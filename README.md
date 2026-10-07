@@ -1,0 +1,2 @@
+# MAGKOM
+Website magang
