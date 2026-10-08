@@ -78,4 +78,55 @@ class PenempatanController extends Controller
 
         return $pdfService->generate($penempatan);
     }
+
+    /**
+     * Memindahkan pembimbing peserta magang (AC-07-4).
+     */
+    public function pindahPembimbing(Penempatan $penempatan, Request $request): RedirectResponse
+    {
+        $request->validate([
+            'pembimbing_id' => ['required', 'exists:users,id'],
+        ]);
+
+        $pembimbingBaru = User::findOrFail($request->integer('pembimbing_id'));
+
+        try {
+            $this->placementService->pindahPembimbing(
+                penempatan: $penempatan,
+                pembimbingBaru: $pembimbingBaru,
+                admin: $request->user()
+            );
+
+            return redirect()->route('admin.penempatan.index')
+                ->with('success', "Pembimbing berhasil dialihkan ke {$pembimbingBaru->nama}.");
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Membatalkan penerimaan atau mencatat pengunduran diri peserta magang (AC-07-5, BR-07).
+     */
+    public function batalkan(Penempatan $penempatan, Request $request): RedirectResponse
+    {
+        $request->validate([
+            'alasan' => ['required', 'string', 'min:10', 'max:1000'],
+        ], [
+            'alasan.min' => 'Alasan pembatalan/pengunduran diri minimal 10 karakter.',
+        ]);
+
+        try {
+            $this->placementService->batalkanPenempatan(
+                penempatan: $penempatan,
+                admin: $request->user(),
+                alasan: $request->input('alasan')
+            );
+
+            return redirect()->route('admin.penempatan.index')
+                ->with('success', 'Status penerimaan/penempatan peserta berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
 }
+

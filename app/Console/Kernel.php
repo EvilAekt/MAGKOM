@@ -12,8 +12,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('magkom:nonaktifkan-peserta')
+            ->dailyAt('00:01')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
     }
+
 
     /**
      * Register the commands for the application.

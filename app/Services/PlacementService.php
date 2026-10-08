@@ -225,4 +225,109 @@ class PlacementService extends AuditedService
             });
         });
     }
+
+    /**
+     * Memindahkan pembimbing peserta magang aktif (AC-07-4, BR-13, A-12).
+     */
+    public function pindahPembimbing(Penempatan $penempatan, User $pembimbingBaru, User $admin): Penempatan
+    {
+        return $this->jalankan(__FUNCTION__, func_get_args(), function () use ($penempatan, $pembimbingBaru, $admin) {
+            return DB::transaction(function () use ($penempatan, $pembimbingBaru, $admin) {
+                $p = Penempatan::whereKey($penempatan->id)->lockForUpdate()->firstOrFail();
+
+                if ($p->status !== StatusPenempatanEnum::Aktif) {
+                    throw new \RuntimeException('Pembimbing hanya dapat dipindahkan untuk penempatan yang berstatus aktif.');
+                }
+
+                // Cek batas beban pembimbing (BR-13)
+                $batasBeban = \App\Support\Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
+                if ($batasBeban > 0) {
+                    $bebanAktif = Penempatan::where('pembimbing_id', $pembimbingBaru->id)
+                        ->where('status', StatusPenempatanEnum::Aktif)
+                        ->count();
+
+                    if ($bebanAktif >= $batasBeban) {
+                        throw new \RuntimeException("Pembimbing {$pembimbingBaru->nama} telah mencapai batas beban maksimum ({$batasBeban} peserta aktif).");
+                    }
+                }
+
+                $pembimbingLamaId = $p->pembimbing_id;
+                $p->update(['pembimbing_id' => $pembimbingBaru->id]);
+
+                $this->auditService->catat(
+                    tipe: TipeAuditEnum::Aksi,
+                    tabel: 'penempatan',
+                    idData: $p->id,
+                    nilaiLama: ['pembimbing_id' => $pembimbingLamaId],
+                    nilaiBaru: ['pembimbing_id' => $pembimbingBaru->id],
+                    detail: [
+                        'aksi' => 'Memindahkan pembimbing peserta magang',
+                        'pembimbing_lama_id' => $pembimbingLamaId,
+                        'pembimbing_baru_id' => $pembimbingBaru->id,
+                        'admin_id' => $admin->id,
+                    ]
+                );
+
+                return $p;
+            });
+        });
+    }
+
+    /**
+     * Membatalkan penerimaan atau mencatat pengunduran diri peserta (AC-07-5, BR-07).
+     */
+    public function batalkanPenempatan(Penempatan $penempatan, User $admin, string $alasan): Penempatan
+    {
+        return $this->jalankan(__FUNCTION__, func_get_args(), function () use ($penempatan, $admin, $alasan) {
+            return DB::transaction(function () use ($penempatan, $admin, $alasan) {
+                $p = Penempatan::whereKey($penempatan->id)->lockForUpdate()->firstOrFail();
+
+                if ($p->status !== StatusPenempatanEnum::Aktif) {
+                    throw new \RuntimeException('Hanya penempatan aktif yang dapat dibatalkan atau dicatat pengunduran dirinya.');
+                }
+
+                $hariIni = today('Asia/Jakarta');
+                $tglMulai = \Carbon\Carbon::parse($p->tgl_mulai);
+                $sebelumMulai = $hariIni->lt($tglMulai);
+
+                if ($sebelumMulai) {
+                    // Sebelum tanggal mulai: kembalikan kuota & akun peserta tetap aktif
+                    if ($p->kuota_id) {
+                        \App\Models\Kuota::whereKey($p->kuota_id)->decrement('terisi');
+                    } elseif ($p->slot_khusus_id) {
+                        SlotKhusus::whereKey($p->slot_khusus_id)->decrement('terisi');
+                    }
+
+                    if ($p->pendaftaran_id) {
+                        Pendaftaran::whereKey($p->pendaftaran_id)->update([
+                            'status' => StatusPendaftaranEnum::Dibatalkan,
+                            'catatan' => $alasan,
+                        ]);
+                    }
+                } else {
+                    // Sejak tanggal mulai: kuota tidak dikembalikan, akun peserta dinonaktifkan
+                    $p->peserta()->update(['status_aktif' => false]);
+                }
+
+                $statusLama = $p->status->value;
+                $p->update(['status' => StatusPenempatanEnum::MengundurkanDiri]);
+
+                $this->auditService->catat(
+                    tipe: TipeAuditEnum::Aksi,
+                    tabel: 'penempatan',
+                    idData: $p->id,
+                    nilaiLama: ['status' => $statusLama],
+                    nilaiBaru: ['status' => StatusPenempatanEnum::MengundurkanDiri->value],
+                    detail: [
+                        'aksi' => $sebelumMulai ? 'Pembatalan sebelum tanggal mulai (kuota dikembalikan)' : 'Pengunduran diri setelah mulai (kuota hangus, akun nonaktif)',
+                        'alasan' => $alasan,
+                        'admin_id' => $admin->id,
+                    ]
+                );
+
+                return $p;
+            });
+        });
+    }
 }
+
