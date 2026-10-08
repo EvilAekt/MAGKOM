@@ -226,7 +226,7 @@ gantt
 ### Rilis 3 (Could Have)
 - [x] **F-18 (OAuth Google Social Login)**: Registrasi & Login "Continue with Google" via Laravel Socialite khusus akun role Peserta dengan validasi penautan email anti-pembajakan (*anti-email-hijacking*, NFR-S9, AC-18-1) dan pemblokiran login sosial untuk peran staf.
 - [ ] **F-19 (OAuth Facebook Social Login)**: Menyusul setelah integrasi Google stabil dan verifikasi aplikasi Meta selesai (opsional/future release).
-- [x] **Automated Feature Test**: `tests/Feature/ReleaseThreeSocialLoginTest.php` lulus 100% (8 tests, 46 assertions).
+- [x] **Automated Feature Test**: `tests/Feature/ReleaseThreeSocialLoginTest.php` lulus 100% (11 tests, 57 assertions).
 
 ---
 

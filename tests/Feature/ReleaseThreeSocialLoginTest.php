@@ -223,4 +223,36 @@ class ReleaseThreeSocialLoginTest extends TestCase
         $response->assertSessionHasErrors('email');
         $this->assertGuest();
     }
+
+    public function test_oauth_callback_handles_provider_exception_gracefully(): void
+    {
+        $provider = Mockery::mock(SocialiteProviderContract::class);
+        $provider->shouldReceive('user')->andThrow(new \Exception('Google OAuth authentication failed or user canceled'));
+
+        Socialite::shouldReceive('driver')->with('google')->andReturn($provider);
+
+        $response = $this->get(route('oauth.callback', 'google'));
+
+        $response->assertRedirect(route('login'));
+        $response->assertSessionHasErrors('email');
+        $this->assertGuest();
+    }
+
+    public function test_login_page_renders_google_login_button(): void
+    {
+        $response = $this->get(route('login'));
+
+        $response->assertStatus(200);
+        $response->assertSee(route('oauth.redirect', 'google'));
+        $response->assertSee('Masuk dengan Google');
+    }
+
+    public function test_register_page_renders_google_register_button(): void
+    {
+        $response = $this->get(route('register'));
+
+        $response->assertStatus(200);
+        $response->assertSee(route('oauth.redirect', 'google'));
+        $response->assertSee('Daftar dengan Google');
+    }
 }
