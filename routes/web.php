@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\KuotaController;
+use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
 use App\Http\Controllers\Admin\PenempatanController as AdminPenempatanController;
 use App\Http\Controllers\Admin\WaitingListController as AdminWaitingListController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Peserta\NilaiController as PesertaNilaiController;
 use App\Http\Controllers\Peserta\PendaftaranController as PesertaPendaftaranController;
 use App\Http\Controllers\Peserta\ProfilController as PesertaProfilController;
 use App\Http\Controllers\Peserta\TugasController as PesertaTugasController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Public\LandingController;
 use App\Http\Controllers\SuperAdmin\BulanController;
 use App\Http\Controllers\SuperAdmin\SlotKhususController;
@@ -28,6 +30,16 @@ use Illuminate\Support\Facades\Route;
 
 // Rute Publik (F-01: Landing Page Kuota & Informasi Magang)
 Route::get('/', LandingController::class)->name('landing');
+
+// Rute Autentikasi Publik (F-02, F-14)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
+
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:pendaftaran');
+});
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Unduh Dokumen Privat dengan Temporary Signed URL (AC-03-9)
 Route::get('/berkas/{dokumen}/download', [BerkasController::class, 'unduh'])
@@ -44,16 +56,18 @@ Route::middleware(['auth', 'verified', 'role:peserta'])->prefix('peserta')->name
     Route::get('/pendaftaran/{pendaftaran}', [PesertaPendaftaranController::class, 'detail'])->name('pendaftaran.detail');
     Route::post('/pendaftaran/{pendaftaran}/ajukan', [PesertaPendaftaranController::class, 'ajukan'])->name('pendaftaran.ajukan');
     Route::post('/pendaftaran/{pendaftaran}/berkas', [BerkasController::class, 'unggah'])->name('berkas.unggah');
+    Route::get('/penempatan/{penempatan}/surat-diterima', [PesertaPendaftaranController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
 
     // Pelaksanaan: Tugas & Progres (F-08)
     Route::get('/tugas', [PesertaTugasController::class, 'index'])->name('tugas.index');
     Route::get('/tugas/{tugas}', [PesertaTugasController::class, 'show'])->name('tugas.show');
     Route::post('/tugas/{tugas}/progres', [PesertaTugasController::class, 'unggahProgres'])->name('tugas.progres');
 
-    // Pelaksanaan: Logbook Harian (F-09)
+    // Pelaksanaan: Logbook Harian (F-09, F-15)
     Route::get('/logbook', [PesertaLogbookController::class, 'index'])->name('logbook.index');
     Route::post('/logbook', [PesertaLogbookController::class, 'store'])->name('logbook.store');
     Route::put('/logbook/{logbook}', [PesertaLogbookController::class, 'update'])->name('logbook.update');
+    Route::get('/logbook/{logbook}/lampiran', [PesertaLogbookController::class, 'unduhLampiran'])->name('logbook.lampiran');
 
     // Penilaian & Unduh Lembar Nilai PDF (F-10, F-12)
     Route::get('/nilai', [PesertaNilaiController::class, 'show'])->name('nilai.show');
@@ -96,6 +110,13 @@ Route::middleware(['auth', 'verified', 'role:admin,superadmin'])->prefix('admin'
 
     Route::get('/penempatan', [AdminPenempatanController::class, 'index'])->name('penempatan.index');
     Route::post('/penempatan/manual', [AdminPenempatanController::class, 'storeManual'])->name('penempatan.manual');
+    Route::get('/penempatan/{penempatan}/surat-diterima', [AdminPenempatanController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
+
+    // Laporan & Ekspor Data CSV (F-17)
+    Route::get('/laporan/pendaftaran', [LaporanController::class, 'pendaftaran'])->name('laporan.pendaftaran');
+    Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
+    Route::get('/laporan/kuota', [LaporanController::class, 'kuota'])->name('laporan.kuota');
+    Route::get('/laporan/nilai', [LaporanController::class, 'nilai'])->name('laporan.nilai');
 });
 
 // Rute Khusus SuperAdmin (Bulan Magang & Slot Khusus Internal - F-06, F-11)

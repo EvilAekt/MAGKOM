@@ -132,4 +132,14 @@ class PendaftaranController extends Controller
 
         return redirect()->route('peserta.pendaftaran.detail', $pendaftaran)->with('success', $pesan);
     }
+
+    /**
+     * Mengunduh Surat Keterangan Diterima PDF resmi (AC-16-1, F-16).
+     */
+    public function unduhSuratDiterima(\App\Models\Penempatan $penempatan, \App\Services\SuratDiterimaPdfService $pdfService)
+    {
+        $this->authorize('view', $penempatan);
+
+        return $pdfService->generate($penempatan);
+    }
 }

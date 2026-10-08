@@ -216,11 +216,12 @@ gantt
 
 ## 4. Rencana Rilis Lanjutan (R2 & R3)
 
-### Rilis 2 (Should Have)
-- **F-14 (Captcha)**: Integrasi Cloudflare Turnstile pada registrasi dan login.
-- **F-15 (Lampiran Logbook)**: Fitur unggah file PDF laporan atau URL eksternal https.
-- **F-16 (Surat Keterangan Diterima)**: Template dan generator PDF penerimaan magang.
-- **F-17 (Laporan & Ekspor)**: Ekspor CSV dan Excel XLSX dengan sanitasi formula injection.
+### Rilis 2 (Should Have) — [SELESAI 100%]
+- [x] **F-14 (Captcha Proteksi Bot)**: Integrasi Cloudflare Turnstile pada registrasi (fail-closed) dan login (fail-open) dengan Rate Limiting.
+- [x] **F-15 (Lampiran Logbook Harian)**: Fitur unggah file PDF laporan (maks 2MB) ke disk privat & tautan eksternal aman skema `https://` (`rel="noopener noreferrer"`).
+- [x] **F-16 (Surat Keterangan Diterima PDF)**: Template dan generator on-the-fly dokumen resmi PDF Surat Keterangan Diterima Magang berkop dinas untuk peserta dan admin.
+- [x] **F-17 (Laporan & Ekspor Data)**: Ekspor CSV/Spreadsheet rekapitulasi pendaftaran, penempatan, realisasi kuota, dan nilai (khusus SuperAdmin) dengan proteksi sanitasi *formula injection* (`=`, `+`, `-`, `@`) dan pencatatan audit log `AC-13-4`.
+- [x] **Automated Feature Test**: `tests/Feature/ReleaseTwoFeaturesTest.php` lulus 100% (4 tests, 44 assertions).
 
 ### Rilis 3 (Could Have)
 - **F-18 & F-19 (OAuth Social Login)**: Registrasi & Login "Continue with Google" dan "Continue with Facebook" khusus akun role Peserta dengan validasi penautan email anti-pembajakan.

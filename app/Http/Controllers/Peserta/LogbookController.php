@@ -142,4 +142,22 @@ class LogbookController extends Controller
             'data' => $logbook,
         ]);
     }
+
+    /**
+     * Mengunduh berkas PDF lampiran logbook dari disk privat (AC-09-6, F-15).
+     */
+    public function unduhLampiran(Logbook $logbook)
+    {
+        Gate::authorize('view', $logbook);
+
+        if (! $logbook->file_laporan || ! \Illuminate\Support\Facades\Storage::disk('private')->exists($logbook->file_laporan)) {
+            abort(404, 'Berkas lampiran logbook tidak ditemukan.');
+        }
+
+        return \Illuminate\Support\Facades\Storage::disk('private')->response(
+            $logbook->file_laporan,
+            "lampiran-logbook-{$logbook->tanggal->toDateString()}.pdf",
+            ['Content-Type' => 'application/pdf']
+        );
+    }
 }

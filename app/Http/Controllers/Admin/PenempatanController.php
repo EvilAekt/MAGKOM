@@ -68,4 +68,14 @@ class PenempatanController extends Controller
             return back()->with('error', 'Gagal memproses penempatan manual: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Mengunduh dokumen resmi Surat Keterangan Diterima Magang PDF (AC-16-1, F-16).
+     */
+    public function unduhSuratDiterima(Penempatan $penempatan, \App\Services\SuratDiterimaPdfService $pdfService)
+    {
+        $this->authorize('view', $penempatan);
+
+        return $pdfService->generate($penempatan);
+    }
 }
