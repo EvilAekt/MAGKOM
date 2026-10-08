@@ -17,6 +17,7 @@ use App\Http\Controllers\Peserta\PendaftaranController as PesertaPendaftaranCont
 use App\Http\Controllers\Peserta\ProfilController as PesertaProfilController;
 use App\Http\Controllers\Peserta\TugasController as PesertaTugasController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Public\LandingController;
 use App\Http\Controllers\SuperAdmin\BulanController;
 use App\Http\Controllers\SuperAdmin\SlotKhususController;
@@ -31,13 +32,17 @@ use Illuminate\Support\Facades\Route;
 // Rute Publik (F-01: Landing Page Kuota & Informasi Magang)
 Route::get('/', LandingController::class)->name('landing');
 
-// Rute Autentikasi Publik (F-02, F-14)
+// Rute Autentikasi Publik (F-02, F-14, F-18)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:pendaftaran');
+
+    // OAuth Social Login (F-18: Google khusus peserta)
+    Route::get('/auth/{provider}/redirect', [SocialiteController::class, 'redirect'])->name('oauth.redirect');
+    Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('oauth.callback');
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 

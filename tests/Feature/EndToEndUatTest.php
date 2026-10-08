@@ -217,16 +217,19 @@ class EndToEndUatTest extends TestCase
         $this->assertEquals(StatusPendaftaranEnum::BerkasBelumLengkap, $pendaftaran->status);
 
         // 3. Upload Berkas Wajib ke Disk Private
-        $fileDummy = UploadedFile::fake()->create('surat-pengantar.pdf', 500, 'application/pdf');
-        $uploadRes = $this->actingAs($peserta)->post(route('peserta.berkas.unggah', $pendaftaran->id), [
-            'jenis_dokumen_id' => $jenisSurat->id,
-            'file' => $fileDummy,
-        ]);
-        $uploadRes->assertRedirect();
-        $this->assertDatabaseHas('dokumen', [
-            'pendaftaran_id' => $pendaftaran->id,
-            'jenis_dokumen_id' => $jenisSurat->id,
-        ]);
+        $dokumenWajib = JenisDokumen::where('jenjang', 'smk')->where('wajib', true)->where('aktif', true)->get();
+        foreach ($dokumenWajib as $jenis) {
+            $fileDummy = UploadedFile::fake()->create("{$jenis->kode}.pdf", 500, 'application/pdf');
+            $uploadRes = $this->actingAs($peserta)->post(route('peserta.berkas.unggah', $pendaftaran->id), [
+                'jenis_dokumen_id' => $jenis->id,
+                'file' => $fileDummy,
+            ]);
+            $uploadRes->assertRedirect();
+            $this->assertDatabaseHas('dokumen', [
+                'pendaftaran_id' => $pendaftaran->id,
+                'jenis_dokumen_id' => $jenis->id,
+            ]);
+        }
 
         // 4. Ajukan Pendaftaran
         $ajukanRes = $this->actingAs($peserta)->post(route('peserta.pendaftaran.ajukan', $pendaftaran->id));
@@ -368,11 +371,14 @@ class EndToEndUatTest extends TestCase
         ]);
 
         // Upload berkas wajib
-        $fileDummy = UploadedFile::fake()->create('surat.pdf', 300, 'application/pdf');
-        $this->actingAs($peserta)->post(route('peserta.berkas.unggah', $pendaftaran->id), [
-            'jenis_dokumen_id' => $jenisSurat->id,
-            'file' => $fileDummy,
-        ]);
+        $dokumenWajib = JenisDokumen::where('jenjang', 'smk')->where('wajib', true)->where('aktif', true)->get();
+        foreach ($dokumenWajib as $jenis) {
+            $fileDummy = UploadedFile::fake()->create("{$jenis->kode}.pdf", 300, 'application/pdf');
+            $this->actingAs($peserta)->post(route('peserta.berkas.unggah', $pendaftaran->id), [
+                'jenis_dokumen_id' => $jenis->id,
+                'file' => $fileDummy,
+            ]);
+        }
 
         // Ajukan: karena kuota terisi == jumlah, status otomatis WaitingList
         $ajukanRes = $this->actingAs($peserta)->post(route('peserta.pendaftaran.ajukan', $pendaftaran->id));

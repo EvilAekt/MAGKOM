@@ -12,14 +12,14 @@ use App\Models\Pengaturan;
 use App\Models\Rubrik;
 use App\Models\User;
 use App\Services\AuditService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Route;
 use RuntimeException;
 use Tests\TestCase;
 
 class CoreFoundationTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     protected function setUp(): void
     {
