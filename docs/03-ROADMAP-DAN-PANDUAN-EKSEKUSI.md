@@ -223,6 +223,15 @@ gantt
 - [x] **F-17 (Laporan & Ekspor Data)**: Ekspor CSV/Spreadsheet rekapitulasi pendaftaran, penempatan, realisasi kuota, dan nilai (khusus SuperAdmin) dengan proteksi sanitasi *formula injection* (`=`, `+`, `-`, `@`) dan pencatatan audit log `AC-13-4`.
 - [x] **Automated Feature Test**: `tests/Feature/ReleaseTwoFeaturesTest.php` lulus 100% (4 tests, 44 assertions).
 
+### Gelombang Tambahan: Penyempurnaan Administrasi, Audit Trail & Utility — [SELESAI 100%]
+- [x] **F-11 (Akun Staf & Penegakan BR-15)**: CRUD staf internal (Admin & Pembimbing) oleh SuperAdmin, reset password staf, nonaktifkan staf, dan form/eksekusi ganti kata sandi wajib staf (`must_change_password`) anti-kata sandi lama.
+- [x] **F-11 (Master Data)**: CRUD master jurusan (penegakan BR-12), bidang dinas, rubrik penilaian (penegakan bobot 100%), dan pengaturan parameter sistem dengan auto cache invalidation.
+- [x] **F-13 (Audit Log Viewer)**: Endpoint `GET /superadmin/audit-log` strictly read-only, paginasi 25 baris, filter tanggal, tipe, entitas, dan request ID.
+- [x] **F-04 & F-07 (Operasi Penempatan Lanjutan)**: Pemindahan pembimbing dengan validasi batas beban (BR-13), pembatalan penempatan / pengunduran diri sesuai BR-07 (sebelum vs sesudah mulai magang), dan tutup antrean waiting list massal awal bulan (AC-04-7).
+- [x] **F-02, F-12 & NFR**: Registrasi scheduler harian di Kernel (`magkom:nonaktifkan-peserta`), alur verifikasi email peserta, alur lupa/reset password peserta dengan respon seragam anti-enumeration, endpoint healthcheck `/health`, dan halaman kebijakan privasi `/kebijakan-privasi`.
+- [x] **Automated Test Suite**: `tests/Feature/BackendSupplementalFeaturesTest.php` lulus 100% (5 tests, 47 assertions).
+
+
 ### Rilis 3 (Could Have)
 - [x] **F-18 (OAuth Google Social Login)**: Registrasi & Login "Continue with Google" via Laravel Socialite khusus akun role Peserta dengan validasi penautan email anti-pembajakan (*anti-email-hijacking*, NFR-S9, AC-18-1) dan pemblokiran login sosial untuk peran staf.
 - [ ] **F-19 (OAuth Facebook Social Login)**: Menyusul setelah integrasi Google stabil dan verifikasi aplikasi Meta selesai (opsional/future release).

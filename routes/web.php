@@ -7,6 +7,10 @@ use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
 use App\Http\Controllers\Admin\PenempatanController as AdminPenempatanController;
 use App\Http\Controllers\Admin\WaitingListController as AdminWaitingListController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Pembimbing\LogbookReviewController as PembimbingLogbookReviewController;
 use App\Http\Controllers\Pembimbing\PenilaianController as PembimbingPenilaianController;
 use App\Http\Controllers\Pembimbing\TugasController as PembimbingTugasController;
@@ -16,11 +20,17 @@ use App\Http\Controllers\Peserta\NilaiController as PesertaNilaiController;
 use App\Http\Controllers\Peserta\PendaftaranController as PesertaPendaftaranController;
 use App\Http\Controllers\Peserta\ProfilController as PesertaProfilController;
 use App\Http\Controllers\Peserta\TugasController as PesertaTugasController;
-use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\Public\HealthController;
 use App\Http\Controllers\Public\LandingController;
+use App\Http\Controllers\SuperAdmin\AuditLogController;
+use App\Http\Controllers\SuperAdmin\BidangController;
 use App\Http\Controllers\SuperAdmin\BulanController;
+use App\Http\Controllers\SuperAdmin\JurusanController;
+use App\Http\Controllers\SuperAdmin\PengaturanController;
+use App\Http\Controllers\SuperAdmin\RubrikController;
 use App\Http\Controllers\SuperAdmin\SlotKhususController;
+use App\Http\Controllers\SuperAdmin\StafController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,10 +39,12 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Rute Publik (F-01: Landing Page Kuota & Informasi Magang)
+// Rute Publik (F-01, NFR-O1, NFR-R1)
 Route::get('/', LandingController::class)->name('landing');
+Route::get('/health', HealthController::class)->name('health');
+Route::view('/kebijakan-privasi', 'public.kebijakan-privasi')->name('kebijakan-privasi');
 
-// Rute Autentikasi Publik (F-02, F-14, F-18)
+// Rute Autentikasi Publik & Reset Password (F-02, F-14, F-18)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
@@ -43,8 +55,31 @@ Route::middleware('guest')->group(function () {
     // OAuth Social Login (F-18: Google khusus peserta)
     Route::get('/auth/{provider}/redirect', [SocialiteController::class, 'redirect'])->name('oauth.redirect');
     Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('oauth.callback');
+
+    // Reset Password
+    Route::get('/forgot-password', [ResetPasswordController::class, 'showForgot'])->name('password.request');
+    Route::post('/forgot-password', [ResetPasswordController::class, 'sendResetLink'])->name('password.email')->middleware('throttle:5,1');
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showReset'])->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 });
+
+// Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+// Verifikasi Email Calon Peserta (F-02 AC-02-4)
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', [VerificationController::class, 'notice'])->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+    Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+
+    // Penegakan Ganti Password Wajib Staf (BR-15, AC-11-5)
+    Route::get('/password/ganti', [PasswordController::class, 'showGanti'])->name('password.ganti');
+    Route::post('/password/ganti', [PasswordController::class, 'updateGanti'])->name('password.ganti.update');
+});
 
 // Unduh Dokumen Privat dengan Temporary Signed URL (AC-03-9)
 Route::get('/berkas/{dokumen}/download', [BerkasController::class, 'unduh'])
@@ -52,7 +87,7 @@ Route::get('/berkas/{dokumen}/download', [BerkasController::class, 'unduh'])
     ->middleware(['signed', 'auth']);
 
 // Rute Peserta Magang (F-02, F-03, F-08, F-09, F-10, F-12)
-Route::middleware(['auth', 'verified', 'role:peserta'])->prefix('peserta')->name('peserta.')->group(function () {
+Route::middleware(['auth', 'verified', 'must_change_password', 'role:peserta'])->prefix('peserta')->name('peserta.')->group(function () {
     Route::get('/profil', [PesertaProfilController::class, 'show'])->name('profil.show');
     Route::post('/profil', [PesertaProfilController::class, 'simpan'])->name('profil.simpan');
 
@@ -80,19 +115,16 @@ Route::middleware(['auth', 'verified', 'role:peserta'])->prefix('peserta')->name
 });
 
 // Rute Pembimbing Magang (F-08, F-09, F-10, F-12)
-Route::middleware(['auth', 'verified', 'role:pembimbing,admin'])->prefix('pembimbing')->name('pembimbing.')->group(function () {
-    // Tugas & Evaluasi Progres
+Route::middleware(['auth', 'verified', 'must_change_password', 'role:pembimbing,admin'])->prefix('pembimbing')->name('pembimbing.')->group(function () {
     Route::get('/tugas', [PembimbingTugasController::class, 'index'])->name('tugas.index');
     Route::post('/tugas', [PembimbingTugasController::class, 'store'])->name('tugas.store');
     Route::get('/tugas/{tugas}', [PembimbingTugasController::class, 'show'])->name('tugas.show');
     Route::put('/tugas/{tugas}', [PembimbingTugasController::class, 'update'])->name('tugas.update');
     Route::post('/progres/{progres}/review', [PembimbingTugasController::class, 'reviewProgres'])->name('progres.review');
 
-    // Review Logbook Harian
     Route::get('/logbook', [PembimbingLogbookReviewController::class, 'index'])->name('logbook.index');
     Route::post('/logbook/{logbook}/review', [PembimbingLogbookReviewController::class, 'review'])->name('logbook.review');
 
-    // Penilaian Rubrik & Penyelesaian Magang
     Route::get('/penilaian', [PembimbingPenilaianController::class, 'index'])->name('penilaian.index');
     Route::get('/penilaian/{penempatan}', [PembimbingPenilaianController::class, 'show'])->name('penilaian.show');
     Route::post('/penilaian/{penempatan}', [PembimbingPenilaianController::class, 'store'])->name('penilaian.store');
@@ -100,8 +132,8 @@ Route::middleware(['auth', 'verified', 'role:pembimbing,admin'])->prefix('pembim
     Route::get('/penilaian/{penempatan}/unduh', [PembimbingPenilaianController::class, 'unduhPdf'])->name('penilaian.unduh');
 });
 
-// Rute Admin & SuperAdmin (Manajemen Kuota, Verifikasi Pendaftaran & Penempatan - F-04, F-05, F-07)
-Route::middleware(['auth', 'verified', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
+// Rute Admin & SuperAdmin (F-04, F-05, F-07, F-17)
+Route::middleware(['auth', 'verified', 'must_change_password', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/kuota', [KuotaController::class, 'index'])->name('kuota.index');
     Route::post('/kuota', [KuotaController::class, 'store'])->name('kuota.store');
     Route::put('/kuota/{kuota}', [KuotaController::class, 'update'])->name('kuota.update');
@@ -112,20 +144,23 @@ Route::middleware(['auth', 'verified', 'role:admin,superadmin'])->prefix('admin'
     Route::post('/pendaftaran/{pendaftaran}/putuskan', [AdminPendaftaranController::class, 'putuskan'])->name('pendaftaran.putuskan');
 
     Route::get('/waiting-list', [AdminWaitingListController::class, 'index'])->name('waiting-list.index');
+    Route::post('/waiting-list/{bulanMagang}/tutup', [AdminWaitingListController::class, 'tutupAntrean'])->name('waiting-list.tutup');
 
     Route::get('/penempatan', [AdminPenempatanController::class, 'index'])->name('penempatan.index');
     Route::post('/penempatan/manual', [AdminPenempatanController::class, 'storeManual'])->name('penempatan.manual');
     Route::get('/penempatan/{penempatan}/surat-diterima', [AdminPenempatanController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
+    Route::post('/penempatan/{penempatan}/pindah-pembimbing', [AdminPenempatanController::class, 'pindahPembimbing'])->name('penempatan.pindah-pembimbing');
+    Route::post('/penempatan/{penempatan}/batalkan', [AdminPenempatanController::class, 'batalkan'])->name('penempatan.batalkan');
 
-    // Laporan & Ekspor Data CSV (F-17)
     Route::get('/laporan/pendaftaran', [LaporanController::class, 'pendaftaran'])->name('laporan.pendaftaran');
     Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
     Route::get('/laporan/kuota', [LaporanController::class, 'kuota'])->name('laporan.kuota');
     Route::get('/laporan/nilai', [LaporanController::class, 'nilai'])->name('laporan.nilai');
 });
 
-// Rute Khusus SuperAdmin (Bulan Magang & Slot Khusus Internal - F-06, F-11)
-Route::middleware(['auth', 'verified', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+// Rute Khusus SuperAdmin (F-06, F-11, F-13)
+Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+    // Bulan Magang & Slot Khusus
     Route::get('/bulan', [BulanController::class, 'index'])->name('bulan.index');
     Route::post('/bulan', [BulanController::class, 'store'])->name('bulan.store');
     Route::put('/bulan/{bulan}', [BulanController::class, 'update'])->name('bulan.update');
@@ -135,4 +170,33 @@ Route::middleware(['auth', 'verified', 'role:superadmin'])->prefix('superadmin')
     Route::post('/slot-khusus', [SlotKhususController::class, 'store'])->name('slot-khusus.store');
     Route::put('/slot-khusus/{slot_khusus}', [SlotKhususController::class, 'update'])->name('slot-khusus.update');
     Route::patch('/slot-khusus/{slot_khusus}/toggle', [SlotKhususController::class, 'toggleAktif'])->name('slot-khusus.toggle');
+
+    // Manajemen Staf Internal (F-11)
+    Route::get('/staf', [StafController::class, 'index'])->name('staf.index');
+    Route::post('/staf', [StafController::class, 'store'])->name('staf.store');
+    Route::post('/staf/{staf}/reset-password', [StafController::class, 'resetPassword'])->name('staf.reset-password');
+    Route::patch('/staf/{staf}/toggle', [StafController::class, 'toggleAktif'])->name('staf.toggle');
+
+    // Master Data (Jurusan, Bidang, Rubrik) (F-11)
+    Route::get('/jurusan', [JurusanController::class, 'index'])->name('jurusan.index');
+    Route::post('/jurusan', [JurusanController::class, 'store'])->name('jurusan.store');
+    Route::put('/jurusan/{jurusan}', [JurusanController::class, 'update'])->name('jurusan.update');
+    Route::patch('/jurusan/{jurusan}/toggle', [JurusanController::class, 'toggleAktif'])->name('jurusan.toggle');
+
+    Route::get('/bidang', [BidangController::class, 'index'])->name('bidang.index');
+    Route::post('/bidang', [BidangController::class, 'store'])->name('bidang.store');
+    Route::put('/bidang/{bidang}', [BidangController::class, 'update'])->name('bidang.update');
+    Route::patch('/bidang/{bidang}/toggle', [BidangController::class, 'toggleAktif'])->name('bidang.toggle');
+
+    Route::get('/rubrik', [RubrikController::class, 'index'])->name('rubrik.index');
+    Route::post('/rubrik', [RubrikController::class, 'store'])->name('rubrik.store');
+    Route::put('/rubrik/{rubrik}', [RubrikController::class, 'update'])->name('rubrik.update');
+    Route::patch('/rubrik/{rubrik}/toggle', [RubrikController::class, 'toggleAktif'])->name('rubrik.toggle');
+
+    // Parameter Pengaturan Sistem (F-11)
+    Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
+    Route::put('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
+
+    // Audit Log Trail (F-13 AC-13-6)
+    Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log.index');
 });
