@@ -27,13 +27,28 @@ class PendaftaranController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user();
+        $profil = $user->profil;
+
         $pendaftaranList = Pendaftaran::with(['bulanMagang', 'kuota.jurusan', 'penempatan'])
             ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $kuotaList = collect();
+        if ($profil && $profil->jurusan_id) {
+            $kuotaList = \App\Models\Kuota::with(['bulanMagang', 'jurusan'])
+                ->where('jurusan_id', $profil->jurusan_id)
+                ->where('aktif', true)
+                ->whereHas('bulanMagang', function ($q) {
+                    $q->where('aktif', true);
+                })
+                ->get();
+        }
+
         return view('peserta.pendaftaran.index', [
             'pendaftaranList' => $pendaftaranList,
+            'profil'          => $profil,
+            'kuotaList'       => $kuotaList,
         ]);
     }
 

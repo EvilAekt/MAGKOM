@@ -25,7 +25,7 @@ class TugasController extends Controller
     /**
      * Daftar seluruh penugasan yang diberikan kepada peserta bimbingan.
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): mixed
     {
         $user = $request->user();
 
@@ -46,9 +46,15 @@ class TugasController extends Controller
 
         $tugas = $query->latest()->paginate(15);
 
-        return response()->json([
-            'success' => true,
-            'data' => $tugas,
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $tugas,
+            ]);
+        }
+
+        return view('pembimbing.tugas.index', [
+            'tugasList' => $tugas,
         ]);
     }
 

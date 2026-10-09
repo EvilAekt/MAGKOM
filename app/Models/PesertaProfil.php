@@ -22,6 +22,9 @@ class PesertaProfil extends Model
         'jurusan_id',
         'jenjang',
         'no_hp',
+        'nama_kontak_darurat',
+        'no_kontak_darurat',
+        'hubungan_kontak_darurat',
     ];
 
     protected $casts = [
