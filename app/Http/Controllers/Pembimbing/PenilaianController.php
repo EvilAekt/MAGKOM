@@ -28,7 +28,7 @@ class PenilaianController extends Controller
     /**
      * Daftar seluruh penempatan dan status penilaian magang.
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
     {
         $user = $request->user();
 
@@ -41,29 +41,43 @@ class PenilaianController extends Controller
 
         $penempatan = $query->latest()->paginate(15);
 
-        return response()->json([
-            'success' => true,
-            'data' => $penempatan,
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $penempatan,
+            ]);
+        }
+
+        return view('pembimbing.penilaian.index', [
+            'penempatanList' => $penempatan,
         ]);
     }
 
     /**
      * Lembar instrumen penilaian rubrik untuk peserta terkait.
      */
-    public function show(Penempatan $penempatan): JsonResponse
+    public function show(Penempatan $penempatan, Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
     {
         Gate::authorize('view', [Penilaian::class, $penempatan]);
 
-        $rubrikAktif = Rubrik::where('aktif', true)->get();
-        $penilaian = $penempatan->penilaian()?->with(['details.rubrik', 'riwayats.pengubah'])->first();
+        $rubrikAktif = Rubrik::where('aktif', true)->orderBy('id')->get();
+        $penilaian = $penempatan->penilaian()->with(['details.rubrik', 'riwayats.pengubah'])->first();
 
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'penempatan' => $penempatan->load(['peserta.profil', 'bidang']),
-                'rubrik_aktif' => $rubrikAktif,
-                'penilaian' => $penilaian,
-            ],
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'penempatan' => $penempatan->load(['peserta.profil', 'bidang']),
+                    'rubrik_aktif' => $rubrikAktif,
+                    'penilaian' => $penilaian,
+                ],
+            ]);
+        }
+
+        return view('pembimbing.penilaian.show', [
+            'penempatan' => $penempatan->load(['peserta.profil', 'bidang']),
+            'rubrikAktif' => $rubrikAktif,
+            'penilaian' => $penilaian,
         ]);
     }
 
@@ -114,6 +128,10 @@ class PenilaianController extends Controller
             $pesan = 'Draf penilaian magang berhasil disimpan.';
         }
 
+        if (! $request->expectsJson() && ! $request->wantsJson()) {
+            return back()->with('success', $pesan);
+        }
+
         return response()->json([
             'success' => true,
             'message' => $pesan,
@@ -125,9 +143,13 @@ class PenilaianController extends Controller
      * Menandai penempatan selesai magang (BR-10).
      * Mensyaratkan nilai akhir telah berstatus final.
      */
-    public function selesai(Request $request, Penempatan $penempatan): JsonResponse
+    public function selesai(Request $request, Penempatan $penempatan): JsonResponse|\Illuminate\Http\RedirectResponse
     {
         $penempatanUpdated = $this->masaTenggangService->tandaiSelesai($penempatan, $request->user());
+
+        if (! $request->expectsJson() && ! $request->wantsJson()) {
+            return back()->with('success', 'Status magang peserta berhasil diselesaikan dan masa tenggang akun telah diaktifkan.');
+        }
 
         return response()->json([
             'success' => true,

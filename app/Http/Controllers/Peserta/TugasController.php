@@ -28,33 +28,47 @@ class TugasController extends Controller
     /**
      * Menampilkan daftar tugas untuk penempatan aktif peserta.
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
     {
         $user = $request->user();
 
-        $tugas = Tugas::with(['progresLogs'])
+        $tugas = Tugas::with(['progresLogs', 'penempatan.pembimbing'])
             ->whereHas('penempatan', function ($q) use ($user) {
                 $q->where('peserta_id', $user->id);
             })
             ->latest('deadline')
             ->paginate(15);
 
-        return response()->json([
-            'success' => true,
-            'data' => $tugas,
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $tugas,
+            ]);
+        }
+
+        return view('peserta.tugas.index', [
+            'tugasList' => $tugas,
         ]);
     }
 
     /**
      * Detail tugas yang diberikan.
      */
-    public function show(Request $request, Tugas $tugas): JsonResponse
+    public function show(Request $request, Tugas $tugas): \Illuminate\View\View|\Illuminate\Http\JsonResponse
     {
         Gate::authorize('view', $tugas);
 
-        return response()->json([
-            'success' => true,
-            'data' => $tugas->load('progresLogs'),
+        $tugasData = $tugas->load(['progresLogs', 'penempatan.pembimbing']);
+
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $tugasData,
+            ]);
+        }
+
+        return view('peserta.tugas.show', [
+            'tugas' => $tugasData,
         ]);
     }
 
@@ -95,6 +109,10 @@ class TugasController extends Controller
             ],
             detail: ['aksi' => 'unggah_progres_tugas']
         );
+
+        if (! $request->expectsJson() && ! $request->wantsJson()) {
+            return back()->with('success', 'Laporan progres tugas berhasil dikirimkan.');
+        }
 
         return response()->json([
             'success' => true,

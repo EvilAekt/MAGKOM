@@ -33,10 +33,12 @@ class PenempatanController extends Controller
         }
 
         $penempatanList = $query->paginate(15);
+        $pembimbingList = User::where('role', RoleEnum::Pembimbing)->where('status_aktif', true)->orderBy('nama')->get();
 
         return view('admin.penempatan.index', [
             'penempatanList' => $penempatanList,
             'statusEnum' => StatusPenempatanEnum::cases(),
+            'pembimbingList' => $pembimbingList,
         ]);
     }
 

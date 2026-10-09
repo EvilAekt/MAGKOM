@@ -79,6 +79,10 @@ class TugasController extends Controller
             detail: ['aksi' => 'buat_tugas']
         );
 
+        if (! $request->expectsJson() && ! $request->wantsJson()) {
+            return redirect()->route('pembimbing.tugas.index')->with('success', 'Tugas baru berhasil dibuat.');
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Tugas baru berhasil dibuat.',
@@ -89,20 +93,28 @@ class TugasController extends Controller
     /**
      * Detail penugasan dan seluruh laporan progres kerja.
      */
-    public function show(Request $request, Tugas $tugas): JsonResponse
+    public function show(Request $request, Tugas $tugas): \Illuminate\View\View|\Illuminate\Http\JsonResponse
     {
         Gate::authorize('view', $tugas);
 
-        return response()->json([
-            'success' => true,
-            'data' => $tugas->load(['penempatan.peserta', 'penempatan.bidang', 'progresLogs']),
+        $tugasData = $tugas->load(['penempatan.peserta', 'penempatan.bidang', 'progresLogs']);
+
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $tugasData,
+            ]);
+        }
+
+        return view('pembimbing.tugas.show', [
+            'tugas' => $tugasData,
         ]);
     }
 
     /**
      * Memperbarui informasi atau status penugasan.
      */
-    public function update(TugasRequest $request, Tugas $tugas): JsonResponse
+    public function update(TugasRequest $request, Tugas $tugas): JsonResponse|\Illuminate\Http\RedirectResponse
     {
         Gate::authorize('update', $tugas);
 
@@ -118,6 +130,10 @@ class TugasController extends Controller
             detail: ['aksi' => 'update_tugas']
         );
 
+        if (! $request->expectsJson() && ! $request->wantsJson()) {
+            return back()->with('success', 'Data tugas berhasil diperbarui.');
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Data tugas berhasil diperbarui.',
@@ -128,7 +144,7 @@ class TugasController extends Controller
     /**
      * Melakukan review umpan balik terhadap laporan progres tugas (AC-08-4).
      */
-    public function reviewProgres(ReviewProgresRequest $request, ProgresLog $progres): JsonResponse
+    public function reviewProgres(ReviewProgresRequest $request, ProgresLog $progres): JsonResponse|\Illuminate\Http\RedirectResponse
     {
         $tugas = $progres->tugas;
         Gate::authorize('reviewProgres', $tugas);
@@ -148,6 +164,10 @@ class TugasController extends Controller
             nilaiBaru: $request->validated(),
             detail: ['aksi' => 'review_progres_tugas']
         );
+
+        if (! $request->expectsJson() && ! $request->wantsJson()) {
+            return back()->with('success', 'Evaluasi progres tugas berhasil disimpan.');
+        }
 
         return response()->json([
             'success' => true,

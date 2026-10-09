@@ -22,7 +22,7 @@ class LogbookReviewController extends Controller
     /**
      * Daftar logbook harian seluruh peserta yang dibimbing.
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
     {
         $user = $request->user();
 
@@ -47,9 +47,25 @@ class LogbookReviewController extends Controller
 
         $logbooks = $query->latest('tanggal')->paginate(20);
 
-        return response()->json([
-            'success' => true,
-            'data' => $logbooks,
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $logbooks,
+            ]);
+        }
+
+        $penempatanList = \App\Models\Penempatan::with('peserta')
+            ->where(function ($q) use ($user) {
+                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                    $q->where('pembimbing_id', $user->id);
+                }
+            })
+            ->where('status', \App\Enums\StatusPenempatanEnum::Aktif)
+            ->get();
+
+        return view('pembimbing.logbook.index', [
+            'logbooks' => $logbooks,
+            'penempatanList' => $penempatanList,
         ]);
     }
 

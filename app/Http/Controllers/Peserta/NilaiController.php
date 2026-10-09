@@ -19,7 +19,7 @@ class NilaiController extends Controller
      * Melihat lembar evaluasi nilai magang saya.
      * Hanya dapat diakses bila nilai telah berstatus 'final'.
      */
-    public function show(Request $request): JsonResponse
+    public function show(Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
     {
         $user = $request->user();
 
@@ -30,12 +30,19 @@ class NilaiController extends Controller
 
         Gate::authorize('view', [Penilaian::class, $penempatan]);
 
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'penempatan' => $penempatan,
-                'penilaian' => $penempatan->penilaian,
-            ],
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'penempatan' => $penempatan,
+                    'penilaian' => $penempatan->penilaian,
+                ],
+            ]);
+        }
+
+        return view('peserta.nilai.show', [
+            'penempatan' => $penempatan,
+            'penilaian' => $penempatan->penilaian,
         ]);
     }
 

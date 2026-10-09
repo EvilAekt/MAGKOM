@@ -25,7 +25,7 @@ class LogbookController extends Controller
     /**
      * Menampilkan daftar riwayat logbook harian peserta.
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
     {
         $user = $request->user();
 
@@ -35,9 +35,24 @@ class LogbookController extends Controller
             ->latest('tanggal')
             ->paginate(20);
 
-        return response()->json([
-            'success' => true,
-            'data' => $logbooks,
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $logbooks,
+            ]);
+        }
+
+        $penempatan = Penempatan::with(['bidang', 'pembimbing'])
+            ->where('peserta_id', $user->id)
+            ->where('status', StatusPenempatanEnum::Aktif)
+            ->first();
+
+        $logbookMaksMundur = \App\Support\Pengaturan::int('logbook_maks_mundur_hari', 3);
+
+        return view('peserta.logbook.index', [
+            'logbooks' => $logbooks,
+            'penempatan' => $penempatan,
+            'logbookMaksMundur' => $logbookMaksMundur,
         ]);
     }
 

@@ -32,8 +32,43 @@ class PendaftaranController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $pendaftaranAktif = $pendaftaranList->first(function ($p) {
+            return in_array($p->status->value, [
+                StatusPendaftaranEnum::BerkasBelumLengkap->value,
+                StatusPendaftaranEnum::Diajukan->value,
+                StatusPendaftaranEnum::PerluPerbaikan->value,
+                StatusPendaftaranEnum::WaitingList->value,
+                StatusPendaftaranEnum::Diterima->value,
+            ], true);
+        });
+
+        $profil = $user->profil;
+        $kategoriJurusan = match ($profil?->jenjang) {
+            \App\Enums\JenjangEnum::Smk => 'smk',
+            \App\Enums\JenjangEnum::D3, \App\Enums\JenjangEnum::S1 => 'mahasiswa',
+            default => null,
+        };
+
+        $bulanAktifList = BulanMagang::with(['kuota' => function ($q) use ($kategoriJurusan) {
+            $q->where('aktif', true)->with('jurusan');
+            if ($kategoriJurusan) {
+                $q->whereHas('jurusan', function ($jq) use ($kategoriJurusan) {
+                    $jq->where('kategori', $kategoriJurusan);
+                });
+            }
+        }])
+        ->where('aktif', true)
+        ->orderBy('bulan_mulai', 'asc')
+        ->get()
+        ->filter(function ($bulan) {
+            return $this->bulanStatusService->status($bulan) === \App\Enums\StatusKetersediaanEnum::Tersedia;
+        });
+
         return view('peserta.pendaftaran.index', [
             'pendaftaranList' => $pendaftaranList,
+            'pendaftaranAktif' => $pendaftaranAktif,
+            'bulanAktifList' => $bulanAktifList,
+            'profil' => $profil,
         ]);
     }
 
@@ -63,12 +98,21 @@ class PendaftaranController extends Controller
         $this->authorize('view', $pendaftaran);
 
         $user = $request->user();
-        $profil = $user->profil;
+        $pendaftaran->loadMissing([
+            'bulanMagang',
+            'kuota.jurusan',
+            'penempatan.pembimbing',
+            'penempatan.bidang',
+            'verifikator',
+            'dokumen.jenisDokumen',
+        ]);
 
-        // Ambil jenis dokumen wajib sesuai jenjang profil peserta
+        $profil = $user->profil;
         $jenjang = $profil?->jenjang ?? \App\Enums\JenjangEnum::Smk;
+
         $jenisDokumenList = JenisDokumen::where('aktif', true)
             ->where('jenjang', $jenjang->value)
+            ->orderBy('wajib', 'desc')
             ->get();
 
         $dokumenTerunggah = $pendaftaran->dokumen->keyBy('jenis_dokumen_id');
@@ -77,6 +121,8 @@ class PendaftaranController extends Controller
             'pendaftaran' => $pendaftaran,
             'jenisDokumenList' => $jenisDokumenList,
             'dokumenTerunggah' => $dokumenTerunggah,
+            'profil' => $profil,
+            'maksMb' => \App\Support\Pengaturan::int('berkas_maks_mb', 2),
         ]);
     }
 

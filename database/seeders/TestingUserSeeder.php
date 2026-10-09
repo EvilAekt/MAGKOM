@@ -53,6 +53,18 @@ class TestingUserSeeder extends Seeder
             $user->status_aktif = true;
             $user->must_change_password = false;
             $user->save();
+
+            if ($user->role === RoleEnum::Peserta && ! $user->profil) {
+                $jurusanSmk = \App\Models\Jurusan::where('kategori', 'smk')->first();
+                \App\Models\PesertaProfil::create([
+                    'user_id' => $user->id,
+                    'nim_nisn' => '20241001',
+                    'institusi' => 'SMK Negeri 1 Sleman',
+                    'jurusan_id' => $jurusanSmk?->id,
+                    'jenjang' => \App\Enums\JenjangEnum::Smk,
+                    'no_hp' => '081234567890',
+                ]);
+            }
         }
     }
 }
