@@ -151,7 +151,7 @@ class ReleaseTwoFeaturesTest extends TestCase
             'kegiatan' => 'Mengerjakan analisis data trafik web portal dan konfigurasi DNS',
             'link_laporan' => 'https://github.com/EvilAekt/MAGKOM/commit/xyz',
             'file_laporan' => $validPdf,
-        ]);
+        ], ['Accept' => 'application/json']);
         $storeRes->assertStatus(201);
 
         $logbook = Logbook::where('penempatan_id', $this->penempatan->id)

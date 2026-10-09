@@ -264,7 +264,12 @@
             gap: 16px;
         }
 
-        .user-chip {
+        /* Profile Dropdown */
+        .profile-dropdown-container {
+            position: relative;
+        }
+
+        .user-chip-btn {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -272,6 +277,33 @@
             background: var(--neutral-100);
             border: 1px solid var(--neutral-400);
             border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .user-chip-btn:hover,
+        .user-chip-btn[aria-expanded="true"] {
+            background: var(--blue-tint);
+            border-color: var(--blue-tint-line);
+            box-shadow: 0 2px 6px rgba(7, 81, 255, 0.12);
+        }
+
+        .user-chip-btn:focus-visible {
+            outline: 2px solid var(--blue-600);
+            outline-offset: 2px;
+        }
+
+        .dropdown-chevron {
+            color: var(--neutral-500);
+            transition: transform 0.2s ease;
+            margin-left: 2px;
+        }
+
+        .user-chip-btn[aria-expanded="true"] .dropdown-chevron {
+            transform: rotate(180deg);
+            color: var(--blue-700);
         }
 
         .user-avatar {
@@ -303,6 +335,144 @@
             font-size: 11px;
             color: var(--blue-600);
             font-weight: 600;
+        }
+
+        .profile-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 270px;
+            background: #ffffff;
+            border: 1px solid var(--neutral-400);
+            border-radius: var(--radius-default);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+            z-index: 50;
+            overflow: hidden;
+            animation: dropdownFadeIn 0.15s ease-out;
+        }
+
+        .profile-dropdown-menu.open {
+            display: block;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: var(--neutral-100);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+
+        .dropdown-header-avatar {
+            width: 38px;
+            height: 38px;
+            background: var(--blue-600);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .dropdown-header-meta {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .dropdown-header-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--neutral-800);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-header-email {
+            font-size: 11px;
+            color: var(--neutral-600);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-header-role {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--blue-700);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--neutral-200);
+            margin: 4px 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neutral-700);
+            text-decoration: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+            box-sizing: border-box;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .dropdown-item svg {
+            color: var(--neutral-500);
+            transition: color 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .dropdown-item:hover {
+            background: var(--blue-tint);
+            color: var(--blue-700);
+        }
+
+        .dropdown-item:hover svg {
+            color: var(--blue-700);
+        }
+
+        .dropdown-item.dropdown-logout {
+            color: var(--red-600);
+        }
+
+        .dropdown-item.dropdown-logout svg {
+            color: var(--red-600);
+        }
+
+        .dropdown-item.dropdown-logout:hover {
+            background: #FEF2F2;
+            color: #DC2626;
         }
 
         .content-area {
@@ -603,13 +773,72 @@
             </div>
 
             <div class="topbar-right">
-                <div class="user-chip">
-                    <div class="user-avatar">
-                        {{ strtoupper(substr(auth()->user()->name ?? 'P', 0, 1)) }}
-                    </div>
-                    <div class="user-info">
-                        <span class="user-name">{{ auth()->user()->name }}</span>
-                        <span class="user-badge">Peserta Magang</span>
+                <div class="profile-dropdown-container">
+                    <button type="button" 
+                            class="user-chip-btn" 
+                            id="userProfileBtn" 
+                            aria-expanded="false" 
+                            aria-haspopup="true" 
+                            aria-label="Menu Profil Pengguna"
+                            onclick="toggleProfileMenu(event)">
+                        <div class="user-avatar">
+                            {{ strtoupper(substr(auth()->user()->nama ?? auth()->user()->name ?? 'P', 0, 1)) }}
+                        </div>
+                        <div class="user-info">
+                            <span class="user-name">{{ auth()->user()->nama ?? auth()->user()->name }}</span>
+                            <span class="user-badge">Peserta Magang</span>
+                        </div>
+                        <svg class="dropdown-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <div class="profile-dropdown-menu" id="userProfileMenu" role="menu" aria-labelledby="userProfileBtn">
+                        <div class="dropdown-header">
+                            <div class="dropdown-header-avatar">
+                                {{ strtoupper(substr(auth()->user()->nama ?? auth()->user()->name ?? 'P', 0, 1)) }}
+                            </div>
+                            <div class="dropdown-header-meta">
+                                <span class="dropdown-header-name">{{ auth()->user()->nama ?? auth()->user()->name }}</span>
+                                <span class="dropdown-header-email">{{ auth()->user()->email }}</span>
+                                <span class="dropdown-header-role">Peserta Magang</span>
+                            </div>
+                        </div>
+
+                        <div class="dropdown-divider"></div>
+
+                        <a href="{{ route('peserta.profil.show') }}" class="dropdown-item" role="menuitem">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            <span>Biodata & Profil</span>
+                        </a>
+
+                        <a href="{{ route('peserta.pendaftaran.index') }}" class="dropdown-item" role="menuitem">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span>Riwayat Pendaftaran</span>
+                        </a>
+
+                        <a href="{{ route('password.ganti') }}" class="dropdown-item" role="menuitem">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                            </svg>
+                            <span>Ganti Kata Sandi</span>
+                        </a>
+
+                        <div class="dropdown-divider"></div>
+
+                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="dropdown-item dropdown-logout" role="menuitem">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                                <span>Keluar Akun</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -655,6 +884,45 @@
             sidebar.classList.toggle('open');
             backdrop.classList.toggle('open');
         }
+
+        function toggleProfileMenu(e) {
+            e.stopPropagation();
+            const btn = document.getElementById('userProfileBtn');
+            const menu = document.getElementById('userProfileMenu');
+            if (!btn || !menu) return;
+
+            const isOpen = menu.classList.contains('open');
+            if (isOpen) {
+                closeProfileMenu();
+            } else {
+                menu.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        function closeProfileMenu() {
+            const btn = document.getElementById('userProfileBtn');
+            const menu = document.getElementById('userProfileMenu');
+            if (menu && menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                if (btn) btn.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        // Tutup dropdown saat klik di luar
+        document.addEventListener('click', function(e) {
+            const container = document.querySelector('.profile-dropdown-container');
+            if (container && !container.contains(e.target)) {
+                closeProfileMenu();
+            }
+        });
+
+        // Tutup dropdown saat tombol Escape ditekan
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeProfileMenu();
+            }
+        });
     </script>
     @stack('scripts')
 </body>

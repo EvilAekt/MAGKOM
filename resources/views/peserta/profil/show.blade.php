@@ -156,7 +156,7 @@
                 {{-- Data Akun (Readonly) --}}
                 <div class="form-group">
                     <label class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-control" value="{{ $user->name }}" readonly disabled>
+                    <input type="text" class="form-control" value="{{ $user->nama ?? $user->name }}" readonly disabled>
                 </div>
 
                 <div class="form-group">

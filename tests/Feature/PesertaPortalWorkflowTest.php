@@ -134,4 +134,17 @@ class PesertaPortalWorkflowTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Lembar Nilai Belum Tersedia');
     }
+
+    public function test_topbar_menampilkan_nama_peserta_dan_dropdown_profil(): void
+    {
+        $response = $this->actingAs($this->peserta)->get(route('peserta.profil.show'));
+        $response->assertStatus(200);
+        $response->assertSee('Budi Peserta Test');
+        $response->assertSee('userProfileBtn');
+        $response->assertSee('userProfileMenu');
+        $response->assertSee('Biodata &amp; Profil', false);
+        $response->assertSee('Riwayat Pendaftaran');
+        $response->assertSee('Ganti Kata Sandi');
+        $response->assertSee('Keluar Akun');
+    }
 }
