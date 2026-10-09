@@ -226,25 +226,52 @@
         .auth-form-header-bar {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            max-width: 480px;
+            justify-content: flex-end;
             width: 100%;
-            margin: 0 auto 1.5rem auto;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1023px) {
+            .auth-form-header-bar {
+                justify-content: space-between;
+            }
         }
 
         .back-link {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
             font-weight: 600;
-            color: var(--neutral-600);
+            color: var(--neutral-700);
+            background-color: var(--neutral-0);
+            border: 1px solid var(--neutral-200);
+            border-radius: 9999px;
+            padding: 0.45rem 1rem;
             text-decoration: none;
-            transition: color 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .back-link:hover {
-            color: var(--blue-600);
+            color: var(--neutral-900);
+            background-color: var(--neutral-50);
+            border-color: var(--neutral-300);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .back-link:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .back-link svg {
+            transition: transform 0.2s ease;
+        }
+
+        .back-link:hover svg {
+            transform: translateX(-3px);
         }
 
         .mobile-brand {
@@ -547,14 +574,6 @@
         <main class="auth-form-panel">
             <!-- Header Bar (Back Link & Mobile Brand) -->
             <div class="auth-form-header-bar">
-                <a href="{{ route('landing') }}" class="back-link" title="Kembali ke halaman utama">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="19" y1="12" x2="5" y2="12"></line>
-                        <polyline points="12 19 5 12 12 5"></polyline>
-                    </svg>
-                    <span>Kembali ke beranda</span>
-                </a>
-
                 <div class="mobile-brand">
                     <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="40" height="40" rx="8" fill="#0751FF"/>
@@ -562,6 +581,14 @@
                     </svg>
                     <span style="font-weight: 800; font-size: 0.9375rem; color: var(--neutral-900);">MAGKOM</span>
                 </div>
+
+                <a href="{{ route('landing') }}" class="back-link" title="Kembali ke beranda">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    <span>Kembali ke beranda</span>
+                </a>
             </div>
 
             <!-- Konten Form Dinamis -->

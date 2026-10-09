@@ -11,13 +11,6 @@
         </div>
     @endif
 
-    <!-- Step Badge Presisi Figma -->
-    <div class="step-badge">
-        <span>LANGKAH 01</span>
-        <span>&bull;</span>
-        <span>Kredensial Akun</span>
-    </div>
-
     <!-- Header Form Register -->
     <h1 class="auth-title">Register Akun MagKom</h1>
     <p class="auth-subtitle">Daftarkan akun Anda untuk memulai proses seleksi magang di Dinas Kominfo.</p>
