@@ -88,10 +88,15 @@ class AuthController extends Controller
     {
         $turnstileEnabled = (bool) config('services.turnstile.enabled', false);
 
+        if ($request->has('username') && ! $request->has('nama')) {
+            $request->merge(['nama' => $request->input('username')]);
+        }
+
         $rules = [
             'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'confirmed', Password::min(8)],
+            'no_telp' => ['sometimes', 'required', 'string', 'max:20', 'regex:/^[0-9\+\-\s]+$/'],
+            'password' => ['required', 'string', Password::min(8)],
         ];
 
         if ($turnstileEnabled) {
@@ -103,6 +108,7 @@ class AuthController extends Controller
         $user = new User();
         $user->nama = $validated['nama'];
         $user->email = $validated['email'];
+        $user->no_telp = $validated['no_telp'] ?? $request->input('no_telp');
         $user->password = Hash::make($validated['password']);
         $user->role = RoleEnum::Peserta;
         $user->status_aktif = true;
@@ -118,7 +124,7 @@ class AuthController extends Controller
             tabel: 'users',
             idData: $user->id,
             nilaiLama: null,
-            nilaiBaru: ['nama' => $user->nama, 'email' => $user->email, 'role' => $user->role->value],
+            nilaiBaru: ['nama' => $user->nama, 'email' => $user->email, 'no_telp' => $user->no_telp, 'role' => $user->role->value],
             detail: ['aksi' => 'registrasi_peserta_baru']
         );
 

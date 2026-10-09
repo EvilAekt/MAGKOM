@@ -255,4 +255,35 @@ class ReleaseThreeSocialLoginTest extends TestCase
         $response->assertSee(route('oauth.redirect', 'google'));
         $response->assertSee('Daftar dengan Google');
     }
+
+    public function test_simplified_registration_renders_exact_fields(): void
+    {
+        $response = $this->get(route('register'));
+
+        $response->assertStatus(200);
+        $response->assertSee('name="username"', false);
+        $response->assertSee('name="email"', false);
+        $response->assertSee('name="no_telp"', false);
+        $response->assertSee('name="password"', false);
+        $response->assertDontSee('name="password_confirmation"', false);
+    }
+
+    public function test_user_can_register_with_username_and_phone_number_without_confirmation(): void
+    {
+        $response = $this->post(route('register'), [
+            'username' => 'Peserta Sleman 2026',
+            'email' => 'peserta.sleman@test.id',
+            'no_telp' => '081234567890',
+            'password' => 'SlemanJuara2026',
+        ]);
+
+        $response->assertRedirect(route('peserta.profil.show'));
+
+        $this->assertDatabaseHas('users', [
+            'nama' => 'Peserta Sleman 2026',
+            'email' => 'peserta.sleman@test.id',
+            'no_telp' => '081234567890',
+        ]);
+    }
 }
+

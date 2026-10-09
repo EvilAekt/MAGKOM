@@ -1,73 +1,182 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
-@section('title', 'Daftar Calon Peserta - Portal MagKom')
+@section('title', 'Register - Portal MagKom Sleman')
+@section('meta_description', 'Registrasi akun calon peserta magang / PKL Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')
-<div class="container" style="max-width: 480px; margin: 4rem auto;">
-    <div style="background: #ffffff; padding: 2.5rem; border-radius: 1rem; border: 1px solid var(--gray-200); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-        <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.5rem; text-align: center;">Registrasi Akun Baru</h2>
-        <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 2rem; text-align: center;">Khusus calon peserta magang / PKL Dinas Kominfo.</p>
+    <!-- Alert Notifikasi Error Validasi -->
+    @if($errors->any())
+        <div class="auth-alert-error" role="alert">
+            {{ $errors->first() }}
+        </div>
+    @endif
 
-        @if($errors->any())
-            <div style="background: #fee2e2; border-left: 4px solid #ef4444; padding: 0.75rem 1rem; border-radius: 0.375rem; margin-bottom: 1.5rem; color: #991b1b; font-size: 0.875rem;">
-                {{ $errors->first() }}
+    <!-- Step Badge Presisi Figma -->
+    <div class="step-badge">
+        <span>LANGKAH 01</span>
+        <span>&bull;</span>
+        <span>Kredensial Akun</span>
+    </div>
+
+    <!-- Header Form Register -->
+    <h1 class="auth-title">Register Akun MagKom</h1>
+    <p class="auth-subtitle">Daftarkan akun Anda untuk memulai proses seleksi magang di Dinas Kominfo.</p>
+
+    <!-- Form Registrasi Akun Baru -->
+    <form action="{{ route('register') }}" method="POST" novalidate>
+        @csrf
+
+        <!-- Field Username -->
+        <div class="form-group">
+            <label for="username" class="form-label sr-only">Username</label>
+            <div class="input-wrapper">
+                <span class="input-icon-left" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </span>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    value="{{ old('username', old('nama')) }}" 
+                    required 
+                    autofocus 
+                    class="form-input" 
+                    placeholder="username"
+                    autocomplete="username"
+                    aria-label="Username"
+                >
+            </div>
+        </div>
+
+        <!-- Field Alamat Email Aktif -->
+        <div class="form-group">
+            <label for="email" class="form-label sr-only">Alamat Email Aktif</label>
+            <div class="input-wrapper">
+                <span class="input-icon-left" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </span>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    value="{{ old('email') }}" 
+                    required 
+                    class="form-input" 
+                    placeholder="email"
+                    autocomplete="email"
+                    aria-label="Alamat Email Aktif"
+                >
+            </div>
+            <span class="form-hint">Gunakan email aktif untuk verifikasi berkas dan notifikasi seleksi.</span>
+        </div>
+
+        <!-- Field Nomor Telepon -->
+        <div class="form-group">
+            <label for="no_telp" class="form-label sr-only">Nomor Telepon</label>
+            <div class="input-wrapper">
+                <span class="input-icon-left" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                </span>
+                <input 
+                    type="tel" 
+                    id="no_telp" 
+                    name="no_telp" 
+                    value="{{ old('no_telp') }}" 
+                    required 
+                    class="form-input" 
+                    placeholder="no telp"
+                    autocomplete="tel"
+                    aria-label="Nomor Telepon"
+                >
+            </div>
+            <span class="form-hint">Nomor WhatsApp aktif untuk koordinasi dan informasi seleksi.</span>
+        </div>
+
+        <!-- Field Kata Sandi -->
+        <div class="form-group">
+            <label for="password" class="form-label sr-only">Kata Sandi / Password</label>
+            <div class="input-wrapper">
+                <span class="input-icon-left" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </span>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required 
+                    class="form-input" 
+                    placeholder="password"
+                    autocomplete="new-password"
+                    aria-label="Kata Sandi"
+                    style="padding-right: 2.75rem;"
+                >
+                <button type="button" class="toggle-password-btn" data-target="password" aria-label="Tampilkan atau sembunyikan kata sandi">
+                    <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                </button>
+            </div>
+            <span class="form-hint">Minimal 8 karakter kombinasi huruf dan angka.</span>
+        </div>
+
+        <!-- Checkbox Persetujuan Kebijakan Privasi -->
+        <div style="margin-bottom: 1.5rem; font-size: 0.8125rem;">
+            <label style="display: flex; align-items: flex-start; gap: 0.625rem; cursor: pointer; color: var(--neutral-600); line-height: 1.4;">
+                <input type="checkbox" name="setuju_privasi" id="setuju_privasi" required checked style="width: 1.1rem; height: 1.1rem; accent-color: var(--blue-600); cursor: pointer; margin-top: 0.125rem;">
+                <span>
+                    Saya menyetujui <a href="{{ route('kebijakan-privasi') }}" target="_blank" style="color: var(--blue-600); font-weight: 600; text-decoration: underline;">Kebijakan Privasi</a> Dinas Komunikasi dan Informatika Kabupaten Sleman.
+                </span>
+            </label>
+        </div>
+
+        <!-- Cloudflare Turnstile CAPTCHA jika Diaktifkan -->
+        @if(config('services.turnstile.enabled'))
+            <div style="margin-bottom: 1.25rem;">
+                <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}"></div>
+                <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
             </div>
         @endif
 
-        <form action="{{ route('register') }}" method="POST">
-            @csrf
+        <!-- Tombol Submit Register -->
+        <button type="submit" class="btn-primary" id="btn-submit-register">
+            Register
+        </button>
+    </form>
 
-            <div style="margin-bottom: 1.25rem;">
-                <label for="nama" style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Nama Lengkap</label>
-                <input type="text" id="nama" name="nama" value="{{ old('nama') }}" required autofocus style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--gray-300); border-radius: 0.5rem; font-size: 0.95rem;">
-            </div>
-
-            <div style="margin-bottom: 1.25rem;">
-                <label for="email" style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Alamat Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--gray-300); border-radius: 0.5rem; font-size: 0.95rem;">
-            </div>
-
-            <div style="margin-bottom: 1.25rem;">
-                <label for="password" style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Kata Sandi (Min. 8 karakter)</label>
-                <input type="password" id="password" name="password" required style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--gray-300); border-radius: 0.5rem; font-size: 0.95rem;">
-            </div>
-
-            <div style="margin-bottom: 1.25rem;">
-                <label for="password_confirmation" style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--gray-700); margin-bottom: 0.5rem;">Konfirmasi Kata Sandi</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" required style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--gray-300); border-radius: 0.5rem; font-size: 0.95rem;">
-            </div>
-
-            @if(config('services.turnstile.enabled'))
-                <div style="margin-bottom: 1.25rem;">
-                    <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}"></div>
-                    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-                </div>
-            @endif
-
-            <button type="submit" style="width: 100%; background: #2563eb; color: #ffffff; padding: 0.75rem; border: none; border-radius: 0.5rem; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s;">
-                Daftar Akun
-            </button>
-        </form>
-
-        <div style="display: flex; align-items: center; margin: 1.5rem 0;">
-            <div style="flex-grow: 1; height: 1px; background: var(--gray-300);"></div>
-            <span style="padding: 0 0.75rem; font-size: 0.8rem; color: var(--gray-500); text-transform: uppercase;">atau</span>
-            <div style="flex-grow: 1; height: 1px; background: var(--gray-300);"></div>
-        </div>
-
-        <a href="{{ route('oauth.redirect', 'google') }}" style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; width: 100%; padding: 0.75rem; background: #ffffff; color: var(--gray-700); border: 1px solid var(--gray-300); border-radius: 0.5rem; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-            <svg width="18" height="18" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            Daftar dengan Google
-        </a>
-
-        <p style="text-align: center; font-size: 0.875rem; color: var(--gray-600); margin-top: 1.5rem;">
-            Sudah memiliki akun? <a href="{{ route('login') }}" style="color: #2563eb; text-decoration: none; font-weight: 600;">Masuk di sini</a>
-        </p>
+    <!-- Divider Pemisah -->
+    <div class="auth-divider">
+        <span>atau</span>
     </div>
-</div>
+
+    <!-- Tombol Daftar dengan Google OAuth -->
+    <a href="{{ route('oauth.redirect', 'google') }}" class="btn-google" id="btn-register-google" title="Daftar dengan Google" aria-label="Daftar dengan Google">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span>Register dengan Google</span>
+    </a>
+
+    <!-- Footer Tautan Switch ke Halaman Login -->
+    <p class="auth-footer-text">
+        Sudah punya akun? <a href="{{ route('login') }}">Login</a>
+    </p>
 @endsection
