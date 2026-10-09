@@ -8,7 +8,7 @@ Dokumen-dokumen di dalam direktori ini disusun secara komprehensif, modular, dan
 
 ## 🗺️ Peta Navigasi Dokumen
 
-Direktori ini membagi panduan ke dalam 5 dokumen spesialisasi utama:
+Direktori ini membagi panduan ke dalam 7 dokumen spesialisasi utama:
 
 | No | Dokumen | Fokus & Isi Utama | Audiens Utama |
 |:---:|---|---|---|
@@ -17,6 +17,8 @@ Direktori ini membagi panduan ke dalam 5 dokumen spesialisasi utama:
 | **03** | [`03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md`](file:///g:/MAGKOM/docs/03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md) | **Peta Jalan Eksekusi & Tahapan Gelombang (Anti-Ngaco)**<br>• Urutan kerja bertahap R1 (Gelombang 0 s/d Gelombang 4)<br>• Breakdown file, model, controller, service per gelombang<br>• Kriteria Definition of Ready (DoR) & Definition of Done (DoD)<br>• Rencana rilis lanjutan R2 (Should Have) & R3 (Could Have)<br>• Quality gates & integrasi slash command | Developer, Agen AI Pasangan Programming, Reviewer |
 | **04** | [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](file:///g:/MAGKOM/docs/04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) | **Kamus Data, Skema Database & Seeder**<br>• Diagram Relasi Entitas (ERD) Mermaid lengkap<br>• Kamus data detail untuk 20 tabel domain<br>• Definisi foreign key, indeks, dan CHECK constraints database<br>• Spesifikasi master seeder (jurusan, berkas, rubrik, pengaturan) | Database Administrator, Backend Developer |
 | **05** | [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](file:///g:/MAGKOM/docs/05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md) | **Spesifikasi Keamanan, RBAC & Audit Trail**<br>• Matriks perizinan RBAC lengkap 4 role<br>• Pola isolasi SuperAdmin Read-Only pada ranah pembimbing<br>• Implementasi `AuditedService` & 4 tipe audit (`auth`, `aksi`, `service`, `akses_data`)<br>• Hak akses database append-only (`GRANT SELECT, INSERT`)<br>• Keamanan berkas privat, temporary signed route (5 menit), dan HTTP security headers | Security Engineer, Tech Lead, Backend Developer |
+| **06** | [`06-ADDENDUM-KEAMANAN-DAN-QA.md`](file:///g:/MAGKOM/docs/06-ADDENDUM-KEAMANAN-DAN-QA.md) | **Addendum Keamanan dan Pengujian (QA) v1.0**<br>• Model ancaman konkret (THR-01 s/d THR-16)<br>• Spesifikasi kebutuhan keamanan (SEC-01 s/d SEC-74, P0/P1/P2)<br>• Matriks hak akses detail HTTP & state akun<br>• Katalog uji per AC (edge case negatif & konkurensi)<br>• Alarm keamanan audit log & runbook insiden siber | Security Engineer, QA Tester, DevOps, Developer |
+| **07** | [`07-DESIGN-SYSTEM-MAGKOM.md`](file:///g:/MAGKOM/docs/07-DESIGN-SYSTEM-MAGKOM.md) | **Design System MagKom (DS-MagKom) v1.0**<br>• Fondasi token: 30 warna `MagKom/Warna`, tipografi Open Sans & JetBrains Mono<br>• Penyelarasan kontras WCAG 2.1 AA (K-1 s/d K-5)<br>• Spesifikasi komponen: Tombol, form, badge status 5 varian, alert, modal konfirmasi, tabel, timeline<br>• Pemetaan status lengkap PRD (enum ke UI label, varian, dan ikon Lucide)<br>• Aturan wajib tampilan (AC-DS-1 s/d AC-DS-11) & panduan Tailwind/Blade | Frontend Developer, UI/UX Designer, Product Owner |
 
 ---
 
