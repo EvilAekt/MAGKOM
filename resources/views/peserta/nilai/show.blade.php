@@ -1,179 +1,209 @@
-@extends('layouts.dashboard')
+@extends('layouts.peserta')
 
-@section('title', 'Lembar Nilai Magang - Peserta MagKom')
-@section('page_title', 'Evaluasi Nilai Akhir Magang')
-@section('page_description', 'Lembar hasil penilaian kompetensi magang resmi dari Dinas Kominfo Kabupaten Sleman.')
+@section('title', 'Lembar Evaluasi Nilai Magang')
+@section('page_title', 'Lembar Nilai Magang')
 
-@section('breadcrumbs')
-    <span class="breadcrumb-current">Nilai Akhir Magang</span>
-@endsection
+@push('styles')
+<style>
+    .nilai-summary-card {
+        background: linear-gradient(135deg, var(--blue-700) 0%, var(--blue-600) 100%);
+        border-radius: var(--radius-md);
+        padding: 32px;
+        color: #ffffff;
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    .nilai-score-box {
+        display: flex;
+        align-items: baseline;
+        gap: 16px;
+    }
+    .score-number {
+        font-size: 54px;
+        font-weight: 800;
+        line-height: 1;
+    }
+    .grade-badge {
+        font-size: 24px;
+        font-weight: 800;
+        padding: 4px 18px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-radius: var(--radius-default);
+    }
+    .table-container {
+        overflow-x: auto;
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+    .table th {
+        background: var(--neutral-200);
+        padding: 14px 16px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--neutral-800);
+        border-bottom: 1px solid var(--neutral-400);
+    }
+    .table td {
+        padding: 16px;
+        font-size: 14px;
+        border-bottom: 1px solid var(--neutral-200);
+        color: var(--neutral-800);
+    }
+    .table tr.total-row td {
+        background: var(--neutral-100);
+        font-weight: 700;
+        font-size: 15px;
+    }
+</style>
+@endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 960px; margin-inline: auto;">
-    <!-- Top Action Card -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-        <div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--green-500);"></span>
-                <span style="font-weight: 700; color: var(--green-800); font-size: 0.875rem;">Status Nilai: Resmi & Telah Difinalisasi</span>
+<div style="max-width: 960px; margin: 0 auto;">
+
+    @if(!$penempatan || !$isFinal)
+        {{-- State Belum Ada Penilaian Final --}}
+        <div class="card" style="text-align: center; padding: 48px 24px;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--amber-100); color: var(--amber-700); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
             </div>
-            <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.25rem 0 0 0;">
-                Penilaian telah disahkan oleh pembimbing lapangan Anda. Anda dapat mengunduh dokumen resmi bertandatangan digital.
+            <h3 style="font-size: 18px; font-weight: 700; color: var(--neutral-800); margin-bottom: 8px;">
+                Lembar Nilai Belum Tersedia
+            </h3>
+            <p style="font-size: 14px; color: var(--neutral-600); max-width: 480px; margin: 0 auto 20px auto; line-height: 1.5;">
+                Evaluasi nilai resmi akan dirilis setelah periode penempatan magang Anda selesai dan pembimbing lapangan telah melakukan finalisasi penginputan 5 rubrik penilaian magang (AC-10-2).
             </p>
+            @if($penempatan)
+                <div style="display: inline-block; padding: 10px 18px; background: var(--neutral-100); border-radius: var(--radius-default); font-size: 13px; color: var(--neutral-700);">
+                    Status Penempatan: <strong>{{ ucfirst($penempatan->status->value ?? (string)$penempatan->status) }}</strong>
+                    | Pembimbing: <strong>{{ $penempatan->pembimbing?->name ?? 'Belum ditentukan' }}</strong>
+                </div>
+            @endif
         </div>
-
-        <a href="{{ route('peserta.nilai.unduh') }}" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 42px; padding: 0 1.25rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; text-decoration: none; border-radius: 8px; box-shadow: 0 2px 4px rgba(2, 132, 199, 0.2); transition: background 0.15s;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Unduh Lembar Nilai PDF
-        </a>
-    </div>
-
-    <!-- Official Certificate Card -->
-    <div style="background: var(--neutral-0); border: 2px solid var(--neutral-300); border-radius: 16px; padding: 2.5rem; box-shadow: var(--shadow-card); position: relative; overflow: hidden;">
-        <!-- Watermark / Header line -->
-        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--neutral-800); padding-bottom: 1.5rem; margin-bottom: 2rem;">
-            <div style="display: flex; align-items: center; gap: 1.25rem;">
-                <div style="width: 56px; height: 56px; background: var(--blue-600); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 800; font-size: 1.5rem;">
-                    MK
-                </div>
-                <div>
-                    <h2 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0; text-transform: uppercase; letter-spacing: 0.05em;">
-                        DINAS KOMUNIKASI DAN INFORMATIKA
-                    </h2>
-                    <div style="font-size: 0.875rem; font-weight: 600; color: var(--neutral-700);">
-                        KABUPATEN SLEMAN
-                    </div>
-                    <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem;">
-                        Sistem Informasi Pengelolaan Magang Kominfo (MagKom)
-                    </div>
-                </div>
-            </div>
-            <div style="text-align: right;">
-                <div style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500); text-transform: uppercase;">Nomor Dokumen</div>
-                <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-800); font-family: monospace;">
-                    MGK-{{ date('Y') }}-{{ str_pad($penempatan->id, 4, '0', STR_PAD_LEFT) }}
-                </div>
-            </div>
-        </div>
-
-        <!-- Grade Summary Banner -->
-        <div style="background: linear-gradient(135deg, var(--blue-50) 0%, var(--neutral-100) 100%); border: 1px solid var(--blue-200); border-radius: 12px; padding: 1.75rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem;">
+    @else
+        {{-- State Nilai Sudah Final --}}
+        <div class="nilai-summary-card">
             <div>
-                <div style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-800); text-transform: uppercase; letter-spacing: 0.05em;">
-                    HASIL PENILAIAN AKHIR
-                </div>
-                <h1 style="font-size: 2.25rem; font-weight: 900; color: var(--neutral-900); margin: 0.25rem 0;">
-                    {{ number_format((float)$penilaian->nilai_akhir, 2) }}
-                </h1>
-                <div style="display: flex; gap: 0.5rem; align-items: center;">
-                    <span style="font-size: 1rem; font-weight: 800; color: var(--blue-700);">
-                        Predikat {{ $penilaian->predikat->value ?? $penilaian->predikat }}
-                    </span>
-                    <span style="color: var(--neutral-500);">•</span>
-                    <span style="font-size: 0.875rem; font-weight: 600; color: var(--neutral-700);">
-                        @php
-                            $predikatLabel = match($penilaian->predikat->value ?? (string)$penilaian->predikat) {
-                                'A' => 'Sangat Memuaskan',
-                                'B' => 'Memuaskan / Baik',
-                                'C' => 'Cukup',
-                                'D' => 'Kurang',
-                                default => 'Sangat Kurang'
-                            };
-                        @endphp
-                        {{ $predikatLabel }}
-                    </span>
-                </div>
+                <span style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9;">
+                    Evaluasi Resmi Akhir Magang Kominfo
+                </span>
+                <h2 style="font-size: 24px; font-weight: 800; margin-top: 4px;">
+                    Hasil Penilaian Akhir
+                </h2>
+                <p style="font-size: 14px; opacity: 0.85; margin-top: 4px;">
+                    Bidang: <strong>{{ $penempatan->bidang?->nama_bidang }}</strong> | Evaluator: <strong>{{ $penempatan->pembimbing?->name }}</strong>
+                </p>
             </div>
 
-            <!-- Mentee Metadata Box -->
-            <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.875rem; min-width: 260px; border-left: 2px solid var(--blue-200); padding-left: 1.25rem;">
-                <div>
-                    <span style="color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase;">Peserta Magang</span>
-                    <div style="font-weight: 700; color: var(--neutral-900);">{{ $penempatan->peserta->nama ?? '-' }}</div>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div class="nilai-score-box">
+                    <div>
+                        <div style="font-size: 11px; text-transform: uppercase; opacity: 0.8;">Nilai Akhir</div>
+                        <div class="score-number">{{ number_format($penilaian->nilai_akhir, 2) }}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; text-transform: uppercase; opacity: 0.8;">Predikat</div>
+                        <div class="grade-badge">{{ $penilaian->predikat }}</div>
+                    </div>
                 </div>
-                <div>
-                    <span style="color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase;">Bidang Penempatan</span>
-                    <div style="font-weight: 600; color: var(--neutral-800);">{{ $penempatan->bidang->nama_bidang ?? '-' }}</div>
-                </div>
-                <div>
-                    <span style="color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase;">Pembimbing Lapangan</span>
-                    <div style="font-weight: 600; color: var(--neutral-800);">{{ $penempatan->pembimbing->nama ?? '-' }}</div>
-                </div>
+
+                <a href="{{ route('peserta.nilai.unduh') }}" class="btn" style="background: #ffffff; color: var(--blue-700); height: 44px; padding: 0 20px; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Unduh PDF Resmi
+                </a>
             </div>
         </div>
 
-        <!-- Detailed Rubrics Table -->
-        <h3 style="font-size: 1rem; font-weight: 800; color: var(--neutral-900); margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 0.05em;">
-            Rincian Nilai Berdasarkan Rubrik Kompetensi
-        </h3>
+        {{-- Tabel Rincian 5 Rubrik Penilaian --}}
+        <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 24px;">
+            <div style="padding: 20px 24px; border-bottom: 1px solid var(--neutral-200);">
+                <h3 class="card-title">Rincian 5 Rubrik Penilaian</h3>
+                <p class="card-subtitle">Snapshot bobot dan skor masing-masing kompetensi evaluasi peserta.</p>
+            </div>
 
-        <div style="overflow-x: auto; border: 1px solid var(--neutral-300); border-radius: 8px; margin-bottom: 2rem;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
-                <thead>
-                    <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-300); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-700);">
-                        <th style="padding: 0.875rem 1rem; text-align: left; width: 40px;">No</th>
-                        <th style="padding: 0.875rem 1rem; text-align: left;">Kriteria Rubrik</th>
-                        <th style="padding: 0.875rem 1rem; text-align: center; width: 90px;">Bobot</th>
-                        <th style="padding: 0.875rem 1rem; text-align: right; width: 110px;">Skor</th>
-                        <th style="padding: 0.875rem 1.25rem; text-align: right; width: 140px;">Kontribusi Nilai</th>
-                    </tr>
-                </thead>
-                <tbody style="divide-y: 1px solid var(--neutral-300);">
-                    @foreach($penilaian->details as $index => $detail)
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">No</th>
+                            <th>Kriteria Evaluasi</th>
+                            <th style="width: 120px; text-align: center;">Bobot (%)</th>
+                            <th style="width: 120px; text-align: center;">Skor (0-100)</th>
+                            <th style="width: 140px; text-align: right;">Nilai Terbobot</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @php
-                            $kontribusi = ($detail->skor * $detail->rubrik->bobot) / 100;
+                            $totalBobot = 0;
+                            $totalTertimbang = 0;
                         @endphp
-                        <tr style="border-bottom: 1px solid var(--neutral-300);">
-                            <td style="padding: 1rem; font-weight: 600; color: var(--neutral-600);">
-                                {{ $index + 1 }}
-                            </td>
-                            <td style="padding: 1rem;">
-                                <div style="font-weight: 700; color: var(--neutral-900);">
-                                    {{ $detail->rubrik->nama_rubrik ?? '-' }}
-                                </div>
-                                <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem;">
-                                    {{ $detail->rubrik->deskripsi ?? '' }}
-                                </div>
-                            </td>
-                            <td style="padding: 1rem; text-align: center; font-weight: 600; color: var(--neutral-700);">
-                                {{ $detail->rubrik->bobot ?? 0 }}%
-                            </td>
-                            <td style="padding: 1rem; text-align: right; font-weight: 700; color: var(--neutral-900);">
-                                {{ number_format((float)$detail->skor, 1) }}
-                            </td>
-                            <td style="padding: 1rem 1.25rem; text-align: right; font-weight: 800; color: var(--blue-700);">
-                                {{ number_format((float)$kontribusi, 2) }}
+                        @forelse($penilaian->details as $index => $detail)
+                            @php
+                                $totalBobot += $detail->bobot;
+                                $terbobot = ($detail->skor * $detail->bobot) / 100;
+                                $totalTertimbang += $terbobot;
+                            @endphp
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>
+                                    <strong>{{ $detail->rubrik?->nama_kriteria ?? 'Kriteria Penilaian ' . ($index + 1) }}</strong>
+                                    @if($detail->rubrik?->deskripsi)
+                                        <div style="font-size: 12px; color: var(--neutral-600); margin-top: 2px;">
+                                            {{ $detail->rubrik->deskripsi }}
+                                        </div>
+                                    @endif
+                                </td>
+                                <td style="text-align: center;">{{ $detail->bobot }}%</td>
+                                <td style="text-align: center; font-weight: 700;">{{ number_format($detail->skor, 1) }}</td>
+                                <td style="text-align: right; font-weight: 600; color: var(--blue-700);">
+                                    {{ number_format($terbobot, 2) }}
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: var(--neutral-600);">
+                                    Tidak ada rincian rubrik penilaian yang tersimpan.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="2" style="text-align: right;">Total Evaluasi Kumulatif:</td>
+                            <td style="text-align: center;">{{ $totalBobot }}%</td>
+                            <td style="text-align: center;">-</td>
+                            <td style="text-align: right; color: var(--blue-700);">
+                                {{ number_format($penilaian->nilai_akhir, 2) }}
                             </td>
                         </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr style="background: var(--neutral-50); border-top: 2px solid var(--neutral-400);">
-                        <td colspan="4" style="padding: 1rem; font-weight: 800; font-size: 0.9375rem; color: var(--neutral-900); text-align: right;">
-                            Total Nilai Akhir (Skala 100):
-                        </td>
-                        <td style="padding: 1rem 1.25rem; text-align: right; font-weight: 900; font-size: 1.125rem; color: var(--blue-800);">
-                            {{ number_format((float)$penilaian->nilai_akhir, 2) }}
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+                    </tfoot>
+                </table>
+            </div>
         </div>
 
+        {{-- Catatan Evaluasi Pembimbing --}}
         @if($penilaian->catatan)
-            <div style="background: var(--neutral-50); border: 1px solid var(--neutral-300); border-radius: 8px; padding: 1.25rem; margin-bottom: 2rem;">
-                <h4 style="font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; color: var(--neutral-700); margin: 0 0 0.5rem 0;">
-                    Catatan & Ulasan Evaluasi Pembimbing:
+            <div class="card">
+                <h4 style="font-size: 14px; font-weight: 700; color: var(--neutral-700); text-transform: uppercase; margin-bottom: 8px;">
+                    Catatan & Ulasan Pembimbing Lapangan:
                 </h4>
-                <div style="font-size: 0.875rem; color: var(--neutral-900); line-height: 1.6; font-style: italic;">
-                    "{{ $penilaian->catatan }}"
+                <div style="font-size: 14px; color: var(--neutral-800); line-height: 1.6; white-space: pre-line; padding: 14px; background: var(--neutral-100); border-radius: var(--radius-default); border-left: 3px solid var(--blue-600);">
+                    {{ $penilaian->catatan }}
                 </div>
             </div>
         @endif
-    </div>
+    @endif
+
 </div>
 @endsection

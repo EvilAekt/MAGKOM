@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             SuperAdminSeeder::class,
             PeriodeKuotaSeeder::class,
             JenisDokumenSeeder::class,
+            UserSeeder::class,
             TestingUserSeeder::class,
         ]);
     }

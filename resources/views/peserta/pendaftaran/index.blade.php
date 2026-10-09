@@ -1,279 +1,243 @@
-@extends('layouts.dashboard')
+@extends('layouts.peserta')
 
-@section('title', 'Pendaftaran Magang - Peserta MagKom Sleman')
-@section('page_title', 'Pendaftaran & Riwayat Magang')
-@section('page_description', 'Kelola pengajuan pendaftaran, lengkapi berkas persyaratan, dan pantau status seleksi magang Anda.')
+@section('title', 'Pendaftaran Magang')
+@section('page_title', 'Pendaftaran Magang')
 
-@section('breadcrumbs')
-    <span class="breadcrumb-current">Pendaftaran Magang</span>
-@endsection
+@push('styles')
+<style>
+    .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .table-container {
+        overflow-x: auto;
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+    .table th {
+        background: var(--neutral-200);
+        padding: 12px 16px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--neutral-800);
+        border-bottom: 1px solid var(--neutral-400);
+    }
+    .table td {
+        padding: 16px;
+        font-size: 14px;
+        border-bottom: 1px solid var(--neutral-200);
+        color: var(--neutral-800);
+        vertical-align: middle;
+    }
+    .table tr:hover td {
+        background: var(--neutral-100);
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: rgba(29, 37, 48, 0.6);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    .modal.open {
+        display: flex;
+    }
+    .modal-box {
+        background: #ffffff;
+        border-radius: var(--radius-lg);
+        width: 100%;
+        max-width: 580px;
+        padding: 28px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--neutral-200);
+    }
+    .modal-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--neutral-800);
+    }
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: var(--neutral-500);
+    }
+    .empty-state {
+        text-align: center;
+        padding: 48px 24px;
+    }
+    .empty-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 16px auto;
+        background: var(--blue-tint);
+        color: var(--blue-600);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .empty-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--neutral-800);
+        margin-bottom: 6px;
+    }
+    .empty-desc {
+        font-size: 14px;
+        color: var(--neutral-600);
+        max-width: 420px;
+        margin: 0 auto 20px auto;
+    }
+</style>
+@endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div>
+    {{-- Validasi Kelengkapan Profil (AC-03-1) --}}
+    @php
+        $profilLengkap = $profil && $profil->nim_nisn && $profil->institusi && $profil->jurusan_id && $profil->no_hp;
+    @endphp
 
-    <!-- 1. KARTU PENDAFTARAN AKTIF (Jika sudah ada pengajuan aktif) -->
-    @if($pendaftaranAktif)
-        <div style="background: var(--neutral-0); border: 2px solid var(--blue-600); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-                <div>
-                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.375rem;">
-                        <span style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-700); text-transform: uppercase; letter-spacing: 0.05em;">Pengajuan Aktif</span>
-                        @php
-                            $status = $pendaftaranAktif->status;
-                            $badgeClass = match($status->value) {
-                                'berkas_belum_lengkap' => ['bg' => 'var(--neutral-200)', 'color' => 'var(--neutral-800)'],
-                                'diajukan' => ['bg' => 'var(--amber-200)', 'color' => 'var(--amber-700)'],
-                                'perlu_perbaikan' => ['bg' => 'var(--amber-200)', 'color' => 'var(--amber-700)'],
-                                'waiting_list' => ['bg' => 'var(--blue-tint)', 'color' => 'var(--blue-700)'],
-                                'diterima' => ['bg' => 'var(--green-100)', 'color' => 'var(--green-700)'],
-                                default => ['bg' => 'var(--neutral-200)', 'color' => 'var(--neutral-800)'],
-                            };
-                        @endphp
-                        <span class="role-chip-badge" style="background: {{ $badgeClass['bg'] }}; color: {{ $badgeClass['color'] }}; font-weight: 700;">
-                            {{ $status->label() }}
-                        </span>
-                    </div>
-                    <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--neutral-800); margin: 0 0 0.25rem 0;">
-                        {{ $pendaftaranAktif->nomor_pendaftaran }}
-                    </h2>
-                    <p style="font-size: 0.875rem; color: var(--neutral-600); margin: 0;">
-                        Periode Mulai: <strong>{{ $pendaftaranAktif->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}</strong> &bull; 
-                        Jurusan: <strong>{{ $pendaftaranAktif->kuota?->jurusan?->nama_jurusan }}</strong> &bull; 
-                        Durasi: <strong>{{ $pendaftaranAktif->durasi_bulan }} Bulan</strong>
+    @if(!$profilLengkap)
+        <div class="card" style="border-left: 4px solid var(--amber-700); background: var(--amber-100);">
+            <div style="display: flex; align-items: flex-start; gap: 16px;">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--amber-700); flex-shrink: 0; margin-top: 2px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <div style="flex: 1;">
+                    <h3 style="font-size: 16px; font-weight: 700; color: var(--amber-700); margin-bottom: 4px;">
+                        Lengkapi Biodata Profil Terlebih Dahulu
+                    </h3>
+                    <p style="font-size: 14px; color: var(--neutral-700); margin-bottom: 16px;">
+                        Sesuai ketentuan, Anda harus melengkapi biodata profil (institusi sekolah/kampus, NISN/NIM, jurusan, dan kontak darurat) sebelum dapat membuat pengajuan magang baru.
                     </p>
+                    <a href="{{ route('peserta.profil.show') }}" class="btn btn-primary" style="height: 40px; padding: 0 16px;">
+                        Lengkapi Profil Sekarang →
+                    </a>
                 </div>
-
-                <a href="{{ route('peserta.pendaftaran.detail', $pendaftaranAktif) }}" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--blue-600); color: #FFFFFF; text-decoration: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; box-shadow: var(--shadow-subtle);">
-                    <span>Buka Detail & Kelola Berkas</span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                </a>
             </div>
-
-            @if($status->value === 'berkas_belum_lengkap')
-                <div style="background: var(--neutral-100); border-left: 4px solid var(--amber-500); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.8125rem; color: var(--neutral-700);">
-                    Pendaftaran Anda masih berstatus draf. Silakan unggah seluruh dokumen persyaratan wajib sebelum batas waktu penutupan pendaftaran.
-                </div>
-            @elseif($status->value === 'perlu_perbaikan')
-                <div style="background: var(--amber-100); border-left: 4px solid var(--amber-600); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.8125rem; color: var(--amber-800);">
-                    <strong>Catatan Tim Verifikator:</strong> {{ $pendaftaranAktif->catatan ?? 'Terdapat berkas yang perlu diperbaiki. Silakan periksa detail pengajuan.' }}
-                </div>
-            @elseif($status->value === 'waiting_list')
-                <div style="background: var(--blue-tint); border-left: 4px solid var(--blue-600); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.8125rem; color: var(--blue-700);">
-                    Pengajuan Anda berada di antrean <strong>Waiting List</strong> karena kuota reguler jurusan telah penuh.
-                </div>
-            @elseif($status->value === 'diterima')
-                <div style="background: var(--green-100); border-left: 4px solid var(--green-600); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.8125rem; color: var(--green-700);">
-                    Selamat! Anda telah <strong>Diterima</strong> magang di Dinas Kominfo Sleman. Silakan buka halaman detail untuk mengunduh Surat Keterangan Diterima Magang resmi.
-                </div>
-            @endif
         </div>
-
-    <!-- 2. KARTU PENDAFTARAN BARU (Jika belum ada pendaftaran aktif) -->
-    @else
-        @if(!$profil || !$profil->institusi || !$profil->nim_nisn)
-            <!-- Peringatan: Profil belum lengkap -->
-            <div style="background: var(--amber-100); border: 1px solid var(--amber-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                <div style="display: flex; align-items: center; gap: 0.875rem;">
-                    <div style="width: 40px; height: 40px; background: var(--amber-200); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--amber-800); flex-shrink: 0;">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                            <line x1="12" y1="9" x2="12" y2="13"></line>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 1rem; font-weight: 700; color: var(--amber-900); margin: 0 0 0.25rem 0;">Lengkapi Biodata Profil Terlebih Dahulu</h3>
-                        <p style="font-size: 0.8125rem; color: var(--amber-800); margin: 0;">
-                            Sebelum mengajukan pendaftaran magang, Anda wajib melengkapi data institusi, jurusan, dan NIM/NISN pada profil biodata.
-                        </p>
-                    </div>
-                </div>
-                <a href="{{ route('peserta.profil.show') }}" style="background: var(--blue-600); color: #FFFFFF; text-decoration: none; padding: 0.55rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; white-space: nowrap;">
-                    Lengkapi Profil Sekarang
-                </a>
-            </div>
-        @else
-            <!-- Form Pemilihan Periode & Kuota Baru -->
-            <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle);">
-                <div style="border-bottom: 1px solid var(--neutral-400); padding-bottom: 1rem; margin-bottom: 1.25rem;">
-                    <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Mulai Pendaftaran Magang Baru</h2>
-                    <p style="font-size: 0.875rem; color: var(--neutral-600); margin: 0;">
-                        Pilih periode magang dan jurusan yang sesuai dengan keahlian Anda untuk memulai pengajuan berkas.
-                    </p>
-                </div>
-
-                @if($bulanAktifList->isEmpty())
-                    <div style="text-align: center; padding: 2rem 1rem; color: var(--neutral-600);">
-                        <p style="margin: 0; font-size: 0.9375rem;">Saat ini belum ada periode magang yang membuka pendaftaran baru. Silakan pantau secara berkala.</p>
-                    </div>
-                @else
-                    <form method="POST" action="{{ route('peserta.pendaftaran.store') }}" style="display: flex; flex-direction: column; gap: 1.25rem;">
-                        @csrf
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
-                            <!-- Pilih Periode Bulan -->
-                            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
-                                <label for="bulan_magang_id" style="font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800);">
-                                    Periode Bulan Magang <span style="color: var(--red-600); font-weight: 700;">*</span>
-                                </label>
-                                <select id="bulan_magang_id" name="bulan_magang_id" required style="height: 44px; border: 1px solid var(--neutral-500); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-0);" onchange="updateKuotaOptions()">
-                                    <option value="">-- Pilih Periode Bulan --</option>
-                                    @foreach($bulanAktifList as $b)
-                                        <option value="{{ $b->id }}" {{ old('bulan_magang_id') == $b->id ? 'selected' : '' }}>
-                                            {{ $b->bulan_mulai?->translatedFormat('F Y') }} (Buka s/d {{ \Carbon\Carbon::parse($b->tgl_tutup)->translatedFormat('d M Y') }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <!-- Pilih Kuota Jurusan -->
-                            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
-                                <label for="kuota_id" style="font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800);">
-                                    Jurusan / Bidang Keahlian <span style="color: var(--red-600); font-weight: 700;">*</span>
-                                </label>
-                                <select id="kuota_id" name="kuota_id" required style="height: 44px; border: 1px solid var(--neutral-500); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-0);">
-                                    <option value="">-- Pilih Periode Terlebih Dahulu --</option>
-                                </select>
-                            </div>
-
-                            <!-- Pilih Durasi -->
-                            <div style="display: flex; flex-direction: column; gap: 0.375rem;">
-                                <label for="durasi_bulan" style="font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800);">
-                                    Rencana Durasi Magang <span style="color: var(--red-600); font-weight: 700;">*</span>
-                                </label>
-                                <select id="durasi_bulan" name="durasi_bulan" required style="height: 44px; border: 1px solid var(--neutral-500); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-0);">
-                                    <option value="1" {{ old('durasi_bulan') == 1 ? 'selected' : '' }}>1 Bulan</option>
-                                    <option value="2" {{ old('durasi_bulan') == 2 ? 'selected' : '' }}>2 Bulan</option>
-                                    <option value="3" {{ old('durasi_bulan', 3) == 3 ? 'selected' : '' }}>3 Bulan (Standar)</option>
-                                    <option value="4" {{ old('durasi_bulan') == 4 ? 'selected' : '' }}>4 Bulan</option>
-                                    <option value="5" {{ old('durasi_bulan') == 5 ? 'selected' : '' }}>5 Bulan</option>
-                                    <option value="6" {{ old('durasi_bulan') == 6 ? 'selected' : '' }}>6 Bulan</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div style="display: flex; justify-content: flex-end; margin-top: 0.5rem;">
-                            <button type="submit" style="height: 44px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s; display: inline-flex; align-items: center; gap: 0.5rem;">
-                                <span>Buat Draf & Unggah Berkas</span>
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                            </button>
-                        </div>
-                    </form>
-
-                    <script>
-                        const bulanData = @json($bulanAktifList);
-                        const oldKuotaId = "{{ old('kuota_id') }}";
-
-                        function updateKuotaOptions() {
-                            const bulanSelect = document.getElementById('bulan_magang_id');
-                            const kuotaSelect = document.getElementById('kuota_id');
-                            const selectedBulanId = bulanSelect.value;
-
-                            kuotaSelect.innerHTML = '<option value="">-- Pilih Jurusan / Kuota --</option>';
-
-                            if (!selectedBulanId) {
-                                kuotaSelect.innerHTML = '<option value="">-- Pilih Periode Terlebih Dahulu --</option>';
-                                return;
-                            }
-
-                            const bulan = bulanData.find(b => b.id == selectedBulanId);
-                            if (bulan && bulan.kuota) {
-                                bulan.kuota.forEach(k => {
-                                    const sisa = Math.max(0, k.jumlah - k.terisi);
-                                    const opt = document.createElement('option');
-                                    opt.value = k.id;
-                                    opt.text = `${k.jurusan ? k.jurusan.nama_jurusan : 'Umum'} (Sisa Kuota: ${sisa} kursi)`;
-                                    if (oldKuotaId && oldKuotaId == k.id) {
-                                        opt.selected = true;
-                                    }
-                                    kuotaSelect.appendChild(opt);
-                                });
-                            }
-                        }
-
-                        document.addEventListener('DOMContentLoaded', function() {
-                            if (document.getElementById('bulan_magang_id').value) {
-                                updateKuotaOptions();
-                            }
-                        });
-                    </script>
-                @endif
-            </div>
-        @endif
     @endif
 
-    <!-- 3. TABEL RIWAYAT PENDAFTARAN -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Riwayat Pengajuan Pendaftaran</h3>
-            <span style="font-size: 0.8125rem; color: var(--neutral-600);">Total: {{ $pendaftaranList->count() }} Pengajuan</span>
+    <div class="header-actions">
+        <div>
+            <h2 style="font-size: 20px; font-weight: 700; color: var(--neutral-800);">Riwayat Pendaftaran Magang</h2>
+            <p style="font-size: 13px; color: var(--neutral-600); margin-top: 2px;">
+                Daftar pengajuan magang yang telah Anda daftarkan di Dinas Kominfo Sleman.
+            </p>
         </div>
 
+        @if($profilLengkap)
+            <button type="button" class="btn btn-primary" onclick="openModal()">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Buat Pengajuan Baru
+            </button>
+        @else
+            <button type="button" class="btn btn-primary" disabled title="Lengkapi profil terlebih dahulu">
+                Buat Pengajuan Baru (Terkunci)
+            </button>
+        @endif
+    </div>
+
+    {{-- Tabel Riwayat Pendaftaran --}}
+    <div class="card" style="padding: 0; overflow: hidden;">
         @if($pendaftaranList->isEmpty())
-            <div style="padding: 3.5rem 1.5rem; text-align: center; color: var(--neutral-600);">
-                <div style="width: 56px; height: 56px; background: var(--blue-tint); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; color: var(--blue-700);">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                 </div>
-                <h4 style="font-size: 1.125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">Belum Ada Riwayat Magang</h4>
-                <p style="font-size: 0.875rem; max-width: 480px; margin: 0 auto 1.5rem auto;">
-                    Anda belum memiliki riwayat pendaftaran magang di Dinas Kominfo Sleman.
+                <h3 class="empty-title">Belum Ada Pengajuan Magang</h3>
+                <p class="empty-desc">
+                    Anda belum pernah mengajukan permohonan magang. Klik tombol "Buat Pengajuan Baru" di atas untuk memilih periode bulan dan kuota magang.
                 </p>
+                @if($profilLengkap)
+                    <button type="button" class="btn btn-primary" onclick="openModal()">
+                        Daftar Magang Sekarang
+                    </button>
+                @endif
             </div>
         @else
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+            <div class="table-container">
+                <table class="table">
                     <thead>
-                        <tr style="background: var(--neutral-200); border-bottom: 1px solid var(--neutral-400); height: 52px;">
-                            <th style="padding: 0.75rem 1rem; font-weight: 700; color: var(--neutral-800);">No. Pendaftaran</th>
-                            <th style="padding: 0.75rem 1rem; font-weight: 700; color: var(--neutral-800);">Periode Bulan</th>
-                            <th style="padding: 0.75rem 1rem; font-weight: 700; color: var(--neutral-800);">Jurusan</th>
-                            <th style="padding: 0.75rem 1rem; font-weight: 700; color: var(--neutral-800);">Durasi</th>
-                            <th style="padding: 0.75rem 1rem; font-weight: 700; color: var(--neutral-800);">Status</th>
-                            <th style="padding: 0.75rem 1rem; font-weight: 700; color: var(--neutral-800); text-align: right;">Detail</th>
+                        <tr>
+                            <th>No. Pendaftaran</th>
+                            <th>Periode Magang</th>
+                            <th>Jurusan & Durasi</th>
+                            <th>Status Pengajuan</th>
+                            <th>Tanggal Buat</th>
+                            <th style="text-align: right;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($pendaftaranList as $item)
-                            <tr style="border-bottom: 1px solid var(--neutral-400); height: 56px;">
-                                <td style="padding: 0.75rem 1rem; font-weight: 600; color: var(--blue-700);">
-                                    {{ $item->nomor_pendaftaran }}
+                            <tr>
+                                <td>
+                                    <strong style="color: var(--blue-700);">#REG-{{ str_pad((string)$item->id, 5, '0', STR_PAD_LEFT) }}</strong>
                                 </td>
-                                <td style="padding: 0.75rem 1rem; color: var(--neutral-800);">
-                                    {{ $item->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
+                                <td>
+                                    <strong>{{ $item->bulanMagang?->nama_bulan }} {{ $item->bulanMagang?->tahun }}</strong>
+                                    <div style="font-size: 12px; color: var(--neutral-600);">
+                                        Mulai: {{ $item->bulanMagang?->tgl_mulai ? \Carbon\Carbon::parse($item->bulanMagang->tgl_mulai)->translatedFormat('d M Y') : '-' }}
+                                    </div>
                                 </td>
-                                <td style="padding: 0.75rem 1rem; color: var(--neutral-700);">
-                                    {{ $item->kuota?->jurusan?->nama_jurusan }}
+                                <td>
+                                    <div>{{ $item->kuota?->jurusan?->nama_jurusan ?? '-' }}</div>
+                                    <div style="font-size: 12px; color: var(--neutral-600);">
+                                        Durasi: <strong>{{ $item->durasi_bulan }} Bulan</strong>
+                                    </div>
                                 </td>
-                                <td style="padding: 0.75rem 1rem; color: var(--neutral-700);">
-                                    {{ $item->durasi_bulan }} Bulan
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
+                                <td>
                                     @php
-                                        $s = $item->status;
-                                        $badgeStyle = match($s->value) {
-                                            'berkas_belum_lengkap' => ['bg' => 'var(--neutral-200)', 'color' => 'var(--neutral-800)'],
-                                            'diajukan' => ['bg' => 'var(--amber-200)', 'color' => 'var(--amber-700)'],
-                                            'perlu_perbaikan' => ['bg' => 'var(--amber-200)', 'color' => 'var(--amber-700)'],
-                                            'waiting_list' => ['bg' => 'var(--blue-tint)', 'color' => 'var(--blue-700)'],
-                                            'diterima' => ['bg' => 'var(--green-100)', 'color' => 'var(--green-700)'],
-                                            'ditolak' => ['bg' => 'var(--red-200)', 'color' => 'var(--red-700)'],
-                                            default => ['bg' => 'var(--neutral-200)', 'color' => 'var(--neutral-700)'],
-                                        };
+                                        $val = $item->status->value ?? (string)$item->status;
                                     @endphp
-                                    <span class="role-chip-badge" style="background: {{ $badgeStyle['bg'] }}; color: {{ $badgeStyle['color'] }}; font-weight: 600;">
-                                        {{ $s->label() }}
-                                    </span>
+                                    @if($val === 'berkas_belum_lengkap')
+                                        <span class="badge badge-warning">Berkas Belum Lengkap</span>
+                                    @elseif($val === 'diajukan')
+                                        <span class="badge badge-info">Diajukan (Verifikasi)</span>
+                                    @elseif($val === 'waiting_list')
+                                        <span class="badge badge-warning">Waiting List</span>
+                                    @elseif($val === 'perlu_perbaikan')
+                                        <span class="badge badge-danger">Perlu Perbaikan</span>
+                                    @elseif($val === 'diterima')
+                                        <span class="badge badge-success">Diterima</span>
+                                    @elseif($val === 'ditolak')
+                                        <span class="badge badge-danger">Ditolak</span>
+                                    @elseif($val === 'dibatalkan')
+                                        <span class="badge badge-neutral">Dibatalkan</span>
+                                    @else
+                                        <span class="badge badge-neutral">{{ $val }}</span>
+                                    @endif
                                 </td>
-                                <td style="padding: 0.75rem 1rem; text-align: right;">
-                                    <a href="{{ route('peserta.pendaftaran.detail', $item) }}" style="padding: 0.375rem 0.75rem; background: var(--blue-600); color: #FFFFFF; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.8125rem;">
-                                        Lihat Berkas
+                                <td style="font-size: 13px; color: var(--neutral-600);">
+                                    {{ $item->created_at->translatedFormat('d M Y, H:i') }}
+                                </td>
+                                <td style="text-align: right;">
+                                    <a href="{{ route('peserta.pendaftaran.detail', $item) }}" class="btn btn-secondary" style="height: 36px; padding: 0 14px; font-size: 13px;">
+                                        Lihat Detail & Berkas →
                                     </a>
                                 </td>
                             </tr>
@@ -283,6 +247,99 @@
             </div>
         @endif
     </div>
-
 </div>
+
+{{-- Modal Pengajuan Pendaftaran Magang Baru --}}
+@if($profilLengkap)
+<div class="modal" id="pendaftaranModal" onclick="if(event.target === this) closeModal()">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 class="modal-title">Form Pengajuan Magang Baru</h3>
+            <button type="button" class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+
+        <form action="{{ route('peserta.pendaftaran.store') }}" method="POST">
+            @csrf
+
+            <div style="display: flex; flex-direction: column; gap: 18px;">
+                {{-- Info Jurusan Profil --}}
+                <div style="padding: 12px 16px; background: var(--blue-tint); border-radius: var(--radius-default); border: 1px solid var(--blue-tint-line);">
+                    <div style="font-size: 12px; color: var(--blue-700); font-weight: 700; text-transform: uppercase;">Jurusan Terdaftar Anda:</div>
+                    <div style="font-size: 14px; font-weight: 700; color: var(--neutral-800); margin-top: 2px;">
+                        {{ $profil->jurusan?->nama_jurusan }} ({{ strtoupper($profil->jenjang?->value ?? $profil->jenjang) }})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="kuota_id" class="form-label">Pilih Periode Bulan Magang & Kuota <span class="req" style="color: var(--red-600);">*</span></label>
+                    <select id="kuota_id" name="kuota_id" class="form-control" required onchange="handleKuotaChange(this)">
+                        <option value="">-- Pilih Periode Bulan Magang --</option>
+                        @foreach($kuotaList as $kuota)
+                            @php
+                                $sisa = max(0, $kuota->jumlah - $kuota->terisi);
+                            @endphp
+                            <option value="{{ $kuota->id }}"
+                                    data-bulan-id="{{ $kuota->bulan_magang_id }}"
+                                    {{ old('kuota_id') == $kuota->id ? 'selected' : '' }}>
+                                {{ $kuota->bulanMagang?->nama_bulan }} {{ $kuota->bulanMagang?->tahun }}
+                                (Sisa Kuota: {{ $sisa > 0 ? $sisa . ' kursi' : 'Penuh (Waiting List)' }})
+                            </option>
+                        @endforeach
+                    </select>
+                    <span style="font-size: 12px; color: var(--neutral-600);">
+                        Hanya menampilkan periode bulan yang dibuka untuk jurusan Anda.
+                    </span>
+                </div>
+
+                {{-- Hidden input bulan_magang_id yang diisi otomatis via JS dari select kuota_id --}}
+                <input type="hidden" id="bulan_magang_id" name="bulan_magang_id" value="{{ old('bulan_magang_id') }}">
+
+                <div class="form-group">
+                    <label for="durasi_bulan" class="form-label">Rencana Durasi Magang <span class="req" style="color: var(--red-600);">*</span></label>
+                    <select id="durasi_bulan" name="durasi_bulan" class="form-control" required>
+                        <option value="1" {{ old('durasi_bulan') == 1 ? 'selected' : '' }}>1 Bulan</option>
+                        <option value="2" {{ old('durasi_bulan') == 2 ? 'selected' : '' }}>2 Bulan</option>
+                        <option value="3" {{ old('durasi_bulan', 3) == 3 ? 'selected' : '' }}>3 Bulan (Standar)</option>
+                        <option value="4" {{ old('durasi_bulan') == 4 ? 'selected' : '' }}>4 Bulan</option>
+                        <option value="5" {{ old('durasi_bulan') == 5 ? 'selected' : '' }}>5 Bulan</option>
+                        <option value="6" {{ old('durasi_bulan') == 6 ? 'selected' : '' }}>6 Bulan (Maksimal)</option>
+                    </select>
+                    <span style="font-size: 12px; color: var(--neutral-600);">
+                        Sesuai rekomendasi surat pengantar institusi pendidikan Anda.
+                    </span>
+                </div>
+            </div>
+
+            <div style="margin-top: 28px; display: flex; justify-content: flex-end; gap: 12px;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Batal</button>
+                <button type="submit" class="btn btn-primary" id="btnSubmitPendaftaran">
+                    Lanjut ke Pengunggahan Berkas →
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
+@push('scripts')
+<script>
+    function openModal() {
+        document.getElementById('pendaftaranModal').classList.add('open');
+    }
+    function closeModal() {
+        document.getElementById('pendaftaranModal').classList.remove('open');
+    }
+    function handleKuotaChange(select) {
+        const selectedOption = select.options[select.selectedIndex];
+        const bulanId = selectedOption.getAttribute('data-bulan-id');
+        document.getElementById('bulan_magang_id').value = bulanId || '';
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        const select = document.getElementById('kuota_id');
+        if (select && select.value) {
+            handleKuotaChange(select);
+        }
+    });
+</script>
+@endpush
 @endsection

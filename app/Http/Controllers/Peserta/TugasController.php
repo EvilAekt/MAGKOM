@@ -28,7 +28,7 @@ class TugasController extends Controller
     /**
      * Menampilkan daftar tugas untuk penempatan aktif peserta.
      */
-    public function index(Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
+    public function index(Request $request): mixed
     {
         $user = $request->user();
 
@@ -48,34 +48,37 @@ class TugasController extends Controller
 
         return view('peserta.tugas.index', [
             'tugasList' => $tugas,
+            'tugas' => $tugas,
         ]);
     }
 
     /**
      * Detail tugas yang diberikan.
      */
-    public function show(Request $request, Tugas $tugas): \Illuminate\View\View|\Illuminate\Http\JsonResponse
+    public function show(Request $request, Tugas $tugas): mixed
     {
         Gate::authorize('view', $tugas);
 
-        $tugasData = $tugas->load(['progresLogs', 'penempatan.pembimbing']);
+        $tugas->load(['progresLogs' => function ($q) {
+            $q->latest();
+        }, 'penempatan.pembimbing']);
 
         if ($request->expectsJson() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'data' => $tugasData,
+                'data' => $tugas,
             ]);
         }
 
         return view('peserta.tugas.show', [
-            'tugas' => $tugasData,
+            'tugas' => $tugas,
         ]);
     }
 
     /**
      * Mengunggah laporan progres pekerjaan tugas (AC-08-3).
      */
-    public function unggahProgres(ProgresLogRequest $request, Tugas $tugas): JsonResponse
+    public function unggahProgres(ProgresLogRequest $request, Tugas $tugas): mixed
     {
         Gate::authorize('submitProgres', $tugas);
 
@@ -102,7 +105,6 @@ class TugasController extends Controller
             tipe: TipeAuditEnum::Aksi,
             tabel: 'progres_log',
             idData: $progres->id,
-            nilaiLama: null,
             nilaiBaru: [
                 'tugas_id' => $tugas->id,
                 'tgl_lapor' => $progres->tgl_lapor->toDateString(),
@@ -110,6 +112,7 @@ class TugasController extends Controller
             detail: ['aksi' => 'unggah_progres_tugas']
         );
 
+<<<<<<< HEAD
         if (! $request->expectsJson() && ! $request->wantsJson()) {
             return back()->with('success', 'Laporan progres tugas berhasil dikirimkan.');
         }
@@ -119,5 +122,17 @@ class TugasController extends Controller
             'message' => 'Laporan progres tugas berhasil dikirimkan.',
             'data' => $progres,
         ], 201);
+=======
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Laporan progres tugas berhasil dikirimkan.',
+                'data' => $progres,
+            ], 201);
+        }
+
+        return redirect()->route('peserta.tugas.show', $tugas)
+            ->with('success', 'Laporan progres tugas berhasil diunggah.');
+>>>>>>> origin/main
     }
 }

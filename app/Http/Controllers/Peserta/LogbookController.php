@@ -25,9 +25,14 @@ class LogbookController extends Controller
     /**
      * Menampilkan daftar riwayat logbook harian peserta.
      */
-    public function index(Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
+    public function index(Request $request): mixed
     {
         $user = $request->user();
+
+        $penempatan = Penempatan::with(['pembimbing', 'bidang'])
+            ->where('peserta_id', $user->id)
+            ->where('status', StatusPenempatanEnum::Aktif)
+            ->first();
 
         $logbooks = Logbook::whereHas('penempatan', function ($q) use ($user) {
             $q->where('peserta_id', $user->id);
@@ -42,16 +47,11 @@ class LogbookController extends Controller
             ]);
         }
 
-        $penempatan = Penempatan::with(['bidang', 'pembimbing'])
-            ->where('peserta_id', $user->id)
-            ->where('status', StatusPenempatanEnum::Aktif)
-            ->first();
-
         $logbookMaksMundur = \App\Support\Pengaturan::int('logbook_maks_mundur_hari', 3);
 
         return view('peserta.logbook.index', [
-            'logbooks' => $logbooks,
-            'penempatan' => $penempatan,
+            'penempatan'        => $penempatan,
+            'logbooks'          => $logbooks,
             'logbookMaksMundur' => $logbookMaksMundur,
         ]);
     }
@@ -59,7 +59,7 @@ class LogbookController extends Controller
     /**
      * Mengisi catatan logbook kegiatan harian baru (AC-09).
      */
-    public function store(LogbookRequest $request): JsonResponse
+    public function store(LogbookRequest $request): mixed
     {
         $user = $request->user();
 
@@ -68,10 +68,14 @@ class LogbookController extends Controller
             ->first();
 
         if (! $penempatan) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Anda tidak memiliki status penempatan magang aktif.',
-            ], 422);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki status penempatan magang aktif.',
+                ], 422);
+            }
+            return redirect()->route('peserta.logbook.index')
+                ->with('error', 'Anda tidak memiliki status penempatan magang aktif.');
         }
 
         Gate::authorize('create', [Logbook::class, $penempatan]);
@@ -82,10 +86,14 @@ class LogbookController extends Controller
             ->exists();
 
         if ($sudahAda) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Catatan logbook kegiatan untuk tanggal tersebut sudah pernah dicatat sebelumnya.',
-            ], 422);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Catatan logbook kegiatan untuk tanggal tersebut sudah pernah dicatat sebelumnya.',
+                ], 422);
+            }
+            return redirect()->route('peserta.logbook.index')
+                ->with('error', 'Catatan logbook kegiatan untuk tanggal tersebut sudah pernah dicatat sebelumnya.');
         }
 
         $filePath = null;
@@ -114,17 +122,22 @@ class LogbookController extends Controller
             detail: ['aksi' => 'isi_logbook']
         );
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Catatan kegiatan harian logbook berhasil disimpan.',
-            'data' => $logbook,
-        ], 201);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Catatan kegiatan harian logbook berhasil disimpan.',
+                'data' => $logbook,
+            ], 201);
+        }
+
+        return redirect()->route('peserta.logbook.index')
+            ->with('success', 'Catatan logbook kegiatan harian berhasil disimpan.');
     }
 
     /**
      * Memperbarui catatan logbook yang telah dibuat.
      */
-    public function update(LogbookRequest $request, Logbook $logbook): JsonResponse
+    public function update(LogbookRequest $request, Logbook $logbook): mixed
     {
         Gate::authorize('update', $logbook);
 
@@ -151,11 +164,16 @@ class LogbookController extends Controller
             detail: ['aksi' => 'update_logbook']
         );
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Catatan logbook berhasil diperbarui.',
-            'data' => $logbook,
-        ]);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Catatan logbook berhasil diperbarui.',
+                'data' => $logbook,
+            ]);
+        }
+
+        return redirect()->route('peserta.logbook.index')
+            ->with('success', 'Catatan logbook berhasil diperbarui.');
     }
 
     /**

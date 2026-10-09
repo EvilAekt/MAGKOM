@@ -27,6 +27,8 @@ class PendaftaranController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user();
+        $profil = $user->profil;
+
         $pendaftaranList = Pendaftaran::with(['bulanMagang', 'kuota.jurusan', 'penempatan'])
             ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
@@ -42,7 +44,6 @@ class PendaftaranController extends Controller
             ], true);
         });
 
-        $profil = $user->profil;
         $kategoriJurusan = match ($profil?->jenjang) {
             \App\Enums\JenjangEnum::Smk => 'smk',
             \App\Enums\JenjangEnum::D3, \App\Enums\JenjangEnum::S1 => 'mahasiswa',
@@ -64,11 +65,23 @@ class PendaftaranController extends Controller
             return $this->bulanStatusService->status($bulan) === \App\Enums\StatusKetersediaanEnum::Tersedia;
         });
 
+        $kuotaList = collect();
+        if ($profil && $profil->jurusan_id) {
+            $kuotaList = \App\Models\Kuota::with(['bulanMagang', 'jurusan'])
+                ->where('jurusan_id', $profil->jurusan_id)
+                ->where('aktif', true)
+                ->whereHas('bulanMagang', function ($q) {
+                    $q->where('aktif', true);
+                })
+                ->get();
+        }
+
         return view('peserta.pendaftaran.index', [
-            'pendaftaranList' => $pendaftaranList,
+            'pendaftaranList'  => $pendaftaranList,
             'pendaftaranAktif' => $pendaftaranAktif,
-            'bulanAktifList' => $bulanAktifList,
-            'profil' => $profil,
+            'bulanAktifList'   => $bulanAktifList,
+            'profil'           => $profil,
+            'kuotaList'        => $kuotaList,
         ]);
     }
 

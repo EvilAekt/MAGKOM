@@ -25,7 +25,7 @@ class TugasController extends Controller
     /**
      * Daftar seluruh penugasan yang diberikan kepada peserta bimbingan.
      */
-    public function index(Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
+    public function index(Request $request): mixed
     {
         $user = $request->user();
 

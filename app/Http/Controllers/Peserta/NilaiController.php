@@ -19,30 +19,37 @@ class NilaiController extends Controller
      * Melihat lembar evaluasi nilai magang saya.
      * Hanya dapat diakses bila nilai telah berstatus 'final'.
      */
-    public function show(Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
+    public function show(Request $request): mixed
     {
         $user = $request->user();
 
         $penempatan = Penempatan::with(['penilaian.details.rubrik', 'pembimbing', 'bidang'])
             ->where('peserta_id', $user->id)
             ->latest()
-            ->firstOrFail();
+            ->first();
 
-        Gate::authorize('view', [Penilaian::class, $penempatan]);
+        $penilaian = $penempatan?->penilaian;
+        $isFinal = $penilaian && $penilaian->status === \App\Enums\StatusPenilaianEnum::Final;
 
         if ($request->expectsJson() || $request->wantsJson()) {
+            if (! $penempatan) {
+                abort(404, 'Penempatan magang tidak ditemukan.');
+            }
+            Gate::authorize('view', [Penilaian::class, $penempatan]);
+
             return response()->json([
                 'success' => true,
                 'data' => [
                     'penempatan' => $penempatan,
-                    'penilaian' => $penempatan->penilaian,
+                    'penilaian' => $penilaian,
                 ],
             ]);
         }
 
         return view('peserta.nilai.show', [
             'penempatan' => $penempatan,
-            'penilaian' => $penempatan->penilaian,
+            'penilaian'  => $penilaian,
+            'isFinal'    => $isFinal,
         ]);
     }
 
