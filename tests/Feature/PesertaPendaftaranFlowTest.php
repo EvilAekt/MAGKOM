@@ -85,8 +85,8 @@ class PesertaPendaftaranFlowTest extends TestCase
         $response = $this->actingAs($this->peserta)->get(route('peserta.pendaftaran.index'));
 
         $response->assertOk();
-        $response->assertSee('Pendaftaran & Riwayat Magang');
-        $response->assertSee('Mulai Pendaftaran Magang Baru');
+        $response->assertSee('Riwayat Pendaftaran Magang');
+        $response->assertSee('Buat Pengajuan Baru');
         $response->assertSee('November 2026');
         $response->assertSee('Teknik Komputer dan Jaringan');
     }
@@ -119,11 +119,10 @@ class PesertaPendaftaranFlowTest extends TestCase
         $response = $this->actingAs($this->peserta)->get(route('peserta.pendaftaran.detail', $pendaftaran));
 
         $response->assertOk();
-        $response->assertSee('Detail Berkas & Status Pendaftaran');
-        $response->assertSee('Tahapan Alur Pendaftaran');
-        $response->assertSee('Unggah Berkas');
-        $response->assertSee('Verifikasi Berkas');
-        $response->assertSee('Keputusan Akhir');
+        $response->assertSee('Detail & Berkas Pendaftaran');
+        $response->assertSee('1. Berkas Persyaratan');
+        $response->assertSee('2. Verifikasi Berkas');
+        $response->assertSee('3. Keputusan');
         $response->assertSee('Surat Permohonan PKL/Magang dari Kepala Sekolah');
         $response->assertSee('Curriculum Vitae (CV) & Portofolio Keahlian');
         $response->assertSee('Salinan Kartu Pelajar');
@@ -240,8 +239,8 @@ class PesertaPendaftaranFlowTest extends TestCase
         $response = $this->actingAs($this->peserta)->get(route('peserta.pendaftaran.detail', $pendaftaran));
 
         $response->assertOk();
-        $response->assertSee('Selamat! Pendaftaran Anda Diterima');
-        $response->assertSee('Unduh Surat Keterangan Diterima (PDF)');
+        $response->assertSee('Selamat! Permohonan Magang Anda Telah Disetujui');
+        $response->assertSee('Unduh Surat Diterima (PDF)');
         $response->assertSee(route('peserta.penempatan.surat-diterima', $penempatan));
 
         // Test unduh file PDF

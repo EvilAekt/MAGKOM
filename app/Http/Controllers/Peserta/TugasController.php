@@ -112,18 +112,7 @@ class TugasController extends Controller
             detail: ['aksi' => 'unggah_progres_tugas']
         );
 
-<<<<<<< HEAD
-        if (! $request->expectsJson() && ! $request->wantsJson()) {
-            return back()->with('success', 'Laporan progres tugas berhasil dikirimkan.');
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Laporan progres tugas berhasil dikirimkan.',
-            'data' => $progres,
-        ], 201);
-=======
-        if ($request->expectsJson()) {
+        if ($request->expectsJson() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Laporan progres tugas berhasil dikirimkan.',
@@ -133,6 +122,5 @@ class TugasController extends Controller
 
         return redirect()->route('peserta.tugas.show', $tugas)
             ->with('success', 'Laporan progres tugas berhasil diunggah.');
->>>>>>> origin/main
     }
 }

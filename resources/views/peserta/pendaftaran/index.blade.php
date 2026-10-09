@@ -199,9 +199,9 @@
                                     <strong style="color: var(--blue-700);">#REG-{{ str_pad((string)$item->id, 5, '0', STR_PAD_LEFT) }}</strong>
                                 </td>
                                 <td>
-                                    <strong>{{ $item->bulanMagang?->nama_bulan }} {{ $item->bulanMagang?->tahun }}</strong>
+                                    <strong>{{ $item->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}</strong>
                                     <div style="font-size: 12px; color: var(--neutral-600);">
-                                        Mulai: {{ $item->bulanMagang?->tgl_mulai ? \Carbon\Carbon::parse($item->bulanMagang->tgl_mulai)->translatedFormat('d M Y') : '-' }}
+                                        Mulai: {{ $item->bulanMagang?->bulan_mulai ? $item->bulanMagang->bulan_mulai->translatedFormat('d M Y') : '-' }}
                                     </div>
                                 </td>
                                 <td>
@@ -281,7 +281,7 @@
                             <option value="{{ $kuota->id }}"
                                     data-bulan-id="{{ $kuota->bulan_magang_id }}"
                                     {{ old('kuota_id') == $kuota->id ? 'selected' : '' }}>
-                                {{ $kuota->bulanMagang?->nama_bulan }} {{ $kuota->bulanMagang?->tahun }}
+                                {{ $kuota->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
                                 (Sisa Kuota: {{ $sisa > 0 ? $sisa . ' kursi' : 'Penuh (Waiting List)' }})
                             </option>
                         @endforeach
