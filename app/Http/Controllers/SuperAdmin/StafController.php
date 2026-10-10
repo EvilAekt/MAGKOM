@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Enums\RoleEnum;
+use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Bidang;
+use App\Models\Penempatan;
 use App\Models\User;
 use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
@@ -28,6 +30,9 @@ class StafController extends Controller
     public function index(Request $request): View
     {
         $query = User::with('bidang')
+            ->withCount(['penempatanBimbingan as mentee_aktif_count' => function ($q) {
+                $q->where('status', StatusPenempatanEnum::Aktif);
+            }])
             ->whereIn('role', [RoleEnum::Admin->value, RoleEnum::Pembimbing->value])
             ->orderBy('nama', 'asc');
 
@@ -48,10 +53,12 @@ class StafController extends Controller
         }
 
         $stafList = $query->paginate(15);
+        $maksPeserta = \App\Support\Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
 
         return view('superadmin.staf.index', [
             'stafList' => $stafList,
             'bidangList' => Bidang::aktif()->get(),
+            'maksPeserta' => $maksPeserta,
         ]);
     }
 
@@ -104,6 +111,56 @@ class StafController extends Controller
     }
 
     /**
+     * Memperbarui data profil staf oleh SuperAdmin (AC-11-1).
+     */
+    public function update(User $staf, Request $request): RedirectResponse
+    {
+        if ($staf->isSuperAdmin()) {
+            return back()->with('error', 'Akun SuperAdmin tidak dapat diubah melalui menu ini.');
+        }
+
+        $validated = $request->validate([
+            'nama' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($staf->id)],
+            'role' => ['required', Rule::in([RoleEnum::Admin->value, RoleEnum::Pembimbing->value])],
+            'bidang_id' => ['nullable', 'exists:bidang,id'],
+        ]);
+
+        $nilaiLama = [
+            'nama' => $staf->nama,
+            'email' => $staf->email,
+            'role' => $staf->role->value,
+            'bidang_id' => $staf->bidang_id,
+        ];
+
+        $staf->nama = $validated['nama'];
+        $staf->email = $validated['email'];
+        $staf->role = RoleEnum::from($validated['role']);
+        $staf->bidang_id = ! empty($validated['bidang_id']) ? (int) $validated['bidang_id'] : null;
+        $staf->save();
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'users',
+            idData: $staf->id,
+            nilaiLama: $nilaiLama,
+            nilaiBaru: [
+                'nama' => $staf->nama,
+                'email' => $staf->email,
+                'role' => $staf->role->value,
+                'bidang_id' => $staf->bidang_id,
+            ],
+            detail: [
+                'aksi' => 'Memperbarui data profil staf (' . $staf->role->label() . ')',
+                'superadmin_id' => $request->user()->id,
+            ]
+        );
+
+        return redirect()->route('superadmin.staf.index')
+            ->with('success', "Data profil staf {$staf->nama} berhasil diperbarui.");
+    }
+
+    /**
      * Mereset kata sandi staf oleh SuperAdmin (AC-11-4).
      */
     public function resetPassword(User $staf, Request $request): RedirectResponse
@@ -153,6 +210,26 @@ class StafController extends Controller
 
         $statusLama = $staf->status_aktif;
         $statusBaru = ! $statusLama;
+
+        // Penegakan Aturan Bisnis BR-12 & AC-11-2 jika hendak menonaktifkan staf pembimbing
+        if (! $statusBaru && $staf->role === RoleEnum::Pembimbing) {
+            $hasActiveMentees = Penempatan::where('pembimbing_id', $staf->id)
+                ->where('status', StatusPenempatanEnum::Aktif)
+                ->exists();
+
+            if ($hasActiveMentees) {
+                return back()->with('error', 'Penonaktifan ditolak (BR-12): Pembimbing masih memiliki penempatan peserta aktif. Pindahkan penempatan terlebih dahulu.');
+            }
+
+            $activePembimbingCount = User::where('role', RoleEnum::Pembimbing)
+                ->where('status_aktif', true)
+                ->count();
+
+            if ($activePembimbingCount <= 1) {
+                return back()->with('error', 'Penonaktifan ditolak (BR-12): Tidak dapat menonaktifkan satu-satunya pembimbing aktif dalam sistem.');
+            }
+        }
+
         $staf->update(['status_aktif' => $statusBaru]);
 
         $this->auditService->catat(

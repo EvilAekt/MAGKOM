@@ -33,12 +33,24 @@ class BerkasController extends Controller
         $jenisDokumen = JenisDokumen::findOrFail($request->integer('jenis_dokumen_id'));
         $file = $request->file('file');
 
+        $dokumenLama = Dokumen::where('pendaftaran_id', $pendaftaran->id)
+            ->where('jenis_dokumen_id', $jenisDokumen->id)
+            ->first();
+
+        $nilaiLama = $dokumenLama ? [
+            'nama_asli' => $dokumenLama->nama_asli,
+            'hash' => $dokumenLama->hash,
+            'ukuran' => $dokumenLama->ukuran,
+            'mime' => $dokumenLama->mime,
+        ] : null;
+
         $dokumen = $this->documentService->simpan($pendaftaran, $jenisDokumen, $file);
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
             tabel: 'dokumen',
             idData: $dokumen->id,
+            nilaiLama: $nilaiLama,
             nilaiBaru: [
                 'pendaftaran_id' => $pendaftaran->id,
                 'jenis_dokumen_id' => $jenisDokumen->id,
@@ -47,7 +59,7 @@ class BerkasController extends Controller
                 'mime' => $dokumen->mime,
                 'hash' => $dokumen->hash,
             ],
-            detail: ['aksi' => 'Mengunggah berkas persyaratan magang ke private disk']
+            detail: ['aksi' => $dokumenLama ? 'Mengganti berkas persyaratan magang (replace)' : 'Mengunggah berkas persyaratan magang ke private disk']
         );
 
         return back()->with('success', "Berkas {$jenisDokumen->nama} berhasil diunggah.");
@@ -61,5 +73,15 @@ class BerkasController extends Controller
         $this->authorize('view', $dokumen);
 
         return $this->documentService->unduh($dokumen);
+    }
+
+    /**
+     * Menyajikan pratinjau inline berkas fisik privat dengan verifikasi otorisasi dan signed URL (AC-03-9).
+     */
+    public function pratinjau(Request $request, Dokumen $dokumen): \Symfony\Component\HttpFoundation\Response
+    {
+        $this->authorize('view', $dokumen);
+
+        return $this->documentService->pratinjau($dokumen);
     }
 }

@@ -35,7 +35,8 @@ class KuotaRequest extends FormRequest
     }
 
     /**
-     * Validasi kustom tambahan untuk mencegah penurunan kuota di bawah jumlah terisi (AC-05-3).
+     * Validasi kustom tambahan untuk mencegah penurunan kuota di bawah jumlah terisi (AC-05-3)
+     * dan batas maksimum total kuota umum bulanan (BR-01, AC-05-2).
      */
     public function withValidator(Validator $validator): void
     {
@@ -49,6 +50,23 @@ class KuotaRequest extends FormRequest
                     'jumlah',
                     "Jumlah kuota ({$jumlahBaru}) tidak boleh lebih kecil dari jumlah peserta yang telah diterima ({$kuota->terisi})."
                 );
+            }
+
+            // Validasi BR-01 & AC-05-2: Total kuota seluruh jurusan dalam satu bulan <= kuota_umum_maks_per_bulan
+            $bulanMagangId = (int) $this->input('bulan_magang_id', $kuota?->bulan_magang_id ?? 0);
+            if ($bulanMagangId > 0) {
+                $maksPerBulan = \App\Support\Pengaturan::int('kuota_umum_maks_per_bulan', 12);
+                $kuotaLainSum = Kuota::where('bulan_magang_id', $bulanMagangId)
+                    ->when($kuota, fn ($q) => $q->where('id', '!=', $kuota->id))
+                    ->sum('jumlah');
+
+                $totalSetelahInput = $kuotaLainSum + $jumlahBaru;
+                if ($totalSetelahInput > $maksPerBulan) {
+                    $validator->errors()->add(
+                        'jumlah',
+                        "Total alokasi kuota umum untuk bulan ini ({$totalSetelahInput}) melebihi batas maksimum yang ditetapkan ({$maksPerBulan} peserta) sesuai aturan instansi (BR-01, AC-05-2)."
+                    );
+                }
             }
         });
     }

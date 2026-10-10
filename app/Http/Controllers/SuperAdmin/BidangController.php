@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\SuperAdmin;
 
+use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Bidang;
+use App\Models\Penempatan;
+use App\Models\User;
 use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -97,6 +100,22 @@ class BidangController extends Controller
     public function toggleAktif(Bidang $bidang, Request $request): RedirectResponse
     {
         $targetAktif = ! $bidang->aktif;
+
+        // Penegakan Aturan Bisnis BR-12 jika hendak menonaktifkan bidang
+        if (! $targetAktif) {
+            $hasActiveStaf = User::where('bidang_id', $bidang->id)->where('status_aktif', true)->exists();
+            if ($hasActiveStaf) {
+                return back()->with('error', 'Penonaktifan ditolak (BR-12): Masih terdapat staf aktif yang bertugas di bidang dinas ini.');
+            }
+
+            $hasActivePenempatan = Penempatan::where('bidang_id', $bidang->id)
+                ->where('status', StatusPenempatanEnum::Aktif)
+                ->exists();
+            if ($hasActivePenempatan) {
+                return back()->with('error', 'Penonaktifan ditolak (BR-12): Masih terdapat peserta magang aktif yang ditempatkan di bidang dinas ini.');
+            }
+        }
+
         $nilaiLama = $bidang->toArray();
         $bidang->update(['aktif' => $targetAktif]);
 

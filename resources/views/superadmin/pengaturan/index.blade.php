@@ -112,6 +112,55 @@
                 </div>
             </div>
 
+            <!-- Section 4: Skala Ambang Batas Predikat Nilai (PRD 8.3, 8.6) -->
+            <div>
+                <div style="display: flex; align-items: center; gap: 0.625rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-300); padding-bottom: 0.75rem;">
+                    <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--blue-50); color: var(--blue-600); display: flex; align-items: center; justify-content: center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                    </div>
+                    <div>
+                        <h2 style="font-size: 1.0625rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
+                            Skala Ambang Batas Predikat Nilai (PRD 8.3 & 8.6)
+                        </h2>
+                        <span style="font-size: 0.75rem; color: var(--neutral-600);">Konfigurasi ambang skor minimum untuk predikat A, B, C, dan D (Di bawah D otomatis predikat E).</span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem;">
+                    <div style="background: var(--neutral-100); border: 1px solid var(--neutral-300); border-radius: 8px; padding: 1rem;">
+                        <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--green-800); margin-bottom: 0.375rem;">
+                            Batas Minimum Predikat A <span style="color: var(--red-600);">*</span>
+                        </label>
+                        <input type="number" name="batas_predikat_a" min="1" max="100" required value="{{ old('batas_predikat_a', $predikatBatas['A'] ?? 85) }}" style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem; font-weight: 700; background: #FFFFFF;">
+                        <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem; display: block;">Nilai Sangat Baik (Default: 85 - 100)</span>
+                    </div>
+
+                    <div style="background: var(--neutral-100); border: 1px solid var(--neutral-300); border-radius: 8px; padding: 1rem;">
+                        <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--blue-800); margin-bottom: 0.375rem;">
+                            Batas Minimum Predikat B <span style="color: var(--red-600);">*</span>
+                        </label>
+                        <input type="number" name="batas_predikat_b" min="1" max="100" required value="{{ old('batas_predikat_b', $predikatBatas['B'] ?? 70) }}" style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem; font-weight: 700; background: #FFFFFF;">
+                        <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem; display: block;">Nilai Baik (Default: 70 - <85)</span>
+                    </div>
+
+                    <div style="background: var(--neutral-100); border: 1px solid var(--neutral-300); border-radius: 8px; padding: 1rem;">
+                        <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--amber-800); margin-bottom: 0.375rem;">
+                            Batas Minimum Predikat C <span style="color: var(--red-600);">*</span>
+                        </label>
+                        <input type="number" name="batas_predikat_c" min="1" max="100" required value="{{ old('batas_predikat_c', $predikatBatas['C'] ?? 55) }}" style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem; font-weight: 700; background: #FFFFFF;">
+                        <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem; display: block;">Nilai Cukup (Default: 55 - <70)</span>
+                    </div>
+
+                    <div style="background: var(--neutral-100); border: 1px solid var(--neutral-300); border-radius: 8px; padding: 1rem;">
+                        <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--red-800); margin-bottom: 0.375rem;">
+                            Batas Minimum Predikat D <span style="color: var(--red-600);">*</span>
+                        </label>
+                        <input type="number" name="batas_predikat_d" min="1" max="100" required value="{{ old('batas_predikat_d', $predikatBatas['D'] ?? 40) }}" style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem; font-weight: 700; background: #FFFFFF;">
+                        <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem; display: block;">Nilai Kurang (Default: 40 - <55)</span>
+                    </div>
+                </div>
+            </div>
+
             <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--neutral-300); padding-top: 1.5rem;">
                 <button type="submit" style="height: 44px; padding: 0 2rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s; box-shadow: 0 2px 4px rgba(2, 132, 199, 0.2);">
                     Simpan Perubahan Konfigurasi

@@ -74,6 +74,16 @@
                                     <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: {{ $roleBadgeBg }}; color: {{ $roleBadgeText }};">
                                         {{ $staf->role->label() }}
                                     </span>
+                                    @if($staf->role->value === 'pembimbing')
+                                        <div style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-700); margin-top: 0.25rem;">
+                                            {{ $staf->mentee_aktif_count ?? 0 }} Mentee Aktif
+                                            @if($maksPeserta > 0)
+                                                <span style="color: {{ ($staf->mentee_aktif_count ?? 0) >= $maksPeserta ? 'var(--red-600)' : 'var(--neutral-500)' }};">
+                                                    / {{ $maksPeserta }} maks
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </td>
                                 <td style="padding: 1rem 1rem;">
                                     <span style="font-weight: 600; color: var(--neutral-800);">{{ $staf->bidang->nama_bidang ?? '-' }}</span>
@@ -90,7 +100,12 @@
                                     @endif
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
-                                    <div style="display: inline-flex; gap: 0.5rem; align-items: center;">
+                                    <div style="display: inline-flex; gap: 0.375rem; align-items: center;">
+                                        <!-- Edit Profil Staf (AC-11-1) -->
+                                        <button onclick="openModalEdit('{{ $staf->id }}', '{{ addslashes($staf->nama) }}', '{{ addslashes($staf->email) }}', '{{ $staf->role->value }}', '{{ $staf->bidang_id ?? '' }}')" style="padding: 0.375rem 0.75rem; background: var(--blue-tint); border: 1px solid var(--blue-300); border-radius: 6px; font-size: 0.75rem; font-weight: 600; color: var(--blue-800); cursor: pointer;">
+                                            Edit
+                                        </button>
+
                                         <!-- Reset Password Button -->
                                         <button onclick="openModalReset('{{ $staf->id }}', '{{ addslashes($staf->nama) }}')" style="padding: 0.375rem 0.75rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 600; color: var(--neutral-800); cursor: pointer;">
                                             Reset Sandi
@@ -209,11 +224,71 @@
     </div>
 </div>
 
+<!-- Modal Edit Staf (AC-11-1) -->
+<div id="modalEditStaf" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div style="background: var(--neutral-0); border-radius: 16px; width: 100%; max-width: 520px; padding: 2rem; box-shadow: var(--shadow-card); position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--neutral-300); padding-bottom: 0.75rem;">
+            <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Edit Data Profil Staf</h3>
+            <button onclick="document.getElementById('modalEditStaf').style.display='none'" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--neutral-600);">&times;</button>
+        </div>
+
+        <form id="formEditStaf" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+            @csrf
+            @method('PUT')
+            <div>
+                <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800); margin-bottom: 0.375rem;">Nama Lengkap Staf <span style="color: var(--red-600);">*</span></label>
+                <input type="text" id="editNama" name="nama" required style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem;">
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800); margin-bottom: 0.375rem;">Alamat Email Dinas <span style="color: var(--red-600);">*</span></label>
+                <input type="email" id="editEmail" name="email" required style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem;">
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800); margin-bottom: 0.375rem;">Peran Akses Sistem <span style="color: var(--red-600);">*</span></label>
+                <select id="editRole" name="role" required style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-0);">
+                    <option value="admin">Administrasi Kominfo (Verifikator)</option>
+                    <option value="pembimbing">Pembimbing Lapangan</option>
+                </select>
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800); margin-bottom: 0.375rem;">Bidang Penugasan Dinas (Opsional)</label>
+                <select id="editBidang" name="bidang_id" style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-0);">
+                    <option value="">-- Tanpa Bidang Spesifik --</option>
+                    @foreach($bidangList as $b)
+                        <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.75rem;">
+                <button type="button" onclick="document.getElementById('modalEditStaf').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-200); border: none; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+                    Batal
+                </button>
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 6px; font-weight: 700; font-size: 0.875rem; cursor: pointer;">
+                    Perbarui Profil
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     function openModalReset(stafId, stafNama) {
         document.getElementById('resetNamaStaf').textContent = stafNama;
         document.getElementById('formResetSandi').action = '/superadmin/staf/' + stafId + '/reset-password';
         document.getElementById('modalResetSandi').style.display = 'flex';
+    }
+
+    function openModalEdit(stafId, nama, email, role, bidangId) {
+        document.getElementById('editNama').value = nama;
+        document.getElementById('editEmail').value = email;
+        document.getElementById('editRole').value = role;
+        document.getElementById('editBidang').value = bidangId || '';
+        document.getElementById('formEditStaf').action = '/superadmin/staf/' + stafId;
+        document.getElementById('modalEditStaf').style.display = 'flex';
     }
 </script>
 @endsection

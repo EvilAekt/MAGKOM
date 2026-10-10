@@ -13,7 +13,12 @@
     <!-- Filter Toolbar Card -->
     <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow-subtle);">
         <form method="GET" action="{{ route('superadmin.audit-log.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-end;">
-            <div style="display: flex; flex-direction: column; gap: 0.25rem; min-width: 160px;">
+            <div style="display: flex; flex-direction: column; gap: 0.25rem; min-width: 220px; flex: 1;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase;">Kata Kunci / Pencarian</label>
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari aksi, user, entitas, IP, request ID..." style="height: 38px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem;">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.25rem; min-width: 150px;">
                 <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase;">Tipe Log</label>
                 <select name="tipe" style="height: 38px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.5rem; font-size: 0.8125rem; background: var(--neutral-0);">
                     <option value="">Semua Tipe</option>
@@ -25,9 +30,26 @@
                 </select>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 0.25rem; min-width: 140px;">
+            <div style="display: flex; flex-direction: column; gap: 0.25rem; min-width: 170px;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase;">Aktor / Staf</label>
+                <select name="user_id" style="height: 38px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.5rem; font-size: 0.8125rem; background: var(--neutral-0);">
+                    <option value="">Semua Staf & Akun</option>
+                    @foreach($internalUsers ?? [] as $staf)
+                        <option value="{{ $staf->id }}" {{ request('user_id') == $staf->id ? 'selected' : '' }}>
+                            {{ $staf->nama }} ({{ $staf->role->label() }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.25rem; min-width: 130px;">
                 <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase;">Entitas / Tabel</label>
-                <input type="text" name="entitas" value="{{ request('entitas') }}" placeholder="Contoh: pendaftaran" style="height: 38px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem;">
+                <input type="text" name="entitas" value="{{ request('entitas') }}" placeholder="pendaftaran..." style="height: 38px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem;">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.25rem; min-width: 140px;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase;">Request ID</label>
+                <input type="text" name="request_id" value="{{ request('request_id') }}" placeholder="req-..." style="height: 38px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; font-family: monospace;">
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 0.25rem;">
@@ -40,15 +62,23 @@
                 <input type="date" name="sampai_tanggal" value="{{ request('sampai_tanggal') }}" style="height: 38px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.5rem; font-size: 0.8125rem;">
             </div>
 
-            <div style="display: flex; gap: 0.5rem;">
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
                 <button type="submit" style="height: 38px; padding: 0 1.25rem; background: var(--neutral-800); color: #FFFFFF; font-weight: 600; font-size: 0.8125rem; border: none; border-radius: 6px; cursor: pointer;">
                     Filter
                 </button>
-                @if(request()->hasAny(['tipe', 'entitas', 'dari_tanggal', 'sampai_tanggal', 'request_id', 'user_id']))
+                @if(request()->hasAny(['q', 'tipe', 'entitas', 'dari_tanggal', 'sampai_tanggal', 'request_id', 'user_id']))
                     <a href="{{ route('superadmin.audit-log.index') }}" style="height: 38px; padding: 0 0.75rem; display: inline-flex; align-items: center; font-size: 0.8125rem; color: var(--neutral-600); text-decoration: none;">
                         Reset
                     </a>
                 @endif
+                <a href="{{ route('superadmin.audit-log.export', request()->query()) }}" style="height: 38px; padding: 0 1rem; background: var(--green-700); color: #FFFFFF; font-weight: 600; font-size: 0.8125rem; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.375rem; white-space: nowrap;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Ekspor CSV
+                </a>
             </div>
         </form>
     </div>
@@ -92,7 +122,7 @@
                             @endphp
                             <tr style="border-bottom: 1px solid var(--neutral-300); transition: background 0.15s;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
                                 <td style="padding: 0.875rem 1rem; white-space: nowrap; font-family: monospace;">
-                                    {{ $log->waktu ? $log->waktu->format('Y-m-d H:i:s') : $log->created_at->format('Y-m-d H:i:s') }}
+                                    {{ $log->waktu?->format('Y-m-d H:i:s') ?? '-' }}
                                 </td>
                                 <td style="padding: 0.875rem 1rem;">
                                     @if($log->user)
@@ -109,24 +139,31 @@
                                 </td>
                                 <td style="padding: 0.875rem 1rem;">
                                     <div style="font-weight: 600; color: var(--neutral-800);">
-                                        {{ $log->entitas ?? $log->tabel ?? '-' }}
+                                        {{ $log->entitas ?? '-' }}
                                     </div>
-                                    @if($log->id_data)
-                                        <div style="font-size: 0.75rem; color: var(--neutral-600); font-family: monospace;">ID: #{{ $log->id_data }}</div>
+                                    @if($log->aksi)
+                                        <div style="font-size: 0.75rem; color: var(--blue-700); font-family: monospace;">{{ $log->aksi }}</div>
+                                    @endif
+                                    @if($log->entitas_id)
+                                        <div style="font-size: 0.75rem; color: var(--neutral-600); font-family: monospace;">ID: #{{ $log->entitas_id }}</div>
                                     @endif
                                 </td>
                                 <td style="padding: 0.875rem 1rem; font-family: monospace; color: var(--neutral-700); white-space: nowrap;">
-                                    {{ $log->ip_address ?? '-' }}
+                                    {{ $log->ip ?? '-' }}
                                 </td>
                                 <td style="padding: 0.875rem 1rem; text-align: right; white-space: nowrap;">
                                     <button onclick="openModalLogDetail({{ json_encode([
                                         'id' => $log->id,
-                                        'waktu' => $log->waktu ? $log->waktu->format('Y-m-d H:i:s') : $log->created_at->format('Y-m-d H:i:s'),
+                                        'waktu' => $log->waktu?->format('Y-m-d H:i:s') ?? '-',
                                         'user' => $log->user ? ($log->user->nama ?? $log->user->name) : 'Sistem / Anonim',
-                                        'entitas' => $log->entitas ?? $log->tabel,
-                                        'id_data' => $log->id_data,
-                                        'ip_address' => $log->ip_address,
+                                        'entitas' => $log->entitas ?? '-',
+                                        'entitas_id' => $log->entitas_id,
+                                        'ip' => $log->ip ?? '-',
                                         'request_id' => $log->request_id,
+                                        'metode' => $log->metode,
+                                        'rute' => $log->rute,
+                                        'status_http' => $log->status_http,
+                                        'durasi_ms' => $log->durasi_ms,
                                         'detail' => $log->detail,
                                         'nilai_lama' => $log->nilai_lama,
                                         'nilai_baru' => $log->nilai_baru,
@@ -150,40 +187,46 @@
 </div>
 
 <!-- Modal Detail JSON Audit Log -->
-<div id="modalLogDetail" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
-    <div style="background: var(--neutral-0); border-radius: 16px; width: 100%; max-width: 640px; padding: 2rem; box-shadow: var(--shadow-card); position: relative; max-height: 85vh; display: flex; flex-direction: column;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-300); padding-bottom: 0.75rem;">
-            <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Inspeksi Detail Audit Trail #<span id="logId"></span></h3>
-            <button onclick="document.getElementById('modalLogDetail').style.display='none'" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--neutral-600);">&times;</button>
+<div id="modalLogDetail" onclick="if(event.target === this) closeModalLogDetail()" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div style="background: var(--neutral-0); border-radius: 16px; width: 100%; max-width: 680px; padding: 1.75rem 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); position: relative; max-height: 85vh; display: flex; flex-direction: column;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--neutral-300); padding-bottom: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Inspeksi Detail Audit Trail #<span id="logId"></span></h3>
+                <span class="role-chip-badge" style="background: var(--blue-tint); color: var(--blue-700); font-size: 0.6875rem;">Append-Only</span>
+            </div>
+            <button onclick="closeModalLogDetail()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-600);">&times;</button>
         </div>
 
         <div style="overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding-right: 0.5rem;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.8125rem; background: var(--neutral-50); padding: 0.875rem; border-radius: 8px; border: 1px solid var(--neutral-200);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.8125rem; background: var(--neutral-100); padding: 0.875rem 1rem; border-radius: 8px; border: 1px solid var(--neutral-300);">
                 <div><strong>Pelaku:</strong> <span id="logUser">-</span></div>
                 <div><strong>Waktu:</strong> <span id="logWaktu">-</span></div>
                 <div><strong>Entitas / ID:</strong> <span id="logEntitas">-</span></div>
                 <div><strong>IP Address:</strong> <span id="logIp">-</span></div>
                 <div style="grid-column: span 2;"><strong>Request ID:</strong> <span id="logRequestId" style="font-family: monospace;">-</span></div>
+                <div style="grid-column: span 2;"><strong>Konteks HTTP:</strong> <span id="logHttp" style="font-family: monospace; color: var(--blue-700);">-</span></div>
             </div>
 
             <div>
-                <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase;">Detail Peristiwa (Payload)</label>
-                <pre id="logPayload" style="background: var(--neutral-900); color: var(--neutral-100); padding: 0.875rem; border-radius: 8px; font-size: 0.75rem; overflow-x: auto; margin-top: 0.25rem; max-height: 180px;"></pre>
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase;">Detail Peristiwa (Payload Event)</label>
+                <pre id="logPayload" style="background: #1e293b; color: #f8fafc; padding: 0.875rem; border-radius: 8px; font-size: 0.75rem; overflow-x: auto; margin-top: 0.25rem; max-height: 160px; font-family: monospace;"></pre>
             </div>
 
-            <div>
-                <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase;">Nilai Lama (Sebelum Mutasi)</label>
-                <pre id="logNilaiLama" style="background: var(--neutral-100); color: var(--neutral-800); border: 1px solid var(--neutral-300); padding: 0.875rem; border-radius: 8px; font-size: 0.75rem; overflow-x: auto; margin-top: 0.25rem; max-height: 140px;"></pre>
-            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label style="font-size: 0.75rem; font-weight: 700; color: var(--red-800); text-transform: uppercase;">Nilai Lama (Sebelum Mutasi)</label>
+                    <pre id="logNilaiLama" style="background: #fff5f5; color: #7f1d1d; border: 1px solid #fecaca; padding: 0.75rem; border-radius: 8px; font-size: 0.75rem; overflow-x: auto; margin-top: 0.25rem; max-height: 160px; font-family: monospace;"></pre>
+                </div>
 
-            <div>
-                <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase;">Nilai Baru (Setelah Mutasi)</label>
-                <pre id="logNilaiBaru" style="background: var(--neutral-100); color: var(--neutral-800); border: 1px solid var(--neutral-300); padding: 0.875rem; border-radius: 8px; font-size: 0.75rem; overflow-x: auto; margin-top: 0.25rem; max-height: 140px;"></pre>
+                <div>
+                    <label style="font-size: 0.75rem; font-weight: 700; color: var(--green-800); text-transform: uppercase;">Nilai Baru (Setelah Mutasi)</label>
+                    <pre id="logNilaiBaru" style="background: #f0fdf4; color: #14532d; border: 1px solid #bbf7d0; padding: 0.75rem; border-radius: 8px; font-size: 0.75rem; overflow-x: auto; margin-top: 0.25rem; max-height: 160px; font-family: monospace;"></pre>
+                </div>
             </div>
         </div>
 
         <div style="display: flex; justify-content: flex-end; margin-top: 1.25rem; border-top: 1px solid var(--neutral-300); padding-top: 0.75rem;">
-            <button onclick="document.getElementById('modalLogDetail').style.display='none'" style="height: 38px; padding: 0 1.25rem; background: var(--neutral-200); border: none; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+            <button onclick="closeModalLogDetail()" style="height: 38px; padding: 0 1.25rem; background: var(--neutral-200); border: none; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
                 Tutup
             </button>
         </div>
@@ -195,13 +238,27 @@
         document.getElementById('logId').textContent = data.id;
         document.getElementById('logUser').textContent = data.user;
         document.getElementById('logWaktu').textContent = data.waktu;
-        document.getElementById('logEntitas').textContent = (data.entitas || '-') + ' #' + (data.id_data || '-');
-        document.getElementById('logIp').textContent = data.ip_address || '-';
+        document.getElementById('logEntitas').textContent = (data.entitas || '-') + (data.entitas_id ? (' #' + data.entitas_id) : '');
+        document.getElementById('logIp').textContent = data.ip || '-';
         document.getElementById('logRequestId').textContent = data.request_id || '-';
-        document.getElementById('logPayload').textContent = JSON.stringify(data.detail, null, 2);
-        document.getElementById('logNilaiLama').textContent = JSON.stringify(data.nilai_lama, null, 2);
-        document.getElementById('logNilaiBaru').textContent = JSON.stringify(data.nilai_baru, null, 2);
+        document.getElementById('logHttp').textContent = (data.metode || '-') + ' ' + (data.rute || '-') + (data.status_http ? (' [' + data.status_http + ']') : '') + (data.durasi_ms ? (' (' + data.durasi_ms + 'ms)') : '');
+        document.getElementById('logPayload').textContent = data.detail ? JSON.stringify(data.detail, null, 2) : '-';
+        document.getElementById('logNilaiLama').textContent = data.nilai_lama ? JSON.stringify(data.nilai_lama, null, 2) : '-';
+        document.getElementById('logNilaiBaru').textContent = data.nilai_baru ? JSON.stringify(data.nilai_baru, null, 2) : '-';
         document.getElementById('modalLogDetail').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
+
+    function closeModalLogDetail() {
+        document.getElementById('modalLogDetail').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModalLogDetail();
+        }
+    });
 </script>
 @endsection
+

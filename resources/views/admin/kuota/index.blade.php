@@ -93,8 +93,15 @@
                                 <td style="padding: 0.75rem 1rem; text-align: center; font-weight: 700; color: var(--neutral-800);">
                                     {{ $k->jumlah }}
                                 </td>
-                                <td style="padding: 0.75rem 1rem; text-align: center; font-weight: 600; color: var(--amber-800);">
-                                    {{ $k->terisi }}
+                                <td style="padding: 0.75rem 1rem; text-align: center;">
+                                    <span style="font-weight: 700; color: var(--amber-800);">{{ $k->terisi }}</span>
+                                    @php
+                                        $persen = $k->jumlah > 0 ? min(100, round(($k->terisi / $k->jumlah) * 100)) : 0;
+                                        $barColor = $persen >= 100 ? 'var(--red-600)' : ($persen >= 80 ? 'var(--amber-600)' : 'var(--blue-600)');
+                                    @endphp
+                                    <div style="margin-top: 0.25rem; width: 100%; max-width: 80px; height: 5px; background: var(--neutral-300); border-radius: 99px; overflow: hidden; margin-left: auto; margin-right: auto;" title="Okupansi: {{ $persen }}%">
+                                        <div style="width: {{ $persen }}%; height: 100%; background: {{ $barColor }};"></div>
+                                    </div>
                                 </td>
                                 <td style="padding: 0.75rem 1rem; text-align: center; font-weight: 700; color: {{ $sisa > 0 ? 'var(--green-700)' : 'var(--red-700)' }};">
                                     {{ $sisa }}

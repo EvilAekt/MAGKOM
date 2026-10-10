@@ -241,11 +241,211 @@ class PesertaPendaftaranFlowTest extends TestCase
         $response->assertOk();
         $response->assertSee('Selamat! Permohonan Magang Anda Telah Disetujui');
         $response->assertSee('Unduh Surat Diterima (PDF)');
+        $response->assertSee('Lihat Surat Diterima');
         $response->assertSee(route('peserta.penempatan.surat-diterima', $penempatan));
+        $response->assertSee(route('peserta.penempatan.surat-diterima.pratinjau', $penempatan));
 
         // Test unduh file PDF
         $downloadResponse = $this->actingAs($this->peserta)->get(route('peserta.penempatan.surat-diterima', $penempatan));
         $downloadResponse->assertOk();
         $this->assertStringContainsString('application/pdf', $downloadResponse->headers->get('content-type'));
+
+        // Test pratinjau inline stream PDF
+        $previewResponse = $this->actingAs($this->peserta)->get(route('peserta.penempatan.surat-diterima.pratinjau', $penempatan));
+        $previewResponse->assertOk();
+        $this->assertStringContainsString('application/pdf', $previewResponse->headers->get('content-type'));
+        $this->assertStringContainsString('inline', $previewResponse->headers->get('content-disposition'));
+    }
+
+    public function test_peserta_can_cancel_draft_or_submitted_pendaftaran(): void
+    {
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $this->peserta->id,
+            'bulan_magang_id' => $this->bulan->id,
+            'kuota_id' => $this->kuota->id,
+            'durasi_bulan' => 3,
+            'status' => StatusPendaftaranEnum::BerkasBelumLengkap,
+        ]);
+
+        $response = $this->actingAs($this->peserta)->post(route('peserta.pendaftaran.batalkan', $pendaftaran));
+
+        $response->assertRedirect(route('peserta.pendaftaran.index'));
+        $response->assertSessionHas('success', 'Pengajuan pendaftaran magang berhasil dibatalkan.');
+
+        $this->assertEquals(StatusPendaftaranEnum::Dibatalkan, $pendaftaran->fresh()->status);
+        $this->assertDatabaseHas('audit_log', [
+            'entitas' => 'pendaftaran',
+            'entitas_id' => $pendaftaran->id,
+            'aksi' => 'Peserta membatalkan pengajuan pendaftaran magang',
+        ]);
+    }
+
+    public function test_peserta_cannot_cancel_accepted_pendaftaran(): void
+    {
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $this->peserta->id,
+            'bulan_magang_id' => $this->bulan->id,
+            'kuota_id' => $this->kuota->id,
+            'durasi_bulan' => 3,
+            'status' => StatusPendaftaranEnum::Diterima,
+            'diputuskan_at' => now(),
+        ]);
+
+        $response = $this->actingAs($this->peserta)->post(route('peserta.pendaftaran.batalkan', $pendaftaran));
+
+        $response->assertForbidden();
+        $this->assertEquals(StatusPendaftaranEnum::Diterima, $pendaftaran->fresh()->status);
+    }
+
+    public function test_peserta_cannot_cancel_other_users_pendaftaran(): void
+    {
+        $otherPeserta = User::create([
+            'nama' => 'Peserta Lain',
+            'email' => 'lain@example.com',
+            'password' => 'Password123!',
+            'role' => RoleEnum::Peserta,
+            'email_verified_at' => now(),
+            'status_aktif' => true,
+            'must_change_password' => false,
+        ]);
+
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $otherPeserta->id,
+            'bulan_magang_id' => $this->bulan->id,
+            'kuota_id' => $this->kuota->id,
+            'durasi_bulan' => 3,
+            'status' => StatusPendaftaranEnum::Diajukan,
+        ]);
+
+        $response = $this->actingAs($this->peserta)->post(route('peserta.pendaftaran.batalkan', $pendaftaran));
+
+        $response->assertForbidden();
+        $this->assertEquals(StatusPendaftaranEnum::Diajukan, $pendaftaran->fresh()->status);
+    }
+
+    public function test_submitting_application_sets_status_to_diajukan_even_if_quota_full(): void
+    {
+        // Set kuota penuh
+        $this->kuota->update(['terisi' => 10]);
+
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $this->peserta->id,
+            'bulan_magang_id' => $this->bulan->id,
+            'kuota_id' => $this->kuota->id,
+            'durasi_bulan' => 3,
+            'status' => StatusPendaftaranEnum::BerkasBelumLengkap,
+        ]);
+
+        $wajibDokumen = JenisDokumen::where('jenjang', 'smk')->where('wajib', true)->get();
+
+        foreach ($wajibDokumen as $jenis) {
+            Dokumen::create([
+                'pendaftaran_id' => $pendaftaran->id,
+                'jenis_dokumen_id' => $jenis->id,
+                'path' => 'dokumen/test_' . $jenis->kode . '.pdf',
+                'nama_asli' => 'test_' . $jenis->kode . '.pdf',
+                'mime' => 'application/pdf',
+                'ukuran' => 204800,
+                'hash' => md5($jenis->kode),
+            ]);
+        }
+
+        $response = $this->actingAs($this->peserta)->post(route('peserta.pendaftaran.ajukan', $pendaftaran));
+
+        $response->assertRedirect(route('peserta.pendaftaran.detail', $pendaftaran));
+        $response->assertSessionHas('success');
+
+        // Status harus tetap Diajukan (verifikasi admin) per AC-03-6 & BR-06
+        $this->assertEquals(StatusPendaftaranEnum::Diajukan, $pendaftaran->fresh()->status);
+        $this->assertNotNull($pendaftaran->fresh()->diajukan_at);
+    }
+
+    public function test_peserta_blocked_from_creating_multiple_active_pendaftaran(): void
+    {
+        // Pendaftaran 1 yang aktif
+        Pendaftaran::create([
+            'user_id' => $this->peserta->id,
+            'bulan_magang_id' => $this->bulan->id,
+            'kuota_id' => $this->kuota->id,
+            'durasi_bulan' => 3,
+            'status' => StatusPendaftaranEnum::Diajukan,
+        ]);
+
+        // Bulan ke-2
+        $bulan2 = BulanMagang::create([
+            'bulan_mulai' => '2026-12-01',
+            'tgl_buka' => '2026-11-01',
+            'tgl_tutup' => '2026-11-25',
+            'aktif' => true,
+        ]);
+        $kuota2 = Kuota::create([
+            'bulan_magang_id' => $bulan2->id,
+            'jurusan_id' => $this->jurusan->id,
+            'jumlah' => 10,
+            'terisi' => 0,
+            'aktif' => true,
+        ]);
+
+        $response = $this->actingAs($this->peserta)->post(route('peserta.pendaftaran.store'), [
+            'bulan_magang_id' => $bulan2->id,
+            'kuota_id' => $kuota2->id,
+            'durasi_bulan' => 3,
+        ]);
+
+        $response->assertSessionHasErrors('pendaftaran');
+        $this->assertCount(1, Pendaftaran::where('user_id', $this->peserta->id)->get());
+    }
+
+    public function test_peserta_can_preview_uploaded_document_inline_with_signed_url(): void
+    {
+        Storage::fake('private');
+
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $this->peserta->id,
+            'bulan_magang_id' => $this->bulan->id,
+            'kuota_id' => $this->kuota->id,
+            'durasi_bulan' => 3,
+            'status' => StatusPendaftaranEnum::BerkasBelumLengkap,
+        ]);
+
+        $filePath = "documents/{$pendaftaran->id}/proposal_magang.pdf";
+        Storage::disk('private')->put($filePath, '%PDF-1.4 dummy content');
+
+        $dokumen = Dokumen::create([
+            'pendaftaran_id' => $pendaftaran->id,
+            'jenis_dokumen_id' => JenisDokumen::first()->id,
+            'path' => $filePath,
+            'nama_asli' => 'proposal_magang.pdf',
+            'mime' => 'application/pdf',
+            'ukuran' => 1024,
+            'hash' => hash('sha256', '%PDF-1.4 dummy content'),
+        ]);
+
+        $signedPreviewUrl = $dokumen->getSignedPreviewUrl(5);
+
+        // 1. Pemilik pendaftaran dapat melihat pratinjau inline
+        $previewRes = $this->actingAs($this->peserta)->get($signedPreviewUrl);
+        $previewRes->assertOk();
+        $this->assertStringContainsString('application/pdf', $previewRes->headers->get('content-type'));
+        $this->assertStringContainsString('inline', $previewRes->headers->get('content-disposition'));
+        $this->assertEquals('nosniff', $previewRes->headers->get('x-content-type-options'));
+
+        // 2. Akses tanpa signature valid ditolak (403)
+        $unsignedUrl = route('berkas.pratinjau', $dokumen);
+        $unsignedRes = $this->actingAs($this->peserta)->get($unsignedUrl);
+        $unsignedRes->assertStatus(403);
+
+        // 3. Peserta lain ditolak mengakses berkas privat orang lain (403 IDOR prevention)
+        $pesertaLain = new User();
+        $pesertaLain->nama = 'Peserta Lain';
+        $pesertaLain->email = 'peserta.lain@example.com';
+        $pesertaLain->password = 'Password123!';
+        $pesertaLain->role = RoleEnum::Peserta;
+        $pesertaLain->email_verified_at = now();
+        $pesertaLain->status_aktif = true;
+        $pesertaLain->must_change_password = false;
+        $pesertaLain->save();
+        $pesertaLainRes = $this->actingAs($pesertaLain)->get($signedPreviewUrl);
+        $pesertaLainRes->assertStatus(403);
     }
 }

@@ -17,9 +17,31 @@ class SuratDiterimaPdfService
     ) {}
 
     /**
-     * Menghasilkan dokumen PDF Surat Keterangan Diterima Magang secara on-the-fly (AC-16-1, F-16).
+     * Menghasilkan dokumen PDF Surat Keterangan Diterima Magang secara on-the-fly untuk diunduh (AC-16-1, F-16).
      */
     public function generate(Penempatan $penempatan): Response
+    {
+        [$pdf, $filename] = $this->renderPdf($penempatan, 'unduh');
+
+        return $pdf->download($filename);
+    }
+
+    /**
+     * Menyajikan dokumen PDF Surat Keterangan Diterima Magang secara inline stream untuk pratinjau browser/modal (AC-16-1, F-16).
+     */
+    public function stream(Penempatan $penempatan): Response
+    {
+        [$pdf, $filename] = $this->renderPdf($penempatan, 'pratinjau');
+
+        return $pdf->stream($filename);
+    }
+
+    /**
+     * Menyiapkan objek PDF dan mencatat audit log.
+     *
+     * @return array{\Barryvdh\DomPDF\PDF, string}
+     */
+    protected function renderPdf(Penempatan $penempatan, string $mode): array
     {
         $penempatan->loadMissing(['peserta.profil.jurusan', 'pembimbing', 'bidang', 'kuota.jurusan']);
 
@@ -46,7 +68,7 @@ class SuratDiterimaPdfService
                 'tgl_terbit' => $tglTerbit,
             ],
             detail: [
-                'aksi' => 'unduh_surat_keterangan_diterima_pdf',
+                'aksi' => $mode === 'pratinjau' ? 'pratinjau_surat_keterangan_diterima_pdf' : 'unduh_surat_keterangan_diterima_pdf',
                 'peserta_id' => $peserta->id,
             ]
         );
@@ -54,7 +76,7 @@ class SuratDiterimaPdfService
         $safeNama = preg_replace('/[^a-zA-Z0-9_-]/', '_', strtolower($peserta->nama));
         $filename = "surat-keterangan-diterima-{$safeNama}.pdf";
 
-        return $pdf->download($filename);
+        return [$pdf, $filename];
     }
 
     /**

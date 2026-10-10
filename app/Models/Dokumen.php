@@ -47,7 +47,21 @@ class Dokumen extends Model
         return URL::temporarySignedRoute(
             'berkas.download',
             now()->addMinutes($minutes),
-            ['dokumen' => $this->id]
+            ['dokumen' => $this->id],
+            false
+        );
+    }
+
+    /**
+     * Menghasilkan tautan pratinjau privat bertanda tangan sementara (default 5 menit).
+     */
+    public function getSignedPreviewUrl(int $minutes = 5): string
+    {
+        return URL::temporarySignedRoute(
+            'berkas.pratinjau',
+            now()->addMinutes($minutes),
+            ['dokumen' => $this->id],
+            false
         );
     }
 }

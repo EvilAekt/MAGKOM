@@ -73,7 +73,11 @@ class PendaftaranController extends Controller
                 ->whereHas('bulanMagang', function ($q) {
                     $q->where('aktif', true);
                 })
-                ->get();
+                ->get()
+                ->filter(function ($kuota) {
+                    return $kuota->bulanMagang && $this->bulanStatusService->status($kuota->bulanMagang, $kuota) === \App\Enums\StatusKetersediaanEnum::Tersedia;
+                })
+                ->values();
         }
 
         return view('peserta.pendaftaran.index', [
@@ -163,16 +167,10 @@ class PendaftaranController extends Controller
             return back()->with('error', 'Semua berkas persyaratan wajib harus diunggah sebelum pengajuan dapat dikirim.');
         }
 
-        // Tentukan apakah masuk antrean reguler atau Waiting List (AC-01-3 / BR-05)
-        $kuota = $pendaftaran->kuota;
-        $statusTujuan = ($kuota && $kuota->terisi >= $kuota->jumlah)
-            ? StatusPendaftaranEnum::WaitingList
-            : StatusPendaftaranEnum::Diajukan;
-
         $nilaiLama = ['status' => $pendaftaran->status->value];
 
         $pendaftaran->update([
-            'status' => $statusTujuan,
+            'status' => StatusPendaftaranEnum::Diajukan,
             'diajukan_at' => now(),
         ]);
 
@@ -181,15 +179,38 @@ class PendaftaranController extends Controller
             tabel: 'pendaftaran',
             idData: $pendaftaran->id,
             nilaiLama: $nilaiLama,
-            nilaiBaru: ['status' => $statusTujuan->value],
+            nilaiBaru: ['status' => StatusPendaftaranEnum::Diajukan->value],
             detail: ['aksi' => 'Peserta mengajukan berkas lengkap pendaftaran']
         );
 
-        $pesan = $statusTujuan === StatusPendaftaranEnum::WaitingList
-            ? 'Pendaftaran Anda berhasil diajukan dan masuk ke antrean Waiting List karena kuota reguler penuh.'
-            : 'Pendaftaran Anda berhasil diajukan dan sedang menunggu verifikasi berkas oleh admin.';
+        return redirect()->route('peserta.pendaftaran.detail', $pendaftaran)
+            ->with('success', 'Pendaftaran Anda berhasil diajukan dan sedang menunggu verifikasi berkas oleh admin.');
+    }
 
-        return redirect()->route('peserta.pendaftaran.detail', $pendaftaran)->with('success', $pesan);
+    /**
+     * Membatalkan pengajuan pendaftaran mandiri oleh peserta (AC-03-9).
+     */
+    public function batalkan(Request $request, Pendaftaran $pendaftaran): RedirectResponse
+    {
+        $this->authorize('cancel', $pendaftaran);
+
+        $nilaiLama = ['status' => $pendaftaran->status->value];
+
+        $pendaftaran->update([
+            'status' => StatusPendaftaranEnum::Dibatalkan,
+        ]);
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'pendaftaran',
+            idData: $pendaftaran->id,
+            nilaiLama: $nilaiLama,
+            nilaiBaru: ['status' => StatusPendaftaranEnum::Dibatalkan->value],
+            detail: ['aksi' => 'Peserta membatalkan pengajuan pendaftaran magang']
+        );
+
+        return redirect()->route('peserta.pendaftaran.index')
+            ->with('success', 'Pengajuan pendaftaran magang berhasil dibatalkan.');
     }
 
     /**
@@ -200,5 +221,15 @@ class PendaftaranController extends Controller
         $this->authorize('view', $penempatan);
 
         return $pdfService->generate($penempatan);
+    }
+
+    /**
+     * Menyajikan pratinjau inline stream Surat Keterangan Diterima PDF resmi (AC-16-1, F-16).
+     */
+    public function pratinjauSuratDiterima(\App\Models\Penempatan $penempatan, \App\Services\SuratDiterimaPdfService $pdfService)
+    {
+        $this->authorize('view', $penempatan);
+
+        return $pdfService->stream($penempatan);
     }
 }

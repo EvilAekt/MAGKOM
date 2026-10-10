@@ -61,12 +61,25 @@ class ExportReportService
         if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
+        if (! empty($filters['jurusan_id'])) {
+            $jurusanId = (int) $filters['jurusan_id'];
+            $query->where(function ($q) use ($jurusanId) {
+                $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
+                  ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
+            });
+        }
+        if (! empty($filters['dari_tanggal'])) {
+            $query->where('created_at', '>=', $filters['dari_tanggal'] . ' 00:00:00');
+        }
+        if (! empty($filters['sampai_tanggal'])) {
+            $query->where('created_at', '<=', $filters['sampai_tanggal'] . ' 23:59:59');
+        }
 
         $records = $query->latest('created_at')->get();
 
         // Audit Trail akses ekspor data (AC-13-4, AC-17-2)
         $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
+            tipe: TipeAuditEnum::AksesData,
             tabel: 'pendaftaran',
             idData: null,
             nilaiLama: null,
@@ -86,6 +99,7 @@ class ExportReportService
 
         return response()->streamDownload(function () use ($headers, $records) {
             $handle = fopen('php://output', 'w');
+            fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
             fputcsv($handle, $headers);
 
             foreach ($records as $p) {
@@ -124,11 +138,24 @@ class ExportReportService
         if (! empty($filters['jalur'])) {
             $query->where('jalur', $filters['jalur']);
         }
+        if (! empty($filters['jurusan_id'])) {
+            $jurusanId = (int) $filters['jurusan_id'];
+            $query->where(function ($q) use ($jurusanId) {
+                $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
+                  ->orWhereHas('peserta.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
+            });
+        }
+        if (! empty($filters['dari_tanggal'])) {
+            $query->where('tgl_mulai', '>=', $filters['dari_tanggal']);
+        }
+        if (! empty($filters['sampai_tanggal'])) {
+            $query->where('tgl_mulai', '<=', $filters['sampai_tanggal']);
+        }
 
         $records = $query->latest('tgl_mulai')->get();
 
         $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
+            tipe: TipeAuditEnum::AksesData,
             tabel: 'penempatan',
             idData: null,
             nilaiLama: null,
@@ -149,6 +176,7 @@ class ExportReportService
 
         return response()->streamDownload(function () use ($headers, $records) {
             $handle = fopen('php://output', 'w');
+            fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
             fputcsv($handle, $headers);
 
             foreach ($records as $pen) {
@@ -182,7 +210,7 @@ class ExportReportService
         $slotKhususList = SlotKhusus::all();
 
         $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
+            tipe: TipeAuditEnum::AksesData,
             tabel: 'kuota',
             idData: null,
             nilaiLama: null,
@@ -198,6 +226,7 @@ class ExportReportService
 
         return response()->streamDownload(function () use ($headers, $kuotaList, $slotKhususList) {
             $handle = fopen('php://output', 'w');
+            fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
             fputcsv($handle, $headers);
 
             foreach ($kuotaList as $k) {
@@ -244,7 +273,7 @@ class ExportReportService
             ->get();
 
         $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
+            tipe: TipeAuditEnum::AksesData,
             tabel: 'penilaian',
             idData: null,
             nilaiLama: null,
@@ -263,6 +292,7 @@ class ExportReportService
 
         return response()->streamDownload(function () use ($headers, $records) {
             $handle = fopen('php://output', 'w');
+            fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
             fputcsv($handle, $headers);
 
             foreach ($records as $nilai) {

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\KuotaController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
@@ -11,6 +12,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
+use App\Http\Controllers\SuperAdmin\MonitoringPesertaController;
 use App\Http\Controllers\Pembimbing\LogbookReviewController as PembimbingLogbookReviewController;
 use App\Http\Controllers\Pembimbing\PenilaianController as PembimbingPenilaianController;
 use App\Http\Controllers\Pembimbing\TugasController as PembimbingTugasController;
@@ -23,6 +26,7 @@ use App\Http\Controllers\Peserta\TugasController as PesertaTugasController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Public\HealthController;
 use App\Http\Controllers\Public\LandingController;
+use App\Http\Controllers\SuperAdmin\ArsipPesertaController;
 use App\Http\Controllers\SuperAdmin\AuditLogController;
 use App\Http\Controllers\SuperAdmin\BidangController;
 use App\Http\Controllers\SuperAdmin\BulanController;
@@ -81,10 +85,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/password/ganti', [PasswordController::class, 'updateGanti'])->name('password.ganti.update');
 });
 
-// Unduh Dokumen Privat dengan Temporary Signed URL (AC-03-9)
+// Unduh & Pratinjau Dokumen Privat dengan Temporary Signed URL (AC-03-9)
 Route::get('/berkas/{dokumen}/download', [BerkasController::class, 'unduh'])
     ->name('berkas.download')
-    ->middleware(['signed', 'auth']);
+    ->middleware(['signed:relative', 'auth']);
+
+Route::get('/berkas/{dokumen}/pratinjau', [BerkasController::class, 'pratinjau'])
+    ->name('berkas.pratinjau')
+    ->middleware(['signed:relative', 'auth']);
 
 // Rute Peserta Magang (F-02, F-03, F-08, F-09, F-10, F-12)
 Route::middleware(['auth', 'verified', 'must_change_password', 'role:peserta'])->prefix('peserta')->name('peserta.')->group(function () {
@@ -95,8 +103,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:peserta'])-
     Route::post('/pendaftaran', [PesertaPendaftaranController::class, 'store'])->name('pendaftaran.store');
     Route::get('/pendaftaran/{pendaftaran}', [PesertaPendaftaranController::class, 'detail'])->name('pendaftaran.detail');
     Route::post('/pendaftaran/{pendaftaran}/ajukan', [PesertaPendaftaranController::class, 'ajukan'])->name('pendaftaran.ajukan');
+    Route::post('/pendaftaran/{pendaftaran}/batalkan', [PesertaPendaftaranController::class, 'batalkan'])->name('pendaftaran.batalkan');
     Route::post('/pendaftaran/{pendaftaran}/berkas', [BerkasController::class, 'unggah'])->name('berkas.unggah');
     Route::get('/penempatan/{penempatan}/surat-diterima', [PesertaPendaftaranController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
+    Route::get('/penempatan/{penempatan}/surat-diterima/pratinjau', [PesertaPendaftaranController::class, 'pratinjauSuratDiterima'])->name('penempatan.surat-diterima.pratinjau');
 
     // Pelaksanaan: Tugas & Progres (F-08)
     Route::get('/tugas', [PesertaTugasController::class, 'index'])->name('tugas.index');
@@ -134,6 +144,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:pembimbing,
 
 // Rute Admin & SuperAdmin (F-04, F-05, F-07, F-17)
 Route::middleware(['auth', 'verified', 'must_change_password', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
     Route::get('/kuota', [KuotaController::class, 'index'])->name('kuota.index');
     Route::post('/kuota', [KuotaController::class, 'store'])->name('kuota.store');
     Route::put('/kuota/{kuota}', [KuotaController::class, 'update'])->name('kuota.update');
@@ -149,9 +161,11 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:admin,super
     Route::get('/penempatan', [AdminPenempatanController::class, 'index'])->name('penempatan.index');
     Route::post('/penempatan/manual', [AdminPenempatanController::class, 'storeManual'])->name('penempatan.manual');
     Route::get('/penempatan/{penempatan}/surat-diterima', [AdminPenempatanController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
+    Route::get('/penempatan/{penempatan}/surat-diterima/pratinjau', [AdminPenempatanController::class, 'pratinjauSuratDiterima'])->name('penempatan.surat-diterima.pratinjau');
     Route::post('/penempatan/{penempatan}/pindah-pembimbing', [AdminPenempatanController::class, 'pindahPembimbing'])->name('penempatan.pindah-pembimbing');
     Route::post('/penempatan/{penempatan}/batalkan', [AdminPenempatanController::class, 'batalkan'])->name('penempatan.batalkan');
 
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/pendaftaran', [LaporanController::class, 'pendaftaran'])->name('laporan.pendaftaran');
     Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
     Route::get('/laporan/kuota', [LaporanController::class, 'kuota'])->name('laporan.kuota');
@@ -160,6 +174,12 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:admin,super
 
 // Rute Khusus SuperAdmin (F-06, F-11, F-13)
 Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+    Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Monitoring Pelaksanaan Magang Aktif (PRD 3.3, AC-07-7, AC-08-5)
+    Route::get('/monitoring-peserta', [MonitoringPesertaController::class, 'index'])->name('monitoring.index');
+    Route::get('/monitoring-peserta/{penempatan}', [MonitoringPesertaController::class, 'show'])->name('monitoring.show');
+
     // Bulan Magang & Slot Khusus
     Route::get('/bulan', [BulanController::class, 'index'])->name('bulan.index');
     Route::post('/bulan', [BulanController::class, 'store'])->name('bulan.store');
@@ -174,6 +194,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'
     // Manajemen Staf Internal (F-11)
     Route::get('/staf', [StafController::class, 'index'])->name('staf.index');
     Route::post('/staf', [StafController::class, 'store'])->name('staf.store');
+    Route::put('/staf/{staf}', [StafController::class, 'update'])->name('staf.update');
     Route::post('/staf/{staf}/reset-password', [StafController::class, 'resetPassword'])->name('staf.reset-password');
     Route::patch('/staf/{staf}/toggle', [StafController::class, 'toggleAktif'])->name('staf.toggle');
 
@@ -197,6 +218,11 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
     Route::put('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
 
+    // Arsip Peserta Magang (F-12 AC-12-4, PRD 9.2)
+    Route::get('/arsip-peserta', [ArsipPesertaController::class, 'index'])->name('arsip.index');
+    Route::get('/arsip-peserta/{penempatan}', [ArsipPesertaController::class, 'show'])->name('arsip.show');
+
     // Audit Log Trail (F-13 AC-13-6)
+    Route::get('/audit-log/export', [AuditLogController::class, 'export'])->name('audit-log.export');
     Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log.index');
 });

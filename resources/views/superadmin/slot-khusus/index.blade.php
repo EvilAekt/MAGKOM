@@ -121,7 +121,7 @@
                 </div>
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800); margin-bottom: 0.375rem;">Jumlah Kuota Slot <span style="color: var(--red-600);">*</span></label>
-                    <input type="number" name="jumlah_slot" min="1" max="50" required placeholder="1 - 50" style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem;">
+                    <input type="number" name="jumlah" value="{{ $defaultSlot ?? 3 }}" min="0" max="100" required placeholder="Contoh: 3" style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem;">
                 </div>
             </div>
 

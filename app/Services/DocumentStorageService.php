@@ -40,7 +40,7 @@ class DocumentStorageService
         }
 
         // 2. Validasi batas ukuran berkas
-        $maksMb = Pengaturan::int('berkas_maks_mb', 5);
+        $maksMb = Pengaturan::int('berkas_maks_mb', 2);
         $maksBytes = $maksMb * 1024 * 1024;
         if ($file->getSize() > $maksBytes) {
             throw ValidationException::withMessages([
@@ -91,5 +91,26 @@ class DocumentStorageService
         }
 
         return Storage::disk('private')->download($dokumen->path, $dokumen->nama_asli);
+    }
+
+    /**
+     * Menyajikan berkas dari disk privat secara inline untuk pratinjau browser/modal.
+     */
+    public function pratinjau(Dokumen $dokumen): \Symfony\Component\HttpFoundation\Response
+    {
+        if (! Storage::disk('private')->exists($dokumen->path)) {
+            abort(404, 'Berkas fisik tidak ditemukan di penyimpanan server.');
+        }
+
+        return Storage::disk('private')->response(
+            $dokumen->path,
+            $dokumen->nama_asli,
+            [
+                'Content-Type' => $dokumen->mime,
+                'Content-Disposition' => 'inline; filename="' . $dokumen->nama_asli . '"',
+                'X-Content-Type-Options' => 'nosniff',
+            ],
+            'inline'
+        );
     }
 }

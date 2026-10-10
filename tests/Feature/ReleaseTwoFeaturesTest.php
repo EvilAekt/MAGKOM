@@ -146,7 +146,7 @@ class ReleaseTwoFeaturesTest extends TestCase
 
         // 3. Simpan logbook dengan lampiran PDF valid dan link HTTPS valid
         $validPdf = UploadedFile::fake()->create('laporan-harian.pdf', 800, 'application/pdf');
-        $storeRes = $this->actingAs($this->peserta)->post(route('peserta.logbook.store'), [
+        $storeRes = $this->actingAs($this->peserta)->postJson(route('peserta.logbook.store'), [
             'tanggal' => Carbon::today()->toDateString(),
             'kegiatan' => 'Mengerjakan analisis data trafik web portal dan konfigurasi DNS',
             'link_laporan' => 'https://github.com/EvilAekt/MAGKOM/commit/xyz',

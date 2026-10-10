@@ -4,9 +4,19 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\StatusPendaftaranEnum;
+use App\Enums\StatusPenempatanEnum;
 use App\Http\Controllers\Controller;
+use App\Models\BulanMagang;
+use App\Models\Kuota;
+use App\Models\Pendaftaran;
+use App\Models\Penempatan;
+use App\Models\Penilaian;
+use App\Models\SlotKhusus;
 use App\Services\ExportReportService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LaporanController extends Controller
@@ -16,13 +26,130 @@ class LaporanController extends Controller
     ) {}
 
     /**
+     * Menampilkan Hub Laporan & Rekapitulasi Data (F-17, AC-17-1).
+     */
+    public function index(Request $request): View
+    {
+        $user = $request->user();
+        $tab = $request->input('tab', 'pendaftaran');
+
+        // Jika user bukan superadmin mencoba membuka tab nilai, batasi ke tab pendaftaran
+        if ($tab === 'nilai' && ! $user->isSuperAdmin()) {
+            $tab = 'pendaftaran';
+        }
+
+        // Ringkasan Statistik Eksekutif (Cards Metrik)
+        $metricCards = [
+            'total_pendaftaran' => Pendaftaran::count(),
+            'total_diterima'    => Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)->count(),
+            'penempatan_aktif'  => Penempatan::where('status', StatusPenempatanEnum::Aktif)->count(),
+            'penempatan_selesai'=> Penempatan::where('status', StatusPenempatanEnum::Selesai)->count(),
+            'kuota_terisi'      => (int) Kuota::sum('terisi'),
+            'slot_terisi'       => (int) SlotKhusus::sum('terisi'),
+        ];
+
+        $bulanMagangList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
+        $jurusanList = \App\Models\Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
+
+        // Data berdasarkan Tab
+        $pendaftaranData = null;
+        $penempatanData = null;
+        $kuotaData = null;
+        $slotKhususData = null;
+        $nilaiData = null;
+
+        if ($tab === 'pendaftaran') {
+            $pQuery = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan'])
+                ->latest('created_at');
+
+            if ($request->filled('bulan_magang_id')) {
+                $pQuery->where('bulan_magang_id', $request->input('bulan_magang_id'));
+            }
+            if ($request->filled('status')) {
+                $pQuery->where('status', $request->input('status'));
+            }
+            if ($request->filled('jurusan_id')) {
+                $jurusanId = $request->integer('jurusan_id');
+                $pQuery->where(function ($q) use ($jurusanId) {
+                    $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
+                      ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
+                });
+            }
+            if ($request->filled('dari_tanggal')) {
+                $pQuery->where('created_at', '>=', $request->input('dari_tanggal') . ' 00:00:00');
+            }
+            if ($request->filled('sampai_tanggal')) {
+                $pQuery->where('created_at', '<=', $request->input('sampai_tanggal') . ' 23:59:59');
+            }
+
+            $pendaftaranData = $pQuery->paginate(10)->withQueryString();
+        } elseif ($tab === 'penempatan') {
+            $penQuery = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan', 'slotKhusus'])
+                ->orderBy('tgl_mulai', 'desc');
+
+            if ($request->filled('status')) {
+                $penQuery->where('status', $request->input('status'));
+            }
+            if ($request->filled('jalur')) {
+                $penQuery->where('jalur', $request->input('jalur'));
+            }
+            if ($request->filled('jurusan_id')) {
+                $jurusanId = $request->integer('jurusan_id');
+                $penQuery->where(function ($q) use ($jurusanId) {
+                    $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
+                      ->orWhereHas('peserta.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
+                });
+            }
+            if ($request->filled('dari_tanggal')) {
+                $penQuery->where('tgl_mulai', '>=', $request->input('dari_tanggal'));
+            }
+            if ($request->filled('sampai_tanggal')) {
+                $penQuery->where('tgl_mulai', '<=', $request->input('sampai_tanggal'));
+            }
+
+            $penempatanData = $penQuery->paginate(10)->withQueryString();
+        } elseif ($tab === 'kuota') {
+            $kuotaData = Kuota::with(['bulanMagang', 'jurusan'])
+                ->join('bulan_magang', 'kuota.bulan_magang_id', '=', 'bulan_magang.id')
+                ->orderBy('bulan_magang.bulan_mulai', 'desc')
+                ->select('kuota.*')
+                ->paginate(15, ['*'], 'kuota_page')
+                ->withQueryString();
+
+            $slotKhususData = SlotKhusus::orderBy('bulan_mulai', 'desc')
+                ->paginate(10, ['*'], 'slot_page')
+                ->withQueryString();
+        } elseif ($tab === 'nilai' && $user->isSuperAdmin()) {
+            $nilaiData = Penilaian::with(['penempatan.peserta.profil', 'pembimbing'])
+                ->latest()
+                ->paginate(10)
+                ->withQueryString();
+        }
+
+        return view('admin.laporan.index', [
+            'tab'               => $tab,
+            'metricCards'       => $metricCards,
+            'bulanMagangList'   => $bulanMagangList,
+            'jurusanList'       => $jurusanList,
+            'statusPendaftaran' => StatusPendaftaranEnum::cases(),
+            'statusPenempatan'  => StatusPenempatanEnum::cases(),
+            'pendaftaranData'   => $pendaftaranData,
+            'penempatanData'    => $penempatanData,
+            'kuotaData'         => $kuotaData,
+            'slotKhususData'    => $slotKhususData,
+            'nilaiData'         => $nilaiData,
+            'isSuperAdmin'      => $user->isSuperAdmin(),
+        ]);
+    }
+
+    /**
      * Ekspor rekapitulasi data pendaftaran peserta (AC-17-1, F-17).
      */
     public function pendaftaran(Request $request): StreamedResponse
     {
         return $this->exportService->exportPendaftaran(
             $request->user(),
-            $request->only(['bulan_magang_id', 'status'])
+            $request->only(['bulan_magang_id', 'status', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal'])
         );
     }
 
@@ -33,7 +160,7 @@ class LaporanController extends Controller
     {
         return $this->exportService->exportPenempatan(
             $request->user(),
-            $request->only(['status', 'jalur'])
+            $request->only(['status', 'jalur', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal'])
         );
     }
 
@@ -50,6 +177,10 @@ class LaporanController extends Controller
      */
     public function nilai(Request $request): StreamedResponse
     {
+        if (! $request->user()->isSuperAdmin()) {
+            throw new AuthorizationException('Rekapitulasi nilai hanya dapat diakses oleh SuperAdmin (PRD 3.3, A-20).');
+        }
+
         return $this->exportService->exportNilai($request->user());
     }
 }

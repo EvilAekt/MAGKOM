@@ -25,8 +25,11 @@ class SlotKhususController extends Controller
             ->orderBy('bulan_mulai', 'desc')
             ->paginate(12);
 
+        $defaultSlot = \App\Support\Pengaturan::int('slot_khusus_default', 3);
+
         return view('superadmin.slot-khusus.index', [
             'slotList' => $slotList,
+            'defaultSlot' => $defaultSlot,
         ]);
     }
 
@@ -71,8 +74,21 @@ class SlotKhususController extends Controller
 
     public function toggleAktif(Request $request, SlotKhusus $slotKhusus): RedirectResponse
     {
+        $targetAktif = ! $slotKhusus->aktif;
+
+        // Penegakan Aturan Bisnis BR-12 jika hendak menonaktifkan slot khusus
+        if (! $targetAktif) {
+            $hasActivePenempatan = \App\Models\Penempatan::where('slot_khusus_id', $slotKhusus->id)
+                ->where('status', \App\Enums\StatusPenempatanEnum::Aktif)
+                ->exists();
+
+            if ($hasActivePenempatan) {
+                return back()->with('error', 'Penonaktifan ditolak (BR-12): Masih terdapat peserta magang aktif pada slot khusus ini.');
+            }
+        }
+
         $nilaiLama = ['aktif' => $slotKhusus->aktif];
-        $slotKhusus->aktif = ! $slotKhusus->aktif;
+        $slotKhusus->aktif = $targetAktif;
         $slotKhusus->save();
 
         $this->auditService->catat(

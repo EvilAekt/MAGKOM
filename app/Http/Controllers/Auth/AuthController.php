@@ -58,8 +58,8 @@ class AuthController extends Controller
             );
 
             return redirect()->intended(match ($user->role) {
-                RoleEnum::SuperAdmin => route('superadmin.bulan.index'),
-                RoleEnum::Admin => route('admin.pendaftaran.index'),
+                RoleEnum::SuperAdmin => route('superadmin.dashboard'),
+                RoleEnum::Admin => route('admin.dashboard'),
                 RoleEnum::Pembimbing => route('pembimbing.tugas.index'),
                 RoleEnum::Peserta => route('peserta.pendaftaran.index'),
             });

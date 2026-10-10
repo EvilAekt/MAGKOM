@@ -16,7 +16,7 @@ class UnggahDokumenRequest extends FormRequest
 
     public function rules(): array
     {
-        $maksKb = Pengaturan::int('berkas_maks_mb', 5) * 1024;
+        $maksKb = Pengaturan::int('berkas_maks_mb', 2) * 1024;
 
         return [
             'jenis_dokumen_id' => ['required', 'exists:jenis_dokumen,id'],
@@ -31,7 +31,7 @@ class UnggahDokumenRequest extends FormRequest
 
     public function messages(): array
     {
-        $maksMb = Pengaturan::int('berkas_maks_mb', 5);
+        $maksMb = Pengaturan::int('berkas_maks_mb', 2);
 
         return [
             'jenis_dokumen_id.required' => 'Jenis dokumen persyaratan wajib dipilih.',

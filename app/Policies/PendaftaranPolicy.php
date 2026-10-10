@@ -36,6 +36,23 @@ class PendaftaranPolicy
     }
 
     /**
+     * Menentukan apakah peserta dapat membatalkan pendaftaran mandiri (AC-03-9).
+     */
+    public function cancel(User $user, Pendaftaran $pendaftaran): bool
+    {
+        if ($user->id !== $pendaftaran->user_id) {
+            return false;
+        }
+
+        return in_array($pendaftaran->status, [
+            StatusPendaftaranEnum::BerkasBelumLengkap,
+            StatusPendaftaranEnum::Diajukan,
+            StatusPendaftaranEnum::PerluPerbaikan,
+            StatusPendaftaranEnum::WaitingList,
+        ], true);
+    }
+
+    /**
      * Menentukan apakah admin/superadmin dapat mereview dan memutuskan pendaftaran.
      */
     public function review(User $user, Pendaftaran $pendaftaran): bool

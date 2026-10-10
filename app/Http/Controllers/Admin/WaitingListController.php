@@ -8,6 +8,7 @@ use App\Enums\StatusPendaftaranEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\BulanMagang;
+use App\Models\Jurusan;
 use App\Models\Pendaftaran;
 use App\Services\AuditService;
 use Carbon\Carbon;
@@ -27,13 +28,51 @@ class WaitingListController extends Controller
      */
     public function index(Request $request): View
     {
-        $waitingList = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan'])
+        $query = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan'])
             ->where('status', StatusPendaftaranEnum::WaitingList)
-            ->orderBy('diajukan_at', 'asc')
-            ->paginate(20);
+            ->orderBy('diajukan_at', 'asc');
+
+        if ($request->filled('bulan_magang_id')) {
+            $query->where('bulan_magang_id', $request->integer('bulan_magang_id'));
+        }
+
+        if ($request->filled('jurusan_id')) {
+            $jurusanId = $request->integer('jurusan_id');
+            $query->whereHas('kuota', function ($q) use ($jurusanId) {
+                $q->where('jurusan_id', $jurusanId);
+            });
+        }
+
+        if ($request->filled('search')) {
+            $search = '%' . trim((string) $request->input('search')) . '%';
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($qu) use ($search) {
+                    $qu->where('nama', 'like', $search)
+                        ->orWhere('email', 'like', $search)
+                        ->orWhereHas('profil', function ($qp) use ($search) {
+                            $qp->where('institusi', 'like', $search)
+                                ->orWhere('nim_nisn', 'like', $search);
+                        });
+                });
+            });
+        }
+
+        $waitingList = $query->paginate(20)->withQueryString();
+
+        $bulanAntreanIds = Pendaftaran::where('status', StatusPendaftaranEnum::WaitingList)
+            ->distinct()
+            ->pluck('bulan_magang_id');
+
+        $bulanAntreanList = BulanMagang::whereIn('id', $bulanAntreanIds)
+            ->orderBy('bulan_mulai', 'asc')
+            ->get();
+
+        $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
 
         return view('admin.waiting-list.index', [
             'waitingList' => $waitingList,
+            'bulanAntreanList' => $bulanAntreanList,
+            'jurusanList' => $jurusanList,
         ]);
     }
 

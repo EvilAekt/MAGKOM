@@ -117,7 +117,25 @@ class JurusanController extends Controller
                 return back()->with('error', 'Penonaktifan ditolak (BR-12): Masih terdapat alokasi kuota aktif untuk jurusan ini.');
             }
 
-            // 2. Cek apakah ada penempatan magang aktif
+            // 2. Cek apakah ada pendaftaran aktif pada jurusan ini (BR-12)
+            $hasActivePendaftaran = Pendaftaran::where(function ($q) use ($jurusan) {
+                    $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusan->id))
+                      ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusan->id));
+                })
+                ->whereIn('status', [
+                    StatusPendaftaranEnum::Diajukan,
+                    StatusPendaftaranEnum::WaitingList,
+                    StatusPendaftaranEnum::PerluPerbaikan,
+                    StatusPendaftaranEnum::BerkasBelumLengkap,
+                    StatusPendaftaranEnum::Diterima,
+                ])
+                ->exists();
+
+            if ($hasActivePendaftaran) {
+                return back()->with('error', 'Penonaktifan ditolak (BR-12): Masih terdapat pendaftaran aktif pada jurusan ini.');
+            }
+
+            // 3. Cek apakah ada penempatan magang aktif
             $hasActivePenempatan = Penempatan::whereHas('kuota', function ($q) use ($jurusan) {
                 $q->where('jurusan_id', $jurusan->id);
             })->where('status', StatusPenempatanEnum::Aktif)->exists();

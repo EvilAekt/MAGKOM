@@ -68,6 +68,14 @@ class Pendaftaran extends Model
     }
 
     /**
+     * Accessor nomor pendaftaran terformat (#REG-XXXXX).
+     */
+    public function getNomorPendaftaranAttribute(): string
+    {
+        return '#REG-' . str_pad((string) $this->id, 5, '0', STR_PAD_LEFT);
+    }
+
+    /**
      * Scope pendaftaran yang masih aktif (BR-17).
      * Pendaftaran dianggap aktif jika statusnya belum final (bukan ditolak).
      */
