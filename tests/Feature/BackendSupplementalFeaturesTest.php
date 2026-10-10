@@ -19,13 +19,13 @@ use App\Models\Penempatan;
 use App\Models\Pengaturan;
 use App\Models\Rubrik;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class BackendSupplementalFeaturesTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     protected function setUp(): void
     {

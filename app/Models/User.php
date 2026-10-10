@@ -60,6 +60,15 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * Accessor atribut 'name' agar kompatibel dengan konvensi Laravel dan template tampilan.
+     */
+    public function getNameAttribute(): ?string
+    {
+        return $this->nama;
+    }
+
+
+    /**
      * Relasi ke unit kerja bidang (khusus staf).
      */
     public function bidang(): BelongsTo
