@@ -20,6 +20,7 @@ use App\Http\Controllers\Pembimbing\PenilaianController as PembimbingPenilaianCo
 use App\Http\Controllers\Pembimbing\PesertaController as PembimbingPesertaController;
 use App\Http\Controllers\Pembimbing\TugasController as PembimbingTugasController;
 use App\Http\Controllers\Peserta\BerkasController;
+use App\Http\Controllers\Peserta\DashboardController as PesertaDashboardController;
 use App\Http\Controllers\Peserta\LogbookController as PesertaLogbookController;
 use App\Http\Controllers\Peserta\NilaiController as PesertaNilaiController;
 use App\Http\Controllers\Peserta\PendaftaranController as PesertaPendaftaranController;
@@ -99,6 +100,8 @@ Route::get('/berkas/{dokumen}/pratinjau', [BerkasController::class, 'pratinjau']
 
 // Rute Peserta Magang (F-02, F-03, F-08, F-09, F-10, F-12)
 Route::middleware(['auth', 'verified', 'must_change_password', 'role:peserta'])->prefix('peserta')->name('peserta.')->group(function () {
+    Route::get('/dashboard', [PesertaDashboardController::class, 'index'])->name('dashboard');
+
     Route::get('/profil', [PesertaProfilController::class, 'show'])->name('profil.show');
     Route::post('/profil', [PesertaProfilController::class, 'simpan'])->name('profil.simpan');
 

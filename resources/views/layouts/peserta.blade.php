@@ -10,7 +10,7 @@
     <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -48,6 +48,23 @@
             --red-700: #991B1B;
 
             --font-sans: 'Open Sans', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            
+            /* Tipografi Skala MagKom Resmi (Bab 2.2) */
+            --text-2xs: 0.6875rem; /* 11px */
+            --text-xs: 0.75rem;    /* 12px */
+            --text-sm: 0.8125rem;  /* 13px */
+            --text-base: 0.875rem; /* 14px - Standar Body */
+            --text-md: 0.9375rem;  /* 15px */
+            --text-lg: 1rem;       /* 16px */
+            --text-xl: 1.125rem;   /* 18px */
+            --text-2xl: 1.25rem;   /* 20px */
+            --text-3xl: 1.5rem;    /* 24px */
+
+            --fw-normal: 400;
+            --fw-medium: 500;
+            --fw-semibold: 600;
+            --fw-bold: 700;
+
             --radius-default: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
@@ -56,136 +73,199 @@
             --topbar-height: 64px;
         }
 
-        * {
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: var(--font-sans);
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
         }
 
         body {
+            font-family: var(--font-sans);
+            font-size: var(--text-base);
+            font-weight: var(--fw-normal);
+            line-height: 1.5;
             background-color: var(--neutral-150);
             color: var(--neutral-800);
             min-height: 100vh;
             display: flex;
-            line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
-        /* Sidebar Styling */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--neutral-800);
+            font-weight: var(--fw-bold);
+            line-height: 1.3;
+        }
+
+        p {
+            line-height: 1.5;
+        }
+
+        input, button, select, textarea, optgroup {
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        /* Sidebar Styling (Diselaraskan dengan Super Admin / Design System MagKom) */
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--blue-700);
             color: var(--neutral-0);
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             position: fixed;
             top: 0;
             bottom: 0;
             left: 0;
             z-index: 50;
-            transition: transform 0.25s ease-in-out;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
         }
 
         .sidebar-header {
-            padding: 24px 20px 20px 20px;
+            padding: 1.25rem 1.25rem 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            gap: 0.75rem;
+            flex-shrink: 0;
         }
 
         .brand-box {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 0.75rem;
             text-decoration: none;
             color: #ffffff;
+            min-width: 0;
         }
 
         .brand-icon {
-            width: 36px;
-            height: 36px;
-            background: #ffffff;
-            color: var(--blue-700);
-            border-radius: var(--radius-default);
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #FFFFFF;
             font-weight: 800;
-            font-size: 18px;
+            font-size: 1.125rem;
+            flex-shrink: 0;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
         }
 
         .brand-text h2 {
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 700;
             letter-spacing: -0.01em;
+            color: #FFFFFF;
             line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .brand-text span {
-            font-size: 11px;
+            font-size: 0.6875rem;
+            font-weight: 600;
             color: rgba(255, 255, 255, 0.75);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.04em;
         }
 
         .sidebar-nav {
-            padding: 20px 16px;
+            padding: 1rem 0.75rem;
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 0.2rem;
             overflow-y: auto;
+            min-height: 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .sidebar-nav::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
         }
 
         .nav-label {
-            font-size: 11px;
+            font-size: 0.6875rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
             color: rgba(255, 255, 255, 0.6);
-            padding: 12px 12px 6px 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.625rem 0.75rem 0.25rem 0.75rem;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: var(--radius-default);
-            color: rgba(255, 255, 255, 0.85);
+            gap: 0.75rem;
+            min-height: 40px;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
             text-decoration: none;
-            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.875rem;
             font-weight: 600;
-            transition: all 0.15s ease;
+            transition: all 0.15s ease-in-out;
+            outline: none;
         }
 
         .nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.12);
             color: #ffffff;
         }
 
         .nav-item.active {
-            background-color: #ffffff;
+            background-color: var(--neutral-0);
             color: var(--blue-700);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-subtle);
         }
 
         .nav-item.active svg {
             color: var(--blue-700);
+            stroke-width: 2.25;
         }
 
         .nav-item svg {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             flex-shrink: 0;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.85);
         }
 
         .sidebar-footer {
-            padding: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 1rem 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
         }
 
         .logout-btn {
@@ -193,21 +273,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            gap: 0.5rem;
+            min-height: 38px;
+            padding: 0.5rem 0.75rem;
+            background: rgba(255, 255, 255, 0.08);
             color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--radius-default);
-            font-size: 13px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            font-size: 0.8125rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.15s ease;
+            transition: background 0.15s ease, border-color 0.15s ease;
         }
 
         .logout-btn:hover {
-            background: rgba(220, 38, 38, 0.8);
-            border-color: rgba(220, 38, 38, 0.8);
+            background: rgba(220, 38, 38, 0.85);
+            border-color: rgba(220, 38, 38, 0.85);
         }
 
         /* Layout Main Area */
@@ -253,9 +334,10 @@
         }
 
         .topbar-title {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: var(--text-xl);
+            font-weight: var(--fw-bold);
             color: var(--neutral-800);
+            line-height: 1.3;
         }
 
         .topbar-right {
@@ -315,8 +397,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
-            font-weight: 700;
+            font-size: var(--text-sm);
+            font-weight: var(--fw-bold);
         }
 
         .user-info {
@@ -325,16 +407,16 @@
         }
 
         .user-name {
-            font-size: 13px;
-            font-weight: 700;
+            font-size: var(--text-base);
+            font-weight: var(--fw-semibold);
             color: var(--neutral-800);
-            line-height: 1.2;
+            line-height: 1.25;
         }
 
         .user-badge {
-            font-size: 11px;
+            font-size: var(--text-2xs);
             color: var(--blue-600);
-            font-weight: 600;
+            font-weight: var(--fw-semibold);
         }
 
         .profile-dropdown-menu {
@@ -385,8 +467,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 15px;
-            font-weight: 700;
+            font-size: var(--text-base);
+            font-weight: var(--fw-bold);
             flex-shrink: 0;
         }
 
@@ -397,8 +479,8 @@
         }
 
         .dropdown-header-name {
-            font-size: 13px;
-            font-weight: 700;
+            font-size: var(--text-base);
+            font-weight: var(--fw-bold);
             color: var(--neutral-800);
             white-space: nowrap;
             overflow: hidden;
@@ -406,7 +488,7 @@
         }
 
         .dropdown-header-email {
-            font-size: 11px;
+            font-size: var(--text-xs);
             color: var(--neutral-600);
             white-space: nowrap;
             overflow: hidden;
@@ -414,8 +496,8 @@
         }
 
         .dropdown-header-role {
-            font-size: 10px;
-            font-weight: 700;
+            font-size: var(--text-2xs);
+            font-weight: var(--fw-bold);
             color: var(--blue-700);
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -434,8 +516,8 @@
             gap: 10px;
             width: 100%;
             padding: 10px 16px;
-            font-size: 13px;
-            font-weight: 600;
+            font-size: var(--text-base);
+            font-weight: var(--fw-semibold);
             color: var(--neutral-700);
             text-decoration: none;
             background: transparent;
@@ -491,8 +573,9 @@
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: var(--text-base);
+            font-weight: var(--fw-normal);
+            line-height: 1.5;
         }
 
         .alert-success {
@@ -544,15 +627,18 @@
         }
 
         .card-title {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: var(--text-xl);
+            font-weight: var(--fw-bold);
             color: var(--neutral-800);
+            line-height: 1.3;
         }
 
         .card-subtitle {
-            font-size: 13px;
+            font-size: var(--text-sm);
+            font-weight: var(--fw-normal);
             color: var(--neutral-600);
             margin-top: 4px;
+            line-height: 1.4;
         }
 
         .btn {
@@ -560,15 +646,16 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            height: 44px;
-            padding: 0 20px;
+            height: 42px;
+            padding: 0 18px;
             border-radius: var(--radius-default);
-            font-size: 14px;
-            font-weight: 600;
+            font-size: var(--text-base);
+            font-weight: var(--fw-semibold);
             cursor: pointer;
             text-decoration: none;
             transition: all 0.15s ease;
             border: none;
+            line-height: 1.25;
         }
 
         .btn-primary {
@@ -606,8 +693,9 @@
             gap: 6px;
             padding: 4px 10px;
             border-radius: var(--radius-full);
-            font-size: 12px;
-            font-weight: 600;
+            font-size: var(--text-xs);
+            font-weight: var(--fw-semibold);
+            line-height: 1.2;
         }
 
         .badge-success {
@@ -688,7 +776,7 @@
     <!-- Sidebar Dashboard Peserta -->
     <aside class="sidebar" id="sidebarNav">
         <div class="sidebar-header">
-            <a href="{{ route('peserta.profil.show') }}" class="brand-box">
+            <a href="{{ route('peserta.dashboard') }}" class="brand-box">
                 <div class="brand-icon">M</div>
                 <div class="brand-text">
                     <h2>MagKom</h2>
@@ -699,6 +787,13 @@
 
         <nav class="sidebar-nav">
             <div class="nav-label">Menu Utama</div>
+
+            <a href="{{ route('peserta.dashboard') }}" class="nav-item {{ request()->routeIs('peserta.dashboard') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                Dashboard
+            </a>
 
             <a href="{{ route('peserta.profil.show') }}" class="nav-item {{ request()->routeIs('peserta.profil.*') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -720,7 +815,7 @@
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                 </svg>
-                Logbook Harian
+                Logbook Mingguan
             </a>
 
             <a href="{{ route('peserta.tugas.index') }}" class="nav-item {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}">
@@ -781,8 +876,12 @@
                             aria-haspopup="true" 
                             aria-label="Menu Profil Pengguna"
                             onclick="toggleProfileMenu(event)">
-                        <div class="user-avatar">
-                            {{ strtoupper(substr(auth()->user()->nama ?? auth()->user()->name ?? 'P', 0, 1)) }}
+                        <div class="user-avatar" style="overflow: hidden;">
+                            @if(auth()->user()->profil?->foto_url)
+                                <img src="{{ auth()->user()->profil->foto_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            @else
+                                {{ strtoupper(substr(auth()->user()->nama ?? auth()->user()->name ?? 'P', 0, 1)) }}
+                            @endif
                         </div>
                         <div class="user-info">
                             <span class="user-name">{{ auth()->user()->nama ?? auth()->user()->name }}</span>
@@ -795,8 +894,12 @@
 
                     <div class="profile-dropdown-menu" id="userProfileMenu" role="menu" aria-labelledby="userProfileBtn">
                         <div class="dropdown-header">
-                            <div class="dropdown-header-avatar">
-                                {{ strtoupper(substr(auth()->user()->nama ?? auth()->user()->name ?? 'P', 0, 1)) }}
+                            <div class="dropdown-header-avatar" style="overflow: hidden;">
+                                @if(auth()->user()->profil?->foto_url)
+                                    <img src="{{ auth()->user()->profil->foto_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                @else
+                                    {{ strtoupper(substr(auth()->user()->nama ?? auth()->user()->name ?? 'P', 0, 1)) }}
+                                @endif
                             </div>
                             <div class="dropdown-header-meta">
                                 <span class="dropdown-header-name">{{ auth()->user()->nama ?? auth()->user()->name }}</span>
@@ -806,6 +909,13 @@
                         </div>
 
                         <div class="dropdown-divider"></div>
+
+                        <a href="{{ route('peserta.dashboard') }}" class="dropdown-item" role="menuitem">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            <span>Dashboard</span>
+                        </a>
 
                         <a href="{{ route('peserta.profil.show') }}" class="dropdown-item" role="menuitem">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

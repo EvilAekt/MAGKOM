@@ -61,7 +61,7 @@ class AuthController extends Controller
                 RoleEnum::SuperAdmin => route('superadmin.dashboard'),
                 RoleEnum::Admin => route('admin.dashboard'),
                 RoleEnum::Pembimbing => route('pembimbing.dashboard'),
-                RoleEnum::Peserta => route('peserta.pendaftaran.index'),
+                RoleEnum::Peserta => route('peserta.dashboard'),
             });
         }
 

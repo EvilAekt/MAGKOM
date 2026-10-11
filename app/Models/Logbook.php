@@ -17,6 +17,7 @@ class Logbook extends Model
 
     protected $fillable = [
         'penempatan_id',
+        'minggu_ke',
         'tanggal',
         'kegiatan',
         'file_laporan',
@@ -27,8 +28,26 @@ class Logbook extends Model
 
     protected $casts = [
         'tanggal' => 'date',
+        'minggu_ke' => 'integer',
         'status' => StatusLogbookEnum::class,
     ];
+
+    /**
+     * Dapatkan label representasi minggu magang (misal: "Minggu ke-1").
+     */
+    public function getLabelMingguAttribute(): string
+    {
+        if ($this->minggu_ke) {
+            return "Minggu ke-{$this->minggu_ke}";
+        }
+
+        if ($this->penempatan && $this->penempatan->tgl_mulai && $this->tanggal) {
+            $diffWeeks = (int) $this->penempatan->tgl_mulai->diffInWeeks($this->tanggal) + 1;
+            return "Minggu ke-{$diffWeeks}";
+        }
+
+        return "Minggu ke-1";
+    }
 
     public function penempatan(): BelongsTo
     {
