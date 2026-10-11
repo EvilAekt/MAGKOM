@@ -148,9 +148,11 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::post('/progres/{progres}/review', [PembimbingTugasController::class, 'reviewProgres'])->name('progres.review');
 
     Route::get('/logbook', [PembimbingLogbookReviewController::class, 'index'])->name('logbook.index');
+    Route::post('/logbook/bulk-review', [PembimbingLogbookReviewController::class, 'bulkReview'])->name('logbook.bulk-review');
     Route::post('/logbook/{logbook}/review', [PembimbingLogbookReviewController::class, 'review'])->name('logbook.review');
 
     Route::get('/penilaian', [PembimbingPenilaianController::class, 'index'])->name('penilaian.index');
+    Route::get('/penilaian/ekspor-bidang', [PembimbingPenilaianController::class, 'exportRekapBidang'])->name('penilaian.ekspor-bidang');
     Route::get('/penilaian/{penempatan}', [PembimbingPenilaianController::class, 'show'])->name('penilaian.show');
     Route::post('/penilaian/{penempatan}', [PembimbingPenilaianController::class, 'store'])->name('penilaian.store');
     Route::post('/penempatan/{penempatan}/selesai', [PembimbingPenilaianController::class, 'selesai'])->name('penempatan.selesai');
@@ -174,6 +176,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:admin,super
     Route::post('/waiting-list/{bulanMagang}/tutup', [AdminWaitingListController::class, 'tutupAntrean'])->name('waiting-list.tutup');
 
     Route::get('/penempatan', [AdminPenempatanController::class, 'index'])->name('penempatan.index');
+    Route::get('/penempatan/ekspor-surat-diterima', [AdminPenempatanController::class, 'exportRekapSuratDiterima'])->name('penempatan.ekspor-surat-diterima');
     Route::post('/penempatan/manual', [AdminPenempatanController::class, 'storeManual'])->name('penempatan.manual');
     Route::get('/penempatan/{penempatan}/surat-diterima', [AdminPenempatanController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
     Route::get('/penempatan/{penempatan}/surat-diterima/pratinjau', [AdminPenempatanController::class, 'pratinjauSuratDiterima'])->name('penempatan.surat-diterima.pratinjau');

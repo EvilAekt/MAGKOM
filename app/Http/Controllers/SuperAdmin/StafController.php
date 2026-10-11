@@ -178,25 +178,30 @@ class StafController extends Controller
         $staf->update([
             'password' => Hash::make($validated['password_baru']),
             'must_change_password' => true,
+            'remember_token' => null,
         ]);
+
+        if (\Illuminate\Support\Facades\Schema::hasTable('sessions')) {
+            \Illuminate\Support\Facades\DB::table('sessions')->where('user_id', $staf->id)->delete();
+        }
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
             tabel: 'users',
             idData: $staf->id,
             detail: [
-                'aksi' => 'Reset kata sandi staf secara manual',
+                'aksi' => 'Reset kata sandi staf secara manual dan invalidasi sesi aktif (SEC-04)',
                 'staf_email' => $staf->email,
                 'superadmin_id' => $request->user()->id,
             ]
         );
 
         return redirect()->route('superadmin.staf.index')
-            ->with('success', 'Kata sandi staf berhasil direset. Staf wajib mengganti kata sandi saat login berikutnya.');
+            ->with('success', 'Kata sandi staf berhasil direset. Sesi aktif pengguna telah dicabut dan wajib mengganti kata sandi saat login berikutnya.');
     }
 
     /**
-     * Mengubah status aktif akun staf (AC-11-4).
+     * Mengubah status aktif akun staf (AC-11-4, SEC-03, SEC-16).
      */
     public function toggleAktif(User $staf, Request $request): RedirectResponse
     {
@@ -204,8 +209,15 @@ class StafController extends Controller
             return back()->with('error', 'Anda tidak dapat menonaktifkan akun Anda sendiri.');
         }
 
+        // Penegakan SEC-16: Penjaga SuperAdmin Terakhir
         if ($staf->isSuperAdmin()) {
-            return back()->with('error', 'Status akun SuperAdmin tidak dapat diubah melalui menu ini.');
+            $activeSuperAdminCount = User::where('role', RoleEnum::SuperAdmin)
+                ->where('status_aktif', true)
+                ->count();
+
+            if ($activeSuperAdminCount <= 1) {
+                return back()->with('error', 'Penonaktifan ditolak (SEC-16): Sistem harus memiliki minimal satu akun SuperAdmin aktif.');
+            }
         }
 
         $statusLama = $staf->status_aktif;
@@ -230,7 +242,14 @@ class StafController extends Controller
             }
         }
 
-        $staf->update(['status_aktif' => $statusBaru]);
+        $staf->status_aktif = $statusBaru;
+        if (! $statusBaru) {
+            $staf->remember_token = null; // Revoke remember token (SEC-03)
+            if (\Illuminate\Support\Facades\Schema::hasTable('sessions')) {
+                \Illuminate\Support\Facades\DB::table('sessions')->where('user_id', $staf->id)->delete();
+            }
+        }
+        $staf->save();
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
@@ -239,7 +258,7 @@ class StafController extends Controller
             nilaiLama: ['status_aktif' => $statusLama],
             nilaiBaru: ['status_aktif' => $statusBaru],
             detail: [
-                'aksi' => $statusBaru ? 'Mengaktifkan kembali akun staf' : 'Menonaktifkan akun staf',
+                'aksi' => $statusBaru ? 'Mengaktifkan kembali akun staf' : 'Menonaktifkan akun staf dan invalidasi sesi aktif (SEC-03)',
                 'superadmin_id' => $request->user()->id,
             ]
         );

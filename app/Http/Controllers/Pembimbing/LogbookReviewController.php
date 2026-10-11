@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Pembimbing;
 
+use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
@@ -118,5 +119,78 @@ class LogbookReviewController extends Controller
             'message' => 'Review catatan logbook harian berhasil disimpan.',
             'data' => $logbook,
         ]);
+    }
+
+    /**
+     * Persetujuan logbook massal untuk entri berstatus terkirim (Pilar 1).
+     */
+    public function bulkReview(Request $request): JsonResponse|RedirectResponse
+    {
+        $request->validate([
+            'logbook_ids' => ['required', 'array', 'min:1'],
+            'logbook_ids.*' => ['required', 'integer', 'exists:logbook,id'],
+            'catatan_pembimbing' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $user = $request->user();
+        $catatan = $request->input('catatan_pembimbing') ?? 'Disetujui secara massal oleh pembimbing lapangan.';
+        $ids = $request->input('logbook_ids');
+
+        // Proteksi Otorisasi Anti-IDOR (SEC-11)
+        if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+            $unauthorizedCount = Logbook::whereIn('id', $ids)
+                ->whereDoesntHave('penempatan', fn ($q) => $q->where('pembimbing_id', $user->id))
+                ->count();
+
+            if ($unauthorizedCount > 0) {
+                abort(403, 'Akses ditolak: Anda hanya dapat mereviu logbook peserta bimbingan Anda.');
+            }
+        }
+
+        $logbooks = Logbook::with('penempatan')
+            ->whereIn('id', $ids)
+            ->where('status', StatusLogbookEnum::Terkirim)
+            ->get();
+
+        if ($logbooks->isEmpty()) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak ada entri logbook terkirim yang dapat disetujui.',
+                ], 422);
+            }
+            return redirect()->route('pembimbing.logbook.index')->with('error', 'Tidak ada entri logbook terkirim yang dapat disetujui.');
+        }
+
+        $count = 0;
+        foreach ($logbooks as $lb) {
+            $nilaiLama = $lb->only(['status', 'catatan_pembimbing']);
+            $lb->update([
+                'status' => StatusLogbookEnum::Disetujui,
+                'catatan_pembimbing' => $catatan,
+            ]);
+
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Aksi,
+                tabel: 'logbook',
+                idData: $lb->id,
+                nilaiLama: $nilaiLama,
+                nilaiBaru: ['status' => StatusLogbookEnum::Disetujui->value, 'catatan_pembimbing' => $catatan],
+                detail: ['aksi' => 'bulk_review_logbook', 'pembimbing_id' => $user->id]
+            );
+            $count++;
+        }
+
+        $message = "Berhasil menyetujui {$count} entri logbook harian sekaligus.";
+
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'count' => $count,
+            ]);
+        }
+
+        return redirect()->route('pembimbing.logbook.index')->with('success', $message);
     }
 }

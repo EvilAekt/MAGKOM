@@ -235,9 +235,20 @@
                                         </div>
 
                                         <div>
-                                            <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--neutral-600); margin-bottom: 0.25rem;">
-                                                Catatan Umpan Balik / Arahan Perbaikan <span id="feedback_req_badge_{{ $log->id }}" style="color: #ef4444; display: {{ $reviewVal === 'perlu_revisi' ? 'inline' : 'none' }};">* (Wajib diisi jika perlu revisi)</span>
-                                            </label>
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--neutral-600);">
+                                                    Catatan Umpan Balik / Arahan Perbaikan <span id="feedback_req_badge_{{ $log->id }}" style="color: #ef4444; display: {{ $reviewVal === 'perlu_revisi' ? 'inline' : 'none' }};">* (Wajib diisi jika perlu revisi)</span>
+                                                </label>
+                                            </div>
+                                            <div style="margin-bottom: 0.35rem;">
+                                                <select onchange="applyTugasSnippet('{{ $log->id }}', this.value)" style="width: 100%; height: 32px; border: 1px solid var(--neutral-300); border-radius: 6px; padding: 0 0.5rem; font-size: 0.75rem; background: var(--neutral-50);">
+                                                    <option value="">-- Pilih Template Evaluasi Cepat --</option>
+                                                    <option value="Hasil pekerjaan telah sesuai dengan spesifikasi dan standar mutu dinas. Lanjutkan.">Pekerjaan Sesuai Spesifikasi</option>
+                                                    <option value="Perlu perbaikan format laporan, mohon sertakan dokumentasi hasil pengujian.">Perlu Dokumentasi & Pengujian</option>
+                                                    <option value="Progres berjalan baik, lanjutkan ke tahapan pengerjaan berikutnya.">Lanjutkan ke Tahap Berikutnya</option>
+                                                    <option value="Terdapat kendala teknis yang perlu didiskusikan saat sesi tatap muka mingguan.">Jadwalkan Diskusi Bimbingan</option>
+                                                </select>
+                                            </div>
                                             <textarea name="feedback" id="feedback_input_{{ $log->id }}" rows="2" placeholder="Tuliskan umpan balik atau instruksi perbaikan untuk peserta..." style="width: 100%; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0.65rem; font-size: 0.8125rem; font-family: inherit;">{{ old('feedback', $log->feedback) }}</textarea>
                                         </div>
 
@@ -340,6 +351,14 @@
             input.setAttribute('required', 'required');
         } else if (input) {
             input.removeAttribute('required');
+        }
+    }
+
+    function applyTugasSnippet(logId, val) {
+        if (!val) return;
+        const input = document.getElementById('feedback_input_' + logId);
+        if (input) {
+            input.value = val;
         }
     }
 </script>

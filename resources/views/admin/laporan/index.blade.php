@@ -62,6 +62,140 @@
         </div>
     </div>
 
+    <!-- 1.5 VISUAL ANALYTICS & INSIGHTS (AC-17-1) -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.25rem;">
+        <!-- KARTU 1: TINGKAT KETERISIAN KUOTA PER JURUSAN -->
+        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle); display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; gap: 1rem;">
+                <div>
+                    <h3 style="font-size: 1rem; font-weight: 800; color: var(--neutral-900); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--blue-600);"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+                        <span>Tingkat Keterisian Kuota per Jurusan</span>
+                    </h3>
+                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.25rem 0 0 0;">
+                        Alokasi kursi reguler terhadap realisasi pendaftar diterima
+                    </p>
+                </div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--blue-700); background: var(--blue-tint, #EEF2FF); padding: 0.25rem 0.625rem; border-radius: 999px; white-space: nowrap;">
+                    Live Capacity
+                </span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1rem; max-height: 280px; overflow-y: auto; padding-right: 0.25rem;" class="clean-scrollbar">
+                @forelse($analyticsKuotaJurusan ?? [] as $item)
+                    <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8125rem;">
+                            <span style="font-weight: 700; color: var(--neutral-800); max-width: 60%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $item['nama_jurusan'] }}">
+                                {{ $item['nama_jurusan'] }}
+                            </span>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="color: var(--neutral-600); font-size: 0.75rem;">
+                                    <strong>{{ $item['terisi'] }}</strong> / {{ $item['kuota'] }} Kursi
+                                </span>
+                                @if($item['persen'] >= 100)
+                                    <span style="font-size: 0.6875rem; font-weight: 800; background: var(--red-100, #FEE2E2); color: var(--red-700, #B91C1C); padding: 0.15rem 0.5rem; border-radius: 6px;">Penuh</span>
+                                @elseif($item['persen'] >= 75)
+                                    <span style="font-size: 0.6875rem; font-weight: 800; background: var(--amber-100, #FEF3C7); color: var(--amber-800, #92400E); padding: 0.15rem 0.5rem; border-radius: 6px;">Padat</span>
+                                @else
+                                    <span style="font-size: 0.6875rem; font-weight: 800; background: var(--green-100, #DCFCE7); color: var(--green-800, #166534); padding: 0.15rem 0.5rem; border-radius: 6px;">Tersedia</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: var(--neutral-200); border-radius: 999px; overflow: hidden; position: relative;">
+                            <div style="height: 100%; width: {{ $item['persen'] }}%; border-radius: 999px; background: {{ $item['persen'] >= 100 ? 'var(--red-600)' : ($item['persen'] >= 75 ? 'var(--amber-600)' : 'linear-gradient(90deg, var(--blue-600) 0%, var(--blue-700) 100%)') }}; transition: width 0.4s ease;"></div>
+                        </div>
+                    </div>
+                @empty
+                    <div style="text-align: center; padding: 2rem 1rem; color: var(--neutral-500); font-size: 0.875rem;">
+                        Belum ada data kuota aktif pada sistem.
+                    </div>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- KARTU 2: PROPORSI JENJANG PENDIDIKAN PESERTA -->
+        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle); display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; gap: 1rem;">
+                <div>
+                    <h3 style="font-size: 1rem; font-weight: 800; color: var(--neutral-900); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--green-600);"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <span>Proporsi Jenjang Calon Peserta</span>
+                    </h3>
+                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.25rem 0 0 0;">
+                        Komposisi pendaftar jenjang SMK vs Mahasiswa (D3/S1)
+                    </p>
+                </div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--green-800); background: var(--green-100, #DCFCE7); padding: 0.25rem 0.625rem; border-radius: 999px; white-space: nowrap;">
+                    Demografi
+                </span>
+            </div>
+
+            <!-- STACKED HORIZONTAL BAR -->
+            @php
+                $totJenjang = $analyticsJenjang['total'] ?? 0;
+            @endphp
+            <div style="width: 100%; height: 14px; background: var(--neutral-200); border-radius: 999px; overflow: hidden; display: flex; margin-bottom: 1.5rem;">
+                @if($totJenjang > 0)
+                    <div style="height: 100%; width: {{ $analyticsJenjang['smk']['persen'] ?? 0 }}%; background: #0641CC;" title="SMK: {{ $analyticsJenjang['smk']['persen'] ?? 0 }}%"></div>
+                    <div style="height: 100%; width: {{ $analyticsJenjang['d3']['persen'] ?? 0 }}%; background: #16A34A;" title="D3: {{ $analyticsJenjang['d3']['persen'] ?? 0 }}%"></div>
+                    <div style="height: 100%; width: {{ $analyticsJenjang['s1']['persen'] ?? 0 }}%; background: #9333EA;" title="S1: {{ $analyticsJenjang['s1']['persen'] ?? 0 }}%"></div>
+                @else
+                    <div style="height: 100%; width: 100%; background: var(--neutral-300);"></div>
+                @endif
+            </div>
+
+            <!-- BREAKDOWN CARDS -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: auto;">
+                <!-- SMK -->
+                <div style="background: #F0F4FF; border: 1px solid #D6E4FF; border-radius: 10px; padding: 0.875rem 0.75rem; text-align: center;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 0.35rem; margin-bottom: 0.25rem;">
+                        <span style="width: 8px; height: 8px; border-radius: 50%; background: #0641CC; display: inline-block;"></span>
+                        <span style="font-size: 0.75rem; font-weight: 700; color: #1E3A8A;">SMK</span>
+                    </div>
+                    <div style="font-size: 1.25rem; font-weight: 900; color: #0641CC;">
+                        {{ $analyticsJenjang['smk']['count'] ?? 0 }}
+                    </div>
+                    <small style="font-size: 0.6875rem; color: #3B82F6; font-weight: 700;">
+                        {{ $analyticsJenjang['smk']['persen'] ?? 0 }}% Total
+                    </small>
+                </div>
+
+                <!-- D3 -->
+                <div style="background: #F0FDF4; border: 1px solid #DCFCE7; border-radius: 10px; padding: 0.875rem 0.75rem; text-align: center;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 0.35rem; margin-bottom: 0.25rem;">
+                        <span style="width: 8px; height: 8px; border-radius: 50%; background: #16A34A; display: inline-block;"></span>
+                        <span style="font-size: 0.75rem; font-weight: 700; color: #14532D;">Diploma (D3)</span>
+                    </div>
+                    <div style="font-size: 1.25rem; font-weight: 900; color: #16A34A;">
+                        {{ $analyticsJenjang['d3']['count'] ?? 0 }}
+                    </div>
+                    <small style="font-size: 0.6875rem; color: #22C55E; font-weight: 700;">
+                        {{ $analyticsJenjang['d3']['persen'] ?? 0 }}% Total
+                    </small>
+                </div>
+
+                <!-- S1 -->
+                <div style="background: #FAF5FF; border: 1px solid #F3E8FF; border-radius: 10px; padding: 0.875rem 0.75rem; text-align: center;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 0.35rem; margin-bottom: 0.25rem;">
+                        <span style="width: 8px; height: 8px; border-radius: 50%; background: #9333EA; display: inline-block;"></span>
+                        <span style="font-size: 0.75rem; font-weight: 700; color: #581C87;">Sarjana (S1)</span>
+                    </div>
+                    <div style="font-size: 1.25rem; font-weight: 900; color: #9333EA;">
+                        {{ $analyticsJenjang['s1']['count'] ?? 0 }}
+                    </div>
+                    <small style="font-size: 0.6875rem; color: #A855F7; font-weight: 700;">
+                        {{ $analyticsJenjang['s1']['persen'] ?? 0 }}% Total
+                    </small>
+                </div>
+            </div>
+
+            <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--neutral-600);">
+                <span>Total Profil Calon Peserta Terdata</span>
+                <strong style="color: var(--neutral-900); font-weight: 800;">{{ number_format($totJenjang) }} Orang</strong>
+            </div>
+        </div>
+    </div>
+
     <!-- 2. TAB SWITCHER -->
     <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 0.5rem; box-shadow: var(--shadow-subtle); display: flex; gap: 0.5rem; flex-wrap: wrap;">
         <a href="{{ route('admin.laporan.index', ['tab' => 'pendaftaran']) }}"

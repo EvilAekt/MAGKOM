@@ -82,7 +82,7 @@ class WaitingListController extends Controller
     public function tutupAntrean(BulanMagang $bulanMagang, Request $request): RedirectResponse
     {
         $hariIni = today('Asia/Jakarta');
-        $tglMulaiBulan = Carbon::parse($bulanMagang->bulan_mulai . '-01', 'Asia/Jakarta');
+        $tglMulaiBulan = Carbon::parse($bulanMagang->bulan_mulai)->timezone('Asia/Jakarta')->startOfMonth();
 
         if ($hariIni->lt($tglMulaiBulan)) {
             return back()->with('error', 'Penutupan antrean massal hanya dapat dilakukan untuk bulan magang yang sudah dimulai.');

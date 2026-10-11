@@ -108,7 +108,7 @@ class PengaturanController extends Controller
             $nilaiBaru[$kunci] = $record->nilai;
         }
 
-        Cache::forget('pengaturan_all');
+        Pengaturan::clearCache();
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,

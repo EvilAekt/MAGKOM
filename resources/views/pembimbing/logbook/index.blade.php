@@ -126,7 +126,10 @@
                 <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                     <thead>
                         <tr style="border-bottom: 1px solid var(--neutral-200); background: #f8fafc; color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                            <th style="padding: 1rem 1.5rem; width: 140px;">Tanggal</th>
+                            <th style="padding: 1rem 0.5rem 1rem 1.25rem; width: 40px; text-align: center;">
+                                <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)" title="Pilih Semua" style="cursor: pointer; width: 16px; height: 16px; accent-color: #0641CC;">
+                            </th>
+                            <th style="padding: 1rem 1.25rem; width: 130px;">Tanggal</th>
                             <th style="padding: 1rem 1rem;">Peserta Magang</th>
                             <th style="padding: 1rem 1rem;">Aktivitas Kegiatan</th>
                             <th style="padding: 1rem 1rem;">Lampiran</th>
@@ -150,7 +153,10 @@
                                 };
                             @endphp
                             <tr style="border-bottom: 1px solid var(--neutral-100); transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                                <td style="padding: 1rem 1.5rem; font-weight: 700; color: var(--neutral-900); white-space: nowrap;">
+                                <td style="padding: 1rem 0.5rem 1rem 1.25rem; text-align: center;">
+                                    <input type="checkbox" class="logbook-checkbox" value="{{ $log->id }}" onchange="updateBulkBar()" {{ $statusVal === 'disetujui' ? 'disabled' : '' }} style="cursor: pointer; width: 16px; height: 16px; accent-color: #0641CC;">
+                                </td>
+                                <td style="padding: 1rem 1.25rem; font-weight: 700; color: var(--neutral-900); white-space: nowrap;">
                                     {{ \Carbon\Carbon::parse($log->tanggal)->format('d M Y') }}
                                 </td>
                                 <td style="padding: 1rem 1rem;">
@@ -242,6 +248,20 @@
                 </select>
             </div>
 
+            <!-- Template Respon Cepat (Pilar 1) -->
+            <div>
+                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">
+                    Template Umpan Balik Cepat
+                </label>
+                <select id="quick-canned-select" onchange="applyCannedResponse(this.value)" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.8125rem; background: var(--neutral-50);">
+                    <option value="">-- Pilih Template Komentar --</option>
+                    <option value="Laporan kegiatan terverifikasi lengkap dan sesuai arahan penugasan dinas.">Laporan Lengkap & Sesuai Arahan</option>
+                    <option value="Mohon lengkapi dokumentasi output pekerjaan atau lampirkan tautan bukti hasil kerja.">Minta Lampiran / Bukti Kerja</option>
+                    <option value="Uraian aktivitas terlalu singkat, mohon dirinci poin pekerjaan dan kendala yang dihadapi.">Uraian Terlalu Singkat</option>
+                    <option value="Kerja bagus! Konsistensi dan kedisiplinan pelaporan sudah sangat memuaskan.">Apresiasi Kedisiplinan</option>
+                </select>
+            </div>
+
             <!-- Catatan Pembimbing (Wajib jika Perlu Revisi / AC-09-4) -->
             <div>
                 <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">
@@ -265,12 +285,32 @@
     </div>
 </div>
 
+<!-- FLOATING BULK APPROVAL ACTION BAR (Pilar 1) -->
+<div id="bulk-action-bar" style="display: none; position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: #1e293b; color: #ffffff; padding: 0.75rem 1.75rem; border-radius: 999px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); z-index: 999; align-items: center; gap: 1.25rem; border: 1px solid rgba(255,255,255,0.15);">
+    <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600;">
+        <span id="bulk-selected-count" style="background: #0641CC; color: #ffffff; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.8rem; font-weight: 800;">0</span>
+        <span>Logbook Terpilih</span>
+    </div>
+    <form id="form-bulk-review" method="POST" action="{{ route('pembimbing.logbook.bulk-review') }}" style="display: inline-flex; align-items: center; gap: 0.75rem; margin: 0;">
+        @csrf
+        <div id="bulk-hidden-inputs"></div>
+        <button type="submit" style="height: 36px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 700; font-size: 0.8125rem; border: none; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Setujui Terpilih (1-Klik)</span>
+        </button>
+    </form>
+    <button type="button" onclick="clearBulkSelection()" style="background: transparent; border: none; color: #94a3b8; font-size: 0.8125rem; cursor: pointer; text-decoration: underline;">
+        Batal
+    </button>
+</div>
+
 <script>
     function openReviewModal(logId, namaPeserta, tanggal, status, catatan) {
         document.getElementById('review-modal-subtitle').innerText = namaPeserta + ' • Tanggal: ' + tanggal;
         document.getElementById('form-review-logbook').action = '/pembimbing/logbook/' + logId + '/review';
         document.getElementById('review-status-select').value = status;
         document.getElementById('review-catatan-textarea').value = catatan;
+        document.getElementById('quick-canned-select').value = '';
         handleStatusChange(status);
         document.getElementById('modal-review-logbook').style.display = 'flex';
     }
@@ -289,6 +329,52 @@
             star.style.display = 'none';
             textarea.removeAttribute('required');
         }
+    }
+
+    function applyCannedResponse(val) {
+        if (!val) return;
+        const textarea = document.getElementById('review-catatan-textarea');
+        textarea.value = val;
+    }
+
+    // BULK SELECTION LOGIC
+    function toggleSelectAll(masterCheckbox) {
+        const checkboxes = document.querySelectorAll('.logbook-checkbox:not(:disabled)');
+        checkboxes.forEach(cb => {
+            cb.checked = masterCheckbox.checked;
+        });
+        updateBulkBar();
+    }
+
+    function updateBulkBar() {
+        const checkedBoxes = document.querySelectorAll('.logbook-checkbox:checked');
+        const bar = document.getElementById('bulk-action-bar');
+        const countSpan = document.getElementById('bulk-selected-count');
+        const hiddenInputsContainer = document.getElementById('bulk-hidden-inputs');
+
+        if (checkedBoxes.length > 0) {
+            countSpan.innerText = checkedBoxes.length;
+            hiddenInputsContainer.innerHTML = '';
+            checkedBoxes.forEach(cb => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'logbook_ids[]';
+                input.value = cb.value;
+                hiddenInputsContainer.appendChild(input);
+            });
+            bar.style.display = 'flex';
+        } else {
+            bar.style.display = 'none';
+            hiddenInputsContainer.innerHTML = '';
+        }
+    }
+
+    function clearBulkSelection() {
+        const checkboxes = document.querySelectorAll('.logbook-checkbox');
+        checkboxes.forEach(cb => cb.checked = false);
+        const master = document.getElementById('selectAllCheckbox');
+        if (master) master.checked = false;
+        updateBulkBar();
     }
 </script>
 @endsection

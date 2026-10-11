@@ -6,21 +6,25 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PenempatanManualRequest;
 use App\Models\Bidang;
 use App\Models\Penempatan;
 use App\Models\SlotKhusus;
 use App\Models\User;
+use App\Services\AuditService;
 use App\Services\PlacementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PenempatanController extends Controller
 {
     public function __construct(
-        protected PlacementService $placementService
+        protected PlacementService $placementService,
+        protected AuditService $auditService
     ) {}
 
     public function index(Request $request): View
@@ -215,5 +219,90 @@ class PenempatanController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+
+    /**
+     * Ekspor rekapitulasi data surat keterangan diterima magang ke format CSV (F-16).
+     */
+    public function exportRekapSuratDiterima(Request $request): StreamedResponse
+    {
+        $query = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan', 'slotKhusus'])
+            ->orderBy('tgl_mulai', 'desc');
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+        if ($request->filled('bidang_id')) {
+            $query->where('bidang_id', $request->integer('bidang_id'));
+        }
+
+        $records = $query->get();
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::AksesData,
+            tabel: 'penempatan',
+            idData: null,
+            nilaiLama: null,
+            nilaiBaru: null,
+            detail: [
+                'aksi' => 'Ekspor rekapitulasi surat diterima magang (F-16)',
+                'jumlah_baris' => $records->count(),
+            ],
+            user: $request->user()->id
+        );
+
+        $sanitize = function (mixed $val): string {
+            if ($val === null) {
+                return '';
+            }
+            $s = (string) $val;
+            if ($s !== '' && in_array($s[0], ['=', '+', '-', '@'], true)) {
+                return "'" . $s;
+            }
+            return $s;
+        };
+
+        $fileName = 'rekap-surat-diterima-' . date('Ymd-His') . '.csv';
+
+        return response()->streamDownload(function () use ($records, $sanitize) {
+            $handle = fopen('php://output', 'w');
+            fwrite($handle, "\xEF\xBB\xBF");
+            fputcsv($handle, [
+                'No Penempatan',
+                'Nama Peserta',
+                'NIM/NISN',
+                'Institusi/Kampus',
+                'Jurusan',
+                'Bidang Penempatan',
+                'Pembimbing Lapangan',
+                'Jalur',
+                'Tanggal Mulai',
+                'Tanggal Selesai',
+                'Status',
+                'No Surat Diterima',
+            ]);
+
+            foreach ($records as $item) {
+                fputcsv($handle, [
+                    $sanitize($item->id),
+                    $sanitize($item->peserta?->nama ?? '-'),
+                    $sanitize($item->peserta?->profil?->nim_nisn ?? '-'),
+                    $sanitize($item->peserta?->profil?->institusi ?? '-'),
+                    $sanitize($item->kuota?->jurusan?->nama_jurusan ?? ($item->peserta?->profil?->jurusan?->nama_jurusan ?? '-')),
+                    $sanitize($item->bidang?->nama_bidang ?? '-'),
+                    $sanitize($item->pembimbing?->nama ?? '-'),
+                    $sanitize(strtoupper($item->jalur instanceof \App\Enums\JalurEnum ? $item->jalur->value : (string) ($item->jalur ?? 'REGULER'))),
+                    $sanitize($item->tgl_mulai?->format('d/m/Y') ?? '-'),
+                    $sanitize($item->tgl_selesai?->format('d/m/Y') ?? '-'),
+                    $sanitize(ucfirst($item->status?->value ?? '-')),
+                    $sanitize($item->no_surat ?? '500.12/' . str_pad((string) $item->id, 4, '0', STR_PAD_LEFT) . '/DISKOMINFO/' . date('Y')),
+                ]);
+            }
+
+            fclose($handle);
+        }, $fileName, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
 }
+
 

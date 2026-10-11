@@ -82,4 +82,19 @@ class Pengaturan extends Model
             Cache::forget(self::CACHE_PREFIX . $pengaturan->kunci);
         });
     }
+
+    /**
+     * Bersihkan cache pengaturan kunci tertentu atau seluruhnya.
+     */
+    public static function clearCache(?string $kunci = null): void
+    {
+        if ($kunci) {
+            Cache::forget(self::CACHE_PREFIX . $kunci);
+        } else {
+            Cache::forget('pengaturan_all');
+            foreach (self::pluck('kunci') as $k) {
+                Cache::forget(self::CACHE_PREFIX . $k);
+            }
+        }
+    }
 }

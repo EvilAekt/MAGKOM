@@ -15,15 +15,26 @@
 @endsection
 
 @section('page_actions')
-    @if(isset($slotKhususList) && $slotKhususList->isNotEmpty())
-        <button type="button" onclick="openManualModal()" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #0641CC; color: #FFFFFF; border: none; padding: 0.6rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: all 0.15s ease;" onmouseover="this.style.background='#0533A3'" onmouseout="this.style.background='#0641CC'">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
+    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="{{ route('admin.penempatan.ekspor-surat-diterima', request()->query()) }}" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--neutral-0, #FFFFFF); color: var(--neutral-800, #1E293B); border: 1px solid var(--neutral-300, #CBD5E1); padding: 0.6rem 1.15rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; text-decoration: none; box-shadow: var(--shadow-subtle, 0 1px 2px rgba(0,0,0,0.05)); transition: all 0.15s ease;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
-            <span>Penempatan Jalur Khusus</span>
-        </button>
-    @endif
+            <span>Ekspor Rekap Surat (CSV)</span>
+        </a>
+
+        @if(isset($slotKhususList) && $slotKhususList->isNotEmpty())
+            <button type="button" onclick="openManualModal()" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #0641CC; color: #FFFFFF; border: none; padding: 0.6rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: all 0.15s ease;" onmouseover="this.style.background='#0533A3'" onmouseout="this.style.background='#0641CC'">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Penempatan Jalur Khusus</span>
+            </button>
+        @endif
+    </div>
 @endsection
 
 @section('content')

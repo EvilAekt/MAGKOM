@@ -39,4 +39,12 @@ final class Pengaturan
     {
         PengaturanModel::setNilai($kunci, $nilai);
     }
+
+    /**
+     * Bersihkan cache konfigurasi sistem.
+     */
+    public static function clearCache(?string $kunci = null): void
+    {
+        PengaturanModel::clearCache($kunci);
+    }
 }

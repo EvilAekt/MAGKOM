@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\JenjangEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Http\Controllers\Controller;
@@ -12,6 +13,7 @@ use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\Penilaian;
+use App\Models\PesertaProfil;
 use App\Models\SlotKhusus;
 use App\Services\ExportReportService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -50,6 +52,50 @@ class LaporanController extends Controller
 
         $bulanMagangList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
         $jurusanList = \App\Models\Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
+
+        // Visual Analytics Keterisian Kuota per Jurusan (AC-17-1)
+        $analyticsKuotaJurusan = Kuota::with('jurusan')
+            ->selectRaw('jurusan_id, SUM(jumlah) as total_kuota, SUM(terisi) as total_terisi')
+            ->groupBy('jurusan_id')
+            ->get()
+            ->map(function ($k) {
+                $kuota = (int) $k->total_kuota;
+                $terisi = (int) $k->total_terisi;
+                $persen = $kuota > 0 ? min(100, (int) round(($terisi / $kuota) * 100)) : 0;
+                return [
+                    'nama_jurusan' => $k->jurusan?->nama_jurusan ?? 'Jurusan Lain',
+                    'kuota' => $kuota,
+                    'terisi' => $terisi,
+                    'sisa' => max(0, $kuota - $terisi),
+                    'persen' => $persen,
+                ];
+            })
+            ->sortByDesc('persen')
+            ->values();
+
+        // Visual Analytics Proporsi Jenjang Pendidikan Calon Peserta
+        $smkCount = PesertaProfil::where('jenjang', JenjangEnum::Smk)->count();
+        $d3Count = PesertaProfil::where('jenjang', JenjangEnum::D3)->count();
+        $s1Count = PesertaProfil::where('jenjang', JenjangEnum::S1)->count();
+        $totalJenjang = $smkCount + $d3Count + $s1Count;
+        $analyticsJenjang = [
+            'smk' => [
+                'label' => 'SMK / Sederajat',
+                'count' => $smkCount,
+                'persen' => $totalJenjang > 0 ? (int) round(($smkCount / $totalJenjang) * 100) : 0,
+            ],
+            'd3' => [
+                'label' => 'Diploma (D3)',
+                'count' => $d3Count,
+                'persen' => $totalJenjang > 0 ? (int) round(($d3Count / $totalJenjang) * 100) : 0,
+            ],
+            's1' => [
+                'label' => 'Sarjana (S1)',
+                'count' => $s1Count,
+                'persen' => $totalJenjang > 0 ? (int) round(($s1Count / $totalJenjang) * 100) : 0,
+            ],
+            'total' => $totalJenjang,
+        ];
 
         // Data berdasarkan Tab
         $pendaftaranData = null;
@@ -138,6 +184,8 @@ class LaporanController extends Controller
             'kuotaData'         => $kuotaData,
             'slotKhususData'    => $slotKhususData,
             'nilaiData'         => $nilaiData,
+            'analyticsKuotaJurusan' => $analyticsKuotaJurusan,
+            'analyticsJenjang'  => $analyticsJenjang,
             'isSuperAdmin'      => $user->isSuperAdmin(),
         ]);
     }

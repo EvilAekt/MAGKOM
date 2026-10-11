@@ -10,6 +10,7 @@ use App\Http\Requests\PenilaianRequest;
 use App\Models\Penempatan;
 use App\Models\Penilaian;
 use App\Models\Rubrik;
+use App\Services\AuditService;
 use App\Services\MasaTenggangService;
 use App\Services\ScoringService;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -19,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PenilaianController extends Controller
 {
@@ -221,5 +223,102 @@ class PenilaianController extends Controller
         $namaFile = 'lembar-nilai-' . str_replace(' ', '-', strtolower($namaPeserta)) . '.pdf';
 
         return $pdf->download($namaFile);
+    }
+
+    /**
+     * Ekspor rekapitulasi penilaian mentee bimbingan bidang ke format CSV berproteksi (Pilar 1).
+     */
+    public function exportRekapBidang(Request $request, AuditService $auditService): StreamedResponse
+    {
+        $user = $request->user();
+
+        $penempatan = Penempatan::with(['peserta.profil.jurusan', 'bidang', 'penilaian', 'tugas', 'logbooks'])
+            ->where(function ($q) use ($user) {
+                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                    $q->where('pembimbing_id', $user->id);
+                }
+            })
+            ->latest('tgl_mulai')
+            ->get();
+
+        $auditService->catat(
+            tipe: \App\Enums\TipeAuditEnum::Aksi,
+            tabel: 'penilaian',
+            idData: null,
+            detail: [
+                'aksi' => 'ekspor_rekap_penilaian_bidang',
+                'pembimbing_id' => $user->id,
+                'total_baris' => $penempatan->count(),
+            ]
+        );
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="rekap-bimbingan-' . date('Ymd-His') . '.csv"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        return response()->stream(function () use ($penempatan) {
+            $handle = fopen('php://output', 'w');
+            fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF)); // UTF-8 BOM
+
+            fputcsv($handle, [
+                'No',
+                'Nama Mentee',
+                'Email',
+                'NIM/NISN',
+                'Institusi',
+                'Jurusan',
+                'Bidang Penempatan',
+                'Periode Mulai',
+                'Periode Selesai',
+                'Status Magang',
+                'Total Tugas',
+                'Tugas Selesai',
+                'Total Logbook',
+                'Nilai Akhir',
+                'Predikat',
+                'Status Penilaian',
+            ]);
+
+            $no = 1;
+            foreach ($penempatan as $p) {
+                $peserta = $p->peserta;
+                $profil = $peserta?->profil;
+                $penilaian = $p->penilaian;
+                $tugasSelesai = $p->tugas->where('status', \App\Enums\StatusTugasEnum::Selesai)->count();
+
+                $sanitize = function ($val) {
+                    $s = (string) ($val ?? '-');
+                    if (in_array(substr($s, 0, 1), ['=', '+', '-', '@'], true)) {
+                        return "'" . $s;
+                    }
+                    return $s;
+                };
+
+                fputcsv($handle, [
+                    $no++,
+                    $sanitize($peserta?->nama),
+                    $sanitize($peserta?->email),
+                    $sanitize($profil?->nim_nisn),
+                    $sanitize($profil?->institusi),
+                    $sanitize($profil?->jurusan?->nama_jurusan),
+                    $sanitize($p->bidang?->nama_bidang),
+                    $sanitize($p->tgl_mulai?->format('d/m/Y')),
+                    $sanitize($p->tgl_selesai?->format('d/m/Y')),
+                    $sanitize($p->status?->label() ?? ($p->status?->value ?? '-')),
+                    $p->tugas->count(),
+                    $tugasSelesai,
+                    $p->logbooks->count(),
+                    $penilaian ? number_format((float) $penilaian->nilai_akhir, 2) : '-',
+                    $sanitize($penilaian?->predikat_huruf),
+                    $penilaian ? ($penilaian->status?->label() ?? ($penilaian->status?->value ?? '-')) : 'Belum Dinilai',
+                ]);
+            }
+
+            fclose($handle);
+        }, 200, $headers);
     }
 }

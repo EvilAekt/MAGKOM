@@ -31,6 +31,12 @@
                 Kelola lembar evaluasi kompetensi rubrik, catat riwayat revisi nilai, dan tetapkan kelulusan magang.
             </p>
         </div>
+        <div>
+            <a href="{{ route('pembimbing.penilaian.ekspor-bidang') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.8125rem; border-radius: 8px; text-decoration: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Ekspor Rekap Bimbingan (CSV)</span>
+            </a>
+        </div>
     </div>
 
     <!-- Info Banner Panduan -->
