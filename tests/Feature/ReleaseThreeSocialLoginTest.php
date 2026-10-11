@@ -6,7 +6,7 @@ namespace Tests\Feature;
 
 use App\Enums\RoleEnum;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Contracts\Provider as SocialiteProviderContract;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
@@ -16,7 +16,7 @@ use Tests\TestCase;
 
 class ReleaseThreeSocialLoginTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected function tearDown(): void
     {

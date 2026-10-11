@@ -13,12 +13,12 @@ use App\Models\SlotKhusus;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class LandingPageTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -82,10 +82,8 @@ class LandingPageTest extends TestCase
     public function test_slot_khusus_tidak_pernah_bocor_di_response_publik_ac_01_5(): void
     {
         // Pastikan di database memang ada slot khusus yang aktif
-        $this->assertDatabaseHas('slot_khusus', [
-            'bulan_mulai' => '2026-11-01',
-            'jumlah' => 3,
-        ]);
+        $slotKhusus = SlotKhusus::where('jumlah', 3)->firstOrFail();
+        $this->assertEquals('2026-11-01', $slotKhusus->bulan_mulai->format('Y-m-d'));
 
         $response = $this->get('/');
 
@@ -99,7 +97,7 @@ class LandingPageTest extends TestCase
 
     public function test_override_status_superadmin_langsung_mengubah_status_landing_page(): void
     {
-        $bulanNov = BulanMagang::where('bulan_mulai', '2026-11-01')->firstOrFail();
+        $bulanNov = BulanMagang::whereDate('bulan_mulai', '2026-11-01')->firstOrFail();
 
         // Awalnya override_status null -> Tersedia
         $responseAwal = $this->get('/');

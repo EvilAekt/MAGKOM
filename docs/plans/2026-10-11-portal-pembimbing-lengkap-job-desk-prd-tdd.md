@@ -1,7 +1,7 @@
 # Plan: Penyempurnaan Seluruh Job Desk Pembimbing Sesuai PRD, TDD, Figma, dan Addendum Keamanan/QA
 
 - **Tanggal**: 2026-10-11
-- **Status**: Draft (Menunggu Persetujuan)
+- **Status**: Selesai (Completed)
 - **Author**: Antigravity (web-planning)
 - **Target Area**: Seluruh Portal Job Desk Pembimbing (`/pembimbing/*`):
   1. Direktori & Profil 360° Mentee (`/pembimbing/peserta/*`)
@@ -106,50 +106,50 @@ Menyusun rencana kerja komprehensif untuk mengeksekusi dan menyempurnakan seluru
 ## 6. Langkah Implementasi Bertahap
 
 ### Tahap 1: Penyempurnaan Modul Peserta & Profil 360° Mentee
-- [ ] **Langkah 1.1**: Perbaiki bug tampilan kolom jurusan pada `resources/views/pembimbing/peserta/index.blade.php` dari `$p->peserta?->profil?->jurusan` menjadi `$p->peserta?->profil?->jurusan?->nama_jurusan ?? '-'`.
-- [ ] **Langkah 1.2**: Pastikan controller `Pembimbing\PesertaController.php` melakukan eager loading relasi lengkap: `peserta.profil.jurusan`, `bidang`, `penilaian`, `tugas`, `logbooks`.
-- [ ] **Langkah 1.3**: Poles tampilan halaman detail `resources/views/pembimbing/peserta/show.blade.php`:
+- [x] **Langkah 1.1**: Perbaiki bug tampilan kolom jurusan pada `resources/views/pembimbing/peserta/index.blade.php` dari `$p->peserta?->profil?->jurusan` menjadi `$p->peserta?->profil?->jurusan?->nama_jurusan ?? '-'`.
+- [x] **Langkah 1.2**: Pastikan controller `Pembimbing\PesertaController.php` melakukan eager loading relasi lengkap: `peserta.profil.jurusan`, `bidang`, `penilaian`, `tugas`, `logbooks`.
+- [x] **Langkah 1.3**: Poles tampilan halaman detail `resources/views/pembimbing/peserta/show.blade.php`:
   - Perbaiki label jurusan di banner profil.
   - Sempurnakan kartu metrik KPI: Tingkat penyelesaian tugas (persentase visual), kedisiplinan logbook (total disetujui vs revisi), dan status penilaian rubrik.
   - Tambahkan tab ringkas riwayat tugas berjalan & logbook terbaru di bawah profil mentee.
 
 ### Tahap 2: Penyempurnaan Modul Tugas Peserta & Review Progres (F-08)
-- [ ] **Langkah 2.1**: Update `resources/views/pembimbing/tugas/index.blade.php`:
+- [x] **Langkah 2.1**: Update `resources/views/pembimbing/tugas/index.blade.php`:
   - Perbaiki modal dialog "Buat Tugas Baru" agar memiliki validasi visual tanggal (deadline tidak boleh sebelum hari ini dan tidak melebihi tanggal akhir magang mentee terpilih).
   - Pastikan badge status tugas (`belum`, `proses`, `selesai`) dan indikator runtime terlambat (overdue BR-16) serta "mendekati deadline" ($\le 3$ hari) tampil jelas dengan warna token yang konsisten.
-- [ ] **Langkah 2.2**: Update `resources/views/pembimbing/tugas/show.blade.php`:
+- [x] **Langkah 2.2**: Update `resources/views/pembimbing/tugas/show.blade.php`:
   - Sempurnakan timeline laporan kemajuan progres dari mentee.
   - Sediakan modal/inline form evaluasi umpan balik pembimbing: Opsi status `diterima` vs `perlu_revisi` dengan textarea catatan feedback (wajib terisi jika memilih perlu revisi).
   - Tampilkan tombol aksi "Tandai Selesai" dengan modal konfirmasi konklusif jika tugas belum selesai.
-- [ ] **Langkah 2.3**: Verifikasi controller `Pembimbing\TugasController.php` untuk memastikan validasi deadline tugas (AC-08-1) dan penolakan jika pembimbing mencoba mengakses tugas peserta orang lain (SEC-11).
+- [x] **Langkah 2.3**: Verifikasi controller `Pembimbing\TugasController.php` untuk memastikan validasi deadline tugas (AC-08-1) dan penolakan jika pembimbing mencoba mengakses tugas peserta orang lain (SEC-11).
 
 ### Tahap 3: Penyempurnaan Modul Reviu Logbook Harian (F-09)
-- [ ] **Langkah 3.1**: Update `resources/views/pembimbing/logbook/index.blade.php`:
+- [x] **Langkah 3.1**: Update `resources/views/pembimbing/logbook/index.blade.php`:
   - Perbaiki filter pencarian tanggal dan dropdown mentee.
   - Sempurnakan modal dialog reviu logbook: pembimbing dapat memilih status (`disetujui` atau `perlu_revisi`) dan memasukkan catatan bimbingan terperinci.
   - Pastikan tautan lampiran eksternal mematuhi AC-09-6 (hanya skema `https://` dan disematkan atribut `rel="noopener noreferrer" target="_blank"`).
-- [ ] **Langkah 3.2**: Verifikasi controller `Pembimbing\LogbookReviewController.php`:
+- [x] **Langkah 3.2**: Verifikasi controller `Pembimbing\LogbookReviewController.php`:
   - Wajibkan catatan jika status ditandai `perlu_revisi` (AC-09-4).
   - Lindungi dari mutasi jika penempatan peserta sudah berstatus `selesai` (AC-09-5).
 
 ### Tahap 4: Penyempurnaan Modul Penilaian Rubrik, Nilai Final & Kelulusan (F-10, F-12)
-- [ ] **Langkah 4.1**: Perbaiki `resources/views/pembimbing/penilaian/index.blade.php`:
+- [x] **Langkah 4.1**: Perbaiki `resources/views/pembimbing/penilaian/index.blade.php`:
   - Koreksi pemanggilan jurusan agar menampilkan nama jurusan string (`jurusan?->nama_jurusan`).
   - Sempurnakan badge status evaluasi: `Belum Dinilai` (Abu-abu), `Draf Sementara` (Kuning), `Final Resmi` (Hijau).
   - Tampilkan nilai akhir dan predikat huruf mutu (A–E) bagi yang sudah dinilai.
-- [ ] **Langkah 4.2**: Perbaiki bug kritis audit trail pada `resources/views/pembimbing/penilaian/show.blade.php`:
+- [x] **Langkah 4.2**: Perbaiki bug kritis audit trail pada `resources/views/pembimbing/penilaian/show.blade.php`:
   - Ganti pemanggilan `$riwayat->created_at` menjadi `$riwayat->waktu?->translatedFormat('d M Y H:i')`.
   - Tampilkan nilai akhir lama dan baru dari snapshot JSON `nilai_lama` dan `nilai_baru` atau relasi yang valid.
-- [ ] **Langkah 4.3**: Tingkatkan pengalaman input skor rubrik pada `penilaian/show.blade.php`:
+- [x] **Langkah 4.3**: Tingkatkan pengalaman input skor rubrik pada `penilaian/show.blade.php`:
   - Perhitungan JavaScript dinamis nilai akhir berbobot $\sum(\text{skor} \times \text{bobot}) / 100$ dan penentuan predikat mutu huruf (A $\ge 85$, B $\ge 70$, C $\ge 55$, D $\ge 40$, E $< 40$) saat pembimbing mengetik skor.
   - Tombol aksi terpisah: "Simpan Draf" vs "Finalisasi Nilai Resmi".
   - Jika nilai sudah berstatus `final`, tampilkan form revisi nilai final dengan input catatan alasan perubahan wajib (minimal 10 karakter, AC-10-3).
-- [ ] **Langkah 4.4**: Sempurnakan blok "Penyelesaian Periode Magang (BR-10)":
+- [x] **Langkah 4.4**: Sempurnakan blok "Penyelesaian Periode Magang (BR-10)":
   - Tampilkan peringatan aktivasi masa tenggang akun peserta (BR-11) dengan tombol konfirmasi "Tandai Selesai Magang".
   - Tampilkan tombol unduh Lembar Nilai PDF resmi *on-the-fly* jika nilai sudah final.
 
 ### Tahap 5: Automated Testing & Verifikasi Visual Lengkap
-- [ ] **Langkah 5.1**: Buat test suite komprehensif `tests/Feature/PembimbingFullJobDeskTest.php` yang mencakup:
+- [x] **Langkah 5.1**: Buat test suite komprehensif `tests/Feature/PembimbingFullJobDeskTest.php` yang mencakup:
   - Uji direktori peserta dan profil 360° mentee.
   - Uji pembuatan tugas dengan validasi batas deadline (AC-08-1).
   - Uji reviu progres tugas dan penolakan perlu revisi tanpa feedback (AC-08-4).
@@ -159,8 +159,8 @@ Menyusun rencana kerja komprehensif untuk mengeksekusi dan menyempurnakan seluru
   - Uji revisi nilai final dengan validasi alasan min 10 karakter & perekaman `PenilaianRiwayat` (AC-10-3).
   - Uji penetapan selesai magang dan penolakan jika belum ada nilai final (BR-10, AC-10-5).
   - Uji pencegahan SuperAdmin melakukan aksi tulis pada seluruh modul pembimbing (SEC-12).
-- [ ] **Langkah 5.2**: Jalankan seluruh regression test suite (`PembimbingDashboardEnhancementTest`, `PembimbingPortalFeatureTest`, `TugasLogbookTest`, `ScoringAndCompletionTest`).
-- [ ] **Langkah 5.3**: Verifikasi visual langsung seluruh halaman modul job desk pembimbing via browser subagent dan pastikan bebas error visual.
+- [x] **Langkah 5.2**: Jalankan seluruh regression test suite (`PembimbingDashboardEnhancementTest`, `PembimbingPortalFeatureTest`, `TugasLogbookTest`, `ScoringAndCompletionTest`).
+- [x] **Langkah 5.3**: Verifikasi visual langsung seluruh halaman modul job desk pembimbing via browser subagent dan pastikan bebas error visual.
 
 ---
 

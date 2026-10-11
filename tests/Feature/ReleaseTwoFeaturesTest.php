@@ -21,7 +21,7 @@ use App\Models\PesertaProfil;
 use App\Models\Rubrik;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
@@ -30,7 +30,7 @@ use Tests\TestCase;
 
 class ReleaseTwoFeaturesTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected User $superAdmin;
     protected User $admin;
@@ -342,7 +342,7 @@ class ReleaseTwoFeaturesTest extends TestCase
             'password' => 'secret1234',
             'cf-turnstile-response' => 'token_any',
         ]);
-        $failOpenLogin->assertRedirect(route('peserta.pendaftaran.index'));
+        $failOpenLogin->assertRedirect(route('peserta.dashboard'));
         $this->assertAuthenticated();
     }
 }

@@ -31,14 +31,14 @@ use App\Models\Tugas;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class EndToEndUatTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected User $superAdmin;
     protected User $admin;
@@ -123,7 +123,7 @@ class EndToEndUatTest extends TestCase
             'tgl_tutup' => '2026-11-30',
         ]);
         $bulanRes->assertRedirect(route('superadmin.bulan.index'));
-        $bulan = BulanMagang::where('bulan_mulai', '2027-02-01')->firstOrFail();
+        $bulan = BulanMagang::whereDate('bulan_mulai', '2027-02-01')->firstOrFail();
 
         // 2. Admin mengatur kuota umum per jurusan (kuota 12)
         $kuotaRes = $this->actingAs($this->admin)->post(route('admin.kuota.store'), [
@@ -380,9 +380,16 @@ class EndToEndUatTest extends TestCase
             ]);
         }
 
-        // Ajukan: karena kuota terisi == jumlah, status otomatis WaitingList
+        // Ajukan berkas: status menjadi diajukan
         $ajukanRes = $this->actingAs($peserta)->post(route('peserta.pendaftaran.ajukan', $pendaftaran->id));
         $ajukanRes->assertRedirect();
+
+        // Admin memutuskan waiting_list karena kuota penuh
+        $adminRes = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
+            'keputusan' => 'waiting_list',
+            'catatan' => 'Kuota untuk periode ini telah terpenuhi, masuk antrean cadangan.',
+        ]);
+        $adminRes->assertRedirect();
 
         $pendaftaran->refresh();
         $this->assertEquals(StatusPendaftaranEnum::WaitingList, $pendaftaran->status, 'Pendaftaran pada kuota penuh otomatis masuk ke waiting list');

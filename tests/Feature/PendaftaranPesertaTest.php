@@ -13,18 +13,19 @@ use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
+use App\Models\Penempatan;
 use App\Models\PesertaProfil;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PendaftaranPesertaTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -88,7 +89,7 @@ class PendaftaranPesertaTest extends TestCase
         $this->assertDatabaseHas('peserta_profil', ['user_id' => $peserta->id, 'nim_nisn' => '1234567890']);
 
         // 3. Buat Pengajuan Pendaftaran Magang
-        $bulanNov = BulanMagang::where('bulan_mulai', '2026-11-01')->firstOrFail();
+        $bulanNov = BulanMagang::whereDate('bulan_mulai', '2026-11-01')->firstOrFail();
         $kuota = Kuota::where('bulan_magang_id', $bulanNov->id)
             ->where('jurusan_id', $jurusan->id)
             ->firstOrFail();
@@ -163,14 +164,12 @@ class PendaftaranPesertaTest extends TestCase
         $this->assertEquals($terisiAwal + 1, $kuota->terisi);
 
         // Verifikasi entri Penempatan terbentuk resmi
-        $this->assertDatabaseHas('penempatan', [
-            'pendaftaran_id' => $pendaftaran->id,
-            'peserta_id' => $peserta->id,
-            'pembimbing_id' => $pembimbing->id,
-            'status' => StatusPenempatanEnum::Aktif->value,
-            'tgl_mulai' => '2026-11-01',
-            'tgl_selesai' => '2027-01-31', // 3 bulan (Nov, Des, Jan)
-        ]);
+        $penempatan = Penempatan::where('pendaftaran_id', $pendaftaran->id)->firstOrFail();
+        $this->assertEquals($peserta->id, $penempatan->peserta_id);
+        $this->assertEquals($pembimbing->id, $penempatan->pembimbing_id);
+        $this->assertEquals(StatusPenempatanEnum::Aktif, $penempatan->status);
+        $this->assertEquals('2026-11-01', $penempatan->tgl_mulai->format('Y-m-d'));
+        $this->assertEquals('2027-01-31', $penempatan->tgl_selesai->format('Y-m-d'));
 
         // 8. Uji Unduh Berkas Privat dengan Temporary Signed URL (AC-03-9)
         $signedUrl = $dokumenPertama->getSignedDownloadUrl(5);
