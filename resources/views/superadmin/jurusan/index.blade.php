@@ -5,31 +5,62 @@
 @section('page_description', 'Kelola daftar jurusan program pendidikan (SMK dan Perguruan Tinggi) untuk alokasi kuota magang.')
 
 @section('breadcrumbs')
+    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <span class="breadcrumb-separator">/</span>
     <span class="breadcrumb-current">Master Jurusan</span>
+@endsection
+
+@section('page_actions')
+    <button type="button" onclick="document.getElementById('modalTambahJurusan').style.display='flex'" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 42px; padding: 0 1.25rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s ease; box-shadow: var(--shadow-subtle);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Tambah Jurusan Baru</span>
+    </button>
 @endsection
 
 @section('content')
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-    <!-- Info Banner & Create Button -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+
+    <!-- 1. ALERT BANNER ATURAN PENONAKTIFAN (BR-12) -->
+    <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; box-shadow: var(--shadow-subtle);">
+        <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-600); color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+        </div>
         <div>
-            <h2 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin: 0 0 0.25rem 0;">Aturan Penonaktifan Jurusan (BR-12)</h2>
-            <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">
-                Jurusan tidak dapat dinonaktifkan jika masih terikat dengan kuota aktif atau memiliki peserta magang aktif.
+            <h2 style="font-size: 0.9375rem; font-weight: 700; color: var(--blue-700); margin: 0 0 0.25rem 0;">
+                Aturan Penonaktifan Jurusan (BR-12)
+            </h2>
+            <p style="font-size: 0.8125rem; color: var(--neutral-700); margin: 0; line-height: 1.5;">
+                Jurusan tidak dapat dinonaktifkan jika masih terikat dengan kuota aktif pada periode pendaftaran berjalan atau masih memiliki peserta magang aktif yang ditempatkan di dinas.
             </p>
         </div>
-
-        <button onclick="document.getElementById('modalTambahJurusan').style.display='flex'" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            Tambah Jurusan Baru
-        </button>
     </div>
 
-    <!-- Data Table Card -->
+    <!-- 2. DATA TABLE CARD -->
     <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
+        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Master Program Studi & Jurusan</h3>
+                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.125rem 0 0 0;">Daftar program kualifikasi akademik yang diakomodasi untuk seleksi magang.</p>
+            </div>
+            <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
+                Total Jurusan: <strong>{{ method_exists($jurusanList, 'total') ? $jurusanList->total() : $jurusanList->count() }}</strong>
+            </span>
+        </div>
+
         @if($jurusanList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
-                <p style="font-size: 1rem; margin: 0;">Belum ada master data jurusan.</p>
+                <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </div>
+                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada master data jurusan.</p>
+                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Jurusan Baru</strong> untuk menambahkan prodi baru.</p>
             </div>
         @else
             <div style="overflow-x: auto;">
@@ -37,49 +68,59 @@
                     <thead>
                         <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                             <th style="padding: 1rem 1.25rem; font-weight: 700;">Nama Jurusan</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Kategori Pendidikan</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Status</th>
-                            <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right;">Aksi</th>
+                            <th style="padding: 1rem 1rem; font-weight: 700; width: 240px;">Kategori Pendidikan</th>
+                            <th style="padding: 1rem 1rem; font-weight: 700; width: 130px; text-align: center;">Status</th>
+                            <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right; width: 200px;">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody style="divide-y: 1px solid var(--neutral-300);">
+                    <tbody>
                         @foreach($jurusanList as $jurusan)
-                            <tr style="border-bottom: 1px solid var(--neutral-300); transition: background 0.15s;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
-                                <td style="padding: 1rem 1.25rem; font-weight: 700; color: var(--neutral-900);">
-                                    {{ $jurusan->nama_jurusan }}
+                            <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
+                                <td style="padding: 1rem 1.25rem;">
+                                    <div style="font-weight: 700; color: var(--neutral-900); font-size: 0.9375rem;">
+                                        {{ $jurusan->nama_jurusan }}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.2rem;">
+                                        ID #{{ $jurusan->id }}
+                                    </div>
                                 </td>
                                 <td style="padding: 1rem 1rem; white-space: nowrap;">
                                     @if($jurusan->kategori === 'smk')
-                                        <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--purple-50, #F3E8FF); color: var(--purple-800, #6B21A8);">
+                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: #F3E8FF; color: #6B21A8; border: 1px solid rgba(107, 33, 168, 0.2);">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                                             SMK / Vokasi
                                         </span>
                                     @else
-                                        <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--blue-50); color: var(--blue-700);">
+                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--blue-tint); color: var(--blue-700); border: 1px solid var(--blue-tint-line);">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
                                             Perguruan Tinggi (D3/D4/S1)
                                         </span>
                                     @endif
                                 </td>
-                                <td style="padding: 1rem 1rem; white-space: nowrap;">
+                                <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
                                     @if($jurusan->aktif)
-                                        <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-50); color: var(--green-800);">
+                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(22, 163, 74, 0.2);">
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>
                                             Aktif
                                         </span>
                                     @else
-                                        <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--red-50); color: var(--red-700);">
+                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--red-100); color: var(--red-700); border: 1px solid rgba(220, 38, 38, 0.2);">
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--red-600);"></span>
                                             Nonaktif
                                         </span>
                                     @endif
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
-                                    <div style="display: inline-flex; gap: 0.5rem; align-items: center;">
-                                        <button onclick="openModalEditJurusan('{{ $jurusan->id }}', '{{ addslashes($jurusan->nama_jurusan) }}', '{{ $jurusan->kategori }}')" style="padding: 0.375rem 0.75rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 600; color: var(--neutral-800); cursor: pointer;">
+                                    <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
+                                        <button type="button" onclick="openModalEditJurusan('{{ $jurusan->id }}', '{{ addslashes($jurusan->nama_jurusan) }}', '{{ $jurusan->kategori }}')" style="padding: 0.45rem 0.875rem; background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--neutral-800); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.375rem;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='var(--neutral-0)'">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                             Edit
                                         </button>
 
-                                        <form action="{{ route('superadmin.jurusan.toggle', $jurusan) }}" method="POST" style="display: inline-block;">
+                                        <form action="{{ route('superadmin.jurusan.toggle', $jurusan) }}" method="POST" style="display: inline-block; margin: 0;">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" onclick="return confirm('{{ $jurusan->aktif ? 'Nonaktifkan jurusan ini? Pastikan tidak ada kuota dan penempatan aktif.' : 'Aktifkan kembali jurusan ini?' }}')" style="padding: 0.375rem 0.75rem; background: {{ $jurusan->aktif ? 'var(--red-50)' : 'var(--green-50)' }}; border: 1px solid {{ $jurusan->aktif ? 'var(--red-200)' : 'var(--green-200)' }}; border-radius: 6px; font-size: 0.75rem; font-weight: 600; color: {{ $jurusan->aktif ? 'var(--red-700)' : 'var(--green-800)' }}; cursor: pointer;">
+                                            <button type="submit" onclick="return confirm('{{ $jurusan->aktif ? 'Nonaktifkan jurusan ini? Pastikan tidak ada kuota dan penempatan aktif.' : 'Aktifkan kembali jurusan ini?' }}')" style="padding: 0.45rem 0.875rem; background: {{ $jurusan->aktif ? 'var(--red-100)' : 'var(--green-100)' }}; border: 1px solid {{ $jurusan->aktif ? 'var(--red-300)' : 'rgba(22, 163, 74, 0.25)' }}; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: {{ $jurusan->aktif ? 'var(--red-700)' : 'var(--green-700)' }}; cursor: pointer; transition: all 0.15s;">
                                                 {{ $jurusan->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
                                             </button>
                                         </form>
@@ -92,7 +133,7 @@
             </div>
 
             @if($jurusanList->hasPages())
-                <div style="padding: 1rem 1.25rem; border-top: 1px solid var(--neutral-300);">
+                <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200); background: var(--neutral-100);">
                     {{ $jurusanList->links() }}
                 </div>
             @endif
@@ -100,34 +141,45 @@
     </div>
 </div>
 
-<!-- Modal Tambah Jurusan -->
-<div id="modalTambahJurusan" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
-    <div style="background: var(--neutral-0); border-radius: 16px; width: 100%; max-width: 440px; padding: 2rem; box-shadow: var(--shadow-card); position: relative;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-300); padding-bottom: 0.75rem;">
-            <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Jurusan Baru</h3>
-            <button onclick="document.getElementById('modalTambahJurusan').style.display='none'" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--neutral-600);">&times;</button>
+<!-- =====================================================================
+     MODAL TAMBAH JURUSAN
+     ===================================================================== -->
+<div id="modalTambahJurusan" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div style="background: var(--neutral-0); border-radius: 16px; width: 100%; max-width: 480px; padding: 2rem; box-shadow: var(--shadow-modal); position: relative; border: 1px solid var(--neutral-400);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.875rem;">
+            <div style="display: flex; align-items: center; gap: 0.625rem;">
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Jurusan Baru</h3>
+            </div>
+            <button type="button" onclick="document.getElementById('modalTambahJurusan').style.display='none'" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
-        <form action="{{ route('superadmin.jurusan.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+        <form action="{{ route('superadmin.jurusan.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
             @csrf
             <div>
-                <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800); margin-bottom: 0.375rem;">Nama Jurusan <span style="color: var(--red-600);">*</span></label>
-                <input type="text" name="nama_jurusan" required placeholder="Contoh: Rekayasa Perangkat Lunak" style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem;">
+                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                    Nama Jurusan <span style="color: var(--red-600);">*</span>
+                </label>
+                <input type="text" name="nama_jurusan" required placeholder="Contoh: Rekayasa Perangkat Lunak" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
             <div>
-                <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800); margin-bottom: 0.375rem;">Kategori Pendidikan <span style="color: var(--red-600);">*</span></label>
-                <select name="kategori" required style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-0);">
+                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                    Kategori Pendidikan <span style="color: var(--red-600);">*</span>
+                </label>
+                <select name="kategori" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
                     <option value="smk">SMK / Sekolah Menengah Kejuruan</option>
                     <option value="mahasiswa">Perguruan Tinggi (D3/D4/S1)</option>
                 </select>
             </div>
 
-            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.75rem;">
-                <button type="button" onclick="document.getElementById('modalTambahJurusan').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-200); border: none; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
+                <button type="button" onclick="document.getElementById('modalTambahJurusan').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 6px; font-weight: 700; font-size: 0.875rem; cursor: pointer;">
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
                     Simpan Jurusan
                 </button>
             </div>
@@ -135,35 +187,46 @@
     </div>
 </div>
 
-<!-- Modal Edit Jurusan -->
-<div id="modalEditJurusan" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
-    <div style="background: var(--neutral-0); border-radius: 16px; width: 100%; max-width: 440px; padding: 2rem; box-shadow: var(--shadow-card); position: relative;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-300); padding-bottom: 0.75rem;">
-            <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Edit Master Jurusan</h3>
-            <button onclick="document.getElementById('modalEditJurusan').style.display='none'" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--neutral-600);">&times;</button>
+<!-- =====================================================================
+     MODAL EDIT JURUSAN
+     ===================================================================== -->
+<div id="modalEditJurusan" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div style="background: var(--neutral-0); border-radius: 16px; width: 100%; max-width: 480px; padding: 2rem; box-shadow: var(--shadow-modal); position: relative; border: 1px solid var(--neutral-400);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.875rem;">
+            <div style="display: flex; align-items: center; gap: 0.625rem;">
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                </div>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Edit Master Jurusan</h3>
+            </div>
+            <button type="button" onclick="document.getElementById('modalEditJurusan').style.display='none'" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
-        <form id="formEditJurusan" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+        <form id="formEditJurusan" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
             @csrf
             @method('PUT')
             <div>
-                <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800); margin-bottom: 0.375rem;">Nama Jurusan <span style="color: var(--red-600);">*</span></label>
-                <input type="text" id="editNamaJurusan" name="nama_jurusan" required style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem;">
+                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                    Nama Jurusan <span style="color: var(--red-600);">*</span>
+                </label>
+                <input type="text" id="editNamaJurusan" name="nama_jurusan" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
             <div>
-                <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800); margin-bottom: 0.375rem;">Kategori Pendidikan <span style="color: var(--red-600);">*</span></label>
-                <select id="editKategoriJurusan" name="kategori" required style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-0);">
+                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                    Kategori Pendidikan <span style="color: var(--red-600);">*</span>
+                </label>
+                <select id="editKategoriJurusan" name="kategori" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
                     <option value="smk">SMK / Sekolah Menengah Kejuruan</option>
                     <option value="mahasiswa">Perguruan Tinggi (D3/D4/S1)</option>
                 </select>
             </div>
 
-            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.75rem;">
-                <button type="button" onclick="document.getElementById('modalEditJurusan').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-200); border: none; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
+                <button type="button" onclick="document.getElementById('modalEditJurusan').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 6px; font-weight: 700; font-size: 0.875rem; cursor: pointer;">
+                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
                     Perbarui Jurusan
                 </button>
             </div>

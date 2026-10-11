@@ -17,12 +17,12 @@ use App\Models\PesertaProfil;
 use App\Models\Rubrik;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ScoringAndCompletionTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected User $pembimbing;
     protected User $peserta;
@@ -40,6 +40,7 @@ class ScoringAndCompletionTest extends TestCase
         $this->pembimbing->role = RoleEnum::Pembimbing;
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->status_aktif = true;
+        $this->pembimbing->must_change_password = false;
         $this->pembimbing->save();
 
         $this->peserta = new User();
@@ -49,6 +50,7 @@ class ScoringAndCompletionTest extends TestCase
         $this->peserta->role = RoleEnum::Peserta;
         $this->peserta->email_verified_at = now();
         $this->peserta->status_aktif = true;
+        $this->peserta->must_change_password = false;
         $this->peserta->save();
 
         $jurusan = \App\Models\Jurusan::firstOrCreate(
@@ -72,6 +74,7 @@ class ScoringAndCompletionTest extends TestCase
         $this->superAdmin->role = RoleEnum::SuperAdmin;
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->status_aktif = true;
+        $this->superAdmin->must_change_password = false;
         $this->superAdmin->save();
 
         $bidang = Bidang::firstOrCreate(
@@ -204,7 +207,7 @@ class ScoringAndCompletionTest extends TestCase
         $responseGagal = $this->actingAs($this->pembimbing)
             ->postJson(route('pembimbing.penempatan.selesai', $this->penempatan));
 
-        $responseGagal->assertStatus(500); // InvalidArgumentException BR-10
+        $responseGagal->assertStatus(422); // InvalidArgumentException BR-10 ditangani secara elegan (422)
 
         // 2. Buat nilai final
         $rubrikAktif = Rubrik::where('aktif', true)->get();

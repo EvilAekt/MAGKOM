@@ -20,7 +20,7 @@ use App\Models\ProgresLog;
 use App\Models\Tugas;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +28,7 @@ use Tests\TestCase;
 
 class TugasLogbookTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected User $pembimbing;
     protected User $peserta;
@@ -48,6 +48,7 @@ class TugasLogbookTest extends TestCase
         $this->pembimbing->role = RoleEnum::Pembimbing;
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->status_aktif = true;
+        $this->pembimbing->must_change_password = false;
         $this->pembimbing->save();
 
         $this->peserta = new User();
@@ -57,6 +58,7 @@ class TugasLogbookTest extends TestCase
         $this->peserta->role = RoleEnum::Peserta;
         $this->peserta->email_verified_at = now();
         $this->peserta->status_aktif = true;
+        $this->peserta->must_change_password = false;
         $this->peserta->save();
 
         $this->superAdmin = new User();
@@ -66,6 +68,7 @@ class TugasLogbookTest extends TestCase
         $this->superAdmin->role = RoleEnum::SuperAdmin;
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->status_aktif = true;
+        $this->superAdmin->must_change_password = false;
         $this->superAdmin->save();
 
         $bidang = Bidang::firstOrCreate(
@@ -196,9 +199,9 @@ class TugasLogbookTest extends TestCase
         $responseHariIni->assertStatus(201);
         $this->assertDatabaseHas('logbook', [
             'penempatan_id' => $this->penempatan->id,
-            'tanggal' => $today,
             'status' => StatusLogbookEnum::Terkirim->value,
         ]);
+        $this->assertEquals($today, Logbook::where('penempatan_id', $this->penempatan->id)->first()->tanggal->toDateString());
 
         // 2. Mengisi logbook kedua di tanggal yang sama -> Ditolak (Constraint unik)
         $responseDuplikat = $this->actingAs($this->peserta)->postJson(route('peserta.logbook.store'), [

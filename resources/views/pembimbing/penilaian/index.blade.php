@@ -1,138 +1,203 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Penilaian Magang - Pembimbing MagKom')
-@section('page_title', 'Evaluasi & Penilaian Magang')
-@section('page_description', 'Kelola instrumen penilaian rubrik kompetensi untuk seluruh peserta magang bimbingan Anda.')
-
-@section('breadcrumbs')
-    <span class="breadcrumb-current">Penilaian Magang</span>
-@endsection
+@section('title', 'Penilaian Magang - Portal MagKom')
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
-    <!-- Info Banner -->
-    <div style="background: var(--blue-50); border: 1px solid var(--blue-200); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
-        <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-600); color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9"></path>
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-            </svg>
+<div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+    <!-- Flash Notification -->
+    @if(session('success'))
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; color: #065f46;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <span style="font-size: 0.875rem; font-weight: 500;">{{ session('success') }}</span>
+            </div>
+            <button type="button" onclick="this.parentElement.remove()" style="background: transparent; border: none; cursor: pointer; color: #065f46;">&times;</button>
         </div>
+    @endif
+
+    <!-- Header & Breadcrumbs -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
-            <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--blue-900); margin: 0 0 0.25rem 0;">Petunjuk Evaluasi Rubrik (AC-10 & AC-12)</h3>
-            <p style="font-size: 0.875rem; color: var(--blue-800); margin: 0; line-height: 1.5;">
-                Penilaian dihitung secara otomatis berdasarkan 5 rubrik kompetensi aktif. Anda dapat menyimpan draf sementara, memfinalisasi nilai, melakukan revisi tercatat (audit log), dan menerbitkan Lembar Nilai Magang resmi berformat PDF.
+            <nav style="font-size: 0.8rem; color: var(--neutral-500); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+                <a href="{{ route('pembimbing.dashboard') }}" style="color: var(--neutral-600); text-decoration: none;">Dashboard</a>
+                <span>/</span>
+                <span style="color: var(--neutral-900); font-weight: 600;">Penilaian Magang</span>
+            </nav>
+            <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
+                Evaluasi Rubrik & Penilaian Magang (F-10, F-12)
+            </h1>
+            <p style="font-size: 0.875rem; color: var(--neutral-600); margin: 0.25rem 0 0 0;">
+                Kelola lembar evaluasi kompetensi rubrik, catat riwayat revisi nilai, dan tetapkan kelulusan magang.
             </p>
         </div>
     </div>
 
+    <!-- Info Banner Panduan -->
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #0641CC; border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
+        <div style="width: 36px; height: 36px; border-radius: 8px; background: #0641CC; color: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+        </div>
+        <div>
+            <h3 style="font-size: 0.95rem; font-weight: 700; color: #1e3a8a; margin: 0 0 0.25rem 0;">Petunjuk Evaluasi Rubrik Resmi Diskominfo Sleman</h3>
+            <p style="font-size: 0.85rem; color: #1e40af; margin: 0; line-height: 1.5;">
+                Nilai akhir dikalkulasi otomatis berbobot 100% dari 5 kriteria rubrik aktif. Status Draf belum tampil ke peserta. Status Final mengunci nilai resmi, dan setiap perubahan selanjutnya wajib menyertakan alasan revisi minimal 10 karakter untuk jejak audit (AC-10-3).
+            </p>
+        </div>
+    </div>
+
+    <!-- Filter Bar Card -->
+    <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <form method="GET" action="{{ route('pembimbing.penilaian.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+            
+            <!-- Filter Status Penilaian -->
+            <div style="flex: 1; min-width: 180px;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Status Nilai</label>
+                <select name="status_nilai" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                    <option value="">Semua Status Nilai</option>
+                    <option value="belum" {{ request('status_nilai') === 'belum' ? 'selected' : '' }}>Belum Dinilai</option>
+                    <option value="draft" {{ request('status_nilai') === 'draft' ? 'selected' : '' }}>Draf Tersimpan</option>
+                    <option value="final" {{ request('status_nilai') === 'final' ? 'selected' : '' }}>Final Resmi</option>
+                </select>
+            </div>
+
+            <!-- Filter Status Penempatan -->
+            <div style="flex: 1; min-width: 180px;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Status Magang</label>
+                <select name="status_penempatan" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                    <option value="">Semua Status Magang</option>
+                    <option value="aktif" {{ request('status_penempatan') === 'aktif' ? 'selected' : '' }}>Aktif Berjalan</option>
+                    <option value="selesai" {{ request('status_penempatan') === 'selesai' ? 'selected' : '' }}>Selesai Ditetapkan</option>
+                </select>
+            </div>
+
+            <!-- Pencarian Peserta -->
+            <div style="flex: 2; min-width: 220px;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Cari Mentee</label>
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama atau institusi..." style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem;">
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" style="height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
+                    Filter
+                </button>
+                @if(request()->hasAny(['status_nilai', 'status_penempatan', 'q']))
+                    <a href="{{ route('pembimbing.penilaian.index') }}" style="height: 40px; padding: 0 1rem; background: var(--neutral-200); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center;">
+                        Reset
+                    </a>
+                @endif
+            </div>
+        </form>
+    </div>
+
     <!-- Data Table Card -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
+    <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
         @if($penempatanList->isEmpty())
-            <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
-                <div style="width: 64px; height: 64px; background: var(--neutral-200); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: var(--neutral-500);">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-500);">
+                <div style="width: 64px; height: 64px; background: var(--neutral-100); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: var(--neutral-400);">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="8" x2="12" y2="12"></line>
                         <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--neutral-900); margin: 0 0 0.5rem 0;">Belum Ada Peserta Bimbingan</h3>
-                <p style="font-size: 0.875rem; color: var(--neutral-600); margin: 0;">
-                    Saat ini Anda belum memiliki peserta magang aktif yang ditempatkan pada bimbingan Anda.
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--neutral-800); margin: 0 0 0.5rem 0;">Belum Ada Data Peserta</h3>
+                <p style="font-size: 0.85rem; color: var(--neutral-500); margin: 0;">
+                    Belum ada data peserta bimbingan yang sesuai dengan filter pencarian Anda.
                 </p>
             </div>
         @else
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
-                        <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                            <th style="padding: 1rem 1.25rem; font-weight: 700;">Peserta Magang</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Institusi / Jurusan</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Bidang Penempatan</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Status Evaluasi</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Skor & Predikat</th>
-                            <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right;">Aksi</th>
+                        <tr style="border-bottom: 1px solid var(--neutral-200); background: #f8fafc; color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                            <th style="padding: 1rem 1.5rem;">Peserta Magang</th>
+                            <th style="padding: 1rem 1rem;">Institusi & Jurusan</th>
+                            <th style="padding: 1rem 1rem;">Status Magang</th>
+                            <th style="padding: 1rem 1rem;">Status Evaluasi</th>
+                            <th style="padding: 1rem 1rem;">Nilai Akhir & Predikat</th>
+                            <th style="padding: 1rem 1.5rem; text-align: right;">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody style="divide-y: 1px solid var(--neutral-300);">
+                    <tbody>
                         @foreach($penempatanList as $item)
                             @php
                                 $penilaian = $item->penilaian;
                                 $statusNilai = $penilaian ? $penilaian->status->value : 'belum';
                                 $badgeBg = match($statusNilai) {
-                                    'final' => 'var(--green-50)',
-                                    'draft' => 'var(--yellow-50)',
-                                    default => 'var(--neutral-200)'
+                                    'final' => '#d1fae5',
+                                    'draft' => '#fef3c7',
+                                    default => 'var(--neutral-100)'
                                 };
                                 $badgeText = match($statusNilai) {
-                                    'final' => 'var(--green-800)',
-                                    'draft' => 'var(--yellow-800)',
-                                    default => 'var(--neutral-700)'
+                                    'final' => '#065f46',
+                                    'draft' => '#92400e',
+                                    default => 'var(--neutral-600)'
                                 };
                                 $badgeLabel = match($statusNilai) {
-                                    'final' => 'Final (Selesai)',
+                                    'final' => 'Final Resmi',
                                     'draft' => 'Draf Tersimpan',
                                     default => 'Belum Dinilai'
                                 };
                             @endphp
-                            <tr style="border-bottom: 1px solid var(--neutral-300); transition: background 0.15s;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
-                                <td style="padding: 1.125rem 1.25rem;">
-                                    <div style="font-weight: 700; color: var(--neutral-900); font-size: 0.9375rem;">
-                                        {{ $item->peserta->nama ?? '-' }}
+                            <tr style="border-bottom: 1px solid var(--neutral-100); transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                                <td style="padding: 1.1rem 1.5rem;">
+                                    <div style="font-weight: 700; color: var(--neutral-900); font-size: 0.925rem;">
+                                        {{ $item->peserta?->nama ?? '-' }}
                                     </div>
-                                    <div style="font-size: 0.75rem; color: var(--neutral-600);">
-                                        {{ $item->peserta->email ?? '-' }}
-                                    </div>
-                                </td>
-                                <td style="padding: 1.125rem 1rem;">
-                                    <div style="font-weight: 600; color: var(--neutral-800);">
-                                        {{ $item->peserta->profil->institusi ?? ($item->peserta->profil->asal_instansi ?? '-') }}
-                                    </div>
-                                    <div style="font-size: 0.75rem; color: var(--neutral-600);">
-                                        {{ $item->peserta->profil->jurusan?->nama_jurusan ?? ($item->peserta->profil->jurusan ?? '-') }}
+                                    <div style="font-size: 0.75rem; color: var(--neutral-500);">
+                                        {{ $item->peserta?->email ?? '-' }}
                                     </div>
                                 </td>
-                                <td style="padding: 1.125rem 1rem; white-space: nowrap;">
-                                    <span style="font-weight: 600; color: var(--neutral-800);">
-                                        {{ $item->bidang->nama_bidang ?? '-' }}
+                                <td style="padding: 1.1rem 1rem;">
+                                    <div style="font-weight: 500; color: var(--neutral-800);">
+                                        {{ $item->peserta?->profil?->institusi ?? '-' }}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--neutral-500);">
+                                        {{ $item->peserta?->profil?->jurusan?->nama_jurusan ?? '-' }}
+                                    </div>
+                                </td>
+                                <td style="padding: 1.1rem 1rem;">
+                                    <span style="font-size: 0.75rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 999px; background: {{ $item->status->value === 'aktif' ? '#e0e7ff' : '#f3f4f6' }}; color: {{ $item->status->value === 'aktif' ? '#3730a3' : '#374151' }};">
+                                        {{ ucfirst($item->status->value) }}
                                     </span>
                                 </td>
-                                <td style="padding: 1.125rem 1rem; white-space: nowrap;">
-                                    <span style="display: inline-block; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: {{ $badgeBg }}; color: {{ $badgeText }};">
+                                <td style="padding: 1.1rem 1rem;">
+                                    <span style="display: inline-block; padding: 0.25rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: {{ $badgeBg }}; color: {{ $badgeText }};">
                                         {{ $badgeLabel }}
                                     </span>
                                 </td>
-                                <td style="padding: 1.125rem 1rem; white-space: nowrap;">
+                                <td style="padding: 1.1rem 1rem;">
                                     @if($penilaian && $penilaian->nilai_akhir !== null)
-                                        <div style="display: flex; align-items: baseline; gap: 0.375rem;">
-                                            <span style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900);">
-                                                {{ number_format((float)$penilaian->nilai_akhir, 1) }}
+                                        <div style="display: flex; align-items: baseline; gap: 0.4rem;">
+                                            <span style="font-size: 1.15rem; font-weight: 800; color: var(--neutral-900);">
+                                                {{ number_format((float) $penilaian->nilai_akhir, 2) }}
                                             </span>
-                                            <span style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-700);">
+                                            <span style="font-size: 0.8rem; font-weight: 700; color: #0641CC;">
                                                 ({{ $penilaian->predikat->value ?? $penilaian->predikat }})
                                             </span>
                                         </div>
                                     @else
-                                        <span style="color: var(--neutral-500); font-size: 0.8125rem;">-</span>
+                                        <span style="color: var(--neutral-400); font-size: 0.8125rem;">-</span>
                                     @endif
                                 </td>
-                                <td style="padding: 1.125rem 1.25rem; text-align: right; white-space: nowrap;">
-                                    <div style="display: inline-flex; gap: 0.5rem; align-items: center;">
+                                <td style="padding: 1.1rem 1.5rem; text-align: right;">
+                                    <div style="display: inline-flex; gap: 0.4rem; align-items: center;">
                                         @if($penilaian && $penilaian->status->value === 'final')
-                                            <a href="{{ route('pembimbing.penilaian.unduh', $item) }}" target="_blank" title="Unduh Lembar Nilai PDF" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid var(--neutral-400); background: var(--neutral-0); color: var(--neutral-700); border-radius: 6px; text-decoration: none; transition: background 0.15s;">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <a href="{{ route('pembimbing.penilaian.unduh', $item->id) }}" target="_blank" title="Unduh Lembar Nilai PDF" style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 1px solid var(--neutral-300); background: #ffffff; color: var(--neutral-700); border-radius: 6px; text-decoration: none;">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                                     <polyline points="7 10 12 15 17 10"></polyline>
                                                     <line x1="12" y1="15" x2="12" y2="3"></line>
                                                 </svg>
                                             </a>
                                         @endif
-                                        <a href="{{ route('pembimbing.penilaian.show', $item) }}" style="display: inline-flex; align-items: center; gap: 0.375rem; height: 36px; padding: 0 0.875rem; background: var(--blue-600); color: #FFFFFF; font-weight: 600; font-size: 0.8125rem; text-decoration: none; border-radius: 6px; transition: background 0.15s;">
-                                            {{ $penilaian ? 'Buka Penilaian' : 'Input Nilai' }}
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <polyline points="9 18 15 12 9 6"></polyline>
-                                            </svg>
+                                        <a href="{{ route('pembimbing.penilaian.show', $item->id) }}" style="display: inline-flex; align-items: center; gap: 0.35rem; height: 34px; padding: 0 0.85rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.8rem; text-decoration: none; border-radius: 6px;">
+                                            {{ $penilaian ? 'Buka Nilai' : 'Input Nilai' }} &rarr;
                                         </a>
                                     </div>
                                 </td>
@@ -143,7 +208,7 @@
             </div>
 
             @if($penempatanList->hasPages())
-                <div style="padding: 1rem 1.25rem; border-top: 1px solid var(--neutral-300);">
+                <div style="padding: 1rem 1.5rem; border-top: 1px solid var(--neutral-200); background: #fafafa;">
                     {{ $penempatanList->links() }}
                 </div>
             @endif

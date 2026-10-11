@@ -70,5 +70,7 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\EnsureUserHasRole::class,
         'participant.writable' => \App\Http\Middleware\EnsureParticipantWritable::class,
         'must_change_password' => \App\Http\Middleware\EnsurePasswordChanged::class,
+        'account.active' => \App\Http\Middleware\EnsureAccountActive::class,
+        'superadmin.readonly' => \App\Http\Middleware\EnsureSuperAdminReadOnly::class,
     ];
 }

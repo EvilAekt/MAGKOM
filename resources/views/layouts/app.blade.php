@@ -423,9 +423,9 @@
                         @php
                             $user = auth()->user();
                             $dashboardUrl = match($user->role->value ?? '') {
-                                'superadmin' => route('superadmin.staf.index'),
-                                'admin' => route('admin.kuota.index'),
-                                'pembimbing' => route('pembimbing.tugas.index'),
+                                'superadmin' => route('superadmin.dashboard'),
+                                'admin' => route('admin.dashboard'),
+                                'pembimbing' => route('pembimbing.dashboard'),
                                 default => route('peserta.pendaftaran.index'),
                             };
                         @endphp

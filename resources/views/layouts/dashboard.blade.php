@@ -101,16 +101,33 @@
             left: 0;
             z-index: 50;
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            overflow-y: auto;
+            overflow: hidden;
             border-right: 1px solid rgba(255, 255, 255, 0.12);
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .dashboard-sidebar::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+
+        .sidebar-top-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
         }
 
         .sidebar-header {
-            padding: 1.5rem 1.25rem 1.25rem 1.25rem;
+            padding: 1.25rem 1.25rem 1rem 1.25rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.12);
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            flex-shrink: 0;
         }
 
         .sidebar-brand-emblem {
@@ -152,11 +169,21 @@
 
         /* Sidebar Navigation Items */
         .sidebar-nav {
-            padding: 1.25rem 0.875rem;
+            padding: 1rem 0.75rem;
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.2rem;
+            overflow-y: auto;
+            min-height: 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .sidebar-nav::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
         }
 
         .nav-section-label {
@@ -165,15 +192,15 @@
             color: rgba(255, 255, 255, 0.6);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            padding: 0.75rem 0.75rem 0.375rem 0.75rem;
+            padding: 0.625rem 0.75rem 0.25rem 0.75rem;
         }
 
         .nav-item-link {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            min-height: 44px;
-            padding: 0.625rem 0.75rem;
+            min-height: 40px;
+            padding: 0.5rem 0.75rem;
             border-radius: 8px;
             text-decoration: none;
             color: rgba(255, 255, 255, 0.9);
@@ -214,11 +241,124 @@
             color: rgba(255, 255, 255, 0.85);
         }
 
+        /* Collapsible Sub-menu Navigation (Figma Node 560-24892) */
+        .nav-group-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            min-height: 40px;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+            text-align: left;
+            outline: none;
+        }
+
+        .nav-group-btn:hover {
+            background-color: rgba(255, 255, 255, 0.12);
+            color: #FFFFFF;
+        }
+
+        .nav-group-btn.has-active {
+            color: #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-group-btn-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-group-chevron {
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            color: rgba(255, 255, 255, 0.6);
+            transform-origin: center;
+        }
+
+        .nav-group-btn[aria-expanded="true"] .nav-group-chevron {
+            transform: rotate(90deg);
+            color: #FFFFFF;
+        }
+
+        .nav-sub-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.125rem;
+            padding-left: 0.5rem;
+            margin-top: 0;
+            margin-bottom: 0;
+            border-left: 2px solid rgba(255, 255, 255, 0.2);
+            margin-left: 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transition: max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, margin 0.2s ease, visibility 0.2s;
+        }
+
+        .nav-sub-menu.show {
+            max-height: 500px;
+            opacity: 1;
+            visibility: visible;
+            margin-top: 0.125rem;
+            margin-bottom: 0.375rem;
+        }
+
+        .nav-sub-item {
+            display: flex;
+            align-items: center;
+            min-height: 36px;
+            padding: 0.375rem 0.625rem;
+            border-radius: 6px;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+
+        .nav-sub-item:hover {
+            color: #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .nav-sub-item.active {
+            background-color: var(--neutral-0);
+            color: var(--blue-700);
+            font-weight: 700;
+        }
+
+        /* Pulse green dot status */
+        @keyframes pulseDot {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+        .status-dot-pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #22C55E;
+            animation: pulseDot 2s infinite;
+            flex-shrink: 0;
+            display: inline-block;
+        }
+
         /* Sidebar Footer / System Badge */
         .sidebar-footer {
-            padding: 1.25rem 1rem;
+            padding: 1rem 1rem;
             border-top: 1px solid rgba(255, 255, 255, 0.12);
             background: rgba(0, 0, 0, 0.08);
+            flex-shrink: 0;
         }
 
         .sidebar-status-box {
@@ -727,9 +867,124 @@
                 display: inline-flex;
             }
         }
+
+        /* =====================================================================
+           DASHBOARD UNIFIED TAB CONTROLLER & QUICK ACTIONS
+           ===================================================================== */
+        .dashboard-tab-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #F1F5F9;
+            padding: 0.375rem;
+            border-radius: 10px;
+            border: 1px solid var(--neutral-300);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .dashboard-tab-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--neutral-600);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+            white-space: nowrap;
+            outline: none;
+        }
+
+        .tab-btn:hover {
+            color: var(--neutral-900);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .tab-btn.active {
+            color: var(--blue-700);
+            background: #FFFFFF;
+            font-weight: 700;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-btn .tab-badge {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            padding: 0.1rem 0.45rem;
+            border-radius: 999px;
+            background: #E2E8F0;
+            color: var(--neutral-700);
+        }
+
+        .tab-btn.active .tab-badge {
+            background: #DBEAFE;
+            color: #1D4ED8;
+        }
+
+        .tab-content-panel {
+            display: none;
+            animation: fadeInTab 0.2s ease-in-out;
+        }
+
+        .tab-content-panel.active {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quick-action-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.45rem 0.75rem;
+            background: var(--neutral-0);
+            border: 1px solid var(--neutral-400);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--neutral-800);
+            text-decoration: none;
+            transition: all 0.15s ease-in-out;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .quick-action-chip:hover {
+            background: #F8FAFC;
+            border-color: var(--blue-600);
+            color: var(--blue-600);
+            transform: translateY(-1px);
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
     </style>
 
     @yield('styles')
+    @stack('styles')
 </head>
 <body>
     @php
@@ -769,8 +1024,9 @@
                         </svg>
                     </div>
                     <div class="sidebar-brand-text">
-                        <span class="sidebar-brand-title">Portal MagKom</span>
-                        <span class="sidebar-brand-subtitle">Dinas Kominfo Sleman</span>
+                        <span class="sidebar-brand-title">MagKom</span>
+                        <span class="sidebar-brand-subtitle">KOMINFO PORTAL</span>
+                        <span class="sr-only">Portal MagKom - Dinas Kominfo Sleman</span>
                     </div>
                 </div>
 
@@ -831,8 +1087,32 @@
                         </a>
 
                     @elseif($userRole === 'pembimbing')
-                        <!-- NAVIGASI PEMBIMBING (PRD 9.2) -->
+                        <!-- NAVIGASI PEMBIMBING (PRD 9.2 & FIGMA 560-41611) -->
                         <span class="nav-section-label">Bimbingan Magang</span>
+
+                        <a href="{{ route('pembimbing.dashboard') }}" class="nav-item-link {{ request()->routeIs('pembimbing.dashboard') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                            </span>
+                            <span>Dashboard</span>
+                        </a>
+
+                        <a href="{{ route('pembimbing.peserta.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.peserta.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                            </span>
+                            <span>Peserta Bimbingan</span>
+                        </a>
 
                         <a href="{{ route('pembimbing.tugas.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.tugas.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
@@ -939,9 +1219,7 @@
                         </a>
 
                     @elseif($userRole === 'superadmin')
-                        <!-- NAVIGASI SUPERADMIN (PRD 9.2) -->
-                        <span class="nav-section-label">Tata Kelola Eksekutif</span>
-
+                        <!-- NAVIGASI SUPERADMIN (Figma Node 560-24892 & PRD 9.2) -->
                         <a href="{{ route('superadmin.dashboard') }}" class="nav-item-link {{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -951,56 +1229,80 @@
                                     <rect x="3" y="14" width="7" height="7"></rect>
                                 </svg>
                             </span>
-                            <span>Dashboard Eksekutif</span>
+                            <span>Dashboard</span>
                         </a>
 
-                        <span class="nav-section-label">Konfigurasi & Penempatan</span>
+                        <!-- GRUP 1: MODUL OPERASIONAL -->
+                        <span class="nav-section-label">MODUL OPERASIONAL</span>
 
-                        <a href="{{ route('superadmin.bulan.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.bulan.*') ? 'active' : '' }}">
+                        @php
+                            $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*') || request()->routeIs('admin.kuota.*') || request()->routeIs('admin.waiting-list.*') || request()->routeIs('admin.penempatan.*') || request()->routeIs('admin.laporan.*');
+                        @endphp
+                        <div class="nav-group-container">
+                            <button type="button" class="nav-group-btn {{ $isOperasionalAdminActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalAdminActive ? 'true' : 'false' }}">
+                                <span class="nav-group-btn-left">
+                                    <span class="nav-item-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                                            <line x1="9" y1="22" x2="9" y2="2"></line>
+                                            <line x1="15" y1="12" x2="15" y2="12.01"></line>
+                                            <line x1="15" y1="16" x2="15" y2="16.01"></line>
+                                        </svg>
+                                    </span>
+                                    <span>Administrasi</span>
+                                </span>
+                                <svg class="nav-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </button>
+                            <div class="nav-sub-menu {{ $isOperasionalAdminActive ? 'show' : '' }}">
+                                <a href="{{ route('admin.pendaftaran.index') }}" class="nav-sub-item {{ request()->routeIs('admin.pendaftaran.*') ? 'active' : '' }}">Verifikasi Berkas</a>
+                                <a href="{{ route('admin.kuota.index') }}" class="nav-sub-item {{ request()->routeIs('admin.kuota.*') ? 'active' : '' }}">Kuota Magang</a>
+                                <a href="{{ route('admin.waiting-list.index') }}" class="nav-sub-item {{ request()->routeIs('admin.waiting-list.*') ? 'active' : '' }}">Waiting List</a>
+                                <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">Penempatan</a>
+                                <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">Laporan & Ekspor</a>
+                            </div>
+                        </div>
+
+                        <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                    <path d="M9 14l2 2 4-4"></path>
                                 </svg>
                             </span>
-                            <span>Bulan Magang</span>
+                            <span>Pembimbing</span>
                         </a>
 
-                        <a href="{{ route('superadmin.slot-khusus.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.slot-khusus.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                    <polyline points="9 12 11 14 15 10"></polyline>
+                        @php
+                            $isOperasionalPesertaActive = request()->routeIs('superadmin.monitoring.*') || request()->routeIs('superadmin.arsip.*');
+                        @endphp
+                        <div class="nav-group-container">
+                            <button type="button" class="nav-group-btn {{ $isOperasionalPesertaActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalPesertaActive ? 'true' : 'false' }}">
+                                <span class="nav-group-btn-left">
+                                    <span class="nav-item-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                    </span>
+                                    <span>Peserta</span>
+                                </span>
+                                <svg class="nav-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
-                            </span>
-                            <span>Slot Khusus</span>
-                        </a>
+                            </button>
+                            <div class="nav-sub-menu {{ $isOperasionalPesertaActive ? 'show' : '' }}">
+                                <a href="{{ route('superadmin.monitoring.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.monitoring.*') ? 'active' : '' }}">Monitoring Peserta</a>
+                                <a href="{{ route('superadmin.arsip.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.arsip.*') ? 'active' : '' }}">Arsip Peserta</a>
+                            </div>
+                        </div>
 
-                        <a href="{{ route('admin.penempatan.index') }}" class="nav-item-link {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="9" cy="7" r="4"></circle>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                </svg>
-                            </span>
-                            <span>Penempatan Magang</span>
-                        </a>
-
-                        <a href="{{ route('superadmin.monitoring.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.monitoring.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                            </span>
-                            <span>Monitoring Peserta</span>
-                        </a>
-
-                        <span class="nav-section-label">Master & Keamanan</span>
+                        <!-- GRUP 2: SISTEM -->
+                        <span class="nav-section-label">SISTEM</span>
 
                         <a href="{{ route('superadmin.staf.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.staf.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
@@ -1011,28 +1313,17 @@
                                     <line x1="23" y1="11" x2="17" y2="11"></line>
                                 </svg>
                             </span>
-                            <span>Manajemen Staf</span>
+                            <span>Pengguna<span class="sr-only"> / Manajemen Staf</span></span>
                         </a>
 
-                        <a href="{{ route('superadmin.jurusan.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.jurusan.*') ? 'active' : '' }}">
+                        <a href="{{ route('superadmin.role.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.role.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M3 21h18M3 7v14M21 7v14M6 7V3h12v4M9 11h2M13 11h2M9 15h2M13 15h2"></path>
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    <polyline points="9 12 11 14 15 10"></polyline>
                                 </svg>
                             </span>
-                            <span>Master Jurusan</span>
-                        </a>
-
-                        <a href="{{ route('superadmin.bidang.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.bidang.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
-                                    <line x1="9" y1="22" x2="9" y2="2"></line>
-                                    <line x1="15" y1="12" x2="15" y2="12.01"></line>
-                                    <line x1="15" y1="16" x2="15" y2="16.01"></line>
-                                </svg>
-                            </span>
-                            <span>Bidang Dinas</span>
+                            <span>Role</span>
                         </a>
 
                         <a href="{{ route('superadmin.rubrik.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.rubrik.*') ? 'active' : '' }}">
@@ -1041,22 +1332,11 @@
                                     <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                 </svg>
                             </span>
-                            <span>Rubrik Nilai</span>
+                            <span>Rubrik</span>
+                            <span class="sr-only">Rubrik Nilai</span>
                         </a>
 
-                        <a href="{{ route('superadmin.pengaturan.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.pengaturan.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                                </svg>
-                            </span>
-                            <span>Pengaturan Sistem</span>
-                        </a>
-
-                        <span class="nav-section-label">Laporan & Rekam Jejak</span>
-
-                        <a href="{{ route('admin.laporan.index') }}" class="nav-item-link {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">
+                        <a href="{{ route('superadmin.audit-log.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.audit-log.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -1066,41 +1346,45 @@
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
                             </span>
-                            <span>Laporan & Ekspor</span>
+                            <span>Audit Log</span>
+                            <span class="sr-only">Jejak Audit Log</span>
                         </a>
 
-                        <a href="{{ route('superadmin.arsip.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.arsip.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="21 8 21 21 3 21 3 8"></polyline>
-                                    <rect x="1" y="3" width="22" height="5"></rect>
-                                    <line x1="10" y1="12" x2="14" y2="12"></line>
+                        @php
+                            $isConfigActive = request()->routeIs('superadmin.pengaturan.*') || request()->routeIs('superadmin.bulan.*') || request()->routeIs('superadmin.slot-khusus.*') || request()->routeIs('superadmin.jurusan.*') || request()->routeIs('superadmin.bidang.*');
+                        @endphp
+                        <div class="nav-group-container">
+                            <button type="button" class="nav-group-btn {{ $isConfigActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isConfigActive ? 'true' : 'false' }}">
+                                <span class="nav-group-btn-left">
+                                    <span class="nav-item-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                        </svg>
+                                    </span>
+                                    <span>Konfigurasi</span>
+                                </span>
+                                <svg class="nav-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
-                            </span>
-                            <span>Arsip Peserta</span>
-                        </a>
-
-                        <a href="{{ route('superadmin.audit-log.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.audit-log.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 20h9"></path>
-                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                                </svg>
-                            </span>
-                            <span>Jejak Audit Log</span>
-                        </a>
+                            </button>
+                            <div class="nav-sub-menu {{ $isConfigActive ? 'show' : '' }}">
+                                <a href="{{ route('superadmin.pengaturan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.pengaturan.*') ? 'active' : '' }}">Pengaturan Sistem</a>
+                                <a href="{{ route('superadmin.bulan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bulan.*') ? 'active' : '' }}">Bulan Magang</a>
+                                <a href="{{ route('superadmin.slot-khusus.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.slot-khusus.*') ? 'active' : '' }}">Slot Khusus</a>
+                                <a href="{{ route('superadmin.jurusan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.jurusan.*') ? 'active' : '' }}">Master Jurusan</a>
+                                <a href="{{ route('superadmin.bidang.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bidang.*') ? 'active' : '' }}">Bidang Dinas</a>
+                            </div>
+                        </div>
                     @endif
                 </nav>
             </div>
 
-            <!-- Footer Sidebar: Indikator Sistem -->
+            <!-- Footer Sidebar: Indikator Sistem Internal Kominfo (Figma Node 560-24892) -->
             <div class="sidebar-footer">
-                <div class="sidebar-status-box">
-                    <span class="status-dot"></span>
-                    <div class="status-text-wrap">
-                        <span class="status-system-title">Sistem Aktif</span>
-                        <span class="status-system-desc">Server Kominfo Sleman</span>
-                    </div>
+                <div class="sidebar-status-box" style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.625rem; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px;">
+                    <span class="status-dot-pulse"></span>
+                    <span style="font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.85); letter-spacing: 0.01em;">Sistem internal Kominfo</span>
                 </div>
             </div>
         </aside>
@@ -1342,6 +1626,22 @@
             }
         }
 
+        // Toggle Accordion Sub-Menu Sidebar (Figma Node 560-24892)
+        function toggleNavGroup(btn) {
+            if (!btn) return;
+            const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+            const subMenu = btn.nextElementSibling;
+            if (subMenu) {
+                if (isExpanded) {
+                    btn.setAttribute('aria-expanded', 'false');
+                    subMenu.classList.remove('show');
+                } else {
+                    btn.setAttribute('aria-expanded', 'true');
+                    subMenu.classList.add('show');
+                }
+            }
+        }
+
         // Toggle User Profile Dropdown
         function toggleUserMenu() {
             const menu = document.getElementById('userDropdown');
@@ -1382,5 +1682,6 @@
     </script>
 
     @yield('scripts')
+    @stack('scripts')
 </body>
 </html>

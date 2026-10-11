@@ -14,9 +14,11 @@ use App\Services\MasaTenggangService;
 use App\Services\ScoringService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
 
 class PenilaianController extends Controller
 {
@@ -28,18 +30,44 @@ class PenilaianController extends Controller
     /**
      * Daftar seluruh penempatan dan status penilaian magang.
      */
-    public function index(Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
+    public function index(Request $request): View|JsonResponse
     {
         $user = $request->user();
 
-        $query = Penempatan::with(['peserta.profil', 'bidang', 'penilaian.details.rubrik'])
+        $query = Penempatan::with(['peserta.profil.jurusan', 'bidang', 'penilaian.details.rubrik'])
             ->where(function ($q) use ($user) {
                 if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
                     $q->where('pembimbing_id', $user->id);
                 }
             });
 
-        $penempatan = $query->latest()->paginate(15);
+        if ($request->filled('status_penempatan')) {
+            $query->where('status', $request->input('status_penempatan'));
+        }
+
+        if ($request->filled('status_nilai')) {
+            $statusNilai = $request->input('status_nilai');
+            if ($statusNilai === 'belum') {
+                $query->whereDoesntHave('penilaian');
+            } else {
+                $query->whereHas('penilaian', function ($q) use ($statusNilai) {
+                    $q->where('status', $statusNilai);
+                });
+            }
+        }
+
+        if ($request->filled('q')) {
+            $search = '%' . $request->input('q') . '%';
+            $query->whereHas('peserta', function ($q) use ($search) {
+                $q->where('nama', 'like', $search)
+                    ->orWhere('email', 'like', $search)
+                    ->orWhereHas('profil', function ($qp) use ($search) {
+                        $qp->where('institusi', 'like', $search);
+                    });
+            });
+        }
+
+        $penempatan = $query->latest()->paginate(15)->withQueryString();
 
         if ($request->expectsJson() || $request->wantsJson()) {
             return response()->json([
@@ -67,7 +95,7 @@ class PenilaianController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'penempatan' => $penempatan->load(['peserta.profil', 'bidang']),
+                    'penempatan' => $penempatan->load(['peserta.profil.jurusan', 'bidang']),
                     'rubrik_aktif' => $rubrikAktif,
                     'penilaian' => $penilaian,
                 ],
@@ -75,7 +103,7 @@ class PenilaianController extends Controller
         }
 
         return view('pembimbing.penilaian.show', [
-            'penempatan' => $penempatan->load(['peserta.profil', 'bidang']),
+            'penempatan' => $penempatan->load(['peserta.profil.jurusan', 'bidang']),
             'rubrikAktif' => $rubrikAktif,
             'penilaian' => $penilaian,
         ]);
@@ -84,7 +112,7 @@ class PenilaianController extends Controller
     /**
      * Simpan evaluasi penilaian magang (Draft, Final, atau Revisi Final) - AC-10.
      */
-    public function store(PenilaianRequest $request, Penempatan $penempatan): JsonResponse
+    public function store(PenilaianRequest $request, Penempatan $penempatan): JsonResponse|RedirectResponse
     {
         Gate::authorize('manage', [Penilaian::class, $penempatan]);
 
@@ -145,7 +173,20 @@ class PenilaianController extends Controller
      */
     public function selesai(Request $request, Penempatan $penempatan): JsonResponse|\Illuminate\Http\RedirectResponse
     {
-        $penempatanUpdated = $this->masaTenggangService->tandaiSelesai($penempatan, $request->user());
+        try {
+            $penempatanUpdated = $this->masaTenggangService->tandaiSelesai($penempatan, $request->user());
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            abort(403, $e->getMessage());
+        } catch (\InvalidArgumentException $e) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ], 422);
+            }
+
+            return back()->withErrors(['penilaian' => $e->getMessage()])->with('error', $e->getMessage());
+        }
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
             return back()->with('success', 'Status magang peserta berhasil diselesaikan dan masa tenggang akun telah diaktifkan.');
@@ -165,7 +206,7 @@ class PenilaianController extends Controller
     {
         Gate::authorize('downloadPdf', [Penilaian::class, $penempatan]);
 
-        $penempatan->loadMissing(['peserta.profil', 'pembimbing', 'bidang', 'penilaian.details.rubrik']);
+        $penempatan->loadMissing(['peserta.profil.jurusan', 'pembimbing', 'bidang', 'penilaian.details.rubrik']);
         $penilaian = $penempatan->penilaian;
 
         $pdf = Pdf::loadView('pdf.lembar-nilai', [

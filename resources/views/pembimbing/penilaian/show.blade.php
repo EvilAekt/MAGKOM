@@ -117,7 +117,7 @@
                                 </td>
                                 <td style="padding: 1rem;">
                                     <div style="font-weight: 700; color: var(--neutral-900); font-size: 0.9375rem;">
-                                        {{ $rubrik->nama_rubrik }}
+                                        {{ $rubrik->kriteria }}
                                     </div>
                                     <div style="font-size: 0.8125rem; color: var(--neutral-600); margin-top: 0.25rem; line-height: 1.4;">
                                         {{ $rubrik->deskripsi }}
@@ -219,9 +219,9 @@
                     Nilai peserta telah final. Klik tombol berikut untuk menyelesaikan status magang peserta dan mengaktifkan masa tenggang akun (grace period).
                 </p>
             </div>
-            <form action="{{ route('pembimbing.penilaian.selesai', $penempatan) }}" method="POST">
+            <form action="{{ route('pembimbing.penempatan.selesai', $penempatan) }}" method="POST">
                 @csrf
-                <button type="submit" onclick="return confirm('Tandai masa magang peserta ini telah selesai?')" style="height: 42px; padding: 0 1.25rem; background: var(--green-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
+                <button type="submit" onclick="return confirm('Tandai masa magang peserta ini telah selesai dan aktifkan masa tenggang akun?')" style="height: 42px; padding: 0 1.25rem; background: #059669; color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
                     Tandai Selesai Magang
                 </button>
             </form>
@@ -247,11 +247,25 @@
                     </thead>
                     <tbody style="divide-y: 1px solid var(--neutral-300);">
                         @foreach($penilaian->riwayats as $riwayat)
+                            @php
+                                $nilaiLamaAkhir = is_array($riwayat->nilai_lama) ? ($riwayat->nilai_lama['nilai_akhir'] ?? null) : null;
+                                $nilaiBaruAkhir = is_array($riwayat->nilai_baru) ? ($riwayat->nilai_baru['nilai_akhir'] ?? null) : null;
+                                $predikatLama = is_array($riwayat->nilai_lama) ? ($riwayat->nilai_lama['predikat'] ?? '') : '';
+                                $predikatBaru = is_array($riwayat->nilai_baru) ? ($riwayat->nilai_baru['predikat'] ?? '') : '';
+                                $predikatLamaStr = is_object($predikatLama) ? ($predikatLama->value ?? '') : (string)$predikatLama;
+                                $predikatBaruStr = is_object($predikatBaru) ? ($predikatBaru->value ?? '') : (string)$predikatBaru;
+                            @endphp
                             <tr style="border-bottom: 1px solid var(--neutral-300);">
-                                <td style="padding: 0.75rem 1rem;">{{ $riwayat->created_at->translatedFormat('d M Y H:i') }}</td>
-                                <td style="padding: 0.75rem 1rem; font-weight: 600;">{{ $riwayat->pengubah->nama ?? '-' }}</td>
-                                <td style="padding: 0.75rem 1rem;">{{ number_format((float)$riwayat->nilai_akhir_lama, 1) }}</td>
-                                <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--blue-700);">{{ number_format((float)$riwayat->nilai_akhir_baru, 1) }}</td>
+                                <td style="padding: 0.75rem 1rem;">{{ $riwayat->waktu ? $riwayat->waktu->translatedFormat('d M Y H:i') : '-' }}</td>
+                                <td style="padding: 0.75rem 1rem; font-weight: 600;">{{ $riwayat->pengubah?->nama ?? '-' }}</td>
+                                <td style="padding: 0.75rem 1rem;">
+                                    {{ $nilaiLamaAkhir !== null ? number_format((float)$nilaiLamaAkhir, 2) : '-' }}
+                                    @if($predikatLamaStr) ({{ $predikatLamaStr }}) @endif
+                                </td>
+                                <td style="padding: 0.75rem 1rem; font-weight: 700; color: #0641CC;">
+                                    {{ $nilaiBaruAkhir !== null ? number_format((float)$nilaiBaruAkhir, 2) : '-' }}
+                                    @if($predikatBaruStr) ({{ $predikatBaruStr }}) @endif
+                                </td>
                                 <td style="padding: 0.75rem 1rem; color: var(--neutral-800); font-style: italic;">"{{ $riwayat->alasan }}"</td>
                             </tr>
                         @endforeach

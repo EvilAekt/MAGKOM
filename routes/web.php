@@ -14,8 +14,10 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
 use App\Http\Controllers\SuperAdmin\MonitoringPesertaController;
+use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboardController;
 use App\Http\Controllers\Pembimbing\LogbookReviewController as PembimbingLogbookReviewController;
 use App\Http\Controllers\Pembimbing\PenilaianController as PembimbingPenilaianController;
+use App\Http\Controllers\Pembimbing\PesertaController as PembimbingPesertaController;
 use App\Http\Controllers\Pembimbing\TugasController as PembimbingTugasController;
 use App\Http\Controllers\Peserta\BerkasController;
 use App\Http\Controllers\Peserta\LogbookController as PesertaLogbookController;
@@ -32,6 +34,7 @@ use App\Http\Controllers\SuperAdmin\BidangController;
 use App\Http\Controllers\SuperAdmin\BulanController;
 use App\Http\Controllers\SuperAdmin\JurusanController;
 use App\Http\Controllers\SuperAdmin\PengaturanController;
+use App\Http\Controllers\SuperAdmin\RoleController;
 use App\Http\Controllers\SuperAdmin\RubrikController;
 use App\Http\Controllers\SuperAdmin\SlotKhususController;
 use App\Http\Controllers\SuperAdmin\StafController;
@@ -124,12 +127,18 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:peserta'])-
     Route::get('/nilai/unduh', [PesertaNilaiController::class, 'unduhPdf'])->name('nilai.unduh');
 });
 
-// Rute Pembimbing Magang (F-08, F-09, F-10, F-12)
-Route::middleware(['auth', 'verified', 'must_change_password', 'role:pembimbing,admin'])->prefix('pembimbing')->name('pembimbing.')->group(function () {
+// Rute Pembimbing Magang (F-08, F-09, F-10, F-12, SEC-03, SEC-12)
+Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:pembimbing,admin,superadmin', 'superadmin.readonly'])->prefix('pembimbing')->name('pembimbing.')->group(function () {
+    Route::get('/dashboard', [PembimbingDashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/peserta', [PembimbingPesertaController::class, 'index'])->name('peserta.index');
+    Route::get('/peserta/{penempatan}', [PembimbingPesertaController::class, 'show'])->name('peserta.show');
+
     Route::get('/tugas', [PembimbingTugasController::class, 'index'])->name('tugas.index');
     Route::post('/tugas', [PembimbingTugasController::class, 'store'])->name('tugas.store');
     Route::get('/tugas/{tugas}', [PembimbingTugasController::class, 'show'])->name('tugas.show');
     Route::put('/tugas/{tugas}', [PembimbingTugasController::class, 'update'])->name('tugas.update');
+    Route::post('/tugas/{tugas}/selesai', [PembimbingTugasController::class, 'selesai'])->name('tugas.selesai');
     Route::post('/progres/{progres}/review', [PembimbingTugasController::class, 'reviewProgres'])->name('progres.review');
 
     Route::get('/logbook', [PembimbingLogbookReviewController::class, 'index'])->name('logbook.index');
@@ -197,6 +206,9 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'
     Route::put('/staf/{staf}', [StafController::class, 'update'])->name('staf.update');
     Route::post('/staf/{staf}/reset-password', [StafController::class, 'resetPassword'])->name('staf.reset-password');
     Route::patch('/staf/{staf}/toggle', [StafController::class, 'toggleAktif'])->name('staf.toggle');
+
+    // Matriks Hak Akses dan Role (Figma SA-02, PRD 3.1 & 3.3)
+    Route::get('/role', [RoleController::class, 'index'])->name('role.index');
 
     // Master Data (Jurusan, Bidang, Rubrik) (F-11)
     Route::get('/jurusan', [JurusanController::class, 'index'])->name('jurusan.index');
