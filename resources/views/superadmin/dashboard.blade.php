@@ -100,6 +100,20 @@
                     </svg>
                     <span>Ekspor Laporan</span>
                 </a>
+                <a href="{{ route('superadmin.health.index') }}" class="quick-action-chip">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #059669;">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    <span>Telemetri Sistem</span>
+                </a>
+                <a href="{{ route('superadmin.backup.index') }}" class="quick-action-chip">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #7C3AED;">
+                        <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                    </svg>
+                    <span>Backup Hub</span>
+                </a>
             </div>
 
             <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
@@ -1506,6 +1520,28 @@
                             <span style="font-size: 0.8125rem; font-weight: 600;">Ekspor Jejak Audit Trail (CSV)</span>
                         </div>
                         <span style="font-size: 0.75rem; color: #DC2626; font-weight: 700;">Unduh &rarr;</span>
+                    </a>
+
+                    <a href="{{ route('superadmin.health.index') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 0.625rem 0.75rem; background: var(--neutral-150); border: 1px solid var(--neutral-300); border-radius: 8px; text-decoration: none; color: var(--neutral-900);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #059669;">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                            <span style="font-size: 0.8125rem; font-weight: 600;">Telemetri Kesehatan & Storage Infrastruktur</span>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--blue-600); font-weight: 700;">Buka &rarr;</span>
+                    </a>
+
+                    <a href="{{ route('superadmin.backup.index') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 0.625rem 0.75rem; background: var(--neutral-150); border: 1px solid var(--neutral-300); border-radius: 8px; text-decoration: none; color: var(--neutral-900);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #7C3AED;">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                            </svg>
+                            <span style="font-size: 0.8125rem; font-weight: 600;">Pusat Cadangan & Pemulihan Basis Data (Backup Hub)</span>
+                        </div>
+                        <span style="font-size: 0.75rem; color: var(--blue-600); font-weight: 700;">Buka &rarr;</span>
                     </a>
                 </div>
 

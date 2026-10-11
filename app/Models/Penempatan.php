@@ -97,6 +97,11 @@ class Penempatan extends Model
         return $this->hasOne(Penilaian::class, 'penempatan_id');
     }
 
+    public function agendaBimbingan(): HasMany
+    {
+        return $this->hasMany(AgendaBimbingan::class, 'penempatan_id');
+    }
+
     public function scopeAktif(Builder $query): Builder
     {
         return $query->where('status', StatusPenempatanEnum::Aktif);

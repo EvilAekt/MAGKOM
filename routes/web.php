@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\KuotaController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
 use App\Http\Controllers\Admin\PenempatanController as AdminPenempatanController;
+use App\Http\Controllers\Admin\SertifikatController as AdminSertifikatController;
 use App\Http\Controllers\Admin\WaitingListController as AdminWaitingListController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
 use App\Http\Controllers\SuperAdmin\MonitoringPesertaController;
+use App\Http\Controllers\Pembimbing\AgendaBimbinganController as PembimbingAgendaBimbinganController;
 use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboardController;
 use App\Http\Controllers\Pembimbing\LogbookReviewController as PembimbingLogbookReviewController;
 use App\Http\Controllers\Pembimbing\PenilaianController as PembimbingPenilaianController;
@@ -31,8 +33,10 @@ use App\Http\Controllers\Public\HealthController;
 use App\Http\Controllers\Public\LandingController;
 use App\Http\Controllers\SuperAdmin\ArsipPesertaController;
 use App\Http\Controllers\SuperAdmin\AuditLogController;
+use App\Http\Controllers\SuperAdmin\BackupController;
 use App\Http\Controllers\SuperAdmin\BidangController;
 use App\Http\Controllers\SuperAdmin\BulanController;
+use App\Http\Controllers\SuperAdmin\HealthMonitorController;
 use App\Http\Controllers\SuperAdmin\JurusanController;
 use App\Http\Controllers\SuperAdmin\PengaturanController;
 use App\Http\Controllers\SuperAdmin\RoleController;
@@ -157,6 +161,12 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::post('/penilaian/{penempatan}', [PembimbingPenilaianController::class, 'store'])->name('penilaian.store');
     Route::post('/penempatan/{penempatan}/selesai', [PembimbingPenilaianController::class, 'selesai'])->name('penempatan.selesai');
     Route::get('/penilaian/{penempatan}/unduh', [PembimbingPenilaianController::class, 'unduhPdf'])->name('penilaian.unduh');
+
+    // Agenda Penjadwalan Mentoring & Notulensi Bimbingan Lapangan
+    Route::get('/agenda', [PembimbingAgendaBimbinganController::class, 'index'])->name('agenda.index');
+    Route::post('/agenda', [PembimbingAgendaBimbinganController::class, 'store'])->name('agenda.store');
+    Route::put('/agenda/{agenda}', [PembimbingAgendaBimbinganController::class, 'update'])->name('agenda.update');
+    Route::delete('/agenda/{agenda}', [PembimbingAgendaBimbinganController::class, 'destroy'])->name('agenda.destroy');
 });
 
 // Rute Admin & SuperAdmin (F-04, F-05, F-07, F-17)
@@ -188,6 +198,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:admin,super
     Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
     Route::get('/laporan/kuota', [LaporanController::class, 'kuota'])->name('laporan.kuota');
     Route::get('/laporan/nilai', [LaporanController::class, 'nilai'])->name('laporan.nilai');
+
+    // Hub Penerbitan Sertifikat Kelulusan Resmi (AC-12, BR-10)
+    Route::get('/sertifikat', [AdminSertifikatController::class, 'index'])->name('sertifikat.index');
+    Route::get('/sertifikat/{penempatan}/cetak', [AdminSertifikatController::class, 'cetak'])->name('sertifikat.cetak');
 });
 
 // Rute Khusus SuperAdmin (F-06, F-11, F-13)
@@ -246,4 +260,13 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'
     // Audit Log Trail (F-13 AC-13-6)
     Route::get('/audit-log/export', [AuditLogController::class, 'export'])->name('audit-log.export');
     Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log.index');
+
+    // Telemetri Kesehatan Sistem & Infrastruktur
+    Route::get('/health-monitor', [HealthMonitorController::class, 'index'])->name('health.index');
+
+    // Hub Cadangan Basis Data (Disaster Recovery & Backup) (SEC-03)
+    Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
+    Route::post('/backup/snapshot', [BackupController::class, 'triggerSnapshot'])->name('backup.snapshot');
+    Route::get('/backup/{filename}/download', [BackupController::class, 'download'])->name('backup.download');
+    Route::delete('/backup/{filename}', [BackupController::class, 'destroy'])->name('backup.destroy');
 });

@@ -124,6 +124,12 @@
                 </select>
             </form>
 
+            <a href="{{ route('admin.sertifikat.index') }}" 
+               style="height: 38px; padding: 0 1rem; background: #0641CC; color: #ffffff; border-radius: 8px; font-size: 0.85rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                <span>Hub Sertifikat</span>
+            </a>
+
             <a href="{{ route('admin.laporan.index') }}" 
                style="height: 38px; padding: 0 1rem; background: #ffffff; color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
@@ -271,6 +277,14 @@
             <button type="button" class="admin-tab-btn" onclick="switchAdminTab('tab-penempatan', this)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                 <span>Arsip Penempatan Terkini ({{ $penempatanTerbaru->count() }})</span>
+            </button>
+            <button type="button" class="admin-tab-btn" onclick="switchAdminTab('tab-offboarding', this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>Offboarding Watchdog ({{ $upcomingOffboardingList->count() }})</span>
+            </button>
+            <button type="button" class="admin-tab-btn" onclick="switchAdminTab('tab-timeline', this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span>Timeline Gelombang Magang ({{ $timelineGelombangMagang->count() }})</span>
             </button>
         </div>
 
@@ -554,6 +568,183 @@
             @endif
         </div>
 
+        {{-- TAB 5: OFFBOARDING WATCHDOG & PERINGATAN SELESAI MAGANG --}}
+        <div id="tab-offboarding" class="admin-tab-content" style="display: none;">
+            <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                <div>
+                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0;">
+                        Pusat Pengingat SLA & Offboarding Watchdog
+                    </h3>
+                    <p style="font-size: 0.8rem; color: var(--neutral-600, #475569); margin: 0.2rem 0 0 0;">
+                        Peringatan dini peserta magang aktif yang akan selesai dalam rentang ≤ 14 hari kalender atau telah melewati batas selesai (H-14 s/d Overdue).
+                    </p>
+                </div>
+                <a href="{{ route('admin.sertifikat.index') }}" style="font-size: 0.825rem; font-weight: 700; color: #0641CC; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+                    <span>Buka Hub Sertifikat Kelulusan</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </a>
+            </div>
+
+            @if($upcomingOffboardingList->isEmpty())
+                <div style="padding: 3rem 1.5rem; text-align: center; color: var(--neutral-600, #475569);">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </div>
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin-bottom: 0.25rem;">Tidak Ada Peserta Mendekati Batas Selesai</h4>
+                    <p style="font-size: 0.8125rem; margin: 0;">Seluruh peserta aktif saat ini memiliki masa magang lebih dari 14 hari ke depan.</p>
+                </div>
+            @else
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Peserta Magang</th>
+                                <th>Institusi</th>
+                                <th>Bidang & Pembimbing</th>
+                                <th>Target Tanggal Selesai</th>
+                                <th>Status Hitung Mundur</th>
+                                <th style="text-align: right;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($upcomingOffboardingList as $offboard)
+                                @php
+                                    $item = $offboard['penempatan'];
+                                    $days = $offboard['days_remaining'];
+                                    $isOverdue = $offboard['is_overdue'];
+                                @endphp
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 700; color: var(--neutral-900, #0F172A);">{{ $item->peserta?->nama }}</div>
+                                        <small style="color: var(--neutral-500, #64748B);">{{ $item->peserta?->email }}</small>
+                                    </td>
+                                    <td>
+                                        <div>{{ $item->peserta?->profil?->institusi ?? '-' }}</div>
+                                        <small style="color: var(--neutral-500, #64748B);">{{ $item->peserta?->profil?->jurusan ?? '-' }}</small>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 600; color: #0641CC;">{{ $item->bidang?->nama_bidang ?? '-' }}</div>
+                                        <small style="color: var(--neutral-500, #64748B);">Pembimbing: {{ $item->pembimbing?->nama ?? 'Belum Ditugaskan' }}</small>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 700;">{{ $item->tgl_selesai?->translatedFormat('d M Y') }}</div>
+                                        <small style="color: var(--neutral-500, #64748B);">Mulai: {{ $item->tgl_mulai?->format('d/m/Y') }}</small>
+                                    </td>
+                                    <td>
+                                        @if($isOverdue)
+                                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA;">
+                                                ⚠️ Lewat {{ abs($days) }} Hari (Perlu Penutupan)
+                                            </span>
+                                        @elseif($days === 0)
+                                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #FFFBEB; color: #D97706; border: 1px solid #FDE68A;">
+                                                🔔 Hari Terakhir Magang
+                                            </span>
+                                        @else
+                                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #EFF6FF; color: #0641CC; border: 1px solid #BFDBFE;">
+                                                ⏳ {{ $days }} Hari Tersisa
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td style="text-align: right; white-space: nowrap;">
+                                        <a href="{{ route('admin.penempatan.index') }}" 
+                                           style="padding: 0.35rem 0.75rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-decoration: none;">
+                                            Tinjau Penempatan
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+
+        {{-- TAB 6: TIMELINE GELOMBANG MAGANG --}}
+        <div id="tab-timeline" class="admin-tab-content" style="display: none;">
+            <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                <div>
+                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0;">
+                        Kalender Operasional & Timeline Gelombang Magang
+                    </h3>
+                    <p style="font-size: 0.8rem; color: var(--neutral-600, #475569); margin: 0.2rem 0 0 0;">
+                        Jadwal pembukaan, penutupan pendaftaran, dan utilisasi kuota kumulatif antar-gelombang magang.
+                    </p>
+                </div>
+                <a href="{{ route('admin.kuota.index') }}" style="font-size: 0.825rem; font-weight: 700; color: #0641CC; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+                    <span>Kelola Kuota Jurusan</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </a>
+            </div>
+
+            @if($timelineGelombangMagang->isEmpty())
+                <div style="padding: 3rem 1.5rem; text-align: center; color: var(--neutral-600, #475569);">
+                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin-bottom: 0.25rem;">Belum Ada Data Periode Magang</h4>
+                    <p style="font-size: 0.8125rem; margin: 0;">Silakan tambahkan data bulan magang terlebih dahulu.</p>
+                </div>
+            @else
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Periode Magang</th>
+                                <th>Jadwal Pendaftaran</th>
+                                <th>Status Pendaftaran</th>
+                                <th>Keterisian Kuota</th>
+                                <th style="text-align: right;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($timelineGelombangMagang as $g)
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 800; color: var(--neutral-900, #0F172A); font-size: 0.95rem;">
+                                            {{ $g['periode'] }}
+                                        </div>
+                                        <small style="color: var(--neutral-500, #64748B);">Mulai: {{ $g['tgl_mulai'] }}</small>
+                                    </td>
+                                    <td>
+                                        <div style="font-size: 0.85rem; color: var(--neutral-700, #334155);">
+                                            <strong>{{ $g['tgl_buka'] }}</strong> s/d <strong>{{ $g['tgl_tutup'] }}</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if($g['status_pendaftaran'] === 'Pendaftaran Dibuka')
+                                            <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #DCFCE7; color: #166534; border: 1px solid #86EFAC;">
+                                                🟢 {{ $g['status_pendaftaran'] }}
+                                            </span>
+                                        @elseif($g['status_pendaftaran'] === 'Pendaftaran Ditutup')
+                                            <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
+                                                ⚪ {{ $g['status_pendaftaran'] }}
+                                            </span>
+                                        @else
+                                            <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A;">
+                                                🟡 {{ $g['status_pendaftaran'] }}
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td style="min-width: 180px;">
+                                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.25rem;">
+                                            <span>{{ $g['kuota_terisi'] }} / {{ $g['kuota_total'] }} Slot</span>
+                                            <span style="color: #0641CC;">{{ $g['persen_terisi'] }}%</span>
+                                        </div>
+                                        <div style="width: 100%; height: 6px; background: #E2E8F0; border-radius: 9999px; overflow: hidden;">
+                                            <div style="height: 100%; width: {{ $g['persen_terisi'] }}%; background: #0641CC; border-radius: 9999px;"></div>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <a href="{{ route('admin.dashboard', ['bulan_id' => $g['id']]) }}" 
+                                           style="padding: 0.35rem 0.75rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-decoration: none;">
+                                            Lihat Kuota
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+
     </div>
 
     {{-- 5. QUICK ACTION SHORTCUTS FOOTER --}}
@@ -600,6 +791,16 @@
                 <div>
                     <span style="font-weight: 700; font-size: 0.85rem; display: block;">Waiting List</span>
                     <span style="font-size: 0.72rem; color: var(--neutral-500, #64748B);">Kelola antrean FIFO</span>
+                </div>
+            </a>
+
+            <a href="{{ route('admin.sertifikat.index') }}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: #F8FAFC; border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 10px; text-decoration: none; color: var(--neutral-800, #1E293B); transition: all 0.15s ease;">
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: #D97706; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                </div>
+                <div>
+                    <span style="font-weight: 700; font-size: 0.85rem; display: block;">Hub Sertifikat</span>
+                    <span style="font-size: 0.72rem; color: var(--neutral-500, #64748B);">Cetak ijazah kelulusan</span>
                 </div>
             </a>
         </div>

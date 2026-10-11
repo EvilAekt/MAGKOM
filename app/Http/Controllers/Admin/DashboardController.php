@@ -97,6 +97,59 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // 7. Upcoming Offboarding Tracker (Peserta aktif yang mendekati selesai magang dalam 14 hari ke depan)
+        $upcomingOffboardingList = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang'])
+            ->where('status', StatusPenempatanEnum::Aktif)
+            ->where('tgl_selesai', '<=', now()->addDays(14)->endOfDay())
+            ->orderBy('tgl_selesai', 'asc')
+            ->take(6)
+            ->get()
+            ->map(function ($item) {
+                $daysRemaining = (int) now()->startOfDay()->diffInDays($item->tgl_selesai->startOfDay(), false);
+                return [
+                    'penempatan' => $item,
+                    'days_remaining' => $daysRemaining,
+                    'is_overdue' => $daysRemaining < 0,
+                ];
+            });
+
+        // 8. Timeline Gelombang Magang Terpadu (Periode 3 bulan terakhir hingga 3 bulan ke depan)
+        $timelineGelombangMagang = BulanMagang::with(['kuota' => fn ($q) => $q->where('aktif', true)])
+            ->whereDate('bulan_mulai', '>=', now()->subMonths(2)->startOfMonth())
+            ->whereDate('bulan_mulai', '<=', now()->addMonths(3)->endOfMonth())
+            ->orderBy('bulan_mulai', 'asc')
+            ->get()
+            ->map(function ($b) {
+                $today = now()->startOfDay();
+                $buka = $b->tgl_buka ? $b->tgl_buka->startOfDay() : null;
+                $tutup = $b->tgl_tutup ? $b->tgl_tutup->endOfDay() : null;
+
+                $statusPendaftaran = 'Mendatang';
+                if ($buka && $tutup) {
+                    if ($today->between($buka, $tutup)) {
+                        $statusPendaftaran = 'Pendaftaran Dibuka';
+                    } elseif ($today->gt($tutup)) {
+                        $statusPendaftaran = 'Pendaftaran Ditutup';
+                    }
+                }
+
+                $kuotaTotal = (int) $b->kuota->sum('jumlah');
+                $kuotaTerisi = (int) $b->kuota->sum('terisi');
+
+                return [
+                    'id' => $b->id,
+                    'periode' => $b->bulan_mulai?->format('F Y') ?? '-',
+                    'tgl_buka' => $b->tgl_buka?->format('d M Y') ?? '-',
+                    'tgl_tutup' => $b->tgl_tutup?->format('d M Y') ?? '-',
+                    'tgl_mulai' => $b->bulan_mulai?->format('d M Y') ?? '-',
+                    'status_pendaftaran' => $statusPendaftaran,
+                    'kuota_total' => $kuotaTotal,
+                    'kuota_terisi' => $kuotaTerisi,
+                    'persen_terisi' => $kuotaTotal > 0 ? min(100, (int) round(($kuotaTerisi / $kuotaTotal) * 100)) : 0,
+                    'aktif' => (bool) $b->aktif,
+                ];
+            });
+
         return view('admin.dashboard', [
             'pengajuanMenunggu' => $pengajuanMenunggu,
             'perluPerbaikan' => $perluPerbaikan,
@@ -112,6 +165,8 @@ class DashboardController extends Controller
             'pendaftaranTerbaru' => $pendaftaranTerbaru,
             'pembimbingWorkload' => $pembimbingWorkload,
             'penempatanTerbaru' => $penempatanTerbaru,
+            'upcomingOffboardingList' => $upcomingOffboardingList,
+            'timelineGelombangMagang' => $timelineGelombangMagang,
         ]);
     }
 }
