@@ -27,6 +27,8 @@ class TugasRequest extends FormRequest
             'penempatan_id' => [$isUpdate ? 'sometimes' : 'required', 'exists:penempatan,id'],
             'judul' => ['required', 'string', 'max:150'],
             'deskripsi' => ['nullable', 'string'],
+            'link_referensi' => ['nullable', 'url', 'max:255'],
+            'file_lampiran' => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,csv,ppt,pptx,zip,png,jpg,jpeg', 'max:10240'],
             'kategori' => ['required', 'string', 'max:50'],
             'kompleksitas' => ['required', new Enum(KompleksitasEnum::class)],
             'deadline' => ['required', 'date', $isUpdate ? 'nullable' : 'after_or_equal:today'],
@@ -38,6 +40,9 @@ class TugasRequest extends FormRequest
     {
         return [
             'deadline.after_or_equal' => 'Batas waktu (deadline) tugas tidak boleh di masa lampau (AC-08-1).',
+            'link_referensi.url' => 'Format tautan referensi tidak valid. Harap gunakan URL lengkap diawali http:// atau https://.',
+            'file_lampiran.mimes' => 'Format berkas lampiran tidak didukung. Harap unggah berkas berformat PDF, Word, Excel, PPT, ZIP, atau Gambar.',
+            'file_lampiran.max' => 'Ukuran berkas lampiran tidak boleh melebihi 10 MB.',
         ];
     }
 

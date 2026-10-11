@@ -18,6 +18,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class TugasController extends Controller
@@ -91,6 +92,30 @@ class TugasController extends Controller
     }
 
     /**
+     * Menampilkan form layar penuh pembuatan tugas baru (Assignment Workspace ala Classroom).
+     */
+    public function create(Request $request): View
+    {
+        $user = $request->user();
+
+        $penempatanList = Penempatan::with(['peserta.profil.jurusan', 'bidang'])
+            ->where(function ($q) use ($user) {
+                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                    $q->where('pembimbing_id', $user->id);
+                }
+            })
+            ->where('status', StatusPenempatanEnum::Aktif)
+            ->get();
+
+        $selectedPenempatanId = $request->integer('penempatan_id', 0);
+
+        return view('pembimbing.tugas.create', [
+            'penempatanList' => $penempatanList,
+            'selectedPenempatanId' => $selectedPenempatanId > 0 ? $selectedPenempatanId : null,
+        ]);
+    }
+
+    /**
      * Memberikan tugas baru kepada peserta bimbingan (AC-08).
      */
     public function store(TugasRequest $request): JsonResponse|RedirectResponse
@@ -100,19 +125,33 @@ class TugasController extends Controller
         // Penegakan batasan hak akses & isolasi SuperAdmin (AC-08-5)
         Gate::authorize('create', [Tugas::class, $penempatan]);
 
-        $tugas = Tugas::create($request->validated());
+        $payload = $request->validated();
+        unset($payload['file_lampiran']);
+
+        $tugas = Tugas::create($payload);
+
+        if ($request->hasFile('file_lampiran')) {
+            $file = $request->file('file_lampiran');
+            $path = $file->store("tugas/{$tugas->id}", 'private');
+            $tugas->update([
+                'file_lampiran' => $path,
+                'nama_file_lampiran' => $file->getClientOriginalName(),
+                'ukuran_file_lampiran' => $file->getSize(),
+            ]);
+        }
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
             tabel: 'tugas',
             idData: $tugas->id,
             nilaiLama: null,
-            nilaiBaru: $request->validated(),
+            nilaiBaru: $tugas->only(['judul', 'kategori', 'kompleksitas', 'deadline', 'link_referensi', 'nama_file_lampiran']),
             detail: ['aksi' => 'buat_tugas']
         );
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
-            return redirect()->route('pembimbing.tugas.index')->with('success', 'Tugas baru berhasil diberikan kepada mentee.');
+            return redirect()->route('pembimbing.tugas.index')
+                ->with('success', 'Tugas baru berhasil diberikan kepada mentee.');
         }
 
         return response()->json([
@@ -144,21 +183,49 @@ class TugasController extends Controller
     }
 
     /**
+     * Mengunduh berkas fisik acuan tugas secara aman (AC-08).
+     */
+    public function unduhLampiran(Request $request, Tugas $tugas): mixed
+    {
+        Gate::authorize('view', $tugas);
+
+        if (! $tugas->file_lampiran || ! Storage::disk('private')->exists($tugas->file_lampiran)) {
+            abort(404, 'Berkas lampiran acuan tugas tidak ditemukan.');
+        }
+
+        return Storage::disk('private')->download($tugas->file_lampiran, $tugas->nama_file_lampiran ?: 'lampiran-tugas');
+    }
+
+    /**
      * Memperbarui informasi atau status penugasan.
      */
     public function update(TugasRequest $request, Tugas $tugas): JsonResponse|RedirectResponse
     {
         Gate::authorize('update', $tugas);
 
-        $nilaiLama = $tugas->only(['judul', 'deskripsi', 'kategori', 'kompleksitas', 'deadline', 'status']);
-        $tugas->update($request->validated());
+        $nilaiLama = $tugas->only(['judul', 'deskripsi', 'link_referensi', 'nama_file_lampiran', 'kategori', 'kompleksitas', 'deadline', 'status']);
+        $payload = $request->validated();
+        unset($payload['file_lampiran']);
+
+        if ($request->hasFile('file_lampiran')) {
+            if ($tugas->file_lampiran && Storage::disk('private')->exists($tugas->file_lampiran)) {
+                Storage::disk('private')->delete($tugas->file_lampiran);
+            }
+            $file = $request->file('file_lampiran');
+            $path = $file->store("tugas/{$tugas->id}", 'private');
+            $payload['file_lampiran'] = $path;
+            $payload['nama_file_lampiran'] = $file->getClientOriginalName();
+            $payload['ukuran_file_lampiran'] = $file->getSize();
+        }
+
+        $tugas->update($payload);
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
             tabel: 'tugas',
             idData: $tugas->id,
             nilaiLama: $nilaiLama,
-            nilaiBaru: $request->validated(),
+            nilaiBaru: $tugas->only(['judul', 'link_referensi', 'nama_file_lampiran', 'kategori', 'kompleksitas', 'deadline', 'status']),
             detail: ['aksi' => 'update_tugas']
         );
 

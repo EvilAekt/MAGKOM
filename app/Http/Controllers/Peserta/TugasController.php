@@ -123,4 +123,18 @@ class TugasController extends Controller
         return redirect()->route('peserta.tugas.show', $tugas)
             ->with('success', 'Laporan progres tugas berhasil diunggah.');
     }
+
+    /**
+     * Mengunduh berkas fisik acuan tugas yang diberikan oleh pembimbing (AC-08).
+     */
+    public function unduhLampiran(Request $request, Tugas $tugas): mixed
+    {
+        Gate::authorize('view', $tugas);
+
+        if (! $tugas->file_lampiran || ! Storage::disk('private')->exists($tugas->file_lampiran)) {
+            abort(404, 'Berkas panduan tugas tidak ditemukan.');
+        }
+
+        return Storage::disk('private')->download($tugas->file_lampiran, $tugas->nama_file_lampiran ?: 'panduan-tugas');
+    }
 }

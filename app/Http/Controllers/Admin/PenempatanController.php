@@ -32,6 +32,23 @@ class PenempatanController extends Controller
             $query->where('status', $request->input('status'));
         }
 
+        if ($request->filled('pembimbing_id')) {
+            $query->where('pembimbing_id', $request->integer('pembimbing_id'));
+        }
+
+        if ($request->filled('bidang_id')) {
+            $query->where('bidang_id', $request->integer('bidang_id'));
+        }
+
+        if ($request->filled('q')) {
+            $search = '%' . trim((string) $request->input('q')) . '%';
+            $query->whereHas('peserta', function ($qu) use ($search) {
+                $qu->where('nama', 'like', $search)
+                    ->orWhere('email', 'like', $search)
+                    ->orWhereHas('profil', fn ($qp) => $qp->where('institusi', 'like', $search));
+            });
+        }
+
         $penempatanList = $query->paginate(15)->withQueryString();
         $pembimbingList = User::where('role', RoleEnum::Pembimbing)
             ->where('status_aktif', true)
@@ -53,6 +70,13 @@ class PenempatanController extends Controller
             ->orderBy('nama')
             ->get();
 
+        $penempatanStats = [
+            'total' => Penempatan::count(),
+            'aktif' => Penempatan::where('status', StatusPenempatanEnum::Aktif)->count(),
+            'selesai' => Penempatan::where('status', StatusPenempatanEnum::Selesai)->count(),
+            'khusus' => Penempatan::whereNotNull('slot_khusus_id')->count(),
+        ];
+
         return view('admin.penempatan.index', [
             'penempatanList' => $penempatanList,
             'statusEnum' => StatusPenempatanEnum::cases(),
@@ -62,6 +86,7 @@ class PenempatanController extends Controller
             'jurusanList' => $jurusanList,
             'kuotaList' => $kuotaList,
             'pesertaList' => $pesertaList,
+            'penempatanStats' => $penempatanStats,
         ]);
     }
 

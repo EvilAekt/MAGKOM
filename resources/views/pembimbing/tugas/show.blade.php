@@ -99,6 +99,60 @@
                 <div style="color: var(--neutral-800); font-size: 0.925rem; line-height: 1.7; white-space: pre-line; background: #f8fafc; padding: 1.25rem; border-radius: 10px; border: 1px solid var(--neutral-200);">
                     {{ $tugas->deskripsi ?: 'Tidak ada deskripsi rinci yang disertakan.' }}
                 </div>
+
+                <!-- Sumber Daya & Berkas Acuan Tugas -->
+                @if($tugas->file_lampiran || $tugas->link_referensi)
+                    <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--neutral-200); display: flex; flex-direction: column; gap: 0.75rem;">
+                        <h4 style="font-size: 0.85rem; font-weight: 700; color: var(--neutral-700); margin: 0; text-transform: uppercase; letter-spacing: 0.025em;">
+                            Materi & Sumber Daya Penugasan:
+                        </h4>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem;">
+                            @if($tugas->link_referensi)
+                                <div style="background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.65rem; min-width: 0;">
+                                        <div style="width: 34px; height: 34px; border-radius: 8px; background: #dbeafe; color: #1d4ed8; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                                        </div>
+                                        <div style="min-width: 0;">
+                                            <div style="font-size: 0.75rem; font-weight: 700; color: #1e40af;">Tautan Referensi Eksternal</div>
+                                            <div style="font-size: 0.8125rem; color: #1d4ed8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">
+                                                {{ $tugas->link_referensi }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" style="padding: 0.35rem 0.75rem; background: #1d4ed8; color: #ffffff; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem;">
+                                        <span>Buka</span>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                                    </a>
+                                </div>
+                            @endif
+
+                            @if($tugas->file_lampiran)
+                                @php $badge = $tugas->badge_color_lampiran; @endphp
+                                <div style="background: #fafafa; border: 1px solid var(--neutral-200); border-radius: 10px; padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.65rem; min-width: 0;">
+                                        <div style="padding: 0.25rem 0.5rem; border-radius: 6px; background: {{ $badge['bg'] }}; color: {{ $badge['color'] }}; font-weight: 800; font-size: 0.7rem; border: 1px solid {{ $badge['border'] }}; flex-shrink: 0;">
+                                            {{ $badge['label'] }}
+                                        </div>
+                                        <div style="min-width: 0;">
+                                            <div style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-900); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px;" title="{{ $tugas->nama_file_lampiran }}">
+                                                {{ $tugas->nama_file_lampiran ?: 'Berkas Panduan' }}
+                                            </div>
+                                            <div style="font-size: 0.725rem; color: var(--neutral-500);">
+                                                Ukuran: {{ $tugas->ukuran_format ?? '-' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="{{ route('pembimbing.tugas.lampiran', $tugas->id) }}" style="padding: 0.35rem 0.75rem; background: #0641CC; color: #ffffff; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                        <span>Unduh</span>
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Progress Logs & Review List -->

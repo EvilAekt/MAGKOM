@@ -163,9 +163,9 @@
             </p>
             <!-- Quick Action Shortcuts -->
             <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.75rem;">
-                <a href="{{ route('pembimbing.tugas.index') }}" style="display: inline-flex; align-items: center; gap: 0.45rem; background: #ffffff; color: #0641CC; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8125rem; font-weight: 700; text-decoration: none; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: transform 0.2s ease;">
+                <a href="{{ route('pembimbing.tugas.create') }}" style="display: inline-flex; align-items: center; gap: 0.45rem; background: #ffffff; color: #0641CC; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8125rem; font-weight: 700; border: none; text-decoration: none; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: transform 0.2s ease;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    Beri Tugas Baru
+                    + Beri Tugas Baru
                 </a>
                 <button type="button" onclick="switchPembimbingTab('tab-antrean')" style="display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8125rem; font-weight: 600; cursor: pointer; transition: background 0.2s ease;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>
@@ -448,26 +448,52 @@
                         @php
                             $diff = \Carbon\Carbon::today()->diffInDays($tugas->deadline, false);
                         @endphp
-                        <div style="background: #ffffff; border-radius: 10px; border: 1px solid var(--neutral-200); padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; transition: transform 0.15s ease;">
-                            <div style="display: flex; flex-direction: column; gap: 0.2rem; flex: 1;">
-                                <div style="display: flex; align-items: center; gap: 0.45rem;">
-                                    <span style="font-size: 0.7rem; background: rgba(6, 65, 204, 0.08); color: #0641CC; padding: 0.1rem 0.45rem; border-radius: 4px; font-weight: 600;">
+                        <div style="background: #ffffff; border-radius: 12px; border: 1px solid var(--neutral-200); padding: 1rem 1.15rem; display: flex; flex-direction: column; justify-content: space-between; gap: 0.75rem; transition: transform 0.15s ease, box-shadow 0.15s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                                    <span style="font-size: 0.7rem; background: rgba(6, 65, 204, 0.08); color: #0641CC; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
                                         {{ $tugas->kategori ?? 'Tugas' }}
                                     </span>
-                                    <span style="font-size: 0.7rem; font-weight: 700; color: {{ $diff == 0 ? '#b91c1c' : '#d97706' }};">
-                                        {{ $diff == 0 ? 'Hari Ini!' : ($diff == 1 ? 'Besok' : 'Sisa ' . $diff . ' hari') }}
+                                    <span style="font-size: 0.725rem; font-weight: 700; color: {{ $diff == 0 ? '#b91c1c' : ($diff <= 1 ? '#ea580c' : '#d97706') }}; background: {{ $diff == 0 ? '#fee2e2' : '#fef3c7' }}; padding: 0.15rem 0.5rem; border-radius: 999px;">
+                                        {{ $diff == 0 ? 'Tenggat Hari Ini!' : ($diff == 1 ? 'Besok Jatuh Tempo' : 'Sisa ' . $diff . ' hari') }}
                                     </span>
                                 </div>
-                                <span style="font-size: 0.8125rem; font-weight: 600; color: var(--neutral-900); line-height: 1.3;">
-                                    {{ \Illuminate\Support\Str::limit($tugas->judul, 35) }}
-                                </span>
-                                <span style="font-size: 0.75rem; color: var(--neutral-500);">
-                                    Mentee: {{ $tugas->penempatan?->peserta?->nama ?? '-' }}
-                                </span>
+                                <h4 style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-900); margin: 0.2rem 0 0 0; line-height: 1.35;">
+                                    {{ $tugas->judul }}
+                                </h4>
+                                <div style="font-size: 0.75rem; color: var(--neutral-500); display: flex; align-items: center; gap: 0.35rem;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    <span>Mentee: <strong>{{ $tugas->penempatan?->peserta?->nama ?? '-' }}</strong></span>
+                                </div>
+
+                                <!-- Indikator Sumber Daya Lampiran & Tautan -->
+                                @if($tugas->file_lampiran || $tugas->link_referensi)
+                                    <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.25rem; padding-top: 0.35rem; border-top: 1px dashed var(--neutral-200);">
+                                        @if($tugas->file_lampiran)
+                                            @php
+                                                $badge = $tugas->badge_color_lampiran;
+                                            @endphp
+                                            <a href="{{ route('pembimbing.tugas.lampiran', $tugas->id) }}" title="Unduh Berkas Panduan: {{ $tugas->nama_file_lampiran }}" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.45rem; border-radius: 4px; background: {{ $badge['bg'] }}; color: {{ $badge['color'] }}; text-decoration: none; border: 1px solid {{ $badge['border'] }};">
+                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                                {{ $badge['label'] }} ({{ $tugas->ukuran_format }})
+                                            </a>
+                                        @endif
+                                        @if($tugas->link_referensi)
+                                            <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" title="Buka Tautan Acuan: {{ $tugas->link_referensi }}" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.45rem; border-radius: 4px; background: #eff6ff; color: #1d4ed8; text-decoration: none; border: 1px solid #bfdbfe;">
+                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                                                Tautan Acuan ↗
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
-                            <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}" style="padding: 0.4rem 0.75rem; background: rgba(6, 65, 204, 0.08); color: #0641CC; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none; white-space: nowrap;">
-                                Pantau
-                            </a>
+
+                            <div style="display: flex; justify-content: flex-end; align-items: center; border-top: 1px solid var(--neutral-100); padding-top: 0.5rem;">
+                                <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}" style="padding: 0.35rem 0.85rem; background: #0641CC; color: #ffffff; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                    <span>Reviu & Detail</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                            </div>
                         </div>
                     @endforeach
                 </div>

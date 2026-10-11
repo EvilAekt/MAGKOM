@@ -100,8 +100,36 @@
         <div style="padding: 16px; background: var(--neutral-100); border-radius: var(--radius-default); border: 1px solid var(--neutral-200);">
             <h4 style="font-size: 13px; font-weight: 700; color: var(--neutral-700); margin-bottom: 6px; text-transform: uppercase;">Deskripsi & Instruksi:</h4>
             <div style="font-size: 14px; color: var(--neutral-800); white-space: pre-line; line-height: 1.6;">
-                {{ $tugas->deskripsi }}
+                {{ $tugas->deskripsi ?: 'Tidak ada deskripsi rinci yang disertakan.' }}
             </div>
+
+            <!-- Sumber Daya Panduan dari Pembimbing -->
+            @if($tugas->file_lampiran || $tugas->link_referensi)
+                <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--neutral-200); display: flex; flex-direction: column; gap: 10px;">
+                    <h5 style="font-size: 12px; font-weight: 700; color: var(--neutral-600); text-transform: uppercase; margin: 0;">
+                        Lampiran & Acuan dari Pembimbing:
+                    </h5>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        @if($tugas->link_referensi)
+                            <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; background: #eff6ff; color: #1d4ed8; text-decoration: none; font-size: 13px; font-weight: 600; border: 1px solid #bfdbfe;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                                <span>Buka Tautan Acuan ↗</span>
+                            </a>
+                        @endif
+
+                        @if($tugas->file_lampiran)
+                            @php $badge = $tugas->badge_color_lampiran; @endphp
+                            <a href="{{ route('peserta.tugas.lampiran', $tugas->id) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; background: #ffffff; color: var(--neutral-800); text-decoration: none; font-size: 13px; font-weight: 600; border: 1px solid var(--neutral-300);">
+                                <span style="padding: 1px 5px; border-radius: 4px; background: {{ $badge['bg'] }}; color: {{ $badge['color'] }}; font-size: 11px; font-weight: 800;">
+                                    {{ $badge['label'] }}
+                                </span>
+                                <span>Unduh {{ $tugas->nama_file_lampiran ?: 'Berkas Panduan' }} ({{ $tugas->ukuran_format }})</span>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 

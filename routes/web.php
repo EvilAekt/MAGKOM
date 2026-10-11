@@ -114,6 +114,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:peserta'])-
     // Pelaksanaan: Tugas & Progres (F-08)
     Route::get('/tugas', [PesertaTugasController::class, 'index'])->name('tugas.index');
     Route::get('/tugas/{tugas}', [PesertaTugasController::class, 'show'])->name('tugas.show');
+    Route::get('/tugas/{tugas}/lampiran', [PesertaTugasController::class, 'unduhLampiran'])->name('tugas.lampiran');
     Route::post('/tugas/{tugas}/progres', [PesertaTugasController::class, 'unggahProgres'])->name('tugas.progres');
 
     // Pelaksanaan: Logbook Harian (F-09, F-15)
@@ -135,9 +136,11 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/peserta/{penempatan}', [PembimbingPesertaController::class, 'show'])->name('peserta.show');
 
     Route::get('/tugas', [PembimbingTugasController::class, 'index'])->name('tugas.index');
+    Route::get('/tugas/create', [PembimbingTugasController::class, 'create'])->name('tugas.create');
     Route::post('/tugas', [PembimbingTugasController::class, 'store'])->name('tugas.store');
     Route::get('/tugas/{tugas}', [PembimbingTugasController::class, 'show'])->name('tugas.show');
     Route::put('/tugas/{tugas}', [PembimbingTugasController::class, 'update'])->name('tugas.update');
+    Route::get('/tugas/{tugas}/lampiran', [PembimbingTugasController::class, 'unduhLampiran'])->name('tugas.lampiran');
     Route::post('/tugas/{tugas}/selesai', [PembimbingTugasController::class, 'selesai'])->name('tugas.selesai');
     Route::post('/progres/{progres}/review', [PembimbingTugasController::class, 'reviewProgres'])->name('progres.review');
 

@@ -89,11 +89,24 @@ class PendaftaranController extends Controller
         $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
         $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
 
+        $queueStats = [
+            'total' => Pendaftaran::count(),
+            'diajukan' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)->count(),
+            'perlu_perbaikan' => Pendaftaran::where('status', StatusPendaftaranEnum::PerluPerbaikan)->count(),
+            'waiting_list' => Pendaftaran::where('status', StatusPendaftaranEnum::WaitingList)->count(),
+            'diterima' => Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)->count(),
+            'ditolak' => Pendaftaran::where('status', StatusPendaftaranEnum::Ditolak)->count(),
+            'sla_warning' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
+                ->where('diajukan_at', '<=', now()->subDays(3))
+                ->count(),
+        ];
+
         return view('admin.pendaftaran.index', [
             'pendaftaranList' => $pendaftaranList,
             'bulanList' => $bulanList,
             'jurusanList' => $jurusanList,
             'statusEnum' => StatusPendaftaranEnum::cases(),
+            'queueStats' => $queueStats,
         ]);
     }
 

@@ -43,10 +43,10 @@
             </p>
         </div>
         <div>
-            <button type="button" onclick="document.getElementById('modalBuatTugas').style.display='flex'" style="background: #0641CC; color: #ffffff; padding: 0.55rem 1.2rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);">
+            <a href="{{ route('pembimbing.tugas.create') }}" style="background: #0641CC; color: #ffffff; text-decoration: none; padding: 0.55rem 1.2rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 Buat Tugas Baru
-            </button>
+            </a>
         </div>
     </div>
 
@@ -125,13 +125,26 @@
                                         {{ $tugas->judul }}
                                     </a>
                                 </div>
-                                <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.25rem;">
+                                <div style="display: flex; gap: 0.4rem; align-items: center; margin-top: 0.35rem; flex-wrap: wrap;">
                                     <span style="font-size: 0.7rem; background: #e0e7ff; color: #3730a3; padding: 0.1rem 0.45rem; border-radius: 4px; font-weight: 600;">
                                         {{ $tugas->kategori }}
                                     </span>
                                     <span style="font-size: 0.75rem; color: var(--neutral-500);">
-                                        {{ $tugas->progresLogs->count() }} Laporan Progres
+                                        &bull; {{ $tugas->progresLogs->count() }} Laporan Progres
                                     </span>
+                                    @if($tugas->file_lampiran)
+                                        @php $badge = $tugas->badge_color_lampiran; @endphp
+                                        <a href="{{ route('pembimbing.tugas.lampiran', $tugas->id) }}" title="{{ $tugas->nama_file_lampiran }}" style="display: inline-flex; align-items: center; gap: 0.2rem; font-size: 0.675rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 4px; background: {{ $badge['bg'] }}; color: {{ $badge['color'] }}; text-decoration: none; border: 1px solid {{ $badge['border'] }};">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                            {{ $badge['label'] }} ({{ $tugas->ukuran_format }})
+                                        </a>
+                                    @endif
+                                    @if($tugas->link_referensi)
+                                        <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.2rem; font-size: 0.675rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 4px; background: #eff6ff; color: #1d4ed8; text-decoration: none; border: 1px solid #bfdbfe;">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                                            Link Acuan ↗
+                                        </a>
+                                    @endif
                                 </div>
                             </td>
                             <td style="padding: 1rem 1rem;">
@@ -201,97 +214,4 @@
     </div>
 
 </div>
-
-<!-- Modal Buat Tugas Baru (AC-08) -->
-<div id="modalBuatTugas" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
-    <div style="background: #ffffff; border-radius: 16px; width: 100%; max-width: 560px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); overflow: hidden; max-height: 90vh; display: flex; flex-direction: column;">
-        
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; background: #fafafa;">
-            <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
-                Buat Tugas Baru untuk Mentee
-            </h3>
-            <button type="button" onclick="document.getElementById('modalBuatTugas').style.display='none'" style="background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400); line-height: 1;">&times;</button>
-        </div>
-
-        <form method="POST" action="{{ route('pembimbing.tugas.store') }}" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; overflow-y: auto;">
-            @csrf
-
-            <!-- Pilih Mentee Penempatan -->
-            <div>
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Peserta Bimbingan <span style="color: #ef4444;">*</span></label>
-                <select name="penempatan_id" id="modal_penempatan_id" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
-                    <option value="">-- Pilih Peserta Bimbingan --</option>
-                    @foreach($penempatanList as $p)
-                        <option value="{{ $p->id }}" data-tgl-selesai="{{ $p->tgl_selesai?->format('Y-m-d') }}">
-                            {{ $p->peserta?->nama }} - {{ $p->peserta?->profil?->institusi ?? 'Institusi' }} (Selesai: {{ $p->tgl_selesai?->format('d/m/Y') }})
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Judul Tugas -->
-            <div>
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Judul Tugas <span style="color: #ef4444;">*</span></label>
-                <input type="text" name="judul" required maxlength="150" placeholder="Contoh: Implementasi Modul Laporan Presensi" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem;">
-            </div>
-
-            <!-- Kategori & Kompleksitas -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <div>
-                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Kategori Bidang <span style="color: #ef4444;">*</span></label>
-                    <input type="text" name="kategori" required placeholder="Pengembangan Web, Jaringan, ..." style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem;">
-                </div>
-                <div>
-                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Tingkat Kompleksitas <span style="color: #ef4444;">*</span></label>
-                    <select name="kompleksitas" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
-                        <option value="rendah">Rendah (Dasar/Minor)</option>
-                        <option value="sedang" selected>Sedang (Standar)</option>
-                        <option value="tinggi">Tinggi (Kompleks/Utama)</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Tenggat Waktu (Deadline) - AC-08-1 -->
-            <div>
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">
-                    Batas Waktu (Deadline) <span style="color: #ef4444;">*</span>
-                </label>
-                <input type="date" name="deadline" id="modal_deadline" min="{{ date('Y-m-d') }}" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem;">
-                <span id="deadline_hint" style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem; display: block;">
-                    Batas waktu tidak boleh di masa lampau dan tidak boleh melampaui batas selesai magang mentee (AC-08-1).
-                </span>
-            </div>
-
-            <!-- Deskripsi Rinci Tugas -->
-            <div>
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Deskripsi & Ekspektasi Output</label>
-                <textarea name="deskripsi" rows="3" placeholder="Rincikan instruksi tugas, kriteria penerimaan, dan format dokumen output yang diharapkan..." style="width: 100%; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; font-family: inherit;"></textarea>
-            </div>
-
-            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="document.getElementById('modalBuatTugas').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="height: 40px; padding: 0 1.5rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
-                    Simpan & Berikan Tugas
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    document.getElementById('modal_penempatan_id')?.addEventListener('change', function() {
-        const selected = this.options[this.selectedIndex];
-        const tglSelesai = selected.getAttribute('data-tgl-selesai');
-        const deadlineInput = document.getElementById('modal_deadline');
-        const hint = document.getElementById('deadline_hint');
-        if (tglSelesai && deadlineInput) {
-            deadlineInput.max = tglSelesai;
-            hint.textContent = 'Maksimal batas waktu untuk mentee ini: ' + tglSelesai;
-        } else if (deadlineInput) {
-            deadlineInput.removeAttribute('max');
-        }
-    });
-</script>
 @endsection
