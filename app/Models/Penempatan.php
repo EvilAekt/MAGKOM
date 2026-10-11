@@ -101,4 +101,106 @@ class Penempatan extends Model
     {
         return $query->where('status', StatusPenempatanEnum::Aktif);
     }
+
+    /**
+     * Dapatkan nomor minggu magang yang sedang berjalan saat ini.
+     */
+    public function getMingguAktifAttribute(): int
+    {
+        if (! $this->tgl_mulai) {
+            return 1;
+        }
+
+        $today = now()->startOfDay();
+        $mulai = $this->tgl_mulai->copy()->startOfDay();
+
+        if ($today->lt($mulai)) {
+            return 1;
+        }
+
+        $diffDays = $mulai->diffInDays($today);
+        $minggu = (int) floor($diffDays / 7) + 1;
+
+        $totalMinggu = $this->total_minggu;
+        return min(max(1, $minggu), $totalMinggu);
+    }
+
+    /**
+     * Dapatkan total estimasi durasi magang dalam satuan minggu.
+     */
+    public function getTotalMingguAttribute(): int
+    {
+        if (! $this->tgl_mulai || ! $this->tgl_selesai) {
+            return 12; // Default 12 minggu (~3 bulan)
+        }
+
+        $mulai = $this->tgl_mulai->copy()->startOfDay();
+        $selesai = $this->tgl_selesai->copy()->endOfDay();
+        $diffDays = $mulai->diffInDays($selesai) + 1;
+
+        return max(1, (int) ceil($diffDays / 7));
+    }
+
+    /**
+     * Menghasilkan struktur daftar seluruh minggu magang beserta status pengisian logbooknya.
+     */
+    public function getDaftarMingguMagang(): array
+    {
+        if (! $this->tgl_mulai) {
+            return [];
+        }
+
+        $total = $this->total_minggu;
+        $today = now()->startOfDay();
+        $mulai = $this->tgl_mulai->copy()->startOfDay();
+
+        // Load logbooks jika belum dimuat
+        $logbookMap = $this->relationLoaded('logbooks')
+            ? $this->logbooks->keyBy(function ($item) {
+                return $item->minggu_ke ?? ($this->tgl_mulai->diffInWeeks($item->tanggal) + 1);
+            })
+            : $this->logbooks()->get()->keyBy(function ($item) {
+                return $item->minggu_ke ?? ($this->tgl_mulai->diffInWeeks($item->tanggal) + 1);
+            });
+
+        $hasil = [];
+
+        for ($i = 1; $i <= $total; $i++) {
+            $tglAwal = $mulai->copy()->addDays(($i - 1) * 7);
+            $tglAkhir = $tglAwal->copy()->addDays(6);
+
+            // Batasi tanggal akhir agar tidak melebihi tgl_selesai jika sudah di ujung
+            if ($this->tgl_selesai && $tglAkhir->gt($this->tgl_selesai)) {
+                $tglAkhir = $this->tgl_selesai->copy();
+            }
+
+            $isAktif = $today->betweenIncluded($tglAwal, $tglAkhir);
+            $isLampau = $today->gt($tglAkhir);
+            $isMendatang = $today->lt($tglAwal);
+
+            $logbook = $logbookMap->get($i);
+
+            $statusPengisian = 'belum_diisi';
+            if ($logbook) {
+                $statusVal = $logbook->status->value ?? (string) $logbook->status;
+                $statusPengisian = $statusVal;
+            } elseif ($isMendatang) {
+                $statusPengisian = 'mendatang';
+            }
+
+            $hasil[] = [
+                'minggu_ke'       => $i,
+                'tgl_awal'        => $tglAwal,
+                'tgl_akhir'       => $tglAkhir,
+                'label_periode'   => $tglAwal->translatedFormat('d M') . ' – ' . $tglAkhir->translatedFormat('d M Y'),
+                'is_aktif'        => $isAktif,
+                'is_lampau'       => $isLampau,
+                'is_mendatang'    => $isMendatang,
+                'logbook'         => $logbook,
+                'status'          => $statusPengisian,
+            ];
+        }
+
+        return $hasil;
+    }
 }

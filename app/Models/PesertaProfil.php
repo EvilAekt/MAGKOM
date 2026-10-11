@@ -22,10 +22,23 @@ class PesertaProfil extends Model
         'jurusan_id',
         'jenjang',
         'no_hp',
+        'foto',
         'nama_kontak_darurat',
         'no_kontak_darurat',
         'hubungan_kontak_darurat',
     ];
+
+    /**
+     * Accessor untuk URL foto profil publik.
+     */
+    public function getFotoUrlAttribute(): ?string
+    {
+        if (! empty($this->foto)) {
+            return asset('storage/' . $this->foto);
+        }
+
+        return null;
+    }
 
     protected $casts = [
         'jenjang' => JenjangEnum::class,

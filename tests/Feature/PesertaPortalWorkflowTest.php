@@ -85,6 +85,56 @@ class PesertaPortalWorkflowTest extends TestCase
         ]);
     }
 
+    public function test_peserta_dapat_unggah_dan_hapus_foto_profil(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+
+        // 1. Simpan profil beserta upload berkas foto (valid 1x1 PNG bytes tanpa ketergantungan GD extension)
+        $pngContent = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
+        $file = \Illuminate\Http\UploadedFile::fake()->createWithContent('pasfoto_formal.png', $pngContent);
+
+        $postData = [
+            'institusi' => 'Universitas Gadjah Mada',
+            'nim_nisn' => '22/123456/TK/54321',
+            'jenjang' => 's1',
+            'jurusan_id' => $this->jurusan->id,
+            'no_hp' => '081298765432',
+            'foto' => $file,
+        ];
+
+        $response = $this->actingAs($this->peserta)->post(route('peserta.profil.simpan'), $postData);
+        $response->assertRedirect(route('peserta.profil.show'));
+        $response->assertSessionHas('success');
+
+        $profil = PesertaProfil::where('user_id', $this->peserta->id)->firstOrFail();
+        $this->assertNotNull($profil->foto);
+        $this->assertNotNull($profil->foto_url);
+        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($profil->foto);
+
+        // 2. Buka halaman profil dan pastikan url foto dirender
+        $this->peserta->refresh();
+        $pageResponse = $this->actingAs($this->peserta)->get(route('peserta.profil.show'));
+        $pageResponse->assertStatus(200);
+        $pageResponse->assertSee($profil->foto);
+
+        // 3. Hapus foto profil dengan flag hapus_foto
+        $deleteData = [
+            'institusi' => 'Universitas Gadjah Mada',
+            'nim_nisn' => '22/123456/TK/54321',
+            'jenjang' => 's1',
+            'jurusan_id' => $this->jurusan->id,
+            'no_hp' => '081298765432',
+            'hapus_foto' => '1',
+        ];
+
+        $delResponse = $this->actingAs($this->peserta)->post(route('peserta.profil.simpan'), $deleteData);
+        $delResponse->assertRedirect(route('peserta.profil.show'));
+
+        $profilFresh = $profil->fresh();
+        $this->assertNull($profilFresh->foto);
+        $this->assertNull($profilFresh->foto_url);
+    }
+
     public function test_halaman_pendaftaran_dapat_dibuka_dan_menampilkan_view(): void
     {
         $response = $this->actingAs($this->peserta)->get(route('peserta.pendaftaran.index'));
@@ -118,7 +168,7 @@ class PesertaPortalWorkflowTest extends TestCase
     {
         $response = $this->actingAs($this->peserta)->get(route('peserta.logbook.index'));
         $response->assertStatus(200);
-        $response->assertSee('Jurnal & Logbook Harian');
+        $response->assertSee('Logbook Mingguan');
     }
 
     public function test_halaman_tugas_dapat_dibuka(): void

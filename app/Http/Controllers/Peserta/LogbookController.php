@@ -23,13 +23,13 @@ class LogbookController extends Controller
     ) {}
 
     /**
-     * Menampilkan daftar riwayat logbook harian peserta.
+     * Menampilkan daftar riwayat logbook mingguan peserta.
      */
     public function index(Request $request): mixed
     {
         $user = $request->user();
 
-        $penempatan = Penempatan::with(['pembimbing', 'bidang'])
+        $penempatan = Penempatan::with(['pembimbing', 'bidang', 'logbooks'])
             ->where('peserta_id', $user->id)
             ->where('status', StatusPenempatanEnum::Aktif)
             ->first();
@@ -49,15 +49,30 @@ class LogbookController extends Controller
 
         $logbookMaksMundur = \App\Support\Pengaturan::int('logbook_maks_mundur_hari', 3);
 
+        $daftarMinggu = $penempatan ? $penempatan->getDaftarMingguMagang() : [];
+        $totalMinggu = $penempatan ? $penempatan->total_minggu : 12;
+        $mingguAktif = $penempatan ? $penempatan->minggu_aktif : 1;
+        $totalTerisi = $penempatan ? $penempatan->logbooks()->count() : 0;
+        $totalTerkirim = $penempatan ? $penempatan->logbooks()->where('status', StatusLogbookEnum::Terkirim)->count() : 0;
+        $persentaseTerisi = $penempatan && $totalMinggu > 0 ? (int) round(($totalTerisi / $totalMinggu) * 100) : 0;
+        $mingguAktifSudahDiisi = $penempatan ? $penempatan->logbooks()->where('minggu_ke', $mingguAktif)->exists() : false;
+
         return view('peserta.logbook.index', [
-            'penempatan'        => $penempatan,
-            'logbooks'          => $logbooks,
-            'logbookMaksMundur' => $logbookMaksMundur,
+            'penempatan'            => $penempatan,
+            'logbooks'              => $logbooks,
+            'logbookMaksMundur'     => $logbookMaksMundur,
+            'daftarMinggu'          => $daftarMinggu,
+            'totalMinggu'           => $totalMinggu,
+            'mingguAktif'           => $mingguAktif,
+            'totalTerisi'           => $totalTerisi,
+            'totalTerkirim'         => $totalTerkirim,
+            'persentaseTerisi'      => $persentaseTerisi,
+            'mingguAktifSudahDiisi' => $mingguAktifSudahDiisi,
         ]);
     }
 
     /**
-     * Mengisi catatan logbook kegiatan harian baru (AC-09).
+     * Mengisi catatan logbook mingguan baru.
      */
     public function store(LogbookRequest $request): mixed
     {
@@ -80,20 +95,35 @@ class LogbookController extends Controller
 
         Gate::authorize('create', [Logbook::class, $penempatan]);
 
-        // Validasi keunikan penempatan_id dan tanggal kegiatan
-        $sudahAda = Logbook::where('penempatan_id', $penempatan->id)
-            ->whereDate('tanggal', $request->validated('tanggal'))
-            ->exists();
+        $mingguKe = $request->validated('minggu_ke');
+        if (! $mingguKe && $penempatan->tgl_mulai) {
+            $tglInput = \Carbon\Carbon::parse($request->validated('tanggal'));
+            $diffDays = $penempatan->tgl_mulai->diffInDays($tglInput);
+            $mingguKe = (int) floor($diffDays / 7) + 1;
+        }
 
-        if ($sudahAda) {
+        // Validasi keunikan penempatan_id dan tanggal kegiatan atau minggu_ke
+        $cekQuery = Logbook::where('penempatan_id', $penempatan->id)
+            ->where(function ($q) use ($request, $mingguKe) {
+                $q->whereDate('tanggal', $request->validated('tanggal'));
+                if ($mingguKe) {
+                    $q->orWhere('minggu_ke', $mingguKe);
+                }
+            });
+
+        if ($cekQuery->exists()) {
+            $pesan = $mingguKe
+                ? "Catatan logbook kegiatan untuk Minggu ke-{$mingguKe} atau tanggal tersebut sudah pernah dicatat sebelumnya."
+                : 'Catatan logbook kegiatan untuk tanggal tersebut sudah pernah dicatat sebelumnya.';
+
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Catatan logbook kegiatan untuk tanggal tersebut sudah pernah dicatat sebelumnya.',
+                    'message' => $pesan,
                 ], 422);
             }
             return redirect()->route('peserta.logbook.index')
-                ->with('error', 'Catatan logbook kegiatan untuk tanggal tersebut sudah pernah dicatat sebelumnya.');
+                ->with('error', $pesan);
         }
 
         $filePath = null;
@@ -103,6 +133,7 @@ class LogbookController extends Controller
 
         $logbook = Logbook::create([
             'penempatan_id' => $penempatan->id,
+            'minggu_ke' => $mingguKe,
             'tanggal' => $request->validated('tanggal'),
             'kegiatan' => $request->validated('kegiatan'),
             'file_laporan' => $filePath,
@@ -117,21 +148,22 @@ class LogbookController extends Controller
             nilaiLama: null,
             nilaiBaru: [
                 'penempatan_id' => $penempatan->id,
+                'minggu_ke' => $logbook->minggu_ke,
                 'tanggal' => $logbook->tanggal->toDateString(),
             ],
-            detail: ['aksi' => 'isi_logbook']
+            detail: ['aksi' => 'isi_logbook_mingguan']
         );
 
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Catatan kegiatan harian logbook berhasil disimpan.',
+                'message' => 'Catatan kegiatan logbook mingguan berhasil disimpan.',
                 'data' => $logbook,
             ], 201);
         }
 
         return redirect()->route('peserta.logbook.index')
-            ->with('success', 'Catatan logbook kegiatan harian berhasil disimpan.');
+            ->with('success', 'Catatan logbook mingguan berhasil disimpan.');
     }
 
     /**
@@ -146,9 +178,11 @@ class LogbookController extends Controller
             $filePath = $request->file('file_laporan')->store("logbook/{$logbook->penempatan_id}", 'private');
         }
 
-        $nilaiLama = $logbook->only(['kegiatan', 'file_laporan', 'link_laporan', 'status']);
+        $mingguKe = $request->validated('minggu_ke') ?? $logbook->minggu_ke;
+        $nilaiLama = $logbook->only(['minggu_ke', 'kegiatan', 'file_laporan', 'link_laporan', 'status']);
 
         $logbook->update([
+            'minggu_ke' => $mingguKe,
             'kegiatan' => $request->validated('kegiatan'),
             'file_laporan' => $filePath,
             'link_laporan' => $request->validated('link_laporan'),
@@ -160,20 +194,20 @@ class LogbookController extends Controller
             tabel: 'logbook',
             idData: $logbook->id,
             nilaiLama: $nilaiLama,
-            nilaiBaru: $logbook->only(['kegiatan', 'file_laporan', 'link_laporan', 'status']),
-            detail: ['aksi' => 'update_logbook']
+            nilaiBaru: $logbook->only(['minggu_ke', 'kegiatan', 'file_laporan', 'link_laporan', 'status']),
+            detail: ['aksi' => 'update_logbook_mingguan']
         );
 
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Catatan logbook berhasil diperbarui.',
+                'message' => 'Catatan logbook mingguan berhasil diperbarui.',
                 'data' => $logbook,
             ]);
         }
 
         return redirect()->route('peserta.logbook.index')
-            ->with('success', 'Catatan logbook berhasil diperbarui.');
+            ->with('success', 'Catatan logbook mingguan berhasil diperbarui.');
     }
 
     /**

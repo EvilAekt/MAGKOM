@@ -23,6 +23,7 @@ class LogbookRequest extends FormRequest
         $maksBerkasKb = Pengaturan::getInt('berkas_maks_mb', 2) * 1024;
 
         return [
+            'minggu_ke' => ['nullable', 'integer', 'min:1'],
             'tanggal' => [
                 'required',
                 'date',
