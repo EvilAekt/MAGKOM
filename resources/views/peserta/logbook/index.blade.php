@@ -682,6 +682,173 @@
         text-align: right;
         margin-top: 4px;
     }
+
+    /* Dark Mode Harmonization ala Menu Tugas */
+    [data-theme="dark"] .card-modern,
+    [data-theme="dark"] .progress-tracker-card,
+    [data-theme="dark"] .weekly-card {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    [data-theme="dark"] .weekly-card-header {
+        background: #182234 !important;
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .weekly-card-content {
+        background: #182234 !important;
+        border-top-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .weekly-card.is-expanded {
+        border-color: #2563EB !important;
+        box-shadow: 0 4px 20px rgba(37, 99, 235, 0.15) !important;
+    }
+
+    [data-theme="dark"] .weekly-card-title {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .weekly-card-meta {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .weekly-body {
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .review-callout {
+        background: rgba(120, 53, 15, 0.35) !important;
+        border-left-color: #F59E0B !important;
+        color: #FEF3C7 !important;
+    }
+
+    [data-theme="dark"] .week-number-pill {
+        background: rgba(6, 65, 204, 0.35) !important;
+        border-color: rgba(7, 81, 255, 0.4) !important;
+        color: #60A5FA !important;
+    }
+
+    /* ========================================================
+       MODAL LOGBOOK DARK THEME HARMONIZATION
+       ======================================================== */
+    [data-theme="dark"] .modal-backdrop {
+        background: rgba(0, 0, 0, 0.75);
+    }
+
+    [data-theme="dark"] .modal-box {
+        background: #182234 !important;
+        border: 1px solid #26354D !important;
+        color: #F8FAFC !important;
+        box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    [data-theme="dark"] .modal-header {
+        background: #182234 !important;
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .modal-header h3 {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .modal-header p {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .modal-close-btn {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .modal-close-btn:hover {
+        background: #1F2937 !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .modal-body {
+        background: #182234 !important;
+    }
+
+    [data-theme="dark"] .logbook-select-placeholder {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .logbook-select-placeholder h4 {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .logbook-select-placeholder p {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] #alertMingguSudahDiisi {
+        background: rgba(30, 58, 138, 0.3) !important;
+        border-color: rgba(96, 165, 250, 0.4) !important;
+    }
+
+    [data-theme="dark"] #alertMingguSudahDiisi strong {
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] #alertMingguSudahDiisi p {
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .tips-box-bottom {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .tips-box-bottom strong {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .tips-box-bottom p {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .char-counter {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .modal-footer {
+        background: #0F172A !important;
+        border-top-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .btn-secondary {
+        background: #1E293B !important;
+        border: 1px solid #334155 !important;
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .btn-secondary:hover {
+        background: #334155 !important;
+        color: #FFFFFF !important;
+    }
+
+    [data-theme="dark"] .form-control {
+        background: #0F172A !important;
+        border-color: #3E516E !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .form-control:focus {
+        border-color: #2563EB !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+    }
+
+    [data-theme="dark"] .form-label {
+        color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .progress-tracker-title {
+        color: #F8FAFC !important;
+    }
 </style>
 @endpush
 

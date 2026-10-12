@@ -675,6 +675,151 @@
             justify-content: flex-start;
         }
     }
+
+    /* ========================================================
+       DARK THEME HARMONIZATION (Detail & Berkas Pendaftaran)
+       ======================================================== */
+    [data-theme="dark"] .btn-top-back {
+        background: #182234;
+        border-color: #26354D;
+        color: #CBD5E1;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="dark"] .btn-top-back:hover {
+        background: #1E293B;
+        border-color: #3B82F6;
+        color: #60A5FA;
+    }
+
+    [data-theme="dark"] .btn-top-cancel {
+        background: rgba(127, 29, 29, 0.25);
+        border-color: rgba(239, 68, 68, 0.4);
+        color: #FCA5A5;
+    }
+
+    [data-theme="dark"] .btn-top-cancel:hover {
+        background: rgba(127, 29, 29, 0.45);
+        border-color: #EF4444;
+        color: #FFFFFF;
+    }
+
+    [data-theme="dark"] .stepper-card,
+    [data-theme="dark"] .docs-summary-card,
+    [data-theme="dark"] .doc-card-modern,
+    [data-theme="dark"] .submit-final-card {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    [data-theme="dark"] .stepper-timeline::before {
+        background: #26354D;
+    }
+
+    [data-theme="dark"] .stepper-icon-circle {
+        background: #0F172A;
+        border-color: #334155;
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .stepper-label {
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .stepper-step.active .stepper-label,
+    [data-theme="dark"] .stepper-step.completed .stepper-label {
+        color: #F8FAFC;
+    }
+
+    [data-theme="dark"] .docs-summary-title,
+    [data-theme="dark"] .doc-name {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .docs-summary-subtitle,
+    [data-theme="dark"] .doc-instructions,
+    [data-theme="dark"] .uploaded-meta,
+    [data-theme="dark"] .dropzone-subtext {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .progress-bar-wrapper {
+        background: #26354D;
+    }
+
+    [data-theme="dark"] .badge-doc-opsional {
+        background: #1E293B;
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .uploaded-box-modern {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .uploaded-box-modern:hover {
+        border-color: #3B82F6 !important;
+    }
+
+    [data-theme="dark"] .uploaded-filename {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .dropzone-box-modern {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .dropzone-box-modern:hover,
+    [data-theme="dark"] .dropzone-box-modern.dragover {
+        background: #182234 !important;
+        border-color: #2563EB !important;
+    }
+
+    [data-theme="dark"] .dropzone-icon-circle {
+        background: #182234;
+        color: #60A5FA;
+    }
+
+    [data-theme="dark"] .dropzone-prompt {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .selected-bar-modern {
+        background: #0F172A;
+        border-color: #2563EB;
+        color: #F8FAFC;
+    }
+
+    [data-theme="dark"] .modal-box,
+    [data-theme="dark"] .modal-box-large {
+        background: #182234 !important;
+        border: 1px solid #26354D !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .modal-header {
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .modal-title {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .modal-close {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .modal-close:hover {
+        background: #1F2937 !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .modal-body-preview {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+    }
 </style>
 @endpush
 
