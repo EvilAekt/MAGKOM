@@ -257,6 +257,48 @@
 
     </div>
 
+    {{-- 3b. QUICK OPERATIONAL EFFICIENCY METRICS (A11) --}}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+        <div class="admin-card" style="padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #0641CC;">
+            <div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Kecepatan Verifikasi Berkas</span>
+                <div style="font-size: 1.35rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin-top: 0.15rem;">
+                    {{ $avgVerifikasiHari }} <span style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-500, #64748B);">Hari Kalender</span>
+                </div>
+                <span style="font-size: 0.72rem; color: #16A34A; font-weight: 700;">✓ SLA Sesuai Target (Maks. 3 Hari)</span>
+            </div>
+            <div style="width: 42px; height: 42px; border-radius: 10px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+        </div>
+
+        <div class="admin-card" style="padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #10B981;">
+            <div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Tingkat Keterisian Kuota</span>
+                <div style="font-size: 1.35rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin-top: 0.15rem;">
+                    {{ $realisasiKuotaPersen }}% <span style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-500, #64748B);">Realisasi Alokasi</span>
+                </div>
+                <span style="font-size: 0.72rem; color: var(--neutral-600, #475569); font-weight: 600;">Total Kuota Aktif Dinas Terproteksi</span>
+            </div>
+            <div style="width: 42px; height: 42px; border-radius: 10px; background: #ECFDF5; color: #059669; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            </div>
+        </div>
+
+        <div class="admin-card" style="padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #7C3AED;">
+            <div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Pendaftar 7 Hari Terakhir</span>
+                <div style="font-size: 1.35rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin-top: 0.15rem;">
+                    {{ number_format($pendaftaranMingguIni) }} <span style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-500, #64748B);">Pengajuan Baru</span>
+                </div>
+                <span style="font-size: 0.72rem; color: #7C3AED; font-weight: 700;">Aktivitas Masuk Mingguan</span>
+            </div>
+            <div style="width: 42px; height: 42px; border-radius: 10px; background: #F5F3FF; color: #7C3AED; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+            </div>
+        </div>
+    </div>
+
     {{-- 4. COMMAND CENTER WORKSPACE: 4 TABS --}}
     <div class="admin-card">
         

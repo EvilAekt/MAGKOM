@@ -330,12 +330,16 @@
                                 {{-- Aksi --}}
                                 <td style="text-align: right;">
                                     @if($sisaKuota > 0)
-                                        <a href="{{ route('admin.pendaftaran.show', $item) }}" class="btn-action-promosi" title="Kuota terbuka! Proses penerimaan peserta ini">
-                                            <span>Promosikan</span>
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <polyline points="9 18 15 12 9 6"></polyline>
-                                            </svg>
-                                        </a>
+                                        <form method="POST" action="{{ route('admin.waiting-list.promote') }}" style="display: inline-block; margin: 0;" onsubmit="return confirm('Promosikan {{ addslashes($item->user?->nama ?? 'peserta') }} menjadi Diterima secara instan sesuai kuota yang tersedia?');">
+                                            @csrf
+                                            <input type="hidden" name="pendaftaran_id" value="{{ $item->id }}">
+                                            <button type="submit" class="btn-action-promosi" style="border: none; cursor: pointer;" title="Promosikan 1-klik langsung sesuai kuota kosong">
+                                                <span>Promote FIFO</span>
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                                </svg>
+                                            </button>
+                                        </form>
                                     @else
                                         <a href="{{ route('admin.pendaftaran.show', $item) }}" class="btn-action-tinjau" title="Tinjau berkas pendaftaran">
                                             <span>Tinjau</span>

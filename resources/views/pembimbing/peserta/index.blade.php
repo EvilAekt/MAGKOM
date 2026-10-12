@@ -34,12 +34,18 @@
     <!-- Tab Filter & Pencarian -->
     <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         
-        <!-- Tab Aktif vs Selesai -->
+        <!-- Tab Aktif vs Perlu Perhatian vs Selesai -->
         <div style="display: flex; gap: 0.5rem; background: var(--neutral-100); padding: 0.3rem; border-radius: 10px;">
             <a href="{{ route('pembimbing.peserta.index', ['tab' => 'aktif']) }}" style="padding: 0.45rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease; {{ $currentTab === 'aktif' ? 'background: #ffffff; color: #0641CC; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'color: var(--neutral-600);' }}">
                 Peserta Aktif
                 <span style="margin-left: 0.35rem; padding: 0.1rem 0.45rem; border-radius: 999px; font-size: 0.75rem; {{ $currentTab === 'aktif' ? 'background: #e0e7ff; color: #0641CC;' : 'background: var(--neutral-200); color: var(--neutral-600);' }}">
                     {{ $countAktif }}
+                </span>
+            </a>
+            <a href="{{ route('pembimbing.peserta.index', ['tab' => 'perhatian']) }}" style="padding: 0.45rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease; {{ $currentTab === 'perhatian' ? 'background: #ffffff; color: #d97706; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'color: var(--neutral-600);' }}">
+                Perlu Perhatian (Alert)
+                <span style="margin-left: 0.35rem; padding: 0.1rem 0.45rem; border-radius: 999px; font-size: 0.75rem; {{ ($countPerhatian ?? 0) > 0 ? 'background: #fef3c7; color: #b45309; font-weight: 700;' : 'background: var(--neutral-200); color: var(--neutral-600);' }}">
+                    {{ $countPerhatian ?? 0 }}
                 </span>
             </a>
             <a href="{{ route('pembimbing.peserta.index', ['tab' => 'selesai']) }}" style="padding: 0.45rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease; {{ $currentTab === 'selesai' ? 'background: #ffffff; color: #0641CC; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'color: var(--neutral-600);' }}">
@@ -103,9 +109,16 @@
                                         {{ strtoupper(substr($p->peserta?->nama ?? 'P', 0, 2)) }}
                                     </div>
                                     <div>
-                                        <a href="{{ route('pembimbing.peserta.show', $p->id) }}" style="font-weight: 600; color: var(--neutral-900); text-decoration: none; font-size: 0.925rem;">
-                                            {{ $p->peserta?->nama }}
-                                        </a>
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                                            <a href="{{ route('pembimbing.peserta.show', $p->id) }}" style="font-weight: 600; color: var(--neutral-900); text-decoration: none; font-size: 0.925rem;">
+                                                {{ $p->peserta?->nama }}
+                                            </a>
+                                            @if(in_array($p->id, $perhatianIds ?? []))
+                                                <span style="font-size: 0.68rem; font-weight: 700; color: #b45309; background: #fef3c7; border: 1px solid #fde68a; padding: 0.1rem 0.45rem; border-radius: 999px;">
+                                                    Perlu Perhatian
+                                                </span>
+                                            @endif
+                                        </div>
                                         <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.1rem;">
                                             {{ $p->peserta?->email }}
                                         </div>

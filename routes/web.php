@@ -17,10 +17,12 @@ use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardCo
 use App\Http\Controllers\SuperAdmin\MonitoringPesertaController;
 use App\Http\Controllers\Pembimbing\AgendaBimbinganController as PembimbingAgendaBimbinganController;
 use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboardController;
+use App\Http\Controllers\Pembimbing\LaporanKinerjaController as PembimbingLaporanKinerjaController;
 use App\Http\Controllers\Pembimbing\LogbookReviewController as PembimbingLogbookReviewController;
 use App\Http\Controllers\Pembimbing\PenilaianController as PembimbingPenilaianController;
 use App\Http\Controllers\Pembimbing\PesertaController as PembimbingPesertaController;
 use App\Http\Controllers\Pembimbing\TugasController as PembimbingTugasController;
+use App\Http\Controllers\Pembimbing\TugasTemplateController as PembimbingTugasTemplateController;
 use App\Http\Controllers\Peserta\BerkasController;
 use App\Http\Controllers\Peserta\DashboardController as PesertaDashboardController;
 use App\Http\Controllers\Peserta\LogbookController as PesertaLogbookController;
@@ -150,6 +152,13 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/peserta', [PembimbingPesertaController::class, 'index'])->name('peserta.index');
     Route::get('/peserta/{penempatan}', [PembimbingPesertaController::class, 'show'])->name('peserta.show');
 
+    // Template Tugas Mandiri & API Picker (PRD F-08)
+    Route::get('/tugas/template', [PembimbingTugasTemplateController::class, 'index'])->name('tugas.template.index');
+    Route::post('/tugas/template', [PembimbingTugasTemplateController::class, 'store'])->name('tugas.template.store');
+    Route::get('/tugas/template-picker', [PembimbingTugasTemplateController::class, 'pickerJson'])->name('tugas.template.picker');
+    Route::put('/tugas/template/{template}', [PembimbingTugasTemplateController::class, 'update'])->name('tugas.template.update');
+    Route::delete('/tugas/template/{template}', [PembimbingTugasTemplateController::class, 'destroy'])->name('tugas.template.destroy');
+
     Route::get('/tugas', [PembimbingTugasController::class, 'index'])->name('tugas.index');
     Route::get('/tugas/create', [PembimbingTugasController::class, 'create'])->name('tugas.create');
     Route::post('/tugas', [PembimbingTugasController::class, 'store'])->name('tugas.store');
@@ -175,6 +184,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::post('/agenda', [PembimbingAgendaBimbinganController::class, 'store'])->name('agenda.store');
     Route::put('/agenda/{agenda}', [PembimbingAgendaBimbinganController::class, 'update'])->name('agenda.update');
     Route::delete('/agenda/{agenda}', [PembimbingAgendaBimbinganController::class, 'destroy'])->name('agenda.destroy');
+
+    // Laporan Kinerja Mentoring ASN Sleman
+    Route::get('/laporan-kinerja', [PembimbingLaporanKinerjaController::class, 'index'])->name('laporan-kinerja.index');
+    Route::get('/laporan-kinerja/cetak', [PembimbingLaporanKinerjaController::class, 'cetak'])->name('laporan-kinerja.cetak');
 });
 
 // Rute Admin & SuperAdmin (F-04, F-05, F-07, F-17)
@@ -187,15 +200,19 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:admin,super
     Route::patch('/kuota/{kuota}/toggle', [KuotaController::class, 'toggleAktif'])->name('kuota.toggle');
 
     Route::get('/pendaftaran', [AdminPendaftaranController::class, 'index'])->name('pendaftaran.index');
+    Route::get('/pendaftaran/download-zip', [AdminPendaftaranController::class, 'downloadBundelZip'])->name('pendaftaran.download-zip');
     Route::get('/pendaftaran/{pendaftaran}', [AdminPendaftaranController::class, 'show'])->name('pendaftaran.show');
     Route::post('/pendaftaran/{pendaftaran}/putuskan', [AdminPendaftaranController::class, 'putuskan'])->name('pendaftaran.putuskan');
 
     Route::get('/waiting-list', [AdminWaitingListController::class, 'index'])->name('waiting-list.index');
+    Route::post('/waiting-list/promote', [AdminWaitingListController::class, 'promoteFifo'])->name('waiting-list.promote');
     Route::post('/waiting-list/{bulanMagang}/tutup', [AdminWaitingListController::class, 'tutupAntrean'])->name('waiting-list.tutup');
 
     Route::get('/penempatan', [AdminPenempatanController::class, 'index'])->name('penempatan.index');
     Route::get('/penempatan/ekspor-surat-diterima', [AdminPenempatanController::class, 'exportRekapSuratDiterima'])->name('penempatan.ekspor-surat-diterima');
     Route::post('/penempatan/manual', [AdminPenempatanController::class, 'storeManual'])->name('penempatan.manual');
+    Route::post('/penempatan/bulk-reassign', [AdminPenempatanController::class, 'bulkReassignPembimbing'])->name('penempatan.bulk-reassign');
+    Route::get('/penempatan/{penempatan}', [AdminPenempatanController::class, 'show'])->name('penempatan.show');
     Route::get('/penempatan/{penempatan}/surat-diterima', [AdminPenempatanController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
     Route::get('/penempatan/{penempatan}/surat-diterima/pratinjau', [AdminPenempatanController::class, 'pratinjauSuratDiterima'])->name('penempatan.surat-diterima.pratinjau');
     Route::post('/penempatan/{penempatan}/pindah-pembimbing', [AdminPenempatanController::class, 'pindahPembimbing'])->name('penempatan.pindah-pembimbing');
@@ -242,6 +259,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'
     Route::post('/staf', [StafController::class, 'store'])->name('staf.store');
     Route::put('/staf/{staf}', [StafController::class, 'update'])->name('staf.update');
     Route::post('/staf/{staf}/reset-password', [StafController::class, 'resetPassword'])->name('staf.reset-password');
+    Route::post('/staf/{staf}/regenerate-password', [StafController::class, 'regenerateTemporaryPassword'])->name('staf.regenerate-password');
     Route::patch('/staf/{staf}/toggle', [StafController::class, 'toggleAktif'])->name('staf.toggle');
 
     // Matriks Hak Akses dan Role (Figma SA-02, PRD 3.1 & 3.3)
@@ -265,6 +283,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'
 
     // Parameter Pengaturan Sistem (F-11, PRD 10.3 NFR-A5)
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
+    Route::get('/pengaturan/export-json', [PengaturanController::class, 'exportMasterSnapshotJson'])->name('pengaturan.export-json');
     Route::put('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
     Route::post('/pengaturan/purge-audit', [PengaturanController::class, 'triggerPurgeAudit'])->name('pengaturan.purge-audit');
 
@@ -278,6 +297,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'
 
     // Telemetri Kesehatan Sistem & Infrastruktur
     Route::get('/health-monitor', [HealthMonitorController::class, 'index'])->name('health.index');
+    Route::post('/health-monitor/security-sweep', [HealthMonitorController::class, 'runSecuritySweep'])->name('health.security-sweep');
 
     // Hub Cadangan Basis Data (Disaster Recovery & Backup) (SEC-03)
     Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');

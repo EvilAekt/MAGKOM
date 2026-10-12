@@ -60,19 +60,34 @@ class ArsipPesertaController extends Controller
     }
 
     /**
-     * Menampilkan detail rekam jejak arsip peserta magang secara baca-saja (AC-12-4).
+     * Menampilkan detail rekam jejak arsip peserta magang secara baca-saja (AC-12-4, C9).
      */
     public function show(Penempatan $penempatan): View
     {
         $penempatan->load([
-            'peserta.profil',
-            'pembimbing',
+            'peserta.profil.jurusan',
+            'pembimbing.bidang',
             'bidang',
             'kuota.jurusan',
-            'tugas.progresList',
+            'slotKhusus',
+            'tugas.progresLogs',
             'logbooks',
             'penilaian.details.rubrik',
+            'pendaftaran.dokumen',
         ]);
+
+        app(\App\Services\AuditService::class)->catat(
+            tipe: \App\Enums\TipeAuditEnum::AksesData,
+            tabel: 'penempatan',
+            idData: $penempatan->id,
+            nilaiLama: null,
+            nilaiBaru: null,
+            detail: [
+                'aksi' => 'Melihat arsip historis permanen peserta magang (C9)',
+                'peserta_id' => $penempatan->peserta_id,
+            ],
+            user: request()->user()?->id
+        );
 
         return view('superadmin.arsip.show', [
             'penempatan' => $penempatan,

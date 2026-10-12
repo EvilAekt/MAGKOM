@@ -139,4 +139,63 @@ class PengaturanController extends Controller
         return redirect()->route('superadmin.pengaturan.index')
             ->with('success', 'Pemangkasan log akses data berhasil dijalankan: ' . trim($output));
     }
+
+    /**
+     * Mengekspor snapshot konfigurasi master data dan sistem ke file JSON terstruktur (PRD F-11, Bab 10.2).
+     */
+    public function exportMasterSnapshotJson(Request $request)
+    {
+        $superadmin = $request->user();
+
+        $pengaturan = Pengaturan::all()->pluck('nilai', 'kunci')->toArray();
+        $jurusan = \App\Models\Jurusan::all(['id', 'nama_jurusan', 'kategori', 'aktif'])->toArray();
+        $bidang = \App\Models\Bidang::all(['id', 'nama_bidang', 'deskripsi', 'aktif'])->toArray();
+        $rubrik = \App\Models\Rubrik::all(['id', 'kriteria', 'bobot', 'urutan', 'aktif'])->toArray();
+        $bulanMagang = \App\Models\BulanMagang::all(['id', 'bulan_mulai', 'tgl_buka', 'tgl_tutup', 'override_status', 'aktif'])->toArray();
+
+        $payloadData = [
+            'app' => 'MagKom Sleman',
+            'version' => '1.1.0',
+            'exported_at' => now()->toIso8601String(),
+            'exported_by' => [
+                'id' => $superadmin->id,
+                'nama' => $superadmin->nama,
+                'email' => $superadmin->email,
+            ],
+            'snapshot' => [
+                'pengaturan' => $pengaturan,
+                'jurusan' => $jurusan,
+                'bidang' => $bidang,
+                'rubrik' => $rubrik,
+                'bulan_magang' => $bulanMagang,
+            ],
+        ];
+
+        $jsonString = json_encode($payloadData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $checksum = hash('sha256', (string) $jsonString);
+        $payloadData['sha256_checksum'] = $checksum;
+
+        $finalJson = json_encode($payloadData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::AksesData,
+            tabel: 'pengaturan',
+            idData: null,
+            nilaiLama: null,
+            nilaiBaru: null,
+            detail: [
+                'aksi' => 'Ekspor snapshot master konfigurasi sistem (JSON)',
+                'superadmin_id' => $superadmin->id,
+                'checksum' => $checksum,
+            ]
+        );
+
+        $fileName = 'magkom-master-snapshot-' . date('Ymd-His') . '.json';
+
+        return response($finalJson, 200, [
+            'Content-Type' => 'application/json',
+            'Content-Disposition' => "attachment; filename=\"{$fileName}\"",
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
 }

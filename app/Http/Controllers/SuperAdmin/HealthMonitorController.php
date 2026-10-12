@@ -88,6 +88,10 @@ class HealthMonitorController extends Controller
             }
         }
 
+        // 6. Telemetri Higienitas Keamanan (Security Sweep)
+        $sweepService = app(\App\Services\SecuritySweepService::class);
+        $sweeperStats = $sweepService->getPendingStats();
+
         return view('superadmin.health.index', [
             'dbStatus' => $dbStatus,
             'dbLatency' => $dbLatency,
@@ -104,6 +108,20 @@ class HealthMonitorController extends Controller
             'totalAudit' => $totalAudit,
             'failedJobsCount' => $failedJobsCount,
             'lastBackupTime' => $lastBackupTime,
+            'sweeperStats' => $sweeperStats,
         ]);
+    }
+
+    /**
+     * Memicu eksekusi Security Sweep secara on-demand dari panel telemetri.
+     */
+    public function runSecuritySweep(Request $request, \App\Services\SecuritySweepService $sweepService): \Illuminate\Http\RedirectResponse
+    {
+        $results = $sweepService->sweep(dryRun: false);
+
+        return back()->with(
+            'status_keberhasilan',
+            "Pembersihan keamanan berhasil: {$results['deleted_tokens']} token kedaluwarsa dibersihkan, {$results['deleted_temp_files']} berkas arsip sementara dihapus, dan {$results['deleted_unverified_users']} pendaftar unverified (>72 jam) dibersihkan."
+        );
     }
 }

@@ -66,6 +66,13 @@
         </div>
     </div>
 
+    @if(session('status_keberhasilan'))
+        <div style="background: #DCFCE7; border: 1px solid #86EFAC; color: #166534; padding: 1rem 1.25rem; border-radius: 10px; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>{{ session('status_keberhasilan') }}</span>
+        </div>
+    @endif
+
     {{-- 2. GRID TELEMETRI --}}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
 
@@ -173,6 +180,48 @@
                     <strong style="color: #10B981;">{{ number_format($totalAudit) }} Log Tercatat</strong>
                 </div>
             </div>
+        </div>
+
+        {{-- KARTU 4: HIGIENITAS KEAMANAN (SECURITY SWEEPER) --}}
+        <div class="health-card" style="border-top: 4px solid #DC2626; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                    <h3 style="font-size: 1rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <span>Higienitas Keamanan</span>
+                    </h3>
+                    <span class="{{ ($sweeperStats['pending_tokens'] > 0 || $sweeperStats['pending_temp_files'] > 0 || $sweeperStats['pending_unverified_users'] > 0) ? 'metric-badge-warn' : 'metric-badge-ok' }}">
+                        {{ ($sweeperStats['pending_tokens'] > 0 || $sweeperStats['pending_temp_files'] > 0 || $sweeperStats['pending_unverified_users'] > 0) ? 'Perlu Pembersihan' : 'Higienis' }}
+                    </span>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; margin-bottom: 1.25rem;">
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #E2E8F0; padding-bottom: 0.5rem;">
+                        <span style="color: #64748B;">Token Reset Kedaluwarsa:</span>
+                        <strong style="color: {{ $sweeperStats['pending_tokens'] > 0 ? '#DC2626' : '#166534' }};">{{ $sweeperStats['pending_tokens'] }} Token</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #E2E8F0; padding-bottom: 0.5rem;">
+                        <span style="color: #64748B;">Berkas ZIP Sementara (>2h):</span>
+                        <strong style="color: {{ $sweeperStats['pending_temp_files'] > 0 ? '#DC2626' : '#166534' }};">{{ $sweeperStats['pending_temp_files'] }} Berkas</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #E2E8F0; padding-bottom: 0.5rem;">
+                        <span style="color: #64748B;">Unverified Pendaftar (>72h):</span>
+                        <strong style="color: {{ $sweeperStats['pending_unverified_users'] > 0 ? '#DC2626' : '#166534' }};">{{ $sweeperStats['pending_unverified_users'] }} Akun</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #64748B;">Pembersihan Terakhir:</span>
+                        <strong style="color: #475569;">{{ $sweeperStats['last_sweep_at'] ?? 'Belum ada log sweeper' }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <form action="{{ route('superadmin.health.security-sweep') }}" method="POST" onsubmit="return confirm('Jalankan pembersihan higienitas keamanan sistem sekarang? Token kedaluwarsa, residu arsip sementara, dan pendaftar tidak terverifikasi akan dibersihkan.');">
+                @csrf
+                <button type="submit" style="width: 100%; height: 38px; background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; border-radius: 8px; font-size: 0.8125rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; transition: all 0.15s ease;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    <span>Jalankan Security Sweep Sekarang</span>
+                </button>
+            </form>
         </div>
 
     </div>

@@ -518,9 +518,52 @@
                             </div>
                         </div>
                     @endforeach
-                </div>
             </div>
         @endif
+
+        {{-- WIDGET AKTIVITAS MENTORING MINGGU INI (B11) --}}
+        <div style="background: #ffffff; border: 1px solid var(--neutral-200); border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #2563EB;"></div>
+                    <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
+                        Aktivitas Mentoring Minggu Ini
+                    </h3>
+                </div>
+                <span style="font-size: 0.75rem; color: var(--neutral-500); font-weight: 600;">
+                    Logbook, progres tugas, dan sesi bimbingan lapangan terbaru
+                </span>
+            </div>
+
+            @if(!empty($aktivitasMingguIni) && $aktivitasMingguIni->isNotEmpty())
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    @foreach($aktivitasMingguIni as $act)
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-radius: 10px; background: #F8FAFC; border: 1px solid var(--neutral-200); gap: 1rem; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <span style="font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 6px; background: {{ $act['badge_bg'] }}; color: {{ $act['badge_color'] }}; text-transform: uppercase;">
+                                    {{ $act['badge'] }}
+                                </span>
+                                <div>
+                                    <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-900);">
+                                        {{ $act['judul'] }}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.1rem;">
+                                        {{ $act['keterangan'] }}
+                                    </div>
+                                </div>
+                            </div>
+                            <span style="font-size: 0.75rem; color: var(--neutral-500); font-weight: 500;">
+                                {{ \Carbon\Carbon::parse($act['waktu'])->diffForHumans() }}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div style="text-align: center; padding: 1.5rem; color: var(--neutral-500); font-size: 0.8125rem;">
+                    Belum ada aktivitas baru dari peserta bimbingan minggu ini.
+                </div>
+            @endif
+        </div>
 
         <!-- Pelacak Peserta Mendekati Batas Akhir Magang (Off-boarding Tracker <= 14 Hari) -->
         @if($offboardingMentees->count() > 0)

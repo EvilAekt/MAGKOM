@@ -345,6 +345,10 @@
                 <a href="{{ route('admin.pendaftaran.index') }}" style="height: 42px; padding: 0 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; border: 1px solid var(--neutral-200, #E2E8F0); transition: background 0.15s ease;">
                     Reset
                 </a>
+                <a href="{{ route('admin.pendaftaran.download-zip', request()->query()) }}" style="height: 42px; padding: 0 1rem; background: #ffffff; color: #0641CC; font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; gap: 0.45rem; border: 1px solid #BFDBFE; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;" title="Unduh seluruh berkas pendaftaran peserta hasil filter saat ini ke dalam satu arsip ZIP">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span>Unduh Bundel (ZIP)</span>
+                </a>
             </div>
         </form>
     </div>

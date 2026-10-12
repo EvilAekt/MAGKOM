@@ -150,6 +150,28 @@ class DashboardController extends Controller
                 ];
             });
 
+        // 9. Quick Stats Tambahan (A11)
+        $processedRegistrations = Pendaftaran::whereNotNull('diajukan_at')
+            ->whereNotNull('verifikasi_at')
+            ->get(['diajukan_at', 'verifikasi_at']);
+
+        if ($processedRegistrations->isNotEmpty()) {
+            $totalDays = $processedRegistrations->sum(function ($p) {
+                return max(0.5, $p->diajukan_at->diffInHours($p->verifikasi_at) / 24);
+            });
+            $avgVerifikasiHari = round($totalDays / $processedRegistrations->count(), 1);
+        } else {
+            $avgVerifikasiHari = 1.5;
+        }
+
+        $kapasitasKuotaAktif = (int) Kuota::where('aktif', true)->sum('jumlah');
+        $terisiKuotaAktif = (int) Kuota::where('aktif', true)->sum('terisi');
+        $realisasiKuotaPersen = $kapasitasKuotaAktif > 0
+            ? min(100, (int) round(($terisiKuotaAktif / $kapasitasKuotaAktif) * 100))
+            : 0;
+
+        $pendaftaranMingguIni = Pendaftaran::where('created_at', '>=', now()->subDays(7))->count();
+
         return view('admin.dashboard', [
             'pengajuanMenunggu' => $pengajuanMenunggu,
             'perluPerbaikan' => $perluPerbaikan,
@@ -167,6 +189,9 @@ class DashboardController extends Controller
             'penempatanTerbaru' => $penempatanTerbaru,
             'upcomingOffboardingList' => $upcomingOffboardingList,
             'timelineGelombangMagang' => $timelineGelombangMagang,
+            'avgVerifikasiHari' => $avgVerifikasiHari,
+            'realisasiKuotaPersen' => $realisasiKuotaPersen,
+            'pendaftaranMingguIni' => $pendaftaranMingguIni,
         ]);
     }
 }

@@ -30,8 +30,49 @@ class PesertaController extends Controller
                 }
             });
 
+        $today = Carbon::today();
+
+        // Evaluasi kedisiplinan mentee aktif (Early Warning Mentee Pasif & Overdue BR-09, BR-16)
+        $allAktifMentees = Penempatan::with(['tugas', 'logbooks'])
+            ->where('status', StatusPenempatanEnum::Aktif)
+            ->where(function ($q) use ($user) {
+                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                    $q->where('pembimbing_id', $user->id);
+                }
+            })
+            ->get();
+
+        $perhatianIds = [];
+        foreach ($allAktifMentees as $mentee) {
+            $hasOverdueTask = $mentee->tugas->contains(function ($t) use ($today) {
+                return $t->deadline && Carbon::parse($t->deadline)->isPast() && $t->status !== StatusTugasEnum::Selesai;
+            });
+
+            $logbookBolong = false;
+            if ($mentee->tgl_mulai && $mentee->tgl_mulai->isPast()) {
+                $lastLogbook = $mentee->logbooks->sortByDesc('tanggal')->first();
+                if ($lastLogbook && $lastLogbook->tanggal) {
+                    $daysSinceLogbook = Carbon::parse($lastLogbook->tanggal)->diffInDays($today, false);
+                    if ($daysSinceLogbook >= 3) {
+                        $logbookBolong = true;
+                    }
+                } else {
+                    $daysSinceStart = $mentee->tgl_mulai->diffInDays($today, false);
+                    if ($daysSinceStart >= 3) {
+                        $logbookBolong = true;
+                    }
+                }
+            }
+
+            if ($hasOverdueTask || $logbookBolong) {
+                $perhatianIds[] = $mentee->id;
+            }
+        }
+
         if ($tab === 'selesai') {
             $query->where('status', StatusPenempatanEnum::Selesai);
+        } elseif ($tab === 'perhatian') {
+            $query->whereIn('id', $perhatianIds);
         } else {
             $query->where('status', StatusPenempatanEnum::Aktif);
         }
@@ -62,12 +103,15 @@ class PesertaController extends Controller
 
         $countAktif = (clone $baseCounter)->where('status', StatusPenempatanEnum::Aktif)->count();
         $countSelesai = (clone $baseCounter)->where('status', StatusPenempatanEnum::Selesai)->count();
+        $countPerhatian = count($perhatianIds);
 
         $data = [
             'penempatanList' => $penempatanList,
             'currentTab' => $tab,
             'countAktif' => $countAktif,
+            'countPerhatian' => $countPerhatian,
             'countSelesai' => $countSelesai,
+            'perhatianIds' => $perhatianIds,
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {
@@ -129,6 +173,23 @@ class PesertaController extends Controller
             $sisaHari = Carbon::today()->diffInDays($penempatan->tgl_selesai, false);
         }
 
+        // Metrik Chart Visualisasi (B9)
+        $tugasDalamPengerjaan = $penempatan->tugas->where('status', StatusTugasEnum::Proses)->count();
+        $tugasBelumDimulai = $penempatan->tugas->where('status', StatusTugasEnum::Belum)->count();
+        $tugasTerlambat = $penempatan->tugas->filter(fn ($t) => $t->terlambat)->count();
+
+        $tugasStats = [
+            'total' => $totalTugas,
+            'selesai' => $tugasSelesai,
+            'dalam_pengerjaan' => $tugasDalamPengerjaan,
+            'belum_dimulai' => $tugasBelumDimulai,
+            'terlambat' => $tugasTerlambat,
+        ];
+        $completionRate = $totalTugas > 0 ? (int) round(($tugasSelesai / $totalTugas) * 100) : 0;
+
+        $daftarMinggu = $penempatan->getDaftarMingguMagang();
+        $logbookPerMinggu = array_slice($daftarMinggu, 0, 12);
+
         $data = [
             'penempatan' => $penempatan,
             'totalTugas' => $totalTugas,
@@ -140,6 +201,9 @@ class PesertaController extends Controller
             'progresHari' => $progresHari,
             'totalHariMagang' => $totalHariMagang,
             'sisaHari' => $sisaHari,
+            'tugasStats' => $tugasStats,
+            'completionRate' => $completionRate,
+            'logbookPerMinggu' => $logbookPerMinggu,
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {

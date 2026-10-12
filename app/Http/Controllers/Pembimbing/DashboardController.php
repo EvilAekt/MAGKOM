@@ -234,12 +234,55 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // 13. Aktivitas Mentoring Minggu Ini (B11)
+        $aktivitasMingguIni = collect();
+
+        foreach ($allPendingLogbooks->take(3) as $lb) {
+            $aktivitasMingguIni->push([
+                'tipe' => 'logbook',
+                'judul' => 'Pengajuan Logbook: ' . ($lb->penempatan?->peserta?->nama ?? 'Peserta'),
+                'keterangan' => 'Minggu ke-' . ($lb->minggu_ke ?? 1) . ' • ' . ($lb->ringkasan_aktivitas ?? 'Aktivitas magang harian'),
+                'waktu' => $lb->created_at ?? now(),
+                'badge' => 'Logbook',
+                'badge_color' => '#D97706',
+                'badge_bg' => '#FEF3C7',
+            ]);
+        }
+
+        foreach ($allPendingProgresLogs->take(3) as $pr) {
+            $aktivitasMingguIni->push([
+                'tipe' => 'progres',
+                'judul' => 'Unggahan Progres: ' . ($pr->tugas?->penempatan?->peserta?->nama ?? 'Peserta'),
+                'keterangan' => ($pr->tugas?->judul ?? 'Tugas') . ' • ' . ($pr->catatan ?? 'Menunggu reviu evaluasi'),
+                'waktu' => $pr->created_at ?? now(),
+                'badge' => 'Tugas',
+                'badge_color' => '#2563EB',
+                'badge_bg' => '#EFF6FF',
+            ]);
+        }
+
+        foreach ($upcomingAgendaBimbingan->take(3) as $ag) {
+            $aktivitasMingguIni->push([
+                'tipe' => 'agenda',
+                'judul' => 'Agenda Mentoring: ' . ($ag->topik ?? 'Bimbingan Lapangan'),
+                'keterangan' => ($ag->penempatan?->peserta?->nama ?? 'Peserta') . ' • Jam ' . ($ag->jam_mulai ?? '09:00') . ' WIB',
+                'waktu' => $ag->created_at ?? now(),
+                'badge' => 'Agenda',
+                'badge_color' => '#059669',
+                'badge_bg' => '#ECFDF5',
+            ]);
+        }
+
+        $aktivitasMingguIni = $aktivitasMingguIni->sortByDesc('waktu')->values()->take(6);
+
         $data = [
             'totalMenteeAktif' => $totalMenteeAktif,
             'maxBebanKapasitas' => $maxBebanKapasitas,
             'persentaseKapasitas' => $persentaseKapasitas,
             'logbookPendingCount' => $logbookPendingCount,
+            'logbookPerluReviewCount' => $logbookPendingCount,
             'progresPendingCount' => $progresPendingCount,
+            'progresBaruCount' => $progresPendingCount,
             'tugasAktifCount' => $tugasAktifCount,
             'tugasOverdueCount' => $tugasOverdueCount,
             'deadlineMendekatiHari' => $deadlineMendekatiHari,
@@ -259,6 +302,7 @@ class DashboardController extends Controller
             'competencyRadar' => $competencyRadar,
             'menteeAtRiskList' => $menteeAtRiskList,
             'upcomingAgendaBimbingan' => $upcomingAgendaBimbingan,
+            'aktivitasMingguIni' => $aktivitasMingguIni,
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {

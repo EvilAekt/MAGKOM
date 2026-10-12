@@ -1114,7 +1114,7 @@
                             <span>Peserta Bimbingan</span>
                         </a>
 
-                        <a href="{{ route('pembimbing.tugas.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.tugas.*') ? 'active' : '' }}">
+                        <a href="{{ route('pembimbing.tugas.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.tugas.index', 'pembimbing.tugas.show', 'pembimbing.tugas.create') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M9 11l3 3L22 4"></path>
@@ -1122,6 +1122,17 @@
                                 </svg>
                             </span>
                             <span>Tugas Peserta</span>
+                        </a>
+
+                        <a href="{{ route('pembimbing.tugas.template.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.tugas.template.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                                </svg>
+                            </span>
+                            <span>Bank Template</span>
                         </a>
 
                         <a href="{{ route('pembimbing.logbook.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">
@@ -1134,6 +1145,18 @@
                             <span>Reviu Logbook</span>
                         </a>
 
+                        <a href="{{ route('pembimbing.agenda.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.agenda.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </span>
+                            <span>Agenda Mentoring</span>
+                        </a>
+
                         <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.penilaian.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1142,6 +1165,19 @@
                                 </svg>
                             </span>
                             <span>Penilaian Magang</span>
+                        </a>
+
+                        <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                            </span>
+                            <span>Laporan Kinerja ASN</span>
                         </a>
 
                     @elseif($userRole === 'admin')
@@ -1218,6 +1254,25 @@
                             <span>Laporan & Ekspor</span>
                         </a>
 
+                        <a href="{{ route('admin.sertifikat.index') }}" class="nav-item-link {{ request()->routeIs('admin.sertifikat.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="8" r="7"></circle>
+                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                                </svg>
+                            </span>
+                            <span>Sertifikat</span>
+                        </a>
+
+                        <a href="{{ route('admin.survei.index') }}" class="nav-item-link {{ request()->routeIs('admin.survei.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </span>
+                            <span>Survei Kepuasan</span>
+                        </a>
+
                     @elseif($userRole === 'superadmin')
                         <!-- NAVIGASI SUPERADMIN (Figma Node 560-24892 & PRD 9.2) -->
                         <a href="{{ route('superadmin.dashboard') }}" class="nav-item-link {{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
@@ -1236,7 +1291,7 @@
                         <span class="nav-section-label">MODUL OPERASIONAL</span>
 
                         @php
-                            $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*') || request()->routeIs('admin.kuota.*') || request()->routeIs('admin.waiting-list.*') || request()->routeIs('admin.penempatan.*') || request()->routeIs('admin.laporan.*');
+                            $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*') || request()->routeIs('admin.kuota.*') || request()->routeIs('admin.waiting-list.*') || request()->routeIs('admin.penempatan.*') || request()->routeIs('admin.laporan.*') || request()->routeIs('admin.sertifikat.*') || request()->routeIs('admin.survei.*');
                         @endphp
                         <div class="nav-group-container">
                             <button type="button" class="nav-group-btn {{ $isOperasionalAdminActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalAdminActive ? 'true' : 'false' }}">
@@ -1261,6 +1316,8 @@
                                 <a href="{{ route('admin.waiting-list.index') }}" class="nav-sub-item {{ request()->routeIs('admin.waiting-list.*') ? 'active' : '' }}">Waiting List</a>
                                 <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">Penempatan</a>
                                 <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">Laporan & Ekspor</a>
+                                <a href="{{ route('admin.sertifikat.index') }}" class="nav-sub-item {{ request()->routeIs('admin.sertifikat.*') ? 'active' : '' }}">Sertifikat</a>
+                                <a href="{{ route('admin.survei.index') }}" class="nav-sub-item {{ request()->routeIs('admin.survei.*') ? 'active' : '' }}">Survei Kepuasan</a>
                             </div>
                         </div>
 

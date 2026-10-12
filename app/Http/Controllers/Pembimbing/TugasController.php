@@ -108,10 +108,19 @@ class TugasController extends Controller
             ->get();
 
         $selectedPenempatanId = $request->integer('penempatan_id', 0);
+        $selectedTemplate = null;
+        if ($request->filled('template_id')) {
+            $selectedTemplate = \App\Models\TugasTemplate::accessibleBy($user->id)
+                ->find($request->integer('template_id'));
+        }
+
+        $templates = \App\Models\TugasTemplate::accessibleBy($user->id)->latest()->get();
 
         return view('pembimbing.tugas.create', [
             'penempatanList' => $penempatanList,
             'selectedPenempatanId' => $selectedPenempatanId > 0 ? $selectedPenempatanId : null,
+            'selectedTemplate' => $selectedTemplate,
+            'templates' => $templates,
         ]);
     }
 

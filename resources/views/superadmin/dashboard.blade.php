@@ -291,6 +291,107 @@
         </div>
     </div>
 
+    {{-- TELEMETRI KESEHATAN SISTEM & GRAFIK TREN (C11, C13) --}}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
+        
+        {{-- Card Kesehatan Sistem (C11) --}}
+        <div style="background: var(--neutral-0, #ffffff); border: 1px solid var(--neutral-400, #CBD5E1); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle, 0 1px 3px rgba(0,0,0,0.05)); display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                    <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0;">
+                        Telemetri Infrastruktur &amp; Sistem
+                    </h3>
+                </div>
+                <a href="{{ route('superadmin.health.index') }}" style="font-size: 0.75rem; font-weight: 700; color: #2563EB; text-decoration: none;">
+                    Monitor Lengkap &rarr;
+                </a>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 0.65rem 0.85rem;">
+                    <div style="font-size: 0.6875rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Kapasitas Disk</div>
+                    <div style="font-size: 1.1rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin-top: 0.15rem;">
+                        {{ $systemSummary['disk_free_gb'] }} <span style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-500, #64748B);">GB Bebas</span>
+                    </div>
+                    <div style="font-size: 0.6875rem; color: var(--neutral-600, #475569); margin-top: 0.2rem;">
+                        Terpakai {{ $systemSummary['disk_usage_percent'] }}%
+                    </div>
+                </div>
+
+                <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 0.65rem 0.85rem;">
+                    <div style="font-size: 0.6875rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Status Basis Data</div>
+                    <div style="font-size: 1.1rem; font-weight: 800; color: #16A34A; margin-top: 0.15rem;">
+                        {{ $systemSummary['db_status'] }}
+                    </div>
+                    <div style="font-size: 0.6875rem; color: var(--neutral-600, #475569); margin-top: 0.2rem;">
+                        Koneksi Aktif
+                    </div>
+                </div>
+
+                <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 0.65rem 0.85rem;">
+                    <div style="font-size: 0.6875rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Snapshot Cadangan</div>
+                    <div style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin-top: 0.15rem;">
+                        {{ $systemSummary['last_backup'] }}
+                    </div>
+                    <div style="font-size: 0.6875rem; color: var(--neutral-600, #475569); margin-top: 0.2rem;">
+                        Disaster Recovery Siap
+                    </div>
+                </div>
+
+                <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 0.65rem 0.85rem;">
+                    <div style="font-size: 0.6875rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Pengguna & Runtime</div>
+                    <div style="font-size: 1.1rem; font-weight: 800; color: #2563EB; margin-top: 0.15rem;">
+                        {{ $systemSummary['active_sessions'] }} <span style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-500, #64748B);">Akun Aktif</span>
+                    </div>
+                    <div style="font-size: 0.6875rem; color: var(--neutral-600, #475569); margin-top: 0.2rem;">
+                        PHP {{ $systemSummary['php_version'] }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Card Tren Pendaftaran 12 Bulan (C13) --}}
+        <div style="background: var(--neutral-0, #ffffff); border: 1px solid var(--neutral-400, #CBD5E1); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle, 0 1px 3px rgba(0,0,0,0.05)); display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0;">
+                        Tren Pendaftaran 12 Bulan Terakhir
+                    </h3>
+                </div>
+                <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); font-weight: 600;">
+                    Volume Pendaftar
+                </span>
+            </div>
+
+            @php
+                $maxVal = 1;
+                foreach($trenPendaftar as $t) {
+                    if($t['count'] > $maxVal) { $maxVal = $t['count']; }
+                }
+            @endphp
+            <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.25rem; height: 95px; padding: 0.5rem 0.25rem 0.25rem 0.25rem; border-bottom: 2px solid var(--neutral-200, #E2E8F0); margin-bottom: 0.5rem;">
+                @foreach($trenPendaftar as $tp)
+                    @php
+                        $barPct = round(($tp['count'] / $maxVal) * 100);
+                        $barHeightPx = max(8, round(($barPct / 100) * 80));
+                    @endphp
+                    <div style="display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 14px;" title="{{ $tp['bulan'] }}: {{ $tp['count'] }} pendaftar">
+                        <div style="width: 100%; max-width: 18px; height: {{ $barHeightPx }}px; background: {{ $tp['count'] > 0 ? '#2563EB' : '#E2E8F0' }}; border-radius: 3px 3px 0 0; transition: all 0.2s ease;"></div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--neutral-500, #64748B);">
+                @foreach($trenPendaftar as $tp)
+                    <span style="flex: 1; text-align: center;">{{ $tp['bulan'] }}</span>
+                @endforeach
+            </div>
+        </div>
+
+    </div>
+
     <!-- =========================================================================
          3. SEGMENTED TAB CONTROLLER (NAVIGASI TERPADU 4 AREA FUNGSI)
          ========================================================================= -->

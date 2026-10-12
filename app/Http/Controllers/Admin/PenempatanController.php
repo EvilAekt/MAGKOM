@@ -95,6 +95,62 @@ class PenempatanController extends Controller
     }
 
     /**
+     * Menampilkan detail lengkap penempatan peserta individual (A9).
+     */
+    public function show(Penempatan $penempatan): View
+    {
+        $penempatan->load([
+            'peserta.profil.jurusan',
+            'pembimbing',
+            'bidang',
+            'slotKhusus',
+            'kuota.jurusan',
+            'tugas.progresLogs',
+            'logbooks',
+            'penilaian.details.rubrik',
+            'pendaftaran.dokumen',
+        ]);
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::AksesData,
+            tabel: 'penempatan',
+            idData: $penempatan->id,
+            nilaiLama: null,
+            nilaiBaru: null,
+            detail: [
+                'aksi' => 'Melihat detail individual penempatan peserta (A9)',
+                'peserta_id' => $penempatan->peserta_id,
+            ],
+            user: request()->user()?->id
+        );
+
+        $pembimbingList = User::where('role', RoleEnum::Pembimbing)
+            ->where('status_aktif', true)
+            ->withCount(['penempatanBimbingan as mentee_aktif_count' => function ($q) {
+                $q->where('status', StatusPenempatanEnum::Aktif);
+            }])
+            ->orderBy('nama')
+            ->get();
+
+        $tugasCount = $penempatan->tugas->count();
+        $tugasSelesaiCount = $penempatan->tugas->filter(function ($t) {
+            return $t->status === \App\Enums\StatusTugasEnum::Selesai;
+        })->count();
+
+        $logbookCount = $penempatan->logbooks->count();
+        $nilaiAkhir = $penempatan->penilaian?->nilai_akhir;
+
+        return view('admin.penempatan.show', [
+            'penempatan' => $penempatan,
+            'pembimbingList' => $pembimbingList,
+            'tugasCount' => $tugasCount,
+            'tugasSelesaiCount' => $tugasSelesaiCount,
+            'logbookCount' => $logbookCount,
+            'nilaiAkhir' => $nilaiAkhir,
+        ]);
+    }
+
+    /**
      * Alur penempatan manual peserta (SuperAdmin & Admin) (F-06, F-07, AC-07-3).
      */
     public function storeManual(PenempatanManualRequest $request): RedirectResponse
@@ -193,6 +249,81 @@ class PenempatanController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * Memindahkan pembimbing untuk banyak penempatan peserta sekaligus (Bulk Reassign) (AC-07-4, BR-13, A-12).
+     */
+    public function bulkReassignPembimbing(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'penempatan_ids' => ['required', 'array', 'min:1'],
+            'penempatan_ids.*' => ['required', 'integer', 'exists:penempatan,id'],
+            'pembimbing_id' => ['required', 'integer', 'exists:users,id'],
+        ], [
+            'penempatan_ids.required' => 'Pilih minimal satu penempatan peserta untuk dialihkan.',
+            'pembimbing_id.required' => 'Pilih pembimbing baru tujuan.',
+        ]);
+
+        $admin = $request->user();
+        $pembimbingBaru = User::where('id', $request->integer('pembimbing_id'))
+            ->where('role', RoleEnum::Pembimbing)
+            ->where('status_aktif', true)
+            ->firstOrFail();
+
+        $ids = $request->input('penempatan_ids');
+
+        // Validasi kuota kapasitas maksimal pembimbing (BR-13)
+        $maxBebanSetting = \App\Models\Pengaturan::where('kunci', 'maks_peserta_aktif_per_pembimbing')->value('nilai');
+        if ($maxBebanSetting !== null && $maxBebanSetting !== '') {
+            $maxBeban = (int) $maxBebanSetting;
+            $currentAktif = Penempatan::where('pembimbing_id', $pembimbingBaru->id)
+                ->where('status', StatusPenempatanEnum::Aktif)
+                ->count();
+
+            $penambahanAktif = Penempatan::whereIn('id', $ids)
+                ->where('status', StatusPenempatanEnum::Aktif)
+                ->where('pembimbing_id', '!=', $pembimbingBaru->id)
+                ->count();
+
+            if (($currentAktif + $penambahanAktif) > $maxBeban) {
+                return back()->with('error', "Kapasitas pembimbing {$pembimbingBaru->nama} terlampaui (Batas maksimal: {$maxBeban} mentee aktif, saat ini: {$currentAktif}, penambahan: {$penambahanAktif}).");
+            }
+        }
+
+        $count = \Illuminate\Support\Facades\DB::transaction(function () use ($ids, $pembimbingBaru, $admin) {
+            $penempatans = Penempatan::whereIn('id', $ids)->get();
+            $updated = 0;
+
+            foreach ($penempatans as $p) {
+                if ($p->pembimbing_id === $pembimbingBaru->id) {
+                    continue;
+                }
+
+                $pembimbingLamaId = $p->pembimbing_id;
+                $p->update(['pembimbing_id' => $pembimbingBaru->id]);
+
+                $this->auditService->catat(
+                    tipe: TipeAuditEnum::Aksi,
+                    tabel: 'penempatan',
+                    idData: $p->id,
+                    nilaiLama: ['pembimbing_id' => $pembimbingLamaId],
+                    nilaiBaru: ['pembimbing_id' => $pembimbingBaru->id],
+                    detail: [
+                        'aksi' => 'Pemindahan pembimbing massal (bulk reassign)',
+                        'admin_id' => $admin->id,
+                        'pembimbing_baru_id' => $pembimbingBaru->id,
+                    ]
+                );
+
+                $updated++;
+            }
+
+            return $updated;
+        });
+
+        return redirect()->route('admin.penempatan.index')
+            ->with('success', "Sebanyak {$count} penempatan peserta berhasil dialihkan ke {$pembimbingBaru->nama}.");
     }
 
     /**

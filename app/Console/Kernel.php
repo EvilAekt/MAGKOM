@@ -22,6 +22,12 @@ class Kernel extends ConsoleKernel
             ->monthlyOn(1, '02:00')
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
+
+        // Pembersihan keamanan berkala & higienitas sistem (PRD 8.4, 10.3)
+        $schedule->command('magkom:security-sweep')
+            ->dailyAt('03:00')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
     }
 
 

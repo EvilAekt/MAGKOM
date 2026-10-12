@@ -235,4 +235,50 @@ class PendaftaranController extends Controller
 
         return back();
     }
+
+    /**
+     * Mengunduh bundel seluruh berkas pendaftaran peserta dalam arsip ZIP terstruktur (PRD F-03, Bab 8.4, NFR-S6).
+     */
+    public function downloadBundelZip(Request $request, \App\Services\DocumentArchiveService $archiveService)
+    {
+        $query = Pendaftaran::with(['user.profil', 'dokumen.jenisDokumen', 'bulanMagang', 'kuota.jurusan']);
+
+        if ($request->filled('pendaftaran_ids')) {
+            $ids = (array) $request->input('pendaftaran_ids');
+            $query->whereIn('id', $ids);
+        } elseif ($request->filled('bulan_magang_id')) {
+            $query->where('bulan_magang_id', $request->integer('bulan_magang_id'));
+        } elseif ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        } else {
+            // Default: ambil pendaftaran berstatus diterima atau diajukan (maksimal 50 entri per bundel untuk keselamatan memori)
+            $query->whereIn('status', [StatusPendaftaranEnum::Diterima, StatusPendaftaranEnum::Diajukan]);
+        }
+
+        $pendaftarans = $query->latest('id')->take(50)->get();
+
+        if ($pendaftarans->isEmpty()) {
+            return back()->with('error', 'Tidak ada data pendaftaran yang memenuhi kriteria untuk diunduh berkasnya.');
+        }
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::AksesData,
+            tabel: 'dokumen',
+            idData: null,
+            nilaiLama: null,
+            nilaiBaru: null,
+            detail: [
+                'aksi' => 'Unduh bundel arsip ZIP berkas pendaftaran peserta',
+                'jumlah_pendaftar' => $pendaftarans->count(),
+            ]
+        );
+
+        $zipPath = $archiveService->createRegistrationBatchZip($pendaftarans);
+        $downloadName = 'bundel-berkas-magkom-' . date('Ymd-His') . '.zip';
+
+        return response()->download($zipPath, $downloadName, [
+            'Content-Type' => 'application/zip',
+            'X-Content-Type-Options' => 'nosniff',
+        ])->deleteFileAfterSend(true);
+    }
 }

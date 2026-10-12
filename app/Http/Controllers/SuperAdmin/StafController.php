@@ -44,6 +44,10 @@ class StafController extends Controller
             $query->where('status_aktif', filter_var($request->input('status_aktif'), FILTER_VALIDATE_BOOLEAN));
         }
 
+        if ($request->filled('must_change_password')) {
+            $query->where('must_change_password', filter_var($request->input('must_change_password'), FILTER_VALIDATE_BOOLEAN));
+        }
+
         if ($request->filled('search')) {
             $search = '%' . $request->input('search') . '%';
             $query->where(function ($q) use ($search) {
@@ -52,13 +56,18 @@ class StafController extends Controller
             });
         }
 
-        $stafList = $query->paginate(15);
+        $stafList = $query->paginate(15)->withQueryString();
         $maksPeserta = \App\Support\Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
+
+        $stafPendingPasswordCount = User::whereIn('role', [RoleEnum::Admin->value, RoleEnum::Pembimbing->value])
+            ->where('must_change_password', true)
+            ->count();
 
         return view('superadmin.staf.index', [
             'stafList' => $stafList,
             'bidangList' => Bidang::aktif()->get(),
             'maksPeserta' => $maksPeserta,
+            'stafPendingPasswordCount' => $stafPendingPasswordCount,
         ]);
     }
 
@@ -266,5 +275,41 @@ class StafController extends Controller
         $statusLabel = $statusBaru ? 'diaktifkan' : 'dinonaktifkan';
         return redirect()->route('superadmin.staf.index')
             ->with('success', "Akun staf {$staf->nama} berhasil {$statusLabel}.");
+    }
+
+    /**
+     * Menghasilkan kata sandi acak sementara dan menandai must_change_password untuk staf (PRD 3.2, BR-15).
+     */
+    public function regenerateTemporaryPassword(User $staf, Request $request): RedirectResponse
+    {
+        if ($staf->isSuperAdmin() || $staf->isPeserta()) {
+            return back()->with('error', 'Regenerasi kata sandi instan hanya berlaku untuk akun Admin dan Pembimbing.');
+        }
+
+        $tempPassword = 'Mk' . \Illuminate\Support\Str::random(8) . '!9';
+
+        $staf->update([
+            'password' => Hash::make($tempPassword),
+            'must_change_password' => true,
+            'remember_token' => null,
+        ]);
+
+        if (\Illuminate\Support\Facades\Schema::hasTable('sessions')) {
+            \Illuminate\Support\Facades\DB::table('sessions')->where('user_id', $staf->id)->delete();
+        }
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'users',
+            idData: $staf->id,
+            detail: [
+                'aksi' => 'Regenerasi kata sandi acak sementara staf (BR-15)',
+                'staf_email' => $staf->email,
+                'superadmin_id' => $request->user()->id,
+            ]
+        );
+
+        return redirect()->route('superadmin.staf.index')
+            ->with('success', "Kata sandi sementara untuk staf {$staf->nama} berhasil dibuat: [ {$tempPassword} ]. Harap salin dan serahkan secara manual (BR-15).");
     }
 }

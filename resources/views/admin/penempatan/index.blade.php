@@ -286,6 +286,9 @@
                 <table class="admin-table">
                     <thead>
                         <tr>
+                            <th style="width: 40px; text-align: center;">
+                                <input type="checkbox" id="checkAllPenempatan" onclick="toggleAllPenempatan(this)" style="cursor: pointer; width: 16px; height: 16px;">
+                            </th>
                             <th>Peserta Magang</th>
                             <th>Pembimbing Lapangan</th>
                             <th>Jalur / Bidang Dinas</th>
@@ -308,6 +311,9 @@
                                 };
                             @endphp
                             <tr>
+                                <td style="text-align: center;">
+                                    <input type="checkbox" value="{{ $p->id }}" class="penempatan-checkbox" onchange="updateBulkUI()" style="cursor: pointer; width: 16px; height: 16px;">
+                                </td>
                                 {{-- Peserta Magang --}}
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -381,6 +387,11 @@
                                 {{-- Aksi --}}
                                 <td style="text-align: right;">
                                     <div style="display: inline-flex; gap: 0.35rem; align-items: center;">
+                                        <a href="{{ route('admin.penempatan.show', $p) }}" title="Lihat Detail Penempatan" style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.4rem 0.65rem; background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; border-radius: 6px; font-weight: 700; font-size: 0.75rem; text-decoration: none; transition: all 0.15s ease;" onmouseover="this.style.background='#E0E7FF'" onmouseout="this.style.background='#EEF2FF'">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                            <span>Detail</span>
+                                        </a>
+
                                         <button type="button" onclick="openSuratPreview('{{ route('admin.penempatan.surat-diterima.pratinjau', $p) }}', '{{ route('admin.penempatan.surat-diterima', $p) }}', 'Surat Diterima - {{ addslashes($p->peserta?->nama) }}')" title="Pratinjau Surat Keterangan Diterima Langsung" style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.4rem 0.65rem; background: #EFF6FF; color: #1D4ED8; border: 1px solid #DBEAFE; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: all 0.15s ease;" onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                             <span>Surat</span>
@@ -804,8 +815,132 @@
                 closeManualModal();
                 closePindahModal();
                 closeBatalModal();
+                closeBulkReassignModal();
             }
         });
     });
+
+    function toggleAllPenempatan(masterCheckbox) {
+        const checkboxes = document.querySelectorAll('.penempatan-checkbox');
+        checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+        updateBulkUI();
+    }
+
+    function updateBulkUI() {
+        const checkedBoxes = document.querySelectorAll('.penempatan-checkbox:checked');
+        const count = checkedBoxes.length;
+        const floatingBar = document.getElementById('floating-bulk-bar');
+        const countBadge = document.getElementById('bulk-selected-count');
+
+        if (countBadge) countBadge.innerText = count;
+
+        if (floatingBar) {
+            if (count > 0) {
+                floatingBar.style.display = 'flex';
+            } else {
+                floatingBar.style.display = 'none';
+            }
+        }
+    }
+
+    function openBulkReassignModal() {
+        const checkedBoxes = document.querySelectorAll('.penempatan-checkbox:checked');
+        if (checkedBoxes.length === 0) {
+            alert('Pilih minimal satu penempatan peserta terlebih dahulu.');
+            return;
+        }
+
+        const container = document.getElementById('bulk-ids-container');
+        if (container) {
+            container.innerHTML = '';
+            checkedBoxes.forEach(cb => {
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'penempatan_ids[]';
+                hidden.value = cb.value;
+                container.appendChild(hidden);
+            });
+        }
+
+        const countEl = document.getElementById('bulk-modal-count');
+        if (countEl) countEl.innerText = checkedBoxes.length;
+
+        const modal = document.getElementById('modal-bulk-reassign');
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeBulkReassignModal() {
+        const modal = document.getElementById('modal-bulk-reassign');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
 </script>
+
+{{-- FLOATING BULK ACTION BAR --}}
+<div id="floating-bulk-bar" style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #0F172A; color: #ffffff; padding: 0.85rem 1.5rem; border-radius: 9999px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); z-index: 1040; align-items: center; gap: 1.25rem;">
+    <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+        <span id="bulk-selected-count" style="background: #0641CC; color: #ffffff; padding: 0.15rem 0.55rem; border-radius: 999px; font-weight: 700; font-size: 0.8125rem;">0</span>
+        <span>Peserta Dipilih</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <button type="button" onclick="openBulkReassignModal()" style="padding: 0.45rem 1rem; background: #0641CC; color: #ffffff; border: none; border-radius: 999px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
+            <span>Pindahkan Pembimbing Massal</span>
+        </button>
+        <button type="button" onclick="toggleAllPenempatan({checked: false})" style="background: transparent; border: none; color: #94A3B8; font-size: 0.8125rem; cursor: pointer; padding: 0.25rem 0.5rem;">
+            Batal
+        </button>
+    </div>
+</div>
+
+{{-- MODAL BULK REASSIGN PEMBIMBING --}}
+<div id="modal-bulk-reassign" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); z-index: 1060; align-items: center; justify-content: center; padding: 1rem;">
+    <div style="background: #ffffff; border-radius: 14px; width: 100%; max-width: 520px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); padding: 1.75rem; border: 1px solid var(--neutral-200);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.85rem;">
+            <div>
+                <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--neutral-900); margin: 0;">Pindahkan Pembimbing Massal</h3>
+                <p style="font-size: 0.8rem; color: var(--neutral-500); margin: 0.2rem 0 0 0;">
+                    Alihkan <span id="bulk-modal-count" style="font-weight: 700; color: #0641CC;">0</span> penempatan peserta ke pembimbing baru.
+                </p>
+            </div>
+            <button type="button" onclick="closeBulkReassignModal()" style="background: transparent; border: none; cursor: pointer; color: var(--neutral-500); font-size: 1.25rem;">&times;</button>
+        </div>
+
+        <form method="POST" action="{{ route('admin.penempatan.bulk-reassign') }}">
+            @csrf
+            <div id="bulk-ids-container"></div>
+
+            <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.4rem;">
+                    Pilih Pembimbing Lapangan Baru <span style="color: #ef4444;">*</span>
+                </label>
+                <select name="pembimbing_id" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                    <option value="">-- Pilih Pembimbing Aktif --</option>
+                    @foreach($pembimbingList as $pem)
+                        <option value="{{ $pem->id }}">
+                            {{ $pem->nama }} (Beban: {{ $pem->mentee_aktif_count }} mentee aktif)
+                        </option>
+                    @endforeach
+                </select>
+                <small style="display: block; font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.35rem;">
+                    Sistem akan memvalidasi batas kapasitas <code>maks_peserta_aktif_per_pembimbing</code> (BR-13).
+                </small>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
+                <button type="button" onclick="closeBulkReassignModal()" style="padding: 0.5rem 1.25rem; background: var(--neutral-200); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
+                    Batal
+                </button>
+                <button type="submit" style="padding: 0.5rem 1.5rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
+                    Konfirmasi Pindah Pembimbing
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection

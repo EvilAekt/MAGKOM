@@ -133,7 +133,13 @@
             </p>
         </div>
 
-        <div style="display: flex; items-center; gap: 0.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <button type="button" 
+                    onclick="openModalPickerTemplate()" 
+                    style="padding: 0.55rem 1rem; background: #EFF6FF; color: #0641CC; border: 1px solid #BFDBFE; border-radius: 10px; font-size: 0.875rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: background 0.15s ease;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <span>Pilih Template Tugas</span>
+            </button>
             <a href="{{ route('pembimbing.tugas.index') }}" 
                style="padding: 0.55rem 1rem; background: #ffffff; color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 10px; font-size: 0.875rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
@@ -189,7 +195,7 @@
                                id="judul" 
                                required 
                                maxlength="150"
-                               value="{{ old('judul') }}"
+                               value="{{ old('judul', $selectedTemplate?->judul) }}"
                                placeholder="Tuliskan judul tugas (contoh: Analisis Skema Database & REST Endpoint Antrean Layanan)" 
                                style="width: 100%; font-size: 1.15rem; font-weight: 700; color: var(--neutral-900, #0F172A); padding: 0.75rem 0.9rem; border-radius: 10px; border: 1px solid var(--neutral-300, #CBD5E1); background: #ffffff; box-sizing: border-box;"
                                class="form-control-input">
@@ -208,7 +214,7 @@
                                   required 
                                   placeholder="Tuliskan detail arahan penugasan untuk mentee...&#10;&#10;Contoh:&#10;1. Pelajari spesifikasi dokumen TOR terlampir.&#10;2. Implementasikan skema validasi data sesuai aturan kedinasan.&#10;3. Unggah hasil pull request atau lembar kerja dokumen ke repositori." 
                                   style="width: 100%; border-radius: 10px; border: 1px solid var(--neutral-300, #CBD5E1); background: #F8FAFC; padding: 0.85rem 1rem; font-size: 0.875rem; line-height: 1.6; color: var(--neutral-900, #0F172A); font-family: inherit; resize: vertical; box-sizing: border-box;"
-                                  class="form-control-input">{{ old('deskripsi') }}</textarea>
+                                  class="form-control-input">{{ old('deskripsi', $selectedTemplate?->deskripsi) }}</textarea>
                     </div>
                 </div>
 
@@ -242,7 +248,7 @@
                             <input type="url" 
                                    name="link_referensi" 
                                    id="link_referensi" 
-                                   value="{{ old('link_referensi') }}"
+                                   value="{{ old('link_referensi', $selectedTemplate?->link_referensi) }}"
                                    placeholder="https://github.com/..., https://figma.com/..., atau docs.google.com/..." 
                                    style="padding-left: 2.35rem;"
                                    class="form-control-input">
@@ -363,7 +369,7 @@
                                id="kategori" 
                                list="kategoriList" 
                                required 
-                               value="{{ old('kategori', 'Pengembangan Web') }}" 
+                               value="{{ old('kategori', $selectedTemplate?->kategori ?? 'Pengembangan Web') }}" 
                                placeholder="Pilih atau ketik kategori tugas..."
                                class="form-control-input">
                         <datalist id="kategoriList">
@@ -382,21 +388,24 @@
                         <label class="form-label">
                             Tingkat Kompleksitas <span style="color: #DC2626;">*</span>
                         </label>
+                        @php
+                            $currentKomp = old('kompleksitas', $selectedTemplate?->kompleksitas?->value ?? ($selectedTemplate?->kompleksitas ?? 'sedang'));
+                        @endphp
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
                             <label class="complexity-option">
-                                <input type="radio" name="kompleksitas" value="rendah" {{ old('kompleksitas') === 'rendah' ? 'checked' : '' }}>
+                                <input type="radio" name="kompleksitas" value="rendah" {{ $currentKomp === 'rendah' ? 'checked' : '' }}>
                                 <div class="complexity-box">
                                     Rendah
                                 </div>
                             </label>
                             <label class="complexity-option">
-                                <input type="radio" name="kompleksitas" value="sedang" {{ old('kompleksitas', 'sedang') === 'sedang' ? 'checked' : '' }}>
+                                <input type="radio" name="kompleksitas" value="sedang" {{ $currentKomp === 'sedang' ? 'checked' : '' }}>
                                 <div class="complexity-box">
                                     Sedang
                                 </div>
                             </label>
                             <label class="complexity-option">
-                                <input type="radio" name="kompleksitas" value="tinggi" {{ old('kompleksitas') === 'tinggi' ? 'checked' : '' }}>
+                                <input type="radio" name="kompleksitas" value="tinggi" {{ $currentKomp === 'tinggi' ? 'checked' : '' }}>
                                 <div class="complexity-box">
                                     Tinggi
                                 </div>
@@ -570,5 +579,85 @@ document.addEventListener('DOMContentLoaded', function () {
         updateMenteeInfo();
     }
 });
+
+function openModalPickerTemplate() {
+    const modal = document.getElementById('modalPickerTemplate');
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeModalPickerTemplate() {
+    const modal = document.getElementById('modalPickerTemplate');
+    if (modal) modal.style.display = 'none';
+}
+
+function applyTemplate(tmpl) {
+    if (!tmpl) return;
+    
+    const judulInput = document.getElementById('judul');
+    if (judulInput && tmpl.judul) judulInput.value = tmpl.judul;
+
+    const deskripsiInput = document.getElementById('deskripsi');
+    if (deskripsiInput) deskripsiInput.value = tmpl.deskripsi || '';
+
+    const kategoriInput = document.getElementById('kategori');
+    if (kategoriInput && tmpl.kategori) kategoriInput.value = tmpl.kategori;
+
+    const linkRefInput = document.getElementById('link_referensi');
+    if (linkRefInput) linkRefInput.value = tmpl.link_referensi || '';
+
+    const kompVal = (typeof tmpl.kompleksitas === 'object' && tmpl.kompleksitas !== null) ? tmpl.kompleksitas.value : tmpl.kompleksitas;
+    if (kompVal) {
+        const radio = document.querySelector(`input[name="kompleksitas"][value="${kompVal}"]`);
+        if (radio) radio.checked = true;
+    }
+
+    closeModalPickerTemplate();
+
+    // Visual notification feedback
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position: fixed; bottom: 2rem; right: 2rem; background: #0641CC; color: #ffffff; padding: 0.85rem 1.25rem; border-radius: 10px; font-size: 0.875rem; font-weight: 600; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); z-index: 9999; display: flex; align-items: center; gap: 0.5rem; animation: fadeIn 0.2s ease;';
+    toast.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Template '${tmpl.judul}' berhasil diterapkan!</span>`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
+}
 </script>
+
+<!-- Modal Picker Template Penugasan -->
+<div id="modalPickerTemplate" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 1000; align-items: center; justify-content: center; padding: 1.5rem; backdrop-filter: blur(4px);">
+    <div style="background: #ffffff; border-radius: 14px; width: 100%; max-width: 650px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); padding: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.75rem;">
+            <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--neutral-900); margin: 0;">Pilih Template Penugasan</h3>
+                <p style="font-size: 0.8rem; color: var(--neutral-500); margin: 0.15rem 0 0 0;">Klik template untuk langsung mengisi formulir tugas secara otomatis</p>
+            </div>
+            <button type="button" onclick="closeModalPickerTemplate()" style="background: transparent; border: none; cursor: pointer; color: var(--neutral-500); font-size: 1.25rem;">&times;</button>
+        </div>
+        <div style="overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; padding-right: 0.25rem;">
+            @forelse($templates ?? [] as $t)
+                <div onclick="applyTemplate({{ json_encode($t) }})" style="padding: 1rem; border-radius: 10px; border: 1px solid var(--neutral-200); background: #f8fafc; cursor: pointer; transition: all 0.15s ease;" onmouseover="this.style.borderColor='#0641CC'; this.style.background='#eff6ff';" onmouseout="this.style.borderColor='var(--neutral-200)'; this.style.background='#f8fafc';">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                        <span style="font-size: 0.75rem; font-weight: 700; color: #0641CC; text-transform: uppercase;">{{ $t->kategori }}</span>
+                        <div style="display: flex; gap: 0.4rem; align-items: center;">
+                            <span style="font-size: 0.72rem; font-weight: 600; padding: 0.15rem 0.45rem; border-radius: 4px; background: #ffffff; border: 1px solid var(--neutral-300);">{{ ucfirst($t->kompleksitas?->value ?? (string) $t->kompleksitas) }}</span>
+                            @if($t->is_global)
+                                <span style="font-size: 0.68rem; font-weight: 600; padding: 0.15rem 0.4rem; border-radius: 4px; background: #f3e8ff; color: #7e22ce;">Global</span>
+                            @endif
+                        </div>
+                    </div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--neutral-900); margin: 0 0 0.35rem 0;">{{ $t->judul }}</h4>
+                    <p style="font-size: 0.8rem; color: var(--neutral-600); margin: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $t->deskripsi ?: 'Tidak ada deskripsi tambahan.' }}</p>
+                </div>
+            @empty
+                <div style="text-align: center; padding: 2rem 1rem; color: var(--neutral-500);">
+                    <p style="margin: 0 0 0.75rem 0;">Belum ada template tersimpan di pustaka Anda.</p>
+                    <a href="{{ route('pembimbing.tugas.template.index') }}" target="_blank" style="font-size: 0.85rem; color: #0641CC; font-weight: 600; text-decoration: none;">Buka Bank Template &raquo;</a>
+                </div>
+            @endforelse
+        </div>
+        <div style="margin-top: 1rem; border-top: 1px solid var(--neutral-200); padding-top: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+            <a href="{{ route('pembimbing.tugas.template.index') }}" style="font-size: 0.8125rem; font-weight: 600; color: #0641CC; text-decoration: none;">Kelola Bank Template &raquo;</a>
+            <button type="button" onclick="closeModalPickerTemplate()" style="padding: 0.45rem 1rem; background: var(--neutral-200); color: var(--neutral-700); font-weight: 600; font-size: 0.8125rem; border: none; border-radius: 8px; cursor: pointer;">Tutup</button>
+        </div>
+    </div>
+</div>
 @endsection

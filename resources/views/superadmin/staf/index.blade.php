@@ -44,12 +44,18 @@
                     <option value="false" {{ request('status_aktif') === 'false' ? 'selected' : '' }}>Nonaktif</option>
                 </select>
 
+                <select name="must_change_password" style="height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit; min-width: 170px;">
+                    <option value="">Status Kata Sandi</option>
+                    <option value="true" {{ request('must_change_password') === 'true' ? 'selected' : '' }}>Menunggu Ganti (BR-15)</option>
+                    <option value="false" {{ request('must_change_password') === 'false' ? 'selected' : '' }}>Sudah Diganti</option>
+                </select>
+
                 <button type="submit" style="height: 42px; padding: 0 1.25rem; background: var(--neutral-900); color: #FFFFFF; font-weight: 700; font-size: 0.8125rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.375rem;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                     Filter
                 </button>
 
-                @if(request()->hasAny(['search', 'role', 'status_aktif']))
+                @if(request()->hasAny(['search', 'role', 'status_aktif', 'must_change_password']))
                     <a href="{{ route('superadmin.staf.index') }}" style="font-size: 0.8125rem; color: var(--neutral-600); text-decoration: none; padding: 0.5rem 0.75rem; font-weight: 600;">
                         Reset Filter
                     </a>
@@ -152,6 +158,14 @@
                                             Nonaktif
                                         </span>
                                     @endif
+
+                                    @if($staf->must_change_password)
+                                        <div style="margin-top: 0.35rem;">
+                                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.68rem; font-weight: 700; color: #b45309; background: #fef3c7; border: 1px solid #fde68a; padding: 0.15rem 0.45rem; border-radius: 4px;">
+                                                ⚠️ Wajib Ganti Sandi (BR-15)
+                                            </span>
+                                        </div>
+                                    @endif
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
                                     <div style="display: inline-flex; gap: 0.375rem; align-items: center; justify-content: flex-end;">
@@ -161,10 +175,19 @@
                                             Edit
                                         </button>
 
-                                        <!-- Reset Password Button -->
+                                        <!-- Regenerate Temporary Password Button (BR-15) -->
+                                        <form action="{{ route('superadmin.staf.regenerate-password', $staf) }}" method="POST" style="display: inline-block; margin: 0;" onsubmit="return confirm('Buat kata sandi sementara baru untuk {{ addslashes($staf->nama) }}? Sesi aktif staf akan ditutup dan staf wajib mengganti kata sandi saat login.');">
+                                            @csrf
+                                            <button type="submit" style="padding: 0.45rem 0.75rem; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: #0641CC; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.25rem;" title="Buat kata sandi sementara baru secara instan">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                                Sandi Baru
+                                            </button>
+                                        </form>
+
+                                        <!-- Reset Password Manual Form Button -->
                                         <button type="button" onclick="openModalReset('{{ $staf->id }}', '{{ addslashes($staf->nama) }}')" style="padding: 0.45rem 0.75rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--neutral-800); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.25rem;" onmouseover="this.style.background='var(--neutral-200)'" onmouseout="this.style.background='var(--neutral-100)'">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                            Reset Sandi
+                                            Reset
                                         </button>
 
                                         <!-- Toggle Status Form -->
