@@ -102,12 +102,22 @@ class LogbookController extends Controller
             $mingguKe = (int) floor($diffDays / 7) + 1;
         }
 
+        $tglAwalMinggu = null;
+        $tglAkhirMinggu = null;
+        if ($mingguKe && $penempatan->tgl_mulai) {
+            $tglAwalMinggu = $penempatan->tgl_mulai->copy()->startOfDay()->addDays(($mingguKe - 1) * 7);
+            $tglAkhirMinggu = $tglAwalMinggu->copy()->addDays(6)->endOfDay();
+        }
+
         // Validasi keunikan penempatan_id dan tanggal kegiatan atau minggu_ke
         $cekQuery = Logbook::where('penempatan_id', $penempatan->id)
-            ->where(function ($q) use ($request, $mingguKe) {
+            ->where(function ($q) use ($request, $mingguKe, $tglAwalMinggu, $tglAkhirMinggu) {
                 $q->whereDate('tanggal', $request->validated('tanggal'));
                 if ($mingguKe) {
                     $q->orWhere('minggu_ke', $mingguKe);
+                    if ($tglAwalMinggu && $tglAkhirMinggu) {
+                        $q->orWhereBetween('tanggal', [$tglAwalMinggu->toDateString(), $tglAkhirMinggu->toDateString()]);
+                    }
                 }
             });
 
@@ -116,7 +126,7 @@ class LogbookController extends Controller
                 ? "Catatan logbook kegiatan untuk Minggu ke-{$mingguKe} atau tanggal tersebut sudah pernah dicatat sebelumnya."
                 : 'Catatan logbook kegiatan untuk tanggal tersebut sudah pernah dicatat sebelumnya.';
 
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => $pesan,

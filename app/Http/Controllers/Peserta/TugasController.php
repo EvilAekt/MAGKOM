@@ -92,6 +92,7 @@ class TugasController extends Controller
             'tugas_id' => $tugas->id,
             'catatan' => $request->validated('catatan'),
             'file' => $filePath,
+            'link' => $request->validated('link'),
             'tgl_lapor' => Carbon::today(),
             'status_review' => StatusReviewProgresEnum::Menunggu,
         ]);

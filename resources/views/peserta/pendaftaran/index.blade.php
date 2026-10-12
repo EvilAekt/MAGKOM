@@ -248,6 +248,34 @@
         color: var(--neutral-800);
     }
 
+    .active-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        padding-top: 18px;
+        border-top: 1px dashed var(--neutral-200);
+    }
+
+    .active-card-note {
+        font-size: 0.75rem;
+        color: var(--neutral-500);
+        margin: 0;
+        line-height: 1.4;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        max-width: 580px;
+    }
+
+    .active-card-actions {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
     /* ========================================================
        KATALOG KUOTA BULAN MAGANG (VISUAL CARDS)
        ======================================================== */
@@ -473,6 +501,22 @@
         .duration-chips-grid {
             grid-template-columns: repeat(2, 1fr);
         }
+
+        .active-card-footer {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 14px;
+        }
+
+        .active-card-actions {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .active-card-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>
 @endpush
@@ -675,18 +719,20 @@
                 </div>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;">
-                <p style="font-size: 0.75rem; color: var(--neutral-500); margin: 0; line-height: 1.4; display: flex; align-items: center; gap: 6px;">
+            <div class="active-card-footer">
+                <p class="active-card-note">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--blue-600); flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                     <span>Sesuai ketentuan sistem (BR-03 & BR-17), pengajuan baru terkunci saat Anda masih memiliki pengajuan aktif yang sedang berjalan.</span>
                 </p>
 
-                <a href="{{ route('peserta.pendaftaran.detail', $pendaftaranAktif) }}" class="btn btn-primary">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    Buka Berkas & Detail Pengajuan
-                </a>
+                <div class="active-card-actions">
+                    <a href="{{ route('peserta.pendaftaran.detail', $pendaftaranAktif) }}" class="btn btn-primary">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Buka Berkas & Detail Pengajuan
+                    </a>
+                </div>
             </div>
         </div>
     @endif
@@ -917,13 +963,13 @@
                                 <td style="font-size: 0.8125rem; color: var(--neutral-600);">
                                     {{ $item->created_at->translatedFormat('d M Y, H:i') }}
                                 </td>
-                                <td style="text-align: right;">
-                                    <a href="{{ route('peserta.pendaftaran.detail', $item) }}" class="btn btn-secondary" style="height: 36px; padding: 0 14px; font-size: 0.8125rem;">
+                                <td style="text-align: right; white-space: nowrap;">
+                                    <a href="{{ route('peserta.pendaftaran.detail', $item) }}" class="btn btn-secondary" style="height: 34px; padding: 0 14px; font-size: 0.8125rem; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
                                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                         </svg>
-                                        Lihat Detail
+                                        Detail
                                     </a>
                                 </td>
                             </tr>

@@ -150,6 +150,7 @@ class PesertaClassroomTugasLogbookTest extends TestCase
 
         $response = $this->actingAs($this->peserta)->post(route('peserta.tugas.progres', $tugas), [
             'file' => $file,
+            'link' => 'https://github.com/magkom/demo-progres',
             'catatan' => 'Berikut draf halaman detail tugas yang sudah disesuaikan.',
         ]);
 
@@ -162,7 +163,39 @@ class PesertaClassroomTugasLogbookTest extends TestCase
         $progres = \App\Models\ProgresLog::where('tugas_id', $tugas->id)->latest()->first();
         $this->assertNotNull($progres);
         $this->assertNotNull($progres->file);
+        $this->assertEquals('https://github.com/magkom/demo-progres', $progres->link);
         $this->assertEquals('Berikut draf halaman detail tugas yang sudah disesuaikan.', $progres->catatan);
+
+        // Verifikasi link muncul di halaman detail tugas peserta
+        $viewResponse = $this->actingAs($this->peserta)->get(route('peserta.tugas.show', $tugas));
+        $viewResponse->assertSee('Buka Tautan Tugas ↗');
+        $viewResponse->assertSee('https://github.com/magkom/demo-progres');
+    }
+
+    public function test_peserta_dapat_mengirim_progres_tugas_hanya_dengan_link_tanpa_file(): void
+    {
+        $tugas = Tugas::create([
+            'penempatan_id' => $this->penempatan->id,
+            'judul' => 'Pembuatan Desain Mockup Figma',
+            'deskripsi' => 'Kerjakan mockup desain halaman profil.',
+            'kategori' => 'UI/UX Design',
+            'kompleksitas' => \App\Enums\KompleksitasEnum::Rendah,
+            'deadline' => now()->addDays(3),
+            'status' => StatusTugasEnum::Belum,
+        ]);
+
+        $response = $this->actingAs($this->peserta)->post(route('peserta.tugas.progres', $tugas), [
+            'link' => 'https://www.figma.com/file/contoh-link-mockup',
+            'catatan' => 'Tautan mockup UI/UX di Figma siap ditinjau mentor.',
+        ]);
+
+        $response->assertRedirect(route('peserta.tugas.show', $tugas));
+        $response->assertSessionHas('success');
+
+        $progres = \App\Models\ProgresLog::where('tugas_id', $tugas->id)->latest()->first();
+        $this->assertNotNull($progres);
+        $this->assertNull($progres->file);
+        $this->assertEquals('https://www.figma.com/file/contoh-link-mockup', $progres->link);
     }
 
     public function test_peserta_dapat_melihat_timeline_feed_logbook(): void

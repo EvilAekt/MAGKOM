@@ -164,8 +164,45 @@ class PesertaPortalWorkflowTest extends TestCase
         $response->assertSee('Berkas Persyaratan Magang');
     }
 
+    protected function ensurePenempatanAktif(): Penempatan
+    {
+        $pembimbing = User::where('role', RoleEnum::Pembimbing)->first();
+        if (! $pembimbing) {
+            $pembimbing = new User([
+                'nama' => 'Pembimbing Test',
+                'email' => 'pembimbing.workflow@kominfo.test',
+                'password' => bcrypt('Secret#2026'),
+                'status_aktif' => true,
+                'must_change_password' => false,
+            ]);
+            $pembimbing->role = RoleEnum::Pembimbing;
+            $pembimbing->email_verified_at = now();
+            $pembimbing->save();
+        }
+
+        $bidang = \App\Models\Bidang::firstOrCreate([
+            'nama_bidang' => 'Aptika',
+        ], [
+            'deskripsi' => 'Bidang Aptika',
+            'aktif' => true,
+        ]);
+
+        return Penempatan::firstOrCreate([
+            'peserta_id' => $this->peserta->id,
+        ], [
+            'pembimbing_id' => $pembimbing->id,
+            'bidang_id' => $bidang->id,
+            'jalur' => \App\Enums\JalurEnum::Umum,
+            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'tgl_mulai' => now()->subDay()->format('Y-m-d'),
+            'tgl_selesai' => now()->addMonths(3)->format('Y-m-d'),
+            'status' => StatusPenempatanEnum::Aktif,
+        ]);
+    }
+
     public function test_halaman_logbook_dapat_dibuka_dan_menampilkan_view_peserta(): void
     {
+        $this->ensurePenempatanAktif();
         $response = $this->actingAs($this->peserta)->get(route('peserta.logbook.index'));
         $response->assertStatus(200);
         $response->assertSee('Logbook Mingguan');
@@ -173,6 +210,7 @@ class PesertaPortalWorkflowTest extends TestCase
 
     public function test_halaman_tugas_dapat_dibuka(): void
     {
+        $this->ensurePenempatanAktif();
         $response = $this->actingAs($this->peserta)->get(route('peserta.tugas.index'));
         $response->assertStatus(200);
         $response->assertSee('Tugas & Progres Magang');
@@ -180,6 +218,7 @@ class PesertaPortalWorkflowTest extends TestCase
 
     public function test_halaman_nilai_dapat_dibuka_dengan_graceful_handling_saat_belum_final(): void
     {
+        $this->ensurePenempatanAktif();
         $response = $this->actingAs($this->peserta)->get(route('peserta.nilai.show'));
         $response->assertStatus(200);
         $response->assertSee('Lembar Nilai Belum Tersedia');

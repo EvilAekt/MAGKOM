@@ -104,6 +104,14 @@
             line-height: 1.3;
         }
 
+        .dashboard-hero h1, .dashboard-hero h2, .dashboard-hero h3,
+        .banner-penempatan h1, .banner-penempatan h2, .banner-penempatan h3,
+        .classroom-banner h1, .classroom-banner h2, .classroom-banner h3,
+        .profile-hero h1, .profile-hero h2, .profile-hero h3,
+        .pendaftaran-hero h1, .pendaftaran-hero h2, .pendaftaran-hero h3 {
+            color: #ffffff;
+        }
+
         p {
             line-height: 1.5;
         }
@@ -261,6 +269,37 @@
             height: 20px;
             flex-shrink: 0;
             color: rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-item.locked {
+            opacity: 0.55;
+            cursor: not-allowed;
+            background-color: transparent !important;
+            color: rgba(255, 255, 255, 0.6) !important;
+            user-select: none;
+        }
+
+        .nav-item.locked:hover {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .badge-locked {
+            margin-left: auto;
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.75);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item.locked:hover .badge-locked {
+            background: rgba(255, 255, 255, 0.22);
+            color: #ffffff;
         }
 
         .sidebar-footer {
@@ -809,28 +848,64 @@
                 Pendaftaran Magang
             </a>
 
+            @php
+                $isDiterima = auth()->user()?->hasPenempatanMagang();
+            @endphp
+
             <div class="nav-label">Pelaksanaan Magang</div>
 
-            <a href="{{ route('peserta.logbook.index') }}" class="nav-item {{ request()->routeIs('peserta.logbook.*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                </svg>
-                Logbook Mingguan
-            </a>
+            @if($isDiterima)
+                <a href="{{ route('peserta.logbook.index') }}" class="nav-item {{ request()->routeIs('peserta.logbook.*') ? 'active' : '' }}">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    Logbook Mingguan
+                </a>
 
-            <a href="{{ route('peserta.tugas.index') }}" class="nav-item {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                </svg>
-                Tugas & Progres
-            </a>
+                <a href="{{ route('peserta.tugas.index') }}" class="nav-item {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    Tugas & Progres
+                </a>
 
-            <a href="{{ route('peserta.nilai.show') }}" class="nav-item {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                </svg>
-                Lembar Nilai
-            </a>
+                <a href="{{ route('peserta.nilai.show') }}" class="nav-item {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                    </svg>
+                    Lembar Nilai
+                </a>
+            @else
+                <div class="nav-item locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    <span>Logbook Mingguan</span>
+                    <span class="badge-locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan" aria-label="Terkunci">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </span>
+                </div>
+
+                <div class="nav-item locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    <span>Tugas & Progres</span>
+                    <span class="badge-locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan" aria-label="Terkunci">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </span>
+                </div>
+
+                <div class="nav-item locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                    </svg>
+                    <span>Lembar Nilai</span>
+                    <span class="badge-locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan" aria-label="Terkunci">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </span>
+                </div>
+            @endif
 
             <div class="nav-label">Tautan Luar</div>
 

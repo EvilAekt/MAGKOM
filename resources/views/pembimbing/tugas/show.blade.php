@@ -210,10 +210,19 @@
                                 </div>
 
                                 @if($log->file)
-                                    <div style="margin-bottom: 1rem;">
+                                    <div style="margin-bottom: 0.75rem;">
                                         <a href="{{ route('berkas.download', ['dokumen' => $log->file]) }}" target="_blank" style="display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.75rem; font-weight: 600; color: #0641CC; text-decoration: none; padding: 0.4rem 0.75rem; background: rgba(6, 65, 204, 0.08); border-radius: 6px;">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                                             Unduh Berkas Lampiran Progres
+                                        </a>
+                                    </div>
+                                @endif
+
+                                @if($log->link)
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <a href="{{ $log->link }}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.75rem; font-weight: 700; color: #1D4ED8; text-decoration: none; padding: 0.4rem 0.75rem; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 6px;">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                                            <span>Buka Tautan Tugas Mentee ↗</span>
                                         </a>
                                     </div>
                                 @endif

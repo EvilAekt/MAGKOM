@@ -122,21 +122,24 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:peserta'])-
     Route::get('/penempatan/{penempatan}/surat-diterima', [PesertaPendaftaranController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
     Route::get('/penempatan/{penempatan}/surat-diterima/pratinjau', [PesertaPendaftaranController::class, 'pratinjauSuratDiterima'])->name('penempatan.surat-diterima.pratinjau');
 
-    // Pelaksanaan: Tugas & Progres (F-08)
-    Route::get('/tugas', [PesertaTugasController::class, 'index'])->name('tugas.index');
-    Route::get('/tugas/{tugas}', [PesertaTugasController::class, 'show'])->name('tugas.show');
-    Route::get('/tugas/{tugas}/lampiran', [PesertaTugasController::class, 'unduhLampiran'])->name('tugas.lampiran');
-    Route::post('/tugas/{tugas}/progres', [PesertaTugasController::class, 'unggahProgres'])->name('tugas.progres');
+    // Pelaksanaan Magang: Khusus Peserta yang Telah Resmi Diterima & Ditempatkan
+    Route::middleware('peserta.diterima')->group(function () {
+        // Pelaksanaan: Tugas & Progres (F-08)
+        Route::get('/tugas', [PesertaTugasController::class, 'index'])->name('tugas.index');
+        Route::get('/tugas/{tugas}', [PesertaTugasController::class, 'show'])->name('tugas.show');
+        Route::get('/tugas/{tugas}/lampiran', [PesertaTugasController::class, 'unduhLampiran'])->name('tugas.lampiran');
+        Route::post('/tugas/{tugas}/progres', [PesertaTugasController::class, 'unggahProgres'])->name('tugas.progres');
 
-    // Pelaksanaan: Logbook Harian (F-09, F-15)
-    Route::get('/logbook', [PesertaLogbookController::class, 'index'])->name('logbook.index');
-    Route::post('/logbook', [PesertaLogbookController::class, 'store'])->name('logbook.store');
-    Route::put('/logbook/{logbook}', [PesertaLogbookController::class, 'update'])->name('logbook.update');
-    Route::get('/logbook/{logbook}/lampiran', [PesertaLogbookController::class, 'unduhLampiran'])->name('logbook.lampiran');
+        // Pelaksanaan: Logbook Harian (F-09, F-15)
+        Route::get('/logbook', [PesertaLogbookController::class, 'index'])->name('logbook.index');
+        Route::post('/logbook', [PesertaLogbookController::class, 'store'])->name('logbook.store');
+        Route::put('/logbook/{logbook}', [PesertaLogbookController::class, 'update'])->name('logbook.update');
+        Route::get('/logbook/{logbook}/lampiran', [PesertaLogbookController::class, 'unduhLampiran'])->name('logbook.lampiran');
 
-    // Penilaian & Unduh Lembar Nilai PDF (F-10, F-12)
-    Route::get('/nilai', [PesertaNilaiController::class, 'show'])->name('nilai.show');
-    Route::get('/nilai/unduh', [PesertaNilaiController::class, 'unduhPdf'])->name('nilai.unduh');
+        // Penilaian & Unduh Lembar Nilai PDF (F-10, F-12)
+        Route::get('/nilai', [PesertaNilaiController::class, 'show'])->name('nilai.show');
+        Route::get('/nilai/unduh', [PesertaNilaiController::class, 'unduhPdf'])->name('nilai.unduh');
+    });
 
     // Evaluasi & Survei Kepuasan Magang (PRD 4.3 Poin 4)
     Route::get('/survei', [\App\Http\Controllers\Peserta\SurveiController::class, 'show'])->name('survei.show');

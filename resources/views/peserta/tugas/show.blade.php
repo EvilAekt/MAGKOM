@@ -342,6 +342,32 @@
         background: #ffffff;
     }
 
+    .input-clean {
+        width: 100%;
+        height: 42px;
+        padding: 10px 14px 10px 38px;
+        border: 1.5px solid #94A3B8;
+        border-radius: 8px;
+        font-size: var(--text-sm);
+        color: var(--neutral-900);
+        background: #ffffff;
+        font-family: inherit;
+        line-height: 1.5;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        box-sizing: border-box;
+    }
+
+    .input-clean:focus {
+        outline: none;
+        border-color: #1A73E8;
+        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.18);
+        background: #ffffff;
+    }
+
+    .input-clean.is-invalid {
+        border-color: var(--red-600);
+    }
+
     /* Custom File Upload Box */
     .file-upload-box {
         display: block;
@@ -622,6 +648,17 @@
                                 </div>
                             @endif
 
+                            @if($progres->link)
+                                <div style="margin-top: 6px;">
+                                    <a href="{{ $progres->link }}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 6px; background: #EFF6FF; color: #1D4ED8; font-size: 0.75rem; font-weight: 700; text-decoration: none; border: 1px solid #BFDBFE;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"></path>
+                                        </svg>
+                                        <span>Buka Tautan Tugas ↗</span>
+                                    </a>
+                                </div>
+                            @endif
+
                             @if($progres->catatan_review)
                                 <div class="feedback-bubble-box">
                                     <div style="font-weight: 700; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
@@ -694,14 +731,36 @@
                             @enderror
                         </div>
 
-                        {{-- 2. Catatan Progres Pekerjaan (Di Bawah, Bergaris Tegas) --}}
-                        <div class="form-group-clean" style="margin-top: 18px;">
+                        {{-- 2. Tautan Tugas / Repositori / Demo --}}
+                        <div class="form-group-clean" style="margin-top: 14px;">
+                            <label for="link" class="form-label-clean">
+                                <span>Tautan Tugas / Repositori / Demo</span>
+                                <span style="font-size: 0.6875rem; color: var(--neutral-500); font-weight: 400;">Opsional (https://)</span>
+                            </label>
+                            <div style="position: relative; width: 100%; display: flex; align-items: center;">
+                                <span style="position: absolute; left: 13px; color: var(--neutral-500); pointer-events: none; display: flex; align-items: center;">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"></path>
+                                    </svg>
+                                </span>
+                                <input type="url" id="link" name="link"
+                                       class="input-clean @error('link') is-invalid @enderror"
+                                       placeholder="Contoh: https://github.com/... atau https://drive.google.com/..."
+                                       value="{{ old('link') }}">
+                            </div>
+                            @error('link')
+                                <span style="font-size: 0.75rem; color: var(--red-600); display: block; margin-top: 4px;">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        {{-- 3. Catatan Progres Pekerjaan (Di Bawah, Bergaris Tegas) --}}
+                        <div class="form-group-clean" style="margin-top: 14px;">
                             <label for="catatan" class="form-label-clean">
                                 <span>Catatan Progres Pekerjaan <span style="color: var(--red-600);">*</span></span>
                                 <span id="catatanLengthHint" style="font-size: 0.6875rem; color: var(--neutral-500); font-weight: 400;">Rangkuman kemajuan</span>
                             </label>
                             <textarea id="catatan" name="catatan" rows="4" class="textarea-clean"
-                                      placeholder="Tuliskan ringkasan hasil kerja, tautan demo/repositori, atau kendala pengerjaan..."
+                                      placeholder="Tuliskan ringkasan hasil kerja atau kendala pengerjaan..."
                                       required>{{ old('catatan') }}</textarea>
                             @error('catatan')
                                 <span style="font-size: 0.75rem; color: var(--red-600); display: block; margin-top: 4px;">{{ $message }}</span>
