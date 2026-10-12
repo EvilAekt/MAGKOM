@@ -51,11 +51,24 @@ class SuratDiterimaPdfService
         $nomorSurat = sprintf('%03d/KOMINFO/MAGKOM/%s/%s', $penempatan->id, $bulanRomawi, $tahun);
         $tglTerbit = Carbon::today('Asia/Jakarta')->translatedFormat('d F Y');
 
+        $verificationService = app(DocumentVerificationService::class);
+        $dokumenVerifikasi = $verificationService->getOrCreateVerification(
+            $penempatan,
+            'surat_diterima',
+            $nomorSurat
+        );
+        $qrCodeSvg = $verificationService->generateQrCodeSvg(
+            $verificationService->getVerificationUrl($dokumenVerifikasi->kode_unik),
+            80
+        );
+
         $pdf = Pdf::loadView('pdf.surat-keterangan-diterima', [
             'penempatan' => $penempatan,
             'peserta' => $peserta,
             'nomorSurat' => $nomorSurat,
             'tglTerbit' => $tglTerbit,
+            'dokumenVerifikasi' => $dokumenVerifikasi,
+            'qrCodeSvg' => $qrCodeSvg,
         ])->setPaper('a4', 'portrait');
 
         $this->auditService->catat(

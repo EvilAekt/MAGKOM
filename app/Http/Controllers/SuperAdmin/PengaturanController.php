@@ -56,6 +56,7 @@ class PengaturanController extends Controller
             'logbook_maks_mundur_hari' => ['required', 'integer', 'min:1', 'max:30'],
             'berkas_maks_mb' => ['required', 'integer', 'min:1', 'max:20'],
             'deadline_mendekati_hari' => ['required', 'integer', 'min:1', 'max:14'],
+            'retensi_audit_akses_data_hari' => ['nullable', 'integer', 'min:30', 'max:1825'],
             'batas_predikat_a' => ['nullable', 'integer', 'min:1', 'max:100'],
             'batas_predikat_b' => ['nullable', 'integer', 'min:1', 'max:100'],
             'batas_predikat_c' => ['nullable', 'integer', 'min:1', 'max:100'],
@@ -69,6 +70,7 @@ class PengaturanController extends Controller
             'logbook_maks_mundur_hari' => (string) $validated['logbook_maks_mundur_hari'],
             'berkas_maks_mb' => (string) $validated['berkas_maks_mb'],
             'deadline_mendekati_hari' => (string) $validated['deadline_mendekati_hari'],
+            'retensi_audit_akses_data_hari' => (string) ($validated['retensi_audit_akses_data_hari'] ?? '365'),
         ];
 
         if (isset($validated['slot_khusus_default'])) {
@@ -124,5 +126,17 @@ class PengaturanController extends Controller
 
         return redirect()->route('superadmin.pengaturan.index')
             ->with('success', 'Konfigurasi sistem berhasil diperbarui.');
+    }
+
+    /**
+     * Memicu pemangkasan log akses data secara langsung oleh SuperAdmin (NFR-A5).
+     */
+    public function triggerPurgeAudit(Request $request): RedirectResponse
+    {
+        \Illuminate\Support\Facades\Artisan::call('magkom:audit-purge');
+        $output = \Illuminate\Support\Facades\Artisan::output();
+
+        return redirect()->route('superadmin.pengaturan.index')
+            ->with('success', 'Pemangkasan log akses data berhasil dijalankan: ' . trim($output));
     }
 }

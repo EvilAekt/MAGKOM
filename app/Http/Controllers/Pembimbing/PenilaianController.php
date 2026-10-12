@@ -211,12 +211,26 @@ class PenilaianController extends Controller
         $penempatan->loadMissing(['peserta.profil.jurusan', 'pembimbing', 'bidang', 'penilaian.details.rubrik']);
         $penilaian = $penempatan->penilaian;
 
+        $verificationService = app(\App\Services\DocumentVerificationService::class);
+        $nomorNilai = '500.12/NILAI/' . str_pad((string) $penempatan->id, 4, '0', STR_PAD_LEFT) . '/DISKOMINFO/' . ($penempatan->tgl_selesai?->format('Y') ?? date('Y'));
+        $dokumenVerifikasi = $verificationService->getOrCreateVerification(
+            $penempatan,
+            'lembar_nilai',
+            $nomorNilai
+        );
+        $qrCodeSvg = $verificationService->generateQrCodeSvg(
+            $verificationService->getVerificationUrl($dokumenVerifikasi->kode_unik),
+            75
+        );
+
         $pdf = Pdf::loadView('pdf.lembar-nilai', [
             'penempatan' => $penempatan,
             'peserta' => $penempatan->peserta,
             'profil' => $penempatan->peserta->profil,
             'pembimbing' => $penempatan->pembimbing,
             'penilaian' => $penilaian,
+            'dokumenVerifikasi' => $dokumenVerifikasi,
+            'qrCodeSvg' => $qrCodeSvg,
         ])->setPaper('a4', 'portrait');
 
         $namaPeserta = $penempatan->peserta->nama ?? ($penempatan->peserta->name ?? 'peserta');

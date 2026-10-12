@@ -142,14 +142,39 @@
                 </div>
             </div>
 
-            <div style="max-width: 420px;">
-                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Durasi Masa Tenggang Akun Pasca Magang (Bulan) <span style="color: var(--red-600);">*</span>
-                </label>
-                <input type="number" name="masa_tenggang_bulan" min="1" max="12" required value="{{ old('masa_tenggang_bulan', $pengaturan['masa_tenggang_bulan'] ?? 1) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
-                <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
-                    Rentang waktu akun peserta tetap aktif untuk mengunduh sertifikat dan lembar nilai (BR-10).
-                </span>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                <div>
+                    <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                        Durasi Masa Tenggang Akun Pasca Magang (Bulan) <span style="color: var(--red-600);">*</span>
+                    </label>
+                    <input type="number" name="masa_tenggang_bulan" min="1" max="12" required value="{{ old('masa_tenggang_bulan', $pengaturan['masa_tenggang_bulan'] ?? 1) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                    <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
+                        Rentang waktu akun peserta tetap aktif untuk mengunduh sertifikat dan lembar nilai (BR-10).
+                    </span>
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
+                        Masa Retensi Log Akses Data (Hari) <span style="color: var(--red-600);">*</span>
+                    </label>
+                    <input type="number" name="retensi_audit_akses_data_hari" min="30" max="1825" required value="{{ old('retensi_audit_akses_data_hari', $pengaturan['retensi_audit_akses_data_hari'] ?? 365) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                    <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
+                        Batas retensi log akses data sebelum dipangkas otomatis (NFR-A5; default 365 hari / 1 tahun).
+                    </span>
+                </div>
+            </div>
+
+            <!-- Tombol Pemangkasan On-Demand -->
+            <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                <div>
+                    <span style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800);">Pemeliharaan Penyimpanan Audit Trail</span>
+                    <p style="font-size: 0.75rem; color: var(--neutral-600); margin: 0.15rem 0 0 0;">
+                        Menjalankan pemangkasan data log pembacaan (akses_data) manual saat ini juga tanpa menunggu jadwal bulanan.
+                    </p>
+                </div>
+                <button type="submit" form="formPurgeAudit" onclick="return confirm('Apakah Anda yakin ingin memicu pemangkasan log akses data audit yang melampaui batas retensi sekarang?')" class="btn btn-outline" style="font-size: 0.8125rem; color: var(--red-600); border-color: var(--red-300);">
+                    Jalankan Pemangkasan Log Sekarang
+                </button>
             </div>
         </div>
 
@@ -210,6 +235,11 @@
                 Simpan Perubahan Konfigurasi
             </button>
         </div>
+    </form>
+
+    <!-- Hidden Form untuk Trigger Pemangkasan Log On-Demand -->
+    <form id="formPurgeAudit" action="{{ route('superadmin.pengaturan.purge-audit') }}" method="POST" style="display: none;">
+        @csrf
     </form>
 </div>
 @endsection

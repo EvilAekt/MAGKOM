@@ -245,6 +245,35 @@
         </a>
     </div>
 
+    {{-- 2.5 QUICK FILTER SLA WATCHDOG PILLS --}}
+    <div style="display: flex; gap: 0.5rem; align-items: center; overflow-x: auto; padding-bottom: 0.25rem;">
+        <span style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-600, #475569); margin-right: 0.25rem;">Watchdog SLA:</span>
+        @php
+            $currentSla = request('sla', '');
+            $makeSlaUrl = function($slaVal) {
+                $params = request()->except('sla', 'page');
+                if ($slaVal !== '') {
+                    $params['sla'] = $slaVal;
+                }
+                return route('admin.pendaftaran.index', $params);
+            };
+        @endphp
+
+        <a href="{{ $makeSlaUrl('') }}" class="filter-pill {{ $currentSla === '' ? 'active' : '' }}">
+            <span>Semua SLA</span>
+        </a>
+
+        <a href="{{ $makeSlaUrl('mendekati') }}" class="filter-pill {{ $currentSla === 'mendekati' ? 'active' : '' }}" style="{{ $currentSla !== 'mendekati' ? 'border-color: #FCD34D; color: #92400E;' : '' }}">
+            <span>Mendekati Batas (3–4 Hari)</span>
+            <span class="pill-count" style="background: #FEF3C7; color: #92400E;">{{ $queueStats['sla_mendekati'] ?? 0 }}</span>
+        </a>
+
+        <a href="{{ $makeSlaUrl('breach') }}" class="filter-pill {{ $currentSla === 'breach' ? 'active' : '' }}" style="{{ $currentSla !== 'breach' ? 'border-color: #FECACA; color: #DC2626;' : '' }}">
+            <span>Melebihi SLA (> 5 Hari)</span>
+            <span class="pill-count" style="background: #FEE2E2; color: #B91C1C;">{{ $queueStats['sla_breach'] ?? 0 }}</span>
+        </a>
+    </div>
+
     {{-- 3. DETAILED FILTER TOOLBAR --}}
     <div class="admin-card" style="padding: 1.25rem 1.5rem;">
         <form method="GET" action="{{ route('admin.pendaftaran.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
@@ -459,14 +488,19 @@
                                         </span>
 
                                         @if($val === 'diajukan' && $slaDays !== null)
-                                            @if($slaDays >= 3)
-                                                <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 700; color: #DC2626; background: #FEE2E2; padding: 0.15rem 0.45rem; border-radius: 4px;" title="Target SLA Peninjauan ≤ 5 Hari Kerja (NFR-O1)">
+                                            @if($slaDays >= 5)
+                                                <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 800; color: #991B1B; background: #FEE2E2; padding: 0.15rem 0.5rem; border-radius: 4px; border: 1px solid #FECACA;" title="SLA Terlampaui: > 5 Hari Kerja (PRD Bab 2.3)">
                                                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                                                    <span>SLA: {{ $slaDays }} Hari Lalu</span>
+                                                    <span>Breach SLA ({{ $slaDays }} Hari)</span>
+                                                </span>
+                                            @elseif($slaDays >= 3)
+                                                <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 700; color: #92400E; background: #FEF3C7; padding: 0.15rem 0.5rem; border-radius: 4px; border: 1px solid #FCD34D;" title="Mendekati Batas SLA Peninjauan">
+                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                                    <span>Mendekati Batas ({{ $slaDays }} Hari)</span>
                                                 </span>
                                             @else
-                                                <span style="font-size: 0.7rem; color: var(--neutral-500, #64748B);">
-                                                    Diajukan {{ $slaDays }} hari lalu
+                                                <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 600; color: #065F46; background: #D1FAE5; padding: 0.15rem 0.5rem; border-radius: 4px;">
+                                                    <span>SLA Aman ({{ $slaDays }} Hari)</span>
                                                 </span>
                                             @endif
                                         @endif

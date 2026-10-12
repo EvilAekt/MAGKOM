@@ -51,10 +51,14 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Rute Publik (F-01, NFR-O1, NFR-R1)
+// Rute Publik (F-01, NFR-O1, NFR-R1, PRD 4.3 Poin 1)
 Route::get('/', LandingController::class)->name('landing');
 Route::get('/health', HealthController::class)->name('health');
 Route::view('/kebijakan-privasi', 'public.kebijakan-privasi')->name('kebijakan-privasi');
+Route::get('/verifikasi-dokumen/{kode}', \App\Http\Controllers\Public\VerifikasiDokumenController::class)
+    ->name('dokumen.verifikasi')
+    ->middleware('throttle:60,1');
+
 
 // Rute Autentikasi Publik & Reset Password (F-02, F-14, F-18)
 Route::middleware('guest')->group(function () {
@@ -133,6 +137,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:peserta'])-
     // Penilaian & Unduh Lembar Nilai PDF (F-10, F-12)
     Route::get('/nilai', [PesertaNilaiController::class, 'show'])->name('nilai.show');
     Route::get('/nilai/unduh', [PesertaNilaiController::class, 'unduhPdf'])->name('nilai.unduh');
+
+    // Evaluasi & Survei Kepuasan Magang (PRD 4.3 Poin 4)
+    Route::get('/survei', [\App\Http\Controllers\Peserta\SurveiController::class, 'show'])->name('survei.show');
+    Route::post('/survei', [\App\Http\Controllers\Peserta\SurveiController::class, 'store'])->name('survei.store');
 });
 
 // Rute Pembimbing Magang (F-08, F-09, F-10, F-12, SEC-03, SEC-12)
@@ -198,10 +206,16 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:admin,super
     Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
     Route::get('/laporan/kuota', [LaporanController::class, 'kuota'])->name('laporan.kuota');
     Route::get('/laporan/nilai', [LaporanController::class, 'nilai'])->name('laporan.nilai');
+    Route::get('/laporan/tahunan', [\App\Http\Controllers\Admin\AnalitikTahunanController::class, 'index'])->name('laporan.tahunan');
+    Route::get('/laporan/tahunan/export', [\App\Http\Controllers\Admin\AnalitikTahunanController::class, 'export'])->name('laporan.tahunan.export');
 
     // Hub Penerbitan Sertifikat Kelulusan Resmi (AC-12, BR-10)
     Route::get('/sertifikat', [AdminSertifikatController::class, 'index'])->name('sertifikat.index');
     Route::get('/sertifikat/{penempatan}/cetak', [AdminSertifikatController::class, 'cetak'])->name('sertifikat.cetak');
+
+    // Evaluasi Mutu & Survei Kepuasan Alumni (PRD 4.3 Poin 4)
+    Route::get('/survei', [\App\Http\Controllers\Admin\SurveiAdminController::class, 'index'])->name('survei.index');
+    Route::get('/survei/export', [\App\Http\Controllers\Admin\SurveiAdminController::class, 'export'])->name('survei.export');
 });
 
 // Rute Khusus SuperAdmin (F-06, F-11, F-13)
@@ -249,9 +263,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'
     Route::put('/rubrik/{rubrik}', [RubrikController::class, 'update'])->name('rubrik.update');
     Route::patch('/rubrik/{rubrik}/toggle', [RubrikController::class, 'toggleAktif'])->name('rubrik.toggle');
 
-    // Parameter Pengaturan Sistem (F-11)
+    // Parameter Pengaturan Sistem (F-11, PRD 10.3 NFR-A5)
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
     Route::put('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
+    Route::post('/pengaturan/purge-audit', [PengaturanController::class, 'triggerPurgeAudit'])->name('pengaturan.purge-audit');
 
     // Arsip Peserta Magang (F-12 AC-12-4, PRD 9.2)
     Route::get('/arsip-peserta', [ArsipPesertaController::class, 'index'])->name('arsip.index');

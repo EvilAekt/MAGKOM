@@ -84,6 +84,22 @@ class PendaftaranController extends Controller
             $query->whereHas('penempatan', fn ($qp) => $qp->where('jalur', $jalur));
         }
 
+        // SLA Watchdog Filter (PRD 2.3 & F-04: target verifikasi <= 5 hari kerja)
+        if ($request->filled('sla')) {
+            $sla = $request->input('sla');
+            if ($sla === 'breach' || $sla === 'terlambat') {
+                $query->where('status', StatusPendaftaranEnum::Diajukan)
+                    ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(5)]);
+            } elseif ($sla === 'mendekati') {
+                $query->where('status', StatusPendaftaranEnum::Diajukan)
+                    ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(3)])
+                    ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays(5)]);
+            } elseif ($sla === 'aman') {
+                $query->where('status', StatusPendaftaranEnum::Diajukan)
+                    ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays(3)]);
+            }
+        }
+
         // AC-04-1: Pagination 25 per halaman
         $pendaftaranList = $query->paginate(25)->withQueryString();
         $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
@@ -97,7 +113,14 @@ class PendaftaranController extends Controller
             'diterima' => Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)->count(),
             'ditolak' => Pendaftaran::where('status', StatusPendaftaranEnum::Ditolak)->count(),
             'sla_warning' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
-                ->where('diajukan_at', '<=', now()->subDays(3))
+                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(3)])
+                ->count(),
+            'sla_breach' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
+                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(5)])
+                ->count(),
+            'sla_mendekati' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
+                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(3)])
+                ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays(5)])
                 ->count(),
         ];
 

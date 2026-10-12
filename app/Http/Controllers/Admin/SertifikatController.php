@@ -80,6 +80,17 @@ class SertifikatController extends Controller
         $tahun = $penempatan->tgl_selesai?->format('Y') ?? date('Y');
         $nomorSertifikat = '500.12/SRT/' . str_pad((string) $penempatan->id, 4, '0', STR_PAD_LEFT) . '/DISKOMINFO/' . $tahun;
 
+        $verificationService = app(\App\Services\DocumentVerificationService::class);
+        $dokumenVerifikasi = $verificationService->getOrCreateVerification(
+            $penempatan,
+            'sertifikat',
+            $nomorSertifikat
+        );
+        $qrCodeSvg = $verificationService->generateQrCodeSvg(
+            $verificationService->getVerificationUrl($dokumenVerifikasi->kode_unik),
+            75
+        );
+
         if ($request->query('preview') === '1') {
             return view('pdf.sertifikat-magang', [
                 'penempatan' => $penempatan,
@@ -87,6 +98,8 @@ class SertifikatController extends Controller
                 'profil' => $penempatan->peserta?->profil,
                 'penilaian' => $penempatan->penilaian,
                 'nomorSertifikat' => $nomorSertifikat,
+                'dokumenVerifikasi' => $dokumenVerifikasi,
+                'qrCodeSvg' => $qrCodeSvg,
             ]);
         }
 
@@ -96,6 +109,8 @@ class SertifikatController extends Controller
             'profil' => $penempatan->peserta?->profil,
             'penilaian' => $penempatan->penilaian,
             'nomorSertifikat' => $nomorSertifikat,
+            'dokumenVerifikasi' => $dokumenVerifikasi,
+            'qrCodeSvg' => $qrCodeSvg,
         ])->setPaper('a4', 'landscape');
 
         $namaPeserta = $penempatan->peserta?->nama ?? 'alumni';

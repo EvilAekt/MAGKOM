@@ -82,14 +82,33 @@
             margin: 20px 0;
             font-size: 10.5pt;
         }
+        .footer-container {
+            margin-top: 30px;
+            width: 100%;
+        }
+        .footer-qr {
+            width: 50%;
+            vertical-align: top;
+            font-size: 8pt;
+            color: #4a5568;
+            line-height: 1.3;
+        }
+        .footer-qr .qr-wrapper {
+            margin-bottom: 6px;
+        }
+        .footer-qr .qr-code-text {
+            font-family: monospace;
+            font-weight: bold;
+            color: #1a365d;
+            font-size: 8.5pt;
+        }
         .footer-sig {
-            margin-top: 40px;
-            float: right;
-            width: 45%;
+            width: 50%;
+            vertical-align: top;
             text-align: center;
         }
         .footer-sig .date {
-            margin-bottom: 60px;
+            margin-bottom: 55px;
         }
         .footer-sig .name {
             font-weight: bold;
@@ -177,13 +196,29 @@
         </p>
     </div>
 
-    <div class="footer-sig">
-        <div class="date">
-            Ditetapkan pada: {{ $tglTerbit }}<br>
-            Kepala Dinas Komunikasi dan Informatika
-        </div>
-        <div class="name">Drs. Pengelola Magang, M.Eng.</div>
-        <div class="nip">NIP. 19780512 200212 1 003</div>
-    </div>
+    <table class="footer-container">
+        <tr>
+            <td class="footer-qr">
+                @if(isset($qrCodeSvg))
+                    <div class="qr-wrapper">
+                        {!! $qrCodeSvg !!}
+                    </div>
+                @endif
+                <div>
+                    <strong>Verifikasi Dokumen Elektronik</strong><br>
+                    Kode: <span class="qr-code-text">{{ $dokumenVerifikasi->kode_unik ?? '-' }}</span><br>
+                    <span>Pindai QR Code untuk memvalidasi keaslian dokumen pada portal resmi MagKom Diskominfo.</span>
+                </div>
+            </td>
+            <td class="footer-sig">
+                <div class="date">
+                    Ditetapkan pada: {{ $tglTerbit }}<br>
+                    Kepala Dinas Komunikasi dan Informatika
+                </div>
+                <div class="name">Drs. Pengelola Magang, M.Eng.</div>
+                <div class="nip">NIP. 19780512 200212 1 003</div>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

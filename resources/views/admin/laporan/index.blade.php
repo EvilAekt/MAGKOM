@@ -228,6 +228,12 @@
                 <span>Rekap Nilai (SuperAdmin)</span>
             </a>
         @endif
+
+        <a href="{{ route('admin.laporan.tahunan') }}"
+           style="flex: 1; min-width: 170px; padding: 0.625rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 700; text-align: center; transition: all 0.15s; background: transparent; color: var(--blue-700); border: 1px dashed var(--blue-400); display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            <span>Analitik Tahunan</span>
+        </a>
     </div>
 
     <!-- 3. TAB 1: REKAP PENDAFTARAN -->

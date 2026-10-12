@@ -126,9 +126,16 @@
             font-size: 9pt;
         }
         .signature-table td {
-            vertical-align: top;
+            vertical-align: middle;
             text-align: center;
-            width: 50%;
+            width: 33.33%;
+        }
+        .signature-table td.qr-cell {
+            vertical-align: top;
+            font-size: 7pt;
+            color: #64748B;
+            line-height: 1.25;
+            padding: 0 10px;
         }
         .sign-title {
             color: #475569;
@@ -185,6 +192,16 @@
                         </div>
                         <div class="sign-name">{{ $penempatan->pembimbing?->nama ?? 'Pembimbing MagKom' }}</div>
                         <div class="sign-nip">NIP. {{ $penempatan->pembimbing?->profil?->nomor_identitas ?? $penempatan->pembimbing?->email ?? '-' }}</div>
+                    </td>
+                    <td class="qr-cell">
+                        @if(isset($qrCodeSvg))
+                            <div style="margin-bottom: 4px;">
+                                {!! $qrCodeSvg !!}
+                            </div>
+                        @endif
+                        <strong style="color: #0641CC;">Verifikasi Elektronik</strong><br>
+                        <span style="font-family: monospace; font-weight: bold; color: #1E293B;">{{ $dokumenVerifikasi->kode_unik ?? '-' }}</span><br>
+                        <span>Pindai QR untuk verifikasi keabsahan sertifikat ini.</span>
                     </td>
                     <td>
                         <div class="sign-title">

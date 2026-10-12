@@ -16,6 +16,12 @@ class Kernel extends ConsoleKernel
             ->dailyAt('00:01')
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
+
+        // Pemangkasan berkala log akses data (PRD 10.3 NFR-A5)
+        $schedule->command('magkom:audit-purge')
+            ->monthlyOn(1, '02:00')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
     }
 
 

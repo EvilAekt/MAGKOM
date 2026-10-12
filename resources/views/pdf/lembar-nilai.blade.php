@@ -221,7 +221,18 @@
 
     <table class="signature-table">
         <tr>
-            <td></td>
+            <td style="vertical-align: top; text-align: left; padding-left: 10px;">
+                @if(isset($qrCodeSvg))
+                    <div style="font-size: 8pt; color: #4a5568; line-height: 1.35;">
+                        <div style="margin-bottom: 5px;">
+                            {!! $qrCodeSvg !!}
+                        </div>
+                        <strong style="color: #1a365d;">Verifikasi Dokumen Elektronik</strong><br>
+                        Kode: <span style="font-family: monospace; font-weight: bold; color: #2b6cb0;">{{ $dokumenVerifikasi->kode_unik ?? '-' }}</span><br>
+                        <span>Pindai QR Code untuk memvalidasi keaslian nilai resmi pada portal MagKom Diskominfo.</span>
+                    </div>
+                @endif
+            </td>
             <td>
                 <div class="signature-box">
                     <p>Ditetapkan pada: {{ ($penempatan->tgl_ditetapkan_selesai ?? now())->translatedFormat('d F Y') }}<br>

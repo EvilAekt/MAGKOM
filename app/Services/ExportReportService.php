@@ -314,4 +314,30 @@ class ExportReportService
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }
+
+    /**
+     * Helper umum unduh streamed CSV dengan UTF-8 BOM dan sanitasi formula injection (AC-17-2).
+     *
+     * @param array<int, string> $headers
+     * @param array<int, array<int, mixed>> $rows
+     */
+    public function downloadCsvStream(string $filename, array $headers, array $rows): StreamedResponse
+    {
+        return response()->streamDownload(function () use ($headers, $rows) {
+            $handle = fopen('php://output', 'w');
+            fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Excel
+
+            $sanitizedHeaders = array_map([$this, 'sanitizeCell'], $headers);
+            fputcsv($handle, $sanitizedHeaders);
+
+            foreach ($rows as $row) {
+                $sanitizedRow = array_map([$this, 'sanitizeCell'], $row);
+                fputcsv($handle, $sanitizedRow);
+            }
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
 }

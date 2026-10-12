@@ -109,7 +109,7 @@ class PesertaClassroomTugasLogbookTest extends TestCase
         $response->assertSee('Sedang Dikerjakan');
         $response->assertSee('Pembuatan Mockup Dashboard Peserta');
         $response->assertSee('Analisis Kebutuhan Sistem MagKom');
-        $response->assertSee('Tenggat: 14 Okt 2026');
+        $response->assertSee('Tenggat: ' . now()->addDays(3)->translatedFormat('d M Y'));
     }
 
     public function test_peserta_dapat_melihat_detail_tugas_layout_dua_kolom(): void
