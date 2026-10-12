@@ -255,10 +255,12 @@
 
     .checklist-mini-item {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
         font-size: 0.75rem;
         color: var(--neutral-700);
+        padding: 2px 0;
     }
 
     .checklist-mini-item.done {
@@ -660,38 +662,38 @@
 
                         <div class="checklist-mini-list">
                             <div class="checklist-mini-item {{ $checklist['data_diri'] ? 'done' : '' }}">
+                                <span>Akun & Nama Lengkap</span>
                                 <span class="checklist-mini-icon {{ $checklist['data_diri'] ? 'done' : 'pending' }}">
                                     {{ $checklist['data_diri'] ? '✓' : '•' }}
                                 </span>
-                                <span>Akun & Nama Lengkap</span>
                             </div>
 
                             <div class="checklist-mini-item {{ $checklist['foto'] ? 'done' : '' }}">
+                                <span>Pasfoto Resmi</span>
                                 <span class="checklist-mini-icon {{ $checklist['foto'] ? 'done' : 'pending' }}">
                                     {{ $checklist['foto'] ? '✓' : '•' }}
                                 </span>
-                                <span>Pasfoto Resmi</span>
                             </div>
 
                             <div class="checklist-mini-item {{ $checklist['akademik'] ? 'done' : '' }}">
+                                <span>Data Akademik & Kampus</span>
                                 <span class="checklist-mini-icon {{ $checklist['akademik'] ? 'done' : 'pending' }}">
                                     {{ $checklist['akademik'] ? '✓' : '•' }}
                                 </span>
-                                <span>Data Akademik & Kampus</span>
                             </div>
 
                             <div class="checklist-mini-item {{ $checklist['kontak'] ? 'done' : '' }}">
+                                <span>Nomor WhatsApp Aktif</span>
                                 <span class="checklist-mini-icon {{ $checklist['kontak'] ? 'done' : 'pending' }}">
                                     {{ $checklist['kontak'] ? '✓' : '•' }}
                                 </span>
-                                <span>Nomor WhatsApp Aktif</span>
                             </div>
 
                             <div class="checklist-mini-item {{ $checklist['darurat'] ? 'done' : '' }}">
+                                <span>Kontak Darurat / Wali</span>
                                 <span class="checklist-mini-icon {{ $checklist['darurat'] ? 'done' : 'pending' }}">
                                     {{ $checklist['darurat'] ? '✓' : '•' }}
                                 </span>
-                                <span>Kontak Darurat / Wali</span>
                             </div>
                         </div>
                     </div>
