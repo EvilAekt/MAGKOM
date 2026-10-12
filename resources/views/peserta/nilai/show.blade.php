@@ -96,7 +96,7 @@
                 <span style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9;">
                     Evaluasi Resmi Akhir Magang Kominfo
                 </span>
-                <h2 style="font-size: 24px; font-weight: 800; margin-top: 4px;">
+                <h2 style="font-size: 24px; font-weight: 800; margin-top: 4px; color: #ffffff;">
                     Hasil Penilaian Akhir
                 </h2>
                 <p style="font-size: 14px; opacity: 0.85; margin-top: 4px;">

@@ -33,17 +33,29 @@ class Logbook extends Model
     ];
 
     /**
+     * Dapatkan nomor minggu magang (dengan fallback otomatis jika kolom di DB bernilai null).
+     */
+    public function getMingguKeAttribute($value): ?int
+    {
+        if ($value !== null) {
+            return (int) $value;
+        }
+
+        if ($this->penempatan && $this->penempatan->tgl_mulai && $this->tanggal) {
+            return (int) floor($this->penempatan->tgl_mulai->diffInDays($this->tanggal) / 7) + 1;
+        }
+
+        return null;
+    }
+
+    /**
      * Dapatkan label representasi minggu magang (misal: "Minggu ke-1").
      */
     public function getLabelMingguAttribute(): string
     {
-        if ($this->minggu_ke) {
-            return "Minggu ke-{$this->minggu_ke}";
-        }
-
-        if ($this->penempatan && $this->penempatan->tgl_mulai && $this->tanggal) {
-            $diffWeeks = (int) $this->penempatan->tgl_mulai->diffInWeeks($this->tanggal) + 1;
-            return "Minggu ke-{$diffWeeks}";
+        $minggu = $this->minggu_ke;
+        if ($minggu) {
+            return "Minggu ke-{$minggu}";
         }
 
         return "Minggu ke-1";

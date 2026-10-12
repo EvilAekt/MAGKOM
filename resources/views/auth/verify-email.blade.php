@@ -1,44 +1,62 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi Alamat Email - MagKom</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; padding: 20px; }
-        .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 32px; width: 100%; max-width: 440px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        h1 { font-size: 20px; font-weight: 700; margin: 0 0 8px; color: #38bdf8; }
-        p { font-size: 14px; color: #94a3b8; line-height: 1.6; margin: 0 0 20px; }
-        .btn { width: 100%; background: #0284c7; color: white; border: none; border-radius: 8px; padding: 12px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background 0.2s; }
-        .btn:hover { background: #0369a1; }
-        .btn-link { background: none; border: none; color: #94a3b8; font-size: 13px; cursor: pointer; text-decoration: underline; margin-top: 16px; display: block; text-align: center; width: 100%; }
-        .btn-link:hover { color: #f8fafc; }
-        .alert-success { background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; border-radius: 8px; padding: 12px; font-size: 13px; color: #86efac; margin-bottom: 16px; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>Verifikasi Email Anda</h1>
-        <p>Terima kasih telah mendaftar di Portal MagKom. Kami telah mengirimkan tautan verifikasi ke alamat email Anda. Silakan klik tautan tersebut untuk mengaktifkan akun Anda.</p>
+@extends('layouts.auth')
 
-        @if (session('status') == 'verification-link-sent')
-            <div class="alert-success">
-                Tautan verifikasi baru telah dikirimkan ke alamat email Anda.
-            </div>
-        @endif
+@section('title', 'Verifikasi Alamat Email - Portal MagKom Sleman')
+@section('meta_description', 'Verifikasi alamat email Anda untuk mengaktifkan akses ke Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
-        <form action="{{ route('verification.send') }}" method="POST">
-            @csrf
-            <button type="submit" class="btn">Kirim Ulang Email Verifikasi</button>
-        </form>
+@section('content')
+    <!-- Alert Notifikasi Flash -->
+    @if (session('status') == 'verification-link-sent')
+        <div class="auth-alert-success" role="alert">
+            Tautan verifikasi baru telah berhasil dikirimkan ke alamat email Anda. Silakan periksa kotak masuk atau folder spam.
+        </div>
+    @endif
 
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="btn-link">Keluar dari Akun</button>
-        </form>
+    @if(isset($errors) && $errors->any())
+        <div class="auth-alert-error" role="alert">
+            {{ $errors->first() }}
+        </div>
+    @endif
+
+    <!-- Header Verifikasi Email -->
+    <div class="step-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        <span>Aktivasi Akun</span>
     </div>
-</body>
-</html>
+    <h1 class="auth-title">Verifikasi Alamat Email</h1>
+    <p class="auth-subtitle">
+        Terima kasih telah mendaftar di Portal MagKom. Kami telah mengirimkan tautan aktivasi akun ke alamat email Anda. Silakan klik tautan tersebut untuk memverifikasi dan mengaktifkan akun Anda.
+    </p>
+
+    <!-- Kotak Saran & Bantuan -->
+    <div style="background-color: var(--neutral-50); border: 1px solid var(--neutral-200); border-radius: 0.5rem; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--neutral-600); line-height: 1.5;">
+        <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 0.125rem;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <div>
+                Belum menerima email? Pastikan untuk memeriksa tab <strong>Spam</strong> atau <strong>Promosi</strong> di akun email Anda, atau klik tombol di bawah untuk meminta tautan baru.
+            </div>
+        </div>
+    </div>
+
+    <!-- Tombol Kirim Ulang Verifikasi -->
+    <form action="{{ route('verification.send') }}" method="POST">
+        @csrf
+        <button type="submit" class="btn-primary" style="margin-bottom: 1rem;">
+            Kirim Ulang Email Verifikasi
+        </button>
+    </form>
+
+    <!-- Opsi Keluar Akun -->
+    <form action="{{ route('logout') }}" method="POST" style="text-align: center;">
+        @csrf
+        <button type="submit" style="background: none; border: none; color: var(--neutral-500); font-size: 0.875rem; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0.5rem 1rem; transition: color 0.15s ease;">
+            Keluar dari Akun
+        </button>
+    </form>
+@endsection

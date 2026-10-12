@@ -140,6 +140,22 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Memeriksa apakah peserta magang telah resmi diterima dan memiliki penempatan aktif / selesai.
+     */
+    public function hasPenempatanMagang(): bool
+    {
+        if ($this->relationLoaded('penempatanPeserta')) {
+            return $this->penempatanPeserta->contains(function ($p) {
+                return in_array($p->status, [\App\Enums\StatusPenempatanEnum::Aktif, \App\Enums\StatusPenempatanEnum::Selesai], true);
+            });
+        }
+
+        return $this->penempatanPeserta()
+            ->whereIn('status', [\App\Enums\StatusPenempatanEnum::Aktif, \App\Enums\StatusPenempatanEnum::Selesai])
+            ->exists();
+    }
+
+    /**
      * Scope untuk pengguna aktif.
      */
     public function scopeAktif(Builder $query): Builder

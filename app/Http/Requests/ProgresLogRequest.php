@@ -17,7 +17,8 @@ class ProgresLogRequest extends FormRequest
     {
         return [
             'catatan' => ['required', 'string', 'min:5', 'max:3000'],
-            'file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,zip', 'max:5120'],
+            'file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,zip,rar,doc,docx', 'max:5120'],
+            'link' => ['nullable', 'url', 'max:2048'],
         ];
     }
 }

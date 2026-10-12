@@ -161,12 +161,8 @@ class Penempatan extends Model
 
         // Load logbooks jika belum dimuat
         $logbookMap = $this->relationLoaded('logbooks')
-            ? $this->logbooks->keyBy(function ($item) {
-                return $item->minggu_ke ?? ($this->tgl_mulai->diffInWeeks($item->tanggal) + 1);
-            })
-            : $this->logbooks()->get()->keyBy(function ($item) {
-                return $item->minggu_ke ?? ($this->tgl_mulai->diffInWeeks($item->tanggal) + 1);
-            });
+            ? $this->logbooks->keyBy(fn ($item) => (int) ($item->minggu_ke ?? floor($this->tgl_mulai->diffInDays($item->tanggal) / 7) + 1))
+            : $this->logbooks()->get()->keyBy(fn ($item) => (int) ($item->minggu_ke ?? floor($this->tgl_mulai->diffInDays($item->tanggal) / 7) + 1));
 
         $hasil = [];
 

@@ -1,57 +1,143 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ganti Kata Sandi - MagKom</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; padding: 20px; }
-        .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 32px; width: 100%; max-width: 440px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        h1 { font-size: 20px; font-weight: 700; margin: 0 0 8px; color: #38bdf8; }
-        p { font-size: 14px; color: #94a3b8; margin: 0 0 24px; }
-        .form-group { margin-bottom: 16px; }
-        label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #cbd5e1; }
-        input { width: 100%; box-sizing: border-box; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 10px 14px; color: #fff; font-size: 14px; }
-        input:focus { outline: none; border-color: #38bdf8; }
-        .btn { width: 100%; background: #0284c7; color: white; border: none; border-radius: 8px; padding: 12px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
-        .btn:hover { background: #0369a1; }
-        .alert-error { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; border-radius: 8px; padding: 12px; font-size: 13px; color: #fca5a5; margin-bottom: 16px; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>Ganti Kata Sandi Wajib</h1>
-        <p>Demi standar keamanan instansi, Anda wajib mengganti kata sandi awal sebelum dapat mengakses fitur portal.</p>
+@extends('layouts.auth')
 
-        @if ($errors->any())
-            <div class="alert-error">
-                <ul style="margin: 0; padding-left: 20px;">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+@section('title', 'Ganti Kata Sandi - Portal MagKom Sleman')
+@section('meta_description', 'Ganti kata sandi akun Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
-        <form action="{{ route('password.ganti.update') }}" method="POST">
-            @csrf
-            <div class="form-group">
-                <label for="current_password">Kata Sandi Saat Ini</label>
-                <input type="password" id="current_password" name="current_password" required autofocus>
-            </div>
-            <div class="form-group">
-                <label for="password">Kata Sandi Baru (Min. 8 Karakter, Kombinasi Huruf & Angka)</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
-                <label for="password_confirmation">Konfirmasi Kata Sandi Baru</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" required>
-            </div>
-            <button type="submit" class="btn">Perbarui Kata Sandi & Lanjutkan</button>
-        </form>
+@section('content')
+    <!-- Alert Notifikasi Flash -->
+    @if(session('success'))
+        <div class="auth-alert-success" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(isset($errors) && $errors->any())
+        <div class="auth-alert-error" role="alert">
+            <ul style="margin: 0; padding-left: 1.25rem;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <!-- Header Form Ganti Password -->
+    <div class="step-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <span>Keamanan Akun</span>
     </div>
-</body>
-</html>
+    <h1 class="auth-title">Ganti Kata Sandi</h1>
+    <p class="auth-subtitle">Demi standar keamanan instansi, Anda wajib memperbarui kata sandi awal sebelum dapat mengakses fitur portal.</p>
+
+    <!-- Form Ganti Kata Sandi -->
+    <form action="{{ route('password.ganti.update') }}" method="POST" novalidate>
+        @csrf
+
+        <!-- Field Kata Sandi Saat Ini -->
+        <div class="form-group">
+            <label for="current_password" class="form-label">Kata Sandi Saat Ini</label>
+            <div class="input-wrapper">
+                <span class="input-icon-left" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </span>
+                <input 
+                    type="password" 
+                    id="current_password" 
+                    name="current_password" 
+                    required 
+                    autofocus 
+                    class="form-input" 
+                    placeholder="Masukkan kata sandi saat ini"
+                    autocomplete="current-password"
+                    style="padding-right: 2.75rem;"
+                >
+                <button type="button" class="toggle-password-btn" data-target="current_password" aria-label="Tampilkan atau sembunyikan kata sandi saat ini">
+                    <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Field Kata Sandi Baru -->
+        <div class="form-group">
+            <label for="password" class="form-label">Kata Sandi Baru</label>
+            <div class="input-wrapper">
+                <span class="input-icon-left" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 2l-2 2m-1.5 1.5L14 9l-1.5-1.5-3 3 1.5 1.5-5 5H2v-4l5-5 1.5 1.5 3-3L12 5.5 13.5 4 15.5 2z"></path>
+                    </svg>
+                </span>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required 
+                    class="form-input" 
+                    placeholder="Min. 8 karakter (huruf & angka)"
+                    autocomplete="new-password"
+                    style="padding-right: 2.75rem;"
+                >
+                <button type="button" class="toggle-password-btn" data-target="password" aria-label="Tampilkan atau sembunyikan kata sandi baru">
+                    <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                </button>
+            </div>
+            <span class="form-hint">Minimal 8 karakter dengan kombinasi huruf dan angka.</span>
+        </div>
+
+        <!-- Field Konfirmasi Kata Sandi Baru -->
+        <div class="form-group">
+            <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi Baru</label>
+            <div class="input-wrapper">
+                <span class="input-icon-left" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </span>
+                <input 
+                    type="password" 
+                    id="password_confirmation" 
+                    name="password_confirmation" 
+                    required 
+                    class="form-input" 
+                    placeholder="Ulangi kata sandi baru"
+                    autocomplete="new-password"
+                    style="padding-right: 2.75rem;"
+                >
+                <button type="button" class="toggle-password-btn" data-target="password_confirmation" aria-label="Tampilkan atau sembunyikan konfirmasi kata sandi baru">
+                    <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tombol Submit -->
+        <button type="submit" class="btn-primary" style="margin-top: 1.5rem;">
+            Perbarui Kata Sandi & Lanjutkan
+        </button>
+    </form>
+@endsection

@@ -184,7 +184,8 @@ class AcceptedPesertaSeeder extends Seeder
 
         Logbook::create([
             'penempatan_id' => $penempatan->id,
-            'tanggal' => Carbon::now()->subDays(2)->toDateString(),
+            'minggu_ke' => 1,
+            'tanggal' => Carbon::parse($penempatan->tgl_mulai)->addDays(5)->toDateString(),
             'kegiatan' => 'Orientasi lingkungan kerja di Bidang Aplikasi Informatika dan pengenalan alur kerja sistem informasi Kominfo Sleman bersama pembimbing lapangan.',
             'status' => StatusLogbookEnum::Terkirim,
             'catatan_pembimbing' => 'Bagus, teruskan mempelajari spesifikasi arsitektur proyek.',
@@ -192,7 +193,8 @@ class AcceptedPesertaSeeder extends Seeder
 
         Logbook::create([
             'penempatan_id' => $penempatan->id,
-            'tanggal' => Carbon::now()->subDays(1)->toDateString(),
+            'minggu_ke' => 2,
+            'tanggal' => Carbon::parse($penempatan->tgl_mulai)->addDays(12)->toDateString(),
             'kegiatan' => 'Merancang komponen visual Blade UI dan penyesuaian token warna Design System MagKom untuk seluruh modul portal peserta.',
             'status' => StatusLogbookEnum::Terkirim,
             'catatan_pembimbing' => 'Desain rapi dan telah memenuhi standar pedoman warna Sleman.',
@@ -200,7 +202,8 @@ class AcceptedPesertaSeeder extends Seeder
 
         Logbook::create([
             'penempatan_id' => $penempatan->id,
-            'tanggal' => Carbon::now()->toDateString(),
+            'minggu_ke' => 3,
+            'tanggal' => Carbon::parse($penempatan->tgl_mulai)->addDays(15)->toDateString(),
             'kegiatan' => 'Menjalankan pengujian integrasi fungsional menyeluruh pada modul dashboard, logbook, tugas, dan verifikasi status penempatan magang.',
             'status' => StatusLogbookEnum::Terkirim,
         ]);

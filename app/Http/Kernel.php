@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'must_change_password' => \App\Http\Middleware\EnsurePasswordChanged::class,
         'account.active' => \App\Http\Middleware\EnsureAccountActive::class,
         'superadmin.readonly' => \App\Http\Middleware\EnsureSuperAdminReadOnly::class,
+        'peserta.diterima' => \App\Http\Middleware\EnsurePesertaDiterima::class,
     ];
 }

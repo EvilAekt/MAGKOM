@@ -1056,35 +1056,67 @@
                             <span>Pendaftaran Magang</span>
                         </a>
 
-                        <a href="{{ route('peserta.logbook.index') }}" class="nav-item-link {{ request()->routeIs('peserta.logbook.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                </svg>
-                            </span>
-                            <span>Logbook Harian</span>
-                        </a>
+                        @if(auth()->user()?->hasPenempatanMagang())
+                            <a href="{{ route('peserta.logbook.index') }}" class="nav-item-link {{ request()->routeIs('peserta.logbook.*') ? 'active' : '' }}">
+                                <span class="nav-item-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                    </svg>
+                                </span>
+                                <span>Logbook Harian</span>
+                            </a>
 
-                        <a href="{{ route('peserta.tugas.index') }}" class="nav-item-link {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 11l3 3L22 4"></path>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                </svg>
-                            </span>
-                            <span>Tugas & Progres</span>
-                        </a>
+                            <a href="{{ route('peserta.tugas.index') }}" class="nav-item-link {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}">
+                                <span class="nav-item-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 11l3 3L22 4"></path>
+                                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                    </svg>
+                                </span>
+                                <span>Tugas & Progres</span>
+                            </a>
 
-                        <a href="{{ route('peserta.nilai.show') }}" class="nav-item-link {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="8" r="7"></circle>
-                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                                </svg>
-                            </span>
-                            <span>Lembar Nilai</span>
-                        </a>
+                            <a href="{{ route('peserta.nilai.show') }}" class="nav-item-link {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}">
+                                <span class="nav-item-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="8" r="7"></circle>
+                                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                                    </svg>
+                                </span>
+                                <span>Lembar Nilai</span>
+                            </a>
+                        @else
+                            <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
+                                <span class="nav-item-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                    </svg>
+                                </span>
+                                <span>Logbook Harian</span>
+                            </div>
+
+                            <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
+                                <span class="nav-item-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 11l3 3L22 4"></path>
+                                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                    </svg>
+                                </span>
+                                <span>Tugas & Progres</span>
+                            </div>
+
+                            <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
+                                <span class="nav-item-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="8" r="7"></circle>
+                                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                                    </svg>
+                                </span>
+                                <span>Lembar Nilai</span>
+                            </div>
+                        @endif
 
                     @elseif($userRole === 'pembimbing')
                         <!-- NAVIGASI PEMBIMBING (PRD 9.2 & FIGMA 560-41611) -->

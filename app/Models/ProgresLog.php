@@ -19,6 +19,7 @@ class ProgresLog extends Model
         'tugas_id',
         'catatan',
         'file',
+        'link',
         'tgl_lapor',
         'status_review',
         'feedback',

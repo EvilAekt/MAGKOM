@@ -10,13 +10,13 @@
         background: linear-gradient(95deg, rgba(6, 65, 204, 0.96) 0%, rgba(6, 65, 204, 0.88) 45%, rgba(6, 65, 204, 0.35) 100%),
                     url('{{ asset('images/dashboard_hero_bg.jpg') }}') right center / cover no-repeat;
         border-radius: var(--radius-lg);
-        padding: 34px 36px;
+        padding: 32px 36px;
         color: #ffffff;
-        margin-bottom: 28px;
+        margin-bottom: 24px;
         position: relative;
         overflow: hidden;
         box-shadow: 0 6px 20px rgba(6, 65, 204, 0.16);
-        min-height: 185px;
+        min-height: 180px;
     }
 
     .dashboard-hero::after {
@@ -38,25 +38,69 @@
     }
 
     .hero-greeting h1 {
-        font-size: var(--text-3xl);
+        font-size: var(--text-2xl);
         font-weight: var(--fw-bold);
+        color: #ffffff;
         letter-spacing: -0.01em;
         margin-bottom: 6px;
         line-height: 1.25;
     }
 
+    .hero-placement-title {
+        font-size: var(--text-xl);
+        font-weight: var(--fw-bold);
+        color: #ffffff;
+        margin: 4px 0 10px 0;
+        line-height: 1.3;
+    }
+
     .hero-greeting p {
         font-size: var(--text-base);
-        color: rgba(255, 255, 255, 0.9);
+        color: rgba(255, 255, 255, 0.92);
         max-width: 600px;
         line-height: 1.5;
+    }
+
+    .hero-meta-badges {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .hero-meta-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.16);
+        backdrop-filter: blur(6px);
+        padding: 5px 12px;
+        border-radius: var(--radius-full);
+        font-size: var(--text-xs);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .hero-status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        background: #10B981;
+        color: #ffffff;
+        border-radius: var(--radius-full);
+        font-size: var(--text-2xs);
+        font-weight: var(--fw-bold);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
     }
 
     .hero-meta {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        gap: 8px;
+        gap: 10px;
     }
 
     .hero-date-badge {
@@ -72,6 +116,30 @@
         border: 1px solid rgba(255, 255, 255, 0.25);
     }
 
+    .hero-glass-btn {
+        background: rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        color: #ffffff;
+        padding: 8px 16px;
+        border-radius: var(--radius-full);
+        font-size: var(--text-xs);
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .hero-glass-btn:hover {
+        background: rgba(255, 255, 255, 0.28);
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.6);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
     .hero-role-pill {
         display: inline-block;
         padding: 4px 12px;
@@ -84,39 +152,95 @@
         letter-spacing: 0.05em;
     }
 
-    /* KPI Grid Cards */
-    .kpi-grid {
+    /* Attention Banner (Catatan Perhatian) */
+    .attention-banner {
+        background: #FFFBEB;
+        border: 1px solid #FDE68A;
+        border-left: 4px solid #D97706;
+        border-radius: var(--radius-md);
+        padding: 14px 20px;
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        box-shadow: 0 1px 3px rgba(217, 119, 6, 0.08);
+    }
+
+    .btn-attention-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #D97706;
+        color: #ffffff;
+        padding: 6px 14px;
+        border-radius: var(--radius-full);
+        font-size: var(--text-xs);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.15s ease;
+    }
+
+    .btn-attention-action:hover {
+        background: #B45309;
+        color: #ffffff;
+    }
+
+    /* Quick Action Buttons */
+    .quick-actions-bar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+    }
+
+    /* KPI Unified Strip Card (Panel Metrik Terpadu) */
+    .kpi-unified-card {
+        background: var(--neutral-0);
+        border: 1px solid var(--neutral-200);
+        border-radius: var(--radius-md);
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
         margin-bottom: 28px;
-    }
-
-    .kpi-card {
-        background: var(--neutral-0);
-        border: 1px solid var(--neutral-400);
-        border-radius: var(--radius-md);
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
         box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        overflow: hidden;
     }
 
-    .kpi-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    .kpi-unified-item {
+        padding: 18px 20px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        position: relative;
+        transition: background-color 0.15s ease;
+    }
+
+    .kpi-unified-item:hover {
+        background-color: var(--neutral-100);
+    }
+
+    .kpi-unified-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 15%;
+        height: 70%;
+        width: 1px;
+        background-color: var(--neutral-200);
     }
 
     .kpi-icon-box {
-        width: 48px;
-        height: 48px;
+        width: 44px;
+        height: 44px;
         border-radius: var(--radius-default);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        margin-top: 2px;
     }
 
     .kpi-icon-blue { background: var(--blue-tint); color: var(--blue-600); }
@@ -127,7 +251,8 @@
     .kpi-details {
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        flex: 1;
+        min-width: 0;
     }
 
     .kpi-label {
@@ -136,20 +261,37 @@
         color: var(--neutral-600);
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        margin-bottom: 4px;
+        margin-bottom: 2px;
     }
 
     .kpi-value {
-        font-size: var(--text-2xl);
+        font-size: var(--text-xl);
         font-weight: var(--fw-bold);
-        color: var(--neutral-800);
-        line-height: 1.2;
+        color: var(--neutral-900);
+        line-height: 1.25;
+    }
+
+    .micro-progress-bar {
+        height: 5px;
+        background: var(--neutral-200);
+        border-radius: 999px;
+        overflow: hidden;
+        margin: 6px 0 4px 0;
+    }
+
+    .micro-progress-fill {
+        height: 100%;
+        border-radius: 999px;
+        transition: width 0.3s ease;
     }
 
     .kpi-subtext {
-        font-size: var(--text-xs);
+        font-size: 11px;
         color: var(--neutral-500);
-        margin-top: 2px;
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     /* Onboarding Card */
@@ -269,30 +411,33 @@
 
     .list-card {
         background: var(--neutral-0);
-        border: 1px solid var(--neutral-400);
+        border: 1px solid var(--neutral-300);
         border-radius: var(--radius-md);
         padding: 20px;
         display: flex;
         flex-direction: column;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        height: 100%;
     }
 
     .list-card-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
         padding-bottom: 12px;
         border-bottom: 1px solid var(--neutral-200);
     }
 
     .list-card-title {
-        font-size: var(--text-lg);
+        font-size: var(--text-base);
         font-weight: var(--fw-bold);
-        color: var(--neutral-800);
+        color: var(--neutral-900);
         display: flex;
         align-items: center;
         gap: 8px;
         line-height: 1.3;
+        margin: 0;
     }
 
     .item-row {
@@ -302,6 +447,7 @@
         justify-content: space-between;
         align-items: center;
         gap: 12px;
+        transition: background-color 0.15s ease;
     }
 
     .item-row:last-child {
@@ -309,38 +455,88 @@
         padding-bottom: 0;
     }
 
+    .item-meta {
+        flex: 1;
+        min-width: 0;
+    }
+
     .item-meta h4 {
-        font-size: var(--text-base);
+        font-size: var(--text-sm);
         font-weight: var(--fw-semibold);
-        color: var(--neutral-800);
+        color: var(--neutral-900);
         margin-bottom: 4px;
-        line-height: 1.3;
+        line-height: 1.35;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .item-meta p {
-        font-size: var(--text-xs);
+        font-size: 12px;
         color: var(--neutral-500);
         line-height: 1.4;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    /* Quick Action Buttons */
-    .quick-actions-bar {
+    .deadline-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+        background: var(--neutral-100);
+        color: var(--neutral-600);
+        border: 1px solid var(--neutral-300);
+        white-space: nowrap;
+    }
+
+    .deadline-pill.is-urgent {
+        background: #FEF2F2;
+        color: #DC2626;
+        border-color: #FECACA;
+    }
+
+    .deadline-pill.is-warning {
+        background: #FFFBEB;
+        color: #D97706;
+        border-color: #FDE68A;
+    }
+
+    .week-mini-badge {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        background: var(--blue-tint);
+        color: var(--blue-700);
         display: flex;
-        gap: 12px;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+        border: 1px solid rgba(7, 81, 255, 0.18);
     }
 
     /* Responsive */
     @media (max-width: 1024px) {
-        .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        .kpi-unified-card { grid-template-columns: repeat(2, 1fr); }
+        .kpi-unified-item:nth-child(2)::after { display: none; }
+        .kpi-unified-item:nth-child(1),
+        .kpi-unified-item:nth-child(2) { border-bottom: 1px solid var(--neutral-200); }
         .dashboard-columns { grid-template-columns: 1fr; }
         .stepper-list { grid-template-columns: 1fr; }
         .hero-meta { align-items: flex-start; }
     }
 
     @media (max-width: 640px) {
-        .kpi-grid { grid-template-columns: 1fr; }
+        .kpi-unified-card { grid-template-columns: 1fr; }
+        .kpi-unified-item::after { display: none; }
+        .kpi-unified-item:not(:last-child) { border-bottom: 1px solid var(--neutral-200); }
     }
 </style>
 @endpush
@@ -348,25 +544,88 @@
 @section('content')
 
 {{-- 1. Hero Greeting Banner --}}
-<div class="dashboard-hero">
-    <div class="hero-content">
-        <div class="hero-greeting">
-            <h1>Selamat Datang, {{ $user->nama ?? $user->name }}! 👋</h1>
-            <p>
-                Selamat datang di portal terpadu magang Dinas Komunikasi dan Informatika Kabupaten Sleman. Pantau status pendaftaran, kegiatan harian, tugas, dan evaluasi hasil kerja Anda secara terpusat.
-            </p>
-        </div>
-        <div class="hero-meta">
-            <div class="hero-date-badge">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                <span>{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}</span>
+@if($fase === 'aktif' && $penempatan)
+    <div class="dashboard-hero">
+        <div class="hero-content">
+            <div class="hero-greeting">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span class="hero-status-pill">● Status Penempatan: Magang Aktif</span>
+                </div>
+                <h1>Selamat Datang, {{ $user->nama ?? $user->name }}! 👋</h1>
+                <h2 class="hero-placement-title">{{ $penempatan->bidang->nama_bidang ?? 'Dinas Komunikasi dan Informatika Kabupaten Sleman' }}</h2>
+                
+                <div class="hero-meta-badges">
+                    <div class="hero-meta-chip">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        <span>Pembimbing: <strong>{{ $penempatan->pembimbing->nama ?? $penempatan->pembimbing->name ?? 'Belum Ditugaskan' }}</strong></span>
+                    </div>
+                    <div class="hero-meta-chip">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span>Periode: {{ \Carbon\Carbon::parse($penempatan->tgl_mulai ?? $penempatan->tanggal_mulai)->isoFormat('D MMM Y') }} &ndash; {{ \Carbon\Carbon::parse($penempatan->tgl_selesai ?? $penempatan->tanggal_selesai)->isoFormat('D MMM Y') }}</span>
+                    </div>
+                </div>
             </div>
-            <span class="hero-role-pill">Peran: Peserta Magang</span>
+
+            <div class="hero-meta">
+                <div class="hero-date-badge">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}</span>
+                </div>
+                <a href="{{ route('peserta.penempatan.surat-diterima.pratinjau', $penempatan) }}" class="hero-glass-btn" target="_blank">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-1.943-9.542-7z"></path>
+                    </svg>
+                    Pratinjau SK Diterima
+                </a>
+            </div>
         </div>
     </div>
-</div>
+
+    {{-- Banner Alert Catatan Perhatian --}}
+    @if($logbookPerluRevisi > 0)
+        <div class="attention-banner">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 20px; line-height: 1;">⚠️</span>
+                <div>
+                    <strong style="color: #92400E; font-size: 14px;">Tindak Lanjut Diperlukan:</strong>
+                    <span style="color: #78350F; font-size: 13px; margin-left: 4px;">
+                        Terdapat <strong>{{ $logbookPerluRevisi }}</strong> laporan logbook mingguan yang memerlukan perbaikan dari pembimbing lapangan.
+                    </span>
+                </div>
+            </div>
+            <a href="{{ route('peserta.logbook.index') }}" class="btn-attention-action">
+                Perbaiki Logbook Sekarang &rarr;
+            </a>
+        </div>
+    @endif
+@else
+    <div class="dashboard-hero">
+        <div class="hero-content">
+            <div class="hero-greeting">
+                <h1>Selamat Datang, {{ $user->nama ?? $user->name }}! 👋</h1>
+                <p>
+                    Selamat datang di portal terpadu magang Dinas Komunikasi dan Informatika Kabupaten Sleman. Pantau status pendaftaran, kegiatan harian, tugas, dan evaluasi hasil kerja Anda secara terpusat.
+                </p>
+            </div>
+            <div class="hero-meta">
+                <div class="hero-date-badge">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}</span>
+                </div>
+                <span class="hero-role-pill">Peran: Peserta Magang</span>
+            </div>
+        </div>
+    </div>
+@endif
 
 {{-- 2. Modul Berdasarkan Fase --}}
 
@@ -506,116 +765,113 @@
 
 {{-- FASE 3: AKTIF MAGANG (Sedang Berjalan) --}}
 @if($fase === 'aktif' && $penempatan)
-    {{-- Banner Penempatan Aktif --}}
-    <div class="card" style="border-left: 4px solid var(--blue-600); margin-bottom: 24px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-            <div>
-                <span class="badge badge-success" style="margin-bottom: 8px;">● Status Penempatan: Magang Aktif</span>
-                <h3 style="font-size: 18px; font-weight: 700; color: var(--neutral-800);">
-                    {{ $penempatan->bidang->nama_bidang ?? 'Dinas Komunikasi dan Informatika Kabupaten Sleman' }}
-                </h3>
-                <p style="font-size: 13px; color: var(--neutral-600); margin-top: 4px;">
-                    Pembimbing Lapangan: <strong>{{ $penempatan->pembimbing->nama ?? $penempatan->pembimbing->name ?? 'Belum Ditugaskan' }}</strong> 
-                    &bull; Periode: {{ \Carbon\Carbon::parse($penempatan->tgl_mulai ?? $penempatan->tanggal_mulai)->isoFormat('D MMM Y') }} s/d {{ \Carbon\Carbon::parse($penempatan->tgl_selesai ?? $penempatan->tanggal_selesai)->isoFormat('D MMM Y') }}
-                </p>
-            </div>
-            <div>
-                <a href="{{ route('peserta.penempatan.surat-diterima.pratinjau', $penempatan) }}" class="btn btn-secondary" target="_blank">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-1.943-9.542-7z"></path>
-                    </svg>
-                    Pratinjau SK Diterima
-                </a>
-            </div>
-        </div>
-    </div>
-
-    {{-- Grid 4 KPI --}}
-    <div class="kpi-grid">
-        <div class="kpi-card">
-            <div class="kpi-icon-box kpi-icon-blue">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                </svg>
-            </div>
-            <div class="kpi-details">
-                <span class="kpi-label">Tugas Selesai</span>
-                <span class="kpi-value">{{ $tugasSelesai }} / {{ $totalTugas }}</span>
-                <span class="kpi-subtext">{{ $tugasBelum }} tugas dalam proses</span>
-            </div>
-        </div>
-
-        <div class="kpi-card">
-            <div class="kpi-icon-box kpi-icon-green">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                </svg>
-            </div>
-            <div class="kpi-details">
-                <span class="kpi-label">Logbook Mingguan</span>
-                <span class="kpi-value">{{ $totalLogbook }} Laporan</span>
-                <span class="kpi-subtext">
-                    @if($logbookPerluRevisi > 0)
-                        <strong style="color: var(--red-600);">{{ $logbookPerluRevisi }} perlu revisi</strong>
-                    @else
-                        Aktivitas tercatat
-                    @endif
-                </span>
-            </div>
-        </div>
-
-        <div class="kpi-card">
-            <div class="kpi-icon-box kpi-icon-amber">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-            </div>
-            <div class="kpi-details">
-                <span class="kpi-label">Sisa Hari Magang</span>
-                <span class="kpi-value">{{ $sisaHari !== null ? $sisaHari . ' Hari' : '-' }}</span>
-                <span class="kpi-subtext">Hingga akhir periode</span>
-            </div>
-        </div>
-
-        <div class="kpi-card">
-            <div class="kpi-icon-box kpi-icon-purple">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                </svg>
-            </div>
-            <div class="kpi-details">
-                <span class="kpi-label">Status Evaluasi</span>
-                <span class="kpi-value" style="font-size: 16px;">
-                    {{ $isFinalNilai ? ($penilaian->predikat ?? 'A') . ' (' . number_format($penilaian->nilai_akhir, 1) . ')' : 'Dalam Proses' }}
-                </span>
-                <span class="kpi-subtext">Rubrik pembimbing</span>
-            </div>
-        </div>
-    </div>
+    @php
+        $persenTugas = $totalTugas > 0 ? min(100, round(($tugasSelesai / $totalTugas) * 100)) : 0;
+        
+        $tglMulaiCarbon = $penempatan ? \Carbon\Carbon::parse($penempatan->tgl_mulai ?? $penempatan->tanggal_mulai)->startOfDay() : null;
+        $tglSelesaiCarbon = $penempatan ? \Carbon\Carbon::parse($penempatan->tgl_selesai ?? $penempatan->tanggal_selesai)->startOfDay() : null;
+        $totalHariMagang = ($tglMulaiCarbon && $tglSelesaiCarbon) ? max(1, $tglMulaiCarbon->diffInDays($tglSelesaiCarbon)) : 1;
+        $hariBerjalan = ($tglMulaiCarbon) ? max(0, min($totalHariMagang, (int)$tglMulaiCarbon->diffInDays(now()->startOfDay()))) : 0;
+        $persenHariMagang = min(100, round(($hariBerjalan / $totalHariMagang) * 100));
+    @endphp
 
     {{-- Quick Action Bar --}}
     <div class="quick-actions-bar">
-        <a href="{{ route('peserta.logbook.index') }}" class="btn btn-primary">
+        <a href="{{ route('peserta.logbook.index') }}" class="btn btn-primary" style="box-shadow: 0 4px 12px rgba(7, 81, 255, 0.22);">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
             </svg>
-            Isi Logbook Mingguan
+            + Isi Logbook Mingguan
         </a>
 
         <a href="{{ route('peserta.tugas.index') }}" class="btn btn-secondary">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
             </svg>
             Lihat Daftar Tugas
         </a>
 
         <a href="{{ route('peserta.nilai.show') }}" class="btn btn-secondary">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
             </svg>
             Cek Lembar Nilai
         </a>
+    </div>
+
+    {{-- Panel Metrik Terpadu (Unified KPI Card dengan Micro-Progress) --}}
+    <div class="kpi-unified-card">
+        <div class="kpi-unified-item">
+            <div class="kpi-icon-box kpi-icon-blue">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+            </div>
+            <div class="kpi-details">
+                <span class="kpi-label">Tugas Selesai</span>
+                <span class="kpi-value">{{ $tugasSelesai }} / {{ $totalTugas }}</span>
+                <div class="micro-progress-bar">
+                    <div class="micro-progress-fill" style="width: {{ $persenTugas }}%; background: var(--blue-600);"></div>
+                </div>
+                <span class="kpi-subtext">{{ $persenTugas }}% tuntas &bull; {{ $tugasBelum }} dalam proses</span>
+            </div>
+        </div>
+
+        <div class="kpi-unified-item">
+            <div class="kpi-icon-box kpi-icon-green">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+            </div>
+            <div class="kpi-details">
+                <span class="kpi-label">Logbook Mingguan</span>
+                <span class="kpi-value">{{ $totalLogbook }} Laporan</span>
+                <div class="micro-progress-bar">
+                    <div class="micro-progress-fill" style="width: 100%; background: var(--green-600);"></div>
+                </div>
+                <span class="kpi-subtext">
+                    @if($logbookPerluRevisi > 0)
+                        <strong style="color: var(--red-600);">{{ $logbookPerluRevisi }} laporan perlu revisi</strong>
+                    @else
+                        Aktivitas tercatat rapi
+                    @endif
+                </span>
+            </div>
+        </div>
+
+        <div class="kpi-unified-item">
+            <div class="kpi-icon-box kpi-icon-amber">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div class="kpi-details">
+                <span class="kpi-label">Sisa Hari Magang</span>
+                <span class="kpi-value">{{ $sisaHari !== null ? $sisaHari . ' Hari' : '-' }}</span>
+                <div class="micro-progress-bar">
+                    <div class="micro-progress-fill" style="width: {{ $persenHariMagang }}%; background: #D97706;"></div>
+                </div>
+                <span class="kpi-subtext">Hari ke-{{ $hariBerjalan }} dari {{ $totalHariMagang }} ({{ $persenHariMagang }}%)</span>
+            </div>
+        </div>
+
+        <div class="kpi-unified-item">
+            <div class="kpi-icon-box kpi-icon-purple">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                </svg>
+            </div>
+            <div class="kpi-details">
+                <span class="kpi-label">Status Evaluasi</span>
+                <span class="kpi-value" style="font-size: 1.125rem;">
+                    {{ $isFinalNilai ? ($penilaian->predikat ?? 'A') . ' (' . number_format($penilaian->nilai_akhir, 1) . ')' : 'Dalam Proses' }}
+                </span>
+                <div class="micro-progress-bar">
+                    <div class="micro-progress-fill" style="width: {{ $isFinalNilai ? 100 : 50 }}%; background: #7E22CE;"></div>
+                </div>
+                <span class="kpi-subtext">{{ $isFinalNilai ? 'Nilai final resmi' : '5 rubrik pembimbing' }}</span>
+            </div>
+        </div>
     </div>
 
     {{-- 2 Kolom: Tugas Mendesak & Logbook Terbaru --}}
@@ -624,7 +880,7 @@
         <div class="list-card">
             <div class="list-card-header">
                 <h4 class="list-card-title">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--blue-600);">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
                     Tugas Magang Mendesak
@@ -634,25 +890,42 @@
 
             @if($tugasMendesak->isNotEmpty())
                 @foreach($tugasMendesak as $t)
+                    @php
+                        $deadlineCarbon = \Carbon\Carbon::parse($t->deadline)->startOfDay();
+                        $diffDays = now()->startOfDay()->diffInDays($deadlineCarbon, false);
+                    @endphp
                     <div class="item-row">
                         <div class="item-meta">
                             <h4>{{ $t->judul }}</h4>
-                            <p>Tenggat: {{ \Carbon\Carbon::parse($t->deadline)->isoFormat('D MMM Y') }} &bull; {{ $t->kategori ?? 'Tugas Lapangan' }}</p>
+                            <p style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                                @if($diffDays < 0)
+                                    <span class="deadline-pill is-urgent">Lewat Tenggat</span>
+                                @elseif($diffDays === 0)
+                                    <span class="deadline-pill is-urgent">⚡ Hari Ini</span>
+                                @elseif($diffDays === 1)
+                                    <span class="deadline-pill is-urgent">⚠️ Besok</span>
+                                @elseif($diffDays <= 3)
+                                    <span class="deadline-pill is-warning">⏳ {{ $diffDays }} Hari Lagi</span>
+                                @else
+                                    <span class="deadline-pill">📅 {{ $deadlineCarbon->isoFormat('D MMM') }}</span>
+                                @endif
+                                <span>&bull; {{ $t->kategori ?? 'Tugas Lapangan' }}</span>
+                            </p>
                         </div>
                         <div>
-                            <a href="{{ route('peserta.tugas.show', $t) }}" class="btn btn-secondary" style="height: 32px; padding: 0 12px; font-size: 12px;">
+                            <a href="{{ route('peserta.tugas.show', $t) }}" class="btn btn-secondary" style="height: 32px; padding: 0 12px; font-size: 12px; white-space: nowrap;">
                                 Kerjakan
                             </a>
                         </div>
                     </div>
                 @endforeach
             @else
-                <div style="text-align: center; padding: 32px 16px; color: var(--neutral-500);">
+                <div style="text-align: center; padding: 36px 16px; color: var(--neutral-500); margin: auto 0;">
                     <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 12px auto; color: var(--green-600);">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <p style="font-size: 14px; font-weight: 600; color: var(--neutral-700);">Semua tugas selesai!</p>
-                    <p style="font-size: 12px;">Tidak ada tugas yang menunggu pengerjaan saat ini.</p>
+                    <p style="font-size: 14px; font-weight: 700; color: var(--neutral-800); margin: 0 0 4px 0;">Semua tugas selesai!</p>
+                    <p style="font-size: 12px; margin: 0;">Tidak ada tugas yang menunggu pengerjaan saat ini.</p>
                 </div>
             @endif
         </div>
@@ -661,7 +934,7 @@
         <div class="list-card">
             <div class="list-card-header">
                 <h4 class="list-card-title">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--blue-600);">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
                     Logbook Mingguan Terkini
@@ -671,27 +944,37 @@
 
             @if($logbookTerbaru->isNotEmpty())
                 @foreach($logbookTerbaru as $lb)
+                    @php
+                        $statusValue = $lb->status->value ?? (string)$lb->status;
+                    @endphp
                     <div class="item-row">
-                        <div class="item-meta">
-                            <h4>Minggu ke-{{ $lb->minggu_ke ?? ($loop->iteration) }} • {{ \Carbon\Carbon::parse($lb->tanggal)->isoFormat('D MMM Y') }}</h4>
-                            <p>{{ \Illuminate\Support\Str::limit($lb->kegiatan, 60) }}</p>
+                        <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
+                            <span class="week-mini-badge">
+                                MG{{ $lb->minggu_ke ?? $loop->iteration }}
+                            </span>
+                            <div class="item-meta">
+                                <h4>Minggu ke-{{ $lb->minggu_ke ?? ($loop->iteration) }} &bull; {{ \Carbon\Carbon::parse($lb->tanggal)->isoFormat('D MMM Y') }}</h4>
+                                <p>{{ \Illuminate\Support\Str::limit($lb->kegiatan, 65) }}</p>
+                            </div>
                         </div>
                         <div>
-                            @if($lb->status === \App\Enums\StatusLogbookEnum::PerluRevisi)
+                            @if($statusValue === 'perlu_revisi' || $statusValue === 'ditolak')
                                 <span class="badge badge-danger">Perlu Revisi</span>
+                            @elseif($statusValue === 'disetujui')
+                                <span class="badge badge-success">Disetujui</span>
                             @else
-                                <span class="badge badge-success">Terkirim</span>
+                                <span class="badge badge-info">Terkirim</span>
                             @endif
                         </div>
                     </div>
                 @endforeach
             @else
-                <div style="text-align: center; padding: 32px 16px; color: var(--neutral-500);">
+                <div style="text-align: center; padding: 36px 16px; color: var(--neutral-500); margin: auto 0;">
                     <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 12px auto; color: var(--neutral-400);">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    <p style="font-size: 14px; font-weight: 600; color: var(--neutral-700);">Belum ada catatan logbook mingguan</p>
-                    <p style="font-size: 12px;">Catat aktivitas mingguan magang Anda secara rutin.</p>
+                    <p style="font-size: 14px; font-weight: 700; color: var(--neutral-800); margin: 0 0 4px 0;">Belum ada catatan logbook mingguan</p>
+                    <p style="font-size: 12px; margin: 0;">Catat aktivitas mingguan magang Anda secara rutin.</p>
                 </div>
             @endif
         </div>

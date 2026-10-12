@@ -46,6 +46,7 @@
     .banner-title {
         font-size: var(--text-2xl);
         font-weight: var(--fw-bold);
+        color: #ffffff;
         margin-bottom: 6px;
         letter-spacing: -0.01em;
         line-height: 1.3;

@@ -11,7 +11,7 @@
         <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; background: rgba(255, 255, 255, 0.2); padding: 0.25rem 0.75rem; border-radius: 999px;">
             Evaluasi Mutu Layanan Dinas
         </span>
-        <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0.75rem 0 0.5rem 0;">Kuesioner Evaluasi & Kepuasan Peserta Magang</h2>
+        <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0.75rem 0 0.5rem 0; color: #ffffff;">Kuesioner Evaluasi & Kepuasan Peserta Magang</h2>
         <p style="font-size: 0.875rem; color: rgba(255, 255, 255, 0.9); margin: 0; line-height: 1.6;">
             Masukan Anda sangat bernilai bagi Dinas Komunikasi dan Informatika Kabupaten Sleman untuk terus meningkatkan kualitas kurikulum penugasan, sarana prasarana, dan bimbingan lapangan di masa mendatang.
         </p>
