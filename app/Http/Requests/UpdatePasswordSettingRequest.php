@@ -10,7 +10,7 @@ class UpdatePasswordSettingRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->isPeserta() ?? false;
+        return $this->user() !== null;
     }
 
     public function rules(): array

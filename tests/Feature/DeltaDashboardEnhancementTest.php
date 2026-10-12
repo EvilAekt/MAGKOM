@@ -189,12 +189,23 @@ class DeltaDashboardEnhancementTest extends TestCase
      */
     public function test_admin_dashboard_merender_quick_stats_enhancement(): void
     {
+        Pendaftaran::create([
+            'user_id' => $this->peserta->id,
+            'bulan_magang_id' => $this->bulan->id,
+            'kuota_id' => $this->kuota->id,
+            'durasi_bulan' => 3,
+            'status' => \App\Enums\StatusPendaftaranEnum::Diterima,
+            'diajukan_at' => now()->subDays(3),
+            'diputuskan_at' => now()->subDay(),
+        ]);
+
         $response = $this->actingAs($this->admin)->get(route('admin.dashboard'));
         $response->assertOk();
         $response->assertViewHas(['avgVerifikasiHari', 'realisasiKuotaPersen', 'pendaftaranMingguIni']);
         $response->assertSee('Kecepatan Verifikasi Berkas');
         $response->assertSee('Tingkat Keterisian Kuota');
         $response->assertSee('Pendaftar 7 Hari Terakhir');
+        $this->assertEquals(2.0, $response->viewData('avgVerifikasiHari'));
     }
 
     /**

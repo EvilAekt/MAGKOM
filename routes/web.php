@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\KuotaController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranController;
 use App\Http\Controllers\Admin\PenempatanController as AdminPenempatanController;
+use App\Http\Controllers\Admin\PengaturanController as AdminPengaturanController;
+use App\Http\Controllers\Admin\ProfilController as AdminProfilController;
 use App\Http\Controllers\Admin\SertifikatController as AdminSertifikatController;
 use App\Http\Controllers\Admin\WaitingListController as AdminWaitingListController;
 use App\Http\Controllers\Auth\AuthController;
@@ -19,8 +21,10 @@ use App\Http\Controllers\Pembimbing\AgendaBimbinganController as PembimbingAgend
 use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboardController;
 use App\Http\Controllers\Pembimbing\LaporanKinerjaController as PembimbingLaporanKinerjaController;
 use App\Http\Controllers\Pembimbing\LogbookReviewController as PembimbingLogbookReviewController;
+use App\Http\Controllers\Pembimbing\PengaturanController as PembimbingPengaturanController;
 use App\Http\Controllers\Pembimbing\PenilaianController as PembimbingPenilaianController;
 use App\Http\Controllers\Pembimbing\PesertaController as PembimbingPesertaController;
+use App\Http\Controllers\Pembimbing\ProfilController as PembimbingProfilController;
 use App\Http\Controllers\Pembimbing\TugasController as PembimbingTugasController;
 use App\Http\Controllers\Pembimbing\TugasTemplateController as PembimbingTugasTemplateController;
 use App\Http\Controllers\Peserta\BerkasController;
@@ -34,6 +38,7 @@ use App\Http\Controllers\Peserta\TugasController as PesertaTugasController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Public\HealthController;
 use App\Http\Controllers\Public\LandingController;
+use App\Http\Controllers\SuperAdmin\AkunController as SuperAdminAkunController;
 use App\Http\Controllers\SuperAdmin\ArsipPesertaController;
 use App\Http\Controllers\SuperAdmin\AuditLogController;
 use App\Http\Controllers\SuperAdmin\BackupController;
@@ -42,6 +47,7 @@ use App\Http\Controllers\SuperAdmin\BulanController;
 use App\Http\Controllers\SuperAdmin\HealthMonitorController;
 use App\Http\Controllers\SuperAdmin\JurusanController;
 use App\Http\Controllers\SuperAdmin\PengaturanController;
+use App\Http\Controllers\SuperAdmin\ProfilController as SuperAdminProfilController;
 use App\Http\Controllers\SuperAdmin\RoleController;
 use App\Http\Controllers\SuperAdmin\RubrikController;
 use App\Http\Controllers\SuperAdmin\SlotKhususController;
@@ -197,6 +203,13 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     // Laporan Kinerja Mentoring ASN Sleman
     Route::get('/laporan-kinerja', [PembimbingLaporanKinerjaController::class, 'index'])->name('laporan-kinerja.index');
     Route::get('/laporan-kinerja/cetak', [PembimbingLaporanKinerjaController::class, 'cetak'])->name('laporan-kinerja.cetak');
+
+    // Profil & Pengaturan Akun Pembimbing
+    Route::get('/profil', [PembimbingProfilController::class, 'show'])->name('profil.show');
+    Route::match(['post', 'put'], '/profil', [PembimbingProfilController::class, 'update'])->name('profil.update');
+    Route::get('/pengaturan', [PembimbingPengaturanController::class, 'index'])->name('pengaturan.index');
+    Route::put('/pengaturan/password', [PembimbingPengaturanController::class, 'updatePassword'])->name('pengaturan.password.update');
+    Route::post('/pengaturan/preferensi', [PembimbingPengaturanController::class, 'updatePreferensi'])->name('pengaturan.preferensi.update');
 });
 
 // Rute Admin & SuperAdmin (F-04, F-05, F-07, F-17)
@@ -242,6 +255,13 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:admin,super
     // Evaluasi Mutu & Survei Kepuasan Alumni (PRD 4.3 Poin 4)
     Route::get('/survei', [\App\Http\Controllers\Admin\SurveiAdminController::class, 'index'])->name('survei.index');
     Route::get('/survei/export', [\App\Http\Controllers\Admin\SurveiAdminController::class, 'export'])->name('survei.export');
+
+    // Profil & Pengaturan Akun Administrator
+    Route::get('/profil', [AdminProfilController::class, 'show'])->name('profil.show');
+    Route::match(['post', 'put'], '/profil', [AdminProfilController::class, 'update'])->name('profil.update');
+    Route::get('/pengaturan', [AdminPengaturanController::class, 'index'])->name('pengaturan.index');
+    Route::put('/pengaturan/password', [AdminPengaturanController::class, 'updatePassword'])->name('pengaturan.password.update');
+    Route::post('/pengaturan/preferensi', [AdminPengaturanController::class, 'updatePreferensi'])->name('pengaturan.preferensi.update');
 });
 
 // Rute Khusus SuperAdmin (F-06, F-11, F-13)
@@ -313,4 +333,11 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'
     Route::post('/backup/snapshot', [BackupController::class, 'triggerSnapshot'])->name('backup.snapshot');
     Route::get('/backup/{filename}/download', [BackupController::class, 'download'])->name('backup.download');
     Route::delete('/backup/{filename}', [BackupController::class, 'destroy'])->name('backup.destroy');
+
+    // Profil & Akun / Preferensi Pribadi SuperAdmin
+    Route::get('/profil', [SuperAdminProfilController::class, 'show'])->name('profil.show');
+    Route::match(['post', 'put'], '/profil', [SuperAdminProfilController::class, 'update'])->name('profil.update');
+    Route::get('/akun', [SuperAdminAkunController::class, 'index'])->name('akun.index');
+    Route::put('/akun/password', [SuperAdminAkunController::class, 'updatePassword'])->name('akun.password.update');
+    Route::post('/akun/preferensi', [SuperAdminAkunController::class, 'updatePreferensi'])->name('akun.preferensi.update');
 });

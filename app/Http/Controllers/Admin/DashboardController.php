@@ -152,12 +152,12 @@ class DashboardController extends Controller
 
         // 9. Quick Stats Tambahan (A11)
         $processedRegistrations = Pendaftaran::whereNotNull('diajukan_at')
-            ->whereNotNull('verifikasi_at')
-            ->get(['diajukan_at', 'verifikasi_at']);
+            ->whereNotNull('diputuskan_at')
+            ->get(['diajukan_at', 'diputuskan_at']);
 
         if ($processedRegistrations->isNotEmpty()) {
             $totalDays = $processedRegistrations->sum(function ($p) {
-                return max(0.5, $p->diajukan_at->diffInHours($p->verifikasi_at) / 24);
+                return max(0.5, $p->diajukan_at->diffInHours($p->diputuskan_at) / 24);
             });
             $avgVerifikasiHari = round($totalDays / $processedRegistrations->count(), 1);
         } else {
