@@ -3,255 +3,815 @@
 @section('title', 'Dashboard Operasional Administrasi - MagKom Sleman')
 
 @section('content')
-<div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 1400px; margin: 0 auto; width: 100%;">
+<div class="adm-cockpit-wrapper">
 
     <style>
-        .admin-stat-card {
-            background: #ffffff;
-            border-radius: 14px;
-            border: 1px solid var(--neutral-200, #E2E8F0);
-            padding: 1.25rem 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        /* ==========================================================================
+           MAGKOM ADMIN OPERATIONAL DASHBOARD - CLEAN, SIMPLE & AESTHETIC
+           Standard: Dinas Komunikasi dan Informatika Kabupaten Sleman
+           ========================================================================== */
+        .adm-cockpit-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+            color: #1E293B;
+            font-family: inherit;
+        }
+
+        /* 1. SIGNATURE HERO BANNER (Persis Tema Peserta MagKom) */
+        .adm-hero {
+            background: linear-gradient(95deg, rgba(6, 65, 204, 0.96) 0%, rgba(6, 65, 204, 0.88) 45%, rgba(6, 65, 204, 0.38) 100%),
+                        url('{{ asset('images/dashboard_hero_bg.jpg') }}') right center / cover no-repeat;
+            border-radius: 16px;
+            padding: 32px 36px;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(6, 65, 204, 0.25), 0 8px 10px -6px rgba(6, 65, 204, 0.15);
+            min-height: 190px;
+        }
+
+        .adm-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 85% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .adm-hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .adm-hero-left {
+            max-width: 720px;
+        }
+
+        .adm-hero-pill-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
         }
-        .admin-stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-        }
-        .admin-card {
-            background: #ffffff;
-            border-radius: 14px;
-            border: 1px solid var(--neutral-200, #E2E8F0);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
-        .admin-tab-nav {
-            display: flex;
-            gap: 0.5rem;
-            border-bottom: 1px solid var(--neutral-200, #E2E8F0);
-            padding: 0 1.25rem;
-            background: #ffffff;
-            overflow-x: auto;
-        }
-        .admin-tab-btn {
-            background: transparent;
-            border: none;
-            padding: 1rem 1rem;
-            font-size: 0.875rem;
-            font-weight: 700;
-            color: var(--neutral-600, #64748B);
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
+
+        .adm-hero-status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            white-space: nowrap;
+            gap: 6px;
+            padding: 4px 12px;
+            background: #10B981;
+            color: #ffffff;
+            border-radius: 9999px;
+            font-size: 0.725rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .adm-hero-role-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #0641CC;
+            border-radius: 9999px;
+            font-size: 0.725rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .adm-hero-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            margin: 0 0 6px 0;
+            line-height: 1.25;
+        }
+
+        .adm-hero-desc {
+            font-size: 0.925rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .adm-hero-meta-badges {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .adm-hero-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.785rem;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .adm-hero-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+        @media (max-width: 900px) {
+            .adm-hero-right {
+                align-items: flex-start;
+            }
+        }
+
+        .adm-hero-date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .adm-hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .adm-hero-glass-btn {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: #ffffff;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             transition: all 0.2s ease;
         }
-        .admin-tab-btn:hover {
-            color: #0641CC;
+        .adm-hero-glass-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
-        .admin-tab-btn.active {
+        .adm-hero-glass-btn.btn-solid {
+            background: #ffffff;
             color: #0641CC;
-            border-bottom-color: #0641CC;
+            border-color: #ffffff;
         }
-        .admin-table {
+        .adm-hero-glass-btn.btn-solid:hover {
+            background: #F8FAFC;
+            color: #0533A8;
+        }
+
+        /* 2. Sub-Bar Control (Periode Selector) */
+        .adm-control-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 0.1rem 0.25rem;
+        }
+        .adm-period-form {
+            display: flex;
+            align-items: center;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: 10px;
+            padding: 0.35rem 0.85rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            gap: 0.5rem;
+        }
+        .adm-period-form label {
+            font-size: 0.775rem;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin: 0;
+            white-space: nowrap;
+        }
+        .adm-period-form select {
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #0F172A;
+            outline: none;
+            cursor: pointer;
+            padding-right: 0.5rem;
+        }
+
+        /* 3. UNIFIED KPI STRIP CARD (Panel Metrik Terpadu) */
+        .adm-kpi-unified-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+            overflow: hidden;
+        }
+        @media (max-width: 1024px) {
+            .adm-kpi-unified-card { grid-template-columns: repeat(2, 1fr); }
+            .adm-kpi-unified-item:nth-child(2)::after { display: none; }
+            .adm-kpi-unified-item:nth-child(1),
+            .adm-kpi-unified-item:nth-child(2) { border-bottom: 1px solid #E2E8F0; }
+        }
+        @media (max-width: 600px) {
+            .adm-kpi-unified-card { grid-template-columns: 1fr; }
+            .adm-kpi-unified-item::after { display: none; }
+            .adm-kpi-unified-item:not(:last-child) { border-bottom: 1px solid #E2E8F0; }
+        }
+
+        .adm-kpi-unified-item {
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            transition: background-color 0.15s ease;
+        }
+        .adm-kpi-unified-item:hover {
+            background-color: #F8FAFC;
+        }
+        .adm-kpi-unified-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 20%;
+            height: 60%;
+            width: 1px;
+            background-color: #E2E8F0;
+        }
+
+        .adm-kpi-icon-box {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .adm-kpi-icon-amber { background: #FEF3C7; color: #D97706; }
+        .adm-kpi-icon-blue { background: #EFF6FF; color: #0641CC; }
+        .adm-kpi-icon-purple { background: #F5F3FF; color: #7C3AED; }
+        .adm-kpi-icon-emerald { background: #ECFDF5; color: #10B981; }
+
+        .adm-kpi-details {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 0;
+        }
+        .adm-kpi-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 2px;
+        }
+        .adm-kpi-val {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #0F172A;
+            line-height: 1.2;
+        }
+        .adm-kpi-hint {
+            font-size: 0.75rem;
+            color: #64748B;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ==========================================================================
+           ZONA 1: ANTREAN VERIFIKASI UTAMA (FULL-WIDTH SPATIOUS CARD)
+           ========================================================================== */
+        .adm-card-full {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+            overflow: hidden;
+        }
+
+        .adm-card-header-spacious {
+            padding: 1.35rem 1.75rem;
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: #FFFFFF;
+        }
+        .adm-section-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #0F172A;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            letter-spacing: -0.015em;
+        }
+        .adm-section-subtitle {
+            font-size: 0.825rem;
+            color: #64748B;
+            margin: 0.2rem 0 0 0;
+        }
+
+        /* Filter Pills Minimalis */
+        .adm-filter-pills {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: #F1F5F9;
+            padding: 0.25rem;
+            border-radius: 8px;
+        }
+        .adm-pill-btn {
+            border: none;
+            background: transparent;
+            font-size: 0.775rem;
+            font-weight: 700;
+            color: #64748B;
+            padding: 0.35rem 0.85rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .adm-pill-btn.active {
+            background: #FFFFFF;
+            color: #0641CC;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+        }
+
+        /* Spacious Table */
+        .adm-table-spacious {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
             font-size: 0.875rem;
         }
-        .admin-table th {
+        .adm-table-spacious th {
             background: #F8FAFC;
-            padding: 0.85rem 1.25rem;
+            padding: 0.95rem 1.5rem;
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--neutral-600, #475569);
-            border-bottom: 1px solid var(--neutral-200, #E2E8F0);
+            color: #64748B;
+            border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
         }
-        .admin-table td {
-            padding: 0.95rem 1.25rem;
-            border-bottom: 1px solid var(--neutral-200, #E2E8F0);
+        .adm-table-spacious td {
+            padding: 1.15rem 1.5rem;
+            border-bottom: 1px solid #E2E8F0;
             vertical-align: middle;
-            color: var(--neutral-800, #1E293B);
+            color: #1E293B;
+            background: #FFFFFF;
+            transition: background 0.15s ease;
         }
-        .admin-table tr:hover {
+        .adm-table-spacious tr:hover td {
             background: #F8FAFC;
+        }
+        .adm-table-spacious tr:last-child td {
+            border-bottom: none;
+        }
+
+        .adm-user-cell-spacious {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+        .adm-avatar-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #EFF6FF;
+            color: #0641CC;
+            border: 1px solid #BFDBFE;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .adm-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.725rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .adm-status-badge.diajukan {
+            background: #FEF3C7;
+            color: #92400E;
+            border: 1px solid #FCD34D;
+        }
+        .adm-status-badge.perbaikan {
+            background: #EFF6FF;
+            color: #1E40AF;
+            border: 1px solid #BFDBFE;
+        }
+
+        .adm-sla-pill-norm {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748B;
+            background: #F1F5F9;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+        }
+        .adm-sla-pill-alert {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #DC2626;
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+        }
+
+        .adm-btn-action-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.95rem;
+            background: #0641CC;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);
+            transition: all 0.15s ease;
+        }
+        .adm-btn-action-primary:hover {
+            background: #0533A8;
+            transform: translateY(-1px);
+            color: #ffffff;
+        }
+
+        /* ==========================================================================
+           ZONA 2: DUA KOLOM SEIMBANG (50% : 50% GRID BERSIH & RAPI)
+           ========================================================================== */
+        .adm-balanced-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        @media (max-width: 960px) {
+            .adm-balanced-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .adm-clean-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+            overflow: hidden;
+        }
+        .adm-clean-card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .adm-clean-card-body {
+            padding: 1.5rem;
+        }
+
+        /* Sleek Quota List Rows (Minimalis & Elegan) */
+        .adm-quota-list-clean {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .adm-quota-row-item {
+            padding: 0.85rem 1rem;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: all 0.15s ease;
+        }
+        .adm-quota-row-item:hover {
+            background: #FFFFFF;
+            border-color: #CBD5E1;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .adm-quota-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .adm-quota-title-text {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #0F172A;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .adm-quota-cat-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .adm-quota-meter-box {
+            width: 140px;
+            flex-shrink: 0;
+        }
+        .adm-quota-meter-track {
+            width: 100%;
+            height: 6px;
+            background: #E2E8F0;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 0.35rem;
+        }
+        .adm-quota-meter-fill {
+            height: 100%;
+            border-radius: 999px;
+        }
+
+        .adm-quota-status-pill {
+            font-size: 0.725rem;
+            font-weight: 800;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* Sub-Sections in Right Card */
+        .adm-sub-section {
+            margin-bottom: 1.5rem;
+        }
+        .adm-sub-section:last-child {
+            margin-bottom: 0;
+        }
+        .adm-sub-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 0 0 0.75rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        /* Mentor Item */
+        .adm-mentor-clean-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            margin-bottom: 0.65rem;
+        }
+        .adm-mentor-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #DBEAFE;
+            color: #1E40AF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        /* Quick Action Bar */
+        .adm-action-link-clean {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #1E293B;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.15s ease;
+            margin-bottom: 0.45rem;
+        }
+        .adm-action-link-clean:hover {
+            border-color: #BFDBFE;
+            background: #F8FAFC;
+            color: #0641CC;
+            transform: translateX(3px);
+        }
+
+        .adm-link-more-clean {
+            font-size: 0.825rem;
+            font-weight: 700;
+            color: #0641CC;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .adm-link-more-clean:hover {
+            text-decoration: underline;
         }
     </style>
 
-    {{-- 1. TOPBAR & OPERATIONAL HEADER --}}
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); padding-bottom: 1rem;">
-        <div>
-            <nav style="font-size: 0.8rem; color: var(--neutral-500, #64748B); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-                <span style="color: var(--neutral-600, #475569);">Portal MagKom</span>
-                <span>/</span>
-                <span style="color: var(--neutral-900, #0F172A); font-weight: 600;">Operasional Administrasi</span>
-            </nav>
-            <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-                <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; letter-spacing: -0.02em;">
-                    Dashboard Operasional Administrasi
+    {{-- ==========================================================================
+       1. SIGNATURE HERO BANNER (BACKGROUND GAMBAR RESMI MAGKOM)
+       ========================================================================== --}}
+    <div class="adm-hero">
+        <div class="adm-hero-content">
+            <div class="adm-hero-left">
+                <div class="adm-hero-pill-row">
+                    <span class="adm-hero-status-pill">● Sistem Operasional Aktif</span>
+                    <span class="adm-hero-role-pill">Administrator MagKom</span>
+                </div>
+                
+                <h1 class="adm-hero-title">
+                    Selamat Bertugas, {{ Auth::user()->nama ?? Auth::user()->name ?? 'Administrator' }}! 👋
                 </h1>
-                <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #DBEAFE; color: #1E40AF; text-transform: uppercase; letter-spacing: 0.04em;">
-                    Command Center
-                </span>
+                
+                <p class="adm-hero-desc">
+                    Pusat Kendali Administrasi Magang &ndash; Dinas Komunikasi dan Informatika Kabupaten Sleman
+                </p>
+
+                <div class="adm-hero-meta-badges">
+                    @if($bulanAktif)
+                        <div class="adm-hero-chip">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            <span>Periode: <strong>{{ $bulanAktif->bulan_mulai?->translatedFormat('F Y') }}</strong></span>
+                        </div>
+                        <div class="adm-hero-chip">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <span>Kapasitas: <strong>{{ $totalKuotaTerisi }}/{{ $totalKuotaUmum }} Kursi Terisi</strong></span>
+                        </div>
+                    @endif
+                    <div class="adm-hero-chip">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        <span>Menunggu Verifikasi: <strong>{{ $pengajuanMenunggu }} Berkas</strong></span>
+                    </div>
+                </div>
             </div>
-            <p style="font-size: 0.85rem; color: var(--neutral-600, #475569); margin: 0.3rem 0 0 0;">
-                Pantau aktivitas pendaftaran, antrean verifikasi berkas, dan utilisasi kuota magang secara real-time.
-            </p>
-        </div>
 
-        {{-- Filter Periode Bulan & Aksi Cepat --}}
-        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-            <form method="GET" action="{{ route('admin.dashboard') }}" style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
-                <label for="selectBulan" style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700, #334155); margin: 0;">
-                    Periode:
-                </label>
-                <select name="bulan_id" 
-                        id="selectBulan" 
-                        onchange="this.form.submit()" 
-                        style="height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 2rem 0 0.75rem; font-size: 0.85rem; font-weight: 600; color: var(--neutral-800, #1E293B); background: #ffffff; cursor: pointer;">
-                    @foreach($daftarBulan as $b)
-                        <option value="{{ $b->id }}" {{ $bulanAktif && $bulanAktif->id === $b->id ? 'selected' : '' }}>
-                            {{ $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '' }}
-                        </option>
-                    @endforeach
-                </select>
-            </form>
+            <div class="adm-hero-right">
+                <div class="adm-hero-date-badge">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span>{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}</span>
+                </div>
 
-            <a href="{{ route('admin.sertifikat.index') }}" 
-               style="height: 38px; padding: 0 1rem; background: #0641CC; color: #ffffff; border-radius: 8px; font-size: 0.85rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                <span>Hub Sertifikat</span>
-            </a>
-
-            <a href="{{ route('admin.laporan.index') }}" 
-               style="height: 38px; padding: 0 1rem; background: #ffffff; color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                <span>Ekspor Laporan</span>
-            </a>
+                <div class="adm-hero-actions">
+                    <a href="{{ route('admin.sertifikat.index') }}" class="adm-hero-glass-btn btn-solid">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        <span>Hub Sertifikat</span>
+                    </a>
+                    <a href="{{ route('admin.laporan.index') }}" class="adm-hero-glass-btn">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <span>Ekspor Laporan</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
-    {{-- 2. HERO OPERATIONAL BANNER (STATUS BULAN BERJALAN & REKAP KAPASITAS) --}}
-    @if($bulanAktif)
-        @php
-            $tglTutup = $bulanAktif->tgl_tutup ? \Carbon\Carbon::parse($bulanAktif->tgl_tutup) : null;
-            $tglBuka = $bulanAktif->tgl_buka ? \Carbon\Carbon::parse($bulanAktif->tgl_buka) : null;
-            $isBuka = $tglBuka && $tglTutup && now()->between($tglBuka, $tglTutup);
-            $sisaHari = $tglTutup && $tglTutup->isFuture() ? (int) now()->diffInDays($tglTutup, false) : 0;
-            $persenKuotaUmum = $totalKuotaUmum > 0 ? min(100, round(($totalKuotaTerisi / $totalKuotaUmum) * 100)) : 0;
-        @endphp
-        <div style="background: linear-gradient(135deg, #EFF6FF 0%, #FFFFFF 100%); border: 1px solid #BFDBFE; border-radius: 14px; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: #0641CC; color: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 8px rgba(6, 65, 204, 0.25);">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                </div>
-                <div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                        <span style="font-size: 0.8rem; font-weight: 700; color: #1E40AF; text-transform: uppercase;">
-                            Keterisian Kuota Magang Periode {{ $bulanAktif->bulan_mulai?->translatedFormat('F Y') }}
-                        </span>
-                        @if($isBuka)
-                            <span style="padding: 0.15rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; background: #DCFCE7; color: #166534; border: 1px solid #86EFAC;">
-                                Pendaftaran Buka
-                            </span>
-                        @else
-                            <span style="padding: 0.15rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
-                                Pendaftaran Tutup
-                            </span>
-                        @endif
-                    </div>
-                    <p style="font-size: 0.85rem; color: var(--neutral-700, #334155); margin: 0.25rem 0 0 0;">
-                        Jadwal Pendaftaran: <strong>{{ $tglBuka ? $tglBuka->translatedFormat('d M Y') : '-' }}</strong> s/d <strong>{{ $tglTutup ? $tglTutup->translatedFormat('d M Y') : '-' }}</strong>
-                        @if($isBuka && $sisaHari >= 0)
-                            <span style="color: #0641CC; font-weight: 700; margin-left: 0.4rem;">({{ $sisaHari }} hari tersisa)</span>
-                        @endif
-                    </p>
-                </div>
-            </div>
+    {{-- ==========================================================================
+       2. CONTROL SUB-BAR (PILIHAN PERIODE)
+       ========================================================================== --}}
+    <div class="adm-control-bar">
+        <form method="GET" action="{{ route('admin.dashboard') }}" class="adm-period-form">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <label for="selectBulan">Pilih Periode:</label>
+            <select name="bulan_id" id="selectBulan" onchange="this.form.submit()">
+                @foreach($daftarBulan as $b)
+                    <option value="{{ $b->id }}" {{ $bulanAktif && $bulanAktif->id === $b->id ? 'selected' : '' }}>
+                        {{ $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '' }}
+                    </option>
+                @endforeach
+            </select>
+        </form>
 
-            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-                <div style="text-align: right;">
-                    <span style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-500, #64748B); display: block;">Realisasi Kuota Umum</span>
-                    <span style="font-size: 1.15rem; font-weight: 800; color: #0641CC;">
-                        {{ $totalKuotaTerisi }} <span style="font-size: 0.85rem; color: var(--neutral-500, #64748B); font-weight: 600;">/ {{ $totalKuotaUmum }} Slot</span>
-                    </span>
-                    <span style="font-size: 0.72rem; color: var(--neutral-600, #475569); display: block;">{{ $persenKuotaUmum }}% Terisi (BR-01)</span>
-                </div>
-                @if($slotKhususTerisi > 0)
-                    <div style="text-align: right; border-left: 1px solid #BFDBFE; padding-left: 1.25rem;">
-                        <span style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-500, #64748B); display: block;">Slot Khusus Internal</span>
-                        <span style="font-size: 1.15rem; font-weight: 800; color: #7C3AED;">
-                            {{ $slotKhususTerisi }} <span style="font-size: 0.85rem; color: var(--neutral-500, #64748B); font-weight: 600;">Terisi</span>
-                        </span>
-                        <span style="font-size: 0.72rem; color: var(--neutral-600, #475569); display: block;">Jalur Khusus (BR-02)</span>
-                    </div>
-                @endif
-            </div>
+        <div style="font-size: 0.825rem; color: #64748B; font-weight: 600;">
+            Pantau aktivitas pendaftaran dan beban bimbingan secara real-time
         </div>
-    @endif
+    </div>
 
-    {{-- 3. 4 KPI SUMMARY STAT METRICS CARDS --}}
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+    {{-- ==========================================================================
+       3. UNIFIED KPI STRIP CARD (PANEL METRIK TERPADU)
+       ========================================================================== --}}
+    <div class="adm-kpi-unified-card">
         
-        <!-- Card 1: Perlu Verifikasi Segera -->
-        <div class="admin-stat-card" style="border-left: 4px solid #F59E0B;">
-            <div>
-                <span style="font-size: 0.8rem; font-weight: 700; color: var(--neutral-600, #475569); display: block; margin-bottom: 0.25rem;">Perlu Verifikasi Segera</span>
-                <span style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900, #0F172A); line-height: 1.1;">{{ number_format($pengajuanMenunggu) }}</span>
-                @if($pengajuanSlaKritisCount > 0)
-                    <span style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; font-weight: 700; color: #DC2626; margin-top: 0.35rem; background: #FEF2F2; padding: 0.15rem 0.45rem; border-radius: 6px; border: 1px solid #FECACA;">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                        <span>{{ $pengajuanSlaKritisCount }} Mendekati Batas SLA</span>
-                    </span>
-                @else
-                    <span style="font-size: 0.75rem; color: #B45309; font-weight: 600; display: block; margin-top: 0.25rem;">Status: Diajukan</span>
-                @endif
-            </div>
-            <div style="width: 46px; height: 46px; border-radius: 10px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        {{-- Item 1: Menunggu Verifikasi --}}
+        <div class="adm-kpi-unified-item">
+            <div class="adm-kpi-icon-box adm-kpi-icon-amber">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
             </div>
+            <div class="adm-kpi-details">
+                <span class="adm-kpi-label">Menunggu Verifikasi</span>
+                <span class="adm-kpi-val">{{ number_format($pengajuanMenunggu) }}</span>
+                @if($pengajuanSlaKritisCount > 0)
+                    <span class="adm-kpi-hint" style="color: #DC2626; font-weight: 700;">
+                        ⚠️ {{ $pengajuanSlaKritisCount }} tertahan &gt; 3 hari
+                    </span>
+                @else
+                    <span class="adm-kpi-hint">Berkas baru masuk</span>
+                @endif
+            </div>
         </div>
 
-        <!-- Card 2: Menunggu Perbaikan Berkas -->
-        <div class="admin-stat-card" style="border-left: 4px solid #0641CC;">
-            <div>
-                <span style="font-size: 0.8rem; font-weight: 700; color: var(--neutral-600, #475569); display: block; margin-bottom: 0.25rem;">Perlu Perbaikan Dokumen</span>
-                <span style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900, #0F172A); line-height: 1.1;">{{ number_format($perluPerbaikan) }}</span>
-                <span style="font-size: 0.75rem; color: #0641CC; font-weight: 600; display: block; margin-top: 0.25rem;">Menunggu revisi peserta</span>
-            </div>
-            <div style="width: 46px; height: 46px; border-radius: 10px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        {{-- Item 2: Revisi Dokumen --}}
+        <div class="adm-kpi-unified-item">
+            <div class="adm-kpi-icon-box adm-kpi-icon-blue">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
             </div>
+            <div class="adm-kpi-details">
+                <span class="adm-kpi-label">Revisi Dokumen</span>
+                <span class="adm-kpi-val">{{ number_format($perluPerbaikan) }}</span>
+                <span class="adm-kpi-hint">Menunggu revisi pemohon</span>
+            </div>
         </div>
 
-        <!-- Card 3: Antrean Waiting List -->
-        <div class="admin-stat-card" style="border-left: 4px solid #7C3AED;">
-            <div>
-                <span style="font-size: 0.8rem; font-weight: 700; color: var(--neutral-600, #475569); display: block; margin-bottom: 0.25rem;">Antrean Waiting List</span>
-                <span style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900, #0F172A); line-height: 1.1;">{{ number_format($waitingListCount) }}</span>
-                <span style="font-size: 0.75rem; color: #6D28D9; font-weight: 600; display: block; margin-top: 0.25rem;">Prioritas antrean FIFO (BR-05)</span>
-            </div>
-            <div style="width: 46px; height: 46px; border-radius: 10px; background: #F5F3FF; color: #7C3AED; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        {{-- Item 3: Antrean Cadangan --}}
+        <div class="adm-kpi-unified-item">
+            <div class="adm-kpi-icon-box adm-kpi-icon-purple">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </div>
+            <div class="adm-kpi-details">
+                <span class="adm-kpi-label">Antrean Cadangan</span>
+                <span class="adm-kpi-val">{{ number_format($waitingListCount) }}</span>
+                <span class="adm-kpi-hint">Daftar tunggu antrean</span>
+            </div>
         </div>
 
-        <!-- Card 4: Peserta Magang Aktif -->
-        <div class="admin-stat-card" style="border-left: 4px solid #10B981;">
-            <div>
-                <span style="font-size: 0.8rem; font-weight: 700; color: var(--neutral-600, #475569); display: block; margin-bottom: 0.25rem;">Peserta Magang Aktif</span>
-                <span style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900, #0F172A); line-height: 1.1;">{{ number_format($pesertaAktifCount) }}</span>
-                <span style="font-size: 0.75rem; color: #047857; font-weight: 600; display: block; margin-top: 0.25rem;">Sedang menjalani tugas</span>
-            </div>
-            <div style="width: 46px; height: 46px; border-radius: 10px; background: #ECFDF5; color: #10B981; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        {{-- Item 4: Peserta Magang Aktif --}}
+        <div class="adm-kpi-unified-item">
+            <div class="adm-kpi-icon-box adm-kpi-icon-emerald">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <div class="adm-kpi-details">
+                <span class="adm-kpi-label">Peserta Magang Aktif</span>
+                <span class="adm-kpi-val">{{ number_format($pesertaAktifCount) }}</span>
+                <span class="adm-kpi-hint">Sedang bertugas di dinas</span>
             </div>
         </div>
 
@@ -299,573 +859,344 @@
         </div>
     </div>
 
-    {{-- 4. COMMAND CENTER WORKSPACE: 4 TABS --}}
-    <div class="admin-card">
-        
-        {{-- Tab Navigation --}}
-        <div class="admin-tab-nav">
-            <button type="button" class="admin-tab-btn active" onclick="switchAdminTab('tab-action-hub', this)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                <span>Antrean Verifikasi Mendesak ({{ $pendaftaranTerbaru->count() }})</span>
-            </button>
-            <button type="button" class="admin-tab-btn" onclick="switchAdminTab('tab-kuota', this)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                <span>Keterisian Kuota Jurusan ({{ $kuotaList->count() }})</span>
-            </button>
-            <button type="button" class="admin-tab-btn" onclick="switchAdminTab('tab-pembimbing', this)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                <span>Beban Pembimbing Lapangan ({{ $pembimbingWorkload->count() }})</span>
-            </button>
-            <button type="button" class="admin-tab-btn" onclick="switchAdminTab('tab-penempatan', this)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-                <span>Arsip Penempatan Terkini ({{ $penempatanTerbaru->count() }})</span>
-            </button>
-            <button type="button" class="admin-tab-btn" onclick="switchAdminTab('tab-offboarding', this)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                <span>Offboarding Watchdog ({{ $upcomingOffboardingList->count() }})</span>
-            </button>
-            <button type="button" class="admin-tab-btn" onclick="switchAdminTab('tab-timeline', this)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                <span>Timeline Gelombang Magang ({{ $timelineGelombangMagang->count() }})</span>
-            </button>
-        </div>
-
-        {{-- TAB 1: ACTION HUB & ANTREAN VERIFIKASI MENDESAK --}}
-        <div id="tab-action-hub" class="admin-tab-content" style="display: block;">
-            <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-                <div>
-                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0;">
-                        Antrean Verifikasi Perlu Tindak Lanjut
-                    </h3>
-                    <p style="font-size: 0.8rem; color: var(--neutral-600, #475569); margin: 0.2rem 0 0 0;">
-                        Pengajuan berstatus Diajukan dan Perlu Perbaikan diurutkan berdasarkan usia berkas untuk penegakan SLA target ≤ 5 hari kerja (PRD 2.3).
-                    </p>
-                </div>
-                <a href="{{ route('admin.pendaftaran.index') }}" style="font-size: 0.825rem; font-weight: 700; color: #0641CC; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                    <span>Buka Semua Antrean Pendaftaran</span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </a>
+    {{-- ==========================================================================
+       ZONA 1: ANTREAN VERIFIKASI UTAMA (FULL-WIDTH SPATIOUS CARD)
+       ========================================================================== --}}
+    <div class="adm-card-full">
+        <div class="adm-card-header-spacious">
+            <div>
+                <h2 class="adm-section-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    <span>Antrean Verifikasi Berkas Pendaftaran</span>
+                </h2>
+                <p class="adm-section-subtitle">Tinjau dan proses berkas pendaftaran calon peserta magang yang membutuhkan verifikasi.</p>
             </div>
 
-            @if($pendaftaranTerbaru->isEmpty())
-                <div style="padding: 3rem 1.5rem; text-align: center; color: var(--neutral-600, #475569);">
-                    <div style="width: 48px; height: 48px; border-radius: 50%; background: #ECFDF5; color: #10B981; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    </div>
-                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin-bottom: 0.25rem;">Semua Pengajuan Telah Diproses</h4>
-                    <p style="font-size: 0.8125rem; margin: 0;">Tidak ada berkas yang tertahan dalam antrean verifikasi saat ini.</p>
+            {{-- Quick Filter Pills --}}
+            <div class="adm-filter-pills">
+                <button type="button" class="adm-pill-btn active" onclick="filterQueueTable('all', this)">
+                    Semua ({{ $pendaftaranTerbaru->count() }})
+                </button>
+                <button type="button" class="adm-pill-btn" onclick="filterQueueTable('diajukan', this)">
+                    Diajukan
+                </button>
+                <button type="button" class="adm-pill-btn" onclick="filterQueueTable('perlu_perbaikan', this)">
+                    Perlu Perbaikan
+                </button>
+            </div>
+        </div>
+
+        @if($pendaftaranTerbaru->isEmpty())
+            <div style="padding: 3.5rem 1.5rem; text-align: center; color: #64748B;">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: #ECFDF5; color: #10B981; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.85rem auto;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </div>
-            @else
-                <div style="overflow-x: auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>No. Pendaftaran</th>
-                                <th>Calon Peserta</th>
-                                <th>Institusi & Jurusan</th>
-                                <th>Bulan Diajukan</th>
-                                <th>Usia Pengajuan (SLA)</th>
-                                <th style="text-align: center;">Status</th>
-                                <th style="text-align: right;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($pendaftaranTerbaru as $item)
-                                @php
-                                    $tglPengajuan = $item->diajukan_at ?? $item->created_at;
-                                    $umurHari = (int) $tglPengajuan->diffInDays(now());
-                                    $slaKritis = $umurHari >= 3;
-                                @endphp
-                                <tr>
-                                    <td style="font-weight: 700; color: #0641CC;">
-                                        {{ $item->nomor_pendaftaran }}
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 700; color: var(--neutral-900, #0F172A);">{{ $item->user?->nama }}</div>
-                                        <small style="color: var(--neutral-500, #64748B);">{{ $item->user?->email }}</small>
-                                    </td>
-                                    <td>
-                                        <div>{{ $item->user?->profil?->institusi ?? '-' }}</div>
-                                        <small style="color: var(--neutral-500, #64748B);">{{ $item->kuota?->jurusan?->nama_jurusan }}</small>
-                                    </td>
-                                    <td>
+                <h4 style="font-size: 1rem; font-weight: 800; color: #0F172A; margin: 0 0 0.25rem 0;">Semua Berkas Sudah Selesai Diverifikasi</h4>
+                <p style="font-size: 0.85rem; margin: 0;">Tidak ada berkas yang menunggu tindak lanjut saat ini.</p>
+            </div>
+        @else
+            <div style="overflow-x: auto; width: 100%;">
+                <table class="adm-table-spacious" id="queueTable">
+                    <thead>
+                        <tr>
+                            <th>Calon Peserta</th>
+                            <th>Institusi & Jurusan</th>
+                            <th>Periode Magang</th>
+                            <th>Usia Pengajuan</th>
+                            <th style="text-align: center;">Status Berkas</th>
+                            <th style="text-align: right;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($pendaftaranTerbaru as $item)
+                            @php
+                                $tgl = $item->diajukan_at ?? $item->created_at;
+                                $umur = (int) $tgl->diffInDays(now());
+                                $isCritical = $umur >= 3;
+                                $initial = strtoupper(substr($item->user?->nama ?? 'P', 0, 1));
+                                $statusClass = $item->status->value === 'diajukan' ? 'status-diajukan' : 'status-perlu-perbaikan';
+                            @endphp
+                            <tr class="queue-row {{ $statusClass }}">
+                                <td>
+                                    <div class="adm-user-cell-spacious">
+                                        <div class="adm-avatar-circle">{{ $initial }}</div>
+                                        <div>
+                                            <div style="font-weight: 700; color: #0F172A; font-size: 0.925rem;">{{ $item->user?->nama }}</div>
+                                            <small style="color: #64748B; font-family: monospace;">{{ $item->nomor_pendaftaran }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; color: #1E293B;">{{ $item->user?->profil?->institusi ?? '-' }}</div>
+                                    <small style="color: #64748B;">{{ $item->kuota?->jurusan?->nama_jurusan }}</small>
+                                </td>
+                                <td>
+                                    <span style="font-weight: 600; color: #334155;">
                                         {{ $item->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
-                                    </td>
-                                    <td>
-                                        @if($slaKritis)
-                                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border-radius: 6px; font-size: 0.72rem; font-weight: 700; background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA;">
-                                                ⚠️ {{ $umurHari }} hari lalu
-                                            </span>
-                                        @else
-                                            <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.55rem; border-radius: 6px; font-size: 0.72rem; font-weight: 600; background: #F8FAFC; color: var(--neutral-600, #475569); border: 1px solid var(--neutral-200, #E2E8F0);">
-                                                {{ $umurHari === 0 ? 'Hari ini' : $umurHari . ' hari lalu' }}
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td style="text-align: center;">
-                                        @if($item->status->value === 'diajukan')
-                                            <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D;">
-                                                Diajukan
-                                            </span>
-                                        @else
-                                            <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE;">
-                                                Perlu Perbaikan
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td style="text-align: right;">
-                                        <a href="{{ route('admin.pendaftaran.show', $item) }}" 
-                                           style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.4rem 0.85rem; background: #0641CC; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 0.8rem; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
-                                            <span>Tinjau</span>
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
-        </div>
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($isCritical)
+                                        <span class="adm-sla-pill-alert">⚠️ {{ $umur }} hari lalu</span>
+                                    @else
+                                        <span class="adm-sla-pill-norm">{{ $umur === 0 ? 'Hari ini' : $umur . ' hari lalu' }}</span>
+                                    @endif
+                                </td>
+                                <td style="text-align: center;">
+                                    @if($item->status->value === 'diajukan')
+                                        <span class="adm-status-badge diajukan">Diajukan</span>
+                                    @else
+                                        <span class="adm-status-badge perbaikan">Perlu Perbaikan</span>
+                                    @endif
+                                </td>
+                                <td style="text-align: right;">
+                                    <a href="{{ route('admin.pendaftaran.show', $item) }}" class="adm-btn-action-primary">
+                                        <span>Tinjau Berkas</span>
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
 
-        {{-- TAB 2: UTILISASI KUOTA JURUSAN --}}
-        <div id="tab-kuota" class="admin-tab-content" style="display: none; padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div style="padding: 1rem 1.75rem; background: #F8FAFC; border-top: 1px solid #E2E8F0; display: flex; justify-content: flex-end;">
+            <a href="{{ route('admin.pendaftaran.index') }}" class="adm-link-more-clean">
+                <span>Lihat Seluruh Arsip Pendaftaran</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
+        </div>
+    </div>
+
+    {{-- ==========================================================================
+       ZONA 2: DUA KOLOM SEIMBANG (50% : 50% GRID BERSIH & RAPI)
+       ========================================================================== --}}
+    <div class="adm-balanced-grid">
+
+        {{-- KOLOM KIRI: MONITORING KUOTA JURUSAN (SLEEK LIST ROWS) --}}
+        <div class="adm-clean-card">
+            <div class="adm-clean-card-header">
                 <div>
-                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0;">
-                        Alokasi Kuota Jurusan (Periode {{ $bulanAktif ? $bulanAktif->bulan_mulai?->translatedFormat('F Y') : 'Aktif' }})
+                    <h3 class="adm-section-title" style="font-size: 0.975rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                        <span>Alokasi & Keterisian Kuota Jurusan</span>
                     </h3>
-                    <p style="font-size: 0.8rem; color: var(--neutral-600, #475569); margin: 0.2rem 0 0 0;">
-                        Monitoring kuota umum per jurusan. Batas aturan bisnis: total kuota umum ≤ 12 (BR-01).
+                    <p class="adm-section-subtitle">
+                        Realisasi kursi magang periode {{ $bulanAktif ? $bulanAktif->bulan_mulai?->translatedFormat('F Y') : 'Aktif' }}.
                     </p>
                 </div>
-                <a href="{{ route('admin.kuota.index') }}" style="font-size: 0.825rem; font-weight: 700; color: #0641CC; text-decoration: none;">
-                    Kelola Konfigurasi Kuota &rarr;
+                <a href="{{ route('admin.kuota.index') }}" class="adm-link-more-clean">
+                    <span>Kelola Kuota &rarr;</span>
                 </a>
             </div>
 
-            @if($kuotaList->isEmpty())
-                <div style="padding: 2.5rem; text-align: center; color: var(--neutral-600, #475569); background: #F8FAFC; border-radius: 10px;">
-                    <p style="margin: 0; font-size: 0.875rem;">Belum ada kuota jurusan yang dikonfigurasi untuk periode ini.</p>
-                </div>
-            @else
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
-                    @foreach($kuotaList as $kuota)
-                        @php
-                            $persen = $kuota->jumlah > 0 ? min(100, round(($kuota->terisi / $kuota->jumlah) * 100)) : 0;
-                            $sisa = max(0, $kuota->jumlah - $kuota->terisi);
-                            $barColor = $persen >= 100 ? '#DC2626' : ($persen >= 75 ? '#F59E0B' : '#0641CC');
-                        @endphp
-                        <div style="background: #F8FAFC; border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 12px; padding: 1.25rem;">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-                                <div>
-                                    <span style="font-weight: 700; font-size: 0.95rem; color: var(--neutral-900, #0F172A); display: block;">
-                                        {{ $kuota->jurusan?->nama_jurusan }}
-                                    </span>
-                                    <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); text-transform: uppercase;">
-                                        Jenjang: {{ $kuota->jurusan?->kategori === 'smk' ? 'SMK' : 'Mahasiswa' }}
-                                    </span>
+            <div class="adm-clean-card-body">
+                {{-- Total Capacity Strip --}}
+                @if($bulanAktif)
+                    @php
+                        $persenTotal = $totalKuotaUmum > 0 ? min(100, round(($totalKuotaTerisi / $totalKuotaUmum) * 100)) : 0;
+                    @endphp
+                    <div style="padding: 1rem 1.15rem; background: #F0F7FF; border: 1px solid #BFDBFE; border-radius: 12px; margin-bottom: 1.25rem;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.825rem; font-weight: 700; color: #1E40AF; margin-bottom: 0.4rem;">
+                            <span>Total Kuota Umum Terisi</span>
+                            <span>{{ $totalKuotaTerisi }} / {{ $totalKuotaUmum }} Kursi ({{ $persenTotal }}%)</span>
+                        </div>
+                        <div style="width: 100%; height: 7px; background: #DBEAFE; border-radius: 999px; overflow: hidden;">
+                            <div style="height: 100%; width: {{ $persenTotal }}%; background: #0641CC; border-radius: 999px;"></div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Sleek List Rows --}}
+                @if($kuotaList->isEmpty())
+                    <p style="margin: 0; font-size: 0.85rem; color: #64748B; text-align: center;">Belum ada kuota jurusan yang dikonfigurasi untuk periode ini.</p>
+                @else
+                    <div class="adm-quota-list-clean">
+                        @foreach($kuotaList as $kuota)
+                            @php
+                                $pct = $kuota->jumlah > 0 ? min(100, round(($kuota->terisi / $kuota->jumlah) * 100)) : 0;
+                                $sisa = max(0, $kuota->jumlah - $kuota->terisi);
+                                $color = $pct >= 100 ? '#DC2626' : ($pct >= 75 ? '#F59E0B' : '#0641CC');
+                                $pillBg = $sisa > 0 ? '#ECFDF5' : '#FEF2F2';
+                                $pillColor = $sisa > 0 ? '#047857' : '#DC2626';
+                            @endphp
+                            <div class="adm-quota-row-item">
+                                <div class="adm-quota-info">
+                                    <span class="adm-quota-title-text">{{ $kuota->jurusan?->nama_jurusan }}</span>
+                                    <span class="adm-quota-cat-badge">{{ $kuota->jurusan?->kategori === 'smk' ? 'SMK' : 'Perguruan Tinggi' }}</span>
                                 </div>
-                                <span style="font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 6px; background: {{ $sisa > 0 ? '#ECFDF5' : '#FEF2F2' }}; color: {{ $sisa > 0 ? '#047857' : '#DC2626' }}; border: 1px solid {{ $sisa > 0 ? '#A7F3D0' : '#FECACA' }};">
-                                    {{ $sisa > 0 ? 'Sisa ' . $sisa . ' Slot' : 'Penuh' }}
+
+                                <div class="adm-quota-meter-box">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748B; font-weight: 600;">
+                                        <span>{{ $kuota->terisi }}/{{ $kuota->jumlah }}</span>
+                                        <span style="color: {{ $color }}; font-weight: 700;">{{ $pct }}%</span>
+                                    </div>
+                                    <div class="adm-quota-meter-track">
+                                        <div class="adm-quota-meter-fill" style="width: {{ $pct }}%; background: {{ $color }};"></div>
+                                    </div>
+                                </div>
+
+                                <span class="adm-quota-status-pill" style="background: {{ $pillBg }}; color: {{ $pillColor }};">
+                                    {{ $sisa > 0 ? 'Sisa ' . $sisa . ' Kursi' : 'Penuh' }}
                                 </span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--neutral-600, #475569); margin-bottom: 0.4rem;">
-                                <span>Terisi: <strong>{{ $kuota->terisi }}</strong> dari {{ $kuota->jumlah }}</span>
-                                <span style="font-weight: 700; color: {{ $barColor }};">{{ $persen }}%</span>
-                            </div>
-                            <div style="width: 100%; height: 8px; background: #E2E8F0; border-radius: 999px; overflow: hidden;">
-                                <div style="width: {{ $persen }}%; height: 100%; background: {{ $barColor }}; border-radius: 999px; transition: width 0.3s ease;"></div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
+                        @endforeach
+                    </div>
+                @endif
+            </div>
         </div>
 
-        {{-- TAB 3: MONITORING BEBAN PEMBIMBING LAPANGAN (BR-13) --}}
-        <div id="tab-pembimbing" class="admin-tab-content" style="display: none; padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+        {{-- KOLOM KANAN: STATUS OPERASIONAL & TIM TERPADU --}}
+        <div class="adm-clean-card">
+            <div class="adm-clean-card-header">
                 <div>
-                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0;">
-                        Monitoring Kapasitas & Beban Kerja Pembimbing (BR-13)
+                    <h3 class="adm-section-title" style="font-size: 0.975rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <span>Status Operasional & Tim Kerja</span>
                     </h3>
-                    <p style="font-size: 0.8rem; color: var(--neutral-600, #475569); margin: 0.2rem 0 0 0;">
-                        Pastikan distribusi peserta merata dan pembimbing tidak melampaui batas beban aktif bimbingan.
-                    </p>
+                    <p class="adm-section-subtitle">Ringkasan jadwal pendaftaran dan kapasitas pembimbing dinas.</p>
                 </div>
-                <a href="{{ route('admin.penempatan.index') }}" style="font-size: 0.825rem; font-weight: 700; color: #0641CC; text-decoration: none;">
-                    Kelola Penempatan Staf &rarr;
-                </a>
             </div>
 
-            @if($pembimbingWorkload->isEmpty())
-                <div style="padding: 2.5rem; text-align: center; color: var(--neutral-600, #475569); background: #F8FAFC; border-radius: 10px;">
-                    <p style="margin: 0; font-size: 0.875rem;">Belum ada akun pembimbing yang terdaftar dan aktif.</p>
-                </div>
-            @else
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
-                    @foreach($pembimbingWorkload as $pmb)
-                        <div style="background: #F8FAFC; border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="adm-clean-card-body">
+                
+                {{-- 1. Status Periode & Countdown --}}
+                @if($bulanAktif)
+                    @php
+                        $tglTutup = $bulanAktif->tgl_tutup ? \Carbon\Carbon::parse($bulanAktif->tgl_tutup) : null;
+                        $tglBuka = $bulanAktif->tgl_buka ? \Carbon\Carbon::parse($bulanAktif->tgl_buka) : null;
+                        $isBuka = $tglBuka && $tglTutup && now()->between($tglBuka, $tglTutup);
+                        $sisaHari = $tglTutup && $tglTutup->isFuture() ? (int) now()->diffInDays($tglTutup, false) : 0;
+                    @endphp
+                    <div class="adm-sub-section">
+                        <div class="adm-sub-title">
+                            <span>Jadwal Pendaftaran Periode Ini</span>
+                        </div>
+                        <div style="padding: 0.85rem 1rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
-                                    <div style="width: 40px; height: 40px; border-radius: 10px; background: #DBEAFE; color: #1E40AF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;">
+                                <span style="font-size: 0.875rem; font-weight: 700; color: #0F172A; display: block;">
+                                    Batas: {{ $tglTutup ? $tglTutup->translatedFormat('d F Y') : '-' }}
+                                </span>
+                                <small style="color: #64748B;">
+                                    @if($isBuka && $sisaHari >= 0)
+                                        Tersisa <strong style="color: #0641CC;">{{ $sisaHari }} hari kalender</strong>
+                                    @else
+                                        Pendaftaran tidak sedang berlangsung
+                                    @endif
+                                </small>
+                            </div>
+                            @if($isBuka)
+                                <span style="padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.725rem; font-weight: 700; background: #DCFCE7; color: #166534;">
+                                    ● Dibuka
+                                </span>
+                            @else
+                                <span style="padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.725rem; font-weight: 700; background: #F1F5F9; color: #64748B;">
+                                    ● Ditutup
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                {{-- 2. Beban Pembimbing Lapangan --}}
+                <div class="adm-sub-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <span class="adm-sub-title" style="margin: 0;">Distribusi Pembimbing Lapangan</span>
+                        <a href="{{ route('admin.penempatan.index') }}" class="adm-link-more-clean" style="font-size: 0.775rem;">
+                            <span>Atur &rarr;</span>
+                        </a>
+                    </div>
+
+                    @if($pembimbingWorkload->isEmpty())
+                        <p style="font-size: 0.825rem; color: #64748B; margin: 0;">Belum ada pembimbing yang terdaftar.</p>
+                    @else
+                        @foreach($pembimbingWorkload->take(3) as $pmb)
+                            <div class="adm-mentor-clean-row">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0;">
+                                    <div class="adm-mentor-avatar">
                                         {{ strtoupper(substr($pmb->nama, 0, 1)) }}
                                     </div>
                                     <div style="min-width: 0;">
-                                        <span style="font-weight: 700; font-size: 0.95rem; color: var(--neutral-900, #0F172A); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        <div style="font-weight: 700; font-size: 0.85rem; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             {{ $pmb->nama }}
-                                        </span>
-                                        <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B);">
-                                            {{ $pmb->bidang?->nama_bidang ?? 'Dinas Kominfo Sleman' }}
-                                        </span>
+                                        </div>
+                                        <small style="color: #64748B; font-size: 0.725rem;">{{ $pmb->bidang?->nama_bidang ?? 'Dinas Kominfo Sleman' }}</small>
                                     </div>
                                 </div>
-                                <div style="padding: 0.6rem 0.75rem; border-radius: 8px; background: #ffffff; border: 1px solid var(--neutral-200, #E2E8F0); margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: 0.75rem; color: var(--neutral-600, #475569);">Peserta Dibimbing:</span>
-                                    <span style="font-weight: 800; font-size: 0.95rem; color: #0641CC;">
-                                        {{ $pmb->aktif_count }} Mentee Aktif
-                                    </span>
-                                </div>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; font-weight: 700; color: #166534;">
-                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #16A34A;"></span>
-                                    <span>Siap Menerima Mentee</span>
+                                <span style="font-weight: 800; font-size: 0.8rem; color: #0641CC; white-space: nowrap;">
+                                    {{ $pmb->aktif_count }} Mentee
                                 </span>
-                                <a href="{{ route('admin.penempatan.index') }}" style="font-size: 0.75rem; font-weight: 700; color: #0641CC; text-decoration: none;">
-                                    Tempatkan &rarr;
-                                </a>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    @endif
                 </div>
-            @endif
-        </div>
 
-        {{-- TAB 4: ARSIP PENEMPATAN TERKINI --}}
-        <div id="tab-penempatan" class="admin-tab-content" style="display: none;">
-            <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-                <div>
-                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0;">
-                        Peserta Baru Ditempatkan
-                    </h3>
-                    <p style="font-size: 0.8rem; color: var(--neutral-600, #475569); margin: 0.2rem 0 0 0;">
-                        Daftar 5 penempatan aktif terkini lengkap dengan akses dokumen Surat Keterangan Diterima resmi (F-16).
-                    </p>
-                </div>
-                <a href="{{ route('admin.penempatan.index') }}" style="font-size: 0.825rem; font-weight: 700; color: #0641CC; text-decoration: none;">
-                    Buka Direktori Penempatan &rarr;
-                </a>
-            </div>
-
-            @if($penempatanTerbaru->isEmpty())
-                <div style="padding: 3rem 1.5rem; text-align: center; color: var(--neutral-600, #475569);">
-                    <p style="margin: 0; font-size: 0.875rem;">Belum ada peserta yang ditempatkan pada periode ini.</p>
-                </div>
-            @else
-                <div style="overflow-x: auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Nama Peserta</th>
-                                <th>Institusi</th>
-                                <th>Pembimbing Lapangan</th>
-                                <th>Durasi & Periode Magang</th>
-                                <th>Surat Diterima (F-16)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($penempatanTerbaru as $p)
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 700; color: var(--neutral-900, #0F172A);">{{ $p->peserta?->nama }}</div>
-                                        <small style="color: var(--neutral-500, #64748B);">{{ $p->peserta?->email }}</small>
-                                    </td>
-                                    <td>
-                                        <div>{{ $p->peserta?->profil?->institusi ?? '-' }}</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600; color: #0641CC;">{{ $p->pembimbing?->nama ?? 'Belum Ditentukan' }}</div>
-                                        <small style="color: var(--neutral-500, #64748B);">{{ $p->bidang?->nama_bidang ?? 'Dinas Kominfo' }}</small>
-                                    </td>
-                                    <td>
-                                        <div style="font-size: 0.8rem;">
-                                            {{ $p->tgl_mulai?->format('d M Y') }} - {{ $p->tgl_selesai?->format('d M Y') }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('admin.penempatan.surat-diterima', $p->id) }}" 
-                                           target="_blank" 
-                                           style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.65rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 6px; font-weight: 600; font-size: 0.75rem; text-decoration: none;">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                                            <span>Unduh PDF</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
-        </div>
-
-        {{-- TAB 5: OFFBOARDING WATCHDOG & PERINGATAN SELESAI MAGANG --}}
-        <div id="tab-offboarding" class="admin-tab-content" style="display: none;">
-            <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-                <div>
-                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0;">
-                        Pusat Pengingat SLA & Offboarding Watchdog
-                    </h3>
-                    <p style="font-size: 0.8rem; color: var(--neutral-600, #475569); margin: 0.2rem 0 0 0;">
-                        Peringatan dini peserta magang aktif yang akan selesai dalam rentang ≤ 14 hari kalender atau telah melewati batas selesai (H-14 s/d Overdue).
-                    </p>
-                </div>
-                <a href="{{ route('admin.sertifikat.index') }}" style="font-size: 0.825rem; font-weight: 700; color: #0641CC; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                    <span>Buka Hub Sertifikat Kelulusan</span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </a>
-            </div>
-
-            @if($upcomingOffboardingList->isEmpty())
-                <div style="padding: 3rem 1.5rem; text-align: center; color: var(--neutral-600, #475569);">
-                    <div style="width: 48px; height: 48px; border-radius: 50%; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                {{-- 3. Tenggat Selesai Magang (Jika ada yang mendekati selesai) --}}
+                @if(!$upcomingOffboardingList->isEmpty())
+                    <div class="adm-sub-section">
+                        <span class="adm-sub-title" style="color: #D97706;">Peringatan Selesai Magang (H-14)</span>
+                        @foreach($upcomingOffboardingList->take(2) as $offboard)
+                            @php
+                                $pen = $offboard['penempatan'];
+                                $days = $offboard['days_remaining'];
+                            @endphp
+                            <div style="padding: 0.65rem 0.85rem; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="font-size: 0.825rem;">
+                                    <strong style="color: #92400E;">{{ $pen->peserta?->nama }}</strong>
+                                    <span style="color: #B45309; display: block; font-size: 0.725rem;">{{ $pen->bidang?->nama_bidang ?? '-' }}</span>
+                                </div>
+                                <span style="font-size: 0.725rem; font-weight: 700; background: #FEF3C7; color: #92400E; padding: 0.2rem 0.5rem; border-radius: 4px;">
+                                    {{ $days }} Hari Lagi
+                                </span>
+                            </div>
+                        @endforeach
                     </div>
-                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin-bottom: 0.25rem;">Tidak Ada Peserta Mendekati Batas Selesai</h4>
-                    <p style="font-size: 0.8125rem; margin: 0;">Seluruh peserta aktif saat ini memiliki masa magang lebih dari 14 hari ke depan.</p>
-                </div>
-            @else
-                <div style="overflow-x: auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Peserta Magang</th>
-                                <th>Institusi</th>
-                                <th>Bidang & Pembimbing</th>
-                                <th>Target Tanggal Selesai</th>
-                                <th>Status Hitung Mundur</th>
-                                <th style="text-align: right;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($upcomingOffboardingList as $offboard)
-                                @php
-                                    $item = $offboard['penempatan'];
-                                    $days = $offboard['days_remaining'];
-                                    $isOverdue = $offboard['is_overdue'];
-                                @endphp
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 700; color: var(--neutral-900, #0F172A);">{{ $item->peserta?->nama }}</div>
-                                        <small style="color: var(--neutral-500, #64748B);">{{ $item->peserta?->email }}</small>
-                                    </td>
-                                    <td>
-                                        <div>{{ $item->peserta?->profil?->institusi ?? '-' }}</div>
-                                        <small style="color: var(--neutral-500, #64748B);">{{ $item->peserta?->profil?->jurusan ?? '-' }}</small>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600; color: #0641CC;">{{ $item->bidang?->nama_bidang ?? '-' }}</div>
-                                        <small style="color: var(--neutral-500, #64748B);">Pembimbing: {{ $item->pembimbing?->nama ?? 'Belum Ditugaskan' }}</small>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 700;">{{ $item->tgl_selesai?->translatedFormat('d M Y') }}</div>
-                                        <small style="color: var(--neutral-500, #64748B);">Mulai: {{ $item->tgl_mulai?->format('d/m/Y') }}</small>
-                                    </td>
-                                    <td>
-                                        @if($isOverdue)
-                                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA;">
-                                                ⚠️ Lewat {{ abs($days) }} Hari (Perlu Penutupan)
-                                            </span>
-                                        @elseif($days === 0)
-                                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #FFFBEB; color: #D97706; border: 1px solid #FDE68A;">
-                                                🔔 Hari Terakhir Magang
-                                            </span>
-                                        @else
-                                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #EFF6FF; color: #0641CC; border: 1px solid #BFDBFE;">
-                                                ⏳ {{ $days }} Hari Tersisa
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td style="text-align: right; white-space: nowrap;">
-                                        <a href="{{ route('admin.penempatan.index') }}" 
-                                           style="padding: 0.35rem 0.75rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-decoration: none;">
-                                            Tinjau Penempatan
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
-        </div>
+                @endif
 
-        {{-- TAB 6: TIMELINE GELOMBANG MAGANG --}}
-        <div id="tab-timeline" class="admin-tab-content" style="display: none;">
-            <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-                <div>
-                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0;">
-                        Kalender Operasional & Timeline Gelombang Magang
-                    </h3>
-                    <p style="font-size: 0.8rem; color: var(--neutral-600, #475569); margin: 0.2rem 0 0 0;">
-                        Jadwal pembukaan, penutupan pendaftaran, dan utilisasi kuota kumulatif antar-gelombang magang.
-                    </p>
+                {{-- 4. Akses Modul Cepat --}}
+                <div class="adm-sub-section">
+                    <span class="adm-sub-title">Akses Modul Administrasi</span>
+                    <a href="{{ route('admin.waiting-list.index') }}" class="adm-action-link-clean">
+                        <span>Antrean Waiting List</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                    <a href="{{ route('admin.penempatan.index') }}" class="adm-action-link-clean">
+                        <span>Penempatan & Pembimbing</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                    <a href="{{ route('admin.sertifikat.index') }}" class="adm-action-link-clean">
+                        <span>Penerbitan Sertifikat Kelulusan</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
                 </div>
-                <a href="{{ route('admin.kuota.index') }}" style="font-size: 0.825rem; font-weight: 700; color: #0641CC; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                    <span>Kelola Kuota Jurusan</span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </a>
+
             </div>
-
-            @if($timelineGelombangMagang->isEmpty())
-                <div style="padding: 3rem 1.5rem; text-align: center; color: var(--neutral-600, #475569);">
-                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin-bottom: 0.25rem;">Belum Ada Data Periode Magang</h4>
-                    <p style="font-size: 0.8125rem; margin: 0;">Silakan tambahkan data bulan magang terlebih dahulu.</p>
-                </div>
-            @else
-                <div style="overflow-x: auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Periode Magang</th>
-                                <th>Jadwal Pendaftaran</th>
-                                <th>Status Pendaftaran</th>
-                                <th>Keterisian Kuota</th>
-                                <th style="text-align: right;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($timelineGelombangMagang as $g)
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 800; color: var(--neutral-900, #0F172A); font-size: 0.95rem;">
-                                            {{ $g['periode'] }}
-                                        </div>
-                                        <small style="color: var(--neutral-500, #64748B);">Mulai: {{ $g['tgl_mulai'] }}</small>
-                                    </td>
-                                    <td>
-                                        <div style="font-size: 0.85rem; color: var(--neutral-700, #334155);">
-                                            <strong>{{ $g['tgl_buka'] }}</strong> s/d <strong>{{ $g['tgl_tutup'] }}</strong>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @if($g['status_pendaftaran'] === 'Pendaftaran Dibuka')
-                                            <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #DCFCE7; color: #166534; border: 1px solid #86EFAC;">
-                                                🟢 {{ $g['status_pendaftaran'] }}
-                                            </span>
-                                        @elseif($g['status_pendaftaran'] === 'Pendaftaran Ditutup')
-                                            <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
-                                                ⚪ {{ $g['status_pendaftaran'] }}
-                                            </span>
-                                        @else
-                                            <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A;">
-                                                🟡 {{ $g['status_pendaftaran'] }}
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td style="min-width: 180px;">
-                                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.25rem;">
-                                            <span>{{ $g['kuota_terisi'] }} / {{ $g['kuota_total'] }} Slot</span>
-                                            <span style="color: #0641CC;">{{ $g['persen_terisi'] }}%</span>
-                                        </div>
-                                        <div style="width: 100%; height: 6px; background: #E2E8F0; border-radius: 9999px; overflow: hidden;">
-                                            <div style="height: 100%; width: {{ $g['persen_terisi'] }}%; background: #0641CC; border-radius: 9999px;"></div>
-                                        </div>
-                                    </td>
-                                    <td style="text-align: right;">
-                                        <a href="{{ route('admin.dashboard', ['bulan_id' => $g['id']]) }}" 
-                                           style="padding: 0.35rem 0.75rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-decoration: none;">
-                                            Lihat Kuota
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
         </div>
 
-    </div>
-
-    {{-- 5. QUICK ACTION SHORTCUTS FOOTER --}}
-    <div style="background: #ffffff; border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-        <h3 style="font-size: 0.9rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0 0 0.85rem 0; display: flex; align-items: center; gap: 0.45rem;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-            <span>Aksi Cepat Operasional Administrasi</span>
-        </h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem;">
-            <a href="{{ route('admin.pendaftaran.index') }}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: #F8FAFC; border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 10px; text-decoration: none; color: var(--neutral-800, #1E293B); transition: all 0.15s ease;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: #0751FF; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><circle cx="10" cy="13" r="2"></circle><path d="m20 17-1.09-1.09a2 2 0 0 0-2.82 0L10 22"></path></svg>
-                </div>
-                <div>
-                    <span style="font-weight: 700; font-size: 0.85rem; display: block;">Verifikasi Berkas</span>
-                    <span style="font-size: 0.72rem; color: var(--neutral-500, #64748B);">Tinjau pengajuan baru</span>
-                </div>
-            </a>
-
-            <a href="{{ route('admin.kuota.index') }}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: #F8FAFC; border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 10px; text-decoration: none; color: var(--neutral-800, #1E293B); transition: all 0.15s ease;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: #0641CC; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                </div>
-                <div>
-                    <span style="font-weight: 700; font-size: 0.85rem; display: block;">Manajemen Kuota</span>
-                    <span style="font-size: 0.72rem; color: var(--neutral-500, #64748B);">Alokasi kuota jurusan</span>
-                </div>
-            </a>
-
-            <a href="{{ route('admin.penempatan.index') }}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: #F8FAFC; border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 10px; text-decoration: none; color: var(--neutral-800, #1E293B); transition: all 0.15s ease;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: #10B981; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                </div>
-                <div>
-                    <span style="font-weight: 700; font-size: 0.85rem; display: block;">Penempatan Staf</span>
-                    <span style="font-size: 0.72rem; color: var(--neutral-500, #64748B);">Input manual & pembimbing</span>
-                </div>
-            </a>
-
-            <a href="{{ route('admin.waiting-list.index') }}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: #F8FAFC; border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 10px; text-decoration: none; color: var(--neutral-800, #1E293B); transition: all 0.15s ease;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: #7C3AED; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                </div>
-                <div>
-                    <span style="font-weight: 700; font-size: 0.85rem; display: block;">Waiting List</span>
-                    <span style="font-size: 0.72rem; color: var(--neutral-500, #64748B);">Kelola antrean FIFO</span>
-                </div>
-            </a>
-
-            <a href="{{ route('admin.sertifikat.index') }}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: #F8FAFC; border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 10px; text-decoration: none; color: var(--neutral-800, #1E293B); transition: all 0.15s ease;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: #D97706; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                </div>
-                <div>
-                    <span style="font-weight: 700; font-size: 0.85rem; display: block;">Hub Sertifikat</span>
-                    <span style="font-size: 0.72rem; color: var(--neutral-500, #64748B);">Cetak ijazah kelulusan</span>
-                </div>
-            </a>
-        </div>
     </div>
 
 </div>
 
 <script>
-function switchAdminTab(tabId, btn) {
-    document.querySelectorAll('.admin-tab-content').forEach(content => {
-        content.style.display = 'none';
-    });
-    document.querySelectorAll('.admin-tab-btn').forEach(b => {
-        b.classList.remove('active');
-    });
+/**
+ * Instant filter untuk tabel antrean verifikasi tanpa reload halaman
+ */
+function filterQueueTable(filterType, btn) {
+    document.querySelectorAll('.adm-pill-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
 
-    const target = document.getElementById(tabId);
-    if (target) {
-        target.style.display = 'block';
-    }
-    if (btn) {
-        btn.classList.add('active');
-    }
+    const rows = document.querySelectorAll('.queue-row');
+    rows.forEach(row => {
+        if (filterType === 'all') {
+            row.style.display = '';
+        } else if (filterType === 'diajukan') {
+            row.style.display = row.classList.contains('status-diajukan') ? '' : 'none';
+        } else if (filterType === 'perlu_perbaikan') {
+            row.style.display = row.classList.contains('status-perlu-perbaikan') ? '' : 'none';
+        }
+    });
 }
 </script>
 @endsection
