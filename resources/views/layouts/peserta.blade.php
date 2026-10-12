@@ -12,6 +12,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
+    <!-- Anti-Flash Theme Script -->
+    <script>
+        (function() {
+            try {
+                const savedPref = localStorage.getItem('magkom_theme') || '{{ session('tema_tampilan', request()->cookie('tema_tampilan', 'terang')) }}';
+                let effectiveTheme = 'light';
+                if (savedPref === 'sistem') {
+                    effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                } else if (savedPref === 'gelap') {
+                    effectiveTheme = 'dark';
+                } else {
+                    effectiveTheme = 'light';
+                }
+                document.documentElement.setAttribute('data-theme', effectiveTheme);
+                document.documentElement.setAttribute('data-pref-theme', savedPref);
+            } catch (e) {}
+        })();
+    </script>
+
     <style>
         :root {
             /* MagKom / Warna Tokens (Design System DS-MagKom Bab 2.1) */
@@ -71,6 +90,311 @@
             --radius-full: 9999px;
             --sidebar-width: 256px;
             --topbar-height: 64px;
+        }
+
+        /* Mode Gelap (Dark Mode Tokens - Modern Slate/Navy Theme ala Menu Tugas) */
+        [data-theme="dark"] {
+            --neutral-0: #182234;       /* Card background */
+            --neutral-100: #0F172A;     /* Secondary container / hover */
+            --neutral-150: #0A0F1D;     /* Body background */
+            --neutral-200: #26354D;     /* Card border & divider */
+            --neutral-400: #3E516E;     /* Input border / outline */
+            --neutral-500: #8FA2BF;     /* Subtitle / muted text */
+            --neutral-600: #CBD5E1;     /* Body secondary text */
+            --neutral-700: #E2E8F0;     /* Body regular text */
+            --neutral-800: #F8FAFC;     /* Heading & bold text */
+            --neutral-900: #FFFFFF;
+
+            --blue-tint: rgba(6, 65, 204, 0.35);
+            --blue-tint-line: rgba(7, 81, 255, 0.5);
+
+            /* Status Tokens Khusus Mode Gelap (Glowing & High Contrast) */
+            --green-100: rgba(6, 78, 59, 0.45);
+            --green-600: #34D399;
+            --green-700: #6EE7B7;
+
+            --amber-100: rgba(120, 53, 15, 0.45);
+            --amber-200: rgba(180, 83, 9, 0.35);
+            --amber-300: #FCD34D;
+            --amber-700: #FBBF24;
+
+            --red-100: rgba(127, 29, 29, 0.45);
+            --red-200: rgba(153, 27, 27, 0.35);
+            --red-300: #FCA5A5;
+            --red-600: #F87171;
+            --red-700: #EF4444;
+        }
+
+        [data-theme="dark"] body {
+            background-color: var(--neutral-150);
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .sidebar {
+            background-color: #111827;
+            border-right-color: #1F2937;
+        }
+
+        [data-theme="dark"] .sidebar-header {
+            border-bottom-color: #1F2937;
+        }
+
+        [data-theme="dark"] .sidebar-footer {
+            border-top-color: #1F2937;
+        }
+
+        [data-theme="dark"] .topbar {
+            background-color: #111827;
+            border-bottom-color: #1F2937;
+        }
+
+        [data-theme="dark"] .topbar-title {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .user-chip-btn {
+            background-color: #1F2937;
+            border-color: #374151;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .user-name {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .profile-dropdown-menu {
+            background-color: #182234;
+            border-color: #26354D;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="dark"] .dropdown-header {
+            border-bottom-color: #26354D;
+        }
+
+        [data-theme="dark"] .dropdown-header-name {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .dropdown-item {
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .dropdown-item:hover {
+            background-color: #1F2937;
+            color: #60A5FA;
+        }
+
+        [data-theme="dark"] .dropdown-divider {
+            background-color: #26354D;
+        }
+
+        [data-theme="dark"] .nav-item {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .nav-item:hover {
+            background-color: #1F2937;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .nav-item.active {
+            background-color: rgba(7, 81, 255, 0.2);
+            color: #60A5FA;
+        }
+
+        [data-theme="dark"] .nav-item.locked {
+            color: #64748B;
+            background-color: transparent;
+        }
+
+        [data-theme="dark"] .badge-locked {
+            background-color: #1F2937;
+            color: #94A3B8;
+            border-color: #374151;
+        }
+
+        [data-theme="dark"] .logout-btn {
+            background-color: #1F2937;
+            border-color: #374151;
+            color: #F87171;
+        }
+
+        [data-theme="dark"] .logout-btn:hover {
+            background-color: #7F1D1D;
+            color: #FFFFFF;
+        }
+
+        [data-theme="dark"] .content-area {
+            background-color: var(--neutral-150);
+        }
+
+        [data-theme="dark"] .settings-card,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .stats-card,
+        [data-theme="dark"] .profile-card,
+        [data-theme="dark"] .tugas-card,
+        [data-theme="dark"] .logbook-card {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .input-custom,
+        [data-theme="dark"] input[type="text"],
+        [data-theme="dark"] input[type="email"],
+        [data-theme="dark"] input[type="password"],
+        [data-theme="dark"] select,
+        [data-theme="dark"] textarea {
+            background-color: #0F172A !important;
+            border-color: var(--neutral-400) !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] input:focus,
+        [data-theme="dark"] select:focus,
+        [data-theme="dark"] textarea:focus {
+            border-color: #2563EB !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+        }
+
+        [data-theme="dark"] .callout-note {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        /* Unified Dark Components across Views */
+        [data-theme="dark"] .table-container,
+        [data-theme="dark"] .table-wrapper,
+        [data-theme="dark"] table {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] th {
+            background-color: #0F172A !important;
+            color: #94A3B8 !important;
+            border-bottom-color: var(--neutral-200) !important;
+        }
+
+        [data-theme="dark"] td {
+            border-bottom-color: var(--neutral-200) !important;
+            color: var(--neutral-700) !important;
+        }
+
+        [data-theme="dark"] tr:hover td {
+            background-color: rgba(30, 41, 59, 0.5) !important;
+        }
+
+        [data-theme="dark"] .modal-content,
+        [data-theme="dark"] .modal-box,
+        [data-theme="dark"] .modal-box-large,
+        [data-theme="dark"] .dialog-content {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        [data-theme="dark"] .modal-header {
+            background-color: #182234 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-footer {
+            background-color: #0F172A !important;
+            border-top-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .btn-secondary {
+            background-color: #1E293B !important;
+            border: 1px solid #334155 !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .btn-secondary:hover {
+            background-color: #334155 !important;
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .alert-success {
+            background-color: rgba(6, 78, 59, 0.35) !important;
+            border-color: rgba(52, 211, 153, 0.4) !important;
+            color: #6EE7B7 !important;
+        }
+
+        [data-theme="dark"] .alert-error,
+        [data-theme="dark"] .alert-danger {
+            background-color: rgba(127, 29, 29, 0.35) !important;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+            color: #FCA5A5 !important;
+        }
+
+        [data-theme="dark"] .alert-info {
+            background-color: rgba(30, 58, 138, 0.35) !important;
+            border-color: rgba(96, 165, 250, 0.4) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .badge-success {
+            background-color: rgba(6, 78, 59, 0.6) !important;
+            border-color: rgba(52, 211, 153, 0.4) !important;
+            color: #6EE7B7 !important;
+        }
+
+        [data-theme="dark"] .badge-warning {
+            background-color: rgba(120, 53, 15, 0.6) !important;
+            border-color: rgba(251, 191, 36, 0.4) !important;
+            color: #FCD34D !important;
+        }
+
+        [data-theme="dark"] .badge-danger {
+            background-color: rgba(127, 29, 29, 0.6) !important;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+            color: #FCA5A5 !important;
+        }
+
+        [data-theme="dark"] .badge-info {
+            background-color: rgba(30, 58, 138, 0.6) !important;
+            border-color: rgba(96, 165, 250, 0.4) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .badge-neutral {
+            background-color: rgba(51, 65, 85, 0.6) !important;
+            border-color: rgba(100, 116, 139, 0.4) !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .tab-btn {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .tab-btn:hover {
+            color: #60A5FA;
+            background: #1E293B;
+        }
+
+        [data-theme="dark"] .tab-btn.active {
+            color: #60A5FA;
+            border-bottom-color: #3B82F6;
+        }
+
+        [data-theme="dark"] .tab-count {
+            background-color: #26354D;
+            color: #CBD5E1;
+        }
+
+        [data-theme="dark"] .tab-btn.active .tab-count {
+            background-color: rgba(7, 81, 255, 0.3);
+            color: #60A5FA;
+        }
+
+        [data-theme="dark"] .divider,
+        [data-theme="dark"] hr {
+            border-color: var(--neutral-200) !important;
         }
 
         *, *::before, *::after {
@@ -840,6 +1164,16 @@
                 </svg>
                 Lihat Kuota Landing ↗
             </a>
+
+            <div class="nav-label">Pengaturan</div>
+
+            <a href="{{ route('peserta.pengaturan.index') }}" class="nav-item {{ request()->routeIs('peserta.pengaturan.*') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Pengaturan Akun
+            </a>
         </nav>
 
         <div class="sidebar-footer">
@@ -931,11 +1265,12 @@
                             <span>Riwayat Pendaftaran</span>
                         </a>
 
-                        <a href="{{ route('password.ganti') }}" class="dropdown-item" role="menuitem">
+                        <a href="{{ route('peserta.pengaturan.index') }}" class="dropdown-item" role="menuitem">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
-                            <span>Ganti Kata Sandi</span>
+                            <span>Pengaturan Akun</span>
                         </a>
 
                         <div class="dropdown-divider"></div>
@@ -1033,6 +1368,33 @@
                 closeProfileMenu();
             }
         });
+
+        // Theme Switcher Engine Global
+        window.applyPortalTheme = function(theme) {
+            let effective = 'light';
+            if (theme === 'sistem') {
+                effective = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            } else if (theme === 'gelap') {
+                effective = 'dark';
+            } else {
+                effective = 'light';
+            }
+            document.documentElement.setAttribute('data-theme', effective);
+            document.documentElement.setAttribute('data-pref-theme', theme);
+            try {
+                localStorage.setItem('magkom_theme', theme);
+            } catch (e) {}
+        };
+
+        // Listener jika OS tema berubah dan user memilih 'sistem'
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                const currentPref = document.documentElement.getAttribute('data-pref-theme') || localStorage.getItem('magkom_theme');
+                if (currentPref === 'sistem') {
+                    document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                }
+            });
+        }
     </script>
     @stack('scripts')
 </body>

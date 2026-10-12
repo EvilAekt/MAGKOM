@@ -62,6 +62,23 @@
         font-weight: 700;
         font-size: 15px;
     }
+
+    /* Dark Mode Harmonization ala Menu Tugas */
+    [data-theme="dark"] .table th {
+        background: #0F172A !important;
+        color: #94A3B8 !important;
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .table td {
+        border-bottom-color: #26354D !important;
+        color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .table tr.total-row td {
+        background: #111C2E !important;
+        color: #F8FAFC !important;
+    }
 </style>
 @endpush
 

@@ -451,6 +451,223 @@
             padding: 24px 20px;
         }
     }
+
+    /* ========================================================
+       DARK THEME HARMONIZATION (Google Classroom Style)
+       ======================================================== */
+    [data-theme="dark"] .back-link-pill {
+        background: #182234;
+        border-color: #26354D;
+        color: #CBD5E1;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="dark"] .back-link-pill:hover {
+        background: #1E293B;
+        border-color: #3B82F6;
+        color: #60A5FA;
+    }
+
+    [data-theme="dark"] .card-modern,
+    [data-theme="dark"] .assignment-sheet-card,
+    [data-theme="dark"] .submission-stream-card,
+    [data-theme="dark"] .your-work-card {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    [data-theme="dark"] .assignment-header,
+    [data-theme="dark"] .stream-header,
+    [data-theme="dark"] .your-work-header {
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .classroom-icon-circle {
+        background: rgba(37, 99, 235, 0.2) !important;
+        color: #60A5FA !important;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25) !important;
+    }
+
+    [data-theme="dark"] .assignment-heading-wrap h1,
+    [data-theme="dark"] .stream-title,
+    [data-theme="dark"] .your-work-title {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .assignment-meta-row,
+    [data-theme="dark"] .section-eyebrow,
+    [data-theme="dark"] .guidance-title {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .meta-chip {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .deadline-label {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .deadline-value {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .instruction-body-text {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .submission-timeline-item {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    [data-theme="dark"] .submission-timeline-item:hover {
+        border-color: #3B82F6 !important;
+    }
+
+    [data-theme="dark"] .submission-author-info {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .submission-desc {
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .submission-file-chip {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .feedback-bubble-box {
+        background: rgba(120, 53, 15, 0.3) !important;
+        border-left: 4px solid #F59E0B !important;
+        color: #FEF3C7 !important;
+    }
+
+    [data-theme="dark"] .form-label-clean {
+        color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .textarea-clean,
+    [data-theme="dark"] .input-clean {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .textarea-clean:focus,
+    [data-theme="dark"] .input-clean:focus {
+        background: #0F172A !important;
+        border-color: #2563EB !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+    }
+
+    [data-theme="dark"] .file-upload-box {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .file-upload-box:hover {
+        background: #182234 !important;
+        border-color: #2563EB !important;
+    }
+
+    [data-theme="dark"] .file-preview-pill {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] .guidance-info-card {
+        background: #182234 !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .guidance-desc {
+        color: #94A3B8 !important;
+    }
+
+    .ref-link-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 6px;
+        background: #EFF6FF;
+        color: #1D4ED8;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid #BFDBFE;
+        transition: all 0.2s ease;
+    }
+    .ref-link-pill:hover {
+        background: #DBEAFE;
+    }
+    [data-theme="dark"] .ref-link-pill {
+        background: #0F172A;
+        border-color: #26354D;
+        color: #60A5FA;
+    }
+
+    .file-lampiran-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 6px;
+        background: #ffffff;
+        color: var(--neutral-800);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid var(--neutral-300);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+    }
+    [data-theme="dark"] .file-lampiran-pill {
+        background: #0F172A;
+        border-color: #26354D;
+        color: #CBD5E1;
+    }
+
+    .empty-stream-box {
+        text-align: center;
+        padding: 36px 16px;
+        color: var(--neutral-500);
+        background: #FAFBFD;
+        border-radius: 8px;
+        border: 1px dashed var(--neutral-300);
+    }
+    [data-theme="dark"] .empty-stream-box {
+        background: #0F172A;
+        border-color: #26354D;
+        color: #94A3B8;
+    }
+    [data-theme="dark"] .empty-stream-box div {
+        color: #F8FAFC !important;
+    }
+
+    .task-completed-banner {
+        background: #ECFDF5;
+        border: 1px solid #A7F3D0;
+        border-radius: 8px;
+        padding: 16px;
+        text-align: center;
+        color: #065F46;
+    }
+    [data-theme="dark"] .task-completed-banner {
+        background: rgba(6, 78, 59, 0.3);
+        border-color: rgba(52, 211, 153, 0.4);
+        color: #A7F3D0;
+    }
 </style>
 @endpush
 
@@ -543,7 +760,7 @@
 
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                                 @if($tugas->link_referensi)
-                                    <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 6px; background: #eff6ff; color: #1d4ed8; text-decoration: none; font-size: 13px; font-weight: 600; border: 1px solid #bfdbfe;">
+                                    <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" class="ref-link-pill">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                                         <span>Buka Tautan Acuan ↗</span>
                                     </a>
@@ -551,7 +768,7 @@
 
                                 @if($tugas->file_lampiran)
                                     @php $badge = $tugas->badge_color_lampiran; @endphp
-                                    <a href="{{ route('peserta.tugas.lampiran', $tugas->id) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 6px; background: #ffffff; color: var(--neutral-800); text-decoration: none; font-size: 13px; font-weight: 600; border: 1px solid var(--neutral-300); box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                    <a href="{{ route('peserta.tugas.lampiran', $tugas->id) }}" class="file-lampiran-pill">
                                         <span style="padding: 1px 6px; border-radius: 4px; background: {{ $badge['bg'] }}; color: {{ $badge['color'] }}; font-size: 11px; font-weight: 800;">
                                             {{ $badge['label'] }}
                                         </span>
@@ -579,7 +796,7 @@
                 </div>
 
                 @if($tugas->progresLogs->isEmpty())
-                    <div style="text-align: center; padding: 36px 16px; color: var(--neutral-500); background: #FAFBFD; border-radius: 8px; border: 1px dashed var(--neutral-300);">
+                    <div class="empty-stream-box">
                         <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 10px auto; color: var(--neutral-400);">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
@@ -656,7 +873,7 @@
                 </div>
 
                 @if($isSelesai)
-                    <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 8px; padding: 16px; text-align: center; color: #065F46;">
+                    <div class="task-completed-banner">
                         <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin: 0 auto 8px auto; color: #10B981;">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>

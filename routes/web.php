@@ -29,6 +29,7 @@ use App\Http\Controllers\Peserta\LogbookController as PesertaLogbookController;
 use App\Http\Controllers\Peserta\NilaiController as PesertaNilaiController;
 use App\Http\Controllers\Peserta\PendaftaranController as PesertaPendaftaranController;
 use App\Http\Controllers\Peserta\ProfilController as PesertaProfilController;
+use App\Http\Controllers\Peserta\PengaturanController as PesertaPengaturanController;
 use App\Http\Controllers\Peserta\TugasController as PesertaTugasController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Public\HealthController;
@@ -114,6 +115,11 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:peserta'])-
 
     Route::get('/profil', [PesertaProfilController::class, 'show'])->name('profil.show');
     Route::post('/profil', [PesertaProfilController::class, 'simpan'])->name('profil.simpan');
+
+    // Pengaturan Akun & Preferensi Peserta
+    Route::get('/pengaturan', [PesertaPengaturanController::class, 'index'])->name('pengaturan.index');
+    Route::put('/pengaturan/password', [PesertaPengaturanController::class, 'updatePassword'])->name('pengaturan.password.update');
+    Route::post('/pengaturan/preferensi', [PesertaPengaturanController::class, 'updatePreferensi'])->name('pengaturan.preferensi.update');
 
     Route::get('/pendaftaran', [PesertaPendaftaranController::class, 'index'])->name('pendaftaran.index');
     Route::post('/pendaftaran', [PesertaPendaftaranController::class, 'store'])->name('pendaftaran.store');

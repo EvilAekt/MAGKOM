@@ -353,6 +353,83 @@
             margin-bottom: 20px;
         }
     }
+
+    /* Dark Mode Harmonization ala Menu Tugas */
+    [data-theme="dark"] .identity-card,
+    [data-theme="dark"] .form-unified-card {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    [data-theme="dark"] .avatar-preview-box {
+        border-color: #182234 !important;
+        background: rgba(6, 65, 204, 0.35) !important;
+        color: #60A5FA !important;
+    }
+
+    [data-theme="dark"] .privacy-notice-box {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .field-input {
+        background: #0F172A !important;
+        border-color: #3E516E !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .field-input:focus {
+        border-color: #2563EB !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+    }
+
+    [data-theme="dark"] .field-input:disabled,
+    [data-theme="dark"] .field-input[readonly] {
+        background: #111C2E !important;
+        border-color: #26354D !important;
+        color: #8FA2BF !important;
+    }
+
+    [data-theme="dark"] .checklist-mini-item {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .checklist-mini-item.done {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .checklist-mini-icon.done {
+        background: rgba(6, 78, 59, 0.45) !important;
+        border-color: rgba(52, 211, 153, 0.4) !important;
+        color: #6EE7B7 !important;
+    }
+
+    [data-theme="dark"] .checklist-mini-icon.pending {
+        background: #26354D !important;
+        color: #8FA2BF !important;
+    }
+
+    [data-theme="dark"] .form-section-title-wrap {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .form-action-bar {
+        border-top-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .profile-header-title {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .profile-header-subtitle {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .field-label {
+        color: #E2E8F0 !important;
+    }
 </style>
 @endpush
 
