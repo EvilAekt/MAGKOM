@@ -10,6 +10,11 @@ class PenilaianRequest extends FormRequest
 {
     public function authorize(): bool
     {
+        $penempatan = $this->route('penempatan');
+        if ($penempatan) {
+            return $this->user()?->can('manage', [\App\Models\Penilaian::class, $penempatan]) ?? false;
+        }
+
         return true;
     }
 

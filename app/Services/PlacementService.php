@@ -12,6 +12,7 @@ use App\Enums\SumberPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Exceptions\Domain\StatusSudahBerubahException;
 use App\Models\Bidang;
+use App\Models\BulanMagang;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\PesertaProfil;
@@ -427,6 +428,53 @@ class PlacementService extends AuditedService
 
                 return $p;
             });
+        });
+    }
+
+    /**
+     * Menutup antrean waiting list secara massal untuk bulan magang yang sudah dimulai (AC-04-7).
+     */
+    public function tutupWaitingListKadaluarsa(BulanMagang $bulan, ?User $admin = null): int
+    {
+        $hariIni = now('Asia/Jakarta')->startOfDay();
+        $tglMulai = \Carbon\Carbon::parse($bulan->bulan_mulai)->timezone('Asia/Jakarta')->startOfMonth();
+
+        if ($hariIni->lt($tglMulai)) {
+            return 0;
+        }
+
+        return DB::transaction(function () use ($bulan, $admin) {
+            $antrean = Pendaftaran::where('bulan_magang_id', $bulan->id)
+                ->where('status', StatusPendaftaranEnum::WaitingList)
+                ->lockForUpdate()
+                ->get();
+
+            $adminId = $admin?->id ?? User::where('role', \App\Enums\RoleEnum::SuperAdmin)->value('id') ?? 1;
+            $catatanOtomatis = 'Periode pelaksanaan magang telah dimulai. Antrean waiting list ditutup secara otomatis (AC-04-7).';
+
+            foreach ($antrean as $pendaftaran) {
+                $pendaftaran->update([
+                    'status' => StatusPendaftaranEnum::Ditolak,
+                    'catatan' => $catatanOtomatis,
+                    'verifikator_id' => $adminId,
+                    'diputuskan_at' => now(),
+                ]);
+
+                $this->auditService->catat(
+                    tipe: TipeAuditEnum::Aksi,
+                    tabel: 'pendaftaran',
+                    idData: $pendaftaran->id,
+                    nilaiLama: ['status' => StatusPendaftaranEnum::WaitingList->value],
+                    nilaiBaru: ['status' => StatusPendaftaranEnum::Ditolak->value],
+                    detail: [
+                        'aksi' => 'Penutupan antrean waiting list otomatis awal bulan magang (AC-04-7)',
+                        'bulan_magang_id' => $bulan->id,
+                        'admin_id' => $adminId,
+                    ]
+                );
+            }
+
+            return $antrean->count();
         });
     }
 }

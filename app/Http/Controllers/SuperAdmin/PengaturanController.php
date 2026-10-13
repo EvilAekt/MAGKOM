@@ -54,7 +54,7 @@ class PengaturanController extends Controller
             'slot_khusus_default' => ['nullable', 'integer', 'min:0', 'max:50'],
             'maks_peserta_aktif_per_pembimbing' => ['nullable', 'integer', 'min:1', 'max:50'],
             'logbook_maks_mundur_hari' => ['required', 'integer', 'min:1', 'max:30'],
-            'berkas_maks_mb' => ['required', 'integer', 'min:1', 'max:20'],
+            'berkas_maks_mb' => ['required', 'integer', 'min:1', 'max:10'],
             'deadline_mendekati_hari' => ['required', 'integer', 'min:1', 'max:14'],
             'retensi_audit_akses_data_hari' => ['nullable', 'integer', 'min:30', 'max:1825'],
             'batas_predikat_a' => ['nullable', 'integer', 'min:1', 'max:100'],

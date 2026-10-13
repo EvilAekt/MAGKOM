@@ -44,7 +44,9 @@ class WaitingListController extends Controller
         }
 
         if ($request->filled('search')) {
-            $search = '%' . trim((string) $request->input('search')) . '%';
+            $rawSearch = trim((string) $request->input('search'));
+            $escapedSearch = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $rawSearch);
+            $search = '%' . $escapedSearch . '%';
             $query->where(function ($q) use ($search) {
                 $q->whereHas('user', function ($qu) use ($search) {
                     $qu->where('nama', 'like', $search)

@@ -783,19 +783,11 @@
         </div>
 
         @if($waitingList->isEmpty())
-            <div style="padding: 4rem 1.5rem; text-align: center; color: #64748B;">
-                <div style="width: 60px; height: 60px; background: #EFF6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: #0641CC;">
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                </div>
-                <h4 style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin: 0 0 0.35rem 0;">
-                    Tidak Ada Antrean Waiting List
-                </h4>
-                <p style="font-size: 0.85rem; max-width: 480px; margin: 0 auto; line-height: 1.5;">
-                    Saat ini tidak ada pendaftaran calon peserta magang yang tertahan dalam antrean tunggu.
-                </p>
+            <div style="padding: 2rem 1.5rem;">
+                <x-empty-state 
+                    title="Tidak Ada Antrean Waiting List" 
+                    description="Saat ini tidak ada pendaftaran calon peserta magang yang tertahan dalam antrean tunggu." 
+                />
             </div>
         @else
             <div style="overflow-x: auto;">

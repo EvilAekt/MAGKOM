@@ -16,6 +16,13 @@ class TugasRequest extends FormRequest
 {
     public function authorize(): bool
     {
+        if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            $tugas = $this->route('tugas');
+            if ($tugas) {
+                return $this->user()?->can('update', $tugas) ?? false;
+            }
+        }
+
         return true;
     }
 

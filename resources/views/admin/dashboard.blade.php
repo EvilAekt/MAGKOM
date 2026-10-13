@@ -771,10 +771,10 @@
                 <span class="adm-kpi-val">{{ number_format($pengajuanMenunggu) }}</span>
                 @if($pengajuanSlaKritisCount > 0)
                     <span class="adm-kpi-hint" style="color: #DC2626; font-weight: 700;">
-                        ⚠️ {{ $pengajuanSlaKritisCount }} tertahan &gt; 3 hari
+                        ⚠️ {{ $pengajuanSlaKritisCount }} Mendekati Batas SLA (Perlu Verifikasi Segera)
                     </span>
                 @else
-                    <span class="adm-kpi-hint">Berkas baru masuk</span>
+                    <span class="adm-kpi-hint">Perlu Verifikasi Segera</span>
                 @endif
             </div>
         </div>
@@ -937,7 +937,7 @@
                                 </td>
                                 <td>
                                     @if($isCritical)
-                                        <span class="adm-sla-pill-alert">⚠️ {{ $umur }} hari lalu</span>
+                                        <span class="adm-sla-pill-alert" title="Mendekati Batas SLA">⚠️ Mendekati Batas SLA ({{ $umur }} hari)</span>
                                     @else
                                         <span class="adm-sla-pill-norm">{{ $umur === 0 ? 'Hari ini' : $umur . ' hari lalu' }}</span>
                                     @endif
@@ -981,7 +981,7 @@
                 <div>
                     <h3 class="adm-section-title" style="font-size: 0.975rem;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                        <span>Alokasi & Keterisian Kuota Jurusan</span>
+                        <span>Alokasi & Keterisian Kuota Magang Periode</span>
                     </h3>
                     <p class="adm-section-subtitle">
                         Realisasi kursi magang periode {{ $bulanAktif ? $bulanAktif->bulan_mulai?->translatedFormat('F Y') : 'Aktif' }}.
@@ -1072,7 +1072,7 @@
                     @endphp
                     <div class="adm-sub-section">
                         <div class="adm-sub-title">
-                            <span>Jadwal Pendaftaran Periode Ini</span>
+                            <span>Timeline Gelombang Magang</span>
                         </div>
                         <div style="padding: 0.85rem 1rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
                             <div>
@@ -1136,7 +1136,7 @@
                 {{-- 3. Tenggat Selesai Magang (Jika ada yang mendekati selesai) --}}
                 @if(!$upcomingOffboardingList->isEmpty())
                     <div class="adm-sub-section">
-                        <span class="adm-sub-title" style="color: #D97706;">Peringatan Selesai Magang (H-14)</span>
+                        <span class="adm-sub-title" style="color: #D97706;">Offboarding Watchdog (Peringatan Selesai H-14)</span>
                         @foreach($upcomingOffboardingList->take(2) as $offboard)
                             @php
                                 $pen = $offboard['penempatan'];

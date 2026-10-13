@@ -178,6 +178,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/tugas/create', [PembimbingTugasController::class, 'create'])->name('tugas.create');
     Route::post('/tugas', [PembimbingTugasController::class, 'store'])->name('tugas.store');
     Route::get('/tugas/{tugas}', [PembimbingTugasController::class, 'show'])->name('tugas.show');
+    Route::get('/tugas/{tugas}/edit', [PembimbingTugasController::class, 'edit'])->name('tugas.edit');
     Route::put('/tugas/{tugas}', [PembimbingTugasController::class, 'update'])->name('tugas.update');
     Route::get('/tugas/{tugas}/lampiran', [PembimbingTugasController::class, 'unduhLampiran'])->name('tugas.lampiran');
     Route::post('/tugas/{tugas}/selesai', [PembimbingTugasController::class, 'selesai'])->name('tugas.selesai');

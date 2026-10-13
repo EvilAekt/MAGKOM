@@ -47,7 +47,8 @@ class PendaftaranController extends Controller
         if ($request->filled('q')) {
             $rawSearch = trim((string) $request->input('q'));
             $cleanId = ltrim(str_ireplace(['#', 'REG-'], '', $rawSearch), '0');
-            $search = '%' . $rawSearch . '%';
+            $escapedSearch = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $rawSearch);
+            $search = '%' . $escapedSearch . '%';
             $query->where(function ($q) use ($search, $cleanId) {
                 if ($cleanId !== '' && is_numeric($cleanId)) {
                     $q->orWhere('id', (int) $cleanId);

@@ -206,11 +206,38 @@ class TugasController extends Controller
     }
 
     /**
+     * Menampilkan formulir pengubahan data penugasan (AC-08-7).
+     */
+    public function edit(Tugas $tugas): View|RedirectResponse
+    {
+        Gate::authorize('update', $tugas);
+
+        if ($tugas->status === StatusTugasEnum::Selesai) {
+            return redirect()->route('pembimbing.tugas.show', $tugas)
+                ->withErrors(['error' => 'Tugas yang telah berstatus selesai tidak dapat diedit kembali.']);
+        }
+
+        return view('pembimbing.tugas.edit', [
+            'tugas' => $tugas->load('penempatan.peserta.profil.jurusan'),
+        ]);
+    }
+
+    /**
      * Memperbarui informasi atau status penugasan.
      */
     public function update(TugasRequest $request, Tugas $tugas): JsonResponse|RedirectResponse
     {
         Gate::authorize('update', $tugas);
+
+        if ($tugas->status === StatusTugasEnum::Selesai) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tugas yang telah berstatus selesai tidak dapat diedit kembali.',
+                ], 422);
+            }
+            return back()->withErrors(['error' => 'Tugas yang telah berstatus selesai tidak dapat diedit kembali.']);
+        }
 
         $nilaiLama = $tugas->only(['judul', 'deskripsi', 'link_referensi', 'nama_file_lampiran', 'kategori', 'kompleksitas', 'deadline', 'status']);
         $payload = $request->validated();

@@ -81,15 +81,17 @@ class StafController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'role' => ['required', Rule::in([RoleEnum::Admin->value, RoleEnum::Pembimbing->value])],
             'bidang_id' => ['nullable', 'exists:bidang,id'],
-            'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'],
+            'password' => ['nullable', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'],
         ], [
             'password.regex' => 'Kata sandi harus mengandung kombinasi huruf dan angka.',
         ]);
 
+        $plainPassword = ! empty($validated['password']) ? (string) $validated['password'] : ('Mk' . \Illuminate\Support\Str::random(10) . '!1');
+
         $staf = new User();
         $staf->nama = $validated['nama'];
         $staf->email = $validated['email'];
-        $staf->password = Hash::make($validated['password']);
+        $staf->password = Hash::make($plainPassword);
         $staf->role = RoleEnum::from($validated['role']);
         $staf->bidang_id = ! empty($validated['bidang_id']) ? (int) $validated['bidang_id'] : null;
         $staf->email_verified_at = now();
@@ -110,13 +112,15 @@ class StafController extends Controller
                 'must_change_password' => true,
             ],
             detail: [
-                'aksi' => 'Membuat akun staf baru (' . $staf->role->label() . ')',
+                'aksi' => 'Membuat akun staf baru (' . $staf->role->label() . ') (SEC-02)',
                 'superadmin_id' => $request->user()->id,
             ]
         );
 
         return redirect()->route('superadmin.staf.index')
-            ->with('success', 'Akun staf berhasil dibuat. Serahkan kata sandi awal kepada staf secara manual.');
+            ->with('success', "Akun staf {$staf->nama} ({$staf->role->label()}) berhasil dibuat. Kata sandi awal: [ {$plainPassword} ]")
+            ->with('password_baru', $plainPassword)
+            ->with('nama_staf', $staf->nama);
     }
 
     /**

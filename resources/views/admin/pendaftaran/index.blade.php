@@ -968,7 +968,7 @@
                                 {{-- Aksi --}}
                                 <td style="text-align: right;">
                                     <a href="{{ route('admin.pendaftaran.show', $item) }}" class="adm-btn-tinjau">
-                                        <span>Tinjau</span>
+                                        <span>Tinjau Berkas</span>
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                     </a>
                                 </td>

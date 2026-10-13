@@ -1223,7 +1223,7 @@
                             <span>Peserta Bimbingan</span>
                         </a>
 
-                        <a href="{{ route('pembimbing.tugas.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.tugas.index', 'pembimbing.tugas.show', 'pembimbing.tugas.create') ? 'active' : '' }}">
+                        <a href="{{ route('pembimbing.tugas.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.tugas.index', 'pembimbing.tugas.show', 'pembimbing.tugas.create', 'pembimbing.tugas.edit') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M9 11l3 3L22 4"></path>

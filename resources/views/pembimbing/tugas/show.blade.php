@@ -54,7 +54,14 @@
                 &larr; Kembali
             </a>
 
-            @if($tugas->status->value !== 'selesai')
+            @if($tugas->status->value !== 'selesai' && auth()->user()->role !== \App\Enums\RoleEnum::SuperAdmin)
+                <a href="{{ route('pembimbing.tugas.edit', $tugas->id) }}" style="padding: 0.5rem 1rem; background: #0641CC; color: #ffffff; font-size: 0.875rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 2px 4px rgba(6, 65, 204, 0.2);">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    <span>Edit Tugas</span>
+                </a>
+            @endif
+
+            @if($tugas->status->value !== 'selesai' && auth()->user()->role !== \App\Enums\RoleEnum::SuperAdmin)
                 <form action="{{ route('pembimbing.tugas.selesai', $tugas->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menandai tugas ini sebagai Selesai?')">
                     @csrf
                     <button type="submit" style="padding: 0.5rem 1rem; background: #059669; color: #ffffff; font-size: 0.875rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2);">

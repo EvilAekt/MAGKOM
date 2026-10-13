@@ -503,6 +503,18 @@
 
         <form method="POST" action="{{ route('admin.penempatan.batalkan', $penempatan) }}" style="padding: 1.5rem;">
             @csrf
+            @php
+                $hariIni = today('Asia/Jakarta');
+                $tglMulaiCarbon = \Carbon\Carbon::parse($penempatan->tgl_mulai);
+                $sebelumMulai = $hariIni->lt($tglMulaiCarbon);
+            @endphp
+            <div style="margin-bottom: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.8125rem; {{ $sebelumMulai ? 'background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE;' : 'background: #FFFBEB; color: #92400E; border: 1px solid #FCD34D;' }}">
+                @if($sebelumMulai)
+                    <strong>Informasi (Sebelum Pelaksanaan):</strong> Periode magang belum dimulai. Kuota akan dikembalikan ke jurusan dan akun login peserta tetap aktif.
+                @else
+                    <strong>Peringatan (Pengunduran Diri):</strong> Periode magang telah berjalan. Kuota TIDAK dikembalikan ke jurusan dan akun login peserta akan dinonaktifkan secara permanen.
+                @endif
+            </div>
             <div style="margin-bottom: 1.25rem;">
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B); margin-bottom: 0.35rem;">
                     Alasan Pembatalan / Pengunduran Diri <span style="color: #DC2626;">*</span>
