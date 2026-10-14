@@ -36,6 +36,7 @@ use App\Http\Controllers\Peserta\ProfilController as PesertaProfilController;
 use App\Http\Controllers\Peserta\PengaturanController as PesertaPengaturanController;
 use App\Http\Controllers\Peserta\TugasController as PesertaTugasController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\Public\AlurMagangController;
 use App\Http\Controllers\Public\HealthController;
 use App\Http\Controllers\Public\LandingController;
 use App\Http\Controllers\Public\CaptchaController;
@@ -63,6 +64,7 @@ use Illuminate\Support\Facades\Route;
 
 // Rute Publik (F-01, NFR-O1, NFR-R1, PRD 4.3 Poin 1, SEC-74)
 Route::get('/', LandingController::class)->name('landing');
+Route::get('/panduan-alur', AlurMagangController::class)->name('panduan-alur');
 Route::get('/health', HealthController::class)->name('health');
 Route::view('/kebijakan-privasi', 'public.kebijakan-privasi')->name('kebijakan-privasi');
 Route::get('/.well-known/security.txt', function () {

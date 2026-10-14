@@ -1033,26 +1033,88 @@
         line-height: 1.55;
     }
 
-    .btn-panduan {
+    .alur-interactive-showcase-bar {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.20);
+        border-radius: 1.15rem;
+        padding: 1.35rem 2rem;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        max-width: 960px;
+        margin: 0 auto;
+        flex-wrap: wrap;
+    }
+
+    .alur-showcase-info {
+        flex: 1;
+        min-width: 280px;
+        text-align: left;
+    }
+
+    .alur-showcase-badge {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.25);
+        gap: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #38bdf8;
+        margin-bottom: 0.35rem;
+    }
+
+    .alur-pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #38bdf8;
+        box-shadow: 0 0 10px #38bdf8;
+        display: inline-block;
+    }
+
+    .alur-showcase-text {
+        font-size: 0.875rem;
+        color: #cbd5e1;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .btn-panduan-showcase {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--blue-600);
         color: #ffffff;
-        padding: 0.75rem 2rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
         font-size: 0.925rem;
+        font-weight: 700;
+        padding: 0.85rem 1.65rem;
+        border-radius: 0.65rem;
         text-decoration: none;
+        white-space: nowrap;
+        box-shadow: 0 6px 18px rgba(7, 81, 255, 0.35);
         transition: all 0.2s ease;
     }
 
-    .btn-panduan:hover {
-        background: rgba(255, 255, 255, 0.18);
-        border-color: rgba(255, 255, 255, 0.45);
+    .btn-panduan-showcase:hover {
+        background: var(--blue-700);
         color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(7, 81, 255, 0.5);
     }
+
+    /* Backward compatibility helper */
+    .btn-panduan {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* =====================================================================
 
     /* =====================================================================
        4. PENGUMUMAN SECTION (MATCHING FIGMA NODE 562-55160)
@@ -1939,7 +2001,7 @@
 
         <div class="alur-steps-row">
             <!-- Step 01 -->
-            <div class="alur-step-card">
+            <a href="{{ route('panduan-alur') }}?step=1" class="alur-step-card" title="Pelajari Tahap Buat Akun">
                 <div>
                     <div class="alur-card-top">
                         <div class="alur-icon-wrap">
@@ -1950,10 +2012,10 @@
                     <h3>Buat Akun</h3>
                     <p>Isi profil dan pilih bidang sesuai jurusanmu.</p>
                 </div>
-            </div>
+            </a>
 
             <!-- Step 02 -->
-            <div class="alur-step-card">
+            <a href="{{ route('panduan-alur') }}?step=2" class="alur-step-card" title="Pelajari Tahap Kirim Berkas">
                 <div>
                     <div class="alur-card-top">
                         <div class="alur-icon-wrap">
@@ -1964,10 +2026,10 @@
                     <h3>Kirim Berkas</h3>
                     <p>Unggah surat pengantar, CV, dan transkrip. Admin memutuskan hasilnya.</p>
                 </div>
-            </div>
+            </a>
 
             <!-- Step 03 -->
-            <div class="alur-step-card">
+            <a href="{{ route('panduan-alur') }}?step=3" class="alur-step-card" title="Pelajari Tahap Kerjakan Tugas">
                 <div>
                     <div class="alur-card-top">
                         <div class="alur-icon-wrap">
@@ -1978,10 +2040,10 @@
                     <h3>Kerjakan Tugas</h3>
                     <p>Terima tugas, unggah progres, dan isi logbook harian.</p>
                 </div>
-            </div>
+            </a>
 
             <!-- Step 04 -->
-            <div class="alur-step-card">
+            <a href="{{ route('panduan-alur') }}?step=4" class="alur-step-card" title="Pelajari Tahap Terima Nilai">
                 <div>
                     <div class="alur-card-top">
                         <div class="alur-icon-wrap">
@@ -1992,11 +2054,24 @@
                     <h3>Terima Nilai</h3>
                     <p>Unduh Lembar Nilai Magang (PDF) dari Pembimbing.</p>
                 </div>
-            </div>
+            </a>
         </div>
 
-        <div>
-            <a href="#alur-section" class="btn-panduan">Lihat panduan lengkap</a>
+        <!-- Interactive Showcase Action Bar (Terpusat & Menyatu) -->
+        <div class="alur-interactive-showcase-bar">
+            <div class="alur-showcase-info">
+                <div class="alur-showcase-badge">
+                    <span class="alur-pulse-dot"></span>
+                    <span>Peta Alur &amp; Panduan Lengkap</span>
+                </div>
+                <p class="alur-showcase-text">
+                    Pelajari rincian 4 fase, kelengkapan berkas wajib, SLA verifikasi 1–3 hari, dan simulasi jalur SMK / Mahasiswa.
+                </p>
+            </div>
+            <a href="{{ route('panduan-alur') }}" class="btn-panduan-showcase btn-panduan">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                <span>Eksplorasi Peta Alur Interaktif &rarr;</span>
+            </a>
         </div>
     </div>
 </section>
@@ -2464,6 +2539,7 @@
     window.setMemberCount = setMemberCount;
     window.switchCardMonth = switchCardMonth;
     window.switchTab = switchTab;
+
 
     // Initialize carousels & initial recalculation once DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
