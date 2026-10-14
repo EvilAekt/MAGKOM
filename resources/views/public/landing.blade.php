@@ -217,111 +217,193 @@
     }
 
     /* =====================================================================
-       2. BIDANG DAN KUOTA HORIZONTAL INTERACTIVE CAROUSEL & MODERN CARDS
+       2. BIDANG DAN KUOTA HORIZONTAL CAROUSEL & ELEVATED COMMAND HUB
        ===================================================================== */
     .quota-controls-bar {
-        background: #ffffff;
-        border: 1px solid #E2E8F0;
-        border-radius: 1.25rem;
-        padding: 1.25rem 1.5rem;
+        background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 1.5rem;
+        padding: 1.6rem 1.85rem;
         margin-bottom: 2.25rem;
-        box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.02);
         display: flex;
         flex-direction: column;
-        gap: 1.15rem;
-    }
-
-    .quota-control-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
         gap: 1.25rem;
-        flex-wrap: wrap;
+        transition: all 0.25s ease;
     }
 
-    .quota-control-label {
+    .quota-hub-main {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.75rem;
+        align-items: center;
+    }
+
+    @media (max-width: 868px) {
+        .quota-hub-main {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+        }
+    }
+
+    .filter-hub-col {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .filter-hub-label {
         font-size: 0.8125rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #64748B;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.45rem;
-    }
-
-    .quota-control-group {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        background: #F8FAFC;
-        padding: 0.3rem;
-        border-radius: 9999px;
-        border: 1px solid #E2E8F0;
-        flex-wrap: wrap;
-    }
-
-    .mode-pill-btn {
-        padding: 0.45rem 1.15rem;
-        font-size: 0.85rem;
-        font-weight: 600;
+        letter-spacing: 0.06em;
         color: #475569;
-        border-radius: 9999px;
-        cursor: pointer;
-        background: transparent;
-        border: none;
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         display: inline-flex;
         align-items: center;
         gap: 0.45rem;
     }
 
-    .mode-pill-btn:hover {
+    .filter-hub-label svg {
         color: #0751FF;
-        background: rgba(7, 81, 255, 0.06);
     }
 
-    .mode-pill-btn.active {
-        background: #ffffff;
-        color: #0751FF;
-        font-weight: 700;
-        box-shadow: 0 2px 8px rgba(7, 81, 255, 0.16);
-        border: 1px solid rgba(7, 81, 255, 0.2);
+    /* Modern Capsule Track (Clean Surface, No Nested Box Look) */
+    .filter-capsule-track {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.35rem;
+        background: #F1F5F9;
+        padding: 0.3rem;
+        border-radius: 0.85rem;
+        border: 1px solid #E2E8F0;
     }
 
-    .member-selector-wrap {
+    .filter-capsule-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1rem;
+        border-radius: 0.65rem;
+        border: none !important;
+        background: transparent !important;
+        color: #475569 !important;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+    }
+
+    .filter-capsule-btn:hover {
+        color: #0751FF !important;
+        background: rgba(255, 255, 255, 0.75) !important;
+    }
+
+    .filter-capsule-btn.active {
+        background: linear-gradient(135deg, #0751FF 0%, #0043DB 100%) !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 14px rgba(7, 81, 255, 0.32) !important;
+    }
+
+    .filter-capsule-btn .capsule-chip {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.15rem 0.45rem;
+        border-radius: 9999px;
+        background: rgba(100, 116, 139, 0.12);
+        color: inherit;
+        transition: all 0.2s ease;
+    }
+
+    .filter-capsule-btn.active .capsule-chip {
+        background: rgba(255, 255, 255, 0.22);
+        color: #ffffff;
+    }
+
+    /* Sub-bar Pilihan Jumlah Anggota Kelompok */
+    .team-size-stepper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        background: #EFF6FF;
+        border: 1px solid #BFDBFE;
+        border-radius: 0.85rem;
+        padding: 0.55rem 1rem;
+        flex-wrap: wrap;
+        animation: slideDownFade 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideDownFade {
+        from { opacity: 0; transform: translateY(-6px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .team-stepper-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: #1E40AF;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        white-space: nowrap;
+    }
+
+    .team-pills-cluster {
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
-        padding-left: 0.5rem;
-        margin-left: 0.25rem;
-        border-left: 1.5px solid #CBD5E1;
-        transition: all 0.3s ease;
     }
 
     .member-pill-btn {
-        padding: 0.3rem 0.75rem;
-        font-size: 0.8rem;
+        padding: 0.35rem 0.85rem;
+        font-size: 0.8125rem;
         font-weight: 600;
         border-radius: 9999px;
-        border: 1px solid #CBD5E1;
+        border: 1px solid #BFDBFE;
         background: #ffffff;
-        color: #475569;
+        color: #1E40AF;
         cursor: pointer;
         transition: all 0.15s ease;
+        white-space: nowrap;
     }
 
     .member-pill-btn:hover {
-        border-color: #3B82F6;
+        border-color: #0751FF;
         color: #0751FF;
+        background: #DBEAFE;
     }
 
     .member-pill-btn.active {
-        background: #0751FF;
-        color: #ffffff;
-        border-color: #0751FF;
-        font-weight: 700;
-        box-shadow: 0 2px 6px rgba(7, 81, 255, 0.25);
+        background: #0751FF !important;
+        color: #ffffff !important;
+        border-color: #0751FF !important;
+        font-weight: 700 !important;
+        box-shadow: 0 2px 8px rgba(7, 81, 255, 0.28) !important;
+    }
+
+    .team-role-note {
+        font-size: 0.75rem;
+        color: #64748B;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    /* Controls Footer Info Bar */
+    .quota-controls-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding-top: 1rem;
+        border-top: 1px solid #F1F5F9;
     }
 
     .quota-indicator-badge {
@@ -330,8 +412,43 @@
         color: #1D4ED8;
         background: #EFF6FF;
         border: 1px solid #BFDBFE;
-        padding: 0.35rem 0.85rem;
+        padding: 0.4rem 0.95rem;
         border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #2563EB;
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .pulse-dot::after {
+        content: '';
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        bottom: -3px;
+        border-radius: 50%;
+        border: 2px solid #3B82F6;
+        animation: pulseAnimation 2s infinite;
+    }
+
+    @keyframes pulseAnimation {
+        0% { transform: scale(0.9); opacity: 0.8; }
+        70% { transform: scale(1.6); opacity: 0; }
+        100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    .quota-nav-hint {
+        font-size: 0.8125rem;
+        color: #64748B;
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
@@ -378,23 +495,23 @@
         }
     }
 
-    /* Floating Glassmorphic Arrow Buttons */
+    /* Floating Arrow Buttons on the Sides of Carousel */
     .carousel-nav-btn {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        width: 48px;
-        height: 48px;
+        width: 46px;
+        height: 46px;
         border-radius: 50%;
         background: #ffffff;
-        border: 1px solid #CBD5E1;
-        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+        border: 1.5px solid #CBD5E1;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.16);
         color: #1E293B;
-        display: flex;
+        display: flex !important;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        z-index: 10;
+        z-index: 15;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         outline: none;
     }
@@ -412,16 +529,97 @@
     }
 
     .carousel-nav-btn.prev {
-        left: -22px;
+        left: -18px;
     }
 
     .carousel-nav-btn.next {
-        right: -22px;
+        right: -18px;
     }
 
     @media (max-width: 860px) {
-        .carousel-nav-btn.prev { left: 4px; }
-        .carousel-nav-btn.next { right: 4px; }
+        .carousel-nav-btn.prev { left: -6px; }
+        .carousel-nav-btn.next { right: -6px; }
+    }
+
+    /* Interactive Notice: Group Registration Guidance (Only 1 Representative) */
+    .group-education-card {
+        background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+        border: 1.5px solid #93C5FD;
+        border-radius: 1.125rem;
+        padding: 1.15rem 1.35rem;
+        margin-top: 1.25rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        box-shadow: 0 4px 16px rgba(7, 81, 255, 0.08);
+        animation: fadeInSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .group-education-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #0751FF;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(7, 81, 255, 0.3);
+    }
+
+    .group-education-body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .group-education-headline {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.35rem;
+    }
+
+    .group-education-headline strong {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: #1E3A8A;
+    }
+
+    .group-badge-perwakilan {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.2rem 0.65rem;
+        border-radius: 9999px;
+        background: #1E40AF;
+        color: #ffffff;
+        font-size: 0.725rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+    }
+
+    .group-education-text {
+        font-size: 0.875rem;
+        color: #1E3A8A;
+        line-height: 1.55;
+        margin: 0;
+    }
+
+    .group-education-text strong {
+        color: #0F172A;
+    }
+
+    @keyframes fadeInSlideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     /* Modern Elevated Quota Card */
@@ -1015,23 +1213,82 @@
     }
 
     [data-theme="dark"] .quota-controls-bar {
-        background: var(--neutral-0, #182234) !important;
-        border-color: var(--neutral-200, #26354D) !important;
+        background: linear-gradient(180deg, #111C2E 0%, #0B1120 100%) !important;
+        border-color: #1E293B !important;
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45) !important;
     }
 
-    [data-theme="dark"] .quota-control-group {
-        background: var(--neutral-100, #0F172A) !important;
-        border-color: var(--neutral-200, #26354D) !important;
-    }
-
-    [data-theme="dark"] .mode-pill-btn {
+    [data-theme="dark"] .filter-hub-label {
         color: #94A3B8 !important;
     }
 
-    [data-theme="dark"] .mode-pill-btn.active {
-        background: #1E293B !important;
+    [data-theme="dark"] .filter-hub-label svg {
         color: #60A5FA !important;
+    }
+
+    [data-theme="dark"] .filter-capsule-track {
+        background: #0B1120 !important;
+        border-color: #1E293B !important;
+    }
+
+    [data-theme="dark"] .filter-capsule-btn {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .filter-capsule-btn:hover {
+        color: #60A5FA !important;
+        background: rgba(30, 41, 59, 0.6) !important;
+    }
+
+    [data-theme="dark"] .filter-capsule-btn.active {
+        background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4) !important;
+    }
+
+    [data-theme="dark"] .team-size-stepper {
+        background: #131D31 !important;
+        border-color: #1E3A8A !important;
+    }
+
+    [data-theme="dark"] .team-stepper-label {
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] .team-role-note {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .member-pill-btn {
+        background: #1E293B !important;
+        border-color: #334155 !important;
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .member-pill-btn:hover {
+        background: #26354D !important;
         border-color: #3B82F6 !important;
+        color: #60A5FA !important;
+    }
+
+    [data-theme="dark"] .member-pill-btn.active {
+        background: #2563EB !important;
+        color: #ffffff !important;
+        border-color: #2563EB !important;
+    }
+
+    [data-theme="dark"] .quota-controls-footer {
+        border-top-color: #1E293B !important;
+    }
+
+    [data-theme="dark"] .quota-indicator-badge {
+        background: #1E293B !important;
+        border-color: #3B82F6 !important;
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] .quota-nav-hint {
+        color: #94A3B8 !important;
     }
 
     [data-theme="dark"] .card-jenjang-pill {
@@ -1057,6 +1314,31 @@
         background: #1E293B !important;
         border-color: #334155 !important;
         color: #F8FAFC !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    [data-theme="dark"] .carousel-nav-btn:hover {
+        background: #3B82F6 !important;
+        color: #ffffff !important;
+        border-color: #3B82F6 !important;
+    }
+
+    [data-theme="dark"] .group-education-card {
+        background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%) !important;
+        border-color: #3B82F6 !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    [data-theme="dark"] .group-education-headline strong {
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] .group-education-text {
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .group-education-text strong {
+        color: #FFFFFF !important;
     }
 
     [data-theme="dark"] .tab-pill-btn {
@@ -1188,61 +1470,107 @@
                 </p>
             </div>
         @else
-            <!-- Control Bar: Jalur Pendidikan & Tipe Pendaftaran (Mandiri vs Kelompok) -->
+            <!-- Control Bar: Elevated Command Hub (Sistem Simetris Bersih & Modern) -->
             <div class="quota-controls-bar">
-                <div class="quota-control-row">
-                    <!-- Tab Switcher SMK vs Mahasiswa (AC-01-1) -->
-                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-                        <span class="quota-control-label">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                            Jalur Pendidikan:
-                        </span>
-                        <div class="quota-control-group">
-                            <button type="button" class="tab-pill-btn active" id="tab-btn-smk" onclick="switchTab('smk')">
-                                Jalur SMK (Sekolah Menengah Kejuruan)
+                <div class="quota-hub-main">
+                    <!-- Kolom 1: Jalur Pendidikan -->
+                    <div class="filter-hub-col">
+                        <div class="filter-hub-label">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                            </svg>
+                            <span>Jalur Pendidikan</span>
+                        </div>
+                        <div class="filter-capsule-track" role="tablist" aria-label="Pilih Jalur Pendidikan">
+                            <button type="button" class="filter-capsule-btn active" id="tab-btn-smk" onclick="switchTab('smk')" role="tab" aria-selected="true">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                                <span>Jalur SMK</span>
+                                <span class="capsule-chip">Kejuruan</span>
                             </button>
-                            <button type="button" class="tab-pill-btn" id="tab-btn-mahasiswa" onclick="switchTab('mahasiswa')">
-                                Jalur Mahasiswa (D3 / S1)
+                            <button type="button" class="filter-capsule-btn" id="tab-btn-mahasiswa" onclick="switchTab('mahasiswa')" role="tab" aria-selected="false">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                                <span>Mahasiswa</span>
+                                <span class="capsule-chip">D3 / S1</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Mode Pendaftaran: Mandiri vs Kelompok (1, 2, 3, 4 Orang) -->
-                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-                        <span class="quota-control-label">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            Pendaftaran:
-                        </span>
-                        <div class="quota-control-group">
-                            <button type="button" class="mode-pill-btn active" id="mode-btn-mandiri" onclick="setRegistrationMode('mandiri')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                <span>Mandiri (1 Orang)</span>
+                    <!-- Kolom 2: Tipe Pendaftaran -->
+                    <div class="filter-hub-col">
+                        <div class="filter-hub-label">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <span>Tipe Pendaftaran</span>
+                        </div>
+                        <div class="filter-capsule-track" role="group" aria-label="Pilih Tipe Pendaftaran">
+                            <button type="button" class="filter-capsule-btn active" id="mode-btn-mandiri" onclick="setRegistrationMode('mandiri')">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <span>Mandiri</span>
+                                <span class="capsule-chip">1 Orang</span>
                             </button>
-                            <button type="button" class="mode-pill-btn" id="mode-btn-kelompok" onclick="setRegistrationMode('kelompok')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                                <span>Kelompok / Tim</span>
+                            <button type="button" class="filter-capsule-btn" id="mode-btn-kelompok" onclick="setRegistrationMode('kelompok')">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                <span>Kelompok</span>
+                                <span class="capsule-chip">2–4 Org</span>
                             </button>
-
-                            <!-- Pilihan Anggota Kelompok: 2, 3, 4 Orang -->
-                            <div class="member-selector-wrap" id="member-selector-wrap" style="display: none;">
-                                <span style="font-size: 0.75rem; font-weight: 700; color: #64748B; margin-right: 0.15rem;">Anggota:</span>
-                                <button type="button" class="member-pill-btn active" data-count="2" onclick="setMemberCount(2)">2 Orang</button>
-                                <button type="button" class="member-pill-btn" data-count="3" onclick="setMemberCount(3)">3 Orang</button>
-                                <button type="button" class="member-pill-btn" data-count="4" onclick="setMemberCount(4)">4 Orang</button>
-                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Feedback Real-Time Indikator -->
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; padding-top: 0.5rem; border-top: 1px solid #F1F5F9;">
+                <!-- Sub-bar Pilihan Jumlah Anggota Kelompok (Muncul otomatis saat mode Kelompok dipilih) -->
+                <div class="team-size-stepper" id="member-selector-wrap" style="display: none;">
+                    <div class="team-stepper-label">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                        <span>Jumlah Calon Peserta Tim:</span>
+                    </div>
+                    <div class="team-pills-cluster">
+                        <button type="button" class="member-pill-btn active" data-count="2" onclick="setMemberCount(2)">2 Orang</button>
+                        <button type="button" class="member-pill-btn" data-count="3" onclick="setMemberCount(3)">3 Orang</button>
+                        <button type="button" class="member-pill-btn" data-count="4" onclick="setMemberCount(4)">4 Orang</button>
+                    </div>
+                    <div class="team-role-note">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>Cukup 1 perwakilan/ketua yang mengisi pendaftaran</span>
+                    </div>
+                </div>
+
+                <!-- Feedback Real-Time Indikator & Action Navigation Controls -->
+                <div class="quota-controls-footer">
                     <div class="quota-indicator-badge" id="quota-indicator-badge">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <span class="pulse-dot"></span>
                         <span id="quota-indicator-text">Pendaftaran Mandiri (1 Orang) · Kuota otomatis dicek untuk 1 calon peserta</span>
                     </div>
-                    <div style="font-size: 0.8125rem; color: #64748B;">
-                        Geser kartu atau gunakan tombol panah untuk menelusuri jurusan ➔
+
+                    <div class="quota-nav-hint">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <span>Geser kartu atau gunakan tombol anak panah di samping</span>
                     </div>
+                </div>
+            </div>
+
+            <!-- Banner Edukasi: Pendaftaran Kelompok Hanya Oleh 1 Perwakilan/Ketua -->
+            <div id="banner-kelompok-edukasi" class="group-education-card" style="display: none;">
+                <div class="group-education-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="group-education-body">
+                    <div class="group-education-headline">
+                        <strong>Penting untuk Calon Peserta Kelompok / Tim:</strong>
+                        <span class="group-badge-perwakilan">Hanya 1 Akun Perwakilan</span>
+                    </div>
+                    <p class="group-education-text">
+                        Untuk pendaftaran kelompok/tim (2–4 orang), <strong>cukup Ketua atau Perwakilan Kelompok yang membuat akun dan mendaftar</strong>. Rekan tim lainnya <strong>tidak perlu membuat akun terpisah</strong>. Seluruh data & berkas anggota tim akan diisi langsung oleh perwakilan saat melengkapi formulir permohonan magang.
+                    </p>
                 </div>
             </div>
 
@@ -1770,6 +2098,7 @@
 <script>
     let carouselSmk = null;
     let carouselMahasiswa = null;
+    let currentActiveTab = 'smk'; // 'smk' | 'mahasiswa'
     let currentRegMode = 'mandiri'; // 'mandiri' | 'kelompok'
     let currentMemberCount = 1;
 
@@ -1779,12 +2108,14 @@
         const btnKelompok = document.getElementById('mode-btn-kelompok');
         const memberWrap = document.getElementById('member-selector-wrap');
         const indicatorText = document.getElementById('quota-indicator-text');
+        const bannerKelompok = document.getElementById('banner-kelompok-edukasi');
 
         if (mode === 'mandiri') {
             currentMemberCount = 1;
             if (btnMandiri) btnMandiri.classList.add('active');
             if (btnKelompok) btnKelompok.classList.remove('active');
             if (memberWrap) memberWrap.style.display = 'none';
+            if (bannerKelompok) bannerKelompok.style.display = 'none';
             if (indicatorText) {
                 indicatorText.textContent = 'Pendaftaran Mandiri (1 Orang) · Kuota otomatis dicek untuk 1 calon peserta';
             }
@@ -1792,7 +2123,8 @@
             if (currentMemberCount < 2) currentMemberCount = 2;
             if (btnKelompok) btnKelompok.classList.add('active');
             if (btnMandiri) btnMandiri.classList.remove('active');
-            if (memberWrap) memberWrap.style.display = 'inline-flex';
+            if (memberWrap) memberWrap.style.display = 'flex';
+            if (bannerKelompok) bannerKelompok.style.display = 'flex';
             updateMemberPillActive();
             if (indicatorText) {
                 indicatorText.textContent = `Pendaftaran Kelompok (${currentMemberCount} Orang) · Kuota otomatis dicek untuk ${currentMemberCount} calon peserta`;
@@ -1845,12 +2177,14 @@
         panels.forEach(panel => {
             const status = panel.getAttribute('data-status');
             const sisa = parseInt(panel.getAttribute('data-sisa'), 10) || 0;
+            const total = parseInt(panel.getAttribute('data-total'), 10) || 0;
             const isWaiting = panel.getAttribute('data-is-waiting') === '1';
             const bulanId = panel.getAttribute('data-bulan-id');
             const jurusanId = panel.getAttribute('data-jurusan-id');
 
             const pill = panel.querySelector('.status-pill-target');
             const barFill = panel.querySelector('.capacity-bar-fill');
+            const metaLeft = panel.querySelector('.capacity-meta-left');
             const btnLink = panel.querySelector('.btn-cta-target');
             const btnText = panel.querySelector('.btn-text');
 
@@ -1863,16 +2197,22 @@
                             pill.className = 'capacity-status-pill status-pill-target waiting';
                             pill.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <span>Kuota Penuh (Waiting List)</span>`;
                         }
+                        if (metaLeft) {
+                            metaLeft.innerHTML = `<span style="color: #b45309; font-weight: 600;">Kuota periode ini terisi. Masuk Waiting List:</span>`;
+                        }
                         if (barFill) barFill.className = 'capacity-bar-fill waiting';
                         if (btnLink) {
                             btnLink.className = 'card-action-btn btn-cta-target btn-waiting';
                             btnLink.href = `/register?bulan=${bulanId}&jurusan=${jurusanId}&tipe=mandiri&jumlah=1`;
                         }
-                        if (btnText) btnText.textContent = 'Daftar Waiting List';
+                        if (btnText) btnText.textContent = 'Daftar Waiting List (1 Orang) ➔';
                     } else {
                         if (pill) {
                             pill.className = 'capacity-status-pill status-pill-target tersedia';
                             pill.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Tersedia (${sisa} Kursi)</span>`;
+                        }
+                        if (metaLeft) {
+                            metaLeft.innerHTML = `Sisa: <strong class="sisa-val">${sisa}</strong> dari ${total} Kursi`;
                         }
                         if (barFill) barFill.className = 'capacity-bar-fill tersedia';
                         if (btnLink) {
@@ -1882,11 +2222,14 @@
                         if (btnText) btnText.textContent = 'Daftar Sekarang ➔';
                     }
                 } else {
-                    // Mode Kelompok
+                    // Mode Kelompok (Tim)
                     if (hasEnoughQuota) {
                         if (pill) {
                             pill.className = 'capacity-status-pill status-pill-target tersedia';
-                            pill.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Kuota Cukup (${sisa} Kursi)</span>`;
+                            pill.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Kuota Cukup (${sisa} Kursi Tersedia)</span>`;
+                        }
+                        if (metaLeft) {
+                            metaLeft.innerHTML = `Sisa: <strong class="sisa-val">${sisa}</strong> dari ${total} Kursi (Cukup untuk tim ${currentMemberCount} org)`;
                         }
                         if (barFill) barFill.className = 'capacity-bar-fill tersedia';
                         if (btnLink) {
@@ -1894,29 +2237,59 @@
                             btnLink.href = `/register?bulan=${bulanId}&jurusan=${jurusanId}&tipe=kelompok&jumlah=${currentMemberCount}`;
                         }
                         if (btnText) btnText.textContent = `Daftar Kelompok (${currentMemberCount} Orang) ➔`;
-                    } else {
-                        // Kuota tidak mencukupi untuk seluruh anggota kelompok -> Masuk Waiting List
+                    } else if (sisa > 0) {
+                        // Kuota sisa ADA, namun tidak cukup untuk seluruh rombongan kelompok
+                        const kekurangan = currentMemberCount - sisa;
                         if (pill) {
                             pill.className = 'capacity-status-pill status-pill-target kurang';
-                            pill.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> <span>Kuota Penuh (Waiting List)</span>`;
+                            pill.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> <span>Tersisa ${sisa} Kursi · Tim Butuh ${currentMemberCount}</span>`;
+                        }
+                        if (metaLeft) {
+                            metaLeft.innerHTML = `<span style="color: #b45309; font-weight: 600;">Sisa ${sisa} kursi (kurang ${kekurangan} kursi untuk tim). Masuk Waiting List:</span>`;
                         }
                         if (barFill) barFill.className = 'capacity-bar-fill kurang';
                         if (btnLink) {
                             btnLink.className = 'card-action-btn btn-cta-target btn-waiting';
                             btnLink.href = `/register?bulan=${bulanId}&jurusan=${jurusanId}&tipe=kelompok&jumlah=${currentMemberCount}`;
                         }
-                        if (btnText) btnText.textContent = `Daftar Waiting List (${currentMemberCount} Orang)`;
+                        if (btnText) btnText.textContent = `Daftar Waiting List (${currentMemberCount} Orang) ➔`;
+                    } else {
+                        // Kuota benar-benar habis (0 kursi)
+                        if (pill) {
+                            pill.className = 'capacity-status-pill status-pill-target waiting';
+                            pill.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <span>Kuota Penuh (Waiting List)</span>`;
+                        }
+                        if (metaLeft) {
+                            metaLeft.innerHTML = `<span style="color: #b45309; font-weight: 600;">0 dari ${total} kursi tersisa. Pendaftaran masuk antrean:</span>`;
+                        }
+                        if (barFill) barFill.className = 'capacity-bar-fill waiting';
+                        if (btnLink) {
+                            btnLink.className = 'card-action-btn btn-cta-target btn-waiting';
+                            btnLink.href = `/register?bulan=${bulanId}&jurusan=${jurusanId}&tipe=kelompok&jumlah=${currentMemberCount}`;
+                        }
+                        if (btnText) btnText.textContent = `Daftar Waiting List (${currentMemberCount} Orang) ➔`;
                     }
                 }
             }
         });
     }
 
-    function setupQuotaCarousel(trackId, prevBtnId, nextBtnId) {
+    function scrollActiveCarousel(direction) {
+        const trackId = (currentActiveTab === 'smk') ? 'carousel-track-smk' : 'carousel-track-mahasiswa';
         const track = document.getElementById(trackId);
-        const prevBtn = document.getElementById(prevBtnId);
-        const nextBtn = document.getElementById(nextBtnId);
+        if (!track) return;
 
+        const activeObj = (currentActiveTab === 'smk') ? carouselSmk : carouselMahasiswa;
+        if (activeObj && typeof activeObj.pauseWithTimeout === 'function') {
+            activeObj.pauseWithTimeout(4000);
+        }
+
+        const stepWidth = 394; // 370px card width + 24px gap
+        track.scrollBy({ left: direction * stepWidth, behavior: 'smooth' });
+    }
+
+    function setupQuotaCarousel(trackId) {
+        const track = document.getElementById(trackId);
         if (!track) return null;
 
         // Clone kartu agar terjadi infinite seamless loop tanpa jeda/patah
@@ -1981,37 +2354,6 @@
         track.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
         track.addEventListener('touchend', () => { pauseWithTimeout(2500); }, { passive: true });
 
-        // Arrow button navigation (Smooth Step per card)
-        const stepWidth = 394; // 370px card width + 24px gap
-
-        if (prevBtn) {
-            prevBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                pauseWithTimeout(4000);
-                track.scrollBy({ left: -stepWidth, behavior: 'smooth' });
-                // Check wrap-around boundary
-                setTimeout(() => {
-                    if (hasClones && track.scrollLeft <= 0) {
-                        track.scrollLeft += halfScrollWidth;
-                    }
-                }, 350);
-            });
-        }
-
-        if (nextBtn) {
-            nextBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                pauseWithTimeout(4000);
-                track.scrollBy({ left: stepWidth, behavior: 'smooth' });
-                // Check wrap-around boundary
-                setTimeout(() => {
-                    if (hasClones && track.scrollLeft >= halfScrollWidth) {
-                        track.scrollLeft -= halfScrollWidth;
-                    }
-                }, 350);
-            });
-        }
-
         // Mouse Drag-to-Scroll support
         let isDown = false;
         let startX = 0;
@@ -2050,14 +2392,47 @@
             }
         });
 
+        // Arrow button navigation on the sides (Smooth Step per card like reference)
+        const prevBtn = prevBtnId ? document.getElementById(prevBtnId) : null;
+        const nextBtn = nextBtnId ? document.getElementById(nextBtnId) : null;
+        const stepWidth = 394; // 370px card width + 24px gap
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                pauseWithTimeout(4000);
+                track.scrollBy({ left: -stepWidth, behavior: 'smooth' });
+                setTimeout(() => {
+                    if (hasClones && track.scrollLeft <= 0) {
+                        track.scrollLeft += halfScrollWidth;
+                    }
+                }, 350);
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                pauseWithTimeout(4000);
+                track.scrollBy({ left: stepWidth, behavior: 'smooth' });
+                setTimeout(() => {
+                    if (hasClones && track.scrollLeft >= halfScrollWidth) {
+                        track.scrollLeft -= halfScrollWidth;
+                    }
+                }, 350);
+            });
+        }
+
         return {
             pause: () => { isPaused = true; },
             resume: () => { isPaused = false; },
+            pauseWithTimeout: pauseWithTimeout,
             reset: () => { track.scrollLeft = hasClones ? halfScrollWidth : 0; }
         };
     }
 
     function switchTab(type) {
+        currentActiveTab = type;
         const btnSmk = document.getElementById('tab-btn-smk');
         const btnMahasiswa = document.getElementById('tab-btn-mahasiswa');
         const contentSmk = document.getElementById('tab-content-smk');

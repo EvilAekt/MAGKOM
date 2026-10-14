@@ -40,6 +40,23 @@
         </div>
     @endif
 
+    @if(($selectedTipe ?? request('tipe')) === 'kelompok')
+        <div style="background: #EFF6FF; border: 1.5px solid #93C5FD; border-radius: 0.75rem; padding: 0.875rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.75rem;">
+            <div style="width: 28px; height: 28px; border-radius: 6px; background: #0751FF; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </div>
+            <div style="font-size: 0.8125rem; color: #1E40AF; line-height: 1.5;">
+                <strong style="color: #1E3A8A; display: block; margin-bottom: 2px;">Pendaftaran Akun Ketua / Perwakilan Kelompok:</strong>
+                Anda mendaftar sebagai perwakilan kelompok ({{ $selectedJumlah ?? request('jumlah', 2) }} orang). Rekan tim Anda <strong>tidak perlu membuat akun terpisah</strong>. Seluruh identitas & berkas rekan tim akan dimasukkan langsung pada formulir permohonan magang setelah akun ini aktif.
+            </div>
+        </div>
+    @endif
+
     <!-- Form Registrasi Akun Baru -->
     <form action="{{ route('register') }}" method="POST" novalidate>
         @csrf
