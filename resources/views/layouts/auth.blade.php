@@ -459,25 +459,121 @@
             text-transform: lowercase;
         }
 
-        /* Alerts & Badges */
-        .auth-alert-error {
-            background-color: var(--red-50);
-            border-left: 4px solid var(--red-500);
-            padding: 0.875rem 1rem;
-            border-radius: 0.375rem;
+        /* Alerts & Toasts */
+        .alerts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             margin-bottom: 1.5rem;
-            color: var(--red-700);
-            font-size: 0.875rem;
+            width: 100%;
         }
 
-        .auth-alert-success {
-            background-color: var(--green-50);
-            border-left: 4px solid var(--green-500);
-            padding: 0.875rem 1rem;
-            border-radius: 0.375rem;
-            margin-bottom: 1.5rem;
-            color: var(--green-700);
+        .app-toast,
+        .app-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 18px;
+            background: #FFFFFF;
+            border: 1px solid var(--neutral-200);
+            border-radius: 14px;
+            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+            position: relative;
+            transition: all 0.25s ease;
+            text-align: left;
+        }
+
+        .app-toast.toast-hiding,
+        .app-alert.toast-hiding {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+
+        .toast-icon-badge,
+        .alert-icon-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-icon-badge.success,
+        .alert-icon-badge.success {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        .toast-icon-badge.error,
+        .alert-icon-badge.error {
+            background: #FEF2F2;
+            color: #EF4444;
+        }
+
+        .toast-icon-badge.warning,
+        .alert-icon-badge.warning {
+            background: #FFFBEB;
+            color: #F59E0B;
+        }
+
+        .toast-icon-badge.info,
+        .alert-icon-badge.info {
+            background: #EFF6FF;
+            color: #3B82F6;
+        }
+
+        .toast-content,
+        .alert-body {
+            flex: 1;
+            min-width: 0;
+            padding-top: 1px;
+        }
+
+        .toast-title,
+        .alert-title {
             font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            line-height: 1.35;
+            margin-bottom: 2px;
+        }
+
+        .toast-desc,
+        .alert-desc {
+            font-size: 0.8125rem;
+            font-weight: 400;
+            color: var(--neutral-500);
+            line-height: 1.45;
+        }
+
+        .toast-desc ul,
+        .alert-desc ul {
+            margin: 4px 0 0 16px;
+            padding: 0;
+        }
+
+        .toast-close-btn,
+        .alert-close-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--neutral-400);
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+        }
+
+        .toast-close-btn:hover,
+        .alert-close-btn:hover {
+            color: var(--neutral-600);
+            background: var(--neutral-100);
         }
 
         .auth-footer-text {
@@ -593,6 +689,9 @@
 
             <!-- Konten Form Dinamis -->
             <div class="auth-form-wrapper">
+                <div class="alerts-container">
+                    <x-flash-alert />
+                </div>
                 @yield('content')
             </div>
 
@@ -603,9 +702,34 @@
         </main>
     </div>
 
-    <!-- Script Pembantu Show / Hide Password (Tanpa Dependency Luar, CSP Compliant) -->
+    <!-- Script Pembantu Show / Hide Password & Toast Dismiss -->
     <script>
+        function dismissToast(btn) {
+            const toast = btn.closest('.app-toast') || btn.closest('.app-alert');
+            if (!toast) return;
+            toast.classList.add('toast-hiding');
+            setTimeout(() => toast.remove(), 300);
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
+            // Auto dismiss alert toast after 5s with pause on hover
+            const alerts = document.querySelectorAll('.alerts-container .app-toast, .alerts-container .app-alert');
+            alerts.forEach(alert => {
+                let timer = setTimeout(() => {
+                    alert.classList.add('toast-hiding');
+                    setTimeout(() => alert.remove(), 300);
+                }, 5000);
+
+                alert.addEventListener('mouseenter', () => clearTimeout(timer));
+                alert.addEventListener('mouseleave', () => {
+                    timer = setTimeout(() => {
+                        alert.classList.add('toast-hiding');
+                        setTimeout(() => alert.remove(), 300);
+                    }, 3000);
+                });
+            });
+
+            // Password Toggle
             const toggleButtons = document.querySelectorAll('.toggle-password-btn');
             toggleButtons.forEach(button => {
                 button.addEventListener('click', function () {

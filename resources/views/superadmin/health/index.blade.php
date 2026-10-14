@@ -66,12 +66,7 @@
         </div>
     </div>
 
-    @if(session('status_keberhasilan'))
-        <div style="background: #DCFCE7; border: 1px solid #86EFAC; color: #166534; padding: 1rem 1.25rem; border-radius: 10px; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            <span>{{ session('status_keberhasilan') }}</span>
-        </div>
-    @endif
+
 
     {{-- 2. GRID TELEMETRI --}}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">

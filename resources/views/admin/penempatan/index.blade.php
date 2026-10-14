@@ -846,7 +846,12 @@
     function openBulkReassignModal() {
         const checkedBoxes = document.querySelectorAll('.penempatan-checkbox:checked');
         if (checkedBoxes.length === 0) {
-            alert('Pilih minimal satu penempatan peserta terlebih dahulu.');
+            const msg = 'Pilih minimal satu penempatan peserta terlebih dahulu.';
+            if (window.MagKomToast) {
+                window.MagKomToast.warning(msg);
+            } else {
+                alert(msg);
+            }
             return;
         }
 

@@ -4,12 +4,7 @@
 @section('meta_description', 'Registrasi akun calon peserta magang / PKL Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')
-    <!-- Alert Notifikasi Error Validasi -->
-    @if($errors->any())
-        <div class="auth-alert-error" role="alert">
-            {{ $errors->first() }}
-        </div>
-    @endif
+
 
     <!-- Header Form Register -->
     <h1 class="auth-title">Register Akun MagKom</h1>

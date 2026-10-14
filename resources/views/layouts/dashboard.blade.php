@@ -799,14 +799,16 @@
             pointer-events: none;
         }
 
-        .alerts-container .app-alert {
+        .alerts-container .app-alert,
+        .alerts-container .app-toast {
             pointer-events: auto;
             margin-bottom: 0;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
             animation: toastSlideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .alerts-container .app-alert.toast-hiding {
+        .alerts-container .app-alert.toast-hiding,
+        .alerts-container .app-toast.toast-hiding {
             animation: toastSlideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
@@ -832,7 +834,8 @@
             }
         }
 
-        .app-alert {
+        .app-alert,
+        .app-toast {
             display: flex;
             align-items: flex-start;
             gap: 14px;
@@ -846,7 +849,8 @@
             transition: all 0.25s ease;
         }
 
-        .alert-icon-badge {
+        .alert-icon-badge,
+        .toast-icon-badge {
             width: 42px;
             height: 42px;
             border-radius: 50%;
@@ -856,33 +860,39 @@
             flex-shrink: 0;
         }
 
-        .alert-icon-badge.success {
+        .alert-icon-badge.success,
+        .toast-icon-badge.success {
             background: #ECFDF5;
             color: #10B981;
         }
 
-        .alert-icon-badge.error {
+        .alert-icon-badge.error,
+        .toast-icon-badge.error {
             background: #FEF2F2;
             color: #EF4444;
         }
 
-        .alert-icon-badge.warning {
+        .alert-icon-badge.warning,
+        .toast-icon-badge.warning {
             background: #FFFBEB;
             color: #F59E0B;
         }
 
-        .alert-icon-badge.info {
+        .alert-icon-badge.info,
+        .toast-icon-badge.info {
             background: #EFF6FF;
             color: #3B82F6;
         }
 
-        .alert-body {
+        .alert-body,
+        .toast-content {
             flex: 1;
             min-width: 0;
             padding-top: 1px;
         }
 
-        .alert-title {
+        .alert-title,
+        .toast-title {
             font-size: 0.9375rem;
             font-weight: 700;
             color: #0F172A;
@@ -890,19 +900,22 @@
             margin-bottom: 2px;
         }
 
-        .alert-desc {
+        .alert-desc,
+        .toast-desc {
             font-size: 0.84375rem;
             font-weight: 400;
             color: #64748B;
             line-height: 1.45;
         }
 
-        .alert-desc ul {
+        .alert-desc ul,
+        .toast-desc ul {
             margin: 4px 0 0 16px;
             padding: 0;
         }
 
-        .alert-close-btn {
+        .alert-close-btn,
+        .toast-close-btn {
             background: transparent;
             border: none;
             cursor: pointer;
@@ -917,51 +930,61 @@
             transition: all 0.15s ease;
         }
 
-        .alert-close-btn:hover {
+        .alert-close-btn:hover,
+        .toast-close-btn:hover {
             color: #475569;
             background: #F1F5F9;
         }
 
         /* Dark Theme Support for Alerts */
-        [data-theme="dark"] .app-alert {
+        [data-theme="dark"] .app-alert,
+        [data-theme="dark"] .app-toast {
             background: #182234 !important;
             border-color: #26354D !important;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
         }
 
-        [data-theme="dark"] .alert-title {
+        [data-theme="dark"] .alert-title,
+        [data-theme="dark"] .toast-title {
             color: #F8FAFC !important;
         }
 
-        [data-theme="dark"] .alert-desc {
+        [data-theme="dark"] .alert-desc,
+        [data-theme="dark"] .toast-desc {
             color: #94A3B8 !important;
         }
 
-        [data-theme="dark"] .alert-icon-badge.success {
+        [data-theme="dark"] .alert-icon-badge.success,
+        [data-theme="dark"] .toast-icon-badge.success {
             background: rgba(16, 185, 129, 0.18) !important;
             color: #34D399 !important;
         }
 
-        [data-theme="dark"] .alert-icon-badge.error {
+        [data-theme="dark"] .alert-icon-badge.error,
+        [data-theme="dark"] .toast-icon-badge.error {
             background: rgba(239, 68, 68, 0.18) !important;
             color: #F87171 !important;
         }
 
-        [data-theme="dark"] .alert-icon-badge.warning {
+        [data-theme="dark"] .alert-icon-badge.warning,
+        [data-theme="dark"] .toast-icon-badge.warning {
             background: rgba(245, 158, 11, 0.18) !important;
             color: #FBBF24 !important;
         }
 
-        [data-theme="dark"] .alert-icon-badge.info {
+        [data-theme="dark"] .alert-icon-badge.info,
+        [data-theme="dark"] .toast-icon-badge.info {
             background: rgba(59, 130, 246, 0.18) !important;
             color: #60A5FA !important;
         }
 
-        [data-theme="dark"] .alert-close-btn {
+        [data-theme="dark"] .alert-close-btn,
+        [data-theme="dark"] .toast-close-btn {
             color: #64748B !important;
         }
 
-        [data-theme="dark"] .alert-close-btn:hover {
+        [data-theme="dark"] .alert-close-btn:hover,
+        [data-theme="dark"] .toast-close-btn:hover {
             color: #CBD5E1 !important;
             background: #1E293B !important;
         }
@@ -1893,99 +1916,7 @@
                      GLOBAL FLASH ALERTS
                      ===================================================================== -->
                 <div class="alerts-container">
-                    @if(session('success'))
-                        @php
-                            $isSettingOrProfile = request()->routeIs('*.profil.*') || request()->routeIs('*.pengaturan.*') || request()->routeIs('*.akun.*');
-                            $toastTitle = session('success_title') ?? ($isSettingOrProfile ? 'Pengaturan tersimpan' : 'Perubahan Berhasil Disimpan');
-                        @endphp
-                        <div class="app-alert alert-success" role="alert">
-                            <div class="alert-icon-badge success">
-                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                                </svg>
-                            </div>
-                            <div class="alert-body">
-                                <div class="alert-title">{{ $toastTitle }}</div>
-                                <div class="alert-desc">{{ session('success') }}</div>
-                            </div>
-                            <button type="button" class="alert-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="app-alert alert-error" role="alert">
-                            <div class="alert-icon-badge error">
-                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                                    <line x1="9" y1="9" x2="15" y2="15"></line>
-                                </svg>
-                            </div>
-                            <div class="alert-body">
-                                <div class="alert-title">Terjadi Kesalahan</div>
-                                <div class="alert-desc">{{ session('error') }}</div>
-                            </div>
-                            <button type="button" class="alert-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    @endif
-
-                    @if(session('warning'))
-                        <div class="app-alert alert-warning" role="alert">
-                            <div class="alert-icon-badge warning">
-                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                                </svg>
-                            </div>
-                            <div class="alert-body">
-                                <div class="alert-title">Perhatian</div>
-                                <div class="alert-desc">{{ session('warning') }}</div>
-                            </div>
-                            <button type="button" class="alert-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    @endif
-
-                    @if(isset($errors) && $errors->any())
-                        <div class="app-alert alert-error" role="alert">
-                            <div class="alert-icon-badge error">
-                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                </svg>
-                            </div>
-                            <div class="alert-body">
-                                <div class="alert-title">Periksa Kembali Isian Formulir:</div>
-                                <div class="alert-desc">
-                                    <ul>
-                                        @foreach($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                            <button type="button" class="alert-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </button>
-                        </div>
-                    @endif
+                    <x-flash-alert />
                 </div>
 
                 <!-- =====================================================================
@@ -2152,9 +2083,71 @@
             setTimeout(() => toast.remove(), 300);
         }
 
+        // Global MagKomToast helper API for JS triggers
+        window.MagKomToast = {
+            show({ type = 'success', title = '', message = '', duration = 5000 }) {
+                let container = document.querySelector('.alerts-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.className = 'alerts-container';
+                    const mainContent = document.getElementById('mainContent') || document.body;
+                    mainContent.insertBefore(container, mainContent.firstChild);
+                }
+                const toast = document.createElement('div');
+                toast.className = `app-toast app-alert alert-${type === 'error' ? 'error alert-danger' : type}`;
+                toast.setAttribute('role', 'alert');
+
+                let iconSvg = '';
+                if (type === 'success') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>';
+                } else if (type === 'warning') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+                } else if (type === 'info') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+                } else {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+                }
+
+                toast.innerHTML = `
+                    <div class="toast-icon-badge alert-icon-badge ${type}">${iconSvg}</div>
+                    <div class="toast-content alert-body">
+                        ${title ? `<div class="toast-title alert-title">${title}</div>` : ''}
+                        <div class="toast-desc alert-desc">${message}</div>
+                    </div>
+                    <button type="button" class="toast-close-btn alert-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                `;
+
+                container.appendChild(toast);
+
+                if (duration > 0) {
+                    let timer = setTimeout(() => {
+                        toast.classList.add('toast-hiding');
+                        setTimeout(() => toast.remove(), 300);
+                    }, duration);
+
+                    toast.addEventListener('mouseenter', () => clearTimeout(timer));
+                    toast.addEventListener('mouseleave', () => {
+                        timer = setTimeout(() => {
+                            toast.classList.add('toast-hiding');
+                            setTimeout(() => toast.remove(), 300);
+                        }, 2500);
+                    });
+                }
+            },
+            success(title, message) { this.show({ type: 'success', title, message }); },
+            error(title, message) { this.show({ type: 'error', title, message }); },
+            warning(title, message) { this.show({ type: 'warning', title, message }); },
+            info(title, message) { this.show({ type: 'info', title, message }); }
+        };
+
         // Auto dismiss alert toast after 5s with pause on hover
         document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('.alerts-container .app-alert');
+            const alerts = document.querySelectorAll('.alerts-container .app-alert, .alerts-container .app-toast');
             alerts.forEach(alert => {
                 let timer = setTimeout(() => {
                     alert.classList.add('toast-hiding');

@@ -168,12 +168,7 @@
         </p>
     </div>
 
-    @if(session('success'))
-        <div style="background: var(--green-50, #F0FDF4); border: 1px solid var(--green-300, #86EFAC); border-radius: 12px; padding: 1rem 1.25rem; color: var(--green-800, #166534); font-size: 0.875rem; display: flex; align-items: center; gap: 0.75rem;">
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-            <span>{{ session('success') }}</span>
-        </div>
-    @endif
+
 
     @if($survei)
         <div class="survei-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">

@@ -4,22 +4,7 @@
 @section('meta_description', 'Ganti kata sandi akun Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')
-    <!-- Alert Notifikasi Flash -->
-    @if(session('success'))
-        <div class="auth-alert-success" role="alert">
-            {{ session('success') }}
-        </div>
-    @endif
 
-    @if(isset($errors) && $errors->any())
-        <div class="auth-alert-error" role="alert">
-            <ul style="margin: 0; padding-left: 1.25rem;">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <!-- Header Form Ganti Password -->
     <div class="step-badge">

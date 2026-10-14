@@ -2145,14 +2145,24 @@
         const maxBytes = maksMb * 1024 * 1024;
 
         if (!allowedExtensions.includes(ext)) {
-            alert('Format berkas tidak diizinkan. Hanya file PDF, JPG, JPEG, atau PNG yang diterima.');
+            const msg = 'Format berkas tidak diizinkan. Hanya file PDF, JPG, JPEG, atau PNG yang diterima.';
+            if (window.MagKomToast) {
+                window.MagKomToast.warning(msg);
+            } else {
+                alert(msg);
+            }
             input.value = '';
             resetFileSelection(jenisId);
             return;
         }
 
         if (file.size > maxBytes) {
-            alert(`Ukuran berkas (${(file.size / (1024 * 1024)).toFixed(2)} MB) melebihi batas maksimal ${maksMb} MB.`);
+            const msg = `Ukuran berkas (${(file.size / (1024 * 1024)).toFixed(2)} MB) melebihi batas maksimal ${maksMb} MB.`;
+            if (window.MagKomToast) {
+                window.MagKomToast.warning(msg);
+            } else {
+                alert(msg);
+            }
             input.value = '';
             resetFileSelection(jenisId);
             return;

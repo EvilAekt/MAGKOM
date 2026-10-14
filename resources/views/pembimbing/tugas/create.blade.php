@@ -155,22 +155,7 @@
         </div>
     </div>
 
-    {{-- Error Banner Alert --}}
-    @if ($errors->any())
-        <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 12px; padding: 1rem 1.25rem; color: #991B1B;">
-            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" style="flex-shrink: 0; margin-top: 0.1rem;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                <div>
-                    <h3 style="font-size: 0.875rem; font-weight: 700; margin: 0 0 0.25rem 0;">Terdapat kesalahan pada isian formulir:</h3>
-                    <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.8rem; line-height: 1.5;">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-    @endif
+
 
     {{-- Main Two-Column Classroom Workspace --}}
     <form id="formBuatTugasClassroom" 

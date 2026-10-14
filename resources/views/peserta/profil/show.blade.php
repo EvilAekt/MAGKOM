@@ -1040,7 +1040,11 @@
         if (this.files && this.files[0]) {
             const file = this.files[0];
             if (file.size > 2 * 1024 * 1024) {
-                alert('Ukuran berkas melebihi batas maksimal 2 MB.');
+                if (window.MagKomToast) {
+                    window.MagKomToast.warning('Ukuran berkas melebihi batas maksimal 2 MB.');
+                } else {
+                    alert('Ukuran berkas melebihi batas maksimal 2 MB.');
+                }
                 this.value = '';
                 return;
             }

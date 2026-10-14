@@ -86,17 +86,7 @@
         </div>
     </div>
 
-    {{-- ALERT NOTIFIKASI --}}
-    @if(session('success'))
-        <div style="background: #DCFCE7; border: 1px solid #86EFAC; color: #166534; padding: 0.85rem 1.25rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600;">
-            ✓ {{ session('success') }}
-        </div>
-    @endif
-    @if($errors->any())
-        <div style="background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; padding: 0.85rem 1.25rem; border-radius: 10px; font-size: 0.85rem;">
-            ⚠️ {{ $errors->first() }}
-        </div>
-    @endif
+
 
     {{-- 2. METRIK KPI --}}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">

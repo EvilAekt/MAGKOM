@@ -141,16 +141,7 @@
         </div>
     </div>
 
-    @if($errors->any())
-        <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 12px; padding: 1rem 1.25rem; color: #991B1B;">
-            <div style="font-weight: 700; font-size: 0.875rem; margin-bottom: 0.25rem;">Terdapat Kesalahan Pengisian Formulir:</div>
-            <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.825rem;">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+
 
     <form id="form-edit-tugas" action="{{ route('pembimbing.tugas.update', $tugas) }}" method="POST" enctype="multipart/form-data">
         @csrf

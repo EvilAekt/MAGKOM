@@ -1635,13 +1635,16 @@
             setTimeout(() => {
                 card.classList.remove('highlight-card');
             }, 2500);
-        } else {
             if (isAktif || status === 'belum') {
                 openTambahModal(mingguKe);
             } else {
-                alert(`Laporan Minggu ke-${mingguKe} belum dimulai.`);
+                const msg = `Laporan Minggu ke-${mingguKe} belum dimulai.`;
+                if (window.MagKomToast) {
+                    window.MagKomToast.info(msg, 'Informasi Jadwal');
+                } else {
+                    alert(msg);
+                }
             }
-        }
     }
 
     // Close on backdrop click & ESC key

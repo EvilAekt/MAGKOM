@@ -4,18 +4,7 @@
 @section('meta_description', 'Masuk ke akun Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')
-    <!-- Alert Notifikasi Flash -->
-    @if(session('success'))
-        <div class="auth-alert-success" role="alert">
-            {{ session('success') }}
-        </div>
-    @endif
 
-    @if($errors->any())
-        <div class="auth-alert-error" role="alert">
-            {{ $errors->first() }}
-        </div>
-    @endif
 
     <!-- Header Form Login -->
     <h1 class="auth-title">Selamat Datang di MagKom</h1>

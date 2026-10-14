@@ -1528,99 +1528,7 @@
         <main class="content-area">
             {{-- Floating Flash Messages (Top-Right Pop Up) --}}
             <div class="toast-floating-container" id="toastFloatingContainer" aria-live="polite" aria-atomic="true">
-                @if(session('success'))
-                    @php
-                        $isSettingOrProfile = request()->routeIs('*.profil.*') || request()->routeIs('*.pengaturan.*');
-                        $toastTitle = session('success_title') ?? ($isSettingOrProfile ? 'Pengaturan tersimpan' : 'Perubahan Berhasil Disimpan');
-                    @endphp
-                    <div class="app-toast alert-success" role="alert">
-                        <div class="toast-icon-badge success">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                            </svg>
-                        </div>
-                        <div class="toast-content">
-                            <div class="toast-title">{{ $toastTitle }}</div>
-                            <div class="toast-desc">{{ session('success') }}</div>
-                        </div>
-                        <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="app-toast alert-error" role="alert">
-                        <div class="toast-icon-badge error">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="15" y1="9" x2="9" y2="15"></line>
-                                <line x1="9" y1="9" x2="15" y2="15"></line>
-                            </svg>
-                        </div>
-                        <div class="toast-content">
-                            <div class="toast-title">Terjadi Kesalahan</div>
-                            <div class="toast-desc">{{ session('error') }}</div>
-                        </div>
-                        <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
-                    </div>
-                @endif
-
-                @if(session('warning'))
-                    <div class="app-toast alert-warning" role="alert">
-                        <div class="toast-icon-badge warning">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                            </svg>
-                        </div>
-                        <div class="toast-content">
-                            <div class="toast-title">Perhatian</div>
-                            <div class="toast-desc">{{ session('warning') }}</div>
-                        </div>
-                        <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
-                    </div>
-                @endif
-
-                @if(isset($errors) && $errors->any())
-                    <div class="app-toast alert-error" role="alert">
-                        <div class="toast-icon-badge error">
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                        </div>
-                        <div class="toast-content">
-                            <div class="toast-title">Periksa Kembali Isian Formulir</div>
-                            <div class="toast-desc">
-                                <ul>
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                        <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
-                    </div>
-                @endif
+                <x-flash-alert />
             </div>
 
             @yield('content')
@@ -1634,6 +1542,68 @@
             toast.classList.add('toast-hiding');
             setTimeout(() => toast.remove(), 300);
         }
+
+        // Global MagKomToast helper API for JS triggers
+        window.MagKomToast = {
+            show({ type = 'success', title = '', message = '', duration = 5000 }) {
+                let container = document.getElementById('toastFloatingContainer');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.className = 'toast-floating-container';
+                    container.id = 'toastFloatingContainer';
+                    document.body.appendChild(container);
+                }
+                const toast = document.createElement('div');
+                toast.className = `app-toast alert-${type === 'error' ? 'error' : type}`;
+                toast.setAttribute('role', 'alert');
+
+                let iconSvg = '';
+                if (type === 'success') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>';
+                } else if (type === 'warning') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+                } else if (type === 'info') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+                } else {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+                }
+
+                toast.innerHTML = `
+                    <div class="toast-icon-badge ${type}">${iconSvg}</div>
+                    <div class="toast-content">
+                        ${title ? `<div class="toast-title">${title}</div>` : ''}
+                        <div class="toast-desc">${message}</div>
+                    </div>
+                    <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                `;
+
+                container.appendChild(toast);
+
+                if (duration > 0) {
+                    let timer = setTimeout(() => {
+                        toast.classList.add('toast-hiding');
+                        setTimeout(() => toast.remove(), 300);
+                    }, duration);
+
+                    toast.addEventListener('mouseenter', () => clearTimeout(timer));
+                    toast.addEventListener('mouseleave', () => {
+                        timer = setTimeout(() => {
+                            toast.classList.add('toast-hiding');
+                            setTimeout(() => toast.remove(), 300);
+                        }, 2500);
+                    });
+                }
+            },
+            success(title, message) { this.show({ type: 'success', title, message }); },
+            error(title, message) { this.show({ type: 'error', title, message }); },
+            warning(title, message) { this.show({ type: 'warning', title, message }); },
+            info(title, message) { this.show({ type: 'info', title, message }); }
+        };
 
         // Auto dismiss toast after 5s with pause on hover
         document.addEventListener('DOMContentLoaded', function() {
