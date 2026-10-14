@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Auth;
 use App\Enums\RoleEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
+use App\Models\BulanMagang;
+use App\Models\Jurusan;
 use App\Models\User;
 use App\Rules\CaptchaRule;
 use App\Rules\TurnstileRule;
@@ -86,9 +88,14 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function showRegister(): View
+    public function showRegister(Request $request): View
     {
-        return view('auth.register');
+        $selectedBulan = $request->filled('bulan') ? BulanMagang::find($request->query('bulan')) : null;
+        $selectedJurusan = $request->filled('jurusan') ? Jurusan::with('bidang')->find($request->query('jurusan')) : null;
+        $selectedTipe = $request->query('tipe', 'mandiri');
+        $selectedJumlah = (int) $request->query('jumlah', 1);
+
+        return view('auth.register', compact('selectedBulan', 'selectedJurusan', 'selectedTipe', 'selectedJumlah'));
     }
 
     public function register(Request $request): RedirectResponse
@@ -140,6 +147,17 @@ class AuthController extends Controller
             nilaiBaru: ['nama' => $user->nama, 'email' => $user->email, 'no_telp' => $user->no_telp, 'role' => $user->role->value],
             detail: ['aksi' => 'registrasi_peserta_baru']
         );
+
+        if ($request->filled('redirect_bulan') || $request->filled('redirect_jurusan')) {
+            session([
+                'pendaftaran_preferensi' => [
+                    'bulan_id' => $request->input('redirect_bulan'),
+                    'jurusan_id' => $request->input('redirect_jurusan'),
+                    'tipe' => $request->input('redirect_tipe', 'mandiri'),
+                    'jumlah' => (int) $request->input('redirect_jumlah', 1),
+                ]
+            ]);
+        }
 
         return redirect()->route('peserta.profil.show')
             ->with('success', 'Pendaftaran akun berhasil. Silakan lengkapi profil biodata Anda.');

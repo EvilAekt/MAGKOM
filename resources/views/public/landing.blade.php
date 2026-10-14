@@ -154,10 +154,7 @@
         padding-top: 0.85rem;
     }
 
-    /* =====================================================================
-       2. BIDANG DAN KUOTA SECTION (Figma + AC-01 Matrix)
-       ===================================================================== */
-    /* =====================================================================
+            /* =====================================================================
        2. BIDANG DAN KUOTA SECTION (Figma + AC-01 Matrix)
        ===================================================================== */
     .section-bidang-kuota {
@@ -219,158 +216,523 @@
         box-shadow: 0 4px 14px rgba(7, 81, 255, 0.28);
     }
 
-    /* Quota Grid */
-    .quota-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 1.75rem;
-        margin-bottom: 3.5rem;
-    }
-
-    .figma-quota-card {
+    /* =====================================================================
+       2. BIDANG DAN KUOTA HORIZONTAL INTERACTIVE CAROUSEL & MODERN CARDS
+       ===================================================================== */
+    .quota-controls-bar {
         background: #ffffff;
-        border: 1px solid var(--neutral-400);
-        border-radius: 1rem;
-        padding: 1.75rem;
+        border: 1px solid #E2E8F0;
+        border-radius: 1.25rem;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2.25rem;
+        box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        gap: 1.15rem;
     }
 
-    .figma-quota-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.09);
-        border-color: var(--blue-600);
-    }
-
-    .card-top-row {
+    .quota-control-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 1.25rem;
+        gap: 1.25rem;
+        flex-wrap: wrap;
     }
 
-    .card-icon-box {
-        width: 3rem;
-        height: 3rem;
-        border-radius: 0.625rem;
-        background: var(--blue-tint);
-        border: 1px solid var(--blue-tint-line);
-        color: var(--blue-600);
-        display: flex;
+    .quota-control-label {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748B;
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
+        gap: 0.45rem;
     }
 
-    .card-icon-box svg {
-        width: 1.5rem;
-        height: 1.5rem;
-        fill: currentColor;
-    }
-
-    .card-jenjang-badge {
-        display: inline-block;
-        padding: 0.3rem 0.85rem;
+    .quota-control-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: #F8FAFC;
+        padding: 0.3rem;
         border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        background: var(--neutral-200);
-        color: var(--neutral-700);
+        border: 1px solid #E2E8F0;
+        flex-wrap: wrap;
     }
 
-    .card-jurusan-title {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: var(--neutral-800);
-        margin-bottom: 0.45rem;
-        line-height: 1.3;
-    }
-
-    .card-jurusan-desc {
-        font-size: 0.875rem;
-        color: var(--neutral-600);
-        margin-bottom: 1.25rem;
-        line-height: 1.5;
-        min-height: 42px;
-    }
-
-    /* Month Periods Inside Card */
-    .card-period-box {
-        background: var(--neutral-100);
-        border: 1px solid var(--neutral-200);
-        border-radius: 0.75rem;
-        padding: 1.15rem;
-        margin-bottom: 0.875rem;
-    }
-
-    .period-title {
-        font-size: 0.875rem;
+    .mode-pill-btn {
+        padding: 0.45rem 1.15rem;
+        font-size: 0.85rem;
         font-weight: 600;
-        color: var(--neutral-700);
-        margin-bottom: 0.6rem;
+        color: #475569;
+        border-radius: 9999px;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
     }
 
-    .status-badge {
+    .mode-pill-btn:hover {
+        color: #0751FF;
+        background: rgba(7, 81, 255, 0.06);
+    }
+
+    .mode-pill-btn.active {
+        background: #ffffff;
+        color: #0751FF;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(7, 81, 255, 0.16);
+        border: 1px solid rgba(7, 81, 255, 0.2);
+    }
+
+    .member-selector-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding-left: 0.5rem;
+        margin-left: 0.25rem;
+        border-left: 1.5px solid #CBD5E1;
+        transition: all 0.3s ease;
+    }
+
+    .member-pill-btn {
+        padding: 0.3rem 0.75rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border-radius: 9999px;
+        border: 1px solid #CBD5E1;
+        background: #ffffff;
+        color: #475569;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .member-pill-btn:hover {
+        border-color: #3B82F6;
+        color: #0751FF;
+    }
+
+    .member-pill-btn.active {
+        background: #0751FF;
+        color: #ffffff;
+        border-color: #0751FF;
+        font-weight: 700;
+        box-shadow: 0 2px 6px rgba(7, 81, 255, 0.25);
+    }
+
+    .quota-indicator-badge {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: #1D4ED8;
+        background: #EFF6FF;
+        border: 1px solid #BFDBFE;
+        padding: 0.35rem 0.85rem;
+        border-radius: 9999px;
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
-        padding: 0.35rem 0.85rem;
-        border-radius: 9999px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        margin-bottom: 0.65rem;
     }
 
-    .status-tersedia {
-        background: var(--green-100);
-        color: var(--green-700);
-        border: 1px solid var(--green-600);
-    }
-
-    .status-waiting-list {
-        background: var(--blue-tint);
-        color: var(--blue-700);
-        border: 1px solid var(--blue-tint-line);
-    }
-
-    .status-segera {
-        background: var(--blue-tint);
-        color: var(--blue-700);
-        border: 1px solid var(--blue-tint-line);
-    }
-
-    .status-tutup {
-        background: var(--neutral-200);
-        color: var(--neutral-600);
-        border: 1px solid var(--neutral-400);
-    }
-
-    .quota-info {
-        font-size: 0.825rem;
-        color: var(--neutral-600);
-        margin-bottom: 0.85rem;
-        line-height: 1.4;
-    }
-
-    .quota-count {
-        font-weight: 700;
-        color: var(--neutral-800);
-    }
-
-    .btn-sm {
-        padding: 0.55rem 1rem;
-        font-size: 0.85rem;
+    .quota-carousel-wrapper {
+        position: relative;
         width: 100%;
-        text-align: center;
-        border-radius: 0.5rem;
+        margin-bottom: 2.5rem;
     }
 
-    .btn-disabled {
-        background: var(--neutral-200);
-        color: var(--neutral-500);
-        border: 1px solid var(--neutral-400);
+    .quota-carousel-track {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding: 0.75rem 0.5rem 1.75rem;
+        cursor: grab;
+    }
+
+    .quota-carousel-track:active {
+        cursor: grabbing;
+    }
+
+    .quota-carousel-track::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Fixed Width for Cards in Horizontal Slider */
+    .quota-carousel-track .figma-quota-card {
+        flex: 0 0 370px;
+        width: 370px;
+        min-width: 370px;
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 640px) {
+        .quota-carousel-track .figma-quota-card {
+            flex: 0 0 86vw;
+            width: 86vw;
+            min-width: 86vw;
+        }
+    }
+
+    /* Floating Glassmorphic Arrow Buttons */
+    .carousel-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 1px solid #CBD5E1;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+        color: #1E293B;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        outline: none;
+    }
+
+    .carousel-nav-btn:hover {
+        background: #0751FF;
+        color: #ffffff;
+        border-color: #0751FF;
+        box-shadow: 0 8px 24px rgba(7, 81, 255, 0.35);
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .carousel-nav-btn:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+
+    .carousel-nav-btn.prev {
+        left: -22px;
+    }
+
+    .carousel-nav-btn.next {
+        right: -22px;
+    }
+
+    @media (max-width: 860px) {
+        .carousel-nav-btn.prev { left: 4px; }
+        .carousel-nav-btn.next { right: 4px; }
+    }
+
+    /* Modern Elevated Quota Card */
+    .figma-quota-card {
+        background: #ffffff;
+        border: 1px solid #E2E8F0;
+        border-radius: 1.25rem;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05);
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .figma-quota-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #0751FF 0%, #38BDF8 100%);
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }
+
+    .figma-quota-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 35px -8px rgba(7, 81, 255, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+        border-color: #93C5FD;
+    }
+
+    .figma-quota-card:hover::before {
+        opacity: 1;
+    }
+
+    .card-header-meta {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .card-jenjang-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        background: #F1F5F9;
+        color: #334155;
+        border: 1px solid #E2E8F0;
+        letter-spacing: 0.02em;
+        flex-shrink: 0;
+    }
+
+    .card-bidang-cluster {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        justify-content: flex-end;
+    }
+
+    .bidang-chip {
+        font-size: 0.6875rem;
+        font-weight: 700;
+        padding: 0.2rem 0.55rem;
+        border-radius: 0.375rem;
+        letter-spacing: 0.02em;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+    }
+
+    .bidang-chip-ikp {
+        background: #F0FDF4;
+        color: #166534;
+        border: 1px solid #BBF7D0;
+    }
+    .bidang-chip-egov {
+        background: #EFF6FF;
+        color: #1E40AF;
+        border: 1px solid #BFDBFE;
+    }
+    .bidang-chip-iti {
+        background: #FAF5FF;
+        color: #6B21A8;
+        border: 1px solid #E9D5FF;
+    }
+    .bidang-chip-sekretariat {
+        background: #FFF7ED;
+        color: #9A3412;
+        border: 1px solid #FED7AA;
+    }
+
+    .card-jurusan-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 0.35rem;
+        line-height: 1.35;
+        letter-spacing: -0.015em;
+    }
+
+    .card-jurusan-desc {
+        font-size: 0.8125rem;
+        color: #64748B;
+        margin-bottom: 1.15rem;
+        line-height: 1.45;
+        min-height: 38px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Card Period Segmented Bar (if multiple months) */
+    .card-period-nav {
+        display: flex;
+        gap: 0.35rem;
+        background: #F1F5F9;
+        padding: 0.25rem;
+        border-radius: 0.625rem;
+        margin-bottom: 1rem;
+    }
+
+    .card-period-tab-btn {
+        flex: 1;
+        padding: 0.35rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #64748B;
+        border-radius: 0.375rem;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.15s ease;
+    }
+
+    .card-period-tab-btn:hover {
+        color: #0F172A;
+    }
+
+    .card-period-tab-btn.active {
+        background: #ffffff;
+        color: #0F172A;
+        font-weight: 700;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Quota Capacity Tracker Surface */
+    .card-capacity-box {
+        background: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        border-radius: 0.875rem;
+        padding: 1rem;
+        margin-bottom: 1.25rem;
+        transition: all 0.2s ease;
+    }
+
+    .capacity-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.625rem;
+        gap: 0.5rem;
+    }
+
+    .capacity-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #64748B;
+    }
+
+    .capacity-status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.2rem 0.65rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    .capacity-status-pill.tersedia {
+        background: #ECFDF5;
+        color: #065F46;
+        border: 1px solid #A7F3D0;
+    }
+
+    .capacity-status-pill.waiting {
+        background: #EFF6FF;
+        color: #1E40AF;
+        border: 1px solid #BFDBFE;
+    }
+
+    .capacity-status-pill.kurang {
+        background: #FFFBEB;
+        color: #92400E;
+        border: 1px solid #FDE68A;
+    }
+
+    .capacity-status-pill.segera {
+        background: #EFF6FF;
+        color: #1E40AF;
+        border: 1px solid #BFDBFE;
+    }
+
+    .capacity-status-pill.tutup {
+        background: #F1F5F9;
+        color: #64748B;
+        border: 1px solid #CBD5E1;
+    }
+
+    /* Capacity Progress Bar */
+    .capacity-bar-track {
+        height: 7px;
+        background: #E2E8F0;
+        border-radius: 9999px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+        position: relative;
+    }
+
+    .capacity-bar-fill {
+        height: 100%;
+        border-radius: 9999px;
+        transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+    }
+
+    .capacity-bar-fill.tersedia {
+        background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+    }
+
+    .capacity-bar-fill.kurang {
+        background: linear-gradient(90deg, #F59E0B 0%, #D97706 100%);
+    }
+
+    .capacity-bar-fill.waiting {
+        background: linear-gradient(90deg, #3B82F6 0%, #6366F1 100%);
+    }
+
+    .capacity-bar-fill.tutup {
+        background: #94A3B8;
+    }
+
+    .capacity-meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: #64748B;
+    }
+
+    .capacity-meta-row strong {
+        color: #0F172A;
+    }
+
+    /* Single High-Converting CTA Button */
+    .card-action-btn {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+        border-radius: 0.625rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        border: none;
+    }
+
+    .card-action-btn.btn-daftar {
+        background: #0751FF;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(7, 81, 255, 0.22);
+    }
+
+    .card-action-btn.btn-daftar:hover {
+        background: #0438b3;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(7, 81, 255, 0.32);
+        color: #ffffff;
+    }
+
+    .card-action-btn.btn-waiting {
+        background: #FEF3C7;
+        color: #92400E;
+        border: 1px solid #FCD34D;
+    }
+
+    .card-action-btn.btn-waiting:hover {
+        background: #FDE68A;
+        color: #78350F;
+    }
+
+    .card-action-btn.btn-disabled {
+        background: #F1F5F9;
+        color: #94A3B8;
+        border: 1px solid #E2E8F0;
         cursor: not-allowed;
     }
 
@@ -646,9 +1008,55 @@
         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45) !important;
     }
 
-    [data-theme="dark"] .card-period-box {
+    [data-theme="dark"] .card-period-box,
+    [data-theme="dark"] .card-capacity-box {
         background: var(--neutral-100, #0F172A) !important;
         border-color: var(--neutral-200, #26354D) !important;
+    }
+
+    [data-theme="dark"] .quota-controls-bar {
+        background: var(--neutral-0, #182234) !important;
+        border-color: var(--neutral-200, #26354D) !important;
+    }
+
+    [data-theme="dark"] .quota-control-group {
+        background: var(--neutral-100, #0F172A) !important;
+        border-color: var(--neutral-200, #26354D) !important;
+    }
+
+    [data-theme="dark"] .mode-pill-btn {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .mode-pill-btn.active {
+        background: #1E293B !important;
+        color: #60A5FA !important;
+        border-color: #3B82F6 !important;
+    }
+
+    [data-theme="dark"] .card-jenjang-pill {
+        background: #0F172A !important;
+        border-color: #334155 !important;
+        color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .card-period-nav {
+        background: #0F172A !important;
+    }
+
+    [data-theme="dark"] .card-period-tab-btn {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .card-period-tab-btn.active {
+        background: #1E293B !important;
+        color: #FFFFFF !important;
+    }
+
+    [data-theme="dark"] .carousel-nav-btn {
+        background: #1E293B !important;
+        border-color: #334155 !important;
+        color: #F8FAFC !important;
     }
 
     [data-theme="dark"] .tab-pill-btn {
@@ -770,7 +1178,7 @@
     <div class="container">
         <div class="section-heading-center">
             <h2>Bidang dan kuota</h2>
-            <p>Gelombang 2 · pendaftaran 1–15 Okt 2026 · magang mulai 2 Nov 2026</p>
+            <p>Pendaftaran Magang & PKL Dinas Komunikasi dan Informatika Kabupaten Sleman</p>
         </div>
 
         @if($bulanTampil->isEmpty())
@@ -780,100 +1188,221 @@
                 </p>
             </div>
         @else
-            <!-- Tab Switcher SMK vs Mahasiswa (AC-01-1) -->
-            <div class="tab-pills-wrap">
-                <button type="button" class="tab-pill-btn active" id="tab-btn-smk" onclick="switchTab('smk')">
-                    Jalur SMK (Sekolah Menengah Kejuruan)
-                </button>
-                <button type="button" class="tab-pill-btn" id="tab-btn-mahasiswa" onclick="switchTab('mahasiswa')">
-                    Jalur Mahasiswa (D3 / S1)
-                </button>
+            <!-- Control Bar: Jalur Pendidikan & Tipe Pendaftaran (Mandiri vs Kelompok) -->
+            <div class="quota-controls-bar">
+                <div class="quota-control-row">
+                    <!-- Tab Switcher SMK vs Mahasiswa (AC-01-1) -->
+                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                        <span class="quota-control-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                            Jalur Pendidikan:
+                        </span>
+                        <div class="quota-control-group">
+                            <button type="button" class="tab-pill-btn active" id="tab-btn-smk" onclick="switchTab('smk')">
+                                Jalur SMK (Sekolah Menengah Kejuruan)
+                            </button>
+                            <button type="button" class="tab-pill-btn" id="tab-btn-mahasiswa" onclick="switchTab('mahasiswa')">
+                                Jalur Mahasiswa (D3 / S1)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mode Pendaftaran: Mandiri vs Kelompok (1, 2, 3, 4 Orang) -->
+                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                        <span class="quota-control-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            Pendaftaran:
+                        </span>
+                        <div class="quota-control-group">
+                            <button type="button" class="mode-pill-btn active" id="mode-btn-mandiri" onclick="setRegistrationMode('mandiri')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <span>Mandiri (1 Orang)</span>
+                            </button>
+                            <button type="button" class="mode-pill-btn" id="mode-btn-kelompok" onclick="setRegistrationMode('kelompok')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                <span>Kelompok / Tim</span>
+                            </button>
+
+                            <!-- Pilihan Anggota Kelompok: 2, 3, 4 Orang -->
+                            <div class="member-selector-wrap" id="member-selector-wrap" style="display: none;">
+                                <span style="font-size: 0.75rem; font-weight: 700; color: #64748B; margin-right: 0.15rem;">Anggota:</span>
+                                <button type="button" class="member-pill-btn active" data-count="2" onclick="setMemberCount(2)">2 Orang</button>
+                                <button type="button" class="member-pill-btn" data-count="3" onclick="setMemberCount(3)">3 Orang</button>
+                                <button type="button" class="member-pill-btn" data-count="4" onclick="setMemberCount(4)">4 Orang</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feedback Real-Time Indikator -->
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; padding-top: 0.5rem; border-top: 1px solid #F1F5F9;">
+                    <div class="quota-indicator-badge" id="quota-indicator-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <span id="quota-indicator-text">Pendaftaran Mandiri (1 Orang) · Kuota otomatis dicek untuk 1 calon peserta</span>
+                    </div>
+                    <div style="font-size: 0.8125rem; color: #64748B;">
+                        Geser kartu atau gunakan tombol panah untuk menelusuri jurusan ➔
+                    </div>
+                </div>
             </div>
 
             <!-- Tab Content: SMK -->
             <div id="tab-content-smk">
-                <div class="quota-grid">
-                    @forelse($jurusanSmk as $jurusan)
-                        <div class="figma-quota-card">
+                <div class="quota-carousel-wrapper" id="carousel-wrapper-smk">
+                    <button type="button" class="carousel-nav-btn prev" id="carousel-prev-smk" aria-label="Geser ke kiri" title="Geser ke kiri">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+
+                    <div class="quota-carousel-track" id="carousel-track-smk">
+                        @forelse($jurusanSmk as $jurusan)
+                        <div class="figma-quota-card" data-jurusan-id="{{ $jurusan->id }}">
                             <div>
-                                <div class="card-top-row">
-                                    <div class="card-icon-box">
-                                        <svg viewBox="0 0 24 24"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg>
-                                    </div>
-                                    <span class="card-jenjang-badge">SMK</span>
+                                <!-- Top Meta Row -->
+                                <div class="card-header-meta">
+                                    <span class="card-jenjang-pill">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M6 8h.01M10 8h.01M14 8h.01"></path></svg>
+                                        SMK
+                                    </span>
+
+                                    @if($jurusan->bidang->isNotEmpty())
+                                        <div class="card-bidang-cluster">
+                                            @foreach($jurusan->bidang as $bdg)
+                                                @php
+                                                    $rawName = $bdg->nama_bidang;
+                                                    $code = 'Bidang';
+                                                    $chipClass = 'bidang-chip-egov';
+                                                    if (stripos($rawName, 'IKP') !== false || stripos($rawName, 'Informasi dan Komunikasi') !== false) {
+                                                        $code = 'IKP';
+                                                        $chipClass = 'bidang-chip-ikp';
+                                                    } elseif (stripos($rawName, 'E-Government') !== false || stripos($rawName, 'EGOV') !== false) {
+                                                        $code = 'E-Gov';
+                                                        $chipClass = 'bidang-chip-egov';
+                                                    } elseif (stripos($rawName, 'Infrastruktur') !== false || stripos($rawName, 'ITI') !== false) {
+                                                        $code = 'ITI';
+                                                        $chipClass = 'bidang-chip-iti';
+                                                    } elseif (stripos($rawName, 'Sekretariat') !== false) {
+                                                        $code = 'Sekretariat';
+                                                        $chipClass = 'bidang-chip-sekretariat';
+                                                    }
+                                                @endphp
+                                                <span class="bidang-chip {{ $chipClass }}" title="Diterima di bidang {{ $rawName }}">
+                                                    {{ $code }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
+
+                                <!-- Major Title & Description -->
                                 <h3 class="card-jurusan-title">{{ $jurusan->nama_jurusan }}</h3>
-                                @if($jurusan->bidang->isNotEmpty())
-                                    <div class="card-bidang-tags" style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-                                        @foreach($jurusan->bidang as $bdg)
-                                            @php
-                                                $shortName = preg_match('/\((.*?)\)/', $bdg->nama_bidang, $m) ? $m[1] : (str_contains($bdg->nama_bidang, 'Sekretariat') ? 'Sekretariat' : $bdg->nama_bidang);
-                                            @endphp
-                                            <span style="font-size: 0.6875rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 9999px; background: var(--blue-tint); color: var(--blue-700); border: 1px solid var(--blue-tint-line);" title="Diterima di bidang {{ $bdg->nama_bidang }}">
-                                                {{ $shortName }}
-                                            </span>
+                                <p class="card-jurusan-desc">{{ $jurusan->deskripsi ?? 'Kompetensi keahlian kejuruan tingkat menengah.' }}</p>
+
+                                <!-- Period Switcher (if multiple months exist) -->
+                                @if($bulanTampil->count() > 1)
+                                    <div class="card-period-nav">
+                                        @foreach($bulanTampil as $bIdx => $bulan)
+                                            <button type="button" 
+                                                class="card-period-tab-btn {{ $bIdx === 0 ? 'active' : '' }}" 
+                                                data-target-month="{{ $bulan->id }}"
+                                                onclick="switchCardMonth(this, '{{ $jurusan->id }}', '{{ $bulan->id }}')">
+                                                {{ \Carbon\CarbonImmutable::parse($bulan->bulan_mulai)->translatedFormat('M Y') }}
+                                            </button>
                                         @endforeach
                                     </div>
                                 @endif
-                                <p class="card-jurusan-desc">{{ $jurusan->deskripsi ?? 'Kompetensi keahlian kejuruan tingkat menengah' }}</p>
 
-                                <!-- Months list -->
-                                @foreach($bulanTampil as $bulan)
+                                <!-- Month Panels -->
+                                @foreach($bulanTampil as $bIdx => $bulan)
                                     @php
                                         $data = $matriksKetersediaan[$jurusan->id][$bulan->id] ?? null;
                                         $status = $data['status'] ?? \App\Enums\StatusKetersediaanEnum::Tutup;
                                         $sisa = $data['sisa_kuota'] ?? 0;
+                                        $total = $data['total_kuota'] ?? 0;
+                                        $terisi = $data['terisi'] ?? 0;
+                                        $persen = $data['persen_terisi'] ?? 0;
                                         $isWaiting = $data['is_waiting_list'] ?? false;
                                         $buka = \Carbon\CarbonImmutable::parse($bulan->tgl_buka)->translatedFormat('d M Y');
+                                        $bulanMulaiStr = \Carbon\CarbonImmutable::parse($bulan->bulan_mulai)->translatedFormat('F Y');
                                     @endphp
-                                    <div class="card-period-box">
-                                        <div class="period-title">Mulai: {{ \Carbon\CarbonImmutable::parse($bulan->bulan_mulai)->translatedFormat('F Y') }}</div>
-                                        @if($status === \App\Enums\StatusKetersediaanEnum::Tersedia)
-                                            @if($isWaiting)
-                                                <div class="status-badge status-waiting-list">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                                    <span>Kuota Penuh (Waiting List)</span>
-                                                </div>
-                                                <p class="quota-info">
-                                                    Kuota terisi penuh.<br>
-                                                    <span style="font-size: 0.75rem; color: #b45309;">Pendaftaran masuk antrean tunggu</span>
-                                                </p>
-                                            @else
-                                                <div class="status-badge status-tersedia">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                                    <span>Tersedia</span>
-                                                </div>
-                                                <p class="quota-info">
-                                                    Sisa kuota: <span class="quota-count">{{ $sisa }}</span> kursi
-                                                </p>
-                                            @endif
-                                        @elseif($status === \App\Enums\StatusKetersediaanEnum::Segera)
-                                            <div class="status-badge status-segera">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                                <span>Segera Dibuka</span>
+                                    <div class="card-month-panel" 
+                                        id="panel-j{{ $jurusan->id }}-b{{ $bulan->id }}"
+                                        style="{{ $bIdx === 0 ? '' : 'display: none;' }}"
+                                        data-jurusan-id="{{ $jurusan->id }}"
+                                        data-bulan-id="{{ $bulan->id }}"
+                                        data-status="{{ $status->value }}"
+                                        data-sisa="{{ $sisa }}"
+                                        data-total="{{ $total }}"
+                                        data-terisi="{{ $terisi }}"
+                                        data-persen="{{ $persen }}"
+                                        data-is-waiting="{{ $isWaiting ? '1' : '0' }}"
+                                        data-buka-str="{{ $buka }}"
+                                        data-bulan-str="{{ $bulanMulaiStr }}">
+                                        
+                                        <!-- Capacity Box Surface -->
+                                        <div class="card-capacity-box">
+                                            <div class="capacity-header">
+                                                <span class="capacity-label">Mulai: {{ $bulanMulaiStr }}</span>
+                                                <span class="capacity-status-pill status-pill-target {{ $status === \App\Enums\StatusKetersediaanEnum::Tersedia ? ($isWaiting ? 'waiting' : 'tersedia') : ($status === \App\Enums\StatusKetersediaanEnum::Segera ? 'segera' : 'tutup') }}">
+                                                    @if($status === \App\Enums\StatusKetersediaanEnum::Tersedia)
+                                                        @if($isWaiting)
+                                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                                            <span>Kuota Penuh (Waiting List)</span>
+                                                        @else
+                                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                            <span>Tersedia</span>
+                                                        @endif
+                                                    @elseif($status === \App\Enums\StatusKetersediaanEnum::Segera)
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+                                                        <span>Segera Dibuka</span>
+                                                    @else
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                                        <span>Tutup</span>
+                                                    @endif
+                                                </span>
                                             </div>
-                                            <p class="quota-info">
-                                                Buka pada: <strong>{{ $buka }}</strong>
-                                            </p>
-                                        @else
-                                            <div class="status-badge status-tutup">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                                <span>Tutup</span>
-                                            </div>
-                                            <p class="quota-info">
-                                                Pendaftaran belum atau sudah ditutup.
-                                            </p>
-                                        @endif
 
+                                            <!-- Visual Capacity Bar -->
+                                            <div class="capacity-bar-track">
+                                                <div class="capacity-bar-fill {{ $status === \App\Enums\StatusKetersediaanEnum::Tersedia ? ($isWaiting ? 'waiting' : 'tersedia') : ($status === \App\Enums\StatusKetersediaanEnum::Segera ? 'waiting' : 'tutup') }}" 
+                                                    style="width: {{ $persen }}%;"></div>
+                                            </div>
+
+                                            <div class="capacity-meta-row">
+                                                <span class="capacity-meta-left">
+                                                    @if($status === \App\Enums\StatusKetersediaanEnum::Tersedia)
+                                                        @if($isWaiting)
+                                                            <span style="color: #b45309; font-weight: 600;">Pendaftaran masuk antrean tunggu</span>
+                                                        @else
+                                                            Sisa: <strong class="sisa-val">{{ $sisa }}</strong> dari {{ $total }} Kursi
+                                                        @endif
+                                                    @elseif($status === \App\Enums\StatusKetersediaanEnum::Segera)
+                                                        Buka: <strong>{{ $buka }}</strong>
+                                                    @else
+                                                        Pendaftaran Ditutup
+                                                    @endif
+                                                </span>
+                                                <span class="capacity-meta-right">
+                                                    @if($status === \App\Enums\StatusKetersediaanEnum::Tersedia)
+                                                        <span class="persen-val">{{ $persen }}%</span> Terisi
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Action Button CTA -->
                                         <div>
                                             @if($status === \App\Enums\StatusKetersediaanEnum::Tersedia)
-                                                <a href="{{ url('/register?bulan=' . $bulan->id . '&jurusan=' . $jurusan->id) }}" 
-                                                    class="btn btn-primary btn-sm">
-                                                    {{ $isWaiting ? 'Daftar Waiting List' : 'Daftar Sekarang' }}
+                                                <a href="{{ url('/register?bulan=' . $bulan->id . '&jurusan=' . $jurusan->id . '&tipe=mandiri&jumlah=1') }}" 
+                                                   class="card-action-btn btn-cta-target {{ $isWaiting ? 'btn-waiting' : 'btn-daftar' }}">
+                                                    <span class="btn-text">
+                                                        {{ $isWaiting ? 'Daftar Waiting List' : 'Daftar Sekarang ➔' }}
+                                                    </span>
                                                 </a>
                                             @else
-                                                <button type="button" class="btn btn-disabled btn-sm" disabled>
-                                                    Pendaftaran Ditutup
+                                                <button type="button" class="card-action-btn btn-disabled" disabled>
+                                                    {{ $status === \App\Enums\StatusKetersediaanEnum::Segera ? 'Segera Dibuka' : 'Pendaftaran Ditutup' }}
                                                 </button>
                                             @endif
                                         </div>
@@ -882,95 +1411,173 @@
                             </div>
                         </div>
                     @empty
-                        <p style="color: var(--gray-600); text-align: center; grid-column: 1/-1;">Belum ada master jurusan SMK yang aktif.</p>
+                        <p style="color: var(--gray-600); text-align: center; width: 100%; padding: 2rem;">Belum ada master jurusan SMK yang aktif.</p>
                     @endforelse
+                    </div>
+
+                    <button type="button" class="carousel-nav-btn next" id="carousel-next-smk" aria-label="Geser ke kanan" title="Geser ke kanan">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
                 </div>
             </div>
 
             <!-- Tab Content: Mahasiswa -->
             <div id="tab-content-mahasiswa" style="display: none;">
-                <div class="quota-grid">
-                    @forelse($jurusanMahasiswa as $jurusan)
-                        <div class="figma-quota-card">
+                <div class="quota-carousel-wrapper" id="carousel-wrapper-mahasiswa">
+                    <button type="button" class="carousel-nav-btn prev" id="carousel-prev-mahasiswa" aria-label="Geser ke kiri" title="Geser ke kiri">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+
+                    <div class="quota-carousel-track" id="carousel-track-mahasiswa">
+                        @forelse($jurusanMahasiswa as $jurusan)
+                        <div class="figma-quota-card" data-jurusan-id="{{ $jurusan->id }}">
                             <div>
-                                <div class="card-top-row">
-                                    <div class="card-icon-box">
-                                        <svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"/></svg>
-                                    </div>
-                                    <span class="card-jenjang-badge">D3 · S1</span>
+                                <!-- Top Meta Row -->
+                                <div class="card-header-meta">
+                                    <span class="card-jenjang-pill" style="background: #EFF6FF; color: #1E40AF; border-color: #BFDBFE;">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                                        D3 · S1
+                                    </span>
+
+                                    @if($jurusan->bidang->isNotEmpty())
+                                        <div class="card-bidang-cluster">
+                                            @foreach($jurusan->bidang as $bdg)
+                                                @php
+                                                    $rawName = $bdg->nama_bidang;
+                                                    $code = 'Bidang';
+                                                    $chipClass = 'bidang-chip-egov';
+                                                    if (stripos($rawName, 'IKP') !== false || stripos($rawName, 'Informasi dan Komunikasi') !== false) {
+                                                        $code = 'IKP';
+                                                        $chipClass = 'bidang-chip-ikp';
+                                                    } elseif (stripos($rawName, 'E-Government') !== false || stripos($rawName, 'EGOV') !== false) {
+                                                        $code = 'E-Gov';
+                                                        $chipClass = 'bidang-chip-egov';
+                                                    } elseif (stripos($rawName, 'Infrastruktur') !== false || stripos($rawName, 'ITI') !== false) {
+                                                        $code = 'ITI';
+                                                        $chipClass = 'bidang-chip-iti';
+                                                    } elseif (stripos($rawName, 'Sekretariat') !== false) {
+                                                        $code = 'Sekretariat';
+                                                        $chipClass = 'bidang-chip-sekretariat';
+                                                    }
+                                                @endphp
+                                                <span class="bidang-chip {{ $chipClass }}" title="Diterima di bidang {{ $rawName }}">
+                                                    {{ $code }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
+
+                                <!-- Major Title & Description -->
                                 <h3 class="card-jurusan-title">{{ $jurusan->nama_jurusan }}</h3>
-                                @if($jurusan->bidang->isNotEmpty())
-                                    <div class="card-bidang-tags" style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-                                        @foreach($jurusan->bidang as $bdg)
-                                            @php
-                                                $shortName = preg_match('/\((.*?)\)/', $bdg->nama_bidang, $m) ? $m[1] : (str_contains($bdg->nama_bidang, 'Sekretariat') ? 'Sekretariat' : $bdg->nama_bidang);
-                                            @endphp
-                                            <span style="font-size: 0.6875rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 9999px; background: var(--blue-tint); color: var(--blue-700); border: 1px solid var(--blue-tint-line);" title="Diterima di bidang {{ $bdg->nama_bidang }}">
-                                                {{ $shortName }}
-                                            </span>
+                                <p class="card-jurusan-desc">{{ $jurusan->deskripsi ?? 'Program studi perguruan tinggi (D3 / D4 / S1).' }}</p>
+
+                                <!-- Period Switcher (if multiple months exist) -->
+                                @if($bulanTampil->count() > 1)
+                                    <div class="card-period-nav">
+                                        @foreach($bulanTampil as $bIdx => $bulan)
+                                            <button type="button" 
+                                                class="card-period-tab-btn {{ $bIdx === 0 ? 'active' : '' }}" 
+                                                data-target-month="{{ $bulan->id }}"
+                                                onclick="switchCardMonth(this, '{{ $jurusan->id }}', '{{ $bulan->id }}')">
+                                                {{ \Carbon\CarbonImmutable::parse($bulan->bulan_mulai)->translatedFormat('M Y') }}
+                                            </button>
                                         @endforeach
                                     </div>
                                 @endif
-                                <p class="card-jurusan-desc">{{ $jurusan->deskripsi ?? 'Program studi perguruan tinggi (D3 / D4 / S1)' }}</p>
 
-                                <!-- Months list -->
-                                @foreach($bulanTampil as $bulan)
+                                <!-- Month Panels -->
+                                @foreach($bulanTampil as $bIdx => $bulan)
                                     @php
                                         $data = $matriksKetersediaan[$jurusan->id][$bulan->id] ?? null;
                                         $status = $data['status'] ?? \App\Enums\StatusKetersediaanEnum::Tutup;
                                         $sisa = $data['sisa_kuota'] ?? 0;
+                                        $total = $data['total_kuota'] ?? 0;
+                                        $terisi = $data['terisi'] ?? 0;
+                                        $persen = $data['persen_terisi'] ?? 0;
                                         $isWaiting = $data['is_waiting_list'] ?? false;
                                         $buka = \Carbon\CarbonImmutable::parse($bulan->tgl_buka)->translatedFormat('d M Y');
+                                        $bulanMulaiStr = \Carbon\CarbonImmutable::parse($bulan->bulan_mulai)->translatedFormat('F Y');
                                     @endphp
-                                    <div class="card-period-box">
-                                        <div class="period-title">Mulai: {{ \Carbon\CarbonImmutable::parse($bulan->bulan_mulai)->translatedFormat('F Y') }}</div>
-                                        @if($status === \App\Enums\StatusKetersediaanEnum::Tersedia)
-                                            @if($isWaiting)
-                                                <div class="status-badge status-waiting-list">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                                    <span>Kuota Penuh (Waiting List)</span>
-                                                </div>
-                                                <p class="quota-info">
-                                                    Kuota terisi penuh.<br>
-                                                    <span style="font-size: 0.75rem; color: #b45309;">Pendaftaran masuk antrean tunggu</span>
-                                                </p>
-                                            @else
-                                                <div class="status-badge status-tersedia">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                                    <span>Tersedia</span>
-                                                </div>
-                                                <p class="quota-info">
-                                                    Sisa kuota: <span class="quota-count">{{ $sisa }}</span> kursi
-                                                </p>
-                                            @endif
-                                        @elseif($status === \App\Enums\StatusKetersediaanEnum::Segera)
-                                            <div class="status-badge status-segera">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                                <span>Segera Dibuka</span>
+                                    <div class="card-month-panel" 
+                                        id="panel-j{{ $jurusan->id }}-b{{ $bulan->id }}"
+                                        style="{{ $bIdx === 0 ? '' : 'display: none;' }}"
+                                        data-jurusan-id="{{ $jurusan->id }}"
+                                        data-bulan-id="{{ $bulan->id }}"
+                                        data-status="{{ $status->value }}"
+                                        data-sisa="{{ $sisa }}"
+                                        data-total="{{ $total }}"
+                                        data-terisi="{{ $terisi }}"
+                                        data-persen="{{ $persen }}"
+                                        data-is-waiting="{{ $isWaiting ? '1' : '0' }}"
+                                        data-buka-str="{{ $buka }}"
+                                        data-bulan-str="{{ $bulanMulaiStr }}">
+                                        
+                                        <!-- Capacity Box Surface -->
+                                        <div class="card-capacity-box">
+                                            <div class="capacity-header">
+                                                <span class="capacity-label">Mulai: {{ $bulanMulaiStr }}</span>
+                                                <span class="capacity-status-pill status-pill-target {{ $status === \App\Enums\StatusKetersediaanEnum::Tersedia ? ($isWaiting ? 'waiting' : 'tersedia') : ($status === \App\Enums\StatusKetersediaanEnum::Segera ? 'segera' : 'tutup') }}">
+                                                    @if($status === \App\Enums\StatusKetersediaanEnum::Tersedia)
+                                                        @if($isWaiting)
+                                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                                            <span>Kuota Penuh (Waiting List)</span>
+                                                        @else
+                                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                            <span>Tersedia</span>
+                                                        @endif
+                                                    @elseif($status === \App\Enums\StatusKetersediaanEnum::Segera)
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+                                                        <span>Segera Dibuka</span>
+                                                    @else
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                                        <span>Tutup</span>
+                                                    @endif
+                                                </span>
                                             </div>
-                                            <p class="quota-info">
-                                                Buka pada: <strong>{{ $buka }}</strong>
-                                            </p>
-                                        @else
-                                            <div class="status-badge status-tutup">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                                <span>Tutup</span>
-                                            </div>
-                                            <p class="quota-info">
-                                                Pendaftaran belum atau sudah ditutup.
-                                            </p>
-                                        @endif
 
+                                            <!-- Visual Capacity Bar -->
+                                            <div class="capacity-bar-track">
+                                                <div class="capacity-bar-fill {{ $status === \App\Enums\StatusKetersediaanEnum::Tersedia ? ($isWaiting ? 'waiting' : 'tersedia') : ($status === \App\Enums\StatusKetersediaanEnum::Segera ? 'waiting' : 'tutup') }}" 
+                                                    style="width: {{ $persen }}%;"></div>
+                                            </div>
+
+                                            <div class="capacity-meta-row">
+                                                <span class="capacity-meta-left">
+                                                    @if($status === \App\Enums\StatusKetersediaanEnum::Tersedia)
+                                                        @if($isWaiting)
+                                                            <span style="color: #b45309; font-weight: 600;">Pendaftaran masuk antrean tunggu</span>
+                                                        @else
+                                                            Sisa: <strong class="sisa-val">{{ $sisa }}</strong> dari {{ $total }} Kursi
+                                                        @endif
+                                                    @elseif($status === \App\Enums\StatusKetersediaanEnum::Segera)
+                                                        Buka: <strong>{{ $buka }}</strong>
+                                                    @else
+                                                        Pendaftaran Ditutup
+                                                    @endif
+                                                </span>
+                                                <span class="capacity-meta-right">
+                                                    @if($status === \App\Enums\StatusKetersediaanEnum::Tersedia)
+                                                        <span class="persen-val">{{ $persen }}%</span> Terisi
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Action Button CTA -->
                                         <div>
                                             @if($status === \App\Enums\StatusKetersediaanEnum::Tersedia)
-                                                <a href="{{ url('/register?bulan=' . $bulan->id . '&jurusan=' . $jurusan->id) }}" 
-                                                    class="btn btn-primary btn-sm">
-                                                    {{ $isWaiting ? 'Daftar Waiting List' : 'Daftar Sekarang' }}
+                                                <a href="{{ url('/register?bulan=' . $bulan->id . '&jurusan=' . $jurusan->id . '&tipe=mandiri&jumlah=1') }}" 
+                                                   class="card-action-btn btn-cta-target {{ $isWaiting ? 'btn-waiting' : 'btn-daftar' }}">
+                                                    <span class="btn-text">
+                                                        {{ $isWaiting ? 'Daftar Waiting List' : 'Daftar Sekarang ➔' }}
+                                                    </span>
                                                 </a>
                                             @else
-                                                <button type="button" class="btn btn-disabled btn-sm" disabled>
-                                                    Pendaftaran Ditutup
+                                                <button type="button" class="card-action-btn btn-disabled" disabled>
+                                                    {{ $status === \App\Enums\StatusKetersediaanEnum::Segera ? 'Segera Dibuka' : 'Pendaftaran Ditutup' }}
                                                 </button>
                                             @endif
                                         </div>
@@ -979,16 +1586,14 @@
                             </div>
                         </div>
                     @empty
-                        <p style="color: var(--gray-600); text-align: center; grid-column: 1/-1;">Belum ada master jurusan Mahasiswa yang aktif.</p>
+                        <p style="color: var(--gray-600); text-align: center; width: 100%; padding: 2rem;">Belum ada master jurusan Mahasiswa yang aktif.</p>
                     @endforelse
-                </div>
-            </div>
+                    </div>
 
-            <!-- Button Daftar ke bidang pilihan -->
-            <div style="text-align: center;">
-                <a href="#kuota-section" class="btn btn-primary" style="padding: 0.75rem 2.25rem; font-size: 0.95rem;">
-                    Daftar ke bidang pilihan
-                </a>
+                    <button type="button" class="carousel-nav-btn next" id="carousel-next-mahasiswa" aria-label="Geser ke kanan" title="Geser ke kanan">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
             </div>
         @endif
     </div>
@@ -1163,6 +1768,295 @@
 
 @push('scripts')
 <script>
+    let carouselSmk = null;
+    let carouselMahasiswa = null;
+    let currentRegMode = 'mandiri'; // 'mandiri' | 'kelompok'
+    let currentMemberCount = 1;
+
+    function setRegistrationMode(mode) {
+        currentRegMode = mode;
+        const btnMandiri = document.getElementById('mode-btn-mandiri');
+        const btnKelompok = document.getElementById('mode-btn-kelompok');
+        const memberWrap = document.getElementById('member-selector-wrap');
+        const indicatorText = document.getElementById('quota-indicator-text');
+
+        if (mode === 'mandiri') {
+            currentMemberCount = 1;
+            if (btnMandiri) btnMandiri.classList.add('active');
+            if (btnKelompok) btnKelompok.classList.remove('active');
+            if (memberWrap) memberWrap.style.display = 'none';
+            if (indicatorText) {
+                indicatorText.textContent = 'Pendaftaran Mandiri (1 Orang) · Kuota otomatis dicek untuk 1 calon peserta';
+            }
+        } else {
+            if (currentMemberCount < 2) currentMemberCount = 2;
+            if (btnKelompok) btnKelompok.classList.add('active');
+            if (btnMandiri) btnMandiri.classList.remove('active');
+            if (memberWrap) memberWrap.style.display = 'inline-flex';
+            updateMemberPillActive();
+            if (indicatorText) {
+                indicatorText.textContent = `Pendaftaran Kelompok (${currentMemberCount} Orang) · Kuota otomatis dicek untuk ${currentMemberCount} calon peserta`;
+            }
+        }
+
+        recalculateAllCards();
+    }
+
+    function setMemberCount(count) {
+        currentMemberCount = parseInt(count, 10);
+        updateMemberPillActive();
+        const indicatorText = document.getElementById('quota-indicator-text');
+        if (indicatorText) {
+            indicatorText.textContent = `Pendaftaran Kelompok (${currentMemberCount} Orang) · Kuota otomatis dicek untuk ${currentMemberCount} calon peserta`;
+        }
+        recalculateAllCards();
+    }
+
+    function updateMemberPillActive() {
+        document.querySelectorAll('.member-pill-btn').forEach(btn => {
+            if (parseInt(btn.getAttribute('data-count'), 10) === currentMemberCount) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    function switchCardMonth(btn, jurusanId, targetBulanId) {
+        const card = btn.closest('.figma-quota-card');
+        if (!card) return;
+
+        // Update active period tab in this card
+        card.querySelectorAll('.card-period-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Show target month panel, hide others
+        card.querySelectorAll('.card-month-panel').forEach(panel => {
+            if (panel.getAttribute('data-bulan-id') === String(targetBulanId)) {
+                panel.style.display = 'block';
+            } else {
+                panel.style.display = 'none';
+            }
+        });
+    }
+
+    function recalculateAllCards() {
+        const panels = document.querySelectorAll('.card-month-panel');
+        panels.forEach(panel => {
+            const status = panel.getAttribute('data-status');
+            const sisa = parseInt(panel.getAttribute('data-sisa'), 10) || 0;
+            const isWaiting = panel.getAttribute('data-is-waiting') === '1';
+            const bulanId = panel.getAttribute('data-bulan-id');
+            const jurusanId = panel.getAttribute('data-jurusan-id');
+
+            const pill = panel.querySelector('.status-pill-target');
+            const barFill = panel.querySelector('.capacity-bar-fill');
+            const btnLink = panel.querySelector('.btn-cta-target');
+            const btnText = panel.querySelector('.btn-text');
+
+            if (status === 'tersedia') {
+                const hasEnoughQuota = (sisa >= currentMemberCount);
+
+                if (currentRegMode === 'mandiri') {
+                    if (isWaiting || sisa === 0) {
+                        if (pill) {
+                            pill.className = 'capacity-status-pill status-pill-target waiting';
+                            pill.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <span>Kuota Penuh (Waiting List)</span>`;
+                        }
+                        if (barFill) barFill.className = 'capacity-bar-fill waiting';
+                        if (btnLink) {
+                            btnLink.className = 'card-action-btn btn-cta-target btn-waiting';
+                            btnLink.href = `/register?bulan=${bulanId}&jurusan=${jurusanId}&tipe=mandiri&jumlah=1`;
+                        }
+                        if (btnText) btnText.textContent = 'Daftar Waiting List';
+                    } else {
+                        if (pill) {
+                            pill.className = 'capacity-status-pill status-pill-target tersedia';
+                            pill.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Tersedia (${sisa} Kursi)</span>`;
+                        }
+                        if (barFill) barFill.className = 'capacity-bar-fill tersedia';
+                        if (btnLink) {
+                            btnLink.className = 'card-action-btn btn-cta-target btn-daftar';
+                            btnLink.href = `/register?bulan=${bulanId}&jurusan=${jurusanId}&tipe=mandiri&jumlah=1`;
+                        }
+                        if (btnText) btnText.textContent = 'Daftar Sekarang ➔';
+                    }
+                } else {
+                    // Mode Kelompok
+                    if (hasEnoughQuota) {
+                        if (pill) {
+                            pill.className = 'capacity-status-pill status-pill-target tersedia';
+                            pill.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Kuota Cukup (${sisa} Kursi)</span>`;
+                        }
+                        if (barFill) barFill.className = 'capacity-bar-fill tersedia';
+                        if (btnLink) {
+                            btnLink.className = 'card-action-btn btn-cta-target btn-daftar';
+                            btnLink.href = `/register?bulan=${bulanId}&jurusan=${jurusanId}&tipe=kelompok&jumlah=${currentMemberCount}`;
+                        }
+                        if (btnText) btnText.textContent = `Daftar Kelompok (${currentMemberCount} Orang) ➔`;
+                    } else {
+                        // Kuota tidak mencukupi untuk seluruh anggota kelompok -> Masuk Waiting List
+                        if (pill) {
+                            pill.className = 'capacity-status-pill status-pill-target kurang';
+                            pill.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> <span>Kuota Penuh (Waiting List)</span>`;
+                        }
+                        if (barFill) barFill.className = 'capacity-bar-fill kurang';
+                        if (btnLink) {
+                            btnLink.className = 'card-action-btn btn-cta-target btn-waiting';
+                            btnLink.href = `/register?bulan=${bulanId}&jurusan=${jurusanId}&tipe=kelompok&jumlah=${currentMemberCount}`;
+                        }
+                        if (btnText) btnText.textContent = `Daftar Waiting List (${currentMemberCount} Orang)`;
+                    }
+                }
+            }
+        });
+    }
+
+    function setupQuotaCarousel(trackId, prevBtnId, nextBtnId) {
+        const track = document.getElementById(trackId);
+        const prevBtn = document.getElementById(prevBtnId);
+        const nextBtn = document.getElementById(nextBtnId);
+
+        if (!track) return null;
+
+        // Clone kartu agar terjadi infinite seamless loop tanpa jeda/patah
+        const originalCards = Array.from(track.querySelectorAll('.figma-quota-card'));
+        let hasClones = false;
+        if (originalCards.length > 1) {
+            originalCards.forEach(card => {
+                const clone = card.cloneNode(true);
+                clone.setAttribute('data-is-clone', 'true');
+                track.appendChild(clone);
+            });
+            hasClones = true;
+        }
+
+        let halfScrollWidth = hasClones ? (track.scrollWidth / 2) : track.scrollWidth;
+        
+        // Posisikan awal di tengah (set kedua) agar bisa langsung mengalir ke kanan
+        if (hasClones) {
+            track.scrollLeft = halfScrollWidth;
+        }
+
+        window.addEventListener('resize', () => {
+            if (hasClones) {
+                halfScrollWidth = track.scrollWidth / 2;
+            }
+        });
+
+        let isPaused = false;
+        let animId = null;
+        let resumeTimeout = null;
+        const scrollSpeed = 0.65; // pixels per animation frame
+
+        function step() {
+            if (!isPaused && track.offsetParent !== null && hasClones) {
+                // Pergerakan kiri ke kanan: scrollLeft berkurang
+                track.scrollLeft -= scrollSpeed;
+
+                // Seamless wrap: jika mendekati/mencapai ujung kiri (<= 0), kembali ke halfScrollWidth
+                if (track.scrollLeft <= 0) {
+                    track.scrollLeft += halfScrollWidth;
+                }
+            }
+            animId = requestAnimationFrame(step);
+        }
+
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!prefersReducedMotion && hasClones) {
+            animId = requestAnimationFrame(step);
+        }
+
+        function pauseWithTimeout(duration = 3500) {
+            isPaused = true;
+            clearTimeout(resumeTimeout);
+            resumeTimeout = setTimeout(() => {
+                isPaused = false;
+            }, duration);
+        }
+
+        // Hover & Touch event listeners (Smart Pause saat pengguna membaca kartu)
+        track.addEventListener('mouseenter', () => { isPaused = true; });
+        track.addEventListener('mouseleave', () => { isPaused = false; });
+        track.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
+        track.addEventListener('touchend', () => { pauseWithTimeout(2500); }, { passive: true });
+
+        // Arrow button navigation (Smooth Step per card)
+        const stepWidth = 394; // 370px card width + 24px gap
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                pauseWithTimeout(4000);
+                track.scrollBy({ left: -stepWidth, behavior: 'smooth' });
+                // Check wrap-around boundary
+                setTimeout(() => {
+                    if (hasClones && track.scrollLeft <= 0) {
+                        track.scrollLeft += halfScrollWidth;
+                    }
+                }, 350);
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                pauseWithTimeout(4000);
+                track.scrollBy({ left: stepWidth, behavior: 'smooth' });
+                // Check wrap-around boundary
+                setTimeout(() => {
+                    if (hasClones && track.scrollLeft >= halfScrollWidth) {
+                        track.scrollLeft -= halfScrollWidth;
+                    }
+                }, 350);
+            });
+        }
+
+        // Mouse Drag-to-Scroll support
+        let isDown = false;
+        let startX = 0;
+        let scrollStart = 0;
+
+        track.addEventListener('mousedown', (e) => {
+            if (e.target.closest('a, button, input')) return;
+            isDown = true;
+            isPaused = true;
+            startX = e.pageX - track.offsetLeft;
+            scrollStart = track.scrollLeft;
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDown) {
+                isDown = false;
+                pauseWithTimeout(2500);
+            }
+        });
+
+        track.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - track.offsetLeft;
+            const walk = (x - startX) * 1.4;
+            track.scrollLeft = scrollStart - walk;
+
+            if (hasClones) {
+                if (track.scrollLeft <= 0) {
+                    track.scrollLeft += halfScrollWidth;
+                    scrollStart += halfScrollWidth;
+                } else if (track.scrollLeft >= halfScrollWidth * 2 - track.clientWidth) {
+                    track.scrollLeft -= halfScrollWidth;
+                    scrollStart -= halfScrollWidth;
+                }
+            }
+        });
+
+        return {
+            pause: () => { isPaused = true; },
+            resume: () => { isPaused = false; },
+            reset: () => { track.scrollLeft = hasClones ? halfScrollWidth : 0; }
+        };
+    }
+
     function switchTab(type) {
         const btnSmk = document.getElementById('tab-btn-smk');
         const btnMahasiswa = document.getElementById('tab-btn-mahasiswa');
@@ -1176,12 +2070,37 @@
             btnMahasiswa.classList.remove('active');
             contentSmk.style.display = 'block';
             contentMahasiswa.style.display = 'none';
+
+            if (carouselMahasiswa) carouselMahasiswa.pause();
+            if (carouselSmk) carouselSmk.resume();
         } else {
             btnMahasiswa.classList.add('active');
             btnSmk.classList.remove('active');
             contentMahasiswa.style.display = 'block';
             contentSmk.style.display = 'none';
+
+            if (carouselSmk) carouselSmk.pause();
+            if (carouselMahasiswa) carouselMahasiswa.resume();
         }
     }
+
+    // Explicitly expose functions to window scope for inline onclick handlers
+    window.setRegistrationMode = setRegistrationMode;
+    window.setMemberCount = setMemberCount;
+    window.switchCardMonth = switchCardMonth;
+    window.switchTab = switchTab;
+
+    // Initialize carousels & initial recalculation once DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        carouselSmk = setupQuotaCarousel('carousel-track-smk', 'carousel-prev-smk', 'carousel-next-smk');
+        carouselMahasiswa = setupQuotaCarousel('carousel-track-mahasiswa', 'carousel-prev-mahasiswa', 'carousel-next-mahasiswa');
+
+        // Initially pause mahasiswa if SMK is active
+        if (carouselMahasiswa) {
+            carouselMahasiswa.pause();
+        }
+
+        recalculateAllCards();
+    });
 </script>
 @endpush

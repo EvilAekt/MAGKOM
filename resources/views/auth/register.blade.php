@@ -10,9 +10,52 @@
     <h1 class="auth-title">Register Akun MagKom</h1>
     <p class="auth-subtitle">Daftarkan akun Anda untuk memulai proses seleksi magang di Dinas Kominfo.</p>
 
+    @if(isset($selectedJurusan) && $selectedJurusan)
+        <div style="background: linear-gradient(135deg, rgba(7, 81, 255, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%); border: 1px solid rgba(7, 81, 255, 0.22); border-radius: 0.875rem; padding: 1rem 1.15rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.85rem;">
+            <div style="width: 2.5rem; height: 2.5rem; border-radius: 0.625rem; background: var(--blue-600); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(7, 81, 255, 0.25);">
+                @if($selectedTipe === 'kelompok')
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                @else
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                @endif
+            </div>
+            <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.25rem;">
+                    <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--blue-700);">
+                        Pilihan Magang Terpilih
+                    </span>
+                    <span style="font-size: 0.75rem; font-weight: 700; padding: 0.15rem 0.65rem; border-radius: 9999px; background: {{ $selectedTipe === 'kelompok' ? '#dbeafe' : '#e0e7ff' }}; color: {{ $selectedTipe === 'kelompok' ? '#1e40af' : '#3730a3' }};">
+                        {{ $selectedTipe === 'kelompok' ? 'Kelompok (' . $selectedJumlah . ' Orang)' : 'Mandiri (1 Orang)' }}
+                    </span>
+                </div>
+                <div style="font-size: 0.95rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">
+                    {{ $selectedJurusan->nama_jurusan }} ({{ strtoupper($selectedJurusan->kategori) }})
+                </div>
+                @if($selectedBulan)
+                    <div style="font-size: 0.8125rem; color: var(--neutral-600);">
+                        Periode Mulai: <strong>{{ \Carbon\CarbonImmutable::parse($selectedBulan->bulan_mulai)->translatedFormat('F Y') }}</strong>
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endif
+
     <!-- Form Registrasi Akun Baru -->
     <form action="{{ route('register') }}" method="POST" novalidate>
         @csrf
+
+        @if(request('bulan'))
+            <input type="hidden" name="redirect_bulan" value="{{ request('bulan') }}">
+        @endif
+        @if(request('jurusan'))
+            <input type="hidden" name="redirect_jurusan" value="{{ request('jurusan') }}">
+        @endif
+        @if(request('tipe'))
+            <input type="hidden" name="redirect_tipe" value="{{ request('tipe') }}">
+        @endif
+        @if(request('jumlah'))
+            <input type="hidden" name="redirect_jumlah" value="{{ request('jumlah') }}">
+        @endif
 
         <!-- Field Username -->
         <div class="form-group">
