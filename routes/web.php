@@ -38,6 +38,7 @@ use App\Http\Controllers\Peserta\TugasController as PesertaTugasController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Public\HealthController;
 use App\Http\Controllers\Public\LandingController;
+use App\Http\Controllers\Public\CaptchaController;
 use App\Http\Controllers\SuperAdmin\AkunController as SuperAdminAkunController;
 use App\Http\Controllers\SuperAdmin\ArsipPesertaController;
 use App\Http\Controllers\SuperAdmin\AuditLogController;
@@ -75,6 +76,10 @@ Route::get('/.well-known/security.txt', function () {
 })->name('security.txt');
 Route::get('/verifikasi-dokumen/{kode}', \App\Http\Controllers\Public\VerifikasiDokumenController::class)
     ->name('dokumen.verifikasi')
+    ->middleware('throttle:60,1');
+
+Route::get('/captcha/image', [CaptchaController::class, 'image'])
+    ->name('captcha.image')
     ->middleware('throttle:60,1');
 
 
@@ -124,8 +129,8 @@ Route::get('/berkas/{dokumen}/pratinjau', [BerkasController::class, 'pratinjau']
     ->name('berkas.pratinjau')
     ->middleware(['signed:relative', 'auth']);
 
-// Rute Peserta Magang (F-02, F-03, F-08, F-09, F-10, F-12)
-Route::middleware(['auth', 'verified', 'must_change_password', 'role:peserta'])->prefix('peserta')->name('peserta.')->group(function () {
+// Rute Peserta Magang (F-02, F-03, F-08, F-09, F-10, F-12, SEC-03)
+Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:peserta'])->prefix('peserta')->name('peserta.')->group(function () {
     Route::get('/dashboard', [PesertaDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/profil', [PesertaProfilController::class, 'show'])->name('profil.show');
@@ -222,8 +227,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::post('/pengaturan/preferensi', [PembimbingPengaturanController::class, 'updatePreferensi'])->name('pengaturan.preferensi.update');
 });
 
-// Rute Admin & SuperAdmin (F-04, F-05, F-07, F-17)
-Route::middleware(['auth', 'verified', 'must_change_password', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
+// Rute Admin & SuperAdmin (F-04, F-05, F-07, F-17, SEC-03)
+Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/kuota', [KuotaController::class, 'index'])->name('kuota.index');
@@ -274,8 +279,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:admin,super
     Route::post('/pengaturan/preferensi', [AdminPengaturanController::class, 'updatePreferensi'])->name('pengaturan.preferensi.update');
 });
 
-// Rute Khusus SuperAdmin (F-06, F-11, F-13)
-Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+// Rute Khusus SuperAdmin (F-06, F-11, F-13, SEC-03)
+Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
 
     // Monitoring Pelaksanaan Magang Aktif (PRD 3.3, AC-07-7, AC-08-5)

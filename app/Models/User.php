@@ -48,6 +48,16 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * Nilai default atribut model.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'status_aktif' => true,
+        'must_change_password' => false,
+    ];
+
+    /**
      * Cast tipe data kolom.
      *
      * @var array<string, string>

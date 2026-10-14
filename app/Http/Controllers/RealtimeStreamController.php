@@ -30,7 +30,10 @@ class RealtimeStreamController extends Controller
         $rawLastId = $request->header('Last-Event-ID', $request->query('last_event_id', '0'));
         $lastEventId = is_numeric($rawLastId) ? (int) $rawLastId : 0;
 
-        // CRITICAL: Lepaskan session lock PHP agar tab lain dari pengguna ini tidak terblokir
+        // CRITICAL: Lepaskan session lock Laravel & PHP agar navigasi/reload pengguna tidak terblokir
+        if ($request->hasSession()) {
+            $request->session()->save();
+        }
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_write_close();
         }
@@ -43,19 +46,21 @@ class RealtimeStreamController extends Controller
         @ini_set('implicit_flush', '1');
 
         return response()->stream(function () use ($user, $lastEventId) {
-            // Instruksikan browser native EventSource untuk menyambung ulang tiap 2500ms
-            echo "retry: 2500\n\n";
+            $startTime = time();
+            $currentLastId = $lastEventId;
+            $isLocalOrTesting = app()->environment(['local', 'testing']);
+            $maxDuration = $isLocalOrTesting ? 1 : 20;
+            $sleepSeconds = $isLocalOrTesting ? 0 : 2;
+            $retryMs = $isLocalOrTesting ? 3500 : 2500;
+
+            // Instruksikan browser native EventSource untuk menyambung ulang
+            echo "retry: {$retryMs}\n\n";
             if (ob_get_level() > 0) {
                 @ob_flush();
             }
             flush();
 
-            $startTime = time();
-            $currentLastId = $lastEventId;
-            $maxDuration = app()->environment('testing') ? 1 : 20;
-            $sleepSeconds = app()->environment('testing') ? 0 : 2;
-
-            // Loop terkontrol maksimal 20 detik (anti-starvation PHP-FPM)
+            // Loop terkontrol (di local/testing: 1 iterasi burst cepat untuk menghindari worker starvation)
             while ((time() - $startTime) < $maxDuration) {
                 if (connection_aborted()) {
                     break;

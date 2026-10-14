@@ -92,6 +92,9 @@
             </div>
         @endif
 
+        <!-- Dynamic SVG Security CAPTCHA (4 Kode) -->
+        <x-captcha-field />
+
         <!-- Tombol Submit Login -->
         <button type="submit" class="btn-primary" id="btn-submit-login">
             Login

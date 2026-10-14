@@ -260,9 +260,34 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         $response->assertSee('Master Jurusan');
         $response->assertSee('Bidang Dinas');
 
-        // 2. Verifikasi keberadaan definisi fungsi JavaScript toggleNavGroup & toggleSidebar
+        // 2. Verifikasi markup accordion pada grup Pembimbing (Figma Node 560-24892)
+        $response->assertSee('Pembimbing');
+        $response->assertSee('Penilaian Peserta');
+        $response->assertSee('Reviu Logbook');
+        $response->assertSee('Tugas Magang');
+        $response->assertSee('Agenda Bimbingan');
+        $response->assertSee('Laporan Kinerja');
+
+        // 3. Verifikasi keberadaan definisi fungsi JavaScript toggleNavGroup & toggleSidebar
         $response->assertSee('function toggleNavGroup(btn)', false);
         $response->assertSee('function toggleSidebar(forceState)', false);
+    }
+
+    /**
+     * Memastikan grup accordion Pembimbing otomatis terbuka dan aktif saat SuperAdmin mengakses rute pembimbing.
+     */
+    public function test_sidebar_highlights_and_expands_pembimbing_group_when_active(): void
+    {
+        $response = $this->actingAs($this->superAdmin)->get(route('pembimbing.penilaian.index'));
+
+        $response->assertStatus(200);
+        // Tombol grup memiliki class has-active dan aria-expanded="true"
+        $response->assertSee('nav-group-btn has-active', false);
+        $response->assertSee('aria-expanded="true"', false);
+        // Submenu memiliki class show
+        $response->assertSee('nav-sub-menu show', false);
+        // Tautan penilaian peserta aktif
+        $response->assertSee('nav-sub-item active', false);
     }
 
     /**

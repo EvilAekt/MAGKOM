@@ -141,6 +141,9 @@
             </div>
         @endif
 
+        <!-- Dynamic SVG Security CAPTCHA (4 Kode) -->
+        <x-captcha-field />
+
         <!-- Tombol Submit Register -->
         <button type="submit" class="btn-primary" id="btn-submit-register">
             Register

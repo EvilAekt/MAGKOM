@@ -1623,16 +1623,33 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                                    <path d="M9 14l2 2 4-4"></path>
+                        @php
+                            $isOperasionalPembimbingActive = request()->routeIs('pembimbing.*');
+                        @endphp
+                        <div class="nav-group-container">
+                            <button type="button" class="nav-group-btn {{ $isOperasionalPembimbingActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalPembimbingActive ? 'true' : 'false' }}">
+                                <span class="nav-group-btn-left">
+                                    <span class="nav-item-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                            <path d="M9 14l2 2 4-4"></path>
+                                        </svg>
+                                    </span>
+                                    <span>Pembimbing</span>
+                                </span>
+                                <svg class="nav-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
-                            </span>
-                            <span>Pembimbing</span>
-                        </a>
+                            </button>
+                            <div class="nav-sub-menu {{ $isOperasionalPembimbingActive ? 'show' : '' }}">
+                                <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.penilaian.*') ? 'active' : '' }}">Penilaian Peserta</a>
+                                <a href="{{ route('pembimbing.logbook.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">Reviu Logbook</a>
+                                <a href="{{ route('pembimbing.tugas.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.tugas.*') ? 'active' : '' }}">Tugas Magang</a>
+                                <a href="{{ route('pembimbing.agenda.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.agenda.*') ? 'active' : '' }}">Agenda Bimbingan</a>
+                                <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">Laporan Kinerja</a>
+                            </div>
+                        </div>
 
                         @php
                             $isOperasionalPesertaActive = request()->routeIs('superadmin.monitoring.*') || request()->routeIs('superadmin.arsip.*');
