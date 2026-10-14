@@ -146,6 +146,10 @@ class PembimbingDashboardMetricsService
             'tugasOverdueCount' => $tugasMetrics['tugasOverdueCount'],
             'deadlineMendekatiHari' => $tugasMetrics['deadlineMendekatiHari'],
             'upcomingDeadlines' => $tugasMetrics['upcomingDeadlines'],
+            'totalTugasKumulatif' => $tugasMetrics['totalTugasKumulatif'],
+            'tugasSelesaiKumulatif' => $tugasMetrics['tugasSelesaiKumulatif'],
+            'persenTugasKumulatif' => $tugasMetrics['persenTugasKumulatif'],
+            'tugasPrioritasPembimbing' => $tugasMetrics['tugasPrioritasPembimbing'],
             'inactiveLogbookMentees' => $inactiveLogbookMentees,
             'jenjangCounts' => $jenjangCounts,
             'pendingProgresLogs' => $pendingProgresLogs,
@@ -167,23 +171,43 @@ class PembimbingDashboardMetricsService
 
     /**
      * @param array<int> $penempatanIds
-     * @return array{tugasAktifCount: int, tugasOverdueCount: int, deadlineMendekatiHari: int, upcomingDeadlines: Collection}
+     * @return array{
+     *     tugasAktifCount: int,
+     *     tugasOverdueCount: int,
+     *     deadlineMendekatiHari: int,
+     *     upcomingDeadlines: Collection,
+     *     totalTugasKumulatif: int,
+     *     tugasSelesaiKumulatif: int,
+     *     persenTugasKumulatif: int,
+     *     tugasPrioritasPembimbing: Collection
+     * }
      */
     protected function resolveTugasMetrics(array $penempatanIds): array
     {
-        $tugasAktifList = Tugas::with(['penempatan.peserta.profil'])
+        $allTugasMentee = Tugas::with([
+            'penempatan.peserta.profil.jurusan',
+            'progresLogs',
+        ])
             ->whereIn('penempatan_id', $penempatanIds)
-            ->whereIn('status', [StatusTugasEnum::Belum, StatusTugasEnum::Proses])
+            ->latest('updated_at')
             ->get();
 
+        $totalTugasKumulatif = $allTugasMentee->count();
+        $tugasSelesaiKumulatif = $allTugasMentee->where('status', StatusTugasEnum::Selesai)->count();
+        $persenTugasKumulatif = $totalTugasKumulatif > 0
+            ? (int) min(100, round(($tugasSelesaiKumulatif / $totalTugasKumulatif) * 100))
+            : 0;
+
+        $tugasAktifList = $allTugasMentee->whereIn('status', [StatusTugasEnum::Belum, StatusTugasEnum::Proses]);
         $tugasAktifCount = $tugasAktifList->count();
+
+        $today = Carbon::today();
         $tugasOverdueCount = $tugasAktifList
             ->filter(fn (Tugas $t) => $t->deadline && Carbon::parse($t->deadline)->isPast() && $t->status !== StatusTugasEnum::Selesai)
             ->count();
 
         $deadlineSetting = Pengaturan::where('kunci', 'deadline_mendekati_hari')->value('nilai');
         $deadlineMendekatiHari = $deadlineSetting ? (int) $deadlineSetting : 3;
-        $today = Carbon::today();
         $maxUpcoming = Carbon::today()->addDays($deadlineMendekatiHari);
 
         $upcomingDeadlines = $tugasAktifList
@@ -198,11 +222,49 @@ class PembimbingDashboardMetricsService
             ->sortBy('deadline')
             ->values();
 
+        // Menyusun Tugas Prioritas Pembimbing (Perlu Tindakan, Overdue, Due Soon, dan Aktif)
+        $tugasPrioritasPembimbing = $tugasAktifList->map(function (Tugas $t) use ($today, $maxUpcoming) {
+            $pendingProgresCount = $t->progresLogs
+                ->where('status_review', StatusReviewProgresEnum::Menunggu)
+                ->count();
+
+            $diffDays = $t->deadline ? $today->diffInDays(Carbon::parse($t->deadline), false) : 999;
+            $isOverdue = $t->deadline && Carbon::parse($t->deadline)->isPast() && $t->status !== StatusTugasEnum::Selesai;
+            $isDueSoon = ! $isOverdue && $t->deadline && $diffDays >= 0 && $diffDays <= 3;
+
+            // Prioritas sorting: 1 = ada progres menunggu review, 2 = overdue, 3 = due soon, 4 = aktif standar
+            $priorityRank = 4;
+            if ($pendingProgresCount > 0) {
+                $priorityRank = 1;
+            } elseif ($isOverdue) {
+                $priorityRank = 2;
+            } elseif ($isDueSoon) {
+                $priorityRank = 3;
+            }
+
+            $t->pending_progres_count = $pendingProgresCount;
+            $t->diff_days = $diffDays;
+            $t->is_overdue = $isOverdue;
+            $t->is_due_soon = $isDueSoon;
+            $t->priority_rank = $priorityRank;
+
+            return $t;
+        })
+            ->sortBy([
+                ['priority_rank', 'asc'],
+                ['deadline', 'asc'],
+            ])
+            ->values();
+
         return [
             'tugasAktifCount' => $tugasAktifCount,
             'tugasOverdueCount' => $tugasOverdueCount,
             'deadlineMendekatiHari' => $deadlineMendekatiHari,
             'upcomingDeadlines' => $upcomingDeadlines,
+            'totalTugasKumulatif' => $totalTugasKumulatif,
+            'tugasSelesaiKumulatif' => $tugasSelesaiKumulatif,
+            'persenTugasKumulatif' => $persenTugasKumulatif,
+            'tugasPrioritasPembimbing' => $tugasPrioritasPembimbing,
         ];
     }
 

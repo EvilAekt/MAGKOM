@@ -46,7 +46,13 @@ class TugasController extends Controller
         }
 
         if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
+            if ($request->input('status') === 'perlu_review') {
+                $query->whereHas('progresLogs', function ($qp) {
+                    $qp->where('status_review', 'menunggu');
+                });
+            } else {
+                $query->where('status', $request->input('status'));
+            }
         }
 
         if ($request->filled('kategori')) {
@@ -76,9 +82,31 @@ class TugasController extends Controller
             ->where('status', StatusPenempatanEnum::Aktif)
             ->get();
 
+        // Hitung metrik agregat status tugas untuk banner dan tab classroom
+        $baseMetricsQuery = Tugas::whereHas('penempatan', function ($q) use ($user) {
+            if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                $q->where('pembimbing_id', $user->id);
+            }
+        });
+
+        if ($request->filled('penempatan_id')) {
+            $baseMetricsQuery->where('penempatan_id', $request->input('penempatan_id'));
+        }
+
+        $counts = [
+            'total' => (clone $baseMetricsQuery)->count(),
+            'belum' => (clone $baseMetricsQuery)->where('status', StatusTugasEnum::Belum)->count(),
+            'proses' => (clone $baseMetricsQuery)->where('status', StatusTugasEnum::Proses)->count(),
+            'selesai' => (clone $baseMetricsQuery)->where('status', StatusTugasEnum::Selesai)->count(),
+            'perlu_review' => (clone $baseMetricsQuery)->whereHas('progresLogs', function ($qp) {
+                $qp->where('status_review', 'menunggu');
+            })->count(),
+        ];
+
         $data = [
             'tugasList' => $tugasList,
             'penempatanList' => $penempatanList,
+            'counts' => $counts,
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {

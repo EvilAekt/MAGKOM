@@ -168,8 +168,8 @@
 
         <!-- Kartu Penuh Bawah: Preferensi Tampilan & Bahasa -->
         <div class="settings-card settings-card-wide">
-            <h2 class="card-title">Preferensi Antarmuka & Bahasa</h2>
-            <p class="card-subtitle">Sesuaikan kenyamanan visual dan bahasa saat membimbing peserta magang.</p>
+            <h2 class="card-title">{{ __('Preferensi Antarmuka & Bahasa') }}</h2>
+            <p class="card-subtitle">{{ __('Sesuaikan kenyamanan visual dan bahasa saat membimbing peserta magang.') }}</p>
 
             <form action="{{ route('pembimbing.pengaturan.preferensi.update') }}" method="POST">
                 @csrf
@@ -177,11 +177,11 @@
                 <div class="pref-horizontal-grid">
                     <!-- Pilihan Bahasa -->
                     <div class="pref-group">
-                        <label class="pref-label" for="bahasaSelect">Bahasa Antarmuka</label>
+                        <label class="pref-label" for="bahasaSelect">{{ __('Bahasa Antarmuka') }}</label>
                         <div class="language-select-wrapper">
                             <select name="bahasa" id="bahasaSelect" class="language-select-custom">
-                                <option value="id" {{ ($bahasaAktif ?? 'id') === 'id' ? 'selected' : '' }}>Indonesia (Default)</option>
-                                <option value="en" {{ ($bahasaAktif ?? '') === 'en' ? 'selected' : '' }}>English (US)</option>
+                                <option value="id" {{ ($bahasaAktif ?? 'id') === 'id' ? 'selected' : '' }}>{{ __('Indonesia (Default)') }}</option>
+                                <option value="en" {{ ($bahasaAktif ?? '') === 'en' ? 'selected' : '' }}>{{ __('English (US)') }}</option>
                             </select>
                             <div class="language-chevron-icon" aria-hidden="true">
                                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -189,12 +189,12 @@
                                 </svg>
                             </div>
                         </div>
-                        <div class="form-hint" style="margin-bottom: 0;">Bahasa yang digunakan untuk menu dan label evaluasi.</div>
+                        <div class="form-hint" style="margin-bottom: 0;">{{ __('Bahasa yang digunakan untuk menu dan label evaluasi.') }}</div>
                     </div>
 
                     <!-- Pilihan Tema -->
                     <div class="pref-group">
-                        <label class="pref-label">Mode Tampilan Tema</label>
+                        <label class="pref-label">{{ __('Mode Tampilan Tema') }}</label>
                         <div class="theme-options-grid">
                             <!-- Pilihan Terang -->
                             <label class="theme-card-option {{ ($temaAktif ?? 'terang') === 'terang' ? 'selected' : '' }}" 
@@ -206,8 +206,8 @@
                                     <span class="preview-bar"></span>
                                 </div>
                                 <div>
-                                    <div class="theme-info-title">Terang</div>
-                                    <div class="theme-info-desc">Mode default portal</div>
+                                    <div class="theme-info-title">{{ __('Terang') }}</div>
+                                    <div class="theme-info-desc">{{ __('Mode default portal') }}</div>
                                 </div>
                             </label>
 
@@ -221,8 +221,8 @@
                                     <span class="preview-bar"></span>
                                 </div>
                                 <div>
-                                    <div class="theme-info-title">Gelap</div>
-                                    <div class="theme-info-desc">Ramah mata untuk malam hari</div>
+                                    <div class="theme-info-title">{{ __('Gelap') }}</div>
+                                    <div class="theme-info-desc">{{ __('Ramah mata untuk malam hari') }}</div>
                                 </div>
                             </label>
 
@@ -236,8 +236,8 @@
                                     <span class="preview-bar"></span>
                                 </div>
                                 <div>
-                                    <div class="theme-info-title">Ikuti Sistem</div>
-                                    <div class="theme-info-desc">Menyesuaikan pengaturan OS</div>
+                                    <div class="theme-info-title">{{ __('Ikuti Sistem') }}</div>
+                                    <div class="theme-info-desc">{{ __('Menyesuaikan pengaturan OS') }}</div>
                                 </div>
                             </label>
                         </div>
@@ -245,7 +245,7 @@
                 </div>
 
                 <div class="form-actions-row" style="margin-top: 24px;">
-                    <button type="submit" class="btn-primary-custom">Simpan Preferensi Tampilan</button>
+                    <button type="submit" class="btn-primary-custom">{{ __('Simpan Preferensi Tampilan') }}</button>
                 </div>
             </form>
         </div>

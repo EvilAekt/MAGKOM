@@ -164,4 +164,52 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    public function test_pembimbing_bisa_mengakses_halaman_index_penugasan_berformat_classroom_stream_dan_banner(): void
+    {
+        $tugas = Tugas::create([
+            'penempatan_id' => $this->penempatan->id,
+            'judul' => 'Pengembangan Antarmuka Dashboard Portal MagKom',
+            'deskripsi' => 'Menyusun komponen antarmuka web modern sesuai standar Design System MagKom.',
+            'kategori' => 'Fitur Baru',
+            'kompleksitas' => 'sedang',
+            'deadline' => Carbon::today()->addDays(2),
+        ]);
+
+        $response = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.tugas.index'));
+
+        $response->assertOk();
+        $response->assertSee('classroom-banner', false);
+        $response->assertSee('Manajemen Penugasan & Progres (F-08)', false);
+        $response->assertSee('1 Tugas');
+        $response->assertSee('Semua Tugas');
+        $response->assertSee('Ditugaskan');
+        $response->assertSee('Sedang Dikerjakan');
+        $response->assertSee('Selesai');
+        $response->assertSee('classroomCardContainer', false);
+        $response->assertSee('Pengembangan Antarmuka Dashboard Portal MagKom');
+        $response->assertSee('Mentee Satu');
+        $response->assertSee('+ Buat Tugas Baru');
+    }
+
+    public function test_filter_tab_status_dan_perlu_evaluasi_pada_halaman_index_pembimbing(): void
+    {
+        $tugasProses = Tugas::create([
+            'penempatan_id' => $this->penempatan->id,
+            'judul' => 'Tugas Berjalan Dalam Proses',
+            'deskripsi' => 'Tugas sedang dikerjakan mentee',
+            'kategori' => 'Backend',
+            'kompleksitas' => 'tinggi',
+            'deadline' => Carbon::today()->addDays(5),
+            'status' => \App\Enums\StatusTugasEnum::Proses,
+        ]);
+
+        $response = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.tugas.index', ['status' => 'proses']));
+
+        $response->assertOk();
+        $response->assertSee('Tugas Berjalan Dalam Proses');
+    }
 }
+

@@ -301,4 +301,79 @@ final class PembimbingDashboardEnhancementTest extends TestCase
         $response->assertSee('Tenggat Waktu Tugas Mendekati Batas Akhir');
         $response->assertSee('Instalasi Server Jaringan Sleman');
     }
+
+    public function test_dashboard_pembimbing_menampilkan_komponen_tugas_terpadu_dengan_avatar_chip_dan_micro_progress(): void
+    {
+        $pesertaUser = $this->createUser('Citra Kirana', 'citra@ugm.ac.id', RoleEnum::Peserta);
+
+        PesertaProfil::create([
+            'user_id' => $pesertaUser->id,
+            'jurusan_id' => $this->jurusan->id,
+            'jenjang' => JenjangEnum::S1,
+            'institusi' => 'Universitas Gadjah Mada',
+            'nim_nisn' => '22334455',
+            'no_hp' => '081234567891',
+        ]);
+
+        $penempatan = Penempatan::create([
+            'peserta_id' => $pesertaUser->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'bidang_id' => $this->bidang->id,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'status' => StatusPenempatanEnum::Aktif,
+            'tgl_mulai' => Carbon::today()->subDays(10),
+            'tgl_selesai' => Carbon::today()->addDays(20),
+        ]);
+
+        // Tugas 1: Selesai
+        Tugas::create([
+            'penempatan_id' => $penempatan->id,
+            'judul' => 'Perancangan Basis Data MagKom',
+            'kategori' => 'Database',
+            'kompleksitas' => KompleksitasEnum::Sedang,
+            'deadline' => Carbon::today()->subDays(2),
+            'status' => StatusTugasEnum::Selesai,
+        ]);
+
+        // Tugas 2: Proses dan memiliki ProgresLog yang menunggu evaluasi
+        $tugas2 = Tugas::create([
+            'penempatan_id' => $penempatan->id,
+            'judul' => 'Pembuatan Endpoint API Mobile Sleman',
+            'kategori' => 'Backend',
+            'kompleksitas' => KompleksitasEnum::Tinggi,
+            'deadline' => Carbon::today()->addDay(),
+            'status' => StatusTugasEnum::Proses,
+        ]);
+
+        ProgresLog::create([
+            'tugas_id' => $tugas2->id,
+            'catatan' => 'Modul autentikasi dan rute API telah selesai diuji.',
+            'tgl_lapor' => Carbon::today(),
+            'status_review' => StatusReviewProgresEnum::Menunggu,
+        ]);
+
+        $response = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.dashboard'));
+
+        $response->assertOk();
+
+        // 1. Validasi keberadaan elemen list-card terpadu
+        $response->assertSee('Tenggat Waktu Tugas Mendekati Batas Akhir');
+        $response->assertSee('Penugasan Mentee');
+        $response->assertSee('Pembuatan Endpoint API Mobile Sleman');
+        $response->assertSee('Citra Kirana');
+        $response->assertSee('Universitas Gadjah Mada');
+
+        // 2. Validasi avatar chip inisial
+        $response->assertSee('CK');
+
+        // 3. Validasi status laporan progres menunggu evaluasi & tombol aksi
+        $response->assertSee('Laporan Progres Menunggu Evaluasi');
+        $response->assertSee('Evaluasi Progres');
+
+        // 4. Validasi micro progress bar pada KPI tugas
+        $response->assertSee('micro-progress-bar');
+        $response->assertSee('50% tuntas');
+    }
 }

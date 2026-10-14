@@ -120,6 +120,353 @@
         background-color: #cbd5e1;
         border-radius: 4px;
     }
+
+    /* ========================================================================= */
+    /* Komponen Kartu Tugas Terpadu Ala Dashboard Peserta Magang (DS-MagKom)     */
+    /* ========================================================================= */
+    .list-card {
+        background: var(--neutral-0, #ffffff);
+        border: 1px solid var(--neutral-200, #E2E8F0);
+        border-radius: 14px;
+        padding: 20px 24px;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .list-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--neutral-200, #E2E8F0);
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .list-card-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--neutral-900, #0F172A);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        line-height: 1.3;
+        margin: 0;
+    }
+
+    /* Filter Tabs Mini Cepat pada Header Kartu Tugas */
+    .task-quick-filters {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .task-filter-btn {
+        background: var(--neutral-100, #F8FAFC);
+        border: 1px solid var(--neutral-200, #E2E8F0);
+        padding: 5px 12px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--neutral-600, #64748B);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: inherit;
+    }
+
+    .task-filter-btn:hover {
+        background: rgba(6, 65, 204, 0.08);
+        color: #0641CC;
+        border-color: #0641CC;
+    }
+
+    .task-filter-btn.active {
+        background: #0641CC;
+        color: #ffffff;
+        border-color: #0641CC;
+        box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);
+    }
+
+    .task-filter-btn .filter-badge {
+        padding: 1px 6px;
+        border-radius: 999px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        background: rgba(0, 0, 0, 0.08);
+    }
+
+    .task-filter-btn.active .filter-badge {
+        background: rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+    }
+
+    /* Item Row Tugas */
+    .task-item-row {
+        padding: 14px 0;
+        border-bottom: 1px solid var(--neutral-100, #F1F5F9);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        transition: background-color 0.15s ease;
+    }
+
+    .task-item-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .task-item-row:first-child {
+        padding-top: 4px;
+    }
+
+    .task-item-left {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* Mentee Avatar Inisial Badge */
+    .mentee-avatar-chip {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #0641CC 0%, #2563EB 100%);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8125rem;
+        font-weight: 700;
+        flex-shrink: 0;
+        box-shadow: 0 2px 6px rgba(6, 65, 204, 0.16);
+    }
+
+    .task-item-meta {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .task-item-meta h4 {
+        font-size: 0.9375rem;
+        font-weight: 700;
+        color: var(--neutral-900, #0F172A);
+        margin: 0 0 4px 0;
+        line-height: 1.35;
+    }
+
+    .task-item-meta h4 a {
+        color: inherit;
+        text-decoration: none;
+        transition: color 0.15s ease;
+    }
+
+    .task-item-meta h4 a:hover {
+        color: #0641CC;
+    }
+
+    .task-mentee-info {
+        font-size: 0.775rem;
+        color: var(--neutral-600, #475569);
+        margin: 0 0 6px 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .task-badges-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    /* Deadline Pill - Standar Desain Dashboard Peserta Magang */
+    .deadline-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        background: var(--neutral-100, #F1F5F9);
+        color: var(--neutral-600, #475569);
+        border: 1px solid var(--neutral-300, #CBD5E1);
+        white-space: nowrap;
+    }
+
+    .deadline-pill.is-urgent {
+        background: #FEF2F2;
+        color: #DC2626;
+        border-color: #FECACA;
+    }
+
+    .deadline-pill.is-warning {
+        background: #FFFBEB;
+        color: #D97706;
+        border-color: #FDE68A;
+    }
+
+    /* Category Chip */
+    .task-category-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        background: #EFF6FF;
+        color: #1D4ED8;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid #BFDBFE;
+    }
+
+    /* Action Buttons Compact */
+    .btn-task-action {
+        padding: 6px 14px;
+        font-size: 0.775rem;
+        font-weight: 600;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        transition: all 0.15s ease;
+        border: 1px solid transparent;
+        cursor: pointer;
+    }
+
+    .btn-task-action-primary {
+        background: #0641CC;
+        color: #ffffff;
+        box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);
+    }
+
+    .btn-task-action-primary:hover {
+        background: #0535A6;
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+    .btn-task-action-secondary {
+        background: var(--neutral-100, #F8FAFC);
+        color: var(--neutral-700, #334155);
+        border-color: var(--neutral-300, #CBD5E1);
+    }
+
+    .btn-task-action-secondary:hover {
+        background: var(--neutral-200, #E2E8F0);
+        color: #0641CC;
+        border-color: #0641CC;
+    }
+
+    /* Micro Progress Bar untuk KPI Metrik Pembimbing */
+    .micro-progress-bar {
+        height: 6px;
+        background: var(--neutral-200, #E2E8F0);
+        border-radius: 999px;
+        overflow: hidden;
+        margin: 6px 0 4px 0;
+        width: 100%;
+    }
+
+    .micro-progress-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: #10B981;
+        transition: width 0.3s ease;
+    }
+
+    /* Dark Mode Harmonization (DS-MagKom) */
+    [data-theme="dark"] .list-card {
+        background: #182234;
+        border-color: #26354D;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    [data-theme="dark"] .list-card-header {
+        border-bottom-color: #26354D;
+    }
+
+    [data-theme="dark"] .list-card-title {
+        color: #F8FAFC;
+    }
+
+    [data-theme="dark"] .task-item-row {
+        border-bottom-color: #26354D;
+    }
+
+    [data-theme="dark"] .task-item-meta h4 {
+        color: #F8FAFC;
+    }
+
+    [data-theme="dark"] .task-mentee-info {
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .deadline-pill {
+        background: #1E293B;
+        border-color: #334155;
+        color: #CBD5E1;
+    }
+
+    [data-theme="dark"] .deadline-pill.is-urgent {
+        background: rgba(239, 68, 68, 0.2);
+        color: #F87171;
+        border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    [data-theme="dark"] .deadline-pill.is-warning {
+        background: rgba(245, 158, 11, 0.2);
+        color: #FBBF24;
+        border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    [data-theme="dark"] .task-category-chip {
+        background: rgba(30, 58, 138, 0.35);
+        color: #93C5FD;
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    [data-theme="dark"] .task-filter-btn {
+        background: #0F172A;
+        border-color: #26354D;
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .task-filter-btn.active {
+        background: #0641CC;
+        color: #ffffff;
+        border-color: #0641CC;
+    }
+
+    [data-theme="dark"] .btn-task-action-secondary {
+        background: #1E293B;
+        border-color: #334155;
+        color: #CBD5E1;
+    }
+
+    [data-theme="dark"] .btn-task-action-secondary:hover {
+        background: #26354D;
+        color: #60A5FA;
+        border-color: #3B82F6;
+    }
+
+    [data-theme="dark"] .micro-progress-bar {
+        background: #26354D;
+    }
 </style>
 @endpush
 
@@ -334,10 +681,10 @@
                 </div>
             </div>
 
-            <!-- Kartu 4: Tugas Aktif & Overdue -->
+            <!-- Kartu 4: Tugas Aktif & Ketuntasan Mentee -->
             <div class="stat-card-pembimbing">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div>
+                    <div style="flex: 1; min-width: 0;">
                         <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-500); text-transform: uppercase; letter-spacing: 0.025em;">Tugas Berjalan</span>
                         <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-top: 0.25rem;">
                             <span style="font-size: 1.875rem; font-weight: 700; color: var(--neutral-900);">
@@ -349,15 +696,21 @@
                                 </span>
                             @endif
                         </div>
+                        <div class="micro-progress-bar" style="margin-top: 8px;">
+                            <div class="micro-progress-fill" style="width: {{ $persenTugasKumulatif }}%;"></div>
+                        </div>
+                        <div style="font-size: 0.725rem; color: var(--neutral-500); margin-top: 2px;">
+                            {{ $persenTugasKumulatif }}% tuntas &bull; {{ $tugasSelesaiKumulatif }}/{{ $totalTugasKumulatif }} tugas
+                        </div>
                     </div>
-                    <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(16, 185, 129, 0.1); color: #10b981; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(16, 185, 129, 0.1); color: #10b981; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 10px;">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M9 11l3 3L22 4"></path>
                             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                         </svg>
                     </div>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--neutral-200);">
                     <span style="font-size: 0.75rem; color: var(--neutral-500);">
                         {{ $tugasOverdueCount > 0 ? 'Perlu tindak lanjut' : 'Jadwal terkendali' }}
                     </span>
@@ -435,52 +788,110 @@
                     @endforeach
                 </div>
             </div>
-        @endif
-
-        <!-- Tenggat Waktu Tugas Mendatang (BR-16 Upcoming Deadlines <= 3 Hari) -->
-        @if($upcomingDeadlines->count() > 0)
-            <div style="background: #f8fafc; border: 1px solid var(--neutral-200); border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
-                    <div style="display: flex; align-items: center; gap: 0.6rem;">
-                        <div style="width: 8px; height: 8px; border-radius: 50%; background: #0641CC;"></div>
-                        <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
-                            Tenggat Waktu Tugas Mendekati Batas Akhir (&le; {{ $deadlineMendekatiHari }} Hari)
-                        </h3>
+        @endif        <!-- Komponen Kartu Tugas Terpadu Ala Dashboard Peserta Magang (DS-MagKom) -->
+        <div class="list-card">
+            <div class="list-card-header">
+                <div>
+                    <h3 class="list-card-title">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0641CC;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
+                        <span>Tenggat Waktu Tugas Mendekati Batas Akhir & Penugasan Mentee</span>
+                    </h3>
+                    <div style="font-size: 0.775rem; color: var(--neutral-500); margin-top: 4px;">
+                        Pemantauan penugasan aktif, tenggat waktu (&le; {{ $deadlineMendekatiHari }} hari), dan antrean evaluasi progres mentee.
                     </div>
-                    <a href="{{ route('pembimbing.tugas.index') }}" style="font-size: 0.75rem; font-weight: 600; color: #0641CC; text-decoration: none;">
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <!-- Mini Filter Tab Cepat Client-Side -->
+                    <div class="task-quick-filters">
+                        <button type="button" class="task-filter-btn active" onclick="filterDashboardTasks('semua', this)">
+                            Semua <span class="filter-badge">{{ $tugasPrioritasPembimbing->count() }}</span>
+                        </button>
+                        <button type="button" class="task-filter-btn" onclick="filterDashboardTasks('mendesak', this)">
+                            Mendesak <span class="filter-badge">{{ $tugasPrioritasPembimbing->filter(fn($t) => $t->is_overdue || $t->is_due_soon)->count() }}</span>
+                        </button>
+                        <button type="button" class="task-filter-btn" onclick="filterDashboardTasks('reviu', this)">
+                            Perlu Reviu <span class="filter-badge">{{ $tugasPrioritasPembimbing->where('pending_progres_count', '>', 0)->count() }}</span>
+                        </button>
+                    </div>
+
+                    <a href="{{ route('pembimbing.tugas.index') }}" style="font-size: 0.8125rem; font-weight: 600; color: #0641CC; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
                         Lihat Seluruh Tugas &rarr;
                     </a>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.85rem;">
-                    @foreach($upcomingDeadlines as $tugas)
-                        @php
-                            $diff = \Carbon\Carbon::today()->diffInDays($tugas->deadline, false);
-                        @endphp
-                        <div style="background: #ffffff; border-radius: 12px; border: 1px solid var(--neutral-200); padding: 1rem 1.15rem; display: flex; flex-direction: column; justify-content: space-between; gap: 0.75rem; transition: transform 0.15s ease, box-shadow 0.15s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                                    <span style="font-size: 0.7rem; background: rgba(6, 65, 204, 0.08); color: #0641CC; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 700; text-transform: uppercase;">
-                                        {{ $tugas->kategori ?? 'Tugas' }}
-                                    </span>
-                                    <span style="font-size: 0.725rem; font-weight: 700; color: {{ $diff == 0 ? '#b91c1c' : ($diff <= 1 ? '#ea580c' : '#d97706') }}; background: {{ $diff == 0 ? '#fee2e2' : '#fef3c7' }}; padding: 0.15rem 0.5rem; border-radius: 999px;">
-                                        {{ $diff == 0 ? 'Tenggat Hari Ini!' : ($diff == 1 ? 'Besok Jatuh Tempo' : 'Sisa ' . $diff . ' hari') }}
-                                    </span>
-                                </div>
-                                <h4 style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-900); margin: 0.2rem 0 0 0; line-height: 1.35;">
-                                    {{ $tugas->judul }}
-                                </h4>
-                                <div style="font-size: 0.75rem; color: var(--neutral-500); display: flex; align-items: center; gap: 0.35rem;">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                    <span>Mentee: <strong>{{ $tugas->penempatan?->peserta?->nama ?? '-' }}</strong></span>
-                                </div>
+            </div>
 
-                                <!-- Indikator Sumber Daya Lampiran & Tautan -->
-                                @if($tugas->file_lampiran || $tugas->link_referensi)
-                                    <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.25rem; padding-top: 0.35rem; border-top: 1px dashed var(--neutral-200);">
+            <!-- Daftar Item Tugas -->
+            @if($tugasPrioritasPembimbing->isNotEmpty())
+                <div id="dashboard-tasks-container">
+                    @foreach($tugasPrioritasPembimbing as $tugas)
+                        @php
+                            $diff = $tugas->diff_days;
+                            $hasPendingReview = $tugas->pending_progres_count > 0;
+                            $isUrgent = $tugas->is_overdue || ($tugas->deadline && $diff <= 3);
+                            $menteeName = $tugas->penempatan?->peserta?->nama ?? 'Peserta Magang';
+                            $initials = strtoupper(substr($menteeName, 0, 2));
+                        @endphp
+                        <div class="task-item-row" data-is-urgent="{{ $isUrgent ? '1' : '0' }}" data-has-pending="{{ $hasPendingReview ? '1' : '0' }}">
+                            <div class="task-item-left">
+                                <div class="mentee-avatar-chip" title="Mentee: {{ $menteeName }}">
+                                    {{ $initials }}
+                                </div>
+                                <div class="task-item-meta">
+                                    <h4>
+                                        <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}">
+                                            {{ $tugas->judul }}
+                                        </a>
+                                    </h4>
+                                    <div class="task-mentee-info">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                        <span>Mentee: <strong>{{ $menteeName }}</strong></span>
+                                        <span>&bull;</span>
+                                        <span>{{ $tugas->penempatan?->peserta?->profil?->institusi ?? 'Institusi Belum Terisi' }}</span>
+                                    </div>
+                                    <div class="task-badges-row">
+                                        <!-- Deadline Pill Standar Peserta Magang -->
+                                        @if($tugas->is_overdue)
+                                            <span class="deadline-pill is-urgent">
+                                                <span>⚠️</span> Lewat Tenggat
+                                            </span>
+                                        @elseif($tugas->is_due_today)
+                                            <span class="deadline-pill is-urgent">
+                                                <span>⚡</span> Tenggat Hari Ini!
+                                            </span>
+                                        @elseif($tugas->is_due_tomorrow)
+                                            <span class="deadline-pill is-urgent">
+                                                <span>⚠️</span> Besok Jatuh Tempo
+                                            </span>
+                                        @elseif($tugas->is_due_soon)
+                                            <span class="deadline-pill is-warning">
+                                                <span>⏳</span> Sisa {{ $diff }} Hari
+                                            </span>
+                                        @elseif($tugas->deadline)
+                                            <span class="deadline-pill">
+                                                <span>📅</span> {{ \Carbon\Carbon::parse($tugas->deadline)->isoFormat('D MMM Y') }}
+                                            </span>
+                                        @else
+                                            <span class="deadline-pill">Tanpa Tenggat</span>
+                                        @endif
+
+                                        <!-- Category Chip -->
+                                        <span class="task-category-chip">
+                                            {{ $tugas->kategori ?? 'Tugas Lapangan' }}
+                                        </span>
+
+                                        <!-- Pending Review Highlight Badge -->
+                                        @if($hasPendingReview)
+                                            <span style="font-size: 0.7rem; font-weight: 700; background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; padding: 2px 8px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px;">
+                                                <span>📥</span> {{ $tugas->pending_progres_count }} Laporan Progres Menunggu Evaluasi
+                                            </span>
+                                        @endif
+
+                                        <!-- Attachment / Reference Links -->
                                         @if($tugas->file_lampiran)
-                                            @php
-                                                $badge = $tugas->badge_color_lampiran;
-                                            @endphp
+                                            @php $badge = $tugas->badge_color_lampiran; @endphp
                                             <a href="{{ route('pembimbing.tugas.lampiran', $tugas->id) }}" title="Unduh Berkas Panduan: {{ $tugas->nama_file_lampiran }}" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.45rem; border-radius: 4px; background: {{ $badge['bg'] }}; color: {{ $badge['color'] }}; text-decoration: none; border: 1px solid {{ $badge['border'] }};">
                                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                                                 {{ $badge['label'] }} ({{ $tugas->ukuran_format }})
@@ -493,19 +904,47 @@
                                             </a>
                                         @endif
                                     </div>
-                                @endif
+                                </div>
                             </div>
 
-                            <div style="display: flex; justify-content: flex-end; align-items: center; border-top: 1px solid var(--neutral-100); padding-top: 0.5rem;">
-                                <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}" style="padding: 0.35rem 0.85rem; background: #0641CC; color: #ffffff; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.35rem;">
-                                    <span>Reviu & Detail</span>
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                </a>
+                            <!-- Tombol Aksi Cepat Kontekstual -->
+                            <div>
+                                @if($hasPendingReview)
+                                    <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}" class="btn-task-action btn-task-action-primary" style="box-shadow: 0 4px 12px rgba(6, 65, 204, 0.22);">
+                                        <span>Evaluasi Progres</span>
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                    </a>
+                                @else
+                                    <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}" class="btn-task-action btn-task-action-secondary">
+                                        <span>Reviu & Detail</span>
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     @endforeach
-            </div>
-        @endif
+                </div>
+
+                <!-- Empty state untuk filter client-side jika tidak ada item yang cocok -->
+                <div id="task-filter-empty-state" style="display: none; text-align: center; padding: 2rem 1rem; color: var(--neutral-500);">
+                    <p style="font-size: 0.875rem; font-weight: 600; color: var(--neutral-700); margin: 0 0 4px 0;">Tidak ada tugas pada kategori filter ini.</p>
+                    <p style="font-size: 0.775rem; color: var(--neutral-500); margin: 0;">Silakan pilih filter "Semua" untuk melihat seluruh penugasan mentee.</p>
+                </div>
+            @else
+                <!-- Empty State Estetik Ala Dashboard Peserta Magang -->
+                <div style="text-align: center; padding: 3rem 1.5rem; color: var(--neutral-500);">
+                    <svg width="44" height="44" fill="none" stroke="#10b981" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 12px auto;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--neutral-900); margin: 0 0 4px 0;">Semua tugas mentee terkendali!</h4>
+                    <p style="font-size: 0.8125rem; color: var(--neutral-500); margin: 0 0 1rem 0;">Tidak ada penugasan yang terlambat atau laporan progres yang tertunda saat ini.</p>
+                    <a href="{{ route('pembimbing.tugas.create') }}" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1.15rem; background: #0641CC; color: #ffffff; border-radius: 8px; font-size: 0.8125rem; font-weight: 600; text-decoration: none; box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        + Berikan Tugas Baru
+                    </a>
+                </div>
+            @endif
+        </div>
 
         {{-- WIDGET AKTIVITAS MENTORING MINGGU INI (B11) --}}
         <div style="background: #ffffff; border: 1px solid var(--neutral-200); border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
@@ -1486,6 +1925,48 @@
             } else {
                 trs[i].style.display = "none";
             }
+        }
+    }
+
+    // Client-side quick filter untuk Kartu Tugas Pembimbing
+    function filterDashboardTasks(filterType, btnEl) {
+        document.querySelectorAll('.task-filter-btn').forEach(function(b) {
+            b.classList.remove('active');
+        });
+        if (btnEl) {
+            btnEl.classList.add('active');
+        }
+
+        var rows = document.querySelectorAll('.task-item-row');
+        var visibleCount = 0;
+
+        rows.forEach(function(row) {
+            var isUrgent = row.getAttribute('data-is-urgent') === '1';
+            var hasPending = row.getAttribute('data-has-pending') === '1';
+
+            if (filterType === 'semua') {
+                row.style.display = 'flex';
+                visibleCount++;
+            } else if (filterType === 'mendesak') {
+                if (isUrgent) {
+                    row.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            } else if (filterType === 'reviu') {
+                if (hasPending) {
+                    row.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+
+        var emptyBox = document.getElementById('task-filter-empty-state');
+        if (emptyBox) {
+            emptyBox.style.display = (visibleCount === 0) ? 'block' : 'none';
         }
     }
 

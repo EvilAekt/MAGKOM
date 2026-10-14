@@ -686,18 +686,18 @@
 
         <!-- Kolom Kiri 2: Preferensi -->
         <div class="settings-card">
-            <h2 class="card-title">Preferensi</h2>
+            <h2 class="card-title">{{ __('Preferensi') }}</h2>
 
             <form action="{{ route('peserta.pengaturan.preferensi.update') }}" method="POST">
                 @csrf
 
                 <!-- Pilihan Bahasa -->
                 <div class="pref-group">
-                    <label class="pref-label" for="bahasaSelect">Bahasa</label>
+                    <label class="pref-label" for="bahasaSelect">{{ __('Bahasa') }}</label>
                     <div class="language-select-wrapper">
                         <select name="bahasa" id="bahasaSelect" class="language-select-custom">
-                            <option value="id" {{ ($bahasaAktif ?? 'id') === 'id' ? 'selected' : '' }}>Indonesia</option>
-                            <option value="en" {{ ($bahasaAktif ?? '') === 'en' ? 'selected' : '' }}>English (US)</option>
+                            <option value="id" {{ ($bahasaAktif ?? 'id') === 'id' ? 'selected' : '' }}>{{ __('Indonesia') }}</option>
+                            <option value="en" {{ ($bahasaAktif ?? '') === 'en' ? 'selected' : '' }}>{{ __('English (US)') }}</option>
                         </select>
                         <div class="language-chevron-icon" aria-hidden="true">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -705,12 +705,12 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="form-hint" style="margin-bottom: 0;">Berlaku untuk tampilan portal ini.</div>
+                    <div class="form-hint" style="margin-bottom: 0;">{{ __('Berlaku untuk tampilan portal ini.') }}</div>
                 </div>
 
                 <!-- Pilihan Tampilan Tema -->
                 <div class="pref-group">
-                    <label class="pref-label">Tampilan</label>
+                    <label class="pref-label">{{ __('Tampilan') }}</label>
                     <div class="theme-options-grid">
                         <!-- Pilihan Terang -->
                         <label class="theme-card-option {{ ($temaAktif ?? 'terang') === 'terang' ? 'selected' : '' }}" 
@@ -722,8 +722,8 @@
                                 <span class="preview-bar"></span>
                             </div>
                             <div>
-                                <div class="theme-info-title">Terang</div>
-                                <div class="theme-info-desc">Mode default portal</div>
+                                <div class="theme-info-title">{{ __('Terang') }}</div>
+                                <div class="theme-info-desc">{{ __('Mode default portal') }}</div>
                             </div>
                         </label>
 
@@ -737,8 +737,8 @@
                                 <span class="preview-bar"></span>
                             </div>
                             <div>
-                                <div class="theme-info-title">Gelap</div>
-                                <div class="theme-info-desc">Mode malam untuk penggunaan lama</div>
+                                <div class="theme-info-title">{{ __('Gelap') }}</div>
+                                <div class="theme-info-desc">{{ __('Mode malam untuk penggunaan lama') }}</div>
                             </div>
                         </label>
 
@@ -752,14 +752,14 @@
                                 <span class="preview-bar"></span>
                             </div>
                             <div>
-                                <div class="theme-info-title">Ikuti sistem</div>
-                                <div class="theme-info-desc">Sesuaikan tema dengan pengaturan OS</div>
+                                <div class="theme-info-title">{{ __('Ikuti sistem') }}</div>
+                                <div class="theme-info-desc">{{ __('Sesuaikan tema dengan pengaturan OS') }}</div>
                             </div>
                         </label>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-primary-custom" style="margin-top: 8px;">Simpan preferensi</button>
+                <button type="submit" class="btn-primary-custom" style="margin-top: 8px;">{{ __('Simpan preferensi') }}</button>
             </form>
         </div>
     </div>
