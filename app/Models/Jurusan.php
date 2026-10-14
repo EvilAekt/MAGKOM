@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Jurusan extends Model
 {
@@ -23,6 +24,14 @@ class Jurusan extends Model
     protected $casts = [
         'aktif' => 'boolean',
     ];
+
+    /**
+     * Relasi ke Bidang yang menerima jurusan ini.
+     */
+    public function bidang(): BelongsToMany
+    {
+        return $this->belongsToMany(Bidang::class, 'bidang_jurusan', 'jurusan_id', 'bidang_id')->withTimestamps();
+    }
 
     /**
      * Scope jurusan yang aktif.

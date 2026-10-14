@@ -8,6 +8,9 @@
     <title>@yield('title', 'Portal MagKom - Autentikasi')</title>
     <meta name="description" content="@yield('meta_description', 'Portal Magang Resmi Dinas Komunikasi dan Informatika Kabupaten Sleman.')">
 
+    <!-- Favicon Resmi Sleman -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+
     <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -823,12 +826,9 @@
             <div class="auth-visual-overlay"></div>
             <div class="auth-visual-content">
                 <!-- Header Visual -->
-                <!-- Header Visual (Logo Tetap Asli) -->
+                <!-- Header Visual (Logo Resmi Sleman) -->
                 <div style="display: flex; align-items: center; gap: 0.875rem;">
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="40" height="40" rx="10" fill="#ffffff" fill-opacity="0.2"/>
-                        <path d="M12 28V12L20 20L28 12V28" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    <img src="{{ asset('images/logo-sleman.png') }}" alt="Lambang Kabupaten Sleman" style="width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25)); flex-shrink: 0;">
                     <div>
                         <div style="font-size: 1.125rem; font-weight: 800; letter-spacing: 0.05em; line-height: 1.2;">MAGKOM</div>
                         <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.85; letter-spacing: 0.02em;">DINAS KOMINFO SLEMAN</div>

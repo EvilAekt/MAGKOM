@@ -803,6 +803,18 @@
                                     <span class="card-jenjang-badge">SMK</span>
                                 </div>
                                 <h3 class="card-jurusan-title">{{ $jurusan->nama_jurusan }}</h3>
+                                @if($jurusan->bidang->isNotEmpty())
+                                    <div class="card-bidang-tags" style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                                        @foreach($jurusan->bidang as $bdg)
+                                            @php
+                                                $shortName = preg_match('/\((.*?)\)/', $bdg->nama_bidang, $m) ? $m[1] : (str_contains($bdg->nama_bidang, 'Sekretariat') ? 'Sekretariat' : $bdg->nama_bidang);
+                                            @endphp
+                                            <span style="font-size: 0.6875rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 9999px; background: var(--blue-tint); color: var(--blue-700); border: 1px solid var(--blue-tint-line);" title="Diterima di bidang {{ $bdg->nama_bidang }}">
+                                                {{ $shortName }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                @endif
                                 <p class="card-jurusan-desc">{{ $jurusan->deskripsi ?? 'Kompetensi keahlian kejuruan tingkat menengah' }}</p>
 
                                 <!-- Months list -->
@@ -888,6 +900,18 @@
                                     <span class="card-jenjang-badge">D3 · S1</span>
                                 </div>
                                 <h3 class="card-jurusan-title">{{ $jurusan->nama_jurusan }}</h3>
+                                @if($jurusan->bidang->isNotEmpty())
+                                    <div class="card-bidang-tags" style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                                        @foreach($jurusan->bidang as $bdg)
+                                            @php
+                                                $shortName = preg_match('/\((.*?)\)/', $bdg->nama_bidang, $m) ? $m[1] : (str_contains($bdg->nama_bidang, 'Sekretariat') ? 'Sekretariat' : $bdg->nama_bidang);
+                                            @endphp
+                                            <span style="font-size: 0.6875rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 9999px; background: var(--blue-tint); color: var(--blue-700); border: 1px solid var(--blue-tint-line);" title="Diterima di bidang {{ $bdg->nama_bidang }}">
+                                                {{ $shortName }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                @endif
                                 <p class="card-jurusan-desc">{{ $jurusan->deskripsi ?? 'Program studi perguruan tinggi (D3 / D4 / S1)' }}</p>
 
                                 <!-- Months list -->

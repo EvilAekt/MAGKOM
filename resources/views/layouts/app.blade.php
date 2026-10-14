@@ -15,6 +15,9 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:locale" content="id_ID">
 
+    <!-- Favicon Resmi Sleman -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+
     <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -263,19 +266,18 @@
             flex-shrink: 0;
         }
 
-        .brand-logo-icon {
-            width: 2.65rem;
-            height: 2.65rem;
-            background: var(--blue-600);
-            border-radius: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 1.35rem;
-            box-shadow: 0 2px 6px rgba(7, 81, 255, 0.25);
+        .brand-logo-img {
+            height: 2.75rem;
+            width: auto;
+            max-width: 2.75rem;
+            object-fit: contain;
             flex-shrink: 0;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+            transition: transform 0.2s ease;
+        }
+
+        .brand-link:hover .brand-logo-img {
+            transform: scale(1.05);
         }
 
         .brand-text h1 {
@@ -531,7 +533,7 @@
             <div class="nav-inner">
                 <!-- Brand: MagKom KOMINFO PORTAL -->
                 <a href="{{ route('landing') }}" class="brand-link" id="brand-link" title="MagKom Kominfo Sleman">
-                    <div class="brand-logo-icon">M</div>
+                    <img src="{{ asset('images/logo-sleman.png') }}" alt="Lambang Kabupaten Sleman" class="brand-logo-img">
                     <div class="brand-text">
                         <h1>MagKom</h1>
                         <p>KOMINFO PORTAL</p>

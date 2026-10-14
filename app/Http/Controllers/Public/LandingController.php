@@ -39,8 +39,9 @@ class LandingController extends Controller
             return $this->bulanStatusService->tampilDiLanding($bulan, $sekarang);
         })->values();
 
-        // Ambil jurusan aktif
-        $semuaJurusan = Jurusan::where('aktif', true)
+        // Ambil jurusan aktif beserta bidang penempatan
+        $semuaJurusan = Jurusan::with('bidang')
+            ->where('aktif', true)
             ->orderBy('kategori', 'asc')
             ->orderBy('nama_jurusan', 'asc')
             ->get();

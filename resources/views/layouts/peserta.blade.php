@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Portal Peserta') - MagKom Kominfo</title>
+    <!-- Favicon Resmi Sleman -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -595,15 +596,23 @@
             width: 40px;
             height: 40px;
             background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #FFFFFF;
-            font-weight: 800;
-            font-size: 1.125rem;
             flex-shrink: 0;
+            padding: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .brand-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
         }
 
         .brand-text {
@@ -1397,7 +1406,9 @@
     <aside class="sidebar" id="sidebarNav">
         <div class="sidebar-header">
             <a href="{{ route('peserta.dashboard') }}" class="brand-box">
-                <div class="brand-icon">M</div>
+                <div class="brand-icon">
+                    <img src="{{ asset('images/logo-sleman.png') }}" alt="Lambang Kabupaten Sleman" class="brand-logo-img">
+                </div>
                 <div class="brand-text">
                     <h2>MagKom</h2>
                     <span>Portal Peserta</span>

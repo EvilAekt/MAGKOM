@@ -8,6 +8,9 @@
     <title>@yield('title', 'Dashboard - Portal MagKom Sleman')</title>
     <meta name="description" content="@yield('meta_description', 'Dashboard Resmi Portal Magang Dinas Komunikasi dan Informatika Kabupaten Sleman.')">
 
+    <!-- Favicon Resmi Sleman -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+
     <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -567,13 +570,23 @@
             width: 40px;
             height: 40px;
             background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #FFFFFF;
             flex-shrink: 0;
+            padding: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .sidebar-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
         }
 
         .sidebar-brand-text {
@@ -1593,9 +1606,7 @@
                 <!-- Header Brand Sleman -->
                 <div class="sidebar-header">
                     <div class="sidebar-brand-emblem">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                        </svg>
+                        <img src="{{ asset('images/logo-sleman.png') }}" alt="Lambang Kabupaten Sleman" class="sidebar-logo-img">
                     </div>
                     <div class="sidebar-brand-text">
                         <span class="sidebar-brand-title">MagKom</span>
