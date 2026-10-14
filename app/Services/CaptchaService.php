@@ -102,7 +102,7 @@ class CaptchaService
             $color = $textColors[array_rand($textColors)];
 
             $elements[] = sprintf(
-                '<text x="%d" y="%d" fill="%s" font-family="monospace, \'Courier New\', Courier, sans-serif" font-size="%d" font-weight="bold" letter-spacing="2" transform="rotate(%d, %d, %d)" text-anchor="middle" dominant-baseline="central">%s</text>',
+                '<text x="%d" y="%d" fill="%s" font-family="ui-monospace, Consolas, \'Liberation Mono\', monospace, sans-serif" font-size="%d" font-weight="bold" letter-spacing="2" transform="rotate(%d, %d, %d)" text-anchor="middle" dominant-baseline="central">%s</text>',
                 $x, $y, $color, $fontSize, $angle, $x, $y, $char
             );
         }

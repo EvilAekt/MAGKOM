@@ -1712,6 +1712,7 @@
                     alert(msg);
                 }
             }
+        }
     }
 
     // Close on backdrop click & ESC key

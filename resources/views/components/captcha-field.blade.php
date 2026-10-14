@@ -47,11 +47,10 @@
                 name="captcha" 
                 maxlength="4" 
                 required 
-                class="form-input @error('captcha') form-input-error @enderror" 
+                class="form-input captcha-input @error('captcha') form-input-error @enderror" 
                 placeholder="4 digit kode di atas"
                 autocomplete="off"
                 aria-label="Kode Verifikasi Keamanan 4 Karakter"
-                style="font-family: monospace, 'Courier New', Courier, sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase;"
             >
         </div>
         <span class="form-hint" style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem; display: block;">
@@ -60,6 +59,22 @@
     </div>
 
     <style>
+        .captcha-input {
+            font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace !important;
+            font-size: 1.125rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.2em !important;
+            text-transform: uppercase !important;
+        }
+        .captcha-input::placeholder {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            font-size: 0.875rem !important;
+            font-weight: 400 !important;
+            letter-spacing: normal !important;
+            text-transform: none !important;
+            color: var(--neutral-400) !important;
+            opacity: 1;
+        }
         .btn-refresh-captcha:hover {
             background-color: var(--neutral-100);
             color: var(--blue-600);
@@ -74,6 +89,9 @@
         }
 
         /* Dark mode overrides for Captcha Component */
+        [data-theme="dark"] .captcha-input::placeholder {
+            color: #64748B !important;
+        }
         [data-theme="dark"] .btn-refresh-captcha {
             background-color: var(--neutral-100, #0F172A) !important;
             border-color: var(--neutral-200, #26354D) !important;
