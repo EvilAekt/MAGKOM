@@ -168,6 +168,18 @@
         box-shadow: 0 1px 3px rgba(217, 119, 6, 0.08);
     }
 
+    .attention-title {
+        color: #92400E;
+        font-size: 14px;
+        font-weight: var(--fw-bold);
+    }
+
+    .attention-desc {
+        color: #78350F;
+        font-size: 13px;
+        margin-left: 4px;
+    }
+
     .btn-attention-action {
         display: inline-flex;
         align-items: center;
@@ -522,6 +534,66 @@
         border: 1px solid rgba(7, 81, 255, 0.18);
     }
 
+    /* Progress Fills Base */
+    .progress-fill-blue { background: var(--blue-600); }
+    .progress-fill-green { background: var(--green-600); }
+    .progress-fill-amber { background: #D97706; }
+    .progress-fill-purple { background: #7E22CE; }
+
+    /* Completion Card (Fase 4 - Selesai Magang) */
+    .completion-card {
+        background: #FAFDFB;
+        border: 2px solid var(--green-600);
+        border-radius: var(--radius-md);
+        padding: 32px;
+        box-shadow: 0 4px 14px rgba(22, 163, 74, 0.08);
+    }
+
+    .completion-grade-box {
+        text-align: right;
+        background: var(--neutral-0);
+        border: 1px solid var(--neutral-300);
+        border-radius: var(--radius-md);
+        padding: 16px 24px;
+    }
+
+    .completion-grade-score {
+        font-size: 36px;
+        font-weight: 800;
+        color: var(--green-700);
+        line-height: 1.1;
+    }
+
+    .completion-notes-box {
+        margin-top: 20px;
+        padding: 16px;
+        background: var(--neutral-0);
+        border: 1px solid var(--neutral-200);
+        border-left: 4px solid var(--green-600);
+        border-radius: var(--radius-default);
+    }
+
+    /* Empty State Base */
+    .dashboard-empty-state {
+        text-align: center;
+        padding: 36px 16px;
+        color: var(--neutral-500);
+        margin: auto 0;
+    }
+
+    .dashboard-empty-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--neutral-800);
+        margin: 0 0 4px 0;
+    }
+
+    .dashboard-empty-subtext {
+        font-size: 12px;
+        color: var(--neutral-500);
+        margin: 0;
+    }
+
     /* Responsive */
     @media (max-width: 1024px) {
         .kpi-unified-card { grid-template-columns: repeat(2, 1fr); }
@@ -539,7 +611,20 @@
         .kpi-unified-item:not(:last-child) { border-bottom: 1px solid var(--neutral-200); }
     }
 
-    /* Dark Mode Harmonization ala Menu Tugas */
+    /* Dark Mode Harmonization */
+    [data-theme="dark"] .dashboard-hero {
+        background: linear-gradient(95deg, rgba(15, 23, 42, 0.94) 0%, rgba(30, 58, 138, 0.88) 50%, rgba(6, 65, 204, 0.45) 100%),
+                    url('{{ asset('images/dashboard_hero_bg.jpg') }}') right center / cover no-repeat;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+
+    [data-theme="dark"] .hero-role-pill {
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        color: #ffffff;
+    }
+
     [data-theme="dark"] .kpi-unified-card {
         background: #182234;
         border-color: #26354D;
@@ -594,6 +679,23 @@
         color: #C084FC;
     }
 
+    /* Progress Fills in Dark Mode */
+    [data-theme="dark"] .progress-fill-blue {
+        background: #3B82F6 !important;
+    }
+
+    [data-theme="dark"] .progress-fill-green {
+        background: #10B981 !important;
+    }
+
+    [data-theme="dark"] .progress-fill-amber {
+        background: #F59E0B !important;
+    }
+
+    [data-theme="dark"] .progress-fill-purple {
+        background: #A855F7 !important;
+    }
+
     [data-theme="dark"] .onboarding-card {
         background: #182234;
         border-color: #26354D;
@@ -614,6 +716,50 @@
     [data-theme="dark"] .step-item.active {
         background: rgba(30, 58, 138, 0.25);
         border-color: rgba(96, 165, 250, 0.4);
+    }
+
+    [data-theme="dark"] .step-title {
+        color: #F8FAFC;
+    }
+
+    [data-theme="dark"] .step-desc {
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .step-item.active .step-title {
+        color: #93C5FD;
+    }
+
+    [data-theme="dark"] .step-item.active .step-desc {
+        color: #CBD5E1;
+    }
+
+    [data-theme="dark"] .step-item.completed .step-title {
+        color: #6EE7B7;
+    }
+
+    [data-theme="dark"] .step-item.completed .step-desc {
+        color: #CBD5E1;
+    }
+
+    /* Phase Selection Tracker (Fase 2) */
+    [data-theme="dark"] .status-tracker-card {
+        background: #182234;
+        border-color: #26354D;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    [data-theme="dark"] .info-strip {
+        background: #0F172A;
+        border: 1px solid #26354D;
+    }
+
+    [data-theme="dark"] .info-strip-item span {
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .info-strip-item strong {
+        color: #F8FAFC;
     }
 
     [data-theme="dark"] .list-card {
@@ -652,6 +798,18 @@
         color: #CBD5E1;
     }
 
+    [data-theme="dark"] .deadline-pill.is-urgent {
+        background: rgba(239, 68, 68, 0.2);
+        color: #F87171;
+        border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    [data-theme="dark"] .deadline-pill.is-warning {
+        background: rgba(245, 158, 11, 0.2);
+        color: #FBBF24;
+        border-color: rgba(245, 158, 11, 0.4);
+    }
+
     [data-theme="dark"] .week-mini-badge {
         background: rgba(6, 65, 204, 0.35);
         border-color: rgba(7, 81, 255, 0.4);
@@ -662,14 +820,30 @@
         background: rgba(120, 53, 15, 0.35);
         border-color: rgba(245, 158, 11, 0.4);
         border-left-color: #F59E0B;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     }
 
-    [data-theme="dark"] .attention-banner strong {
+    [data-theme="dark"] .attention-title {
         color: #FCD34D !important;
     }
 
-    [data-theme="dark"] .attention-banner span {
+    [data-theme="dark"] .attention-desc {
         color: #FEF3C7 !important;
+    }
+
+    [data-theme="dark"] .attention-desc strong {
+        color: #FDE68A !important;
+    }
+
+    [data-theme="dark"] .btn-attention-action {
+        background: #D97706;
+        color: #ffffff;
+        box-shadow: 0 2px 10px rgba(217, 119, 6, 0.35);
+    }
+
+    [data-theme="dark"] .btn-attention-action:hover {
+        background: #B45309;
+        color: #ffffff;
     }
 
     [data-theme="dark"] .quick-action-btn {
@@ -682,6 +856,36 @@
         background: #1E293B;
         border-color: #3B82F6;
         color: #60A5FA;
+    }
+
+    [data-theme="dark"] .dashboard-empty-title {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .dashboard-empty-subtext {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .completion-card {
+        background: rgba(6, 78, 59, 0.2) !important;
+        border-color: rgba(52, 211, 153, 0.45) !important;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    [data-theme="dark"] .completion-grade-box {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    [data-theme="dark"] .completion-grade-score {
+        color: #34D399 !important;
+    }
+
+    [data-theme="dark"] .completion-notes-box {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        border-left-color: #34D399 !important;
     }
 </style>
 @endpush
@@ -739,8 +943,8 @@
             <div style="display: flex; align-items: center; gap: 12px;">
                 <span style="font-size: 20px; line-height: 1;">⚠️</span>
                 <div>
-                    <strong style="color: #92400E; font-size: 14px;">Tindak Lanjut Diperlukan:</strong>
-                    <span style="color: #78350F; font-size: 13px; margin-left: 4px;">
+                    <strong class="attention-title">Tindak Lanjut Diperlukan:</strong>
+                    <span class="attention-desc">
                         Terdapat <strong>{{ $logbookPerluRevisi }}</strong> laporan logbook mingguan yang memerlukan perbaikan dari pembimbing lapangan.
                     </span>
                 </div>
@@ -956,7 +1160,7 @@
                 <span class="kpi-label">Tugas Selesai</span>
                 <span class="kpi-value">{{ $tugasSelesai }} / {{ $totalTugas }}</span>
                 <div class="micro-progress-bar">
-                    <div class="micro-progress-fill" style="width: {{ $persenTugas }}%; background: var(--blue-600);"></div>
+                    <div class="micro-progress-fill progress-fill-blue" style="width: {{ $persenTugas }}%;"></div>
                 </div>
                 <span class="kpi-subtext">{{ $persenTugas }}% tuntas &bull; {{ $tugasBelum }} dalam proses</span>
             </div>
@@ -972,7 +1176,7 @@
                 <span class="kpi-label">Logbook Mingguan</span>
                 <span class="kpi-value">{{ $totalLogbook }} Laporan</span>
                 <div class="micro-progress-bar">
-                    <div class="micro-progress-fill" style="width: 100%; background: var(--green-600);"></div>
+                    <div class="micro-progress-fill progress-fill-green" style="width: 100%;"></div>
                 </div>
                 <span class="kpi-subtext">
                     @if($logbookPerluRevisi > 0)
@@ -994,7 +1198,7 @@
                 <span class="kpi-label">Sisa Hari Magang</span>
                 <span class="kpi-value">{{ $sisaHari !== null ? $sisaHari . ' Hari' : '-' }}</span>
                 <div class="micro-progress-bar">
-                    <div class="micro-progress-fill" style="width: {{ $persenHariMagang }}%; background: #D97706;"></div>
+                    <div class="micro-progress-fill progress-fill-amber" style="width: {{ $persenHariMagang }}%;"></div>
                 </div>
                 <span class="kpi-subtext">Hari ke-{{ $hariBerjalan }} dari {{ $totalHariMagang }} ({{ $persenHariMagang }}%)</span>
             </div>
@@ -1012,7 +1216,7 @@
                     {{ $isFinalNilai ? ($penilaian->predikat ?? 'A') . ' (' . number_format($penilaian->nilai_akhir, 1) . ')' : 'Dalam Proses' }}
                 </span>
                 <div class="micro-progress-bar">
-                    <div class="micro-progress-fill" style="width: {{ $isFinalNilai ? 100 : 50 }}%; background: #7E22CE;"></div>
+                    <div class="micro-progress-fill progress-fill-purple" style="width: {{ $isFinalNilai ? 100 : 50 }}%;"></div>
                 </div>
                 <span class="kpi-subtext">{{ $isFinalNilai ? 'Nilai final resmi' : '5 rubrik pembimbing' }}</span>
             </div>
@@ -1065,12 +1269,12 @@
                     </div>
                 @endforeach
             @else
-                <div style="text-align: center; padding: 36px 16px; color: var(--neutral-500); margin: auto 0;">
+                <div class="dashboard-empty-state">
                     <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 12px auto; color: var(--green-600);">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <p style="font-size: 14px; font-weight: 700; color: var(--neutral-800); margin: 0 0 4px 0;">Semua tugas selesai!</p>
-                    <p style="font-size: 12px; margin: 0;">Tidak ada tugas yang menunggu pengerjaan saat ini.</p>
+                    <p class="dashboard-empty-title">Semua tugas selesai!</p>
+                    <p class="dashboard-empty-subtext">Tidak ada tugas yang menunggu pengerjaan saat ini.</p>
                 </div>
             @endif
         </div>
@@ -1114,12 +1318,12 @@
                     </div>
                 @endforeach
             @else
-                <div style="text-align: center; padding: 36px 16px; color: var(--neutral-500); margin: auto 0;">
+                <div class="dashboard-empty-state">
                     <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 12px auto; color: var(--neutral-400);">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    <p style="font-size: 14px; font-weight: 700; color: var(--neutral-800); margin: 0 0 4px 0;">Belum ada catatan logbook mingguan</p>
-                    <p style="font-size: 12px; margin: 0;">Catat aktivitas mingguan magang Anda secara rutin.</p>
+                    <p class="dashboard-empty-title">Belum ada catatan logbook mingguan</p>
+                    <p class="dashboard-empty-subtext">Catat aktivitas mingguan magang Anda secara rutin.</p>
                 </div>
             @endif
         </div>
@@ -1128,7 +1332,7 @@
 
 {{-- FASE 4: SELESAI MAGANG (Pasca Penilaian / Kelulusan) --}}
 @if($fase === 'selesai' && $penempatan)
-    <div class="card" style="border: 2px solid var(--green-600); background: #FAFDFB; padding: 32px;">
+    <div class="completion-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;">
             <div>
                 <span class="badge badge-success" style="font-size: 14px; padding: 6px 16px; margin-bottom: 12px;">
@@ -1143,9 +1347,9 @@
             </div>
 
             @if($isFinalNilai)
-                <div style="text-align: right; background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: var(--radius-md); padding: 16px 24px;">
+                <div class="completion-grade-box">
                     <span style="font-size: 12px; font-weight: 600; color: var(--neutral-500); text-transform: uppercase;">Predikat Kelulusan</span>
-                    <div style="font-size: 36px; font-weight: 800; color: var(--green-700); line-height: 1.1;">
+                    <div class="completion-grade-score">
                         {{ $penilaian->predikat ?? 'A' }}
                     </div>
                     <span style="font-size: 13px; color: var(--neutral-600);">Skor: {{ number_format($penilaian->nilai_akhir, 2) }} / 100</span>
@@ -1154,7 +1358,7 @@
         </div>
 
         @if($isFinalNilai && $penilaian->catatan)
-            <div style="margin-top: 20px; padding: 16px; background: var(--neutral-0); border-left: 4px solid var(--green-600); border-radius: var(--radius-default);">
+            <div class="completion-notes-box">
                 <strong style="font-size: 13px; color: var(--neutral-700); display: block; margin-bottom: 4px;">Catatan & Evaluasi Pembimbing:</strong>
                 <p style="font-size: 14px; color: var(--neutral-800); font-style: italic;">"{{ $penilaian->catatan }}"</p>
             </div>

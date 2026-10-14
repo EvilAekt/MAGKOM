@@ -332,6 +332,12 @@
             color: #FCA5A5 !important;
         }
 
+        [data-theme="dark"] .alert-warning {
+            background-color: rgba(120, 53, 15, 0.35) !important;
+            border-color: rgba(245, 158, 11, 0.4) !important;
+            color: #FCD34D !important;
+        }
+
         [data-theme="dark"] .alert-info {
             background-color: rgba(30, 58, 138, 0.35) !important;
             border-color: rgba(96, 165, 250, 0.4) !important;
@@ -928,48 +934,204 @@
             margin: 0 auto;
         }
 
-        /* Flash Messages */
-        .alert {
-            padding: 14px 18px;
-            border-radius: var(--radius-default);
-            margin-bottom: 24px;
+        /* ========================================================
+           MODERN TOAST NOTIFICATION COMPONENT (Mint Circular Badge)
+           ======================================================== */
+        .app-toast {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
+            gap: 14px;
+            padding: 14px 18px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+            margin-bottom: 24px;
+            position: relative;
+            transition: all 0.25s ease;
+        }
+
+        .toast-icon-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-icon-badge.success {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        .toast-icon-badge.error {
+            background: #FEF2F2;
+            color: #EF4444;
+        }
+
+        .toast-icon-badge.warning {
+            background: #FFFBEB;
+            color: #F59E0B;
+        }
+
+        .toast-icon-badge.info {
+            background: #EFF6FF;
+            color: #3B82F6;
+        }
+
+        .toast-content {
+            flex: 1;
+            min-width: 0;
+            padding-top: 1px;
+        }
+
+        .toast-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: #0F172A;
+            line-height: 1.35;
+            margin-bottom: 2px;
+        }
+
+        .toast-desc {
+            font-size: 0.84375rem;
+            font-weight: 400;
+            color: #64748B;
+            line-height: 1.45;
+        }
+
+        .toast-desc ul {
+            margin: 4px 0 0 16px;
+            padding: 0;
+        }
+
+        .toast-close-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #94A3B8;
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+        }
+
+        .toast-close-btn:hover {
+            color: #475569;
+            background: #F1F5F9;
+        }
+
+        /* Backward Compatibility for .alert class */
+        .alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06);
+            margin-bottom: 24px;
             font-size: var(--text-base);
-            font-weight: var(--fw-normal);
             line-height: 1.5;
         }
 
-        .alert-success {
-            background: var(--green-100);
-            border: 1px solid var(--green-600);
-            color: var(--green-700);
+        /* Dark Theme Support for Toasts */
+        [data-theme="dark"] .app-toast,
+        [data-theme="dark"] .alert {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
         }
 
-        .alert-error {
-            background: var(--red-100);
-            border: 1px solid var(--red-600);
-            color: var(--red-700);
+        [data-theme="dark"] .toast-title {
+            color: #F8FAFC !important;
         }
 
-        .alert-warning {
-            background: var(--amber-100);
-            border: 1px solid var(--amber-300);
-            color: var(--amber-700);
+        [data-theme="dark"] .toast-desc {
+            color: #94A3B8 !important;
         }
 
-        .alert-info {
-            background: var(--blue-tint);
-            border: 1px solid var(--blue-tint-line);
-            color: var(--blue-700);
+        [data-theme="dark"] .toast-icon-badge.success {
+            background: rgba(16, 185, 129, 0.18) !important;
+            color: #34D399 !important;
         }
 
-        .alert svg {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
-            margin-top: 1px;
+        [data-theme="dark"] .toast-icon-badge.error {
+            background: rgba(239, 68, 68, 0.18) !important;
+            color: #F87171 !important;
+        }
+
+        [data-theme="dark"] .toast-icon-badge.warning {
+            background: rgba(245, 158, 11, 0.18) !important;
+            color: #FBBF24 !important;
+        }
+
+        [data-theme="dark"] .toast-icon-badge.info {
+            background: rgba(59, 130, 246, 0.18) !important;
+            color: #60A5FA !important;
+        }
+
+        /* Floating Top-Right Toast Container & Animations */
+        .toast-floating-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 420px;
+            width: calc(100vw - 48px);
+            pointer-events: none;
+        }
+
+        .toast-floating-container .app-toast {
+            pointer-events: auto;
+            margin-bottom: 0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+            animation: toastSlideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .toast-floating-container .app-toast.toast-hiding {
+            animation: toastSlideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes toastSlideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        @keyframes toastSlideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(50px) scale(0.96);
+            }
+        }
+
+        [data-theme="dark"] .toast-close-btn {
+            color: #64748B !important;
+        }
+
+        [data-theme="dark"] .toast-close-btn:hover {
+            color: #CBD5E1 !important;
+            background: #1E293B !important;
         }
 
         /* Common Components */
@@ -1364,39 +1526,133 @@
         </header>
 
         <main class="content-area">
-            {{-- Flash Messages --}}
-            @if(session('success'))
-                <div class="alert alert-success" role="alert">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <div>{{ session('success') }}</div>
-                </div>
-            @endif
+            {{-- Floating Flash Messages (Top-Right Pop Up) --}}
+            <div class="toast-floating-container" id="toastFloatingContainer" aria-live="polite" aria-atomic="true">
+                @if(session('success'))
+                    @php
+                        $isSettingOrProfile = request()->routeIs('*.profil.*') || request()->routeIs('*.pengaturan.*');
+                        $toastTitle = session('success_title') ?? ($isSettingOrProfile ? 'Pengaturan tersimpan' : 'Perubahan Berhasil Disimpan');
+                    @endphp
+                    <div class="app-toast alert-success" role="alert">
+                        <div class="toast-icon-badge success">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        </div>
+                        <div class="toast-content">
+                            <div class="toast-title">{{ $toastTitle }}</div>
+                            <div class="toast-desc">{{ session('success') }}</div>
+                        </div>
+                        <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                @endif
 
-            @if(session('error'))
-                <div class="alert alert-error" role="alert">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <div>{{ session('error') }}</div>
-                </div>
-            @endif
+                @if(session('error'))
+                    <div class="app-toast alert-error" role="alert">
+                        <div class="toast-icon-badge error">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="15" y1="9" x2="9" y2="15"></line>
+                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                            </svg>
+                        </div>
+                        <div class="toast-content">
+                            <div class="toast-title">Terjadi Kesalahan</div>
+                            <div class="toast-desc">{{ session('error') }}</div>
+                        </div>
+                        <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                @endif
 
-            @if(session('warning'))
-                <div class="alert alert-warning" role="alert">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                    </svg>
-                    <div>{{ session('warning') }}</div>
-                </div>
-            @endif
+                @if(session('warning'))
+                    <div class="app-toast alert-warning" role="alert">
+                        <div class="toast-icon-badge warning">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <div class="toast-content">
+                            <div class="toast-title">Perhatian</div>
+                            <div class="toast-desc">{{ session('warning') }}</div>
+                        </div>
+                        <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                @endif
+
+                @if(isset($errors) && $errors->any())
+                    <div class="app-toast alert-error" role="alert">
+                        <div class="toast-icon-badge error">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <div class="toast-content">
+                            <div class="toast-title">Periksa Kembali Isian Formulir</div>
+                            <div class="toast-desc">
+                                <ul>
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                @endif
+            </div>
 
             @yield('content')
         </main>
     </div>
 
     <script>
+        function dismissToast(btn) {
+            const toast = btn.closest('.app-toast');
+            if (!toast) return;
+            toast.classList.add('toast-hiding');
+            setTimeout(() => toast.remove(), 300);
+        }
+
+        // Auto dismiss toast after 5s with pause on hover
+        document.addEventListener('DOMContentLoaded', function() {
+            const toasts = document.querySelectorAll('.toast-floating-container .app-toast');
+            toasts.forEach(toast => {
+                let timer = setTimeout(() => {
+                    toast.classList.add('toast-hiding');
+                    setTimeout(() => toast.remove(), 300);
+                }, 5000);
+
+                toast.addEventListener('mouseenter', () => clearTimeout(timer));
+                toast.addEventListener('mouseleave', () => {
+                    timer = setTimeout(() => {
+                        toast.classList.add('toast-hiding');
+                        setTimeout(() => toast.remove(), 300);
+                    }, 3000);
+                });
+            });
+        });
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebarNav');
             const backdrop = document.getElementById('drawerBackdrop');

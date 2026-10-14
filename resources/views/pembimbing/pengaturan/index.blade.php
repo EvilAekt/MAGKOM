@@ -5,30 +5,7 @@
 @section('content')
 <div class="settings-page">
 
-    {{-- Notification Alerts --}}
-    @if(session('success'))
-        <div class="alert-banner alert-success" role="alert">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <div>
-                <div class="alert-title">Berhasil Memperbarui</div>
-                <div class="alert-desc">{{ session('success') }}</div>
-            </div>
-        </div>
-    @endif
 
-    @if(session('error'))
-        <div class="alert-banner alert-danger" role="alert">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <div>
-                <div class="alert-title">Terjadi Kesalahan</div>
-                <div class="alert-desc">{{ session('error') }}</div>
-            </div>
-        </div>
-    @endif
 
     @if($errors->any())
         <div class="alert-banner alert-danger" role="alert">

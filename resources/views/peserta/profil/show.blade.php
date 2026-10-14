@@ -629,15 +629,7 @@
 @section('content')
 <div class="profile-page-wrapper">
 
-    {{-- Alert Flash Message --}}
-    @if(session('success'))
-        <div style="background: #F0FDF4; border: 1px solid #86EFAC; border-radius: 12px; padding: 14px 18px; color: #166534; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>{{ session('success') }}</span>
-        </div>
-    @endif
+
 
     {{-- Clean Page Header --}}
     <div class="profile-header-clean">
