@@ -1385,6 +1385,7 @@
                             <span>Laporan & Ekspor</span>
                         </a>
 
+                        @if(\App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true))
                         <a href="{{ route('admin.sertifikat.index') }}" class="nav-item-link {{ request()->routeIs('admin.sertifikat.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1394,7 +1395,9 @@
                             </span>
                             <span>Sertifikat</span>
                         </a>
+                        @endif
 
+                        @if(\App\Support\Pengaturan::bool('fitur_survei_aktif', true))
                         <a href="{{ route('admin.survei.index') }}" class="nav-item-link {{ request()->routeIs('admin.survei.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1403,6 +1406,7 @@
                             </span>
                             <span>Survei Kepuasan</span>
                         </a>
+                        @endif
 
                         <span class="nav-section-label">PENGATURAN</span>
 
@@ -1469,8 +1473,12 @@
                                 <a href="{{ route('admin.waiting-list.index') }}" class="nav-sub-item {{ request()->routeIs('admin.waiting-list.*') ? 'active' : '' }}">Waiting List</a>
                                 <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">Penempatan</a>
                                 <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">Laporan & Ekspor</a>
+                                @if(\App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true))
                                 <a href="{{ route('admin.sertifikat.index') }}" class="nav-sub-item {{ request()->routeIs('admin.sertifikat.*') ? 'active' : '' }}">Sertifikat</a>
+                                @endif
+                                @if(\App\Support\Pengaturan::bool('fitur_survei_aktif', true))
                                 <a href="{{ route('admin.survei.index') }}" class="nav-sub-item {{ request()->routeIs('admin.survei.*') ? 'active' : '' }}">Survei Kepuasan</a>
+                                @endif
                             </div>
                         </div>
 
@@ -1998,5 +2006,6 @@
 
     @yield('scripts')
     @stack('scripts')
+    <x-sse-toast-listener />
 </body>
 </html>

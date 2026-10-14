@@ -253,12 +253,12 @@ Aturan di bab ini adalah rujukan utama. Contoh tanggal memakai zona waktu WIB (`
 | **BR-06** | **Waiting List:** masuk lewat keputusan Admin saat kuota umum habis (berkas tetap diverifikasi dulu), diurutkan berdasar waktu diajukan. Kenaikan ke Diterima dilakukan manual oleh Admin. Sisa antrean ditutup massal oleh Admin saat bulan dimulai (status Ditolak dengan catatan otomatis). Slot khusus tidak memiliki Waiting List |
 | **BR-07** | **Pembatalan dan pengunduran diri.** Aksi dilakukan Admin atau SuperAdmin pada peserta yang sudah Diterima. *Sebelum tanggal mulai* (pembatalan): pendaftaran menjadi `dibatalkan`, penempatan menjadi `mengundurkan_diri`, kuota dikembalikan, akun peserta tetap aktif sehingga peserta dapat mendaftar bulan lain. *Sejak tanggal mulai* (pengunduran diri): penempatan menjadi `mengundurkan_diri`, pendaftaran tetap `diterima`, kuota **tidak** dikembalikan, dan akun peserta dinonaktifkan (A-17) `[Klarifikasi]` |
 | **BR-08** | Durasi magang 1 sampai 6 bulan dipilih peserta. **Tanggal mulai** = tanggal 1 pada bulan mulai. **Tanggal selesai** = hari terakhir pada bulan ke-N (inklusif). Contoh: bulan mulai Januari 2027, durasi 3 bulan, maka 1 Januari 2027 sampai 31 Maret 2027 (A-14, OQ-10) `[Klarifikasi]` |
-| **BR-09** | **Logbook:** hanya dapat diisi bila peserta punya penempatan aktif; tanggal dalam rentang magang dan tidak di masa depan; isi mundur dibatasi (default 3 hari, yaitu tanggal ≥ hari ini dikurangi 3; dapat diubah di pengaturan); satu entri per penempatan per tanggal; tanpa pembatasan hari kerja atau libur (A-19). Peserta dapat mengedit entri miliknya selama penempatan aktif bila entri masih dalam batas mundur atau berstatus `perlu_revisi`. Baca-saja setelah penempatan Selesai. Tidak ada approval wajib per entri: Pembimbing dapat menandai "perlu revisi" dengan catatan |
+| **BR-09** | **Logbook:** hanya dapat diisi bila peserta punya penempatan aktif; berformat mingguan (`minggu_ke`) sesuai konsensus operasional lapangan; tanggal dalam rentang magang dan tidak di masa depan; isi mundur dibatasi (default 3 hari mundur; dapat diubah di pengaturan); satu entri ringkasan per minggu per penempatan. Peserta dapat mengedit entri miliknya selama penempatan aktif bila entri masih dalam batas mundur atau berstatus `perlu_revisi`. Baca-saja setelah penempatan Selesai. Tidak ada approval wajib per entri: Pembimbing dapat menandai "perlu revisi" dengan catatan `[Klarifikasi PO]` |
 | **BR-10** | **Penilaian** sepenuhnya oleh Pembimbing; SuperAdmin hanya melihat. Nilai **dapat diubah**; setiap perubahan wajib disertai alasan dan dicatat (nilai lama dan baru). Status `draft`/`final` hanya penanda bahwa nilai sudah tampil ke peserta. Bobot rubrik disimpan sebagai snapshot di setiap penilaian. **Penetapan Selesai mensyaratkan penilaian berstatus final** `[Klarifikasi]`. Lembar Nilai dibuat saat diunduh dari data terbaru |
 | **BR-11** | **Masa tenggang:** setelah Pembimbing menetapkan Selesai, akun peserta baca-saja selama masa tenggang (default 1 bulan, dapat diubah SuperAdmin), lalu dinonaktifkan otomatis. `tgl_nonaktif` = tanggal ditetapkan selesai + masa tenggang, dihitung saat penetapan; mengubah pengaturan tidak memengaruhi yang sudah dihitung. Data tidak dihapus; SuperAdmin mengakses arsip baca-saja |
 | **BR-12** | **Penonaktifan master data:** jurusan, bulan, atau kuota yang masih memiliki pendaftaran atau penempatan aktif tidak dapat dinonaktifkan. Pembimbing tidak dapat dinonaktifkan sebelum penempatan aktifnya dipindahkan; sistem menolak bila ia satu-satunya Pembimbing aktif |
-| **BR-13** | **Beban Pembimbing:** saat menerima peserta atau memindahkan penempatan, sistem memeriksa jumlah penempatan aktif terhadap `maks_peserta_aktif_per_pembimbing` di pengaturan. Bila nilainya belum diisi (null), tidak ada batas (OQ-01) |
-| **BR-14** | **Tanpa notifikasi.** Peserta mengetahui status lewat dashboard (status, catatan Admin, timeline). Satu-satunya email: verifikasi email dan reset password |
+| **BR-13** | **Beban Pembimbing:** saat menerima peserta atau memindahkan penempatan, sistem memeriksa jumlah penempatan aktif terhadap `maks_peserta_aktif_per_pembimbing` di pengaturan (default: 20 peserta aktif, fleksibel dapat disesuaikan SuperAdmin). Bila nilainya dikosongkan (null), tidak ada batas `[Klarifikasi PO, OQ-01]` |
+| **BR-14** | **Notifikasi dan Saluran Informasi.** Peserta memantau status secara mandiri lewat dashboard (status berkas, catatan verifikator, timeline tahapan). Notifikasi realtime Server-Sent Events (SSE) `/realtime/stream` disediakan sebagai inovasi UI/UX interaktif portal. Pengiriman email transaksi dibatasi untuk verifikasi registrasi dan pemulihan password (di bypass saat SMTP belum terpasang) `[Klarifikasi PO]` |
 | **BR-15** | Akun staf dibuat SuperAdmin dengan `must_change_password`: staf wajib mengganti password saat login pertama. Hal yang sama berlaku untuk akun peserta jalur khusus yang dibuat manual `[Usulan]`. Password tidak pernah disimpan atau dicatat dalam bentuk asli |
 | **BR-16** | Status Terlambat pada tugas **dihitung saat dibaca** (deadline sudah lewat dan status belum Selesai), bukan disimpan atau dijadwalkan. Penanda "mendekati deadline" muncul bila sisa waktu ≤ 3 hari (`deadline_mendekati_hari`) |
 | **BR-17** | Peserta hanya boleh memiliki **satu pendaftaran aktif** pada satu waktu (status `berkas_belum_lengkap`, `diajukan`, `perlu_perbaikan`, `waiting_list`, atau `diterima` dengan penempatan belum selesai). Mencegah peserta menempati dua kuota sekaligus `[Usulan]` (A-15) |
@@ -712,11 +712,14 @@ Skala nilai akhir 0 sampai 100:
 | `masa_tenggang_bulan` | bilangan bulat ≥ 0 | 1 | BR-11 |
 | `kuota_umum_maks_per_bulan` | bilangan bulat ≥ 0 | 12 | BR-01 |
 | `slot_khusus_default` | bilangan bulat ≥ 0 | 3 | Nilai awal formulir slot (BR-02) |
-| `maks_peserta_aktif_per_pembimbing` | bilangan bulat atau null | null (tanpa batas) | BR-13; OQ-01 |
+| `maks_peserta_aktif_per_pembimbing` | bilangan bulat atau null | 20 | Default 20 mentee aktif; fleksibel dapat diubah SuperAdmin (BR-13; OQ-01) |
 | `logbook_maks_mundur_hari` | bilangan bulat ≥ 0 | 3 | BR-09 |
 | `berkas_maks_mb` | bilangan bulat ≥ 1 | 2 | Bab 8.4 |
 | `deadline_mendekati_hari` | bilangan bulat ≥ 0 | 3 | BR-16 |
 | `predikat_batas` | JSON | A: 85, B: 70, C: 55, D: 40 | Bab 8.3 |
+| `fitur_sertifikat_aktif` | boolean ('1'/'0') | '1' (Aktif) | Master feature toggle modul penerbitan sertifikat digital |
+| `fitur_survei_aktif` | boolean ('1'/'0') | '1' (Aktif) | Master feature toggle modul evaluasi mutu & survei NPS |
+| `fitur_analitik_aktif` | boolean ('1'/'0') | '1' (Aktif) | Master feature toggle modul laporan analitik tahunan eksekutif |
 
 ---
 
@@ -857,7 +860,7 @@ Setiap pertanyaan punya pemilik, tenggat, dan nilai bawaan agar developer tidak 
 
 | ID | Pertanyaan | Pemilik | Tenggat | Nilai bawaan sampai diputuskan |
 |---|---|---|---|---|
-| **OQ-01** | Berapa batas maksimal peserta aktif per Pembimbing? | Product Owner dan Pembimbing | Sebelum UAT | Kosong (tanpa batas) |
+| **OQ-01** | Berapa batas maksimal peserta aktif per Pembimbing? | Product Owner dan Pembimbing | Selesai | **Diputuskan: 20 peserta aktif** (default konfigurasi sistem, fleksibel dapat disesuaikan SuperAdmin). |
 | **OQ-02** | Apakah asumsi A-01 sampai A-05 sesuai kondisi di lapangan? | Product Owner | Sebelum gelombang 1 | Asumsi berlaku |
 | **OQ-03** | Format resmi, penomoran, dan tanda tangan Lembar Nilai dan Surat Keterangan Diterima | Admin Kominfo dan pimpinan | Lembar Nilai: sebelum UAT R1. Surat: sebelum mulai R2 | Template sederhana tanpa tanda tangan basah |
 | **OQ-04** | Skala nilai, predikat, dan bobot awal rubrik | Pembimbing dan Product Owner | Sebelum gelombang 3 | Bab 8.3 |

@@ -113,4 +113,22 @@ class DocumentStorageService
             'inline'
         );
     }
+
+    /**
+     * Menghapus seluruh berkas fisik pendaftaran dari disk privat (Kepatuhan UU PDP Hak Lupa).
+     */
+    public function hapusBerkasPendaftaran(Pendaftaran $pendaftaran): void
+    {
+        $folder = "documents/{$pendaftaran->id}";
+        if (Storage::disk('private')->exists($folder)) {
+            Storage::disk('private')->deleteDirectory($folder);
+        }
+
+        foreach ($pendaftaran->dokumen as $dokumen) {
+            if (Storage::disk('private')->exists($dokumen->path)) {
+                Storage::disk('private')->delete($dokumen->path);
+            }
+            $dokumen->delete();
+        }
+    }
 }

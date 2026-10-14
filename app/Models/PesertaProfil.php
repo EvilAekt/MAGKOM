@@ -26,6 +26,7 @@ class PesertaProfil extends Model
         'nama_kontak_darurat',
         'no_kontak_darurat',
         'hubungan_kontak_darurat',
+        'persetujuan_wali_at',
     ];
 
     /**
@@ -42,6 +43,7 @@ class PesertaProfil extends Model
 
     protected $casts = [
         'jenjang' => JenjangEnum::class,
+        'persetujuan_wali_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

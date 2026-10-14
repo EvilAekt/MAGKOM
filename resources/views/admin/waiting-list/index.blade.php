@@ -650,8 +650,8 @@
             </div>
             <div class="adm-kpi-details">
                 <span class="adm-kpi-label">Siap Dipromosikan</span>
-                <span class="adm-kpi-val" style="color: {{ $siapPromosiCount > 0 ? '#059669' : '#0F172A' }};">{{ number_format($siapPromosiCount) }}</span>
-                <span class="adm-kpi-hint" style="color: {{ $siapPromosiCount > 0 ? '#059669' : '#64748B' }};">
+                <span class="adm-kpi-val {{ $siapPromosiCount > 0 ? 'text-emerald-600' : 'text-slate-900' }}">{{ number_format($siapPromosiCount) }}</span>
+                <span class="adm-kpi-hint {{ $siapPromosiCount > 0 ? 'text-emerald-600' : 'text-slate-500' }}">
                     {{ $siapPromosiCount > 0 ? 'Kursi kuota telah terbuka' : 'Menunggu kuota terbuka' }}
                 </span>
             </div>
@@ -664,7 +664,7 @@
             </div>
             <div class="adm-kpi-details">
                 <span class="adm-kpi-label">Tertahan Kuota Penuh</span>
-                <span class="adm-kpi-val" style="color: #D97706;">{{ number_format(max(0, $totalWaiting - $siapPromosiCount)) }}</span>
+                <span class="adm-kpi-val text-amber-600">{{ number_format(max(0, $totalWaiting - $siapPromosiCount)) }}</span>
                 <span class="adm-kpi-hint">Menunggu penambahan kursi dinas</span>
             </div>
         </div>
@@ -676,7 +676,7 @@
             </div>
             <div class="adm-kpi-details">
                 <span class="adm-kpi-label">Periode Bulan Magang</span>
-                <span class="adm-kpi-val" style="color: #4F46E5;">{{ $periodeCount }}</span>
+                <span class="adm-kpi-val text-indigo-600">{{ $periodeCount }}</span>
                 <span class="adm-kpi-hint">Bulan dengan antrean aktif</span>
             </div>
         </div>
@@ -827,9 +827,9 @@
 
                                 {{-- No. Registrasi --}}
                                 <td>
-                                    <span style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; font-weight: 700; color: #0641CC; background: #EFF6FF; padding: 3px 8px; border-radius: 6px; border: 1px solid #DBEAFE;">
+                                    <x-badge variant="info">
                                         {{ $item->nomor_pendaftaran }}
-                                    </span>
+                                    </x-badge>
                                 </td>
 
                                 {{-- Calon Peserta --}}
@@ -872,14 +872,13 @@
                                 {{-- Status Kuota --}}
                                 <td style="text-align: center;">
                                     @if($sisaKuota > 0)
-                                        <span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0;">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #10B981;"></span>
+                                        <x-badge variant="success" dot>
                                             Tersedia {{ $sisaKuota }} Kursi
-                                        </span>
+                                        </x-badge>
                                     @else
-                                        <span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
+                                        <x-badge variant="secondary">
                                             Kuota Penuh
-                                        </span>
+                                        </x-badge>
                                     @endif
                                 </td>
 

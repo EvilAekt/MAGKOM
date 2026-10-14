@@ -110,7 +110,22 @@ class LogbookReviewController extends Controller
             detail: ['aksi' => 'review_logbook']
         );
 
+        // Notifikasi Real-time SSE ke Peserta (TASK-SSE-06)
+        $pesertaId = $logbook->penempatan?->peserta_id;
+        if ($pesertaId) {
+            app(\App\Services\RealtimeEventService::class)->publish(
+                \App\Enums\RealtimeEventTypeEnum::LogbookDireviu,
+                [
+                    'title' => 'Catatan Logbook Telah Direviu',
+                    'message' => 'Pembimbing telah meninjau catatan logbook harian Anda.',
+                    'action_url' => route('peserta.logbook.index'),
+                ],
+                $pesertaId
+            );
+        }
+
         if (! $request->expectsJson() && ! $request->wantsJson()) {
+
             return back()->with('success', 'Review catatan logbook harian berhasil disimpan.');
         }
 

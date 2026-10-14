@@ -158,7 +158,22 @@ class TugasController extends Controller
             detail: ['aksi' => 'buat_tugas']
         );
 
+        // Notifikasi Real-time SSE ke Peserta Mentee (TASK-SSE-06)
+        if ($penempatan->peserta_id) {
+            app(\App\Services\RealtimeEventService::class)->publish(
+                \App\Enums\RealtimeEventTypeEnum::TugasBaru,
+                [
+                    'title' => 'Tugas Magang Baru',
+                    'message' => "Pembimbing memberikan tugas: {$tugas->judul}.",
+                    'deadline' => $tugas->deadline?->format('d/m/Y H:i'),
+                    'action_url' => route('peserta.tugas.index'),
+                ],
+                $penempatan->peserta_id
+            );
+        }
+
         if (! $request->expectsJson() && ! $request->wantsJson()) {
+
             return redirect()->route('pembimbing.tugas.index')
                 ->with('success', 'Tugas baru berhasil diberikan kepada mentee.');
         }

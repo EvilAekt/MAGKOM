@@ -61,23 +61,37 @@ class PengaturanController extends Controller
             'batas_predikat_b' => ['nullable', 'integer', 'min:1', 'max:100'],
             'batas_predikat_c' => ['nullable', 'integer', 'min:1', 'max:100'],
             'batas_predikat_d' => ['nullable', 'integer', 'min:1', 'max:100'],
+            'predikat_batas' => ['nullable'],
+            'fitur_sertifikat_aktif' => ['nullable', 'boolean'],
+            'fitur_survei_aktif' => ['nullable', 'boolean'],
+            'fitur_analitik_aktif' => ['nullable', 'boolean'],
         ]);
 
         $settingsToSave = [
             'masa_tenggang_bulan' => (string) $validated['masa_tenggang_bulan'],
             'kuota_umum_maks_per_bulan' => (string) $validated['kuota_umum_maks_per_bulan'],
-            'maks_peserta_aktif_per_pembimbing' => $validated['maks_peserta_aktif_per_pembimbing'] !== null ? (string) $validated['maks_peserta_aktif_per_pembimbing'] : null,
+            'maks_peserta_aktif_per_pembimbing' => ! empty($validated['maks_peserta_aktif_per_pembimbing']) ? (string) $validated['maks_peserta_aktif_per_pembimbing'] : null,
             'logbook_maks_mundur_hari' => (string) $validated['logbook_maks_mundur_hari'],
             'berkas_maks_mb' => (string) $validated['berkas_maks_mb'],
             'deadline_mendekati_hari' => (string) $validated['deadline_mendekati_hari'],
             'retensi_audit_akses_data_hari' => (string) ($validated['retensi_audit_akses_data_hari'] ?? '365'),
+            'fitur_sertifikat_aktif' => $request->boolean('fitur_sertifikat_aktif') ? '1' : '0',
+            'fitur_survei_aktif' => $request->boolean('fitur_survei_aktif') ? '1' : '0',
+            'fitur_analitik_aktif' => $request->boolean('fitur_analitik_aktif') ? '1' : '0',
         ];
 
         if (isset($validated['slot_khusus_default'])) {
             $settingsToSave['slot_khusus_default'] = (string) $validated['slot_khusus_default'];
         }
 
-        if (isset($validated['batas_predikat_a'], $validated['batas_predikat_b'], $validated['batas_predikat_c'], $validated['batas_predikat_d'])) {
+        $anyPredikat = isset($validated['batas_predikat_a']) || isset($validated['batas_predikat_b']) || isset($validated['batas_predikat_c']) || isset($validated['batas_predikat_d']);
+        if ($anyPredikat) {
+            if (! isset($validated['batas_predikat_a'], $validated['batas_predikat_b'], $validated['batas_predikat_c'], $validated['batas_predikat_d'])) {
+                return back()->withInput()->withErrors([
+                    'batas_predikat_a' => 'Seluruh batas ambang predikat (A, B, C, D) wajib diisi lengkap.',
+                ]);
+            }
+
             $limA = (int) $validated['batas_predikat_a'];
             $limB = (int) $validated['batas_predikat_b'];
             $limC = (int) $validated['batas_predikat_c'];
@@ -94,6 +108,33 @@ class PengaturanController extends Controller
                 'B' => $limB,
                 'C' => $limC,
                 'D' => $limD,
+            ]);
+        } elseif ($request->filled('predikat_batas')) {
+            $raw = $request->input('predikat_batas');
+            $decoded = is_array($raw) ? $raw : json_decode((string) $raw, true);
+
+            if (! is_array($decoded) || ! isset($decoded['A'], $decoded['B'], $decoded['C'], $decoded['D'])) {
+                return back()->withInput()->withErrors([
+                    'predikat_batas' => 'Format predikat batas harus berupa JSON valid dengan kunci A, B, C, dan D.',
+                ]);
+            }
+
+            $pA = (int) $decoded['A'];
+            $pB = (int) $decoded['B'];
+            $pC = (int) $decoded['C'];
+            $pD = (int) $decoded['D'];
+
+            if (! ($pA > $pB && $pB > $pC && $pC > $pD)) {
+                return back()->withInput()->withErrors([
+                    'predikat_batas' => 'Skala batas ambang predikat harus berurutan secara logis: A > B > C > D.',
+                ]);
+            }
+
+            $settingsToSave['predikat_batas'] = json_encode([
+                'A' => $pA,
+                'B' => $pB,
+                'C' => $pC,
+                'D' => $pD,
             ]);
         }
 

@@ -60,10 +60,19 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Rute Publik (F-01, NFR-O1, NFR-R1, PRD 4.3 Poin 1)
+// Rute Publik (F-01, NFR-O1, NFR-R1, PRD 4.3 Poin 1, SEC-74)
 Route::get('/', LandingController::class)->name('landing');
 Route::get('/health', HealthController::class)->name('health');
 Route::view('/kebijakan-privasi', 'public.kebijakan-privasi')->name('kebijakan-privasi');
+Route::get('/.well-known/security.txt', function () {
+    $path = public_path('.well-known/security.txt');
+    if (file_exists($path)) {
+        return response(file_get_contents($path), 200, [
+            'Content-Type' => 'text/plain; charset=utf-8',
+        ]);
+    }
+    abort(404);
+})->name('security.txt');
 Route::get('/verifikasi-dokumen/{kode}', \App\Http\Controllers\Public\VerifikasiDokumenController::class)
     ->name('dokumen.verifikasi')
     ->middleware('throttle:60,1');
@@ -342,3 +351,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'role:superadmin'
     Route::put('/akun/password', [SuperAdminAkunController::class, 'updatePassword'])->name('akun.password.update');
     Route::post('/akun/preferensi', [SuperAdminAkunController::class, 'updatePreferensi'])->name('akun.preferensi.update');
 });
+
+// Server-Sent Events (SSE) Real-time Stream & Notifikasi (RFC 8895)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/realtime/stream', [\App\Http\Controllers\RealtimeStreamController::class, 'stream'])->name('realtime.stream');
+    Route::post('/realtime/read/{id}', [\App\Http\Controllers\RealtimeStreamController::class, 'markRead'])->name('realtime.read');
+});
+

@@ -183,8 +183,23 @@ class PendaftaranController extends Controller
             detail: ['aksi' => 'Peserta mengajukan berkas lengkap pendaftaran']
         );
 
+        // Notifikasi Real-time SSE ke Admin (TASK-SSE-05)
+        app(\App\Services\RealtimeEventService::class)->publish(
+            \App\Enums\RealtimeEventTypeEnum::PendaftaranBaru,
+            [
+                'title' => 'Pendaftaran Baru Masuk',
+                'message' => "Berkas dari {$user->nama} siap diverifikasi.",
+                'nomor_pendaftaran' => $pendaftaran->nomor_pendaftaran,
+                'action_url' => route('admin.pendaftaran.show', $pendaftaran->id),
+                'badge_target' => '#badge-antrean-menunggu',
+            ],
+            null,
+            'admin'
+        );
+
         return redirect()->route('peserta.pendaftaran.detail', $pendaftaran)
             ->with('success', 'Pendaftaran Anda berhasil diajukan dan sedang menunggu verifikasi berkas oleh admin.');
+
     }
 
     /**

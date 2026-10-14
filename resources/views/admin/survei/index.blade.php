@@ -11,22 +11,22 @@
 @endsection
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="flex flex-col gap-6">
 
     <!-- TOP TOOLBAR -->
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1rem 1.25rem; box-shadow: var(--shadow-subtle);">
+    <div class="flex justify-between items-center flex-wrap gap-4 bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
         <div>
-            <span style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-800); text-transform: uppercase; letter-spacing: 0.5px;">Survei Evaluasi Penyelenggaraan</span>
-            <div style="font-size: 0.875rem; color: var(--neutral-600); margin-top: 0.25rem;">
-                Total Responden Terdata: <strong>{{ number_format($totalResponden) }} Alumni</strong>
+            <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Survei Evaluasi Penyelenggaraan</span>
+            <div class="text-sm text-slate-600 mt-1">
+                Total Responden Terdata: <strong class="text-slate-900">{{ number_format($totalResponden) }} Alumni</strong>
             </div>
         </div>
 
-        <div style="display: flex; gap: 0.75rem;">
-            <a href="{{ route('admin.laporan.index') }}" class="btn btn-outline" style="font-size: 0.8125rem;">
+        <div class="flex gap-3">
+            <a href="{{ route('admin.laporan.index') }}" class="btn btn-outline text-xs">
                 &larr; Hub Laporan
             </a>
-            <a href="{{ route('admin.survei.export') }}" class="btn btn-primary" style="font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 0.375rem;">
+            <a href="{{ route('admin.survei.export') }}" class="btn btn-primary text-xs inline-flex items-center gap-1.5">
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 Ekspor Hasil Survei (CSV)
             </a>
@@ -34,29 +34,29 @@
     </div>
 
     <!-- 4 RINGKASAN METRIK IKM & NPS -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         <!-- IKM INDEKS KEPUASAN -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
-            <div style="font-size: 0.75rem; font-weight: 700; color: var(--blue-700); text-transform: uppercase;">Indeks Kepuasan Magang (IKM)</div>
-            <div style="font-size: 2.25rem; font-weight: 900; color: var(--blue-800); margin-top: 0.25rem;">
-                {{ $ikmSkala100 }} <span style="font-size: 1rem; color: var(--neutral-500); font-weight: 600;">/ 100</span>
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+            <div class="text-xs font-bold text-blue-800 uppercase">Indeks Kepuasan Magang (IKM)</div>
+            <div class="text-3xl font-extrabold text-blue-900 mt-1">
+                {{ $ikmSkala100 }} <span class="text-sm text-slate-500 font-semibold">/ 100</span>
             </div>
-            <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem;">
+            <div class="text-xs text-slate-600 mt-1">
                 Kategori: 
-                <strong style="color: {{ $ikmSkala100 >= 80 ? 'var(--green-700)' : ($ikmSkala100 >= 60 ? 'var(--blue-700)' : 'var(--amber-700)') }};">
+                <strong class="{{ $ikmSkala100 >= 80 ? 'text-emerald-700' : ($ikmSkala100 >= 60 ? 'text-blue-700' : 'text-amber-700') }}">
                     {{ $ikmSkala100 >= 80 ? 'Sangat Memuaskan (A)' : ($ikmSkala100 >= 60 ? 'Memuaskan (B)' : 'Cukup (C)') }}
                 </strong>
             </div>
         </div>
 
         <!-- NET PROMOTER SCORE -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
-            <div style="font-size: 0.75rem; font-weight: 700; color: var(--green-700); text-transform: uppercase;">Net Promoter Score (NPS)</div>
-            <div style="font-size: 2.25rem; font-weight: 900; color: {{ $npsScore >= 50 ? 'var(--green-700)' : ($npsScore >= 0 ? 'var(--blue-700)' : 'var(--red-700)') }}; margin-top: 0.25rem;">
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+            <div class="text-xs font-bold text-emerald-800 uppercase">Net Promoter Score (NPS)</div>
+            <div class="text-3xl font-extrabold {{ $npsScore >= 50 ? 'text-emerald-700' : ($npsScore >= 0 ? 'text-blue-700' : 'text-rose-700') }} mt-1">
                 {{ $npsScore > 0 ? '+' : '' }}{{ $npsScore }}
             </div>
-            <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem;">
+            <div class="text-xs text-slate-600 mt-1">
                 {{ $promoters }} Promoters &bull; {{ $passives }} Passives &bull; {{ $detractors }} Detractors
             </div>
         </div>

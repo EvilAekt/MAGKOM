@@ -16,6 +16,7 @@ use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Pendaftaran;
+use App\Models\PesertaProfil;
 use App\Models\User;
 use App\Services\AuditService;
 use App\Services\PlacementService;
@@ -152,11 +153,21 @@ class PendaftaranController extends Controller
         $kuota = $pendaftaran->kuota;
         $sisaKuota = $kuota ? max(0, $kuota->jumlah - $kuota->terisi) : 0;
 
+        // Deteksi duplikasi NIM/NISN lintas akun (SEC-15)
+        $profil = $pendaftaran->user?->profil;
+        $duplikasiNimCount = 0;
+        if ($profil && ! empty($profil->nim_nisn)) {
+            $duplikasiNimCount = PesertaProfil::where('nim_nisn', $profil->nim_nisn)
+                ->where('user_id', '!=', $pendaftaran->user_id)
+                ->count();
+        }
+
         return view('admin.pendaftaran.show', [
             'pendaftaran' => $pendaftaran,
             'pembimbingList' => $pembimbingList,
             'bidangList' => $bidangList,
             'sisaKuota' => $sisaKuota,
+            'duplikasiNimCount' => $duplikasiNimCount,
         ]);
     }
 
@@ -207,8 +218,21 @@ class PendaftaranController extends Controller
                     ]
                 );
 
+                // Notifikasi Real-time SSE ke peserta (TASK-SSE-05)
+                app(\App\Services\RealtimeEventService::class)->publish(
+                    \App\Enums\RealtimeEventTypeEnum::StatusPendaftaran,
+                    [
+                        'title' => 'Dialihkan ke Waiting List',
+                        'message' => 'Kuota umum saat ini telah penuh. Pengajuan Anda masuk ke dalam antrean Waiting List.',
+                        'status' => 'waiting_list',
+                        'action_url' => route('peserta.dashboard'),
+                    ],
+                    $pendaftaran->user_id
+                );
+
                 return redirect()->route('admin.pendaftaran.show', $pendaftaran)
                     ->with('success', 'Pendaftaran berhasil dialihkan ke antrean Waiting List.');
+
             }
 
             if ($keputusan === 'tolak') {

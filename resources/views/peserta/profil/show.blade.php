@@ -896,6 +896,30 @@
                     </div>
                 </div>
 
+                {{-- Kepatuhan UU PDP (SEC-41): Persetujuan Orang Tua/Wali Khusus Siswa SMK --}}
+                <div id="wrapper-persetujuan-wali" class="field-row full" style="{{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'smk' || !empty($profil?->persetujuan_wali_at) ? '' : 'display: none;' }}">
+                    <div class="form-field-group" style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 14px 16px;">
+                        <label class="field-label" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-weight: normal;">
+                            <input type="hidden" name="persetujuan_wali" value="0">
+                            <input type="checkbox" id="persetujuan_wali" name="persetujuan_wali" value="1"
+                                   {{ old('persetujuan_wali') || !empty($profil?->persetujuan_wali_at) ? 'checked' : '' }}
+                                   style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--blue-600);">
+                            <span style="font-size: 0.8125rem; color: var(--neutral-800); line-height: 1.4;">
+                                <strong>Pernyataan Kepatuhan UU PDP No. 27/2022 (Khusus Jenjang SMK):</strong><br>
+                                Saya berusia minimal 18 tahun atau telah mendapatkan izin dan persetujuan dari orang tua / wali sah untuk mengikuti kegiatan magang serta pemrosesan data identitas untuk administrasi instansi Dinas Kominfo.
+                                @if(!empty($profil?->persetujuan_wali_at))
+                                    <span style="display: block; font-size: 0.75rem; color: var(--green-600); margin-top: 4px; font-weight: 600;">
+                                        ✓ Persetujuan telah tercatat pada: {{ $profil->persetujuan_wali_at->format('d/m/Y H:i') }} WIB
+                                    </span>
+                                @endif
+                            </span>
+                        </label>
+                        @error('persetujuan_wali')
+                            <span class="field-error-text" style="margin-top: 6px;">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="form-section-divider"></div>
 
                 {{-- SEKSI 2: KONTAK & JALUR DARURAT --}}
@@ -1058,6 +1082,22 @@
             if (selectedFileName) selectedFileName.textContent = '(Foto akan dihapus saat Anda menekan tombol Simpan)';
         }
     });
+
+    // Dynamic toggle persetujuan wali untuk jenjang SMK (SEC-41)
+    const jenjangSelect = document.getElementById('jenjang');
+    const waliWrapper = document.getElementById('wrapper-persetujuan-wali');
+    if (jenjangSelect && waliWrapper) {
+        jenjangSelect.addEventListener('change', function() {
+            if (this.value === 'smk') {
+                waliWrapper.style.display = '';
+            } else {
+                const checkbox = document.getElementById('persetujuan_wali');
+                if (checkbox && !checkbox.checked) {
+                    waliWrapper.style.display = 'none';
+                }
+            }
+        });
+    }
 
     // Anti double-submit proteksi
     document.getElementById('formBiodataPeserta')?.addEventListener('submit', function() {

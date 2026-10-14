@@ -1471,5 +1471,7 @@
         }
     </script>
     @stack('scripts')
+    <x-sse-toast-listener />
 </body>
 </html>
+

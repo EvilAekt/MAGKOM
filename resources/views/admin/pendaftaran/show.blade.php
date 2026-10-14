@@ -520,6 +520,19 @@
         }
     </style>
 
+    {{-- SEC-15: Indikator Peringatan Deteksi NIM/NISN Ganda Lintas Akun --}}
+    @if(isset($duplikasiNimCount) && $duplikasiNimCount > 0)
+        <div style="background: #FEF3C7; border: 1.5px solid #F59E0B; border-radius: 12px; padding: 14px 18px; color: #92400E; display: flex; align-items: flex-start; gap: 12px; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.08);">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 1px; color: #D97706;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <div style="font-size: 0.875rem; line-height: 1.45;">
+                <strong style="color: #78350F; font-size: 0.9375rem;">Peringatan Keamanan & Integritas Data (SEC-15 / BR-17):</strong><br>
+                Nomor identitas (NIM/NISN) <code>{{ $profil?->nim_nisn }}</code> ini juga terdaftar pada <strong>{{ $duplikasiNimCount }} akun peserta lainnya</strong> di sistem. Harap verifikator memeriksa keabsahan dokumen identitas pendaftar sebelum mengambil keputusan.
+            </div>
+        </div>
+    @endif
+
     {{-- ======================================================================
          1. COMPACT IDENTITY BAR (HEADER RAMPING & BERSIH)
          ====================================================================== --}}
