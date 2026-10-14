@@ -485,6 +485,199 @@
             from { opacity: 0; transform: scale(0.96); }
             to { opacity: 1; transform: scale(1); }
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .adm-kuota-wrapper {
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-card {
+            background-color: #182234;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:hover {
+            background-color: #162238;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:not(:last-child)::after {
+            background-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-label {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-val {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-kpi-hint {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-blue {
+            background: rgba(37, 99, 235, 0.25);
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-emerald {
+            background: rgba(16, 185, 129, 0.25);
+            color: #6EE7B7;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-amber {
+            background: rgba(217, 119, 6, 0.25);
+            color: #FCD34D;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-purple {
+            background: rgba(124, 58, 237, 0.25);
+            color: #C4B5FD;
+        }
+
+        [data-theme="dark"] .adm-period-bar {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-period-select {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-period-select:focus {
+            border-color: #3B82F6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        [data-theme="dark"] .adm-period-select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-period-info-open {
+            background: rgba(16, 185, 129, 0.15) !important;
+            color: #6EE7B7 !important;
+            border: 1px solid rgba(16, 185, 129, 0.35) !important;
+        }
+
+        [data-theme="dark"] .adm-period-info-closed {
+            background: rgba(148, 163, 184, 0.15) !important;
+            color: #94A3B8 !important;
+            border: 1px solid #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-table-card-header {
+            background-color: #141E30 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table-card-title {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-table th {
+            background-color: #0E1726 !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table td {
+            background-color: #182234 !important;
+            color: #CBD5E1 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table tbody tr:hover td {
+            background-color: #162238 !important;
+        }
+
+        [data-theme="dark"] .adm-table td strong,
+        [data-theme="dark"] .adm-table td [style*="color: #0F172A"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-badge-jenjang {
+            background: rgba(37, 99, 235, 0.2) !important;
+            color: #93C5FD !important;
+            border-color: rgba(59, 130, 246, 0.3) !important;
+        }
+
+        [data-theme="dark"] .adm-progress-bar-wrap {
+            background: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-btn-edit {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-edit:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .modal-container {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="background: #F8FAFC"] {
+            background-color: #141E30 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container h3 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container p {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .modal-container form label {
+            color: #E2E8F0 !important;
+        }
+
+        [data-theme="dark"] .modal-container form select,
+        [data-theme="dark"] .modal-container form input[type="number"] {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container form select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container form span[style*="color: #64748B"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .modal-container form div[style*="border-top: 1px solid #E2E8F0"] {
+            border-top-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container form button[onclick*="close"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
     </style>
 
     {{-- ==========================================================================

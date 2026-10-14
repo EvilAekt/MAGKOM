@@ -11,6 +11,110 @@
 @section('content')
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
+    @push('styles')
+    <style>
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] div[style*="background: #F0F4FF"] {
+            background: rgba(37, 99, 235, 0.15) !important;
+            border-color: #26354D !important;
+        }
+        [data-theme="dark"] div[style*="background: #F0FDF4"] {
+            background: rgba(16, 185, 129, 0.15) !important;
+            border-color: #26354D !important;
+        }
+        [data-theme="dark"] div[style*="background: #FAF5FF"] {
+            background: rgba(147, 51, 234, 0.15) !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3,
+        [data-theme="dark"] h4 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] span[style*="color: var(--neutral-800)"],
+        [data-theme="dark"] strong[style*="color: var(--neutral-900)"],
+        [data-theme="dark"] div[style*="color: var(--neutral-800)"],
+        [data-theme="dark"] td[style*="color: var(--neutral-800)"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] p[style*="color: var(--neutral-600)"],
+        [data-theme="dark"] span[style*="color: var(--neutral-600)"],
+        [data-theme="dark"] small[style*="color: var(--neutral-600)"],
+        [data-theme="dark"] div[style*="color: var(--neutral-600)"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] select,
+        [data-theme="dark"] input[type="text"],
+        [data-theme="dark"] input[type="date"] {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] table thead tr {
+            background: #0E1726 !important;
+            border-bottom-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] table tbody tr {
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] table tbody td {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] table tbody tr:hover {
+            background: #162238 !important;
+        }
+
+        [data-theme="dark"] a[style*="background: transparent"][style*="color: var(--neutral-700)"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] a[style*="background: transparent"][style*="color: var(--neutral-700)"]:hover {
+            background: #162238 !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] a[style*="background: #ffffff"],
+        [data-theme="dark"] a[style*="background: var(--neutral-0)"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] a[style*="background: #ffffff"]:hover,
+        [data-theme="dark"] a[style*="background: var(--neutral-0)"]:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"] {
+            border-top-color: #26354D !important;
+        }
+    </style>
+    @endpush
+
     <!-- 1. SUMMARY METRICS CARDS -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
         <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">

@@ -72,6 +72,21 @@
         .btn-refresh-captcha.spinning .refresh-icon {
             animation: spinCaptchaIcon 0.5s ease-in-out;
         }
+
+        /* Dark mode overrides for Captcha Component */
+        [data-theme="dark"] .btn-refresh-captcha {
+            background-color: var(--neutral-100, #0F172A) !important;
+            border-color: var(--neutral-200, #26354D) !important;
+            color: var(--neutral-600, #CBD5E1) !important;
+        }
+        [data-theme="dark"] .btn-refresh-captcha:hover {
+            background-color: var(--neutral-0, #182234) !important;
+            color: #60A5FA !important;
+            border-color: #3B82F6 !important;
+        }
+        [data-theme="dark"] .captcha-group .form-hint {
+            color: var(--neutral-500, #94A3B8) !important;
+        }
     </style>
 
     <script>

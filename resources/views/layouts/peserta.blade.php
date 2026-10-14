@@ -403,6 +403,101 @@
             border-color: var(--neutral-200) !important;
         }
 
+        [data-theme="dark"] .bg-white:not(.badge-white):not(.text-white) {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .text-slate-900,
+        [data-theme="dark"] .text-gray-900 {
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .text-slate-700,
+        [data-theme="dark"] .text-gray-700 {
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .text-slate-500,
+        [data-theme="dark"] .text-gray-500,
+        [data-theme="dark"] .text-slate-400,
+        [data-theme="dark"] .text-gray-400 {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .border-slate-200,
+        [data-theme="dark"] .border-gray-200,
+        [data-theme="dark"] .border-slate-100,
+        [data-theme="dark"] .border-gray-100 {
+            border-color: var(--neutral-200) !important;
+        }
+
+        /* =====================================================================
+           UNIVERSAL INLINE-STYLE INVERSION (DS-MagKom Dark Contrast Fix)
+           Menembus inline-style hardcoded pada child views agar kontras tinggi
+           ===================================================================== */
+        [data-theme="dark"] [style*="color: #0F172A"],
+        [data-theme="dark"] [style*="color:#0F172A"],
+        [data-theme="dark"] [style*="color: #0f172a"],
+        [data-theme="dark"] [style*="color:#0f172a"],
+        [data-theme="dark"] [style*="color: #1E293B"],
+        [data-theme="dark"] [style*="color:#1E293B"],
+        [data-theme="dark"] [style*="color: #1e293b"],
+        [data-theme="dark"] [style*="color:#1e293b"],
+        [data-theme="dark"] [style*="color: #000000"],
+        [data-theme="dark"] [style*="color:#000000"],
+        [data-theme="dark"] [style*="color: #05070B"],
+        [data-theme="dark"] [style*="color: #1D2530"],
+        [data-theme="dark"] [style*="color: #333333"] {
+            color: var(--neutral-800, #F8FAFC) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #334155"],
+        [data-theme="dark"] [style*="color:#334155"],
+        [data-theme="dark"] [style*="color: #475569"],
+        [data-theme="dark"] [style*="color:#475569"],
+        [data-theme="dark"] [style*="color: #666666"] {
+            color: var(--neutral-700, #E2E8F0) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #64748B"],
+        [data-theme="dark"] [style*="color:#64748B"],
+        [data-theme="dark"] [style*="color: #7A8494"] {
+            color: var(--neutral-500, #94A3B8) !important;
+        }
+
+        [data-theme="dark"] [style*="background: #ffffff"],
+        [data-theme="dark"] [style*="background:#ffffff"],
+        [data-theme="dark"] [style*="background: #FFFFFF"],
+        [data-theme="dark"] [style*="background:#FFFFFF"],
+        [data-theme="dark"] [style*="background-color: #ffffff"],
+        [data-theme="dark"] [style*="background-color:#ffffff"],
+        [data-theme="dark"] [style*="background-color: #FFFFFF"],
+        [data-theme="dark"] [style*="background-color:#FFFFFF"] {
+            background-color: var(--neutral-0, #182234) !important;
+            border-color: var(--neutral-200, #26354D) !important;
+        }
+
+        [data-theme="dark"] [style*="background: #F8FAFC"],
+        [data-theme="dark"] [style*="background:#F8FAFC"],
+        [data-theme="dark"] [style*="background: #F1F5F9"],
+        [data-theme="dark"] [style*="background:#F1F5F9"] {
+            background-color: var(--neutral-100, #0F172A) !important;
+            border-color: var(--neutral-200, #26354D) !important;
+        }
+
+        [data-theme="dark"] [style*="border-bottom: 1px dashed #E2E8F0"],
+        [data-theme="dark"] [style*="border-bottom: 1px dashed #CBD5E1"] {
+            border-bottom-color: var(--neutral-200, #26354D) !important;
+        }
+
+        [data-theme="dark"] [style*="border: 1px solid #E2E8F0"],
+        [data-theme="dark"] [style*="border: 1px solid #CBD5E1"],
+        [data-theme="dark"] [style*="border: 1px solid #BFDBFE"] {
+            border-color: var(--neutral-200, #26354D) !important;
+        }
+
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;

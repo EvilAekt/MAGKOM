@@ -579,6 +579,162 @@
             background: #EFF6FF;
             transform: translateY(-1px);
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .adm-waiting-wrapper {
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-card {
+            background-color: #182234;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:hover {
+            background-color: #162238;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:not(:last-child)::after {
+            background-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-label {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-val {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-filter-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-field-group label {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .adm-input-search,
+        [data-theme="dark"] .adm-select {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-input-search:focus,
+        [data-theme="dark"] .adm-select:focus {
+            border-color: #3B82F6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        [data-theme="dark"] .adm-select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-btn-filter-reset {
+            background-color: #111C2E !important;
+            border-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-filter-reset:hover {
+            background-color: #162238 !important;
+            color: #F8FAFC !important;
+            border-color: #3B82F6 !important;
+        }
+
+        [data-theme="dark"] .adm-bulk-closure-strip {
+            border-top-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-bulk-closure-strip div[style*="color: #475569"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-closure.disabled {
+            background-color: #111C2E !important;
+            border-color: #26354D !important;
+            color: #64748B !important;
+        }
+
+        [data-theme="dark"] .adm-table-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-table-card-header {
+            background-color: #141E30 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table-card-title {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-table th {
+            background-color: #0E1726 !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table td {
+            background-color: #182234 !important;
+            color: #CBD5E1 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table tbody tr:hover td {
+            background-color: #162238 !important;
+        }
+
+        [data-theme="dark"] .adm-fifo-rank-other {
+            background-color: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .adm-candidate-avatar {
+            background-color: rgba(37, 99, 235, 0.25) !important;
+            border-color: rgba(59, 130, 246, 0.3) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-table td div[style*="color: #0F172A"],
+        [data-theme="dark"] .adm-table td div[style*="color: #1E293B"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-table td div[style*="color: #64748B"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-table td[style*="font-family: ui-monospace"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-action-review {
+            background-color: #111C2E !important;
+            border-color: #26354D !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-btn-action-review:hover {
+            background-color: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .adm-table-card div[style*="background: #ffffff"] {
+            background-color: #141E30 !important;
+            border-top-color: #26354D !important;
+        }
     </style>
 
     {{-- ==========================================================================

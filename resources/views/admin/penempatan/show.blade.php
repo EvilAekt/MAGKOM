@@ -99,6 +99,111 @@
             overflow: hidden;
             border: 1px solid var(--neutral-200, #E2E8F0);
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .admin-card {
+            background: #182234 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-card[style*="linear-gradient"] {
+            background: linear-gradient(135deg, #182234 0%, #111C2E 100%) !important;
+        }
+
+        [data-theme="dark"] .admin-card div[style*="background: #F8FAFC"] {
+            background: #141E30 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .stat-badge-summary {
+            background: #182234 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .field-label {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .field-value {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] h2[style*="color: var(--neutral-900"],
+        [data-theme="dark"] h3[style*="color: var(--neutral-900"],
+        [data-theme="dark"] h4[style*="color: var(--neutral-900"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] div[style*="color: var(--neutral-900"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] div[style*="color: var(--neutral-800"] {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] div[style*="color: var(--neutral-600"],
+        [data-theme="dark"] span[style*="color: var(--neutral-500"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] a[style*="background: #ffffff"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] a[style*="background: #ffffff"]:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] div[style*="background: #F8FAFC; border: 1px solid var(--neutral-200"] {
+            background: #0F172A !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="background: #F8FAFC"] {
+            background: #141E30 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container select,
+        [data-theme="dark"] .modal-container input,
+        [data-theme="dark"] .modal-container textarea {
+            background: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container select option {
+            background: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container label {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="border-top: 1px solid"] {
+            border-top-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container button[style*="background: #ffffff"],
+        [data-theme="dark"] .modal-container button[style*="background: var(--neutral-0"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
     </style>
 
 

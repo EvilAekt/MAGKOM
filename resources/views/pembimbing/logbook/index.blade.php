@@ -25,13 +25,13 @@
     </div>
 
     <!-- Filter Bar Card -->
-    <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="app-card" style="background: var(--neutral-0); border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
         <form method="GET" action="{{ route('pembimbing.logbook.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
             
             <!-- Filter Peserta -->
             <div style="flex: 1; min-width: 200px;">
                 <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Peserta Magang</label>
-                <select name="penempatan_id" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                <select name="penempatan_id" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-100); color: inherit;">
                     <option value="">Semua Peserta Bimbingan</option>
                     @foreach($penempatanList as $pen)
                         <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
@@ -44,7 +44,7 @@
             <!-- Filter Status -->
             <div style="flex: 1; min-width: 160px;">
                 <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Status Reviu</label>
-                <select name="status" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                <select name="status" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-100); color: inherit;">
                     <option value="">Semua Status</option>
                     <option value="terkirim" {{ request('status') === 'terkirim' ? 'selected' : '' }}>Terkirim (Menunggu)</option>
                     <option value="disetujui" {{ request('status') === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
@@ -55,13 +55,13 @@
             <!-- Filter Tanggal -->
             <div style="width: 170px;">
                 <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Tanggal Logbook</label>
-                <input type="date" name="tanggal" value="{{ request('tanggal') }}" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
+                <input type="date" name="tanggal" value="{{ request('tanggal') }}" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-100); color: inherit;">
             </div>
 
             <!-- Pencarian Isi Aktivitas -->
             <div style="flex: 1; min-width: 200px;">
                 <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Cari Aktivitas</label>
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari uraian kegiatan..." style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem;">
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari uraian kegiatan..." style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem; background: var(--neutral-100); color: inherit;">
             </div>
 
             <div style="display: flex; gap: 0.5rem;">
@@ -78,8 +78,8 @@
     </div>
 
     <!-- Data Table Card -->
-    <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; background: #fafafa;">
+    <div class="app-card" style="background: var(--neutral-0); border-radius: 14px; border: 1px solid var(--neutral-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
+        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; background: var(--neutral-50);">
             <div>
                 <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin: 0;">Catatan Kegiatan Harian Peserta</h3>
                 <span style="font-size: 0.75rem; color: var(--neutral-500);">Menampilkan riwayat pelaporan logbook dinas</span>

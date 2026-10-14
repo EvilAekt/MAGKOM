@@ -676,6 +676,338 @@
         .adm-link-more-clean:hover {
             text-decoration: underline;
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .adm-cockpit-wrapper {
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .adm-period-form {
+            background-color: #0F172A;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-period-form label {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-period-form select {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-card {
+            background-color: #182234;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:hover {
+            background-color: #162238;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:not(:last-child)::after {
+            background-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-label {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-val {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-kpi-hint {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-amber {
+            background: rgba(217, 119, 6, 0.25);
+            color: #FCD34D;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-blue {
+            background: rgba(37, 99, 235, 0.25);
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-purple {
+            background: rgba(124, 58, 237, 0.25);
+            color: #C4B5FD;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-emerald {
+            background: rgba(16, 185, 129, 0.25);
+            color: #6EE7B7;
+        }
+
+        [data-theme="dark"] .adm-card-full,
+        [data-theme="dark"] .adm-card-header-spacious {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-section-title {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-section-subtitle {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-filter-pills {
+            background-color: #0F172A;
+            border: 1px solid #26354D;
+        }
+
+        [data-theme="dark"] .adm-pill-btn {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-pill-btn.active {
+            background-color: #1E293B;
+            color: #93C5FD;
+            box-shadow: none;
+        }
+
+        [data-theme="dark"] .adm-table-spacious th {
+            background-color: #0E1726 !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table-spacious td {
+            background-color: #182234 !important;
+            color: #CBD5E1 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table-spacious tr:hover td {
+            background-color: #162238 !important;
+        }
+
+        [data-theme="dark"] .adm-avatar-circle {
+            background: rgba(37, 99, 235, 0.25);
+            border-color: #2563EB;
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-status-badge.diajukan {
+            background: rgba(217, 119, 6, 0.25);
+            border-color: rgba(245, 158, 11, 0.4);
+            color: #FCD34D;
+        }
+
+        [data-theme="dark"] .adm-mentor-clean-row {
+            background-color: #111C2E;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-mentor-avatar {
+            background: rgba(37, 99, 235, 0.25);
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-action-link-clean {
+            background-color: #182234;
+            border-color: #26354D;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-action-link-clean:hover {
+            border-color: #3B82F6;
+            background-color: #162238;
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-hero-role-pill {
+            background: rgba(255, 255, 255, 0.18);
+            color: #93C5FD;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        [data-theme="dark"] .adm-clean-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card-header {
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-quota-row-item {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-quota-row-item:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .adm-quota-title-text {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-quota-cat-badge {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-quota-meter-track {
+            background: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-sub-title {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-sla-pill-norm {
+            background: #111C2E !important;
+            color: #94A3B8 !important;
+            border: 1px solid #26354D;
+        }
+
+        [data-theme="dark"] .adm-status-badge.perbaikan {
+            background: rgba(37, 99, 235, 0.25) !important;
+            border-color: rgba(59, 130, 246, 0.4) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-table-spacious td div[style*="color: #0F172A"],
+        [data-theme="dark"] .adm-table-spacious td div[style*="color: #1E293B"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-table-spacious td span[style*="color: #334155"] {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .adm-card-full > div:last-child {
+            background: #0E1726 !important;
+            border-top-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #F0F7FF"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #F0F7FF"] span[style*="color: #1E40AF"] {
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #DBEAFE"] {
+            background: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #F8FAFC"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card span[style*="color: #0F172A"],
+        [data-theme="dark"] .adm-clean-card div[style*="color: #0F172A"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #FFFBEB"] {
+            background: rgba(217, 119, 6, 0.15) !important;
+            border-color: rgba(245, 158, 11, 0.3) !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #FFFBEB"] strong[style*="color: #92400E"] {
+            color: #FCD34D !important;
+        }
+
+        [data-theme="dark"] .adm-period-form select option {
+            background-color: #0F172A;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-control-bar > div {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-sla-pill-alert {
+            background: rgba(220, 38, 38, 0.2) !important;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+            color: #FCA5A5 !important;
+        }
+
+        [data-theme="dark"] .adm-quota-status-pill[style*="background: #ECFDF5"] {
+            background: rgba(16, 185, 129, 0.2) !important;
+            color: #6EE7B7 !important;
+            border: 1px solid rgba(16, 185, 129, 0.3) !important;
+        }
+
+        [data-theme="dark"] .adm-quota-status-pill[style*="background: #FEF2F2"] {
+            background: rgba(220, 38, 38, 0.2) !important;
+            color: #FCA5A5 !important;
+            border: 1px solid rgba(220, 38, 38, 0.3) !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card span[style*="background: #DCFCE7"] {
+            background: rgba(16, 185, 129, 0.2) !important;
+            color: #6EE7B7 !important;
+            border: 1px solid rgba(16, 185, 129, 0.3) !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card span[style*="background: #F1F5F9"] {
+            background: rgba(148, 163, 184, 0.15) !important;
+            color: #94A3B8 !important;
+            border: 1px solid rgba(148, 163, 184, 0.2) !important;
+        }
+
+        [data-theme="dark"] .adm-mentor-clean-row span[style*="color: #0641CC"] {
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-mentor-clean-row div[style*="color: #0F172A"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card p[style*="color: #64748B"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-card-full h4[style*="color: #0F172A"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #FFFBEB"] span[style*="background: #FEF3C7"] {
+            background: rgba(245, 158, 11, 0.25) !important;
+            color: #FDE68A !important;
+            border: 1px solid rgba(245, 158, 11, 0.3) !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #FFFBEB"] span[style*="color: #B45309"] {
+            color: #FCD34D !important;
+        }
+
+        [data-theme="dark"] .admin-card span[style*="color: #16A34A"] {
+            color: #6EE7B7 !important;
+        }
+
+        [data-theme="dark"] .admin-card span[style*="color: #7C3AED"] {
+            color: #C4B5FD !important;
+        }
+
+        [data-theme="dark"] .admin-card span[style*="color: var(--neutral-600, #475569)"] {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-card span[style*="color: var(--neutral-500, #64748B)"] {
+            color: #94A3B8 !important;
+        }
+
+        @media (max-width: 768px) {
+            .adm-table-spacious th,
+            .adm-table-spacious td {
+                padding: 0.85rem 1rem;
+            }
+        }
     </style>
 
     {{-- ==========================================================================
@@ -957,6 +1289,11 @@
                                 </td>
                             </tr>
                         @endforeach
+                        <tr id="queueFilterEmptyRow" style="display: none;">
+                            <td colspan="6" style="padding: 2.5rem 1.5rem; text-align: center; color: var(--neutral-500, #64748B);">
+                                <p style="margin: 0; font-size: 0.875rem; font-weight: 600;">Tidak ada berkas pendaftaran dengan filter status ini.</p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -1188,15 +1525,24 @@ function filterQueueTable(filterType, btn) {
     if (btn) btn.classList.add('active');
 
     const rows = document.querySelectorAll('.queue-row');
+    let visibleCount = 0;
     rows.forEach(row => {
+        let show = false;
         if (filterType === 'all') {
-            row.style.display = '';
+            show = true;
         } else if (filterType === 'diajukan') {
-            row.style.display = row.classList.contains('status-diajukan') ? '' : 'none';
+            show = row.classList.contains('status-diajukan');
         } else if (filterType === 'perlu_perbaikan') {
-            row.style.display = row.classList.contains('status-perlu-perbaikan') ? '' : 'none';
+            show = row.classList.contains('status-perlu-perbaikan');
         }
+        row.style.display = show ? '' : 'none';
+        if (show) visibleCount++;
     });
+
+    const emptyRow = document.getElementById('queueFilterEmptyRow');
+    if (emptyRow) {
+        emptyRow.style.display = (visibleCount === 0 && rows.length > 0) ? '' : 'none';
+    }
 }
 </script>
 @endsection

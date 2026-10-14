@@ -7,7 +7,7 @@
 
     <style>
         .backup-stat-card {
-            background: #ffffff;
+            background: var(--neutral-0, #ffffff);
             border-radius: 14px;
             border: 1px solid var(--neutral-200, #E2E8F0);
             padding: 1.25rem 1.5rem;
@@ -15,6 +15,13 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+        .backup-container {
+            background: var(--neutral-0, #ffffff);
+            border: 1px solid var(--neutral-200, #E2E8F0);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .backup-table {
             width: 100%;
@@ -40,6 +47,53 @@
         }
         .backup-table tr:hover {
             background: #F8FAFC;
+        }
+        [data-theme="dark"] .backup-stat-card {
+            background: var(--neutral-0, #182234) !important;
+            border-color: var(--neutral-200, #26354D) !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+        }
+        [data-theme="dark"] .backup-stat-card span {
+            color: var(--neutral-400, #94A3B8);
+        }
+        [data-theme="dark"] .backup-container {
+            background: var(--neutral-0, #182234) !important;
+            border-color: var(--neutral-200, #26354D) !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+        }
+        [data-theme="dark"] .backup-table th {
+            background: var(--neutral-100, #0E1726) !important;
+            color: var(--neutral-400, #94A3B8) !important;
+            border-bottom-color: var(--neutral-200, #26354D) !important;
+        }
+        [data-theme="dark"] .backup-table td {
+            color: var(--neutral-700, #E2E8F0) !important;
+            border-bottom-color: var(--neutral-200, #26354D) !important;
+        }
+        [data-theme="dark"] .backup-table tr:hover {
+            background: var(--neutral-100, #141F30) !important;
+        }
+        [data-theme="dark"] .backup-checksum-badge {
+            background: var(--neutral-100, #0F172A) !important;
+            color: var(--neutral-400, #94A3B8) !important;
+            border-color: var(--neutral-200, #26354D) !important;
+        }
+        [data-theme="dark"] .backup-btn-delete {
+            background: var(--neutral-100, #0F172A) !important;
+            color: #F87171 !important;
+            border-color: rgba(220, 38, 38, 0.35) !important;
+        }
+        [data-theme="dark"] a[href*="health"] {
+            background-color: #111C2E !important;
+            border-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+        [data-theme="dark"] h1,
+        [data-theme="dark"] .backup-stat-card strong {
+            color: #F8FAFC !important;
+        }
+        [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200"] {
+            border-bottom-color: #26354D !important;
         }
     </style>
 
@@ -108,7 +162,7 @@
     </div>
 
     {{-- 3. TABEL DAFTAR BACKUP --}}
-    <div style="background: #ffffff; border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="backup-container">
         @if($backupFiles->isEmpty())
             <div style="padding: 3.5rem 1.5rem; text-align: center; color: var(--neutral-600, #475569);">
                 <div style="width: 48px; height: 48px; border-radius: 50%; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
@@ -145,10 +199,10 @@
                                     <div style="font-size: 0.825rem; color: #334155;">{{ $item['created_at'] }}</div>
                                 </td>
                                 <td>
-                                    <span style="font-weight: 700; color: #0F172A;">{{ $item['size_mb'] }} MB</span>
+                                    <span style="font-weight: 700; color: var(--neutral-900, #0F172A);">{{ $item['size_mb'] }} MB</span>
                                 </td>
                                 <td>
-                                    <span style="font-family: monospace; font-size: 0.72rem; color: #64748B; background: #F1F5F9; padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid #E2E8F0;" title="{{ $item['checksum'] }}">
+                                    <span class="backup-checksum-badge" style="font-family: monospace; font-size: 0.72rem; color: #64748B; background: #F1F5F9; padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid #E2E8F0;" title="{{ $item['checksum'] }}">
                                         {{ substr($item['checksum'], 0, 16) }}...{{ substr($item['checksum'], -8) }}
                                     </span>
                                 </td>
@@ -161,7 +215,7 @@
                                     <form method="POST" action="{{ route('superadmin.backup.destroy', $item['filename']) }}" style="display: inline-block;" onsubmit="return confirm('Hapus berkas snapshot ini secara permanen?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" style="padding: 0.35rem 0.65rem; background: #ffffff; border: 1px solid #FECACA; color: #DC2626; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
+                                        <button type="submit" class="backup-btn-delete" style="padding: 0.35rem 0.65rem; background: #ffffff; border: 1px solid #FECACA; color: #DC2626; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
                                             Hapus
                                         </button>
                                     </form>

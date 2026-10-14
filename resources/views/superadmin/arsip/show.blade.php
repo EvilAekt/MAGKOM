@@ -92,6 +92,71 @@
         .arsip-tab-pane.active {
             display: block;
         }
+
+        /* Dark Mode Overrides for SuperAdmin Arsip Detail */
+        [data-theme="dark"] .arsip-card {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+        [data-theme="dark"] .arsip-card[style*="linear-gradient"] {
+            background: linear-gradient(135deg, #182234 0%, #111C2E 100%) !important;
+            border-color: #26354D !important;
+        }
+        [data-theme="dark"] .arsip-tab-bar {
+            border-bottom-color: #26354D !important;
+        }
+        [data-theme="dark"] .arsip-tab-btn {
+            color: #94A3B8 !important;
+        }
+        [data-theme="dark"] .arsip-tab-btn:hover {
+            color: #F8FAFC !important;
+        }
+        [data-theme="dark"] .arsip-tab-btn.active {
+            color: #93C5FD !important;
+            background: rgba(37, 99, 235, 0.2) !important;
+            border-bottom-color: #3B82F6 !important;
+        }
+        [data-theme="dark"] a[href*="surat-diterima"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #93C5FD !important;
+        }
+        [data-theme="dark"] a[href*="arsip.index"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+        [data-theme="dark"] table th {
+            background: #141E30 !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #26354D !important;
+        }
+        [data-theme="dark"] table td {
+            color: #CBD5E1 !important;
+            border-bottom-color: #26354D !important;
+        }
+        [data-theme="dark"] table tbody tr:hover td {
+            background: #162238 !important;
+        }
+        [data-theme="dark"] div[style*="background: #ffffff"],
+        [data-theme="dark"] div[style*="background: #FFFFFF"],
+        [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+        }
+        [data-theme="dark"] div[style*="background: var(--neutral-100)"],
+        [data-theme="dark"] div[style*="background: #F8FAFC"],
+        [data-theme="dark"] div[style*="background: #f8fafc"] {
+            background-color: #111C2E !important;
+            border-color: #26354D !important;
+        }
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3,
+        [data-theme="dark"] h4,
+        [data-theme="dark"] strong {
+            color: #F8FAFC !important;
+        }
     </style>
 
     {{-- 1. HEADER ALUMNI PROFILE CARD --}}

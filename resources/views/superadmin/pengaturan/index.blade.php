@@ -31,6 +31,55 @@
     </div>
 @endsection
 
+@push('styles')
+<style>
+    /* Dark Mode Overrides for SuperAdmin Settings */
+    [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
+        background-color: #182234 !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] a[href*="export-json"] {
+        background-color: #111C2E !important;
+        border-color: #26354D !important;
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
+    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
+    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] input[type="text"],
+    [data-theme="dark"] input[type="number"],
+    [data-theme="dark"] select {
+        background-color: #0F172A !important;
+        color: #F8FAFC !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] span[style*="color: var(--neutral-900)"],
+    [data-theme="dark"] div[style*="color: var(--neutral-900)"],
+    [data-theme="dark"] h2[style*="color: var(--neutral-900)"],
+    [data-theme="dark"] span[style*="color: var(--neutral-800)"],
+    [data-theme="dark"] label[style*="color: var(--neutral-800)"] {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] span[style*="color: var(--neutral-600)"],
+    [data-theme="dark"] div[style*="color: var(--neutral-600)"],
+    [data-theme="dark"] p[style*="color: var(--neutral-600)"] {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] div[style*="background: var(--neutral-100)"] {
+        background-color: #111C2E !important;
+        border-color: #26354D !important;
+    }
+</style>
+@endpush
+
 @section('content')
 <div style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 1080px;">
 

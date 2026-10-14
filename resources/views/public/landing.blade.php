@@ -629,6 +629,71 @@
             grid-template-columns: 1fr 1fr;
         }
     }
+
+    /* Dark Mode Overrides for Landing Page */
+    [data-theme="dark"] .figma-quota-card,
+    [data-theme="dark"] .pengumuman-card,
+    [data-theme="dark"] .layanan-card {
+        background: var(--neutral-0, #182234) !important;
+        border-color: var(--neutral-200, #26354D) !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    [data-theme="dark"] .figma-quota-card:hover,
+    [data-theme="dark"] .pengumuman-card:hover,
+    [data-theme="dark"] .layanan-card:hover {
+        border-color: var(--blue-600, #3B82F6) !important;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    [data-theme="dark"] .card-period-box {
+        background: var(--neutral-100, #0F172A) !important;
+        border-color: var(--neutral-200, #26354D) !important;
+    }
+
+    [data-theme="dark"] .tab-pill-btn {
+        background: var(--neutral-0, #182234) !important;
+        border-color: var(--neutral-200, #26354D) !important;
+        color: var(--neutral-600, #CBD5E1) !important;
+    }
+
+    [data-theme="dark"] .tab-pill-btn.active {
+        background: var(--blue-600, #3B82F6) !important;
+        color: #ffffff !important;
+        border-color: var(--blue-600, #3B82F6) !important;
+    }
+
+    [data-theme="dark"] .card-jenjang-badge {
+        background: var(--neutral-100, #0F172A) !important;
+        color: var(--neutral-600, #CBD5E1) !important;
+    }
+
+    [data-theme="dark"] .card-jurusan-title,
+    [data-theme="dark"] .pengumuman-card h3,
+    [data-theme="dark"] .layanan-card span {
+        color: var(--neutral-900, #FFFFFF) !important;
+    }
+
+    [data-theme="dark"] .card-jurusan-desc,
+    [data-theme="dark"] .pengumuman-card p {
+        color: var(--neutral-500, #94A3B8) !important;
+    }
+
+    [data-theme="dark"] .period-title {
+        color: var(--neutral-700, #E2E8F0) !important;
+    }
+
+    [data-theme="dark"] .quota-count {
+        color: var(--neutral-800, #F8FAFC) !important;
+    }
+
+    [data-theme="dark"] .section-pengumuman {
+        background: var(--neutral-150, #0A0F1D) !important;
+    }
+
+    [data-theme="dark"] .section-layanan {
+        background: var(--neutral-100, #0F172A) !important;
+    }
 </style>
 @endpush
 

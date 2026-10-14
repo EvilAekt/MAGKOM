@@ -48,7 +48,7 @@
     </div>
 
     <!-- Filter Bar Card -->
-    <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="app-card" style="background: var(--neutral-0); border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
         <form method="GET" action="{{ route('pembimbing.penilaian.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
             
             <!-- Filter Status Penilaian -->
@@ -92,7 +92,7 @@
     </div>
 
     <!-- Data Table Card -->
-    <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
+    <div class="app-card" style="background: var(--neutral-0); border-radius: 14px; border: 1px solid var(--neutral-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
         @if($penempatanList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-500);">
                 <div style="width: 64px; height: 64px; background: var(--neutral-100); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: var(--neutral-400);">

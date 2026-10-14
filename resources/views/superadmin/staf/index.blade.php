@@ -20,6 +20,83 @@
     </button>
 @endsection
 
+@push('styles')
+<style>
+    /* Dark Mode Overrides for SuperAdmin Staf Management */
+    [data-theme="dark"] .staf-filter-card,
+    [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
+        background-color: #182234 !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] input[type="text"],
+    [data-theme="dark"] input[type="email"],
+    [data-theme="dark"] input[type="password"],
+    [data-theme="dark"] select {
+        background-color: #0F172A !important;
+        color: #F8FAFC !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] button[style*="background: var(--neutral-900)"] {
+        background-color: #2563EB !important;
+        color: #FFFFFF !important;
+    }
+
+    [data-theme="dark"] table th {
+        background-color: #141E30 !important;
+        color: #94A3B8 !important;
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] table td {
+        border-bottom-color: #26354D !important;
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] table tbody tr:hover td {
+        background-color: #162238 !important;
+    }
+
+    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
+    [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"],
+    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
+        border-color: #26354D !important;
+    }
+
+    /* Modal Dark Mode */
+    [data-theme="dark"] #modalTambahStaf > div,
+    [data-theme="dark"] #modalEditStaf > div,
+    [data-theme="dark"] #modalResetSandi > div {
+        background-color: #182234 !important;
+        border-color: #26354D !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] #modalTambahStaf h3,
+    [data-theme="dark"] #modalEditStaf h3,
+    [data-theme="dark"] #modalResetSandi h3 {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] div[style*="background: var(--neutral-100)"] {
+        background-color: #111C2E !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] button[style*="background: var(--neutral-100)"] {
+        background-color: #111C2E !important;
+        border-color: #26354D !important;
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] button[style*="background: var(--neutral-100)"]:hover {
+        background-color: #162238 !important;
+        color: #F8FAFC !important;
+    }
+</style>
+@endpush
+
 @section('content')
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 

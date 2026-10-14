@@ -8,13 +8,171 @@
     <span class="breadcrumb-current">Dashboard</span>
 @endsection
 
+@push('styles')
+<style>
+    /* =====================================================================
+       SUPERADMIN DASHBOARD DARK MODE OVERRIDES (DS-MagKom Standards)
+       ===================================================================== */
+    [data-theme="dark"] #select-bulan {
+        background-color: #0F172A !important;
+        color: #F8FAFC !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] div[style*="background: #FFFBEB"],
+    [data-theme="dark"] div[style*="background:#FFFBEB"],
+    [data-theme="dark"] div[style*="background: var(--amber-100)"] {
+        background-color: rgba(217, 119, 6, 0.12) !important;
+        border-color: rgba(245, 158, 11, 0.3) !important;
+    }
+
+    /* Executive Hero Header & Main Container Gradients */
+    [data-theme="dark"] div[style*="background: linear-gradient(135deg, var(--neutral-0)"],
+    [data-theme="dark"] div[style*="background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%)"],
+    [data-theme="dark"] div[style*="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)"] {
+        background: linear-gradient(135deg, #182234 0%, #111C2E 100%) !important;
+        border-color: #26354D !important;
+    }
+
+    /* Primary Cards & Panels */
+    [data-theme="dark"] div[style*="background: var(--neutral-0)"],
+    [data-theme="dark"] div[style*="background: var(--neutral-0, #ffffff)"],
+    [data-theme="dark"] div[style*="background: #FFFFFF"],
+    [data-theme="dark"] div[style*="background: #ffffff"],
+    [data-theme="dark"] .bg-white {
+        background-color: #182234 !important;
+        border-color: #26354D !important;
+    }
+
+    /* Sub-panels, KPI Boxes, and Telemetry Tiles */
+    [data-theme="dark"] div[style*="background: #F8FAFC"],
+    [data-theme="dark"] div[style*="background: #f8fafc"],
+    [data-theme="dark"] div[style*="background: var(--neutral-100)"],
+    [data-theme="dark"] div[style*="background: var(--neutral-150)"] {
+        background-color: #111C2E !important;
+        border-color: #26354D !important;
+    }
+
+    /* General Border Color Normalization */
+    [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
+    [data-theme="dark"] div[style*="border: 1px solid var(--neutral-300)"],
+    [data-theme="dark"] div[style*="border: 1px solid var(--neutral-200)"],
+    [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-300)"],
+    [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"],
+    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
+    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-300)"],
+    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
+        border-color: #26354D !important;
+    }
+
+    /* High Contrast Typography */
+    [data-theme="dark"] h1,
+    [data-theme="dark"] h2,
+    [data-theme="dark"] h3,
+    [data-theme="dark"] h4,
+    [data-theme="dark"] h5 {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] span[style*="color: var(--neutral-900)"],
+    [data-theme="dark"] div[style*="color: var(--neutral-900)"],
+    [data-theme="dark"] span[style*="color: var(--neutral-800)"],
+    [data-theme="dark"] div[style*="color: var(--neutral-800)"],
+    [data-theme="dark"] span[style*="color: var(--neutral-700)"],
+    [data-theme="dark"] div[style*="color: var(--neutral-700)"],
+    [data-theme="dark"] div[style*="color: var(--neutral-900, #0F172A)"],
+    [data-theme="dark"] span[style*="color: var(--neutral-800, #1E293B)"],
+    [data-theme="dark"] span[style*="color: #0F172A"],
+    [data-theme="dark"] span[style*="color: #1E293B"],
+    [data-theme="dark"] div[style*="color: #0F172A"],
+    [data-theme="dark"] div[style*="color: #1E293B"],
+    [data-theme="dark"] strong[style*="color: var(--neutral-900)"],
+    [data-theme="dark"] strong[style*="color: var(--neutral-800)"] {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] span[style*="color: var(--neutral-600)"],
+    [data-theme="dark"] div[style*="color: var(--neutral-600)"],
+    [data-theme="dark"] p[style*="color: var(--neutral-600)"],
+    [data-theme="dark"] span[style*="color: var(--neutral-500)"],
+    [data-theme="dark"] div[style*="color: var(--neutral-500)"],
+    [data-theme="dark"] p[style*="color: var(--neutral-500)"] {
+        color: #94A3B8 !important;
+    }
+
+    /* Badges & Category Accents */
+    [data-theme="dark"] div[style*="background: #EFF6FF"],
+    [data-theme="dark"] span[style*="background: #EFF6FF"],
+    [data-theme="dark"] div[style*="background: #DBEAFE"],
+    [data-theme="dark"] span[style*="background: #DBEAFE"] {
+        background-color: rgba(37, 99, 235, 0.2) !important;
+        border-color: rgba(59, 130, 246, 0.3) !important;
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] div[style*="background: #ECFDF5"],
+    [data-theme="dark"] span[style*="background: #ECFDF5"],
+    [data-theme="dark"] div[style*="background: #DCFCE7"],
+    [data-theme="dark"] span[style*="background: #DCFCE7"] {
+        background-color: rgba(16, 185, 129, 0.2) !important;
+        border-color: rgba(16, 185, 129, 0.3) !important;
+        color: #6EE7B7 !important;
+    }
+
+    [data-theme="dark"] div[style*="background: #F3E8FF"],
+    [data-theme="dark"] span[style*="background: #F3E8FF"],
+    [data-theme="dark"] div[style*="background: #EDE9FE"],
+    [data-theme="dark"] span[style*="background: #EDE9FE"] {
+        background-color: rgba(124, 58, 237, 0.2) !important;
+        border-color: rgba(124, 58, 237, 0.3) !important;
+        color: #C4B5FD !important;
+    }
+
+    /* Tables in All Tabs */
+    [data-theme="dark"] table tr {
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] table th {
+        color: #94A3B8 !important;
+        background-color: #141E30 !important;
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] table td {
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] table tbody tr:hover td {
+        background-color: #162238 !important;
+    }
+
+    /* Trend Bar Background & Track */
+    [data-theme="dark"] div[style*="border-bottom: 2px solid var(--neutral-200, #E2E8F0)"] {
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] div[style*="background: #E2E8F0"],
+    [data-theme="dark"] div[style*="background: #CBD5E1"],
+    [data-theme="dark"] div[style*="background: var(--neutral-200)"] {
+        background-color: #26354D !important;
+    }
+
+    /* Empty states */
+    [data-theme="dark"] div[style*="border: 1px dashed"] {
+        background-color: #0E1726 !important;
+        border-color: #26354D !important;
+    }
+</style>
+@endpush
+
 @section('content')
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- =========================================================================
          1. HERO SAPAAN EKSEKUTIF (Figma Node 560-26404) + QUICK ACTIONS TOOLBAR
          ========================================================================= -->
-    <div style="background: linear-gradient(135deg, var(--neutral-0) 0%, #F8FAFC 100%); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem 1.75rem; box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; gap: 1.25rem;">
+    <div style="background: linear-gradient(135deg, var(--neutral-0) 0%, var(--neutral-50) 100%); border: 1px solid var(--neutral-200); border-radius: 12px; padding: 1.5rem 1.75rem; box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; gap: 1.25rem;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
             <div style="max-width: 820px;">
                 <div style="display: flex; align-items: center; gap: 0.625rem; margin-bottom: 0.375rem;">

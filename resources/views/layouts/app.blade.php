@@ -20,6 +20,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
+    <!-- Anti-Flash Theme Script -->
+    <script>
+        (function() {
+            try {
+                const savedPref = localStorage.getItem('magkom_theme') || '{{ session('tema_tampilan', request()->cookie('tema_tampilan', 'terang')) }}';
+                let effectiveTheme = 'light';
+                if (savedPref === 'sistem') {
+                    effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                } else if (savedPref === 'gelap') {
+                    effectiveTheme = 'dark';
+                } else {
+                    effectiveTheme = 'light';
+                }
+                document.documentElement.setAttribute('data-theme', effectiveTheme);
+                document.documentElement.setAttribute('data-pref-theme', savedPref);
+            } catch (e) {}
+        })();
+    </script>
+
     <style>
         :root {
             /* MagKom / Warna Tokens (Design System DS-MagKom Bab 2.1) */
@@ -70,6 +89,117 @@
             --gray-900: var(--neutral-900);
 
             --font-sans: 'Open Sans', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Dark Mode Tokens & Overrides (DS-MagKom) */
+        [data-theme="dark"] {
+            --neutral-0: #182234;
+            --neutral-100: #0F172A;
+            --neutral-150: #0A0F1D;
+            --neutral-200: #26354D;
+            --neutral-400: #475569;
+            --neutral-500: #94A3B8;
+            --neutral-600: #CBD5E1;
+            --neutral-700: #E2E8F0;
+            --neutral-800: #F8FAFC;
+            --neutral-900: #FFFFFF;
+
+            --blue-tint: #1E3A8A;
+            --blue-tint-line: #3B82F6;
+        }
+
+        [data-theme="dark"] body {
+            background-color: var(--neutral-150);
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .bg-white {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+        }
+
+        [data-theme="dark"] .text-slate-900,
+        [data-theme="dark"] .text-gray-900 {
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .text-slate-700,
+        [data-theme="dark"] .text-gray-700 {
+            color: var(--neutral-700) !important;
+        }
+
+        [data-theme="dark"] .text-slate-500,
+        [data-theme="dark"] .text-gray-500 {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .border-slate-200,
+        [data-theme="dark"] .border-gray-200 {
+            border-color: var(--neutral-200) !important;
+        }
+
+        [data-theme="dark"] .header-nav {
+            background: var(--neutral-0, #182234) !important;
+            border-bottom-color: var(--neutral-200, #26354D) !important;
+        }
+
+        [data-theme="dark"] .brand-text h1 {
+            color: var(--neutral-900, #FFFFFF) !important;
+        }
+
+        [data-theme="dark"] .nav-link {
+            color: var(--neutral-600, #CBD5E1) !important;
+        }
+
+        [data-theme="dark"] .nav-link:hover,
+        [data-theme="dark"] .nav-link.active {
+            color: var(--neutral-900, #FFFFFF) !important;
+        }
+
+        [data-theme="dark"] .nav-action-link {
+            color: var(--neutral-700, #E2E8F0) !important;
+        }
+
+        [data-theme="dark"] .nav-action-link:hover {
+            color: var(--blue-600, #3B82F6) !important;
+        }
+
+        [data-theme="dark"] .mobile-drawer {
+            background: var(--neutral-0, #182234) !important;
+            border-bottom-color: var(--neutral-200, #26354D) !important;
+        }
+
+        [data-theme="dark"] .mobile-toggle {
+            color: var(--neutral-800, #F8FAFC) !important;
+        }
+
+        [data-theme="dark"] .btn-outline {
+            color: var(--neutral-800, #F8FAFC) !important;
+            border-color: var(--neutral-400, #475569) !important;
+        }
+
+        [data-theme="dark"] .btn-outline:hover {
+            background: var(--neutral-100, #0F172A) !important;
+        }
+
+        /* Universal Inline-Style Inversion for Public views */
+        [data-theme="dark"] [style*="color: #0F172A"],
+        [data-theme="dark"] [style*="color:#0F172A"],
+        [data-theme="dark"] [style*="color: #1E293B"],
+        [data-theme="dark"] [style*="color: #000000"],
+        [data-theme="dark"] [style*="color: #333333"] {
+            color: var(--neutral-800, #F8FAFC) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #334155"],
+        [data-theme="dark"] [style*="color: #475569"],
+        [data-theme="dark"] [style*="color: #666666"] {
+            color: var(--neutral-700, #E2E8F0) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #64748B"],
+        [data-theme="dark"] [style*="color: #7A8494"] {
+            color: var(--neutral-500, #94A3B8) !important;
         }
 
         * {

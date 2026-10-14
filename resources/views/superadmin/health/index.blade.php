@@ -7,7 +7,7 @@
 
     <style>
         .health-card {
-            background: #ffffff;
+            background: var(--neutral-0, #ffffff);
             border-radius: 14px;
             border: 1px solid var(--neutral-200, #E2E8F0);
             padding: 1.5rem;
@@ -30,6 +30,50 @@
             border-radius: 9999px;
             font-size: 0.75rem;
             font-weight: 700;
+        }
+        [data-theme="dark"] .health-card {
+            background: var(--neutral-0, #182234) !important;
+            border-color: var(--neutral-200, #26354D) !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+        }
+        [data-theme="dark"] .health-card h3,
+        [data-theme="dark"] .health-card strong {
+            color: var(--neutral-900, #F8FAFC) !important;
+        }
+        [data-theme="dark"] .health-card span {
+            color: var(--neutral-500, #94A3B8);
+        }
+        [data-theme="dark"] .metric-badge-ok {
+            background: rgba(34, 197, 94, 0.15) !important;
+            color: #4ADE80 !important;
+            border-color: rgba(34, 197, 94, 0.3) !important;
+        }
+        [data-theme="dark"] .metric-badge-warn {
+            background: rgba(234, 179, 8, 0.15) !important;
+            color: #FBBF24 !important;
+            border-color: rgba(234, 179, 8, 0.3) !important;
+        }
+        [data-theme="dark"] .health-btn-hub {
+            background: var(--neutral-100, #0F172A) !important;
+            color: #60A5FA !important;
+            border-color: #1E3A8A !important;
+        }
+        [data-theme="dark"] .health-btn-sweep {
+            background: rgba(220, 38, 38, 0.15) !important;
+            color: #F87171 !important;
+            border-color: rgba(220, 38, 38, 0.3) !important;
+        }
+        [data-theme="dark"] .health-divider {
+            border-bottom-color: var(--neutral-200, #26354D) !important;
+        }
+        [data-theme="dark"] .health-progress-bg {
+            background: var(--neutral-100, #0F172A) !important;
+        }
+        [data-theme="dark"] h1 {
+            color: #F8FAFC !important;
+        }
+        [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200"] {
+            border-bottom-color: #26354D !important;
         }
     </style>
 
@@ -55,7 +99,7 @@
         </div>
 
         <div style="display: flex; gap: 0.75rem; align-items: center;">
-            <a href="{{ route('superadmin.backup.index') }}" style="height: 38px; padding: 0 1rem; background: #ffffff; color: #0641CC; border: 1px solid #BFDBFE; border-radius: 8px; font-size: 0.85rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
+            <a href="{{ route('superadmin.backup.index') }}" class="health-btn-hub" style="height: 38px; padding: 0 1rem; background: #ffffff; color: #0641CC; border: 1px solid #BFDBFE; border-radius: 8px; font-size: 0.85rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 <span>Backup Hub</span>
             </a>

@@ -597,6 +597,196 @@
             transform: translateY(-1px);
             color: #ffffff;
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .adm-verifikasi-wrapper {
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .adm-hero-role-pill {
+            background: rgba(255, 255, 255, 0.18);
+            color: #93C5FD;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-card {
+            background-color: #182234;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:hover {
+            background-color: #162238;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:not(:last-child)::after {
+            background-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-label {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-val {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-kpi-hint {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-amber {
+            background: rgba(217, 119, 6, 0.25);
+            color: #FCD34D;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-blue {
+            background: rgba(37, 99, 235, 0.25);
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-orange {
+            background: rgba(234, 88, 12, 0.25);
+            color: #FDBA74;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-red {
+            background: rgba(220, 38, 38, 0.25);
+            color: #FCA5A5;
+        }
+
+        /* Filter Toolbar Card */
+        [data-theme="dark"] .adm-filter-card {
+            background-color: #182234;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-status-track {
+            background-color: #0F172A;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-status-tab {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-status-tab:hover {
+            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme="dark"] .adm-status-tab.active {
+            background-color: #1E3A8A;
+            color: #93C5FD;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .adm-status-counter {
+            background-color: #26354D;
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .adm-status-tab.active .adm-status-counter {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .adm-field-group label {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-input-search,
+        [data-theme="dark"] .adm-select {
+            background-color: #0F172A;
+            border-color: #26354D;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-select option {
+            background-color: #0F172A;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-input-search:focus,
+        [data-theme="dark"] .adm-select:focus {
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        [data-theme="dark"] .adm-btn-filter-reset {
+            background-color: #0F172A;
+            border-color: #26354D;
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-btn-filter-reset:hover {
+            background-color: #162238;
+            color: #F8FAFC;
+            border-color: #3B82F6;
+        }
+
+        [data-theme="dark"] a[href*="download-zip"] {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #93C5FD !important;
+        }
+
+        /* Table Card */
+        [data-theme="dark"] .adm-table-card {
+            background-color: #182234;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-table-card-header {
+            border-bottom-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-table-card-title {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-table th {
+            background-color: #0E1726;
+            color: #94A3B8;
+            border-bottom-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-table td {
+            background-color: #182234;
+            color: #CBD5E1;
+            border-bottom-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-table tr:hover td {
+            background-color: #162238;
+        }
+
+        [data-theme="dark"] .adm-avatar {
+            background: rgba(37, 99, 235, 0.25);
+            border-color: #2563EB;
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-table td div[style*="color: #0F172A"],
+        [data-theme="dark"] .adm-table td div[style*="color: #1E293B"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-table td span[style*="color: #0641CC"] {
+            background-color: rgba(37, 99, 235, 0.2) !important;
+            border-color: rgba(59, 130, 246, 0.3) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-table-card div[style*="text-align: center; color: #64748B"] h3 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-table-card div[style*="text-align: center; color: #64748B"] div[style*="background: #EFF6FF"] {
+            background-color: rgba(37, 99, 235, 0.2) !important;
+            color: #93C5FD !important;
+        }
     </style>
 
     {{-- ==========================================================================

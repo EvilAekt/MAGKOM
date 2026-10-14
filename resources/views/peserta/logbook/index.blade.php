@@ -849,6 +849,73 @@
     [data-theme="dark"] .progress-tracker-title {
         color: #F8FAFC !important;
     }
+
+    [data-theme="dark"] .smart-reminder-banner {
+        background: rgba(30, 58, 138, 0.25) !important;
+        border-color: rgba(59, 130, 246, 0.4) !important;
+        border-left-color: #3B82F6 !important;
+    }
+
+    [data-theme="dark"] .smart-reminder-banner h4 {
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] .smart-reminder-banner p {
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .search-logbook-input {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .search-logbook-input:focus {
+        border-color: #3B82F6 !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+    }
+
+    [data-theme="dark"] .btn-toggle-all {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .btn-toggle-all:hover {
+        background: #182234 !important;
+        color: #FFFFFF !important;
+        border-color: #3B82F6 !important;
+    }
+
+    [data-theme="dark"] .week-chip {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .week-chip.is-done {
+        background: rgba(6, 78, 59, 0.35) !important;
+        border-color: rgba(52, 211, 153, 0.4) !important;
+        color: #6EE7B7 !important;
+    }
+
+    [data-theme="dark"] .week-chip.is-waiting {
+        background: rgba(30, 58, 138, 0.35) !important;
+        border-color: rgba(96, 165, 250, 0.4) !important;
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] .week-chip.is-revisi {
+        background: rgba(120, 53, 15, 0.35) !important;
+        border-color: rgba(245, 158, 11, 0.4) !important;
+        color: #FCD34D !important;
+    }
+
+    [data-theme="dark"] .search-result-count {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #94A3B8 !important;
+    }
 </style>
 @endpush
 

@@ -13,6 +13,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
+    <!-- Anti-Flash Theme Script -->
+    <script>
+        (function() {
+            try {
+                const savedPref = localStorage.getItem('magkom_theme') || '{{ session('tema_tampilan', request()->cookie('tema_tampilan', 'terang')) }}';
+                let effectiveTheme = 'light';
+                if (savedPref === 'sistem') {
+                    effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                } else if (savedPref === 'gelap') {
+                    effectiveTheme = 'dark';
+                } else {
+                    effectiveTheme = 'light';
+                }
+                document.documentElement.setAttribute('data-theme', effectiveTheme);
+                document.documentElement.setAttribute('data-pref-theme', savedPref);
+            } catch (e) {}
+        })();
+    </script>
+
     <style>
         :root {
             /* MagKom / Warna Tokens (Design System DS-MagKom Bab 2.1) */
@@ -45,6 +64,180 @@
             --red-500: #EF4444;
             --red-600: #DC2626;
             --red-700: #B91C1C;
+        }
+
+        /* Dark Mode Tokens & Overrides (DS-MagKom) */
+        [data-theme="dark"] {
+            --neutral-0: #182234;
+            --neutral-50: #111C2E;
+            --neutral-100: #0F172A;
+            --neutral-200: #26354D;
+            --neutral-300: #334155;
+            --neutral-400: #475569;
+            --neutral-500: #94A3B8;
+            --neutral-600: #CBD5E1;
+            --neutral-700: #E2E8F0;
+            --neutral-800: #F8FAFC;
+            --neutral-900: #FFFFFF;
+
+            --blue-50: #1E3A8A;
+            --blue-100: #1E40AF;
+        }
+
+        [data-theme="dark"] body {
+            background-color: #0A0F1D;
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .auth-form-panel {
+            background-color: #0A0F1D;
+        }
+
+        [data-theme="dark"] .auth-card {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        [data-theme="dark"] .auth-title {
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .auth-subtitle {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .form-label {
+            color: var(--neutral-700) !important;
+        }
+
+        [data-theme="dark"] .form-input,
+        [data-theme="dark"] input[type="text"],
+        [data-theme="dark"] input[type="email"],
+        [data-theme="dark"] input[type="password"] {
+            background-color: var(--neutral-100) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .form-input:focus,
+        [data-theme="dark"] input:focus {
+            border-color: var(--blue-600) !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35) !important;
+        }
+
+        [data-theme="dark"] .form-input::placeholder,
+        [data-theme="dark"] input::placeholder {
+            color: var(--neutral-400) !important;
+        }
+
+        [data-theme="dark"] .back-link {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-700) !important;
+        }
+
+        [data-theme="dark"] .back-link:hover {
+            background-color: var(--neutral-50) !important;
+            color: var(--neutral-900) !important;
+            border-color: var(--neutral-300) !important;
+        }
+
+        [data-theme="dark"] .oauth-btn {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .oauth-btn:hover {
+            background-color: var(--neutral-50) !important;
+            border-color: var(--neutral-300) !important;
+        }
+
+        [data-theme="dark"] .divider-text {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .divider-line {
+            background-color: var(--neutral-200) !important;
+        }
+
+        /* Universal Inline-Style Inversion for Auth views */
+        [data-theme="dark"] [style*="color: #0F172A"],
+        [data-theme="dark"] [style*="color:#0F172A"],
+        [data-theme="dark"] [style*="color: #1E293B"],
+        [data-theme="dark"] [style*="color: #000000"],
+        [data-theme="dark"] [style*="color: #333333"] {
+            color: var(--neutral-800, #F8FAFC) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #334155"],
+        [data-theme="dark"] [style*="color: #475569"],
+        [data-theme="dark"] [style*="color: #666666"] {
+            color: var(--neutral-700, #E2E8F0) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #64748B"],
+        [data-theme="dark"] [style*="color: #7A8494"] {
+            color: var(--neutral-500, #94A3B8) !important;
+        }
+
+        [data-theme="dark"] .btn-google {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .btn-google:hover {
+            background-color: var(--neutral-50) !important;
+            border-color: var(--neutral-300) !important;
+        }
+
+        [data-theme="dark"] .auth-divider::before,
+        [data-theme="dark"] .auth-divider::after {
+            border-bottom-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .auth-divider span {
+            color: var(--neutral-500);
+        }
+
+        [data-theme="dark"] .auth-footer-text,
+        [data-theme="dark"] .auth-terms-text {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .step-badge {
+            background-color: rgba(37, 99, 235, 0.2) !important;
+            border-color: rgba(59, 130, 246, 0.4) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .auth-footer-link,
+        [data-theme="dark"] .forgot-link {
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .auth-footer-link:hover,
+        [data-theme="dark"] .forgot-link:hover {
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .input-icon-box {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .password-toggle-btn {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .password-toggle-btn:hover {
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .bg-white {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
         }
 
         *, *::before, *::after {

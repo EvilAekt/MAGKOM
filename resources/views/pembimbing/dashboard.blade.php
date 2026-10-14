@@ -121,6 +121,7 @@
         border-radius: 4px;
     }
 
+<<<<<<< HEAD
     /* ========================================================================= */
     /* Komponen Kartu Tugas Terpadu Ala Dashboard Peserta Magang (DS-MagKom)     */
     /* ========================================================================= */
@@ -466,6 +467,151 @@
 
     [data-theme="dark"] .micro-progress-bar {
         background: #26354D;
+    }
+
+    /* =====================================================================
+       DARK MODE OVERRIDES (DS-MagKom Standards)
+       ===================================================================== */
+    [data-theme="dark"] .pembimbing-tab-bar {
+        background-color: #0F172A;
+        border-color: #26354D;
+    }
+
+    [data-theme="dark"] .pembimbing-tab-btn {
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .pembimbing-tab-btn:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: #F8FAFC;
+    }
+
+    [data-theme="dark"] .pembimbing-tab-btn.active {
+        background-color: #1E3A8A;
+        color: #93C5FD;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="dark"] .stat-card-pembimbing {
+        background-color: #182234 !important;
+        border-color: #26354D !important;
+        color: #F8FAFC;
+    }
+
+    [data-theme="dark"] .tab-badge {
+        background-color: #26354D;
+        color: #E2E8F0;
+    }
+
+    [data-theme="dark"] .tab-badge.badge-amber {
+        background-color: rgba(217, 119, 6, 0.25);
+        color: #FCD34D;
+    }
+
+    [data-theme="dark"] .tab-badge.badge-blue {
+        background-color: rgba(37, 99, 235, 0.25);
+        color: #93C5FD;
+    }
+
+    /* Tab Panes & Container Overrides for Dark Mode */
+    [data-theme="dark"] .dashboard-content div[style*="background: #ffffff"],
+    [data-theme="dark"] .dashboard-content div[style*="background: #FFFFFF"] {
+        background-color: #182234 !important;
+        border-color: #26354D !important;
+        color: #F8FAFC;
+    }
+
+    [data-theme="dark"] .dashboard-content div[style*="background: #fafafa"] {
+        background-color: #0E1726 !important;
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .dashboard-content div[style*="background: #f8fafc"],
+    [data-theme="dark"] .dashboard-content div[style*="background: #F8FAFC"] {
+        background-color: #111C2E !important;
+        border-color: #26354D !important;
+    }
+
+    /* Headings & Text High Contrast */
+    [data-theme="dark"] .dashboard-content h2,
+    [data-theme="dark"] .dashboard-content h3,
+    [data-theme="dark"] .dashboard-content h4 {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .dashboard-content span[style*="color: var(--neutral-900)"],
+    [data-theme="dark"] .dashboard-content div[style*="color: var(--neutral-900)"],
+    [data-theme="dark"] .dashboard-content span[style*="color: var(--neutral-800)"],
+    [data-theme="dark"] .dashboard-content div[style*="color: var(--neutral-800)"],
+    [data-theme="dark"] .dashboard-content span[style*="color: var(--neutral-700)"],
+    [data-theme="dark"] .dashboard-content div[style*="color: var(--neutral-700)"],
+    [data-theme="dark"] .dashboard-content div[style*="color: #0F172A"],
+    [data-theme="dark"] .dashboard-content span[style*="color: #0F172A"] {
+        color: #F8FAFC !important;
+    }
+
+    /* Tables in All Tabs */
+    [data-theme="dark"] .dashboard-content table tr[style*="background: #f8fafc"],
+    [data-theme="dark"] .dashboard-content table tr[style*="background: #F8FAFC"] {
+        background-color: #0E1726 !important;
+        border-bottom-color: #26354D !important;
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .dashboard-content table tr {
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .dashboard-content table td {
+        color: #CBD5E1 !important;
+        background-color: transparent !important;
+    }
+
+    [data-theme="dark"] .dashboard-content table tbody tr:hover td {
+        background-color: #162238 !important;
+    }
+
+    /* Input Fields */
+    [data-theme="dark"] .dashboard-content input[type="text"] {
+        background-color: #0F172A !important;
+        border-color: #26354D !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .dashboard-content input[type="text"]::placeholder {
+        color: #64748B !important;
+    }
+
+    /* Alert / Warning Sections */
+    [data-theme="dark"] .dashboard-content div[style*="background: #fffbeb"] {
+        background-color: rgba(217, 119, 6, 0.12) !important;
+        border-color: rgba(245, 158, 11, 0.3) !important;
+    }
+
+    [data-theme="dark"] .dashboard-content div[style*="background: #fff7ed"] {
+        background-color: rgba(234, 88, 12, 0.12) !important;
+        border-color: rgba(234, 88, 12, 0.3) !important;
+    }
+
+    /* Track Bars */
+    [data-theme="dark"] .dashboard-content div[style*="background: #E2E8F0"] {
+        background-color: #26354D !important;
+    }
+
+    /* Quick Badges */
+    [data-theme="dark"] .dashboard-content div[style*="background: #eff6ff"] {
+        background-color: rgba(37, 99, 235, 0.2) !important;
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] .dashboard-content div[style*="background: #f5f3ff"] {
+        background-color: rgba(124, 58, 237, 0.2) !important;
+        color: #C4B5FD !important;
+    }
+
+    [data-theme="dark"] .dashboard-content div[style*="background: #ecfdf5"] {
+        background-color: rgba(16, 185, 129, 0.2) !important;
+        color: #6EE7B7 !important;
     }
 </style>
 @endpush

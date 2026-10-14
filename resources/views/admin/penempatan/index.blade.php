@@ -113,6 +113,180 @@
             from { opacity: 0; transform: scale(0.96); }
             to { opacity: 1; transform: scale(1); }
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .admin-stat-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-stat-card div div {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-stat-card span[style*="color: var(--neutral-500"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"]:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .admin-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-card label {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-card input#q-input {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-card select {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-card select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-card a[href*="admin.penempatan.index"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .admin-card a[href*="admin.penempatan.index"]:hover {
+            background: #162238 !important;
+            color: #F8FAFC !important;
+            border-color: #3B82F6 !important;
+        }
+
+        [data-theme="dark"] .admin-card div[style*="background: #ffffff"] {
+            background-color: #141E30 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-card h3 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-table th {
+            background-color: #0E1726 !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-table td {
+            background-color: #182234 !important;
+            color: #CBD5E1 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-table tr:hover td,
+        [data-theme="dark"] .admin-table tr:hover {
+            background-color: #162238 !important;
+        }
+
+        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-900"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-800"] {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-500"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .admin-table td a[style*="background: #ffffff"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-table td a[style*="background: #ffffff"]:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .modal-container {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="background: #F8FAFC"] {
+            background-color: #141E30 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container h3 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container p {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .modal-container label {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .modal-container select,
+        [data-theme="dark"] .modal-container input,
+        [data-theme="dark"] .modal-container textarea {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="background: var(--neutral-100"] {
+            background-color: #0F172A !important;
+            border: 1px solid #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="border-top: 1px solid"] {
+            border-top-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container button[style*="background: #ffffff"],
+        [data-theme="dark"] .modal-container button[style*="background: var(--neutral-0"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] #bulkActionBar {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+        }
     </style>
 
     {{-- 1. HERO STATS CARDS --}}

@@ -518,6 +518,197 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .adm-detail-wrapper {
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .adm-identity-bar {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-candidate-name {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-candidate-sub {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-submission-time {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-submission-time strong {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-btn-back {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-back:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .adm-panel-card {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-panel-header {
+            background: #141E30 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-panel-title {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-panel-title svg {
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .adm-doc-item {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-doc-item:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-doc-title {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-doc-detail {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-action-download {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-action-download:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .adm-summary-label {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-summary-val {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-decision-tabs {
+            background: #0F172A !important;
+            border: 1px solid #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-tab-pill {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-form-field label {
+            color: #E2E8F0 !important;
+        }
+
+        [data-theme="dark"] .adm-form-field select,
+        [data-theme="dark"] .adm-form-field textarea {
+            background: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-form-field select:focus,
+        [data-theme="dark"] .adm-form-field textarea:focus {
+            border-color: #3B82F6 !important;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        [data-theme="dark"] .adm-form-field select option {
+            background: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .doc-modal-box {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .doc-modal-body {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] #previewModalTitle {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] #previewOpenNewTabBtn,
+        [data-theme="dark"] #previewDownloadBtn {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] #previewOpenNewTabBtn:hover,
+        [data-theme="dark"] #previewDownloadBtn:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] #previewLoading {
+            background: rgba(15, 23, 42, 0.95) !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] #previewLoading > div:nth-child(2) {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] #previewLoading > div:nth-child(3) {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] #previewError > div:nth-child(2) {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] #previewError > div:nth-child(3) {
+            color: #94A3B8 !important;
+        }
+
+        /* Rekam Jejak Pendaftaran Borders in Dark Mode */
+        [data-theme="dark"] .adm-panel-body div[style*="border-bottom: 1px solid #F1F5F9"] {
+            border-bottom-color: #26354D !important;
+        }
+        [data-theme="dark"] .adm-panel-body div[style*="border-bottom: 1px solid #F1F5F9"] span[style*="color: #64748B"] {
+            color: #94A3B8 !important;
+        }
+        [data-theme="dark"] .adm-panel-body div[style*="border-bottom: 1px solid #F1F5F9"] span[style*="color: #0F172A"] {
+            color: #F8FAFC !important;
+        }
     </style>
 
     {{-- SEC-15: Indikator Peringatan Deteksi NIM/NISN Ganda Lintas Akun --}}

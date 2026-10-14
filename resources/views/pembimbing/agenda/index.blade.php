@@ -51,6 +51,32 @@
             z-index: 9999;
             padding: 1rem;
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .agenda-stat-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .agenda-table th {
+            background-color: #0E1726 !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .agenda-table td {
+            background-color: #182234 !important;
+            color: #CBD5E1 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .agenda-table tr:hover td,
+        [data-theme="dark"] .agenda-table tr:hover {
+            background-color: #162238 !important;
+        }
     </style>
 
     {{-- 1. HEADER & BREADCRUMB --}}
