@@ -48,6 +48,9 @@ use App\Http\Controllers\SuperAdmin\BidangController;
 use App\Http\Controllers\SuperAdmin\BulanController;
 use App\Http\Controllers\SuperAdmin\HealthMonitorController;
 use App\Http\Controllers\SuperAdmin\JurusanController;
+use App\Http\Controllers\PublicModulController;
+use App\Http\Controllers\SuperAdmin\ModulBuilderController;
+use App\Http\Controllers\SuperAdmin\ModulDataController;
 use App\Http\Controllers\SuperAdmin\PengaturanController;
 use App\Http\Controllers\SuperAdmin\ProfilController as SuperAdminProfilController;
 use App\Http\Controllers\SuperAdmin\RoleController;
@@ -83,6 +86,12 @@ Route::get('/verifikasi-dokumen/{kode}', \App\Http\Controllers\Public\Verifikasi
 Route::get('/captcha/image', [CaptchaController::class, 'image'])
     ->name('captcha.image')
     ->middleware('throttle:60,1');
+
+// Modul Publik Read-Only (Ekuivalen Basefw PUBLIC_list & PUBLIC_detail)
+Route::prefix('publik/modul')->name('public.modul.')->group(function () {
+    Route::get('/{slug}', [PublicModulController::class, 'index'])->name('index');
+    Route::get('/{slug}/{id}', [PublicModulController::class, 'show'])->name('show');
+});
 
 
 // Rute Autentikasi Publik & Reset Password (F-02, F-14, F-18)
@@ -337,13 +346,38 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/arsip-peserta', [ArsipPesertaController::class, 'index'])->name('arsip.index');
     Route::get('/arsip-peserta/{penempatan}', [ArsipPesertaController::class, 'show'])->name('arsip.show');
 
-    // Audit Log Trail (F-13 AC-13-6)
+    // Audit Log Trail (F-13 AC-13-6 & Multi-Channel Stream)
     Route::get('/audit-log/export', [AuditLogController::class, 'export'])->name('audit-log.export');
+    Route::get('/audit-log/channel/{channel}', [AuditLogController::class, 'index'])->name('audit-log.channel');
     Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log.index');
 
     // Telemetri Kesehatan Sistem & Infrastruktur
     Route::get('/health-monitor', [HealthMonitorController::class, 'index'])->name('health.index');
     Route::post('/health-monitor/security-sweep', [HealthMonitorController::class, 'runSecuritySweep'])->name('health.security-sweep');
+    Route::post('/health-monitor/optimize-db', [HealthMonitorController::class, 'optimizeDatabase'])->name('health.optimize-db');
+    Route::post('/health-monitor/clear-cache', [HealthMonitorController::class, 'clearSystemCache'])->name('health.clear-cache');
+    Route::post('/health-monitor/test-storage', [HealthMonitorController::class, 'testStorageWrite'])->name('health.test-storage');
+
+    // Pembuat Modul Dinamis (Low-Code Engine & Reverse-Engineering Basefw) (Tri-Core SuperAdmin)
+    Route::get('/modul-builder/api/tables', [ModulBuilderController::class, 'apiGetTables'])->name('modul-builder.api.tables');
+    Route::get('/modul-builder/api/inspect', [ModulBuilderController::class, 'apiInspectTable'])->name('modul-builder.api.inspect');
+    Route::get('/modul-builder', [ModulBuilderController::class, 'index'])->name('modul-builder.index');
+    Route::get('/modul-builder/create', [ModulBuilderController::class, 'create'])->name('modul-builder.create');
+    Route::post('/modul-builder', [ModulBuilderController::class, 'store'])->name('modul-builder.store');
+    Route::get('/modul-builder/{modul}/edit', [ModulBuilderController::class, 'edit'])->name('modul-builder.edit');
+    Route::put('/modul-builder/{modul}', [ModulBuilderController::class, 'update'])->name('modul-builder.update');
+    Route::patch('/modul-builder/{modul}/toggle', [ModulBuilderController::class, 'toggleAktif'])->name('modul-builder.toggle');
+    Route::delete('/modul-builder/{modul}', [ModulBuilderController::class, 'destroy'])->name('modul-builder.destroy');
+
+    // Eksekutor Universal Data Modul Dinamis (SuperAdmin Route Group)
+    Route::get('/modul/{slug}/export', [ModulDataController::class, 'export'])->name('modul.export');
+    Route::get('/modul/{slug}/export-pdf', [ModulDataController::class, 'exportPdf'])->name('modul.export-pdf');
+    Route::get('/modul/{slug}/print', [ModulDataController::class, 'printPreview'])->name('modul.print');
+    Route::get('/modul/{slug}/file/{id}/{field}', [ModulDataController::class, 'downloadFile'])->name('modul.download-file');
+    Route::get('/modul/{slug}', [ModulDataController::class, 'index'])->name('modul.index');
+    Route::post('/modul/{slug}', [ModulDataController::class, 'store'])->name('modul.store');
+    Route::put('/modul/{slug}/{id}', [ModulDataController::class, 'update'])->name('modul.update');
+    Route::delete('/modul/{slug}/{id}', [ModulDataController::class, 'destroy'])->name('modul.destroy');
 
     // Hub Cadangan Basis Data (Disaster Recovery & Backup) (SEC-03)
     Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
@@ -357,6 +391,18 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/akun', [SuperAdminAkunController::class, 'index'])->name('akun.index');
     Route::put('/akun/password', [SuperAdminAkunController::class, 'updatePassword'])->name('akun.password.update');
     Route::post('/akun/preferensi', [SuperAdminAkunController::class, 'updatePreferensi'])->name('akun.preferensi.update');
+});
+
+// Eksekutor Universal Data Modul Dinamis untuk Semua Role Terotorisasi (target_roles)
+Route::middleware(['auth', 'verified', 'must_change_password', 'account.active'])->prefix('kustom-modul')->name('kustom-modul.')->group(function () {
+    Route::get('/{slug}/export', [ModulDataController::class, 'export'])->name('export');
+    Route::get('/{slug}/export-pdf', [ModulDataController::class, 'exportPdf'])->name('export-pdf');
+    Route::get('/{slug}/print', [ModulDataController::class, 'printPreview'])->name('print');
+    Route::get('/{slug}/file/{id}/{field}', [ModulDataController::class, 'downloadFile'])->name('download-file');
+    Route::get('/{slug}', [ModulDataController::class, 'index'])->name('index');
+    Route::post('/{slug}', [ModulDataController::class, 'store'])->name('store');
+    Route::put('/{slug}/{id}', [ModulDataController::class, 'update'])->name('update');
+    Route::delete('/{slug}/{id}', [ModulDataController::class, 'destroy'])->name('destroy');
 });
 
 // Server-Sent Events (SSE) Real-time Stream & Notifikasi (RFC 8895)

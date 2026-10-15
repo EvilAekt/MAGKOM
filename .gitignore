@@ -25,3 +25,4 @@ strix_runs/
 testsprite_out/
 __pycache__/
 *.pyc
+basefw*/

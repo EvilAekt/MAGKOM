@@ -53,6 +53,30 @@ class AppServiceProvider extends ServiceProvider
 
                 $view->with($badgeData);
             }
+
+            // Injeksi Modul Dinamis Aktif ke Sidebar Dashboard
+            if ($user) {
+                $userRole = is_object($user->role) && property_exists($user->role, 'value') ? $user->role->value : (string) $user->role;
+                $userRoleLower = strtolower($userRole);
+
+                $allModules = Cache::remember('dynamic_modules_sidebar', 3600, function () {
+                    try {
+                        return \App\Models\ModulDinamis::where('status_aktif', true)->orderBy('urutan')->get();
+                    } catch (\Throwable $e) {
+                        return collect();
+                    }
+                });
+
+                $accessibleModules = $allModules->filter(function ($module) use ($userRoleLower) {
+                    if ($userRoleLower === 'superadmin') {
+                        return true;
+                    }
+                    $roles = array_map('strtolower', (array) ($module->target_roles ?? []));
+                    return in_array($userRoleLower, $roles, true);
+                });
+
+                $view->with('sidebarDynamicModules', $accessibleModules);
+            }
         });
     }
 }

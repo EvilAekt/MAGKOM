@@ -1938,6 +1938,22 @@
                             <span>{{ __('Pengaturan Akun') }}</span>
                         </a>
 
+                        <!-- GRUP: MODUL KUSTOM DINAMIS (ADMIN) -->
+                        @if(isset($sidebarDynamicModules) && $sidebarDynamicModules->isNotEmpty())
+                            <span class="nav-section-label">{{ __('MODUL KUSTOM') }}</span>
+                            @foreach($sidebarDynamicModules as $customModul)
+                                <a href="{{ route('kustom-modul.index', ['slug' => $customModul->slug]) }}" class="nav-item-link {{ request()->is('kustom-modul/'.$customModul->slug.'*') ? 'active' : '' }}">
+                                    <span class="nav-item-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                        </svg>
+                                    </span>
+                                    <span>{{ $customModul->nama_modul }}</span>
+                                </a>
+                            @endforeach
+                        @endif
+
                     @elseif($userRole === 'superadmin')
                         <!-- NAVIGASI SUPERADMIN (Figma Node 560-24892 & PRD 9.2) -->
                         <a href="{{ route('superadmin.dashboard') }}" class="nav-item-link {{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
@@ -2089,8 +2105,30 @@
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
                             </span>
-                            <span>{{ __('Audit Log') }}</span>
-                            <span class="sr-only">Jejak Audit Log</span>
+                            <span>{{ __('Audit Log (15 Kanal)') }}</span>
+                            <span class="sr-only">Jejak Audit Log Multi Kanal</span>
+                        </a>
+
+                        <a href="{{ route('superadmin.health.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.health.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                            </span>
+                            <span>{{ __('Telemetri Kesehatan') }}</span>
+                            <span class="sr-only">Kesehatan Infrastruktur</span>
+                        </a>
+
+                        <a href="{{ route('superadmin.modul-builder.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.modul-builder.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                    <polyline points="2 17 12 22 22 17"></polyline>
+                                    <polyline points="2 12 12 17 22 12"></polyline>
+                                </svg>
+                            </span>
+                            <span>{{ __('Pembuat Modul') }}</span>
+                            <span class="sr-only">Low-Code Module Builder</span>
                         </a>
 
                         @php
@@ -2119,6 +2157,22 @@
                                 <a href="{{ route('superadmin.bidang.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bidang.*') ? 'active' : '' }}">{{ __('Bidang Dinas') }}</a>
                             </div>
                         </div>
+
+                        <!-- GRUP: MODUL KUSTOM DINAMIS -->
+                        @if(isset($sidebarDynamicModules) && $sidebarDynamicModules->isNotEmpty())
+                            <span class="nav-section-label">{{ __('MODUL KUSTOM') }}</span>
+                            @foreach($sidebarDynamicModules as $customModul)
+                                <a href="{{ route('superadmin.modul.index', ['slug' => $customModul->slug]) }}" class="nav-item-link {{ request()->is('superadmin/modul/'.$customModul->slug.'*') || request()->is('kustom-modul/'.$customModul->slug.'*') ? 'active' : '' }}">
+                                    <span class="nav-item-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                        </svg>
+                                    </span>
+                                    <span>{{ $customModul->nama_modul }}</span>
+                                </a>
+                            @endforeach
+                        @endif
 
                         <!-- GRUP 3: AKUN & PROFIL PRIBADI -->
                         <span class="nav-section-label">{{ __('AKUN PRIBADI') }}</span>
