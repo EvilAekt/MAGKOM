@@ -65,13 +65,30 @@ class AlurMagangPageTest extends TestCase
         $response->assertSee('journey-stepper-track');
         $response->assertSee('dagProgressBar');
 
+        // Flowchart Canvas & Zoom Controls
+        $response->assertSee('flowchart-canvas-wrapper');
+        $response->assertSee('flowchart-canvas-inner');
+        $response->assertSee('flowchart-zoom-group');
+        $response->assertSee('id="btnZoomIn"', false);
+        $response->assertSee('id="btnZoomOut"', false);
+        $response->assertSee('id="btnZoomReset"', false);
+
+        // Terminator Nodes
+        $response->assertSee('id="flow-node-start"', false);
+        $response->assertSee('START &bull; Akses Portal MagKom', false);
+        $response->assertSee('id="flow-node-finish"', false);
+        $response->assertSee('FINISH &bull; Sertifikat QR &amp; Lembar Nilai', false);
+
         // Journey Board container & nodes
         $response->assertSee('journey-board-container');
         $response->assertSee('dag-canvas-container');
         $response->assertSee('id="node-1"', false);
         $response->assertSee('id="node-2"', false);
         $response->assertSee('id="node-3"', false);
+        $response->assertSee('id="loopbackTargetAnchor"', false);
         $response->assertSee('id="node-4"', false);
+        $response->assertSee('decision-rhombus-gateway');
+        $response->assertSee('Gerbang Keputusan Evaluasi Dokumen Admin');
         $response->assertSee('id="node-waiting"', false);
         $response->assertSee('id="node-diterima"', false);
         $response->assertSee('id="node-perbaikan"', false);

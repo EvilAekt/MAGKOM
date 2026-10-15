@@ -285,10 +285,11 @@
        INTERACTIVE DAG WORKFLOW CANVAS & PIPELINE STYLING (DS-MAGKOM)
        ===================================================================== */
     .journey-board-container,
-    .dag-canvas-container {
+    .dag-canvas-container,
+    .flowchart-canvas-wrapper {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 0;
         position: relative;
         width: 100%;
         background: #ffffff;
@@ -296,8 +297,277 @@
         background-size: 22px 22px;
         border: 1px solid var(--neutral-300);
         border-radius: 1.25rem;
-        padding: 1.75rem;
+        padding: 1.75rem 1.5rem;
         box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .flowchart-canvas-inner {
+        width: 100%;
+        min-width: 580px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        transform-origin: top center;
+        transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+        position: relative;
+    }
+
+    /* Zoom Controls in Toolbar */
+    .flowchart-zoom-group {
+        display: inline-flex;
+        align-items: center;
+        background: var(--neutral-0);
+        border: 1px solid var(--neutral-300);
+        border-radius: 0.5rem;
+        padding: 2px;
+        gap: 2px;
+    }
+
+    .zoom-btn {
+        min-height: 32px !important;
+        padding: 0.25rem 0.55rem !important;
+        font-size: 0.75rem !important;
+        border-radius: 0.35rem !important;
+        border: none !important;
+        background: transparent !important;
+        color: var(--neutral-700) !important;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        font-weight: 700;
+        transition: all 120ms ease;
+    }
+    .zoom-btn:hover {
+        background: var(--neutral-100) !important;
+        color: var(--blue-600) !important;
+    }
+    .zoom-btn:active {
+        transform: scale(0.95);
+    }
+
+    /* Flowchart Terminator Pills (Start & Finish) */
+    .flow-terminator-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.55rem 1.4rem;
+        border-radius: 9999px;
+        font-size: 0.8125rem;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 180ms cubic-bezier(0.2, 0, 0, 1);
+        user-select: none;
+        z-index: 5;
+        border: 2px solid transparent;
+    }
+
+    .flow-terminator-pill.start {
+        background: #0F172A;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
+    }
+    .flow-terminator-pill.start:hover {
+        background: #1E293B;
+        border-color: #38BDF8;
+        transform: scale(1.02);
+    }
+
+    .flow-terminator-pill.finish {
+        background: linear-gradient(135deg, #047857 0%, #10B981 100%);
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+    .flow-terminator-pill.finish:hover {
+        filter: brightness(1.1);
+        transform: scale(1.02);
+    }
+
+    .terminator-pulse-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #38BDF8;
+        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6);
+        animation: pulseRing 1.8s infinite;
+    }
+
+    @keyframes pulseRing {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(56, 189, 248, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+
+    /* Flowchart Vertical Edge Pipe */
+    .flow-vertical-edge {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        height: 38px;
+        margin: -2px 0;
+    }
+
+    .flow-edge-svg {
+        width: 40px;
+        height: 38px;
+        overflow: visible;
+    }
+
+    .flow-edge-track {
+        stroke: var(--neutral-300);
+        stroke-width: 2.5px;
+        fill: none;
+        stroke-linecap: round;
+    }
+
+    .flow-edge-pulse {
+        stroke: var(--blue-600);
+        stroke-width: 3px;
+        fill: none;
+        stroke-dasharray: 6 4;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+        stroke-linecap: round;
+    }
+
+    .flow-vertical-edge.active .flow-edge-pulse {
+        opacity: 1;
+        animation: beamFlow 1.2s linear infinite;
+    }
+
+    .flow-edge-arrow {
+        fill: var(--neutral-400);
+        transition: fill 0.25s ease;
+    }
+
+    .flow-vertical-edge.active .flow-edge-arrow {
+        fill: var(--blue-600);
+    }
+
+    /* Decision Rhombus Gateway */
+    .decision-rhombus-gateway {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        margin: 1.15rem 0 0.85rem;
+        padding: 0.65rem 1rem;
+        background: #FFFBEB;
+        border: 1px solid #FDE68A;
+        border-radius: 0.75rem;
+        position: relative;
+    }
+
+    .rhombus-diamond-box {
+        width: 30px;
+        height: 30px;
+        background: #D97706;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: rotate(45deg);
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(217, 119, 6, 0.35);
+        flex-shrink: 0;
+    }
+
+    .rhombus-diamond-box svg {
+        transform: rotate(-45deg);
+    }
+
+    .rhombus-title {
+        font-size: 0.8125rem;
+        font-weight: 800;
+        color: #92400E;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    /* Loopback Target Anchor & Curved SVG Connector */
+    .loopback-target-anchor {
+        position: absolute;
+        right: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--neutral-0, #ffffff);
+        border: 2px solid #D97706;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .anchor-pulse {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #D97706;
+    }
+
+    .loopback-target-anchor.active,
+    .journey-node-card.active .loopback-target-anchor {
+        box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.35);
+        transform: translateY(-50%) scale(1.15);
+    }
+
+    /* Curved Loopback SVG Canvas Container */
+    .loopback-curved-svg-container {
+        position: absolute;
+        right: 8px;
+        top: 240px;
+        bottom: 520px;
+        width: 70px;
+        pointer-events: none;
+        z-index: 8;
+        display: none;
+    }
+
+    .loopback-curved-svg-container.active {
+        display: block;
+    }
+
+    .loopback-curved-svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+    }
+
+    .loopback-svg-path {
+        fill: none;
+        stroke: #D97706;
+        stroke-width: 3px;
+        stroke-dasharray: 6 4;
+        animation: beamFlow 1.2s linear infinite;
+    }
+
+    .loopback-floating-badge {
+        position: absolute;
+        right: -10px;
+        top: 50%;
+        transform: translateY(-50%) rotate(90deg);
+        transform-origin: center center;
+        background: #FEF3C7;
+        border: 1px solid #D97706;
+        color: #92400E;
+        font-size: 0.68rem;
+        font-weight: 800;
+        padding: 2px 8px;
+        border-radius: 9999px;
+        white-space: nowrap;
+        box-shadow: 0 2px 6px rgba(217, 119, 6, 0.2);
     }
 
     /* 1. Simulation Control Toolbar */
@@ -465,263 +735,548 @@
         color: #ffffff;
     }
 
-    /* 3. Phase Track Container */
-    .journey-phase-track {
-        background: var(--neutral-0, #ffffff);
-        border: 1px solid var(--neutral-300);
+    /* =====================================================================
+       3. TRUE 2D FLOWCHART CANVAS & NODE GRAPH ENGINE (FIGMA/MIRO STYLE)
+       ===================================================================== */
+    .flowchart-viewport {
+        position: relative;
+        width: 100%;
+        overflow: hidden; /* ZERO-SCROLL GUARANTEE */
         border-radius: 1rem;
-        padding: 1.25rem 1.35rem;
+        background: var(--neutral-100, #F8FAFC);
+        border: 1px solid var(--neutral-300, #CBD5E1);
+        padding: 0;
+        box-shadow: inset 0 2px 6px rgba(15, 23, 42, 0.04);
+        box-sizing: border-box;
+    }
+
+    .flowchart-autofit-stage {
         position: relative;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        width: 100%;
+        overflow: hidden;
+        transform-origin: top left;
+        transition: height 0.2s cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .journey-phase-track:hover {
-        border-color: rgba(7, 81, 255, 0.4);
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
-    }
-
-    .journey-phase-header-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 0.85rem;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-
-    .journey-phase-badge-label {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        padding: 4px 12px;
-        border-radius: 9999px;
-    }
-
-    .journey-phase-desc-mini {
-        font-size: 0.78rem;
-        color: var(--neutral-600);
-        margin: 0;
-        font-weight: 500;
-    }
-
-    .journey-nodes-row {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 0.85rem;
-        position: relative;
-    }
-
-    /* 4. Milestone Interactive Card (ZERO JITTER GUARANTEE: No translateY!) */
-    .journey-node-card,
-    .dag-node-card {
-        background: var(--neutral-0, #ffffff);
-        border: 1.5px solid var(--neutral-300);
+    .flowchart-canvas-plane {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1040px;
+        min-width: 1040px;
+        height: 500px;
+        background-color: var(--neutral-0, #ffffff);
+        background-image: radial-gradient(var(--neutral-300, #CBD5E1) 1.25px, transparent 1.25px);
+        background-size: 20px 20px;
         border-radius: 0.85rem;
-        padding: 1rem 1.15rem;
-        cursor: pointer;
-        text-align: left;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
-        outline: none;
         user-select: none;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        transform-origin: top left;
+        transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .journey-node-card:active,
-    .dag-node-card:active {
-        transform: scale(0.97);
+    /* SVG Connector Overlay Layer (Behind Nodes) */
+    .flow-svg-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        overflow: visible;
     }
 
-    @media (hover: hover) {
-        .journey-node-card:hover,
-        .dag-node-card:hover {
-            border-color: var(--blue-600);
-            background: rgba(7, 81, 255, 0.02);
-            box-shadow: 0 6px 18px -2px rgba(7, 81, 255, 0.16);
+    .flow-edge-track {
+        fill: none;
+        stroke: var(--neutral-300, #CBD5E1);
+        stroke-width: 2px;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: stroke 0.2s ease, stroke-width 0.2s ease;
+    }
+
+    .flow-edge-track.active {
+        stroke: var(--blue-600, #0751FF);
+        stroke-width: 2.5px;
+    }
+
+    /* Living Motion: SVG Laser Beam Flow */
+    .flow-edge-pulse {
+        fill: none;
+        stroke: #38BDF8;
+        stroke-width: 3px;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }
+
+    .flow-edge-pulse.active {
+        opacity: 1;
+        stroke-dasharray: 8 10;
+        animation: laserBeamFlow 0.9s linear infinite;
+    }
+
+    .flow-edge-loopback {
+        fill: none;
+        stroke: #EA580C;
+        stroke-width: 2.5px;
+        stroke-dasharray: 6 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        opacity: 0.75;
+        transition: opacity 0.25s ease, stroke-width 0.25s ease;
+    }
+
+    .flow-edge-loopback.active {
+        opacity: 1;
+        stroke-width: 3px;
+        stroke-dasharray: 6 6;
+        animation: loopbackReverseFlow 1.1s linear infinite;
+    }
+
+    @keyframes laserBeamFlow {
+        from { stroke-dashoffset: 36; }
+        to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes loopbackReverseFlow {
+        from { stroke-dashoffset: 0; }
+        to { stroke-dashoffset: 24; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .flow-edge-pulse.active,
+        .flow-edge-loopback.active {
+            animation: none !important;
         }
     }
 
-    .journey-node-card.active,
-    .dag-node-card.active {
-        border-color: var(--blue-600);
-        background: rgba(7, 81, 255, 0.06);
-        box-shadow: 0 0 0 3px rgba(7, 81, 255, 0.22), 0 8px 24px -4px rgba(7, 81, 255, 0.18);
+    /* Edge Condition Badges (HTML over SVG) */
+    .flow-edge-badge {
+        position: absolute;
+        z-index: 2;
+        background: var(--neutral-0, #ffffff);
+        border: 1px solid var(--neutral-300, #CBD5E1);
+        padding: 3px 9px;
+        border-radius: 9999px;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        color: var(--neutral-600, #475569);
+        white-space: nowrap;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        transition: all 0.2s ease;
     }
 
-    .journey-node-card:focus-visible,
-    .dag-node-card:focus-visible {
-        box-shadow: 0 0 0 3px rgba(7, 81, 255, 0.4);
+    .flow-edge-badge.active {
+        color: var(--blue-600, #0751FF);
+        border-color: var(--blue-400, #60A5FA);
+        background: var(--blue-tint, #EFF6FF);
+        box-shadow: 0 2px 6px rgba(7, 81, 255, 0.16);
     }
 
-    .node-header-row {
+    .flow-edge-badge.loopback-badge {
+        color: #9A3412;
+        border-color: #FDBA74;
+        background: #FFF7ED;
+    }
+
+    .flow-edge-badge.loopback-badge.active {
+        background: #FFEDD5;
+        border-color: #EA580C;
+        color: #9A3412;
+        box-shadow: 0 2px 8px rgba(234, 88, 12, 0.22);
+    }
+
+    /* HTML Interactive Node Layer (Z-Index 3) */
+    .flow-node-item {
+        position: absolute;
+        z-index: 3;
+        cursor: pointer;
+        outline: none;
+        transition: transform 150ms cubic-bezier(0.2, 0, 0, 1),
+                    border-color 150ms ease,
+                    box-shadow 150ms ease,
+                    background-color 150ms ease;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .flow-node-item:active {
+        transform: scale(0.96) !important;
+    }
+
+    /* Node Port Anchors (Visual In/Out connection dots) */
+    .port-anchor {
+        position: absolute;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--neutral-400, #94A3B8);
+        border: 1.5px solid var(--neutral-0, #ffffff);
+        pointer-events: none;
+        z-index: 4;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .flow-node-item:hover .port-anchor,
+    .flow-node-item.active .port-anchor {
+        background: var(--blue-600, #0751FF);
+        transform: scale(1.25);
+    }
+
+    /* Figma-style Selection Handles (When Active) */
+    .selection-handle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: #ffffff;
+        border: 1.5px solid var(--blue-600, #0751FF);
+        border-radius: 1px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease;
+        z-index: 5;
+    }
+
+    .selection-handle.tl { top: -4px; left: -4px; }
+    .selection-handle.tr { top: -4px; right: -4px; }
+    .selection-handle.bl { bottom: -4px; left: -4px; }
+    .selection-handle.br { bottom: -4px; right: -4px; }
+
+    .flow-node-item.active .selection-handle {
+        opacity: 1;
+    }
+
+    /* =====================================================================
+       NODE SHAPE 1: CIRCLE INGRESS NODES (PURPLE / LAVENDER)
+       ===================================================================== */
+    .flow-node-circle {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: #FAF5FF;
+        border: 2px solid #C084FC;
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 0.5rem;
-    }
-
-    .node-number-badge {
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-size: 0.75rem;
+        text-align: center;
+        color: #6B21A8;
+        box-shadow: 0 4px 12px rgba(168, 85, 247, 0.14);
+    }
+
+    .flow-node-circle:hover {
+        border-color: #9333EA;
+        background: #F3E8FF;
+        box-shadow: 0 6px 18px rgba(168, 85, 247, 0.24);
+    }
+
+    .flow-node-circle.active {
+        border-color: var(--blue-600, #0751FF);
+        box-shadow: 0 0 0 3px rgba(7, 81, 255, 0.25), 0 6px 20px rgba(168, 85, 247, 0.25);
+        background: #F3E8FF;
+    }
+
+    .flow-circle-icon {
+        width: 20px;
+        height: 20px;
+        margin-bottom: 2px;
+        color: #7E22CE;
+    }
+
+    .flow-circle-title {
+        font-size: 0.72rem;
         font-weight: 800;
-        background: var(--blue-tint, #EFF6FF);
-        color: var(--blue-600);
-        border: 1px solid rgba(7, 81, 255, 0.2);
-        font-variant-numeric: tabular-nums;
-    }
-
-    .journey-node-card.active .node-number-badge,
-    .dag-node-card.active .node-number-badge {
-        background: var(--blue-600);
-        color: #ffffff;
-    }
-
-    .node-tag-pill {
-        font-size: 0.7rem;
-        font-weight: 700;
-        padding: 2px 7px;
-        border-radius: 9999px;
-        background: var(--neutral-200);
-        color: var(--neutral-600);
-    }
-
-    .node-card-title {
-        font-size: 0.95rem;
-        font-weight: 800;
-        color: var(--neutral-900);
-        margin: 0 0 0.25rem;
-        line-height: 1.3;
+        line-height: 1.1;
         letter-spacing: -0.01em;
     }
 
-    .node-card-subtitle {
-        font-size: 0.8rem;
-        color: var(--neutral-600);
+    .flow-circle-sub {
+        font-size: 0.6rem;
+        font-weight: 600;
+        opacity: 0.8;
+    }
+
+    /* =====================================================================
+       NODE SHAPE 2: PROCESS BOXES (ROUNDED RECTANGLES)
+       ===================================================================== */
+    .flow-node-rect {
+        border-radius: 1rem;
+        background: var(--neutral-0, #ffffff);
+        border: 1.5px solid var(--neutral-300, #CBD5E1);
+        padding: 0.75rem 0.85rem;
+        box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 84px;
+        box-sizing: border-box;
+    }
+
+    .flow-node-rect:hover {
+        border-color: var(--blue-400, #60A5FA);
+        background: rgba(7, 81, 255, 0.015);
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    }
+
+    .flow-node-rect.active {
+        border-color: var(--blue-600, #0751FF);
+        background: rgba(7, 81, 255, 0.04);
+        box-shadow: 0 0 0 3px rgba(7, 81, 255, 0.22), 0 8px 20px rgba(7, 81, 255, 0.14);
+    }
+
+    .flow-node-rect.step-1 { border-left: 4px solid #10B981; }
+    .flow-node-rect.step-2 { border-left: 4px solid #0751FF; }
+    .flow-node-rect.step-3 { border-left: 4px solid #F59E0B; }
+    .flow-node-rect.step-5 { border-left: 4px solid #2563EB; }
+    .flow-node-rect.step-6 { border-left: 4px solid #D97706; }
+    .flow-node-rect.step-7 { border-left: 4px solid #16A34A; }
+
+    .flow-rect-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.35rem;
+    }
+
+    .flow-rect-step-num {
+        font-size: 0.6875rem;
+        font-weight: 800;
+        color: var(--blue-600, #0751FF);
+        background: var(--blue-tint, #EFF6FF);
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .flow-rect-tag {
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: var(--neutral-500, #64748B);
+        background: var(--neutral-150, #F1F5F9);
+        padding: 1px 6px;
+        border-radius: 9999px;
+    }
+
+    .flow-rect-title {
+        font-size: 0.8125rem;
+        font-weight: 800;
+        color: var(--neutral-900, #0F172A);
+        line-height: 1.25;
         margin: 0;
-        line-height: 1.45;
+        letter-spacing: -0.01em;
+    }
+
+    .flow-rect-desc {
+        font-size: 0.6875rem;
+        color: var(--neutral-600, #475569);
+        margin: 0.25rem 0 0;
+        line-height: 1.35;
         text-wrap: pretty;
     }
 
-    /* 5. Decision Gateway & Branches */
-    .decision-gateway-header {
+    /* Target Loopback Glow on Node 3 */
+    .flow-node-rect.loopback-target-active {
+        border-color: #EA580C !important;
+        box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.3) !important;
+    }
+
+    /* =====================================================================
+       NODE SHAPE 3: DECISION DIAMOND (BELAH KETUPAT ROTATED 45 DEG)
+       ===================================================================== */
+    .flow-node-diamond-wrapper {
+        width: 86px;
+        height: 86px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .flow-node-diamond-box {
+        width: 66px;
+        height: 66px;
+        background: #FFF7ED;
+        border: 2px solid #F97316;
+        border-radius: 10px;
+        transform: rotate(45deg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 14px rgba(249, 115, 22, 0.16);
+        transition: all 180ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .flow-node-diamond-wrapper:hover .flow-node-diamond-box {
+        border-color: #EA580C;
+        background: #FFEDD5;
+        box-shadow: 0 6px 18px rgba(249, 115, 22, 0.26);
+    }
+
+    .flow-node-diamond-wrapper.active .flow-node-diamond-box {
+        border-color: var(--blue-600, #0751FF);
+        box-shadow: 0 0 0 3px rgba(7, 81, 255, 0.25), 0 6px 20px rgba(249, 115, 22, 0.25);
+        background: #FFEDD5;
+    }
+
+    .flow-node-diamond-content {
+        transform: rotate(-45deg); /* Counter-rotate text */
+        text-align: center;
+        color: #9A3412;
+        padding: 2px;
+    }
+
+    .flow-diamond-icon {
+        width: 16px;
+        height: 16px;
+        margin: 0 auto 2px;
+        color: #C2410C;
+    }
+
+    .flow-diamond-text {
+        font-size: 0.65rem;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+    }
+
+    /* =====================================================================
+       NODE SHAPE 4: OUTCOME PILLS (BRANCH RESULTS)
+       ===================================================================== */
+    .flow-node-pill {
+        border-radius: 0.65rem;
+        padding: 0.55rem 0.85rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        margin: 1.15rem 0 0.75rem;
-        padding: 0.6rem 0.95rem;
-        background: var(--neutral-200);
-        border-radius: 0.65rem;
-        font-size: 0.78rem;
-        font-weight: 800;
-        color: var(--neutral-700);
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
-
-    .decision-branches-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.85rem;
-    }
-
-    @media (max-width: 680px) {
-        .decision-branches-container {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .decision-branch-card,
-    .dag-branch-pill {
-        border-radius: 0.85rem;
-        padding: 0.95rem 1.1rem;
-        cursor: pointer;
-        text-align: left;
-        transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
         border: 1.5px solid transparent;
-        user-select: none;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
     }
 
-    .decision-branch-card:active,
-    .dag-branch-pill:active {
-        transform: scale(0.97);
-    }
-
-    .decision-branch-card.diterima {
+    .flow-node-pill.diterima {
         background: #DCFCE7;
         border-color: #86EFAC;
         color: #166534;
     }
-    .decision-branch-card.diterima:hover,
-    .decision-branch-card.diterima.active {
+    .flow-node-pill.diterima:hover,
+    .flow-node-pill.diterima.active {
         border-color: #16A34A;
-        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.25), 0 6px 16px rgba(22, 163, 74, 0.15);
+        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.25), 0 4px 12px rgba(22, 163, 74, 0.15);
     }
 
-    .decision-branch-card.waiting {
+    .flow-node-pill.waiting {
         background: #EFF6FF;
         border-color: #BFDBFE;
         color: #1E40AF;
     }
-    .decision-branch-card.waiting:hover,
-    .decision-branch-card.waiting.active {
+    .flow-node-pill.waiting:hover,
+    .flow-node-pill.waiting.active {
         border-color: #3B82F6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), 0 6px 16px rgba(59, 130, 246, 0.15);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), 0 4px 12px rgba(59, 130, 246, 0.15);
     }
 
-    .decision-branch-card.perbaikan {
+    .flow-node-pill.perbaikan {
         background: #FEF3C7;
         border-color: #FDE68A;
         color: #92400E;
     }
-    .decision-branch-card.perbaikan:hover,
-    .decision-branch-card.perbaikan.active {
+    .flow-node-pill.perbaikan:hover,
+    .flow-node-pill.perbaikan.active {
         border-color: #D97706;
-        box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.25), 0 6px 16px rgba(217, 119, 6, 0.15);
+        box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.25), 0 4px 12px rgba(217, 119, 6, 0.15);
     }
 
-    .decision-title {
-        font-size: 0.85rem;
+    .flow-pill-icon {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+    }
+
+    .flow-pill-text {
+        font-size: 0.75rem;
         font-weight: 800;
-        margin: 0 0 4px;
+        line-height: 1.2;
+    }
+
+    .flow-pill-sub {
+        font-size: 0.625rem;
+        opacity: 0.85;
+    }
+
+    /* Terminator End Pill */
+    .flow-node-finish-pill {
+        border-radius: 9999px;
+        background: #F0FDF4;
+        border: 2px solid #86EFAC;
+        color: #166534;
+        padding: 0.45rem 1rem;
         display: flex;
         align-items: center;
-        gap: 6px;
-    }
-
-    .decision-desc {
-        font-size: 0.75rem;
-        opacity: 0.95;
-        margin: 0;
-        line-height: 1.4;
-    }
-
-    .decision-loopback-tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 0.68rem;
+        gap: 0.5rem;
+        font-size: 0.72rem;
         font-weight: 800;
-        padding: 3px 8px;
-        border-radius: 9999px;
-        background: rgba(217, 119, 6, 0.18);
-        color: #92400E;
-        margin-top: 6px;
+        box-shadow: 0 2px 8px rgba(22, 163, 74, 0.12);
     }
 
-    /* Loopback Return Ribbon */
+    .flow-node-finish-pill:hover,
+    .flow-node-finish-pill.active {
+        border-color: #16A34A;
+        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.25);
+    }
+
+    /* =====================================================================
+       5. MULTIPLAYER CURSOR TAGS (FIGMA / MIRO COLLABORATIVE FEEL)
+       ===================================================================== */
+    .flow-cursor-tag {
+        position: absolute;
+        z-index: 6;
+        pointer-events: none;
+        display: flex;
+        align-items: flex-start;
+        gap: 2px;
+        transition: transform 0.3s ease;
+        animation: cursorFloat 4s ease-in-out infinite;
+    }
+
+    .flow-cursor-tag.tag-pink { color: #EC4899; }
+    .flow-cursor-tag.tag-green { color: #10B981; animation-delay: -1.5s; }
+    .flow-cursor-tag.tag-purple { color: #8B5CF6; animation-delay: -3s; }
+
+    .cursor-badge-pill {
+        font-size: 0.6875rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 4px;
+        color: #ffffff;
+        margin-top: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .flow-cursor-tag.tag-pink .cursor-badge-pill { background: #EC4899; }
+    .flow-cursor-tag.tag-green .cursor-badge-pill { background: #10B981; }
+    .flow-cursor-tag.tag-purple .cursor-badge-pill { background: #8B5CF6; }
+
+    @keyframes cursorFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-4px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .flow-edge-pulse.active,
+        .flow-edge-loopback.active,
+        .flow-cursor-tag {
+            animation: none !important;
+        }
+    }
+
+    /* Compatibility wrapper */
+    .svg-node-group {
+        cursor: pointer;
+    }
+
+    /* Loopback Ribbon Alert */
     .dag-loopback-ribbon {
         display: none;
         align-items: center;
@@ -734,131 +1289,9 @@
         font-size: 0.8125rem;
         font-weight: 600;
         color: #92400E;
-        animation: pulseBorder 2s ease infinite;
     }
-
     .dag-loopback-ribbon.active {
         display: flex;
-    }
-
-    @keyframes pulseBorder {
-        0%, 100% { border-color: #D97706; box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.2); }
-        50% { border-color: #B45309; box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.15); }
-    }
-
-    /* 6. Dynamic Vector Connecting Pipeline Indicators */
-    .dag-pipeline-beam-connector {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-        margin: -0.25rem 0;
-    }
-
-    .dag-beam-svg {
-        width: 100%;
-        max-width: 420px;
-        height: 38px;
-        overflow: visible;
-    }
-
-    .dag-beam-track {
-        fill: none;
-        stroke: var(--neutral-300);
-        stroke-width: 3px;
-        stroke-linecap: round;
-    }
-
-    .dag-beam-pulse {
-        fill: none;
-        stroke: var(--blue-600);
-        stroke-width: 3.5px;
-        stroke-linecap: round;
-        stroke-dasharray: 8 8;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .dag-beam-pulse.active {
-        opacity: 1;
-        animation: beamFlow 1.4s linear infinite;
-    }
-
-    @keyframes beamFlow {
-        from { stroke-dashoffset: 32; }
-        to { stroke-dashoffset: 0; }
-    }
-
-    .dag-beam-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        font-size: 0.72rem;
-        font-weight: 700;
-        color: var(--neutral-600);
-        background: var(--neutral-100);
-        border: 1px solid var(--neutral-300);
-        padding: 2px 10px;
-        border-radius: 9999px;
-        margin-top: -8px;
-        z-index: 2;
-        transition: all 0.2s ease;
-    }
-
-    .dag-pipeline-beam-connector.active .dag-beam-badge {
-        color: var(--blue-600);
-        border-color: rgba(7, 81, 255, 0.35);
-        background: #EFF6FF;
-        box-shadow: 0 2px 6px rgba(7, 81, 255, 0.15);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .dag-beam-pulse.active {
-            animation: none !important;
-            stroke-dasharray: none !important;
-        }
-        .dag-loopback-ribbon {
-            animation: none !important;
-        }
-    }
-
-    .phase-connector-indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 24px;
-        color: var(--neutral-400);
-        position: relative;
-    }
-
-    .phase-connector-indicator::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: var(--neutral-300);
-        z-index: 0;
-    }
-
-    .phase-connector-indicator svg {
-        position: relative;
-        z-index: 1;
-        background: var(--neutral-0);
-        padding: 2px;
-        border-radius: 50%;
-    }
-
-    .phase-connector-indicator.active {
-        color: var(--blue-600);
-    }
-    .phase-connector-indicator.active::before {
-        background: var(--blue-600);
-    }
-
-    /* Compatibility wrapper */
-    .svg-node-group {
-        cursor: pointer;
     }
 
     /* Inspector Side Card (DS-MAGKOM Compliant) */
@@ -1353,10 +1786,41 @@
         border-color: rgba(239, 68, 68, 0.45) !important;
         color: #fca5a5 !important;
     }
-    [data-theme="dark"] .dag-canvas-container {
+    [data-theme="dark"] .dag-canvas-container,
+    [data-theme="dark"] .flowchart-canvas-wrapper {
         background: #0F172A !important;
         background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
         border-color: #26354D !important;
+    }
+    [data-theme="dark"] .flowchart-zoom-group {
+        background: #182234 !important;
+        border-color: #26354D !important;
+    }
+    [data-theme="dark"] .zoom-btn {
+        color: #E2E8F0 !important;
+    }
+    [data-theme="dark"] .zoom-btn:hover {
+        background: #26354D !important;
+        color: #60A5FA !important;
+    }
+    [data-theme="dark"] .decision-rhombus-gateway {
+        background: rgba(146, 64, 14, 0.25) !important;
+        border-color: #B45309 !important;
+    }
+    [data-theme="dark"] .rhombus-title {
+        color: #FDE68A !important;
+    }
+    [data-theme="dark"] .loopback-target-anchor {
+        background: #182234 !important;
+        border-color: #F59E0B !important;
+    }
+    [data-theme="dark"] .anchor-pulse {
+        background: #F59E0B !important;
+    }
+    [data-theme="dark"] .loopback-floating-badge {
+        background: #1E293B !important;
+        border-color: #D97706 !important;
+        color: #FDE68A !important;
     }
     [data-theme="dark"] .dag-loopback-ribbon {
         background: rgba(146, 64, 14, 0.25) !important;
@@ -1513,10 +1977,23 @@
                         </button>
                     </div>
                     <div class="dag-sim-controls-right">
+                        <!-- Canvas Zoom Controls -->
+                        <div class="flowchart-zoom-group" role="group" aria-label="Kontrol Perbesaran Canvas">
+                            <button type="button" id="btnZoomOut" class="dag-sim-btn zoom-btn" onclick="zoomCanvas(-0.15)" aria-label="Perkecil Canvas (-)" title="Perkecil Canvas (-)">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </button>
+                            <button type="button" id="btnZoomReset" class="dag-sim-btn zoom-btn" onclick="resetCanvasZoom()" aria-label="Reset Ukuran Canvas (100%)" title="Reset Ukuran (100%)">
+                                <span id="zoomPercentLabel">100%</span>
+                            </button>
+                            <button type="button" id="btnZoomIn" class="dag-sim-btn zoom-btn" onclick="zoomCanvas(0.15)" aria-label="Perbesar Canvas (+)" title="Perbesar Canvas (+)">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </button>
+                        </div>
+
                         <span id="dagStepCounter" class="dag-step-counter">Langkah 1 dari 7</span>
                         <span class="dag-status-pill">
                             <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-                            Alur Pipa Aktif
+                            Diagram Alur Aktif
                         </span>
                     </div>
                 </div>
@@ -1535,191 +2012,264 @@
                     <div class="stepper-node-dot" data-step="7" onclick="selectDagNode(7)" tabindex="0" role="button" aria-label="Lompat ke Tahap 07 Nilai & Sertifikat">07</div>
                 </div>
 
-                <!-- DAG Canvas & Journey Pipeline Container -->
-                <div class="journey-board-container dag-canvas-container" id="journeyBoardContainer">
-                    <!-- Phase 1: Pendaftaran & Kuota -->
-                    <div class="journey-phase-track" style="border-left: 4px solid #0751FF;">
-                        <div class="journey-phase-header-row">
-                            <span class="journey-phase-badge-label" style="background:#E6EEFF;color:#0751FF;">
-                                <span>Fase 1: Pendaftaran &amp; Kuota</span>
-                            </span>
-                            <p class="journey-phase-desc-mini">Tahap awal penetapan jalur &amp; pengajuan berkas</p>
-                        </div>
-                        <div class="journey-nodes-row">
-                            <!-- Node 1: Cek Kuota -->
-                            <div id="node-1" class="journey-node-card dag-node-card svg-node-group active" onclick="selectDagNode(1)" tabindex="0" role="button" aria-label="Tahap 01 Cek Kuota">
-                                <div class="node-header-row">
-                                    <span class="node-number-badge">01</span>
-                                    <span class="node-tag-pill">Real-Time</span>
-                                </div>
-                                <h3 class="node-card-title">Cek Kuota</h3>
-                                <p class="node-card-subtitle">Pantau ketersediaan kursi magang bulanan</p>
+                <!-- =================================================================
+                     TRUE 2D FLOWCHART CANVAS (ZERO-SCROLL AUTO-FIT LIVING GRAPH ENGINE)
+                     ================================================================= -->
+                <div class="flowchart-viewport journey-board-container dag-canvas-container flowchart-canvas-wrapper" id="flowchartViewport" role="region" aria-label="Kanvas Diagram Flowchart Interaktif Magang">
+                    <div class="flowchart-autofit-stage" id="flowchartStage">
+                        <div class="flowchart-canvas-plane flowchart-canvas-inner" id="flowchartCanvasPlane">
+
+                            <!-- LAYER 1: SVG ORTHOGONAL CONNECTORS & ARROWS (BASE: 1040x500) -->
+                            <svg class="flow-svg-layer" viewBox="0 0 1040 500" preserveAspectRatio="none" aria-hidden="true">
+                                <defs>
+                                    <marker id="arrow-default" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#94A3B8"/>
+                                    </marker>
+                                    <marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#0751FF"/>
+                                    </marker>
+                                    <marker id="arrow-green" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#16A34A"/>
+                                    </marker>
+                                    <marker id="arrow-loopback" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#EA580C"/>
+                                    </marker>
+                                </defs>
+
+                                <!-- Ingress: START (X:55, Y:45) -> SMK (X:55, Y:88) & MHS (X:92, Y:241) menyatu ke Step 01 (X:155, Y:185) -->
+                                <path id="edge-start-1" d="M 55 45 V 88" class="flow-edge-track active" marker-end="url(#arrow-default)" />
+                                <path id="edge-smk-1" d="M 92 124 H 125 V 185 H 155" class="flow-edge-track active" marker-end="url(#arrow-default)" />
+                                <path id="edge-mhs-1" d="M 92 241 H 125 V 185 H 155" class="flow-edge-track active" marker-end="url(#arrow-default)" />
+
+                                <!-- Main Highway: Step 01 (280, 185) -> Step 02 (305, 185) -> Step 03 (455, 185) -->
+                                <path id="edge-1-2" d="M 280 185 H 305" class="flow-edge-track active" marker-end="url(#arrow-default)" />
+                                <path id="edge-1-2-pulse" d="M 280 185 H 305" class="flow-edge-pulse active" />
+
+                                <path id="edge-2-3" d="M 430 185 H 455" class="flow-edge-track active" marker-end="url(#arrow-default)" />
+                                <path id="edge-2-3-pulse" d="M 430 185 H 455" class="flow-edge-pulse active" />
+
+                                <!-- Step 03 (585, 185) -> Decision Diamond (Verifikasi Admin X:610, Y:185) -->
+                                <path id="edge-3-4" d="M 585 185 H 610" class="flow-edge-track active" marker-end="url(#arrow-default)" />
+                                <path id="edge-3-4-pulse" d="M 585 185 H 610" class="flow-edge-pulse active" />
+
+                                <!-- Decision Diamond Branches: (Diamond Center X:638, Y:185) -->
+                                <!-- Branch 1 (Atas): Lolos Seleksi -> Diterima Resmi (X:735, Y:80) -->
+                                <path id="edge-4-diterima" d="M 638 157 V 80 H 735" class="flow-edge-track active" marker-end="url(#arrow-green)" />
+                                <path id="edge-4-diterima-pulse" d="M 638 157 V 80 H 735" class="flow-edge-pulse" />
+
+                                <!-- Branch 2 (Tengah): Kuota Penuh -> Waiting List (X:735, Y:185) -->
+                                <path id="edge-4-waiting" d="M 666 185 H 735" class="flow-edge-track" marker-end="url(#arrow-default)" />
+
+                                <!-- Branch 3 (Bawah): Berkas Kurang -> Perlu Perbaikan (X:735, Y:290) -->
+                                <path id="edge-4-perbaikan" d="M 638 213 V 290 H 735" class="flow-edge-track" marker-end="url(#arrow-loopback)" />
+
+                                <!-- LOOPBACK REVISI: Dari Perlu Perbaikan (805, 318) memutar balik ke Step 03 Unggah Berkas (520, 226) -->
+                                <path id="edge-loopback-flow" d="M 805 318 V 385 H 520 V 226" class="flow-edge-loopback" marker-end="url(#arrow-loopback)" />
+
+                                <!-- Branch Diterima (865, 80) -> Step 05 Orientasi & Mentor (895, 80) -->
+                                <path id="edge-diterima-5" d="M 865 80 H 895" class="flow-edge-track active" marker-end="url(#arrow-default)" />
+
+                                <!-- Step 05 (957, 120) -> Step 06 Logbook Harian (957, 148) -->
+                                <path id="edge-5-6" d="M 957 120 V 148" class="flow-edge-track" marker-end="url(#arrow-default)" />
+
+                                <!-- Step 06 (957, 224) -> Step 07 Nilai & Sertifikat (957, 252) -->
+                                <path id="edge-6-7" d="M 957 224 V 252" class="flow-edge-track" marker-end="url(#arrow-default)" />
+
+                                <!-- Step 07 (957, 328) -> FINISH (957, 365) -->
+                                <path id="edge-7-finish" d="M 957 328 V 365" class="flow-edge-track" marker-end="url(#arrow-green)" />
+                            </svg>
+
+                            <!-- EDGE CONDITION LABELS (HTML OVERLAYS) -->
+                            <div class="flow-edge-badge" style="left: 125px; top: 160px;">PKL / Magang</div>
+                            <div class="flow-edge-badge" style="left: 686px; top: 68px;">Lolos Seleksi</div>
+                            <div class="flow-edge-badge" style="left: 700px; top: 172px;">Kuota Penuh</div>
+                            <div class="flow-edge-badge" style="left: 686px; top: 302px;">Format Keliru</div>
+                            <div class="flow-edge-badge loopback-badge" id="badgeLoopback" style="left: 660px; top: 385px;">
+                                <span>&larr; Alur Loopback: Perbaikan Berkas 3&times;24 Jam</span>
                             </div>
 
-                            <!-- Node 2: Registrasi Akun -->
-                            <div id="node-2" class="journey-node-card dag-node-card svg-node-group" onclick="selectDagNode(2)" tabindex="0" role="button" aria-label="Tahap 02 Registrasi Akun">
-                                <div class="node-header-row">
-                                    <span class="node-number-badge">02</span>
-                                    <span class="node-tag-pill">Akun</span>
-                                </div>
-                                <h3 class="node-card-title">Registrasi Akun</h3>
-                                <p class="node-card-subtitle">Biodata NISN/NIM &amp; kontak WhatsApp</p>
+                            <!-- LAYER 2: INTERACTIVE FLOWCHART NODES -->
+
+                            <!-- Terminator Start Node (Pill) -->
+                            <div id="flow-node-start" class="flow-node-item flow-terminator-pill start svg-node-group" style="position: absolute; left: 20px; top: 22px; z-index: 4; border-radius: 9999px; background: #0F172A; color: #ffffff; padding: 5px 14px; font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);" onclick="selectDagNode(1)" tabindex="0" role="button" aria-label="Mulai: Akses Portal MagKom">
+                                <span class="terminator-pulse-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #38BDF8; display: inline-block;"></span>
+                                <span class="terminator-title">START &bull; Akses Portal MagKom</span>
                             </div>
 
-                            <!-- Node 3: Unggah Berkas -->
-                            <div id="node-3" class="journey-node-card dag-node-card svg-node-group" onclick="selectDagNode(3)" tabindex="0" role="button" aria-label="Tahap 03 Unggah Berkas">
-                                <div class="node-header-row">
-                                    <span class="node-number-badge">03</span>
-                                    <span class="node-tag-pill">PDF 2MB</span>
-                                </div>
-                                <h3 class="node-card-title">Unggah Berkas</h3>
-                                <p class="node-card-subtitle">Surat Pengantar Institusi, CV, Transkrip</p>
+                            <!-- Ingress 1: Siswa SMK -->
+                            <div id="node-smk" class="flow-node-item flow-node-circle svg-node-group" style="left: 20px; top: 88px;" onclick="setSimJenjang('smk'); selectDagNode(1);" tabindex="0" role="button" aria-label="Jalur Siswa SMK (PKL)">
+                                <div class="selection-handle tl"></div><div class="selection-handle tr"></div><div class="selection-handle bl"></div><div class="selection-handle br"></div>
+                                <div class="port-anchor" style="right: -4px; top: 50%; transform: translateY(-50%);"></div>
+                                <svg class="flow-circle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                                <span class="flow-circle-title">Siswa SMK</span>
+                                <span class="flow-circle-sub">PKL 3 Bln</span>
                             </div>
+
+                            <!-- Ingress 2: Mahasiswa -->
+                            <div id="node-mhs" class="flow-node-item flow-node-circle svg-node-group" style="left: 20px; top: 205px;" onclick="setSimJenjang('mahasiswa'); selectDagNode(1);" tabindex="0" role="button" aria-label="Jalur Mahasiswa (D3/S1)">
+                                <div class="selection-handle tl"></div><div class="selection-handle tr"></div><div class="selection-handle bl"></div><div class="selection-handle br"></div>
+                                <div class="port-anchor" style="right: -4px; top: 50%; transform: translateY(-50%);"></div>
+                                <svg class="flow-circle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                                <span class="flow-circle-title">Mahasiswa</span>
+                                <span class="flow-circle-sub">D3 / S1</span>
+                            </div>
+
+                            <!-- Process Step 01: Cek Kuota -->
+                            <div id="node-1" class="flow-node-item flow-node-rect step-1 svg-node-group active" style="left: 155px; top: 148px; width: 125px;" onclick="selectDagNode(1)" tabindex="0" role="button" aria-label="Tahap 01 Cek Kuota Formasi">
+                                <div class="selection-handle tl"></div><div class="selection-handle tr"></div><div class="selection-handle bl"></div><div class="selection-handle br"></div>
+                                <div class="port-anchor" style="left: -4px; top: 50%; transform: translateY(-50%);"></div>
+                                <div class="port-anchor" style="right: -4px; top: 50%; transform: translateY(-50%);"></div>
+                                <div class="flow-rect-top">
+                                    <span class="flow-rect-step-num">01</span>
+                                    <span class="flow-rect-tag" style="background:#DCFCE7;color:#166534;">Instan</span>
+                                </div>
+                                <h4 class="flow-rect-title">Cek Kuota</h4>
+                                <p class="flow-rect-desc">Pantau kursi dinas</p>
+                            </div>
+
+                            <!-- Process Step 02: Registrasi Akun -->
+                            <div id="node-2" class="flow-node-item flow-node-rect step-2 svg-node-group" style="left: 305px; top: 148px; width: 125px;" onclick="selectDagNode(2)" tabindex="0" role="button" aria-label="Tahap 02 Registrasi Akun">
+                                <div class="selection-handle tl"></div><div class="selection-handle tr"></div><div class="selection-handle bl"></div><div class="selection-handle br"></div>
+                                <div class="port-anchor" style="left: -4px; top: 50%; transform: translateY(-50%);"></div>
+                                <div class="port-anchor" style="right: -4px; top: 50%; transform: translateY(-50%);"></div>
+                                <div class="flow-rect-top">
+                                    <span class="flow-rect-step-num">02</span>
+                                    <span class="flow-rect-tag">Akun</span>
+                                </div>
+                                <h4 class="flow-rect-title">Registrasi Akun</h4>
+                                <p class="flow-rect-desc">NISN/NIM &amp; WhatsApp</p>
+                            </div>
+
+                            <!-- Process Step 03: Unggah Berkas (Target Loopback) -->
+                            <div id="node-3" class="flow-node-item flow-node-rect step-3 svg-node-group" style="left: 455px; top: 148px; width: 130px;" onclick="selectDagNode(3)" tabindex="0" role="button" aria-label="Tahap 03 Unggah Berkas">
+                                <div class="selection-handle tl"></div><div class="selection-handle tr"></div><div class="selection-handle bl"></div><div class="selection-handle br"></div>
+                                <div class="port-anchor" style="left: -4px; top: 50%; transform: translateY(-50%);"></div>
+                                <div class="port-anchor" style="right: -4px; top: 50%; transform: translateY(-50%);"></div>
+                                <div class="port-anchor" id="loopbackTargetAnchor" style="bottom: -4px; left: 50%; transform: translateX(-50%); background:#EA580C;" title="Port Masuk Loopback Revisi"></div>
+                                <div class="flow-rect-top">
+                                    <span class="flow-rect-step-num" style="background:#FEF3C7;color:#D97706;">03</span>
+                                    <span class="flow-rect-tag" style="background:#FEF3C7;color:#D97706;">PDF 2MB</span>
+                                </div>
+                                <h4 class="flow-rect-title">Unggah Berkas</h4>
+                                <p class="flow-rect-desc">Surat Pengantar &amp; CV</p>
+                            </div>
+
+                            <!-- Decision Diamond: Verifikasi Dokumen & Seleksi Admin -->
+                            <div id="node-4" class="flow-node-item flow-node-diamond-wrapper svg-node-group" style="left: 610px; top: 157px;" onclick="selectDagNode(4)" tabindex="0" role="button" aria-label="Tahap 04 Evaluasi Dokumen Admin">
+                                <div class="decision-rhombus-gateway flow-node-diamond-box">
+                                    <div class="flow-node-diamond-content">
+                                        <svg class="flow-diamond-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 22 12 12 22 2 12 12 2"/></svg>
+                                        <div class="flow-diamond-text rhombus-title">Verifikasi Admin</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="visually-hidden" aria-hidden="true">Gerbang Keputusan Evaluasi Dokumen Admin</div>
+
+                            <!-- Outcome Branch 1: Diterima Resmi (Pill Hijau) -->
+                            <div id="node-diterima" class="flow-node-item flow-node-pill diterima svg-node-group" style="left: 735px; top: 55px; width: 130px;" onclick="selectDagNode('diterima')" tabindex="0" role="button" aria-label="Keputusan: Diterima Resmi">
+                                <div class="selection-handle tl"></div><div class="selection-handle tr"></div><div class="selection-handle bl"></div><div class="selection-handle br"></div>
+                                <div class="port-anchor" style="left: -4px; top: 50%; transform: translateY(-50%); background:#16A34A;"></div>
+                                <div class="port-anchor" style="right: -4px; top: 50%; transform: translateY(-50%); background:#16A34A;"></div>
+                                <svg class="flow-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                <div>
+                                    <div class="flow-pill-text">Diterima Resmi</div>
+                                    <div class="flow-pill-sub">Terbit SK Digital</div>
+                                </div>
+                            </div>
+
+                            <!-- Outcome Branch 2: Waiting List (Pill Biru) -->
+                            <div id="node-waiting" class="flow-node-item flow-node-pill waiting svg-node-group" style="left: 735px; top: 160px; width: 130px;" onclick="selectDagNode('waiting')" tabindex="0" role="button" aria-label="Keputusan: Waiting List">
+                                <div class="selection-handle tl"></div><div class="selection-handle tr"></div><div class="selection-handle bl"></div><div class="selection-handle br"></div>
+                                <div class="port-anchor" style="left: -4px; top: 50%; transform: translateY(-50%); background:#3B82F6;"></div>
+                                <svg class="flow-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                <div>
+                                    <div class="flow-pill-text">Waiting List</div>
+                                    <div class="flow-pill-sub">Antrean FIFO</div>
+                                </div>
+                            </div>
+
+                            <!-- Outcome Branch 3: Perlu Perbaikan (Pill Oranye - Loopback Source) -->
+                            <div id="node-perbaikan" class="flow-node-item flow-node-pill perbaikan svg-node-group" style="left: 735px; top: 265px; width: 140px;" onclick="selectDagNode('perbaikan')" tabindex="0" role="button" aria-label="Keputusan: Perlu Perbaikan">
+                                <div class="selection-handle tl"></div><div class="selection-handle tr"></div><div class="selection-handle bl"></div><div class="selection-handle br"></div>
+                                <div class="port-anchor" style="left: -4px; top: 50%; transform: translateY(-50%); background:#D97706;"></div>
+                                <div class="port-anchor" style="bottom: -4px; left: 50%; transform: translateX(-50%); background:#EA580C;"></div>
+                                <svg class="flow-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
+                                <div>
+                                    <div class="flow-pill-text">Perlu Perbaikan</div>
+                                    <div class="flow-pill-sub">Loopback ke Tahap 03</div>
+                                </div>
+                            </div>
+
+                            <!-- Process Step 05: Orientasi & Mentor -->
+                            <div id="node-5" class="flow-node-item flow-node-rect step-5 svg-node-group" style="left: 895px; top: 43px; width: 125px;" onclick="selectDagNode(5)" tabindex="0" role="button" aria-label="Tahap 05 Orientasi & Mentor">
+                                <div class="selection-handle tl"></div><div class="selection-handle tr"></div><div class="selection-handle bl"></div><div class="selection-handle br"></div>
+                                <div class="port-anchor" style="left: -4px; top: 50%; transform: translateY(-50%);"></div>
+                                <div class="port-anchor" style="bottom: -4px; left: 50%; transform: translateX(-50%);"></div>
+                                <div class="flow-rect-top">
+                                    <span class="flow-rect-step-num">05</span>
+                                    <span class="flow-rect-tag" style="background:#EFF6FF;color:#2563EB;">Hari Ke-1</span>
+                                </div>
+                                <h4 class="flow-rect-title">Orientasi Dinas</h4>
+                                <p class="flow-rect-desc">Mentor &amp; Proyek</p>
+                            </div>
+
+                            <!-- Process Step 06: Logbook Harian -->
+                            <div id="node-6" class="flow-node-item flow-node-rect step-6 svg-node-group" style="left: 895px; top: 148px; width: 125px;" onclick="selectDagNode(6)" tabindex="0" role="button" aria-label="Tahap 06 Logbook Harian">
+                                <div class="selection-handle tl"></div><div class="selection-handle tr"></div><div class="selection-handle bl"></div><div class="selection-handle br"></div>
+                                <div class="port-anchor" style="top: -4px; left: 50%; transform: translateX(-50%);"></div>
+                                <div class="port-anchor" style="bottom: -4px; left: 50%; transform: translateX(-50%);"></div>
+                                <div class="flow-rect-top">
+                                    <span class="flow-rect-step-num" style="background:#FEF3C7;color:#D97706;">06</span>
+                                    <span class="flow-rect-tag" style="background:#FEF3C7;color:#D97706;">Maks. H+1</span>
+                                </div>
+                                <h4 class="flow-rect-title">Logbook Harian</h4>
+                                <p class="flow-rect-desc">Disiplin Harian (BR-09)</p>
+                            </div>
+
+                            <!-- Process Step 07: Nilai & Sertifikat QR -->
+                            <div id="node-7" class="flow-node-item flow-node-rect step-7 svg-node-group" style="left: 895px; top: 252px; width: 125px;" onclick="selectDagNode(7)" tabindex="0" role="button" aria-label="Tahap 07 Nilai & Sertifikat">
+                                <div class="selection-handle tl"></div><div class="selection-handle tr"></div><div class="selection-handle bl"></div><div class="selection-handle br"></div>
+                                <div class="port-anchor" style="top: -4px; left: 50%; transform: translateX(-50%);"></div>
+                                <div class="port-anchor" style="bottom: -4px; left: 50%; transform: translateX(-50%);"></div>
+                                <div class="flow-rect-top">
+                                    <span class="flow-rect-step-num" style="background:#DCFCE7;color:#166534;">07</span>
+                                    <span class="flow-rect-tag" style="background:#DCFCE7;color:#166534;">100 Poin &amp; QR</span>
+                                </div>
+                                <h4 class="flow-rect-title">Nilai &amp; Sertifikat</h4>
+                                <p class="flow-rect-desc">Evaluasi &amp; QR Code</p>
+                            </div>
+
+                            <!-- Terminator Finish Pill -->
+                            <div id="flow-node-finish" class="flow-node-item flow-node-finish-pill svg-node-group" style="left: 835px; top: 365px;" onclick="selectDagNode(7)" tabindex="0" role="button" aria-label="Penerbitan Sertifikat Resmi">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                                <span class="terminator-title">FINISH &bull; Sertifikat QR &amp; Lembar Nilai</span>
+                            </div>
+
+                            <!-- MULTIPLAYER CURSOR TAGS (FIGMA/MIRO COLLABORATIVE VIBE) -->
+                            <div class="flow-cursor-tag tag-pink" style="left: 195px; top: 100px;" title="Kursor Pemohon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="3 3 10 21 13 14 20 11 3 3"/></svg>
+                                <span class="cursor-badge-pill">Ally (Pemohon SMK)</span>
+                            </div>
+
+                            <div class="flow-cursor-tag tag-green" style="left: 660px; top: 25px;" title="Kursor Tim Administrasi">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="3 3 10 21 13 14 20 11 3 3"/></svg>
+                                <span class="cursor-badge-pill">Admin Diskominfo</span>
+                            </div>
+
+                            <div class="flow-cursor-tag tag-purple" style="left: 880px; top: 115px;" title="Kursor Pembimbing Lapangan">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="3 3 10 21 13 14 20 11 3 3"/></svg>
+                                <span class="cursor-badge-pill">Pembimbing Lapangan</span>
+                            </div>
+
                         </div>
                     </div>
+                </div>
 
-                    <!-- Dynamic Vector Pipeline Connector 1 -> 2 -->
-                    <div id="pipeline-indicator-1-2" class="dag-pipeline-beam-connector phase-connector-indicator active" aria-hidden="true">
-                        <svg class="dag-beam-svg" viewBox="0 0 300 36">
-                            <path class="dag-beam-track" d="M 150 0 L 150 36" />
-                            <path class="dag-beam-pulse active" d="M 150 0 L 150 36" />
-                        </svg>
-                        <div class="dag-beam-badge">Pendaftaran Diajukan &bull; Verifikasi SLA 1–3 Hari</div>
-                    </div>
-
-                    <!-- Phase 2: Seleksi & Keputusan Resmi -->
-                    <div class="journey-phase-track" style="border-left: 4px solid #16A34A;">
-                        <div class="journey-phase-header-row">
-                            <span class="journey-phase-badge-label" style="background:#E8F7EE;color:#16A34A;">
-                                <span>Fase 2: Seleksi &amp; Keputusan</span>
-                            </span>
-                            <p class="journey-phase-desc-mini">⏱ SLA Telaah Admin: 1–3 Hari Kerja</p>
-                        </div>
-                        
-                        <!-- Main Node 4 -->
-                        <div id="node-4" class="journey-node-card dag-node-card svg-node-group" onclick="selectDagNode(4)" tabindex="0" role="button" aria-label="Tahap 04 Verifikasi Dokumen">
-                            <div class="node-header-row">
-                                <span class="node-number-badge" style="background:#E8F7EE;color:#16A34A;">04</span>
-                                <span class="node-tag-pill" style="background:#DCFCE7;color:#166534;">SLA 1–3 Hari</span>
-                            </div>
-                            <h3 class="node-card-title">Verifikasi Dokumen &amp; Penempatan</h3>
-                            <p class="node-card-subtitle">Pengecekan keabsahan berkas oleh Tim Administrasi Diskominfo Sleman.</p>
-                        </div>
-
-                        <!-- Decision Gateway Header -->
-                        <div class="decision-gateway-header">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                            <span>Gerbang Keputusan Admin Diskominfo</span>
-                        </div>
-
-                        <!-- Decision Branches -->
-                        <div class="decision-branches-container">
-                            <div id="node-diterima" class="decision-branch-card dag-branch-pill diterima svg-node-group" onclick="selectDagNode('diterima')" tabindex="0" role="button" aria-label="Status Diterima Resmi">
-                                <div class="decision-title">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                                    <span>Diterima Resmi</span>
-                                </div>
-                                <p class="decision-desc">Terbit SK Digital bertanda tangan &amp; QR Code keabsahan.</p>
-                            </div>
-
-                            <div id="node-waiting" class="decision-branch-card dag-branch-pill waiting svg-node-group" onclick="selectDagNode('waiting')" tabindex="0" role="button" aria-label="Status Waiting List">
-                                <div class="decision-title">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    <span>Waiting List</span>
-                                </div>
-                                <p class="decision-desc">Kuota penuh, masuk antrean prioritas FIFO otomatis.</p>
-                            </div>
-
-                            <div id="node-perbaikan" class="decision-branch-card dag-branch-pill perbaikan svg-node-group" onclick="selectDagNode('perbaikan')" tabindex="0" role="button" aria-label="Status Perlu Perbaikan">
-                                <div class="decision-title">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
-                                    <span>Perlu Perbaikan</span>
-                                </div>
-                                <p class="decision-desc">Dokumen buram/keliru, batas revisi 3x24 jam.</p>
-                                <span class="decision-loopback-tag">
-                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><polyline points="3 3 3 8 8 8"/></svg>
-                                    Loopback ke Tahap 03
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Animated Loopback Return Ribbon -->
-                        <div id="loopbackRibbon" class="dag-loopback-ribbon" role="alert" aria-live="polite">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><polyline points="3 3 3 8 8 8"/></svg>
-                            <div>
-                                <strong>Jalur Revisi Loopback Aktif:</strong> Berkas perlu diperbaiki oleh pemohon dalam tempo <strong>3x24 Jam Kalender</strong>. Alur berputar kembali ke <button type="button" onclick="selectDagNode(3)" style="background:none;border:none;color:#92400E;text-decoration:underline;font-weight:800;cursor:pointer;padding:0;font-size:inherit;">Tahap 03 (Unggah Berkas)</button>.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Dynamic Vector Pipeline Connector 2 -> 3 -->
-                    <div id="pipeline-indicator-2-3" class="dag-pipeline-beam-connector phase-connector-indicator" aria-hidden="true">
-                        <svg class="dag-beam-svg" viewBox="0 0 300 36">
-                            <path class="dag-beam-track" d="M 150 0 L 150 36" />
-                            <path class="dag-beam-pulse" d="M 150 0 L 150 36" />
-                        </svg>
-                        <div class="dag-beam-badge">SK Diterbitkan &bull; Konfirmasi Penempatan (BR-05)</div>
-                    </div>
-
-                    <!-- Phase 3: Pelaksanaan & Bimbingan -->
-                    <div class="journey-phase-track" style="border-left: 4px solid #2563EB;">
-                        <div class="journey-phase-header-row">
-                            <span class="journey-phase-badge-label" style="background:#EFF6FF;color:#2563EB;">
-                                <span>Fase 3: Pelaksanaan &amp; Bimbingan</span>
-                            </span>
-                            <p class="journey-phase-desc-mini">Aktivitas magang di bawah arahan Pembimbing Lapangan</p>
-                        </div>
-                        <div class="journey-nodes-row">
-                            <!-- Node 5: Orientasi -->
-                            <div id="node-5" class="journey-node-card dag-node-card svg-node-group" onclick="selectDagNode(5)" tabindex="0" role="button" aria-label="Tahap 05 Orientasi & Mentor">
-                                <div class="node-header-row">
-                                    <span class="node-number-badge" style="background:#EFF6FF;color:#2563EB;">05</span>
-                                    <span class="node-tag-pill">Hari Ke-1</span>
-                                </div>
-                                <h3 class="node-card-title">Orientasi &amp; Mentor</h3>
-                                <p class="node-card-subtitle">Pengenalan kantor dinas &amp; penugasan proyek</p>
-                            </div>
-
-                            <!-- Node 6: Logbook Harian -->
-                            <div id="node-6" class="journey-node-card dag-node-card svg-node-group" onclick="selectDagNode(6)" tabindex="0" role="button" aria-label="Tahap 06 Logbook Harian">
-                                <div class="node-header-row">
-                                    <span class="node-number-badge" style="background:#FEF3C7;color:#D97706;">06</span>
-                                    <span class="node-tag-pill" style="background:#FEF3C7;color:#D97706;">Maks. H-1</span>
-                                </div>
-                                <h3 class="node-card-title">Logbook Harian</h3>
-                                <p class="node-card-subtitle">Pengisian aktivitas disiplin harian (BR-09)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Dynamic Vector Pipeline Connector 3 -> 4 -->
-                    <div id="pipeline-indicator-3-4" class="dag-pipeline-beam-connector phase-connector-indicator" aria-hidden="true">
-                        <svg class="dag-beam-svg" viewBox="0 0 300 36">
-                            <path class="dag-beam-track" d="M 150 0 L 150 36" />
-                            <path class="dag-beam-pulse" d="M 150 0 L 150 36" />
-                        </svg>
-                        <div class="dag-beam-badge">Laporan Disahkan &bull; Terbit Nilai & Sertifikat QR</div>
-                    </div>
-
-                    <!-- Phase 4: Evaluasi & Kelulusan -->
-                    <div class="journey-phase-track" style="border-left: 4px solid #D97706;">
-                        <div class="journey-phase-header-row">
-                            <span class="journey-phase-badge-label" style="background:#FEF3C7;color:#D97706;">
-                                <span>Fase 4: Evaluasi &amp; Kelulusan</span>
-                            </span>
-                            <p class="journey-phase-desc-mini">Masa Akses Dokumen Kelulusan: 30 Hari Kalender (BR-10)</p>
-                        </div>
-                        <div class="journey-nodes-row" style="grid-template-columns: 1fr;">
-                            <!-- Node 7: Nilai & Sertifikat -->
-                            <div id="node-7" class="journey-node-card dag-node-card svg-node-group" onclick="selectDagNode(7)" tabindex="0" role="button" aria-label="Tahap 07 Nilai & Sertifikat">
-                                <div class="node-header-row">
-                                    <span class="node-number-badge" style="background:#FEF3C7;color:#D97706;">07</span>
-                                    <span class="node-tag-pill" style="background:#DCFCE7;color:#166534;">100 Poin &amp; QR</span>
-                                </div>
-                                <h3 class="node-card-title">Penilaian Rubrik 100 Poin &amp; Sertifikat Digital</h3>
-                                <p class="node-card-subtitle">Pengesahan laporan akhir, penilaian 5 aspek oleh Pembimbing, dan unduh Lembar Nilai Resmi serta Sertifikat ber-QR Code.</p>
-                            </div>
-                        </div>
+                <!-- Animated Loopback Return Ribbon Alert -->
+                <div id="loopbackRibbon" class="dag-loopback-ribbon" role="alert" aria-live="polite">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><polyline points="3 3 3 8 8 8"/></svg>
+                    <div>
+                        <strong>Jalur Revisi Loopback Aktif:</strong> Berkas perlu diperbaiki oleh pemohon dalam tempo <strong>3x24 Jam Kalender</strong>. Alur berputar kembali ke <button type="button" onclick="selectDagNode(3)" style="background:none;border:none;color:#92400E;text-decoration:underline;font-weight:800;cursor:pointer;padding:0;font-size:inherit;">Tahap 03 (Unggah Berkas)</button>.
                     </div>
                 </div>
             </div>
@@ -2263,47 +2813,40 @@
             }
         });
 
-        // Update Pipeline Flow Indicators & Pulses
-        const p12 = document.getElementById('pipeline-indicator-1-2');
-        const p23 = document.getElementById('pipeline-indicator-2-3');
-        const p34 = document.getElementById('pipeline-indicator-3-4');
+        // Update SVG Flow Pulses & Highlights
+        const pulse12 = document.getElementById('edge-1-2-pulse');
+        const pulse23 = document.getElementById('edge-2-3-pulse');
+        const pulse34 = document.getElementById('edge-3-4-pulse');
+        const pulse4Diterima = document.getElementById('edge-4-diterima-pulse');
 
-        const isP12Active = mapping.stepNum >= 2;
-        const isP23Active = nodeId === 'diterima' || mapping.stepNum >= 5;
-        const isP34Active = mapping.stepNum >= 7;
+        if (pulse12) pulse12.classList.toggle('active', mapping.stepNum >= 2);
+        if (pulse23) pulse23.classList.toggle('active', mapping.stepNum >= 3);
+        if (pulse34) pulse34.classList.toggle('active', mapping.stepNum >= 4);
+        if (pulse4Diterima) pulse4Diterima.classList.toggle('active', (nodeId === 'diterima' || mapping.stepNum >= 5));
 
-        if (p12) {
-            p12.classList.toggle('active', isP12Active);
-            const pulse = p12.querySelector('.dag-beam-pulse');
-            if (pulse) pulse.classList.toggle('active', isP12Active);
-        }
-        if (p23) {
-            p23.classList.toggle('active', isP23Active);
-            const pulse = p23.querySelector('.dag-beam-pulse');
-            if (pulse) pulse.classList.toggle('active', isP23Active);
-        }
-        if (p34) {
-            p34.classList.toggle('active', isP34Active);
-            const pulse = p34.querySelector('.dag-beam-pulse');
-            if (pulse) pulse.classList.toggle('active', isP34Active);
-        }
-
-        // Update Loopback Ribbon
+        // Update Loopback Edge & Target Highlight
         const loopbackRibbon = document.getElementById('loopbackRibbon');
+        const loopbackTargetAnchor = document.getElementById('loopbackTargetAnchor');
+        const loopbackEdge = document.getElementById('edge-loopback-flow');
+        const loopbackBadge = document.getElementById('badgeLoopback');
         const node3 = document.getElementById('node-3');
-        if (loopbackRibbon) {
-            const isPerbaikan = (nodeId === 'perbaikan');
-            loopbackRibbon.classList.toggle('active', isPerbaikan);
-            if (node3) {
-                if (isPerbaikan) {
-                    node3.style.borderColor = '#D97706';
-                    node3.style.boxShadow = '0 0 0 3px rgba(217, 119, 6, 0.3)';
-                } else if (!node3.classList.contains('active')) {
-                    node3.style.borderColor = '';
-                    node3.style.boxShadow = '';
-                }
-            }
+
+        const isPerbaikan = (nodeId === 'perbaikan');
+        if (loopbackRibbon) loopbackRibbon.classList.toggle('active', isPerbaikan);
+        if (loopbackEdge) loopbackEdge.classList.toggle('active', isPerbaikan);
+        if (loopbackBadge) loopbackBadge.classList.toggle('active', isPerbaikan);
+        if (loopbackTargetAnchor) loopbackTargetAnchor.style.transform = isPerbaikan ? 'translateX(-50%) scale(1.6)' : 'translateX(-50%) scale(1)';
+
+        if (node3) {
+            node3.classList.toggle('loopback-target-active', isPerbaikan);
         }
+
+        // Update Start & Finish Terminator Nodes
+        const finishTerminator = document.getElementById('flow-node-finish');
+        const edge7Finish = document.getElementById('edge-7-finish');
+
+        if (finishTerminator) finishTerminator.classList.toggle('active', mapping.stepNum === 7);
+        if (edge7Finish) edge7Finish.classList.toggle('active', mapping.stepNum >= 7);
 
         // Update Inspector Card
         const data = nodeData[nodeId];
@@ -2359,6 +2902,50 @@
             url.searchParams.set('step', nodeId);
             window.history.replaceState({}, '', url);
         }
+    }
+
+    // Zero-Scroll Auto-Fit & Responsive Zoom Engine
+    let userZoomMultiplier = 1.0;
+    const BASE_CANVAS_WIDTH = 1040;
+    const BASE_CANVAS_HEIGHT = 500;
+
+    function autoFitFlowchartCanvas() {
+        const viewport = document.getElementById('flowchartViewport');
+        const plane = document.getElementById('flowchartCanvasPlane');
+        const stage = document.getElementById('flowchartStage');
+        if (!viewport || !plane) return;
+
+        // Ambil lebar kontainer viewport aktual (tanpa scrollbar)
+        const availableWidth = viewport.clientWidth;
+        if (availableWidth <= 0) return;
+
+        // Auto scale proporsional terhadap base width 1040px
+        const autoFitScale = Math.min(1.0, Math.max(0.40, availableWidth / BASE_CANVAS_WIDTH));
+        const effectiveScale = parseFloat((autoFitScale * userZoomMultiplier).toFixed(3));
+
+        plane.style.transform = `scale(${effectiveScale})`;
+        plane.style.transformOrigin = 'top left';
+
+        if (stage) {
+            stage.style.height = `${Math.round(BASE_CANVAS_HEIGHT * effectiveScale)}px`;
+            stage.style.width = '100%';
+        }
+
+        const zoomLabel = document.getElementById('zoomPercentLabel');
+        if (zoomLabel) {
+            const isAuto = (userZoomMultiplier === 1.0);
+            zoomLabel.innerText = isAuto ? `${Math.round(effectiveScale * 100)}% (Auto)` : `${Math.round(effectiveScale * 100)}%`;
+        }
+    }
+
+    function zoomCanvas(delta) {
+        userZoomMultiplier = Math.min(1.6, Math.max(0.6, parseFloat((userZoomMultiplier + delta).toFixed(2))));
+        autoFitFlowchartCanvas();
+    }
+
+    function resetCanvasZoom() {
+        userZoomMultiplier = 1.0;
+        autoFitFlowchartCanvas();
     }
 
     // Auto-Tour Player Functions
@@ -2443,6 +3030,7 @@
             btnRoadmap.classList.remove('active');
             viewGraph.style.display = 'grid';
             viewRoadmap.classList.remove('active');
+            requestAnimationFrame(() => autoFitFlowchartCanvas());
         } else {
             btnRoadmap.classList.add('active');
             btnGraph.classList.remove('active');
@@ -2456,8 +3044,15 @@
         item.classList.toggle('open');
     }
 
+    // Window & Viewport Resize Observers for Zero-Scroll
+    window.addEventListener('resize', autoFitFlowchartCanvas);
+    window.addEventListener('load', autoFitFlowchartCanvas);
+
     // Initialize on DOM ready
     document.addEventListener('DOMContentLoaded', () => {
+        // Panggil initial auto-fit layout
+        autoFitFlowchartCanvas();
+
         const urlParams = new URLSearchParams(window.location.search);
         const stepParam = urlParams.get('step') || urlParams.get('fase');
         if (stepParam && nodeData[stepParam]) {
@@ -2467,7 +3062,7 @@
         }
 
         // Add keyboard Enter/Space support for milestone cards
-        document.querySelectorAll('.journey-node-card, .decision-branch-card, .stepper-node-dot').forEach(el => {
+        document.querySelectorAll('.journey-node-card, .decision-branch-card, .stepper-node-dot, .flow-terminator-pill').forEach(el => {
             el.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -2476,7 +3071,7 @@
             });
         });
 
-        // Global Arrow key navigation
+        // Global Arrow key & Zoom navigation
         document.addEventListener('keydown', (e) => {
             if (['input', 'textarea', 'select'].includes(document.activeElement.tagName.toLowerCase())) {
                 return;
@@ -2487,6 +3082,15 @@
             } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 prevDagStep();
+            } else if (e.key === '+' || e.key === '=') {
+                e.preventDefault();
+                zoomCanvas(0.15);
+            } else if (e.key === '-' || e.key === '_') {
+                e.preventDefault();
+                zoomCanvas(-0.15);
+            } else if (e.key === '0') {
+                e.preventDefault();
+                resetCanvasZoom();
             }
         });
     });
@@ -2498,6 +3102,9 @@
     window.nextDagStep = nextDagStep;
     window.prevDagStep = prevDagStep;
     window.resetDagTour = resetDagTour;
+    window.zoomCanvas = zoomCanvas;
+    window.resetCanvasZoom = resetCanvasZoom;
+    window.autoFitFlowchartCanvas = autoFitFlowchartCanvas;
     window.setSimJenjang = setSimJenjang;
     window.setSimTipe = setSimTipe;
     window.switchMainView = switchMainView;
