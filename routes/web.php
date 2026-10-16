@@ -80,7 +80,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Logout
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Verifikasi Email Calon Peserta (F-02 AC-02-4)
 Route::middleware('auth')->group(function () {
