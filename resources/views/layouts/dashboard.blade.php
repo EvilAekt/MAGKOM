@@ -11,7 +11,7 @@
     <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -59,6 +59,12 @@
             --topbar-height: 64px;
 
             --font-sans: 'Open Sans', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+            /* Tipografi Bobot Standar MagKom (Plan 2026-10-16) */
+            --fw-regular: 400;
+            --fw-medium: 500;
+            --fw-semibold: 600;
+            --fw-bold: 700;
         }
 
         *, *::before, *::after {
@@ -73,8 +79,25 @@
             color: var(--neutral-800);
             min-height: 100vh;
             line-height: 1.5;
+            font-weight: var(--fw-regular);
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+        }
+
+        /* Headings: SemiBold atau Bold Tegas dan Jelas sebagai Judul */
+        h1, h2 {
+            font-weight: var(--fw-bold);
+            color: var(--neutral-800);
+        }
+
+        h3, h4, h5, h6 {
+            font-weight: var(--fw-semibold);
+            color: var(--neutral-800);
+        }
+
+        /* Teks semua di web (body): Regular */
+        p, span.text-body, td, li {
+            font-weight: var(--fw-regular);
         }
 
         /* Layout Grid Container */

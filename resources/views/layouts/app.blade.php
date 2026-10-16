@@ -18,7 +18,7 @@
     <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -70,6 +70,12 @@
             --gray-900: var(--neutral-900);
 
             --font-sans: 'Open Sans', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+            /* Tipografi Bobot Standar MagKom (Plan 2026-10-16) */
+            --fw-regular: 400;
+            --fw-medium: 500;
+            --fw-semibold: 600;
+            --fw-bold: 700;
         }
 
         * {
@@ -86,7 +92,24 @@
             display: flex;
             flex-direction: column;
             line-height: 1.5;
+            font-weight: var(--fw-regular);
             -webkit-font-smoothing: antialiased;
+        }
+
+        /* Headings: SemiBold atau Bold Tegas dan Jelas sebagai Judul */
+        h1, h2 {
+            font-weight: var(--fw-bold);
+            color: var(--neutral-800);
+        }
+
+        h3, h4, h5, h6 {
+            font-weight: var(--fw-semibold);
+            color: var(--neutral-800);
+        }
+
+        /* Teks semua di web (body): Regular */
+        p, span.text-body, td, li {
+            font-weight: var(--fw-regular);
         }
 
         .container {
@@ -331,6 +354,7 @@
             color: #94a3b8;
             padding: 4rem 0 3rem;
             font-size: 0.85rem;
+            font-weight: var(--fw-regular);
             border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
@@ -341,11 +365,13 @@
             line-height: 1.6;
         }
 
+        /* Footer Column Title: Medium (500) per instruksi */
         .footer-col-title {
             color: #38bdf8;
             font-size: 0.95rem;
-            font-weight: 700;
+            font-weight: var(--fw-medium);
             margin-bottom: 1.25rem;
+            letter-spacing: -0.01em;
         }
 
         .footer-links {
@@ -355,9 +381,11 @@
             gap: 0.65rem;
         }
 
+        /* Footer links & address: Regular (400) per instruksi */
         .footer-links a {
             color: #94a3b8;
             text-decoration: none;
+            font-weight: var(--fw-regular);
             transition: color 0.15s ease;
         }
 
@@ -370,6 +398,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            font-weight: var(--fw-regular);
         }
 
         @media (max-width: 992px) {

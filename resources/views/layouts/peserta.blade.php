@@ -60,6 +60,7 @@
             --text-2xl: 1.25rem;   /* 20px */
             --text-3xl: 1.5rem;    /* 24px */
 
+            --fw-regular: 400;
             --fw-normal: 400;
             --fw-medium: 500;
             --fw-semibold: 600;
@@ -87,7 +88,7 @@
         body {
             font-family: var(--font-sans);
             font-size: var(--text-base);
-            font-weight: var(--fw-normal);
+            font-weight: var(--fw-regular);
             line-height: 1.5;
             background-color: var(--neutral-150);
             color: var(--neutral-800);
@@ -98,9 +99,16 @@
             text-rendering: optimizeLegibility;
         }
 
-        h1, h2, h3, h4, h5, h6 {
+        /* Headings: SemiBold atau Bold Tegas dan Jelas sebagai Judul */
+        h1, h2 {
             color: var(--neutral-800);
             font-weight: var(--fw-bold);
+            line-height: 1.3;
+        }
+
+        h3, h4, h5, h6 {
+            color: var(--neutral-800);
+            font-weight: var(--fw-semibold);
             line-height: 1.3;
         }
 
@@ -112,7 +120,9 @@
             color: #ffffff;
         }
 
-        p {
+        /* Teks semua di web (body): Regular */
+        p, span.text-body, td, li {
+            font-weight: var(--fw-regular);
             line-height: 1.5;
         }
 
