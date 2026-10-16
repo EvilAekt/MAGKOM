@@ -5,14 +5,14 @@
         <div class="sa-panel__head">
             <div>
                 @if($title)
-                    <h3 class="sa-panel__title">{{ $title }}</h3>
+                    <h3 class="sa-panel__title">{!! $title !!}</h3>
                 @endif
                 @if($subtitle)
-                    <p class="sa-panel__sub">{{ $subtitle }}</p>
+                    <p class="sa-panel__sub">{!! $subtitle !!}</p>
                 @endif
             </div>
             @if($href && $linkText)
-                <a href="{{ $href }}" class="sa-link">{{ $linkText }}</a>
+                <a href="{{ $href }}" class="sa-link">{!! $linkText !!}</a>
             @endif
         </div>
     @endif

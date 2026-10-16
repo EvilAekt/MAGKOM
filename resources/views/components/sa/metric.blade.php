@@ -2,15 +2,15 @@
 
 <div {{ $attributes->merge(['class' => 'sa-metric sa-metric--' . $tone]) }}>
     <div class="sa-metric__header">
-        <span class="sa-metric__label">{{ $label }}</span>
+        <span class="sa-metric__label">{!! $label !!}</span>
         @if($icon)
             <span class="sa-metric__icon"><x-sa.icon :name="$icon" :size="18" /></span>
         @endif
     </div>
-    <div class="sa-metric__value">{{ $value }}</div>
+    <div class="sa-metric__value">{!! $value !!}</div>
     @if($hint || isset($sub))
         <div class="sa-metric__hint">
-            {{ $hint ?? $sub }}
+            {!! $hint ?? $sub !!}
         </div>
     @endif
     @if(isset($slot) && trim($slot))
