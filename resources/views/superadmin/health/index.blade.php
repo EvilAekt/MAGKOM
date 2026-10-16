@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Telemetri Kesehatan & Diagnostik Sistem - SuperAdmin MagKom')
-@section('page_title', 'Telemetri Kesehatan Sistem & Infrastruktur')
+@section('page_title', 'Panel Telemetri Kesehatan Infrastruktur')
 @section('page_description', 'Pemantauan real-time latensi basis data, kapasitas storage, integritas server, dan suite pemeliharaan proaktif 1-klik.')
 
 @section('breadcrumbs')

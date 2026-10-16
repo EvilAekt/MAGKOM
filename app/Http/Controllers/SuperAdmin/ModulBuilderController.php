@@ -21,20 +21,57 @@ use Illuminate\View\View;
 class ModulBuilderController extends Controller
 {
     public const AVAILABLE_ICONS = [
-        'box'          => 'Kotak / Aset',
+        // 💻 TI & Perangkat Jaringan
         'laptop'       => 'Laptop / Komputer',
-        'shield'       => 'Keamanan / Shield',
-        'award'        => 'Sertifikat / Penghargaan',
-        'book'         => 'Buku / Arsip',
-        'file-text'    => 'Dokumen / Formulir',
-        'database'     => 'Basis Data / Storage',
-        'users'        => 'Grup Pengguna / Mitra',
-        'calendar'     => 'Kalender / Agenda',
-        'check-circle' => 'Verifikasi / Checklist',
-        'layers'       => 'Lapisan / Modul Dinamis',
-        'cpu'          => 'Perangkat Keras / IoT',
         'server'       => 'Server / Jaringan',
-        'activity'     => 'Aktivitas / Log',
+        'cpu'          => 'Perangkat Keras / IoT',
+        'hard-drive'   => 'Hard Disk / Media Simpan',
+        'wifi'         => 'Koneksi WiFi / Hotspot',
+        'terminal'     => 'Terminal / Konsol',
+        'smartphone'   => 'Smartphone / Ponsel',
+        'monitor'      => 'Monitor / Layar Kerja',
+        'printer'      => 'Printer / Percetakan',
+        'shield'       => 'Keamanan Siber / Proteksi',
+
+        // 📁 Data & Administrasi Arsip
+        'database'     => 'Basis Data / SQL',
+        'table'        => 'Tabel Data / Spreadsheet',
+        'file-text'    => 'Dokumen / Formulir',
+        'folder'       => 'Folder / Direktori',
+        'book'         => 'Buku / Pedoman',
+        'clipboard'    => 'Papan Klip / Catatan',
+        'archive'      => 'Arsip / Kotak Penyimpanan',
+        'layers'       => 'Lapisan / Modul Dinamis',
+        'file-plus'    => 'Tambah Dokumen / Berkas Baru',
+
+        // 👥 Manajemen, Tim & Institusi
+        'users'        => 'Grup Pengguna / Mitra',
+        'user-check'   => 'Verifikasi User / Peserta',
+        'user-plus'    => 'Registrasi User / Anggota',
+        'briefcase'    => 'Unit Kerja / Portofolio',
+        'award'        => 'Sertifikat / Prestasi',
+        'building'     => 'Gedung / OPD Kominfo',
+        'compass'      => 'Arah / Kebijakan Strategis',
+        'flag'         => 'Prioritas / Bendera Tugas',
+
+        // ⚙️ Layanan Publik & Operasional
+        'calendar'     => 'Kalender / Jadwal Kegiatan',
+        'clock'        => 'Waktu / Presensi / Jam',
+        'check-circle' => 'Selesai / Terverifikasi',
+        'activity'     => 'Aktivitas / Log Dinamis',
+        'bell'         => 'Notifikasi / Pengumuman',
+        'mail'         => 'Surat Masuk / Undangan',
+        'phone'        => 'Kontak Telepon / Hotline',
+        'map-pin'      => 'Lokasi / Wilayah Sleman',
+        'tool'         => 'Peralatan / Maintenance',
+        'sliders'      => 'Pengaturan / Konfigurasi',
+
+        // 📦 Inventaris & Aset Logistik
+        'box'          => 'Kotak Aset / Inventaris',
+        'package'      => 'Paket / Pengiriman Barang',
+        'tag'          => 'Label / Klasifikasi Barang',
+        'credit-card'  => 'Anggaran / Kartu Pembayaran',
+        'qr-code'      => 'Kode QR / Autentikasi',
     ];
 
     public function __construct(
