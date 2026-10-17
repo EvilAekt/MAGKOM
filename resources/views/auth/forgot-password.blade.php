@@ -4,18 +4,7 @@
 @section('meta_description', 'Pemulihan kata sandi akun peserta magang Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')
-    <!-- Alert Notifikasi Flash -->
-    @if (session('status'))
-        <div class="auth-alert-success" role="alert">
-            {{ session('status') }}
-        </div>
-    @endif
 
-    @if(isset($errors) && $errors->any())
-        <div class="auth-alert-error" role="alert">
-            {{ $errors->first() }}
-        </div>
-    @endif
 
     <!-- Header Lupa Kata Sandi -->
     <div class="step-badge">

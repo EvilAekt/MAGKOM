@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Bidang extends Model
@@ -28,6 +29,11 @@ class Bidang extends Model
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'bidang_id');
+    }
+
+    public function jurusan(): BelongsToMany
+    {
+        return $this->belongsToMany(Jurusan::class, 'bidang_jurusan', 'bidang_id', 'jurusan_id')->withTimestamps();
     }
 
     public function scopeAktif(Builder $query): Builder

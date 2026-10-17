@@ -26,6 +26,11 @@ class SecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 
+        if ($request->user() || $request->routeIs('berkas.*') || $request->is('*/unduh*', '*/lampiran*', '*/download*')) {
+            $response->headers->set('Cache-Control', 'no-store, private, must-revalidate');
+            $response->headers->set('Pragma', 'no-cache');
+        }
+
         if (app()->isProduction()) {
             $response->headers->set(
                 'Content-Security-Policy',

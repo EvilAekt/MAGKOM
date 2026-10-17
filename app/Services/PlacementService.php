@@ -12,11 +12,14 @@ use App\Enums\SumberPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Exceptions\Domain\StatusSudahBerubahException;
 use App\Models\Bidang;
+use App\Models\BulanMagang;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\PesertaProfil;
 use App\Models\SlotKhusus;
+use App\Enums\RealtimeEventTypeEnum;
 use App\Models\User;
+use App\Services\RealtimeEventService;
 use App\Support\PeriodeMagang;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
@@ -27,10 +30,13 @@ class PlacementService extends AuditedService
 {
     public function __construct(
         protected AuditService $auditService,
-        protected QuotaAllocationService $quotaAllocationService
+        protected QuotaAllocationService $quotaAllocationService,
+        protected ?RealtimeEventService $realtimeService = null
     ) {
         parent::__construct($auditService);
+        $this->realtimeService = $realtimeService ?? app(RealtimeEventService::class);
     }
+
 
     /**
      * Menerima pendaftaran calon peserta magang secara online (jalur umum) (F-04, F-07).
@@ -101,6 +107,28 @@ class PlacementService extends AuditedService
                     ]
                 );
 
+                // Notifikasi Real-time SSE (TASK-SSE-05)
+                $this->realtimeService->publish(
+                    RealtimeEventTypeEnum::StatusPendaftaran,
+                    [
+                        'title' => 'Selamat! Pendaftaran Diterima',
+                        'message' => 'Pendaftaran magang Anda telah disetujui. Anda resmi ditempatkan.',
+                        'status' => 'diterima',
+                        'action_url' => route('peserta.dashboard'),
+                    ],
+                    $p->user_id
+                );
+                $this->realtimeService->publish(
+                    RealtimeEventTypeEnum::KuotaBerubah,
+                    [
+                        'title' => 'Pembaruan Kuota Magang',
+                        'message' => 'Kuota jurusan telah dialokasikan untuk peserta baru.',
+                        'kuota_id' => $p->kuota_id,
+                    ],
+                    null,
+                    'admin'
+                );
+
                 return $penempatan;
             }, 3);
         });
@@ -135,6 +163,19 @@ class PlacementService extends AuditedService
                     nilaiLama: $nilaiLama,
                     nilaiBaru: $p->toArray(),
                     detail: ['alasan' => $alasan, 'aksi' => 'Menolak pengajuan pendaftaran']
+                );
+
+                // Notifikasi Real-time SSE ke peserta (TASK-SSE-05)
+                $this->realtimeService->publish(
+                    RealtimeEventTypeEnum::StatusPendaftaran,
+                    [
+                        'title' => 'Pendaftaran Tidak Diterima',
+                        'message' => 'Mohon maaf, pengajuan pendaftaran Anda belum dapat diterima.',
+                        'status' => 'ditolak',
+                        'alasan' => $alasan,
+                        'action_url' => route('peserta.dashboard'),
+                    ],
+                    $p->user_id
                 );
 
                 return $p;
@@ -172,10 +213,24 @@ class PlacementService extends AuditedService
                     detail: ['catatan' => $catatan, 'aksi' => 'Meminta revisi/perbaikan berkas pendaftaran']
                 );
 
+                // Notifikasi Real-time SSE ke peserta (TASK-SSE-05)
+                $this->realtimeService->publish(
+                    RealtimeEventTypeEnum::StatusPendaftaran,
+                    [
+                        'title' => 'Permintaan Perbaikan Berkas',
+                        'message' => 'Verifikator meminta perbaikan berkas pendaftaran Anda. Silakan cek catatan revisi.',
+                        'status' => 'perlu_perbaikan',
+                        'catatan' => $catatan,
+                        'action_url' => route('peserta.pendaftaran.detail', $p->id),
+                    ],
+                    $p->user_id
+                );
+
                 return $p;
             });
         });
     }
+
 
     /**
      * Penempatan manual jalur khusus (SuperAdmin / Admin) (F-06, F-07).
@@ -427,6 +482,53 @@ class PlacementService extends AuditedService
 
                 return $p;
             });
+        });
+    }
+
+    /**
+     * Menutup antrean waiting list secara massal untuk bulan magang yang sudah dimulai (AC-04-7).
+     */
+    public function tutupWaitingListKadaluarsa(BulanMagang $bulan, ?User $admin = null): int
+    {
+        $hariIni = now('Asia/Jakarta')->startOfDay();
+        $tglMulai = \Carbon\Carbon::parse($bulan->bulan_mulai)->timezone('Asia/Jakarta')->startOfMonth();
+
+        if ($hariIni->lt($tglMulai)) {
+            return 0;
+        }
+
+        return DB::transaction(function () use ($bulan, $admin) {
+            $antrean = Pendaftaran::where('bulan_magang_id', $bulan->id)
+                ->where('status', StatusPendaftaranEnum::WaitingList)
+                ->lockForUpdate()
+                ->get();
+
+            $adminId = $admin?->id ?? User::where('role', \App\Enums\RoleEnum::SuperAdmin)->value('id') ?? 1;
+            $catatanOtomatis = 'Periode pelaksanaan magang telah dimulai. Antrean waiting list ditutup secara otomatis (AC-04-7).';
+
+            foreach ($antrean as $pendaftaran) {
+                $pendaftaran->update([
+                    'status' => StatusPendaftaranEnum::Ditolak,
+                    'catatan' => $catatanOtomatis,
+                    'verifikator_id' => $adminId,
+                    'diputuskan_at' => now(),
+                ]);
+
+                $this->auditService->catat(
+                    tipe: TipeAuditEnum::Aksi,
+                    tabel: 'pendaftaran',
+                    idData: $pendaftaran->id,
+                    nilaiLama: ['status' => StatusPendaftaranEnum::WaitingList->value],
+                    nilaiBaru: ['status' => StatusPendaftaranEnum::Ditolak->value],
+                    detail: [
+                        'aksi' => 'Penutupan antrean waiting list otomatis awal bulan magang (AC-04-7)',
+                        'bulan_magang_id' => $bulan->id,
+                        'admin_id' => $adminId,
+                    ]
+                );
+            }
+
+            return $antrean->count();
         });
     }
 }

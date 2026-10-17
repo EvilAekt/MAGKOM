@@ -76,6 +76,11 @@ class ProfilController extends Controller
 
         unset($validated['hapus_foto']);
 
+        if ($request->boolean('persetujuan_wali')) {
+            $validated['persetujuan_wali_at'] = now();
+        }
+        unset($validated['persetujuan_wali']);
+
         $profil = PesertaProfil::updateOrCreate(
             ['user_id' => $user->id],
             $validated

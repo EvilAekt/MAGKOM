@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+    <!-- Anti-Flash Theme Script -->
+    <script>
+        (function() {
+            try {
+                const savedPref = localStorage.getItem('magkom_theme') || '{{ session('tema_tampilan', request()->cookie('tema_tampilan', 'terang')) }}';
+                let effectiveTheme = 'light';
+                if (savedPref === 'sistem') {
+                    effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                } else if (savedPref === 'gelap') {
+                    effectiveTheme = 'dark';
+                } else {
+                    effectiveTheme = 'light';
+                }
+                document.documentElement.setAttribute('data-theme', effectiveTheme);
+                document.documentElement.setAttribute('data-pref-theme', savedPref);
+            } catch (e) {}
+        })();
+    </script>
 
     <style>
         :root {
@@ -79,6 +98,412 @@
             --radius-full: 9999px;
             --sidebar-width: 256px;
             --topbar-height: 64px;
+        }
+
+        /* Mode Gelap (Dark Mode Tokens - Modern Slate/Navy Theme ala Menu Tugas) */
+        [data-theme="dark"] {
+            --neutral-0: #182234;       /* Card background */
+            --neutral-100: #0F172A;     /* Secondary container / hover */
+            --neutral-150: #0A0F1D;     /* Body background */
+            --neutral-200: #26354D;     /* Card border & divider */
+            --neutral-400: #3E516E;     /* Input border / outline */
+            --neutral-500: #8FA2BF;     /* Subtitle / muted text */
+            --neutral-600: #CBD5E1;     /* Body secondary text */
+            --neutral-700: #E2E8F0;     /* Body regular text */
+            --neutral-800: #F8FAFC;     /* Heading & bold text */
+            --neutral-900: #FFFFFF;
+
+            --blue-tint: rgba(6, 65, 204, 0.35);
+            --blue-tint-line: rgba(7, 81, 255, 0.5);
+
+            /* Status Tokens Khusus Mode Gelap (Glowing & High Contrast) */
+            --green-100: rgba(6, 78, 59, 0.45);
+            --green-600: #34D399;
+            --green-700: #6EE7B7;
+
+            --amber-100: rgba(120, 53, 15, 0.45);
+            --amber-200: rgba(180, 83, 9, 0.35);
+            --amber-300: #FCD34D;
+            --amber-700: #FBBF24;
+
+            --red-100: rgba(127, 29, 29, 0.45);
+            --red-200: rgba(153, 27, 27, 0.35);
+            --red-300: #FCA5A5;
+            --red-600: #F87171;
+            --red-700: #EF4444;
+        }
+
+        [data-theme="dark"] body {
+            background-color: var(--neutral-150);
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .sidebar {
+            background-color: #111827;
+            border-right-color: #1F2937;
+        }
+
+        [data-theme="dark"] .sidebar-header {
+            border-bottom-color: #1F2937;
+        }
+
+        [data-theme="dark"] .sidebar-footer {
+            border-top-color: #1F2937;
+        }
+
+        [data-theme="dark"] .topbar {
+            background-color: #111827;
+            border-bottom-color: #1F2937;
+        }
+
+        [data-theme="dark"] .topbar-title {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .user-chip-btn {
+            background-color: #1F2937;
+            border-color: #374151;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .user-name {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .profile-dropdown-menu {
+            background-color: #182234;
+            border-color: #26354D;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="dark"] .dropdown-header {
+            border-bottom-color: #26354D;
+        }
+
+        [data-theme="dark"] .dropdown-header-name {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .dropdown-item {
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .dropdown-item:hover {
+            background-color: #1F2937;
+            color: #60A5FA;
+        }
+
+        [data-theme="dark"] .dropdown-divider {
+            background-color: #26354D;
+        }
+
+        [data-theme="dark"] .nav-item {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .nav-item:hover {
+            background-color: #1F2937;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .nav-item.active {
+            background-color: rgba(7, 81, 255, 0.2);
+            color: #60A5FA;
+        }
+
+        [data-theme="dark"] .nav-item.locked {
+            color: #64748B;
+            background-color: transparent;
+        }
+
+        [data-theme="dark"] .badge-locked {
+            background-color: #1F2937;
+            color: #94A3B8;
+            border-color: #374151;
+        }
+
+        [data-theme="dark"] .logout-btn {
+            background-color: #1F2937;
+            border-color: #374151;
+            color: #F87171;
+        }
+
+        [data-theme="dark"] .logout-btn:hover {
+            background-color: #7F1D1D;
+            color: #FFFFFF;
+        }
+
+        [data-theme="dark"] .content-area {
+            background-color: var(--neutral-150);
+        }
+
+        [data-theme="dark"] .settings-card,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .stats-card,
+        [data-theme="dark"] .profile-card,
+        [data-theme="dark"] .tugas-card,
+        [data-theme="dark"] .logbook-card {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .input-custom,
+        [data-theme="dark"] input[type="text"],
+        [data-theme="dark"] input[type="email"],
+        [data-theme="dark"] input[type="password"],
+        [data-theme="dark"] select,
+        [data-theme="dark"] textarea {
+            background-color: #0F172A !important;
+            border-color: var(--neutral-400) !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] input:focus,
+        [data-theme="dark"] select:focus,
+        [data-theme="dark"] textarea:focus {
+            border-color: #2563EB !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+        }
+
+        [data-theme="dark"] .callout-note {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        /* Unified Dark Components across Views */
+        [data-theme="dark"] .table-container,
+        [data-theme="dark"] .table-wrapper,
+        [data-theme="dark"] table {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] th {
+            background-color: #0F172A !important;
+            color: #94A3B8 !important;
+            border-bottom-color: var(--neutral-200) !important;
+        }
+
+        [data-theme="dark"] td {
+            border-bottom-color: var(--neutral-200) !important;
+            color: var(--neutral-700) !important;
+        }
+
+        [data-theme="dark"] tr:hover td {
+            background-color: rgba(30, 41, 59, 0.5) !important;
+        }
+
+        [data-theme="dark"] .modal-content,
+        [data-theme="dark"] .modal-box,
+        [data-theme="dark"] .modal-box-large,
+        [data-theme="dark"] .dialog-content {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        [data-theme="dark"] .modal-header {
+            background-color: #182234 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-footer {
+            background-color: #0F172A !important;
+            border-top-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .btn-secondary {
+            background-color: #1E293B !important;
+            border: 1px solid #334155 !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .btn-secondary:hover {
+            background-color: #334155 !important;
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .alert-success {
+            background-color: rgba(6, 78, 59, 0.35) !important;
+            border-color: rgba(52, 211, 153, 0.4) !important;
+            color: #6EE7B7 !important;
+        }
+
+        [data-theme="dark"] .alert-error,
+        [data-theme="dark"] .alert-danger {
+            background-color: rgba(127, 29, 29, 0.35) !important;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+            color: #FCA5A5 !important;
+        }
+
+        [data-theme="dark"] .alert-warning {
+            background-color: rgba(120, 53, 15, 0.35) !important;
+            border-color: rgba(245, 158, 11, 0.4) !important;
+            color: #FCD34D !important;
+        }
+
+        [data-theme="dark"] .alert-info {
+            background-color: rgba(30, 58, 138, 0.35) !important;
+            border-color: rgba(96, 165, 250, 0.4) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .badge-success {
+            background-color: rgba(6, 78, 59, 0.6) !important;
+            border-color: rgba(52, 211, 153, 0.4) !important;
+            color: #6EE7B7 !important;
+        }
+
+        [data-theme="dark"] .badge-warning {
+            background-color: rgba(120, 53, 15, 0.6) !important;
+            border-color: rgba(251, 191, 36, 0.4) !important;
+            color: #FCD34D !important;
+        }
+
+        [data-theme="dark"] .badge-danger {
+            background-color: rgba(127, 29, 29, 0.6) !important;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+            color: #FCA5A5 !important;
+        }
+
+        [data-theme="dark"] .badge-info {
+            background-color: rgba(30, 58, 138, 0.6) !important;
+            border-color: rgba(96, 165, 250, 0.4) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .badge-neutral {
+            background-color: rgba(51, 65, 85, 0.6) !important;
+            border-color: rgba(100, 116, 139, 0.4) !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .tab-btn {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .tab-btn:hover {
+            color: #60A5FA;
+            background: #1E293B;
+        }
+
+        [data-theme="dark"] .tab-btn.active {
+            color: #60A5FA;
+            border-bottom-color: #3B82F6;
+        }
+
+        [data-theme="dark"] .tab-count {
+            background-color: #26354D;
+            color: #CBD5E1;
+        }
+
+        [data-theme="dark"] .tab-btn.active .tab-count {
+            background-color: rgba(7, 81, 255, 0.3);
+            color: #60A5FA;
+        }
+
+        [data-theme="dark"] .divider,
+        [data-theme="dark"] hr {
+            border-color: var(--neutral-200) !important;
+        }
+
+        [data-theme="dark"] .bg-white:not(.badge-white):not(.text-white) {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .text-slate-900,
+        [data-theme="dark"] .text-gray-900 {
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .text-slate-700,
+        [data-theme="dark"] .text-gray-700 {
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .text-slate-500,
+        [data-theme="dark"] .text-gray-500,
+        [data-theme="dark"] .text-slate-400,
+        [data-theme="dark"] .text-gray-400 {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .border-slate-200,
+        [data-theme="dark"] .border-gray-200,
+        [data-theme="dark"] .border-slate-100,
+        [data-theme="dark"] .border-gray-100 {
+            border-color: var(--neutral-200) !important;
+        }
+
+        /* =====================================================================
+           UNIVERSAL INLINE-STYLE INVERSION (DS-MagKom Dark Contrast Fix)
+           Menembus inline-style hardcoded pada child views agar kontras tinggi
+           ===================================================================== */
+        [data-theme="dark"] [style*="color: #0F172A"],
+        [data-theme="dark"] [style*="color:#0F172A"],
+        [data-theme="dark"] [style*="color: #0f172a"],
+        [data-theme="dark"] [style*="color:#0f172a"],
+        [data-theme="dark"] [style*="color: #1E293B"],
+        [data-theme="dark"] [style*="color:#1E293B"],
+        [data-theme="dark"] [style*="color: #1e293b"],
+        [data-theme="dark"] [style*="color:#1e293b"],
+        [data-theme="dark"] [style*="color: #000000"],
+        [data-theme="dark"] [style*="color:#000000"],
+        [data-theme="dark"] [style*="color: #05070B"],
+        [data-theme="dark"] [style*="color: #1D2530"],
+        [data-theme="dark"] [style*="color: #333333"] {
+            color: var(--neutral-800, #F8FAFC) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #334155"],
+        [data-theme="dark"] [style*="color:#334155"],
+        [data-theme="dark"] [style*="color: #475569"],
+        [data-theme="dark"] [style*="color:#475569"],
+        [data-theme="dark"] [style*="color: #666666"] {
+            color: var(--neutral-700, #E2E8F0) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #64748B"],
+        [data-theme="dark"] [style*="color:#64748B"],
+        [data-theme="dark"] [style*="color: #7A8494"] {
+            color: var(--neutral-500, #94A3B8) !important;
+        }
+
+        [data-theme="dark"] [style*="background: #ffffff"],
+        [data-theme="dark"] [style*="background:#ffffff"],
+        [data-theme="dark"] [style*="background: #FFFFFF"],
+        [data-theme="dark"] [style*="background:#FFFFFF"],
+        [data-theme="dark"] [style*="background-color: #ffffff"],
+        [data-theme="dark"] [style*="background-color:#ffffff"],
+        [data-theme="dark"] [style*="background-color: #FFFFFF"],
+        [data-theme="dark"] [style*="background-color:#FFFFFF"] {
+            background-color: var(--neutral-0, #182234) !important;
+            border-color: var(--neutral-200, #26354D) !important;
+        }
+
+        [data-theme="dark"] [style*="background: #F8FAFC"],
+        [data-theme="dark"] [style*="background:#F8FAFC"],
+        [data-theme="dark"] [style*="background: #F1F5F9"],
+        [data-theme="dark"] [style*="background:#F1F5F9"] {
+            background-color: var(--neutral-100, #0F172A) !important;
+            border-color: var(--neutral-200, #26354D) !important;
+        }
+
+        [data-theme="dark"] [style*="border-bottom: 1px dashed #E2E8F0"],
+        [data-theme="dark"] [style*="border-bottom: 1px dashed #CBD5E1"] {
+            border-bottom-color: var(--neutral-200, #26354D) !important;
+        }
+
+        [data-theme="dark"] [style*="border: 1px solid #E2E8F0"],
+        [data-theme="dark"] [style*="border: 1px solid #CBD5E1"],
+        [data-theme="dark"] [style*="border: 1px solid #BFDBFE"] {
+            border-color: var(--neutral-200, #26354D) !important;
         }
 
         *, *::before, *::after {
@@ -187,14 +612,12 @@
             width: 40px;
             height: 40px;
             background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #FFFFFF;
-            font-weight: 800;
-            font-size: 1.125rem;
             flex-shrink: 0;
             padding: 4px;
         }
@@ -630,48 +1053,204 @@
             margin: 0 auto;
         }
 
-        /* Flash Messages */
-        .alert {
-            padding: 14px 18px;
-            border-radius: var(--radius-default);
-            margin-bottom: 24px;
+        /* ========================================================
+           MODERN TOAST NOTIFICATION COMPONENT (Mint Circular Badge)
+           ======================================================== */
+        .app-toast {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
+            gap: 14px;
+            padding: 14px 18px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+            margin-bottom: 24px;
+            position: relative;
+            transition: all 0.25s ease;
+        }
+
+        .toast-icon-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-icon-badge.success {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        .toast-icon-badge.error {
+            background: #FEF2F2;
+            color: #EF4444;
+        }
+
+        .toast-icon-badge.warning {
+            background: #FFFBEB;
+            color: #F59E0B;
+        }
+
+        .toast-icon-badge.info {
+            background: #EFF6FF;
+            color: #3B82F6;
+        }
+
+        .toast-content {
+            flex: 1;
+            min-width: 0;
+            padding-top: 1px;
+        }
+
+        .toast-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: #0F172A;
+            line-height: 1.35;
+            margin-bottom: 2px;
+        }
+
+        .toast-desc {
+            font-size: 0.84375rem;
+            font-weight: 400;
+            color: #64748B;
+            line-height: 1.45;
+        }
+
+        .toast-desc ul {
+            margin: 4px 0 0 16px;
+            padding: 0;
+        }
+
+        .toast-close-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #94A3B8;
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+        }
+
+        .toast-close-btn:hover {
+            color: #475569;
+            background: #F1F5F9;
+        }
+
+        /* Backward Compatibility for .alert class */
+        .alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06);
+            margin-bottom: 24px;
             font-size: var(--text-base);
-            font-weight: var(--fw-normal);
             line-height: 1.5;
         }
 
-        .alert-success {
-            background: var(--green-100);
-            border: 1px solid var(--green-600);
-            color: var(--green-700);
+        /* Dark Theme Support for Toasts */
+        [data-theme="dark"] .app-toast,
+        [data-theme="dark"] .alert {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
         }
 
-        .alert-error {
-            background: var(--red-100);
-            border: 1px solid var(--red-600);
-            color: var(--red-700);
+        [data-theme="dark"] .toast-title {
+            color: #F8FAFC !important;
         }
 
-        .alert-warning {
-            background: var(--amber-100);
-            border: 1px solid var(--amber-300);
-            color: var(--amber-700);
+        [data-theme="dark"] .toast-desc {
+            color: #94A3B8 !important;
         }
 
-        .alert-info {
-            background: var(--blue-tint);
-            border: 1px solid var(--blue-tint-line);
-            color: var(--blue-700);
+        [data-theme="dark"] .toast-icon-badge.success {
+            background: rgba(16, 185, 129, 0.18) !important;
+            color: #34D399 !important;
         }
 
-        .alert svg {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
-            margin-top: 1px;
+        [data-theme="dark"] .toast-icon-badge.error {
+            background: rgba(239, 68, 68, 0.18) !important;
+            color: #F87171 !important;
+        }
+
+        [data-theme="dark"] .toast-icon-badge.warning {
+            background: rgba(245, 158, 11, 0.18) !important;
+            color: #FBBF24 !important;
+        }
+
+        [data-theme="dark"] .toast-icon-badge.info {
+            background: rgba(59, 130, 246, 0.18) !important;
+            color: #60A5FA !important;
+        }
+
+        /* Floating Top-Right Toast Container & Animations */
+        .toast-floating-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 420px;
+            width: calc(100vw - 48px);
+            pointer-events: none;
+        }
+
+        .toast-floating-container .app-toast {
+            pointer-events: auto;
+            margin-bottom: 0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+            animation: toastSlideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .toast-floating-container .app-toast.toast-hiding {
+            animation: toastSlideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes toastSlideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        @keyframes toastSlideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(50px) scale(0.96);
+            }
+        }
+
+        [data-theme="dark"] .toast-close-btn {
+            color: #64748B !important;
+        }
+
+        [data-theme="dark"] .toast-close-btn:hover {
+            color: #CBD5E1 !important;
+            background: #1E293B !important;
         }
 
         /* Common Components */
@@ -853,95 +1432,105 @@
         </div>
 
         <nav class="sidebar-nav">
-            <div class="nav-label">Menu Utama</div>
+            <div class="nav-label">{{ __('Menu Utama') }}</div>
 
             <a href="{{ route('peserta.dashboard') }}" class="nav-item {{ request()->routeIs('peserta.dashboard') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
-                Dashboard
+                {{ __('Dashboard') }}
             </a>
 
             <a href="{{ route('peserta.profil.show') }}" class="nav-item {{ request()->routeIs('peserta.profil.*') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
-                Profil & Biodata
+                {{ __('Profil & Biodata') }}
             </a>
 
             <a href="{{ route('peserta.pendaftaran.index') }}" class="nav-item {{ request()->routeIs('peserta.pendaftaran.*') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
-                Pendaftaran Magang
+                {{ __('Pendaftaran Magang') }}
             </a>
 
             @php
                 $isDiterima = auth()->user()?->hasPenempatanMagang();
             @endphp
 
-            <div class="nav-label">Pelaksanaan Magang</div>
+            <div class="nav-label">{{ __('Pelaksanaan Magang') }}</div>
 
             @if($isDiterima)
                 <a href="{{ route('peserta.logbook.index') }}" class="nav-item {{ request()->routeIs('peserta.logbook.*') ? 'active' : '' }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
-                    Logbook Mingguan
+                    {{ __('Logbook Mingguan') }}
                 </a>
 
                 <a href="{{ route('peserta.tugas.index') }}" class="nav-item {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                     </svg>
-                    Tugas & Progres
+                    {{ __('Tugas & Progres') }}
                 </a>
 
                 <a href="{{ route('peserta.nilai.show') }}" class="nav-item {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
                     </svg>
-                    Lembar Nilai
+                    {{ __('Lembar Nilai') }}
                 </a>
             @else
-                <div class="nav-item locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
+                <div class="nav-item locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
-                    <span>Logbook Mingguan</span>
-                    <span class="badge-locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan" aria-label="Terkunci">
+                    <span>{{ __('Logbook Mingguan') }}</span>
+                    <span class="badge-locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}" aria-label="{{ __('Terkunci') }}">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </span>
                 </div>
 
-                <div class="nav-item locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
+                <div class="nav-item locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                     </svg>
-                    <span>Tugas & Progres</span>
-                    <span class="badge-locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan" aria-label="Terkunci">
+                    <span>{{ __('Tugas & Progres') }}</span>
+                    <span class="badge-locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}" aria-label="{{ __('Terkunci') }}">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </span>
                 </div>
 
-                <div class="nav-item locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
+                <div class="nav-item locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
                     </svg>
-                    <span>Lembar Nilai</span>
-                    <span class="badge-locked" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan" aria-label="Terkunci">
+                    <span>{{ __('Lembar Nilai') }}</span>
+                    <span class="badge-locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}" aria-label="{{ __('Terkunci') }}">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </span>
                 </div>
             @endif
 
-            <div class="nav-label">Tautan Luar</div>
+            <div class="nav-label">{{ __('Tautan Luar') }}</div>
 
             <a href="{{ route('landing') }}" class="nav-item" target="_blank">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                 </svg>
-                Lihat Kuota Landing ↗
+                {{ __('Lihat Kuota Landing ↗') }}
+            </a>
+
+            <div class="nav-label">{{ __('Pengaturan') }}</div>
+
+            <a href="{{ route('peserta.pengaturan.index') }}" class="nav-item {{ request()->routeIs('peserta.pengaturan.*') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                {{ __('Pengaturan Akun') }}
             </a>
         </nav>
 
@@ -952,7 +1541,7 @@
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                     </svg>
-                    Keluar Akun
+                    {{ __('Keluar Akun') }}
                 </button>
             </form>
         </div>
@@ -962,7 +1551,7 @@
     <div class="main-wrapper">
         <header class="topbar">
             <div class="topbar-left">
-                <button type="button" class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Buka Menu">
+                <button type="button" class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="{{ __('Buka Menu') }}">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
@@ -977,7 +1566,7 @@
                             id="userProfileBtn" 
                             aria-expanded="false" 
                             aria-haspopup="true" 
-                            aria-label="Menu Profil Pengguna"
+                            aria-label="{{ __('Menu Profil Pengguna') }}"
                             onclick="toggleProfileMenu(event)">
                         <div class="user-avatar" style="overflow: hidden;">
                             @if(auth()->user()->profil?->foto_url)
@@ -988,7 +1577,7 @@
                         </div>
                         <div class="user-info">
                             <span class="user-name">{{ auth()->user()->nama ?? auth()->user()->name }}</span>
-                            <span class="user-badge">Peserta Magang</span>
+                            <span class="user-badge">{{ __('Peserta Magang') }}</span>
                         </div>
                         <svg class="dropdown-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
@@ -1007,7 +1596,7 @@
                             <div class="dropdown-header-meta">
                                 <span class="dropdown-header-name">{{ auth()->user()->nama ?? auth()->user()->name }}</span>
                                 <span class="dropdown-header-email">{{ auth()->user()->email }}</span>
-                                <span class="dropdown-header-role">Peserta Magang</span>
+                                <span class="dropdown-header-role">{{ __('Peserta Magang') }}</span>
                             </div>
                         </div>
 
@@ -1017,28 +1606,28 @@
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                             </svg>
-                            <span>Dashboard</span>
+                            <span>{{ __('Dashboard') }}</span>
                         </a>
 
                         <a href="{{ route('peserta.profil.show') }}" class="dropdown-item" role="menuitem">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
-                            <span>Biodata & Profil</span>
+                            <span>{{ __('Biodata & Profil') }}</span>
                         </a>
 
                         <a href="{{ route('peserta.pendaftaran.index') }}" class="dropdown-item" role="menuitem">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            <span>Riwayat Pendaftaran</span>
+                            <span>{{ __('Riwayat Pendaftaran') }}</span>
                         </a>
 
-                        <a href="{{ route('password.ganti') }}" class="dropdown-item" role="menuitem">
+                        <a href="{{ route('peserta.pengaturan.index') }}" class="dropdown-item" role="menuitem">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
-                            <span>Ganti Kata Sandi</span>
+                            <span>{{ __('Ganti Kata Sandi') }}</span>
                         </a>
 
                         <div class="dropdown-divider"></div>
@@ -1049,7 +1638,7 @@
                                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                 </svg>
-                                <span>Keluar Akun</span>
+                                <span>{{ __('Keluar Akun') }}</span>
                             </button>
                         </form>
                     </div>
@@ -1058,39 +1647,103 @@
         </header>
 
         <main class="content-area">
-            {{-- Flash Messages --}}
-            @if(session('success'))
-                <div class="alert alert-success" role="alert">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <div>{{ session('success') }}</div>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-error" role="alert">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <div>{{ session('error') }}</div>
-                </div>
-            @endif
-
-            @if(session('warning'))
-                <div class="alert alert-warning" role="alert">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                    </svg>
-                    <div>{{ session('warning') }}</div>
-                </div>
-            @endif
+            {{-- Floating Flash Messages (Top-Right Pop Up) --}}
+            <div class="toast-floating-container" id="toastFloatingContainer" aria-live="polite" aria-atomic="true">
+                <x-flash-alert />
+            </div>
 
             @yield('content')
         </main>
     </div>
 
     <script>
+        function dismissToast(btn) {
+            const toast = btn.closest('.app-toast');
+            if (!toast) return;
+            toast.classList.add('toast-hiding');
+            setTimeout(() => toast.remove(), 300);
+        }
+
+        // Global MagKomToast helper API for JS triggers
+        window.MagKomToast = {
+            show({ type = 'success', title = '', message = '', duration = 5000 }) {
+                let container = document.getElementById('toastFloatingContainer');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.className = 'toast-floating-container';
+                    container.id = 'toastFloatingContainer';
+                    document.body.appendChild(container);
+                }
+                const toast = document.createElement('div');
+                toast.className = `app-toast alert-${type === 'error' ? 'error' : type}`;
+                toast.setAttribute('role', 'alert');
+
+                let iconSvg = '';
+                if (type === 'success') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>';
+                } else if (type === 'warning') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+                } else if (type === 'info') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+                } else {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+                }
+
+                toast.innerHTML = `
+                    <div class="toast-icon-badge ${type}">${iconSvg}</div>
+                    <div class="toast-content">
+                        ${title ? `<div class="toast-title">${title}</div>` : ''}
+                        <div class="toast-desc">${message}</div>
+                    </div>
+                    <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                `;
+
+                container.appendChild(toast);
+
+                if (duration > 0) {
+                    let timer = setTimeout(() => {
+                        toast.classList.add('toast-hiding');
+                        setTimeout(() => toast.remove(), 300);
+                    }, duration);
+
+                    toast.addEventListener('mouseenter', () => clearTimeout(timer));
+                    toast.addEventListener('mouseleave', () => {
+                        timer = setTimeout(() => {
+                            toast.classList.add('toast-hiding');
+                            setTimeout(() => toast.remove(), 300);
+                        }, 2500);
+                    });
+                }
+            },
+            success(title, message) { this.show({ type: 'success', title, message }); },
+            error(title, message) { this.show({ type: 'error', title, message }); },
+            warning(title, message) { this.show({ type: 'warning', title, message }); },
+            info(title, message) { this.show({ type: 'info', title, message }); }
+        };
+
+        // Auto dismiss toast after 5s with pause on hover
+        document.addEventListener('DOMContentLoaded', function() {
+            const toasts = document.querySelectorAll('.toast-floating-container .app-toast');
+            toasts.forEach(toast => {
+                let timer = setTimeout(() => {
+                    toast.classList.add('toast-hiding');
+                    setTimeout(() => toast.remove(), 300);
+                }, 5000);
+
+                toast.addEventListener('mouseenter', () => clearTimeout(timer));
+                toast.addEventListener('mouseleave', () => {
+                    timer = setTimeout(() => {
+                        toast.classList.add('toast-hiding');
+                        setTimeout(() => toast.remove(), 300);
+                    }, 3000);
+                });
+            });
+        });
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebarNav');
             const backdrop = document.getElementById('drawerBackdrop');
@@ -1136,7 +1789,36 @@
                 closeProfileMenu();
             }
         });
+
+        // Theme Switcher Engine Global
+        window.applyPortalTheme = function(theme) {
+            let effective = 'light';
+            if (theme === 'sistem') {
+                effective = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            } else if (theme === 'gelap') {
+                effective = 'dark';
+            } else {
+                effective = 'light';
+            }
+            document.documentElement.setAttribute('data-theme', effective);
+            document.documentElement.setAttribute('data-pref-theme', theme);
+            try {
+                localStorage.setItem('magkom_theme', theme);
+            } catch (e) {}
+        };
+
+        // Listener jika OS tema berubah dan user memilih 'sistem'
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                const currentPref = document.documentElement.getAttribute('data-pref-theme') || localStorage.getItem('magkom_theme');
+                if (currentPref === 'sistem') {
+                    document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                }
+            });
+        }
     </script>
     @stack('scripts')
+    <x-sse-toast-listener />
 </body>
 </html>
+

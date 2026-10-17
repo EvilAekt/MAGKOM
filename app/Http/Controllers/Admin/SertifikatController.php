@@ -20,6 +20,10 @@ class SertifikatController extends Controller
      */
     public function index(Request $request): View
     {
+        if (! \App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true)) {
+            abort(404, 'Fitur penerbitan sertifikat saat ini dinonaktifkan oleh administrator.');
+        }
+
         $query = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'penilaian'])
             ->where('status', StatusPenempatanEnum::Selesai)
             ->whereHas('penilaian', function ($q) {
@@ -66,6 +70,10 @@ class SertifikatController extends Controller
      */
     public function cetak(Penempatan $penempatan, Request $request): Response|View
     {
+        if (! \App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true)) {
+            abort(404, 'Fitur penerbitan sertifikat saat ini dinonaktifkan oleh administrator.');
+        }
+
         // Validasi syarat kelulusan (status selesai & nilai final)
         if ($penempatan->status !== StatusPenempatanEnum::Selesai) {
             abort(403, 'Sertifikat hanya dapat diterbitkan bagi peserta yang telah menyelesaikan magang (Status: Selesai).');

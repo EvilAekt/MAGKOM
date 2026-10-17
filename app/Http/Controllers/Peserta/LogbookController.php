@@ -164,7 +164,21 @@ class LogbookController extends Controller
             detail: ['aksi' => 'isi_logbook_mingguan']
         );
 
+        // Notifikasi Real-time SSE ke Pembimbing (TASK-SSE-06)
+        if ($penempatan->pembimbing_id) {
+            app(\App\Services\RealtimeEventService::class)->publish(
+                \App\Enums\RealtimeEventTypeEnum::LogbookBaru,
+                [
+                    'title' => 'Setoran Logbook Baru',
+                    'message' => "{$user->nama} menyerahkan catatan logbook baru.",
+                    'action_url' => route('pembimbing.dashboard'),
+                ],
+                $penempatan->pembimbing_id
+            );
+        }
+
         if ($request->expectsJson()) {
+
             return response()->json([
                 'success' => true,
                 'message' => 'Catatan kegiatan logbook mingguan berhasil disimpan.',

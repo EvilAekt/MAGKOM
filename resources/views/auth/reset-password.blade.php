@@ -4,16 +4,7 @@
 @section('meta_description', 'Atur ulang kata sandi akun Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')
-    <!-- Alert Notifikasi Error -->
-    @if(isset($errors) && $errors->any())
-        <div class="auth-alert-error" role="alert">
-            <ul style="margin: 0; padding-left: 1.25rem;">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+
 
     <!-- Header Atur Ulang Sandi -->
     <div class="step-badge">

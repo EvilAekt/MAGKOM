@@ -46,7 +46,13 @@ class TugasController extends Controller
         }
 
         if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
+            if ($request->input('status') === 'perlu_review') {
+                $query->whereHas('progresLogs', function ($qp) {
+                    $qp->where('status_review', 'menunggu');
+                });
+            } else {
+                $query->where('status', $request->input('status'));
+            }
         }
 
         if ($request->filled('kategori')) {
@@ -76,9 +82,31 @@ class TugasController extends Controller
             ->where('status', StatusPenempatanEnum::Aktif)
             ->get();
 
+        // Hitung metrik agregat status tugas untuk banner dan tab classroom
+        $baseMetricsQuery = Tugas::whereHas('penempatan', function ($q) use ($user) {
+            if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                $q->where('pembimbing_id', $user->id);
+            }
+        });
+
+        if ($request->filled('penempatan_id')) {
+            $baseMetricsQuery->where('penempatan_id', $request->input('penempatan_id'));
+        }
+
+        $counts = [
+            'total' => (clone $baseMetricsQuery)->count(),
+            'belum' => (clone $baseMetricsQuery)->where('status', StatusTugasEnum::Belum)->count(),
+            'proses' => (clone $baseMetricsQuery)->where('status', StatusTugasEnum::Proses)->count(),
+            'selesai' => (clone $baseMetricsQuery)->where('status', StatusTugasEnum::Selesai)->count(),
+            'perlu_review' => (clone $baseMetricsQuery)->whereHas('progresLogs', function ($qp) {
+                $qp->where('status_review', 'menunggu');
+            })->count(),
+        ];
+
         $data = [
             'tugasList' => $tugasList,
             'penempatanList' => $penempatanList,
+            'counts' => $counts,
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {
@@ -108,10 +136,19 @@ class TugasController extends Controller
             ->get();
 
         $selectedPenempatanId = $request->integer('penempatan_id', 0);
+        $selectedTemplate = null;
+        if ($request->filled('template_id')) {
+            $selectedTemplate = \App\Models\TugasTemplate::accessibleBy($user->id)
+                ->find($request->integer('template_id'));
+        }
+
+        $templates = \App\Models\TugasTemplate::accessibleBy($user->id)->latest()->get();
 
         return view('pembimbing.tugas.create', [
             'penempatanList' => $penempatanList,
             'selectedPenempatanId' => $selectedPenempatanId > 0 ? $selectedPenempatanId : null,
+            'selectedTemplate' => $selectedTemplate,
+            'templates' => $templates,
         ]);
     }
 
@@ -149,7 +186,22 @@ class TugasController extends Controller
             detail: ['aksi' => 'buat_tugas']
         );
 
+        // Notifikasi Real-time SSE ke Peserta Mentee (TASK-SSE-06)
+        if ($penempatan->peserta_id) {
+            app(\App\Services\RealtimeEventService::class)->publish(
+                \App\Enums\RealtimeEventTypeEnum::TugasBaru,
+                [
+                    'title' => 'Tugas Magang Baru',
+                    'message' => "Pembimbing memberikan tugas: {$tugas->judul}.",
+                    'deadline' => $tugas->deadline?->format('d/m/Y H:i'),
+                    'action_url' => route('peserta.tugas.index'),
+                ],
+                $penempatan->peserta_id
+            );
+        }
+
         if (! $request->expectsJson() && ! $request->wantsJson()) {
+
             return redirect()->route('pembimbing.tugas.index')
                 ->with('success', 'Tugas baru berhasil diberikan kepada mentee.');
         }
@@ -197,11 +249,38 @@ class TugasController extends Controller
     }
 
     /**
+     * Menampilkan formulir pengubahan data penugasan (AC-08-7).
+     */
+    public function edit(Tugas $tugas): View|RedirectResponse
+    {
+        Gate::authorize('update', $tugas);
+
+        if ($tugas->status === StatusTugasEnum::Selesai) {
+            return redirect()->route('pembimbing.tugas.show', $tugas)
+                ->withErrors(['error' => 'Tugas yang telah berstatus selesai tidak dapat diedit kembali.']);
+        }
+
+        return view('pembimbing.tugas.edit', [
+            'tugas' => $tugas->load('penempatan.peserta.profil.jurusan'),
+        ]);
+    }
+
+    /**
      * Memperbarui informasi atau status penugasan.
      */
     public function update(TugasRequest $request, Tugas $tugas): JsonResponse|RedirectResponse
     {
         Gate::authorize('update', $tugas);
+
+        if ($tugas->status === StatusTugasEnum::Selesai) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tugas yang telah berstatus selesai tidak dapat diedit kembali.',
+                ], 422);
+            }
+            return back()->withErrors(['error' => 'Tugas yang telah berstatus selesai tidak dapat diedit kembali.']);
+        }
 
         $nilaiLama = $tugas->only(['judul', 'deskripsi', 'link_referensi', 'nama_file_lampiran', 'kategori', 'kompleksitas', 'deadline', 'status']);
         $payload = $request->validated();

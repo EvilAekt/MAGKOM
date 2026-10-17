@@ -597,6 +597,196 @@
             transform: translateY(-1px);
             color: #ffffff;
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .adm-verifikasi-wrapper {
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .adm-hero-role-pill {
+            background: rgba(255, 255, 255, 0.18);
+            color: #93C5FD;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-card {
+            background-color: #182234;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:hover {
+            background-color: #162238;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:not(:last-child)::after {
+            background-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-label {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-val {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-kpi-hint {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-amber {
+            background: rgba(217, 119, 6, 0.25);
+            color: #FCD34D;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-blue {
+            background: rgba(37, 99, 235, 0.25);
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-orange {
+            background: rgba(234, 88, 12, 0.25);
+            color: #FDBA74;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-red {
+            background: rgba(220, 38, 38, 0.25);
+            color: #FCA5A5;
+        }
+
+        /* Filter Toolbar Card */
+        [data-theme="dark"] .adm-filter-card {
+            background-color: #182234;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-status-track {
+            background-color: #0F172A;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-status-tab {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-status-tab:hover {
+            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme="dark"] .adm-status-tab.active {
+            background-color: #1E3A8A;
+            color: #93C5FD;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .adm-status-counter {
+            background-color: #26354D;
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .adm-status-tab.active .adm-status-counter {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .adm-field-group label {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-input-search,
+        [data-theme="dark"] .adm-select {
+            background-color: #0F172A;
+            border-color: #26354D;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-select option {
+            background-color: #0F172A;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-input-search:focus,
+        [data-theme="dark"] .adm-select:focus {
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        [data-theme="dark"] .adm-btn-filter-reset {
+            background-color: #0F172A;
+            border-color: #26354D;
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-btn-filter-reset:hover {
+            background-color: #162238;
+            color: #F8FAFC;
+            border-color: #3B82F6;
+        }
+
+        [data-theme="dark"] a[href*="download-zip"] {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #93C5FD !important;
+        }
+
+        /* Table Card */
+        [data-theme="dark"] .adm-table-card {
+            background-color: #182234;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-table-card-header {
+            border-bottom-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-table-card-title {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-table th {
+            background-color: #0E1726;
+            color: #94A3B8;
+            border-bottom-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-table td {
+            background-color: #182234;
+            color: #CBD5E1;
+            border-bottom-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-table tr:hover td {
+            background-color: #162238;
+        }
+
+        [data-theme="dark"] .adm-avatar {
+            background: rgba(37, 99, 235, 0.25);
+            border-color: #2563EB;
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-table td div[style*="color: #0F172A"],
+        [data-theme="dark"] .adm-table td div[style*="color: #1E293B"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-table td span[style*="color: #0641CC"] {
+            background-color: rgba(37, 99, 235, 0.2) !important;
+            border-color: rgba(59, 130, 246, 0.3) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-table-card div[style*="text-align: center; color: #64748B"] h3 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-table-card div[style*="text-align: center; color: #64748B"] div[style*="background: #EFF6FF"] {
+            background-color: rgba(37, 99, 235, 0.2) !important;
+            color: #93C5FD !important;
+        }
     </style>
 
     {{-- ==========================================================================
@@ -821,6 +1011,10 @@
                 <a href="{{ route('admin.pendaftaran.index') }}" class="adm-btn-filter-reset" title="Kembalikan pencarian ke kondisi awal">
                     Reset
                 </a>
+                <a href="{{ route('admin.pendaftaran.download-zip', request()->query()) }}" style="height: 42px; padding: 0 1rem; background: #ffffff; color: #0641CC; font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; gap: 0.45rem; border: 1px solid #BFDBFE; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;" title="Unduh seluruh berkas pendaftaran peserta hasil filter saat ini ke dalam satu arsip ZIP">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span>Unduh Bundel (ZIP)</span>
+                </a>
             </div>
         </form>
     </div>
@@ -964,7 +1158,7 @@
                                 {{-- Aksi --}}
                                 <td style="text-align: right;">
                                     <a href="{{ route('admin.pendaftaran.show', $item) }}" class="adm-btn-tinjau">
-                                        <span>Tinjau</span>
+                                        <span>Tinjau Berkas</span>
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                     </a>
                                 </td>

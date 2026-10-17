@@ -676,6 +676,338 @@
         .adm-link-more-clean:hover {
             text-decoration: underline;
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .adm-cockpit-wrapper {
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .adm-period-form {
+            background-color: #0F172A;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-period-form label {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-period-form select {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-card {
+            background-color: #182234;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:hover {
+            background-color: #162238;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:not(:last-child)::after {
+            background-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-label {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-val {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-kpi-hint {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-amber {
+            background: rgba(217, 119, 6, 0.25);
+            color: #FCD34D;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-blue {
+            background: rgba(37, 99, 235, 0.25);
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-purple {
+            background: rgba(124, 58, 237, 0.25);
+            color: #C4B5FD;
+        }
+
+        [data-theme="dark"] .adm-kpi-icon-emerald {
+            background: rgba(16, 185, 129, 0.25);
+            color: #6EE7B7;
+        }
+
+        [data-theme="dark"] .adm-card-full,
+        [data-theme="dark"] .adm-card-header-spacious {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-section-title {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-section-subtitle {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-filter-pills {
+            background-color: #0F172A;
+            border: 1px solid #26354D;
+        }
+
+        [data-theme="dark"] .adm-pill-btn {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-pill-btn.active {
+            background-color: #1E293B;
+            color: #93C5FD;
+            box-shadow: none;
+        }
+
+        [data-theme="dark"] .adm-table-spacious th {
+            background-color: #0E1726 !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table-spacious td {
+            background-color: #182234 !important;
+            color: #CBD5E1 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table-spacious tr:hover td {
+            background-color: #162238 !important;
+        }
+
+        [data-theme="dark"] .adm-avatar-circle {
+            background: rgba(37, 99, 235, 0.25);
+            border-color: #2563EB;
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-status-badge.diajukan {
+            background: rgba(217, 119, 6, 0.25);
+            border-color: rgba(245, 158, 11, 0.4);
+            color: #FCD34D;
+        }
+
+        [data-theme="dark"] .adm-mentor-clean-row {
+            background-color: #111C2E;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-mentor-avatar {
+            background: rgba(37, 99, 235, 0.25);
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-action-link-clean {
+            background-color: #182234;
+            border-color: #26354D;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-action-link-clean:hover {
+            border-color: #3B82F6;
+            background-color: #162238;
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .adm-hero-role-pill {
+            background: rgba(255, 255, 255, 0.18);
+            color: #93C5FD;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        [data-theme="dark"] .adm-clean-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card-header {
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-quota-row-item {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-quota-row-item:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .adm-quota-title-text {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-quota-cat-badge {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-quota-meter-track {
+            background: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-sub-title {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-sla-pill-norm {
+            background: #111C2E !important;
+            color: #94A3B8 !important;
+            border: 1px solid #26354D;
+        }
+
+        [data-theme="dark"] .adm-status-badge.perbaikan {
+            background: rgba(37, 99, 235, 0.25) !important;
+            border-color: rgba(59, 130, 246, 0.4) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-table-spacious td div[style*="color: #0F172A"],
+        [data-theme="dark"] .adm-table-spacious td div[style*="color: #1E293B"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-table-spacious td span[style*="color: #334155"] {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .adm-card-full > div:last-child {
+            background: #0E1726 !important;
+            border-top-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #F0F7FF"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #F0F7FF"] span[style*="color: #1E40AF"] {
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #DBEAFE"] {
+            background: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #F8FAFC"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card span[style*="color: #0F172A"],
+        [data-theme="dark"] .adm-clean-card div[style*="color: #0F172A"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #FFFBEB"] {
+            background: rgba(217, 119, 6, 0.15) !important;
+            border-color: rgba(245, 158, 11, 0.3) !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #FFFBEB"] strong[style*="color: #92400E"] {
+            color: #FCD34D !important;
+        }
+
+        [data-theme="dark"] .adm-period-form select option {
+            background-color: #0F172A;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-control-bar > div {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-sla-pill-alert {
+            background: rgba(220, 38, 38, 0.2) !important;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+            color: #FCA5A5 !important;
+        }
+
+        [data-theme="dark"] .adm-quota-status-pill[style*="background: #ECFDF5"] {
+            background: rgba(16, 185, 129, 0.2) !important;
+            color: #6EE7B7 !important;
+            border: 1px solid rgba(16, 185, 129, 0.3) !important;
+        }
+
+        [data-theme="dark"] .adm-quota-status-pill[style*="background: #FEF2F2"] {
+            background: rgba(220, 38, 38, 0.2) !important;
+            color: #FCA5A5 !important;
+            border: 1px solid rgba(220, 38, 38, 0.3) !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card span[style*="background: #DCFCE7"] {
+            background: rgba(16, 185, 129, 0.2) !important;
+            color: #6EE7B7 !important;
+            border: 1px solid rgba(16, 185, 129, 0.3) !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card span[style*="background: #F1F5F9"] {
+            background: rgba(148, 163, 184, 0.15) !important;
+            color: #94A3B8 !important;
+            border: 1px solid rgba(148, 163, 184, 0.2) !important;
+        }
+
+        [data-theme="dark"] .adm-mentor-clean-row span[style*="color: #0641CC"] {
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-mentor-clean-row div[style*="color: #0F172A"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card p[style*="color: #64748B"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-card-full h4[style*="color: #0F172A"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #FFFBEB"] span[style*="background: #FEF3C7"] {
+            background: rgba(245, 158, 11, 0.25) !important;
+            color: #FDE68A !important;
+            border: 1px solid rgba(245, 158, 11, 0.3) !important;
+        }
+
+        [data-theme="dark"] .adm-clean-card div[style*="background: #FFFBEB"] span[style*="color: #B45309"] {
+            color: #FCD34D !important;
+        }
+
+        [data-theme="dark"] .admin-card span[style*="color: #16A34A"] {
+            color: #6EE7B7 !important;
+        }
+
+        [data-theme="dark"] .admin-card span[style*="color: #7C3AED"] {
+            color: #C4B5FD !important;
+        }
+
+        [data-theme="dark"] .admin-card span[style*="color: var(--neutral-600, #475569)"] {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-card span[style*="color: var(--neutral-500, #64748B)"] {
+            color: #94A3B8 !important;
+        }
+
+        @media (max-width: 768px) {
+            .adm-table-spacious th,
+            .adm-table-spacious td {
+                padding: 0.85rem 1rem;
+            }
+        }
     </style>
 
     {{-- ==========================================================================
@@ -771,10 +1103,10 @@
                 <span class="adm-kpi-val">{{ number_format($pengajuanMenunggu) }}</span>
                 @if($pengajuanSlaKritisCount > 0)
                     <span class="adm-kpi-hint" style="color: #DC2626; font-weight: 700;">
-                        ⚠️ {{ $pengajuanSlaKritisCount }} tertahan &gt; 3 hari
+                        ⚠️ {{ $pengajuanSlaKritisCount }} Mendekati Batas SLA (Perlu Verifikasi Segera)
                     </span>
                 @else
-                    <span class="adm-kpi-hint">Berkas baru masuk</span>
+                    <span class="adm-kpi-hint">Perlu Verifikasi Segera</span>
                 @endif
             </div>
         </div>
@@ -815,6 +1147,48 @@
             </div>
         </div>
 
+    </div>
+
+    {{-- 3b. QUICK OPERATIONAL EFFICIENCY METRICS (A11) --}}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+        <div class="admin-card" style="padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #0641CC;">
+            <div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Kecepatan Verifikasi Berkas</span>
+                <div style="font-size: 1.35rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin-top: 0.15rem;">
+                    {{ $avgVerifikasiHari }} <span style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-500, #64748B);">Hari Kalender</span>
+                </div>
+                <span style="font-size: 0.72rem; color: #16A34A; font-weight: 700;">✓ SLA Sesuai Target (Maks. 3 Hari)</span>
+            </div>
+            <div style="width: 42px; height: 42px; border-radius: 10px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+        </div>
+
+        <div class="admin-card" style="padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #10B981;">
+            <div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Tingkat Keterisian Kuota</span>
+                <div style="font-size: 1.35rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin-top: 0.15rem;">
+                    {{ $realisasiKuotaPersen }}% <span style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-500, #64748B);">Realisasi Alokasi</span>
+                </div>
+                <span style="font-size: 0.72rem; color: var(--neutral-600, #475569); font-weight: 600;">Total Kuota Aktif Dinas Terproteksi</span>
+            </div>
+            <div style="width: 42px; height: 42px; border-radius: 10px; background: #ECFDF5; color: #059669; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            </div>
+        </div>
+
+        <div class="admin-card" style="padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid #7C3AED;">
+            <div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Pendaftar 7 Hari Terakhir</span>
+                <div style="font-size: 1.35rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin-top: 0.15rem;">
+                    {{ number_format($pendaftaranMingguIni) }} <span style="font-size: 0.85rem; font-weight: 600; color: var(--neutral-500, #64748B);">Pengajuan Baru</span>
+                </div>
+                <span style="font-size: 0.72rem; color: #7C3AED; font-weight: 700;">Aktivitas Masuk Mingguan</span>
+            </div>
+            <div style="width: 42px; height: 42px; border-radius: 10px; background: #F5F3FF; color: #7C3AED; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+            </div>
+        </div>
     </div>
 
     {{-- ==========================================================================
@@ -895,7 +1269,7 @@
                                 </td>
                                 <td>
                                     @if($isCritical)
-                                        <span class="adm-sla-pill-alert">⚠️ {{ $umur }} hari lalu</span>
+                                        <span class="adm-sla-pill-alert" title="Mendekati Batas SLA">⚠️ Mendekati Batas SLA ({{ $umur }} hari)</span>
                                     @else
                                         <span class="adm-sla-pill-norm">{{ $umur === 0 ? 'Hari ini' : $umur . ' hari lalu' }}</span>
                                     @endif
@@ -915,6 +1289,11 @@
                                 </td>
                             </tr>
                         @endforeach
+                        <tr id="queueFilterEmptyRow" style="display: none;">
+                            <td colspan="6" style="padding: 2.5rem 1.5rem; text-align: center; color: var(--neutral-500, #64748B);">
+                                <p style="margin: 0; font-size: 0.875rem; font-weight: 600;">Tidak ada berkas pendaftaran dengan filter status ini.</p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -939,7 +1318,7 @@
                 <div>
                     <h3 class="adm-section-title" style="font-size: 0.975rem;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                        <span>Alokasi & Keterisian Kuota Jurusan</span>
+                        <span>Alokasi & Keterisian Kuota Magang Periode</span>
                     </h3>
                     <p class="adm-section-subtitle">
                         Realisasi kursi magang periode {{ $bulanAktif ? $bulanAktif->bulan_mulai?->translatedFormat('F Y') : 'Aktif' }}.
@@ -1030,7 +1409,7 @@
                     @endphp
                     <div class="adm-sub-section">
                         <div class="adm-sub-title">
-                            <span>Jadwal Pendaftaran Periode Ini</span>
+                            <span>Timeline Gelombang Magang</span>
                         </div>
                         <div style="padding: 0.85rem 1rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
                             <div>
@@ -1094,7 +1473,7 @@
                 {{-- 3. Tenggat Selesai Magang (Jika ada yang mendekati selesai) --}}
                 @if(!$upcomingOffboardingList->isEmpty())
                     <div class="adm-sub-section">
-                        <span class="adm-sub-title" style="color: #D97706;">Peringatan Selesai Magang (H-14)</span>
+                        <span class="adm-sub-title" style="color: #D97706;">Offboarding Watchdog (Peringatan Selesai H-14)</span>
                         @foreach($upcomingOffboardingList->take(2) as $offboard)
                             @php
                                 $pen = $offboard['penempatan'];
@@ -1146,15 +1525,24 @@ function filterQueueTable(filterType, btn) {
     if (btn) btn.classList.add('active');
 
     const rows = document.querySelectorAll('.queue-row');
+    let visibleCount = 0;
     rows.forEach(row => {
+        let show = false;
         if (filterType === 'all') {
-            row.style.display = '';
+            show = true;
         } else if (filterType === 'diajukan') {
-            row.style.display = row.classList.contains('status-diajukan') ? '' : 'none';
+            show = row.classList.contains('status-diajukan');
         } else if (filterType === 'perlu_perbaikan') {
-            row.style.display = row.classList.contains('status-perlu-perbaikan') ? '' : 'none';
+            show = row.classList.contains('status-perlu-perbaikan');
         }
+        row.style.display = show ? '' : 'none';
+        if (show) visibleCount++;
     });
+
+    const emptyRow = document.getElementById('queueFilterEmptyRow');
+    if (emptyRow) {
+        emptyRow.style.display = (visibleCount === 0 && rows.length > 0) ? '' : 'none';
+    }
 }
 </script>
 @endsection

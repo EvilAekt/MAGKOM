@@ -20,6 +20,10 @@ class SurveiController extends Controller
      */
     public function show(Request $request): View|RedirectResponse
     {
+        if (! \App\Support\Pengaturan::bool('fitur_survei_aktif', true)) {
+            abort(404, 'Fitur survei kepuasan saat ini dinonaktifkan oleh administrator.');
+        }
+
         $user = $request->user();
         $penempatan = Penempatan::with(['pembimbing', 'bidang'])
             ->where('peserta_id', $user->id)
@@ -44,6 +48,10 @@ class SurveiController extends Controller
      */
     public function store(Request $request, AuditService $auditService): RedirectResponse
     {
+        if (! \App\Support\Pengaturan::bool('fitur_survei_aktif', true)) {
+            abort(404, 'Fitur survei kepuasan saat ini dinonaktifkan oleh administrator.');
+        }
+
         $user = $request->user();
         $penempatan = Penempatan::where('peserta_id', $user->id)
             ->latest()

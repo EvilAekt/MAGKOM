@@ -113,7 +113,23 @@ class TugasController extends Controller
             detail: ['aksi' => 'unggah_progres_tugas']
         );
 
+        // Notifikasi Real-time SSE ke Pembimbing (TASK-SSE-06)
+        $pembimbingId = $tugas->penempatan?->pembimbing_id;
+        if ($pembimbingId) {
+            $pesertaNama = $request->user()?->nama ?? 'Peserta';
+            app(\App\Services\RealtimeEventService::class)->publish(
+                \App\Enums\RealtimeEventTypeEnum::TugasDikumpulkan,
+                [
+                    'title' => 'Pengumpulan Progres Tugas',
+                    'message' => "{$pesertaNama} mengumpulkan progres untuk tugas: {$tugas->judul}.",
+                    'action_url' => route('pembimbing.tugas.show', $tugas->id),
+                ],
+                $pembimbingId
+            );
+        }
+
         if ($request->expectsJson() || $request->wantsJson()) {
+
             return response()->json([
                 'success' => true,
                 'message' => 'Laporan progres tugas berhasil dikirimkan.',
