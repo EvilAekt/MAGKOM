@@ -55,7 +55,7 @@
                                 $namaUser = $p->user?->nama ?? 'Peserta';
                                 $instName = $p->user?->profil?->institusi ?? '-';
                                 $jurusanName = $p->kuota?->jurusan?->nama_jurusan ?? ($p->user?->profil?->jurusan?->nama_jurusan ?? '-');
-                                $bulanName = $p->bulanMagang?->nama_bulan ?? '-';
+                                $bulanName = $p->bulanMagang?->bulan_mulai?->translatedFormat('F Y') ?? '-';
                                 $tglAjuan = $p->diajukan_at ? $p->diajukan_at->format('d M Y, H:i') : ($p->created_at ? $p->created_at->format('d M Y, H:i') : '-');
                             @endphp
                             <tr style="border-bottom: 1px solid var(--neutral-200);">
@@ -108,7 +108,7 @@
                         Utilisasi Kuota per Jurusan
                     </h4>
                     <span style="font-size: 0.75rem; color: var(--neutral-600);">
-                        Periode: <strong>{{ $bulanAktif ? $bulanAktif->nama_bulan : '-' }}</strong>
+                        Periode: <strong>{{ $bulanAktif ? $bulanAktif->bulan_mulai?->translatedFormat('F Y') : '-' }}</strong>
                     </span>
                 </div>
                 <a href="{{ route('admin.kuota.index') }}" style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600); text-decoration: underline;">

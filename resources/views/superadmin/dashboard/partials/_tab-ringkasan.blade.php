@@ -74,7 +74,7 @@
                     @endphp
                     <ul class="sa-list">
                         <li class="sa-list__item">
-                            <div class="sa-list__body"><p class="sa-list__sub">Periode</p><p class="sa-list__title">{{ $bulanAktif->nama_bulan }}</p></div>
+                            <div class="sa-list__body"><p class="sa-list__sub">Periode</p><p class="sa-list__title">{{ $bulanAktif->bulan_mulai?->translatedFormat('F Y') }}</p></div>
                         </li>
                         <li class="sa-list__item">
                             <div class="sa-list__body"><p class="sa-list__sub">Status Publik:</p></div>

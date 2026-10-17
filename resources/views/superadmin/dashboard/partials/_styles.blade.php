@@ -4,7 +4,7 @@
 
     /* Header */
     .sa-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; }
-    .sa-header__meta { display: flex; align-items: center; flex-wrap: wrap; gap: 0.625rem; margin-bottom: 0.5rem; }
+    .sa-header__meta { display: flex; align-items: center; flex-wrap: wrap; gap: 0.625rem; }
     .sa-header__title { font-size: 1.375rem; font-weight: var(--fw-bold); color: var(--neutral-800); margin: 0 0 0.25rem; letter-spacing: -0.01em; }
     .sa-header__desc { font-size: 0.875rem; color: var(--neutral-600); margin: 0; line-height: 1.5; max-width: 760px; }
     .sa-header__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.625rem; }

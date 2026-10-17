@@ -362,3 +362,22 @@ Checklist (centang satu per satu):
 Tempel ini + isi satu bagian "Tugas N" dari dokumen ini:
 
 > Kamu junior developer Laravel 10 + Blade. Kerjakan **hanya** Tugas N dari dokumen plan terlampir. Patuhi bagian 0.3 (yang dilarang), 0.5 (token), dan 0.6 (teks wajib). Jangan mengubah file di luar daftar tugas. Jangan menambah dependensi. Setelah selesai, tampilkan: (1) daftar file yang diubah, (2) hasil `php artisan test --filter=SuperAdmin`, (3) hal yang kamu ragukan. Jika ada instruksi yang bertentangan atau tidak jelas, berhenti dan tanyakan, jangan menebak.
+
+---
+
+## 7. Catatan Hasil Implementasi Percobaan (branch `feat/sa-dashboard-redesign`)
+
+**Selesai**: Tugas 1–6, 9 (sebagian), 10.
+- `DashboardController` dipecah per domain; `$perluTindakan` ditambahkan; nama variabel view tidak berubah.
+- Komponen `x-sa.*` (panel, stat-card, badge, avatar, empty-state, icon, action-chip), `_styles`, dan `public/js/superadmin-dashboard.js` (tab tanpa inline script, ada navigasi panah keyboard).
+- `dashboard.blade.php` turun dari 1.689 baris menjadi 31 baris; header, perlu tindakan, KPI, dan tab Ringkasan memakai komponen dan token tanpa `style=` inline.
+- Tes baru `SuperAdminDashboardRedesignTest` (6 tes). Hasil seluruh suite sama dengan baseline: 7 tes gagal lama (semuanya sisi Admin), 0 tambahan.
+
+**Belum selesai (lanjutan Tugas 7 dan 8)**: partial `_tab-seleksi`, `_tab-bimbingan`, `_tab-sistem` baru dipindahkan apa adanya (masih ±370 `style=` inline). Isi dan perilakunya sama dengan sebelumnya; konversi ke `x-sa.*` tinggal dikerjakan sesuai Tugas 7–8.
+
+**Koreksi terhadap plan di atas** (ditemukan saat implementasi):
+1. **Ada file tes yang terlewat di bagian 0.6**: `tests/Feature/SuperAdminUnifiedDashboardFeaturesTest.php` juga mengecek teks dashboard, antara lain `+ Akun Staf`, `+ Periode Magang`, `Tinjau Berkas`, `Penempatan Peserta`, `Ekspor Laporan`, `Status Publik:`, `Staf Pending Sandi Awal`, `Masa Tenggang`, `Pusat Metrik Keberhasilan Produk & KPI Dinas` (dicek tanpa escape, jadi judulnya dikirim sebagai `HtmlString`), serta semua judul panel di tab Seleksi, Bimbingan, dan Sistem. Karena itu baris "Quick actions dihapus" di bagian 1.3 **tidak berlaku**: pintasan dipertahankan sebagai baris `Pintasan Tindakan`. Hapus atau ubah teks-teks ini hanya bersama tesnya.
+2. Header tidak lagi mengulang `h2` dan deskripsi, karena `layouts/dashboard` sudah menampilkannya dari `@section('page_title')` dan `@section('page_description')`.
+3. Model `BulanMagang` **tidak punya atribut `nama_bulan`** (kode lama menampilkan kosong). Gunakan `bulan_mulai?->translatedFormat('F Y')`, seperti halaman admin lain.
+4. **Jangan menjalankan `pint` pada folder `app` secara keseluruhan**: banyak file lama belum sesuai Pint dan akan ikut berubah. Jalankan hanya pada file yang kamu ubah (`./vendor/bin/pint path/ke/file.php`).
+5. Tes `test_dashboard_tidak_memakai_script...` memeriksa file dashboard, bukan HTML penuh, karena layout masih punya handler inline sendiri (lihat bagian 5, butir 1).

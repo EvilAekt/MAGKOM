@@ -1,11 +1,9 @@
 <header class="sa-header">
     <div>
-        <div class="sa-header__meta">
+        <div class="sa-header__meta sa-header__meta--flush">
             <x-sa.badge tone="info">Dashboard Eksekutif Tata Kelola MagKom</x-sa.badge>
             <span class="sa-live"><span class="status-dot-pulse"></span> Sistem Operasional Aktif</span>
         </div>
-        <h2 class="sa-header__title">Dashboard SuperAdmin</h2>
-        <p class="sa-header__desc">Akses penuh: kelola pengguna, role, rubrik, audit log, konfigurasi, dan seluruh modul Administrasi, Pembimbing, serta Peserta.</p>
     </div>
 
     <div class="sa-header__actions">
@@ -14,7 +12,7 @@
             <select id="select-bulan" name="bulan_id" data-autosubmit>
                 @foreach($daftarBulan as $b)
                     <option value="{{ $b->id }}" @selected($bulanAktif && $bulanAktif->id === $b->id)>
-                        {{ $b->nama_bulan }} {{ $b->override_status ? '['.strtoupper($b->override_status->value).']' : '' }}
+                        {{ $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->override_status ? '['.strtoupper($b->override_status->value).']' : '' }}
                     </option>
                 @endforeach
             </select>
