@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Ganti Kata Sandi - Portal MagKom Sleman')
+@section('title', 'Ganti Kata Sandi - Magang Kominfo Sleman')
 @section('meta_description', 'Ganti kata sandi akun Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')

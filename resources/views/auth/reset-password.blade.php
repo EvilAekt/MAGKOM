@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Atur Ulang Kata Sandi - Portal MagKom Sleman')
+@section('title', 'Atur Ulang Kata Sandi - Magang Kominfo Sleman')
 @section('meta_description', 'Atur ulang kata sandi akun Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')

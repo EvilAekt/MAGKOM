@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Register - Portal MagKom Sleman')
+@section('title', 'Register - Magang Kominfo Sleman')
 @section('meta_description', 'Registrasi akun calon peserta magang / PKL Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi Keabsahan Dokumen Resmi - MagKom Sleman</title>
+    <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
+    <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,12 +20,12 @@
     <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-900 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-blue-900/20">
-                    MK
+                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1 border border-slate-200 shadow-sm">
+                    @include('partials.logo-sleman', ['class' => 'w-full h-full object-contain', 'width' => '32', 'height' => '32'])
                 </div>
                 <div>
                     <h1 class="font-bold text-base text-slate-900 leading-tight">Dinas Komunikasi dan Informatika</h1>
-                    <p class="text-xs text-slate-500 font-medium">Pemerintah Kabupaten Sleman &bull; Portal MagKom</p>
+                    <p class="text-xs text-slate-500 font-medium">Pemerintah Kabupaten Sleman &bull; Magang Kominfo</p>
                 </div>
             </div>
             <a href="{{ route('landing') }}" class="text-xs font-semibold text-blue-800 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors">

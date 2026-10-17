@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Verifikasi Alamat Email - Portal MagKom Sleman')
+@section('title', 'Verifikasi Alamat Email - Magang Kominfo Sleman')
 @section('meta_description', 'Verifikasi alamat email Anda untuk mengaktifkan akses ke Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')

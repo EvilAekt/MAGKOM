@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Portal MagKom - Informasi Kuota & Pendaftaran Magang Kominfo')</title>
+    <title>@yield('title', 'Magang Kominfo Sleman - Informasi Kuota & Pendaftaran')</title>
     <meta name="description" content="@yield('meta_description', 'Transparansi kuota pendaftaran magang Dinas Komunikasi dan Informatika untuk siswa SMK dan mahasiswa D3/S1.')">
     
+    <!-- Favicon Resmi Sleman / MagKom -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
+    <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
+    <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
+
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="@yield('og_title', 'Informasi Kuota Magang Dinas Kominfo - MagKom')">
     <meta property="og:description" content="@yield('og_description', 'Lihat ketersediaan kuota magang per jurusan secara langsung dan transparan.')">
@@ -147,7 +154,7 @@
             width: 100%;
         }
 
-        /* Brand Logo: Rounded blue box with 'M' + MagKom KOMINFO PORTAL */
+        /* Brand Logo: Lambang Sleman + MagKom MAGANG KOMINFO */
         .brand-link {
             display: flex;
             align-items: center;
@@ -156,19 +163,14 @@
             flex-shrink: 0;
         }
 
-        .brand-logo-icon {
+        .brand-logo-img {
+            display: block;
             width: 2.65rem;
             height: 2.65rem;
-            background: var(--blue-600);
-            border-radius: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 1.35rem;
-            box-shadow: 0 2px 6px rgba(7, 81, 255, 0.25);
+            object-fit: contain;
             flex-shrink: 0;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+            image-rendering: -webkit-optimize-contrast;
         }
 
         .brand-text h1 {
@@ -428,12 +430,12 @@
     <header class="header-nav">
         <div class="container">
             <div class="nav-inner">
-                <!-- Brand: MagKom KOMINFO PORTAL -->
-                <a href="{{ route('landing') }}" class="brand-link" id="brand-link" title="MagKom Kominfo Sleman">
-                    <div class="brand-logo-icon">M</div>
+                <!-- Brand: MagKom MAGANG KOMINFO -->
+                <a href="{{ route('landing') }}" class="brand-link" id="brand-link" title="Magang Kominfo - Dinas Kominfo Sleman">
+                    @include('partials.logo-sleman', ['class' => 'brand-logo-img', 'width' => '42', 'height' => '42'])
                     <div class="brand-text">
                         <h1>MagKom</h1>
-                        <p>KOMINFO PORTAL</p>
+                        <p>MAGANG KOMINFO</p>
                     </div>
                 </a>
 

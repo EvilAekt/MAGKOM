@@ -5,8 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Dashboard - Portal MagKom Sleman')</title>
-    <meta name="description" content="@yield('meta_description', 'Dashboard Resmi Portal Magang Dinas Komunikasi dan Informatika Kabupaten Sleman.')">
+    <title>@yield('title', 'Dashboard - Magang Kominfo Sleman')</title>
+    <meta name="description" content="@yield('meta_description', 'Dashboard Resmi Magang Kominfo - Dinas Komunikasi dan Informatika Kabupaten Sleman.')">
+
+    <!-- Favicon Resmi Sleman / MagKom -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
+    <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
+    <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
 
     <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -164,6 +171,15 @@
             justify-content: center;
             color: #FFFFFF;
             flex-shrink: 0;
+            padding: 4px;
+        }
+
+        .sidebar-brand-emblem img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
         }
 
         .sidebar-brand-text {
@@ -1042,14 +1058,12 @@
                 <!-- Header Brand Sleman -->
                 <div class="sidebar-header">
                     <div class="sidebar-brand-emblem">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                        </svg>
+                        @include('partials.logo-sleman', ['width' => '32', 'height' => '32'])
                     </div>
                     <div class="sidebar-brand-text">
                         <span class="sidebar-brand-title">MagKom</span>
-                        <span class="sidebar-brand-subtitle">KOMINFO PORTAL</span>
-                        <span class="sr-only">Portal MagKom - Dinas Kominfo Sleman</span>
+                        <span class="sidebar-brand-subtitle">MAGANG KOMINFO</span>
+                        <span class="sr-only">Magang Kominfo - Dinas Kominfo Sleman</span>
                     </div>
                 </div>
 

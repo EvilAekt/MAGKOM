@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Lupa Kata Sandi - Portal MagKom Sleman')
+@section('title', 'Lupa Kata Sandi - Magang Kominfo Sleman')
 @section('meta_description', 'Pemulihan kata sandi akun peserta magang Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')

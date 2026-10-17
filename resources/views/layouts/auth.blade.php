@@ -5,8 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Portal MagKom - Autentikasi')</title>
+    <title>@yield('title', 'Autentikasi - Magang Kominfo Sleman')</title>
     <meta name="description" content="@yield('meta_description', 'Portal Magang Resmi Dinas Komunikasi dan Informatika Kabupaten Sleman.')">
+
+    <!-- Favicon Resmi Sleman / MagKom -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
+    <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
+    <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
 
     <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -556,16 +563,12 @@
         <aside class="auth-visual-panel" aria-label="Branding MagKom Kominfo Sleman">
             <div class="auth-visual-overlay"></div>
             <div class="auth-visual-content">
-                <!-- Header Visual -->
-                <!-- Header Visual (Logo Tetap Asli) -->
+                <!-- Header Visual (Lambang Sleman & Logo MagKom) -->
                 <div style="display: flex; align-items: center; gap: 0.875rem;">
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="40" height="40" rx="10" fill="#ffffff" fill-opacity="0.2"/>
-                        <path d="M12 28V12L20 20L28 12V28" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    @include('partials.logo-sleman', ['width' => '44', 'height' => '44', 'style' => 'width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));'])
                     <div>
                         <div style="font-size: 1.125rem; font-weight: 800; letter-spacing: 0.05em; line-height: 1.2;">MAGKOM</div>
-                        <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.85; letter-spacing: 0.02em;">DINAS KOMINFO SLEMAN</div>
+                        <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.9; letter-spacing: 0.04em; text-transform: uppercase;">MAGANG KOMINFO SLEMAN</div>
                     </div>
                 </div>
 
@@ -597,11 +600,8 @@
         <main class="auth-form-panel">
             <!-- Header Bar (Back Link & Mobile Brand) -->
             <div class="auth-form-header-bar">
-                <div class="mobile-brand">
-                    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="40" height="40" rx="8" fill="#0751FF"/>
-                        <path d="M12 28V12L20 20L28 12V28" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                <div class="mobile-brand" style="display: flex; align-items: center; gap: 0.5rem;">
+                    @include('partials.logo-sleman', ['width' => '28', 'height' => '28', 'style' => 'width: 28px; height: 28px; object-fit: contain;'])
                     <span style="font-weight: 800; font-size: 0.9375rem; color: var(--neutral-900);">MAGKOM</span>
                 </div>
 
@@ -621,7 +621,7 @@
 
             <!-- Footer Hak Cipta Ringkas Mobile -->
             <div style="max-width: 480px; width: 100%; margin: 1.5rem auto 0 auto; text-align: center; font-size: 0.75rem; color: var(--neutral-400);">
-                Portal Magang Resmi Dinas Kominfo Sleman &bull; v1.0
+                Magang Kominfo &bull; Dinas Kominfo Sleman &bull; v1.0
             </div>
         </main>
     </div>

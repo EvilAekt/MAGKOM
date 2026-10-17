@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Login - Portal MagKom Sleman')
+@section('title', 'Login - Magang Kominfo Sleman')
 @section('meta_description', 'Masuk ke akun Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')

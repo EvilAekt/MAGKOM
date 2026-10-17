@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Portal MagKom - Informasi Kuota & Pendaftaran Magang Kominfo')
+@section('title', 'Magang Kominfo Sleman - Informasi Kuota & Pendaftaran')
 @section('meta_description', 'Transparansi kuota pendaftaran magang Dinas Komunikasi dan Informatika untuk siswa SMK dan mahasiswa D3/S1.')
 @section('og_title', 'Informasi Kuota Magang Dinas Kominfo - MagKom')
 @section('og_description', 'Lihat ketersediaan kuota magang per jurusan secara langsung dan transparan.')
