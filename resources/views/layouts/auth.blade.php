@@ -1,17 +1,43 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Portal MagKom - Autentikasi')</title>
+    <title>@yield('title', 'Autentikasi - Magang Kominfo Sleman')</title>
     <meta name="description" content="@yield('meta_description', 'Portal Magang Resmi Dinas Komunikasi dan Informatika Kabupaten Sleman.')">
+
+    <!-- Favicon Resmi Sleman / MagKom -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
+    <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
+    <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
 
     <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+    <!-- Anti-Flash Theme Script -->
+    <script>
+        (function() {
+            try {
+                const savedPref = localStorage.getItem('magkom_theme') || '{{ session('tema_tampilan', request()->cookie('tema_tampilan', 'terang')) }}';
+                let effectiveTheme = 'light';
+                if (savedPref === 'sistem') {
+                    effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                } else if (savedPref === 'gelap') {
+                    effectiveTheme = 'dark';
+                } else {
+                    effectiveTheme = 'light';
+                }
+                document.documentElement.setAttribute('data-theme', effectiveTheme);
+                document.documentElement.setAttribute('data-pref-theme', savedPref);
+            } catch (e) {}
+        })();
+    </script>
 
     <style>
         :root {
@@ -45,6 +71,186 @@
             --red-500: #EF4444;
             --red-600: #DC2626;
             --red-700: #B91C1C;
+
+            /* Tipografi Bobot Standar MagKom (Plan 2026-10-16) */
+            --fw-regular: 400;
+            --fw-medium: 500;
+            --fw-semibold: 600;
+            --fw-bold: 700;
+        }
+
+        /* Dark Mode Tokens & Overrides (DS-MagKom) */
+        [data-theme="dark"] {
+            --neutral-0: #182234;
+            --neutral-50: #111C2E;
+            --neutral-100: #0F172A;
+            --neutral-200: #26354D;
+            --neutral-300: #334155;
+            --neutral-400: #475569;
+            --neutral-500: #94A3B8;
+            --neutral-600: #CBD5E1;
+            --neutral-700: #E2E8F0;
+            --neutral-800: #F8FAFC;
+            --neutral-900: #FFFFFF;
+
+            --blue-50: #1E3A8A;
+            --blue-100: #1E40AF;
+        }
+
+        [data-theme="dark"] body {
+            background-color: #0A0F1D;
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .auth-form-panel {
+            background-color: #0A0F1D;
+        }
+
+        [data-theme="dark"] .auth-card {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        [data-theme="dark"] .auth-title {
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .auth-subtitle {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .form-label {
+            color: var(--neutral-700) !important;
+        }
+
+        [data-theme="dark"] .form-input,
+        [data-theme="dark"] input[type="text"],
+        [data-theme="dark"] input[type="email"],
+        [data-theme="dark"] input[type="password"] {
+            background-color: var(--neutral-100) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .form-input:focus,
+        [data-theme="dark"] input:focus {
+            border-color: var(--blue-600) !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35) !important;
+        }
+
+        [data-theme="dark"] .form-input::placeholder,
+        [data-theme="dark"] input::placeholder {
+            color: var(--neutral-400) !important;
+        }
+
+        [data-theme="dark"] .back-link {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-700) !important;
+        }
+
+        [data-theme="dark"] .back-link:hover {
+            background-color: var(--neutral-50) !important;
+            color: var(--neutral-900) !important;
+            border-color: var(--neutral-300) !important;
+        }
+
+        [data-theme="dark"] .oauth-btn {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .oauth-btn:hover {
+            background-color: var(--neutral-50) !important;
+            border-color: var(--neutral-300) !important;
+        }
+
+        [data-theme="dark"] .divider-text {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .divider-line {
+            background-color: var(--neutral-200) !important;
+        }
+
+        /* Universal Inline-Style Inversion for Auth views */
+        [data-theme="dark"] [style*="color: #0F172A"],
+        [data-theme="dark"] [style*="color:#0F172A"],
+        [data-theme="dark"] [style*="color: #1E293B"],
+        [data-theme="dark"] [style*="color: #000000"],
+        [data-theme="dark"] [style*="color: #333333"] {
+            color: var(--neutral-800, #F8FAFC) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #334155"],
+        [data-theme="dark"] [style*="color: #475569"],
+        [data-theme="dark"] [style*="color: #666666"] {
+            color: var(--neutral-700, #E2E8F0) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #64748B"],
+        [data-theme="dark"] [style*="color: #7A8494"] {
+            color: var(--neutral-500, #94A3B8) !important;
+        }
+
+        [data-theme="dark"] .btn-google {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .btn-google:hover {
+            background-color: var(--neutral-50) !important;
+            border-color: var(--neutral-300) !important;
+        }
+
+        [data-theme="dark"] .auth-divider::before,
+        [data-theme="dark"] .auth-divider::after {
+            border-bottom-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .auth-divider span {
+            color: var(--neutral-500);
+        }
+
+        [data-theme="dark"] .auth-footer-text,
+        [data-theme="dark"] .auth-terms-text {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .step-badge {
+            background-color: rgba(37, 99, 235, 0.2) !important;
+            border-color: rgba(59, 130, 246, 0.4) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .auth-footer-link,
+        [data-theme="dark"] .forgot-link {
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .auth-footer-link:hover,
+        [data-theme="dark"] .forgot-link:hover {
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .input-icon-box {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .password-toggle-btn {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .password-toggle-btn:hover {
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] .bg-white {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
         }
 
         *, *::before, *::after {
@@ -59,7 +265,24 @@
             color: var(--neutral-800);
             min-height: 100vh;
             line-height: 1.5;
+            font-weight: var(--fw-regular);
             -webkit-font-smoothing: antialiased;
+        }
+
+        /* Headings: SemiBold atau Bold Tegas dan Jelas sebagai Judul */
+        h1, h2 {
+            font-weight: var(--fw-bold);
+            color: var(--neutral-900);
+        }
+
+        h3, h4, h5, h6 {
+            font-weight: var(--fw-semibold);
+            color: var(--neutral-900);
+        }
+
+        /* Teks semua di web (body): Regular */
+        p, span.text-body, td, li {
+            font-weight: var(--fw-regular);
         }
 
         /* Layout Grid Split-Screen */
@@ -459,25 +682,121 @@
             text-transform: lowercase;
         }
 
-        /* Alerts & Badges */
-        .auth-alert-error {
-            background-color: var(--red-50);
-            border-left: 4px solid var(--red-500);
-            padding: 0.875rem 1rem;
-            border-radius: 0.375rem;
+        /* Alerts & Toasts */
+        .alerts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             margin-bottom: 1.5rem;
-            color: var(--red-700);
-            font-size: 0.875rem;
+            width: 100%;
         }
 
-        .auth-alert-success {
-            background-color: var(--green-50);
-            border-left: 4px solid var(--green-500);
-            padding: 0.875rem 1rem;
-            border-radius: 0.375rem;
-            margin-bottom: 1.5rem;
-            color: var(--green-700);
+        .app-toast,
+        .app-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 18px;
+            background: #FFFFFF;
+            border: 1px solid var(--neutral-200);
+            border-radius: 14px;
+            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+            position: relative;
+            transition: all 0.25s ease;
+            text-align: left;
+        }
+
+        .app-toast.toast-hiding,
+        .app-alert.toast-hiding {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+
+        .toast-icon-badge,
+        .alert-icon-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-icon-badge.success,
+        .alert-icon-badge.success {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        .toast-icon-badge.error,
+        .alert-icon-badge.error {
+            background: #FEF2F2;
+            color: #EF4444;
+        }
+
+        .toast-icon-badge.warning,
+        .alert-icon-badge.warning {
+            background: #FFFBEB;
+            color: #F59E0B;
+        }
+
+        .toast-icon-badge.info,
+        .alert-icon-badge.info {
+            background: #EFF6FF;
+            color: #3B82F6;
+        }
+
+        .toast-content,
+        .alert-body {
+            flex: 1;
+            min-width: 0;
+            padding-top: 1px;
+        }
+
+        .toast-title,
+        .alert-title {
             font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            line-height: 1.35;
+            margin-bottom: 2px;
+        }
+
+        .toast-desc,
+        .alert-desc {
+            font-size: 0.8125rem;
+            font-weight: 400;
+            color: var(--neutral-500);
+            line-height: 1.45;
+        }
+
+        .toast-desc ul,
+        .alert-desc ul {
+            margin: 4px 0 0 16px;
+            padding: 0;
+        }
+
+        .toast-close-btn,
+        .alert-close-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--neutral-400);
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+        }
+
+        .toast-close-btn:hover,
+        .alert-close-btn:hover {
+            color: var(--neutral-600);
+            background: var(--neutral-100);
         }
 
         .auth-footer-text {
@@ -533,16 +852,12 @@
         <aside class="auth-visual-panel" aria-label="Branding MagKom Kominfo Sleman">
             <div class="auth-visual-overlay"></div>
             <div class="auth-visual-content">
-                <!-- Header Visual -->
-                <!-- Header Visual (Logo Tetap Asli) -->
+                <!-- Header Visual (Lambang Sleman & Logo MagKom) -->
                 <div style="display: flex; align-items: center; gap: 0.875rem;">
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="40" height="40" rx="10" fill="#ffffff" fill-opacity="0.2"/>
-                        <path d="M12 28V12L20 20L28 12V28" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    @include('partials.logo-sleman', ['width' => '44', 'height' => '44', 'style' => 'width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));'])
                     <div>
                         <div style="font-size: 1.125rem; font-weight: 800; letter-spacing: 0.05em; line-height: 1.2;">MAGKOM</div>
-                        <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.85; letter-spacing: 0.02em;">DINAS KOMINFO SLEMAN</div>
+                        <div style="font-size: 0.75rem; font-weight: 600; opacity: 0.9; letter-spacing: 0.04em; text-transform: uppercase;">MAGANG KOMINFO SLEMAN</div>
                     </div>
                 </div>
 
@@ -574,11 +889,8 @@
         <main class="auth-form-panel">
             <!-- Header Bar (Back Link & Mobile Brand) -->
             <div class="auth-form-header-bar">
-                <div class="mobile-brand">
-                    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="40" height="40" rx="8" fill="#0751FF"/>
-                        <path d="M12 28V12L20 20L28 12V28" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                <div class="mobile-brand" style="display: flex; align-items: center; gap: 0.5rem;">
+                    @include('partials.logo-sleman', ['width' => '28', 'height' => '28', 'style' => 'width: 28px; height: 28px; object-fit: contain;'])
                     <span style="font-weight: 800; font-size: 0.9375rem; color: var(--neutral-900);">MAGKOM</span>
                 </div>
 
@@ -593,19 +905,47 @@
 
             <!-- Konten Form Dinamis -->
             <div class="auth-form-wrapper">
+                <div class="alerts-container">
+                    <x-flash-alert />
+                </div>
                 @yield('content')
             </div>
 
             <!-- Footer Hak Cipta Ringkas Mobile -->
             <div style="max-width: 480px; width: 100%; margin: 1.5rem auto 0 auto; text-align: center; font-size: 0.75rem; color: var(--neutral-400);">
-                Portal Magang Resmi Dinas Kominfo Sleman &bull; v1.0
+                Magang Kominfo &bull; Dinas Kominfo Sleman &bull; v1.0
             </div>
         </main>
     </div>
 
-    <!-- Script Pembantu Show / Hide Password (Tanpa Dependency Luar, CSP Compliant) -->
+    <!-- Script Pembantu Show / Hide Password & Toast Dismiss -->
     <script>
+        function dismissToast(btn) {
+            const toast = btn.closest('.app-toast') || btn.closest('.app-alert');
+            if (!toast) return;
+            toast.classList.add('toast-hiding');
+            setTimeout(() => toast.remove(), 300);
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
+            // Auto dismiss alert toast after 5s with pause on hover
+            const alerts = document.querySelectorAll('.alerts-container .app-toast, .alerts-container .app-alert');
+            alerts.forEach(alert => {
+                let timer = setTimeout(() => {
+                    alert.classList.add('toast-hiding');
+                    setTimeout(() => alert.remove(), 300);
+                }, 5000);
+
+                alert.addEventListener('mouseenter', () => clearTimeout(timer));
+                alert.addEventListener('mouseleave', () => {
+                    timer = setTimeout(() => {
+                        alert.classList.add('toast-hiding');
+                        setTimeout(() => alert.remove(), 300);
+                    }, 3000);
+                });
+            });
+
+            // Password Toggle
             const toggleButtons = document.querySelectorAll('.toggle-password-btn');
             toggleButtons.forEach(button => {
                 button.addEventListener('click', function () {

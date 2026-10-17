@@ -17,9 +17,21 @@ class Kernel extends ConsoleKernel
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
+        // Otomatisasi penutupan waiting list awal bulan magang (AC-04-7)
+        $schedule->command('magkom:tutup-waiting-list')
+            ->dailyAt('00:05')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
+
         // Pemangkasan berkala log akses data (PRD 10.3 NFR-A5)
         $schedule->command('magkom:audit-purge')
             ->monthlyOn(1, '02:00')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
+
+        // Pembersihan keamanan berkala & higienitas sistem (PRD 8.4, 10.3)
+        $schedule->command('magkom:security-sweep')
+            ->dailyAt('03:00')
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
     }

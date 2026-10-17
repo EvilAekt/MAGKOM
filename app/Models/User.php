@@ -27,6 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'nama',
         'email',
         'no_telp',
+        'foto',
         'password',
         'provider',
         'provider_id',
@@ -44,6 +45,16 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    /**
+     * Nilai default atribut model.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'status_aktif' => true,
+        'must_change_password' => false,
     ];
 
     /**
@@ -65,6 +76,23 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getNameAttribute(): ?string
     {
         return $this->nama;
+    }
+
+    /**
+     * Accessor URL berkas foto profil pengguna / staf.
+     */
+    public function getFotoUrlAttribute(): ?string
+    {
+        if ($this->foto && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->foto)) {
+            return \Illuminate\Support\Facades\Storage::disk('public')->url($this->foto);
+        }
+
+        // Fallback untuk akun peserta yang menyimpan foto di tabel peserta_profil
+        if ($this->isPeserta() && $this->profil?->foto_url) {
+            return $this->profil->foto_url;
+        }
+
+        return null;
     }
 
 
@@ -137,6 +165,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isPeserta(): bool
     {
         return $this->role === RoleEnum::Peserta;
+    }
+
+    public function isStaf(): bool
+    {
+        return in_array($this->role, [
+            RoleEnum::SuperAdmin,
+            RoleEnum::Admin,
+            RoleEnum::Pembimbing,
+        ], true);
     }
 
     /**

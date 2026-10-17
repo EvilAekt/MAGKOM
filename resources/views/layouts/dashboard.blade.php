@@ -1,17 +1,46 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Dashboard - Portal MagKom Sleman')</title>
-    <meta name="description" content="@yield('meta_description', 'Dashboard Resmi Portal Magang Dinas Komunikasi dan Informatika Kabupaten Sleman.')">
+    <title>@yield('title', 'Dashboard - Magang Kominfo Sleman')</title>
+    <meta name="description" content="@yield('meta_description', 'Dashboard Resmi Magang Kominfo - Dinas Komunikasi dan Informatika Kabupaten Sleman.')">
+
+    <!-- Favicon Resmi Sleman / MagKom -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
+    <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
+    <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
+
+    <!-- Favicon Resmi Sleman -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+    <!-- Anti-Flash Theme Script -->
+    <script>
+        (function() {
+            try {
+                const savedPref = localStorage.getItem('magkom_theme') || '{{ session('tema_tampilan', request()->cookie('tema_tampilan', 'terang')) }}';
+                let effectiveTheme = 'light';
+                if (savedPref === 'sistem') {
+                    effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                } else if (savedPref === 'gelap') {
+                    effectiveTheme = 'dark';
+                } else {
+                    effectiveTheme = 'light';
+                }
+                document.documentElement.setAttribute('data-theme', effectiveTheme);
+                document.documentElement.setAttribute('data-pref-theme', savedPref);
+            } catch (e) {}
+        })();
+    </script>
 
     <style>
         :root {
@@ -59,6 +88,426 @@
             --topbar-height: 64px;
 
             --font-sans: 'Open Sans', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+            /* Tipografi Bobot Standar MagKom (Plan 2026-10-16) */
+            --fw-regular: 400;
+            --fw-medium: 500;
+            --fw-semibold: 600;
+            --fw-bold: 700;
+        }
+
+        /* Dark Mode Tokens & Overrides (DS-MagKom Industrial Standard) */
+        [data-theme="dark"] {
+            --neutral-0: #182234;     /* Card surface */
+            --neutral-50: #111C2E;    /* Topbar & Sidebar */
+            --neutral-100: #0F172A;   /* Input background */
+            --neutral-150: #0A0F1D;   /* Main canvas background */
+            --neutral-200: #26354D;   /* Borders & Separators */
+            --neutral-300: #334155;   /* Secondary borders */
+            --neutral-400: #64748B;   /* Subdued text / icons / borders (Passes WCAG AA 4.5:1) */
+            --neutral-500: #94A3B8;   /* Muted labels & timestamps */
+            --neutral-600: #CBD5E1;   /* Body text secondary */
+            --neutral-700: #E2E8F0;   /* Body text primary */
+            --neutral-800: #F8FAFC;   /* Headings & prominent text */
+            --neutral-900: #FFFFFF;   /* Maximum contrast highlights */
+
+            --blue-600: #3B82F6;
+            --blue-700: #2563EB;
+            --blue-tint: #1E3A8A;
+            --blue-tint-line: #3B82F6;
+            --sky-100: #182234;
+
+            --green-100: rgba(16, 185, 129, 0.15);
+            --green-600: #34D399;
+            --green-700: #6EE7B7;
+
+            --amber-100: rgba(217, 119, 6, 0.15);
+            --amber-200: rgba(245, 158, 11, 0.25);
+            --amber-700: #FCD34D;
+
+            --red-100: rgba(239, 68, 68, 0.15);
+            --red-200: rgba(239, 68, 68, 0.25);
+            --red-600: #F87171;
+            --red-700: #FCA5A5;
+
+            --focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.35);
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.4);
+            --shadow-raised: 0 4px 16px rgba(0, 0, 0, 0.5);
+            --shadow-modal: 0 24px 48px -8px rgba(0, 0, 0, 0.7);
+        }
+
+        [data-theme="dark"] body {
+            background-color: var(--neutral-150);
+            color: var(--neutral-700);
+        }
+
+        /* Topbar & Breadcrumb */
+        [data-theme="dark"] .dashboard-topbar {
+            background-color: var(--neutral-50);
+            border-bottom-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .user-name-text {
+            color: var(--neutral-800);
+        }
+
+        [data-theme="dark"] .user-dropdown-menu {
+            background-color: var(--neutral-0);
+            border-color: var(--neutral-200);
+            box-shadow: var(--shadow-raised);
+        }
+
+        [data-theme="dark"] .dropdown-item-link {
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .dropdown-item-link:hover {
+            background-color: var(--neutral-100);
+            color: #FFFFFF;
+        }
+
+        [data-theme="dark"] .dropdown-divider {
+            border-top-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .breadcrumb-trail a {
+            color: var(--neutral-500);
+        }
+
+        [data-theme="dark"] .breadcrumb-trail a:hover {
+            color: var(--blue-600);
+        }
+
+        [data-theme="dark"] .breadcrumb-current {
+            color: var(--neutral-800);
+        }
+
+        /* Sidebar Navigasi */
+        [data-theme="dark"] .dashboard-sidebar {
+            background-color: var(--neutral-50);
+            border-right-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .sidebar-header {
+            border-bottom-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .sidebar-brand-title {
+            color: var(--neutral-800);
+        }
+
+        [data-theme="dark"] .sidebar-brand-subtitle {
+            color: var(--neutral-500);
+        }
+
+        [data-theme="dark"] .nav-section-label {
+            color: var(--neutral-500);
+        }
+
+        [data-theme="dark"] .nav-item-link {
+            color: var(--neutral-600);
+        }
+
+        [data-theme="dark"] .nav-item-link:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--neutral-800);
+        }
+
+        [data-theme="dark"] .nav-item-link.active {
+            background-color: var(--blue-tint);
+            color: #93C5FD;
+            border-left-color: var(--blue-tint-line);
+        }
+
+        [data-theme="dark"] .nav-item-icon {
+            color: inherit;
+        }
+
+        /* Kartu & Kontainer Universal */
+        [data-theme="dark"] .app-card,
+        [data-theme="dark"] .card-modern,
+        [data-theme="dark"] .dashboard-card,
+        [data-theme="dark"] .stat-card,
+        [data-theme="dark"] .identity-card,
+        [data-theme="dark"] .form-card-container,
+        [data-theme="dark"] .settings-card,
+        [data-theme="dark"] .bg-white:not(.badge-white):not(.text-white) {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .card-header,
+        [data-theme="dark"] .panel-header {
+            border-bottom-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .card-footer,
+        [data-theme="dark"] .panel-footer {
+            border-top-color: var(--neutral-200);
+            background-color: rgba(15, 23, 42, 0.4);
+        }
+
+        /* Heading & Teks Universal */
+        [data-theme="dark"] h1,
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3,
+        [data-theme="dark"] h4,
+        [data-theme="dark"] .text-slate-900,
+        [data-theme="dark"] .text-gray-900 {
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] p,
+        [data-theme="dark"] .text-slate-700,
+        [data-theme="dark"] .text-gray-700 {
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .text-slate-500,
+        [data-theme="dark"] .text-gray-500,
+        [data-theme="dark"] .text-slate-400,
+        [data-theme="dark"] .text-gray-400 {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .border-slate-200,
+        [data-theme="dark"] .border-gray-200,
+        [data-theme="dark"] .border-slate-100,
+        [data-theme="dark"] .border-gray-100 {
+            border-color: var(--neutral-200) !important;
+        }
+
+        /* =====================================================================
+           UNIVERSAL INLINE-STYLE INVERSION (DS-MagKom Dark Contrast Fix)
+           Menembus inline-style hardcoded pada child views agar kontras tinggi
+           ===================================================================== */
+        [data-theme="dark"] [style*="color: #0F172A"],
+        [data-theme="dark"] [style*="color:#0F172A"],
+        [data-theme="dark"] [style*="color: #0f172a"],
+        [data-theme="dark"] [style*="color:#0f172a"],
+        [data-theme="dark"] [style*="color: #1E293B"],
+        [data-theme="dark"] [style*="color:#1E293B"],
+        [data-theme="dark"] [style*="color: #1e293b"],
+        [data-theme="dark"] [style*="color:#1e293b"],
+        [data-theme="dark"] [style*="color: #000000"],
+        [data-theme="dark"] [style*="color:#000000"],
+        [data-theme="dark"] [style*="color: #05070B"],
+        [data-theme="dark"] [style*="color: #1D2530"],
+        [data-theme="dark"] [style*="color: #333333"] {
+            color: var(--neutral-800, #F8FAFC) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #334155"],
+        [data-theme="dark"] [style*="color:#334155"],
+        [data-theme="dark"] [style*="color: #475569"],
+        [data-theme="dark"] [style*="color:#475569"],
+        [data-theme="dark"] [style*="color: #666666"] {
+            color: var(--neutral-700, #E2E8F0) !important;
+        }
+
+        [data-theme="dark"] [style*="color: #64748B"],
+        [data-theme="dark"] [style*="color:#64748B"],
+        [data-theme="dark"] [style*="color: #7A8494"] {
+            color: var(--neutral-500, #94A3B8) !important;
+        }
+
+        [data-theme="dark"] [style*="background: #ffffff"],
+        [data-theme="dark"] [style*="background:#ffffff"],
+        [data-theme="dark"] [style*="background: #FFFFFF"],
+        [data-theme="dark"] [style*="background:#FFFFFF"],
+        [data-theme="dark"] [style*="background-color: #ffffff"],
+        [data-theme="dark"] [style*="background-color:#ffffff"],
+        [data-theme="dark"] [style*="background-color: #FFFFFF"],
+        [data-theme="dark"] [style*="background-color:#FFFFFF"] {
+            background-color: var(--neutral-0, #182234) !important;
+            border-color: var(--neutral-200, #26354D) !important;
+        }
+
+        [data-theme="dark"] [style*="background: #F8FAFC"],
+        [data-theme="dark"] [style*="background:#F8FAFC"],
+        [data-theme="dark"] [style*="background: #F1F5F9"],
+        [data-theme="dark"] [style*="background:#F1F5F9"] {
+            background-color: var(--neutral-100, #0F172A) !important;
+            border-color: var(--neutral-200, #26354D) !important;
+        }
+
+        [data-theme="dark"] [style*="border-bottom: 1px dashed #E2E8F0"],
+        [data-theme="dark"] [style*="border-bottom: 1px dashed #CBD5E1"] {
+            border-bottom-color: var(--neutral-200, #26354D) !important;
+        }
+
+        [data-theme="dark"] [style*="border: 1px solid #E2E8F0"],
+        [data-theme="dark"] [style*="border: 1px solid #CBD5E1"],
+        [data-theme="dark"] [style*="border: 1px solid #BFDBFE"] {
+            border-color: var(--neutral-200, #26354D) !important;
+        }
+
+        /* Form Controls Universal */
+        [data-theme="dark"] input[type="text"],
+        [data-theme="dark"] input[type="email"],
+        [data-theme="dark"] input[type="password"],
+        [data-theme="dark"] input[type="number"],
+        [data-theme="dark"] input[type="date"],
+        [data-theme="dark"] input[type="time"],
+        [data-theme="dark"] input[type="search"],
+        [data-theme="dark"] select,
+        [data-theme="dark"] textarea,
+        [data-theme="dark"] .form-input,
+        [data-theme="dark"] .form-select,
+        [data-theme="dark"] .form-textarea,
+        [data-theme="dark"] .input-custom,
+        [data-theme="dark"] .field-input {
+            background-color: var(--neutral-100) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] input::placeholder,
+        [data-theme="dark"] textarea::placeholder {
+            color: var(--neutral-400) !important;
+        }
+
+        [data-theme="dark"] input:focus,
+        [data-theme="dark"] select:focus,
+        [data-theme="dark"] textarea:focus {
+            border-color: var(--blue-600) !important;
+            box-shadow: var(--focus-ring) !important;
+            outline: none;
+        }
+
+        [data-theme="dark"] input:disabled,
+        [data-theme="dark"] select:disabled,
+        [data-theme="dark"] textarea:disabled,
+        [data-theme="dark"] .field-input.readonly {
+            background-color: rgba(15, 23, 42, 0.7) !important;
+            color: var(--neutral-500) !important;
+            border-color: var(--neutral-200) !important;
+        }
+
+        /* Tabel Data Universal */
+        [data-theme="dark"] table,
+        [data-theme="dark"] .app-table {
+            border-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] thead,
+        [data-theme="dark"] thead th {
+            background-color: #0E1726 !important;
+            color: var(--neutral-500) !important;
+            border-bottom-color: var(--neutral-200) !important;
+        }
+
+        [data-theme="dark"] tbody tr {
+            background-color: var(--neutral-0);
+            border-bottom-color: var(--neutral-200);
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] tbody tr:hover {
+            background-color: #162238 !important;
+        }
+
+        [data-theme="dark"] td {
+            border-bottom-color: var(--neutral-200);
+            color: inherit;
+        }
+
+        /* Modal Dialog Universal */
+        [data-theme="dark"] .modal-content,
+        [data-theme="dark"] .modal-dialog,
+        [data-theme="dark"] .modal-box {
+            background-color: var(--neutral-0) !important;
+            border: 1px solid var(--neutral-200) !important;
+            color: var(--neutral-700);
+            box-shadow: var(--shadow-modal);
+        }
+
+        [data-theme="dark"] .modal-header {
+            border-bottom-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .modal-footer {
+            border-top-color: var(--neutral-200);
+            background-color: rgba(15, 23, 42, 0.3);
+        }
+
+        /* Tab Controller */
+        [data-theme="dark"] .dashboard-tab-bar {
+            background-color: var(--neutral-100);
+            border-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .tab-btn {
+            color: var(--neutral-500);
+        }
+
+        [data-theme="dark"] .tab-btn:hover {
+            color: var(--neutral-800);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme="dark"] .tab-btn.active {
+            background-color: var(--neutral-0);
+            color: #93C5FD;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            border-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .tab-btn .tab-badge {
+            background-color: var(--neutral-200);
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .tab-btn.active .tab-badge {
+            background-color: var(--blue-tint);
+            color: #93C5FD;
+        }
+
+        /* Quick Action Chips & Secondary Buttons */
+        [data-theme="dark"] .quick-action-chip {
+            background-color: var(--neutral-0);
+            border-color: var(--neutral-200);
+            color: var(--neutral-800);
+        }
+
+        [data-theme="dark"] .quick-action-chip:hover {
+            background-color: #162238;
+            border-color: var(--blue-600);
+            color: #93C5FD;
+        }
+
+        [data-theme="dark"] .btn-secondary,
+        [data-theme="dark"] .btn-outline {
+            background-color: transparent;
+            border-color: var(--neutral-200);
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .btn-secondary:hover,
+        [data-theme="dark"] .btn-outline:hover {
+            background-color: var(--neutral-100);
+            color: var(--neutral-900);
+            border-color: var(--neutral-300);
+        }
+
+        /* Pagination & Nav */
+        [data-theme="dark"] .pagination a,
+        [data-theme="dark"] .pagination span {
+            background-color: var(--neutral-0);
+            border-color: var(--neutral-200);
+            color: var(--neutral-600);
+        }
+
+        [data-theme="dark"] .pagination a:hover {
+            background-color: var(--neutral-100);
+            color: #FFFFFF;
+        }
+
+        [data-theme="dark"] .pagination .active span {
+            background-color: var(--blue-tint);
+            border-color: var(--blue-tint-line);
+            color: #93C5FD;
         }
 
         *, *::before, *::after {
@@ -73,8 +522,25 @@
             color: var(--neutral-800);
             min-height: 100vh;
             line-height: 1.5;
+            font-weight: var(--fw-regular);
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+        }
+
+        /* Headings: SemiBold atau Bold Tegas dan Jelas sebagai Judul */
+        h1, h2 {
+            font-weight: var(--fw-bold);
+            color: var(--neutral-800);
+        }
+
+        h3, h4, h5, h6 {
+            font-weight: var(--fw-semibold);
+            color: var(--neutral-800);
+        }
+
+        /* Teks semua di web (body): Regular */
+        p, span.text-body, td, li {
+            font-weight: var(--fw-regular);
         }
 
         /* Layout Grid Container */
@@ -134,13 +600,22 @@
             width: 40px;
             height: 40px;
             background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #FFFFFF;
             flex-shrink: 0;
+            padding: 4px;
+        }
+
+        .sidebar-brand-emblem img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
         }
 
         .sidebar-brand-text {
@@ -706,69 +1181,210 @@
             margin-bottom: 1.5rem;
         }
 
-        .app-alert {
+        /* ========================================================
+           MODERN TOAST NOTIFICATION COMPONENT (Floating Top-Right)
+           ======================================================== */
+        .alerts-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 420px;
+            width: calc(100vw - 48px);
+            pointer-events: none;
+        }
+
+        .alerts-container .app-alert,
+        .alerts-container .app-toast {
+            pointer-events: auto;
+            margin-bottom: 0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+            animation: toastSlideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .alerts-container .app-alert.toast-hiding,
+        .alerts-container .app-toast.toast-hiding {
+            animation: toastSlideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes toastSlideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        @keyframes toastSlideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(50px) scale(0.96);
+            }
+        }
+
+        .app-alert,
+        .app-toast {
             display: flex;
             align-items: flex-start;
-            gap: 0.75rem;
-            padding: 1rem 1.25rem;
-            border-radius: 12px;
+            gap: 14px;
+            padding: 14px 18px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
             font-size: 0.875rem;
             line-height: 1.5;
             position: relative;
+            transition: all 0.25s ease;
         }
 
-        .alert-icon {
+        .alert-icon-badge,
+        .toast-icon-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
-            margin-top: 2px;
         }
 
-        .alert-body {
+        .alert-icon-badge.success,
+        .toast-icon-badge.success {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        .alert-icon-badge.error,
+        .toast-icon-badge.error {
+            background: #FEF2F2;
+            color: #EF4444;
+        }
+
+        .alert-icon-badge.warning,
+        .toast-icon-badge.warning {
+            background: #FFFBEB;
+            color: #F59E0B;
+        }
+
+        .alert-icon-badge.info,
+        .toast-icon-badge.info {
+            background: #EFF6FF;
+            color: #3B82F6;
+        }
+
+        .alert-body,
+        .toast-content {
             flex: 1;
             min-width: 0;
+            padding-top: 1px;
         }
 
-        .alert-title {
+        .alert-title,
+        .toast-title {
+            font-size: 0.9375rem;
             font-weight: 700;
-            margin-bottom: 0.125rem;
+            color: #0F172A;
+            line-height: 1.35;
+            margin-bottom: 2px;
         }
 
-        .alert-close-btn {
+        .alert-desc,
+        .toast-desc {
+            font-size: 0.84375rem;
+            font-weight: 400;
+            color: #64748B;
+            line-height: 1.45;
+        }
+
+        .alert-desc ul,
+        .toast-desc ul {
+            margin: 4px 0 0 16px;
+            padding: 0;
+        }
+
+        .alert-close-btn,
+        .toast-close-btn {
             background: transparent;
             border: none;
             cursor: pointer;
+            color: #94A3B8;
             padding: 4px;
-            border-radius: 4px;
-            color: inherit;
-            opacity: 0.75;
-            margin-left: 0.5rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
         }
 
-        .alert-close-btn:hover {
-            opacity: 1;
+        .alert-close-btn:hover,
+        .toast-close-btn:hover {
+            color: #475569;
+            background: #F1F5F9;
         }
 
-        .app-alert.alert-success {
-            background-color: var(--green-100);
-            border: 1px solid var(--green-600);
-            color: var(--green-700);
+        /* Dark Theme Support for Alerts */
+        [data-theme="dark"] .app-alert,
+        [data-theme="dark"] .app-toast {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
         }
 
-        .app-alert.alert-error {
-            background-color: var(--red-200);
-            border: 1px solid var(--red-600);
-            color: var(--red-700);
+        [data-theme="dark"] .alert-title,
+        [data-theme="dark"] .toast-title {
+            color: #F8FAFC !important;
         }
 
-        .app-alert.alert-warning {
-            background-color: var(--amber-100);
-            border: 1px solid var(--amber-300);
-            color: var(--amber-700);
+        [data-theme="dark"] .alert-desc,
+        [data-theme="dark"] .toast-desc {
+            color: #94A3B8 !important;
         }
 
-        .app-alert.alert-info {
-            background-color: var(--neutral-200);
-            border: 1px solid var(--neutral-400);
-            color: var(--neutral-800);
+        [data-theme="dark"] .alert-icon-badge.success,
+        [data-theme="dark"] .toast-icon-badge.success {
+            background: rgba(16, 185, 129, 0.18) !important;
+            color: #34D399 !important;
+        }
+
+        [data-theme="dark"] .alert-icon-badge.error,
+        [data-theme="dark"] .toast-icon-badge.error {
+            background: rgba(239, 68, 68, 0.18) !important;
+            color: #F87171 !important;
+        }
+
+        [data-theme="dark"] .alert-icon-badge.warning,
+        [data-theme="dark"] .toast-icon-badge.warning {
+            background: rgba(245, 158, 11, 0.18) !important;
+            color: #FBBF24 !important;
+        }
+
+        [data-theme="dark"] .alert-icon-badge.info,
+        [data-theme="dark"] .toast-icon-badge.info {
+            background: rgba(59, 130, 246, 0.18) !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .alert-close-btn,
+        [data-theme="dark"] .toast-close-btn {
+            color: #64748B !important;
+        }
+
+        [data-theme="dark"] .alert-close-btn:hover,
+        [data-theme="dark"] .toast-close-btn:hover {
+            color: #CBD5E1 !important;
+            background: #1E293B !important;
         }
 
         /* Banner Masa Tenggang Peserta (PRD AC-12-2) */
@@ -1019,14 +1635,12 @@
                 <!-- Header Brand Sleman -->
                 <div class="sidebar-header">
                     <div class="sidebar-brand-emblem">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                        </svg>
+                        @include('partials.logo-sleman', ['width' => '32', 'height' => '32'])
                     </div>
                     <div class="sidebar-brand-text">
                         <span class="sidebar-brand-title">MagKom</span>
-                        <span class="sidebar-brand-subtitle">KOMINFO PORTAL</span>
-                        <span class="sr-only">Portal MagKom - Dinas Kominfo Sleman</span>
+                        <span class="sidebar-brand-subtitle">MAGANG KOMINFO</span>
+                        <span class="sr-only">Magang Kominfo - Dinas Kominfo Sleman</span>
                     </div>
                 </div>
 
@@ -1143,17 +1757,28 @@
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
                             </span>
-                            <span>Peserta Bimbingan</span>
+                            <span>{{ __('Peserta Bimbingan') }}</span>
                         </a>
 
-                        <a href="{{ route('pembimbing.tugas.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.tugas.*') ? 'active' : '' }}">
+                        <a href="{{ route('pembimbing.tugas.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.tugas.index', 'pembimbing.tugas.show', 'pembimbing.tugas.create', 'pembimbing.tugas.edit') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M9 11l3 3L22 4"></path>
                                     <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                                 </svg>
                             </span>
-                            <span>Tugas Peserta</span>
+                            <span>{{ __('Tugas Peserta') }}</span>
+                        </a>
+
+                        <a href="{{ route('pembimbing.tugas.template.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.tugas.template.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                                </svg>
+                            </span>
+                            <span>{{ __('Bank Template') }}</span>
                         </a>
 
                         <a href="{{ route('pembimbing.logbook.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">
@@ -1163,7 +1788,19 @@
                                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                 </svg>
                             </span>
-                            <span>Reviu Logbook</span>
+                            <span>{{ __('Reviu Logbook') }}</span>
+                        </a>
+
+                        <a href="{{ route('pembimbing.agenda.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.agenda.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </span>
+                            <span>{{ __('Agenda Mentoring') }}</span>
                         </a>
 
                         <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.penilaian.*') ? 'active' : '' }}">
@@ -1173,12 +1810,47 @@
                                     <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
                                 </svg>
                             </span>
-                            <span>Penilaian Magang</span>
+                            <span>{{ __('Penilaian Magang') }}</span>
+                        </a>
+
+                        <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                            </span>
+                            <span>{{ __('Laporan Kinerja ASN') }}</span>
+                        </a>
+
+                        <span class="nav-section-label">{{ __('PENGATURAN') }}</span>
+
+                        <a href="{{ route('pembimbing.profil.show') }}" class="nav-item-link {{ request()->routeIs('pembimbing.profil.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </span>
+                            <span>{{ __('Profil Saya') }}</span>
+                        </a>
+
+                        <a href="{{ route('pembimbing.pengaturan.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.pengaturan.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                            </span>
+                            <span>{{ __('Pengaturan Akun') }}</span>
                         </a>
 
                     @elseif($userRole === 'admin')
                         <!-- NAVIGASI ADMINISTRATOR (PRD 9.2) -->
-                        <span class="nav-section-label">Administrasi Magang</span>
+                        <span class="nav-section-label">{{ __('Administrasi Magang') }}</span>
 
                         <a href="{{ route('admin.dashboard') }}" class="nav-item-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                             <span class="nav-item-icon">
@@ -1189,7 +1861,7 @@
                                     <rect x="3" y="14" width="7" height="7"></rect>
                                 </svg>
                             </span>
-                            <span>Dashboard Admin</span>
+                            <span>{{ __('Dashboard') }}</span>
                         </a>
 
                         <a href="{{ route('admin.pendaftaran.index') }}" class="nav-item-link {{ request()->routeIs('admin.pendaftaran.*') ? 'active' : '' }}">
@@ -1201,7 +1873,7 @@
                                     <path d="m20 17-1.09-1.09a2 2 0 0 0-2.82 0L10 22"></path>
                                 </svg>
                             </span>
-                            <span>Verifikasi Berkas</span>
+                            <span>{{ __('Verifikasi Berkas') }}</span>
                         </a>
 
                         <a href="{{ route('admin.kuota.index') }}" class="nav-item-link {{ request()->routeIs('admin.kuota.*') ? 'active' : '' }}">
@@ -1212,7 +1884,7 @@
                                     <line x1="9" y1="21" x2="9" y2="9"></line>
                                 </svg>
                             </span>
-                            <span>Manajemen Kuota</span>
+                            <span>{{ __('Manajemen Kuota') }}</span>
                         </a>
 
                         <a href="{{ route('admin.waiting-list.index') }}" class="nav-item-link {{ request()->routeIs('admin.waiting-list.*') ? 'active' : '' }}">
@@ -1222,7 +1894,7 @@
                                     <polyline points="12 6 12 12 16 14"></polyline>
                                 </svg>
                             </span>
-                            <span>Waiting List</span>
+                            <span>{{ __('Waiting List') }}</span>
                         </a>
 
                         <a href="{{ route('admin.penempatan.index') }}" class="nav-item-link {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">
@@ -1234,7 +1906,7 @@
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
                             </span>
-                            <span>Penempatan</span>
+                            <span>{{ __('Penempatan') }}</span>
                         </a>
 
                         <a href="{{ route('admin.laporan.index') }}" class="nav-item-link {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">
@@ -1247,8 +1919,69 @@
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
                             </span>
-                            <span>Laporan & Ekspor</span>
+                            <span>{!! __('Laporan & Ekspor') !!}</span>
                         </a>
+
+                        @if(\App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true))
+                        <a href="{{ route('admin.sertifikat.index') }}" class="nav-item-link {{ request()->routeIs('admin.sertifikat.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="8" r="7"></circle>
+                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                                </svg>
+                            </span>
+                            <span>{{ __('Sertifikat') }}</span>
+                        </a>
+                        @endif
+
+                        @if(\App\Support\Pengaturan::bool('fitur_survei_aktif', true))
+                        <a href="{{ route('admin.survei.index') }}" class="nav-item-link {{ request()->routeIs('admin.survei.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </span>
+                            <span>{{ __('Survei Kepuasan') }}</span>
+                        </a>
+                        @endif
+
+                        <span class="nav-section-label">{{ __('PENGATURAN') }}</span>
+
+                        <a href="{{ route('admin.profil.show') }}" class="nav-item-link {{ request()->routeIs('admin.profil.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </span>
+                            <span>{{ __('Profil Saya') }}</span>
+                        </a>
+
+                        <a href="{{ route('admin.pengaturan.index') }}" class="nav-item-link {{ request()->routeIs('admin.pengaturan.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                            </span>
+                            <span>{{ __('Pengaturan Akun') }}</span>
+                        </a>
+
+                        <!-- GRUP: MODUL KUSTOM DINAMIS (ADMIN) -->
+                        @if(isset($sidebarDynamicModules) && $sidebarDynamicModules->isNotEmpty())
+                            <span class="nav-section-label">{{ __('MODUL KUSTOM') }}</span>
+                            @foreach($sidebarDynamicModules as $customModul)
+                                <a href="{{ route('kustom-modul.index', ['slug' => $customModul->slug]) }}" class="nav-item-link {{ request()->is('kustom-modul/'.$customModul->slug.'*') ? 'active' : '' }}">
+                                    <span class="nav-item-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                        </svg>
+                                    </span>
+                                    <span>{{ $customModul->nama_modul }}</span>
+                                </a>
+                            @endforeach
+                        @endif
 
                     @elseif($userRole === 'superadmin')
                         <!-- NAVIGASI SUPERADMIN (Figma Node 560-24892 & PRD 9.2) -->
@@ -1261,14 +1994,14 @@
                                     <rect x="3" y="14" width="7" height="7"></rect>
                                 </svg>
                             </span>
-                            <span>Dashboard</span>
+                            <span>{{ __('Dashboard') }}</span>
                         </a>
 
                         <!-- GRUP 1: MODUL OPERASIONAL -->
-                        <span class="nav-section-label">MODUL OPERASIONAL</span>
+                        <span class="nav-section-label">{{ __('MODUL OPERASIONAL') }}</span>
 
                         @php
-                            $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*') || request()->routeIs('admin.kuota.*') || request()->routeIs('admin.waiting-list.*') || request()->routeIs('admin.penempatan.*') || request()->routeIs('admin.laporan.*');
+                            $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*') || request()->routeIs('admin.kuota.*') || request()->routeIs('admin.waiting-list.*') || request()->routeIs('admin.penempatan.*') || request()->routeIs('admin.laporan.*') || request()->routeIs('admin.sertifikat.*') || request()->routeIs('admin.survei.*');
                         @endphp
                         <div class="nav-group-container">
                             <button type="button" class="nav-group-btn {{ $isOperasionalAdminActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalAdminActive ? 'true' : 'false' }}">
@@ -1281,31 +2014,54 @@
                                             <line x1="15" y1="16" x2="15" y2="16.01"></line>
                                         </svg>
                                     </span>
-                                    <span>Administrasi</span>
+                                    <span>{{ __('Administrasi') }}</span>
                                 </span>
                                 <svg class="nav-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
                             </button>
                             <div class="nav-sub-menu {{ $isOperasionalAdminActive ? 'show' : '' }}">
-                                <a href="{{ route('admin.pendaftaran.index') }}" class="nav-sub-item {{ request()->routeIs('admin.pendaftaran.*') ? 'active' : '' }}">Verifikasi Berkas</a>
-                                <a href="{{ route('admin.kuota.index') }}" class="nav-sub-item {{ request()->routeIs('admin.kuota.*') ? 'active' : '' }}">Kuota Magang</a>
-                                <a href="{{ route('admin.waiting-list.index') }}" class="nav-sub-item {{ request()->routeIs('admin.waiting-list.*') ? 'active' : '' }}">Waiting List</a>
-                                <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">Penempatan</a>
-                                <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">Laporan & Ekspor</a>
+                                <a href="{{ route('admin.pendaftaran.index') }}" class="nav-sub-item {{ request()->routeIs('admin.pendaftaran.*') ? 'active' : '' }}">{{ __('Verifikasi Berkas') }}</a>
+                                <a href="{{ route('admin.kuota.index') }}" class="nav-sub-item {{ request()->routeIs('admin.kuota.*') ? 'active' : '' }}">{{ __('Kuota Magang') }}</a>
+                                <a href="{{ route('admin.waiting-list.index') }}" class="nav-sub-item {{ request()->routeIs('admin.waiting-list.*') ? 'active' : '' }}">{{ __('Waiting List') }}</a>
+                                <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">{{ __('Penempatan') }}</a>
+                                <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">{{ __('Laporan & Ekspor') }}</a>
+                                @if(\App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true))
+                                <a href="{{ route('admin.sertifikat.index') }}" class="nav-sub-item {{ request()->routeIs('admin.sertifikat.*') ? 'active' : '' }}">{{ __('Sertifikat') }}</a>
+                                @endif
+                                @if(\App\Support\Pengaturan::bool('fitur_survei_aktif', true))
+                                <a href="{{ route('admin.survei.index') }}" class="nav-sub-item {{ request()->routeIs('admin.survei.*') ? 'active' : '' }}">{{ __('Survei Kepuasan') }}</a>
+                                @endif
                             </div>
                         </div>
 
-                        <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                                    <path d="M9 14l2 2 4-4"></path>
+                        @php
+                            $isOperasionalPembimbingActive = request()->routeIs('pembimbing.*');
+                        @endphp
+                        <div class="nav-group-container">
+                            <button type="button" class="nav-group-btn {{ $isOperasionalPembimbingActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalPembimbingActive ? 'true' : 'false' }}">
+                                <span class="nav-group-btn-left">
+                                    <span class="nav-item-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                            <path d="M9 14l2 2 4-4"></path>
+                                        </svg>
+                                    </span>
+                                    <span>{{ __('Pembimbing') }}</span>
+                                </span>
+                                <svg class="nav-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
-                            </span>
-                            <span>Pembimbing</span>
-                        </a>
+                            </button>
+                            <div class="nav-sub-menu {{ $isOperasionalPembimbingActive ? 'show' : '' }}">
+                                <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.penilaian.*') ? 'active' : '' }}">{{ __('Penilaian Peserta') }}</a>
+                                <a href="{{ route('pembimbing.logbook.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">{{ __('Reviu Logbook') }}</a>
+                                <a href="{{ route('pembimbing.tugas.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.tugas.*') ? 'active' : '' }}">{{ __('Tugas Magang') }}</a>
+                                <a href="{{ route('pembimbing.agenda.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.agenda.*') ? 'active' : '' }}">{{ __('Agenda Bimbingan') }}</a>
+                                <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">{{ __('Laporan Kinerja') }}</a>
+                            </div>
+                        </div>
 
                         @php
                             $isOperasionalPesertaActive = request()->routeIs('superadmin.monitoring.*') || request()->routeIs('superadmin.arsip.*');
@@ -1321,20 +2077,20 @@
                                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                         </svg>
                                     </span>
-                                    <span>Peserta</span>
+                                    <span>{{ __('Peserta') }}</span>
                                 </span>
                                 <svg class="nav-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
                             </button>
                             <div class="nav-sub-menu {{ $isOperasionalPesertaActive ? 'show' : '' }}">
-                                <a href="{{ route('superadmin.monitoring.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.monitoring.*') ? 'active' : '' }}">Monitoring Peserta</a>
-                                <a href="{{ route('superadmin.arsip.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.arsip.*') ? 'active' : '' }}">Arsip Peserta</a>
+                                <a href="{{ route('superadmin.monitoring.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.monitoring.*') ? 'active' : '' }}">{{ __('Monitoring Peserta') }}</a>
+                                <a href="{{ route('superadmin.arsip.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.arsip.*') ? 'active' : '' }}">{{ __('Arsip Peserta') }}</a>
                             </div>
                         </div>
 
                         <!-- GRUP 2: SISTEM -->
-                        <span class="nav-section-label">SISTEM</span>
+                        <span class="nav-section-label">{{ __('SISTEM') }}</span>
 
                         <a href="{{ route('superadmin.staf.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.staf.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
@@ -1345,7 +2101,7 @@
                                     <line x1="23" y1="11" x2="17" y2="11"></line>
                                 </svg>
                             </span>
-                            <span>Pengguna<span class="sr-only"> / Manajemen Staf</span></span>
+                            <span>{{ __('Pengguna') }}<span class="sr-only"> / {{ __('Manajemen Staf') }}</span></span>
                         </a>
 
                         <a href="{{ route('superadmin.role.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.role.*') ? 'active' : '' }}">
@@ -1355,7 +2111,7 @@
                                     <polyline points="9 12 11 14 15 10"></polyline>
                                 </svg>
                             </span>
-                            <span>Role</span>
+                            <span>{{ __('Role') }}</span>
                         </a>
 
                         <a href="{{ route('superadmin.rubrik.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.rubrik.*') ? 'active' : '' }}">
@@ -1364,7 +2120,7 @@
                                     <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                 </svg>
                             </span>
-                            <span>Rubrik</span>
+                            <span>{{ __('Rubrik') }}</span>
                             <span class="sr-only">Rubrik Nilai</span>
                         </a>
 
@@ -1378,8 +2134,30 @@
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
                             </span>
-                            <span>Audit Log</span>
-                            <span class="sr-only">Jejak Audit Log</span>
+                            <span>{{ __('Audit Log (15 Kanal)') }}</span>
+                            <span class="sr-only">Jejak Audit Log Multi Kanal</span>
+                        </a>
+
+                        <a href="{{ route('superadmin.health.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.health.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                            </span>
+                            <span>{{ __('Telemetri Kesehatan') }}</span>
+                            <span class="sr-only">Kesehatan Infrastruktur</span>
+                        </a>
+
+                        <a href="{{ route('superadmin.modul-builder.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.modul-builder.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                    <polyline points="2 17 12 22 22 17"></polyline>
+                                    <polyline points="2 12 12 17 22 12"></polyline>
+                                </svg>
+                            </span>
+                            <span>{{ __('Pembuat Modul') }}</span>
+                            <span class="sr-only">Low-Code Module Builder</span>
                         </a>
 
                         @php
@@ -1394,20 +2172,59 @@
                                             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                                         </svg>
                                     </span>
-                                    <span>Konfigurasi</span>
+                                    <span>{{ __('Konfigurasi') }}</span>
                                 </span>
                                 <svg class="nav-group-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
                             </button>
                             <div class="nav-sub-menu {{ $isConfigActive ? 'show' : '' }}">
-                                <a href="{{ route('superadmin.pengaturan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.pengaturan.*') ? 'active' : '' }}">Pengaturan Sistem</a>
-                                <a href="{{ route('superadmin.bulan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bulan.*') ? 'active' : '' }}">Bulan Magang</a>
-                                <a href="{{ route('superadmin.slot-khusus.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.slot-khusus.*') ? 'active' : '' }}">Slot Khusus</a>
-                                <a href="{{ route('superadmin.jurusan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.jurusan.*') ? 'active' : '' }}">Master Jurusan</a>
-                                <a href="{{ route('superadmin.bidang.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bidang.*') ? 'active' : '' }}">Bidang Dinas</a>
+                                <a href="{{ route('superadmin.pengaturan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.pengaturan.*') ? 'active' : '' }}">{{ __('Pengaturan Sistem') }}</a>
+                                <a href="{{ route('superadmin.bulan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bulan.*') ? 'active' : '' }}">{{ __('Bulan Magang') }}</a>
+                                <a href="{{ route('superadmin.slot-khusus.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.slot-khusus.*') ? 'active' : '' }}">{{ __('Slot Khusus') }}</a>
+                                <a href="{{ route('superadmin.jurusan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.jurusan.*') ? 'active' : '' }}">{{ __('Master Jurusan') }}</a>
+                                <a href="{{ route('superadmin.bidang.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bidang.*') ? 'active' : '' }}">{{ __('Bidang Dinas') }}</a>
                             </div>
                         </div>
+
+                        <!-- GRUP: MODUL KUSTOM DINAMIS -->
+                        @if(isset($sidebarDynamicModules) && $sidebarDynamicModules->isNotEmpty())
+                            <span class="nav-section-label">{{ __('MODUL KUSTOM') }}</span>
+                            @foreach($sidebarDynamicModules as $customModul)
+                                <a href="{{ route('superadmin.modul.index', ['slug' => $customModul->slug]) }}" class="nav-item-link {{ request()->is('superadmin/modul/'.$customModul->slug.'*') || request()->is('kustom-modul/'.$customModul->slug.'*') ? 'active' : '' }}">
+                                    <span class="nav-item-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                        </svg>
+                                    </span>
+                                    <span>{{ $customModul->nama_modul }}</span>
+                                </a>
+                            @endforeach
+                        @endif
+
+                        <!-- GRUP 3: AKUN & PROFIL PRIBADI -->
+                        <span class="nav-section-label">{{ __('AKUN PRIBADI') }}</span>
+
+                        <a href="{{ route('superadmin.profil.show') }}" class="nav-item-link {{ request()->routeIs('superadmin.profil.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </span>
+                            <span>{{ __('Profil Saya') }}</span>
+                        </a>
+
+                        <a href="{{ route('superadmin.akun.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.akun.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                        </svg>
+                            </span>
+                            <span>{{ __('Akun & Preferensi') }}</span>
+                        </a>
                     @endif
                 </nav>
             </div>
@@ -1439,12 +2256,12 @@
 
                     <!-- Breadcrumb Trail -->
                     <nav class="breadcrumb-trail" aria-label="Breadcrumb">
-                        <a href="{{ route('landing') }}">Beranda</a>
+                        <a href="{{ route('landing') }}">{{ __('Beranda') }}</a>
                         <span class="breadcrumb-separator">/</span>
                         @hasSection('breadcrumbs')
                             @yield('breadcrumbs')
                         @else
-                            <span class="breadcrumb-current">Dashboard</span>
+                            <span class="breadcrumb-current">{{ __('Dashboard') }}</span>
                         @endif
                     </nav>
                 </div>
@@ -1452,8 +2269,12 @@
                 <!-- Topbar Menu Pengguna -->
                 <div class="topbar-right">
                     <button type="button" id="userMenuBtn" class="user-menu-trigger" onclick="toggleUserMenu()" aria-expanded="false" aria-haspopup="true">
-                        <div class="user-avatar">
-                            {{ strtoupper(substr($currentUser?->nama ?? 'U', 0, 1)) }}
+                        <div class="user-avatar" style="overflow: hidden; padding: 0;">
+                            @if($currentUser?->foto_url)
+                                <img src="{{ $currentUser->foto_url }}" alt="{{ $currentUser->nama }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                {{ strtoupper(substr($currentUser?->nama ?? 'U', 0, 1)) }}
+                            @endif
                         </div>
                         <div class="user-meta-wrap">
                             <span class="user-name-text">{{ $currentUser?->nama ?? 'Pengguna' }}</span>
@@ -1476,6 +2297,58 @@
                                 </svg>
                                 <span>Profil Saya</span>
                             </a>
+                            <a href="{{ route('peserta.pengaturan.index') }}" class="dropdown-item-link" role="menuitem">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                                <span>Pengaturan Akun</span>
+                            </a>
+                        @elseif($userRole === 'admin')
+                            <a href="{{ route('admin.profil.show') }}" class="dropdown-item-link" role="menuitem">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <span>Profil Saya</span>
+                            </a>
+                            <a href="{{ route('admin.pengaturan.index') }}" class="dropdown-item-link" role="menuitem">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                                <span>Pengaturan Akun</span>
+                            </a>
+                        @elseif($userRole === 'pembimbing')
+                            <a href="{{ route('pembimbing.profil.show') }}" class="dropdown-item-link" role="menuitem">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <span>Profil Saya</span>
+                            </a>
+                            <a href="{{ route('pembimbing.pengaturan.index') }}" class="dropdown-item-link" role="menuitem">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                                <span>{{ __('Pengaturan Akun') }}</span>
+                            </a>
+                        @elseif($userRole === 'superadmin')
+                            <a href="{{ route('superadmin.profil.show') }}" class="dropdown-item-link" role="menuitem">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <span>{{ __('Profil Saya') }}</span>
+                            </a>
+                            <a href="{{ route('superadmin.akun.index') }}" class="dropdown-item-link" role="menuitem">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                                <span>{{ __('Akun & Preferensi') }}</span>
+                            </a>
                         @endif
 
                         <a href="{{ route('landing') }}" class="dropdown-item-link" role="menuitem">
@@ -1483,7 +2356,7 @@
                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
                             </svg>
-                            <span>Ke Beranda Publik</span>
+                            <span>{{ __('Ke Beranda Publik') }}</span>
                         </a>
 
                         <div class="dropdown-divider"></div>
@@ -1497,7 +2370,7 @@
                                     <polyline points="16 17 21 12 16 7"></polyline>
                                     <line x1="21" y1="12" x2="9" y2="12"></line>
                                 </svg>
-                                <span>Keluar (Logout)</span>
+                                <span>{{ __('Keluar (Logout)') }}</span>
                             </button>
                         </form>
                     </div>
@@ -1510,76 +2383,7 @@
                      GLOBAL FLASH ALERTS
                      ===================================================================== -->
                 <div class="alerts-container">
-                    @if(session('success'))
-                        <div class="app-alert alert-success" role="alert">
-                            <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                            </svg>
-                            <div class="alert-body">
-                                <div class="alert-title">Berhasil</div>
-                                <div>{{ session('success') }}</div>
-                            </div>
-                            <button type="button" class="alert-close-btn" onclick="this.closest('.app-alert').remove()" aria-label="Tutup pesan">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
-                        </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="app-alert alert-error" role="alert">
-                            <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="15" y1="9" x2="9" y2="15"></line>
-                                <line x1="9" y1="9" x2="15" y2="15"></line>
-                            </svg>
-                            <div class="alert-body">
-                                <div class="alert-title">Perhatian</div>
-                                <div>{{ session('error') }}</div>
-                            </div>
-                            <button type="button" class="alert-close-btn" onclick="this.closest('.app-alert').remove()" aria-label="Tutup pesan">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
-                        </div>
-                    @endif
-
-                    @if(session('warning'))
-                        <div class="app-alert alert-warning" role="alert">
-                            <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
-                                <line x1="12" y1="9" x2="12" y2="13"></line>
-                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                            </svg>
-                            <div class="alert-body">
-                                <div class="alert-title">Peringatan</div>
-                                <div>{{ session('warning') }}</div>
-                            </div>
-                            <button type="button" class="alert-close-btn" onclick="this.closest('.app-alert').remove()" aria-label="Tutup pesan">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
-                        </div>
-                    @endif
-
-                    @if(isset($errors) && $errors->any())
-                        <div class="app-alert alert-error" role="alert">
-                            <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                            <div class="alert-body">
-                                <div class="alert-title">Terdapat Kesalahan Pengisian:</div>
-                                <ul style="margin: 0.25rem 0 0 1.25rem; padding: 0;">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <button type="button" class="alert-close-btn" onclick="this.closest('.app-alert').remove()" aria-label="Tutup pesan">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
-                        </div>
-                    @endif
+                    <x-flash-alert />
                 </div>
 
                 <!-- =====================================================================
@@ -1711,9 +2515,125 @@
                 }
             }
         });
+
+        // Theme Switcher Engine Global
+        window.applyPortalTheme = function(theme) {
+            let effective = 'light';
+            if (theme === 'sistem') {
+                effective = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            } else if (theme === 'gelap') {
+                effective = 'dark';
+            } else {
+                effective = 'light';
+            }
+            document.documentElement.setAttribute('data-theme', effective);
+            document.documentElement.setAttribute('data-pref-theme', theme);
+            try {
+                localStorage.setItem('magkom_theme', theme);
+            } catch (e) {}
+        };
+
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                const currentPref = document.documentElement.getAttribute('data-pref-theme') || localStorage.getItem('magkom_theme');
+                if (currentPref === 'sistem') {
+                    document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                }
+            });
+        }
+
+        // Floating Toast / Alert Dismiss Logic
+        function dismissToast(btn) {
+            const toast = btn.closest('.app-alert') || btn.closest('.app-toast');
+            if (!toast) return;
+            toast.classList.add('toast-hiding');
+            setTimeout(() => toast.remove(), 300);
+        }
+
+        // Global MagKomToast helper API for JS triggers
+        window.MagKomToast = {
+            show({ type = 'success', title = '', message = '', duration = 5000 }) {
+                let container = document.querySelector('.alerts-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.className = 'alerts-container';
+                    const mainContent = document.getElementById('mainContent') || document.body;
+                    mainContent.insertBefore(container, mainContent.firstChild);
+                }
+                const toast = document.createElement('div');
+                toast.className = `app-toast app-alert alert-${type === 'error' ? 'error alert-danger' : type}`;
+                toast.setAttribute('role', 'alert');
+
+                let iconSvg = '';
+                if (type === 'success') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>';
+                } else if (type === 'warning') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+                } else if (type === 'info') {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+                } else {
+                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+                }
+
+                toast.innerHTML = `
+                    <div class="toast-icon-badge alert-icon-badge ${type}">${iconSvg}</div>
+                    <div class="toast-content alert-body">
+                        ${title ? `<div class="toast-title alert-title">${title}</div>` : ''}
+                        <div class="toast-desc alert-desc">${message}</div>
+                    </div>
+                    <button type="button" class="toast-close-btn alert-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                `;
+
+                container.appendChild(toast);
+
+                if (duration > 0) {
+                    let timer = setTimeout(() => {
+                        toast.classList.add('toast-hiding');
+                        setTimeout(() => toast.remove(), 300);
+                    }, duration);
+
+                    toast.addEventListener('mouseenter', () => clearTimeout(timer));
+                    toast.addEventListener('mouseleave', () => {
+                        timer = setTimeout(() => {
+                            toast.classList.add('toast-hiding');
+                            setTimeout(() => toast.remove(), 300);
+                        }, 2500);
+                    });
+                }
+            },
+            success(title, message) { this.show({ type: 'success', title, message }); },
+            error(title, message) { this.show({ type: 'error', title, message }); },
+            warning(title, message) { this.show({ type: 'warning', title, message }); },
+            info(title, message) { this.show({ type: 'info', title, message }); }
+        };
+
+        // Auto dismiss alert toast after 5s with pause on hover
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alerts-container .app-alert, .alerts-container .app-toast');
+            alerts.forEach(alert => {
+                let timer = setTimeout(() => {
+                    alert.classList.add('toast-hiding');
+                    setTimeout(() => alert.remove(), 300);
+                }, 5000);
+
+                alert.addEventListener('mouseenter', () => clearTimeout(timer));
+                alert.addEventListener('mouseleave', () => {
+                    timer = setTimeout(() => {
+                        alert.classList.add('toast-hiding');
+                        setTimeout(() => alert.remove(), 300);
+                    }, 3000);
+                });
+            });
+        });
     </script>
 
     @yield('scripts')
     @stack('scripts')
+    <x-sse-toast-listener />
 </body>
 </html>

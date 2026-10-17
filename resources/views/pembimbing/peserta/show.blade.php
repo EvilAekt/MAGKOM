@@ -151,6 +151,130 @@
 
     </div>
 
+    {{-- VISUALISASI ANALITIK PROGRES MENTEE (B9) --}}
+    @php
+        $totTugas = max(1, $tugasStats['total'] ?? 1);
+        $pSelesai = round((($tugasStats['selesai'] ?? 0) / $totTugas) * 100);
+        $pProgres = round((($tugasStats['dalam_pengerjaan'] ?? 0) / $totTugas) * 100);
+        $pBelum = round((($tugasStats['belum_dimulai'] ?? 0) / $totTugas) * 100);
+        $pTelat = round((($tugasStats['terlambat'] ?? 0) / $totTugas) * 100);
+
+        $deg1 = round(($pSelesai / 100) * 360);
+        $deg2 = $deg1 + round(($pProgres / 100) * 360);
+        $deg3 = $deg2 + round(($pBelum / 100) * 360);
+    @endphp
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem;">
+        
+        {{-- Card Donut Chart: Komposisi Tugas --}}
+        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 10 10h-10z"></path></svg>
+                    <span>Komposisi &amp; Rasio Tugas Peserta</span>
+                </h3>
+                <span style="font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 9999px; background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE;">
+                    Tingkat Selesai: {{ $completionRate }}%
+                </span>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 1.5rem;">
+                {{-- CSS Donut Chart --}}
+                <div style="position: relative; width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(#10B981 0deg {{ $deg1 }}deg, #2563EB {{ $deg1 }}deg {{ $deg2 }}deg, #CBD5E1 {{ $deg2 }}deg {{ $deg3 }}deg, #EF4444 {{ $deg3 }}deg 360deg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);">
+                    <div style="width: 90px; height: 90px; border-radius: 50%; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                        <span style="font-size: 1.35rem; font-weight: 800; color: var(--neutral-900); line-height: 1;">{{ $tugasStats['selesai'] ?? 0 }}/{{ $tugasStats['total'] ?? 0 }}</span>
+                        <span style="font-size: 0.6875rem; font-weight: 600; color: var(--neutral-500); text-transform: uppercase;">Selesai</span>
+                    </div>
+                </div>
+
+                {{-- Legends --}}
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; min-width: 160px; font-size: 0.8125rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+                        <span style="display: flex; align-items: center; gap: 0.4rem;">
+                            <span style="width: 10px; height: 10px; border-radius: 3px; background: #10B981; display: inline-block;"></span>
+                            <span style="color: var(--neutral-700);">Selesai</span>
+                        </span>
+                        <span style="font-weight: 700; color: var(--neutral-900);">{{ $tugasStats['selesai'] ?? 0 }} ({{ $pSelesai }}%)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+                        <span style="display: flex; align-items: center; gap: 0.4rem;">
+                            <span style="width: 10px; height: 10px; border-radius: 3px; background: #2563EB; display: inline-block;"></span>
+                            <span style="color: var(--neutral-700);">Dikerjakan</span>
+                        </span>
+                        <span style="font-weight: 700; color: var(--neutral-900);">{{ $tugasStats['dalam_pengerjaan'] ?? 0 }} ({{ $pProgres }}%)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+                        <span style="display: flex; align-items: center; gap: 0.4rem;">
+                            <span style="width: 10px; height: 10px; border-radius: 3px; background: #CBD5E1; display: inline-block;"></span>
+                            <span style="color: var(--neutral-700);">Belum Mulai</span>
+                        </span>
+                        <span style="font-weight: 700; color: var(--neutral-900);">{{ $tugasStats['belum_dimulai'] ?? 0 }} ({{ $pBelum }}%)</span>
+                    </div>
+                    @if(($tugasStats['terlambat'] ?? 0) > 0)
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+                            <span style="display: flex; align-items: center; gap: 0.4rem;">
+                                <span style="width: 10px; height: 10px; border-radius: 3px; background: #EF4444; display: inline-block;"></span>
+                                <span style="color: #DC2626; font-weight: 600;">Terlambat</span>
+                            </span>
+                            <span style="font-weight: 700; color: #DC2626;">{{ $tugasStats['terlambat'] }} tugas</span>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        {{-- Card Bar Chart: Timeline Logbook Mingguan --}}
+        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+                    <span>Pelacakan Mingguan Logbook Magang</span>
+                </h3>
+                <span style="font-size: 0.75rem; color: var(--neutral-500); font-weight: 600;">
+                    Target: 12 Minggu
+                </span>
+            </div>
+
+            <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 0.4rem; height: 110px; padding: 0.5rem 0.25rem 0.25rem 0.25rem; border-bottom: 2px solid var(--neutral-200); margin-bottom: 0.5rem;">
+                @foreach($logbookPerMinggu ?? [] as $minggu)
+                    @php
+                        $st = $minggu['status'];
+                        $barHeight = match($st) {
+                            'disetujui' => '90px',
+                            'terkirim' => '70px',
+                            'perlu_revisi' => '45px',
+                            'mendatang' => '15px',
+                            default => '25px',
+                        };
+                        $barBg = match($st) {
+                            'disetujui' => '#10B981',
+                            'terkirim' => '#F59E0B',
+                            'perlu_revisi' => '#EF4444',
+                            'mendatang' => '#F1F5F9',
+                            default => '#E2E8F0',
+                        };
+                    @endphp
+                    <div style="display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 18px;" title="Minggu ke-{{ $minggu['minggu_ke'] }}: {{ ucfirst(str_replace('_', ' ', $st)) }}">
+                        <div style="width: 100%; max-width: 22px; height: {{ $barHeight }}; background: {{ $barBg }}; border-radius: 4px 4px 0 0; transition: all 0.2s ease;"></div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--neutral-500); padding: 0 0.25rem;">
+                @foreach($logbookPerMinggu ?? [] as $minggu)
+                    <span style="flex: 1; text-align: center; font-weight: {{ $minggu['is_aktif'] ? '800; color: #0641CC;' : '600;' }}">M{{ $minggu['minggu_ke'] }}</span>
+                @endforeach
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 0.85rem; font-size: 0.72rem; color: var(--neutral-600); justify-content: center; flex-wrap: wrap;">
+                <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #10B981;"></span> Disetujui</span>
+                <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #F59E0B;"></span> Menunggu Review</span>
+                <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #EF4444;"></span> Perlu Revisi</span>
+                <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #E2E8F0;"></span> Belum Terisi</span>
+            </div>
+        </div>
+
+    </div>
+
     <!-- Rincian Data Diri & Timeline Magang -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
         

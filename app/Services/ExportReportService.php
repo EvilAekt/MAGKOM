@@ -38,7 +38,7 @@ class ExportReportService
             return '';
         }
 
-        $karakterBerbahaya = ['=', '+', '-', '@'];
+        $karakterBerbahaya = ['=', '+', '-', '@', "\t", "\r"];
         if (in_array($str[0], $karakterBerbahaya, true)) {
             return "'" . $str;
         }

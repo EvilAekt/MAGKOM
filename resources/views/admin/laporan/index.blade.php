@@ -11,6 +11,110 @@
 @section('content')
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
+    @push('styles')
+    <style>
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] div[style*="background: #F0F4FF"] {
+            background: rgba(37, 99, 235, 0.15) !important;
+            border-color: #26354D !important;
+        }
+        [data-theme="dark"] div[style*="background: #F0FDF4"] {
+            background: rgba(16, 185, 129, 0.15) !important;
+            border-color: #26354D !important;
+        }
+        [data-theme="dark"] div[style*="background: #FAF5FF"] {
+            background: rgba(147, 51, 234, 0.15) !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3,
+        [data-theme="dark"] h4 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] span[style*="color: var(--neutral-800)"],
+        [data-theme="dark"] strong[style*="color: var(--neutral-900)"],
+        [data-theme="dark"] div[style*="color: var(--neutral-800)"],
+        [data-theme="dark"] td[style*="color: var(--neutral-800)"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] p[style*="color: var(--neutral-600)"],
+        [data-theme="dark"] span[style*="color: var(--neutral-600)"],
+        [data-theme="dark"] small[style*="color: var(--neutral-600)"],
+        [data-theme="dark"] div[style*="color: var(--neutral-600)"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] select,
+        [data-theme="dark"] input[type="text"],
+        [data-theme="dark"] input[type="date"] {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] table thead tr {
+            background: #0E1726 !important;
+            border-bottom-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] table tbody tr {
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] table tbody td {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] table tbody tr:hover {
+            background: #162238 !important;
+        }
+
+        [data-theme="dark"] a[style*="background: transparent"][style*="color: var(--neutral-700)"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] a[style*="background: transparent"][style*="color: var(--neutral-700)"]:hover {
+            background: #162238 !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] a[style*="background: #ffffff"],
+        [data-theme="dark"] a[style*="background: var(--neutral-0)"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] a[style*="background: #ffffff"]:hover,
+        [data-theme="dark"] a[style*="background: var(--neutral-0)"]:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"] {
+            border-top-color: #26354D !important;
+        }
+    </style>
+    @endpush
+
     <!-- 1. SUMMARY METRICS CARDS -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
         <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
@@ -229,11 +333,13 @@
             </a>
         @endif
 
+        @if(\App\Support\Pengaturan::bool('fitur_analitik_aktif', true))
         <a href="{{ route('admin.laporan.tahunan') }}"
            style="flex: 1; min-width: 170px; padding: 0.625rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 700; text-align: center; transition: all 0.15s; background: transparent; color: var(--blue-700); border: 1px dashed var(--blue-400); display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
             <span>Analitik Tahunan</span>
         </a>
+        @endif
     </div>
 
     <!-- 3. TAB 1: REKAP PENDAFTARAN -->

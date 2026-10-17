@@ -76,6 +76,14 @@ class Pendaftaran extends Model
     }
 
     /**
+     * Accessor kompatibilitas alias untuk waktu keputusan / verifikasi berkas.
+     */
+    public function getVerifikasiAtAttribute(): mixed
+    {
+        return $this->diputuskan_at;
+    }
+
+    /**
      * Scope pendaftaran yang masih aktif (BR-17).
      * Pendaftaran dianggap aktif jika statusnya belum final (bukan ditolak).
      */

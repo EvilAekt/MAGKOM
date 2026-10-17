@@ -131,10 +131,12 @@ BLADE;
             // Menu Pembimbing
             $response->assertSee('Tugas Peserta');
             $response->assertSee('Reviu Logbook');
-            $response->assertSee('Penilaian Magang');
+            // Menu Profil & Pengaturan Pembimbing
+            $response->assertSee('Profil Saya');
+            $response->assertSee('Pengaturan Akun');
 
             // Tidak boleh ada menu Peserta/SuperAdmin
-            $response->assertDontSee('Profil Saya');
+            $response->assertDontSee('Pendaftaran Magang');
             $response->assertDontSee('Manajemen Staf');
             $response->assertDontSee('Jejak Audit Log');
         } finally {

@@ -54,6 +54,30 @@ class Pengaturan extends Model
     }
 
     /**
+     * Mengambil nilai sebagai boolean.
+     */
+    public static function getBool(string $kunci, bool $default = false): bool
+    {
+        $val = self::getNilai($kunci);
+        if ($val === null) {
+            return $default;
+        }
+
+        return in_array(strtolower((string) $val), ['1', 'true', 'on', 'yes'], true);
+    }
+
+    /**
+     * Menyimpan atau memperbarui nilai pengaturan.
+     */
+    public static function setNilai(string $kunci, string $nilai): void
+    {
+        self::updateOrCreate(
+            ['kunci' => $kunci],
+            ['nilai' => $nilai]
+        );
+    }
+
+    /**
      * Mengambil nilai JSON sebagai array.
      *
      * @return array<string, mixed>

@@ -29,6 +29,10 @@ class AnalitikTahunanController extends Controller
      */
     public function index(Request $request): View
     {
+        if (! \App\Support\Pengaturan::bool('fitur_analitik_aktif', true)) {
+            abort(404, 'Fitur analitik tahunan saat ini dinonaktifkan oleh administrator.');
+        }
+
         $tahun = (int) ($request->input('tahun') ?? date('Y'));
         $data = $this->hitungMetrikTahunan($tahun, $request->user());
 
@@ -45,6 +49,10 @@ class AnalitikTahunanController extends Controller
      */
     public function export(Request $request, ExportReportService $exportService, AuditService $auditService): StreamedResponse
     {
+        if (! \App\Support\Pengaturan::bool('fitur_analitik_aktif', true)) {
+            abort(404, 'Fitur analitik tahunan saat ini dinonaktifkan oleh administrator.');
+        }
+
         $tahun = (int) ($request->input('tahun') ?? date('Y'));
         $user = $request->user();
         $canViewNilai = $user->role === RoleEnum::SuperAdmin;

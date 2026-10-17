@@ -50,6 +50,14 @@ class Penilaian extends Model
         return $this->hasMany(PenilaianRiwayat::class, 'penilaian_id')->latest('waktu');
     }
 
+    /**
+     * Alias untuk relasi riwayat (tunggal) agar kompatibel dengan pemanggilan singular.
+     */
+    public function riwayat(): HasMany
+    {
+        return $this->riwayats();
+    }
+
     public function isFinal(): bool
     {
         return $this->status === StatusPenilaianEnum::Final;

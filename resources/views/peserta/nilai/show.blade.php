@@ -62,6 +62,46 @@
         font-weight: 700;
         font-size: 15px;
     }
+
+    /* Dark Mode Harmonization */
+    [data-theme="dark"] .nilai-summary-card {
+        background: linear-gradient(135deg, #1E3A8A 0%, #172554 100%) !important;
+        border: 1px solid rgba(59, 130, 246, 0.3) !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    [data-theme="dark"] .nilai-summary-card .btn-unduh-nilai {
+        background: #182234 !important;
+        color: #60A5FA !important;
+        border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    }
+
+    [data-theme="dark"] .nilai-summary-card .btn-unduh-nilai:hover {
+        background: #1E293B !important;
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] .table th {
+        background: #0F172A !important;
+        color: #94A3B8 !important;
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .table td {
+        border-bottom-color: #26354D !important;
+        color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .table tr.total-row td {
+        background: #111C2E !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .catatan-pembimbing-box {
+        background: #0F172A !important;
+        border-left-color: #3B82F6 !important;
+        color: #E2E8F0 !important;
+    }
 </style>
 @endpush
 
@@ -116,7 +156,7 @@
                     </div>
                 </div>
 
-                <a href="{{ route('peserta.nilai.unduh') }}" class="btn" style="background: #ffffff; color: var(--blue-700); height: 44px; padding: 0 20px; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <a href="{{ route('peserta.nilai.unduh') }}" class="btn btn-unduh-nilai" style="background: #ffffff; color: var(--blue-700); height: 44px; padding: 0 20px; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                     </svg>
@@ -150,21 +190,23 @@
                         @endphp
                         @forelse($penilaian->details as $index => $detail)
                             @php
-                                $totalBobot += $detail->bobot;
-                                $terbobot = ($detail->skor * $detail->bobot) / 100;
+                                $bobot = $detail->bobot_snapshot ?? $detail->bobot ?? $detail->rubrik?->bobot ?? 0;
+                                $totalBobot += $bobot;
+                                $terbobot = ($detail->skor * $bobot) / 100;
                                 $totalTertimbang += $terbobot;
+                                $kriteria = $detail->rubrik?->kriteria ?? $detail->rubrik?->nama_kriteria ?? ('Kriteria Penilaian ' . ($index + 1));
                             @endphp
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>
-                                    <strong>{{ $detail->rubrik?->nama_kriteria ?? 'Kriteria Penilaian ' . ($index + 1) }}</strong>
+                                    <strong>{{ $kriteria }}</strong>
                                     @if($detail->rubrik?->deskripsi)
                                         <div style="font-size: 12px; color: var(--neutral-600); margin-top: 2px;">
                                             {{ $detail->rubrik->deskripsi }}
                                         </div>
                                     @endif
                                 </td>
-                                <td style="text-align: center;">{{ $detail->bobot }}%</td>
+                                <td style="text-align: center;">{{ $bobot }}%</td>
                                 <td style="text-align: center; font-weight: 700;">{{ number_format($detail->skor, 1) }}</td>
                                 <td style="text-align: right; font-weight: 600; color: var(--blue-700);">
                                     {{ number_format($terbobot, 2) }}
@@ -198,7 +240,7 @@
                 <h4 style="font-size: 14px; font-weight: 700; color: var(--neutral-700); text-transform: uppercase; margin-bottom: 8px;">
                     Catatan & Ulasan Pembimbing Lapangan:
                 </h4>
-                <div style="font-size: 14px; color: var(--neutral-800); line-height: 1.6; white-space: pre-line; padding: 14px; background: var(--neutral-100); border-radius: var(--radius-default); border-left: 3px solid var(--blue-600);">
+                <div class="catatan-pembimbing-box" style="font-size: 14px; color: var(--neutral-800); line-height: 1.6; white-space: pre-line; padding: 14px; background: var(--neutral-100); border-radius: var(--radius-default); border-left: 3px solid var(--blue-600);">
                     {{ $penilaian->catatan }}
                 </div>
             </div>

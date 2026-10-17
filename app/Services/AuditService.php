@@ -88,13 +88,17 @@ class AuditService
         ?array $nilaiLama = null,
         ?array $nilaiBaru = null,
         ?array $detail = null,
-        User|int|null $user = null
+        User|int|null $user = null,
+        ?string $channel = null,
+        ?string $severity = null
     ): AuditLog {
         $userId = $user instanceof User ? $user->id : ($user ?? Auth::id());
 
         return $this->simpan([
             'user_id' => $userId,
             'tipe' => $tipe,
+            'channel' => $channel,
+            'severity' => $severity,
             'aksi' => $detail['aksi'] ?? "mutasi.{$tabel}",
             'entitas' => $tabel,
             'entitas_id' => $idData,
@@ -212,7 +216,7 @@ class AuditService
     }
 
     /**
-     * Eksekusi insert log ke database.
+     * Eksekusi insert log ke database dengan resolusi channel & severity otomatis.
      *
      * @param array<string, mixed> $data
      */
@@ -229,13 +233,95 @@ class AuditService
         $rute = $request instanceof Request ? $request->path() : 'console';
         $userAgent = $request instanceof Request ? substr((string) $request->userAgent(), 0, 255) : 'Artisan CLI';
 
+        $channel = !empty($data['channel']) ? (string) $data['channel'] : $this->resolveChannel(
+            $data['entitas'] ?? null,
+            (string) ($data['aksi'] ?? ''),
+            $data['detail'] ?? null
+        );
+
+        $severity = !empty($data['severity']) ? (string) $data['severity'] : $this->resolveSeverity(
+            (string) ($data['aksi'] ?? ''),
+            (int) ($data['status_http'] ?? 200)
+        );
+
+        $data['channel'] = $channel;
+        $data['severity'] = $severity;
+
         return AuditLog::create(array_merge([
-            'request_id' => $requestId,
-            'metode' => $metode,
-            'rute' => $rute,
-            'ip' => $ip,
-            'user_agent' => $userAgent,
-            'waktu' => now('Asia/Jakarta'),
+            'request_id'  => $requestId,
+            'channel'     => $channel,
+            'severity'    => $severity,
+            'metode'      => $metode,
+            'rute'        => $rute,
+            'ip'          => $ip,
+            'user_agent'  => $userAgent,
+            'waktu'       => now('Asia/Jakarta'),
         ], $data));
+    }
+
+    /**
+     * Resolusi otomatis kanal log berdasarkan entitas dan aksi.
+     */
+    public function resolveChannel(?string $entitas, string $aksi, ?array $detail = null): string
+    {
+        $text = strtolower($entitas . ' ' . $aksi . ' ' . ($detail['aksi'] ?? ''));
+
+        if (str_contains($text, 'login') || str_contains($text, 'logout') || str_contains($text, 'password') || $entitas === 'password_resets') {
+            return 'auth-session';
+        }
+        if ($entitas === 'users' || $entitas === 'roles' || str_contains($text, 'staf') || str_contains($text, 'role')) {
+            return 'user-management';
+        }
+        if (str_contains($text, 'verifikasi') || str_contains($text, 'setujui') || str_contains($text, 'tolak') || str_contains($text, 'waiting')) {
+            return 'verifikasi-admin';
+        }
+        if ($entitas === 'pendaftaran' || $entitas === 'dokumen' || str_contains($text, 'pendaftaran') || str_contains($text, 'berkas')) {
+            return 'pendaftaran';
+        }
+        if ($entitas === 'penempatan' || str_contains($text, 'pembimbing') || str_contains($text, 'mentor') || str_contains($text, 'reassign')) {
+            return 'penempatan-mentor';
+        }
+        if ($entitas === 'bulan_magang' || $entitas === 'kuota' || $entitas === 'slot_khusus' || str_contains($text, 'kuota') || str_contains($text, 'bulan')) {
+            return 'kuota-periode';
+        }
+        if ($entitas === 'tugas' || $entitas === 'tugas_template' || str_contains($text, 'tugas') || str_contains($text, 'classroom')) {
+            return 'tugas-classroom';
+        }
+        if ($entitas === 'logbook' || $entitas === 'progres_log' || str_contains($text, 'logbook') || str_contains($text, 'presensi')) {
+            return 'logbook-presensi';
+        }
+        if ($entitas === 'penilaian' || $entitas === 'sertifikat' || str_contains($text, 'nilai') || str_contains($text, 'sk') || str_contains($text, 'sertifikat')) {
+            return 'penilaian-sk';
+        }
+        if ($entitas === 'survei' || $entitas === 'survei_kepuasan' || str_contains($text, 'survei') || str_contains($text, 'evaluasi')) {
+            return 'survei-evaluasi';
+        }
+        if (str_starts_with((string) $entitas, 'modul_dinamis') || str_starts_with((string) $entitas, 'modul_data') || str_contains($text, 'modul')) {
+            return 'dynamic-module';
+        }
+        if (str_contains($text, 'backup') || str_contains($text, 'snapshot') || str_contains($text, 'database')) {
+            return 'backup-database';
+        }
+        if (str_contains($text, 'pengaturan') || $entitas === 'jurusan' || $entitas === 'bidang' || $entitas === 'rubrik') {
+            return 'konfigurasi-master';
+        }
+
+        return 'security-alert';
+    }
+
+    /**
+     * Resolusi severity level (info, success, warning, alert).
+     */
+    public function resolveSeverity(string $aksi, int $statusHttp = 200): string
+    {
+        $text = strtolower($aksi);
+
+        if ($statusHttp >= 400 || str_contains($text, 'gagal') || str_contains($text, 'lockout') || str_contains($text, 'tolak') || str_contains($text, 'forbidden') || str_contains($text, 'batal')) {
+            return $statusHttp === 403 || str_contains($text, 'lockout') ? 'alert' : 'warning';
+        }
+        if (str_contains($text, 'berhasil') || str_contains($text, 'setujui') || str_contains($text, 'sukses') || str_contains($text, 'diterima') || str_contains($text, 'selesai')) {
+            return 'success';
+        }
+        return 'info';
     }
 }

@@ -546,21 +546,90 @@
             justify-content: center;
         }
     }
+
+    /* Dark Mode Harmonization ala Menu Tugas */
+    [data-theme="dark"] .identity-card,
+    [data-theme="dark"] .form-unified-card {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    [data-theme="dark"] .avatar-preview-box {
+        border-color: #182234 !important;
+        background: rgba(6, 65, 204, 0.35) !important;
+        color: #60A5FA !important;
+    }
+
+    [data-theme="dark"] .privacy-notice-box {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .field-input {
+        background: #0F172A !important;
+        border-color: #3E516E !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .field-input:focus {
+        border-color: #2563EB !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+    }
+
+    [data-theme="dark"] .field-input:disabled,
+    [data-theme="dark"] .field-input[readonly] {
+        background: #111C2E !important;
+        border-color: #26354D !important;
+        color: #8FA2BF !important;
+    }
+
+    [data-theme="dark"] .checklist-mini-item {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .checklist-mini-item.done {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .checklist-mini-icon.done {
+        background: rgba(6, 78, 59, 0.45) !important;
+        border-color: rgba(52, 211, 153, 0.4) !important;
+        color: #6EE7B7 !important;
+    }
+
+    [data-theme="dark"] .checklist-mini-icon.pending {
+        background: #26354D !important;
+        color: #8FA2BF !important;
+    }
+
+    [data-theme="dark"] .form-section-title-wrap {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .form-action-bar {
+        border-top-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .profile-header-title {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .profile-header-subtitle {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .field-label {
+        color: #E2E8F0 !important;
+    }
 </style>
 @endpush
 
 @section('content')
 <div class="profile-page-wrapper">
 
-    {{-- Alert Flash Message --}}
-    @if(session('success'))
-        <div style="background: #F0FDF4; border: 1px solid #86EFAC; border-radius: 12px; padding: 14px 18px; color: #166534; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>{{ session('success') }}</span>
-        </div>
-    @endif
+
 
     {{-- Clean Page Header --}}
     <div class="profile-header-clean">
@@ -819,6 +888,30 @@
                     </div>
                 </div>
 
+                {{-- Kepatuhan UU PDP (SEC-41): Persetujuan Orang Tua/Wali Khusus Siswa SMK --}}
+                <div id="wrapper-persetujuan-wali" class="field-row full" style="{{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'smk' || !empty($profil?->persetujuan_wali_at) ? '' : 'display: none;' }}">
+                    <div class="form-field-group" style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 14px 16px;">
+                        <label class="field-label" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-weight: normal;">
+                            <input type="hidden" name="persetujuan_wali" value="0">
+                            <input type="checkbox" id="persetujuan_wali" name="persetujuan_wali" value="1"
+                                   {{ old('persetujuan_wali') || !empty($profil?->persetujuan_wali_at) ? 'checked' : '' }}
+                                   style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--blue-600);">
+                            <span style="font-size: 0.8125rem; color: var(--neutral-800); line-height: 1.4;">
+                                <strong>Pernyataan Kepatuhan UU PDP No. 27/2022 (Khusus Jenjang SMK):</strong><br>
+                                Saya berusia minimal 18 tahun atau telah mendapatkan izin dan persetujuan dari orang tua / wali sah untuk mengikuti kegiatan magang serta pemrosesan data identitas untuk administrasi instansi Dinas Kominfo.
+                                @if(!empty($profil?->persetujuan_wali_at))
+                                    <span style="display: block; font-size: 0.75rem; color: var(--green-600); margin-top: 4px; font-weight: 600;">
+                                        ✓ Persetujuan telah tercatat pada: {{ $profil->persetujuan_wali_at->format('d/m/Y H:i') }} WIB
+                                    </span>
+                                @endif
+                            </span>
+                        </label>
+                        @error('persetujuan_wali')
+                            <span class="field-error-text" style="margin-top: 6px;">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="form-section-divider"></div>
 
                 {{-- SEKSI 2: KONTAK & JALUR DARURAT --}}
@@ -947,7 +1040,11 @@
         if (this.files && this.files[0]) {
             const file = this.files[0];
             if (file.size > 2 * 1024 * 1024) {
-                alert('Ukuran berkas melebihi batas maksimal 2 MB.');
+                if (window.MagKomToast) {
+                    window.MagKomToast.warning('Ukuran berkas melebihi batas maksimal 2 MB.');
+                } else {
+                    alert('Ukuran berkas melebihi batas maksimal 2 MB.');
+                }
                 this.value = '';
                 return;
             }
@@ -981,6 +1078,22 @@
             if (selectedFileName) selectedFileName.textContent = '(Foto akan dihapus saat Anda menekan tombol Simpan)';
         }
     });
+
+    // Dynamic toggle persetujuan wali untuk jenjang SMK (SEC-41)
+    const jenjangSelect = document.getElementById('jenjang');
+    const waliWrapper = document.getElementById('wrapper-persetujuan-wali');
+    if (jenjangSelect && waliWrapper) {
+        jenjangSelect.addEventListener('change', function() {
+            if (this.value === 'smk') {
+                waliWrapper.style.display = '';
+            } else {
+                const checkbox = document.getElementById('persetujuan_wali');
+                if (checkbox && !checkbox.checked) {
+                    waliWrapper.style.display = 'none';
+                }
+            }
+        });
+    }
 
     // Anti double-submit proteksi
     document.getElementById('formBiodataPeserta')?.addEventListener('submit', function() {

@@ -23,6 +23,8 @@ class AuditLog extends Model
         'request_id',
         'user_id',
         'tipe',
+        'channel',
+        'severity',
         'aksi',
         'entitas',
         'entitas_id',
@@ -59,6 +61,16 @@ class AuditLog extends Model
         return $query->where('tipe', $tipe->value);
     }
 
+    public function scopeChannel(Builder $query, string $channel): Builder
+    {
+        return $query->where('channel', $channel);
+    }
+
+    public function scopeSeverity(Builder $query, string $severity): Builder
+    {
+        return $query->where('severity', $severity);
+    }
+
     /**
      * Scope filter rentang waktu.
      */
@@ -72,6 +84,33 @@ class AuditLog extends Model
      */
     protected static function booted(): void
     {
+        static::creating(function (AuditLog $log) {
+            if (empty($log->request_id)) {
+                $log->request_id = (string) \Illuminate\Support\Str::uuid();
+            }
+            if (empty($log->waktu)) {
+                $log->waktu = now('Asia/Jakarta');
+            }
+            if (empty($log->channel)) {
+                $log->channel = 'all-actions-stream';
+            }
+            if (empty($log->severity)) {
+                $log->severity = 'info';
+            }
+            if (empty($log->ip)) {
+                $log->ip = request()->ip() ?: '127.0.0.1';
+            }
+            if (empty($log->metode)) {
+                $log->metode = request()->method() ?: 'GET';
+            }
+            if (empty($log->rute)) {
+                $log->rute = request()->path() ?: '/';
+            }
+            if (empty($log->user_agent)) {
+                $log->user_agent = substr((string) (request()->userAgent() ?: 'MagKom System'), 0, 255);
+            }
+        });
+
         static::updating(function () {
             throw new RuntimeException('Tabel audit_log bersifat append-only dan tidak dapat diubah (UPDATE dilarang).');
         });

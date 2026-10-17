@@ -675,6 +675,664 @@
             justify-content: flex-start;
         }
     }
+
+    /* ========================================================
+       SEMANTIC TOKENS & COMPONENTS (Detail & Berkas)
+       ======================================================== */
+    .hero-badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        padding: 7px 14px;
+        border-radius: 6px;
+    }
+    .hero-badge-status.belum-lengkap {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+    .hero-badge-status.diajukan {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+    .hero-badge-status.waiting-list {
+        background: #DBEAFE;
+        color: #1E40AF;
+    }
+    .hero-badge-status.perlu-perbaikan {
+        background: #FED7AA;
+        color: #9A3412;
+    }
+    .hero-badge-status.diterima {
+        background: #D1FAE5;
+        color: #065F46;
+    }
+    .hero-badge-status.ditolak {
+        background: #FEE2E2;
+        color: #991B1B;
+    }
+    .hero-badge-status.dibatalkan {
+        background: #E2E8F0;
+        color: #475569;
+    }
+
+    /* Revisi Alert Box (AC-03-10) */
+    .detail-revisi-alert {
+        background: #FFFBEB;
+        border: 1.5px solid #FDE68A;
+        border-left: 5px solid #D97706;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+    .detail-revisi-icon {
+        color: #D97706;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+    .detail-revisi-title {
+        font-size: 0.9375rem;
+        font-weight: 700;
+        color: #92400E;
+        display: block;
+    }
+    .detail-revisi-box {
+        margin-top: 8px;
+        padding: 12px 16px;
+        background: #ffffff;
+        border-radius: 8px;
+        border: 1px solid #FDE68A;
+        font-size: 0.875rem;
+        color: var(--neutral-800);
+        line-height: 1.55;
+    }
+    .detail-revisi-instruction {
+        font-size: 0.8125rem;
+        color: #78350F;
+        margin-top: 8px;
+        margin-bottom: 0;
+    }
+
+    /* Diterima Magang Alert Box */
+    .detail-success-alert {
+        background: #ECFDF5;
+        border: 1.5px solid #A7F3D0;
+        border-left: 5px solid #10B981;
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .detail-success-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #D1FAE5;
+        color: #065F46;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .detail-success-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #065F46;
+        display: block;
+    }
+    .detail-success-desc {
+        font-size: 0.8125rem;
+        color: #047857;
+        margin-top: 2px;
+    }
+    .btn-detail-preview-surat {
+        height: 40px;
+        padding: 0 16px;
+        font-size: 0.8125rem;
+        font-weight: 700;
+        background: #ffffff;
+        border: 1.5px solid #10B981;
+        color: #065F46;
+    }
+
+    /* Summary Header Badge */
+    .summary-badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 6px;
+    }
+    .summary-badge-status.complete {
+        background: #DCFCE7;
+        color: #15803D;
+    }
+    .summary-badge-status.incomplete {
+        background: #EFF6FF;
+        color: #1D4ED8;
+    }
+
+    /* Document Status Badges */
+    .badge-doc-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 5px 10px;
+        border-radius: 6px;
+    }
+    .badge-doc-status.uploaded {
+        background: #DCFCE7;
+        color: #166534;
+    }
+    .badge-doc-status.pending {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    /* Submit Card Elements */
+    .submit-status-icon-box {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .submit-status-icon-box.complete {
+        background: #DCFCE7;
+        color: #16A34A;
+    }
+    .submit-status-icon-box.incomplete {
+        background: #FEF3C7;
+        color: #D97706;
+    }
+    .submit-status-title {
+        font-size: 0.9375rem;
+        font-weight: 700;
+        display: block;
+    }
+    .submit-status-title.complete {
+        color: #15803D;
+    }
+    .submit-status-title.incomplete {
+        color: #92400E;
+    }
+    .submit-status-desc {
+        font-size: 0.8125rem;
+        color: var(--neutral-600);
+    }
+
+    /* Locked Card */
+    .locked-card {
+        margin-top: 24px;
+        padding: 16px 20px;
+        background: #ffffff;
+        border: 1.5px solid var(--neutral-200);
+        border-radius: 12px;
+        font-size: 0.8125rem;
+        color: var(--neutral-600);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .locked-card-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: #F1F5F9;
+        color: #64748B;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    /* Modal Warning Alert */
+    .modal-warning-box {
+        padding: 16px;
+        background: #FFFBEB;
+        border: 1.5px solid #FDE68A;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    .modal-warning-icon {
+        color: #D97706;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+    .modal-warning-title {
+        color: #92400E;
+        font-size: 0.875rem;
+        font-weight: 700;
+    }
+    .modal-warning-desc {
+        font-size: 0.8125rem;
+        color: #78350F;
+        margin-top: 4px;
+        line-height: 1.5;
+        margin-bottom: 0;
+    }
+    .modal-footer-row {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        padding-top: 16px;
+        border-top: 1px solid #E2E8F0;
+    }
+
+    /* Preview Modal Styles */
+    .preview-modal-icon-box {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background: var(--blue-tint);
+        color: var(--blue-700);
+    }
+    .preview-modal-badge {
+        background: #EFF6FF;
+        color: #1D4ED8;
+        font-size: 0.6875rem;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+    .preview-loading-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.95);
+        z-index: 10;
+    }
+    .preview-loading-spinner {
+        width: 38px;
+        height: 38px;
+        border: 3px solid #CBD5E1;
+        border-top-color: #0751FF;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        margin-bottom: 12px;
+    }
+    .preview-loading-title {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--neutral-800);
+    }
+    .preview-loading-desc {
+        font-size: 0.75rem;
+        color: var(--neutral-500);
+        margin-top: 4px;
+    }
+
+    /* ========================================================
+       DARK THEME HARMONIZATION (Detail & Berkas Pendaftaran)
+       ======================================================== */
+    [data-theme="dark"] .detail-hero {
+        background: linear-gradient(95deg, rgba(15, 23, 42, 0.94) 0%, rgba(30, 58, 138, 0.88) 55%, rgba(6, 65, 204, 0.45) 100%),
+                    url('{{ asset('images/pendaftaran_banner_bg.jpg') }}') right center / cover no-repeat;
+        border: 1px solid rgba(59, 130, 246, 0.25);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    [data-theme="dark"] .hero-badge-status.diajukan {
+        background: rgba(120, 53, 15, 0.5);
+        border: 1px solid rgba(245, 158, 11, 0.45);
+        color: #FCD34D;
+    }
+    [data-theme="dark"] .hero-badge-status.waiting-list {
+        background: rgba(30, 58, 138, 0.5);
+        border: 1px solid rgba(96, 165, 250, 0.45);
+        color: #93C5FD;
+    }
+    [data-theme="dark"] .hero-badge-status.perlu-perbaikan {
+        background: rgba(154, 52, 18, 0.5);
+        border: 1px solid rgba(251, 146, 60, 0.45);
+        color: #FDBA74;
+    }
+    [data-theme="dark"] .hero-badge-status.diterima {
+        background: rgba(6, 78, 59, 0.5);
+        border: 1px solid rgba(52, 211, 153, 0.45);
+        color: #6EE7B7;
+    }
+    [data-theme="dark"] .hero-badge-status.ditolak {
+        background: rgba(127, 29, 29, 0.5);
+        border: 1px solid rgba(239, 68, 68, 0.45);
+        color: #FCA5A5;
+    }
+    [data-theme="dark"] .hero-badge-status.dibatalkan {
+        background: rgba(51, 65, 85, 0.5);
+        border: 1px solid rgba(100, 116, 139, 0.45);
+        color: #CBD5E1;
+    }
+
+    [data-theme="dark"] .btn-top-back {
+        background: #182234;
+        border-color: #26354D;
+        color: #CBD5E1;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="dark"] .btn-top-back:hover {
+        background: #1E293B;
+        border-color: #3B82F6;
+        color: #60A5FA;
+    }
+
+    [data-theme="dark"] .btn-top-cancel {
+        background: rgba(127, 29, 29, 0.25);
+        border-color: rgba(239, 68, 68, 0.4);
+        color: #FCA5A5;
+    }
+
+    [data-theme="dark"] .btn-top-cancel:hover {
+        background: rgba(127, 29, 29, 0.45);
+        border-color: #EF4444;
+        color: #FFFFFF;
+    }
+
+    [data-theme="dark"] .stepper-card,
+    [data-theme="dark"] .docs-summary-card,
+    [data-theme="dark"] .doc-card-modern,
+    [data-theme="dark"] .submit-final-card {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    [data-theme="dark"] .stepper-timeline::before {
+        background: #26354D;
+    }
+
+    [data-theme="dark"] .stepper-icon-circle {
+        background: #0F172A;
+        border-color: #334155;
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .stepper-label {
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .stepper-step.active .stepper-label,
+    [data-theme="dark"] .stepper-step.completed .stepper-label {
+        color: #F8FAFC;
+    }
+
+    /* Revisi Alert Box in Dark Mode */
+    [data-theme="dark"] .detail-revisi-alert {
+        background: rgba(120, 53, 15, 0.35) !important;
+        border-color: rgba(245, 158, 11, 0.4) !important;
+        border-left-color: #F59E0B !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+    [data-theme="dark"] .detail-revisi-icon {
+        color: #FBBF24 !important;
+    }
+    [data-theme="dark"] .detail-revisi-title {
+        color: #FCD34D !important;
+    }
+    [data-theme="dark"] .detail-revisi-box {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .detail-revisi-instruction {
+        color: #FEF3C7 !important;
+    }
+    [data-theme="dark"] .detail-revisi-instruction strong {
+        color: #FCD34D !important;
+    }
+
+    /* Diterima Alert Box in Dark Mode */
+    [data-theme="dark"] .detail-success-alert {
+        background: rgba(6, 78, 59, 0.25) !important;
+        border-color: rgba(52, 211, 153, 0.4) !important;
+        border-left-color: #34D399 !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+    [data-theme="dark"] .detail-success-icon {
+        background: rgba(16, 185, 129, 0.25) !important;
+        color: #34D399 !important;
+    }
+    [data-theme="dark"] .detail-success-title {
+        color: #6EE7B7 !important;
+    }
+    [data-theme="dark"] .detail-success-desc {
+        color: #A7F3D0 !important;
+    }
+    [data-theme="dark"] .btn-detail-preview-surat {
+        background: #1E293B !important;
+        border-color: rgba(52, 211, 153, 0.45) !important;
+        color: #6EE7B7 !important;
+    }
+    [data-theme="dark"] .btn-detail-preview-surat:hover {
+        background: #334155 !important;
+        color: #ffffff !important;
+    }
+
+    [data-theme="dark"] .docs-summary-title,
+    [data-theme="dark"] .doc-name {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .docs-summary-subtitle,
+    [data-theme="dark"] .doc-instructions,
+    [data-theme="dark"] .uploaded-meta,
+    [data-theme="dark"] .dropzone-subtext,
+    [data-theme="dark"] .submit-status-desc {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .progress-bar-wrapper {
+        background: #26354D;
+    }
+
+    /* Summary Header Badge in Dark Mode */
+    [data-theme="dark"] .summary-badge-status.complete {
+        background: rgba(6, 78, 59, 0.4) !important;
+        border: 1px solid rgba(52, 211, 153, 0.4) !important;
+        color: #6EE7B7 !important;
+    }
+    [data-theme="dark"] .summary-badge-status.incomplete {
+        background: rgba(30, 58, 138, 0.4) !important;
+        border: 1px solid rgba(96, 165, 250, 0.4) !important;
+        color: #93C5FD !important;
+    }
+
+    /* Document Status Badges in Dark Mode */
+    [data-theme="dark"] .badge-doc-status.uploaded {
+        background: rgba(6, 78, 59, 0.4) !important;
+        border: 1px solid rgba(52, 211, 153, 0.4) !important;
+        color: #6EE7B7 !important;
+    }
+    [data-theme="dark"] .badge-doc-status.pending {
+        background: rgba(120, 53, 15, 0.4) !important;
+        border: 1px solid rgba(245, 158, 11, 0.4) !important;
+        color: #FCD34D !important;
+    }
+    [data-theme="dark"] .badge-doc-wajib {
+        background: rgba(127, 29, 29, 0.35) !important;
+        border: 1px solid rgba(239, 68, 68, 0.4) !important;
+        color: #FCA5A5 !important;
+    }
+    [data-theme="dark"] .badge-doc-opsional {
+        background: #1E293B;
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .uploaded-box-modern {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .uploaded-box-modern:hover {
+        border-color: #3B82F6 !important;
+    }
+
+    [data-theme="dark"] .uploaded-icon-badge.pdf {
+        background: rgba(127, 29, 29, 0.35) !important;
+        color: #F87171 !important;
+    }
+    [data-theme="dark"] .uploaded-icon-badge.img {
+        background: rgba(79, 70, 229, 0.35) !important;
+        color: #818CF8 !important;
+    }
+
+    [data-theme="dark"] .uploaded-filename {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .dropzone-box-modern {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .dropzone-box-modern:hover,
+    [data-theme="dark"] .dropzone-box-modern.dragover {
+        background: #182234 !important;
+        border-color: #2563EB !important;
+    }
+
+    [data-theme="dark"] .dropzone-icon-circle {
+        background: #182234;
+        color: #60A5FA;
+    }
+
+    [data-theme="dark"] .dropzone-prompt {
+        color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .dropzone-prompt span {
+        color: #60A5FA !important;
+    }
+
+    [data-theme="dark"] .selected-bar-modern {
+        background: #0F172A;
+        border-color: #2563EB;
+        color: #F8FAFC;
+    }
+
+    /* Submit Status Elements in Dark Mode */
+    [data-theme="dark"] .submit-status-icon-box.complete {
+        background: rgba(6, 78, 59, 0.4) !important;
+        color: #34D399 !important;
+    }
+    [data-theme="dark"] .submit-status-icon-box.incomplete {
+        background: rgba(120, 53, 15, 0.4) !important;
+        color: #FBBF24 !important;
+    }
+    [data-theme="dark"] .submit-status-title.complete {
+        color: #6EE7B7 !important;
+    }
+    [data-theme="dark"] .submit-status-title.incomplete {
+        color: #FCD34D !important;
+    }
+
+    /* Locked Card in Dark Mode */
+    [data-theme="dark"] .locked-card {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        color: #94A3B8 !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+    }
+    [data-theme="dark"] .locked-card-icon {
+        background: #0F172A !important;
+        color: #94A3B8 !important;
+    }
+
+    /* Modal Warning in Dark Mode */
+    [data-theme="dark"] .modal-warning-box {
+        background: rgba(120, 53, 15, 0.35) !important;
+        border-color: rgba(245, 158, 11, 0.4) !important;
+    }
+    [data-theme="dark"] .modal-warning-icon {
+        color: #FBBF24 !important;
+    }
+    [data-theme="dark"] .modal-warning-title {
+        color: #FCD34D !important;
+    }
+    [data-theme="dark"] .modal-warning-desc {
+        color: #FEF3C7 !important;
+    }
+    [data-theme="dark"] .modal-footer-row {
+        border-top-color: #26354D !important;
+    }
+
+    /* Preview Modal Styles in Dark Mode */
+    [data-theme="dark"] .preview-modal-icon-box {
+        background: rgba(6, 65, 204, 0.35) !important;
+        color: #60A5FA !important;
+    }
+    [data-theme="dark"] .preview-modal-badge {
+        background: rgba(30, 58, 138, 0.4) !important;
+        border: 1px solid rgba(96, 165, 250, 0.4) !important;
+        color: #93C5FD !important;
+    }
+    [data-theme="dark"] .preview-loading-overlay {
+        background: rgba(15, 23, 42, 0.95) !important;
+    }
+    [data-theme="dark"] .preview-loading-spinner {
+        border-color: #334155 !important;
+        border-top-color: #3B82F6 !important;
+    }
+    [data-theme="dark"] .preview-loading-title {
+        color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .preview-loading-desc {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .modal-box,
+    [data-theme="dark"] .modal-box-large {
+        background: #182234 !important;
+        border: 1px solid #26354D !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .modal-header {
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .modal-title {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .modal-close {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .modal-close:hover {
+        background: #1F2937 !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .modal-body-preview {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+    }
 </style>
 @endpush
 
@@ -761,42 +1419,42 @@
 
             <div>
                 @if($val === 'berkas_belum_lengkap')
-                    <span class="badge" style="background: rgba(255, 255, 255, 0.2); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.35); font-size: 0.8125rem; padding: 7px 14px;">
+                    <span class="hero-badge-status belum-lengkap">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-dasharray="4 4"></circle></svg>
                         Berkas Belum Lengkap
                     </span>
                 @elseif($val === 'diajukan')
-                    <span class="badge" style="background: #FEF3C7; color: #92400E; font-size: 0.8125rem; padding: 7px 14px;">
+                    <span class="hero-badge-status diajukan">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         Menunggu Verifikasi Admin
                     </span>
                 @elseif($val === 'waiting_list')
-                    <span class="badge" style="background: #DBEAFE; color: #1E40AF; font-size: 0.8125rem; padding: 7px 14px;">
+                    <span class="hero-badge-status waiting-list">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                         Waiting List (Antrean Cadangan)
                     </span>
                 @elseif($val === 'perlu_perbaikan')
-                    <span class="badge" style="background: #FED7AA; color: #9A3412; font-size: 0.8125rem; padding: 7px 14px;">
+                    <span class="hero-badge-status perlu-perbaikan">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         Perlu Perbaikan Berkas
                     </span>
                 @elseif($val === 'diterima')
-                    <span class="badge" style="background: #D1FAE5; color: #065F46; font-size: 0.8125rem; padding: 7px 14px;">
+                    <span class="hero-badge-status diterima">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Diterima Magang
                     </span>
                 @elseif($val === 'ditolak')
-                    <span class="badge" style="background: #FEE2E2; color: #991B1B; font-size: 0.8125rem; padding: 7px 14px;">
+                    <span class="hero-badge-status ditolak">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
                         Pengajuan Ditolak
                     </span>
                 @elseif($val === 'dibatalkan')
-                    <span class="badge" style="background: #E2E8F0; color: #475569; font-size: 0.8125rem; padding: 7px 14px;">
+                    <span class="hero-badge-status dibatalkan">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         Dibatalkan
                     </span>
                 @else
-                    <span class="badge badge-neutral" style="font-size: 0.8125rem; padding: 7px 14px;">{{ $val }}</span>
+                    <span class="hero-badge-status">{{ $val }}</span>
                 @endif
             </div>
         </div>
@@ -861,16 +1519,16 @@
 
     {{-- Alert Catatan Revisi Admin (AC-03-10) --}}
     @if($val === 'perlu_perbaikan')
-        <div style="background: #FFFBEB; border: 1.5px solid #FDE68A; border-left: 5px solid #D97706; border-radius: 12px; padding: 20px; margin-bottom: 24px; display: flex; gap: 14px; align-items: flex-start;">
-            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #D97706; flex-shrink: 0; margin-top: 2px;">
+        <div class="detail-revisi-alert">
+            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="detail-revisi-icon">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
             </svg>
             <div style="flex: 1;">
-                <strong style="font-size: 0.9375rem; color: #92400E;">Catatan Perbaikan Berkas dari Tim Verifikator:</strong>
-                <div style="margin-top: 8px; padding: 12px 16px; background: #ffffff; border-radius: 8px; border: 1px solid #FDE68A; font-size: 0.875rem; color: var(--neutral-800); line-height: 1.55;">
+                <strong class="detail-revisi-title">Catatan Perbaikan Berkas dari Tim Verifikator:</strong>
+                <div class="detail-revisi-box">
                     "{{ $pendaftaran->catatan_admin ?? 'Harap tinjau kembali berkas persyaratan dan perbarui dokumen yang diminta.' }}"
                 </div>
-                <p style="font-size: 0.8125rem; color: #78350F; margin-top: 8px;">
+                <p class="detail-revisi-instruction">
                     Silakan klik tombol <strong>Ganti Berkas</strong> pada dokumen terkait di bawah untuk memperbarui dokumen, kemudian tekan <strong>Ajukan Pendaftaran Ulang</strong>.
                 </p>
             </div>
@@ -879,22 +1537,22 @@
 
     {{-- Alert Kelulusan Diterima & Unduh Surat (AC-16-1, F-16) --}}
     @if($val === 'diterima' && $pendaftaran->penempatan)
-        <div style="background: #ECFDF5; border: 1.5px solid #A7F3D0; border-left: 5px solid #10B981; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <div class="detail-success-alert">
             <div style="display: flex; align-items: center; gap: 14px;">
-                <div style="width: 44px; height: 44px; border-radius: 50%; background: #D1FAE5; color: #065F46; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <div class="detail-success-icon">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
                 <div>
-                    <strong style="font-size: 1rem; color: #065F46;">Selamat! Permohonan Magang Anda Telah Disetujui</strong>
-                    <div style="font-size: 0.8125rem; color: #047857; margin-top: 2px;">
+                    <strong class="detail-success-title">Selamat! Permohonan Magang Anda Telah Disetujui</strong>
+                    <div class="detail-success-desc">
                         Surat Keterangan Diterima resmi bertanda tangan digital instansi siap dilihat langsung dan diunduh.
                     </div>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                <button type="button" class="btn" onclick="openDocPreview('{{ route('peserta.penempatan.surat-diterima.pratinjau', $pendaftaran->penempatan) }}', '{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}', 'Surat Keterangan Diterima Magang - #REG-{{ str_pad((string)$pendaftaran->id, 5, '0', STR_PAD_LEFT) }}', 'application/pdf')" style="height: 40px; padding: 0 16px; font-size: 0.8125rem; font-weight: 700; background: #ffffff; border: 1.5px solid #10B981; color: #065F46;">
+                <button type="button" class="btn btn-detail-preview-surat" onclick="openDocPreview('{{ route('peserta.penempatan.surat-diterima.pratinjau', $pendaftaran->penempatan) }}', '{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}', 'Surat Keterangan Diterima Magang - #REG-{{ str_pad((string)$pendaftaran->id, 5, '0', STR_PAD_LEFT) }}', 'application/pdf')">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
@@ -931,7 +1589,7 @@
                 </p>
             </div>
             <div style="text-align: right;">
-                <span class="badge" style="font-size: 0.8125rem; padding: 6px 12px; background: {{ $semuaWajibLengkap ? '#DCFCE7' : '#EFF6FF' }}; color: {{ $semuaWajibLengkap ? '#15803D' : '#1D4ED8' }};">
+                <span class="summary-badge-status {{ $semuaWajibLengkap ? 'complete' : 'incomplete' }}">
                     {{ $uploadedWajib }} dari {{ $totalWajib }} Berkas Wajib ({{ $persen }}%)
                 </span>
             </div>
@@ -970,12 +1628,12 @@
 
                     <div>
                         @if($terunggah)
-                            <span class="badge" style="background: #DCFCE7; color: #166534; font-size: 0.75rem;">
+                            <span class="badge-doc-status uploaded">
                                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                 Sudah Terunggah
                             </span>
                         @else
-                            <span class="badge" style="background: #FEF3C7; color: #92400E; font-size: 0.75rem;">
+                            <span class="badge-doc-status pending">
                                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                                 Belum Diunggah
                             </span>
@@ -1074,7 +1732,7 @@
                                     </svg>
                                 </div>
                                 <div class="dropzone-prompt">
-                                    Seret & lepas berkas ke sini, atau <span style="color: #0751FF; text-decoration: underline;">Pilih File</span>
+                                    Seret & lepas berkas ke sini, atau <span class="dropzone-link" style="text-decoration: underline;">Pilih File</span>
                                 </div>
                                 <div class="dropzone-subtext">
                                     Format PDF, JPG, JPEG, atau PNG (Maksimal {{ $maksMb }} MB)
@@ -1088,7 +1746,7 @@
                                         <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
                                         <polyline points="14 2 14 8 20 8"></polyline>
                                     </svg>
-                                    <span id="selected_name_{{ $jenis->id }}" style="font-weight: 700; color: var(--neutral-800); text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></span>
+                                    <span id="selected_name_{{ $jenis->id }}" style="font-weight: 700; color: inherit; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></span>
                                     <span id="selected_size_{{ $jenis->id }}" style="font-size: 0.75rem; color: var(--neutral-500); flex-shrink: 0;"></span>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 8px;">
@@ -1115,23 +1773,23 @@
             <div>
                 @if($semuaWajibLengkap)
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 32px; height: 32px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <div class="submit-status-icon-box complete">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                         </div>
                         <div>
-                            <span style="color: #15803D; font-size: 0.9375rem; font-weight: 700; display: block;">
+                            <span class="submit-status-title complete">
                                 Seluruh berkas persyaratan wajib telah lengkap!
                             </span>
-                            <span style="font-size: 0.8125rem; color: var(--neutral-600);">
+                            <span class="submit-status-desc">
                                 Klik tombol di samping untuk mengirimkan pengajuan ke tim verifikasi admin.
                             </span>
                         </div>
                     </div>
                 @else
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 32px; height: 32px; border-radius: 50%; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <div class="submit-status-icon-box incomplete">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -1139,10 +1797,10 @@
                             </svg>
                         </div>
                         <div>
-                            <span style="color: #92400E; font-size: 0.9375rem; font-weight: 700; display: block;">
+                            <span class="submit-status-title incomplete">
                                 Masih ada berkas persyaratan bertanda [Wajib] yang belum diunggah.
                             </span>
-                            <span style="font-size: 0.8125rem; color: var(--neutral-600);">
+                            <span class="submit-status-desc">
                                 Lengkapi seluruh berkas wajib di atas untuk mengaktifkan tombol pengajuan.
                             </span>
                         </div>
@@ -1161,8 +1819,8 @@
             </form>
         </div>
     @else
-        <div style="margin-top: 24px; padding: 16px 20px; background: #ffffff; border: 1.5px solid var(--neutral-200); border-radius: 12px; font-size: 0.8125rem; color: var(--neutral-600); display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-            <div style="width: 32px; height: 32px; border-radius: 8px; background: #F1F5F9; color: #64748B; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <div class="locked-card">
+            <div class="locked-card-icon">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                     <path d="M7 11V7a5 5 0 0110 0v4"></path>
@@ -1193,17 +1851,15 @@
         <form action="{{ route('peserta.pendaftaran.batalkan', $pendaftaran) }}" method="POST" id="formBatalkanPendaftaran" onsubmit="handleBatalSubmit(this)">
             @csrf
 
-            <div style="padding: 16px; background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: 10px; margin-bottom: 20px;">
-                <div style="display: flex; gap: 12px; align-items: flex-start;">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #D97706; flex-shrink: 0; margin-top: 2px;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                    </svg>
-                    <div>
-                        <strong style="color: #92400E; font-size: 0.875rem;">Perhatian: Pembatalan Bersifat Final</strong>
-                        <p style="font-size: 0.8125rem; color: #78350F; margin-top: 4px; line-height: 1.5;">
-                            Jika dibatalkan, status pendaftaran akan berubah menjadi <strong>Dibatalkan</strong> dan tidak dapat diaktifkan kembali. Sesuai aturan (BR-03), Anda tidak dapat membuat pengajuan baru pada bulan mulai yang sama, namun Anda dapat memilih bulan magang lain yang masih dibuka.
-                        </p>
-                    </div>
+            <div class="modal-warning-box">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="modal-warning-icon">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <div>
+                    <strong class="modal-warning-title">Perhatian: Pembatalan Bersifat Final</strong>
+                    <p class="modal-warning-desc">
+                        Jika dibatalkan, status pendaftaran akan berubah menjadi <strong>Dibatalkan</strong> dan tidak dapat diaktifkan kembali. Sesuai aturan (BR-03), Anda tidak dapat membuat pengajuan baru pada bulan mulai yang sama, namun Anda dapat memilih bulan magang lain yang masih dibuka.
+                    </p>
                 </div>
             </div>
 
@@ -1211,7 +1867,7 @@
                 Apakah Anda yakin ingin membatalkan pengajuan pendaftaran magang ini?
             </p>
 
-            <div style="display: flex; justify-content: flex-end; gap: 12px; padding-top: 16px; border-top: 1px solid #E2E8F0;">
+            <div class="modal-footer-row">
                 <button type="button" class="btn btn-secondary" onclick="closeCancelModal()" style="height: 38px; padding: 0 16px; font-size: 0.8125rem;">Kembali</button>
                 <button type="submit" class="btn btn-danger" id="btnSubmitBatal" style="height: 38px; padding: 0 18px; font-size: 0.8125rem; background: #DC2626; border-color: #DC2626; color: #ffffff;">
                     Ya, Batalkan Pendaftaran
@@ -1229,7 +1885,7 @@
     <div class="modal-box-large">
         <div class="modal-header" style="margin-bottom: 0; padding-bottom: 14px;">
             <div style="display: flex; align-items: center; gap: 12px; overflow: hidden; padding-right: 12px;">
-                <div id="previewModalIcon" style="width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--blue-tint); color: var(--blue-700);">
+                <div id="previewModalIcon" class="preview-modal-icon-box">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 </div>
                 <div style="overflow: hidden;">
@@ -1237,7 +1893,7 @@
                         <h3 class="modal-title" id="previewModalTitle" style="font-size: 1rem; margin: 0; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
                             Pratinjau Dokumen
                         </h3>
-                        <span id="previewModalBadge" class="badge" style="background: #EFF6FF; color: #1D4ED8; font-size: 0.6875rem; padding: 2px 8px;">PDF</span>
+                        <span id="previewModalBadge" class="preview-modal-badge">PDF</span>
                     </div>
                     <p style="font-size: 0.75rem; color: var(--neutral-500); margin: 3px 0 0 0;">
                         Tinjauan dokumen langsung di sistem &bull; Terproteksi otorisasi MagKom
@@ -1268,10 +1924,10 @@
 
         <div class="modal-body-preview">
             {{-- Loading Indicator --}}
-            <div id="previewLoading" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.95); z-index: 10;">
-                <div style="width: 38px; height: 38px; border: 3px solid #CBD5E1; border-top-color: #0751FF; border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 12px;"></div>
-                <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-800);">Memuat Pratinjau Dokumen...</div>
-                <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 4px;">Mengambil berkas aman dari disk privat MagKom</div>
+            <div id="previewLoading" class="preview-loading-overlay">
+                <div class="preview-loading-spinner"></div>
+                <div class="preview-loading-title">Memuat Pratinjau Dokumen...</div>
+                <div class="preview-loading-desc">Mengambil berkas aman dari disk privat MagKom</div>
             </div>
 
             {{-- PDF Iframe Container --}}
@@ -1489,14 +2145,24 @@
         const maxBytes = maksMb * 1024 * 1024;
 
         if (!allowedExtensions.includes(ext)) {
-            alert('Format berkas tidak diizinkan. Hanya file PDF, JPG, JPEG, atau PNG yang diterima.');
+            const msg = 'Format berkas tidak diizinkan. Hanya file PDF, JPG, JPEG, atau PNG yang diterima.';
+            if (window.MagKomToast) {
+                window.MagKomToast.warning(msg);
+            } else {
+                alert(msg);
+            }
             input.value = '';
             resetFileSelection(jenisId);
             return;
         }
 
         if (file.size > maxBytes) {
-            alert(`Ukuran berkas (${(file.size / (1024 * 1024)).toFixed(2)} MB) melebihi batas maksimal ${maksMb} MB.`);
+            const msg = `Ukuran berkas (${(file.size / (1024 * 1024)).toFixed(2)} MB) melebihi batas maksimal ${maksMb} MB.`;
+            if (window.MagKomToast) {
+                window.MagKomToast.warning(msg);
+            } else {
+                alert(msg);
+            }
             input.value = '';
             resetFileSelection(jenisId);
             return;

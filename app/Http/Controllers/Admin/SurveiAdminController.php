@@ -20,6 +20,10 @@ class SurveiAdminController extends Controller
      */
     public function index(Request $request): View
     {
+        if (! \App\Support\Pengaturan::bool('fitur_survei_aktif', true)) {
+            abort(404, 'Fitur survei kepuasan saat ini dinonaktifkan oleh administrator.');
+        }
+
         $totalResponden = SurveiKepuasan::count();
 
         $avgMentoring = $totalResponden > 0 ? round((float) SurveiKepuasan::avg('skor_mentoring'), 2) : 0.0;
@@ -63,6 +67,10 @@ class SurveiAdminController extends Controller
      */
     public function export(ExportReportService $exportService, AuditService $auditService): StreamedResponse
     {
+        if (! \App\Support\Pengaturan::bool('fitur_survei_aktif', true)) {
+            abort(404, 'Fitur survei kepuasan saat ini dinonaktifkan oleh administrator.');
+        }
+
         $surveiList = SurveiKepuasan::with(['penempatan.peserta.profil', 'penempatan.bidang'])->latest()->get();
 
         $headers = [
