@@ -92,7 +92,7 @@
                     <option value="{{ $t }}" {{ $t == $tahun ? 'selected' : '' }}>Tahun {{ $t }}</option>
                 @endforeach
             </select>
-            <span style="font-size: 0.8125rem; color: var(--neutral-600);">Menampilkan seluruh data periode magang tahun {{ $tahun }}</span>
+            <span style="font-size: 0.8125rem; color: var(--neutral-600);">Menampilkan seluruh data bulan magang tahun {{ $tahun }}</span>
         </form>
 
         <div style="display: flex; gap: 0.75rem; align-items: center;">

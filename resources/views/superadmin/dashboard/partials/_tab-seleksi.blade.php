@@ -9,7 +9,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Pendaftar & Institusi</th>
-                        <th scope="col">Jurusan & Periode</th>
+                        <th scope="col">Jurusan & Bulan</th>
                         <th scope="col">Waktu Ajuan</th>
                         <th scope="col">Status</th>
                         <th scope="col" class="sa-text-right">Aksi</th>
@@ -64,7 +64,7 @@
 {{-- BAGIAN 2: UTILISASI KUOTA PER JURUSAN & WAITING LIST --}}
 <div class="sa-grid sa-grid--2">
     {{-- Box A: Utilisasi Kuota per Jurusan Bulan Aktif --}}
-    <x-sa.panel title="Utilisasi Kuota per Jurusan" subtitle="Periode: {{ $bulanAktif ? $bulanAktif->nama_bulan : '-' }}" :href="route('admin.kuota.index')" linkText="Atur Kuota &rarr;">
+    <x-sa.panel title="Utilisasi Kuota per Jurusan" subtitle="Bulan: {{ $bulanAktif ? $bulanAktif->nama_bulan : '-' }}" :href="route('admin.kuota.index')" linkText="Atur Kuota &rarr;">
         @php
             $persenPagu = $kuotaMaksPagu > 0 ? min(100, round(($totalKuotaUmum / $kuotaMaksPagu) * 100)) : 0;
             $isExceedPagu = $totalKuotaUmum > $kuotaMaksPagu;

@@ -145,7 +145,7 @@
                         <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                             <th style="padding: 1rem 1.25rem; font-weight: 700;">Peserta & Institusi</th>
                             <th style="padding: 1rem 1rem; font-weight: 700;">Jurusan / Bidang</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Periode Pelaksanaan</th>
+                            <th style="padding: 1rem 1rem; font-weight: 700;">Jadwal Pelaksanaan</th>
                             <th style="padding: 1rem 1rem; font-weight: 700;">Pembimbing Lapangan</th>
                             <th style="padding: 1rem 1rem; font-weight: 700; text-align: center; width: 140px;">Nilai & Predikat</th>
                             <th style="padding: 1rem 1rem; font-weight: 700; width: 150px; text-align: center;">Status Arsip</th>

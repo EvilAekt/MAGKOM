@@ -410,7 +410,7 @@
                             <th>Nama Alumni</th>
                             <th>Institusi & Jurusan</th>
                             <th>Bidang Penempatan</th>
-                            <th>Periode Magang</th>
+                            <th>Bulan Magang</th>
                             <th style="text-align: center;">Nilai & Predikat</th>
                             <th style="text-align: right;">Aksi Penerbitan</th>
                         </tr>
