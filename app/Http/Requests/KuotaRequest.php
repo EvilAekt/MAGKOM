@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Models\Kuota;
+use App\Support\Pengaturan;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
 class KuotaRequest extends FormRequest
@@ -16,20 +16,35 @@ class KuotaRequest extends FormRequest
         return $this->user()?->isAdmin() || $this->user()?->isSuperAdmin();
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('jurusan_id') && $this->filled('jurusan_ids')) {
+            $ids = (array) $this->input('jurusan_ids');
+            if (! empty($ids)) {
+                $this->merge([
+                    'jurusan_id' => (int) $ids[0],
+                ]);
+            }
+        }
+    }
+
     public function rules(): array
     {
         $kuotaId = $this->route('kuota')?->id ?? $this->route('kuota');
 
         return [
             'bulan_magang_id' => ['required', 'exists:bulan_magang,id'],
+            'bidang_id' => ['nullable', 'exists:bidang,id'],
+            'jurusan_ids' => ['nullable', 'array'],
+            'jurusan_ids.*' => ['exists:jurusan,id'],
             'jurusan_id' => [
                 'required',
                 'exists:jurusan,id',
-                Rule::unique('kuota', 'jurusan_id')
-                    ->where('bulan_magang_id', $this->input('bulan_magang_id'))
-                    ->ignore($kuotaId),
             ],
             'jumlah' => ['required', 'integer', 'min:0', 'max:500'],
+            'durasi_min' => ['nullable', 'string', 'max:50'],
+            'durasi_max' => ['nullable', 'string', 'max:50'],
+            'jenjang' => ['nullable', 'array'],
             'aktif' => ['sometimes', 'boolean'],
         ];
     }
@@ -55,12 +70,19 @@ class KuotaRequest extends FormRequest
             // Validasi BR-01 & AC-05-2: Total kuota seluruh jurusan dalam satu bulan <= kuota_umum_maks_per_bulan
             $bulanMagangId = (int) $this->input('bulan_magang_id', $kuota?->bulan_magang_id ?? 0);
             if ($bulanMagangId > 0) {
-                $maksPerBulan = \App\Support\Pengaturan::int('kuota_umum_maks_per_bulan', 12);
+                $maksPerBulan = Pengaturan::int('kuota_umum_maks_per_bulan', 12);
+                $jurusanIds = array_filter(array_map('intval', (array) $this->input('jurusan_ids', [])));
+                if (empty($jurusanIds) && $this->filled('jurusan_id')) {
+                    $jurusanIds = [(int) $this->input('jurusan_id')];
+                }
+
                 $kuotaLainSum = Kuota::where('bulan_magang_id', $bulanMagangId)
+                    ->when(! empty($jurusanIds), fn ($q) => $q->whereNotIn('jurusan_id', $jurusanIds))
                     ->when($kuota, fn ($q) => $q->where('id', '!=', $kuota->id))
                     ->sum('jumlah');
 
-                $totalSetelahInput = $kuotaLainSum + $jumlahBaru;
+                $multiplier = max(1, count($jurusanIds));
+                $totalSetelahInput = $kuotaLainSum + ($jumlahBaru * $multiplier);
                 if ($totalSetelahInput > $maksPerBulan) {
                     $validator->errors()->add(
                         'jumlah',

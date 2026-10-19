@@ -242,4 +242,162 @@ class AdminKuotaRevampTest extends TestCase
             'tgl_tutup' => '2026-10-30 00:00:00',
         ]);
     }
+
+    /**
+     * Memastikan modal Ubah Bulan memiliki tata letak dan elemen visual yang selaras dengan Buat Bulan Baru.
+     */
+    public function test_modal_ubah_bulan_matches_buat_bulan_design(): void
+    {
+        $admin = $this->createAdminUser();
+
+        $response = $this->actingAs($admin)->get(route('admin.kuota.index'));
+        $response->assertStatus(200);
+
+        // Header & Judul
+        $response->assertSee('id="modalUbahBulan"', false);
+        $response->assertSee('Ubah bulan', false);
+        $response->assertSee('Tentukan jadwal pendaftaran dan mulai magang.', false);
+
+        // Form fields
+        $response->assertSee('id="ubahNamaBulan"', false);
+        $response->assertSee('id="ubahBulanTglBuka"', false);
+        $response->assertSee('id="ubahBulanTglTutup"', false);
+        $response->assertSee('id="ubahBulanMulai"', false);
+        $response->assertSee('Harus setelah tanggal tutup pendaftaran.', false);
+
+        // Status Bulan (Pills)
+        $response->assertSee('Status bulan', false);
+        $response->assertSee('id="btnUbahStatusDraft"', false);
+        $response->assertSee('id="btnUbahStatusDibuka"', false);
+
+        // Callout Info & Submit
+        $response->assertSee('Perubahan jadwal pendaftaran dan mulai magang akan langsung disinkronkan ke portal publik.', false);
+        $response->assertSee('id="btnSubmitUbahBulan"', false);
+        $response->assertSee('Simpan perubahan', false);
+    }
+
+    /**
+     * Memastikan modal Tambah Kuota memuat seluruh elemen dan kontrol desain sesuai spesifikasi.
+     */
+    public function test_modal_tambah_kuota_displays_all_elements_from_design(): void
+    {
+        $admin = $this->createAdminUser();
+
+        $response = $this->actingAs($admin)->get(route('admin.kuota.index'));
+        $response->assertStatus(200);
+
+        // Header
+        $response->assertSee('id="modalTambahKuota"', false);
+        $response->assertSee('Tambah kuota', false);
+        $response->assertSee('Atur kuota, jurusan, jenjang, dan durasi untuk satu bidang.', false);
+
+        // Baris 1: Bulan (Read-Only) & Bidang (Dropdown)
+        $response->assertSee('Bulan', false);
+        $response->assertSee('id="tambahKuotaBidangSelect"', false);
+
+        // Baris 2: Jurusan yang Dibutuhkan & Tombol + Jurusan
+        $response->assertSee('Jurusan yang dibutuhkan', false);
+        $response->assertSee('id="jurusanChipsContainer"', false);
+        $response->assertSee('+ Jurusan', false);
+        $response->assertSee('id="extraJurusanSelect"', false);
+
+        // Baris 3: Jenjang Pills
+        $response->assertSee('Jenjang', false);
+        $response->assertSee('id="pillJenjangSMK"', false);
+        $response->assertSee('id="pillJenjangD3"', false);
+        $response->assertSee('id="pillJenjangS1"', false);
+
+        // Baris 4: Jumlah kuota, Durasi min, Durasi max
+        $response->assertSee('Jumlah kuota', false);
+        $response->assertSee('id="tambahKuotaJumlahInput"', false);
+        $response->assertSee('Durasi minimum', false);
+        $response->assertSee('Durasi maksimum', false);
+
+        // Baris 5: Warning Box Kapasitas
+        $response->assertSee('id="boxWarningKapasitas"', false);
+        $response->assertSee('Melebihi kapasitas pembimbing', false);
+
+        // Footer
+        $response->assertSee('id="btnSubmitTambahKuota"', false);
+        $response->assertSee('Simpan kuota', false);
+    }
+
+    /**
+     * Memastikan admin dapat memperbarui nama bulan dan status buka/draft via updateBulan.
+     */
+    public function test_admin_can_update_bulan_with_status_and_name(): void
+    {
+        $admin = $this->createAdminUser();
+        $bulan = BulanMagang::first();
+
+        // Update menjadi draft
+        $response = $this->actingAs($admin)->put(route('admin.kuota.bulan.update', $bulan->id), [
+            'nama_bulan' => 'Gelombang 1 Draft',
+            'bulan_mulai' => $bulan->bulan_mulai->format('Y-m-d'),
+            'tgl_buka' => '2026-10-01',
+            'tgl_tutup' => '2026-10-25',
+            'status_awal' => 'draft',
+        ]);
+
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('bulan_magang', [
+            'id' => $bulan->id,
+            'nama_bulan' => 'Gelombang 1 Draft',
+            'aktif' => false,
+        ]);
+
+        // Update kembali menjadi dibuka
+        $response2 = $this->actingAs($admin)->put(route('admin.kuota.bulan.update', $bulan->id), [
+            'nama_bulan' => 'Gelombang 1 Dibuka',
+            'bulan_mulai' => $bulan->bulan_mulai->format('Y-m-d'),
+            'tgl_buka' => '2026-10-01',
+            'tgl_tutup' => '2026-10-25',
+            'status_awal' => 'dibuka',
+        ]);
+
+        $response2->assertSessionHas('success');
+        $this->assertDatabaseHas('bulan_magang', [
+            'id' => $bulan->id,
+            'nama_bulan' => 'Gelombang 1 Dibuka',
+            'aktif' => true,
+        ]);
+    }
+
+    /**
+     * Memastikan admin dapat menyimpan kuota jamak melalui modal baru dengan payload jurusan_ids[].
+     */
+    public function test_admin_can_store_kuota_with_jurusan_ids_array(): void
+    {
+        $admin = $this->createAdminUser();
+        $bulan = BulanMagang::create([
+            'nama_bulan' => 'Bulan Uji Kuota Jamak',
+            'bulan_mulai' => '2027-05-01',
+            'tgl_buka' => '2027-04-01',
+            'tgl_tutup' => '2027-04-20',
+            'aktif' => true,
+        ]);
+        $jurusans = Jurusan::take(2)->get();
+        $bidang = Bidang::first();
+
+        $response = $this->actingAs($admin)->post(route('admin.kuota.store'), [
+            'bulan_magang_id' => $bulan->id,
+            'bidang_id' => $bidang->id,
+            'jurusan_ids' => $jurusans->pluck('id')->toArray(),
+            'jumlah' => 4,
+            'durasi_min' => '3 bulan',
+            'durasi_max' => '6 bulan',
+            'jenjang' => ['S1'],
+        ]);
+
+        $response->assertSessionHas('success');
+
+        foreach ($jurusans as $j) {
+            $this->assertDatabaseHas('kuota', [
+                'bulan_magang_id' => $bulan->id,
+                'jurusan_id' => $j->id,
+                'jumlah' => 4,
+                'aktif' => true,
+            ]);
+        }
+    }
 }

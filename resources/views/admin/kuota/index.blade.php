@@ -668,6 +668,106 @@
             line-height: 1.45;
         }
 
+        /* Chips Jurusan & Jenjang Pills */
+        .jurusan-chips-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .chip-jurusan {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.45rem 0.85rem;
+            background: #EFF6FF;
+            border: 1.5px solid #2563EB;
+            border-radius: 8px;
+            color: #1D4ED8;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .chip-jurusan.inactive {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .btn-add-jurusan-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.45rem 0.85rem;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            color: #475569;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .btn-add-jurusan-chip:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+            color: #0F172A;
+        }
+
+        .jenjang-pills-wrap {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .btn-jenjang-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.4rem 0.95rem;
+            border-radius: 8px;
+            border: 1px solid #CBD5E1;
+            background: #FFFFFF;
+            color: #475569;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-jenjang-pill.active {
+            border: 1.5px solid #2563EB;
+            background: #EFF6FF;
+            color: #2563EB;
+            font-weight: 700;
+        }
+
+        /* Box Warning Kapasitas */
+        .box-capacity-warning {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            color: #991B1B;
+            font-size: 0.8125rem;
+            line-height: 1.45;
+            margin-top: 1rem;
+        }
+
+        .box-capacity-warning strong {
+            display: block;
+            font-weight: 800;
+            color: #991B1B;
+            margin-bottom: 0.2rem;
+        }
+
         .modal-footer-btns {
             display: flex;
             justify-content: flex-end;
@@ -1019,36 +1119,152 @@
 {{-- =========================================================================
      MODAL 1: UBAH BULAN (JADWAL PENDAFTARAN & BULAN MULAI)
      ========================================================================= --}}
+{{-- =========================================================================
+     MODAL 1: UBAH BULAN (JADWAL PENDAFTARAN & BULAN MULAI)
+     ========================================================================= --}}
 @if($selectedBulan)
 <div id="modalUbahBulan" class="modal-overlay">
-    <div class="modal-card">
-        <div class="modal-header-row">
-            <h3 class="modal-title">Ubah Jadwal Bulan Magang</h3>
-            <button type="button" onclick="closeUbahBulanModal()" class="modal-btn-close">&times;</button>
+    <div class="modal-card" style="max-width: 480px; padding: 1.75rem;">
+        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem;">
+            <div>
+                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Ubah bulan</h3>
+                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Tentukan jadwal pendaftaran dan mulai magang.</p>
+            </div>
+            <button type="button" onclick="closeUbahBulanModal()" class="modal-btn-close-box" aria-label="Tutup">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
-        <form method="POST" action="{{ route('admin.kuota.bulan.update', $selectedBulan->id) }}">
+
+        <form method="POST" action="{{ route('admin.kuota.bulan.update', $selectedBulan->id) }}" id="formUbahBulan">
             @csrf
             @method('PUT')
 
+            {{-- 1. Nama Bulan --}}
             <div class="form-row-group">
-                <label>Bulan Mulai Magang <span style="color: #DC2626;">*</span></label>
-                <input type="date" name="bulan_mulai" value="{{ $selectedBulan->bulan_mulai?->format('Y-m-d') }}" required>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Nama bulan</label>
+                <input type="text" 
+                       name="nama_bulan" 
+                       id="ubahNamaBulan"
+                       value="{{ $selectedBulan->nama_bulan }}" 
+                       placeholder="Contoh: Gelombang 2" 
+                       style="height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem;">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            {{-- 2. Tanggal Buka & Tanggal Tutup (Grid 2 Kolom) --}}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem;">
                 <div class="form-row-group">
-                    <label>Tanggal Buka <span style="color: #DC2626;">*</span></label>
-                    <input type="date" name="tgl_buka" value="{{ $selectedBulan->tgl_buka ? \Carbon\Carbon::parse($selectedBulan->tgl_buka)->format('Y-m-d') : '' }}" required>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal buka</label>
+                    <div class="input-calendar-wrap">
+                        <input type="date" 
+                               name="tgl_buka" 
+                               id="ubahBulanTglBuka"
+                               value="{{ $selectedBulan->tgl_buka ? \Carbon\Carbon::parse($selectedBulan->tgl_buka)->format('Y-m-d') : '' }}"
+                               required 
+                               placeholder="Pilih tanggal">
+                        <span class="input-calendar-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </span>
+                    </div>
                 </div>
                 <div class="form-row-group">
-                    <label>Tanggal Tutup <span style="color: #DC2626;">*</span></label>
-                    <input type="date" name="tgl_tutup" value="{{ $selectedBulan->tgl_tutup ? \Carbon\Carbon::parse($selectedBulan->tgl_tutup)->format('Y-m-d') : '' }}" required>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal tutup</label>
+                    <div class="input-calendar-wrap">
+                        <input type="date" 
+                               name="tgl_tutup" 
+                               id="ubahBulanTglTutup"
+                               value="{{ $selectedBulan->tgl_tutup ? \Carbon\Carbon::parse($selectedBulan->tgl_tutup)->format('Y-m-d') : '' }}"
+                               required 
+                               placeholder="Pilih tanggal">
+                        <span class="input-calendar-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <div class="modal-footer-btns">
-                <button type="button" onclick="closeUbahBulanModal()" class="btn-outline-action">Batal</button>
-                <button type="submit" class="btn-primary-action">Simpan Perubahan</button>
+            {{-- 3. Tanggal Mulai Magang --}}
+            <div class="form-row-group">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal mulai magang</label>
+                <div class="input-calendar-wrap">
+                    <input type="date" 
+                           name="bulan_mulai" 
+                           id="ubahBulanMulai"
+                           value="{{ $selectedBulan->bulan_mulai?->format('Y-m-d') }}"
+                           required 
+                           placeholder="Pilih tanggal">
+                    <span class="input-calendar-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </span>
+                </div>
+                <span class="form-helper-text">Harus setelah tanggal tutup pendaftaran.</span>
+            </div>
+
+            {{-- 4. Status Bulan (Segmented Pills) --}}
+            <div class="form-row-group" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.4rem;">Status bulan</label>
+                <input type="hidden" name="status_awal" id="statusUbahInput" value="{{ $selectedBulan->aktif ? 'dibuka' : 'draft' }}">
+                <div class="status-pills-group">
+                    <button type="button" 
+                            id="btnUbahStatusDraft"
+                            onclick="setStatusUbahBulan('draft')" 
+                            class="btn-status-pill {{ ! $selectedBulan->aktif ? 'active' : '' }}">
+                        <span id="checkIconUbahDraft" style="display: {{ ! $selectedBulan->aktif ? 'inline-flex' : 'none' }}; align-items: center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </span>
+                        <span>Draft</span>
+                    </button>
+                    <button type="button" 
+                            id="btnUbahStatusDibuka"
+                            onclick="setStatusUbahBulan('dibuka')" 
+                            class="btn-status-pill {{ $selectedBulan->aktif ? 'active' : '' }}">
+                        <span id="checkIconUbahDibuka" style="display: {{ $selectedBulan->aktif ? 'inline-flex' : 'none' }}; align-items: center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </span>
+                        <span>Dibuka</span>
+                    </button>
+                </div>
+            </div>
+
+            {{-- 5. Alert Callout Box --}}
+            <div class="modal-callout-info">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>Perubahan jadwal pendaftaran dan mulai magang akan langsung disinkronkan ke portal publik.</span>
+            </div>
+
+            {{-- 6. Footer Buttons --}}
+            <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: none;">
+                <button type="button" onclick="closeUbahBulanModal()" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
+                    Batal
+                </button>
+                <button type="submit" id="btnSubmitUbahBulan" class="btn-primary-action" style="padding: 0.6rem 1.4rem; font-weight: 700;">
+                    Simpan perubahan
+                </button>
             </div>
         </form>
     </div>
@@ -1204,40 +1420,146 @@
      ========================================================================= --}}
 @if($selectedBulan)
 <div id="modalTambahKuota" class="modal-overlay">
-    <div class="modal-card">
-        <div class="modal-header-row">
-            <h3 class="modal-title">Tambah Alokasi Kuota Kejuruan</h3>
-            <button type="button" onclick="closeTambahKuotaModal()" class="modal-btn-close">&times;</button>
+    <div class="modal-card" style="max-width: 520px; padding: 1.75rem;">
+        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem;">
+            <div>
+                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Tambah kuota</h3>
+                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Atur kuota, jurusan, jenjang, dan durasi untuk satu bidang.</p>
+            </div>
+            <button type="button" onclick="closeTambahKuotaModal()" class="modal-btn-close-box" aria-label="Tutup">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
-        <form method="POST" action="{{ route('admin.kuota.store') }}">
+
+        <form method="POST" action="{{ route('admin.kuota.store') }}" id="formTambahKuota">
             @csrf
             <input type="hidden" name="bulan_magang_id" value="{{ $selectedBulan->id }}">
 
-            <div class="form-row-group">
-                <label>Bulan Magang:</label>
-                <input type="text" value="{{ $selectedBulan->bulan_mulai?->translatedFormat('F Y') }}" disabled style="background: #F8FAFC; color: #64748B;">
+            {{-- 1. Baris 1: Bulan (Read-Only) & Bidang (Dropdown) --}}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem;">
+                <div class="form-row-group">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Bulan</label>
+                    <input type="text" 
+                           value="{{ $selectedBulan->nama_bulan ?? ($selectedBulan->bulan_mulai?->translatedFormat('F Y') ?? 'Gelombang 1') }}" 
+                           disabled 
+                           style="background: #F8FAFC; color: #475569; font-weight: 600; cursor: not-allowed;">
+                </div>
+                <div class="form-row-group">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Bidang <span style="color: #DC2626;">*</span></label>
+                    <select name="bidang_id" id="tambahKuotaBidangSelect" onchange="onBidangSelected(this.value)" required>
+                        @foreach($bidangList as $b)
+                            <option value="{{ $b['id'] }}" {{ $loop->first ? 'selected' : '' }}>
+                                {{ $b['nama'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
+            {{-- 2. Baris 2: Jurusan yang Dibutuhkan (Chips) --}}
             <div class="form-row-group">
-                <label>Pilih Jurusan <span style="color: #DC2626;">*</span></label>
-                <select name="jurusan_id" required>
-                    <option value="">-- Pilih Kejuruan / Program Studi --</option>
-                    @foreach($jurusanList as $jur)
-                        <option value="{{ $jur->id }}">
-                            {{ $jur->nama_jurusan }} ({{ strtoupper($jur->kategori) }})
-                        </option>
-                    @endforeach
-                </select>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">Jurusan yang dibutuhkan</label>
+                <div class="jurusan-chips-wrap" id="jurusanChipsContainer">
+                    {{-- Dinamis diisi via JavaScript --}}
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem;">
+                    <button type="button" class="btn-add-jurusan-chip" onclick="toggleExtraJurusanSelect()">
+                        <span>+ Jurusan</span>
+                    </button>
+                    <select id="extraJurusanSelect" onchange="addExtraJurusan(this)" style="display: none; height: 34px; font-size: 0.8125rem; padding: 0 0.5rem; border-radius: 6px; border: 1px solid #CBD5E1;">
+                        <option value="">-- Pilih Jurusan Lain --</option>
+                        @foreach($jurusanList as $jur)
+                            <option value="{{ $jur->id }}" data-nama="{{ $jur->nama_jurusan }}">
+                                {{ $jur->nama_jurusan }} ({{ strtoupper($jur->kategori) }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div id="hiddenJurusanInputs"></div>
             </div>
 
+            {{-- 3. Baris 3: Jenjang --}}
             <div class="form-row-group">
-                <label>Jumlah Kuota Kursi <span style="color: #DC2626;">*</span></label>
-                <input type="number" name="jumlah" min="1" max="100" placeholder="Contoh: 5" required>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">Jenjang</label>
+                <div class="jenjang-pills-wrap">
+                    <button type="button" id="pillJenjangSMK" onclick="toggleJenjang('SMK')" class="btn-jenjang-pill">
+                        <span class="jenjang-check" style="display: none;">✓ </span>SMK
+                    </button>
+                    <button type="button" id="pillJenjangD3" onclick="toggleJenjang('D3')" class="btn-jenjang-pill">
+                        <span class="jenjang-check" style="display: none;">✓ </span>D3
+                    </button>
+                    <button type="button" id="pillJenjangS1" onclick="toggleJenjang('S1')" class="btn-jenjang-pill active">
+                        <span class="jenjang-check" style="display: inline;">✓ </span>S1
+                    </button>
+                </div>
+                <input type="hidden" name="jenjang[]" id="inputJenjangSMK" value="" disabled>
+                <input type="hidden" name="jenjang[]" id="inputJenjangD3" value="" disabled>
+                <input type="hidden" name="jenjang[]" id="inputJenjangS1" value="S1">
             </div>
 
-            <div class="modal-footer-btns">
-                <button type="button" onclick="closeTambahKuotaModal()" class="btn-outline-action">Batal</button>
-                <button type="submit" class="btn-primary-action">Simpan Kuota</button>
+            {{-- 4. Baris 4: Jumlah Kuota, Durasi Minimum, Durasi Maksimum (3 Kolom) --}}
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+                <div class="form-row-group">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Jumlah kuota <span style="color: #DC2626;">*</span></label>
+                    <input type="number" 
+                           name="jumlah" 
+                           id="tambahKuotaJumlahInput" 
+                           min="1" 
+                           max="100" 
+                           value="3" 
+                           oninput="checkKapasitasLimit()" 
+                           required>
+                </div>
+                <div class="form-row-group">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Durasi minimum</label>
+                    <select name="durasi_min">
+                        <option value="1 bulan">1 bulan</option>
+                        <option value="2 bulan">2 bulan</option>
+                        <option value="3 bulan" selected>3 bulan</option>
+                        <option value="4 bulan">4 bulan</option>
+                        <option value="5 bulan">5 bulan</option>
+                        <option value="6 bulan">6 bulan</option>
+                    </select>
+                </div>
+                <div class="form-row-group">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Durasi maksimum</label>
+                    <select name="durasi_max">
+                        <option value="1 bulan">1 bulan</option>
+                        <option value="2 bulan">2 bulan</option>
+                        <option value="3 bulan">3 bulan</option>
+                        <option value="4 bulan">4 bulan</option>
+                        <option value="5 bulan">5 bulan</option>
+                        <option value="6 bulan" selected>6 bulan</option>
+                    </select>
+                </div>
+            </div>
+
+            {{-- 5. Baris 5: Warning Box Peringatan Kapasitas Pembimbing --}}
+            <div id="boxWarningKapasitas" class="box-capacity-warning" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <div>
+                    <strong>Melebihi kapasitas pembimbing</strong>
+                    <span id="textWarningKapasitasDetail">
+                        Kapasitas Persandian 12 peserta (2 Pembimbing x 6) dan kuota terpasang sudah 6, sisa kapasitas 6. Kurangi jumlah kuota yang ditambahkan atau tambah Pembimbing aktif di bidang ini.
+                    </span>
+                </div>
+            </div>
+
+            {{-- 6. Footer Buttons --}}
+            <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: none;">
+                <button type="button" onclick="closeTambahKuotaModal()" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
+                    Batal
+                </button>
+                <button type="submit" id="btnSubmitTambahKuota" class="btn-primary-action" style="padding: 0.6rem 1.4rem; font-weight: 700;">
+                    Simpan kuota
+                </button>
             </div>
         </form>
     </div>
@@ -1347,9 +1669,186 @@
         if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
     }
 
+    function setStatusUbahBulan(status) {
+        const input = document.getElementById('statusUbahInput');
+        const btnDraft = document.getElementById('btnUbahStatusDraft');
+        const btnDibuka = document.getElementById('btnUbahStatusDibuka');
+        const iconDraft = document.getElementById('checkIconUbahDraft');
+        const iconDibuka = document.getElementById('checkIconUbahDibuka');
+
+        if (input) input.value = status;
+
+        if (status === 'draft') {
+            if (btnDraft) btnDraft.classList.add('active');
+            if (btnDibuka) btnDibuka.classList.remove('active');
+            if (iconDraft) iconDraft.style.display = 'inline-flex';
+            if (iconDibuka) iconDibuka.style.display = 'none';
+        } else {
+            if (btnDraft) btnDraft.classList.remove('active');
+            if (btnDibuka) btnDibuka.classList.add('active');
+            if (iconDraft) iconDraft.style.display = 'none';
+            if (iconDibuka) iconDibuka.style.display = 'inline-flex';
+        }
+    }
+
+    /* Master Data Bidang & Interaksi Modal Tambah Kuota */
+    const masterBidangData = @json($bidangJsonData ?? []);
+    let activeJurusanIds = [];
+
+    function onBidangSelected(bidangId) {
+        const bidang = masterBidangData.find(b => b.id == bidangId);
+        const container = document.getElementById('jurusanChipsContainer');
+        if (!bidang || !container) return;
+
+        container.innerHTML = '';
+        activeJurusanIds = [];
+
+        if (bidang.jurusans && bidang.jurusans.length > 0) {
+            bidang.jurusans.forEach(j => {
+                activeJurusanIds.push(j.id);
+                const chip = document.createElement('button');
+                chip.type = 'button';
+                chip.className = 'chip-jurusan';
+                chip.id = 'chipJurusan_' + j.id;
+                chip.onclick = function() { toggleJurusanChip(j.id, this); };
+                chip.innerHTML = `<span class="chip-check">✓ </span><span>${j.nama}</span>`;
+                container.appendChild(chip);
+            });
+        } else {
+            container.innerHTML = '<span style="font-size: 0.8125rem; color: #64748B;">Belum ada kejuruan terikat di bidang ini.</span>';
+        }
+
+        updateHiddenJurusanInputs();
+        checkKapasitasLimit();
+    }
+
+    function toggleJurusanChip(jurusanId, element) {
+        const idx = activeJurusanIds.indexOf(jurusanId);
+        const checkSpan = element.querySelector('.chip-check');
+
+        if (idx > -1) {
+            // Uncheck
+            activeJurusanIds.splice(idx, 1);
+            element.classList.add('inactive');
+            if (checkSpan) checkSpan.style.display = 'none';
+        } else {
+            // Check
+            activeJurusanIds.push(jurusanId);
+            element.classList.remove('inactive');
+            if (checkSpan) checkSpan.style.display = 'inline';
+        }
+
+        updateHiddenJurusanInputs();
+    }
+
+    function toggleExtraJurusanSelect() {
+        const select = document.getElementById('extraJurusanSelect');
+        if (!select) return;
+        select.style.display = select.style.display === 'none' ? 'inline-block' : 'none';
+        if (select.style.display !== 'none') select.focus();
+    }
+
+    function addExtraJurusan(selectEl) {
+        const jurId = parseInt(selectEl.value);
+        if (!jurId) return;
+
+        const opt = selectEl.options[selectEl.selectedIndex];
+        const jurNama = opt.getAttribute('data-nama') || opt.text;
+        const container = document.getElementById('jurusanChipsContainer');
+
+        if (!activeJurusanIds.includes(jurId)) {
+            activeJurusanIds.push(jurId);
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'chip-jurusan';
+            chip.id = 'chipJurusan_' + jurId;
+            chip.onclick = function() { toggleJurusanChip(jurId, this); };
+            chip.innerHTML = `<span class="chip-check">✓ </span><span>${jurNama}</span>`;
+            if (container) container.appendChild(chip);
+            updateHiddenJurusanInputs();
+        }
+
+        selectEl.value = '';
+        selectEl.style.display = 'none';
+    }
+
+    function updateHiddenJurusanInputs() {
+        const hiddenWrap = document.getElementById('hiddenJurusanInputs');
+        if (!hiddenWrap) return;
+        hiddenWrap.innerHTML = '';
+        activeJurusanIds.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'jurusan_ids[]';
+            input.value = id;
+            hiddenWrap.appendChild(input);
+        });
+
+        // Pastikan fallback single jurusan_id jika ada
+        if (activeJurusanIds.length > 0) {
+            const singleInput = document.createElement('input');
+            singleInput.type = 'hidden';
+            singleInput.name = 'jurusan_id';
+            singleInput.value = activeJurusanIds[0];
+            hiddenWrap.appendChild(singleInput);
+        }
+    }
+
+    function toggleJenjang(jenjangCode) {
+        const pill = document.getElementById('pillJenjang' + jenjangCode);
+        const input = document.getElementById('inputJenjang' + jenjangCode);
+        if (!pill || !input) return;
+
+        const checkSpan = pill.querySelector('.jenjang-check');
+        const isActive = pill.classList.contains('active');
+
+        if (isActive) {
+            pill.classList.remove('active');
+            input.disabled = true;
+            if (checkSpan) checkSpan.style.display = 'none';
+        } else {
+            pill.classList.add('active');
+            input.disabled = false;
+            input.value = jenjangCode;
+            if (checkSpan) checkSpan.style.display = 'inline';
+        }
+    }
+
+    function checkKapasitasLimit() {
+        const bidangSelect = document.getElementById('tambahKuotaBidangSelect');
+        const jumlahInput = document.getElementById('tambahKuotaJumlahInput');
+        const boxWarning = document.getElementById('boxWarningKapasitas');
+        const textDetail = document.getElementById('textWarningKapasitasDetail');
+
+        if (!bidangSelect || !jumlahInput || !boxWarning || !textDetail) return;
+
+        const bidangId = bidangSelect.value;
+        const bidang = masterBidangData.find(b => b.id == bidangId);
+        const inputVal = parseInt(jumlahInput.value) || 0;
+
+        if (!bidang) {
+            boxWarning.style.display = 'none';
+            return;
+        }
+
+        if (inputVal > bidang.sisa_kapasitas) {
+            boxWarning.style.display = 'flex';
+            textDetail.innerText = `Kapasitas ${bidang.nama} ${bidang.kapasitas_bimbingan} peserta (${bidang.pembimbing_count} Pembimbing x 6) dan kuota terpasang sudah ${bidang.kuota_terpasang}, sisa kapasitas ${bidang.sisa_kapasitas}. Kurangi jumlah kuota yang ditambahkan atau tambah Pembimbing aktif di bidang ini.`;
+        } else {
+            boxWarning.style.display = 'none';
+        }
+    }
+
     function openTambahKuotaModal() {
         const modal = document.getElementById('modalTambahKuota');
-        if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+        if (modal) { 
+            modal.style.display = 'flex'; 
+            document.body.style.overflow = 'hidden'; 
+            const bidangSelect = document.getElementById('tambahKuotaBidangSelect');
+            if (bidangSelect && bidangSelect.value) {
+                onBidangSelected(bidangSelect.value);
+            }
+        }
     }
     function closeTambahKuotaModal() {
         const modal = document.getElementById('modalTambahKuota');
