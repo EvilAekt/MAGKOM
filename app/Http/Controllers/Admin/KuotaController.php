@@ -53,22 +53,22 @@ class KuotaController extends Controller
         // Konfigurasi visual avatar & tema per bidang sesuai desain UI
         $themeMap = [
             'Aplikasi Informatika & E-Government (EGOV)' => [
-                'alias' => 'Aplikasi Informatika',
+                'alias' => 'Aplikasi Informatika (EGOV)',
                 'inisial' => 'A',
                 'bg_color' => '#EEF2FF',
                 'text_color' => '#4F46E5',
                 'durasi' => '1–6 bulan',
             ],
             'Informasi dan Komunikasi Publik (IKP)' => [
-                'alias' => 'Statistik',
-                'inisial' => 'S',
+                'alias' => 'Informasi & Komunikasi Publik (IKP)',
+                'inisial' => 'IKP',
                 'bg_color' => '#FDF2F8',
                 'text_color' => '#DB2777',
                 'durasi' => '1–6 bulan',
             ],
             'Infrastruktur Teknologi Informasi (ITI)' => [
-                'alias' => 'Persandian',
-                'inisial' => 'P',
+                'alias' => 'Infrastruktur TI & Persandian (ITI)',
+                'inisial' => 'ITI',
                 'bg_color' => '#ECFDF5',
                 'text_color' => '#059669',
                 'durasi' => '3–6 bulan',
@@ -176,11 +176,36 @@ class KuotaController extends Controller
             }
         }
 
+        // Siapkan mapping JSON bidang untuk interaksi real-time di modal
+        $bidangJsonData = $bidangList->map(function ($b) {
+            $pembimbingCount = max(2, $b['pembimbing_count']);
+            $kapasitasBimbingan = $pembimbingCount * 6;
+            $kuotaTerpasang = (int) $b['kapasitas'];
+            $sisaKapasitas = max(0, $kapasitasBimbingan - $kuotaTerpasang);
+
+            return [
+                'id' => $b['id'],
+                'nama' => $b['nama'],
+                'nama_lengkap' => $b['nama_lengkap'],
+                'pembimbing_count' => $pembimbingCount,
+                'kapasitas_bimbingan' => $kapasitasBimbingan,
+                'kuota_terpasang' => $kuotaTerpasang,
+                'sisa_kapasitas' => $sisaKapasitas,
+                'jurusans' => $b['jurusan_list']->map(fn ($j) => [
+                    'id' => $j->id,
+                    'nama' => $j->nama_jurusan,
+                    'kategori' => $j->kategori,
+                ])->values(),
+                'jenjang' => $b['jenjang_badges'],
+            ];
+        })->values();
+
         return view('admin.kuota.index', [
             'bulanList' => $bulanList,
             'selectedBulan' => $selectedBulan,
             'jurusanList' => $jurusanList,
             'bidangList' => $bidangList,
+            'bidangJsonData' => $bidangJsonData,
             'totalKapasitas' => $totalKapasitas,
             'totalTerisi' => $totalTerisi,
             'globalPersen' => $globalPersen,
@@ -192,17 +217,38 @@ class KuotaController extends Controller
     public function store(KuotaRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        $kuota = Kuota::create($validated);
+        $bulanMagangId = (int) $validated['bulan_magang_id'];
+        $jumlah = (int) $validated['jumlah'];
+
+        // Jika form mengirimkan array jurusan_ids[] dari modal baru
+        $jurusanIds = ! empty($validated['jurusan_ids'])
+            ? array_map('intval', (array) $validated['jurusan_ids'])
+            : [(int) $validated['jurusan_id']];
+
+        $createdKuotas = [];
+        foreach ($jurusanIds as $jId) {
+            $kuota = Kuota::updateOrCreate(
+                [
+                    'bulan_magang_id' => $bulanMagangId,
+                    'jurusan_id' => $jId,
+                ],
+                [
+                    'jumlah' => $jumlah,
+                    'aktif' => true,
+                ]
+            );
+            $createdKuotas[] = $kuota->id;
+        }
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
             tabel: 'kuota',
-            idData: $kuota->id,
-            nilaiBaru: $kuota->toArray(),
+            idData: $createdKuotas[0] ?? $bulanMagangId,
+            nilaiBaru: ['kuota_ids' => $createdKuotas, 'jumlah' => $jumlah],
             detail: ['aksi' => 'Menambahkan kuota jurusan pada bulan magang']
         );
 
-        return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $kuota->bulan_magang_id])
+        return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $bulanMagangId])
             ->with('success', 'Kuota jurusan berhasil ditambahkan.');
     }
 
@@ -327,6 +373,7 @@ class KuotaController extends Controller
             'bulan_mulai' => ['required', 'date'],
             'tgl_buka' => ['required', 'date'],
             'tgl_tutup' => ['required', 'date', 'after_or_equal:tgl_buka'],
+            'status_awal' => ['sometimes', 'in:draft,dibuka'],
         ], [
             'nama_bulan.max' => 'Nama bulan maksimal 100 karakter.',
             'bulan_mulai.required' => 'Tanggal mulai magang wajib diisi.',
@@ -334,6 +381,12 @@ class KuotaController extends Controller
             'tgl_tutup.required' => 'Tanggal tutup pendaftaran wajib diisi.',
             'tgl_tutup.after_or_equal' => 'Tanggal tutup harus setelah atau sama dengan tanggal buka.',
         ]);
+
+        $statusAwal = $request->input('status_awal');
+        if ($statusAwal) {
+            $validated['aktif'] = ($statusAwal === 'dibuka');
+        }
+        unset($validated['status_awal']);
 
         $nilaiLama = $bulanMagang->toArray();
         $bulanMagang->update($validated);
