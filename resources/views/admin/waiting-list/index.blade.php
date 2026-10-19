@@ -769,7 +769,7 @@
                     @endif
                     <div class="adm-hero-chip">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
-                        <span>{{ $periodeCount }} Periode Magang Terdampak</span>
+                        <span>{{ $periodeCount }} Bulan Magang Terdampak</span>
                     </div>
                 </div>
             </div>
@@ -831,8 +831,8 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
             </div>
             <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Periode Bulan Magang</span>
-                <span class="adm-kpi-val text-indigo-600">{{ $periodeCount }}</span>
+                <span class="adm-kpi-label">Bulan Magang</span>
+                <span class="adm-kpi-val" style="color: #4F46E5;">{{ $periodeCount }}</span>
                 <span class="adm-kpi-hint">Bulan dengan antrean aktif</span>
             </div>
         </div>
@@ -855,9 +855,9 @@
             </div>
 
             <div class="adm-field-group">
-                <label for="select-bulan">Periode Magang</label>
+                <label for="select-bulan">Bulan Magang</label>
                 <select name="bulan_magang_id" id="select-bulan" class="adm-select">
-                    <option value="">Semua Periode Bulan</option>
+                    <option value="">Semua Bulan Magang</option>
                     @foreach($bulanAntreanList as $b)
                         <option value="{{ $b->id }}" {{ request('bulan_magang_id') == $b->id ? 'selected' : '' }}>
                             {{ $b->bulan_mulai?->translatedFormat('F Y') }}
@@ -898,7 +898,7 @@
             <div class="adm-bulk-closure-strip">
                 <div style="display: flex; align-items: center; gap: 8px; color: #475569;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                    <span><strong>Penutupan Massal Awal Bulan (AC-04-7):</strong> Sisa antrean ditolak otomatis jika periode magang telah berjalan.</span>
+                    <span><strong>Penutupan Massal Awal Bulan (AC-04-7):</strong> Sisa antrean ditolak otomatis jika bulan magang telah berjalan.</span>
                 </div>
                 <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     @foreach($bulanAntreanList as $bAntrean)
@@ -907,9 +907,9 @@
                             $tglMulai = \Carbon\Carbon::parse($bAntrean->bulan_mulai . '-01', 'Asia/Jakarta');
                             $bisaTutup = $hariIni->gte($tglMulai);
                         @endphp
-                        <form method="POST" action="{{ route('admin.waiting-list.tutup', $bAntrean) }}" onsubmit="return confirm('Apakah Anda yakin menutup sisa antrean waiting list periode {{ $bAntrean->bulan_mulai?->translatedFormat('F Y') }}? Pendaftaran yang tersisa akan ditolak secara otomatis.');" style="display: inline;">
+                        <form method="POST" action="{{ route('admin.waiting-list.tutup', $bAntrean) }}" onsubmit="return confirm('Apakah Anda yakin menutup sisa antrean waiting list bulan {{ $bAntrean->bulan_mulai?->translatedFormat('F Y') }}? Pendaftaran yang tersisa akan ditolak secara otomatis.');" style="display: inline;">
                             @csrf
-                            <button type="submit" {{ !$bisaTutup ? 'disabled' : '' }} class="adm-btn-closure {{ $bisaTutup ? 'can-close' : 'disabled' }}" title="{{ $bisaTutup ? 'Tutup sisa antrean periode ini' : 'Hanya bisa ditutup setelah tanggal 1 bulan mulai magang' }}">
+                            <button type="submit" {{ !$bisaTutup ? 'disabled' : '' }} class="adm-btn-closure {{ $bisaTutup ? 'can-close' : 'disabled' }}" title="{{ $bisaTutup ? 'Tutup sisa antrean bulan ini' : 'Hanya bisa ditutup setelah tanggal 1 bulan mulai magang' }}">
                                 Tutup Antrean {{ $bAntrean->bulan_mulai?->translatedFormat('M Y') }}
                             </button>
                         </form>
@@ -954,7 +954,7 @@
                             <th style="width: 150px;">No. Registrasi</th>
                             <th>Calon Peserta</th>
                             <th>Instansi &amp; Kejuruan</th>
-                            <th>Periode Magang</th>
+                            <th>Bulan Magang</th>
                             <th style="text-align: center;">Status Kuota</th>
                             <th>Waktu Submit (FIFO)</th>
                             <th style="text-align: right; width: 140px;">Tindak Lanjut</th>

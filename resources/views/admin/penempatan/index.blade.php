@@ -466,7 +466,7 @@
                             <th>Peserta Magang</th>
                             <th>Pembimbing Lapangan</th>
                             <th>Jalur / Bidang Dinas</th>
-                            <th>Periode Magang</th>
+                            <th>Bulan Magang</th>
                             <th>Status</th>
                             <th style="text-align: right; width: 170px;">Aksi</th>
                         </tr>
@@ -696,7 +696,7 @@
                     <option value="">-- Pilih Slot Kemitraan Khusus --</option>
                     @foreach($slotKhususList as $sk)
                         <option value="{{ $sk->id }}">
-                            {{ $sk->nama_mitra }} &bull; Periode: {{ $sk->bulan_mulai?->translatedFormat('F Y') }} (Sisa: {{ $sk->jumlah - $sk->terisi }} Kursi)
+                            {{ $sk->nama_mitra }} &bull; Bulan: {{ $sk->bulan_mulai?->translatedFormat('F Y') }} (Sisa: {{ $sk->jumlah - $sk->terisi }} Kursi)
                         </option>
                     @endforeach
                 </select>

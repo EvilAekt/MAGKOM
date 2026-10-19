@@ -122,7 +122,7 @@
                 Aturan Penonaktifan Jurusan (BR-12)
             </h2>
             <p style="font-size: 0.8125rem; color: var(--neutral-700); margin: 0; line-height: 1.5;">
-                Jurusan tidak dapat dinonaktifkan jika masih terikat dengan kuota aktif pada periode pendaftaran berjalan atau masih memiliki peserta magang aktif yang ditempatkan di dinas.
+                Jurusan tidak dapat dinonaktifkan jika masih terikat dengan kuota aktif pada bulan pendaftaran berjalan atau masih memiliki peserta magang aktif yang ditempatkan di dinas.
             </p>
         </div>
     </div>

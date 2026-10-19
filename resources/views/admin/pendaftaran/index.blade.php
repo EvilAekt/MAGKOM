@@ -969,9 +969,9 @@
             </div>
 
             <div class="adm-field-group">
-                <label for="select-bulan">Periode Magang</label>
+                <label for="select-bulan">Bulan Magang</label>
                 <select name="bulan_magang_id" id="select-bulan" class="adm-select">
-                    <option value="">Semua Periode</option>
+                    <option value="">Semua Bulan</option>
                     @foreach($bulanList as $bulan)
                         <option value="{{ $bulan->id }}" {{ request('bulan_magang_id') == $bulan->id ? 'selected' : '' }}>
                             {{ $bulan->bulan_mulai?->translatedFormat('F Y') }}
@@ -1061,7 +1061,7 @@
                             <th style="width: 140px;">No. Registrasi</th>
                             <th>Calon Peserta</th>
                             <th>Institusi & Jurusan</th>
-                            <th>Periode Magang</th>
+                            <th>Bulan Magang</th>
                             <th>Status & Usia Berkas</th>
                             <th style="text-align: right; width: 130px;">Aksi</th>
                         </tr>

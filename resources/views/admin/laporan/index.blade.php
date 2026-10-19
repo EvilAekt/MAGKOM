@@ -348,7 +348,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
                 <div>
                     <h2 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0 0 0.25rem 0;">Laporan Rekapitulasi Pendaftaran</h2>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Data calon peserta pendaftaran magang berdasarkan periode bulan dan status keputusan.</p>
+                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Data calon peserta pendaftaran magang berdasarkan bulan magang dan status keputusan.</p>
                 </div>
 
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -365,9 +365,9 @@
                 <input type="hidden" name="tab" value="pendaftaran">
 
                 <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-                    <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700);">Periode Bulan Magang</label>
+                    <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700);">Bulan Magang</label>
                     <select name="bulan_magang_id" style="height: 38px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.8125rem; background: #FFFFFF;">
-                        <option value="">Semua Periode Bulan</option>
+                        <option value="">Semua Bulan Magang</option>
                         @foreach($bulanMagangList as $bm)
                             <option value="{{ $bm->id }}" {{ request('bulan_magang_id') == $bm->id ? 'selected' : '' }}>
                                 {{ $bm->bulan_mulai?->translatedFormat('F Y') }}
@@ -428,7 +428,7 @@
                             <th style="padding: 0.75rem 1rem;">No. Registrasi</th>
                             <th style="padding: 0.75rem 1rem;">Nama & Institusi</th>
                             <th style="padding: 0.75rem 1rem;">Jurusan Pilihan</th>
-                            <th style="padding: 0.75rem 1rem;">Periode Mulai</th>
+                            <th style="padding: 0.75rem 1rem;">Bulan Mulai</th>
                             <th style="padding: 0.75rem 1rem;">Durasi</th>
                             <th style="padding: 0.75rem 1rem;">Status</th>
                         </tr>
@@ -636,7 +636,7 @@
                         <table style="width: 100%; border-collapse: collapse; font-size: 0.8125rem; text-align: left;">
                             <thead style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-300);">
                                 <tr>
-                                    <th style="padding: 0.625rem 0.75rem;">Periode</th>
+                                    <th style="padding: 0.625rem 0.75rem;">Bulan Magang</th>
                                     <th style="padding: 0.625rem 0.75rem;">Jurusan</th>
                                     <th style="padding: 0.625rem 0.75rem; text-align: center;">Kapasitas</th>
                                     <th style="padding: 0.625rem 0.75rem; text-align: center;">Terisi</th>
@@ -671,7 +671,7 @@
                         <table style="width: 100%; border-collapse: collapse; font-size: 0.8125rem; text-align: left;">
                             <thead style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-300);">
                                 <tr>
-                                    <th style="padding: 0.625rem 0.75rem;">Periode Bulan</th>
+                                    <th style="padding: 0.625rem 0.75rem;">Bulan Magang</th>
                                     <th style="padding: 0.625rem 0.75rem; text-align: center;">Alokasi Slot</th>
                                     <th style="padding: 0.625rem 0.75rem; text-align: center;">Terisi</th>
                                     <th style="padding: 0.625rem 0.75rem; text-align: center;">Sisa Slot</th>

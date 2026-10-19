@@ -144,7 +144,7 @@
                             <th style="padding: 1rem 1.25rem; font-weight: 700;">Nama Peserta</th>
                             <th style="padding: 1rem 1rem; font-weight: 700;">Institusi & Jurusan</th>
                             <th style="padding: 1rem 1rem; font-weight: 700;">Pembimbing & Bidang</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Periode Bimbingan</th>
+                            <th style="padding: 1rem 1rem; font-weight: 700;">Jadwal Bimbingan</th>
                             <th style="padding: 1rem 1rem; font-weight: 700; text-align: center; width: 110px;">Jalur</th>
                             <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right; width: 150px;">Aksi</th>
                         </tr>

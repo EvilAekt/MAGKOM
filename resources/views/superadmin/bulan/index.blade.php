@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Periode Bulan Magang - SuperAdmin MagKom Sleman')
-@section('page_title', 'Manajemen Periode Bulan Magang')
+@section('title', 'Bulan Magang - SuperAdmin MagKom Sleman')
+@section('page_title', 'Manajemen Bulan Magang')
 @section('page_description', 'Kelola jadwal pembukaan pendaftaran dan override status ketersediaan bulan magang.')
 
 @section('breadcrumbs')
@@ -16,7 +16,7 @@
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
-        <span>Tambah Periode Bulan</span>
+        <span>Tambah Bulan Magang</span>
     </button>
 @endsection
 
@@ -134,11 +134,11 @@
     <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
         <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
             <div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Daftar Periode Bulan Magang</h3>
+                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Daftar Bulan Magang</h3>
                 <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.125rem 0 0 0;">Riwayat jadwal gelombang magang dan status penerimaan calon peserta.</p>
             </div>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
-                Total: <strong>{{ $bulanList->total() }} Periode</strong>
+                Total: <strong>{{ $bulanList->total() }} Bulan Magang</strong>
             </span>
         </div>
 
@@ -147,7 +147,7 @@
                 <thead>
                     <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         <th style="padding: 1rem 1.25rem; font-weight: 700;">Bulan Magang</th>
-                        <th style="padding: 1rem 1rem; font-weight: 700;">Periode Buka Pendaftaran</th>
+                        <th style="padding: 1rem 1rem; font-weight: 700;">Jadwal Buka Pendaftaran</th>
                         <th style="padding: 1rem 1rem; font-weight: 700;">Override Status</th>
                         <th style="padding: 1rem 1rem; font-weight: 700; width: 130px; text-align: center;">Status Aktif</th>
                         <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right; width: 200px;">Aksi</th>
@@ -206,7 +206,7 @@
                                         Edit
                                     </button>
 
-                                    <form method="POST" action="{{ route('superadmin.bulan.toggle', $bulan) }}" style="display: inline-block; margin: 0;" onsubmit="return confirm('Ubah status aktif periode bulan ini?');">
+                                    <form method="POST" action="{{ route('superadmin.bulan.toggle', $bulan) }}" style="display: inline-block; margin: 0;" onsubmit="return confirm('Ubah status aktif bulan magang ini?');">
                                         @csrf
                                         @method('PATCH')
                                         <button type="submit" style="padding: 0.45rem 0.875rem; background: {{ $bulan->aktif ? 'var(--red-100)' : 'var(--green-100)' }}; border: 1px solid {{ $bulan->aktif ? 'var(--red-300)' : 'rgba(22, 163, 74, 0.25)' }}; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: {{ $bulan->aktif ? 'var(--red-700)' : 'var(--green-700)' }}; cursor: pointer; transition: all 0.15s;">
@@ -222,8 +222,8 @@
                                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
                                 </div>
-                                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada data periode bulan magang.</p>
-                                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Periode Bulan</strong> untuk memulai gelombang pendaftaran.</p>
+                                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada data bulan magang.</p>
+                                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Bulan Magang</strong> untuk memulai gelombang pendaftaran.</p>
                             </td>
                         </tr>
                     @endforelse
@@ -249,13 +249,13 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Periode Bulan Magang</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Bulan Magang</h3>
             </div>
             <button type="button" onclick="closeTambahBulanModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0 0 1.25rem 0; line-height: 1.4;">
-            Buat jadwal pembukaan periode magang baru untuk calon peserta dinas.
+            Buat jadwal pembukaan bulan magang baru untuk calon peserta dinas.
         </p>
 
         <form method="POST" action="{{ route('superadmin.bulan.store') }}" style="display: flex; flex-direction: column; gap: 1.25rem;">
@@ -300,7 +300,7 @@
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Simpan Periode
+                    Simpan Bulan Magang
                 </button>
             </div>
         </form>
@@ -317,7 +317,7 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Perbarui Periode Bulan Magang</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Perbarui Bulan Magang</h3>
             </div>
             <button type="button" onclick="closeEditBulanModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>

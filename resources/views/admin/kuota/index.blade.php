@@ -692,7 +692,7 @@
                         Kontrol Alokasi Kuota
                     </span>
                     <span class="adm-hero-period-pill">
-                        {{ $selectedBulan ? $selectedBulan->bulan_mulai?->translatedFormat('F Y') : 'Semua Periode' }}
+                        {{ $selectedBulan ? $selectedBulan->bulan_mulai?->translatedFormat('F Y') : 'Semua Bulan' }}
                     </span>
                 </div>
                 <h1 class="adm-hero-title">Alokasi &amp; Manajemen Kuota Magang</h1>
@@ -773,7 +773,7 @@
                 <span class="adm-kpi-label">Sisa Kursi Siap Daftar</span>
                 <span class="adm-kpi-val" style="color: {{ $sisaKursi > 0 ? '#059669' : '#DC2626' }};">{{ number_format($sisaKursi) }}</span>
                 <span class="adm-kpi-hint" style="color: {{ $sisaKursi > 0 ? '#059669' : '#DC2626' }};">
-                    {{ $sisaKursi > 0 ? 'Tersedia untuk pendaftar' : 'Kuota periode ini penuh' }}
+                    {{ $sisaKursi > 0 ? 'Tersedia untuk pendaftar' : 'Kuota bulan ini penuh' }}
                 </span>
             </div>
         </div>
@@ -800,7 +800,7 @@
         <form method="GET" action="{{ route('admin.kuota.index') }}" class="adm-period-selector-form">
             <label for="bulan-select" style="font-size: 0.825rem; font-weight: 700; color: #475569; white-space: nowrap; display: flex; align-items: center; gap: 6px;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                <span>Periode Magang:</span>
+                <span>Bulan Magang:</span>
             </label>
             <select id="bulan-select" name="bulan_magang_id" onchange="this.form.submit()" class="adm-period-select">
                 @foreach($bulanList as $b)
@@ -832,7 +832,7 @@
                     <span>Alokasi Kuota Jurusan: {{ $selectedBulan ? $selectedBulan->bulan_mulai?->translatedFormat('F Y') : '-' }}</span>
                 </h3>
                 <p style="font-size: 0.8125rem; color: #64748B; margin: 3px 0 0 0;">
-                    Distribusi alokasi kursi magang per jurusan pada periode pendaftaran ini
+                    Distribusi alokasi kursi magang per jurusan pada bulan pendaftaran ini
                 </p>
             </div>
             <span style="font-size: 0.8125rem; font-weight: 700; color: #0641CC; background: #EFF6FF; padding: 4px 12px; border-radius: 9999px; border: 1px solid #DBEAFE;">
@@ -853,7 +853,7 @@
                     Belum Ada Alokasi Kuota Terdaftar
                 </h4>
                 <p style="font-size: 0.85rem; max-width: 480px; margin: 0 auto 1.5rem auto; line-height: 1.5;">
-                    Belum ada alokasi kuota jurusan untuk periode bulan ini. Klik tombol di bawah untuk mulai mengalokasikan kuota kursi.
+                    Belum ada alokasi kuota jurusan untuk bulan ini. Klik tombol di bawah untuk mulai mengalokasikan kuota kursi.
                 </p>
                 @if($selectedBulan)
                     <button type="button" onclick="openTambahKuotaModal()" class="adm-hero-btn-add" style="background: #0641CC; color: #ffffff; border-color: #0641CC; margin: 0 auto;">
@@ -981,7 +981,7 @@
                 <div>
                     <h3 style="font-size: 1rem; font-weight: 800; color: #0F172A; margin: 0;">Tambah Kuota Jurusan</h3>
                     <p style="font-size: 0.75rem; color: #64748B; margin: 2px 0 0 0;">
-                        Periode: <strong>{{ $selectedBulan->bulan_mulai?->translatedFormat('F Y') }}</strong>
+                        Bulan: <strong>{{ $selectedBulan->bulan_mulai?->translatedFormat('F Y') }}</strong>
                     </p>
                 </div>
             </div>
@@ -1005,7 +1005,7 @@
                         <option value="{{ $jur->id }}">{{ $jur->nama_jurusan }} ({{ strtoupper($jur->kategori) }})</option>
                     @endforeach
                 </select>
-                <span style="font-size: 0.75rem; color: #64748B;">Pastikan jurusan aktif belum dialokasikan pada periode bulan ini.</span>
+                <span style="font-size: 0.75rem; color: #64748B;">Pastikan jurusan aktif belum dialokasikan pada bulan ini.</span>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem;">

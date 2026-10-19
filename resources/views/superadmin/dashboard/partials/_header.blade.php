@@ -65,7 +65,7 @@
             </a>
 
             <form method="GET" action="{{ route('superadmin.dashboard') }}" class="sa-period-form">
-                <label for="select-bulan" class="sa-sr-only">Pilih Periode Magang:</label>
+                <label for="select-bulan" class="sa-sr-only">Pilih Bulan Magang:</label>
                 <select id="select-bulan" name="bulan_id" data-auto-submit class="sa-select">
                     @foreach($daftarBulan as $b)
                         <option value="{{ $b->id }}" {{ $bulanAktif && $bulanAktif->id === $b->id ? 'selected' : '' }}>
@@ -92,7 +92,7 @@
             </a>
             <a href="{{ route('superadmin.bulan.index') }}" class="sa-shortcut-chip">
                 <x-sa.icon name="calendar" :size="14" />
-                <span>+ Periode Magang</span>
+                <span>+ Bulan Magang</span>
             </a>
             <a href="{{ route('admin.pendaftaran.index') }}" class="sa-shortcut-chip">
                 <x-sa.icon name="clipboard-check" :size="14" />

@@ -837,12 +837,12 @@
                 </div>
             </div>
 
-            {{-- SECTION 2: RANGKUMAN BIODATA & PERIODE MAGANG TERPADU --}}
+            {{-- SECTION 2: RANGKUMAN BIODATA & BULAN MAGANG TERPADU --}}
             <div class="adm-panel-card">
                 <div class="adm-panel-header">
                     <h3 class="adm-panel-title">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        <span>Rangkuman Biodata & Periode Magang</span>
+                        <span>Rangkuman Biodata & Bulan Magang</span>
                     </h3>
                     <span style="font-size: 0.75rem; font-weight: 700; color: #475569;">
                         Durasi: {{ $pendaftaran->durasi_bulan }} Bulan
@@ -866,7 +866,7 @@
                             <small style="color: #64748B; font-size: 0.775rem;">WhatsApp: {{ $profil?->no_hp ?? '-' }}</small>
                         </div>
                         <div class="adm-summary-cell">
-                            <span class="adm-summary-label">Periode Magang & Kuota</span>
+                            <span class="adm-summary-label">Bulan Magang & Kuota</span>
                             <span class="adm-summary-val" style="color: #0641CC;">
                                 {{ $pendaftaran->bulanMagang?->bulan_mulai?->translatedFormat('F Y') ?? 'Belum ditentukan' }}
                             </span>
