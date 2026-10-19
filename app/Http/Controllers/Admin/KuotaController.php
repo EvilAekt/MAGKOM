@@ -280,21 +280,29 @@ class KuotaController extends Controller
     public function storeBulan(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'bulan_mulai' => ['required', 'date'],
+            'nama_bulan' => ['nullable', 'string', 'max:100'],
             'tgl_buka' => ['required', 'date'],
             'tgl_tutup' => ['required', 'date', 'after_or_equal:tgl_buka'],
+            'bulan_mulai' => ['required', 'date', 'after:tgl_tutup'],
+            'status_awal' => ['sometimes', 'in:draft,dibuka'],
         ], [
-            'bulan_mulai.required' => 'Bulan mulai magang wajib diisi.',
+            'nama_bulan.max' => 'Nama bulan maksimal 100 karakter.',
+            'bulan_mulai.required' => 'Tanggal mulai magang wajib diisi.',
+            'bulan_mulai.after' => 'Tanggal mulai magang harus setelah tanggal tutup pendaftaran.',
             'tgl_buka.required' => 'Tanggal buka pendaftaran wajib diisi.',
             'tgl_tutup.required' => 'Tanggal tutup pendaftaran wajib diisi.',
             'tgl_tutup.after_or_equal' => 'Tanggal tutup harus setelah atau sama dengan tanggal buka.',
         ]);
 
+        $statusAwal = $request->input('status_awal', 'draft');
+        $isAktif = ($statusAwal === 'dibuka');
+
         $bulan = BulanMagang::create([
+            'nama_bulan' => $validated['nama_bulan'] ?? null,
             'bulan_mulai' => $validated['bulan_mulai'],
             'tgl_buka' => $validated['tgl_buka'],
             'tgl_tutup' => $validated['tgl_tutup'],
-            'aktif' => true,
+            'aktif' => $isAktif,
         ]);
 
         $this->auditService->catat(
@@ -315,11 +323,13 @@ class KuotaController extends Controller
     public function updateBulan(Request $request, BulanMagang $bulanMagang): RedirectResponse
     {
         $validated = $request->validate([
+            'nama_bulan' => ['nullable', 'string', 'max:100'],
             'bulan_mulai' => ['required', 'date'],
             'tgl_buka' => ['required', 'date'],
             'tgl_tutup' => ['required', 'date', 'after_or_equal:tgl_buka'],
         ], [
-            'bulan_mulai.required' => 'Bulan mulai magang wajib diisi.',
+            'nama_bulan.max' => 'Nama bulan maksimal 100 karakter.',
+            'bulan_mulai.required' => 'Tanggal mulai magang wajib diisi.',
             'tgl_buka.required' => 'Tanggal buka pendaftaran wajib diisi.',
             'tgl_tutup.required' => 'Tanggal tutup pendaftaran wajib diisi.',
             'tgl_tutup.after_or_equal' => 'Tanggal tutup harus setelah atau sama dengan tanggal buka.',

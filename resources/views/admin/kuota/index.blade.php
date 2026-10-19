@@ -546,6 +546,31 @@
             line-height: 1;
         }
 
+        .modal-btn-close-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            color: #64748B;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .modal-btn-close-box:hover {
+            background: #F8FAFC;
+            color: #0F172A;
+            border-color: #CBD5E1;
+        }
+
+        .modal-header-desc {
+            font-size: 0.8125rem;
+            color: #64748B;
+            margin: 0.25rem 0 0 0;
+        }
+
         .form-row-group {
             display: flex;
             flex-direction: column;
@@ -567,6 +592,80 @@
             padding: 0 0.875rem;
             font-size: 0.875rem;
             font-family: inherit;
+        }
+
+        .input-calendar-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input-calendar-wrap input {
+            width: 100%;
+            height: 42px;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            padding: 0 2.25rem 0 0.875rem;
+            font-size: 0.875rem;
+            font-family: inherit;
+            color: #1E293B;
+        }
+
+        .input-calendar-icon {
+            position: absolute;
+            right: 0.75rem;
+            pointer-events: none;
+            color: #94A3B8;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-helper-text {
+            font-size: 0.75rem;
+            color: #64748B;
+            margin-top: 0.3rem;
+        }
+
+        .status-pills-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.45rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #E2E8F0;
+            background: #FFFFFF;
+            color: #475569;
+            transition: all 0.15s ease;
+        }
+
+        .btn-status-pill.active {
+            border: 1.5px solid #2563EB;
+            background: #EFF6FF;
+            color: #2563EB;
+            font-weight: 700;
+        }
+
+        .modal-callout-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #EFF6FF;
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            margin-top: 1rem;
+            color: #1D4ED8;
+            font-size: 0.8125rem;
+            line-height: 1.45;
         }
 
         .modal-footer-btns {
@@ -676,7 +775,7 @@
                 <select name="bulan_magang_id" onchange="this.form.submit()">
                     @foreach($bulanList as $b)
                         <option value="{{ $b->id }}" {{ $selectedBulan && $selectedBulan->id === $b->id ? 'selected' : '' }}>
-                            {{ $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '' }}
+                            {{ $b->nama_bulan ? $b->nama_bulan . ' (' . $b->bulan_mulai?->translatedFormat('F Y') . ')' : $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '' }}
                         </option>
                     @endforeach
                 </select>
@@ -693,7 +792,7 @@
                 <span class="hero-badge-caps">Bulan Aktif</span>
                 
                 <div class="hero-main-title">
-                    <span>{{ $selectedBulan->bulan_mulai?->translatedFormat('F Y') ?? 'Gelombang 1' }}</span>
+                    <span>{{ $selectedBulan->nama_bulan ?? ($selectedBulan->bulan_mulai?->translatedFormat('F Y') ?? 'Gelombang 1') }}</span>
                     @if($isPendaftaranBuka)
                         <span class="hero-status-pill hero-status-open">
                             <span style="width: 7px; height: 7px; border-radius: 50%; background: #16A34A;"></span>
@@ -960,34 +1059,141 @@
      MODAL 2: BUAT BULAN BARU
      ========================================================================= --}}
 <div id="modalBuatBulan" class="modal-overlay">
-    <div class="modal-card">
-        <div class="modal-header-row">
-            <h3 class="modal-title">Buat Bulan Magang Baru</h3>
-            <button type="button" onclick="closeBuatBulanModal()" class="modal-btn-close">&times;</button>
+    <div class="modal-card" style="max-width: 480px; padding: 1.75rem;">
+        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem;">
+            <div>
+                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Buat bulan baru</h3>
+                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Tentukan jadwal pendaftaran dan mulai magang.</p>
+            </div>
+            <button type="button" onclick="closeBuatBulanModal()" class="modal-btn-close-box" aria-label="Tutup">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
-        <form method="POST" action="{{ route('admin.kuota.bulan.store') }}">
+
+        <form method="POST" action="{{ route('admin.kuota.bulan.store') }}" id="formBuatBulan">
             @csrf
 
+            {{-- 1. Nama Bulan --}}
             <div class="form-row-group">
-                <label>Bulan Mulai Magang <span style="color: #DC2626;">*</span></label>
-                <input type="date" name="bulan_mulai" required value="{{ now()->addMonth()->startOfMonth()->format('Y-m-d') }}">
-                <small style="color: #64748B; font-size: 0.75rem;">Pilih tanggal 1 pada bulan yang akan dibuka.</small>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Nama bulan</label>
+                <input type="text" 
+                       name="nama_bulan" 
+                       placeholder="Contoh: Gelombang 3" 
+                       style="height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem;">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            {{-- 2. Tanggal Buka & Tanggal Tutup (Grid 2 Kolom) --}}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem;">
                 <div class="form-row-group">
-                    <label>Tanggal Buka Pendaftaran <span style="color: #DC2626;">*</span></label>
-                    <input type="date" name="tgl_buka" required value="{{ now()->format('Y-m-d') }}">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal buka</label>
+                    <div class="input-calendar-wrap">
+                        <input type="date" 
+                               name="tgl_buka" 
+                               id="buatBulanTglBuka"
+                               required 
+                               placeholder="Pilih tanggal">
+                        <span class="input-calendar-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </span>
+                    </div>
                 </div>
                 <div class="form-row-group">
-                    <label>Tanggal Tutup Pendaftaran <span style="color: #DC2626;">*</span></label>
-                    <input type="date" name="tgl_tutup" required value="{{ now()->addDays(14)->format('Y-m-d') }}">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal tutup</label>
+                    <div class="input-calendar-wrap">
+                        <input type="date" 
+                               name="tgl_tutup" 
+                               id="buatBulanTglTutup"
+                               required 
+                               placeholder="Pilih tanggal">
+                        <span class="input-calendar-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <div class="modal-footer-btns">
-                <button type="button" onclick="closeBuatBulanModal()" class="btn-outline-action">Batal</button>
-                <button type="submit" class="btn-primary-action">Buat Bulan Magang</button>
+            {{-- 3. Tanggal Mulai Magang --}}
+            <div class="form-row-group">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal mulai magang</label>
+                <div class="input-calendar-wrap">
+                    <input type="date" 
+                           name="bulan_mulai" 
+                           id="buatBulanMulai"
+                           required 
+                           placeholder="Pilih tanggal">
+                    <span class="input-calendar-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </span>
+                </div>
+                <span class="form-helper-text">Harus setelah tanggal tutup pendaftaran.</span>
+            </div>
+
+            {{-- 4. Status Awal (Segmented Pills) --}}
+            <div class="form-row-group" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.4rem;">Status awal</label>
+                <input type="hidden" name="status_awal" id="statusAwalInput" value="draft">
+                <div class="status-pills-group">
+                    <button type="button" 
+                            id="btnStatusDraft"
+                            onclick="setStatusAwal('draft')" 
+                            class="btn-status-pill active">
+                        <span id="checkIconDraft" style="display: inline-flex; align-items: center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </span>
+                        <span>Draft</span>
+                    </button>
+                    <button type="button" 
+                            id="btnStatusDibuka"
+                            onclick="setStatusAwal('dibuka')" 
+                            class="btn-status-pill">
+                        <span id="checkIconDibuka" style="display: none; align-items: center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </span>
+                        <span>Dibuka</span>
+                    </button>
+                </div>
+            </div>
+
+            {{-- 5. Alert Callout Box --}}
+            <div class="modal-callout-info">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>Setelah bulan magang disimpan, atur kuota tiap bidang lewat tombol Tambah kuota.</span>
+            </div>
+
+            {{-- 6. Footer Buttons --}}
+            <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: none;">
+                <button type="button" onclick="closeBuatBulanModal()" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
+                    Batal
+                </button>
+                <button type="submit" class="btn-primary-action" style="padding: 0.6rem 1.4rem; font-weight: 700;">
+                    Simpan bulan
+                </button>
             </div>
         </form>
     </div>
@@ -1077,9 +1283,64 @@
         if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
     }
 
+    function setStatusAwal(status) {
+        const input = document.getElementById('statusAwalInput');
+        const btnDraft = document.getElementById('btnStatusDraft');
+        const btnDibuka = document.getElementById('btnStatusDibuka');
+        const iconDraft = document.getElementById('checkIconDraft');
+        const iconDibuka = document.getElementById('checkIconDibuka');
+
+        if (input) input.value = status;
+
+        if (status === 'draft') {
+            if (btnDraft) btnDraft.classList.add('active');
+            if (btnDibuka) btnDibuka.classList.remove('active');
+            if (iconDraft) iconDraft.style.display = 'inline-flex';
+            if (iconDibuka) iconDibuka.style.display = 'none';
+        } else {
+            if (btnDraft) btnDraft.classList.remove('active');
+            if (btnDibuka) btnDibuka.classList.add('active');
+            if (iconDraft) iconDraft.style.display = 'none';
+            if (iconDibuka) iconDibuka.style.display = 'inline-flex';
+        }
+    }
+
     function openBuatBulanModal() {
         const modal = document.getElementById('modalBuatBulan');
-        if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+        if (modal) { 
+            modal.style.display = 'flex'; 
+            document.body.style.overflow = 'hidden'; 
+            
+            // Pasang event listener untuk validasi tanggal dinamis
+            const tglBuka = document.getElementById('buatBulanTglBuka');
+            const tglTutup = document.getElementById('buatBulanTglTutup');
+            const tglMulai = document.getElementById('buatBulanMulai');
+
+            if (tglBuka && tglTutup) {
+                tglBuka.addEventListener('change', function() {
+                    if (this.value) {
+                        tglTutup.min = this.value;
+                        if (tglTutup.value && tglTutup.value < this.value) {
+                            tglTutup.value = this.value;
+                        }
+                    }
+                });
+            }
+
+            if (tglTutup && tglMulai) {
+                tglTutup.addEventListener('change', function() {
+                    if (this.value) {
+                        const nextDay = new Date(this.value);
+                        nextDay.setDate(nextDay.getDate() + 1);
+                        const isoStr = nextDay.toISOString().split('T')[0];
+                        tglMulai.min = isoStr;
+                        if (tglMulai.value && tglMulai.value <= this.value) {
+                            tglMulai.value = isoStr;
+                        }
+                    }
+                });
+            }
+        }
     }
     function closeBuatBulanModal() {
         const modal = document.getElementById('modalBuatBulan');

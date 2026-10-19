@@ -38,7 +38,7 @@ class AdminKuotaRevampTest extends TestCase
 
     private function createAdminUser(): User
     {
-        $admin = new User();
+        $admin = new User;
         $admin->nama = 'Admin Kuota Test';
         $admin->email = 'admin.kuota.revamp@slemankab.go.id';
         $admin->password = 'Password123!';
@@ -121,7 +121,7 @@ class AdminKuotaRevampTest extends TestCase
     }
 
     /**
-     * Memastikan modal-modal interaktif ter-render di dokumen.
+     * Memastikan modal-modal interaktif ter-render di dokumen dengan elemen-elemen desain baru.
      */
     public function test_kuota_modals_exist_in_dom(): void
     {
@@ -134,27 +134,89 @@ class AdminKuotaRevampTest extends TestCase
         $response->assertSee('id="modalBuatBulan"', false);
         $response->assertSee('id="modalTambahKuota"', false);
         $response->assertSee('id="modalEditBidang"', false);
+
+        // Memastikan isi modal Buat Bulan Baru sesuai dengan desain referensi
+        $response->assertSee('Buat bulan baru', false);
+        $response->assertSee('Tentukan jadwal pendaftaran dan mulai magang.', false);
+        $response->assertSee('Nama bulan', false);
+        $response->assertSee('Contoh: Gelombang 3', false);
+        $response->assertSee('Tanggal buka', false);
+        $response->assertSee('Tanggal tutup', false);
+        $response->assertSee('Tanggal mulai magang', false);
+        $response->assertSee('Harus setelah tanggal tutup pendaftaran.', false);
+        $response->assertSee('Status awal', false);
+        $response->assertSee('Draft', false);
+        $response->assertSee('Dibuka', false);
+        $response->assertSee('Setelah bulan magang disimpan, atur kuota tiap bidang lewat tombol Tambah kuota.', false);
+        $response->assertSee('Simpan bulan', false);
     }
 
     /**
-     * Memastikan admin dapat membuat bulan magang baru via storeBulan.
+     * Memastikan admin dapat membuat bulan magang baru berstatus Draft via storeBulan.
      */
-    public function test_admin_can_store_new_bulan_magang(): void
+    public function test_admin_can_store_new_bulan_magang_as_draft(): void
     {
         $admin = $this->createAdminUser();
 
         $response = $this->actingAs($admin)->post(route('admin.kuota.bulan.store'), [
+            'nama_bulan' => 'Gelombang 3',
             'bulan_mulai' => '2027-01-01',
             'tgl_buka' => '2026-12-01',
             'tgl_tutup' => '2026-12-20',
+            'status_awal' => 'draft',
         ]);
 
         $response->assertSessionHas('success');
         $this->assertDatabaseHas('bulan_magang', [
+            'nama_bulan' => 'Gelombang 3',
             'bulan_mulai' => '2027-01-01 00:00:00',
             'tgl_buka' => '2026-12-01 00:00:00',
             'tgl_tutup' => '2026-12-20 00:00:00',
+            'aktif' => false,
         ]);
+    }
+
+    /**
+     * Memastikan admin dapat membuat bulan magang baru berstatus Dibuka via storeBulan.
+     */
+    public function test_admin_can_store_new_bulan_magang_as_dibuka(): void
+    {
+        $admin = $this->createAdminUser();
+
+        $response = $this->actingAs($admin)->post(route('admin.kuota.bulan.store'), [
+            'nama_bulan' => 'Gelombang 4',
+            'bulan_mulai' => '2027-02-01',
+            'tgl_buka' => '2027-01-01',
+            'tgl_tutup' => '2027-01-20',
+            'status_awal' => 'dibuka',
+        ]);
+
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('bulan_magang', [
+            'nama_bulan' => 'Gelombang 4',
+            'bulan_mulai' => '2027-02-01 00:00:00',
+            'tgl_buka' => '2027-01-01 00:00:00',
+            'tgl_tutup' => '2027-01-20 00:00:00',
+            'aktif' => true,
+        ]);
+    }
+
+    /**
+     * Memastikan validasi menolak jika tanggal mulai magang tidak setelah tanggal tutup pendaftaran.
+     */
+    public function test_validation_rejects_bulan_mulai_not_after_tgl_tutup(): void
+    {
+        $admin = $this->createAdminUser();
+
+        $response = $this->actingAs($admin)->post(route('admin.kuota.bulan.store'), [
+            'nama_bulan' => 'Gelombang Invalid',
+            'bulan_mulai' => '2026-12-15',
+            'tgl_buka' => '2026-12-01',
+            'tgl_tutup' => '2026-12-20',
+            'status_awal' => 'draft',
+        ]);
+
+        $response->assertSessionHasErrors('bulan_mulai');
     }
 
     /**
@@ -166,6 +228,7 @@ class AdminKuotaRevampTest extends TestCase
         $bulan = BulanMagang::first();
 
         $response = $this->actingAs($admin)->put(route('admin.kuota.bulan.update', $bulan->id), [
+            'nama_bulan' => 'Gelombang 1 Diperbarui',
             'bulan_mulai' => $bulan->bulan_mulai->format('Y-m-d'),
             'tgl_buka' => '2026-10-05',
             'tgl_tutup' => '2026-10-30',
@@ -174,6 +237,7 @@ class AdminKuotaRevampTest extends TestCase
         $response->assertSessionHas('success');
         $this->assertDatabaseHas('bulan_magang', [
             'id' => $bulan->id,
+            'nama_bulan' => 'Gelombang 1 Diperbarui',
             'tgl_buka' => '2026-10-05 00:00:00',
             'tgl_tutup' => '2026-10-30 00:00:00',
         ]);
