@@ -244,6 +244,9 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 
     Route::get('/kuota', [KuotaController::class, 'index'])->name('kuota.index');
     Route::post('/kuota', [KuotaController::class, 'store'])->name('kuota.store');
+    Route::post('/kuota/bulan', [KuotaController::class, 'storeBulan'])->name('kuota.bulan.store');
+    Route::put('/kuota/bulan/{bulanMagang}', [KuotaController::class, 'updateBulan'])->name('kuota.bulan.update');
+    Route::put('/kuota/bidang/{bidang}', [KuotaController::class, 'updateBidangKuota'])->name('kuota.bidang.update');
     Route::put('/kuota/{kuota}', [KuotaController::class, 'update'])->name('kuota.update');
     Route::patch('/kuota/{kuota}/toggle', [KuotaController::class, 'toggleAktif'])->name('kuota.toggle');
 

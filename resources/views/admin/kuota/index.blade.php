@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Manajemen Kuota - Admin MagKom Sleman')
+@section('title', 'Bulan & Kuota - Admin MagKom Sleman')
 
 @section('breadcrumbs')
     <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: #64748B;">
@@ -11,1135 +11,1154 @@
 @endsection
 
 @section('content')
-@php
-    $totalKapasitas = $selectedBulan ? $selectedBulan->kuota->sum('jumlah') : 0;
-    $totalTerisi = $selectedBulan ? $selectedBulan->kuota->sum('terisi') : 0;
-    $sisaKursi = max(0, $totalKapasitas - $totalTerisi);
-    $globalPersen = $totalKapasitas > 0 ? min(100, round(($totalTerisi / $totalKapasitas) * 100)) : 0;
-
-    $isPendaftaranBuka = false;
-    if ($selectedBulan) {
-        $now = now();
-        $tglBuka = \Carbon\Carbon::parse($selectedBulan->tgl_buka)->startOfDay();
-        $tglTutup = \Carbon\Carbon::parse($selectedBulan->tgl_tutup)->endOfDay();
-        $isPendaftaranBuka = $now->between($tglBuka, $tglTutup);
-    }
-@endphp
-
-<div class="adm-kuota-wrapper">
+<div class="adm-kuota-revamp-wrap">
 
     <style>
         /* ==========================================================================
-           MAGKOM ADMIN MANAJEMEN KUOTA - SIGNATURE THEME
-           Theme: Dinas Komunikasi dan Informatika Kabupaten Sleman
+           REVAMP DESAIN: BULAN & KUOTA MAGANG (DISKOMINFO KABUPATEN SLEMAN)
            ========================================================================== */
-        .adm-kuota-wrapper {
+        .adm-kuota-revamp-wrap {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
-            max-width: 1440px;
+            gap: 1.75rem;
+            max-width: 1400px;
             margin: 0 auto;
             width: 100%;
-            color: #1E293B;
             font-family: inherit;
+            color: #1E293B;
         }
 
-        /* 1. Signature Hero Banner */
-        .adm-hero {
-            background: linear-gradient(95deg, rgba(6, 65, 204, 0.96) 0%, rgba(6, 65, 204, 0.88) 45%, rgba(6, 65, 204, 0.38) 100%),
-                        url('{{ asset('images/dashboard_hero_bg.jpg') }}') right center / cover no-repeat;
-            border-radius: 16px;
-            padding: 32px 36px;
-            color: #ffffff;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(6, 65, 204, 0.25), 0 8px 10px -6px rgba(6, 65, 204, 0.15);
-            min-height: 190px;
-        }
-
-        .adm-hero::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 85% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .adm-hero-content {
-            position: relative;
-            z-index: 2;
+        /* 1. Header Toolbar */
+        .kuota-page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 24px;
+            gap: 1rem;
         }
 
-        .adm-hero-left {
-            max-width: 760px;
-        }
-
-        .adm-hero-pill-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-
-        .adm-hero-badge-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            color: #ffffff;
-            border-radius: 9999px;
-            font-size: 0.725rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .adm-hero-period-pill {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #ffffff;
-            color: #0641CC;
-            border-radius: 9999px;
-            font-size: 0.725rem;
+        .kuota-page-title {
+            font-size: 1.625rem;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .adm-hero-title {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: #ffffff;
+            color: #0F172A;
+            margin: 0 0 0.25rem 0;
             letter-spacing: -0.02em;
-            margin: 0 0 6px 0;
-            line-height: 1.25;
         }
 
-        .adm-hero-desc {
-            font-size: 0.925rem;
-            color: rgba(255, 255, 255, 0.9);
+        .kuota-page-subtitle {
+            font-size: 0.875rem;
+            color: #64748B;
             margin: 0;
-            line-height: 1.5;
         }
 
-        .adm-hero-chips {
+        .kuota-page-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-top: 14px;
+            gap: 0.625rem;
             flex-wrap: wrap;
         }
 
-        .adm-hero-chip {
+        .btn-outline-action {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            background: rgba(255, 255, 255, 0.16);
-            backdrop-filter: blur(8px);
-            padding: 6px 14px;
-            border-radius: 9999px;
-            font-size: 0.785rem;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-        }
-
-        .adm-hero-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 12px;
-        }
-        @media (max-width: 900px) {
-            .adm-hero-right { align-items: flex-start; }
-        }
-
-        .adm-hero-date-box {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(8px);
-            padding: 6px 16px;
-            border-radius: 9999px;
-            font-size: 0.825rem;
-            font-weight: 600;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-        }
-
-        .adm-hero-btn-add {
-            background: #ffffff;
-            color: #0641CC;
-            border: 1px solid #ffffff;
-            padding: 9px 20px;
-            border-radius: 9999px;
-            font-size: 0.825rem;
-            font-weight: 800;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-        }
-        .adm-hero-btn-add:hover {
-            background: #F8FAFC;
-            color: #0533A8;
-            transform: translateY(-1px);
-        }
-
-        /* 2. Unified KPI Strip Card */
-        .adm-kpi-unified-card {
+            gap: 0.45rem;
+            padding: 0.55rem 1.1rem;
             background: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            border-radius: 14px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-            overflow: hidden;
-        }
-        @media (max-width: 1024px) {
-            .adm-kpi-unified-card { grid-template-columns: repeat(2, 1fr); }
-            .adm-kpi-unified-item:nth-child(2)::after { display: none; }
-            .adm-kpi-unified-item:nth-child(1),
-            .adm-kpi-unified-item:nth-child(2) { border-bottom: 1px solid #E2E8F0; }
-        }
-        @media (max-width: 600px) {
-            .adm-kpi-unified-card { grid-template-columns: 1fr; }
-            .adm-kpi-unified-item::after { display: none; }
-            .adm-kpi-unified-item:not(:last-child) { border-bottom: 1px solid #E2E8F0; }
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1E293B;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
-        .adm-kpi-unified-item {
-            padding: 18px 22px;
-            display: flex;
+        .btn-outline-action:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .btn-primary-action {
+            display: inline-flex;
             align-items: center;
-            gap: 16px;
+            gap: 0.45rem;
+            padding: 0.55rem 1.25rem;
+            background: #2563EB;
+            border: 1px solid #2563EB;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary-action:hover {
+            background: #1D4ED8;
+            border-color: #1D4ED8;
+        }
+
+        /* 2. Hero Card Biru Modern */
+        .hero-banner-blue {
+            background: linear-gradient(135deg, #1E40AF 0%, #2563EB 55%, #3B82F6 100%);
+            border-radius: 16px;
+            padding: 2rem 2.25rem;
+            color: #FFFFFF;
             position: relative;
-            transition: background-color 0.15s ease;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
         }
-        .adm-kpi-unified-item:hover {
-            background-color: #F8FAFC;
-        }
-        .adm-kpi-unified-item:not(:last-child)::after {
+
+        .hero-banner-blue::after {
             content: '';
             position: absolute;
-            right: 0;
-            top: 20%;
-            height: 60%;
-            width: 1px;
-            background-color: #E2E8F0;
+            inset: 0;
+            background: radial-gradient(circle at 80% 40%, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
+            pointer-events: none;
         }
 
-        .adm-kpi-icon-box {
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
+        .hero-left-content {
+            position: relative;
+            z-index: 2;
+            max-width: 680px;
+        }
+
+        .hero-badge-caps {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            border-radius: 9999px;
+            font-size: 0.6875rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-main-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin: 0 0 1.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .hero-status-open {
+            background: #FFFFFF;
+            color: #16A34A;
+        }
+
+        .hero-status-closed {
+            background: rgba(255, 255, 255, 0.2);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-meta-grid {
+            display: flex;
+            align-items: center;
+            gap: 1.75rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .hero-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
         }
-        .adm-kpi-icon-blue { background: #EFF6FF; color: #0641CC; }
-        .adm-kpi-icon-amber { background: #FEF3C7; color: #D97706; }
-        .adm-kpi-icon-green { background: #D1FAE5; color: #059669; }
-        .adm-kpi-icon-red { background: #FEE2E2; color: #DC2626; }
-        .adm-kpi-icon-indigo { background: #EEF2FF; color: #4F46E5; }
 
-        .adm-kpi-details {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            min-width: 0;
-        }
-        .adm-kpi-label {
+        .hero-meta-label {
             font-size: 0.75rem;
-            font-weight: 700;
-            color: #64748B;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
+            color: rgba(255, 255, 255, 0.85);
+            display: block;
             margin-bottom: 2px;
         }
-        .adm-kpi-val {
-            font-size: 1.65rem;
-            font-weight: 800;
-            color: #0F172A;
-            line-height: 1.2;
-        }
-        .adm-kpi-hint {
-            font-size: 0.75rem;
-            color: #64748B;
-            margin-top: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+
+        .hero-meta-val {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            display: block;
         }
 
-        /* 3. Integrated Period Selector Bar */
-        .adm-period-bar {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            border-radius: 16px;
+        /* Glassmorphism Floating Card Kanan */
+        .hero-stat-card {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            backdrop-filter: blur(12px);
+            border-radius: 14px;
             padding: 1.25rem 1.5rem;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1.25rem;
+            min-width: 250px;
         }
 
-        .adm-period-selector-form {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
-            min-width: 320px;
-            max-width: 600px;
-        }
-
-        .adm-period-select {
-            height: 42px;
-            width: 100%;
-            border: 1px solid #CBD5E1;
-            border-radius: 10px;
-            padding: 0 14px;
-            font-size: 0.875rem;
-            color: #0F172A;
-            background: #FFFFFF;
+        .stat-card-label {
+            font-size: 0.75rem;
             font-weight: 600;
-            outline: none;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-        .adm-period-select:focus {
-            border-color: #0641CC;
-            box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.35rem;
         }
 
-        .adm-period-info-badge {
+        .stat-card-number-row {
+            display: flex;
+            align-items: baseline;
+            gap: 0.35rem;
+        }
+
+        .stat-card-num-big {
+            font-size: 2.25rem;
+            font-weight: 800;
+            line-height: 1;
+            color: #FFFFFF;
+        }
+
+        .stat-card-num-sub {
+            font-size: 0.9375rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+        }
+
+        .stat-card-bar-wrap {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 9999px;
+            overflow: hidden;
+            margin: 0.875rem 0 0.5rem 0;
+        }
+
+        .stat-card-bar-fill {
+            height: 100%;
+            background: #FFFFFF;
+            border-radius: 9999px;
+            transition: width 0.4s ease;
+        }
+
+        .stat-card-countdown {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-size: 0.8125rem;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            color: #FEF08A;
             font-weight: 600;
         }
-        .adm-period-info-open {
-            background: #ECFDF5;
-            color: #065F46;
-            border: 1px solid #A7F3D0;
-        }
-        .adm-period-info-closed {
-            background: #F8FAFC;
-            color: #475569;
-            border: 1px solid #E2E8F0;
-        }
 
-        /* 4. Spacious Data Table */
-        .adm-table-card {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            border-radius: 16px;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-            overflow: hidden;
-        }
-
-        .adm-table-card-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid #E2E8F0;
+        /* 3. Section Kuota per Bidang */
+        .section-header-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-end;
+            margin-top: 0.5rem;
             flex-wrap: wrap;
             gap: 0.75rem;
-            background: #FFFFFF;
         }
 
-        .adm-table-card-title {
-            font-size: 1rem;
+        .section-title {
+            font-size: 1.25rem;
             font-weight: 800;
             color: #0F172A;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin: 0 0 0.25rem 0;
         }
 
-        .adm-table {
+        .section-desc {
+            font-size: 0.85rem;
+            color: #64748B;
+            margin: 0;
+        }
+
+        /* 4. Table Wrapper */
+        .card-table-wrap {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .table-bidang {
             width: 100%;
             border-collapse: collapse;
-            text-align: left;
             font-size: 0.875rem;
+            text-align: left;
         }
-        .adm-table th {
+
+        .table-bidang thead th {
             background: #F8FAFC;
-            padding: 0.95rem 1.25rem;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 1rem 1.25rem;
             font-size: 0.75rem;
             font-weight: 700;
+            color: #64748B;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #64748B;
-            border-bottom: 1px solid #E2E8F0;
-        }
-        .adm-table td {
-            padding: 1.1rem 1.25rem;
-            border-bottom: 1px solid #F1F5F9;
-            vertical-align: middle;
-            color: #1E293B;
-        }
-        .adm-table tbody tr {
-            transition: background-color 0.15s ease;
-        }
-        .adm-table tbody tr:hover {
-            background-color: #F8FAFC;
         }
 
-        .adm-badge-jenjang {
-            display: inline-flex;
+        .table-bidang tbody tr {
+            border-bottom: 1px solid #F1F5F9;
+            transition: background 0.15s ease;
+        }
+
+        .table-bidang tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .table-bidang tbody tr:hover {
+            background: #F8FAFC;
+        }
+
+        .table-bidang td {
+            padding: 1.1rem 1.25rem;
+            vertical-align: middle;
+        }
+
+        /* Bidang Avatar */
+        .bidang-cell {
+            display: flex;
             align-items: center;
-            padding: 3px 10px;
-            border-radius: 9999px;
+            gap: 0.875rem;
+        }
+
+        .avatar-initial {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .bidang-name {
+            font-weight: 700;
+            color: #0F172A;
+            font-size: 0.9375rem;
+        }
+
+        .jurusan-text-muted {
+            color: #475569;
+            font-size: 0.8125rem;
+            line-height: 1.45;
+            max-width: 320px;
+        }
+
+        /* Jenjang Badges */
+        .jenjang-badge-group {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+        }
+
+        .badge-jenjang-pill {
+            display: inline-block;
+            padding: 2px 7px;
+            background: #EFF6FF;
+            color: #1D4ED8;
+            border: 1px solid #DBEAFE;
+            border-radius: 6px;
             font-size: 0.725rem;
             font-weight: 700;
-            background: #EFF6FF;
-            color: #0641CC;
-            border: 1px solid #DBEAFE;
         }
 
-        .adm-progress-bar-wrap {
-            width: 100%;
-            max-width: 130px;
-            height: 6px;
+        /* Progress Mini */
+        .kuota-occupancy-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 110px;
+        }
+
+        .occupancy-numbers {
+            font-size: 0.8125rem;
+            color: #1E293B;
+        }
+
+        .occupancy-ratio {
+            font-weight: 800;
+        }
+
+        .occupancy-percent {
+            font-size: 0.75rem;
+            color: #64748B;
+            margin-left: 4px;
+        }
+
+        .mini-progress-bar {
+            height: 5px;
             background: #E2E8F0;
             border-radius: 9999px;
             overflow: hidden;
-            margin: 4px auto;
+            width: 100%;
         }
-        .adm-progress-bar-fill {
+
+        .mini-progress-fill {
             height: 100%;
+            background: #2563EB;
             border-radius: 9999px;
-            transition: width 0.3s ease;
         }
 
-        .adm-btn-edit {
-            padding: 6px 14px;
+        .kapasitas-text {
+            font-weight: 700;
+            color: #0F172A;
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+
+        .btn-edit-action {
+            display: inline-block;
+            padding: 0.35rem 0.95rem;
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            color: #2563EB;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .btn-edit-action:hover {
+            background: #DBEAFE;
+            color: #1D4ED8;
+        }
+
+        /* 5. Alert Info Pembimbing */
+        .alert-validation-box {
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            border-radius: 12px;
+            padding: 0.875rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #1E40AF;
+            font-size: 0.8125rem;
+            line-height: 1.45;
+        }
+
+        /* 6. Selector Bulan Bar Ringkas */
+        .month-switch-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.25rem;
             background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            font-size: 0.8125rem;
+            color: #475569;
+        }
+
+        .month-switch-strip select {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8125rem;
+            font-weight: 700;
             border: 1px solid #CBD5E1;
-            color: #334155;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-        .adm-btn-edit:hover {
-            border-color: #0641CC;
-            color: #0641CC;
+            border-radius: 6px;
             background: #F8FAFC;
-        }
-
-        .adm-btn-toggle {
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.8rem;
+            color: #0F172A;
             cursor: pointer;
-            border: 1px solid transparent;
-            transition: all 0.15s ease;
         }
 
-        /* 5. Modern Modal Dialog */
+        /* 7. Modal Styles */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(6px);
-            z-index: 1050;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            padding: 1.5rem;
         }
-        .modal-container {
-            background: #ffffff;
+
+        .modal-card {
+            background: #FFFFFF;
             border-radius: 16px;
-            max-width: 520px;
             width: 100%;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
+            max-width: 520px;
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             border: 1px solid #E2E8F0;
-            animation: modalFadeIn 0.2s ease-out;
-        }
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
         }
 
-        /* =====================================================================
-           DARK MODE OVERRIDES (DS-MagKom Standards)
-           ===================================================================== */
-        [data-theme="dark"] .adm-kuota-wrapper {
-            color: #E2E8F0;
+        .modal-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.875rem;
+            border-bottom: 1px solid #E2E8F0;
         }
 
-        [data-theme="dark"] .adm-kpi-unified-card {
-            background-color: #182234;
-            border-color: #26354D;
+        .modal-title {
+            font-size: 1.125rem;
+            font-weight: 800;
+            color: #0F172A;
+            margin: 0;
         }
 
-        [data-theme="dark"] .adm-kpi-unified-item:hover {
-            background-color: #162238;
+        .modal-btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #64748B;
+            cursor: pointer;
+            line-height: 1;
         }
 
-        [data-theme="dark"] .adm-kpi-unified-item:not(:last-child)::after {
-            background-color: #26354D;
+        .form-row-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            margin-bottom: 1rem;
         }
 
-        [data-theme="dark"] .adm-kpi-label {
-            color: #94A3B8;
+        .form-row-group label {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #1E293B;
         }
 
-        [data-theme="dark"] .adm-kpi-val {
+        .form-row-group input,
+        .form-row-group select {
+            height: 42px;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            padding: 0 0.875rem;
+            font-size: 0.875rem;
+            font-family: inherit;
+        }
+
+        .modal-footer-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        /* Dark Mode Compatibility */
+        [data-theme="dark"] .adm-kuota-revamp-wrap {
             color: #F8FAFC;
         }
-
-        [data-theme="dark"] .adm-kpi-hint {
-            color: #94A3B8;
+        [data-theme="dark"] .kuota-page-title,
+        [data-theme="dark"] .section-title,
+        [data-theme="dark"] .bidang-name,
+        [data-theme="dark"] .kapasitas-text,
+        [data-theme="dark"] .modal-title {
+            color: #F8FAFC !important;
         }
-
-        [data-theme="dark"] .adm-kpi-icon-blue {
-            background: rgba(37, 99, 235, 0.25);
-            color: #93C5FD;
-        }
-
-        [data-theme="dark"] .adm-kpi-icon-emerald {
-            background: rgba(16, 185, 129, 0.25);
-            color: #6EE7B7;
-        }
-
-        [data-theme="dark"] .adm-kpi-icon-amber {
-            background: rgba(217, 119, 6, 0.25);
-            color: #FCD34D;
-        }
-
-        [data-theme="dark"] .adm-kpi-icon-purple {
-            background: rgba(124, 58, 237, 0.25);
-            color: #C4B5FD;
-        }
-
-        [data-theme="dark"] .adm-period-bar {
+        [data-theme="dark"] .btn-outline-action,
+        [data-theme="dark"] .card-table-wrap,
+        [data-theme="dark"] .month-switch-strip,
+        [data-theme="dark"] .modal-card {
             background-color: #182234 !important;
-            border-color: #26354D !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
-        }
-
-        [data-theme="dark"] .adm-period-select {
-            background-color: #0F172A !important;
             border-color: #26354D !important;
             color: #F8FAFC !important;
         }
-
-        [data-theme="dark"] .adm-period-select:focus {
-            border-color: #3B82F6 !important;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
-        }
-
-        [data-theme="dark"] .adm-period-select option {
-            background-color: #0F172A !important;
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .adm-period-info-open {
-            background: rgba(16, 185, 129, 0.15) !important;
-            color: #6EE7B7 !important;
-            border: 1px solid rgba(16, 185, 129, 0.35) !important;
-        }
-
-        [data-theme="dark"] .adm-period-info-closed {
-            background: rgba(148, 163, 184, 0.15) !important;
-            color: #94A3B8 !important;
-            border: 1px solid #26354D !important;
-        }
-
-        [data-theme="dark"] .adm-table-card {
-            background-color: #182234 !important;
-            border-color: #26354D !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
-        }
-
-        [data-theme="dark"] .adm-table-card-header {
+        [data-theme="dark"] .table-bidang thead th {
             background-color: #141E30 !important;
             border-bottom-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .adm-table-card-title {
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .adm-table th {
-            background-color: #0E1726 !important;
             color: #94A3B8 !important;
+        }
+        [data-theme="dark"] .table-bidang tbody tr {
             border-bottom-color: #26354D !important;
         }
-
-        [data-theme="dark"] .adm-table td {
-            background-color: #182234 !important;
-            color: #CBD5E1 !important;
-            border-bottom-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .adm-table tbody tr:hover td {
+        [data-theme="dark"] .table-bidang tbody tr:hover {
             background-color: #162238 !important;
         }
-
-        [data-theme="dark"] .adm-table td strong,
-        [data-theme="dark"] .adm-table td [style*="color: #0F172A"] {
-            color: #F8FAFC !important;
+        [data-theme="dark"] .jurusan-text-muted {
+            color: #94A3B8 !important;
         }
-
-        [data-theme="dark"] .adm-badge-jenjang {
+        [data-theme="dark"] .badge-jenjang-pill {
             background: rgba(37, 99, 235, 0.2) !important;
             color: #93C5FD !important;
             border-color: rgba(59, 130, 246, 0.3) !important;
         }
-
-        [data-theme="dark"] .adm-progress-bar-wrap {
-            background: #26354D !important;
+        [data-theme="dark"] .alert-validation-box {
+            background: rgba(30, 58, 138, 0.3) !important;
+            border-color: #1E3A8A !important;
+            color: #BFDBFE !important;
         }
-
-        [data-theme="dark"] .adm-btn-edit {
+        [data-theme="dark"] .btn-edit-action {
             background: #111C2E !important;
             border-color: #26354D !important;
-            color: #CBD5E1 !important;
-        }
-
-        [data-theme="dark"] .adm-btn-edit:hover {
-            background: #162238 !important;
-            border-color: #3B82F6 !important;
             color: #60A5FA !important;
-        }
-
-        [data-theme="dark"] .modal-container {
-            background-color: #182234 !important;
-            border-color: #26354D !important;
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .modal-container div[style*="background: #F8FAFC"] {
-            background-color: #141E30 !important;
-            border-bottom-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .modal-container h3 {
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .modal-container p {
-            color: #94A3B8 !important;
-        }
-
-        [data-theme="dark"] .modal-container form label {
-            color: #E2E8F0 !important;
-        }
-
-        [data-theme="dark"] .modal-container form select,
-        [data-theme="dark"] .modal-container form input[type="number"] {
-            background-color: #0F172A !important;
-            border-color: #26354D !important;
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .modal-container form select option {
-            background-color: #0F172A !important;
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .modal-container form span[style*="color: #64748B"] {
-            color: #94A3B8 !important;
-        }
-
-        [data-theme="dark"] .modal-container form div[style*="border-top: 1px solid #E2E8F0"] {
-            border-top-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .modal-container form button[onclick*="close"] {
-            background: #111C2E !important;
-            border-color: #26354D !important;
-            color: #CBD5E1 !important;
         }
     </style>
 
-    {{-- ==========================================================================
-       1. SIGNATURE HERO BANNER
-       ========================================================================== --}}
-    <div class="adm-hero">
-        <div class="adm-hero-content">
-            <div class="adm-hero-left">
-                <div class="adm-hero-pill-row">
-                    <span class="adm-hero-badge-tag">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                        Kontrol Alokasi Kuota
-                    </span>
-                    <span class="adm-hero-period-pill">
-                        {{ $selectedBulan ? $selectedBulan->bulan_mulai?->translatedFormat('F Y') : 'Semua Bulan' }}
-                    </span>
-                </div>
-                <h1 class="adm-hero-title">Alokasi &amp; Manajemen Kuota Magang</h1>
-                <p class="adm-hero-desc">
-                    Distribusi kuota kursi magang per kejuruan secara transparan, adaptif, dan akurat merujuk kapasitas daya tampung dinas.
-                </p>
-                <div class="adm-hero-chips">
-                    <div class="adm-hero-chip">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                        <span>{{ number_format($totalKapasitas) }} Total Kursi</span>
-                    </div>
-                    <div class="adm-hero-chip">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                        <span>{{ $selectedBulan ? $selectedBulan->kuota->count() : 0 }} Kejuruan Dialokasikan</span>
-                    </div>
+    {{-- =========================================================================
+         1. HEADER HALAMAN: BULAN & KUOTA
+         ========================================================================= --}}
+    <div class="kuota-page-header">
+        <div>
+            <h1 class="kuota-page-title">Bulan &amp; kuota</h1>
+            <p class="kuota-page-subtitle">Atur bulan pendaftaran dan kuota magang per bidang.</p>
+        </div>
+
+        <div class="kuota-page-actions">
+            @if($selectedBulan)
+                <button type="button" onclick="openUbahBulanModal()" class="btn-outline-action">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    </svg>
+                    <span>Ubah bulan</span>
+                </button>
+            @endif
+
+            <button type="button" onclick="openBuatBulanModal()" class="btn-primary-action">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Buat bulan baru</span>
+            </button>
+        </div>
+    </div>
+
+    {{-- =========================================================================
+         2. SELECTOR BULAN RINGKAS (UNTUK NAVIGASI MULTI-BULAN)
+         ========================================================================= --}}
+    @if($bulanList->isNotEmpty())
+        <div class="month-switch-strip">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span style="font-weight: 700;">Bulan Magang:</span>
+            </div>
+            <form method="GET" action="{{ route('admin.kuota.index') }}" style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                <select name="bulan_magang_id" onchange="this.form.submit()">
+                    @foreach($bulanList as $b)
+                        <option value="{{ $b->id }}" {{ $selectedBulan && $selectedBulan->id === $b->id ? 'selected' : '' }}>
+                            {{ $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '' }}
+                        </option>
+                    @endforeach
+                </select>
+            </form>
+        </div>
+    @endif
+
+    {{-- =========================================================================
+         3. HERO BANNER: GELOMBANG AKTIF DENGAN GLASSMORPHIC STAT CARD
+         ========================================================================= --}}
+    @if($selectedBulan)
+        <div class="hero-banner-blue">
+            <div class="hero-left-content">
+                <span class="hero-badge-caps">Bulan Aktif</span>
+                
+                <div class="hero-main-title">
+                    <span>{{ $selectedBulan->bulan_mulai?->translatedFormat('F Y') ?? 'Gelombang 1' }}</span>
                     @if($isPendaftaranBuka)
-                        <div class="adm-hero-chip" style="background: rgba(16, 185, 129, 0.25); border-color: rgba(16, 185, 129, 0.5);">
-                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #10B981;"></span>
-                            <span>Pendaftaran Sedang Dibuka</span>
-                        </div>
+                        <span class="hero-status-pill hero-status-open">
+                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #16A34A;"></span>
+                            <span>Dibuka</span>
+                        </span>
+                    @else
+                        <span class="hero-status-pill hero-status-closed">
+                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #CBD5E1;"></span>
+                            <span>Ditutup</span>
+                        </span>
                     @endif
                 </div>
-            </div>
 
-            <div class="adm-hero-right">
-                @if($selectedBulan)
-                    <div class="adm-hero-date-box">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        <span>{{ \Carbon\Carbon::parse($selectedBulan->tgl_buka)->translatedFormat('d M') }} – {{ \Carbon\Carbon::parse($selectedBulan->tgl_tutup)->translatedFormat('d M Y') }}</span>
+                <div class="hero-meta-grid">
+                    {{-- 1. Tanggal Buka --}}
+                    <div class="hero-meta-item">
+                        <div class="hero-icon-box">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="hero-meta-label">Tanggal buka</span>
+                            <span class="hero-meta-val">
+                                {{ $selectedBulan->tgl_buka ? \Carbon\Carbon::parse($selectedBulan->tgl_buka)->translatedFormat('d F Y') : '-' }}
+                            </span>
+                        </div>
                     </div>
-                    <button type="button" onclick="openTambahKuotaModal()" class="adm-hero-btn-add">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        <span>Alokasikan Kuota Jurusan</span>
-                    </button>
-                @endif
-            </div>
-        </div>
-    </div>
 
-    {{-- ==========================================================================
-       2. UNIFIED KPI STRIP CARD (METRIK TERPADU 4-KOLOM)
-       ========================================================================== --}}
-    <div class="adm-kpi-unified-card">
-        {{-- KPI 1: Total Kapasitas Kursi --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box adm-kpi-icon-blue">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Total Kapasitas Kursi</span>
-                <span class="adm-kpi-val">{{ number_format($totalKapasitas) }}</span>
-                <span class="adm-kpi-hint">Alokasi seluruh kejuruan</span>
-            </div>
-        </div>
+                    {{-- 2. Tanggal Tutup --}}
+                    <div class="hero-meta-item">
+                        <div class="hero-icon-box">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                <line x1="4" y1="22" x2="4" y2="15"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="hero-meta-label">Tanggal tutup</span>
+                            <span class="hero-meta-val">
+                                {{ $selectedBulan->tgl_tutup ? \Carbon\Carbon::parse($selectedBulan->tgl_tutup)->translatedFormat('d F Y') : '-' }}
+                            </span>
+                        </div>
+                    </div>
 
-        {{-- KPI 2: Kursi Terisi --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box adm-kpi-icon-amber">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Kursi Terisi</span>
-                <span class="adm-kpi-val" style="color: #D97706;">{{ number_format($totalTerisi) }}</span>
-                <span class="adm-kpi-hint">Peserta magang diterima</span>
-            </div>
-        </div>
-
-        {{-- KPI 3: Sisa Kursi Tersedia --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box {{ $sisaKursi > 0 ? 'adm-kpi-icon-green' : 'adm-kpi-icon-red' }}">
-                @if($sisaKursi > 0)
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
-                @else
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                @endif
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Sisa Kursi Siap Daftar</span>
-                <span class="adm-kpi-val" style="color: {{ $sisaKursi > 0 ? '#059669' : '#DC2626' }};">{{ number_format($sisaKursi) }}</span>
-                <span class="adm-kpi-hint" style="color: {{ $sisaKursi > 0 ? '#059669' : '#DC2626' }};">
-                    {{ $sisaKursi > 0 ? 'Tersedia untuk pendaftar' : 'Kuota bulan ini penuh' }}
-                </span>
-            </div>
-        </div>
-
-        {{-- KPI 4: Okupansi Global --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box adm-kpi-icon-indigo">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Tingkat Okupansi Global</span>
-                <span class="adm-kpi-val" style="color: #4F46E5;">{{ $globalPersen }}%</span>
-                <div style="margin-top: 4px; width: 100%; max-width: 120px; height: 5px; background: #E2E8F0; border-radius: 9999px; overflow: hidden;">
-                    <div style="width: {{ $globalPersen }}%; height: 100%; background: {{ $globalPersen >= 100 ? '#EF4444' : ($globalPersen >= 75 ? '#F59E0B' : '#0641CC') }}; border-radius: 9999px;"></div>
+                    {{-- 3. Mulai Magang --}}
+                    <div class="hero-meta-item">
+                        <div class="hero-icon-box">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="hero-meta-label">Mulai magang</span>
+                            <span class="hero-meta-val">
+                                {{ $selectedBulan->bulan_mulai ? $selectedBulan->bulan_mulai->translatedFormat('d F Y') : '-' }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    {{-- ==========================================================================
-       3. INTEGRATED PERIOD SELECTOR BAR
-       ========================================================================== --}}
-    <div class="adm-period-bar">
-        <form method="GET" action="{{ route('admin.kuota.index') }}" class="adm-period-selector-form">
-            <label for="bulan-select" style="font-size: 0.825rem; font-weight: 700; color: #475569; white-space: nowrap; display: flex; align-items: center; gap: 6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                <span>Bulan Magang:</span>
-            </label>
-            <select id="bulan-select" name="bulan_magang_id" onchange="this.form.submit()" class="adm-period-select">
-                @foreach($bulanList as $b)
-                    <option value="{{ $b->id }}" {{ $selectedBulan && $selectedBulan->id === $b->id ? 'selected' : '' }}>
-                        {{ $b->bulan_mulai?->translatedFormat('F Y') }} (Pendaftaran: {{ \Carbon\Carbon::parse($b->tgl_buka)->translatedFormat('d M') }} – {{ \Carbon\Carbon::parse($b->tgl_tutup)->translatedFormat('d M Y') }})
-                    </option>
-                @endforeach
-            </select>
-        </form>
-
-        @if($selectedBulan)
-            <div class="adm-period-info-badge {{ $isPendaftaranBuka ? 'adm-period-info-open' : 'adm-period-info-closed' }}">
-                <span style="width: 7px; height: 7px; border-radius: 50%; background: {{ $isPendaftaranBuka ? '#10B981' : '#94A3B8' }};"></span>
-                <span>
-                    Jadwal Pendaftaran: <strong>{{ \Carbon\Carbon::parse($selectedBulan->tgl_buka)->translatedFormat('d F Y') }}</strong> s.d. <strong>{{ \Carbon\Carbon::parse($selectedBulan->tgl_tutup)->translatedFormat('d F Y') }}</strong>
-                </span>
-            </div>
-        @endif
-    </div>
-
-    {{-- ==========================================================================
-       4. SPACIOUS DATA TABLE CARD
-       ========================================================================== --}}
-    <div class="adm-table-card">
-        <div class="adm-table-card-header">
-            <div>
-                <h3 class="adm-table-card-title">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                    <span>Alokasi Kuota Jurusan: {{ $selectedBulan ? $selectedBulan->bulan_mulai?->translatedFormat('F Y') : '-' }}</span>
-                </h3>
-                <p style="font-size: 0.8125rem; color: #64748B; margin: 3px 0 0 0;">
-                    Distribusi alokasi kursi magang per jurusan pada bulan pendaftaran ini
-                </p>
-            </div>
-            <span style="font-size: 0.8125rem; font-weight: 700; color: #0641CC; background: #EFF6FF; padding: 4px 12px; border-radius: 9999px; border: 1px solid #DBEAFE;">
-                {{ $selectedBulan ? $selectedBulan->kuota->count() : 0 }} Jurusan Terdaftar
-            </span>
-        </div>
-
-        @if(!$selectedBulan || $selectedBulan->kuota->isEmpty())
-            <div style="padding: 4rem 1.5rem; text-align: center; color: #64748B;">
-                <div style="width: 60px; height: 60px; background: #EFF6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: #0641CC;">
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            {{-- Stat Box Kanan --}}
+            <div class="hero-stat-card">
+                <div class="stat-card-label">Kuota terisi</div>
+                <div class="stat-card-number-row">
+                    <span class="stat-card-num-big">{{ $totalTerisi }}</span>
+                    <span class="stat-card-num-sub">/ {{ $totalKapasitas }} peserta</span>
+                </div>
+                <div class="stat-card-bar-wrap">
+                    <div class="stat-card-bar-fill" style="width: {{ $globalPersen }}%;"></div>
+                </div>
+                <div class="stat-card-countdown">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
+                    <span>
+                        @if($isPendaftaranBuka && $sisaHariTutup >= 0)
+                            Ditutup dalam {{ $sisaHariTutup }} hari
+                        @elseif($isPendaftaranBuka)
+                            Pendaftaran sedang dibuka
+                        @else
+                            Pendaftaran ditutup
+                        @endif
+                    </span>
                 </div>
-                <h4 style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin: 0 0 0.35rem 0;">
-                    Belum Ada Alokasi Kuota Terdaftar
-                </h4>
-                <p style="font-size: 0.85rem; max-width: 480px; margin: 0 auto 1.5rem auto; line-height: 1.5;">
-                    Belum ada alokasi kuota jurusan untuk bulan ini. Klik tombol di bawah untuk mulai mengalokasikan kuota kursi.
-                </p>
-                @if($selectedBulan)
-                    <button type="button" onclick="openTambahKuotaModal()" class="adm-hero-btn-add" style="background: #0641CC; color: #ffffff; border-color: #0641CC; margin: 0 auto;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        <span>Alokasikan Kuota Jurusan Sekarang</span>
-                    </button>
-                @endif
             </div>
-        @else
+        </div>
+    @endif
+
+    {{-- =========================================================================
+         4. SECTION & TABEL KUOTA PER BIDANG
+         ========================================================================= --}}
+    <div>
+        <div class="section-header-row">
+            <div>
+                <h2 class="section-title">Kuota per bidang</h2>
+                <p class="section-desc">Tentukan jumlah kuota, jurusan, jenjang, dan rentang durasi magang.</p>
+            </div>
+            @if($selectedBulan)
+                <button type="button" onclick="openTambahKuotaModal()" class="btn-primary-action">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Tambah kuota</span>
+                </button>
+            @endif
+        </div>
+
+        <div class="card-table-wrap" style="margin-top: 1rem;">
             <div style="overflow-x: auto;">
-                <table class="adm-table">
+                <table class="table-bidang">
                     <thead>
                         <tr>
-                            <th>Nama Jurusan</th>
-                            <th>Kategori Jenjang</th>
-                            <th style="text-align: center; width: 120px;">Total Kuota</th>
-                            <th style="text-align: center; width: 180px;">Terisi &amp; Okupansi</th>
-                            <th style="text-align: center; width: 120px;">Sisa Kuota</th>
-                            <th>Status Alokasi</th>
-                            <th style="text-align: right; width: 180px;">Aksi</th>
+                            <th style="width: 220px;">Bidang</th>
+                            <th>Jurusan yang Dibutuhkan</th>
+                            <th style="width: 140px;">Jenjang</th>
+                            <th style="width: 120px;">Durasi</th>
+                            <th style="width: 150px;">Kuota Terisi</th>
+                            <th style="width: 120px;">Kapasitas</th>
+                            <th style="width: 90px; text-align: right;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($selectedBulan->kuota as $k)
-                            @php
-                                $sisa = max(0, $k->jumlah - $k->terisi);
-                                $persen = $k->jumlah > 0 ? min(100, round(($k->terisi / $k->jumlah) * 100)) : 0;
-                                $barColor = $persen >= 100 ? '#EF4444' : ($persen >= 75 ? '#F59E0B' : '#0641CC');
-                            @endphp
+                        @forelse($bidangList as $item)
                             <tr>
-                                {{-- Nama Jurusan --}}
+                                {{-- 1. Bidang --}}
                                 <td>
-                                    <div style="font-weight: 700; color: #0F172A; font-size: 0.9375rem;">
-                                        {{ $k->jurusan?->nama_jurusan ?? 'Semua Jurusan' }}
-                                    </div>
-                                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 2px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;">
-                                        #KT-{{ str_pad((string)$k->id, 4, '0', STR_PAD_LEFT) }}
+                                    <div class="bidang-cell">
+                                        <div class="avatar-initial" style="background: {{ $item['bg_color'] }}; color: {{ $item['text_color'] }};">
+                                            {{ $item['inisial'] }}
+                                        </div>
+                                        <span class="bidang-name">{{ $item['nama'] }}</span>
                                     </div>
                                 </td>
 
-                                {{-- Kategori Jenjang --}}
+                                {{-- 2. Jurusan yang Dibutuhkan --}}
                                 <td>
-                                    <span class="adm-badge-jenjang">
-                                        {{ $k->jurusan?->kategori === 'smk' ? 'SMK' : 'Mahasiswa (D3/S1)' }}
-                                    </span>
-                                </td>
-
-                                {{-- Total Kuota --}}
-                                <td style="text-align: center; font-weight: 800; color: #0F172A; font-size: 1rem;">
-                                    {{ $k->jumlah }}
-                                </td>
-
-                                {{-- Terisi & Okupansi --}}
-                                <td style="text-align: center;">
-                                    <div style="display: flex; align-items: baseline; justify-content: center; gap: 4px;">
-                                        <span style="font-weight: 800; color: {{ $persen >= 100 ? '#DC2626' : '#D97706' }}; font-size: 0.9375rem;">
-                                            {{ $k->terisi }}
-                                        </span>
-                                        <span style="font-size: 0.75rem; color: #64748B;">/ {{ $k->jumlah }}</span>
-                                    </div>
-
-                                    <div class="adm-progress-bar-wrap" title="Okupansi: {{ $persen }}%">
-                                        <div class="adm-progress-bar-fill" style="width: {{ $persen }}%; background: {{ $barColor }};"></div>
-                                    </div>
-                                    <span style="font-size: 0.72rem; font-weight: 700; color: #64748B;">
-                                        Okupansi: {{ $persen }}%
-                                    </span>
-                                </td>
-
-                                {{-- Sisa Kuota --}}
-                                <td style="text-align: center;">
-                                    <span style="font-weight: 800; font-size: 1rem; color: {{ $sisa > 0 ? '#059669' : '#DC2626' }};">
-                                        {{ $sisa }}
-                                    </span>
-                                    <div style="font-size: 0.72rem; color: {{ $sisa > 0 ? '#059669' : '#DC2626' }}; font-weight: 700;">
-                                        {{ $sisa > 0 ? 'Tersedia' : 'Penuh' }}
+                                    <div class="jurusan-text-muted">
+                                        {{ $item['jurusan_names'] }}
                                     </div>
                                 </td>
 
-                                {{-- Status Alokasi --}}
+                                {{-- 3. Jenjang --}}
                                 <td>
-                                    <span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: {{ $k->aktif ? '#D1FAE5' : '#F1F5F9' }}; color: {{ $k->aktif ? '#065F46' : '#475569' }}; border: 1px solid {{ $k->aktif ? '#A7F3D0' : '#CBD5E1' }};">
-                                        <span style="width: 6px; height: 6px; border-radius: 50%; background: {{ $k->aktif ? '#10B981' : '#94A3B8' }};"></span>
-                                        <span>{{ $k->aktif ? 'Aktif' : 'Nonaktif' }}</span>
+                                    <div class="jenjang-badge-group">
+                                        @foreach($item['jenjang_badges'] as $badge)
+                                            <span class="badge-jenjang-pill">{{ $badge }}</span>
+                                        @endforeach
+                                    </div>
+                                </td>
+
+                                {{-- 4. Durasi --}}
+                                <td>
+                                    <span style="font-weight: 600; font-size: 0.8125rem;">
+                                        {{ $item['durasi'] }}
                                     </span>
                                 </td>
 
-                                {{-- Aksi --}}
+                                {{-- 5. Kuota Terisi --}}
+                                <td>
+                                    <div class="kuota-occupancy-wrap">
+                                        <div class="occupancy-numbers">
+                                            <span class="occupancy-ratio">{{ $item['terisi'] }}/{{ $item['kapasitas'] }}</span>
+                                            <span class="occupancy-percent">{{ $item['persen'] }}%</span>
+                                        </div>
+                                        <div class="mini-progress-bar">
+                                            <div class="mini-progress-fill" style="width: {{ $item['persen'] }}%;"></div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                {{-- 6. Kapasitas --}}
+                                <td>
+                                    <span class="kapasitas-text">{{ $item['kapasitas'] }} peserta</span>
+                                </td>
+
+                                {{-- 7. Aksi --}}
                                 <td style="text-align: right;">
-                                    <div style="display: inline-flex; gap: 6px; align-items: center;">
-                                        <button type="button" onclick="openEditKuotaModal({{ $k->id }}, {{ $k->jumlah }}, {{ $k->terisi }}, '{{ addslashes($k->jurusan?->nama_jurusan ?? '') }}')" class="adm-btn-edit">
-                                            Edit
-                                        </button>
-                                        <form method="POST" action="{{ route('admin.kuota.toggle', $k) }}" style="display: inline;" onsubmit="return confirm('Ubah status aktif kuota jurusan ini?');">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="adm-btn-toggle" style="background: {{ $k->aktif ? '#FEE2E2' : '#D1FAE5' }}; color: {{ $k->aktif ? '#991B1B' : '#065F46' }}; border-color: {{ $k->aktif ? '#FECACA' : '#A7F3D0' }};">
-                                                {{ $k->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
-                                            </button>
-                                        </form>
-                                    </div>
+                                    <button type="button" 
+                                            onclick="openEditBidangModal({{ $item['id'] }}, '{{ addslashes($item['nama']) }}', {{ json_encode($item['jurusan_list']->map(fn($j) => ['id' => $j->id, 'nama' => $j->nama_jurusan, 'jumlah' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->jumlah ?? 0, 'terisi' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->terisi ?? 0])) }})" 
+                                            class="btn-edit-action">
+                                        Ubah
+                                    </button>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 3rem; color: #64748B;">
+                                    Belum ada data bidang terdaftar.
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
-        @endif
+        </div>
+
+        {{-- =====================================================================
+             5. ALERT VALIDASI PEMBIMBING AKTIF
+             ===================================================================== --}}
+        <div class="alert-validation-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span>
+                Sistem otomatis memvalidasi agar total kuota tidak melebihi kapasitas bimbingan, yaitu jumlah Pembimbing aktif di setiap bidang.
+            </span>
+        </div>
     </div>
 
 </div>
 
-{{-- ==========================================================================
-     5. MODAL TAMBAH KUOTA JURUSAN
-     ========================================================================== --}}
+{{-- =========================================================================
+     MODAL 1: UBAH BULAN (JADWAL PENDAFTARAN & BULAN MULAI)
+     ========================================================================= --}}
 @if($selectedBulan)
-<div id="modal-tambah-kuota" class="modal-overlay">
-    <div class="modal-container">
-        {{-- Modal Header --}}
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center; background: #F8FAFC;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 36px; height: 36px; border-radius: 10px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                </div>
-                <div>
-                    <h3 style="font-size: 1rem; font-weight: 800; color: #0F172A; margin: 0;">Tambah Kuota Jurusan</h3>
-                    <p style="font-size: 0.75rem; color: #64748B; margin: 2px 0 0 0;">
-                        Bulan: <strong>{{ $selectedBulan->bulan_mulai?->translatedFormat('F Y') }}</strong>
-                    </p>
-                </div>
-            </div>
-            <button type="button" onclick="closeTambahKuotaModal()" style="background: transparent; border: none; font-size: 1.5rem; color: #94A3B8; cursor: pointer; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                &times;
-            </button>
+<div id="modalUbahBulan" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header-row">
+            <h3 class="modal-title">Ubah Jadwal Bulan Magang</h3>
+            <button type="button" onclick="closeUbahBulanModal()" class="modal-btn-close">&times;</button>
         </div>
-
-        {{-- Modal Form --}}
-        <form method="POST" action="{{ route('admin.kuota.store') }}" style="padding: 1.5rem;">
-            @csrf
-            <input type="hidden" name="bulan_magang_id" value="{{ $selectedBulan->id }}">
-
-            <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.25rem;">
-                <label style="font-size: 0.8rem; font-weight: 700; color: #1E293B;">
-                    Pilih Kejuruan <span style="color: #DC2626;">*</span>
-                </label>
-                <select name="jurusan_id" required style="height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff; color: #0F172A; outline: none;">
-                    <option value="">-- Pilih Jurusan yang Tersedia --</option>
-                    @foreach($jurusanList as $jur)
-                        <option value="{{ $jur->id }}">{{ $jur->nama_jurusan }} ({{ strtoupper($jur->kategori) }})</option>
-                    @endforeach
-                </select>
-                <span style="font-size: 0.75rem; color: #64748B;">Pastikan jurusan aktif belum dialokasikan pada bulan ini.</span>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem;">
-                <label style="font-size: 0.8rem; font-weight: 700; color: #1E293B;">
-                    Jumlah Kuota Kursi <span style="color: #DC2626;">*</span>
-                </label>
-                <input type="number" name="jumlah" min="1" max="100" value="5" required style="height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff; color: #0F172A; outline: none;">
-                <span style="font-size: 0.75rem; color: #64748B;">Alokasi umum disarankan mempertimbangkan daya tampung maksimal dinas.</span>
-            </div>
-
-            <div style="display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid #E2E8F0; padding-top: 1.25rem;">
-                <button type="button" onclick="closeTambahKuotaModal()" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid #CBD5E1; color: #475569; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="padding: 0.55rem 1.4rem; background: #0641CC; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);">
-                    Simpan Alokasi Kuota
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-{{-- ==========================================================================
-     6. MODAL EDIT ALOKASI KUOTA
-     ========================================================================== --}}
-<div id="modal-edit-kuota" class="modal-overlay">
-    <div class="modal-container">
-        {{-- Modal Header --}}
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center; background: #F8FAFC;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 36px; height: 36px; border-radius: 10px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                </div>
-                <div>
-                    <h3 style="font-size: 1rem; font-weight: 800; color: #0F172A; margin: 0;">Perbarui Alokasi Kuota</h3>
-                    <p style="font-size: 0.75rem; color: #64748B; margin: 2px 0 0 0;" id="edit-kuota-jurusan-title">
-                        Jurusan: -
-                    </p>
-                </div>
-            </div>
-            <button type="button" onclick="closeEditKuotaModal()" style="background: transparent; border: none; font-size: 1.5rem; color: #94A3B8; cursor: pointer; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                &times;
-            </button>
-        </div>
-
-        {{-- Modal Form --}}
-        <form method="POST" id="form-edit-kuota" action="" style="padding: 1.5rem;">
+        <form method="POST" action="{{ route('admin.kuota.bulan.update', $selectedBulan->id) }}">
             @csrf
             @method('PUT')
-            <input type="hidden" name="bulan_magang_id" value="{{ $selectedBulan->id }}">
 
-            <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem;">
-                <label style="font-size: 0.8rem; font-weight: 700; color: #1E293B;">
-                    Jumlah Kuota Baru (Kursi) <span style="color: #DC2626;">*</span>
-                </label>
-                <input type="number" id="edit-input-jumlah" name="jumlah" required style="height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff; color: #0F172A; outline: none;">
-                <div id="edit-info-terisi" style="font-size: 0.75rem; color: #B45309; background: #FEF3C7; padding: 0.35rem 0.65rem; border-radius: 6px; margin-top: 4px; font-weight: 600;">
-                    Saat ini telah terisi: 0 kursi.
-                </div>
-                <span style="font-size: 0.72rem; color: #64748B; margin-top: 2px;">
-                    Sesuai aturan sistem: Kuota baru tidak boleh lebih kecil dari jumlah peserta yang telah diterima.
-                </span>
+            <div class="form-row-group">
+                <label>Bulan Mulai Magang <span style="color: #DC2626;">*</span></label>
+                <input type="date" name="bulan_mulai" value="{{ $selectedBulan->bulan_mulai?->format('Y-m-d') }}" required>
             </div>
 
-            <div style="display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid #E2E8F0; padding-top: 1.25rem;">
-                <button type="button" onclick="closeEditKuotaModal()" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid #CBD5E1; color: #475569; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" style="padding: 0.55rem 1.4rem; background: #0641CC; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);">
-                    Simpan Perubahan
-                </button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <div class="form-row-group">
+                    <label>Tanggal Buka <span style="color: #DC2626;">*</span></label>
+                    <input type="date" name="tgl_buka" value="{{ $selectedBulan->tgl_buka ? \Carbon\Carbon::parse($selectedBulan->tgl_buka)->format('Y-m-d') : '' }}" required>
+                </div>
+                <div class="form-row-group">
+                    <label>Tanggal Tutup <span style="color: #DC2626;">*</span></label>
+                    <input type="date" name="tgl_tutup" value="{{ $selectedBulan->tgl_tutup ? \Carbon\Carbon::parse($selectedBulan->tgl_tutup)->format('Y-m-d') : '' }}" required>
+                </div>
+            </div>
+
+            <div class="modal-footer-btns">
+                <button type="button" onclick="closeUbahBulanModal()" class="btn-outline-action">Batal</button>
+                <button type="submit" class="btn-primary-action">Simpan Perubahan</button>
             </div>
         </form>
     </div>
 </div>
 @endif
 
+{{-- =========================================================================
+     MODAL 2: BUAT BULAN BARU
+     ========================================================================= --}}
+<div id="modalBuatBulan" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header-row">
+            <h3 class="modal-title">Buat Bulan Magang Baru</h3>
+            <button type="button" onclick="closeBuatBulanModal()" class="modal-btn-close">&times;</button>
+        </div>
+        <form method="POST" action="{{ route('admin.kuota.bulan.store') }}">
+            @csrf
+
+            <div class="form-row-group">
+                <label>Bulan Mulai Magang <span style="color: #DC2626;">*</span></label>
+                <input type="date" name="bulan_mulai" required value="{{ now()->addMonth()->startOfMonth()->format('Y-m-d') }}">
+                <small style="color: #64748B; font-size: 0.75rem;">Pilih tanggal 1 pada bulan yang akan dibuka.</small>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <div class="form-row-group">
+                    <label>Tanggal Buka Pendaftaran <span style="color: #DC2626;">*</span></label>
+                    <input type="date" name="tgl_buka" required value="{{ now()->format('Y-m-d') }}">
+                </div>
+                <div class="form-row-group">
+                    <label>Tanggal Tutup Pendaftaran <span style="color: #DC2626;">*</span></label>
+                    <input type="date" name="tgl_tutup" required value="{{ now()->addDays(14)->format('Y-m-d') }}">
+                </div>
+            </div>
+
+            <div class="modal-footer-btns">
+                <button type="button" onclick="closeBuatBulanModal()" class="btn-outline-action">Batal</button>
+                <button type="submit" class="btn-primary-action">Buat Bulan Magang</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- =========================================================================
+     MODAL 3: TAMBAH KUOTA JURUSAN
+     ========================================================================= --}}
+@if($selectedBulan)
+<div id="modalTambahKuota" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header-row">
+            <h3 class="modal-title">Tambah Alokasi Kuota Kejuruan</h3>
+            <button type="button" onclick="closeTambahKuotaModal()" class="modal-btn-close">&times;</button>
+        </div>
+        <form method="POST" action="{{ route('admin.kuota.store') }}">
+            @csrf
+            <input type="hidden" name="bulan_magang_id" value="{{ $selectedBulan->id }}">
+
+            <div class="form-row-group">
+                <label>Bulan Magang:</label>
+                <input type="text" value="{{ $selectedBulan->bulan_mulai?->translatedFormat('F Y') }}" disabled style="background: #F8FAFC; color: #64748B;">
+            </div>
+
+            <div class="form-row-group">
+                <label>Pilih Jurusan <span style="color: #DC2626;">*</span></label>
+                <select name="jurusan_id" required>
+                    <option value="">-- Pilih Kejuruan / Program Studi --</option>
+                    @foreach($jurusanList as $jur)
+                        <option value="{{ $jur->id }}">
+                            {{ $jur->nama_jurusan }} ({{ strtoupper($jur->kategori) }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-row-group">
+                <label>Jumlah Kuota Kursi <span style="color: #DC2626;">*</span></label>
+                <input type="number" name="jumlah" min="1" max="100" placeholder="Contoh: 5" required>
+            </div>
+
+            <div class="modal-footer-btns">
+                <button type="button" onclick="closeTambahKuotaModal()" class="btn-outline-action">Batal</button>
+                <button type="submit" class="btn-primary-action">Simpan Kuota</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
+{{-- =========================================================================
+     MODAL 4: UBAH KUOTA PER BIDANG
+     ========================================================================= --}}
+<div id="modalEditBidang" class="modal-overlay">
+    <div class="modal-card" style="max-width: 580px;">
+        <div class="modal-header-row">
+            <div>
+                <h3 class="modal-title" id="editBidangTitle">Ubah Kuota Bidang</h3>
+                <small style="color: #64748B; font-size: 0.75rem;">Sesuaikan alokasi kursi peserta untuk kejuruan di bidang ini.</small>
+            </div>
+            <button type="button" onclick="closeEditBidangModal()" class="modal-btn-close">&times;</button>
+        </div>
+        <form id="formEditBidang" method="POST" action="">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="bulan_magang_id" value="{{ $selectedBulan?->id }}">
+
+            <div id="jurusanAllocList" style="display: flex; flex-direction: column; gap: 0.85rem; max-height: 340px; overflow-y: auto; padding-right: 0.25rem;">
+                {{-- Dinamis diisi via JavaScript --}}
+            </div>
+
+            <div class="modal-footer-btns">
+                <button type="button" onclick="closeEditBidangModal()" class="btn-outline-action">Batal</button>
+                <button type="submit" class="btn-primary-action">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
+    function openUbahBulanModal() {
+        const modal = document.getElementById('modalUbahBulan');
+        if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+    }
+    function closeUbahBulanModal() {
+        const modal = document.getElementById('modalUbahBulan');
+        if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
+    }
+
+    function openBuatBulanModal() {
+        const modal = document.getElementById('modalBuatBulan');
+        if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+    }
+    function closeBuatBulanModal() {
+        const modal = document.getElementById('modalBuatBulan');
+        if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
+    }
+
     function openTambahKuotaModal() {
-        const modal = document.getElementById('modal-tambah-kuota');
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
+        const modal = document.getElementById('modalTambahKuota');
+        if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
     }
     function closeTambahKuotaModal() {
-        const modal = document.getElementById('modal-tambah-kuota');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
+        const modal = document.getElementById('modalTambahKuota');
+        if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
     }
 
-    function openEditKuotaModal(kuotaId, jumlah, terisi, namaJurusan) {
-        const titleEl = document.getElementById('edit-kuota-jurusan-title');
-        const inputEl = document.getElementById('edit-input-jumlah');
-        const infoEl = document.getElementById('edit-info-terisi');
-        const formEl = document.getElementById('form-edit-kuota');
-        const modal = document.getElementById('modal-edit-kuota');
+    function openEditBidangModal(bidangId, namaBidang, jurusans) {
+        const modal = document.getElementById('modalEditBidang');
+        const form = document.getElementById('formEditBidang');
+        const title = document.getElementById('editBidangTitle');
+        const listWrap = document.getElementById('jurusanAllocList');
 
-        if (titleEl) titleEl.innerText = 'Jurusan: ' + namaJurusan;
-        if (inputEl) {
-            inputEl.value = jumlah;
-            inputEl.min = terisi;
+        if (title) title.innerText = 'Ubah Kuota: ' + namaBidang;
+        if (form) form.action = '/admin/kuota/bidang/' + bidangId;
+
+        if (listWrap) {
+            listWrap.innerHTML = '';
+            if (!jurusans || jurusans.length === 0) {
+                listWrap.innerHTML = '<p style="color: #64748B; font-size: 0.85rem; text-align: center; padding: 1.5rem 0;">Belum ada kejuruan terikat di bidang ini.</p>';
+            } else {
+                jurusans.forEach(j => {
+                    const row = document.createElement('div');
+                    row.style = 'display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.65rem 0.85rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px;';
+                    row.innerHTML = `
+                        <div style="flex: 1;">
+                            <strong style="font-size: 0.875rem; color: #0F172A; display: block;">${j.nama}</strong>
+                            <small style="color: #64748B; font-size: 0.725rem;">Terisi: ${j.terisi} kursi</small>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <label style="font-size: 0.75rem; color: #475569; font-weight: 600;">Kuota:</label>
+                            <input type="number" 
+                                   name="alokasi[${j.id}]" 
+                                   value="${j.jumlah}" 
+                                   min="${j.terisi}" 
+                                   max="100" 
+                                   required 
+                                   style="width: 75px; height: 36px; padding: 0 0.5rem; text-align: center; font-weight: 700; border: 1px solid #CBD5E1; border-radius: 6px;">
+                        </div>
+                    `;
+                    listWrap.appendChild(row);
+                });
+            }
         }
-        if (infoEl) infoEl.innerText = 'Saat ini telah terisi: ' + terisi + ' kursi (batas minimum perubahan).';
-        if (formEl) formEl.action = '/admin/kuota/' + kuotaId;
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-    }
-    function closeEditKuotaModal() {
-        const modal = document.getElementById('modal-edit-kuota');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
+
+        if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
     }
 
-    // Close on Escape key
+    function closeEditBidangModal() {
+        const modal = document.getElementById('modalEditBidang');
+        if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
+    }
+
+    // Escape listener
     window.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
+            closeUbahBulanModal();
+            closeBuatBulanModal();
             closeTambahKuotaModal();
-            closeEditKuotaModal();
+            closeEditBidangModal();
         }
     });
 
-    // Close on Backdrop Click
+    // Backdrop click listener
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
         overlay.addEventListener('click', function(e) {
             if (e.target === this) {
+                closeUbahBulanModal();
+                closeBuatBulanModal();
                 closeTambahKuotaModal();
-                closeEditKuotaModal();
+                closeEditBidangModal();
             }
         });
     });
