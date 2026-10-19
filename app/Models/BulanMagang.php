@@ -17,6 +17,7 @@ class BulanMagang extends Model
     protected $table = 'bulan_magang';
 
     protected $fillable = [
+        'nama_bulan',
         'bulan_mulai',
         'tgl_buka',
         'tgl_tutup',
