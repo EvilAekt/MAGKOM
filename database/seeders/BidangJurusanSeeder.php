@@ -7,7 +7,6 @@ namespace Database\Seeders;
 use App\Models\Bidang;
 use App\Models\Jurusan;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class BidangJurusanSeeder extends Seeder
 {
@@ -21,8 +20,7 @@ class BidangJurusanSeeder extends Seeder
             'Informasi dan Komunikasi Publik (IKP)' => [
                 'Statistik',
                 'Ilmu Komunikasi',
-                'Desain Grafis / DKV (SMK)',
-                'Desain Komunikasi Visual / Desain Grafis',
+                'Desain Grafis',
                 'Komunikasi Penyiaran Islam',
             ],
             'Aplikasi Informatika & E-Government (EGOV)' => [
@@ -39,25 +37,25 @@ class BidangJurusanSeeder extends Seeder
             'Sekretariat Dinas' => [
                 'Ilmu Komunikasi',
                 'Komunikasi Penyiaran Islam',
-                'Desain Grafis / DKV (SMK)',
-                'Desain Komunikasi Visual / Desain Grafis',
+                'Desain Grafis',
                 'Ekonomi dan Sosial (KPE)',
-                'Administrasi Perkantoran / Manajemen Perkantoran (SMK)',
-                'Administrasi / Manajemen Perkantoran',
-                'Kearsipan (Ilmu Kearsipan / Manajemen Rekod)',
+                'Administrasi Perkantoran',
+                'Manajemen Perkantoran',
+                'Ilmu Kearsipan',
+                'Manajemen Rekod',
             ],
         ];
 
         foreach ($mapping as $namaBidang => $namaJurusanList) {
             $bidang = Bidang::where('nama_bidang', $namaBidang)->first();
-            if (!$bidang) {
+            if (! $bidang) {
                 continue;
             }
 
             $jurusanIds = Jurusan::whereIn('nama_jurusan', $namaJurusanList)->pluck('id')->toArray();
-            
-            // Sync secara aman tanpa duplikasi
-            $bidang->jurusan()->syncWithoutDetaching($jurusanIds);
+
+            // Sync pemetaan jurusan per bidang
+            $bidang->jurusan()->sync($jurusanIds);
         }
     }
 }
