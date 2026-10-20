@@ -23,10 +23,15 @@ class AdminChildPagesVisualTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $peserta;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
+
     protected Pendaftaran $pendaftaran;
 
     protected function setUp(): void
@@ -36,7 +41,7 @@ class AdminChildPagesVisualTest extends TestCase
         $this->seed(JenisDokumenSeeder::class);
         $this->seed(RubrikSeeder::class);
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Pengelola';
         $this->admin->email = 'admin.operasional@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -66,7 +71,7 @@ class AdminChildPagesVisualTest extends TestCase
             'aktif' => true,
         ]);
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Citra Lestari';
         $this->peserta->email = 'citra@example.com';
         $this->peserta->password = 'Password123!';

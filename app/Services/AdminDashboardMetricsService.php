@@ -35,10 +35,10 @@ class AdminDashboardMetricsService
         $pengajuanSlaKritisCount = Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
             ->where(function ($q) use ($batasSlaKritis) {
                 $q->where('diajukan_at', '<=', $batasSlaKritis)
-                  ->orWhere(function ($q2) use ($batasSlaKritis) {
-                      $q2->whereNull('diajukan_at')
-                         ->where('created_at', '<=', $batasSlaKritis);
-                  });
+                    ->orWhere(function ($q2) use ($batasSlaKritis) {
+                        $q2->whereNull('diajukan_at')
+                            ->where('created_at', '<=', $batasSlaKritis);
+                    });
             })
             ->count();
 
@@ -163,6 +163,7 @@ class AdminDashboardMetricsService
             ->get()
             ->map(function ($item) {
                 $daysRemaining = (int) now()->startOfDay()->diffInDays($item->tgl_selesai->startOfDay(), false);
+
                 return [
                     'penempatan' => $item,
                     'days_remaining' => $daysRemaining,

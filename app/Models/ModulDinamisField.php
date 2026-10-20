@@ -32,12 +32,12 @@ class ModulDinamisField extends Model
     ];
 
     protected $casts = [
-        'opsi_pilihan'    => 'array',
-        'wajib'           => 'boolean',
+        'opsi_pilihan' => 'array',
+        'wajib' => 'boolean',
         'tampil_di_tabel' => 'boolean',
-        'dapat_dicari'    => 'boolean',
-        'dapat_difilter'  => 'boolean',
-        'urutan'          => 'integer',
+        'dapat_dicari' => 'boolean',
+        'dapat_difilter' => 'boolean',
+        'urutan' => 'integer',
     ];
 
     public function modul(): BelongsTo

@@ -15,15 +15,18 @@ class LanguageLocalizationTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Admin MagKom';
         $this->superAdmin->email = 'superadmin.loc@slemankab.go.id';
         $this->superAdmin->password = 'PasswordSuperAdmin123!';
@@ -32,7 +35,7 @@ class LanguageLocalizationTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Bidang Aptika';
         $this->admin->email = 'admin.loc@slemankab.go.id';
         $this->admin->password = 'PasswordAdmin123!';
@@ -41,7 +44,7 @@ class LanguageLocalizationTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan';
         $this->pembimbing->email = 'pembimbing.loc@slemankab.go.id';
         $this->pembimbing->password = 'PasswordPembimbing123!';
@@ -50,7 +53,7 @@ class LanguageLocalizationTest extends TestCase
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Magang Riset';
         $this->peserta->email = 'peserta.loc@univ.ac.id';
         $this->peserta->password = 'PasswordPeserta123!';

@@ -31,11 +31,12 @@ class TutupWaitingListExpiredCommand extends Command
     public function handle(PlacementService $placementService): int
     {
         $hariIni = now('Asia/Jakarta')->startOfDay();
-        
+
         $bulanMagangBerjalan = BulanMagang::where('aktif', true)
             ->get()
             ->filter(function ($bulan) use ($hariIni) {
                 $tglMulai = Carbon::parse($bulan->bulan_mulai)->timezone('Asia/Jakarta')->startOfMonth();
+
                 return $hariIni->gte($tglMulai);
             });
 

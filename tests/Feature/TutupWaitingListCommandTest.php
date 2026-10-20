@@ -29,7 +29,7 @@ class TutupWaitingListCommandTest extends TestCase
 
     protected function createUser(string $nama, string $email, RoleEnum $role): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = 'Password123!';

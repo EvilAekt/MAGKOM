@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
+use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
@@ -115,7 +116,7 @@ class AcceptedPesertaSeeder extends Seeder
         // 6. Buat / Update Pengajuan Pendaftaran menjadi DITERIMA
         $pendaftaran = Pendaftaran::where('user_id', $peserta->id)->latest()->first();
         if (! $pendaftaran) {
-            $pendaftaran = new Pendaftaran();
+            $pendaftaran = new Pendaftaran;
             $pendaftaran->user_id = $peserta->id;
         }
 
@@ -131,7 +132,7 @@ class AcceptedPesertaSeeder extends Seeder
         // 7. Buat / Update Penempatan Aktif
         $penempatan = Penempatan::where('peserta_id', $peserta->id)->first();
         if (! $penempatan) {
-            $penempatan = new Penempatan();
+            $penempatan = new Penempatan;
             $penempatan->peserta_id = $peserta->id;
         }
 
@@ -154,7 +155,7 @@ class AcceptedPesertaSeeder extends Seeder
             'judul' => 'Analisis Kebutuhan Sistem & Pemetaan API MagKom',
             'deskripsi' => 'Pelajari dokumen PRD dan buat pemetaan rancangan endpoint serta arsitektur data.',
             'kategori' => 'Analisis & Riset',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'deadline' => Carbon::now()->subDays(3)->toDateString(),
             'status' => StatusTugasEnum::Selesai,
         ]);
@@ -164,7 +165,7 @@ class AcceptedPesertaSeeder extends Seeder
             'judul' => 'Slicing & Integrasi Frontend Dashboard Peserta',
             'deskripsi' => 'Rancang antarmuka dashboard responsif dengan Design System MagKom dan hubungkan dengan data backend.',
             'kategori' => 'Frontend Development',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Tinggi,
+            'kompleksitas' => KompleksitasEnum::Tinggi,
             'deadline' => Carbon::now()->addDays(4)->toDateString(),
             'status' => StatusTugasEnum::Proses,
         ]);
@@ -174,7 +175,7 @@ class AcceptedPesertaSeeder extends Seeder
             'judul' => 'Uji Fungsional & Penyusunan Dokumen Laporan Magang',
             'deskripsi' => 'Lakukan pengujian antarmuka dan mulai susun draf bab 3 laporan magang terkait kegiatan praktis.',
             'kategori' => 'Testing & Laporan',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'deadline' => Carbon::now()->addDays(14)->toDateString(),
             'status' => StatusTugasEnum::Belum,
         ]);

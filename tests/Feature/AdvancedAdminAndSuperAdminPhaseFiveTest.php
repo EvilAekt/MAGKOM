@@ -15,14 +15,12 @@ use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
-use App\Models\DokumenVerifikasi;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\Penilaian;
 use App\Models\PesertaProfil;
-use App\Models\Rubrik;
 use App\Models\SurveiKepuasan;
 use App\Models\User;
 use App\Services\DocumentVerificationService;
@@ -38,18 +36,26 @@ class AdvancedAdminAndSuperAdminPhaseFiveTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $peserta;
+
     protected User $pembimbing;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
+
     protected Bidang $bidang;
+
     protected DocumentVerificationService $verificationService;
 
     protected function createTestUser(string $nama, string $email, RoleEnum $role, bool $statusAktif = true): User
     {
-        $u = new User();
+        $u = new User;
         $u->nama = $nama;
         $u->email = $email;
         $u->password = 'Password123!';
@@ -168,7 +174,7 @@ class AdvancedAdminAndSuperAdminPhaseFiveTest extends TestCase
         ]);
 
         // Akses publik tanpa autentikasi
-        $response = $this->get('/verifikasi-dokumen/' . $doc->kode_unik);
+        $response = $this->get('/verifikasi-dokumen/'.$doc->kode_unik);
 
         $response->assertStatus(200);
         $response->assertSee('Surat Keterangan Diterima Magang');
@@ -198,7 +204,7 @@ class AdvancedAdminAndSuperAdminPhaseFiveTest extends TestCase
         );
         $doc->update(['status_keabsahan' => 'dicabut']);
 
-        $response = $this->get('/verifikasi-dokumen/' . $doc->kode_unik);
+        $response = $this->get('/verifikasi-dokumen/'.$doc->kode_unik);
 
         $response->assertStatus(200);
         $response->assertSee('DICABUT');

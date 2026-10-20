@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Models\Dokumen;
 use App\Models\Pendaftaran;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -39,10 +38,11 @@ class GenerateSampleDocumentsCommand extends Command
 
         if (! $pendaftaran) {
             $this->error("Pendaftaran dengan ID {$pendaftaranId} tidak ditemukan.");
+
             return Command::FAILURE;
         }
 
-        $this->info("Memproses dokumen untuk Pendaftaran ID: {$pendaftaran->id} (#REG-" . str_pad((string) $pendaftaran->id, 5, '0', STR_PAD_LEFT) . ")...");
+        $this->info("Memproses dokumen untuk Pendaftaran ID: {$pendaftaran->id} (#REG-".str_pad((string) $pendaftaran->id, 5, '0', STR_PAD_LEFT).')...');
 
         $peserta = $pendaftaran->user;
         $profil = $peserta?->profil;
@@ -83,7 +83,7 @@ class GenerateSampleDocumentsCommand extends Command
             ]);
 
             $count++;
-            $this->line(" [✓] Dokumen #{$dokumen->id} ({$jenis->nama}) -> " . number_format($ukuran / 1024, 1) . " KB (Path: {$dokumen->path})");
+            $this->line(" [✓] Dokumen #{$dokumen->id} ({$jenis->nama}) -> ".number_format($ukuran / 1024, 1)." KB (Path: {$dokumen->path})");
         }
 
         $this->info("Berhasil men-generate {$count} berkas PDF valid untuk Pendaftaran ID {$pendaftaran->id}!");

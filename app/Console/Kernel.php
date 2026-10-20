@@ -36,7 +36,6 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping();
     }
 
-
     /**
      * Register the commands for the application.
      */

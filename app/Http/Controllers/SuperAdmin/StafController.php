@@ -12,9 +12,13 @@ use App\Models\Bidang;
 use App\Models\Penempatan;
 use App\Models\User;
 use App\Services\AuditService;
+use App\Support\Pengaturan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -49,15 +53,15 @@ class StafController extends Controller
         }
 
         if ($request->filled('search')) {
-            $search = '%' . $request->input('search') . '%';
+            $search = '%'.$request->input('search').'%';
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', $search)
-                  ->orWhere('email', 'like', $search);
+                    ->orWhere('email', 'like', $search);
             });
         }
 
         $stafList = $query->paginate(15)->withQueryString();
-        $maksPeserta = \App\Support\Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
+        $maksPeserta = Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
 
         $stafPendingPasswordCount = User::whereIn('role', [RoleEnum::Admin->value, RoleEnum::Pembimbing->value])
             ->where('must_change_password', true)
@@ -86,9 +90,9 @@ class StafController extends Controller
             'password.regex' => 'Kata sandi harus mengandung kombinasi huruf dan angka.',
         ]);
 
-        $plainPassword = ! empty($validated['password']) ? (string) $validated['password'] : ('Mk' . \Illuminate\Support\Str::random(10) . '!1');
+        $plainPassword = ! empty($validated['password']) ? (string) $validated['password'] : ('Mk'.Str::random(10).'!1');
 
-        $staf = new User();
+        $staf = new User;
         $staf->nama = $validated['nama'];
         $staf->email = $validated['email'];
         $staf->password = Hash::make($plainPassword);
@@ -112,7 +116,7 @@ class StafController extends Controller
                 'must_change_password' => true,
             ],
             detail: [
-                'aksi' => 'Membuat akun staf baru (' . $staf->role->label() . ') (SEC-02)',
+                'aksi' => 'Membuat akun staf baru ('.$staf->role->label().') (SEC-02)',
                 'superadmin_id' => $request->user()->id,
             ]
         );
@@ -164,7 +168,7 @@ class StafController extends Controller
                 'bidang_id' => $staf->bidang_id,
             ],
             detail: [
-                'aksi' => 'Memperbarui data profil staf (' . $staf->role->label() . ')',
+                'aksi' => 'Memperbarui data profil staf ('.$staf->role->label().')',
                 'superadmin_id' => $request->user()->id,
             ]
         );
@@ -194,8 +198,8 @@ class StafController extends Controller
             'remember_token' => null,
         ]);
 
-        if (\Illuminate\Support\Facades\Schema::hasTable('sessions')) {
-            \Illuminate\Support\Facades\DB::table('sessions')->where('user_id', $staf->id)->delete();
+        if (Schema::hasTable('sessions')) {
+            DB::table('sessions')->where('user_id', $staf->id)->delete();
         }
 
         $this->auditService->catat(
@@ -258,8 +262,8 @@ class StafController extends Controller
         $staf->status_aktif = $statusBaru;
         if (! $statusBaru) {
             $staf->remember_token = null; // Revoke remember token (SEC-03)
-            if (\Illuminate\Support\Facades\Schema::hasTable('sessions')) {
-                \Illuminate\Support\Facades\DB::table('sessions')->where('user_id', $staf->id)->delete();
+            if (Schema::hasTable('sessions')) {
+                DB::table('sessions')->where('user_id', $staf->id)->delete();
             }
         }
         $staf->save();
@@ -277,6 +281,7 @@ class StafController extends Controller
         );
 
         $statusLabel = $statusBaru ? 'diaktifkan' : 'dinonaktifkan';
+
         return redirect()->route('superadmin.staf.index')
             ->with('success', "Akun staf {$staf->nama} berhasil {$statusLabel}.");
     }
@@ -290,7 +295,7 @@ class StafController extends Controller
             return back()->with('error', 'Regenerasi kata sandi instan hanya berlaku untuk akun Admin dan Pembimbing.');
         }
 
-        $tempPassword = 'Mk' . \Illuminate\Support\Str::random(8) . '!9';
+        $tempPassword = 'Mk'.Str::random(8).'!9';
 
         $staf->update([
             'password' => Hash::make($tempPassword),
@@ -298,8 +303,8 @@ class StafController extends Controller
             'remember_token' => null,
         ]);
 
-        if (\Illuminate\Support\Facades\Schema::hasTable('sessions')) {
-            \Illuminate\Support\Facades\DB::table('sessions')->where('user_id', $staf->id)->delete();
+        if (Schema::hasTable('sessions')) {
+            DB::table('sessions')->where('user_id', $staf->id)->delete();
         }
 
         $this->auditService->catat(

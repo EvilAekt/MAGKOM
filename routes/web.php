@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AnalitikTahunanController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\KuotaController;
 use App\Http\Controllers\Admin\LaporanController;
@@ -10,13 +11,13 @@ use App\Http\Controllers\Admin\PenempatanController as AdminPenempatanController
 use App\Http\Controllers\Admin\PengaturanController as AdminPengaturanController;
 use App\Http\Controllers\Admin\ProfilController as AdminProfilController;
 use App\Http\Controllers\Admin\SertifikatController as AdminSertifikatController;
+use App\Http\Controllers\Admin\SurveiAdminController;
 use App\Http\Controllers\Admin\WaitingListController as AdminWaitingListController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
-use App\Http\Controllers\SuperAdmin\MonitoringPesertaController;
 use App\Http\Controllers\Pembimbing\AgendaBimbinganController as PembimbingAgendaBimbinganController;
 use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboardController;
 use App\Http\Controllers\Pembimbing\LaporanKinerjaController as PembimbingLaporanKinerjaController;
@@ -32,25 +33,29 @@ use App\Http\Controllers\Peserta\DashboardController as PesertaDashboardControll
 use App\Http\Controllers\Peserta\LogbookController as PesertaLogbookController;
 use App\Http\Controllers\Peserta\NilaiController as PesertaNilaiController;
 use App\Http\Controllers\Peserta\PendaftaranController as PesertaPendaftaranController;
-use App\Http\Controllers\Peserta\ProfilController as PesertaProfilController;
 use App\Http\Controllers\Peserta\PengaturanController as PesertaPengaturanController;
+use App\Http\Controllers\Peserta\ProfilController as PesertaProfilController;
+use App\Http\Controllers\Peserta\SurveiController;
 use App\Http\Controllers\Peserta\TugasController as PesertaTugasController;
-use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Public\AlurMagangController;
+use App\Http\Controllers\Public\CaptchaController;
 use App\Http\Controllers\Public\HealthController;
 use App\Http\Controllers\Public\LandingController;
-use App\Http\Controllers\Public\CaptchaController;
+use App\Http\Controllers\Public\VerifikasiDokumenController;
+use App\Http\Controllers\PublicModulController;
+use App\Http\Controllers\RealtimeStreamController;
 use App\Http\Controllers\SuperAdmin\AkunController as SuperAdminAkunController;
 use App\Http\Controllers\SuperAdmin\ArsipPesertaController;
 use App\Http\Controllers\SuperAdmin\AuditLogController;
 use App\Http\Controllers\SuperAdmin\BackupController;
 use App\Http\Controllers\SuperAdmin\BidangController;
 use App\Http\Controllers\SuperAdmin\BulanController;
+use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
 use App\Http\Controllers\SuperAdmin\HealthMonitorController;
 use App\Http\Controllers\SuperAdmin\JurusanController;
-use App\Http\Controllers\PublicModulController;
 use App\Http\Controllers\SuperAdmin\ModulBuilderController;
 use App\Http\Controllers\SuperAdmin\ModulDataController;
+use App\Http\Controllers\SuperAdmin\MonitoringPesertaController;
 use App\Http\Controllers\SuperAdmin\PengaturanController;
 use App\Http\Controllers\SuperAdmin\ProfilController as SuperAdminProfilController;
 use App\Http\Controllers\SuperAdmin\RoleController;
@@ -79,7 +84,7 @@ Route::get('/.well-known/security.txt', function () {
     }
     abort(404);
 })->name('security.txt');
-Route::get('/verifikasi-dokumen/{kode}', \App\Http\Controllers\Public\VerifikasiDokumenController::class)
+Route::get('/verifikasi-dokumen/{kode}', VerifikasiDokumenController::class)
     ->name('dokumen.verifikasi')
     ->middleware('throttle:60,1');
 
@@ -92,7 +97,6 @@ Route::prefix('publik/modul')->name('public.modul.')->group(function () {
     Route::get('/{slug}', [PublicModulController::class, 'index'])->name('index');
     Route::get('/{slug}/{id}', [PublicModulController::class, 'show'])->name('show');
 });
-
 
 // Rute Autentikasi Publik & Reset Password (F-02, F-14, F-18)
 Route::middleware('guest')->group(function () {
@@ -181,8 +185,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     });
 
     // Evaluasi & Survei Kepuasan Magang (PRD 4.3 Poin 4)
-    Route::get('/survei', [\App\Http\Controllers\Peserta\SurveiController::class, 'show'])->name('survei.show');
-    Route::post('/survei', [\App\Http\Controllers\Peserta\SurveiController::class, 'store'])->name('survei.store');
+    Route::get('/survei', [SurveiController::class, 'show'])->name('survei.show');
+    Route::post('/survei', [SurveiController::class, 'store'])->name('survei.store');
 });
 
 // Rute Pembimbing Magang (F-08, F-09, F-10, F-12, SEC-03, SEC-12)
@@ -260,6 +264,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::post('/waiting-list/{bulanMagang}/tutup', [AdminWaitingListController::class, 'tutupAntrean'])->name('waiting-list.tutup');
 
     Route::get('/penempatan', [AdminPenempatanController::class, 'index'])->name('penempatan.index');
+    Route::post('/penempatan/tetapkan', [AdminPenempatanController::class, 'tetapkan'])->name('penempatan.tetapkan');
     Route::get('/penempatan/ekspor-surat-diterima', [AdminPenempatanController::class, 'exportRekapSuratDiterima'])->name('penempatan.ekspor-surat-diterima');
     Route::post('/penempatan/manual', [AdminPenempatanController::class, 'storeManual'])->name('penempatan.manual');
     Route::post('/penempatan/bulk-reassign', [AdminPenempatanController::class, 'bulkReassignPembimbing'])->name('penempatan.bulk-reassign');
@@ -274,16 +279,16 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
     Route::get('/laporan/kuota', [LaporanController::class, 'kuota'])->name('laporan.kuota');
     Route::get('/laporan/nilai', [LaporanController::class, 'nilai'])->name('laporan.nilai');
-    Route::get('/laporan/tahunan', [\App\Http\Controllers\Admin\AnalitikTahunanController::class, 'index'])->name('laporan.tahunan');
-    Route::get('/laporan/tahunan/export', [\App\Http\Controllers\Admin\AnalitikTahunanController::class, 'export'])->name('laporan.tahunan.export');
+    Route::get('/laporan/tahunan', [AnalitikTahunanController::class, 'index'])->name('laporan.tahunan');
+    Route::get('/laporan/tahunan/export', [AnalitikTahunanController::class, 'export'])->name('laporan.tahunan.export');
 
     // Hub Penerbitan Sertifikat Kelulusan Resmi (AC-12, BR-10)
     Route::get('/sertifikat', [AdminSertifikatController::class, 'index'])->name('sertifikat.index');
     Route::get('/sertifikat/{penempatan}/cetak', [AdminSertifikatController::class, 'cetak'])->name('sertifikat.cetak');
 
     // Evaluasi Mutu & Survei Kepuasan Alumni (PRD 4.3 Poin 4)
-    Route::get('/survei', [\App\Http\Controllers\Admin\SurveiAdminController::class, 'index'])->name('survei.index');
-    Route::get('/survei/export', [\App\Http\Controllers\Admin\SurveiAdminController::class, 'export'])->name('survei.export');
+    Route::get('/survei', [SurveiAdminController::class, 'index'])->name('survei.index');
+    Route::get('/survei/export', [SurveiAdminController::class, 'export'])->name('survei.export');
 
     // Profil & Pengaturan Akun Administrator
     Route::get('/profil', [AdminProfilController::class, 'show'])->name('profil.show');
@@ -410,7 +415,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active']
 
 // Server-Sent Events (SSE) Real-time Stream & Notifikasi (RFC 8895)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/realtime/stream', [\App\Http\Controllers\RealtimeStreamController::class, 'stream'])->name('realtime.stream');
-    Route::post('/realtime/read/{id}', [\App\Http\Controllers\RealtimeStreamController::class, 'markRead'])->name('realtime.read');
+    Route::get('/realtime/stream', [RealtimeStreamController::class, 'stream'])->name('realtime.stream');
+    Route::post('/realtime/read/{id}', [RealtimeStreamController::class, 'markRead'])->name('realtime.read');
 });
-

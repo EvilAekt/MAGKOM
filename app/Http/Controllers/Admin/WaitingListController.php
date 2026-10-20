@@ -11,6 +11,7 @@ use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Pendaftaran;
 use App\Services\AuditService;
+use App\Services\PlacementService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -46,7 +47,7 @@ class WaitingListController extends Controller
         if ($request->filled('search')) {
             $rawSearch = trim((string) $request->input('search'));
             $escapedSearch = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $rawSearch);
-            $search = '%' . $escapedSearch . '%';
+            $search = '%'.$escapedSearch.'%';
             $query->where(function ($q) use ($search) {
                 $q->whereHas('user', function ($qu) use ($search) {
                     $qu->where('nama', 'like', $search)
@@ -131,7 +132,7 @@ class WaitingListController extends Controller
     /**
      * Mempromosikan pendaftar waiting list teratas secara FIFO saat kuota tersedia (PRD F-04 AC-04-4, AC-04-6, BR-05).
      */
-    public function promoteFifo(Request $request, \App\Services\PlacementService $placementService): RedirectResponse
+    public function promoteFifo(Request $request, PlacementService $placementService): RedirectResponse
     {
         $admin = $request->user();
 
@@ -174,7 +175,7 @@ class WaitingListController extends Controller
             return redirect()->route('admin.waiting-list.index')
                 ->with('success', "Pendaftar antrean FIFO {$pendaftaran->user->nama} ({$pendaftaran->user->profil?->institusi}) berhasil dipromosikan dan diterima magang.");
         } catch (\Throwable $e) {
-            return back()->with('error', 'Gagal mempromosikan pendaftar waiting list: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mempromosikan pendaftar waiting list: '.$e->getMessage());
         }
     }
 }

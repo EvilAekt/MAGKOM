@@ -26,7 +26,7 @@ class SecuritySweeperCommand extends Command
     {
         $dryRun = (bool) $this->option('dry-run');
 
-        $this->info('Memulai pembersihan keamanan sistem (Security Sweep)...' . ($dryRun ? ' [DRY RUN]' : ''));
+        $this->info('Memulai pembersihan keamanan sistem (Security Sweep)...'.($dryRun ? ' [DRY RUN]' : ''));
 
         $results = $sweepService->sweep($dryRun);
 

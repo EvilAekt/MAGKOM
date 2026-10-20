@@ -16,8 +16,9 @@ class DocumentArchiveService
     /**
      * Mengemas seluruh berkas pendaftaran calon peserta ke dalam sebuah file arsip ZIP terstruktur (PRD F-03, Bab 8.4, NFR-S6).
      *
-     * @param Collection<int, Pendaftaran> $pendaftaranList
+     * @param  Collection<int, Pendaftaran>  $pendaftaranList
      * @return string Path absolut ke file ZIP sementara yang dihasilkan
+     *
      * @throws \RuntimeException Jika ZipArchive gagal diinisialisasi
      */
     public function createRegistrationBatchZip(Collection $pendaftaranList): string
@@ -25,10 +26,10 @@ class DocumentArchiveService
         $tempDir = storage_path('app/temp');
         File::ensureDirectoryExists($tempDir);
 
-        $zipFileName = 'bundel-berkas-pendaftaran-' . date('Ymd-His') . '-' . Str::random(6) . '.zip';
-        $zipFilePath = $tempDir . DIRECTORY_SEPARATOR . $zipFileName;
+        $zipFileName = 'bundel-berkas-pendaftaran-'.date('Ymd-His').'-'.Str::random(6).'.zip';
+        $zipFilePath = $tempDir.DIRECTORY_SEPARATOR.$zipFileName;
 
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
         $openResult = $zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         if ($openResult !== true) {
@@ -41,7 +42,7 @@ class DocumentArchiveService
             $peserta = $pendaftaran->user;
             $nim = $peserta?->profil?->nim_nisn ?? 'TANPA-NIM';
             $nama = Str::slug($peserta?->nama ?? 'peserta', '_');
-            
+
             // Nama folder sanitasi untuk mencegah Zip Slip / Path Traversal
             $folderName = preg_replace('/[^A-Za-z0-9_\-]/', '_', "{$nim}_{$nama}");
 
@@ -54,6 +55,7 @@ class DocumentArchiveService
                     "{$folderName}/README.txt",
                     "Peserta: {$peserta?->nama}\nNIM: {$nim}\nStatus: Berkas belum lengkap atau belum diunggah."
                 );
+
                 continue;
             }
 

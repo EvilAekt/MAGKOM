@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Peserta;
 
+use App\Enums\RealtimeEventTypeEnum;
 use App\Enums\StatusReviewProgresEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\TipeAuditEnum;
@@ -13,8 +14,8 @@ use App\Models\Penempatan;
 use App\Models\ProgresLog;
 use App\Models\Tugas;
 use App\Services\AuditService;
+use App\Services\RealtimeEventService;
 use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -117,8 +118,8 @@ class TugasController extends Controller
         $pembimbingId = $tugas->penempatan?->pembimbing_id;
         if ($pembimbingId) {
             $pesertaNama = $request->user()?->nama ?? 'Peserta';
-            app(\App\Services\RealtimeEventService::class)->publish(
-                \App\Enums\RealtimeEventTypeEnum::TugasDikumpulkan,
+            app(RealtimeEventService::class)->publish(
+                RealtimeEventTypeEnum::TugasDikumpulkan,
                 [
                     'title' => 'Pengumpulan Progres Tugas',
                     'message' => "{$pesertaNama} mengumpulkan progres untuk tugas: {$tugas->judul}.",

@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Dokumen;
 use App\Models\JenisDokumen;
 use App\Models\Jurusan;
+use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\User;
@@ -29,15 +32,23 @@ class SecurityDocumentVerificationAuditTest extends TestCase
     use RefreshDatabase;
 
     protected User $pesertaA;
+
     protected User $pesertaB;
+
     protected User $pembimbingA;
+
     protected User $pembimbingLain;
+
     protected User $admin;
+
     protected User $superAdmin;
 
     protected Pendaftaran $pendaftaranA;
+
     protected Pendaftaran $pendaftaranB;
+
     protected JenisDokumen $jenisKtp;
+
     protected Dokumen $dokumenA;
 
     protected function setUp(): void
@@ -59,7 +70,7 @@ class SecurityDocumentVerificationAuditTest extends TestCase
         ]);
 
         $bidang = Bidang::create(['nama_bidang' => 'Aplikasi Informatika', 'aktif' => true]);
-        $kuota = \App\Models\Kuota::create([
+        $kuota = Kuota::create([
             'bulan_magang_id' => $bulan->id,
             'jurusan_id' => $jurusan->id,
             'jumlah' => 10,
@@ -110,8 +121,8 @@ class SecurityDocumentVerificationAuditTest extends TestCase
             'peserta_id' => $this->pesertaA->id,
             'pembimbing_id' => $this->pembimbingA->id,
             'bidang_id' => $bidang->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'tgl_mulai' => now()->startOfMonth(),
             'tgl_selesai' => now()->addMonths(3)->endOfMonth(),
             'status' => StatusPenempatanEnum::Aktif,
@@ -200,7 +211,7 @@ class SecurityDocumentVerificationAuditTest extends TestCase
             ->assertForbidden();
 
         // URL dengan signature yang diubah / tampered
-        $tamperedUrl = $this->dokumenA->getSignedDownloadUrl(10) . 'tampered';
+        $tamperedUrl = $this->dokumenA->getSignedDownloadUrl(10).'tampered';
 
         $this->actingAs($this->pesertaA)
             ->get($tamperedUrl)

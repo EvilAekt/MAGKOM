@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Penempatan;
 use App\Models\SurveiKepuasan;
 use App\Services\AuditService;
+use App\Support\Pengaturan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -20,7 +21,7 @@ class SurveiController extends Controller
      */
     public function show(Request $request): View|RedirectResponse
     {
-        if (! \App\Support\Pengaturan::bool('fitur_survei_aktif', true)) {
+        if (! Pengaturan::bool('fitur_survei_aktif', true)) {
             abort(404, 'Fitur survei kepuasan saat ini dinonaktifkan oleh administrator.');
         }
 
@@ -48,7 +49,7 @@ class SurveiController extends Controller
      */
     public function store(Request $request, AuditService $auditService): RedirectResponse
     {
-        if (! \App\Support\Pengaturan::bool('fitur_survei_aktif', true)) {
+        if (! Pengaturan::bool('fitur_survei_aktif', true)) {
             abort(404, 'Fitur survei kepuasan saat ini dinonaktifkan oleh administrator.');
         }
 

@@ -97,7 +97,7 @@ class LaporanKinerjaController extends Controller
             $tugasSelesai = $p->tugas->where('status', StatusTugasEnum::Selesai)->count();
             $totalLogbook = $p->logbooks->count();
             $logbookReviewed = $p->logbooks->whereIn('status', [StatusLogbookEnum::Disetujui, StatusLogbookEnum::PerluRevisi])->count();
-            
+
             $tglMulai = $p->tgl_mulai;
             $tglSelesai = $p->tgl_selesai;
             $durasiHari = $tglMulai && $tglSelesai ? max(1, $tglMulai->diffInDays($tglSelesai)) : 0;

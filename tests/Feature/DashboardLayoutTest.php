@@ -32,7 +32,7 @@ class DashboardLayoutTest extends TestCase
     private function createDummyBladeView(): void
     {
         $dir = resource_path('views/testing');
-        if (!is_dir($dir)) {
+        if (! is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
 
@@ -71,7 +71,7 @@ BLADE;
 
     private function createUser(string $nama, string $email, RoleEnum $role): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = 'PasswordRahasia123!';

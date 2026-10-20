@@ -79,7 +79,7 @@ class AkunController extends Controller
     {
         $validated = $request->validate([
             'bahasa' => ['nullable', 'string', 'in:id,en'],
-            'tema'   => ['nullable', 'string', 'in:terang,gelap,sistem'],
+            'tema' => ['nullable', 'string', 'in:terang,gelap,sistem'],
         ]);
 
         $tema = $validated['tema'] ?? 'terang';

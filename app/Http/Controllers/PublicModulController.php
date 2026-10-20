@@ -26,7 +26,7 @@ class PublicModulController extends Controller
         $search = trim((string) $request->input('q'));
         $searchableCols = $modul->fields->where('dapat_dicari', true)->pluck('nama_kolom');
 
-        if ($modul->tipe_sumber === 'physical_table' && !empty($modul->nama_tabel_fisik)) {
+        if ($modul->tipe_sumber === 'physical_table' && ! empty($modul->nama_tabel_fisik)) {
             $table = $modul->nama_tabel_fisik;
             $pk = $modul->primary_key ?: 'id';
             $query = DB::table($table);
@@ -68,11 +68,11 @@ class PublicModulController extends Controller
             ->where('is_public_read', true)
             ->firstOrFail();
 
-        if ($modul->tipe_sumber === 'physical_table' && !empty($modul->nama_tabel_fisik)) {
+        if ($modul->tipe_sumber === 'physical_table' && ! empty($modul->nama_tabel_fisik)) {
             $table = $modul->nama_tabel_fisik;
             $pk = $modul->primary_key ?: 'id';
             $record = DB::table($table)->where($pk, $id)->first();
-            if (!$record) {
+            if (! $record) {
                 abort(404, 'Data tidak ditemukan.');
             }
             $data = (array) $record;

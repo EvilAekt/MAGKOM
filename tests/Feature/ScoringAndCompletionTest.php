@@ -10,6 +10,7 @@ use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusPenilaianEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
+use App\Models\Jurusan;
 use App\Models\Penempatan;
 use App\Models\Penilaian;
 use App\Models\PenilaianRiwayat;
@@ -25,15 +26,18 @@ class ScoringAndCompletionTest extends TestCase
     use RefreshDatabase;
 
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected User $superAdmin;
+
     protected Penempatan $penempatan;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan';
         $this->pembimbing->email = 'pembimbing.lapangan@kominfo.test';
         $this->pembimbing->password = 'secret123';
@@ -43,7 +47,7 @@ class ScoringAndCompletionTest extends TestCase
         $this->pembimbing->must_change_password = false;
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Magang';
         $this->peserta->email = 'peserta.magang@kominfo.test';
         $this->peserta->password = 'secret123';
@@ -53,7 +57,7 @@ class ScoringAndCompletionTest extends TestCase
         $this->peserta->must_change_password = false;
         $this->peserta->save();
 
-        $jurusan = \App\Models\Jurusan::firstOrCreate(
+        $jurusan = Jurusan::firstOrCreate(
             ['nama_jurusan' => 'Rekayasa Perangkat Lunak'],
             ['kategori' => 'smk', 'aktif' => true]
         );
@@ -67,7 +71,7 @@ class ScoringAndCompletionTest extends TestCase
             'no_hp' => '08123456789',
         ]);
 
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator';
         $this->superAdmin->email = 'superadmin.audit@kominfo.test';
         $this->superAdmin->password = 'secret123';

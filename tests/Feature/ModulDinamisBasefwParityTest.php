@@ -18,7 +18,9 @@ class ModulDinamisBasefwParityTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $peserta;
 
     protected function setUp(): void
@@ -26,7 +28,7 @@ class ModulDinamisBasefwParityTest extends TestCase
         parent::setUp();
 
         // 1. Setup User SuperAdmin
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Admin Sleman';
         $this->superAdmin->email = 'superadmin.parity@slemankab.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -37,7 +39,7 @@ class ModulDinamisBasefwParityTest extends TestCase
         $this->superAdmin->save();
 
         // 2. Setup User Admin
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Dinas MagKom';
         $this->admin->email = 'admin.parity@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -48,7 +50,7 @@ class ModulDinamisBasefwParityTest extends TestCase
         $this->admin->save();
 
         // 3. Setup User Peserta
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Magang';
         $this->peserta->email = 'peserta.parity@gmail.com';
         $this->peserta->password = 'Password123!';
@@ -109,27 +111,27 @@ class ModulDinamisBasefwParityTest extends TestCase
         $this->actingAs($this->superAdmin);
 
         $modul = ModulDinamis::create([
-            'nama_modul'       => 'Master Aset Dinas',
-            'slug'             => 'master-aset-dinas',
-            'tipe_sumber'      => 'dynamic',
-            'primary_key'      => 'kode_aset',
-            'is_manual_pk'     => true,
-            'ikon'             => 'box',
-            'target_roles'     => ['superadmin', 'admin'],
-            'scope_mode'       => 'none',
-            'status_aktif'     => true,
-            'dibuat_oleh'      => $this->superAdmin->id,
+            'nama_modul' => 'Master Aset Dinas',
+            'slug' => 'master-aset-dinas',
+            'tipe_sumber' => 'dynamic',
+            'primary_key' => 'kode_aset',
+            'is_manual_pk' => true,
+            'ikon' => 'box',
+            'target_roles' => ['superadmin', 'admin'],
+            'scope_mode' => 'none',
+            'status_aktif' => true,
+            'dibuat_oleh' => $this->superAdmin->id,
         ]);
 
         ModulDinamisField::create([
-            'modul_id'        => $modul->id,
-            'nama_kolom'      => 'kode_aset',
-            'label'           => 'Kode Aset',
-            'tipe_data'       => 'text',
-            'wajib'           => true,
+            'modul_id' => $modul->id,
+            'nama_kolom' => 'kode_aset',
+            'label' => 'Kode Aset',
+            'tipe_data' => 'text',
+            'wajib' => true,
             'tampil_di_tabel' => true,
-            'dapat_dicari'    => true,
-            'urutan'          => 1,
+            'dapat_dicari' => true,
+            'urutan' => 1,
         ]);
 
         // 1. Simpan data pertama dengan kode_aset: AST-001
@@ -154,31 +156,31 @@ class ModulDinamisBasefwParityTest extends TestCase
     public function test_granular_rbac_matrix_authorization(): void
     {
         $modul = ModulDinamis::create([
-            'nama_modul'   => 'Laporan Rahasia Bidang',
-            'slug'         => 'laporan-rahasia-bidang',
-            'tipe_sumber'  => 'dynamic',
-            'primary_key'  => 'id',
+            'nama_modul' => 'Laporan Rahasia Bidang',
+            'slug' => 'laporan-rahasia-bidang',
+            'tipe_sumber' => 'dynamic',
+            'primary_key' => 'id',
             'is_manual_pk' => false,
-            'ikon'         => 'shield',
+            'ikon' => 'shield',
             'target_roles' => ['admin'],
-            'izin_aksi'    => [
-                'list'   => ['admin'],
+            'izin_aksi' => [
+                'list' => ['admin'],
                 'create' => ['superadmin'], // Admin dilarang menambah data
                 'delete' => ['superadmin'], // Admin dilarang menghapus data
             ],
             'status_aktif' => true,
-            'dibuat_oleh'  => $this->superAdmin->id,
+            'dibuat_oleh' => $this->superAdmin->id,
         ]);
 
         ModulDinamisField::create([
-            'modul_id'        => $modul->id,
-            'nama_kolom'      => 'judul',
-            'label'           => 'Judul Laporan',
-            'tipe_data'       => 'text',
-            'wajib'           => true,
+            'modul_id' => $modul->id,
+            'nama_kolom' => 'judul',
+            'label' => 'Judul Laporan',
+            'tipe_data' => 'text',
+            'wajib' => true,
             'tampil_di_tabel' => true,
-            'dapat_dicari'    => true,
-            'urutan'          => 1,
+            'dapat_dicari' => true,
+            'urutan' => 1,
         ]);
 
         $this->actingAs($this->admin);
@@ -202,30 +204,30 @@ class ModulDinamisBasefwParityTest extends TestCase
         $this->actingAs($this->superAdmin);
 
         $modul = ModulDinamis::create([
-            'nama_modul'   => 'Catatan Ringan',
-            'slug'         => 'catatan-ringan',
-            'tipe_sumber'  => 'dynamic',
-            'primary_key'  => 'id',
+            'nama_modul' => 'Catatan Ringan',
+            'slug' => 'catatan-ringan',
+            'tipe_sumber' => 'dynamic',
+            'primary_key' => 'id',
             'is_manual_pk' => false,
-            'ikon'         => 'file-text',
+            'ikon' => 'file-text',
             'target_roles' => ['superadmin'],
-            'log_aksi'     => [
+            'log_aksi' => [
                 'create' => false, // Dilarang catat log saat create
                 'delete' => true,  // Wajib catat log saat delete
             ],
             'status_aktif' => true,
-            'dibuat_oleh'  => $this->superAdmin->id,
+            'dibuat_oleh' => $this->superAdmin->id,
         ]);
 
         ModulDinamisField::create([
-            'modul_id'        => $modul->id,
-            'nama_kolom'      => 'catatan',
-            'label'           => 'Catatan',
-            'tipe_data'       => 'text',
-            'wajib'           => true,
+            'modul_id' => $modul->id,
+            'nama_kolom' => 'catatan',
+            'label' => 'Catatan',
+            'tipe_data' => 'text',
+            'wajib' => true,
             'tampil_di_tabel' => true,
-            'dapat_dicari'    => true,
-            'urutan'          => 1,
+            'dapat_dicari' => true,
+            'urutan' => 1,
         ]);
 
         $initialLogCount = AuditLog::count();
@@ -244,7 +246,7 @@ class ModulDinamisBasefwParityTest extends TestCase
         // 2. Hapus data (delete = true)
         $deleteResponse = $this->delete(route('superadmin.modul.destroy', [
             'slug' => 'catatan-ringan',
-            'id'   => $record->id,
+            'id' => $record->id,
         ]));
         $deleteResponse->assertRedirect();
 
@@ -258,32 +260,32 @@ class ModulDinamisBasefwParityTest extends TestCase
     public function test_public_read_endpoints_accessible_without_auth(): void
     {
         $modul = ModulDinamis::create([
-            'nama_modul'     => 'Katalog Pengumuman Magang',
-            'slug'           => 'katalog-pengumuman-magang',
-            'tipe_sumber'    => 'dynamic',
-            'primary_key'    => 'id',
-            'is_manual_pk'   => false,
+            'nama_modul' => 'Katalog Pengumuman Magang',
+            'slug' => 'katalog-pengumuman-magang',
+            'tipe_sumber' => 'dynamic',
+            'primary_key' => 'id',
+            'is_manual_pk' => false,
             'is_public_read' => true,
-            'ikon'           => 'book',
-            'target_roles'   => ['superadmin'],
-            'status_aktif'   => true,
-            'dibuat_oleh'    => $this->superAdmin->id,
+            'ikon' => 'book',
+            'target_roles' => ['superadmin'],
+            'status_aktif' => true,
+            'dibuat_oleh' => $this->superAdmin->id,
         ]);
 
         ModulDinamisField::create([
-            'modul_id'        => $modul->id,
-            'nama_kolom'      => 'judul',
-            'label'           => 'Judul Pengumuman',
-            'tipe_data'       => 'text',
-            'wajib'           => true,
+            'modul_id' => $modul->id,
+            'nama_kolom' => 'judul',
+            'label' => 'Judul Pengumuman',
+            'tipe_data' => 'text',
+            'wajib' => true,
             'tampil_di_tabel' => true,
-            'dapat_dicari'    => true,
-            'urutan'          => 1,
+            'dapat_dicari' => true,
+            'urutan' => 1,
         ]);
 
         $record = ModulDinamisData::create([
-            'modul_id'   => $modul->id,
-            'data'       => ['judul' => 'Pembukaan Gelombang II 2026'],
+            'modul_id' => $modul->id,
+            'data' => ['judul' => 'Pembukaan Gelombang II 2026'],
             'created_by' => $this->superAdmin->id,
         ]);
 
@@ -295,7 +297,7 @@ class ModulDinamisBasefwParityTest extends TestCase
 
         $publicDetailResponse = $this->get(route('public.modul.show', [
             'slug' => 'katalog-pengumuman-magang',
-            'id'   => $record->id,
+            'id' => $record->id,
         ]));
         $publicDetailResponse->assertStatus(200);
         $publicDetailResponse->assertSee('Pembukaan Gelombang II 2026');
@@ -309,31 +311,31 @@ class ModulDinamisBasefwParityTest extends TestCase
         $this->actingAs($this->superAdmin);
 
         $modul = ModulDinamis::create([
-            'nama_modul'   => 'Daftar Mitra Kampus',
-            'slug'         => 'daftar-mitra-kampus',
-            'tipe_sumber'  => 'dynamic',
-            'primary_key'  => 'id',
+            'nama_modul' => 'Daftar Mitra Kampus',
+            'slug' => 'daftar-mitra-kampus',
+            'tipe_sumber' => 'dynamic',
+            'primary_key' => 'id',
             'is_manual_pk' => false,
-            'ikon'         => 'users',
+            'ikon' => 'users',
             'target_roles' => ['superadmin'],
             'status_aktif' => true,
-            'dibuat_oleh'  => $this->superAdmin->id,
+            'dibuat_oleh' => $this->superAdmin->id,
         ]);
 
         ModulDinamisField::create([
-            'modul_id'        => $modul->id,
-            'nama_kolom'      => 'nama_kampus',
-            'label'           => 'Nama Perguruan Tinggi',
-            'tipe_data'       => 'text',
-            'wajib'           => true,
+            'modul_id' => $modul->id,
+            'nama_kolom' => 'nama_kampus',
+            'label' => 'Nama Perguruan Tinggi',
+            'tipe_data' => 'text',
+            'wajib' => true,
             'tampil_di_tabel' => true,
-            'dapat_dicari'    => true,
-            'urutan'          => 1,
+            'dapat_dicari' => true,
+            'urutan' => 1,
         ]);
 
         ModulDinamisData::create([
-            'modul_id'   => $modul->id,
-            'data'       => ['nama_kampus' => 'Universitas Gadjah Mada'],
+            'modul_id' => $modul->id,
+            'data' => ['nama_kampus' => 'Universitas Gadjah Mada'],
             'created_by' => $this->superAdmin->id,
         ]);
 

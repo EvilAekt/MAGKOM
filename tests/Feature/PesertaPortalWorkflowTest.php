@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Enums\JenjangEnum;
+use App\Enums\JalurEnum;
 use App\Enums\RoleEnum;
-use App\Enums\StatusLogbookEnum;
+use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
-use App\Enums\StatusTugasEnum;
+use App\Enums\SumberPenempatanEnum;
+use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
-use App\Models\Logbook;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
-use App\Models\Tugas;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PesertaPortalWorkflowTest extends TestCase
@@ -29,6 +28,7 @@ class PesertaPortalWorkflowTest extends TestCase
     use RefreshDatabase;
 
     protected User $peserta;
+
     protected Jurusan $jurusan;
 
     protected function setUp(): void
@@ -87,11 +87,11 @@ class PesertaPortalWorkflowTest extends TestCase
 
     public function test_peserta_dapat_unggah_dan_hapus_foto_profil(): void
     {
-        \Illuminate\Support\Facades\Storage::fake('public');
+        Storage::fake('public');
 
         // 1. Simpan profil beserta upload berkas foto (valid 1x1 PNG bytes tanpa ketergantungan GD extension)
         $pngContent = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
-        $file = \Illuminate\Http\UploadedFile::fake()->createWithContent('pasfoto_formal.png', $pngContent);
+        $file = UploadedFile::fake()->createWithContent('pasfoto_formal.png', $pngContent);
 
         $postData = [
             'institusi' => 'Universitas Gadjah Mada',
@@ -109,7 +109,7 @@ class PesertaPortalWorkflowTest extends TestCase
         $profil = PesertaProfil::where('user_id', $this->peserta->id)->firstOrFail();
         $this->assertNotNull($profil->foto);
         $this->assertNotNull($profil->foto_url);
-        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($profil->foto);
+        Storage::disk('public')->assertExists($profil->foto);
 
         // 2. Buka halaman profil dan pastikan url foto dirender
         $this->peserta->refresh();
@@ -155,7 +155,7 @@ class PesertaPortalWorkflowTest extends TestCase
             'bulan_magang_id' => $bulan->id,
             'kuota_id' => $kuota->id,
             'durasi_bulan' => 3,
-            'status' => \App\Enums\StatusPendaftaranEnum::BerkasBelumLengkap,
+            'status' => StatusPendaftaranEnum::BerkasBelumLengkap,
         ]);
 
         $response = $this->actingAs($this->peserta)->get(route('peserta.pendaftaran.detail', $pendaftaran));
@@ -180,7 +180,7 @@ class PesertaPortalWorkflowTest extends TestCase
             $pembimbing->save();
         }
 
-        $bidang = \App\Models\Bidang::firstOrCreate([
+        $bidang = Bidang::firstOrCreate([
             'nama_bidang' => 'Aptika',
         ], [
             'deskripsi' => 'Bidang Aptika',
@@ -192,8 +192,8 @@ class PesertaPortalWorkflowTest extends TestCase
         ], [
             'pembimbing_id' => $pembimbing->id,
             'bidang_id' => $bidang->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'tgl_mulai' => now()->subDay()->format('Y-m-d'),
             'tgl_selesai' => now()->addMonths(3)->format('Y-m-d'),
             'status' => StatusPenempatanEnum::Aktif,

@@ -7,10 +7,10 @@ namespace App\Services;
 use App\Enums\StatusPenilaianEnum;
 use App\Enums\TipeAuditEnum;
 use App\Models\Penempatan;
+use App\Models\Pengaturan;
 use App\Models\Penilaian;
 use App\Models\PenilaianDetail;
 use App\Models\PenilaianRiwayat;
-use App\Models\Pengaturan;
 use App\Models\Rubrik;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -60,7 +60,7 @@ class ScoringService
     /**
      * Simpan penilaian sebagai DRAFT.
      *
-     * @param array<int, int> $skorRubrik [rubrik_id => skor]
+     * @param  array<int, int>  $skorRubrik  [rubrik_id => skor]
      */
     public function simpanDraft(
         Penempatan $penempatan,
@@ -106,7 +106,7 @@ class ScoringService
      * Simpan penilaian sebagai FINAL (AC-10).
      * Seluruh rubrik aktif wajib dinilai dan total bobot 100%.
      *
-     * @param array<int, int> $skorRubrik [rubrik_id => skor]
+     * @param  array<int, int>  $skorRubrik  [rubrik_id => skor]
      */
     public function simpanFinal(
         Penempatan $penempatan,
@@ -166,7 +166,7 @@ class ScoringService
     /**
      * Revisi penilaian final dengan rekam jejak audit trail riwayat (AC-10-6).
      *
-     * @param array<int, int> $skorRubrik [rubrik_id => skor]
+     * @param  array<int, int>  $skorRubrik  [rubrik_id => skor]
      */
     public function revisiFinal(
         Penilaian $penilaian,
@@ -255,7 +255,7 @@ class ScoringService
     /**
      * Hitung total skor terbobot dan detail snapshot.
      *
-     * @param array<int, int> $skorRubrik
+     * @param  array<int, int>  $skorRubrik
      * @return array{nilai_akhir: float, predikat: string, details: array<int, array{rubrik_id: int, skor: int, bobot_snapshot: int}>}
      */
     protected function kalkulasiNilaiTerbobot(array $skorRubrik): array
@@ -295,7 +295,7 @@ class ScoringService
     /**
      * Simpan / sinkronkan detail skor ke penilaian_detail.
      *
-     * @param array<int, array{rubrik_id: int, skor: int, bobot_snapshot: int}> $details
+     * @param  array<int, array{rubrik_id: int, skor: int, bobot_snapshot: int}>  $details
      */
     protected function simpanDetailSkor(Penilaian $penilaian, array $details): void
     {

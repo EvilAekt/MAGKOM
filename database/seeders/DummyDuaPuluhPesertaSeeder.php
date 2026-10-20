@@ -32,7 +32,6 @@ use App\Models\Rubrik;
 use App\Models\SlotKhusus;
 use App\Models\Tugas;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -46,9 +45,9 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         $defaultPassword = Hash::make('Password123!');
 
         // Ambil master data pendukung
-        $admin = User::where('role', RoleEnum::Admin)->first() 
+        $admin = User::where('role', RoleEnum::Admin)->first()
             ?? User::where('role', RoleEnum::SuperAdmin)->first();
-            
+
         $pembimbing = User::where('role', RoleEnum::Pembimbing)->first();
         if (! $pembimbing) {
             $pembimbing = User::create([
@@ -117,9 +116,9 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
                     'institusi' => $institusi,
                     'jurusan_id' => $jurusan->id,
                     'jenjang' => JenjangEnum::S1,
-                    'no_hp' => '0812' . rand(10000000, 99999999),
-                    'nama_kontak_darurat' => 'Orang Tua / Wali ' . $nama,
-                    'no_kontak_darurat' => '0813' . rand(10000000, 99999999),
+                    'no_hp' => '0812'.rand(10000000, 99999999),
+                    'nama_kontak_darurat' => 'Orang Tua / Wali '.$nama,
+                    'no_kontak_darurat' => '0813'.rand(10000000, 99999999),
                     'hubungan_kontak_darurat' => 'Orang Tua',
                 ]
             );
@@ -133,11 +132,11 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
                 Dokumen::updateOrCreate(
                     ['pendaftaran_id' => $pendaftaran->id, 'jenis_dokumen_id' => $jd->id],
                     [
-                        'nama_asli' => strtolower(str_replace(' ', '_', $jd->nama)) . '.pdf',
-                        'path' => 'dokumen/sample_' . $jd->kode . '.pdf',
+                        'nama_asli' => strtolower(str_replace(' ', '_', $jd->nama)).'.pdf',
+                        'path' => 'dokumen/sample_'.$jd->kode.'.pdf',
                         'ukuran' => 250000, // 250 KB
                         'mime' => 'application/pdf',
-                        'hash' => sha1('sample_' . $jd->kode . '_' . $pendaftaran->id),
+                        'hash' => sha1('sample_'.$jd->kode.'_'.$pendaftaran->id),
                     ]
                 );
             }

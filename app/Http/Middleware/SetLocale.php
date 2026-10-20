@@ -22,7 +22,7 @@ class SetLocale
     /**
      * Tangani permintaan masuk dan atur locale aplikasi berdasarkan preferensi pengguna.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {

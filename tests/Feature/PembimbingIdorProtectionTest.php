@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\JalurEnum;
-use App\Enums\JenjangEnum;
+use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
+use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
@@ -15,7 +16,6 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Logbook;
 use App\Models\Penempatan;
-use App\Models\PesertaProfil;
 use App\Models\Tugas;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
@@ -28,14 +28,23 @@ class PembimbingIdorProtectionTest extends TestCase
     use RefreshDatabase;
 
     protected User $pembimbing1;
+
     protected User $pembimbing2;
+
     protected User $superAdmin;
+
     protected User $peserta1;
+
     protected User $peserta2;
+
     protected Penempatan $penempatan1;
+
     protected Penempatan $penempatan2;
+
     protected Tugas $tugas1;
+
     protected Tugas $tugas2;
+
     protected Logbook $logbook2;
 
     protected function setUp(): void
@@ -45,7 +54,7 @@ class PembimbingIdorProtectionTest extends TestCase
         $this->seed(JenisDokumenSeeder::class);
         $this->seed(RubrikSeeder::class);
 
-        $this->pembimbing1 = new User();
+        $this->pembimbing1 = new User;
         $this->pembimbing1->nama = 'Pembimbing Alpha';
         $this->pembimbing1->email = 'pembimbing.alpha@slemankab.go.id';
         $this->pembimbing1->password = 'Password123!';
@@ -54,7 +63,7 @@ class PembimbingIdorProtectionTest extends TestCase
         $this->pembimbing1->email_verified_at = now();
         $this->pembimbing1->save();
 
-        $this->pembimbing2 = new User();
+        $this->pembimbing2 = new User;
         $this->pembimbing2->nama = 'Pembimbing Beta';
         $this->pembimbing2->email = 'pembimbing.beta@slemankab.go.id';
         $this->pembimbing2->password = 'Password123!';
@@ -63,7 +72,7 @@ class PembimbingIdorProtectionTest extends TestCase
         $this->pembimbing2->email_verified_at = now();
         $this->pembimbing2->save();
 
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Admin';
         $this->superAdmin->email = 'superadmin@slemankab.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -72,7 +81,7 @@ class PembimbingIdorProtectionTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->peserta1 = new User();
+        $this->peserta1 = new User;
         $this->peserta1->nama = 'Peserta Alpha';
         $this->peserta1->email = 'peserta.alpha@example.com';
         $this->peserta1->password = 'Password123!';
@@ -81,7 +90,7 @@ class PembimbingIdorProtectionTest extends TestCase
         $this->peserta1->email_verified_at = now();
         $this->peserta1->save();
 
-        $this->peserta2 = new User();
+        $this->peserta2 = new User;
         $this->peserta2->nama = 'Peserta Beta';
         $this->peserta2->email = 'peserta.beta@example.com';
         $this->peserta2->password = 'Password123!';
@@ -139,7 +148,7 @@ class PembimbingIdorProtectionTest extends TestCase
             'deskripsi' => 'Deskripsi tugas alpha',
             'deadline' => now()->addDays(14)->toDateString(),
             'kategori' => 'Teknis',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'status' => StatusTugasEnum::Belum,
         ]);
 
@@ -149,7 +158,7 @@ class PembimbingIdorProtectionTest extends TestCase
             'deskripsi' => 'Deskripsi tugas beta',
             'deadline' => now()->addDays(14)->toDateString(),
             'kategori' => 'Teknis',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'status' => StatusTugasEnum::Belum,
         ]);
 
@@ -158,7 +167,7 @@ class PembimbingIdorProtectionTest extends TestCase
             'minggu_ke' => 1,
             'tanggal' => now()->toDateString(),
             'kegiatan' => 'Mengerjakan modul sistem bimbingan beta',
-            'status' => \App\Enums\StatusLogbookEnum::Terkirim,
+            'status' => StatusLogbookEnum::Terkirim,
         ]);
     }
 

@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\AbstractProvider;
 use Throwable;
 
 class SocialiteController extends Controller
@@ -34,11 +35,11 @@ class SocialiteController extends Controller
      */
     public function redirect(string $provider): RedirectResponse
     {
-        if (!in_array($provider, $this->supportedProviders, true)) {
+        if (! in_array($provider, $this->supportedProviders, true)) {
             abort(404, 'Penyedia login sosial tidak didukung.');
         }
 
-        /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
+        /** @var AbstractProvider $driver */
         $driver = Socialite::driver($provider);
 
         return $driver->redirect();
@@ -52,7 +53,7 @@ class SocialiteController extends Controller
      */
     public function callback(string $provider, Request $request): RedirectResponse
     {
-        if (!in_array($provider, $this->supportedProviders, true)) {
+        if (! in_array($provider, $this->supportedProviders, true)) {
             abort(404, 'Penyedia login sosial tidak didukung.');
         }
 
@@ -87,7 +88,7 @@ class SocialiteController extends Controller
             ->first();
 
         if ($userByProvider) {
-            if (!$userByProvider->status_aktif) {
+            if (! $userByProvider->status_aktif) {
                 return redirect()->route('login')
                     ->withErrors(['email' => 'Akun Anda dinonaktifkan. Silakan hubungi administrator.']);
             }
@@ -131,7 +132,7 @@ class SocialiteController extends Controller
                     ->withErrors(['email' => 'Login sosial hanya diizinkan untuk akun peserta. Akun staf harus masuk menggunakan kata sandi.']);
             }
 
-            if (!$existingUser->status_aktif) {
+            if (! $existingUser->status_aktif) {
                 return redirect()->route('login')
                     ->withErrors(['email' => 'Akun Anda dinonaktifkan. Silakan hubungi administrator.']);
             }
@@ -180,7 +181,7 @@ class SocialiteController extends Controller
         // Kasus 3: Belum ada akun dengan email ini -> Buat akun Peserta baru
         $name = $oauthUser->getName() ?: 'Peserta Magang';
 
-        $newUser = new User();
+        $newUser = new User;
         $newUser->nama = (string) $name;
         $newUser->email = $email;
         $newUser->password = null;

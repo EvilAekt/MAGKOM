@@ -15,7 +15,7 @@ final class EnsureAccountActive
      * Memastikan akun pengguna masih dalam status aktif (SEC-03).
      * Jika status_aktif bernilai false, sesi langsung diputus secara paksa.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {

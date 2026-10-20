@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Models\Bidang;
+use App\Enums\SumberPenempatanEnum;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Kuota;
@@ -27,11 +28,17 @@ class AdminPenempatanLifecycleTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $pembimbing1;
+
     protected User $pembimbing2;
+
     protected User $peserta;
+
     protected Jurusan $jurusan;
+
     protected BulanMagang $bulan;
+
     protected Kuota $kuota;
 
     protected function setUp(): void
@@ -41,7 +48,7 @@ class AdminPenempatanLifecycleTest extends TestCase
         $this->seed(JenisDokumenSeeder::class);
         $this->seed(RubrikSeeder::class);
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Magang';
         $this->admin->email = 'admin@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -50,7 +57,7 @@ class AdminPenempatanLifecycleTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing1 = new User();
+        $this->pembimbing1 = new User;
         $this->pembimbing1->nama = 'Pembimbing Satu';
         $this->pembimbing1->email = 'pembimbing1@slemankab.go.id';
         $this->pembimbing1->password = 'Password123!';
@@ -59,7 +66,7 @@ class AdminPenempatanLifecycleTest extends TestCase
         $this->pembimbing1->email_verified_at = now();
         $this->pembimbing1->save();
 
-        $this->pembimbing2 = new User();
+        $this->pembimbing2 = new User;
         $this->pembimbing2->nama = 'Pembimbing Dua';
         $this->pembimbing2->email = 'pembimbing2@slemankab.go.id';
         $this->pembimbing2->password = 'Password123!';
@@ -89,7 +96,7 @@ class AdminPenempatanLifecycleTest extends TestCase
             'aktif' => true,
         ]);
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Uji';
         $this->peserta->email = 'peserta.uji@example.com';
         $this->peserta->password = 'Password123!';
@@ -126,8 +133,8 @@ class AdminPenempatanLifecycleTest extends TestCase
             'peserta_id' => $this->peserta->id,
             'pembimbing_id' => $this->pembimbing1->id,
             'kuota_id' => $this->kuota->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'tgl_mulai' => now()->addDays(14)->toDateString(), // sebelum mulai
             'tgl_selesai' => now()->addDays(104)->toDateString(),
             'status' => StatusPenempatanEnum::Aktif,
@@ -171,8 +178,8 @@ class AdminPenempatanLifecycleTest extends TestCase
             'peserta_id' => $this->peserta->id,
             'pembimbing_id' => $this->pembimbing1->id,
             'kuota_id' => $this->kuota->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'tgl_mulai' => now()->subDays(5)->toDateString(), // sudah dimulai
             'tgl_selesai' => now()->addDays(85)->toDateString(),
             'status' => StatusPenempatanEnum::Aktif,
@@ -203,8 +210,8 @@ class AdminPenempatanLifecycleTest extends TestCase
             'peserta_id' => $this->peserta->id,
             'pembimbing_id' => $this->pembimbing1->id,
             'kuota_id' => $this->kuota->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'tgl_mulai' => now()->toDateString(),
             'tgl_selesai' => now()->addDays(90)->toDateString(),
             'status' => StatusPenempatanEnum::Aktif,
@@ -227,7 +234,7 @@ class AdminPenempatanLifecycleTest extends TestCase
         );
 
         // Buat mentee yang sudah ada untuk pembimbing 2
-        $menteeLain = new User();
+        $menteeLain = new User;
         $menteeLain->nama = 'Mentee Lain';
         $menteeLain->email = 'mentee.lain@example.com';
         $menteeLain->password = 'Password123!';
@@ -239,8 +246,8 @@ class AdminPenempatanLifecycleTest extends TestCase
         Penempatan::create([
             'peserta_id' => $menteeLain->id,
             'pembimbing_id' => $this->pembimbing2->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'tgl_mulai' => now()->toDateString(),
             'tgl_selesai' => now()->addDays(90)->toDateString(),
             'status' => StatusPenempatanEnum::Aktif,
@@ -250,8 +257,8 @@ class AdminPenempatanLifecycleTest extends TestCase
         $penempatan = Penempatan::create([
             'peserta_id' => $this->peserta->id,
             'pembimbing_id' => $this->pembimbing1->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'tgl_mulai' => now()->toDateString(),
             'tgl_selesai' => now()->addDays(90)->toDateString(),
             'status' => StatusPenempatanEnum::Aktif,

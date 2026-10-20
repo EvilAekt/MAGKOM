@@ -7,7 +7,10 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusPenilaianEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Bidang;
 use App\Models\Penempatan;
+use App\Services\DocumentVerificationService;
+use App\Support\Pengaturan;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -20,7 +23,7 @@ class SertifikatController extends Controller
      */
     public function index(Request $request): View
     {
-        if (! \App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true)) {
+        if (! Pengaturan::bool('fitur_sertifikat_aktif', true)) {
             abort(404, 'Fitur penerbitan sertifikat saat ini dinonaktifkan oleh administrator.');
         }
 
@@ -55,7 +58,7 @@ class SertifikatController extends Controller
         $totalBersertifikat = Penempatan::where('status', StatusPenempatanEnum::Selesai)
             ->whereHas('penilaian', fn ($q) => $q->where('status', StatusPenilaianEnum::Final))
             ->count();
-        $daftarBidang = \App\Models\Bidang::where('aktif', true)->get();
+        $daftarBidang = Bidang::where('aktif', true)->get();
 
         return view('admin.sertifikat.index', [
             'alumniList' => $alumniList,
@@ -70,7 +73,7 @@ class SertifikatController extends Controller
      */
     public function cetak(Penempatan $penempatan, Request $request): Response|View
     {
-        if (! \App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true)) {
+        if (! Pengaturan::bool('fitur_sertifikat_aktif', true)) {
             abort(404, 'Fitur penerbitan sertifikat saat ini dinonaktifkan oleh administrator.');
         }
 
@@ -86,9 +89,9 @@ class SertifikatController extends Controller
         }
 
         $tahun = $penempatan->tgl_selesai?->format('Y') ?? date('Y');
-        $nomorSertifikat = '500.12/SRT/' . str_pad((string) $penempatan->id, 4, '0', STR_PAD_LEFT) . '/DISKOMINFO/' . $tahun;
+        $nomorSertifikat = '500.12/SRT/'.str_pad((string) $penempatan->id, 4, '0', STR_PAD_LEFT).'/DISKOMINFO/'.$tahun;
 
-        $verificationService = app(\App\Services\DocumentVerificationService::class);
+        $verificationService = app(DocumentVerificationService::class);
         $dokumenVerifikasi = $verificationService->getOrCreateVerification(
             $penempatan,
             'sertifikat',
@@ -122,7 +125,7 @@ class SertifikatController extends Controller
         ])->setPaper('a4', 'landscape');
 
         $namaPeserta = $penempatan->peserta?->nama ?? 'alumni';
-        $namaFile = 'sertifikat-magang-' . str_replace(' ', '-', strtolower($namaPeserta)) . '.pdf';
+        $namaFile = 'sertifikat-magang-'.str_replace(' ', '-', strtolower($namaPeserta)).'.pdf';
 
         return $pdf->download($namaFile);
     }

@@ -1906,7 +1906,7 @@
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
                             </span>
-                            <span>{{ __('Penempatan') }}</span>
+                            <span>{{ __('Penempatan Peserta') }}</span>
                         </a>
 
                         <a href="{{ route('admin.laporan.index') }}" class="nav-item-link {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">
@@ -2024,7 +2024,7 @@
                                 <a href="{{ route('admin.pendaftaran.index') }}" class="nav-sub-item {{ request()->routeIs('admin.pendaftaran.*') ? 'active' : '' }}">{{ __('Verifikasi Berkas') }}</a>
                                 <a href="{{ route('admin.kuota.index') }}" class="nav-sub-item {{ request()->routeIs('admin.kuota.*') ? 'active' : '' }}">{{ __('Kuota Magang') }}</a>
                                 <a href="{{ route('admin.waiting-list.index') }}" class="nav-sub-item {{ request()->routeIs('admin.waiting-list.*') ? 'active' : '' }}">{{ __('Waiting List') }}</a>
-                                <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">{{ __('Penempatan') }}</a>
+                                <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">{{ __('Penempatan Peserta') }}</a>
                                 <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">{{ __('Laporan & Ekspor') }}</a>
                                 @if(\App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true))
                                 <a href="{{ route('admin.sertifikat.index') }}" class="nav-sub-item {{ request()->routeIs('admin.sertifikat.*') ? 'active' : '' }}">{{ __('Sertifikat') }}</a>

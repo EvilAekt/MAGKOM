@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 use RuntimeException;
 
 class AuditLog extends Model
@@ -86,7 +87,7 @@ class AuditLog extends Model
     {
         static::creating(function (AuditLog $log) {
             if (empty($log->request_id)) {
-                $log->request_id = (string) \Illuminate\Support\Str::uuid();
+                $log->request_id = (string) Str::uuid();
             }
             if (empty($log->waktu)) {
                 $log->waktu = now('Asia/Jakarta');

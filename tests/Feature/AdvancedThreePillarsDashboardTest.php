@@ -12,7 +12,6 @@ use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusPenilaianEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\AgendaBimbingan;
-use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
@@ -33,12 +32,19 @@ final class AdvancedThreePillarsDashboardTest extends TestCase
     use RefreshDatabase;
 
     private User $superAdmin;
+
     private User $admin;
+
     private User $pembimbing1;
+
     private User $pembimbing2;
+
     private Bidang $bidang;
+
     private Jurusan $jurusan;
+
     private BulanMagang $bulanMagang;
+
     private Kuota $kuota;
 
     protected function setUp(): void
@@ -91,7 +97,7 @@ final class AdvancedThreePillarsDashboardTest extends TestCase
 
     private function createUser(string $nama, string $email, RoleEnum $role, ?int $bidangId = null): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = Hash::make('Password123!');
@@ -430,6 +436,6 @@ final class AdvancedThreePillarsDashboardTest extends TestCase
         // 4. Hapus berkas backup
         $deleteResp = $this->actingAs($this->superAdmin)->delete(route('superadmin.backup.destroy', $latestFile));
         $deleteResp->assertRedirect(route('superadmin.backup.index'));
-        $this->assertFileDoesNotExist($backupDir . DIRECTORY_SEPARATOR . $latestFile);
+        $this->assertFileDoesNotExist($backupDir.DIRECTORY_SEPARATOR.$latestFile);
     }
 }

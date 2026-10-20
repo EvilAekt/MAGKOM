@@ -205,4 +205,3 @@ class LandingPageTest extends TestCase
         $response->assertSee(route('admin.pengaturan.index'));
     }
 }
-

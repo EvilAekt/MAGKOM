@@ -58,7 +58,7 @@ class Logbook extends Model
             return "Minggu ke-{$minggu}";
         }
 
-        return "Minggu ke-1";
+        return 'Minggu ke-1';
     }
 
     public function penempatan(): BelongsTo

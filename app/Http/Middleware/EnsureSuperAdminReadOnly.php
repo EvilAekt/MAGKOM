@@ -15,7 +15,7 @@ final class EnsureSuperAdminReadOnly
      * Memastikan SuperAdmin strictly read-only pada modul fungsi Pembimbing (SEC-12).
      * Seluruh method non-safe (POST, PUT, PATCH, DELETE) ditolak dengan HTTP 403.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {

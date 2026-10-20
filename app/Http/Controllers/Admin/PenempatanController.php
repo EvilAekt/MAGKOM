@@ -4,19 +4,30 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\JalurEnum;
 use App\Enums\RoleEnum;
+use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\StatusTugasEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PenempatanManualRequest;
+use App\Http\Requests\TetapkanPenempatanRequest;
 use App\Models\Bidang;
+use App\Models\BulanMagang;
+use App\Models\Jurusan;
+use App\Models\Kuota;
+use App\Models\Pendaftaran;
 use App\Models\Penempatan;
+use App\Models\Pengaturan;
 use App\Models\SlotKhusus;
 use App\Models\User;
 use App\Services\AuditService;
 use App\Services\PlacementService;
+use App\Services\SuratDiterimaPdfService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -29,7 +40,7 @@ class PenempatanController extends Controller
 
     public function index(Request $request): View
     {
-        $query = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan', 'slotKhusus'])
+        $query = Penempatan::with(['peserta.profil', 'pembimbing.bidang', 'bidang', 'kuota.jurusan', 'slotKhusus'])
             ->orderBy('tgl_mulai', 'desc');
 
         if ($request->filled('status')) {
@@ -44,8 +55,16 @@ class PenempatanController extends Controller
             $query->where('bidang_id', $request->integer('bidang_id'));
         }
 
+        if ($request->filled('bulan_magang_id')) {
+            $bulanId = $request->integer('bulan_magang_id');
+            $query->where(function ($q) use ($bulanId) {
+                $q->whereHas('pendaftaran', fn ($qp) => $qp->where('bulan_magang_id', $bulanId))
+                    ->orWhereHas('kuota', fn ($qk) => $qk->where('bulan_magang_id', $bulanId));
+            });
+        }
+
         if ($request->filled('q')) {
-            $search = '%' . trim((string) $request->input('q')) . '%';
+            $search = '%'.trim((string) $request->input('q')).'%';
             $query->whereHas('peserta', function ($qu) use ($search) {
                 $qu->where('nama', 'like', $search)
                     ->orWhere('email', 'like', $search)
@@ -54,18 +73,27 @@ class PenempatanController extends Controller
         }
 
         $penempatanList = $query->paginate(15)->withQueryString();
+
         $pembimbingList = User::where('role', RoleEnum::Pembimbing)
             ->where('status_aktif', true)
+            ->with('bidang')
             ->withCount(['penempatanBimbingan as mentee_aktif_count' => function ($q) {
                 $q->where('status', StatusPenempatanEnum::Aktif);
             }])
             ->orderBy('nama')
             ->get();
 
+        $antreanBelumDitempatkan = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan.bidang'])
+            ->where('status', StatusPendaftaranEnum::Diterima)
+            ->doesntHave('penempatan')
+            ->orderBy('diputuskan_at', 'desc')
+            ->get();
+
+        $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
         $slotKhususList = SlotKhusus::where('aktif', true)->orderBy('bulan_mulai')->get();
         $bidangList = Bidang::where('aktif', true)->orderBy('nama_bidang')->get();
-        $jurusanList = \App\Models\Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
-        $kuotaList = \App\Models\Kuota::with(['bulanMagang', 'jurusan'])->where('aktif', true)->get();
+        $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
+        $kuotaList = Kuota::with(['bulanMagang', 'jurusan'])->where('aktif', true)->get();
         $pesertaList = User::where('role', RoleEnum::Peserta)
             ->where('status_aktif', true)
             ->whereDoesntHave('penempatanPeserta', function ($q) {
@@ -79,6 +107,7 @@ class PenempatanController extends Controller
             'aktif' => Penempatan::where('status', StatusPenempatanEnum::Aktif)->count(),
             'selesai' => Penempatan::where('status', StatusPenempatanEnum::Selesai)->count(),
             'khusus' => Penempatan::whereNotNull('slot_khusus_id')->count(),
+            'belum_ditempatkan' => $antreanBelumDitempatkan->count(),
         ];
 
         return view('admin.penempatan.index', [
@@ -91,7 +120,30 @@ class PenempatanController extends Controller
             'kuotaList' => $kuotaList,
             'pesertaList' => $pesertaList,
             'penempatanStats' => $penempatanStats,
+            'antreanBelumDitempatkan' => $antreanBelumDitempatkan,
+            'bulanList' => $bulanList,
         ]);
+    }
+
+    /**
+     * Menetapkan pembimbing dan bidang dinas untuk peserta yang telah diterima (Tahap 2 Penempatan).
+     */
+    public function tetapkan(TetapkanPenempatanRequest $request): RedirectResponse
+    {
+        $admin = $request->user();
+        $pendaftaran = Pendaftaran::findOrFail($request->integer('pendaftaran_id'));
+        $pembimbing = User::findOrFail($request->integer('pembimbing_id'));
+        $bidang = $request->filled('bidang_id') ? Bidang::find($request->integer('bidang_id')) : null;
+
+        try {
+            $this->placementService->tetapkanPenempatan($pendaftaran, $admin, $pembimbing, $bidang);
+
+            return redirect()->route('admin.penempatan.index')
+                ->with('success', 'Penetapan pembimbing lapangan untuk '.$pendaftaran->user?->nama.' berhasil disimpan.');
+        } catch (\Throwable $e) {
+            return redirect()->route('admin.penempatan.index')
+                ->with('error', 'Gagal menetapkan penempatan: '.$e->getMessage());
+        }
     }
 
     /**
@@ -134,7 +186,7 @@ class PenempatanController extends Controller
 
         $tugasCount = $penempatan->tugas->count();
         $tugasSelesaiCount = $penempatan->tugas->filter(function ($t) {
-            return $t->status === \App\Enums\StatusTugasEnum::Selesai;
+            return $t->status === StatusTugasEnum::Selesai;
         })->count();
 
         $logbookCount = $penempatan->logbooks->count();
@@ -202,14 +254,14 @@ class PenempatanController extends Controller
             return redirect()->route('admin.penempatan.index')
                 ->with('success', 'Penempatan peserta berhasil diproses secara manual.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal memproses penempatan manual: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memproses penempatan manual: '.$e->getMessage());
         }
     }
 
     /**
      * Mengunduh dokumen resmi Surat Keterangan Diterima Magang PDF (AC-16-1, F-16).
      */
-    public function unduhSuratDiterima(Penempatan $penempatan, \App\Services\SuratDiterimaPdfService $pdfService)
+    public function unduhSuratDiterima(Penempatan $penempatan, SuratDiterimaPdfService $pdfService)
     {
         $this->authorize('view', $penempatan);
 
@@ -219,7 +271,7 @@ class PenempatanController extends Controller
     /**
      * Menyajikan pratinjau dokumen resmi Surat Keterangan Diterima Magang PDF secara inline stream (AC-16-1, F-16).
      */
-    public function pratinjauSuratDiterima(Penempatan $penempatan, \App\Services\SuratDiterimaPdfService $pdfService)
+    public function pratinjauSuratDiterima(Penempatan $penempatan, SuratDiterimaPdfService $pdfService)
     {
         $this->authorize('view', $penempatan);
 
@@ -274,7 +326,7 @@ class PenempatanController extends Controller
         $ids = $request->input('penempatan_ids');
 
         // Validasi kuota kapasitas maksimal pembimbing (BR-13)
-        $maxBebanSetting = \App\Models\Pengaturan::where('kunci', 'maks_peserta_aktif_per_pembimbing')->value('nilai');
+        $maxBebanSetting = Pengaturan::where('kunci', 'maks_peserta_aktif_per_pembimbing')->value('nilai');
         if ($maxBebanSetting !== null && $maxBebanSetting !== '') {
             $maxBeban = (int) $maxBebanSetting;
             $currentAktif = Penempatan::where('pembimbing_id', $pembimbingBaru->id)
@@ -291,7 +343,7 @@ class PenempatanController extends Controller
             }
         }
 
-        $count = \Illuminate\Support\Facades\DB::transaction(function () use ($ids, $pembimbingBaru, $admin) {
+        $count = DB::transaction(function () use ($ids, $pembimbingBaru, $admin) {
             $penempatans = Penempatan::whereIn('id', $ids)->get();
             $updated = 0;
 
@@ -387,12 +439,13 @@ class PenempatanController extends Controller
             }
             $s = (string) $val;
             if ($s !== '' && in_array($s[0], ['=', '+', '-', '@'], true)) {
-                return "'" . $s;
+                return "'".$s;
             }
+
             return $s;
         };
 
-        $fileName = 'rekap-surat-diterima-' . date('Ymd-His') . '.csv';
+        $fileName = 'rekap-surat-diterima-'.date('Ymd-His').'.csv';
 
         return response()->streamDownload(function () use ($records, $sanitize) {
             $handle = fopen('php://output', 'w');
@@ -421,11 +474,11 @@ class PenempatanController extends Controller
                     $sanitize($item->kuota?->jurusan?->nama_jurusan ?? ($item->peserta?->profil?->jurusan?->nama_jurusan ?? '-')),
                     $sanitize($item->bidang?->nama_bidang ?? '-'),
                     $sanitize($item->pembimbing?->nama ?? '-'),
-                    $sanitize(strtoupper($item->jalur instanceof \App\Enums\JalurEnum ? $item->jalur->value : (string) ($item->jalur ?? 'REGULER'))),
+                    $sanitize(strtoupper($item->jalur instanceof JalurEnum ? $item->jalur->value : (string) ($item->jalur ?? 'REGULER'))),
                     $sanitize($item->tgl_mulai?->format('d/m/Y') ?? '-'),
                     $sanitize($item->tgl_selesai?->format('d/m/Y') ?? '-'),
                     $sanitize(ucfirst($item->status?->value ?? '-')),
-                    $sanitize($item->no_surat ?? '500.12/' . str_pad((string) $item->id, 4, '0', STR_PAD_LEFT) . '/DISKOMINFO/' . date('Y')),
+                    $sanitize($item->no_surat ?? '500.12/'.str_pad((string) $item->id, 4, '0', STR_PAD_LEFT).'/DISKOMINFO/'.date('Y')),
                 ]);
             }
 
@@ -435,5 +488,3 @@ class PenempatanController extends Controller
         ]);
     }
 }
-
-

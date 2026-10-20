@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\RealtimeEventTypeEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
@@ -19,7 +20,9 @@ use App\Models\Pendaftaran;
 use App\Models\PesertaProfil;
 use App\Models\User;
 use App\Services\AuditService;
+use App\Services\DocumentArchiveService;
 use App\Services\PlacementService;
+use App\Services\RealtimeEventService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -49,7 +52,7 @@ class PendaftaranController extends Controller
             $rawSearch = trim((string) $request->input('q'));
             $cleanId = ltrim(str_ireplace(['#', 'REG-'], '', $rawSearch), '0');
             $escapedSearch = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $rawSearch);
-            $search = '%' . $escapedSearch . '%';
+            $search = '%'.$escapedSearch.'%';
             $query->where(function ($q) use ($search, $cleanId) {
                 if ($cleanId !== '' && is_numeric($cleanId)) {
                     $q->orWhere('id', (int) $cleanId);
@@ -77,7 +80,7 @@ class PendaftaranController extends Controller
             $jurusanId = $request->integer('jurusan_id');
             $query->where(function ($q) use ($jurusanId) {
                 $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
-                  ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
+                    ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
             });
         }
 
@@ -178,13 +181,10 @@ class PendaftaranController extends Controller
 
         try {
             if ($keputusan === 'terima') {
-                $pembimbing = User::find($request->integer('pembimbing_id'));
-                $bidang = $request->filled('bidang_id') ? Bidang::find($request->integer('bidang_id')) : null;
-
-                $this->placementService->terima($pendaftaran, $admin, $pembimbing, $bidang);
+                $this->placementService->terimaBerkas($pendaftaran, $admin, $request->input('catatan'));
 
                 return redirect()->route('admin.pendaftaran.show', $pendaftaran)
-                    ->with('success', 'Pendaftaran berhasil diterima dan peserta resmi ditempatkan.');
+                    ->with('success', 'Berkas pendaftaran berhasil diterima. Silakan tetapkan pembimbing lapangan di menu Penempatan Peserta.');
             }
 
             if ($keputusan === 'waiting_list') {
@@ -195,7 +195,7 @@ class PendaftaranController extends Controller
                 }
 
                 if (! in_array($pendaftaran->status, [StatusPendaftaranEnum::Diajukan, StatusPendaftaranEnum::PerluPerbaikan], true)) {
-                    throw new StatusSudahBerubahException();
+                    throw new StatusSudahBerubahException;
                 }
 
                 $pendaftaran->update([
@@ -219,8 +219,8 @@ class PendaftaranController extends Controller
                 );
 
                 // Notifikasi Real-time SSE ke peserta (TASK-SSE-05)
-                app(\App\Services\RealtimeEventService::class)->publish(
-                    \App\Enums\RealtimeEventTypeEnum::StatusPendaftaran,
+                app(RealtimeEventService::class)->publish(
+                    RealtimeEventTypeEnum::StatusPendaftaran,
                     [
                         'title' => 'Dialihkan ke Waiting List',
                         'message' => 'Kuota umum saat ini telah penuh. Pengajuan Anda masuk ke dalam antrean Waiting List.',
@@ -255,7 +255,7 @@ class PendaftaranController extends Controller
             // AC-04-6: Arahkan ke Waiting List bila kuota ternyata penuh saat diterima
             return back()->with('error', 'Kuota umum telah terisi penuh. Silakan alihkan pendaftaran ke antrean Waiting List (AC-04-6).');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal memproses keputusan: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memproses keputusan: '.$e->getMessage());
         }
 
         return back();
@@ -264,7 +264,7 @@ class PendaftaranController extends Controller
     /**
      * Mengunduh bundel seluruh berkas pendaftaran peserta dalam arsip ZIP terstruktur (PRD F-03, Bab 8.4, NFR-S6).
      */
-    public function downloadBundelZip(Request $request, \App\Services\DocumentArchiveService $archiveService)
+    public function downloadBundelZip(Request $request, DocumentArchiveService $archiveService)
     {
         $query = Pendaftaran::with(['user.profil', 'dokumen.jenisDokumen', 'bulanMagang', 'kuota.jurusan']);
 
@@ -299,7 +299,7 @@ class PendaftaranController extends Controller
         );
 
         $zipPath = $archiveService->createRegistrationBatchZip($pendaftarans);
-        $downloadName = 'bundel-berkas-magkom-' . date('Ymd-His') . '.zip';
+        $downloadName = 'bundel-berkas-magkom-'.date('Ymd-His').'.zip';
 
         return response()->download($zipPath, $downloadName, [
             'Content-Type' => 'application/zip',

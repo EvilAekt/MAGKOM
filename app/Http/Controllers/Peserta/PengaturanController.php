@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Peserta;
 
+use App\Enums\StatusPenempatanEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdatePasswordSettingRequest;
+use App\Models\Penempatan;
 use App\Services\AuditService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -29,9 +31,9 @@ class PengaturanController extends Controller
         $profil = $user->profil;
 
         // Ambil penempatan aktif jika ada
-        $penempatan = \App\Models\Penempatan::with(['bidang', 'pembimbing'])
+        $penempatan = Penempatan::with(['bidang', 'pembimbing'])
             ->where('peserta_id', $user->id)
-            ->where('status', \App\Enums\StatusPenempatanEnum::Aktif)
+            ->where('status', StatusPenempatanEnum::Aktif)
             ->first();
 
         // Metadata sesi & format waktu
@@ -42,12 +44,12 @@ class PengaturanController extends Controller
         $bahasaAktif = $request->hasSession() ? $request->session()->get('bahasa_portal', 'id') : 'id';
 
         return view('peserta.pengaturan.index', [
-            'user'          => $user,
-            'profil'        => $profil,
-            'penempatan'    => $penempatan,
+            'user' => $user,
+            'profil' => $profil,
+            'penempatan' => $penempatan,
             'terakhirMasuk' => $terakhirMasuk,
-            'temaAktif'     => $temaAktif,
-            'bahasaAktif'   => $bahasaAktif,
+            'temaAktif' => $temaAktif,
+            'bahasaAktif' => $bahasaAktif,
         ]);
     }
 
@@ -95,7 +97,7 @@ class PengaturanController extends Controller
     {
         $validated = $request->validate([
             'bahasa' => ['nullable', 'string', 'in:id,en'],
-            'tema'   => ['nullable', 'string', 'in:terang,gelap,sistem'],
+            'tema' => ['nullable', 'string', 'in:terang,gelap,sistem'],
         ]);
 
         $tema = $validated['tema'] ?? 'terang';

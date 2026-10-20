@@ -6,25 +6,21 @@ namespace Tests\Feature;
 
 use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
+use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
-use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Logbook;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
-use App\Models\PenilaianDetail;
 use App\Models\PesertaProfil;
-use App\Models\Rubrik;
 use App\Models\Tugas;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
@@ -37,11 +33,17 @@ class PesertaFullPortalFeatureTest extends TestCase
     use RefreshDatabase;
 
     protected User $peserta;
+
     protected User $pembimbing;
+
     protected User $admin;
+
     protected Jurusan $jurusan;
+
     protected Bidang $bidang;
+
     protected BulanMagang $bulanMagang;
+
     protected Kuota $kuota;
 
     protected function setUp(): void
@@ -210,7 +212,7 @@ class PesertaFullPortalFeatureTest extends TestCase
             'judul' => 'Membuat API Dashboard',
             'deskripsi' => 'Kerjakan controller dan view',
             'kategori' => 'Development',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'deadline' => now()->addDays(5)->toDateString(),
             'status' => StatusTugasEnum::Belum,
         ]);
@@ -269,7 +271,7 @@ class PesertaFullPortalFeatureTest extends TestCase
             'judul' => 'Tugas Pengujian Frontend',
             'deskripsi' => 'Testing tampilan peserta',
             'kategori' => 'Testing',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Rendah,
+            'kompleksitas' => KompleksitasEnum::Rendah,
             'deadline' => now()->addDays(3)->toDateString(),
             'status' => StatusTugasEnum::Belum,
         ]);

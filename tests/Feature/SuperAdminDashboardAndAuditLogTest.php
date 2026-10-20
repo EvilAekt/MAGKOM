@@ -8,6 +8,7 @@ use App\Enums\JalurEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\SumberPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
@@ -28,12 +29,19 @@ class SuperAdminDashboardAndAuditLogTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Bidang $bidang;
+
     protected Kuota $kuota;
 
     protected function setUp(): void
@@ -72,7 +80,7 @@ class SuperAdminDashboardAndAuditLogTest extends TestCase
         ]);
 
         // 2. Setup Pengguna
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Admin MagKom';
         $this->superAdmin->email = 'superadmin@slemankab.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -82,7 +90,7 @@ class SuperAdminDashboardAndAuditLogTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Dinas';
         $this->admin->email = 'admin@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -92,7 +100,7 @@ class SuperAdminDashboardAndAuditLogTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan Aptika';
         $this->pembimbing->email = 'pembimbing@slemankab.go.id';
         $this->pembimbing->password = 'Password123!';
@@ -103,7 +111,7 @@ class SuperAdminDashboardAndAuditLogTest extends TestCase
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Magang Test';
         $this->peserta->email = 'peserta@gmail.com';
         $this->peserta->password = 'Password123!';
@@ -136,7 +144,7 @@ class SuperAdminDashboardAndAuditLogTest extends TestCase
             'kuota_id' => $this->kuota->id,
             'status' => StatusPenempatanEnum::Aktif,
             'jalur' => JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'sumber' => SumberPenempatanEnum::Online,
             'dibuat_oleh' => $this->admin->id,
             'tgl_mulai' => now()->startOfMonth(),
             'tgl_selesai' => now()->endOfMonth(),
@@ -169,7 +177,7 @@ class SuperAdminDashboardAndAuditLogTest extends TestCase
             'kuota_id' => $this->kuota->id,
             'status' => StatusPenempatanEnum::Aktif,
             'jalur' => JalurEnum::Khusus,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'sumber' => SumberPenempatanEnum::Online,
             'dibuat_oleh' => $this->admin->id,
             'tgl_mulai' => now()->startOfMonth(),
             'tgl_selesai' => now()->endOfMonth(),
@@ -202,7 +210,7 @@ class SuperAdminDashboardAndAuditLogTest extends TestCase
             'kuota_id' => $this->kuota->id,
             'status' => StatusPenempatanEnum::MengundurkanDiri,
             'jalur' => JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'sumber' => SumberPenempatanEnum::Online,
             'dibuat_oleh' => $this->admin->id,
             'tgl_mulai' => now()->startOfMonth(),
             'tgl_selesai' => now()->endOfMonth(),

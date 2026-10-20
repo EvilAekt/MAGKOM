@@ -20,15 +20,18 @@ class AdminDuplicateNimDetectionTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Verifikator';
         $this->admin->email = 'admin.verif@magkom.test';
         $this->admin->password = 'secret123';
@@ -60,7 +63,7 @@ class AdminDuplicateNimDetectionTest extends TestCase
 
     public function test_no_warning_when_nim_is_unique(): void
     {
-        $user1 = new User();
+        $user1 = new User;
         $user1->nama = 'Peserta Tunggal';
         $user1->email = 'peserta1@magkom.test';
         $user1->password = 'secret123';
@@ -99,7 +102,7 @@ class AdminDuplicateNimDetectionTest extends TestCase
         $sharedNim = '2100018999';
 
         // Akun peserta 1
-        $user1 = new User();
+        $user1 = new User;
         $user1->nama = 'Budi Satu';
         $user1->email = 'budi1@magkom.test';
         $user1->password = 'secret123';
@@ -128,7 +131,7 @@ class AdminDuplicateNimDetectionTest extends TestCase
         ]);
 
         // Akun peserta 2 dengan NIM sama
-        $user2 = new User();
+        $user2 = new User;
         $user2->nama = 'Budi Dua';
         $user2->email = 'budi2@magkom.test';
         $user2->password = 'secret123';

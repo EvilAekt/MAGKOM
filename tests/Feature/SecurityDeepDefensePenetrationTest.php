@@ -7,6 +7,8 @@ namespace Tests\Feature;
 use App\Enums\JalurEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\StatusTugasEnum;
+use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
@@ -122,7 +124,7 @@ class SecurityDeepDefensePenetrationTest extends TestCase
             'tgl_selesai' => now()->addDays(25),
             'status' => StatusPenempatanEnum::Aktif,
             'jalur' => JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'sumber' => SumberPenempatanEnum::Online,
         ]);
 
         $tugasB = Tugas::create([
@@ -132,7 +134,7 @@ class SecurityDeepDefensePenetrationTest extends TestCase
             'kategori' => 'Teknis',
             'kompleksitas' => 'sedang',
             'deadline' => now()->addDays(7)->toDateString(),
-            'status' => \App\Enums\StatusTugasEnum::Belum,
+            'status' => StatusTugasEnum::Belum,
         ]);
 
         // Mentor A mencoba mengakses detail tugas Mentee B -> HARUS 403 Forbidden

@@ -2,6 +2,23 @@
 
 namespace App\Providers;
 
+use App\Models\Bidang;
+use App\Models\BulanMagang;
+use App\Models\Dokumen;
+use App\Models\Jurusan;
+use App\Models\Kuota;
+use App\Models\Logbook;
+use App\Models\ModulDinamis;
+use App\Models\ModulDinamisData;
+use App\Models\Pendaftaran;
+use App\Models\Penempatan;
+use App\Models\Pengaturan;
+use App\Models\Penilaian;
+use App\Models\Rubrik;
+use App\Models\SlotKhusus;
+use App\Models\Tugas;
+use App\Models\User;
+use App\Observers\AuditableObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -26,27 +43,27 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $observedModels = [
-            \App\Models\User::class,
-            \App\Models\Pendaftaran::class,
-            \App\Models\Dokumen::class,
-            \App\Models\Penempatan::class,
-            \App\Models\Kuota::class,
-            \App\Models\BulanMagang::class,
-            \App\Models\SlotKhusus::class,
-            \App\Models\Tugas::class,
-            \App\Models\Logbook::class,
-            \App\Models\Penilaian::class,
-            \App\Models\Pengaturan::class,
-            \App\Models\Jurusan::class,
-            \App\Models\Bidang::class,
-            \App\Models\Rubrik::class,
-            \App\Models\ModulDinamis::class,
-            \App\Models\ModulDinamisData::class,
+            User::class,
+            Pendaftaran::class,
+            Dokumen::class,
+            Penempatan::class,
+            Kuota::class,
+            BulanMagang::class,
+            SlotKhusus::class,
+            Tugas::class,
+            Logbook::class,
+            Penilaian::class,
+            Pengaturan::class,
+            Jurusan::class,
+            Bidang::class,
+            Rubrik::class,
+            ModulDinamis::class,
+            ModulDinamisData::class,
         ];
 
         foreach ($observedModels as $modelClass) {
             if (class_exists($modelClass)) {
-                $modelClass::observe(\App\Observers\AuditableObserver::class);
+                $modelClass::observe(AuditableObserver::class);
             }
         }
     }

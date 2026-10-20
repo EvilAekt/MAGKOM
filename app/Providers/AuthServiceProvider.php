@@ -3,6 +3,18 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use App\Models\Dokumen;
+use App\Models\Logbook;
+use App\Models\Pendaftaran;
+use App\Models\Penempatan;
+use App\Models\Penilaian;
+use App\Models\Tugas;
+use App\Policies\DokumenPolicy;
+use App\Policies\LogbookPolicy;
+use App\Policies\PendaftaranPolicy;
+use App\Policies\PenempatanPolicy;
+use App\Policies\PenilaianPolicy;
+use App\Policies\TugasPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -13,12 +25,12 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        \App\Models\Pendaftaran::class => \App\Policies\PendaftaranPolicy::class,
-        \App\Models\Dokumen::class => \App\Policies\DokumenPolicy::class,
-        \App\Models\Penempatan::class => \App\Policies\PenempatanPolicy::class,
-        \App\Models\Tugas::class => \App\Policies\TugasPolicy::class,
-        \App\Models\Logbook::class => \App\Policies\LogbookPolicy::class,
-        \App\Models\Penilaian::class => \App\Policies\PenilaianPolicy::class,
+        Pendaftaran::class => PendaftaranPolicy::class,
+        Dokumen::class => DokumenPolicy::class,
+        Penempatan::class => PenempatanPolicy::class,
+        Tugas::class => TugasPolicy::class,
+        Logbook::class => LogbookPolicy::class,
+        Penilaian::class => PenilaianPolicy::class,
     ];
 
     /**

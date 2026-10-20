@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Enums\RoleEnum;
 use App\Enums\TipeAuditEnum;
-use App\Models\BulanMagang;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\Penilaian;
 use App\Models\SlotKhusus;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -40,7 +37,7 @@ class ExportReportService
 
         $karakterBerbahaya = ['=', '+', '-', '@', "\t", "\r"];
         if (in_array($str[0], $karakterBerbahaya, true)) {
-            return "'" . $str;
+            return "'".$str;
         }
 
         return $str;
@@ -49,7 +46,7 @@ class ExportReportService
     /**
      * Ekspor rekapitulasi pengajuan pendaftaran (AC-17-1).
      *
-     * @param array<string, mixed> $filters
+     * @param  array<string, mixed>  $filters
      */
     public function exportPendaftaran(User $user, array $filters = []): StreamedResponse
     {
@@ -65,14 +62,14 @@ class ExportReportService
             $jurusanId = (int) $filters['jurusan_id'];
             $query->where(function ($q) use ($jurusanId) {
                 $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
-                  ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
+                    ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
             });
         }
         if (! empty($filters['dari_tanggal'])) {
-            $query->where('created_at', '>=', $filters['dari_tanggal'] . ' 00:00:00');
+            $query->where('created_at', '>=', $filters['dari_tanggal'].' 00:00:00');
         }
         if (! empty($filters['sampai_tanggal'])) {
-            $query->where('created_at', '<=', $filters['sampai_tanggal'] . ' 23:59:59');
+            $query->where('created_at', '<=', $filters['sampai_tanggal'].' 23:59:59');
         }
 
         $records = $query->latest('created_at')->get();
@@ -99,7 +96,7 @@ class ExportReportService
 
         return response()->streamDownload(function () use ($headers, $records) {
             $handle = fopen('php://output', 'w');
-            fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
+            fwrite($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
             fputcsv($handle, $headers);
 
             foreach ($records as $p) {
@@ -118,7 +115,7 @@ class ExportReportService
             }
 
             fclose($handle);
-        }, 'rekap-pendaftaran-' . date('YmdHis') . '.csv', [
+        }, 'rekap-pendaftaran-'.date('YmdHis').'.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }
@@ -126,7 +123,7 @@ class ExportReportService
     /**
      * Ekspor rekapitulasi data penempatan peserta (AC-17-1).
      *
-     * @param array<string, mixed> $filters
+     * @param  array<string, mixed>  $filters
      */
     public function exportPenempatan(User $user, array $filters = []): StreamedResponse
     {
@@ -142,7 +139,7 @@ class ExportReportService
             $jurusanId = (int) $filters['jurusan_id'];
             $query->where(function ($q) use ($jurusanId) {
                 $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
-                  ->orWhereHas('peserta.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
+                    ->orWhereHas('peserta.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
             });
         }
         if (! empty($filters['dari_tanggal'])) {
@@ -176,7 +173,7 @@ class ExportReportService
 
         return response()->streamDownload(function () use ($headers, $records) {
             $handle = fopen('php://output', 'w');
-            fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
+            fwrite($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
             fputcsv($handle, $headers);
 
             foreach ($records as $pen) {
@@ -196,7 +193,7 @@ class ExportReportService
             }
 
             fclose($handle);
-        }, 'rekap-penempatan-' . date('YmdHis') . '.csv', [
+        }, 'rekap-penempatan-'.date('YmdHis').'.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }
@@ -226,7 +223,7 @@ class ExportReportService
 
         return response()->streamDownload(function () use ($headers, $kuotaList, $slotKhususList) {
             $handle = fopen('php://output', 'w');
-            fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
+            fwrite($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
             fputcsv($handle, $headers);
 
             foreach ($kuotaList as $k) {
@@ -254,7 +251,7 @@ class ExportReportService
             }
 
             fclose($handle);
-        }, 'realisasi-kuota-' . date('YmdHis') . '.csv', [
+        }, 'realisasi-kuota-'.date('YmdHis').'.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }
@@ -292,7 +289,7 @@ class ExportReportService
 
         return response()->streamDownload(function () use ($headers, $records) {
             $handle = fopen('php://output', 'w');
-            fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
+            fwrite($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
             fputcsv($handle, $headers);
 
             foreach ($records as $nilai) {
@@ -310,7 +307,7 @@ class ExportReportService
             }
 
             fclose($handle);
-        }, 'rekap-nilai-magkom-' . date('YmdHis') . '.csv', [
+        }, 'rekap-nilai-magkom-'.date('YmdHis').'.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }
@@ -318,14 +315,14 @@ class ExportReportService
     /**
      * Helper umum unduh streamed CSV dengan UTF-8 BOM dan sanitasi formula injection (AC-17-2).
      *
-     * @param array<int, string> $headers
-     * @param array<int, array<int, mixed>> $rows
+     * @param  array<int, string>  $headers
+     * @param  array<int, array<int, mixed>>  $rows
      */
     public function downloadCsvStream(string $filename, array $headers, array $rows): StreamedResponse
     {
         return response()->streamDownload(function () use ($headers, $rows) {
             $handle = fopen('php://output', 'w');
-            fputs($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Excel
+            fwrite($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Excel
 
             $sanitizedHeaders = array_map([$this, 'sanitizeCell'], $headers);
             fputcsv($handle, $sanitizedHeaders);

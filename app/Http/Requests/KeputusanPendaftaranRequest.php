@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\RoleEnum;
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -31,7 +30,6 @@ class KeputusanPendaftaranRequest extends FormRequest
                 'max:1000',
             ],
             'pembimbing_id' => [
-                Rule::requiredIf(fn () => $this->input('keputusan') === 'terima'),
                 'nullable',
                 Rule::exists('users', 'id')->where(function ($query) {
                     $query->where('role', RoleEnum::Pembimbing->value)
@@ -49,7 +47,6 @@ class KeputusanPendaftaranRequest extends FormRequest
             'keputusan.in' => 'Pilihan keputusan verifikasi tidak valid.',
             'catatan.required' => 'Catatan wajib disertakan saat menolak atau meminta perbaikan berkas.',
             'catatan.min' => 'Catatan keputusan minimal berisi 10 karakter sesuai standar verifikasi (AC-04-3).',
-            'pembimbing_id.required' => 'Pembimbing lapangan wajib ditentukan saat menerima pendaftaran.',
             'pembimbing_id.exists' => 'Pembimbing yang dipilih tidak valid atau sedang tidak aktif.',
         ];
     }

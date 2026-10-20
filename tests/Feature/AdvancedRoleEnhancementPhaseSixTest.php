@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Enums\JalurEnum;
-use App\Enums\JenjangEnum;
-use App\Enums\KompleksitasTugasEnum;
+use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
-use App\Enums\SumberPenempatanEnum;
-use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Dokumen;
@@ -27,13 +23,11 @@ use App\Models\PesertaProfil;
 use App\Models\Tugas;
 use App\Models\TugasTemplate;
 use App\Models\User;
-use App\Support\Pengaturan;
 use Carbon\Carbon;
 use Database\Seeders\JenisDokumenSeeder;
 use Database\Seeders\RubrikSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -43,13 +37,21 @@ class AdvancedRoleEnhancementPhaseSixTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing1;
+
     protected User $pembimbing2;
+
     protected User $pesertaUser;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
+
     protected Bidang $bidang;
 
     protected function setUp(): void
@@ -103,7 +105,7 @@ class AdvancedRoleEnhancementPhaseSixTest extends TestCase
 
     protected function createTestUser(string $nama, string $email, RoleEnum $role, bool $statusAktif = true, ?int $bidangId = null): User
     {
-        $u = new User();
+        $u = new User;
         $u->nama = $nama;
         $u->email = $email;
         $u->password = Hash::make('Password123!');
@@ -193,7 +195,7 @@ class AdvancedRoleEnhancementPhaseSixTest extends TestCase
             'deadline' => Carbon::now()->subDays(2), // Overdue
             'status' => StatusTugasEnum::Belum,
             'kategori' => 'UI/UX',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
         ]);
 
         // Akses tab 'perhatian'
@@ -395,7 +397,7 @@ class AdvancedRoleEnhancementPhaseSixTest extends TestCase
         ]);
 
         // Buat calon pendaftar unverified kadaluwarsa (> 72 jam tanpa pengajuan)
-        $stalePendaftar = new User();
+        $stalePendaftar = new User;
         $stalePendaftar->nama = 'Pendaftar Stale';
         $stalePendaftar->email = 'stale@example.com';
         $stalePendaftar->password = Hash::make('Password123!');

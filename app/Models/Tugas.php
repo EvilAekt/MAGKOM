@@ -93,6 +93,7 @@ class Tugas extends Model
         }
 
         $nama = $this->nama_file_lampiran ?: $this->file_lampiran;
+
         return strtolower(pathinfo($nama, PATHINFO_EXTENSION));
     }
 
@@ -107,10 +108,10 @@ class Tugas extends Model
 
         $bytes = (int) $this->ukuran_file_lampiran;
         if ($bytes >= 1048576) {
-            return number_format($bytes / 1048576, 1) . ' MB';
+            return number_format($bytes / 1048576, 1).' MB';
         }
 
-        return max(1, round($bytes / 1024)) . ' KB';
+        return max(1, round($bytes / 1024)).' KB';
     }
 
     /**

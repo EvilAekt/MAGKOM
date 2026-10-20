@@ -67,7 +67,7 @@ class TugasRequest extends FormRequest
                     if ($deadline->gt($tglSelesai)) {
                         $validator->errors()->add(
                             'deadline',
-                            'Deadline tugas tidak boleh melebihi batas akhir magang peserta (' . $penempatan->tgl_selesai->format('d/m/Y') . ').'
+                            'Deadline tugas tidak boleh melebihi batas akhir magang peserta ('.$penempatan->tgl_selesai->format('d/m/Y').').'
                         );
                     }
                 }

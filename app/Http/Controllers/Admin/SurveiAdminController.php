@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SurveiKepuasan;
 use App\Services\AuditService;
 use App\Services\ExportReportService;
+use App\Support\Pengaturan;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -20,7 +21,7 @@ class SurveiAdminController extends Controller
      */
     public function index(Request $request): View
     {
-        if (! \App\Support\Pengaturan::bool('fitur_survei_aktif', true)) {
+        if (! Pengaturan::bool('fitur_survei_aktif', true)) {
             abort(404, 'Fitur survei kepuasan saat ini dinonaktifkan oleh administrator.');
         }
 
@@ -67,7 +68,7 @@ class SurveiAdminController extends Controller
      */
     public function export(ExportReportService $exportService, AuditService $auditService): StreamedResponse
     {
-        if (! \App\Support\Pengaturan::bool('fitur_survei_aktif', true)) {
+        if (! Pengaturan::bool('fitur_survei_aktif', true)) {
             abort(404, 'Fitur survei kepuasan saat ini dinonaktifkan oleh administrator.');
         }
 
@@ -118,7 +119,7 @@ class SurveiAdminController extends Controller
         );
 
         return $exportService->downloadCsvStream(
-            filename: 'rekap-survei-kepuasan-magkom-' . date('Ymd') . '.csv',
+            filename: 'rekap-survei-kepuasan-magkom-'.date('Ymd').'.csv',
             headers: $headers,
             rows: $rows
         );

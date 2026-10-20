@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Pembimbing;
 
 use App\Enums\StatusPenilaianEnum;
+use App\Enums\StatusTugasEnum;
+use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PenilaianRequest;
 use App\Models\Penempatan;
 use App\Models\Penilaian;
 use App\Models\Rubrik;
 use App\Services\AuditService;
+use App\Services\DocumentVerificationService;
 use App\Services\MasaTenggangService;
 use App\Services\ScoringService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -59,7 +63,7 @@ class PenilaianController extends Controller
         }
 
         if ($request->filled('q')) {
-            $search = '%' . $request->input('q') . '%';
+            $search = '%'.$request->input('q').'%';
             $query->whereHas('peserta', function ($q) use ($search) {
                 $q->where('nama', 'like', $search)
                     ->orWhere('email', 'like', $search)
@@ -86,7 +90,7 @@ class PenilaianController extends Controller
     /**
      * Lembar instrumen penilaian rubrik untuk peserta terkait.
      */
-    public function show(Penempatan $penempatan, Request $request): \Illuminate\View\View|\Illuminate\Http\JsonResponse
+    public function show(Penempatan $penempatan, Request $request): View|JsonResponse
     {
         Gate::authorize('view', [Penilaian::class, $penempatan]);
 
@@ -173,11 +177,11 @@ class PenilaianController extends Controller
      * Menandai penempatan selesai magang (BR-10).
      * Mensyaratkan nilai akhir telah berstatus final.
      */
-    public function selesai(Request $request, Penempatan $penempatan): JsonResponse|\Illuminate\Http\RedirectResponse
+    public function selesai(Request $request, Penempatan $penempatan): JsonResponse|RedirectResponse
     {
         try {
             $penempatanUpdated = $this->masaTenggangService->tandaiSelesai($penempatan, $request->user());
-        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+        } catch (AuthorizationException $e) {
             abort(403, $e->getMessage());
         } catch (\InvalidArgumentException $e) {
             if ($request->expectsJson() || $request->wantsJson()) {
@@ -211,8 +215,8 @@ class PenilaianController extends Controller
         $penempatan->loadMissing(['peserta.profil.jurusan', 'pembimbing', 'bidang', 'penilaian.details.rubrik']);
         $penilaian = $penempatan->penilaian;
 
-        $verificationService = app(\App\Services\DocumentVerificationService::class);
-        $nomorNilai = '500.12/NILAI/' . str_pad((string) $penempatan->id, 4, '0', STR_PAD_LEFT) . '/DISKOMINFO/' . ($penempatan->tgl_selesai?->format('Y') ?? date('Y'));
+        $verificationService = app(DocumentVerificationService::class);
+        $nomorNilai = '500.12/NILAI/'.str_pad((string) $penempatan->id, 4, '0', STR_PAD_LEFT).'/DISKOMINFO/'.($penempatan->tgl_selesai?->format('Y') ?? date('Y'));
         $dokumenVerifikasi = $verificationService->getOrCreateVerification(
             $penempatan,
             'lembar_nilai',
@@ -234,7 +238,7 @@ class PenilaianController extends Controller
         ])->setPaper('a4', 'portrait');
 
         $namaPeserta = $penempatan->peserta->nama ?? ($penempatan->peserta->name ?? 'peserta');
-        $namaFile = 'lembar-nilai-' . str_replace(' ', '-', strtolower($namaPeserta)) . '.pdf';
+        $namaFile = 'lembar-nilai-'.str_replace(' ', '-', strtolower($namaPeserta)).'.pdf';
 
         return $pdf->download($namaFile);
     }
@@ -256,7 +260,7 @@ class PenilaianController extends Controller
             ->get();
 
         $auditService->catat(
-            tipe: \App\Enums\TipeAuditEnum::Aksi,
+            tipe: TipeAuditEnum::Aksi,
             tabel: 'penilaian',
             idData: null,
             detail: [
@@ -268,7 +272,7 @@ class PenilaianController extends Controller
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="rekap-bimbingan-' . date('Ymd-His') . '.csv"',
+            'Content-Disposition' => 'attachment; filename="rekap-bimbingan-'.date('Ymd-His').'.csv"',
             'Pragma' => 'no-cache',
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Expires' => '0',
@@ -302,13 +306,14 @@ class PenilaianController extends Controller
                 $peserta = $p->peserta;
                 $profil = $peserta?->profil;
                 $penilaian = $p->penilaian;
-                $tugasSelesai = $p->tugas->where('status', \App\Enums\StatusTugasEnum::Selesai)->count();
+                $tugasSelesai = $p->tugas->where('status', StatusTugasEnum::Selesai)->count();
 
                 $sanitize = function ($val) {
                     $s = (string) ($val ?? '-');
                     if (in_array(substr($s, 0, 1), ['=', '+', '-', '@'], true)) {
-                        return "'" . $s;
+                        return "'".$s;
                     }
+
                     return $s;
                 };
 

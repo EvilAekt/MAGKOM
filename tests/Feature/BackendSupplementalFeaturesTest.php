@@ -9,6 +9,7 @@ use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\SumberPenempatanEnum;
+use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
@@ -42,7 +43,7 @@ class BackendSupplementalFeaturesTest extends TestCase
 
     protected function createUser(string $nama, string $email, RoleEnum $role, bool $mustChangePassword = false): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = 'PasswordRahasia123!';
@@ -197,7 +198,7 @@ class BackendSupplementalFeaturesTest extends TestCase
         AuditLog::create([
             'request_id' => 'req-test-123',
             'user_id' => $superadmin->id,
-            'tipe' => \App\Enums\TipeAuditEnum::Aksi,
+            'tipe' => TipeAuditEnum::Aksi,
             'aksi' => 'test.aksi',
             'entitas' => 'users',
             'entitas_id' => $superadmin->id,
@@ -233,7 +234,6 @@ class BackendSupplementalFeaturesTest extends TestCase
             ['bulan_magang_id' => $bulan->id, 'jurusan_id' => $jurusan->id],
             ['jumlah' => 10, 'terisi' => 1, 'aktif' => true]
         );
-
 
         $pendaftaran = Pendaftaran::create([
             'user_id' => $peserta->id,

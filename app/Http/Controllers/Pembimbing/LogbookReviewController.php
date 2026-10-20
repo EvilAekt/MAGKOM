@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Pembimbing;
 
+use App\Enums\RealtimeEventTypeEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
@@ -12,6 +13,7 @@ use App\Http\Requests\ReviewLogbookRequest;
 use App\Models\Logbook;
 use App\Models\Penempatan;
 use App\Services\AuditService;
+use App\Services\RealtimeEventService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -51,7 +53,7 @@ class LogbookReviewController extends Controller
         }
 
         if ($request->filled('q')) {
-            $search = '%' . $request->input('q') . '%';
+            $search = '%'.$request->input('q').'%';
             $query->where(function ($q) use ($search) {
                 $q->where('kegiatan', 'like', $search)
                     ->orWhere('catatan_pembimbing', 'like', $search)
@@ -113,8 +115,8 @@ class LogbookReviewController extends Controller
         // Notifikasi Real-time SSE ke Peserta (TASK-SSE-06)
         $pesertaId = $logbook->penempatan?->peserta_id;
         if ($pesertaId) {
-            app(\App\Services\RealtimeEventService::class)->publish(
-                \App\Enums\RealtimeEventTypeEnum::LogbookDireviu,
+            app(RealtimeEventService::class)->publish(
+                RealtimeEventTypeEnum::LogbookDireviu,
                 [
                     'title' => 'Catatan Logbook Telah Direviu',
                     'message' => 'Pembimbing telah meninjau catatan logbook harian Anda.',
@@ -174,6 +176,7 @@ class LogbookReviewController extends Controller
                     'message' => 'Tidak ada entri logbook terkirim yang dapat disetujui.',
                 ], 422);
             }
+
             return redirect()->route('pembimbing.logbook.index')->with('error', 'Tidak ada entri logbook terkirim yang dapat disetujui.');
         }
 

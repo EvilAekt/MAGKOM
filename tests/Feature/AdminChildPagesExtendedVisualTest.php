@@ -16,8 +16,8 @@ use App\Models\Dokumen;
 use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
-use App\Models\Penempatan;
 use App\Models\Pendaftaran;
+use App\Models\Penempatan;
 use App\Models\PesertaProfil;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
@@ -30,13 +30,21 @@ class AdminChildPagesExtendedVisualTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected Bidang $bidang;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
+
     protected Pendaftaran $pendaftaran;
+
     protected Penempatan $penempatan;
 
     protected function setUp(): void
@@ -52,7 +60,7 @@ class AdminChildPagesExtendedVisualTest extends TestCase
             'aktif' => true,
         ]);
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Pengelola';
         $this->admin->email = 'admin.operasional@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -61,7 +69,7 @@ class AdminChildPagesExtendedVisualTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan';
         $this->pembimbing->email = 'pembimbing@slemankab.go.id';
         $this->pembimbing->password = 'Password123!';
@@ -92,7 +100,7 @@ class AdminChildPagesExtendedVisualTest extends TestCase
             'aktif' => true,
         ]);
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Rian Nugraha';
         $this->peserta->email = 'rian@example.com';
         $this->peserta->password = 'Password123!';

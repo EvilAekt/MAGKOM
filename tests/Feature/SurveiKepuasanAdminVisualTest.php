@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\JalurEnum;
+use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\SumberPenempatanEnum;
@@ -25,7 +26,9 @@ class SurveiKepuasanAdminVisualTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $peserta;
+
     protected Penempatan $penempatan;
 
     protected function setUp(): void
@@ -45,7 +48,7 @@ class SurveiKepuasanAdminVisualTest extends TestCase
             'aktif' => true,
         ]);
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Magang Sleman';
         $this->admin->email = 'admin.magang@slemankab.go.id';
         $this->admin->password = Hash::make('Password123!');
@@ -55,7 +58,7 @@ class SurveiKepuasanAdminVisualTest extends TestCase
         $this->admin->must_change_password = false;
         $this->admin->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Alumni Peserta MagKom';
         $this->peserta->email = 'alumni@kampus.ac.id';
         $this->peserta->password = Hash::make('Password123!');
@@ -69,7 +72,7 @@ class SurveiKepuasanAdminVisualTest extends TestCase
             'user_id' => $this->peserta->id,
             'jurusan_id' => $jurusan->id,
             'institusi' => 'Universitas Gadjah Mada',
-            'jenjang' => \App\Enums\JenjangEnum::S1,
+            'jenjang' => JenjangEnum::S1,
             'nim_nisn' => '20110002',
             'no_hp' => '081234567899',
         ]);
