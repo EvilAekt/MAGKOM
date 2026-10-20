@@ -100,27 +100,29 @@
             border-color: #1D4ED8;
         }
 
-        /* 2. Hero Card Biru Modern */
+        /* 2. Hero Card Biru Modern (Persis Dashboard Gambar 2) */
         .hero-banner-blue {
-            background: linear-gradient(135deg, #1E40AF 0%, #2563EB 55%, #3B82F6 100%);
+            background: linear-gradient(95deg, rgba(6, 65, 204, 0.96) 0%, rgba(6, 65, 204, 0.88) 45%, rgba(6, 65, 204, 0.38) 100%),
+                        url('{{ asset('images/dashboard_hero_bg.jpg') }}') right center / cover no-repeat;
             border-radius: 16px;
             padding: 2rem 2.25rem;
             color: #FFFFFF;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.25);
+            box-shadow: 0 10px 25px -5px rgba(6, 65, 204, 0.25), 0 8px 10px -6px rgba(6, 65, 204, 0.15);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 1.5rem;
+            min-height: 190px;
         }
 
         .hero-banner-blue::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 80% 40%, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
+            background: radial-gradient(circle at 85% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
             pointer-events: none;
         }
 
@@ -474,28 +476,38 @@
             line-height: 1.45;
         }
 
-        /* 6. Selector Bulan Bar Ringkas */
+        /* 6. Selector Bulan Bar Ringkas & Tombol Kontrol */
         .month-switch-strip {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.75rem 1.25rem;
+            padding: 0.85rem 1.25rem;
             background: #FFFFFF;
             border: 1px solid #E2E8F0;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 0.8125rem;
             color: #475569;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }
 
         .month-switch-strip select {
-            padding: 0.35rem 0.75rem;
+            padding: 0.45rem 0.85rem;
             font-size: 0.8125rem;
             font-weight: 700;
             border: 1px solid #CBD5E1;
-            border-radius: 6px;
+            border-radius: 8px;
             background: #F8FAFC;
             color: #0F172A;
             cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .month-switch-strip select:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
         }
 
         /* 7. Modal Styles */
@@ -835,56 +847,10 @@
             <h1 class="kuota-page-title">Bulan &amp; kuota</h1>
             <p class="kuota-page-subtitle">Atur bulan pendaftaran dan kuota magang per bidang.</p>
         </div>
-
-        <div class="kuota-page-actions">
-            @if($selectedBulan)
-                <button type="button" onclick="openUbahBulanModal()" class="btn-outline-action">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 20h9"></path>
-                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                    </svg>
-                    <span>Ubah bulan</span>
-                </button>
-            @endif
-
-            <button type="button" onclick="openBuatBulanModal()" class="btn-primary-action">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>Buat bulan baru</span>
-            </button>
-        </div>
     </div>
 
     {{-- =========================================================================
-         2. SELECTOR BULAN RINGKAS (UNTUK NAVIGASI MULTI-BULAN)
-         ========================================================================= --}}
-    @if($bulanList->isNotEmpty())
-        <div class="month-switch-strip">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-                <span style="font-weight: 700;">Bulan Magang:</span>
-            </div>
-            <form method="GET" action="{{ route('admin.kuota.index') }}" style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
-                <select name="bulan_magang_id" onchange="this.form.submit()">
-                    @foreach($bulanList as $b)
-                        <option value="{{ $b->id }}" {{ $selectedBulan && $selectedBulan->id === $b->id ? 'selected' : '' }}>
-                            {{ $b->nama_bulan ? $b->nama_bulan . ' (' . $b->bulan_mulai?->translatedFormat('F Y') . ')' : $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '' }}
-                        </option>
-                    @endforeach
-                </select>
-            </form>
-        </div>
-    @endif
-
-    {{-- =========================================================================
-         3. HERO BANNER: GELOMBANG AKTIF DENGAN GLASSMORPHIC STAT CARD
+         2. HERO BANNER: INFORMASI BULAN AKTIF (PERSIS DASHBOARD GAMBAR 2)
          ========================================================================= --}}
     @if($selectedBulan)
         <div class="hero-banner-blue">
@@ -986,6 +952,54 @@
                         @endif
                     </span>
                 </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- =========================================================================
+         3. CONTROL SUB-BAR: SELECTOR BULAN & TOMBOL AKSI DI BAWAH KOTAKAN BIRU
+         ========================================================================= --}}
+    @if($bulanList->isNotEmpty())
+        <div class="month-switch-strip">
+            <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.45rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span style="font-weight: 700; color: #1E293B;">Bulan Magang:</span>
+                </div>
+                <form method="GET" action="{{ route('admin.kuota.index') }}" style="display: flex; align-items: center; margin: 0;">
+                    <select name="bulan_magang_id" onchange="this.form.submit()">
+                        @foreach($bulanList as $b)
+                            <option value="{{ $b->id }}" {{ $selectedBulan && $selectedBulan->id === $b->id ? 'selected' : '' }}>
+                                {{ $b->nama_bulan ? $b->nama_bulan . ' (' . $b->bulan_mulai?->translatedFormat('F Y') . ')' : $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '' }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
+            </div>
+
+            <div class="kuota-page-actions">
+                @if($selectedBulan)
+                    <button type="button" onclick="openUbahBulanModal()" class="btn-outline-action">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        <span>Ubah bulan</span>
+                    </button>
+                @endif
+
+                <button type="button" onclick="openBuatBulanModal()" class="btn-primary-action">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Buat bulan baru</span>
+                </button>
             </div>
         </div>
     @endif
