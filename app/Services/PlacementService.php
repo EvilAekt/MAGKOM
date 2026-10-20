@@ -26,7 +26,6 @@ use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class PlacementService extends AuditedService
 {
@@ -383,10 +382,11 @@ class PlacementService extends AuditedService
                 $userData, $profilData, $pembimbing, $bidang, $bulanMulai, $durasiBulan, $jalur, $slotKhususId, $kuotaId, $admin
             ) {
                 // 1. Buat user role peserta (AC-07-3: email terverifikasi, must_change_password aktif)
+                $plainPassword = ! empty($userData['password']) ? (string) $userData['password'] : 'Magkom2026!';
                 $peserta = new User;
                 $peserta->nama = $userData['nama'];
                 $peserta->email = $userData['email'];
-                $peserta->password = Hash::make(Str::random(16));
+                $peserta->password = Hash::make($plainPassword);
                 $peserta->role = RoleEnum::Peserta;
                 $peserta->email_verified_at = now();
                 $peserta->must_change_password = true;
@@ -394,11 +394,16 @@ class PlacementService extends AuditedService
                 $peserta->save();
 
                 // 2. Buat profil peserta
+                $jurusanId = $profilData['jurusan_id'] ?? null;
+                if (! $jurusanId) {
+                    $jurusanId = Jurusan::aktif()->first()?->id ?? Jurusan::first()?->id;
+                }
+
                 PesertaProfil::create([
                     'user_id' => $peserta->id,
                     'nim_nisn' => $profilData['nim_nisn'] ?? '-',
                     'institusi' => $profilData['institusi'] ?? '-',
-                    'jurusan_id' => $profilData['jurusan_id'] ?? null,
+                    'jurusan_id' => $jurusanId,
                     'jenjang' => $profilData['jenjang'] ?? 's1',
                     'no_hp' => $profilData['no_hp'] ?? '-',
                 ]);
@@ -449,6 +454,9 @@ class PlacementService extends AuditedService
                         'jalur' => $jalurEnum->value,
                     ]
                 );
+
+                $penempatan->setRelation('peserta', $peserta);
+                $penempatan->plain_password = $plainPassword;
 
                 return $penempatan;
             });

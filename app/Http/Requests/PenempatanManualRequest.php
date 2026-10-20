@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\RoleEnum;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -13,6 +14,45 @@ class PenempatanManualRequest extends FormRequest
     public function authorize(): bool
     {
         return $this->user()?->isAdmin() || $this->user()?->isSuperAdmin();
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $tglMulai = $this->input('tgl_mulai');
+        $tglSelesai = $this->input('tgl_selesai');
+        $bulanMulai = $this->input('bulan_mulai');
+        $durasiBulan = $this->input('durasi_bulan');
+
+        $updates = [];
+
+        // 1. Normalisasi bulan_mulai dari tgl_mulai jika bulan_mulai kosong
+        if (empty($bulanMulai) && ! empty($tglMulai)) {
+            try {
+                $updates['bulan_mulai'] = Carbon::parse($tglMulai)->startOfMonth()->toDateString();
+            } catch (\Exception $e) {
+                // Biarkan validasi default menangkap format tanggal tidak valid
+            }
+        } elseif (! empty($bulanMulai) && empty($tglMulai)) {
+            $updates['tgl_mulai'] = $bulanMulai;
+        }
+
+        // 2. Normalisasi durasi_bulan jika kosong namun tgl_mulai dan tgl_selesai ada
+        if (empty($durasiBulan) && ! empty($tglMulai) && ! empty($tglSelesai)) {
+            try {
+                $start = Carbon::parse($tglMulai);
+                $end = Carbon::parse($tglSelesai);
+                $months = max(1, min(6, (int) round($start->floatDiffInMonths($end))));
+                $updates['durasi_bulan'] = $months;
+            } catch (\Exception $e) {
+                $updates['durasi_bulan'] = 3;
+            }
+        } elseif (empty($durasiBulan)) {
+            $updates['durasi_bulan'] = 3; // Default 3 bulan
+        }
+
+        if (! empty($updates)) {
+            $this->merge($updates);
+        }
     }
 
     public function rules(): array
@@ -33,6 +73,9 @@ class PenempatanManualRequest extends FormRequest
             'bidang_id' => ['nullable', 'exists:bidang,id'],
             'bulan_mulai' => ['required', 'date'],
             'durasi_bulan' => ['required', 'integer', 'min:1', 'max:6'],
+            'tgl_mulai' => ['nullable', 'date'],
+            'tgl_selesai' => ['nullable', 'date'],
+            'password' => ['nullable', 'string', 'min:8'],
         ];
 
         // Validasi Alokasi Jalur
@@ -50,7 +93,7 @@ class PenempatanManualRequest extends FormRequest
             $rules['email'] = ['required', 'email', 'max:255', 'unique:users,email'];
             $rules['nim_nisn'] = ['required', 'string', 'max:30'];
             $rules['institusi'] = ['required', 'string', 'max:100'];
-            $rules['jurusan_id'] = ['nullable', 'exists:jurusan,id'];
+            $rules['jurusan_id'] = ['required', 'exists:jurusan,id'];
             $rules['jenjang'] = ['required', 'in:smk,d3,s1'];
             $rules['no_hp'] = ['nullable', 'string', 'max:20'];
             $rules['peserta_id'] = ['nullable'];
@@ -80,6 +123,7 @@ class PenempatanManualRequest extends FormRequest
             'email.unique' => 'Email tersebut sudah terdaftar di sistem.',
             'nim_nisn.required' => 'NIM / NISN wajib diisi.',
             'institusi.required' => 'Asal institusi / kampus / sekolah wajib diisi.',
+            'jurusan_id.required' => 'Jurusan asal wajib dipilih.',
         ];
     }
 }
