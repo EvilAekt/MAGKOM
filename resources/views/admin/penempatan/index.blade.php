@@ -289,6 +289,34 @@
         }
     </style>
 
+    {{-- ALERT KREDENSIAL AKUN BARU JALUR KHUSUS --}}
+    @if(session('akun_baru_dibuat'))
+        <div class="admin-card" style="border-left: 4px solid #10B981; background: #ECFDF5; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);">
+            <div style="display: flex; align-items: flex-start; gap: 0.85rem;">
+                <div style="width: 42px; height: 42px; border-radius: 10px; background: #D1FAE5; color: #059669; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+                <div>
+                    <h3 style="font-size: 1rem; font-weight: 800; color: #065F46; margin: 0;">
+                        Akun Peserta Jalur Khusus Berhasil Dibuat &amp; Ditempatkan!
+                    </h3>
+                    <p style="font-size: 0.8125rem; color: #047857; margin: 0.25rem 0 0.5rem 0;">
+                        Berikan kredensial login berikut kepada <strong>{{ session('nama_peserta') }}</strong>. Peserta dapat langsung login dan wajib mengganti kata sandi saat pertama kali masuk.
+                    </p>
+                    <div style="display: inline-flex; align-items: center; gap: 1rem; background: #ffffff; border: 1px solid #A7F3D0; border-radius: 8px; padding: 0.5rem 0.85rem; font-size: 0.8125rem; color: #1E293B; font-family: monospace;">
+                        <span><strong>Email:</strong> {{ session('email_peserta') }}</span>
+                        <span style="color: #CBD5E1;">|</span>
+                        <span><strong>Password Awal:</strong> <span style="font-weight: 700; color: #0641CC;">{{ session('password_baru') }}</span></span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="navigator.clipboard.writeText('Email: {{ session('email_peserta') }}\nPassword: {{ session('password_baru') }}'); alert('Kredensial login berhasil disalin!');" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; background: #059669; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(5, 150, 105, 0.25);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>Salin Kredensial</span>
+            </button>
+        </div>
+    @endif
+
     {{-- 1. HERO STATS CARDS --}}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
         {{-- Total Penempatan --}}
@@ -742,6 +770,17 @@
         <form method="POST" action="{{ route('admin.penempatan.manual') }}" id="form-penempatan-manual" style="padding: 1.5rem;">
             @csrf
 
+            @if($errors->any() && (old('mode') || $errors->has('nama') || $errors->has('email') || $errors->has('nim_nisn') || $errors->has('slot_khusus_id') || $errors->has('peserta_id')))
+                <div style="background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 0.8125rem; color: #991B1B;">
+                    <div style="font-weight: 700; margin-bottom: 0.25rem;">Gagal menyimpan penempatan:</div>
+                    <ul style="margin: 0 0 0 1.25rem; padding: 0;">
+                        @foreach($errors->all() as $err)
+                            <li>{{ $err }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             {{-- Switcher Mode Peserta --}}
             <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; background: var(--neutral-100, #F1F5F9); padding: 0.35rem; border-radius: 8px;">
                 <button type="button" id="btn-mode-terdaftar" onclick="switchPesertaMode('terdaftar')" style="flex: 1; padding: 0.5rem; font-size: 0.8125rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #0641CC; color: #FFFFFF;">
@@ -752,6 +791,7 @@
                 </button>
             </div>
             <input type="hidden" name="mode" id="input-mode-peserta" value="terdaftar">
+            <input type="hidden" name="bulan_mulai" id="input-bulan-mulai" value="{{ date('Y-m-01') }}">
 
             {{-- Mode 1: Peserta Terdaftar --}}
             <div id="panel-peserta-terdaftar" style="margin-bottom: 1.25rem;">
@@ -775,25 +815,25 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                     <div>
                         <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Nama Lengkap <span style="color: #DC2626;">*</span></label>
-                        <input type="text" name="nama" id="input-nama-baru" placeholder="Nama siswa/mahasiswa" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
+                        <input type="text" name="nama" id="input-nama-baru" value="{{ old('nama') }}" placeholder="Nama siswa/mahasiswa" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
                     </div>
                     <div>
                         <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Email Aktif <span style="color: #DC2626;">*</span></label>
-                        <input type="email" name="email" id="input-email-baru" placeholder="email@sekolah.ac.id" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
+                        <input type="email" name="email" id="input-email-baru" value="{{ old('email') }}" placeholder="email@sekolah.ac.id" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                     <div>
                         <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">NIM / NISN <span style="color: #DC2626;">*</span></label>
-                        <input type="text" name="nim_nisn" id="input-nim-baru" placeholder="Nomor induk siswa/mhs" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
+                        <input type="text" name="nim_nisn" id="input-nim-baru" value="{{ old('nim_nisn') }}" placeholder="Nomor induk siswa/mhs" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
                     </div>
                     <div>
                         <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Jenjang Pendidikan <span style="color: #DC2626;">*</span></label>
                         <select name="jenjang" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
-                            <option value="s1">S1 (Strata 1)</option>
-                            <option value="d3">D3 (Diploma 3)</option>
-                            <option value="smk">SMK</option>
+                            <option value="s1" {{ old('jenjang') === 's1' ? 'selected' : '' }}>S1 (Strata 1)</option>
+                            <option value="d3" {{ old('jenjang') === 'd3' ? 'selected' : '' }}>D3 (Diploma 3)</option>
+                            <option value="smk" {{ old('jenjang') === 'smk' ? 'selected' : '' }}>SMK</option>
                         </select>
                     </div>
                 </div>
@@ -801,17 +841,23 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                     <div>
                         <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Asal Kampus / Sekolah <span style="color: #DC2626;">*</span></label>
-                        <input type="text" name="institusi" id="input-institusi-baru" placeholder="Nama Universitas / SMK" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
+                        <input type="text" name="institusi" id="input-institusi-baru" value="{{ old('institusi') }}" placeholder="Nama Universitas / SMK" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
                     </div>
                     <div>
-                        <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Jurusan Asal</label>
+                        <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Jurusan Asal <span style="color: #DC2626;">*</span></label>
                         <select name="jurusan_id" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
-                            <option value="">-- Sesuai Master Jurusan --</option>
+                            <option value="">-- Pilih Jurusan Magang --</option>
                             @foreach($jurusanList ?? [] as $j)
-                                <option value="{{ $j->id }}">{{ $j->nama_jurusan }} ({{ strtoupper(is_object($j->kategori) ? $j->kategori->value : (string)$j->kategori) }})</option>
+                                <option value="{{ $j->id }}" {{ old('jurusan_id') == $j->id ? 'selected' : '' }}>{{ $j->nama_jurusan }} ({{ strtoupper(is_object($j->kategori) ? $j->kategori->value : (string)$j->kategori) }})</option>
                             @endforeach
                         </select>
                     </div>
+                </div>
+
+                <div>
+                    <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Kata Sandi Awal (Default: Magkom2026!)</label>
+                    <input type="text" name="password" id="input-password-baru" value="{{ old('password', 'Magkom2026!') }}" placeholder="Magkom2026!" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
+                    <small style="font-size: 0.7rem; color: var(--neutral-500, #64748B);">Peserta wajib mengganti kata sandi ini saat pertama kali login.</small>
                 </div>
             </div>
 
@@ -823,7 +869,7 @@
                 <select name="slot_khusus_id" id="select-slot-khusus" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                     <option value="">-- Pilih Slot Kemitraan Khusus --</option>
                     @foreach($slotKhususList as $sk)
-                        <option value="{{ $sk->id }}">
+                        <option value="{{ $sk->id }}" {{ old('slot_khusus_id') == $sk->id ? 'selected' : '' }}>
                             {{ $sk->nama_mitra }} &bull; Bulan: {{ $sk->bulan_mulai?->translatedFormat('F Y') }} (Sisa: {{ $sk->jumlah - $sk->terisi }} Kursi)
                         </option>
                     @endforeach
@@ -837,7 +883,7 @@
                     <select name="pembimbing_id" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                         <option value="">-- Pilih Pembimbing --</option>
                         @foreach($pembimbingList as $p)
-                            <option value="{{ $p->id }}">{{ $p->nama }} [{{ $p->bidang?->nama_bidang ?? 'Dinas' }}] ({{ $p->mentee_aktif_count ?? 0 }} Mentee)</option>
+                            <option value="{{ $p->id }}" {{ old('pembimbing_id') == $p->id ? 'selected' : '' }}>{{ $p->nama }} [{{ $p->bidang?->nama_bidang ?? 'Dinas' }}] ({{ $p->mentee_aktif_count ?? 0 }} Mentee)</option>
                         @endforeach
                     </select>
                 </div>
@@ -846,21 +892,32 @@
                     <select name="bidang_id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                         <option value="">-- Sesuai Pembimbing --</option>
                         @foreach($bidangList as $b)
-                            <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
+                            <option value="{{ $b->id }}" {{ old('bidang_id') == $b->id ? 'selected' : '' }}>{{ $b->nama_bidang }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
 
-            {{-- Tanggal Mulai & Selesai --}}
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
+            {{-- Tanggal Mulai, Durasi & Tanggal Selesai --}}
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
                 <div>
                     <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Tanggal Mulai <span style="color: #DC2626;">*</span></label>
-                    <input type="date" name="tgl_mulai" required value="{{ date('Y-m-d') }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
+                    <input type="date" name="tgl_mulai" id="input-tgl-mulai" required value="{{ old('tgl_mulai', date('Y-m-d')) }}" onchange="syncManualDates()" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
+                </div>
+                <div>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Durasi Magang <span style="color: #DC2626;">*</span></label>
+                    <select name="durasi_bulan" id="select-durasi-bulan" onchange="syncManualDates()" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                        <option value="1" {{ old('durasi_bulan') == 1 ? 'selected' : '' }}>1 Bulan</option>
+                        <option value="2" {{ old('durasi_bulan') == 2 ? 'selected' : '' }}>2 Bulan</option>
+                        <option value="3" {{ old('durasi_bulan', 3) == 3 ? 'selected' : '' }}>3 Bulan (Standar)</option>
+                        <option value="4" {{ old('durasi_bulan') == 4 ? 'selected' : '' }}>4 Bulan</option>
+                        <option value="5" {{ old('durasi_bulan') == 5 ? 'selected' : '' }}>5 Bulan</option>
+                        <option value="6" {{ old('durasi_bulan') == 6 ? 'selected' : '' }}>6 Bulan</option>
+                    </select>
                 </div>
                 <div>
                     <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Tanggal Selesai <span style="color: #DC2626;">*</span></label>
-                    <input type="date" name="tgl_selesai" required value="{{ date('Y-m-d', strtotime('+3 months')) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
+                    <input type="date" name="tgl_selesai" id="input-tgl-selesai" required value="{{ old('tgl_selesai', date('Y-m-d', strtotime('+3 months'))) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                 </div>
             </div>
 
@@ -1080,6 +1137,39 @@
             document.body.style.overflow = '';
         }
     }
+
+    function syncManualDates() {
+        const tglMulaiEl = document.getElementById('input-tgl-mulai');
+        const durasiEl = document.getElementById('select-durasi-bulan');
+        const tglSelesaiEl = document.getElementById('input-tgl-selesai');
+        const bulanMulaiEl = document.getElementById('input-bulan-mulai');
+
+        if (!tglMulaiEl || !tglMulaiEl.value) return;
+
+        const startDate = new Date(tglMulaiEl.value);
+        if (isNaN(startDate.getTime())) return;
+
+        const y = startDate.getFullYear();
+        const m = String(startDate.getMonth() + 1).padStart(2, '0');
+        if (bulanMulaiEl) bulanMulaiEl.value = `${y}-${m}-01`;
+
+        const durasi = durasiEl ? parseInt(durasiEl.value, 10) || 3 : 3;
+        const endDate = new Date(startDate);
+        endDate.setMonth(endDate.getMonth() + durasi);
+        const ey = endDate.getFullYear();
+        const em = String(endDate.getMonth() + 1).padStart(2, '0');
+        const ed = String(endDate.getDate()).padStart(2, '0');
+        if (tglSelesaiEl) tglSelesaiEl.value = `${ey}-${em}-${ed}`;
+    }
+
+    @if($errors->any() && (old('mode') || $errors->has('nama') || $errors->has('email') || $errors->has('nim_nisn') || $errors->has('slot_khusus_id') || $errors->has('peserta_id')))
+        document.addEventListener('DOMContentLoaded', function() {
+            openManualModal();
+            @if(old('mode') === 'baru')
+                switchPesertaMode('baru');
+            @endif
+        });
+    @endif
 
     function switchPesertaMode(mode) {
         const btnTerdaftar = document.getElementById('btn-mode-terdaftar');

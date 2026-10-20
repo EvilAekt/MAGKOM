@@ -57,9 +57,17 @@ class PenempatanController extends Controller
 
         if ($request->filled('bulan_magang_id')) {
             $bulanId = $request->integer('bulan_magang_id');
-            $query->where(function ($q) use ($bulanId) {
+            $bulanObj = BulanMagang::find($bulanId);
+            $query->where(function ($q) use ($bulanId, $bulanObj) {
                 $q->whereHas('pendaftaran', fn ($qp) => $qp->where('bulan_magang_id', $bulanId))
                     ->orWhereHas('kuota', fn ($qk) => $qk->where('bulan_magang_id', $bulanId));
+
+                if ($bulanObj && $bulanObj->bulan_mulai) {
+                    $q->orWhere(function ($qk) use ($bulanObj) {
+                        $qk->whereYear('tgl_mulai', $bulanObj->bulan_mulai->year)
+                            ->whereMonth('tgl_mulai', $bulanObj->bulan_mulai->month);
+                    });
+                }
             });
         }
 
@@ -251,8 +259,20 @@ class PenempatanController extends Controller
                 );
             }
 
-            return redirect()->route('admin.penempatan.index')
-                ->with('success', 'Penempatan peserta berhasil diproses secara manual.');
+            $redirect = redirect()->route('admin.penempatan.index');
+            if ($mode === 'baru') {
+                $plainPassword = $penempatan->plain_password ?? 'Magkom2026!';
+                $namaPeserta = $penempatan->peserta?->nama ?? 'Peserta';
+                $emailPeserta = $penempatan->peserta?->email ?? '';
+
+                return $redirect->with('success', "Penempatan peserta {$namaPeserta} berhasil diproses. Akun peserta telah aktif dibuat.")
+                    ->with('akun_baru_dibuat', true)
+                    ->with('nama_peserta', $namaPeserta)
+                    ->with('email_peserta', $emailPeserta)
+                    ->with('password_baru', $plainPassword);
+            }
+
+            return $redirect->with('success', 'Penempatan peserta berhasil diproses secara manual.');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal memproses penempatan manual: '.$e->getMessage());
         }
