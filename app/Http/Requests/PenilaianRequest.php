@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Models\Penilaian;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PenilaianRequest extends FormRequest
@@ -12,7 +13,7 @@ class PenilaianRequest extends FormRequest
     {
         $penempatan = $this->route('penempatan');
         if ($penempatan) {
-            return $this->user()?->can('manage', [\App\Models\Penilaian::class, $penempatan]) ?? false;
+            return $this->user()?->can('manage', [Penilaian::class, $penempatan]) ?? false;
         }
 
         return true;

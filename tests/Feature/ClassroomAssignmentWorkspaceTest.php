@@ -8,6 +8,7 @@ use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
@@ -28,13 +29,16 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
     use RefreshDatabase;
 
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected Penempatan $penempatan;
+
     protected Bidang $bidang;
 
     private function createUser(string $nama, string $email, RoleEnum $role, ?int $bidangId = null): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = Hash::make('Password123!');
@@ -123,7 +127,7 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
             ->get(route('pembimbing.tugas.create', ['penempatan_id' => $this->penempatan->id]));
 
         $response->assertOk();
-        $response->assertSee('value="' . $this->penempatan->id . '"', false);
+        $response->assertSee('value="'.$this->penempatan->id.'"', false);
         $response->assertSee('selected', false);
     }
 
@@ -202,7 +206,7 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
             'kategori' => 'Backend',
             'kompleksitas' => 'tinggi',
             'deadline' => Carbon::today()->addDays(5),
-            'status' => \App\Enums\StatusTugasEnum::Proses,
+            'status' => StatusTugasEnum::Proses,
         ]);
 
         $response = $this->actingAs($this->pembimbing)
@@ -212,4 +216,3 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
         $response->assertSee('Tugas Berjalan Dalam Proses');
     }
 }
-

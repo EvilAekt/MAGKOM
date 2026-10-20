@@ -35,7 +35,7 @@ class PesertaProfil extends Model
     public function getFotoUrlAttribute(): ?string
     {
         if (! empty($this->foto)) {
-            return asset('storage/' . $this->foto);
+            return asset('storage/'.$this->foto);
         }
 
         return null;

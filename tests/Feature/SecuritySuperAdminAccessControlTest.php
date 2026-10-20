@@ -15,8 +15,11 @@ class SecuritySuperAdminAccessControlTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
 
     protected function setUp(): void

@@ -43,11 +43,13 @@ class AnonimkanPesertaCommand extends Command
 
         if (! $user) {
             $this->error("Peserta dengan ID {$userId} tidak ditemukan dalam database.");
+
             return Command::FAILURE;
         }
 
         if ($user->role !== RoleEnum::Peserta) {
             $this->error("Pengguna ID {$userId} memiliki role [{$user->role->value}], bukan peserta magang. Anonimisasi dibatalkan.");
+
             return Command::FAILURE;
         }
 
@@ -58,6 +60,7 @@ class AnonimkanPesertaCommand extends Command
 
         if ($isAktif) {
             $this->error("Peserta ID {$userId} sedang aktif menjalani magang. Batalkan atau selesaikan penempatan magang terlebih dahulu.");
+
             return Command::FAILURE;
         }
 
@@ -73,7 +76,7 @@ class AnonimkanPesertaCommand extends Command
                 $user->profil->update([
                     'foto' => null,
                     'no_hp' => '080000000000',
-                    'nim_nisn' => 'ANON-' . $user->id,
+                    'nim_nisn' => 'ANON-'.$user->id,
                     'nama_kontak_darurat' => null,
                     'no_kontak_darurat' => null,
                     'hubungan_kontak_darurat' => null,
@@ -123,6 +126,7 @@ class AnonimkanPesertaCommand extends Command
         });
 
         $this->info("Berhasil melakukan anonimisasi akun peserta #{$user->id} sesuai mandat UU PDP.");
+
         return Command::SUCCESS;
     }
 }

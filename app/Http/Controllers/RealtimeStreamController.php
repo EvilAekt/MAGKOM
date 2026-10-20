@@ -72,7 +72,7 @@ class RealtimeStreamController extends Controller
                     foreach ($events as $event) {
                         echo "id: {$event->id}\n";
                         echo "event: {$event->event_type}\n";
-                        echo "data: " . json_encode($event->payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
+                        echo 'data: '.json_encode($event->payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n\n";
                         $currentLastId = max($currentLastId, (int) $event->id);
                     }
                 } else {

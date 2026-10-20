@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Penempatan;
+use App\Services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ArsipPesertaController extends Controller
@@ -22,7 +25,7 @@ class ArsipPesertaController extends Controller
             ->orderBy('tgl_selesai', 'desc');
 
         if ($request->filled('search')) {
-            $search = '%' . $request->input('search') . '%';
+            $search = '%'.$request->input('search').'%';
             $query->whereHas('peserta', function ($q) use ($search) {
                 $q->where('nama', 'like', $search)
                     ->orWhere('email', 'like', $search)
@@ -43,7 +46,7 @@ class ArsipPesertaController extends Controller
 
         $arsipList = $query->paginate(15)->withQueryString();
 
-        $driver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
+        $driver = DB::connection()->getDriverName();
         $yearExpr = $driver === 'sqlite' ? 'strftime("%Y", tgl_selesai)' : 'YEAR(tgl_selesai)';
 
         $tahunList = Penempatan::whereIn('status', [StatusPenempatanEnum::Selesai, StatusPenempatanEnum::Nonaktif, StatusPenempatanEnum::MengundurkanDiri])
@@ -76,8 +79,8 @@ class ArsipPesertaController extends Controller
             'pendaftaran.dokumen',
         ]);
 
-        app(\App\Services\AuditService::class)->catat(
-            tipe: \App\Enums\TipeAuditEnum::AksesData,
+        app(AuditService::class)->catat(
+            tipe: TipeAuditEnum::AksesData,
             tabel: 'penempatan',
             idData: $penempatan->id,
             nilaiLama: null,

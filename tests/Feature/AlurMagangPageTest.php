@@ -20,7 +20,7 @@ class AlurMagangPageTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Peta Interaktif Alur &amp; Siklus Magang', false);
         $response->assertSee('Diskominfo Sleman');
-        
+
         // Memastikan SEO meta tags terpasang
         $response->assertSee('meta name="description"', false);
         $response->assertSee('property="og:title"', false);

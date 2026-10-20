@@ -14,7 +14,7 @@ class RealtimeEventService
     /**
      * Mempublikasikan event real-time ke tabel outbox SSE.
      *
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     public function publish(
         RealtimeEventTypeEnum $type,

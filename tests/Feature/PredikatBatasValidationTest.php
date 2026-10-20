@@ -19,7 +19,7 @@ class PredikatBatasValidationTest extends TestCase
     {
         parent::setUp();
 
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'SuperAdmin Test';
         $this->superAdmin->email = 'superadmin.predikat@test.com';
         $this->superAdmin->password = 'secret123';

@@ -7,6 +7,7 @@ use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusReviewProgresEnum;
 use App\Models\Logbook;
+use App\Models\ModulDinamis;
 use App\Models\Penempatan;
 use App\Models\ProgresLog;
 use Illuminate\Support\Facades\Cache;
@@ -32,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.dashboard', function ($view) {
             $user = auth()->user();
             if ($user && $user->role === RoleEnum::Pembimbing) {
-                $badgeData = Cache::remember('pembimbing_badge_' . $user->id, 60, function () use ($user) {
+                $badgeData = Cache::remember('pembimbing_badge_'.$user->id, 60, function () use ($user) {
                     $penempatanIds = Penempatan::where('pembimbing_id', $user->id)
                         ->where('status', StatusPenempatanEnum::Aktif)
                         ->pluck('id');
@@ -61,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
 
                 $allModules = Cache::remember('dynamic_modules_sidebar', 3600, function () {
                     try {
-                        return \App\Models\ModulDinamis::where('status_aktif', true)->orderBy('urutan')->get();
+                        return ModulDinamis::where('status_aktif', true)->orderBy('urutan')->get();
                     } catch (\Throwable $e) {
                         return collect();
                     }
@@ -72,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
                         return true;
                     }
                     $roles = array_map('strtolower', (array) ($module->target_roles ?? []));
+
                     return in_array($userRoleLower, $roles, true);
                 });
 

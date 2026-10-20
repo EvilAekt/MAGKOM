@@ -22,56 +22,56 @@ class ModulBuilderController extends Controller
 {
     public const AVAILABLE_ICONS = [
         // 💻 TI & Perangkat Jaringan
-        'laptop'       => 'Laptop / Komputer',
-        'server'       => 'Server / Jaringan',
-        'cpu'          => 'Perangkat Keras / IoT',
-        'hard-drive'   => 'Hard Disk / Media Simpan',
-        'wifi'         => 'Koneksi WiFi / Hotspot',
-        'terminal'     => 'Terminal / Konsol',
-        'smartphone'   => 'Smartphone / Ponsel',
-        'monitor'      => 'Monitor / Layar Kerja',
-        'printer'      => 'Printer / Percetakan',
-        'shield'       => 'Keamanan Siber / Proteksi',
+        'laptop' => 'Laptop / Komputer',
+        'server' => 'Server / Jaringan',
+        'cpu' => 'Perangkat Keras / IoT',
+        'hard-drive' => 'Hard Disk / Media Simpan',
+        'wifi' => 'Koneksi WiFi / Hotspot',
+        'terminal' => 'Terminal / Konsol',
+        'smartphone' => 'Smartphone / Ponsel',
+        'monitor' => 'Monitor / Layar Kerja',
+        'printer' => 'Printer / Percetakan',
+        'shield' => 'Keamanan Siber / Proteksi',
 
         // 📁 Data & Administrasi Arsip
-        'database'     => 'Basis Data / SQL',
-        'table'        => 'Tabel Data / Spreadsheet',
-        'file-text'    => 'Dokumen / Formulir',
-        'folder'       => 'Folder / Direktori',
-        'book'         => 'Buku / Pedoman',
-        'clipboard'    => 'Papan Klip / Catatan',
-        'archive'      => 'Arsip / Kotak Penyimpanan',
-        'layers'       => 'Lapisan / Modul Dinamis',
-        'file-plus'    => 'Tambah Dokumen / Berkas Baru',
+        'database' => 'Basis Data / SQL',
+        'table' => 'Tabel Data / Spreadsheet',
+        'file-text' => 'Dokumen / Formulir',
+        'folder' => 'Folder / Direktori',
+        'book' => 'Buku / Pedoman',
+        'clipboard' => 'Papan Klip / Catatan',
+        'archive' => 'Arsip / Kotak Penyimpanan',
+        'layers' => 'Lapisan / Modul Dinamis',
+        'file-plus' => 'Tambah Dokumen / Berkas Baru',
 
         // 👥 Manajemen, Tim & Institusi
-        'users'        => 'Grup Pengguna / Mitra',
-        'user-check'   => 'Verifikasi User / Peserta',
-        'user-plus'    => 'Registrasi User / Anggota',
-        'briefcase'    => 'Unit Kerja / Portofolio',
-        'award'        => 'Sertifikat / Prestasi',
-        'building'     => 'Gedung / OPD Kominfo',
-        'compass'      => 'Arah / Kebijakan Strategis',
-        'flag'         => 'Prioritas / Bendera Tugas',
+        'users' => 'Grup Pengguna / Mitra',
+        'user-check' => 'Verifikasi User / Peserta',
+        'user-plus' => 'Registrasi User / Anggota',
+        'briefcase' => 'Unit Kerja / Portofolio',
+        'award' => 'Sertifikat / Prestasi',
+        'building' => 'Gedung / OPD Kominfo',
+        'compass' => 'Arah / Kebijakan Strategis',
+        'flag' => 'Prioritas / Bendera Tugas',
 
         // ⚙️ Layanan Publik & Operasional
-        'calendar'     => 'Kalender / Jadwal Kegiatan',
-        'clock'        => 'Waktu / Presensi / Jam',
+        'calendar' => 'Kalender / Jadwal Kegiatan',
+        'clock' => 'Waktu / Presensi / Jam',
         'check-circle' => 'Selesai / Terverifikasi',
-        'activity'     => 'Aktivitas / Log Dinamis',
-        'bell'         => 'Notifikasi / Pengumuman',
-        'mail'         => 'Surat Masuk / Undangan',
-        'phone'        => 'Kontak Telepon / Hotline',
-        'map-pin'      => 'Lokasi / Wilayah Sleman',
-        'tool'         => 'Peralatan / Maintenance',
-        'sliders'      => 'Pengaturan / Konfigurasi',
+        'activity' => 'Aktivitas / Log Dinamis',
+        'bell' => 'Notifikasi / Pengumuman',
+        'mail' => 'Surat Masuk / Undangan',
+        'phone' => 'Kontak Telepon / Hotline',
+        'map-pin' => 'Lokasi / Wilayah Sleman',
+        'tool' => 'Peralatan / Maintenance',
+        'sliders' => 'Pengaturan / Konfigurasi',
 
         // 📦 Inventaris & Aset Logistik
-        'box'          => 'Kotak Aset / Inventaris',
-        'package'      => 'Paket / Pengiriman Barang',
-        'tag'          => 'Label / Klasifikasi Barang',
-        'credit-card'  => 'Anggaran / Kartu Pembayaran',
-        'qr-code'      => 'Kode QR / Autentikasi',
+        'box' => 'Kotak Aset / Inventaris',
+        'package' => 'Paket / Pengiriman Barang',
+        'tag' => 'Label / Klasifikasi Barang',
+        'credit-card' => 'Anggaran / Kartu Pembayaran',
+        'qr-code' => 'Kode QR / Autentikasi',
     ];
 
     public function __construct(
@@ -100,9 +100,9 @@ class ModulBuilderController extends Controller
         $availableTables = $this->inspectorService->getAvailableTables();
 
         return view('superadmin.modul-builder.create', [
-            'availableIcons'   => self::AVAILABLE_ICONS,
-            'availableTables'  => $availableTables,
-            'standardActions'  => ModulDinamis::STANDARD_ACTIONS,
+            'availableIcons' => self::AVAILABLE_ICONS,
+            'availableTables' => $availableTables,
+            'standardActions' => ModulDinamis::STANDARD_ACTIONS,
         ]);
     }
 
@@ -112,9 +112,10 @@ class ModulBuilderController extends Controller
     public function apiGetTables(): JsonResponse
     {
         $tables = $this->inspectorService->getAvailableTables();
+
         return response()->json([
             'success' => true,
-            'tables'  => $tables,
+            'tables' => $tables,
         ]);
     }
 
@@ -130,9 +131,10 @@ class ModulBuilderController extends Controller
 
         try {
             $schema = $this->inspectorService->inspectTable($table);
+
             return response()->json([
                 'success' => true,
-                'schema'  => $schema,
+                'schema' => $schema,
             ]);
         } catch (\Throwable $e) {
             return response()->json([
@@ -148,28 +150,28 @@ class ModulBuilderController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'nama_modul'       => 'required|string|max:100',
-            'slug'             => 'nullable|string|max:100|unique:modul_dinamis,slug',
-            'tipe_sumber'      => 'nullable|string|in:dynamic,physical_table',
+            'nama_modul' => 'required|string|max:100',
+            'slug' => 'nullable|string|max:100|unique:modul_dinamis,slug',
+            'tipe_sumber' => 'nullable|string|in:dynamic,physical_table',
             'nama_tabel_fisik' => 'nullable|required_if:tipe_sumber,physical_table|string|max:64',
-            'primary_key'      => 'nullable|string|max:64',
-            'deskripsi'        => 'nullable|string|max:1000',
-            'ikon'             => 'required|string|max:50',
-            'target_roles'     => 'required|array|min:1',
-            'target_roles.*'   => 'string|in:superadmin,admin,pembimbing,peserta',
-            'scope_mode'       => 'nullable|string|in:none,bidang_scope,creator_scope',
-            'izin_aksi'        => 'nullable|array',
-            'log_aksi'         => 'nullable|array',
-            'fields'           => 'required|array|min:1',
-            'fields.*.nama_kolom'          => 'required|string|max:60|regex:/^[a-zA-Z0-9_]+$/',
-            'fields.*.label'               => 'required|string|max:100',
-            'fields.*.tipe_data'           => 'required|string|in:text,number,textarea,select,multiselect,date,datetime,file,boolean,relation',
-            'fields.*.opsi_pilihan'        => 'nullable|string|max:500',
-            'fields.*.relasi_tabel'        => 'nullable|string|max:60',
+            'primary_key' => 'nullable|string|max:64',
+            'deskripsi' => 'nullable|string|max:1000',
+            'ikon' => 'required|string|max:50',
+            'target_roles' => 'required|array|min:1',
+            'target_roles.*' => 'string|in:superadmin,admin,pembimbing,peserta',
+            'scope_mode' => 'nullable|string|in:none,bidang_scope,creator_scope',
+            'izin_aksi' => 'nullable|array',
+            'log_aksi' => 'nullable|array',
+            'fields' => 'required|array|min:1',
+            'fields.*.nama_kolom' => 'required|string|max:60|regex:/^[a-zA-Z0-9_]+$/',
+            'fields.*.label' => 'required|string|max:100',
+            'fields.*.tipe_data' => 'required|string|in:text,number,textarea,select,multiselect,date,datetime,file,boolean,relation',
+            'fields.*.opsi_pilihan' => 'nullable|string|max:500',
+            'fields.*.relasi_tabel' => 'nullable|string|max:60',
             'fields.*.relasi_kolom_tampil' => 'nullable|string|max:60',
         ]);
 
-        $slug = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['nama_modul']);
+        $slug = ! empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['nama_modul']);
 
         // Pastikan slug unik
         $baseSlug = $slug;
@@ -181,48 +183,48 @@ class ModulBuilderController extends Controller
 
         $tipeSumber = $validated['tipe_sumber'] ?? 'dynamic';
         $primaryKey = $validated['primary_key'] ?? 'id';
-        $scopeMode  = $validated['scope_mode'] ?? 'none';
+        $scopeMode = $validated['scope_mode'] ?? 'none';
 
         DB::transaction(function () use ($validated, $slug, $request, $tipeSumber, $primaryKey, $scopeMode) {
             $maxUrutan = (int) ModulDinamis::max('urutan');
 
             $modul = ModulDinamis::create([
-                'nama_modul'       => $validated['nama_modul'],
-                'slug'             => $slug,
-                'tipe_sumber'      => $tipeSumber,
+                'nama_modul' => $validated['nama_modul'],
+                'slug' => $slug,
+                'tipe_sumber' => $tipeSumber,
                 'nama_tabel_fisik' => $tipeSumber === 'physical_table' ? ($validated['nama_tabel_fisik'] ?? null) : null,
-                'primary_key'      => $primaryKey,
-                'is_manual_pk'     => $request->boolean('is_manual_pk'),
-                'deskripsi'        => $validated['deskripsi'] ?? null,
-                'ikon'             => $validated['ikon'],
-                'target_roles'     => $validated['target_roles'],
-                'izin_aksi'        => $validated['izin_aksi'] ?? null,
-                'log_aksi'         => $validated['log_aksi'] ?? null,
-                'status_aktif'     => true,
-                'is_public_read'   => $request->boolean('is_public_read'),
-                'scope_mode'       => $scopeMode,
-                'urutan'           => $maxUrutan + 1,
-                'dibuat_oleh'      => auth()->id(),
+                'primary_key' => $primaryKey,
+                'is_manual_pk' => $request->boolean('is_manual_pk'),
+                'deskripsi' => $validated['deskripsi'] ?? null,
+                'ikon' => $validated['ikon'],
+                'target_roles' => $validated['target_roles'],
+                'izin_aksi' => $validated['izin_aksi'] ?? null,
+                'log_aksi' => $validated['log_aksi'] ?? null,
+                'status_aktif' => true,
+                'is_public_read' => $request->boolean('is_public_read'),
+                'scope_mode' => $scopeMode,
+                'urutan' => $maxUrutan + 1,
+                'dibuat_oleh' => auth()->id(),
             ]);
 
             foreach ($request->input('fields', []) as $idx => $f) {
                 $opsi = null;
-                if (!empty($f['opsi_pilihan'])) {
+                if (! empty($f['opsi_pilihan'])) {
                     $opsi = array_values(array_filter(array_map('trim', explode(',', (string) $f['opsi_pilihan']))));
                 }
 
                 ModulDinamisField::create([
-                    'modul_id'            => $modul->id,
-                    'nama_kolom'          => Str::snake((string) $f['nama_kolom']),
-                    'label'               => (string) $f['label'],
-                    'tipe_data'           => (string) $f['tipe_data'],
-                    'opsi_pilihan'        => $opsi,
-                    'relasi_tabel'        => !empty($f['relasi_tabel']) ? trim((string) $f['relasi_tabel']) : null,
-                    'relasi_kolom_tampil' => !empty($f['relasi_kolom_tampil']) ? trim((string) $f['relasi_kolom_tampil']) : null,
-                    'wajib'               => !empty($f['wajib']),
-                    'tampil_di_tabel'     => !empty($f['tampil_di_tabel']),
-                    'dapat_dicari'        => !empty($f['dapat_dicari']),
-                    'urutan'              => $idx + 1,
+                    'modul_id' => $modul->id,
+                    'nama_kolom' => Str::snake((string) $f['nama_kolom']),
+                    'label' => (string) $f['label'],
+                    'tipe_data' => (string) $f['tipe_data'],
+                    'opsi_pilihan' => $opsi,
+                    'relasi_tabel' => ! empty($f['relasi_tabel']) ? trim((string) $f['relasi_tabel']) : null,
+                    'relasi_kolom_tampil' => ! empty($f['relasi_kolom_tampil']) ? trim((string) $f['relasi_kolom_tampil']) : null,
+                    'wajib' => ! empty($f['wajib']),
+                    'tampil_di_tabel' => ! empty($f['tampil_di_tabel']),
+                    'dapat_dicari' => ! empty($f['dapat_dicari']),
+                    'urutan' => $idx + 1,
                 ]);
             }
 
@@ -251,8 +253,8 @@ class ModulBuilderController extends Controller
         $availableTables = $this->inspectorService->getAvailableTables();
 
         return view('superadmin.modul-builder.edit', [
-            'modul'           => $modul,
-            'availableIcons'  => self::AVAILABLE_ICONS,
+            'modul' => $modul,
+            'availableIcons' => self::AVAILABLE_ICONS,
             'availableTables' => $availableTables,
             'standardActions' => ModulDinamis::STANDARD_ACTIONS,
         ]);
@@ -264,44 +266,44 @@ class ModulBuilderController extends Controller
     public function update(Request $request, ModulDinamis $modul): RedirectResponse
     {
         $validated = $request->validate([
-            'nama_modul'       => 'required|string|max:100',
-            'tipe_sumber'      => 'nullable|string|in:dynamic,physical_table',
+            'nama_modul' => 'required|string|max:100',
+            'tipe_sumber' => 'nullable|string|in:dynamic,physical_table',
             'nama_tabel_fisik' => 'nullable|required_if:tipe_sumber,physical_table|string|max:64',
-            'primary_key'      => 'nullable|string|max:64',
-            'deskripsi'        => 'nullable|string|max:1000',
-            'ikon'             => 'required|string|max:50',
-            'target_roles'     => 'required|array|min:1',
-            'target_roles.*'   => 'string|in:superadmin,admin,pembimbing,peserta',
-            'scope_mode'       => 'nullable|string|in:none,bidang_scope,creator_scope',
-            'izin_aksi'        => 'nullable|array',
-            'log_aksi'         => 'nullable|array',
-            'fields'           => 'required|array|min:1',
-            'fields.*.nama_kolom'          => 'required|string|max:60|regex:/^[a-zA-Z0-9_]+$/',
-            'fields.*.label'               => 'required|string|max:100',
-            'fields.*.tipe_data'           => 'required|string|in:text,number,textarea,select,multiselect,date,datetime,file,boolean,relation',
-            'fields.*.opsi_pilihan'        => 'nullable|string|max:500',
-            'fields.*.relasi_tabel'        => 'nullable|string|max:60',
+            'primary_key' => 'nullable|string|max:64',
+            'deskripsi' => 'nullable|string|max:1000',
+            'ikon' => 'required|string|max:50',
+            'target_roles' => 'required|array|min:1',
+            'target_roles.*' => 'string|in:superadmin,admin,pembimbing,peserta',
+            'scope_mode' => 'nullable|string|in:none,bidang_scope,creator_scope',
+            'izin_aksi' => 'nullable|array',
+            'log_aksi' => 'nullable|array',
+            'fields' => 'required|array|min:1',
+            'fields.*.nama_kolom' => 'required|string|max:60|regex:/^[a-zA-Z0-9_]+$/',
+            'fields.*.label' => 'required|string|max:100',
+            'fields.*.tipe_data' => 'required|string|in:text,number,textarea,select,multiselect,date,datetime,file,boolean,relation',
+            'fields.*.opsi_pilihan' => 'nullable|string|max:500',
+            'fields.*.relasi_tabel' => 'nullable|string|max:60',
             'fields.*.relasi_kolom_tampil' => 'nullable|string|max:60',
         ]);
 
         $tipeSumber = $validated['tipe_sumber'] ?? ($modul->tipe_sumber ?? 'dynamic');
         $primaryKey = $validated['primary_key'] ?? ($modul->primary_key ?? 'id');
-        $scopeMode  = $validated['scope_mode'] ?? ($modul->scope_mode ?? 'none');
+        $scopeMode = $validated['scope_mode'] ?? ($modul->scope_mode ?? 'none');
 
         DB::transaction(function () use ($validated, $modul, $request, $tipeSumber, $primaryKey, $scopeMode) {
             $modul->update([
-                'nama_modul'       => $validated['nama_modul'],
-                'tipe_sumber'      => $tipeSumber,
+                'nama_modul' => $validated['nama_modul'],
+                'tipe_sumber' => $tipeSumber,
                 'nama_tabel_fisik' => $tipeSumber === 'physical_table' ? ($validated['nama_tabel_fisik'] ?? null) : null,
-                'primary_key'      => $primaryKey,
-                'is_manual_pk'     => $request->boolean('is_manual_pk'),
-                'deskripsi'        => $validated['deskripsi'] ?? null,
-                'ikon'             => $validated['ikon'],
-                'target_roles'     => $validated['target_roles'],
-                'izin_aksi'        => $validated['izin_aksi'] ?? null,
-                'log_aksi'         => $validated['log_aksi'] ?? null,
-                'is_public_read'   => $request->boolean('is_public_read'),
-                'scope_mode'       => $scopeMode,
+                'primary_key' => $primaryKey,
+                'is_manual_pk' => $request->boolean('is_manual_pk'),
+                'deskripsi' => $validated['deskripsi'] ?? null,
+                'ikon' => $validated['ikon'],
+                'target_roles' => $validated['target_roles'],
+                'izin_aksi' => $validated['izin_aksi'] ?? null,
+                'log_aksi' => $validated['log_aksi'] ?? null,
+                'is_public_read' => $request->boolean('is_public_read'),
+                'scope_mode' => $scopeMode,
             ]);
 
             // Re-sync fields
@@ -309,22 +311,22 @@ class ModulBuilderController extends Controller
 
             foreach ($request->input('fields', []) as $idx => $f) {
                 $opsi = null;
-                if (!empty($f['opsi_pilihan'])) {
+                if (! empty($f['opsi_pilihan'])) {
                     $opsi = array_values(array_filter(array_map('trim', explode(',', (string) $f['opsi_pilihan']))));
                 }
 
                 ModulDinamisField::create([
-                    'modul_id'            => $modul->id,
-                    'nama_kolom'          => Str::snake((string) $f['nama_kolom']),
-                    'label'               => (string) $f['label'],
-                    'tipe_data'           => (string) $f['tipe_data'],
-                    'opsi_pilihan'        => $opsi,
-                    'relasi_tabel'        => !empty($f['relasi_tabel']) ? trim((string) $f['relasi_tabel']) : null,
-                    'relasi_kolom_tampil' => !empty($f['relasi_kolom_tampil']) ? trim((string) $f['relasi_kolom_tampil']) : null,
-                    'wajib'               => !empty($f['wajib']),
-                    'tampil_di_tabel'     => !empty($f['tampil_di_tabel']),
-                    'dapat_dicari'        => !empty($f['dapat_dicari']),
-                    'urutan'              => $idx + 1,
+                    'modul_id' => $modul->id,
+                    'nama_kolom' => Str::snake((string) $f['nama_kolom']),
+                    'label' => (string) $f['label'],
+                    'tipe_data' => (string) $f['tipe_data'],
+                    'opsi_pilihan' => $opsi,
+                    'relasi_tabel' => ! empty($f['relasi_tabel']) ? trim((string) $f['relasi_tabel']) : null,
+                    'relasi_kolom_tampil' => ! empty($f['relasi_kolom_tampil']) ? trim((string) $f['relasi_kolom_tampil']) : null,
+                    'wajib' => ! empty($f['wajib']),
+                    'tampil_di_tabel' => ! empty($f['tampil_di_tabel']),
+                    'dapat_dicari' => ! empty($f['dapat_dicari']),
+                    'urutan' => $idx + 1,
                 ]);
             }
 
@@ -349,7 +351,7 @@ class ModulBuilderController extends Controller
      */
     public function toggleAktif(ModulDinamis $modul): RedirectResponse
     {
-        $newStatus = !$modul->status_aktif;
+        $newStatus = ! $modul->status_aktif;
         $modul->update(['status_aktif' => $newStatus]);
         Cache::forget('dynamic_modules_sidebar');
 
@@ -357,12 +359,12 @@ class ModulBuilderController extends Controller
             tipe: TipeAuditEnum::Aksi,
             tabel: 'modul_dinamis',
             idData: $modul->id,
-            detail: ['aksi' => "Toggle Status Modul {$modul->nama_modul} menjadi " . ($newStatus ? 'Aktif' : 'Nonaktif')],
+            detail: ['aksi' => "Toggle Status Modul {$modul->nama_modul} menjadi ".($newStatus ? 'Aktif' : 'Nonaktif')],
             channel: 'dynamic-module',
             severity: 'info'
         );
 
-        return back()->with('status_keberhasilan', "Status modul \"{$modul->nama_modul}\" berhasil diubah menjadi " . ($newStatus ? 'Aktif' : 'Nonaktif') . '.');
+        return back()->with('status_keberhasilan', "Status modul \"{$modul->nama_modul}\" berhasil diubah menjadi ".($newStatus ? 'Aktif' : 'Nonaktif').'.');
     }
 
     /**

@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
+use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
+use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
-use App\Models\AuditLog;
+use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Kuota;
-use App\Models\Logbook;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\PesertaProfil;
-use App\Models\ProgresLog;
 use App\Models\Tugas;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
@@ -29,12 +30,19 @@ class DeltaDashboardEnhancementTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected Penempatan $penempatan;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
 
     protected function setUp(): void
@@ -71,7 +79,7 @@ class DeltaDashboardEnhancementTest extends TestCase
         ]);
 
         // 1. SuperAdmin
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'SuperAdmin Test';
         $this->superAdmin->email = 'superadmin.delta@slemankab.go.id';
         $this->superAdmin->password = bcrypt('Password123!');
@@ -82,7 +90,7 @@ class DeltaDashboardEnhancementTest extends TestCase
         $this->superAdmin->save();
 
         // 2. Admin
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Test';
         $this->admin->email = 'admin.delta@slemankab.go.id';
         $this->admin->password = bcrypt('Password123!');
@@ -93,7 +101,7 @@ class DeltaDashboardEnhancementTest extends TestCase
         $this->admin->save();
 
         // 3. Pembimbing
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Test';
         $this->pembimbing->email = 'pembimbing.delta@slemankab.go.id';
         $this->pembimbing->password = bcrypt('Password123!');
@@ -105,7 +113,7 @@ class DeltaDashboardEnhancementTest extends TestCase
         $this->pembimbing->save();
 
         // 4. Peserta
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Delta';
         $this->peserta->email = 'peserta.delta@student.ac.id';
         $this->peserta->password = bcrypt('Password123!');
@@ -129,8 +137,8 @@ class DeltaDashboardEnhancementTest extends TestCase
             'pembimbing_id' => $this->pembimbing->id,
             'bidang_id' => $bidang->id,
             'kuota_id' => $this->kuota->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'status' => StatusPenempatanEnum::Aktif,
             'tgl_mulai' => now()->startOfMonth(),
             'tgl_selesai' => now()->addMonths(3)->endOfMonth(),
@@ -194,7 +202,7 @@ class DeltaDashboardEnhancementTest extends TestCase
             'bulan_magang_id' => $this->bulan->id,
             'kuota_id' => $this->kuota->id,
             'durasi_bulan' => 3,
-            'status' => \App\Enums\StatusPendaftaranEnum::Diterima,
+            'status' => StatusPendaftaranEnum::Diterima,
             'diajukan_at' => now()->subDays(3),
             'diputuskan_at' => now()->subDay(),
         ]);
@@ -219,7 +227,7 @@ class DeltaDashboardEnhancementTest extends TestCase
             'judul' => 'Integrasi API Dashboard',
             'deskripsi' => 'Kerjakan integrasi modul',
             'kategori' => 'Pengembangan Sistem',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'status' => StatusTugasEnum::Selesai,
             'deadline' => now()->addDays(5),
         ]);

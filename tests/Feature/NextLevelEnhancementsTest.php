@@ -11,6 +11,7 @@ use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\SumberPenempatanEnum;
+use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
@@ -22,7 +23,6 @@ use App\Models\Penempatan;
 use App\Models\Pengaturan;
 use App\Models\PesertaProfil;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -32,10 +32,15 @@ final class NextLevelEnhancementsTest extends TestCase
     use RefreshDatabase;
 
     private User $superAdmin;
+
     private User $admin;
+
     private User $pembimbing;
+
     private Bidang $bidang;
+
     private Jurusan $jurusan;
+
     private BulanMagang $bulanMagang;
 
     protected function setUp(): void
@@ -68,7 +73,7 @@ final class NextLevelEnhancementsTest extends TestCase
 
     private function createUser(string $nama, string $email, RoleEnum $role, ?int $bidangId = null): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = Hash::make('Password123!');
@@ -277,7 +282,7 @@ final class NextLevelEnhancementsTest extends TestCase
         AuditLog::create([
             'waktu' => now(),
             'user_id' => $this->superAdmin->id,
-            'tipe' => \App\Enums\TipeAuditEnum::Aksi,
+            'tipe' => TipeAuditEnum::Aksi,
             'aksi' => '@InsecureActionLog',
             'entitas' => 'pengaturan',
             'entitas_id' => 1,

@@ -119,16 +119,16 @@ class JurusanController extends Controller
 
             // 2. Cek apakah ada pendaftaran aktif pada jurusan ini (BR-12)
             $hasActivePendaftaran = Pendaftaran::where(function ($q) use ($jurusan) {
-                    $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusan->id))
-                      ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusan->id));
-                })
+                $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusan->id))
+                    ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusan->id));
+            })
                 ->whereIn('status', [
-                    StatusPendaftaranEnum::Diajukan,
-                    StatusPendaftaranEnum::WaitingList,
-                    StatusPendaftaranEnum::PerluPerbaikan,
-                    StatusPendaftaranEnum::BerkasBelumLengkap,
-                    StatusPendaftaranEnum::Diterima,
-                ])
+                StatusPendaftaranEnum::Diajukan,
+                StatusPendaftaranEnum::WaitingList,
+                StatusPendaftaranEnum::PerluPerbaikan,
+                StatusPendaftaranEnum::BerkasBelumLengkap,
+                StatusPendaftaranEnum::Diterima,
+            ])
                 ->exists();
 
             if ($hasActivePendaftaran) {
@@ -161,6 +161,7 @@ class JurusanController extends Controller
         );
 
         $statusLabel = $targetAktif ? 'diaktifkan' : 'dinonaktifkan';
+
         return redirect()->route('superadmin.jurusan.index')
             ->with('success', "Jurusan {$jurusan->nama_jurusan} berhasil {$statusLabel}.");
     }

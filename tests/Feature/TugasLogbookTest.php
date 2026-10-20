@@ -31,8 +31,11 @@ class TugasLogbookTest extends TestCase
     use RefreshDatabase;
 
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected User $superAdmin;
+
     protected Penempatan $penempatan;
 
     protected function setUp(): void
@@ -41,7 +44,7 @@ class TugasLogbookTest extends TestCase
 
         Storage::fake('private');
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Budi Pembimbing';
         $this->pembimbing->email = 'pembimbing@kominfo.test';
         $this->pembimbing->password = 'secret123';
@@ -51,7 +54,7 @@ class TugasLogbookTest extends TestCase
         $this->pembimbing->must_change_password = false;
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Siti Peserta';
         $this->peserta->email = 'peserta@kominfo.test';
         $this->peserta->password = 'secret123';
@@ -61,7 +64,7 @@ class TugasLogbookTest extends TestCase
         $this->peserta->must_change_password = false;
         $this->peserta->save();
 
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator';
         $this->superAdmin->email = 'superadmin@kominfo.test';
         $this->superAdmin->password = 'secret123';

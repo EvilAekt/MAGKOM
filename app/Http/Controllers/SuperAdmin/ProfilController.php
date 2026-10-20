@@ -54,7 +54,7 @@ class ProfilController extends Controller
             }
             $file = $request->file('foto');
             $extension = $file->getClientOriginalExtension() ?: 'jpg';
-            $filename = 'staf_' . $user->id . '_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $extension;
+            $filename = 'staf_'.$user->id.'_'.time().'_'.bin2hex(random_bytes(4)).'.'.$extension;
             $path = $file->storeAs('profil-staf', $filename, 'public');
             $user->foto = $path;
         }

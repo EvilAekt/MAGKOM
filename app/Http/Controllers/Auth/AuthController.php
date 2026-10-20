@@ -125,7 +125,7 @@ class AuthController extends Controller
 
         $validated = $request->validate($rules);
 
-        $user = new User();
+        $user = new User;
         $user->nama = $validated['nama'];
         $user->email = $validated['email'];
         $user->no_telp = $validated['no_telp'] ?? $request->input('no_telp');
@@ -155,7 +155,7 @@ class AuthController extends Controller
                     'jurusan_id' => $request->input('redirect_jurusan'),
                     'tipe' => $request->input('redirect_tipe', 'mandiri'),
                     'jumlah' => (int) $request->input('redirect_jumlah', 1),
-                ]
+                ],
             ]);
         }
 

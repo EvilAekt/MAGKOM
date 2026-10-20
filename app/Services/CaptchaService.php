@@ -7,6 +7,7 @@ namespace App\Services;
 class CaptchaService
 {
     public const SESSION_CODE = 'captcha_code';
+
     public const SESSION_EXPIRES_AT = 'captcha_expires_at';
 
     /**

@@ -24,7 +24,7 @@ class ModulDinamisData extends Model
     ];
 
     protected $casts = [
-        'data'           => 'array',
+        'data' => 'array',
         'files_metadata' => 'array',
     ];
 

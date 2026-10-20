@@ -6,11 +6,15 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Bidang;
+use App\Models\BulanMagang;
+use App\Models\Jurusan;
 use App\Models\Pengaturan;
+use App\Models\Rubrik;
 use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\View\View;
 
 class PengaturanController extends Controller
@@ -38,7 +42,7 @@ class PengaturanController extends Controller
         }
 
         return view('superadmin.pengaturan.index', [
-            'pengaturan'    => $pengaturan,
+            'pengaturan' => $pengaturan,
             'predikatBatas' => $predikatBatas,
         ]);
     }
@@ -174,11 +178,11 @@ class PengaturanController extends Controller
      */
     public function triggerPurgeAudit(Request $request): RedirectResponse
     {
-        \Illuminate\Support\Facades\Artisan::call('magkom:audit-purge');
-        $output = \Illuminate\Support\Facades\Artisan::output();
+        Artisan::call('magkom:audit-purge');
+        $output = Artisan::output();
 
         return redirect()->route('superadmin.pengaturan.index')
-            ->with('success', 'Pemangkasan log akses data berhasil dijalankan: ' . trim($output));
+            ->with('success', 'Pemangkasan log akses data berhasil dijalankan: '.trim($output));
     }
 
     /**
@@ -189,10 +193,10 @@ class PengaturanController extends Controller
         $superadmin = $request->user();
 
         $pengaturan = Pengaturan::all()->pluck('nilai', 'kunci')->toArray();
-        $jurusan = \App\Models\Jurusan::all(['id', 'nama_jurusan', 'kategori', 'aktif'])->toArray();
-        $bidang = \App\Models\Bidang::all(['id', 'nama_bidang', 'deskripsi', 'aktif'])->toArray();
-        $rubrik = \App\Models\Rubrik::all(['id', 'kriteria', 'bobot', 'urutan', 'aktif'])->toArray();
-        $bulanMagang = \App\Models\BulanMagang::all(['id', 'bulan_mulai', 'tgl_buka', 'tgl_tutup', 'override_status', 'aktif'])->toArray();
+        $jurusan = Jurusan::all(['id', 'nama_jurusan', 'kategori', 'aktif'])->toArray();
+        $bidang = Bidang::all(['id', 'nama_bidang', 'deskripsi', 'aktif'])->toArray();
+        $rubrik = Rubrik::all(['id', 'kriteria', 'bobot', 'urutan', 'aktif'])->toArray();
+        $bulanMagang = BulanMagang::all(['id', 'bulan_mulai', 'tgl_buka', 'tgl_tutup', 'override_status', 'aktif'])->toArray();
 
         $payloadData = [
             'app' => 'MagKom Sleman',
@@ -231,7 +235,7 @@ class PengaturanController extends Controller
             ]
         );
 
-        $fileName = 'magkom-master-snapshot-' . date('Ymd-His') . '.json';
+        $fileName = 'magkom-master-snapshot-'.date('Ymd-His').'.json';
 
         return response($finalJson, 200, [
             'Content-Type' => 'application/json',

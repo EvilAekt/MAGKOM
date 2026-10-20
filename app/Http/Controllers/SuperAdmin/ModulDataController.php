@@ -37,7 +37,7 @@ class ModulDataController extends Controller
         $search = trim((string) $request->input('q'));
         $searchableFields = $modul->fields->where('dapat_dicari', true)->pluck('nama_kolom');
 
-        if ($modul->tipe_sumber === 'physical_table' && !empty($modul->nama_tabel_fisik)) {
+        if ($modul->tipe_sumber === 'physical_table' && ! empty($modul->nama_tabel_fisik)) {
             $table = $modul->nama_tabel_fisik;
             $pk = $modul->primary_key ?: 'id';
             $query = DB::table($table);
@@ -87,7 +87,7 @@ class ModulDataController extends Controller
         $rules = $this->buildValidationRules($modul);
         $validated = $request->validate($rules);
 
-        if ($modul->tipe_sumber === 'physical_table' && !empty($modul->nama_tabel_fisik)) {
+        if ($modul->tipe_sumber === 'physical_table' && ! empty($modul->nama_tabel_fisik)) {
             $table = $modul->nama_tabel_fisik;
             $pk = $modul->primary_key ?: 'id';
 
@@ -98,13 +98,13 @@ class ModulDataController extends Controller
             $payload = [];
             foreach ($modul->fields as $field) {
                 $col = $field->nama_kolom;
-                if ($col === $pk && !$modul->is_manual_pk) {
+                if ($col === $pk && ! $modul->is_manual_pk) {
                     continue; // Skip auto-increment primary key
                 }
 
                 if ($field->tipe_data === 'file' && $request->hasFile($col)) {
                     $file = $request->file($col);
-                    $path = $file->storeAs("public/modul-dinamis/{$modul->slug}/" . date('Y/m'), Str::random(24) . '.' . $file->getClientOriginalExtension());
+                    $path = $file->storeAs("public/modul-dinamis/{$modul->slug}/".date('Y/m'), Str::random(24).'.'.$file->getClientOriginalExtension());
                     $payload[$col] = Storage::url($path);
                 } elseif ($field->tipe_data === 'boolean') {
                     $payload[$col] = $request->boolean($col) ? 1 : 0;
@@ -155,15 +155,15 @@ class ModulDataController extends Controller
             if ($field->tipe_data === 'file' && $request->hasFile($col)) {
                 $file = $request->file($col);
                 $ext = $file->getClientOriginalExtension();
-                $safeName = Str::random(24) . '.' . $ext;
-                $path = $file->storeAs("public/modul-dinamis/{$modul->slug}/" . date('Y/m'), $safeName);
+                $safeName = Str::random(24).'.'.$ext;
+                $path = $file->storeAs("public/modul-dinamis/{$modul->slug}/".date('Y/m'), $safeName);
 
                 $dataPayload[$col] = Storage::url($path);
                 $filesMetadata[$col] = [
                     'original_name' => $file->getClientOriginalName(),
-                    'mime'          => $file->getClientMimeType(),
-                    'size'          => $file->getSize(),
-                    'path'          => $path,
+                    'mime' => $file->getClientMimeType(),
+                    'size' => $file->getSize(),
+                    'path' => $path,
                 ];
             } elseif ($field->tipe_data === 'boolean') {
                 $dataPayload[$col] = $request->boolean($col);
@@ -175,10 +175,10 @@ class ModulDataController extends Controller
         }
 
         $record = ModulDinamisData::create([
-            'modul_id'       => $modul->id,
-            'data'           => $dataPayload,
+            'modul_id' => $modul->id,
+            'data' => $dataPayload,
             'files_metadata' => $filesMetadata,
-            'created_by'     => auth()->id(),
+            'created_by' => auth()->id(),
         ]);
 
         if ($modul->shouldLogAction('create')) {
@@ -207,12 +207,12 @@ class ModulDataController extends Controller
         $rules = $this->buildValidationRules($modul, isUpdate: true);
         $validated = $request->validate($rules);
 
-        if ($modul->tipe_sumber === 'physical_table' && !empty($modul->nama_tabel_fisik)) {
+        if ($modul->tipe_sumber === 'physical_table' && ! empty($modul->nama_tabel_fisik)) {
             $table = $modul->nama_tabel_fisik;
             $pk = $modul->primary_key ?: 'id';
 
             $existing = DB::table($table)->where($pk, $id)->first();
-            if (!$existing) {
+            if (! $existing) {
                 abort(404, 'Baris data tidak ditemukan pada tabel.');
             }
 
@@ -226,7 +226,7 @@ class ModulDataController extends Controller
 
                 if ($field->tipe_data === 'file' && $request->hasFile($col)) {
                     $file = $request->file($col);
-                    $path = $file->storeAs("public/modul-dinamis/{$modul->slug}/" . date('Y/m'), Str::random(24) . '.' . $file->getClientOriginalExtension());
+                    $path = $file->storeAs("public/modul-dinamis/{$modul->slug}/".date('Y/m'), Str::random(24).'.'.$file->getClientOriginalExtension());
                     $payload[$col] = Storage::url($path);
                 } elseif ($field->tipe_data === 'boolean') {
                     $payload[$col] = $request->boolean($col) ? 1 : 0;
@@ -266,21 +266,21 @@ class ModulDataController extends Controller
             $col = $field->nama_kolom;
 
             if ($field->tipe_data === 'file' && $request->hasFile($col)) {
-                if (!empty($filesMetadata[$col]['path'])) {
+                if (! empty($filesMetadata[$col]['path'])) {
                     Storage::delete($filesMetadata[$col]['path']);
                 }
 
                 $file = $request->file($col);
                 $ext = $file->getClientOriginalExtension();
-                $safeName = Str::random(24) . '.' . $ext;
-                $path = $file->storeAs("public/modul-dinamis/{$modul->slug}/" . date('Y/m'), $safeName);
+                $safeName = Str::random(24).'.'.$ext;
+                $path = $file->storeAs("public/modul-dinamis/{$modul->slug}/".date('Y/m'), $safeName);
 
                 $dataPayload[$col] = Storage::url($path);
                 $filesMetadata[$col] = [
                     'original_name' => $file->getClientOriginalName(),
-                    'mime'          => $file->getClientMimeType(),
-                    'size'          => $file->getSize(),
-                    'path'          => $path,
+                    'mime' => $file->getClientMimeType(),
+                    'size' => $file->getSize(),
+                    'path' => $path,
                 ];
             } elseif ($field->tipe_data === 'boolean') {
                 $dataPayload[$col] = $request->boolean($col);
@@ -293,9 +293,9 @@ class ModulDataController extends Controller
 
         $oldData = $record->data;
         $record->update([
-            'data'           => $dataPayload,
+            'data' => $dataPayload,
             'files_metadata' => $filesMetadata,
-            'updated_by'     => auth()->id(),
+            'updated_by' => auth()->id(),
         ]);
 
         if ($modul->shouldLogAction('edit')) {
@@ -322,7 +322,7 @@ class ModulDataController extends Controller
         $modul = ModulDinamis::where('slug', $slug)->firstOrFail();
         $this->authorizeAction($modul, 'delete');
 
-        if ($modul->tipe_sumber === 'physical_table' && !empty($modul->nama_tabel_fisik)) {
+        if ($modul->tipe_sumber === 'physical_table' && ! empty($modul->nama_tabel_fisik)) {
             $table = $modul->nama_tabel_fisik;
             $pk = $modul->primary_key ?: 'id';
 
@@ -371,7 +371,7 @@ class ModulDataController extends Controller
         $modul = ModulDinamis::with('fields')->where('slug', $slug)->firstOrFail();
         $this->authorizeAction($modul, 'export_csv');
 
-        $fileName = "ekspor-modul-{$modul->slug}-" . now()->format('Ymd-His') . '.csv';
+        $fileName = "ekspor-modul-{$modul->slug}-".now()->format('Ymd-His').'.csv';
 
         if ($modul->shouldLogAction('export_csv')) {
             $this->auditService->catat(
@@ -394,7 +394,7 @@ class ModulDataController extends Controller
             }
             fputcsv($handle, $headers);
 
-            if ($modul->tipe_sumber === 'physical_table' && !empty($modul->nama_tabel_fisik)) {
+            if ($modul->tipe_sumber === 'physical_table' && ! empty($modul->nama_tabel_fisik)) {
                 $pk = $modul->primary_key ?: 'id';
                 $query = DB::table($modul->nama_tabel_fisik);
                 $this->applyScopeFilter($query, $modul, $modul->nama_tabel_fisik);
@@ -433,7 +433,7 @@ class ModulDataController extends Controller
 
             fclose($handle);
         }, $fileName, [
-            'Content-Type'  => 'text/csv; charset=UTF-8',
+            'Content-Type' => 'text/csv; charset=UTF-8',
             'Cache-Control' => 'no-store, no-cache, must-revalidate',
         ]);
     }
@@ -460,13 +460,13 @@ class ModulDataController extends Controller
         $records = $this->getAllRecordsForPrint($modul);
 
         $html = view('superadmin.modul-data.print', [
-            'modul'     => $modul,
-            'records'   => $records,
+            'modul' => $modul,
+            'records' => $records,
             'isPdfMode' => true,
         ])->render();
 
         return response($html, 200, [
-            'Content-Type'        => 'text/html; charset=UTF-8',
+            'Content-Type' => 'text/html; charset=UTF-8',
             'Content-Disposition' => "inline; filename=\"laporan-{$modul->slug}.html\"",
         ]);
     }
@@ -482,8 +482,8 @@ class ModulDataController extends Controller
         $records = $this->getAllRecordsForPrint($modul);
 
         return view('superadmin.modul-data.print', [
-            'modul'     => $modul,
-            'records'   => $records,
+            'modul' => $modul,
+            'records' => $records,
             'isPdfMode' => false,
         ]);
     }
@@ -499,7 +499,7 @@ class ModulDataController extends Controller
         $record = ModulDinamisData::where('modul_id', $modul->id)->findOrFail($id);
         $metadata = $record->files_metadata[$field] ?? null;
 
-        if (!$metadata || empty($metadata['path']) || !Storage::exists($metadata['path'])) {
+        if (! $metadata || empty($metadata['path']) || ! Storage::exists($metadata['path'])) {
             abort(404, 'Berkas lampiran tidak ditemukan atau telah dihapus.');
         }
 
@@ -515,12 +515,12 @@ class ModulDataController extends Controller
     protected function authorizeAction(ModulDinamis $modul, string $action): void
     {
         $user = auth()->user();
-        if (!$user) {
+        if (! $user) {
             abort(401);
         }
 
         $userRole = is_object($user->role) && property_exists($user->role, 'value') ? $user->role->value : (string) $user->role;
-        if (!$modul->canRolePerformAction($userRole, $action)) {
+        if (! $modul->canRolePerformAction($userRole, $action)) {
             abort(403, "Akses Ditolak: Role Anda ({$userRole}) tidak memiliki izin untuk aksi [{$action}] pada modul {$modul->nama_modul}.");
         }
     }
@@ -538,7 +538,7 @@ class ModulDataController extends Controller
             ]);
         }
 
-        if ($modul->tipe_sumber === 'physical_table' && !empty($modul->nama_tabel_fisik)) {
+        if ($modul->tipe_sumber === 'physical_table' && ! empty($modul->nama_tabel_fisik)) {
             $query = DB::table($modul->nama_tabel_fisik)->where($pkCol, $pkValue);
             if ($currentId !== null) {
                 $query->where($pkCol, '!=', $currentId);
@@ -567,7 +567,7 @@ class ModulDataController extends Controller
     protected function applyScopeFilter(mixed $query, ModulDinamis $modul, string $table): void
     {
         $user = auth()->user();
-        if (!$user) {
+        if (! $user) {
             return;
         }
 
@@ -596,7 +596,7 @@ class ModulDataController extends Controller
     protected function applyDynamicScopeFilter(mixed $query, ModulDinamis $modul): void
     {
         $user = auth()->user();
-        if (!$user) {
+        if (! $user) {
             return;
         }
 
@@ -616,7 +616,7 @@ class ModulDataController extends Controller
     protected function injectPhysicalScopeData(array &$payload, ModulDinamis $modul, string $table): void
     {
         $user = auth()->user();
-        if (!$user) {
+        if (! $user) {
             return;
         }
 
@@ -643,7 +643,7 @@ class ModulDataController extends Controller
     {
         $results = [];
 
-        if ($modul->tipe_sumber === 'physical_table' && !empty($modul->nama_tabel_fisik)) {
+        if ($modul->tipe_sumber === 'physical_table' && ! empty($modul->nama_tabel_fisik)) {
             $pk = $modul->primary_key ?: 'id';
             $query = DB::table($modul->nama_tabel_fisik);
             $this->applyScopeFilter($query, $modul, $modul->nama_tabel_fisik);
@@ -681,7 +681,7 @@ class ModulDataController extends Controller
             $rule = [];
             $col = $field->nama_kolom;
 
-            $rule[] = ($field->wajib && !$isUpdate) ? 'required' : 'nullable';
+            $rule[] = ($field->wajib && ! $isUpdate) ? 'required' : 'nullable';
 
             switch ($field->tipe_data) {
                 case 'number':
@@ -706,7 +706,7 @@ class ModulDataController extends Controller
                     $rule[] = 'max:5120'; // 5MB
                     break;
                 case 'select':
-                    if (!empty($field->opsi_pilihan) && is_array($field->opsi_pilihan)) {
+                    if (! empty($field->opsi_pilihan) && is_array($field->opsi_pilihan)) {
                         $rule[] = Rule::in($field->opsi_pilihan);
                     } else {
                         $rule[] = 'string';
@@ -717,7 +717,7 @@ class ModulDataController extends Controller
                     $rule[] = 'array';
                     break;
                 case 'relation':
-                    if (!empty($field->relasi_tabel) && Schema::hasTable($field->relasi_tabel)) {
+                    if (! empty($field->relasi_tabel) && Schema::hasTable($field->relasi_tabel)) {
                         $rule[] = "exists:{$field->relasi_tabel},id";
                     }
                     break;
@@ -743,7 +743,7 @@ class ModulDataController extends Controller
         $options = [];
 
         foreach ($modul->fields as $field) {
-            if ($field->tipe_data === 'relation' && !empty($field->relasi_tabel)) {
+            if ($field->tipe_data === 'relation' && ! empty($field->relasi_tabel)) {
                 $table = $field->relasi_tabel;
                 $displayCol = $field->relasi_kolom_tampil ?: 'nama';
 
@@ -755,7 +755,7 @@ class ModulDataController extends Controller
                             ->get();
 
                         $options[$field->nama_kolom] = $rows->map(fn ($r) => [
-                            'id'    => $r->id,
+                            'id' => $r->id,
                             'label' => (string) $r->label,
                         ])->all();
                     } catch (\Throwable $e) {
@@ -780,7 +780,7 @@ class ModulDataController extends Controller
         $str = (string) $value;
 
         if ($str !== '' && in_array($str[0], ['=', '+', '-', '@', "\t", "\r"], true)) {
-            return "'" . $str;
+            return "'".$str;
         }
 
         return $str;

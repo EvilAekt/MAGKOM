@@ -15,7 +15,6 @@ use Database\Seeders\JenisDokumenSeeder;
 use Database\Seeders\RubrikSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class SuperAdminMasterArchitectureTest extends TestCase
@@ -23,8 +22,11 @@ class SuperAdminMasterArchitectureTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
 
     protected function setUp(): void
@@ -35,7 +37,7 @@ class SuperAdminMasterArchitectureTest extends TestCase
         $this->seed(RubrikSeeder::class);
 
         // 1. Setup User SuperAdmin
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Admin Sleman';
         $this->superAdmin->email = 'superadmin.master@slemankab.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -46,7 +48,7 @@ class SuperAdminMasterArchitectureTest extends TestCase
         $this->superAdmin->save();
 
         // 2. Setup User Admin
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Dinas MagKom';
         $this->admin->email = 'admin.master@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -57,7 +59,7 @@ class SuperAdminMasterArchitectureTest extends TestCase
         $this->admin->save();
 
         // 3. Setup User Pembimbing
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Master';
         $this->pembimbing->email = 'pembimbing.master@slemankab.go.id';
         $this->pembimbing->password = 'Password123!';
@@ -68,7 +70,7 @@ class SuperAdminMasterArchitectureTest extends TestCase
         $this->pembimbing->save();
 
         // 4. Setup User Peserta
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Magang Master';
         $this->peserta->email = 'peserta.master@universitas.ac.id';
         $this->peserta->password = 'Password123!';

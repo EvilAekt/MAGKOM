@@ -33,7 +33,7 @@ class CustomErrorPagesTest extends TestCase
 
     public function test_halaman_404_kustom_dirender_saat_rute_tidak_ditemukan(): void
     {
-        $response = $this->get('/rute-acak-pasti-tidak-ada-' . uniqid());
+        $response = $this->get('/rute-acak-pasti-tidak-ada-'.uniqid());
 
         $response->assertStatus(404);
         $response->assertSee('Halaman Tidak Ditemukan');

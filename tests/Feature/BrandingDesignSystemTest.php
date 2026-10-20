@@ -85,7 +85,7 @@ class BrandingDesignSystemTest extends TestCase
      */
     public function test_internal_dashboard_sidebar_displays_magang_kominfo_subtitle(): void
     {
-        $admin = new User();
+        $admin = new User;
         $admin->nama = 'Administrator MagKom';
         $admin->email = 'admin.brand.test@slemankab.go.id';
         $admin->password = 'Password123!';
@@ -109,7 +109,7 @@ class BrandingDesignSystemTest extends TestCase
      */
     public function test_peserta_portal_sidebar_displays_magang_kominfo_subtitle(): void
     {
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Peserta Magang Aktif';
         $peserta->email = 'peserta.brand.test@example.com';
         $peserta->password = 'Password123!';

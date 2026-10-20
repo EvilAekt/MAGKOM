@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Pembimbing;
 
+use App\Enums\RealtimeEventTypeEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\TipeAuditEnum;
@@ -13,7 +14,9 @@ use App\Http\Requests\TugasRequest;
 use App\Models\Penempatan;
 use App\Models\ProgresLog;
 use App\Models\Tugas;
+use App\Models\TugasTemplate;
 use App\Services\AuditService;
+use App\Services\RealtimeEventService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -60,7 +63,7 @@ class TugasController extends Controller
         }
 
         if ($request->filled('q')) {
-            $search = '%' . $request->input('q') . '%';
+            $search = '%'.$request->input('q').'%';
             $query->where(function ($q) use ($search) {
                 $q->where('judul', 'like', $search)
                     ->orWhere('deskripsi', 'like', $search)
@@ -138,11 +141,11 @@ class TugasController extends Controller
         $selectedPenempatanId = $request->integer('penempatan_id', 0);
         $selectedTemplate = null;
         if ($request->filled('template_id')) {
-            $selectedTemplate = \App\Models\TugasTemplate::accessibleBy($user->id)
+            $selectedTemplate = TugasTemplate::accessibleBy($user->id)
                 ->find($request->integer('template_id'));
         }
 
-        $templates = \App\Models\TugasTemplate::accessibleBy($user->id)->latest()->get();
+        $templates = TugasTemplate::accessibleBy($user->id)->latest()->get();
 
         return view('pembimbing.tugas.create', [
             'penempatanList' => $penempatanList,
@@ -188,8 +191,8 @@ class TugasController extends Controller
 
         // Notifikasi Real-time SSE ke Peserta Mentee (TASK-SSE-06)
         if ($penempatan->peserta_id) {
-            app(\App\Services\RealtimeEventService::class)->publish(
-                \App\Enums\RealtimeEventTypeEnum::TugasBaru,
+            app(RealtimeEventService::class)->publish(
+                RealtimeEventTypeEnum::TugasBaru,
                 [
                     'title' => 'Tugas Magang Baru',
                     'message' => "Pembimbing memberikan tugas: {$tugas->judul}.",
@@ -279,6 +282,7 @@ class TugasController extends Controller
                     'message' => 'Tugas yang telah berstatus selesai tidak dapat diedit kembali.',
                 ], 422);
             }
+
             return back()->withErrors(['error' => 'Tugas yang telah berstatus selesai tidak dapat diedit kembali.']);
         }
 

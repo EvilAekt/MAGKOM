@@ -43,6 +43,7 @@ class JenisDokumen extends Model
     public function scopeUntukJenjang(Builder $query, JenjangEnum|string $jenjang): Builder
     {
         $val = $jenjang instanceof JenjangEnum ? $jenjang->value : $jenjang;
+
         return $query->where('jenjang', $val);
     }
 }

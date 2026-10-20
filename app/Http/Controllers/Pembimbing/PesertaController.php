@@ -44,7 +44,7 @@ class PesertaController extends Controller
 
         $perhatianIds = [];
         foreach ($allAktifMentees as $mentee) {
-            $hasOverdueTask = $mentee->tugas->contains(function ($t) use ($today) {
+            $hasOverdueTask = $mentee->tugas->contains(function ($t) {
                 return $t->deadline && Carbon::parse($t->deadline)->isPast() && $t->status !== StatusTugasEnum::Selesai;
             });
 
@@ -78,7 +78,7 @@ class PesertaController extends Controller
         }
 
         if ($request->filled('q')) {
-            $search = '%' . $request->input('q') . '%';
+            $search = '%'.$request->input('q').'%';
             $query->whereHas('peserta', function ($q) use ($search) {
                 $q->where('nama', 'like', $search)
                     ->orWhere('email', 'like', $search)

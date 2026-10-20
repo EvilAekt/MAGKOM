@@ -14,7 +14,6 @@ use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
-use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
@@ -27,6 +26,7 @@ use Carbon\Carbon;
 use Database\Seeders\JenisDokumenSeeder;
 use Database\Seeders\RubrikSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class AdminSuperAdminPhaseFourTest extends TestCase
@@ -34,17 +34,24 @@ class AdminSuperAdminPhaseFourTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
+
     protected Bidang $bidang;
 
     protected function createTestUser(string $nama, string $email, RoleEnum $role, bool $statusAktif = true): User
     {
-        $u = new User();
+        $u = new User;
         $u->nama = $nama;
         $u->email = $email;
         $u->password = 'Password123!';
@@ -315,7 +322,7 @@ class AdminSuperAdminPhaseFourTest extends TestCase
     {
         // Buat rekaman audit log
         AuditLog::create([
-            'request_id' => (string) \Illuminate\Support\Str::uuid(),
+            'request_id' => (string) Str::uuid(),
             'tipe' => TipeAuditEnum::Aksi,
             'aksi' => 'test.aksi',
             'entitas' => 'kuota',

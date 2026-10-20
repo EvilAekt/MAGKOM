@@ -9,6 +9,7 @@ use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Http\Controllers\Controller;
 use App\Models\BulanMagang;
+use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
@@ -43,15 +44,15 @@ class LaporanController extends Controller
         // Ringkasan Statistik Eksekutif (Cards Metrik)
         $metricCards = [
             'total_pendaftaran' => Pendaftaran::count(),
-            'total_diterima'    => Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)->count(),
-            'penempatan_aktif'  => Penempatan::where('status', StatusPenempatanEnum::Aktif)->count(),
-            'penempatan_selesai'=> Penempatan::where('status', StatusPenempatanEnum::Selesai)->count(),
-            'kuota_terisi'      => (int) Kuota::sum('terisi'),
-            'slot_terisi'       => (int) SlotKhusus::sum('terisi'),
+            'total_diterima' => Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)->count(),
+            'penempatan_aktif' => Penempatan::where('status', StatusPenempatanEnum::Aktif)->count(),
+            'penempatan_selesai' => Penempatan::where('status', StatusPenempatanEnum::Selesai)->count(),
+            'kuota_terisi' => (int) Kuota::sum('terisi'),
+            'slot_terisi' => (int) SlotKhusus::sum('terisi'),
         ];
 
         $bulanMagangList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
-        $jurusanList = \App\Models\Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
+        $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
 
         // Visual Analytics Keterisian Kuota per Jurusan (AC-17-1)
         $analyticsKuotaJurusan = Kuota::with('jurusan')
@@ -62,6 +63,7 @@ class LaporanController extends Controller
                 $kuota = (int) $k->total_kuota;
                 $terisi = (int) $k->total_terisi;
                 $persen = $kuota > 0 ? min(100, (int) round(($terisi / $kuota) * 100)) : 0;
+
                 return [
                     'nama_jurusan' => $k->jurusan?->nama_jurusan ?? 'Jurusan Lain',
                     'kuota' => $kuota,
@@ -118,14 +120,14 @@ class LaporanController extends Controller
                 $jurusanId = $request->integer('jurusan_id');
                 $pQuery->where(function ($q) use ($jurusanId) {
                     $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
-                      ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
+                        ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
                 });
             }
             if ($request->filled('dari_tanggal')) {
-                $pQuery->where('created_at', '>=', $request->input('dari_tanggal') . ' 00:00:00');
+                $pQuery->where('created_at', '>=', $request->input('dari_tanggal').' 00:00:00');
             }
             if ($request->filled('sampai_tanggal')) {
-                $pQuery->where('created_at', '<=', $request->input('sampai_tanggal') . ' 23:59:59');
+                $pQuery->where('created_at', '<=', $request->input('sampai_tanggal').' 23:59:59');
             }
 
             $pendaftaranData = $pQuery->paginate(10)->withQueryString();
@@ -143,7 +145,7 @@ class LaporanController extends Controller
                 $jurusanId = $request->integer('jurusan_id');
                 $penQuery->where(function ($q) use ($jurusanId) {
                     $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
-                      ->orWhereHas('peserta.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
+                        ->orWhereHas('peserta.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
                 });
             }
             if ($request->filled('dari_tanggal')) {
@@ -173,20 +175,20 @@ class LaporanController extends Controller
         }
 
         return view('admin.laporan.index', [
-            'tab'               => $tab,
-            'metricCards'       => $metricCards,
-            'bulanMagangList'   => $bulanMagangList,
-            'jurusanList'       => $jurusanList,
+            'tab' => $tab,
+            'metricCards' => $metricCards,
+            'bulanMagangList' => $bulanMagangList,
+            'jurusanList' => $jurusanList,
             'statusPendaftaran' => StatusPendaftaranEnum::cases(),
-            'statusPenempatan'  => StatusPenempatanEnum::cases(),
-            'pendaftaranData'   => $pendaftaranData,
-            'penempatanData'    => $penempatanData,
-            'kuotaData'         => $kuotaData,
-            'slotKhususData'    => $slotKhususData,
-            'nilaiData'         => $nilaiData,
+            'statusPenempatan' => StatusPenempatanEnum::cases(),
+            'pendaftaranData' => $pendaftaranData,
+            'penempatanData' => $penempatanData,
+            'kuotaData' => $kuotaData,
+            'slotKhususData' => $slotKhususData,
+            'nilaiData' => $nilaiData,
             'analyticsKuotaJurusan' => $analyticsKuotaJurusan,
-            'analyticsJenjang'  => $analyticsJenjang,
-            'isSuperAdmin'      => $user->isSuperAdmin(),
+            'analyticsJenjang' => $analyticsJenjang,
+            'isSuperAdmin' => $user->isSuperAdmin(),
         ]);
     }
 

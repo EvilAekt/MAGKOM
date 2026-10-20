@@ -28,17 +28,24 @@ class AdminDashboardEnhancementTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected BulanMagang $bulanAktif;
+
     protected BulanMagang $bulanDepan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
+
     protected Bidang $bidang;
 
     private function createUser(string $nama, string $email, RoleEnum $role, ?int $bidangId = null): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = Hash::make('Password123!');

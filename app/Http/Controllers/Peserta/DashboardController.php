@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Peserta;
 
 use App\Enums\StatusLogbookEnum;
-use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusTugasEnum;
@@ -92,21 +91,21 @@ class DashboardController extends Controller
         $isFinalNilai = $penilaian && $penilaian->status === StatusPenilaianEnum::Final;
 
         return view('peserta.dashboard', [
-            'user'               => $user,
-            'profil'             => $profil,
-            'pendaftaran'        => $pendaftaran,
-            'penempatan'         => $penempatan,
-            'fase'               => $fase,
-            'totalTugas'         => $totalTugas,
-            'tugasSelesai'       => $tugasSelesai,
-            'tugasBelum'         => $tugasBelum,
-            'tugasMendesak'      => $tugasMendesak,
-            'totalLogbook'       => $totalLogbook,
+            'user' => $user,
+            'profil' => $profil,
+            'pendaftaran' => $pendaftaran,
+            'penempatan' => $penempatan,
+            'fase' => $fase,
+            'totalTugas' => $totalTugas,
+            'tugasSelesai' => $tugasSelesai,
+            'tugasBelum' => $tugasBelum,
+            'tugasMendesak' => $tugasMendesak,
+            'totalLogbook' => $totalLogbook,
             'logbookPerluRevisi' => $logbookPerluRevisi,
-            'logbookTerbaru'     => $logbookTerbaru,
-            'sisaHari'           => $sisaHari,
-            'penilaian'          => $penilaian,
-            'isFinalNilai'       => $isFinalNilai,
+            'logbookTerbaru' => $logbookTerbaru,
+            'sisaHari' => $sisaHari,
+            'penilaian' => $penilaian,
+            'isFinalNilai' => $isFinalNilai,
         ]);
     }
 }

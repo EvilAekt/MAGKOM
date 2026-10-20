@@ -52,7 +52,7 @@ class DatabaseInspectorService
             $tables = Schema::getTableListing();
         }
 
-        return array_values(array_filter($tables, fn ($tbl) => !in_array($tbl, self::PROTECTED_TABLES, true)));
+        return array_values(array_filter($tables, fn ($tbl) => ! in_array($tbl, self::PROTECTED_TABLES, true)));
     }
 
     /**
@@ -76,7 +76,7 @@ class DatabaseInspectorService
      */
     public function inspectTable(string $table): array
     {
-        if (in_array($table, self::PROTECTED_TABLES, true) || !Schema::hasTable($table)) {
+        if (in_array($table, self::PROTECTED_TABLES, true) || ! Schema::hasTable($table)) {
             throw new \InvalidArgumentException("Tabel {$table} tidak valid atau dilindungi.");
         }
 
@@ -102,7 +102,7 @@ class DatabaseInspectorService
                 if (strtolower($colName) === 'id' && $isPk) {
                     $hasAutoIncrementId = true;
                     $primaryKey = 'id';
-                } elseif ($isPk && !$hasAutoIncrementId) {
+                } elseif ($isPk && ! $hasAutoIncrementId) {
                     $primaryKey = $colName;
                 }
 
@@ -111,13 +111,13 @@ class DatabaseInspectorService
                 }
 
                 $columns[] = [
-                    'name'          => $colName,
-                    'label'         => $this->labelFromColumn($colName),
-                    'data_type'     => $this->mapSqlTypeToMagkomType((string) $col->DATA_TYPE),
-                    'is_pk'         => $isPk,
-                    'is_nullable'   => strtoupper((string) $col->IS_NULLABLE) === 'YES',
+                    'name' => $colName,
+                    'label' => $this->labelFromColumn($colName),
+                    'data_type' => $this->mapSqlTypeToMagkomType((string) $col->DATA_TYPE),
+                    'is_pk' => $isPk,
+                    'is_nullable' => strtoupper((string) $col->IS_NULLABLE) === 'YES',
                     'is_searchable' => in_array($this->mapSqlTypeToMagkomType((string) $col->DATA_TYPE), ['text', 'textarea', 'number'], true),
-                    'is_visible'    => !in_array($colName, ['password', 'remember_token', 'deleted_at'], true),
+                    'is_visible' => ! in_array($colName, ['password', 'remember_token', 'deleted_at'], true),
                 ];
             }
         } else {
@@ -134,23 +134,23 @@ class DatabaseInspectorService
                 }
 
                 $columns[] = [
-                    'name'          => $colName,
-                    'label'         => $this->labelFromColumn($colName),
-                    'data_type'     => $this->guessTypeFromName($colName),
-                    'is_pk'         => $isPk,
-                    'is_nullable'   => true,
+                    'name' => $colName,
+                    'label' => $this->labelFromColumn($colName),
+                    'data_type' => $this->guessTypeFromName($colName),
+                    'is_pk' => $isPk,
+                    'is_nullable' => true,
                     'is_searchable' => true,
-                    'is_visible'    => !in_array($colName, ['password', 'remember_token', 'deleted_at'], true),
+                    'is_visible' => ! in_array($colName, ['password', 'remember_token', 'deleted_at'], true),
                 ];
             }
         }
 
         return [
-            'table'          => $table,
-            'primary_key'    => $primaryKey,
-            'is_manual_pk'   => !$hasAutoIncrementId,
+            'table' => $table,
+            'primary_key' => $primaryKey,
+            'is_manual_pk' => ! $hasAutoIncrementId,
             'has_unit_scope' => $hasUnitScope,
-            'columns'        => $columns,
+            'columns' => $columns,
         ];
     }
 
@@ -161,6 +161,7 @@ class DatabaseInspectorService
     {
         $title = Str::headline($column);
         $title = str_ireplace(['Id ', ' Id', ' Kode ', ' Tgl '], ['ID ', ' ID', ' Kode ', ' Tanggal '], $title);
+
         return trim($title);
     }
 
@@ -175,6 +176,7 @@ class DatabaseInspectorService
             if ($sqlType === 'tinyint') {
                 return 'boolean';
             }
+
             return 'number';
         }
 
@@ -214,6 +216,7 @@ class DatabaseInspectorService
         if (str_contains($nameLower, 'jumlah') || str_contains($nameLower, 'kuota') || str_contains($nameLower, 'total')) {
             return 'number';
         }
+
         return 'text';
     }
 }

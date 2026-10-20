@@ -14,7 +14,6 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\PesertaProfil;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;

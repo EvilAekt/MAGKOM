@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Public;
 
-use App\Enums\JenjangEnum;
 use App\Enums\StatusKetersediaanEnum;
 use App\Http\Controllers\Controller;
 use App\Models\BulanMagang;

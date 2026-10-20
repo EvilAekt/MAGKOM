@@ -7,8 +7,8 @@ namespace Tests\Feature;
 use App\Enums\JalurEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
-use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusPendaftaranEnum;
+use App\Enums\StatusPenempatanEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
@@ -17,8 +17,8 @@ use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Logbook;
-use App\Models\Penempatan;
 use App\Models\Pendaftaran;
+use App\Models\Penempatan;
 use App\Models\PesertaProfil;
 use App\Models\RealtimeEvent;
 use App\Models\User;
@@ -142,9 +142,6 @@ class RealtimeEventDispatchIntegrationTest extends TestCase
 
         $response->assertSessionHas('success');
 
-
-
-
         // Pastikan event SSE berstatus Diterima sampai ke peserta
         $this->assertDatabaseHas('realtime_events', [
             'user_id' => $peserta->id,
@@ -223,7 +220,6 @@ class RealtimeEventDispatchIntegrationTest extends TestCase
         $bidang = Bidang::create(['nama_bidang' => 'Teknologi Informasi', 'aktif' => true]);
         $jurusan = Jurusan::create(['nama_jurusan' => 'Informatika', 'kategori' => 'smk', 'aktif' => true]);
         $kuota = Kuota::create(['bulan_magang_id' => $bulan->id, 'jurusan_id' => $jurusan->id, 'jumlah' => 10, 'terisi' => 1, 'aktif' => true]);
-
 
         $pembimbing = User::factory()->create(['role' => RoleEnum::Pembimbing, 'status_aktif' => true, 'must_change_password' => false]);
         $peserta = User::factory()->create(['role' => RoleEnum::Peserta, 'status_aktif' => true, 'must_change_password' => false]);

@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Penempatan Magang - Admin MagKom Sleman')
-@section('page_title', 'Manajemen Penempatan Peserta')
+@section('title', 'Penempatan Peserta - Admin MagKom Sleman')
+@section('page_title', 'Penempatan Peserta')
 @section('page_description', 'Kelola penugasan pembimbing lapangan, pantau peserta aktif, dan kelola administrasi penempatan magang.')
 
 @section('breadcrumbs')
@@ -10,7 +10,7 @@
         <span>/</span>
         <span>Administrasi</span>
         <span>/</span>
-        <span style="color: var(--neutral-900, #0F172A); font-weight: 700;">Penempatan Magang</span>
+        <span style="color: var(--neutral-900, #0F172A); font-weight: 700;">Penempatan Peserta</span>
     </nav>
 @endsection
 
@@ -358,9 +358,121 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg>
             </div>
         </div>
+
+        {{-- Menunggu Penempatan (Antrean Lolos Berkas) --}}
+        @if(($penempatanStats['belum_ditempatkan'] ?? 0) > 0)
+            <div class="admin-stat-card" style="border-left: 4px solid #F59E0B; background: #FFFDF5;">
+                <div>
+                    <span style="font-size: 0.8125rem; font-weight: 600; color: #B45309;">Menunggu Plotting</span>
+                    <div style="font-size: 1.75rem; font-weight: 800; color: #D97706; margin-top: 0.25rem; letter-spacing: -0.02em;">
+                        {{ number_format($penempatanStats['belum_ditempatkan'] ?? 0) }}
+                    </div>
+                    <span style="font-size: 0.75rem; color: #B45309; display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.35rem;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        Lolos berkas (Tahap 1)
+                    </span>
+                </div>
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: #FEF3C7; color: #B45309; display: flex; align-items: center; justify-content: center;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                </div>
+            </div>
+        @endif
     </div>
 
-    {{-- 2. FILTER BAR CARD --}}
+    {{-- 2. ANTREAN PESERTA LOLOS SELEKSI BERKAS (MENUNGGU PENETAPAN PEMBIMBING) --}}
+    @if(isset($antreanBelumDitempatkan) && $antreanBelumDitempatkan->isNotEmpty())
+        <div class="admin-card" style="border-left: 4px solid #F59E0B; background: #FFFBEB;">
+            <div style="padding: 1.15rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #FDE68A; flex-wrap: wrap; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1rem; font-weight: 800; color: #92400E; margin: 0;">
+                            Antrean Peserta Lolos Berkas (Menunggu Penempatan)
+                        </h3>
+                        <p style="font-size: 0.8125rem; color: #B45309; margin: 0.2rem 0 0 0;">
+                            Peserta di bawah ini telah disetujui berkasnya pada Tahap 1 dan siap ditetapkan Pembimbing Lapangan serta Bidang Dinas.
+                        </p>
+                    </div>
+                </div>
+                <span style="padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 700; background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">
+                    {{ $antreanBelumDitempatkan->count() }} Menunggu Penempatan
+                </span>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr style="background: #FEF9C3;">
+                            <th style="color: #854D0E;">Peserta Magang</th>
+                            <th style="color: #854D0E;">Jurusan &amp; Kampus / Sekolah</th>
+                            <th style="color: #854D0E;">Bulan Magang</th>
+                            <th style="color: #854D0E;">Diterima Pada</th>
+                            <th style="text-align: right; width: 150px; color: #854D0E;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($antreanBelumDitempatkan as $antrean)
+                            @php
+                                $firstBidang = $antrean->kuota?->jurusan?->bidang?->first();
+                                $defBidangId = $firstBidang?->id;
+                                $defBidangNama = $firstBidang?->nama_bidang ?? 'Dinas Kominfo';
+                            @endphp
+                            <tr style="background: #FFFFFF;">
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.65rem;">
+                                        <div style="width: 34px; height: 34px; border-radius: 8px; background: #FDE68A; color: #92400E; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;">
+                                            {{ strtoupper(substr($antrean->user?->nama ?? 'P', 0, 1)) }}
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 700; color: #1E293B; font-size: 0.875rem;">
+                                                {{ $antrean->user?->nama }}
+                                            </div>
+                                            <div style="font-size: 0.75rem; color: #64748B;">
+                                                NIM: {{ $antrean->user?->profil?->nim_nisn ?? '-' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; color: #1E293B;">
+                                        {{ $antrean->kuota?->jurusan?->nama_jurusan ?? '-' }}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: #64748B;">
+                                        {{ $antrean->user?->profil?->institusi ?? '-' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-weight: 700; color: #0641CC; font-size: 0.8125rem;">
+                                        {{ $antrean->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
+                                    </span>
+                                    <div style="font-size: 0.75rem; color: #64748B;">
+                                        Durasi: {{ $antrean->durasi_bulan }} Bulan
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-size: 0.8125rem; color: #475569;">
+                                        {{ $antrean->diputuskan_at?->translatedFormat('d M Y H:i') ?? '-' }}
+                                    </span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <button type="button" 
+                                            onclick="openTetapkanModal({{ $antrean->id }}, '{{ addslashes($antrean->user?->nama) }}', '{{ addslashes($antrean->kuota?->jurusan?->nama_jurusan ?? '') }}', {{ $defBidangId ?? 'null' }}, '{{ addslashes($defBidangNama) }}')" 
+                                            style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.95rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                                        <span>Tempatkan</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+
+    {{-- 3. FILTER BAR CARD --}}
     <div class="admin-card" style="padding: 1.25rem 1.5rem;">
         <form method="GET" action="{{ route('admin.penempatan.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
             {{-- Search Bar --}}
@@ -373,6 +485,19 @@
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                 </div>
+            </div>
+
+            {{-- Filter Bulan Magang --}}
+            <div style="display: flex; flex-direction: column; gap: 0.375rem; flex: 1; min-width: 180px;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Bulan Magang</label>
+                <select name="bulan_magang_id" style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff; color: var(--neutral-800, #1E293B);">
+                    <option value="">Semua Bulan Magang</option>
+                    @foreach($bulanList as $bln)
+                        <option value="{{ $bln->id }}" {{ request('bulan_magang_id') == $bln->id ? 'selected' : '' }}>
+                            {{ $bln->nama_bulan ? $bln->nama_bulan . ' (' . $bln->bulan_mulai?->translatedFormat('F Y') . ')' : $bln->bulan_mulai?->translatedFormat('F Y') }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             {{-- Filter Status --}}
@@ -395,7 +520,7 @@
                     <option value="">Semua Pembimbing</option>
                     @foreach($pembimbingList as $pemb)
                         <option value="{{ $pemb->id }}" {{ request('pembimbing_id') == $pemb->id ? 'selected' : '' }}>
-                            {{ $pemb->nama }}
+                            {{ $pemb->nama }} [{{ $pemb->bidang?->nama_bidang ?? 'Dinas' }}]
                         </option>
                     @endforeach
                 </select>
@@ -514,6 +639,9 @@
                                         {{ $p->pembimbing?->nama ?? 'Belum Ditentukan' }}
                                     </div>
                                     @if($p->pembimbing)
+                                        <div style="font-size: 0.75rem; color: #0641CC; font-weight: 600; margin-top: 0.1rem;">
+                                            [{{ $p->pembimbing->bidang?->nama_bidang ?? 'Dinas Kominfo' }}]
+                                        </div>
                                         <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 0.15rem;">
                                             Beban: <strong>{{ $p->pembimbing->mentee_aktif_count ?? 1 }} Mentee Aktif</strong>
                                         </div>
@@ -709,7 +837,7 @@
                     <select name="pembimbing_id" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                         <option value="">-- Pilih Pembimbing --</option>
                         @foreach($pembimbingList as $p)
-                            <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->mentee_aktif_count ?? 0 }} Mentee)</option>
+                            <option value="{{ $p->id }}">{{ $p->nama }} [{{ $p->bidang?->nama_bidang ?? 'Dinas' }}] ({{ $p->mentee_aktif_count ?? 0 }} Mentee)</option>
                         @endforeach
                     </select>
                 </div>
@@ -767,7 +895,7 @@
                 <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Pilih Pembimbing Baru <span style="color: #DC2626;">*</span></label>
                 <select name="pembimbing_id" id="select-pembimbing-baru" required style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                     @foreach($pembimbingList as $p)
-                        <option value="{{ $p->id }}">{{ $p->nama }} (Beban: {{ $p->mentee_aktif_count ?? 0 }} Mentee Aktif)</option>
+                        <option value="{{ $p->id }}">{{ $p->nama }} [{{ $p->bidang?->nama_bidang ?? 'Dinas' }}] (Beban: {{ $p->mentee_aktif_count ?? 0 }} Mentee Aktif)</option>
                     @endforeach
                 </select>
             </div>
@@ -850,7 +978,94 @@
     </div>
 </div>
 
+{{-- MODAL PENETAPAN PEMBIMBING & BIDANG (TAHAP 2) --}}
+<div id="modal-tetapkan-penempatan" class="modal-overlay">
+    <div class="modal-container" style="max-width: 580px;">
+        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: center; background: #F8FAFC;">
+            <div>
+                <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">Penetapan Penempatan Peserta</h3>
+                <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 0.15rem 0 0 0;" id="tetapkan-peserta-info">
+                    Peserta: -
+                </p>
+            </div>
+            <button type="button" onclick="closeTetapkanModal()" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
+        </div>
+
+        <form method="POST" id="form-tetapkan-penempatan" action="{{ route('admin.penempatan.tetapkan') }}" style="padding: 1.5rem;">
+            @csrf
+            <input type="hidden" name="pendaftaran_id" id="tetapkan-pendaftaran-id" value="">
+
+            <div style="background: #EFF6FF; border: 1px solid #DBEAFE; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.8125rem; color: #1E40AF; line-height: 1.45;">
+                <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <div>
+                        <strong>Penetapan Tahap 2:</strong> Pilih pembimbing lapangan dan unit bidang dinas. Surat Keterangan Diterima resmi akan otomatis siap diunduh setelah penempatan disimpan.
+                    </div>
+                </div>
+            </div>
+
+            {{-- Bidang Dinas --}}
+            <div style="display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.25rem;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Unit Bidang Dinas <span style="color: #DC2626;">*</span></label>
+                <select name="bidang_id" id="select-tetapkan-bidang" required style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                    <option value="">-- Pilih Bidang Dinas --</option>
+                    @foreach($bidangList as $b)
+                        <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
+                    @endforeach
+                </select>
+                <small style="font-size: 0.725rem; color: var(--neutral-500, #64748B);">Otomatis direkomendasikan sesuai bidang keahlian jurusan pendaftar.</small>
+            </div>
+
+            {{-- Pembimbing Lapangan --}}
+            <div style="display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.5rem;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Pembimbing Lapangan <span style="color: #DC2626;">*</span></label>
+                <select name="pembimbing_id" id="select-tetapkan-pembimbing" required style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                    <option value="">-- Pilih Pembimbing Dinas --</option>
+                    @foreach($pembimbingList as $p)
+                        <option value="{{ $p->id }}" data-bidang-id="{{ $p->bidang_id ?? '' }}">
+                            {{ $p->nama }} [{{ $p->bidang?->nama_bidang ?? 'Dinas Kominfo' }}] ({{ $p->mentee_aktif_count ?? 0 }} Mentee Aktif)
+                        </option>
+                    @endforeach
+                </select>
+                <small style="font-size: 0.725rem; color: var(--neutral-500, #64748B);">Daftar pembimbing lapangan dilengkapi dengan asal bidang dan beban mentee aktif saat ini.</small>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.6rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1.25rem;">
+                <button type="button" onclick="closeTetapkanModal()" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+                    Batal
+                </button>
+                <button type="submit" style="padding: 0.55rem 1.4rem; background: #0641CC; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);">
+                    Tetapkan &amp; Aktifkan Penempatan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
+    function openTetapkanModal(pendaftaranId, namaPeserta, namaJurusan, defaultBidangId, defaultBidangNama) {
+        const modal = document.getElementById('modal-tetapkan-penempatan');
+        const infoEl = document.getElementById('tetapkan-peserta-info');
+        const idInput = document.getElementById('tetapkan-pendaftaran-id');
+        const bidangSelect = document.getElementById('select-tetapkan-bidang');
+
+        if (infoEl) infoEl.innerText = 'Peserta: ' + namaPeserta + ' (' + namaJurusan + ')';
+        if (idInput) idInput.value = pendaftaranId;
+        if (bidangSelect && defaultBidangId) bidangSelect.value = defaultBidangId;
+
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeTetapkanModal() {
+        const modal = document.getElementById('modal-tetapkan-penempatan');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
     function openManualModal() {
         const modal = document.getElementById('modal-penempatan-manual');
         if (modal) {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\RoleEnum;
-use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -18,8 +17,11 @@ class StaffProfileAndSettingsTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $superAdmin;
+
     protected User $peserta;
 
     protected function setUp(): void
@@ -27,7 +29,7 @@ class StaffProfileAndSettingsTest extends TestCase
         parent::setUp();
         Storage::fake('public');
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Staf Administrasi Operasional';
         $this->admin->email = 'admin.operasional@slemankab.go.id';
         $this->admin->password = 'PasswordAdmin123!';
@@ -37,7 +39,7 @@ class StaffProfileAndSettingsTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan Informatika';
         $this->pembimbing->email = 'pembimbing.aptika@slemankab.go.id';
         $this->pembimbing->password = 'PasswordPembimbing123!';
@@ -47,7 +49,7 @@ class StaffProfileAndSettingsTest extends TestCase
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->save();
 
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator Induk';
         $this->superAdmin->email = 'superadmin@slemankab.go.id';
         $this->superAdmin->password = 'PasswordSuperAdmin123!';
@@ -57,7 +59,7 @@ class StaffProfileAndSettingsTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Magang MagKom';
         $this->peserta->email = 'peserta.magang@univ.ac.id';
         $this->peserta->password = 'PasswordPeserta123!';

@@ -41,7 +41,7 @@ class TugasTemplateController extends Controller
         }
 
         if ($request->filled('q')) {
-            $search = '%' . trim((string) $request->input('q')) . '%';
+            $search = '%'.trim((string) $request->input('q')).'%';
             $query->where(function ($q) use ($search) {
                 $q->where('judul', 'like', $search)
                     ->orWhere('deskripsi', 'like', $search)

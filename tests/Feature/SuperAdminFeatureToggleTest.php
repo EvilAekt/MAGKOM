@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\RoleEnum;
-use App\Models\Pengaturan;
 use App\Models\User;
 use App\Support\Pengaturan as PengaturanHelper;
 use Database\Seeders\JenisDokumenSeeder;
@@ -19,6 +18,7 @@ class SuperAdminFeatureToggleTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
 
     protected function setUp(): void

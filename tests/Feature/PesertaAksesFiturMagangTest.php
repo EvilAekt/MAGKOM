@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
 use App\Enums\RoleEnum;
+use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
@@ -119,9 +122,9 @@ class PesertaAksesFiturMagangTest extends TestCase
             'user_id' => $pesertaDiterima->id,
             'kuota_id' => $kuota->id,
             'bulan_magang_id' => $bulan->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
+            'jalur' => JalurEnum::Umum,
             'durasi_bulan' => 3,
-            'status' => \App\Enums\StatusPendaftaranEnum::Diterima,
+            'status' => StatusPendaftaranEnum::Diterima,
         ]);
 
         Penempatan::create([
@@ -129,8 +132,8 @@ class PesertaAksesFiturMagangTest extends TestCase
             'peserta_id' => $pesertaDiterima->id,
             'pembimbing_id' => $pembimbing->id,
             'bidang_id' => $bidang->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'tgl_mulai' => now()->subDay()->format('Y-m-d'),
             'tgl_selesai' => now()->addMonths(3)->format('Y-m-d'),
             'status' => StatusPenempatanEnum::Aktif,

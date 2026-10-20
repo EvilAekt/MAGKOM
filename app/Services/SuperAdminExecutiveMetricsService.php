@@ -11,6 +11,7 @@ use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusTugasEnum;
+use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\BulanMagang;
 use App\Models\Kuota;
@@ -309,7 +310,7 @@ class SuperAdminExecutiveMetricsService
             ? round(($penempatanSelesaiDenganNilai / $penempatanSelesaiTotal) * 100)
             : 100;
 
-        $loginGagal24Jam = AuditLog::where('tipe', \App\Enums\TipeAuditEnum::Auth->value)
+        $loginGagal24Jam = AuditLog::where('tipe', TipeAuditEnum::Auth->value)
             ->where(function ($q) {
                 $q->where('aksi', 'like', '%gagal%')
                     ->orWhere('status_http', 401)
@@ -319,7 +320,7 @@ class SuperAdminExecutiveMetricsService
             ->count();
 
         $insidenKeamananTerbaru = AuditLog::with('user')
-            ->where('tipe', \App\Enums\TipeAuditEnum::Auth->value)
+            ->where('tipe', TipeAuditEnum::Auth->value)
             ->where(function ($q) {
                 $q->where('aksi', 'like', '%gagal%')
                     ->orWhere('status_http', 401)
@@ -335,10 +336,10 @@ class SuperAdminExecutiveMetricsService
             ->toArray();
 
         $auditTipeDistribution = [
-            'auth' => $auditTipeRaw[\App\Enums\TipeAuditEnum::Auth->value] ?? 0,
-            'aksi' => $auditTipeRaw[\App\Enums\TipeAuditEnum::Aksi->value] ?? 0,
-            'service' => $auditTipeRaw[\App\Enums\TipeAuditEnum::Service->value] ?? 0,
-            'akses_data' => $auditTipeRaw[\App\Enums\TipeAuditEnum::AksesData->value] ?? 0,
+            'auth' => $auditTipeRaw[TipeAuditEnum::Auth->value] ?? 0,
+            'aksi' => $auditTipeRaw[TipeAuditEnum::Aksi->value] ?? 0,
+            'service' => $auditTipeRaw[TipeAuditEnum::Service->value] ?? 0,
+            'akses_data' => $auditTipeRaw[TipeAuditEnum::AksesData->value] ?? 0,
         ];
 
         $securityPosture = [
@@ -370,7 +371,7 @@ class SuperAdminExecutiveMetricsService
             'disk_free_gb' => $diskFreeGb,
             'disk_usage_percent' => $diskUsagePercent,
             'db_status' => $dbConnected ? 'Optimal' : 'Gangguan',
-            'last_backup' => now()->subHours(6)->translatedFormat('d M Y, H:i') . ' WIB',
+            'last_backup' => now()->subHours(6)->translatedFormat('d M Y, H:i').' WIB',
             'active_sessions' => User::where('status_aktif', true)->count(),
             'php_version' => PHP_VERSION,
         ];

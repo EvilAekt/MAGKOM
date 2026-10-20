@@ -8,7 +8,9 @@ use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\StatusPenilaianEnum;
 use App\Enums\SumberPenempatanEnum;
+use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
@@ -16,6 +18,7 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Penempatan;
 use App\Models\Pengaturan;
+use App\Models\Penilaian;
 use App\Models\PesertaProfil;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
@@ -28,13 +31,21 @@ class AdminLaporanDanArsipTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected Bidang $bidang;
+
     protected Jurusan $jurusan;
+
     protected BulanMagang $bulan;
+
     protected Kuota $kuota;
+
     protected Penempatan $penempatanSelesai;
 
     protected function setUp(): void
@@ -74,7 +85,7 @@ class AdminLaporanDanArsipTest extends TestCase
         ]);
 
         // 3. User Accounts
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator';
         $this->superAdmin->email = 'superadmin@slemankab.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -84,7 +95,7 @@ class AdminLaporanDanArsipTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Verifikator';
         $this->admin->email = 'admin@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -94,7 +105,7 @@ class AdminLaporanDanArsipTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan Aptika';
         $this->pembimbing->email = 'pembimbing@slemankab.go.id';
         $this->pembimbing->password = 'Password123!';
@@ -105,7 +116,7 @@ class AdminLaporanDanArsipTest extends TestCase
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Alumni Magang Sleman';
         $this->peserta->email = 'alumni@example.com';
         $this->peserta->password = 'Password123!';
@@ -203,13 +214,13 @@ class AdminLaporanDanArsipTest extends TestCase
         $resIndex->assertSee('Universitas Negeri Yogyakarta');
 
         // 3. SuperAdmin dapat membuka detail arsip
-        \App\Models\Penilaian::create([
+        Penilaian::create([
             'penempatan_id' => $this->penempatanSelesai->id,
             'pembimbing_id' => $this->pembimbing->id,
             'nilai_akhir' => 88.5,
             'predikat' => 'A',
             'catatan' => 'Sangat memuaskan dan berdedikasi tinggi.',
-            'status' => \App\Enums\StatusPenilaianEnum::Final,
+            'status' => StatusPenilaianEnum::Final,
         ]);
 
         $resDetail = $this->actingAs($this->superAdmin)->get(route('superadmin.arsip.show', $this->penempatanSelesai));
@@ -318,7 +329,7 @@ class AdminLaporanDanArsipTest extends TestCase
         // Buat rekaman audit log
         AuditLog::create([
             'user_id' => $this->superAdmin->id,
-            'tipe' => \App\Enums\TipeAuditEnum::Aksi,
+            'tipe' => TipeAuditEnum::Aksi,
             'aksi' => 'Update Pengaturan',
             'entitas' => 'pengaturan',
             'id_data' => 1,

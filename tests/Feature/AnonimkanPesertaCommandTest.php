@@ -8,7 +8,6 @@ use App\Enums\JalurEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\SumberPenempatanEnum;
-use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\Jurusan;
 use App\Models\Penempatan;
@@ -31,7 +30,7 @@ class AnonimkanPesertaCommandTest extends TestCase
 
     public function test_cannot_anonymize_non_peserta_staff(): void
     {
-        $admin = new User();
+        $admin = new User;
         $admin->nama = 'Admin Test';
         $admin->email = 'admin.anon@test.com';
         $admin->password = 'secret123';
@@ -57,7 +56,7 @@ class AnonimkanPesertaCommandTest extends TestCase
         ]);
 
         $bidang = Bidang::create(['nama_bidang' => 'Informatika', 'aktif' => true]);
-        $pembimbing = new User();
+        $pembimbing = new User;
         $pembimbing->nama = 'Pembimbing Test';
         $pembimbing->email = 'pembimbing@test.com';
         $pembimbing->password = 'secret123';

@@ -28,8 +28,8 @@ class MonitoringPesertaController extends Controller
             'kuota.jurusan',
             'pendaftaran.bulanMagang',
         ])
-        ->where('status', StatusPenempatanEnum::Aktif)
-        ->orderBy('tgl_mulai', 'desc');
+            ->where('status', StatusPenempatanEnum::Aktif)
+            ->orderBy('tgl_mulai', 'desc');
 
         if ($request->filled('pembimbing_id')) {
             $query->where('pembimbing_id', $request->integer('pembimbing_id'));
@@ -43,7 +43,7 @@ class MonitoringPesertaController extends Controller
         }
 
         if ($request->filled('search')) {
-            $search = '%' . trim((string) $request->input('search')) . '%';
+            $search = '%'.trim((string) $request->input('search')).'%';
             $query->where(function ($q) use ($search) {
                 $q->whereHas('peserta', function ($qp) use ($search) {
                     $qp->where('nama', 'like', $search)

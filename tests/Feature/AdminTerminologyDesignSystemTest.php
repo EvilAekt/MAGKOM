@@ -41,7 +41,7 @@ class AdminTerminologyDesignSystemTest extends TestCase
 
     private function createAdminUser(): User
     {
-        $admin = new User();
+        $admin = new User;
         $admin->nama = 'Administrator Test';
         $admin->email = 'admin.term.test@slemankab.go.id';
         $admin->password = 'Password123!';
@@ -56,7 +56,7 @@ class AdminTerminologyDesignSystemTest extends TestCase
 
     private function createSuperAdminUser(): User
     {
-        $superadmin = new User();
+        $superadmin = new User;
         $superadmin->nama = 'Super Administrator Test';
         $superadmin->email = 'superadmin.term.test@slemankab.go.id';
         $superadmin->password = 'Password123!';
@@ -71,7 +71,7 @@ class AdminTerminologyDesignSystemTest extends TestCase
 
     private function createPendingPendaftaran(): Pendaftaran
     {
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Peserta Testing Queue';
         $peserta->email = 'peserta.queue.test@example.com';
         $peserta->password = 'Password123!';
@@ -81,7 +81,7 @@ class AdminTerminologyDesignSystemTest extends TestCase
         $peserta->email_verified_at = now();
         $peserta->save();
 
-        $profil = new PesertaProfil();
+        $profil = new PesertaProfil;
         $profil->user_id = $peserta->id;
         $profil->nim_nisn = '1234567890';
         $profil->institusi = 'Universitas Gadjah Mada';
@@ -93,7 +93,7 @@ class AdminTerminologyDesignSystemTest extends TestCase
         $bulan = BulanMagang::where('aktif', true)->first() ?? BulanMagang::first();
         $kuota = Kuota::where('bulan_magang_id', $bulan->id)->first() ?? Kuota::first();
 
-        $pendaftaran = new Pendaftaran();
+        $pendaftaran = new Pendaftaran;
         $pendaftaran->user_id = $peserta->id;
         $pendaftaran->bulan_magang_id = $bulan->id;
         $pendaftaran->kuota_id = $kuota->id;

@@ -135,7 +135,7 @@ class AuditLogController extends Controller
     public function index(Request $request, ?string $channel = null): View
     {
         $activeChannel = $channel ?: $request->input('channel', 'all-actions-stream');
-        if (!array_key_exists($activeChannel, self::CHANNELS)) {
+        if (! array_key_exists($activeChannel, self::CHANNELS)) {
             $activeChannel = 'all-actions-stream';
         }
 
@@ -198,7 +198,7 @@ class AuditLogController extends Controller
             severity: 'info'
         );
 
-        $fileName = 'audit-trail-' . $activeChannel . '-' . now()->format('Ymd-His') . '.csv';
+        $fileName = 'audit-trail-'.$activeChannel.'-'.now()->format('Ymd-His').'.csv';
 
         return response()->streamDownload(function () use ($request, $activeChannel) {
             $handle = fopen('php://output', 'wb');
@@ -319,13 +319,13 @@ class AuditLogController extends Controller
 
         if ($request->filled('dari_tanggal') && $request->filled('sampai_tanggal')) {
             $query->whereBetween('waktu', [
-                $request->input('dari_tanggal') . ' 00:00:00',
-                $request->input('sampai_tanggal') . ' 23:59:59',
+                $request->input('dari_tanggal').' 00:00:00',
+                $request->input('sampai_tanggal').' 23:59:59',
             ]);
         } elseif ($request->filled('dari_tanggal')) {
-            $query->where('waktu', '>=', $request->input('dari_tanggal') . ' 00:00:00');
+            $query->where('waktu', '>=', $request->input('dari_tanggal').' 00:00:00');
         } elseif ($request->filled('sampai_tanggal')) {
-            $query->where('waktu', '<=', $request->input('sampai_tanggal') . ' 23:59:59');
+            $query->where('waktu', '<=', $request->input('sampai_tanggal').' 23:59:59');
         }
 
         return $query;
@@ -343,7 +343,7 @@ class AuditLogController extends Controller
         $str = (string) $value;
 
         if ($str !== '' && in_array($str[0], ['=', '+', '-', '@', "\t", "\r"], true)) {
-            return "'" . $str;
+            return "'".$str;
         }
 
         return $str;

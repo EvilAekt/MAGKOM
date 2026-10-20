@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
-use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
@@ -28,11 +29,17 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
 
     protected function setUp(): void
@@ -64,7 +71,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         ]);
 
         // Users
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator Sleman';
         $this->superAdmin->email = 'superadmin@slemankab.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -74,7 +81,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Verifikator Sleman';
         $this->admin->email = 'admin@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -84,7 +91,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan Aptika';
         $this->pembimbing->email = 'pembimbing@slemankab.go.id';
         $this->pembimbing->password = 'Password123!';
@@ -94,7 +101,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Budi Santoso';
         $this->peserta->email = 'budi@example.com';
         $this->peserta->password = 'Password123!';
@@ -367,8 +374,8 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             'slot_khusus_id' => $slotKhusus->id,
             'pembimbing_id' => $this->pembimbing->id,
             'bidang_id' => $bidangAktif->id,
-            'jalur' => \App\Enums\JalurEnum::Khusus,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Manual,
+            'jalur' => JalurEnum::Khusus,
+            'sumber' => SumberPenempatanEnum::Manual,
             'status' => StatusPenempatanEnum::Aktif,
             'dibuat_oleh' => $this->admin->id,
             'tgl_mulai' => now()->toDateString(),

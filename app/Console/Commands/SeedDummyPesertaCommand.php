@@ -30,7 +30,7 @@ class SeedDummyPesertaCommand extends Command
     {
         $this->info('Memulai seeding 20 peserta magang dengan berbagai kasus dan kondisi...');
 
-        $seeder = new DummyDuaPuluhPesertaSeeder();
+        $seeder = new DummyDuaPuluhPesertaSeeder;
         $seeder->run();
 
         $this->newLine();

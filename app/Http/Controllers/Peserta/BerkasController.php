@@ -14,6 +14,7 @@ use App\Services\AuditService;
 use App\Services\DocumentStorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BerkasController extends Controller
@@ -78,7 +79,7 @@ class BerkasController extends Controller
     /**
      * Menyajikan pratinjau inline berkas fisik privat dengan verifikasi otorisasi dan signed URL (AC-03-9).
      */
-    public function pratinjau(Request $request, Dokumen $dokumen): \Symfony\Component\HttpFoundation\Response
+    public function pratinjau(Request $request, Dokumen $dokumen): Response
     {
         $this->authorize('view', $dokumen);
 

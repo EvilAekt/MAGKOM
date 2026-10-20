@@ -66,23 +66,23 @@ class BackupController extends Controller
         if ($driver === 'sqlite') {
             $dbPath = (string) config('database.connections.sqlite.database');
             $filename = "backup-magkom-sqlite-{$timestamp}.sqlite";
-            $targetPath = $this->backupDir . DIRECTORY_SEPARATOR . $filename;
+            $targetPath = $this->backupDir.DIRECTORY_SEPARATOR.$filename;
 
             if ($dbPath !== ':memory:' && file_exists($dbPath)) {
                 copy($dbPath, $targetPath);
             } else {
                 // In-memory SQLite or test environment: dump schema and records
-                $schema = DB::select("SELECT sql FROM sqlite_master WHERE sql IS NOT NULL");
+                $schema = DB::select('SELECT sql FROM sqlite_master WHERE sql IS NOT NULL');
                 $dump = "-- SQLite Memory Snapshot: {$timestamp}\n\n";
                 foreach ($schema as $s) {
-                    $dump .= $s->sql . ";\n";
+                    $dump .= $s->sql.";\n";
                 }
                 File::put($targetPath, $dump);
             }
         } else {
             // MySQL/PostgreSQL schema & data export
             $filename = "backup-magkom-dump-{$timestamp}.sql";
-            $targetPath = $this->backupDir . DIRECTORY_SEPARATOR . $filename;
+            $targetPath = $this->backupDir.DIRECTORY_SEPARATOR.$filename;
 
             $tables = DB::select('SHOW TABLES');
             $sqlContent = "-- MagKom Database Snapshot Export: {$timestamp}\n";
@@ -92,7 +92,7 @@ class BackupController extends Controller
                 $tableName = reset($tableObj);
                 $sqlContent .= "-- Table: {$tableName}\n";
                 $rows = DB::table($tableName)->get();
-                $sqlContent .= "-- Records count: " . count($rows) . "\n\n";
+                $sqlContent .= '-- Records count: '.count($rows)."\n\n";
             }
             File::put($targetPath, $sqlContent);
         }
@@ -122,7 +122,7 @@ class BackupController extends Controller
             abort(400, 'Format nama berkas cadangan tidak valid.');
         }
 
-        $filePath = $this->backupDir . DIRECTORY_SEPARATOR . $filename;
+        $filePath = $this->backupDir.DIRECTORY_SEPARATOR.$filename;
 
         if (! file_exists($filePath)) {
             abort(404, 'Berkas cadangan tidak ditemukan.');
@@ -140,7 +140,7 @@ class BackupController extends Controller
             abort(400, 'Format nama berkas cadangan tidak valid.');
         }
 
-        $filePath = $this->backupDir . DIRECTORY_SEPARATOR . $filename;
+        $filePath = $this->backupDir.DIRECTORY_SEPARATOR.$filename;
 
         if (file_exists($filePath)) {
             unlink($filePath);

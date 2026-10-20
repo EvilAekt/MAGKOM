@@ -123,7 +123,7 @@ class AuditService
         return $this->simpan([
             'user_id' => $userId,
             'tipe' => TipeAuditEnum::Service,
-            'aksi' => class_basename($serviceClass) . '@' . $metode,
+            'aksi' => class_basename($serviceClass).'@'.$metode,
             'detail' => [
                 'service' => $serviceClass,
                 'metode' => $metode,
@@ -160,7 +160,7 @@ class AuditService
         $log = $this->simpan([
             'user_id' => $userId,
             'tipe' => TipeAuditEnum::AksesData,
-            'aksi' => 'akses.' . $this->dataAksesPending['entitas'],
+            'aksi' => 'akses.'.$this->dataAksesPending['entitas'],
             'entitas' => $this->dataAksesPending['entitas'],
             'detail' => [
                 'filter' => $this->dataAksesPending['filter'],
@@ -182,7 +182,7 @@ class AuditService
         return $this->simpan([
             'user_id' => null,
             'tipe' => TipeAuditEnum::Aksi,
-            'aksi' => 'sistem.' . $aksi,
+            'aksi' => 'sistem.'.$aksi,
             'entitas' => $entitas ? class_basename($entitas) : null,
             'entitas_id' => $entitas ? $entitas->getKey() : null,
             'detail' => $detail ? $this->sanitasi($detail) : null,
@@ -208,6 +208,7 @@ class AuditService
                 if (in_array(strtolower((string) $key), self::KUNCI_RAHASIA, true)) {
                     return '[DISAMARKAN]';
                 }
+
                 return $this->sanitasi($val);
             })->all(),
             is_scalar($nilai) || $nilai === null => $nilai,
@@ -218,7 +219,7 @@ class AuditService
     /**
      * Eksekusi insert log ke database dengan resolusi channel & severity otomatis.
      *
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     private function simpan(array $data): AuditLog
     {
@@ -233,13 +234,13 @@ class AuditService
         $rute = $request instanceof Request ? $request->path() : 'console';
         $userAgent = $request instanceof Request ? substr((string) $request->userAgent(), 0, 255) : 'Artisan CLI';
 
-        $channel = !empty($data['channel']) ? (string) $data['channel'] : $this->resolveChannel(
+        $channel = ! empty($data['channel']) ? (string) $data['channel'] : $this->resolveChannel(
             $data['entitas'] ?? null,
             (string) ($data['aksi'] ?? ''),
             $data['detail'] ?? null
         );
 
-        $severity = !empty($data['severity']) ? (string) $data['severity'] : $this->resolveSeverity(
+        $severity = ! empty($data['severity']) ? (string) $data['severity'] : $this->resolveSeverity(
             (string) ($data['aksi'] ?? ''),
             (int) ($data['status_http'] ?? 200)
         );
@@ -248,14 +249,14 @@ class AuditService
         $data['severity'] = $severity;
 
         return AuditLog::create(array_merge([
-            'request_id'  => $requestId,
-            'channel'     => $channel,
-            'severity'    => $severity,
-            'metode'      => $metode,
-            'rute'        => $rute,
-            'ip'          => $ip,
-            'user_agent'  => $userAgent,
-            'waktu'       => now('Asia/Jakarta'),
+            'request_id' => $requestId,
+            'channel' => $channel,
+            'severity' => $severity,
+            'metode' => $metode,
+            'rute' => $rute,
+            'ip' => $ip,
+            'user_agent' => $userAgent,
+            'waktu' => now('Asia/Jakarta'),
         ], $data));
     }
 
@@ -264,7 +265,7 @@ class AuditService
      */
     public function resolveChannel(?string $entitas, string $aksi, ?array $detail = null): string
     {
-        $text = strtolower($entitas . ' ' . $aksi . ' ' . ($detail['aksi'] ?? ''));
+        $text = strtolower($entitas.' '.$aksi.' '.($detail['aksi'] ?? ''));
 
         if (str_contains($text, 'login') || str_contains($text, 'logout') || str_contains($text, 'password') || $entitas === 'password_resets') {
             return 'auth-session';
@@ -322,6 +323,7 @@ class AuditService
         if (str_contains($text, 'berhasil') || str_contains($text, 'setujui') || str_contains($text, 'sukses') || str_contains($text, 'diterima') || str_contains($text, 'selesai')) {
             return 'success';
         }
+
         return 'info';
     }
 }

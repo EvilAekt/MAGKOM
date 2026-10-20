@@ -170,7 +170,7 @@ class PembimbingDashboardMetricsService
     }
 
     /**
-     * @param array<int> $penempatanIds
+     * @param  array<int>  $penempatanIds
      * @return array{
      *     tugasAktifCount: int,
      *     tugasOverdueCount: int,
@@ -223,7 +223,7 @@ class PembimbingDashboardMetricsService
             ->values();
 
         // Menyusun Tugas Prioritas Pembimbing (Perlu Tindakan, Overdue, Due Soon, dan Aktif)
-        $tugasPrioritasPembimbing = $tugasAktifList->map(function (Tugas $t) use ($today, $maxUpcoming) {
+        $tugasPrioritasPembimbing = $tugasAktifList->map(function (Tugas $t) use ($today) {
             $pendingProgresCount = $t->progresLogs
                 ->where('status_review', StatusReviewProgresEnum::Menunggu)
                 ->count();
@@ -322,7 +322,7 @@ class PembimbingDashboardMetricsService
     }
 
     /**
-     * @param array<int> $penempatanIds
+     * @param  array<int>  $penempatanIds
      */
     protected function resolveCompetencyRadar(array $penempatanIds): Collection
     {
@@ -376,8 +376,8 @@ class PembimbingDashboardMetricsService
         foreach ($allPendingLogbooks->take(3) as $lb) {
             $aktivitas->push([
                 'tipe' => 'logbook',
-                'judul' => 'Pengajuan Logbook: ' . ($lb->penempatan?->peserta?->nama ?? 'Peserta'),
-                'keterangan' => 'Minggu ke-' . ($lb->minggu_ke ?? 1) . ' • ' . ($lb->ringkasan_aktivitas ?? 'Aktivitas magang harian'),
+                'judul' => 'Pengajuan Logbook: '.($lb->penempatan?->peserta?->nama ?? 'Peserta'),
+                'keterangan' => 'Minggu ke-'.($lb->minggu_ke ?? 1).' • '.($lb->ringkasan_aktivitas ?? 'Aktivitas magang harian'),
                 'waktu' => $lb->created_at ?? now(),
                 'badge' => 'Logbook',
                 'badge_color' => '#D97706',
@@ -388,8 +388,8 @@ class PembimbingDashboardMetricsService
         foreach ($allPendingProgresLogs->take(3) as $pr) {
             $aktivitas->push([
                 'tipe' => 'progres',
-                'judul' => 'Unggahan Progres: ' . ($pr->tugas?->penempatan?->peserta?->nama ?? 'Peserta'),
-                'keterangan' => ($pr->tugas?->judul ?? 'Tugas') . ' • ' . ($pr->catatan ?? 'Menunggu reviu evaluasi'),
+                'judul' => 'Unggahan Progres: '.($pr->tugas?->penempatan?->peserta?->nama ?? 'Peserta'),
+                'keterangan' => ($pr->tugas?->judul ?? 'Tugas').' • '.($pr->catatan ?? 'Menunggu reviu evaluasi'),
                 'waktu' => $pr->created_at ?? now(),
                 'badge' => 'Tugas',
                 'badge_color' => '#2563EB',
@@ -400,8 +400,8 @@ class PembimbingDashboardMetricsService
         foreach ($upcomingAgendaBimbingan->take(3) as $ag) {
             $aktivitas->push([
                 'tipe' => 'agenda',
-                'judul' => 'Agenda Mentoring: ' . ($ag->topik ?? 'Bimbingan Lapangan'),
-                'keterangan' => ($ag->penempatan?->peserta?->nama ?? 'Peserta') . ' • Jam ' . ($ag->jam_mulai ?? '09:00') . ' WIB',
+                'judul' => 'Agenda Mentoring: '.($ag->topik ?? 'Bimbingan Lapangan'),
+                'keterangan' => ($ag->penempatan?->peserta?->nama ?? 'Peserta').' • Jam '.($ag->jam_mulai ?? '09:00').' WIB',
                 'waktu' => $ag->created_at ?? now(),
                 'badge' => 'Agenda',
                 'badge_color' => '#059669',

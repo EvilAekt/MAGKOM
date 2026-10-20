@@ -6,7 +6,6 @@ namespace Tests\Feature;
 
 use App\Enums\RealtimeEventTypeEnum;
 use App\Enums\RoleEnum;
-use App\Models\RealtimeEvent;
 use App\Models\User;
 use App\Services\RealtimeEventService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -34,7 +33,6 @@ class RealtimeEventSseStreamTest extends TestCase
         $this->assertEquals('no', $response->headers->get('X-Accel-Buffering'));
     }
 
-
     public function test_sse_stream_delivers_pending_event_for_user(): void
     {
         $user = User::factory()->create(['role' => RoleEnum::Peserta]);
@@ -52,7 +50,7 @@ class RealtimeEventSseStreamTest extends TestCase
         $content = $response->streamedContent();
 
         $this->assertStringContainsString('event: status_pendaftaran', $content);
-        $this->assertStringContainsString('id: ' . $event->id, $content);
+        $this->assertStringContainsString('id: '.$event->id, $content);
         $this->assertStringContainsString('"title":"Diterima"', $content);
     }
 
@@ -84,7 +82,7 @@ class RealtimeEventSseStreamTest extends TestCase
 
         $this->assertStringNotContainsString('Event Pertama', $content);
         $this->assertStringContainsString('Event Kedua', $content);
-        $this->assertStringContainsString('id: ' . $event2->id, $content);
+        $this->assertStringContainsString('id: '.$event2->id, $content);
     }
 
     public function test_sse_stream_isolates_user_events_anti_idor(): void

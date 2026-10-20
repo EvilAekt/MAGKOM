@@ -7,6 +7,8 @@ namespace Tests\Feature;
 use App\Models\User;
 use Database\Seeders\PengaturanSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class SecurityRateLimitingAndBruteForceTest extends TestCase
@@ -67,11 +69,11 @@ class SecurityRateLimitingAndBruteForceTest extends TestCase
             'password' => 'PlaintextSecret123!',
         ]);
 
-        $rawPasswordInDb = \Illuminate\Support\Facades\DB::table('users')
+        $rawPasswordInDb = DB::table('users')
             ->where('id', $user->id)
             ->value('password');
 
         $this->assertNotEquals('PlaintextSecret123!', $rawPasswordInDb);
-        $this->assertTrue(\Illuminate\Support\Facades\Hash::check('PlaintextSecret123!', $rawPasswordInDb));
+        $this->assertTrue(Hash::check('PlaintextSecret123!', $rawPasswordInDb));
     }
 }

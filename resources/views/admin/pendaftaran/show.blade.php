@@ -946,30 +946,26 @@
 
                                 {{-- PANEL 1: TERIMA --}}
                                 <div id="action-panel-terima" style="display: flex; flex-direction: column;">
-                                    <div class="adm-form-field">
-                                        <label for="pembimbing_id">
-                                            Tetapkan Pembimbing Lapangan <span style="color: #DC2626;">*</span>
-                                        </label>
-                                        <select id="pembimbing_id" name="pembimbing_id" required>
-                                            <option value="">-- Pilih Pembimbing Dinas --</option>
-                                            @foreach($pembimbingList as $p)
-                                                <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->mentee_aktif_count ?? 0 }} Mentee Aktif)</option>
-                                            @endforeach
-                                        </select>
+                                    <div style="background: #EFF6FF; border: 1px solid #DBEAFE; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem; font-size: 0.8125rem; color: #1E40AF; line-height: 1.45;">
+                                        <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                            </svg>
+                                            <div>
+                                                <strong>Verifikasi Tahap 1:</strong> Menyetujui pendaftaran ini akan mengalokasikan kuota umum. Penugasan pembimbing lapangan dan bidang dinas dapat dilakukan di menu <strong>Penempatan Peserta</strong>.
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="adm-form-field">
-                                        <label for="bidang_id">Penempatan Bidang Dinas (Opsional)</label>
-                                        <select id="bidang_id" name="bidang_id">
-                                            <option value="">-- Sesuai Pembimbing Terpilih --</option>
-                                            @foreach($bidangList as $b)
-                                                <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
-                                            @endforeach
-                                        </select>
+                                        <label for="catatan_terima">Catatan Penerimaan (Opsional)</label>
+                                        <textarea id="catatan_terima" name="catatan" rows="2" placeholder="Tambahkan catatan verifikasi berkas jika diperlukan..."></textarea>
                                     </div>
 
-                                    <button type="submit" onclick="return confirm('Apakah Anda yakin menerima calon peserta ini dan menetapkan penempatan magang?');" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #0641CC; color: #FFFFFF; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: background 0.15s ease;">
-                                        Terima & Tempatkan Peserta
+                                    <button type="submit" onclick="return confirm('Apakah Anda yakin menerima berkas calon peserta ini?');" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #0641CC; color: #FFFFFF; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: background 0.15s ease;">
+                                        Diterima
                                     </button>
                                 </div>
 
@@ -1033,8 +1029,6 @@
                                         }
                                     });
 
-                                    const pembimbingSelect = document.getElementById('pembimbing_id');
-                                    if (pembimbingSelect) pembimbingSelect.required = (action === 'terima');
                                     const catatanRevisi = document.getElementById('catatan_revisi');
                                     const catatanTolak = document.getElementById('catatan_tolak');
                                     if (catatanRevisi) catatanRevisi.required = (action === 'perlu_perbaikan');
