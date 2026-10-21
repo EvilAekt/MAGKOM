@@ -56,8 +56,9 @@ class LandingPageTest extends TestCase
 
         $response->assertStatus(200);
         // Memastikan tab jurusan SMK dan Mahasiswa tampil (AC-01-1)
-        $response->assertSee('Jalur SMK (Sekolah Menengah Kejuruan)');
-        $response->assertSee('Jalur Mahasiswa (D3 / S1)');
+        $response->assertSee('Jalur SMK');
+        $response->assertSee('Mahasiswa');
+        $response->assertSee('D3 / S1');
 
         // Memastikan master jurusan tampil
         $response->assertSee('Teknik Komputer dan Jaringan (TKJ)');
@@ -145,5 +146,62 @@ class LandingPageTest extends TestCase
         // Data di database tidak berubah
         $kuota->refresh();
         $this->assertNotEquals($jumlahTidakValid, $kuota->jumlah);
+    }
+
+    public function test_landing_page_menampilkan_menu_akun_dan_dropdown_saat_sudah_login_sebagai_peserta(): void
+    {
+        $peserta = User::firstOrNew(['email' => 'peserta.auth@gmail.com']);
+        $peserta->nama = 'Ahmad Santoso';
+        $peserta->password = bcrypt('Password#123');
+        $peserta->role = RoleEnum::Peserta;
+        $peserta->email_verified_at = now();
+        $peserta->status_aktif = true;
+        $peserta->save();
+
+        $response = $this->actingAs($peserta)->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('Ahmad Santoso');
+        $response->assertSee('Peserta');
+        $response->assertSee('id="landingUserDropdown"', false);
+        $response->assertSee('class="landing-dropdown-menu"', false);
+        $response->assertSee('Status pendaftaran, tugas & logbook', false);
+        $response->assertSee('Kelola biodata diri & riwayat berkas', false);
+        $response->assertSee('Keamanan kata sandi & preferensi', false);
+        $response->assertSee('Akhiri sesi akun pada perangkat ini', false);
+        $response->assertSee(route('peserta.dashboard'));
+        $response->assertSee(route('peserta.profil.show'));
+        $response->assertSee(route('peserta.pengaturan.index'));
+        $response->assertSee(route('logout'));
+    }
+
+    public function test_landing_page_memuat_tautan_eksplorasi_peta_alur_interaktif(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        // Memastikan tombol eksplorasi alur interaktif menautkan ke rute publik panduan-alur
+        $response->assertSee(route('panduan-alur'));
+        $response->assertSee('Eksplorasi Peta Alur Interaktif');
+    }
+
+    public function test_landing_page_menampilkan_menu_akun_staf_saat_login_sebagai_admin(): void
+    {
+        $admin = User::firstOrNew(['email' => 'admin.landing@kominfo.go.id']);
+        $admin->nama = 'Siti Administrator';
+        $admin->password = bcrypt('Password#123');
+        $admin->role = RoleEnum::Admin;
+        $admin->email_verified_at = now();
+        $admin->status_aktif = true;
+        $admin->save();
+
+        $response = $this->actingAs($admin)->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('Siti Administrator');
+        $response->assertSee('Admin');
+        $response->assertSee(route('admin.dashboard'));
+        $response->assertSee(route('admin.profil.show'));
+        $response->assertSee(route('admin.pengaturan.index'));
     }
 }

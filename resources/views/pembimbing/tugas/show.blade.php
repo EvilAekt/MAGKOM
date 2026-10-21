@@ -12,27 +12,7 @@
 
 <div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- Flash Notification -->
-    @if(session('success'))
-        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; color: #065f46;">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                <span style="font-size: 0.875rem; font-weight: 500;">{{ session('success') }}</span>
-            </div>
-            <button type="button" onclick="this.parentElement.remove()" style="background: transparent; border: none; cursor: pointer; color: #065f46;">&times;</button>
-        </div>
-    @endif
 
-    @if($errors->any())
-        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1rem 1.25rem; color: #991b1b;">
-            <div style="font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem;">Gagal Menyimpan Umpan Balik:</div>
-            <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.8rem;">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <!-- Top Action Bar -->
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -54,7 +34,14 @@
                 &larr; Kembali
             </a>
 
-            @if($tugas->status->value !== 'selesai')
+            @if($tugas->status->value !== 'selesai' && auth()->user()->role !== \App\Enums\RoleEnum::SuperAdmin)
+                <a href="{{ route('pembimbing.tugas.edit', $tugas->id) }}" style="padding: 0.5rem 1rem; background: #0641CC; color: #ffffff; font-size: 0.875rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 2px 4px rgba(6, 65, 204, 0.2);">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    <span>Edit Tugas</span>
+                </a>
+            @endif
+
+            @if($tugas->status->value !== 'selesai' && auth()->user()->role !== \App\Enums\RoleEnum::SuperAdmin)
                 <form action="{{ route('pembimbing.tugas.selesai', $tugas->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menandai tugas ini sebagai Selesai?')">
                     @csrf
                     <button type="submit" style="padding: 0.5rem 1rem; background: #059669; color: #ffffff; font-size: 0.875rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2);">

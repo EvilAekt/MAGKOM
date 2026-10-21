@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Models\Penilaian;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PenilaianRequest extends FormRequest
 {
     public function authorize(): bool
     {
+        $penempatan = $this->route('penempatan');
+        if ($penempatan) {
+            return $this->user()?->can('manage', [Penilaian::class, $penempatan]) ?? false;
+        }
+
         return true;
     }
 

@@ -518,6 +518,198 @@
             justify-content: center;
         }
     }
+
+    /* Dark Mode Harmonization ala Menu Tugas */
+    [data-theme="dark"] .active-application-card,
+    [data-theme="dark"] .active-card {
+        background: #182234 !important;
+        border: 1.5px solid #26354D !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    [data-theme="dark"] .active-reg-badge {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #60A5FA !important;
+    }
+
+    [data-theme="dark"] .active-card-title,
+    [data-theme="dark"] .active-card-header h2 {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .active-card-subtitle,
+    [data-theme="dark"] .active-card-header p {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .active-card-header {
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .active-grid-info {
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .active-info-item {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .active-info-label {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .active-info-value {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .active-info-value svg {
+        color: #94A3B8;
+    }
+
+    [data-theme="dark"] .active-info-value[style*="color: var(--blue-700)"],
+    [data-theme="dark"] .active-info-highlight {
+        color: #60A5FA !important;
+    }
+
+    [data-theme="dark"] .active-card-footer {
+        border-top-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .active-card-note {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .kuota-card {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    [data-theme="dark"] .kuota-card:hover {
+        border-color: #3B82F6 !important;
+        box-shadow: 0 8px 24px rgba(7, 81, 255, 0.2) !important;
+    }
+
+    [data-theme="dark"] .kuota-month-name,
+    [data-theme="dark"] .section-heading-title {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .kuota-dates {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .kuota-progress-box {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .kuota-progress-bar-bg {
+        background: #26354D !important;
+    }
+
+    .attention-callout-banner {
+        margin-bottom: 24px;
+        padding: 18px 20px;
+        background: #FFFBEB;
+        border: 1.5px solid #FDE68A;
+        border-radius: var(--radius-lg, 12px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    [data-theme="dark"] .attention-callout-banner {
+        background: rgba(120, 53, 15, 0.25) !important;
+        border-color: rgba(245, 158, 11, 0.4) !important;
+    }
+
+    [data-theme="dark"] .attention-callout-banner h3 {
+        color: #FCD34D !important;
+    }
+
+    [data-theme="dark"] .attention-callout-banner p {
+        color: #FEF3C7 !important;
+    }
+
+    [data-theme="dark"] .history-card {
+        background: #182234 !important;
+        border-color: #26354D !important;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    [data-theme="dark"] .history-card-header {
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .history-card-title {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .meta-pill {
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .table-custom {
+        background: #182234 !important;
+    }
+
+    [data-theme="dark"] .table-custom th {
+        background: #0F172A !important;
+        color: #94A3B8 !important;
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .table-custom td {
+        border-bottom-color: #26354D !important;
+        color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .table-custom tr:hover td {
+        background: rgba(30, 41, 59, 0.5) !important;
+    }
+
+    [data-theme="dark"] .modal-dialog-modern {
+        background: #182234 !important;
+        border: 1px solid #26354D !important;
+        color: #F8FAFC !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    [data-theme="dark"] .modal-title-clean {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .modal-subtitle-clean {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .duration-chip-btn {
+        background: #0F172A !important;
+        border-color: #3E516E !important;
+        color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .duration-chip-btn:hover {
+        border-color: #60A5FA !important;
+        background: #1E293B !important;
+    }
+
+    [data-theme="dark"] .duration-chip-btn.is-active {
+        border-color: #2563EB !important;
+        background: rgba(30, 58, 138, 0.4) !important;
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] .field-label {
+        color: #E2E8F0 !important;
+    }
 </style>
 @endpush
 
@@ -602,7 +794,7 @@
          2. ALERT PANDUAN PROFIL (AC-03-1)
          ======================================================== --}}
     @if(!$profilLengkap)
-        <div style="margin-bottom: 24px; padding: 18px 20px; background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: var(--radius-lg, 12px); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+        <div class="attention-callout-banner">
             <div style="display: flex; align-items: flex-start; gap: 14px; flex: 1;">
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -642,10 +834,10 @@
                         </svg>
                         #REG-{{ str_pad((string)$pendaftaranAktif->id, 5, '0', STR_PAD_LEFT) }}
                     </div>
-                    <h2 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 6px 0 2px 0;">
+                    <h2 class="active-card-title" style="font-size: 1.125rem; font-weight: 800; margin: 6px 0 2px 0;">
                         Pengajuan Magang Aktif Sedang Diproses
                     </h2>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-500); margin: 0;">
+                    <p class="active-card-subtitle" style="font-size: 0.8125rem; margin: 0;">
                         Diajukan pada {{ $pendaftaranAktif->created_at->translatedFormat('d F Y, H:i') }} WIB
                     </p>
                 </div>
@@ -688,7 +880,7 @@
             <div class="active-grid-info">
                 <div class="active-info-item">
                     <div class="active-info-label">Periode Bulan Magang</div>
-                    <div class="active-info-value" style="color: var(--blue-700); display: flex; align-items: center; gap: 6px;">
+                    <div class="active-info-value active-info-highlight" style="display: flex; align-items: center; gap: 6px;">
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         <span>{{ $pendaftaranAktif->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}</span>
                     </div>

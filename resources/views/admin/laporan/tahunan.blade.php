@@ -13,6 +13,76 @@
 @section('content')
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
+    @push('styles')
+    <style>
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3,
+        [data-theme="dark"] h4 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] label[style*="color: var(--neutral-800)"],
+        [data-theme="dark"] strong[style*="color: var(--neutral-900)"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] p[style*="color: var(--neutral-600)"],
+        [data-theme="dark"] span[style*="color: var(--neutral-600)"],
+        [data-theme="dark"] div[style*="color: var(--neutral-600)"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] select#tahun {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] select#tahun option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .btn-outline {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .btn-outline:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] table thead tr {
+            border-bottom-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] table tbody tr {
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] table tbody td {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] table tbody tr:hover {
+            background: #162238 !important;
+        }
+    </style>
+    @endpush
+
     <!-- TOP TOOLBAR & YEAR SELECTOR -->
     <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1rem 1.25rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; box-shadow: var(--shadow-subtle);">
         <form method="GET" action="{{ route('admin.laporan.tahunan') }}" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
@@ -22,7 +92,7 @@
                     <option value="{{ $t }}" {{ $t == $tahun ? 'selected' : '' }}>Tahun {{ $t }}</option>
                 @endforeach
             </select>
-            <span style="font-size: 0.8125rem; color: var(--neutral-600);">Menampilkan seluruh data periode magang tahun {{ $tahun }}</span>
+            <span style="font-size: 0.8125rem; color: var(--neutral-600);">Menampilkan seluruh data bulan magang tahun {{ $tahun }}</span>
         </form>
 
         <div style="display: flex; gap: 0.75rem; align-items: center;">

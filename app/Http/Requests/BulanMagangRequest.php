@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\StatusKetersediaanEnum;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -40,13 +41,13 @@ class BulanMagangRequest extends FormRequest
         $validator->after(function ($validator) {
             if ($this->filled('bulan_mulai') && $this->filled('tgl_tutup')) {
                 try {
-                    $bulanMulai = \Carbon\Carbon::parse($this->input('bulan_mulai'))->startOfMonth();
-                    $tglTutup = \Carbon\Carbon::parse($this->input('tgl_tutup'))->startOfDay();
+                    $bulanMulai = Carbon::parse($this->input('bulan_mulai'))->startOfMonth();
+                    $tglTutup = Carbon::parse($this->input('tgl_tutup'))->startOfDay();
 
                     if ($tglTutup->gt($bulanMulai)) {
                         $validator->errors()->add(
                             'tgl_tutup',
-                            'Tanggal tutup pendaftaran tidak boleh melewati tanggal awal dimulainya periode magang (' . $bulanMulai->format('d/m/Y') . ') sesuai aturan instansi (Bab 8.2).'
+                            'Tanggal tutup pendaftaran tidak boleh melewati tanggal awal dimulainya periode magang ('.$bulanMulai->format('d/m/Y').') sesuai aturan instansi (Bab 8.2).'
                         );
                     }
                 } catch (\Exception $e) {

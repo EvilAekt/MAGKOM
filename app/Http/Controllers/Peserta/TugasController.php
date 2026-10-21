@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Peserta;
 
+use App\Enums\RealtimeEventTypeEnum;
 use App\Enums\StatusReviewProgresEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\TipeAuditEnum;
@@ -13,8 +14,8 @@ use App\Models\Penempatan;
 use App\Models\ProgresLog;
 use App\Models\Tugas;
 use App\Services\AuditService;
+use App\Services\RealtimeEventService;
 use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -113,7 +114,23 @@ class TugasController extends Controller
             detail: ['aksi' => 'unggah_progres_tugas']
         );
 
+        // Notifikasi Real-time SSE ke Pembimbing (TASK-SSE-06)
+        $pembimbingId = $tugas->penempatan?->pembimbing_id;
+        if ($pembimbingId) {
+            $pesertaNama = $request->user()?->nama ?? 'Peserta';
+            app(RealtimeEventService::class)->publish(
+                RealtimeEventTypeEnum::TugasDikumpulkan,
+                [
+                    'title' => 'Pengumpulan Progres Tugas',
+                    'message' => "{$pesertaNama} mengumpulkan progres untuk tugas: {$tugas->judul}.",
+                    'action_url' => route('pembimbing.tugas.show', $tugas->id),
+                ],
+                $pembimbingId
+            );
+        }
+
         if ($request->expectsJson() || $request->wantsJson()) {
+
             return response()->json([
                 'success' => true,
                 'message' => 'Laporan progres tugas berhasil dikirimkan.',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Peserta;
 
+use App\Enums\RealtimeEventTypeEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
@@ -12,9 +13,12 @@ use App\Http\Requests\LogbookRequest;
 use App\Models\Logbook;
 use App\Models\Penempatan;
 use App\Services\AuditService;
-use Illuminate\Http\JsonResponse;
+use App\Services\RealtimeEventService;
+use App\Support\Pengaturan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class LogbookController extends Controller
 {
@@ -47,7 +51,7 @@ class LogbookController extends Controller
             ]);
         }
 
-        $logbookMaksMundur = \App\Support\Pengaturan::int('logbook_maks_mundur_hari', 3);
+        $logbookMaksMundur = Pengaturan::int('logbook_maks_mundur_hari', 3);
 
         $daftarMinggu = $penempatan ? $penempatan->getDaftarMingguMagang() : [];
         $totalMinggu = $penempatan ? $penempatan->total_minggu : 12;
@@ -58,15 +62,15 @@ class LogbookController extends Controller
         $mingguAktifSudahDiisi = $penempatan ? $penempatan->logbooks()->where('minggu_ke', $mingguAktif)->exists() : false;
 
         return view('peserta.logbook.index', [
-            'penempatan'            => $penempatan,
-            'logbooks'              => $logbooks,
-            'logbookMaksMundur'     => $logbookMaksMundur,
-            'daftarMinggu'          => $daftarMinggu,
-            'totalMinggu'           => $totalMinggu,
-            'mingguAktif'           => $mingguAktif,
-            'totalTerisi'           => $totalTerisi,
-            'totalTerkirim'         => $totalTerkirim,
-            'persentaseTerisi'      => $persentaseTerisi,
+            'penempatan' => $penempatan,
+            'logbooks' => $logbooks,
+            'logbookMaksMundur' => $logbookMaksMundur,
+            'daftarMinggu' => $daftarMinggu,
+            'totalMinggu' => $totalMinggu,
+            'mingguAktif' => $mingguAktif,
+            'totalTerisi' => $totalTerisi,
+            'totalTerkirim' => $totalTerkirim,
+            'persentaseTerisi' => $persentaseTerisi,
             'mingguAktifSudahDiisi' => $mingguAktifSudahDiisi,
         ]);
     }
@@ -89,6 +93,7 @@ class LogbookController extends Controller
                     'message' => 'Anda tidak memiliki status penempatan magang aktif.',
                 ], 422);
             }
+
             return redirect()->route('peserta.logbook.index')
                 ->with('error', 'Anda tidak memiliki status penempatan magang aktif.');
         }
@@ -97,7 +102,7 @@ class LogbookController extends Controller
 
         $mingguKe = $request->validated('minggu_ke');
         if (! $mingguKe && $penempatan->tgl_mulai) {
-            $tglInput = \Carbon\Carbon::parse($request->validated('tanggal'));
+            $tglInput = Carbon::parse($request->validated('tanggal'));
             $diffDays = $penempatan->tgl_mulai->diffInDays($tglInput);
             $mingguKe = (int) floor($diffDays / 7) + 1;
         }
@@ -132,6 +137,7 @@ class LogbookController extends Controller
                     'message' => $pesan,
                 ], 422);
             }
+
             return redirect()->route('peserta.logbook.index')
                 ->with('error', $pesan);
         }
@@ -164,7 +170,21 @@ class LogbookController extends Controller
             detail: ['aksi' => 'isi_logbook_mingguan']
         );
 
+        // Notifikasi Real-time SSE ke Pembimbing (TASK-SSE-06)
+        if ($penempatan->pembimbing_id) {
+            app(RealtimeEventService::class)->publish(
+                RealtimeEventTypeEnum::LogbookBaru,
+                [
+                    'title' => 'Setoran Logbook Baru',
+                    'message' => "{$user->nama} menyerahkan catatan logbook baru.",
+                    'action_url' => route('pembimbing.dashboard'),
+                ],
+                $penempatan->pembimbing_id
+            );
+        }
+
         if ($request->expectsJson()) {
+
             return response()->json([
                 'success' => true,
                 'message' => 'Catatan kegiatan logbook mingguan berhasil disimpan.',
@@ -227,11 +247,11 @@ class LogbookController extends Controller
     {
         Gate::authorize('view', $logbook);
 
-        if (! $logbook->file_laporan || ! \Illuminate\Support\Facades\Storage::disk('private')->exists($logbook->file_laporan)) {
+        if (! $logbook->file_laporan || ! Storage::disk('private')->exists($logbook->file_laporan)) {
             abort(404, 'Berkas lampiran logbook tidak ditemukan.');
         }
 
-        return \Illuminate\Support\Facades\Storage::disk('private')->response(
+        return Storage::disk('private')->response(
             $logbook->file_laporan,
             "lampiran-logbook-{$logbook->tanggal->toDateString()}.pdf",
             ['Content-Type' => 'application/pdf']

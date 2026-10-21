@@ -579,6 +579,162 @@
             background: #EFF6FF;
             transform: translateY(-1px);
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .adm-waiting-wrapper {
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-card {
+            background-color: #182234;
+            border-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:hover {
+            background-color: #162238;
+        }
+
+        [data-theme="dark"] .adm-kpi-unified-item:not(:last-child)::after {
+            background-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-kpi-label {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-kpi-val {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-filter-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-field-group label {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .adm-input-search,
+        [data-theme="dark"] .adm-select {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-input-search:focus,
+        [data-theme="dark"] .adm-select:focus {
+            border-color: #3B82F6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        [data-theme="dark"] .adm-select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-btn-filter-reset {
+            background-color: #111C2E !important;
+            border-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-filter-reset:hover {
+            background-color: #162238 !important;
+            color: #F8FAFC !important;
+            border-color: #3B82F6 !important;
+        }
+
+        [data-theme="dark"] .adm-bulk-closure-strip {
+            border-top-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-bulk-closure-strip div[style*="color: #475569"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-closure.disabled {
+            background-color: #111C2E !important;
+            border-color: #26354D !important;
+            color: #64748B !important;
+        }
+
+        [data-theme="dark"] .adm-table-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-table-card-header {
+            background-color: #141E30 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table-card-title {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-table th {
+            background-color: #0E1726 !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table td {
+            background-color: #182234 !important;
+            color: #CBD5E1 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-table tbody tr:hover td {
+            background-color: #162238 !important;
+        }
+
+        [data-theme="dark"] .adm-fifo-rank-other {
+            background-color: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .adm-candidate-avatar {
+            background-color: rgba(37, 99, 235, 0.25) !important;
+            border-color: rgba(59, 130, 246, 0.3) !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-table td div[style*="color: #0F172A"],
+        [data-theme="dark"] .adm-table td div[style*="color: #1E293B"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-table td div[style*="color: #64748B"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-table td[style*="font-family: ui-monospace"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-action-review {
+            background-color: #111C2E !important;
+            border-color: #26354D !important;
+            color: #93C5FD !important;
+        }
+
+        [data-theme="dark"] .adm-btn-action-review:hover {
+            background-color: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .adm-table-card div[style*="background: #ffffff"] {
+            background-color: #141E30 !important;
+            border-top-color: #26354D !important;
+        }
     </style>
 
     {{-- ==========================================================================
@@ -613,7 +769,7 @@
                     @endif
                     <div class="adm-hero-chip">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
-                        <span>{{ $periodeCount }} Periode Magang Terdampak</span>
+                        <span>{{ $periodeCount }} Bulan Magang Terdampak</span>
                     </div>
                 </div>
             </div>
@@ -650,8 +806,8 @@
             </div>
             <div class="adm-kpi-details">
                 <span class="adm-kpi-label">Siap Dipromosikan</span>
-                <span class="adm-kpi-val" style="color: {{ $siapPromosiCount > 0 ? '#059669' : '#0F172A' }};">{{ number_format($siapPromosiCount) }}</span>
-                <span class="adm-kpi-hint" style="color: {{ $siapPromosiCount > 0 ? '#059669' : '#64748B' }};">
+                <span class="adm-kpi-val {{ $siapPromosiCount > 0 ? 'text-emerald-600' : 'text-slate-900' }}">{{ number_format($siapPromosiCount) }}</span>
+                <span class="adm-kpi-hint {{ $siapPromosiCount > 0 ? 'text-emerald-600' : 'text-slate-500' }}">
                     {{ $siapPromosiCount > 0 ? 'Kursi kuota telah terbuka' : 'Menunggu kuota terbuka' }}
                 </span>
             </div>
@@ -664,7 +820,7 @@
             </div>
             <div class="adm-kpi-details">
                 <span class="adm-kpi-label">Tertahan Kuota Penuh</span>
-                <span class="adm-kpi-val" style="color: #D97706;">{{ number_format(max(0, $totalWaiting - $siapPromosiCount)) }}</span>
+                <span class="adm-kpi-val text-amber-600">{{ number_format(max(0, $totalWaiting - $siapPromosiCount)) }}</span>
                 <span class="adm-kpi-hint">Menunggu penambahan kursi dinas</span>
             </div>
         </div>
@@ -675,7 +831,7 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
             </div>
             <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Periode Bulan Magang</span>
+                <span class="adm-kpi-label">Bulan Magang</span>
                 <span class="adm-kpi-val" style="color: #4F46E5;">{{ $periodeCount }}</span>
                 <span class="adm-kpi-hint">Bulan dengan antrean aktif</span>
             </div>
@@ -699,9 +855,9 @@
             </div>
 
             <div class="adm-field-group">
-                <label for="select-bulan">Periode Magang</label>
+                <label for="select-bulan">Bulan Magang</label>
                 <select name="bulan_magang_id" id="select-bulan" class="adm-select">
-                    <option value="">Semua Periode Bulan</option>
+                    <option value="">Semua Bulan Magang</option>
                     @foreach($bulanAntreanList as $b)
                         <option value="{{ $b->id }}" {{ request('bulan_magang_id') == $b->id ? 'selected' : '' }}>
                             {{ $b->bulan_mulai?->translatedFormat('F Y') }}
@@ -742,7 +898,7 @@
             <div class="adm-bulk-closure-strip">
                 <div style="display: flex; align-items: center; gap: 8px; color: #475569;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                    <span><strong>Penutupan Massal Awal Bulan (AC-04-7):</strong> Sisa antrean ditolak otomatis jika periode magang telah berjalan.</span>
+                    <span><strong>Penutupan Massal Awal Bulan (AC-04-7):</strong> Sisa antrean ditolak otomatis jika bulan magang telah berjalan.</span>
                 </div>
                 <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     @foreach($bulanAntreanList as $bAntrean)
@@ -751,9 +907,9 @@
                             $tglMulai = \Carbon\Carbon::parse($bAntrean->bulan_mulai . '-01', 'Asia/Jakarta');
                             $bisaTutup = $hariIni->gte($tglMulai);
                         @endphp
-                        <form method="POST" action="{{ route('admin.waiting-list.tutup', $bAntrean) }}" onsubmit="return confirm('Apakah Anda yakin menutup sisa antrean waiting list periode {{ $bAntrean->bulan_mulai?->translatedFormat('F Y') }}? Pendaftaran yang tersisa akan ditolak secara otomatis.');" style="display: inline;">
+                        <form method="POST" action="{{ route('admin.waiting-list.tutup', $bAntrean) }}" onsubmit="return confirm('Apakah Anda yakin menutup sisa antrean waiting list bulan {{ $bAntrean->bulan_mulai?->translatedFormat('F Y') }}? Pendaftaran yang tersisa akan ditolak secara otomatis.');" style="display: inline;">
                             @csrf
-                            <button type="submit" {{ !$bisaTutup ? 'disabled' : '' }} class="adm-btn-closure {{ $bisaTutup ? 'can-close' : 'disabled' }}" title="{{ $bisaTutup ? 'Tutup sisa antrean periode ini' : 'Hanya bisa ditutup setelah tanggal 1 bulan mulai magang' }}">
+                            <button type="submit" {{ !$bisaTutup ? 'disabled' : '' }} class="adm-btn-closure {{ $bisaTutup ? 'can-close' : 'disabled' }}" title="{{ $bisaTutup ? 'Tutup sisa antrean bulan ini' : 'Hanya bisa ditutup setelah tanggal 1 bulan mulai magang' }}">
                                 Tutup Antrean {{ $bAntrean->bulan_mulai?->translatedFormat('M Y') }}
                             </button>
                         </form>
@@ -783,19 +939,11 @@
         </div>
 
         @if($waitingList->isEmpty())
-            <div style="padding: 4rem 1.5rem; text-align: center; color: #64748B;">
-                <div style="width: 60px; height: 60px; background: #EFF6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: #0641CC;">
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                </div>
-                <h4 style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin: 0 0 0.35rem 0;">
-                    Tidak Ada Antrean Waiting List
-                </h4>
-                <p style="font-size: 0.85rem; max-width: 480px; margin: 0 auto; line-height: 1.5;">
-                    Saat ini tidak ada pendaftaran calon peserta magang yang tertahan dalam antrean tunggu.
-                </p>
+            <div style="padding: 2rem 1.5rem;">
+                <x-empty-state 
+                    title="Tidak Ada Antrean Waiting List" 
+                    description="Saat ini tidak ada pendaftaran calon peserta magang yang tertahan dalam antrean tunggu." 
+                />
             </div>
         @else
             <div style="overflow-x: auto;">
@@ -806,7 +954,7 @@
                             <th style="width: 150px;">No. Registrasi</th>
                             <th>Calon Peserta</th>
                             <th>Instansi &amp; Kejuruan</th>
-                            <th>Periode Magang</th>
+                            <th>Bulan Magang</th>
                             <th style="text-align: center;">Status Kuota</th>
                             <th>Waktu Submit (FIFO)</th>
                             <th style="text-align: right; width: 140px;">Tindak Lanjut</th>
@@ -835,9 +983,9 @@
 
                                 {{-- No. Registrasi --}}
                                 <td>
-                                    <span style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; font-weight: 700; color: #0641CC; background: #EFF6FF; padding: 3px 8px; border-radius: 6px; border: 1px solid #DBEAFE;">
+                                    <x-badge variant="info">
                                         {{ $item->nomor_pendaftaran }}
-                                    </span>
+                                    </x-badge>
                                 </td>
 
                                 {{-- Calon Peserta --}}
@@ -880,14 +1028,13 @@
                                 {{-- Status Kuota --}}
                                 <td style="text-align: center;">
                                     @if($sisaKuota > 0)
-                                        <span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0;">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #10B981;"></span>
+                                        <x-badge variant="success" dot>
                                             Tersedia {{ $sisaKuota }} Kursi
-                                        </span>
+                                        </x-badge>
                                     @else
-                                        <span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
+                                        <x-badge variant="secondary">
                                             Kuota Penuh
-                                        </span>
+                                        </x-badge>
                                     @endif
                                 </td>
 
@@ -899,10 +1046,14 @@
                                 {{-- Aksi --}}
                                 <td style="text-align: right;">
                                     @if($sisaKuota > 0)
-                                        <a href="{{ route('admin.pendaftaran.show', $item) }}" class="adm-btn-action-promote" title="Kuota terbuka! Proses penerimaan peserta ini sekarang">
-                                            <span>Promosikan</span>
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                        </a>
+                                        <form method="POST" action="{{ route('admin.waiting-list.promote') }}" style="display: inline-block; margin: 0;" onsubmit="return confirm('Promosikan {{ addslashes($item->user?->nama ?? 'peserta') }} menjadi Diterima secara instan sesuai kuota yang tersedia?');">
+                                            @csrf
+                                            <input type="hidden" name="pendaftaran_id" value="{{ $item->id }}">
+                                            <button type="submit" class="adm-btn-action-promote" style="border: none; cursor: pointer;" title="Promosikan 1-klik langsung sesuai kuota kosong">
+                                                <span>Promosikan</span>
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                            </button>
+                                        </form>
                                     @else
                                         <a href="{{ route('admin.pendaftaran.show', $item) }}" class="adm-btn-action-review" title="Tinjau berkas pendaftaran calon peserta">
                                             <span>Tinjau</span>

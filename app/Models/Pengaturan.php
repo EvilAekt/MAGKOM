@@ -29,8 +29,9 @@ class Pengaturan extends Model
      */
     public static function getNilai(string $kunci, ?string $default = null): ?string
     {
-        return Cache::rememberForever(self::CACHE_PREFIX . $kunci, function () use ($kunci, $default) {
+        return Cache::rememberForever(self::CACHE_PREFIX.$kunci, function () use ($kunci, $default) {
             $setting = self::where('kunci', $kunci)->first();
+
             return $setting ? $setting->nilai : $default;
         });
     }
@@ -41,6 +42,7 @@ class Pengaturan extends Model
     public static function get(string $kunci, mixed $default = null): mixed
     {
         $val = self::getNilai($kunci);
+
         return $val !== null ? $val : $default;
     }
 
@@ -50,7 +52,32 @@ class Pengaturan extends Model
     public static function getInt(string $kunci, int $default = 0): int
     {
         $val = self::getNilai($kunci);
+
         return $val !== null ? (int) $val : $default;
+    }
+
+    /**
+     * Mengambil nilai sebagai boolean.
+     */
+    public static function getBool(string $kunci, bool $default = false): bool
+    {
+        $val = self::getNilai($kunci);
+        if ($val === null) {
+            return $default;
+        }
+
+        return in_array(strtolower((string) $val), ['1', 'true', 'on', 'yes'], true);
+    }
+
+    /**
+     * Menyimpan atau memperbarui nilai pengaturan.
+     */
+    public static function setNilai(string $kunci, string $nilai): void
+    {
+        self::updateOrCreate(
+            ['kunci' => $kunci],
+            ['nilai' => $nilai]
+        );
     }
 
     /**
@@ -66,6 +93,7 @@ class Pengaturan extends Model
         }
 
         $decoded = json_decode($val, true);
+
         return is_array($decoded) ? $decoded : $default;
     }
 
@@ -75,11 +103,11 @@ class Pengaturan extends Model
     protected static function booted(): void
     {
         static::saved(function (self $pengaturan) {
-            Cache::forget(self::CACHE_PREFIX . $pengaturan->kunci);
+            Cache::forget(self::CACHE_PREFIX.$pengaturan->kunci);
         });
 
         static::deleted(function (self $pengaturan) {
-            Cache::forget(self::CACHE_PREFIX . $pengaturan->kunci);
+            Cache::forget(self::CACHE_PREFIX.$pengaturan->kunci);
         });
     }
 
@@ -89,11 +117,11 @@ class Pengaturan extends Model
     public static function clearCache(?string $kunci = null): void
     {
         if ($kunci) {
-            Cache::forget(self::CACHE_PREFIX . $kunci);
+            Cache::forget(self::CACHE_PREFIX.$kunci);
         } else {
             Cache::forget('pengaturan_all');
             foreach (self::pluck('kunci') as $k) {
-                Cache::forget(self::CACHE_PREFIX . $k);
+                Cache::forget(self::CACHE_PREFIX.$k);
             }
         }
     }

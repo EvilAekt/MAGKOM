@@ -7,22 +7,17 @@ namespace Tests\Feature;
 use App\Enums\JalurEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\SumberPenempatanEnum;
-use App\Models\AuditLog;
 use App\Models\Bidang;
-use App\Models\BulanMagang;
 use App\Models\Jurusan;
-use App\Models\Kuota;
 use App\Models\Logbook;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
-use App\Models\Rubrik;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -33,11 +28,17 @@ class ReleaseTwoFeaturesTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected Bidang $bidang;
+
     protected Jurusan $jurusan;
+
     protected Penempatan $penempatan;
 
     protected function setUp(): void
@@ -57,7 +58,7 @@ class ReleaseTwoFeaturesTest extends TestCase
             ['kategori' => 'mahasiswa', 'aktif' => true]
         );
 
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Admin R2';
         $this->superAdmin->email = 'superadmin.r2@kominfo.test';
         $this->superAdmin->password = 'secret123';
@@ -66,7 +67,7 @@ class ReleaseTwoFeaturesTest extends TestCase
         $this->superAdmin->status_aktif = true;
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Pengelola R2';
         $this->admin->email = 'admin.r2@kominfo.test';
         $this->admin->password = 'secret123';
@@ -75,7 +76,7 @@ class ReleaseTwoFeaturesTest extends TestCase
         $this->admin->status_aktif = true;
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan R2';
         $this->pembimbing->email = 'pembimbing.r2@kominfo.test';
         $this->pembimbing->password = 'secret123';
@@ -84,7 +85,7 @@ class ReleaseTwoFeaturesTest extends TestCase
         $this->pembimbing->status_aktif = true;
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Uji R2';
         $this->peserta->email = 'peserta.r2@kampus.test';
         $this->peserta->password = 'secret123';
@@ -168,7 +169,7 @@ class ReleaseTwoFeaturesTest extends TestCase
         $downloadRes->assertHeader('content-type', 'application/pdf');
 
         // 5. User lain tidak berhak mengunduh lampiran (HTTP 403)
-        $userLain = new User();
+        $userLain = new User;
         $userLain->nama = 'Orang Asing';
         $userLain->email = 'asing@test.com';
         $userLain->password = 'secret';
@@ -197,7 +198,7 @@ class ReleaseTwoFeaturesTest extends TestCase
         $adminRes->assertHeader('content-type', 'application/pdf');
 
         // 3. User lain ditolak mengunduh surat penerimaan orang lain
-        $userLain = new User();
+        $userLain = new User;
         $userLain->nama = 'Peserta Lain';
         $userLain->email = 'pesertalain@test.com';
         $userLain->password = 'secret';
@@ -222,7 +223,7 @@ class ReleaseTwoFeaturesTest extends TestCase
     public function test_f17_laporan_ekspor_csv_dan_anti_formula_injection(): void
     {
         // Masukkan data peserta dengan karakter formula berbahaya (=CMD, +SUM, -DIFF, @LOOKUP)
-        $pesertaHacker = new User();
+        $pesertaHacker = new User;
         $pesertaHacker->nama = '=cmd|"/C calc"!A0';
         $pesertaHacker->email = 'calc@hacker.test';
         $pesertaHacker->password = 'secret';
@@ -296,6 +297,7 @@ class ReleaseTwoFeaturesTest extends TestCase
                 if ($token === 'valid_human_token') {
                     return Http::response(['success' => true], 200);
                 }
+
                 // Token down / error
                 return Http::response([], 500);
             },
@@ -323,7 +325,7 @@ class ReleaseTwoFeaturesTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'valid.person@tester.test']);
 
         // Logout user agar kembali berstatus guest sebelum uji registrasi saat service down
-        \Illuminate\Support\Facades\Auth::logout();
+        Auth::logout();
 
         // 3. Layanan Cloudflare down (timeout / network error):
         // AC-14-2: Registrasi DITOLAK saat captcha down (Fail-Closed)

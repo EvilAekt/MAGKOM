@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusKetersediaanEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Dokumen;
@@ -18,7 +20,6 @@ use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\PesertaProfil;
-use App\Models\SlotKhusus;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
 use Database\Seeders\RubrikSeeder;
@@ -30,14 +31,23 @@ class AdminSuperAdminPortalTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected Bidang $bidang;
+
     protected Jurusan $jurusan;
+
     protected BulanMagang $bulan;
+
     protected Kuota $kuota;
+
     protected Pendaftaran $pendaftaran;
+
     protected Penempatan $penempatan;
 
     protected function setUp(): void
@@ -77,7 +87,7 @@ class AdminSuperAdminPortalTest extends TestCase
         ]);
 
         // 3. Users
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator';
         $this->superAdmin->email = 'superadmin@slemankab.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -87,7 +97,7 @@ class AdminSuperAdminPortalTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Verifikator';
         $this->admin->email = 'admin@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -97,7 +107,7 @@ class AdminSuperAdminPortalTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan Aptika';
         $this->pembimbing->email = 'pembimbing@slemankab.go.id';
         $this->pembimbing->password = 'Password123!';
@@ -108,7 +118,7 @@ class AdminSuperAdminPortalTest extends TestCase
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Budi Prakoso';
         $this->peserta->email = 'budi@example.com';
         $this->peserta->password = 'Password123!';
@@ -160,8 +170,8 @@ class AdminSuperAdminPortalTest extends TestCase
             'kuota_id' => $this->kuota->id,
             'pembimbing_id' => $this->pembimbing->id,
             'bidang_id' => $this->bidang->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'dibuat_oleh' => $this->admin->id,
             'tgl_mulai' => now()->toDateString(),
             'tgl_selesai' => now()->addMonths(3)->toDateString(),
@@ -197,7 +207,7 @@ class AdminSuperAdminPortalTest extends TestCase
     public function test_admin_decision_flow_terima_places_candidate_atomically(): void
     {
         // Buat calon peserta baru yang statusnya diajukan
-        $calon = new User();
+        $calon = new User;
         $calon->nama = 'Siti Rahma';
         $calon->email = 'siti@example.com';
         $calon->password = 'Password123!';
@@ -248,7 +258,7 @@ class AdminSuperAdminPortalTest extends TestCase
         $this->assertStringContainsString('Proposal', $this->pendaftaran->fresh()->catatan);
 
         // 2. Tolak pada pengajuan lain yang berstatus Diajukan
-        $calonLain = new User();
+        $calonLain = new User;
         $calonLain->nama = 'Agus Prasetyo';
         $calonLain->email = 'agus@example.com';
         $calonLain->password = 'Password123!';
@@ -291,7 +301,7 @@ class AdminSuperAdminPortalTest extends TestCase
     public function test_admin_waiting_list_promotion_and_bulk_closure(): void
     {
         // Buat calon peserta waiting list
-        $wlUser = new User();
+        $wlUser = new User;
         $wlUser->nama = 'Doni Kusuma';
         $wlUser->email = 'doni@example.com';
         $wlUser->password = 'Password123!';
@@ -350,11 +360,11 @@ class AdminSuperAdminPortalTest extends TestCase
 
         $responseStore->assertRedirect(route('superadmin.bulan.index'));
         $this->assertDatabaseHas('bulan_magang', [
-            'bulan_mulai' => $bulanMulaiBaru . ' 00:00:00',
+            'bulan_mulai' => $bulanMulaiBaru.' 00:00:00',
             'override_status' => StatusKetersediaanEnum::Segera->value,
         ]);
 
-        $createdBulan = BulanMagang::where('bulan_mulai', 'like', substr($bulanMulaiBaru, 0, 7) . '%')->first();
+        $createdBulan = BulanMagang::where('bulan_mulai', 'like', substr($bulanMulaiBaru, 0, 7).'%')->first();
         $this->assertNotNull($createdBulan);
 
         // 2. Update override status

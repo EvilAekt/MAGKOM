@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\SumberPenempatanEnum;
+use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
+use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\PesertaProfil;
@@ -25,8 +29,11 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
 
     protected function setUp(): void
@@ -54,7 +61,7 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
             'aktif' => true,
         ]);
 
-        $kuota = \App\Models\Kuota::create([
+        $kuota = Kuota::create([
             'bulan_magang_id' => $bulan->id,
             'jurusan_id' => $jurusan->id,
             'jumlah' => 10,
@@ -63,7 +70,7 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         ]);
 
         // Akun SuperAdmin
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'SuperAdmin Kominfo Sleman';
         $this->superAdmin->email = 'superadmin.figma@slemankab.go.id';
         $this->superAdmin->password = bcrypt('Password123!');
@@ -74,7 +81,7 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         $this->superAdmin->save();
 
         // Akun Admin Operasional
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Verifikasi Berkas';
         $this->admin->email = 'admin.figma@slemankab.go.id';
         $this->admin->password = bcrypt('Password123!');
@@ -85,7 +92,7 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         $this->admin->save();
 
         // Akun Pembimbing
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan Aptika';
         $this->pembimbing->email = 'pembimbing.figma@slemankab.go.id';
         $this->pembimbing->password = bcrypt('Password123!');
@@ -96,7 +103,7 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         $this->pembimbing->save();
 
         // Akun Peserta Aktif
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Aldi Artha Pratama';
         $this->peserta->email = 'aldi.peserta@example.com';
         $this->peserta->password = bcrypt('Password123!');
@@ -130,8 +137,8 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
             'kuota_id' => $kuota->id,
             'bidang_id' => $bidang->id,
             'pembimbing_id' => $this->pembimbing->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'dibuat_oleh' => $this->superAdmin->id,
             'status' => StatusPenempatanEnum::Aktif,
             'tgl_mulai' => '2026-10-01',
@@ -139,7 +146,7 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         ]);
 
         // Pendaftaran Menunggu Verifikasi
-        $pesertaPending = new User();
+        $pesertaPending = new User;
         $pesertaPending->nama = 'Rina Wulandari';
         $pesertaPending->email = 'rina.pending@example.com';
         $pesertaPending->password = bcrypt('Password123!');
@@ -162,7 +169,7 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         AuditLog::create([
             'request_id' => 'req-test-figma-001',
             'user_id' => $this->superAdmin->id,
-            'tipe' => \App\Enums\TipeAuditEnum::Aksi,
+            'tipe' => TipeAuditEnum::Aksi,
             'aksi' => 'Konfigurasi parameter sistem diperbarui',
             'entitas' => 'pengaturan',
             'entitas_id' => 1,
@@ -260,9 +267,34 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         $response->assertSee('Master Jurusan');
         $response->assertSee('Bidang Dinas');
 
-        // 2. Verifikasi keberadaan definisi fungsi JavaScript toggleNavGroup & toggleSidebar
+        // 2. Verifikasi markup accordion pada grup Pembimbing (Figma Node 560-24892)
+        $response->assertSee('Pembimbing');
+        $response->assertSee('Penilaian Peserta');
+        $response->assertSee('Reviu Logbook');
+        $response->assertSee('Tugas Magang');
+        $response->assertSee('Agenda Bimbingan');
+        $response->assertSee('Laporan Kinerja');
+
+        // 3. Verifikasi keberadaan definisi fungsi JavaScript toggleNavGroup & toggleSidebar
         $response->assertSee('function toggleNavGroup(btn)', false);
         $response->assertSee('function toggleSidebar(forceState)', false);
+    }
+
+    /**
+     * Memastikan grup accordion Pembimbing otomatis terbuka dan aktif saat SuperAdmin mengakses rute pembimbing.
+     */
+    public function test_sidebar_highlights_and_expands_pembimbing_group_when_active(): void
+    {
+        $response = $this->actingAs($this->superAdmin)->get(route('pembimbing.penilaian.index'));
+
+        $response->assertStatus(200);
+        // Tombol grup memiliki class has-active dan aria-expanded="true"
+        $response->assertSee('nav-group-btn has-active', false);
+        $response->assertSee('aria-expanded="true"', false);
+        // Submenu memiliki class show
+        $response->assertSee('nav-sub-menu show', false);
+        // Tautan penilaian peserta aktif
+        $response->assertSee('nav-sub-item active', false);
     }
 
     /**

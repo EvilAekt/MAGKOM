@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Peserta;
 
+use App\Enums\StatusPenilaianEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Penempatan;
 use App\Models\Penilaian;
+use App\Services\DocumentVerificationService;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
@@ -29,7 +30,7 @@ class NilaiController extends Controller
             ->first();
 
         $penilaian = $penempatan?->penilaian;
-        $isFinal = $penilaian && $penilaian->status === \App\Enums\StatusPenilaianEnum::Final;
+        $isFinal = $penilaian && $penilaian->status === StatusPenilaianEnum::Final;
 
         if ($request->expectsJson() || $request->wantsJson()) {
             if (! $penempatan) {
@@ -48,8 +49,8 @@ class NilaiController extends Controller
 
         return view('peserta.nilai.show', [
             'penempatan' => $penempatan,
-            'penilaian'  => $penilaian,
-            'isFinal'    => $isFinal,
+            'penilaian' => $penilaian,
+            'isFinal' => $isFinal,
         ]);
     }
 
@@ -69,8 +70,8 @@ class NilaiController extends Controller
 
         $penilaian = $penempatan->penilaian;
 
-        $verificationService = app(\App\Services\DocumentVerificationService::class);
-        $nomorNilai = '500.12/NILAI/' . str_pad((string) $penempatan->id, 4, '0', STR_PAD_LEFT) . '/DISKOMINFO/' . ($penempatan->tgl_selesai?->format('Y') ?? date('Y'));
+        $verificationService = app(DocumentVerificationService::class);
+        $nomorNilai = '500.12/NILAI/'.str_pad((string) $penempatan->id, 4, '0', STR_PAD_LEFT).'/DISKOMINFO/'.($penempatan->tgl_selesai?->format('Y') ?? date('Y'));
         $dokumenVerifikasi = $verificationService->getOrCreateVerification(
             $penempatan,
             'lembar_nilai',
@@ -92,7 +93,7 @@ class NilaiController extends Controller
         ])->setPaper('a4', 'portrait');
 
         $namaPeserta = $user->nama ?? ($user->name ?? 'peserta');
-        $namaFile = 'lembar-nilai-' . str_replace(' ', '-', strtolower($namaPeserta)) . '.pdf';
+        $namaFile = 'lembar-nilai-'.str_replace(' ', '-', strtolower($namaPeserta)).'.pdf';
 
         return $pdf->download($namaFile);
     }

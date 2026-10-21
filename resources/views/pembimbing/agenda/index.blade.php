@@ -51,6 +51,32 @@
             z-index: 9999;
             padding: 1rem;
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .agenda-stat-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .agenda-table th {
+            background-color: #0E1726 !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .agenda-table td {
+            background-color: #182234 !important;
+            color: #CBD5E1 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .agenda-table tr:hover td,
+        [data-theme="dark"] .agenda-table tr:hover {
+            background-color: #162238 !important;
+        }
     </style>
 
     {{-- 1. HEADER & BREADCRUMB --}}
@@ -86,17 +112,7 @@
         </div>
     </div>
 
-    {{-- ALERT NOTIFIKASI --}}
-    @if(session('success'))
-        <div style="background: #DCFCE7; border: 1px solid #86EFAC; color: #166534; padding: 0.85rem 1.25rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600;">
-            ✓ {{ session('success') }}
-        </div>
-    @endif
-    @if($errors->any())
-        <div style="background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; padding: 0.85rem 1.25rem; border-radius: 10px; font-size: 0.85rem;">
-            ⚠️ {{ $errors->first() }}
-        </div>
-    @endif
+
 
     {{-- 2. METRIK KPI --}}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">

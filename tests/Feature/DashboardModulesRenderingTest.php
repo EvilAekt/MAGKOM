@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
-use App\Enums\KategoriTugasEnum;
-use App\Enums\KompleksitasTugasEnum;
-use App\Enums\PredikatEnum;
+use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusTugasEnum;
+use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
-use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
@@ -36,14 +35,23 @@ class DashboardModulesRenderingTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected Bidang $bidang;
+
     protected Jurusan $jurusan;
+
     protected BulanMagang $bulan;
+
     protected Kuota $kuota;
+
     protected Pendaftaran $pendaftaran;
+
     protected Penempatan $penempatan;
 
     protected function setUp(): void
@@ -83,7 +91,7 @@ class DashboardModulesRenderingTest extends TestCase
         ]);
 
         // 3. Users
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator';
         $this->superAdmin->email = 'superadmin@slemankab.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -93,7 +101,7 @@ class DashboardModulesRenderingTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Verifikator';
         $this->admin->email = 'admin@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -103,7 +111,7 @@ class DashboardModulesRenderingTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan';
         $this->pembimbing->email = 'pembimbing@slemankab.go.id';
         $this->pembimbing->password = 'Password123!';
@@ -114,7 +122,7 @@ class DashboardModulesRenderingTest extends TestCase
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Uji';
         $this->peserta->email = 'peserta@example.com';
         $this->peserta->password = 'Password123!';
@@ -149,8 +157,8 @@ class DashboardModulesRenderingTest extends TestCase
             'kuota_id' => $this->kuota->id,
             'bidang_id' => $this->bidang->id,
             'pembimbing_id' => $this->pembimbing->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'dibuat_oleh' => $this->admin->id,
             'tgl_mulai' => now()->toDateString(),
             'tgl_selesai' => now()->addMonth()->toDateString(),
@@ -203,7 +211,7 @@ class DashboardModulesRenderingTest extends TestCase
             'judul' => 'Pengembangan Modul MagKom',
             'deskripsi' => 'Rancang implementasi Blade UI dashboard',
             'kategori' => 'Project',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'deadline' => now()->addDays(7)->toDateString(),
             'status' => StatusTugasEnum::Belum,
         ]);

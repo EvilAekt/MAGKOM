@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
+use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPenempatanEnum;
@@ -12,6 +14,7 @@ use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\Logbook;
 use App\Models\Penempatan;
+use App\Models\ProgresLog;
 use App\Models\Tugas;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
@@ -26,8 +29,11 @@ class PesertaClassroomTugasLogbookTest extends TestCase
     use RefreshDatabase;
 
     protected User $peserta;
+
     protected User $pembimbing;
+
     protected Bidang $bidang;
+
     protected Penempatan $penempatan;
 
     protected function setUp(): void
@@ -74,7 +80,7 @@ class PesertaClassroomTugasLogbookTest extends TestCase
             'tgl_selesai' => now()->addDays(85)->toDateString(),
             'status' => StatusPenempatanEnum::Aktif,
             'sumber' => SumberPenempatanEnum::Online,
-            'jalur' => \App\Enums\JalurEnum::Umum,
+            'jalur' => JalurEnum::Umum,
         ]);
     }
 
@@ -85,7 +91,7 @@ class PesertaClassroomTugasLogbookTest extends TestCase
             'judul' => 'Pembuatan Mockup Dashboard Peserta',
             'deskripsi' => 'Rancang wireframe Figma dengan pola Google Classroom.',
             'kategori' => 'Desain Antarmuka',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'deadline' => now()->addDays(3),
             'status' => StatusTugasEnum::Belum,
         ]);
@@ -95,7 +101,7 @@ class PesertaClassroomTugasLogbookTest extends TestCase
             'judul' => 'Analisis Kebutuhan Sistem MagKom',
             'deskripsi' => 'Dokumentasikan use case dan business logic.',
             'kategori' => 'Analisis Sistem',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Tinggi,
+            'kompleksitas' => KompleksitasEnum::Tinggi,
             'deadline' => now()->subDay(),
             'status' => StatusTugasEnum::Proses,
         ]);
@@ -109,7 +115,7 @@ class PesertaClassroomTugasLogbookTest extends TestCase
         $response->assertSee('Sedang Dikerjakan');
         $response->assertSee('Pembuatan Mockup Dashboard Peserta');
         $response->assertSee('Analisis Kebutuhan Sistem MagKom');
-        $response->assertSee('Tenggat: ' . now()->addDays(3)->translatedFormat('d M Y'));
+        $response->assertSee('Tenggat: '.now()->addDays(3)->translatedFormat('d M Y'));
     }
 
     public function test_peserta_dapat_melihat_detail_tugas_layout_dua_kolom(): void
@@ -119,7 +125,7 @@ class PesertaClassroomTugasLogbookTest extends TestCase
             'judul' => 'Implementasi Modul Logbook Magang',
             'deskripsi' => 'Kerjakan modul logbook harian dengan blade dan vanilla CSS.',
             'kategori' => 'Pemrograman Web',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'deadline' => now()->addDays(5),
             'status' => StatusTugasEnum::Belum,
         ]);
@@ -141,7 +147,7 @@ class PesertaClassroomTugasLogbookTest extends TestCase
             'judul' => 'Slicing Desain Komponen',
             'deskripsi' => 'Kerjakan slicing CSS untuk halaman detail tugas.',
             'kategori' => 'Pemrograman Web',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Rendah,
+            'kompleksitas' => KompleksitasEnum::Rendah,
             'deadline' => now()->addDays(4),
             'status' => StatusTugasEnum::Belum,
         ]);
@@ -160,7 +166,7 @@ class PesertaClassroomTugasLogbookTest extends TestCase
         $tugas->refresh();
         $this->assertEquals(StatusTugasEnum::Proses, $tugas->status);
 
-        $progres = \App\Models\ProgresLog::where('tugas_id', $tugas->id)->latest()->first();
+        $progres = ProgresLog::where('tugas_id', $tugas->id)->latest()->first();
         $this->assertNotNull($progres);
         $this->assertNotNull($progres->file);
         $this->assertEquals('https://github.com/magkom/demo-progres', $progres->link);
@@ -179,7 +185,7 @@ class PesertaClassroomTugasLogbookTest extends TestCase
             'judul' => 'Pembuatan Desain Mockup Figma',
             'deskripsi' => 'Kerjakan mockup desain halaman profil.',
             'kategori' => 'UI/UX Design',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Rendah,
+            'kompleksitas' => KompleksitasEnum::Rendah,
             'deadline' => now()->addDays(3),
             'status' => StatusTugasEnum::Belum,
         ]);
@@ -192,7 +198,7 @@ class PesertaClassroomTugasLogbookTest extends TestCase
         $response->assertRedirect(route('peserta.tugas.show', $tugas));
         $response->assertSessionHas('success');
 
-        $progres = \App\Models\ProgresLog::where('tugas_id', $tugas->id)->latest()->first();
+        $progres = ProgresLog::where('tugas_id', $tugas->id)->latest()->first();
         $this->assertNotNull($progres);
         $this->assertNull($progres->file);
         $this->assertEquals('https://www.figma.com/file/contoh-link-mockup', $progres->link);

@@ -104,7 +104,7 @@ class QuotaAllocationService
         }
 
         if ($query->exists()) {
-            throw new PendaftaranAktifGandaException();
+            throw new PendaftaranAktifGandaException;
         }
     }
 }

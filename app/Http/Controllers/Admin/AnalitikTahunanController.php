@@ -16,6 +16,7 @@ use App\Models\Penempatan;
 use App\Models\Penilaian;
 use App\Services\AuditService;
 use App\Services\ExportReportService;
+use App\Support\Pengaturan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,10 @@ class AnalitikTahunanController extends Controller
      */
     public function index(Request $request): View
     {
+        if (! Pengaturan::bool('fitur_analitik_aktif', true)) {
+            abort(404, 'Fitur analitik tahunan saat ini dinonaktifkan oleh administrator.');
+        }
+
         $tahun = (int) ($request->input('tahun') ?? date('Y'));
         $data = $this->hitungMetrikTahunan($tahun, $request->user());
 
@@ -45,6 +50,10 @@ class AnalitikTahunanController extends Controller
      */
     public function export(Request $request, ExportReportService $exportService, AuditService $auditService): StreamedResponse
     {
+        if (! Pengaturan::bool('fitur_analitik_aktif', true)) {
+            abort(404, 'Fitur analitik tahunan saat ini dinonaktifkan oleh administrator.');
+        }
+
         $tahun = (int) ($request->input('tahun') ?? date('Y'));
         $user = $request->user();
         $canViewNilai = $user->role === RoleEnum::SuperAdmin;
@@ -62,7 +71,7 @@ class AnalitikTahunanController extends Controller
                 $b['pendaftar'],
                 $b['diterima'],
                 $b['selesai'],
-                $b['rasio'] . '%',
+                $b['rasio'].'%',
             ];
             if ($canViewNilai) {
                 $row[] = $b['rata_nilai'] !== null ? number_format((float) $b['rata_nilai'], 2) : '-';
@@ -76,7 +85,7 @@ class AnalitikTahunanController extends Controller
             $data['totalPendaftaran'],
             $data['totalDiterima'],
             $data['totalSelesai'],
-            number_format($data['acceptanceRate'], 1) . '%',
+            number_format($data['acceptanceRate'], 1).'%',
         ];
         if ($canViewNilai) {
             $summaryRow[] = $data['rataRataNilai'] !== null ? number_format((float) $data['rataRataNilai'], 2) : '-';

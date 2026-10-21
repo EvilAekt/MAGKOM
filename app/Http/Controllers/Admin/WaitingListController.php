@@ -11,6 +11,7 @@ use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Pendaftaran;
 use App\Services\AuditService;
+use App\Services\PlacementService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -44,7 +45,9 @@ class WaitingListController extends Controller
         }
 
         if ($request->filled('search')) {
-            $search = '%' . trim((string) $request->input('search')) . '%';
+            $rawSearch = trim((string) $request->input('search'));
+            $escapedSearch = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $rawSearch);
+            $search = '%'.$escapedSearch.'%';
             $query->where(function ($q) use ($search) {
                 $q->whereHas('user', function ($qu) use ($search) {
                     $qu->where('nama', 'like', $search)
@@ -124,5 +127,55 @@ class WaitingListController extends Controller
 
         return redirect()->route('admin.waiting-list.index')
             ->with('success', "Sebanyak {$jumlahDitutup} pendaftaran waiting list untuk bulan {$bulanMagang->bulan_mulai} berhasil ditutup.");
+    }
+
+    /**
+     * Mempromosikan pendaftar waiting list teratas secara FIFO saat kuota tersedia (PRD F-04 AC-04-4, AC-04-6, BR-05).
+     */
+    public function promoteFifo(Request $request, PlacementService $placementService): RedirectResponse
+    {
+        $admin = $request->user();
+
+        // Ambil pendaftaran waiting list spesifik atau urutan pertama berdasarkan diajukan_at terlama (FIFO)
+        $query = Pendaftaran::with(['kuota.bulanMagang', 'kuota.jurusan', 'user.profil'])
+            ->where('status', StatusPendaftaranEnum::WaitingList);
+
+        if ($request->filled('pendaftaran_id')) {
+            $pendaftaran = $query->find($request->integer('pendaftaran_id'));
+        } elseif ($request->filled('bulan_magang_id') && $request->filled('jurusan_id')) {
+            $bulanId = $request->integer('bulan_magang_id');
+            $jurusanId = $request->integer('jurusan_id');
+            $pendaftaran = $query->where('bulan_magang_id', $bulanId)
+                ->whereHas('kuota', fn ($q) => $q->where('jurusan_id', $jurusanId))
+                ->orderBy('diajukan_at', 'asc')
+                ->first();
+        } else {
+            $pendaftaran = $query->orderBy('diajukan_at', 'asc')->first();
+        }
+
+        if (! $pendaftaran) {
+            return back()->with('error', 'Tidak ada calon peserta waiting list yang memenuhi kriteria untuk dipromosikan.');
+        }
+
+        // Validasi sisa kuota umum
+        $kuota = $pendaftaran->kuota;
+        if (! $kuota || ($kuota->jumlah - $kuota->terisi) <= 0) {
+            $jurusanNama = $kuota?->jurusan?->nama_jurusan ?? 'jurusan tersebut';
+            $bulanMulai = $kuota?->bulanMagang?->bulan_mulai ?? 'bulan tersebut';
+
+            return back()->with('error', "Kuota umum untuk {$jurusanNama} periode {$bulanMulai} saat ini penuh (0 sisa kuota). Pendaftar belum dapat dinaikkan.");
+        }
+
+        try {
+            $penempatan = $placementService->terima(
+                pendaftaran: $pendaftaran,
+                admin: $admin
+            );
+
+            return redirect()->route('admin.waiting-list.index')
+                ->with('success', "Pendaftar antrean FIFO {$pendaftaran->user->nama} ({$pendaftaran->user->profil?->institusi}) berhasil dipromosikan dan diterima magang.");
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Gagal mempromosikan pendaftar waiting list: '.$e->getMessage());
+        }
     }
 }

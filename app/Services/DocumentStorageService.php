@@ -11,6 +11,7 @@ use App\Support\Pengaturan;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DocumentStorageService
@@ -96,7 +97,7 @@ class DocumentStorageService
     /**
      * Menyajikan berkas dari disk privat secara inline untuk pratinjau browser/modal.
      */
-    public function pratinjau(Dokumen $dokumen): \Symfony\Component\HttpFoundation\Response
+    public function pratinjau(Dokumen $dokumen): Response
     {
         if (! Storage::disk('private')->exists($dokumen->path)) {
             abort(404, 'Berkas fisik tidak ditemukan di penyimpanan server.');
@@ -107,10 +108,28 @@ class DocumentStorageService
             $dokumen->nama_asli,
             [
                 'Content-Type' => $dokumen->mime,
-                'Content-Disposition' => 'inline; filename="' . $dokumen->nama_asli . '"',
+                'Content-Disposition' => 'inline; filename="'.$dokumen->nama_asli.'"',
                 'X-Content-Type-Options' => 'nosniff',
             ],
             'inline'
         );
+    }
+
+    /**
+     * Menghapus seluruh berkas fisik pendaftaran dari disk privat (Kepatuhan UU PDP Hak Lupa).
+     */
+    public function hapusBerkasPendaftaran(Pendaftaran $pendaftaran): void
+    {
+        $folder = "documents/{$pendaftaran->id}";
+        if (Storage::disk('private')->exists($folder)) {
+            Storage::disk('private')->deleteDirectory($folder);
+        }
+
+        foreach ($pendaftaran->dokumen as $dokumen) {
+            if (Storage::disk('private')->exists($dokumen->path)) {
+                Storage::disk('private')->delete($dokumen->path);
+            }
+            $dokumen->delete();
+        }
     }
 }

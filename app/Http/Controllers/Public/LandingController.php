@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Public;
 
-use App\Enums\JenjangEnum;
 use App\Enums\StatusKetersediaanEnum;
 use App\Http\Controllers\Controller;
 use App\Models\BulanMagang;
@@ -39,8 +38,9 @@ class LandingController extends Controller
             return $this->bulanStatusService->tampilDiLanding($bulan, $sekarang);
         })->values();
 
-        // Ambil jurusan aktif
-        $semuaJurusan = Jurusan::where('aktif', true)
+        // Ambil jurusan aktif beserta bidang penempatan
+        $semuaJurusan = Jurusan::with('bidang')
+            ->where('aktif', true)
             ->orderBy('kategori', 'asc')
             ->orderBy('nama_jurusan', 'asc')
             ->get();
@@ -61,9 +61,16 @@ class LandingController extends Controller
                 $sisaKuota = $kuota ? max(0, $kuota->jumlah - $kuota->terisi) : 0;
                 $isWaitingList = ($status === StatusKetersediaanEnum::Tersedia && $sisaKuota === 0);
 
+                $totalKuota = $kuota ? (int) $kuota->jumlah : 0;
+                $terisiKuota = $kuota ? (int) $kuota->terisi : 0;
+                $persenTerisi = $totalKuota > 0 ? (int) min(100, round(($terisiKuota / $totalKuota) * 100)) : 0;
+
                 $matriksKetersediaan[$jurusan->id][$bulan->id] = [
                     'bulan' => $bulan,
                     'kuota' => $kuota,
+                    'total_kuota' => $totalKuota,
+                    'terisi' => $terisiKuota,
+                    'persen_terisi' => $persenTerisi,
                     'status' => $status,
                     'sisa_kuota' => $sisaKuota,
                     'is_waiting_list' => $isWaitingList,

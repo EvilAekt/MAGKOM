@@ -23,8 +23,8 @@ class PendaftaranRequest extends FormRequest
     {
         return [
             'bulan_magang_id' => ['required', 'exists:bulan_magang,id'],
-            'kuota_id'        => ['required', 'exists:kuota,id'],
-            'durasi_bulan'    => ['required', 'integer', 'min:1', 'max:6'],
+            'kuota_id' => ['required', 'exists:kuota,id'],
+            'durasi_bulan' => ['required', 'integer', 'min:1', 'max:6'],
         ];
     }
 

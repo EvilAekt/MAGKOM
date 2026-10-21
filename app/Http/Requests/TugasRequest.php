@@ -16,6 +16,13 @@ class TugasRequest extends FormRequest
 {
     public function authorize(): bool
     {
+        if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            $tugas = $this->route('tugas');
+            if ($tugas) {
+                return $this->user()?->can('update', $tugas) ?? false;
+            }
+        }
+
         return true;
     }
 
@@ -60,7 +67,7 @@ class TugasRequest extends FormRequest
                     if ($deadline->gt($tglSelesai)) {
                         $validator->errors()->add(
                             'deadline',
-                            'Deadline tugas tidak boleh melebihi batas akhir magang peserta (' . $penempatan->tgl_selesai->format('d/m/Y') . ').'
+                            'Deadline tugas tidak boleh melebihi batas akhir magang peserta ('.$penempatan->tgl_selesai->format('d/m/Y').').'
                         );
                     }
                 }

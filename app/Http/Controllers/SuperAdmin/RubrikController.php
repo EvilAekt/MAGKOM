@@ -143,6 +143,7 @@ class RubrikController extends Controller
         );
 
         $statusLabel = $targetAktif ? 'diaktifkan' : 'dinonaktifkan';
+
         return redirect()->route('superadmin.rubrik.index')
             ->with('success', "Kriteria rubrik {$rubrik->kriteria} berhasil {$statusLabel}.");
     }

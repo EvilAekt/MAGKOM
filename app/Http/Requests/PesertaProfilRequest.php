@@ -17,7 +17,7 @@ class PesertaProfilRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'nim_nisn' => ['required', 'string', 'max:20'],
             'institusi' => ['required', 'string', 'max:150'],
             'jurusan_id' => ['required', 'exists:jurusan,id'],
@@ -31,7 +31,14 @@ class PesertaProfilRequest extends FormRequest
             'nama_kontak_darurat' => ['nullable', 'string', 'max:100'],
             'no_kontak_darurat' => ['nullable', 'string', 'max:20', 'regex:/^[0-9\+\-\s]+$/'],
             'hubungan_kontak_darurat' => ['nullable', 'string', 'max:50'],
+            'persetujuan_wali' => ['nullable'],
         ];
+
+        if ($this->input('jenjang') === JenjangEnum::Smk->value && $this->has('persetujuan_wali')) {
+            $rules['persetujuan_wali'] = ['accepted'];
+        }
+
+        return $rules;
     }
 
     public function messages(): array
@@ -48,6 +55,8 @@ class PesertaProfilRequest extends FormRequest
             'foto.mimes' => 'Format foto profil harus berupa JPG, JPEG, PNG, atau WEBP.',
             'foto.max' => 'Ukuran berkas foto profil tidak boleh melebihi 2 MB.',
             'no_kontak_darurat.regex' => 'Format nomor kontak darurat tidak valid.',
+            'persetujuan_wali.required' => 'Calon peserta jenjang SMK wajib menyetujui pernyataan persetujuan orang tua / wali sesuai UU PDP.',
+            'persetujuan_wali.accepted' => 'Pernyataan persetujuan orang tua / wali harus disetujui.',
         ];
     }
 }

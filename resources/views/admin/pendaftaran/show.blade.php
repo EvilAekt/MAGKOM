@@ -518,7 +518,211 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .adm-detail-wrapper {
+            color: #E2E8F0;
+        }
+
+        [data-theme="dark"] .adm-identity-bar {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-candidate-name {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-candidate-sub {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-submission-time {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-submission-time strong {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-btn-back {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-back:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .adm-panel-card {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-panel-header {
+            background: #141E30 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-panel-title {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-panel-title svg {
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .adm-doc-item {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-doc-item:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        [data-theme="dark"] .adm-doc-title {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-doc-detail {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-action-download {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .adm-btn-action-download:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .adm-summary-label {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-summary-val {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-decision-tabs {
+            background: #0F172A !important;
+            border: 1px solid #26354D !important;
+        }
+
+        [data-theme="dark"] .adm-tab-pill {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .adm-form-field label {
+            color: #E2E8F0 !important;
+        }
+
+        [data-theme="dark"] .adm-form-field select,
+        [data-theme="dark"] .adm-form-field textarea {
+            background: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-form-field select:focus,
+        [data-theme="dark"] .adm-form-field textarea:focus {
+            border-color: #3B82F6 !important;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        [data-theme="dark"] .adm-form-field select option {
+            background: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .doc-modal-box {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .doc-modal-body {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] #previewModalTitle {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] #previewOpenNewTabBtn,
+        [data-theme="dark"] #previewDownloadBtn {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] #previewOpenNewTabBtn:hover,
+        [data-theme="dark"] #previewDownloadBtn:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] #previewLoading {
+            background: rgba(15, 23, 42, 0.95) !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] #previewLoading > div:nth-child(2) {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] #previewLoading > div:nth-child(3) {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] #previewError > div:nth-child(2) {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] #previewError > div:nth-child(3) {
+            color: #94A3B8 !important;
+        }
+
+        /* Rekam Jejak Pendaftaran Borders in Dark Mode */
+        [data-theme="dark"] .adm-panel-body div[style*="border-bottom: 1px solid #F1F5F9"] {
+            border-bottom-color: #26354D !important;
+        }
+        [data-theme="dark"] .adm-panel-body div[style*="border-bottom: 1px solid #F1F5F9"] span[style*="color: #64748B"] {
+            color: #94A3B8 !important;
+        }
+        [data-theme="dark"] .adm-panel-body div[style*="border-bottom: 1px solid #F1F5F9"] span[style*="color: #0F172A"] {
+            color: #F8FAFC !important;
+        }
     </style>
+
+    {{-- SEC-15: Indikator Peringatan Deteksi NIM/NISN Ganda Lintas Akun --}}
+    @if(isset($duplikasiNimCount) && $duplikasiNimCount > 0)
+        <div style="background: #FEF3C7; border: 1.5px solid #F59E0B; border-radius: 12px; padding: 14px 18px; color: #92400E; display: flex; align-items: flex-start; gap: 12px; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.08);">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 1px; color: #D97706;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <div style="font-size: 0.875rem; line-height: 1.45;">
+                <strong style="color: #78350F; font-size: 0.9375rem;">Peringatan Keamanan & Integritas Data (SEC-15 / BR-17):</strong><br>
+                Nomor identitas (NIM/NISN) <code>{{ $profil?->nim_nisn }}</code> ini juga terdaftar pada <strong>{{ $duplikasiNimCount }} akun peserta lainnya</strong> di sistem. Harap verifikator memeriksa keabsahan dokumen identitas pendaftar sebelum mengambil keputusan.
+            </div>
+        </div>
+    @endif
 
     {{-- ======================================================================
          1. COMPACT IDENTITY BAR (HEADER RAMPING & BERSIH)
@@ -580,7 +784,7 @@
                 <div class="adm-panel-header">
                     <h3 class="adm-panel-title">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                        <span>Dokumen Persyaratan Calon Peserta</span>
+                        <span>Verifikasi Berkas Calon Peserta</span>
                     </h3>
                     <span style="font-size: 0.75rem; font-weight: 700; color: #0641CC; background: #EFF6FF; padding: 3px 10px; border-radius: 9999px;">
                         {{ $pendaftaran->dokumen->count() }} Berkas
@@ -633,12 +837,12 @@
                 </div>
             </div>
 
-            {{-- SECTION 2: RANGKUMAN BIODATA & PERIODE MAGANG TERPADU --}}
+            {{-- SECTION 2: RANGKUMAN BIODATA & BULAN MAGANG TERPADU --}}
             <div class="adm-panel-card">
                 <div class="adm-panel-header">
                     <h3 class="adm-panel-title">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        <span>Rangkuman Biodata & Periode Magang</span>
+                        <span>Rangkuman Biodata & Bulan Magang</span>
                     </h3>
                     <span style="font-size: 0.75rem; font-weight: 700; color: #475569;">
                         Durasi: {{ $pendaftaran->durasi_bulan }} Bulan
@@ -662,7 +866,7 @@
                             <small style="color: #64748B; font-size: 0.775rem;">WhatsApp: {{ $profil?->no_hp ?? '-' }}</small>
                         </div>
                         <div class="adm-summary-cell">
-                            <span class="adm-summary-label">Periode Magang & Kuota</span>
+                            <span class="adm-summary-label">Bulan Magang & Kuota</span>
                             <span class="adm-summary-val" style="color: #0641CC;">
                                 {{ $pendaftaran->bulanMagang?->bulan_mulai?->translatedFormat('F Y') ?? 'Belum ditentukan' }}
                             </span>
@@ -742,30 +946,26 @@
 
                                 {{-- PANEL 1: TERIMA --}}
                                 <div id="action-panel-terima" style="display: flex; flex-direction: column;">
-                                    <div class="adm-form-field">
-                                        <label for="pembimbing_id">
-                                            Tetapkan Pembimbing Lapangan <span style="color: #DC2626;">*</span>
-                                        </label>
-                                        <select id="pembimbing_id" name="pembimbing_id" required>
-                                            <option value="">-- Pilih Pembimbing Dinas --</option>
-                                            @foreach($pembimbingList as $p)
-                                                <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->mentee_aktif_count ?? 0 }} Mentee Aktif)</option>
-                                            @endforeach
-                                        </select>
+                                    <div style="background: #EFF6FF; border: 1px solid #DBEAFE; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem; font-size: 0.8125rem; color: #1E40AF; line-height: 1.45;">
+                                        <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                            </svg>
+                                            <div>
+                                                <strong>Verifikasi Tahap 1:</strong> Menyetujui pendaftaran ini akan mengalokasikan kuota umum. Penugasan pembimbing lapangan dan bidang dinas dapat dilakukan di menu <strong>Penempatan Peserta</strong>.
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="adm-form-field">
-                                        <label for="bidang_id">Penempatan Bidang Dinas (Opsional)</label>
-                                        <select id="bidang_id" name="bidang_id">
-                                            <option value="">-- Sesuai Pembimbing Terpilih --</option>
-                                            @foreach($bidangList as $b)
-                                                <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
-                                            @endforeach
-                                        </select>
+                                        <label for="catatan_terima">Catatan Penerimaan (Opsional)</label>
+                                        <textarea id="catatan_terima" name="catatan" rows="2" placeholder="Tambahkan catatan verifikasi berkas jika diperlukan..."></textarea>
                                     </div>
 
-                                    <button type="submit" onclick="return confirm('Apakah Anda yakin menerima calon peserta ini dan menetapkan penempatan magang?');" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #0641CC; color: #FFFFFF; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: background 0.15s ease;">
-                                        Terima & Tempatkan Peserta
+                                    <button type="submit" onclick="return confirm('Apakah Anda yakin menerima berkas calon peserta ini?');" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #0641CC; color: #FFFFFF; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: background 0.15s ease;">
+                                        Diterima
                                     </button>
                                 </div>
 
@@ -829,8 +1029,6 @@
                                         }
                                     });
 
-                                    const pembimbingSelect = document.getElementById('pembimbing_id');
-                                    if (pembimbingSelect) pembimbingSelect.required = (action === 'terima');
                                     const catatanRevisi = document.getElementById('catatan_revisi');
                                     const catatanTolak = document.getElementById('catatan_tolak');
                                     if (catatanRevisi) catatanRevisi.required = (action === 'perlu_perbaikan');

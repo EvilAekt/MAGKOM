@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\RoleEnum;
+use App\Enums\StatusPenempatanEnum;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -27,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'nama',
         'email',
         'no_telp',
+        'foto',
         'password',
         'provider',
         'provider_id',
@@ -44,6 +49,16 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    /**
+     * Nilai default atribut model.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'status_aktif' => true,
+        'must_change_password' => false,
     ];
 
     /**
@@ -67,6 +82,22 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->nama;
     }
 
+    /**
+     * Accessor URL berkas foto profil pengguna / staf.
+     */
+    public function getFotoUrlAttribute(): ?string
+    {
+        if ($this->foto && Storage::disk('public')->exists($this->foto)) {
+            return Storage::disk('public')->url($this->foto);
+        }
+
+        // Fallback untuk akun peserta yang menyimpan foto di tabel peserta_profil
+        if ($this->isPeserta() && $this->profil?->foto_url) {
+            return $this->profil->foto_url;
+        }
+
+        return null;
+    }
 
     /**
      * Relasi ke unit kerja bidang (khusus staf).
@@ -87,7 +118,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Relasi ke profil peserta (khusus role peserta).
      */
-    public function profil(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function profil(): HasOne
     {
         return $this->hasOne(PesertaProfil::class, 'user_id');
     }
@@ -95,7 +126,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Relasi ke riwayat pengajuan pendaftaran magang.
      */
-    public function pendaftaran(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function pendaftaran(): HasMany
     {
         return $this->hasMany(Pendaftaran::class, 'user_id');
     }
@@ -103,7 +134,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Relasi ke catatan penempatan magang aktif (sebagai peserta).
      */
-    public function penempatanPeserta(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function penempatanPeserta(): HasMany
     {
         return $this->hasMany(Penempatan::class, 'peserta_id');
     }
@@ -111,7 +142,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Relasi ke peserta yang dibimbing (sebagai pembimbing).
      */
-    public function penempatanBimbingan(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function penempatanBimbingan(): HasMany
     {
         return $this->hasMany(Penempatan::class, 'pembimbing_id');
     }
@@ -139,6 +170,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->role === RoleEnum::Peserta;
     }
 
+    public function isStaf(): bool
+    {
+        return in_array($this->role, [
+            RoleEnum::SuperAdmin,
+            RoleEnum::Admin,
+            RoleEnum::Pembimbing,
+        ], true);
+    }
+
     /**
      * Memeriksa apakah peserta magang telah resmi diterima dan memiliki penempatan aktif / selesai.
      */
@@ -146,12 +186,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         if ($this->relationLoaded('penempatanPeserta')) {
             return $this->penempatanPeserta->contains(function ($p) {
-                return in_array($p->status, [\App\Enums\StatusPenempatanEnum::Aktif, \App\Enums\StatusPenempatanEnum::Selesai], true);
+                return in_array($p->status, [StatusPenempatanEnum::Aktif, StatusPenempatanEnum::Selesai], true);
             });
         }
 
         return $this->penempatanPeserta()
-            ->whereIn('status', [\App\Enums\StatusPenempatanEnum::Aktif, \App\Enums\StatusPenempatanEnum::Selesai])
+            ->whereIn('status', [StatusPenempatanEnum::Aktif, StatusPenempatanEnum::Selesai])
             ->exists();
     }
 

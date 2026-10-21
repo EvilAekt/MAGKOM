@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
+use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusTugasEnum;
+use App\Enums\SumberPenempatanEnum;
+use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
@@ -18,7 +21,6 @@ use App\Models\Kuota;
 use App\Models\Logbook;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
 use App\Models\SlotKhusus;
 use App\Models\Tugas;
@@ -26,6 +28,7 @@ use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
 use Database\Seeders\RubrikSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
@@ -33,12 +36,19 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
+
     protected Penempatan $penempatan;
 
     protected function setUp(): void
@@ -75,7 +85,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         ]);
 
         // 1. Akun SuperAdmin
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'SuperAdmin Eksekutif';
         $this->superAdmin->email = 'superadmin.unified@slemankab.go.id';
         $this->superAdmin->password = bcrypt('Password123!');
@@ -96,7 +106,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         ]);
 
         // 2. Akun Admin
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Operasional';
         $this->admin->email = 'admin.unified@slemankab.go.id';
         $this->admin->password = bcrypt('Password123!');
@@ -107,7 +117,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $this->admin->save();
 
         // 3. Akun Pembimbing
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan Utama';
         $this->pembimbing->email = 'pembimbing.unified@slemankab.go.id';
         $this->pembimbing->password = bcrypt('Password123!');
@@ -118,7 +128,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $this->pembimbing->save();
 
         // 4. Akun Peserta
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Budi Santoso';
         $this->peserta->email = 'budi.santoso@example.com';
         $this->peserta->password = bcrypt('Password123!');
@@ -154,8 +164,8 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
             'pembimbing_id' => $this->pembimbing->id,
             'bidang_id' => $bidang->id,
             'kuota_id' => $this->kuota->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'dibuat_oleh' => $this->superAdmin->id,
             'tgl_mulai' => now()->startOfMonth(),
             'tgl_selesai' => now()->addMonths(3)->endOfMonth(),
@@ -168,7 +178,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
             'judul' => 'Pengembangan Modul Dashboard Terpadu',
             'deskripsi' => 'Rancang antarmuka dashboard eksekutif',
             'kategori' => 'Pengembangan Sistem',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'deadline' => now()->addDays(5)->toDateString(),
             'status' => StatusTugasEnum::Proses,
         ]);
@@ -185,7 +195,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         AuditLog::create([
             'request_id' => 'req-test-unified-001',
             'user_id' => $this->superAdmin->id,
-            'tipe' => \App\Enums\TipeAuditEnum::Aksi,
+            'tipe' => TipeAuditEnum::Aksi,
             'aksi' => 'Memperbarui parameter konfigurasi sistem MagKom',
             'entitas' => 'pengaturan',
             'entitas_id' => 1,
@@ -210,7 +220,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Dashboard Eksekutif Tata Kelola MagKom');
         $response->assertSee('Dashboard SuperAdmin');
-        
+
         // Memastikan Quick Actions Bar merender 5 pintasan 1-klik
         $response->assertSee('+ Akun Staf');
         $response->assertSee('+ Periode Magang');
@@ -291,7 +301,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Hub Ekspor Instan Laporan Resmi Dinas (AC-17-1)');
-        
+
         // Memastikan 4 Laporan Dinas tersedia dengan link ekspor CSV instan
         $response->assertSee('Laporan Pendaftaran');
         $response->assertSee('Laporan Penempatan');
@@ -373,8 +383,8 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
             'peserta_id' => $this->peserta->id,
             'kuota_id' => $this->kuota->id,
             'pembimbing_id' => $this->pembimbing->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'status' => StatusPenempatanEnum::Selesai,
             'tgl_mulai' => now()->subMonths(3)->toDateString(),
             'tgl_selesai' => now()->subDay()->toDateString(),
@@ -383,7 +393,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         ]);
 
         // Buat staf yang belum aktivasi sandi awal (BR-15)
-        $stafBaru = new User();
+        $stafBaru = new User;
         $stafBaru->nama = 'Staf Baru Belum Ganti Sandi';
         $stafBaru->email = 'staf.pending@slemankab.go.id';
         $stafBaru->password = bcrypt('Secret123!');
@@ -426,9 +436,9 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
     {
         // Buat anomali login gagal terbaru
         AuditLog::create([
-            'request_id' => (string) \Illuminate\Support\Str::uuid(),
+            'request_id' => (string) Str::uuid(),
             'user_id' => null,
-            'tipe' => \App\Enums\TipeAuditEnum::Auth,
+            'tipe' => TipeAuditEnum::Auth,
             'aksi' => 'login_gagal',
             'status_http' => 401,
             'ip' => '192.168.1.105',
@@ -446,11 +456,11 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $response->assertSee('Higienitas Kredensial Staf (BR-15)');
         $response->assertSee('Vault Dokumen Privat (NFR-S2)');
         $response->assertSee('Audit Trail Imutabel (NFR-S9)');
-        
+
         // Memastikan rekaman radar anomali ter-render dengan detail IP
         $response->assertSee('Radar Anomali Login Terakhir');
         $response->assertSee('192.168.1.105');
-        
+
         // Memastikan distribusi 4 kategori audit trail PRD Bab 10.3 dan postur hardening
         $response->assertSee('Distribusi Audit Trail (PRD Bab 10.3)');
         $response->assertSee('Auth (Login/Sesi)');
@@ -470,8 +480,8 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
             'peserta_id' => $this->peserta->id,
             'kuota_id' => $this->kuota->id,
             'pembimbing_id' => $this->pembimbing->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'status' => StatusPenempatanEnum::Aktif,
             'tgl_mulai' => now()->subMonths(2)->toDateString(),
             'tgl_selesai' => now()->addDays(5)->toDateString(),
@@ -483,7 +493,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
             'judul' => 'Audit Keamanan Modul Auth',
             'deskripsi' => 'Pengujian celah keamanan',
             'kategori' => 'individu',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'deadline' => now()->subDays(2)->toDateString(),
             'status' => StatusTugasEnum::Belum,
         ]);
@@ -499,5 +509,3 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $response->assertSee('5 Hari Lagi');
     }
 }
-
-

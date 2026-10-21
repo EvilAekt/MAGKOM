@@ -5,16 +5,7 @@
 @section('content')
 <div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- Flash Notification -->
-    @if(session('success'))
-        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; color: #065f46;">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                <span style="font-size: 0.875rem; font-weight: 500;">{{ session('success') }}</span>
-            </div>
-            <button type="button" onclick="this.parentElement.remove()" style="background: transparent; border: none; cursor: pointer; color: #065f46;">&times;</button>
-        </div>
-    @endif
+
 
     <!-- Header & Breadcrumbs -->
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -57,7 +48,7 @@
     </div>
 
     <!-- Filter Bar Card -->
-    <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="app-card" style="background: var(--neutral-0); border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
         <form method="GET" action="{{ route('pembimbing.penilaian.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
             
             <!-- Filter Status Penilaian -->
@@ -101,7 +92,7 @@
     </div>
 
     <!-- Data Table Card -->
-    <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
+    <div class="app-card" style="background: var(--neutral-0); border-radius: 14px; border: 1px solid var(--neutral-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
         @if($penempatanList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-500);">
                 <div style="width: 64px; height: 64px; background: var(--neutral-100); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: var(--neutral-400);">

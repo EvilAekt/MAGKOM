@@ -28,8 +28,11 @@ class PesertaPendaftaranFlowTest extends TestCase
     use RefreshDatabase;
 
     protected User $peserta;
+
     protected BulanMagang $bulan;
+
     protected Kuota $kuota;
+
     protected Jurusan $jurusan;
 
     protected function setUp(): void
@@ -39,7 +42,7 @@ class PesertaPendaftaranFlowTest extends TestCase
         Storage::fake('private');
         $this->seed(JenisDokumenSeeder::class);
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Ahmad Fajar';
         $this->peserta->email = 'ahmad.fajar@example.com';
         $this->peserta->password = 'Password123!';
@@ -187,8 +190,8 @@ class PesertaPendaftaranFlowTest extends TestCase
             Dokumen::create([
                 'pendaftaran_id' => $pendaftaran->id,
                 'jenis_dokumen_id' => $jenis->id,
-                'path' => 'dokumen/test_' . $jenis->kode . '.pdf',
-                'nama_asli' => 'test_' . $jenis->kode . '.pdf',
+                'path' => 'dokumen/test_'.$jenis->kode.'.pdf',
+                'nama_asli' => 'test_'.$jenis->kode.'.pdf',
                 'mime' => 'application/pdf',
                 'ukuran' => 204800,
                 'hash' => md5($jenis->kode),
@@ -214,7 +217,7 @@ class PesertaPendaftaranFlowTest extends TestCase
             'diputuskan_at' => now(),
         ]);
 
-        $pembimbing = new User();
+        $pembimbing = new User;
         $pembimbing->nama = 'Bambang Pembimbing';
         $pembimbing->email = 'bambang@sleman.go.id';
         $pembimbing->password = 'Password123!';
@@ -342,8 +345,8 @@ class PesertaPendaftaranFlowTest extends TestCase
             Dokumen::create([
                 'pendaftaran_id' => $pendaftaran->id,
                 'jenis_dokumen_id' => $jenis->id,
-                'path' => 'dokumen/test_' . $jenis->kode . '.pdf',
-                'nama_asli' => 'test_' . $jenis->kode . '.pdf',
+                'path' => 'dokumen/test_'.$jenis->kode.'.pdf',
+                'nama_asli' => 'test_'.$jenis->kode.'.pdf',
                 'mime' => 'application/pdf',
                 'ukuran' => 204800,
                 'hash' => md5($jenis->kode),
@@ -436,7 +439,7 @@ class PesertaPendaftaranFlowTest extends TestCase
         $unsignedRes->assertStatus(403);
 
         // 3. Peserta lain ditolak mengakses berkas privat orang lain (403 IDOR prevention)
-        $pesertaLain = new User();
+        $pesertaLain = new User;
         $pesertaLain->nama = 'Peserta Lain';
         $pesertaLain->email = 'peserta.lain@example.com';
         $pesertaLain->password = 'Password123!';

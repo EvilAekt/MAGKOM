@@ -94,7 +94,7 @@ class BulanController extends Controller
             $hasActivePenempatan = Penempatan::where('status', StatusPenempatanEnum::Aktif)
                 ->where(function ($q) use ($bulan) {
                     $q->whereHas('kuota', fn ($qk) => $qk->where('bulan_magang_id', $bulan->id))
-                      ->orWhereHas('pendaftaran', fn ($qp) => $qp->where('bulan_magang_id', $bulan->id));
+                        ->orWhereHas('pendaftaran', fn ($qp) => $qp->where('bulan_magang_id', $bulan->id));
                 })
                 ->exists();
 

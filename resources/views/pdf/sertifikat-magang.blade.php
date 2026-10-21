@@ -158,7 +158,7 @@
         <div class="cert-inner-border">
             <div class="kop-instansi">Pemerintah Kabupaten Sleman</div>
             <div class="kop-dinas">Dinas Komunikasi dan Informatika</div>
-            <div class="kop-alamat">Jl. Parasamya No. 1, Beran, Tridadi, Sleman, D.I. Yogyakarta 55511 &bull; Portal MagKom</div>
+            <div class="kop-alamat">Jl. Parasamya No. 1, Beran, Tridadi, Sleman, D.I. Yogyakarta 55511 &bull; Magang Kominfo</div>
 
             <div class="cert-title">Sertifikat Kelulusan</div>
             <div class="cert-number">Nomor Seri: {{ $nomorSertifikat }}</div>

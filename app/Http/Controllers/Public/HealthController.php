@@ -28,7 +28,7 @@ class HealthController extends Controller
         }
 
         try {
-            $probeFile = 'probe_' . uniqid() . '.tmp';
+            $probeFile = 'probe_'.uniqid().'.tmp';
             Storage::disk('private')->put($probeFile, 'ok');
             if (Storage::disk('private')->exists($probeFile)) {
                 $storageOk = true;

@@ -229,7 +229,7 @@
                         </div>
                         <strong style="color: #1a365d;">Verifikasi Dokumen Elektronik</strong><br>
                         Kode: <span style="font-family: monospace; font-weight: bold; color: #2b6cb0;">{{ $dokumenVerifikasi->kode_unik ?? '-' }}</span><br>
-                        <span>Pindai QR Code untuk memvalidasi keaslian nilai resmi pada portal MagKom Diskominfo.</span>
+                        <span>Pindai QR Code untuk memvalidasi keaslian nilai resmi pada Magang Kominfo Diskominfo Sleman.</span>
                     </div>
                 @endif
             </td>

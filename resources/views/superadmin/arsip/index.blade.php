@@ -17,6 +17,70 @@
     </div>
 @endsection
 
+@push('styles')
+<style>
+    /* Dark Mode Overrides for SuperAdmin Arsip */
+    [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
+        background-color: #182234 !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] div[style*="background: var(--blue-tint)"] {
+        background-color: rgba(37, 99, 235, 0.15) !important;
+        border-color: rgba(59, 130, 246, 0.3) !important;
+    }
+
+    [data-theme="dark"] input[type="text"],
+    [data-theme="dark"] select {
+        background-color: #0F172A !important;
+        color: #F8FAFC !important;
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] button[style*="background: var(--neutral-900)"] {
+        background-color: #2563EB !important;
+        color: #FFFFFF !important;
+    }
+
+    [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
+    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"] {
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] table thead tr {
+        background-color: #141E30 !important;
+        border-bottom-color: #26354D !important;
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] table th {
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] table tbody tr {
+        border-bottom-color: #26354D !important;
+    }
+
+    [data-theme="dark"] table tbody tr:hover {
+        background-color: #162238 !important;
+    }
+
+    [data-theme="dark"] span[style*="color: var(--neutral-900)"],
+    [data-theme="dark"] div[style*="color: var(--neutral-900)"],
+    [data-theme="dark"] strong[style*="color: var(--neutral-900)"],
+    [data-theme="dark"] span[style*="color: var(--neutral-800)"],
+    [data-theme="dark"] h3[style*="color: var(--neutral-800)"] {
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] span[style*="color: var(--neutral-600)"],
+    [data-theme="dark"] div[style*="color: var(--neutral-600)"],
+    [data-theme="dark"] p[style*="color: var(--neutral-600)"] {
+        color: #94A3B8 !important;
+    }
+</style>
+@endpush
+
 @section('content')
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
@@ -81,7 +145,7 @@
                         <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                             <th style="padding: 1rem 1.25rem; font-weight: 700;">Peserta & Institusi</th>
                             <th style="padding: 1rem 1rem; font-weight: 700;">Jurusan / Bidang</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Periode Pelaksanaan</th>
+                            <th style="padding: 1rem 1rem; font-weight: 700;">Jadwal Pelaksanaan</th>
                             <th style="padding: 1rem 1rem; font-weight: 700;">Pembimbing Lapangan</th>
                             <th style="padding: 1rem 1rem; font-weight: 700; text-align: center; width: 140px;">Nilai & Predikat</th>
                             <th style="padding: 1rem 1rem; font-weight: 700; width: 150px; text-align: center;">Status Arsip</th>

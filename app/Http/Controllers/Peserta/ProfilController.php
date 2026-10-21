@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Peserta;
 
+use App\Enums\StatusPenempatanEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PesertaProfilRequest;
 use App\Models\Jurusan;
+use App\Models\Penempatan;
 use App\Models\PesertaProfil;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,17 +23,17 @@ class ProfilController extends Controller
         $profil = $user->profil;
         $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
 
-        $penempatan = \App\Models\Penempatan::with(['bidang', 'pembimbing'])
+        $penempatan = Penempatan::with(['bidang', 'pembimbing'])
             ->where('peserta_id', $user->id)
-            ->where('status', \App\Enums\StatusPenempatanEnum::Aktif)
+            ->where('status', StatusPenempatanEnum::Aktif)
             ->first();
 
         $checklist = [
-            'data_diri' => !empty($user->nama || $user->name) && !empty($user->email),
-            'foto'      => !empty($profil?->foto),
-            'akademik'  => !empty($profil?->institusi) && !empty($profil?->nim_nisn) && !empty($profil?->jenjang) && !empty($profil?->jurusan_id),
-            'kontak'    => !empty($profil?->no_hp ?? $user->no_telp),
-            'darurat'   => !empty($profil?->nama_kontak_darurat) && !empty($profil?->no_kontak_darurat),
+            'data_diri' => ! empty($user->nama || $user->name) && ! empty($user->email),
+            'foto' => ! empty($profil?->foto),
+            'akademik' => ! empty($profil?->institusi) && ! empty($profil?->nim_nisn) && ! empty($profil?->jenjang) && ! empty($profil?->jurusan_id),
+            'kontak' => ! empty($profil?->no_hp ?? $user->no_telp),
+            'darurat' => ! empty($profil?->nama_kontak_darurat) && ! empty($profil?->no_kontak_darurat),
         ];
 
         $totalWajib = count($checklist);
@@ -39,12 +41,12 @@ class ProfilController extends Controller
         $persentaseLengkap = (int) round(($terisi / $totalWajib) * 100);
 
         return view('peserta.profil.show', [
-            'user'              => $user,
-            'profil'            => $profil,
-            'jurusanList'       => $jurusanList,
-            'penempatan'        => $penempatan,
+            'user' => $user,
+            'profil' => $profil,
+            'jurusanList' => $jurusanList,
+            'penempatan' => $penempatan,
             'persentaseLengkap' => $persentaseLengkap,
-            'checklist'         => $checklist,
+            'checklist' => $checklist,
         ]);
     }
 
@@ -66,7 +68,7 @@ class ProfilController extends Controller
             }
             $file = $request->file('foto');
             $extension = $file->getClientOriginalExtension() ?: 'jpg';
-            $filename = 'peserta_' . $user->id . '_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $extension;
+            $filename = 'peserta_'.$user->id.'_'.time().'_'.bin2hex(random_bytes(4)).'.'.$extension;
             $path = $file->storeAs('profil-peserta', $filename, 'public');
             $validated['foto'] = $path;
         } else {
@@ -75,6 +77,11 @@ class ProfilController extends Controller
         }
 
         unset($validated['hapus_foto']);
+
+        if ($request->boolean('persetujuan_wali')) {
+            $validated['persetujuan_wali_at'] = now();
+        }
+        unset($validated['persetujuan_wali']);
 
         $profil = PesertaProfil::updateOrCreate(
             ['user_id' => $user->id],

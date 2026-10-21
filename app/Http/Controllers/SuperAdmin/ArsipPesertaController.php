@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Penempatan;
+use App\Services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ArsipPesertaController extends Controller
@@ -22,7 +25,7 @@ class ArsipPesertaController extends Controller
             ->orderBy('tgl_selesai', 'desc');
 
         if ($request->filled('search')) {
-            $search = '%' . $request->input('search') . '%';
+            $search = '%'.$request->input('search').'%';
             $query->whereHas('peserta', function ($q) use ($search) {
                 $q->where('nama', 'like', $search)
                     ->orWhere('email', 'like', $search)
@@ -43,7 +46,7 @@ class ArsipPesertaController extends Controller
 
         $arsipList = $query->paginate(15)->withQueryString();
 
-        $driver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
+        $driver = DB::connection()->getDriverName();
         $yearExpr = $driver === 'sqlite' ? 'strftime("%Y", tgl_selesai)' : 'YEAR(tgl_selesai)';
 
         $tahunList = Penempatan::whereIn('status', [StatusPenempatanEnum::Selesai, StatusPenempatanEnum::Nonaktif, StatusPenempatanEnum::MengundurkanDiri])
@@ -60,19 +63,34 @@ class ArsipPesertaController extends Controller
     }
 
     /**
-     * Menampilkan detail rekam jejak arsip peserta magang secara baca-saja (AC-12-4).
+     * Menampilkan detail rekam jejak arsip peserta magang secara baca-saja (AC-12-4, C9).
      */
     public function show(Penempatan $penempatan): View
     {
         $penempatan->load([
-            'peserta.profil',
-            'pembimbing',
+            'peserta.profil.jurusan',
+            'pembimbing.bidang',
             'bidang',
             'kuota.jurusan',
-            'tugas.progresList',
+            'slotKhusus',
+            'tugas.progresLogs',
             'logbooks',
             'penilaian.details.rubrik',
+            'pendaftaran.dokumen',
         ]);
+
+        app(AuditService::class)->catat(
+            tipe: TipeAuditEnum::AksesData,
+            tabel: 'penempatan',
+            idData: $penempatan->id,
+            nilaiLama: null,
+            nilaiBaru: null,
+            detail: [
+                'aksi' => 'Melihat arsip historis permanen peserta magang (C9)',
+                'peserta_id' => $penempatan->peserta_id,
+            ],
+            user: request()->user()?->id
+        );
 
         return view('superadmin.arsip.show', [
             'penempatan' => $penempatan,

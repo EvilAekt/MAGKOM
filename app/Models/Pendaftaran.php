@@ -72,7 +72,15 @@ class Pendaftaran extends Model
      */
     public function getNomorPendaftaranAttribute(): string
     {
-        return '#REG-' . str_pad((string) $this->id, 5, '0', STR_PAD_LEFT);
+        return '#REG-'.str_pad((string) $this->id, 5, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Accessor kompatibilitas alias untuk waktu keputusan / verifikasi berkas.
+     */
+    public function getVerifikasiAtAttribute(): mixed
+    {
+        return $this->diputuskan_at;
     }
 
     /**

@@ -127,6 +127,7 @@ class Penempatan extends Model
         $minggu = (int) floor($diffDays / 7) + 1;
 
         $totalMinggu = $this->total_minggu;
+
         return min(max(1, $minggu), $totalMinggu);
     }
 
@@ -190,15 +191,15 @@ class Penempatan extends Model
             }
 
             $hasil[] = [
-                'minggu_ke'       => $i,
-                'tgl_awal'        => $tglAwal,
-                'tgl_akhir'       => $tglAkhir,
-                'label_periode'   => $tglAwal->translatedFormat('d M') . ' – ' . $tglAkhir->translatedFormat('d M Y'),
-                'is_aktif'        => $isAktif,
-                'is_lampau'       => $isLampau,
-                'is_mendatang'    => $isMendatang,
-                'logbook'         => $logbook,
-                'status'          => $statusPengisian,
+                'minggu_ke' => $i,
+                'tgl_awal' => $tglAwal,
+                'tgl_akhir' => $tglAkhir,
+                'label_periode' => $tglAwal->translatedFormat('d M').' – '.$tglAkhir->translatedFormat('d M Y'),
+                'is_aktif' => $isAktif,
+                'is_lampau' => $isLampau,
+                'is_mendatang' => $isMendatang,
+                'logbook' => $logbook,
+                'status' => $statusPengisian,
             ];
         }
 

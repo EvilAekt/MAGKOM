@@ -21,11 +21,17 @@ class SuperAdminPortalVisualTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Bidang $bidang;
 
     protected function setUp(): void
@@ -55,7 +61,7 @@ class SuperAdminPortalVisualTest extends TestCase
             'aktif' => true,
         ]);
 
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator Visual';
         $this->superAdmin->email = 'superadmin.visual@kominfo.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -65,7 +71,7 @@ class SuperAdminPortalVisualTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Operasional Visual';
         $this->admin->email = 'admin.visual@kominfo.go.id';
         $this->admin->password = 'Password123!';
@@ -75,7 +81,7 @@ class SuperAdminPortalVisualTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan Visual';
         $this->pembimbing->email = 'mentor.visual@kominfo.go.id';
         $this->pembimbing->password = 'Password123!';
@@ -85,7 +91,7 @@ class SuperAdminPortalVisualTest extends TestCase
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Uji Visual';
         $this->peserta->email = 'peserta.visual@gmail.com';
         $this->peserta->password = 'Password123!';

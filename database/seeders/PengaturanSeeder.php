@@ -18,11 +18,14 @@ class PengaturanSeeder extends Seeder
             ['kunci' => 'masa_tenggang_bulan', 'nilai' => '1'],
             ['kunci' => 'kuota_umum_maks_per_bulan', 'nilai' => '12'],
             ['kunci' => 'slot_khusus_default', 'nilai' => '3'],
-            ['kunci' => 'maks_peserta_aktif_per_pembimbing', 'nilai' => null],
+            ['kunci' => 'maks_peserta_aktif_per_pembimbing', 'nilai' => '20'],
             ['kunci' => 'logbook_maks_mundur_hari', 'nilai' => '3'],
             ['kunci' => 'berkas_maks_mb', 'nilai' => '2'],
             ['kunci' => 'deadline_mendekati_hari', 'nilai' => '3'],
             ['kunci' => 'predikat_batas', 'nilai' => json_encode(['A' => 85, 'B' => 70, 'C' => 55, 'D' => 40])],
+            ['kunci' => 'fitur_sertifikat_aktif', 'nilai' => '1'],
+            ['kunci' => 'fitur_survei_aktif', 'nilai' => '1'],
+            ['kunci' => 'fitur_analitik_aktif', 'nilai' => '1'],
         ];
 
         foreach ($pengaturanList as $pengaturan) {

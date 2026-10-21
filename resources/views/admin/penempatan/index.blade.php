@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Penempatan Magang - Admin MagKom Sleman')
-@section('page_title', 'Manajemen Penempatan Peserta')
+@section('title', 'Penempatan Peserta - Admin MagKom Sleman')
+@section('page_title', 'Penempatan Peserta')
 @section('page_description', 'Kelola penugasan pembimbing lapangan, pantau peserta aktif, dan kelola administrasi penempatan magang.')
 
 @section('breadcrumbs')
@@ -10,7 +10,7 @@
         <span>/</span>
         <span>Administrasi</span>
         <span>/</span>
-        <span style="color: var(--neutral-900, #0F172A); font-weight: 700;">Penempatan Magang</span>
+        <span style="color: var(--neutral-900, #0F172A); font-weight: 700;">Penempatan Peserta</span>
     </nav>
 @endsection
 
@@ -113,7 +113,209 @@
             from { opacity: 0; transform: scale(0.96); }
             to { opacity: 1; transform: scale(1); }
         }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] .admin-stat-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-stat-card div div {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-stat-card span[style*="color: var(--neutral-500"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"]:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .admin-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-card label {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-card input#q-input {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-card select {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-card select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-card a[href*="admin.penempatan.index"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .admin-card a[href*="admin.penempatan.index"]:hover {
+            background: #162238 !important;
+            color: #F8FAFC !important;
+            border-color: #3B82F6 !important;
+        }
+
+        [data-theme="dark"] .admin-card div[style*="background: #ffffff"] {
+            background-color: #141E30 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-card h3 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-table th {
+            background-color: #0E1726 !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-table td {
+            background-color: #182234 !important;
+            color: #CBD5E1 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-table tr:hover td,
+        [data-theme="dark"] .admin-table tr:hover {
+            background-color: #162238 !important;
+        }
+
+        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-900"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-800"] {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-500"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .admin-table td a[style*="background: #ffffff"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-table td a[style*="background: #ffffff"]:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .modal-container {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="background: #F8FAFC"] {
+            background-color: #141E30 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container h3 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container p {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .modal-container label {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .modal-container select,
+        [data-theme="dark"] .modal-container input,
+        [data-theme="dark"] .modal-container textarea {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="background: var(--neutral-100"] {
+            background-color: #0F172A !important;
+            border: 1px solid #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="border-top: 1px solid"] {
+            border-top-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container button[style*="background: #ffffff"],
+        [data-theme="dark"] .modal-container button[style*="background: var(--neutral-0"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] #bulkActionBar {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+        }
     </style>
+
+    {{-- ALERT KREDENSIAL AKUN BARU JALUR KHUSUS --}}
+    @if(session('akun_baru_dibuat'))
+        <div class="admin-card" style="border-left: 4px solid #10B981; background: #ECFDF5; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);">
+            <div style="display: flex; align-items: flex-start; gap: 0.85rem;">
+                <div style="width: 42px; height: 42px; border-radius: 10px; background: #D1FAE5; color: #059669; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+                <div>
+                    <h3 style="font-size: 1rem; font-weight: 800; color: #065F46; margin: 0;">
+                        Akun Peserta Jalur Khusus Berhasil Dibuat &amp; Ditempatkan!
+                    </h3>
+                    <p style="font-size: 0.8125rem; color: #047857; margin: 0.25rem 0 0.5rem 0;">
+                        Berikan kredensial login berikut kepada <strong>{{ session('nama_peserta') }}</strong>. Peserta dapat langsung login dan wajib mengganti kata sandi saat pertama kali masuk.
+                    </p>
+                    <div style="display: inline-flex; align-items: center; gap: 1rem; background: #ffffff; border: 1px solid #A7F3D0; border-radius: 8px; padding: 0.5rem 0.85rem; font-size: 0.8125rem; color: #1E293B; font-family: monospace;">
+                        <span><strong>Email:</strong> {{ session('email_peserta') }}</span>
+                        <span style="color: #CBD5E1;">|</span>
+                        <span><strong>Password Awal:</strong> <span style="font-weight: 700; color: #0641CC;">{{ session('password_baru') }}</span></span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="navigator.clipboard.writeText('Email: {{ session('email_peserta') }}\nPassword: {{ session('password_baru') }}'); alert('Kredensial login berhasil disalin!');" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; background: #059669; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(5, 150, 105, 0.25);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>Salin Kredensial</span>
+            </button>
+        </div>
+    @endif
 
     {{-- 1. HERO STATS CARDS --}}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
@@ -184,9 +386,121 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg>
             </div>
         </div>
+
+        {{-- Menunggu Penempatan (Antrean Lolos Berkas) --}}
+        @if(($penempatanStats['belum_ditempatkan'] ?? 0) > 0)
+            <div class="admin-stat-card" style="border-left: 4px solid #F59E0B; background: #FFFDF5;">
+                <div>
+                    <span style="font-size: 0.8125rem; font-weight: 600; color: #B45309;">Menunggu Plotting</span>
+                    <div style="font-size: 1.75rem; font-weight: 800; color: #D97706; margin-top: 0.25rem; letter-spacing: -0.02em;">
+                        {{ number_format($penempatanStats['belum_ditempatkan'] ?? 0) }}
+                    </div>
+                    <span style="font-size: 0.75rem; color: #B45309; display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.35rem;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        Lolos berkas (Tahap 1)
+                    </span>
+                </div>
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: #FEF3C7; color: #B45309; display: flex; align-items: center; justify-content: center;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                </div>
+            </div>
+        @endif
     </div>
 
-    {{-- 2. FILTER BAR CARD --}}
+    {{-- 2. ANTREAN PESERTA LOLOS SELEKSI BERKAS (MENUNGGU PENETAPAN PEMBIMBING) --}}
+    @if(isset($antreanBelumDitempatkan) && $antreanBelumDitempatkan->isNotEmpty())
+        <div class="admin-card" style="border-left: 4px solid #F59E0B; background: #FFFBEB;">
+            <div style="padding: 1.15rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #FDE68A; flex-wrap: wrap; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1rem; font-weight: 800; color: #92400E; margin: 0;">
+                            Antrean Peserta Lolos Berkas (Menunggu Penempatan)
+                        </h3>
+                        <p style="font-size: 0.8125rem; color: #B45309; margin: 0.2rem 0 0 0;">
+                            Peserta di bawah ini telah disetujui berkasnya pada Tahap 1 dan siap ditetapkan Pembimbing Lapangan serta Bidang Dinas.
+                        </p>
+                    </div>
+                </div>
+                <span style="padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 700; background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">
+                    {{ $antreanBelumDitempatkan->count() }} Menunggu Penempatan
+                </span>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr style="background: #FEF9C3;">
+                            <th style="color: #854D0E;">Peserta Magang</th>
+                            <th style="color: #854D0E;">Jurusan &amp; Kampus / Sekolah</th>
+                            <th style="color: #854D0E;">Bulan Magang</th>
+                            <th style="color: #854D0E;">Diterima Pada</th>
+                            <th style="text-align: right; width: 150px; color: #854D0E;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($antreanBelumDitempatkan as $antrean)
+                            @php
+                                $firstBidang = $antrean->kuota?->jurusan?->bidang?->first();
+                                $defBidangId = $firstBidang?->id;
+                                $defBidangNama = $firstBidang?->nama_bidang ?? 'Dinas Kominfo';
+                            @endphp
+                            <tr style="background: #FFFFFF;">
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.65rem;">
+                                        <div style="width: 34px; height: 34px; border-radius: 8px; background: #FDE68A; color: #92400E; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;">
+                                            {{ strtoupper(substr($antrean->user?->nama ?? 'P', 0, 1)) }}
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 700; color: #1E293B; font-size: 0.875rem;">
+                                                {{ $antrean->user?->nama }}
+                                            </div>
+                                            <div style="font-size: 0.75rem; color: #64748B;">
+                                                NIM: {{ $antrean->user?->profil?->nim_nisn ?? '-' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; color: #1E293B;">
+                                        {{ $antrean->kuota?->jurusan?->nama_jurusan ?? '-' }}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: #64748B;">
+                                        {{ $antrean->user?->profil?->institusi ?? '-' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-weight: 700; color: #0641CC; font-size: 0.8125rem;">
+                                        {{ $antrean->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
+                                    </span>
+                                    <div style="font-size: 0.75rem; color: #64748B;">
+                                        Durasi: {{ $antrean->durasi_bulan }} Bulan
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-size: 0.8125rem; color: #475569;">
+                                        {{ $antrean->diputuskan_at?->translatedFormat('d M Y H:i') ?? '-' }}
+                                    </span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <button type="button" 
+                                            onclick="openTetapkanModal({{ $antrean->id }}, '{{ addslashes($antrean->user?->nama) }}', '{{ addslashes($antrean->kuota?->jurusan?->nama_jurusan ?? '') }}', {{ $defBidangId ?? 'null' }}, '{{ addslashes($defBidangNama) }}')" 
+                                            style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.95rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                                        <span>Tempatkan</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+
+    {{-- 3. FILTER BAR CARD --}}
     <div class="admin-card" style="padding: 1.25rem 1.5rem;">
         <form method="GET" action="{{ route('admin.penempatan.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
             {{-- Search Bar --}}
@@ -199,6 +513,19 @@
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                 </div>
+            </div>
+
+            {{-- Filter Bulan Magang --}}
+            <div style="display: flex; flex-direction: column; gap: 0.375rem; flex: 1; min-width: 180px;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Bulan Magang</label>
+                <select name="bulan_magang_id" style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff; color: var(--neutral-800, #1E293B);">
+                    <option value="">Semua Bulan Magang</option>
+                    @foreach($bulanList as $bln)
+                        <option value="{{ $bln->id }}" {{ request('bulan_magang_id') == $bln->id ? 'selected' : '' }}>
+                            {{ $bln->nama_bulan ? $bln->nama_bulan . ' (' . $bln->bulan_mulai?->translatedFormat('F Y') . ')' : $bln->bulan_mulai?->translatedFormat('F Y') }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             {{-- Filter Status --}}
@@ -221,7 +548,7 @@
                     <option value="">Semua Pembimbing</option>
                     @foreach($pembimbingList as $pemb)
                         <option value="{{ $pemb->id }}" {{ request('pembimbing_id') == $pemb->id ? 'selected' : '' }}>
-                            {{ $pemb->nama }}
+                            {{ $pemb->nama }} [{{ $pemb->bidang?->nama_bidang ?? 'Dinas' }}]
                         </option>
                     @endforeach
                 </select>
@@ -286,10 +613,13 @@
                 <table class="admin-table">
                     <thead>
                         <tr>
+                            <th style="width: 40px; text-align: center;">
+                                <input type="checkbox" id="checkAllPenempatan" onclick="toggleAllPenempatan(this)" style="cursor: pointer; width: 16px; height: 16px;">
+                            </th>
                             <th>Peserta Magang</th>
                             <th>Pembimbing Lapangan</th>
                             <th>Jalur / Bidang Dinas</th>
-                            <th>Periode Magang</th>
+                            <th>Bulan Magang</th>
                             <th>Status</th>
                             <th style="text-align: right; width: 170px;">Aksi</th>
                         </tr>
@@ -308,6 +638,9 @@
                                 };
                             @endphp
                             <tr>
+                                <td style="text-align: center;">
+                                    <input type="checkbox" value="{{ $p->id }}" class="penempatan-checkbox" onchange="updateBulkUI()" style="cursor: pointer; width: 16px; height: 16px;">
+                                </td>
                                 {{-- Peserta Magang --}}
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -334,6 +667,9 @@
                                         {{ $p->pembimbing?->nama ?? 'Belum Ditentukan' }}
                                     </div>
                                     @if($p->pembimbing)
+                                        <div style="font-size: 0.75rem; color: #0641CC; font-weight: 600; margin-top: 0.1rem;">
+                                            [{{ $p->pembimbing->bidang?->nama_bidang ?? 'Dinas Kominfo' }}]
+                                        </div>
                                         <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 0.15rem;">
                                             Beban: <strong>{{ $p->pembimbing->mentee_aktif_count ?? 1 }} Mentee Aktif</strong>
                                         </div>
@@ -381,6 +717,11 @@
                                 {{-- Aksi --}}
                                 <td style="text-align: right;">
                                     <div style="display: inline-flex; gap: 0.35rem; align-items: center;">
+                                        <a href="{{ route('admin.penempatan.show', $p) }}" title="Lihat Detail Penempatan" style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.4rem 0.65rem; background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; border-radius: 6px; font-weight: 700; font-size: 0.75rem; text-decoration: none; transition: all 0.15s ease;" onmouseover="this.style.background='#E0E7FF'" onmouseout="this.style.background='#EEF2FF'">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                            <span>Detail</span>
+                                        </a>
+
                                         <button type="button" onclick="openSuratPreview('{{ route('admin.penempatan.surat-diterima.pratinjau', $p) }}', '{{ route('admin.penempatan.surat-diterima', $p) }}', 'Surat Diterima - {{ addslashes($p->peserta?->nama) }}')" title="Pratinjau Surat Keterangan Diterima Langsung" style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.4rem 0.65rem; background: #EFF6FF; color: #1D4ED8; border: 1px solid #DBEAFE; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: all 0.15s ease;" onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                             <span>Surat</span>
@@ -429,6 +770,17 @@
         <form method="POST" action="{{ route('admin.penempatan.manual') }}" id="form-penempatan-manual" style="padding: 1.5rem;">
             @csrf
 
+            @if($errors->any() && (old('mode') || $errors->has('nama') || $errors->has('email') || $errors->has('nim_nisn') || $errors->has('slot_khusus_id') || $errors->has('peserta_id')))
+                <div style="background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 0.8125rem; color: #991B1B;">
+                    <div style="font-weight: 700; margin-bottom: 0.25rem;">Gagal menyimpan penempatan:</div>
+                    <ul style="margin: 0 0 0 1.25rem; padding: 0;">
+                        @foreach($errors->all() as $err)
+                            <li>{{ $err }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             {{-- Switcher Mode Peserta --}}
             <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; background: var(--neutral-100, #F1F5F9); padding: 0.35rem; border-radius: 8px;">
                 <button type="button" id="btn-mode-terdaftar" onclick="switchPesertaMode('terdaftar')" style="flex: 1; padding: 0.5rem; font-size: 0.8125rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #0641CC; color: #FFFFFF;">
@@ -439,6 +791,7 @@
                 </button>
             </div>
             <input type="hidden" name="mode" id="input-mode-peserta" value="terdaftar">
+            <input type="hidden" name="bulan_mulai" id="input-bulan-mulai" value="{{ date('Y-m-01') }}">
 
             {{-- Mode 1: Peserta Terdaftar --}}
             <div id="panel-peserta-terdaftar" style="margin-bottom: 1.25rem;">
@@ -462,25 +815,25 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                     <div>
                         <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Nama Lengkap <span style="color: #DC2626;">*</span></label>
-                        <input type="text" name="nama" id="input-nama-baru" placeholder="Nama siswa/mahasiswa" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
+                        <input type="text" name="nama" id="input-nama-baru" value="{{ old('nama') }}" placeholder="Nama siswa/mahasiswa" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
                     </div>
                     <div>
                         <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Email Aktif <span style="color: #DC2626;">*</span></label>
-                        <input type="email" name="email" id="input-email-baru" placeholder="email@sekolah.ac.id" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
+                        <input type="email" name="email" id="input-email-baru" value="{{ old('email') }}" placeholder="email@sekolah.ac.id" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                     <div>
                         <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">NIM / NISN <span style="color: #DC2626;">*</span></label>
-                        <input type="text" name="nim_nisn" id="input-nim-baru" placeholder="Nomor induk siswa/mhs" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
+                        <input type="text" name="nim_nisn" id="input-nim-baru" value="{{ old('nim_nisn') }}" placeholder="Nomor induk siswa/mhs" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
                     </div>
                     <div>
                         <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Jenjang Pendidikan <span style="color: #DC2626;">*</span></label>
                         <select name="jenjang" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
-                            <option value="s1">S1 (Strata 1)</option>
-                            <option value="d3">D3 (Diploma 3)</option>
-                            <option value="smk">SMK</option>
+                            <option value="s1" {{ old('jenjang') === 's1' ? 'selected' : '' }}>S1 (Strata 1)</option>
+                            <option value="d3" {{ old('jenjang') === 'd3' ? 'selected' : '' }}>D3 (Diploma 3)</option>
+                            <option value="smk" {{ old('jenjang') === 'smk' ? 'selected' : '' }}>SMK</option>
                         </select>
                     </div>
                 </div>
@@ -488,17 +841,23 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                     <div>
                         <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Asal Kampus / Sekolah <span style="color: #DC2626;">*</span></label>
-                        <input type="text" name="institusi" id="input-institusi-baru" placeholder="Nama Universitas / SMK" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
+                        <input type="text" name="institusi" id="input-institusi-baru" value="{{ old('institusi') }}" placeholder="Nama Universitas / SMK" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
                     </div>
                     <div>
-                        <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Jurusan Asal</label>
+                        <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Jurusan Asal <span style="color: #DC2626;">*</span></label>
                         <select name="jurusan_id" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
-                            <option value="">-- Sesuai Master Jurusan --</option>
+                            <option value="">-- Pilih Jurusan Magang --</option>
                             @foreach($jurusanList ?? [] as $j)
-                                <option value="{{ $j->id }}">{{ $j->nama_jurusan }} ({{ strtoupper(is_object($j->kategori) ? $j->kategori->value : (string)$j->kategori) }})</option>
+                                <option value="{{ $j->id }}" {{ old('jurusan_id') == $j->id ? 'selected' : '' }}>{{ $j->nama_jurusan }} ({{ strtoupper(is_object($j->kategori) ? $j->kategori->value : (string)$j->kategori) }})</option>
                             @endforeach
                         </select>
                     </div>
+                </div>
+
+                <div>
+                    <label style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-800, #1E293B);">Kata Sandi Awal (Default: Magkom2026!)</label>
+                    <input type="text" name="password" id="input-password-baru" value="{{ old('password', 'Magkom2026!') }}" placeholder="Magkom2026!" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 6px; padding: 0 0.625rem; font-size: 0.8125rem; background: #ffffff;">
+                    <small style="font-size: 0.7rem; color: var(--neutral-500, #64748B);">Peserta wajib mengganti kata sandi ini saat pertama kali login.</small>
                 </div>
             </div>
 
@@ -510,8 +869,8 @@
                 <select name="slot_khusus_id" id="select-slot-khusus" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                     <option value="">-- Pilih Slot Kemitraan Khusus --</option>
                     @foreach($slotKhususList as $sk)
-                        <option value="{{ $sk->id }}">
-                            {{ $sk->nama_mitra }} &bull; Periode: {{ $sk->bulan_mulai?->translatedFormat('F Y') }} (Sisa: {{ $sk->jumlah - $sk->terisi }} Kursi)
+                        <option value="{{ $sk->id }}" {{ old('slot_khusus_id') == $sk->id ? 'selected' : '' }}>
+                            {{ $sk->nama_mitra }} &bull; Bulan: {{ $sk->bulan_mulai?->translatedFormat('F Y') }} (Sisa: {{ $sk->jumlah - $sk->terisi }} Kursi)
                         </option>
                     @endforeach
                 </select>
@@ -524,7 +883,7 @@
                     <select name="pembimbing_id" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                         <option value="">-- Pilih Pembimbing --</option>
                         @foreach($pembimbingList as $p)
-                            <option value="{{ $p->id }}">{{ $p->nama }} ({{ $p->mentee_aktif_count ?? 0 }} Mentee)</option>
+                            <option value="{{ $p->id }}" {{ old('pembimbing_id') == $p->id ? 'selected' : '' }}>{{ $p->nama }} [{{ $p->bidang?->nama_bidang ?? 'Dinas' }}] ({{ $p->mentee_aktif_count ?? 0 }} Mentee)</option>
                         @endforeach
                     </select>
                 </div>
@@ -533,21 +892,32 @@
                     <select name="bidang_id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                         <option value="">-- Sesuai Pembimbing --</option>
                         @foreach($bidangList as $b)
-                            <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
+                            <option value="{{ $b->id }}" {{ old('bidang_id') == $b->id ? 'selected' : '' }}>{{ $b->nama_bidang }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
 
-            {{-- Tanggal Mulai & Selesai --}}
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
+            {{-- Tanggal Mulai, Durasi & Tanggal Selesai --}}
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
                 <div>
                     <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Tanggal Mulai <span style="color: #DC2626;">*</span></label>
-                    <input type="date" name="tgl_mulai" required value="{{ date('Y-m-d') }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
+                    <input type="date" name="tgl_mulai" id="input-tgl-mulai" required value="{{ old('tgl_mulai', date('Y-m-d')) }}" onchange="syncManualDates()" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
+                </div>
+                <div>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Durasi Magang <span style="color: #DC2626;">*</span></label>
+                    <select name="durasi_bulan" id="select-durasi-bulan" onchange="syncManualDates()" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                        <option value="1" {{ old('durasi_bulan') == 1 ? 'selected' : '' }}>1 Bulan</option>
+                        <option value="2" {{ old('durasi_bulan') == 2 ? 'selected' : '' }}>2 Bulan</option>
+                        <option value="3" {{ old('durasi_bulan', 3) == 3 ? 'selected' : '' }}>3 Bulan (Standar)</option>
+                        <option value="4" {{ old('durasi_bulan') == 4 ? 'selected' : '' }}>4 Bulan</option>
+                        <option value="5" {{ old('durasi_bulan') == 5 ? 'selected' : '' }}>5 Bulan</option>
+                        <option value="6" {{ old('durasi_bulan') == 6 ? 'selected' : '' }}>6 Bulan</option>
+                    </select>
                 </div>
                 <div>
                     <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Tanggal Selesai <span style="color: #DC2626;">*</span></label>
-                    <input type="date" name="tgl_selesai" required value="{{ date('Y-m-d', strtotime('+3 months')) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
+                    <input type="date" name="tgl_selesai" id="input-tgl-selesai" required value="{{ old('tgl_selesai', date('Y-m-d', strtotime('+3 months'))) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                 </div>
             </div>
 
@@ -582,7 +952,7 @@
                 <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Pilih Pembimbing Baru <span style="color: #DC2626;">*</span></label>
                 <select name="pembimbing_id" id="select-pembimbing-baru" required style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                     @foreach($pembimbingList as $p)
-                        <option value="{{ $p->id }}">{{ $p->nama }} (Beban: {{ $p->mentee_aktif_count ?? 0 }} Mentee Aktif)</option>
+                        <option value="{{ $p->id }}">{{ $p->nama }} [{{ $p->bidang?->nama_bidang ?? 'Dinas' }}] (Beban: {{ $p->mentee_aktif_count ?? 0 }} Mentee Aktif)</option>
                     @endforeach
                 </select>
             </div>
@@ -665,7 +1035,94 @@
     </div>
 </div>
 
+{{-- MODAL PENETAPAN PEMBIMBING & BIDANG (TAHAP 2) --}}
+<div id="modal-tetapkan-penempatan" class="modal-overlay">
+    <div class="modal-container" style="max-width: 580px;">
+        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: center; background: #F8FAFC;">
+            <div>
+                <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">Penetapan Penempatan Peserta</h3>
+                <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 0.15rem 0 0 0;" id="tetapkan-peserta-info">
+                    Peserta: -
+                </p>
+            </div>
+            <button type="button" onclick="closeTetapkanModal()" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
+        </div>
+
+        <form method="POST" id="form-tetapkan-penempatan" action="{{ route('admin.penempatan.tetapkan') }}" style="padding: 1.5rem;">
+            @csrf
+            <input type="hidden" name="pendaftaran_id" id="tetapkan-pendaftaran-id" value="">
+
+            <div style="background: #EFF6FF; border: 1px solid #DBEAFE; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.8125rem; color: #1E40AF; line-height: 1.45;">
+                <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <div>
+                        <strong>Penetapan Tahap 2:</strong> Pilih pembimbing lapangan dan unit bidang dinas. Surat Keterangan Diterima resmi akan otomatis siap diunduh setelah penempatan disimpan.
+                    </div>
+                </div>
+            </div>
+
+            {{-- Bidang Dinas --}}
+            <div style="display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.25rem;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Unit Bidang Dinas <span style="color: #DC2626;">*</span></label>
+                <select name="bidang_id" id="select-tetapkan-bidang" required style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                    <option value="">-- Pilih Bidang Dinas --</option>
+                    @foreach($bidangList as $b)
+                        <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
+                    @endforeach
+                </select>
+                <small style="font-size: 0.725rem; color: var(--neutral-500, #64748B);">Otomatis direkomendasikan sesuai bidang keahlian jurusan pendaftar.</small>
+            </div>
+
+            {{-- Pembimbing Lapangan --}}
+            <div style="display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.5rem;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Pembimbing Lapangan <span style="color: #DC2626;">*</span></label>
+                <select name="pembimbing_id" id="select-tetapkan-pembimbing" required style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                    <option value="">-- Pilih Pembimbing Dinas --</option>
+                    @foreach($pembimbingList as $p)
+                        <option value="{{ $p->id }}" data-bidang-id="{{ $p->bidang_id ?? '' }}">
+                            {{ $p->nama }} [{{ $p->bidang?->nama_bidang ?? 'Dinas Kominfo' }}] ({{ $p->mentee_aktif_count ?? 0 }} Mentee Aktif)
+                        </option>
+                    @endforeach
+                </select>
+                <small style="font-size: 0.725rem; color: var(--neutral-500, #64748B);">Daftar pembimbing lapangan dilengkapi dengan asal bidang dan beban mentee aktif saat ini.</small>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.6rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1.25rem;">
+                <button type="button" onclick="closeTetapkanModal()" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+                    Batal
+                </button>
+                <button type="submit" style="padding: 0.55rem 1.4rem; background: #0641CC; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);">
+                    Tetapkan &amp; Aktifkan Penempatan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
+    function openTetapkanModal(pendaftaranId, namaPeserta, namaJurusan, defaultBidangId, defaultBidangNama) {
+        const modal = document.getElementById('modal-tetapkan-penempatan');
+        const infoEl = document.getElementById('tetapkan-peserta-info');
+        const idInput = document.getElementById('tetapkan-pendaftaran-id');
+        const bidangSelect = document.getElementById('select-tetapkan-bidang');
+
+        if (infoEl) infoEl.innerText = 'Peserta: ' + namaPeserta + ' (' + namaJurusan + ')';
+        if (idInput) idInput.value = pendaftaranId;
+        if (bidangSelect && defaultBidangId) bidangSelect.value = defaultBidangId;
+
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeTetapkanModal() {
+        const modal = document.getElementById('modal-tetapkan-penempatan');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
     function openManualModal() {
         const modal = document.getElementById('modal-penempatan-manual');
         if (modal) {
@@ -680,6 +1137,39 @@
             document.body.style.overflow = '';
         }
     }
+
+    function syncManualDates() {
+        const tglMulaiEl = document.getElementById('input-tgl-mulai');
+        const durasiEl = document.getElementById('select-durasi-bulan');
+        const tglSelesaiEl = document.getElementById('input-tgl-selesai');
+        const bulanMulaiEl = document.getElementById('input-bulan-mulai');
+
+        if (!tglMulaiEl || !tglMulaiEl.value) return;
+
+        const startDate = new Date(tglMulaiEl.value);
+        if (isNaN(startDate.getTime())) return;
+
+        const y = startDate.getFullYear();
+        const m = String(startDate.getMonth() + 1).padStart(2, '0');
+        if (bulanMulaiEl) bulanMulaiEl.value = `${y}-${m}-01`;
+
+        const durasi = durasiEl ? parseInt(durasiEl.value, 10) || 3 : 3;
+        const endDate = new Date(startDate);
+        endDate.setMonth(endDate.getMonth() + durasi);
+        const ey = endDate.getFullYear();
+        const em = String(endDate.getMonth() + 1).padStart(2, '0');
+        const ed = String(endDate.getDate()).padStart(2, '0');
+        if (tglSelesaiEl) tglSelesaiEl.value = `${ey}-${em}-${ed}`;
+    }
+
+    @if($errors->any() && (old('mode') || $errors->has('nama') || $errors->has('email') || $errors->has('nim_nisn') || $errors->has('slot_khusus_id') || $errors->has('peserta_id')))
+        document.addEventListener('DOMContentLoaded', function() {
+            openManualModal();
+            @if(old('mode') === 'baru')
+                switchPesertaMode('baru');
+            @endif
+        });
+    @endif
 
     function switchPesertaMode(mode) {
         const btnTerdaftar = document.getElementById('btn-mode-terdaftar');
@@ -804,8 +1294,137 @@
                 closeManualModal();
                 closePindahModal();
                 closeBatalModal();
+                closeBulkReassignModal();
             }
         });
     });
+
+    function toggleAllPenempatan(masterCheckbox) {
+        const checkboxes = document.querySelectorAll('.penempatan-checkbox');
+        checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+        updateBulkUI();
+    }
+
+    function updateBulkUI() {
+        const checkedBoxes = document.querySelectorAll('.penempatan-checkbox:checked');
+        const count = checkedBoxes.length;
+        const floatingBar = document.getElementById('floating-bulk-bar');
+        const countBadge = document.getElementById('bulk-selected-count');
+
+        if (countBadge) countBadge.innerText = count;
+
+        if (floatingBar) {
+            if (count > 0) {
+                floatingBar.style.display = 'flex';
+            } else {
+                floatingBar.style.display = 'none';
+            }
+        }
+    }
+
+    function openBulkReassignModal() {
+        const checkedBoxes = document.querySelectorAll('.penempatan-checkbox:checked');
+        if (checkedBoxes.length === 0) {
+            const msg = 'Pilih minimal satu penempatan peserta terlebih dahulu.';
+            if (window.MagKomToast) {
+                window.MagKomToast.warning(msg);
+            } else {
+                alert(msg);
+            }
+            return;
+        }
+
+        const container = document.getElementById('bulk-ids-container');
+        if (container) {
+            container.innerHTML = '';
+            checkedBoxes.forEach(cb => {
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'penempatan_ids[]';
+                hidden.value = cb.value;
+                container.appendChild(hidden);
+            });
+        }
+
+        const countEl = document.getElementById('bulk-modal-count');
+        if (countEl) countEl.innerText = checkedBoxes.length;
+
+        const modal = document.getElementById('modal-bulk-reassign');
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeBulkReassignModal() {
+        const modal = document.getElementById('modal-bulk-reassign');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
 </script>
+
+{{-- FLOATING BULK ACTION BAR --}}
+<div id="floating-bulk-bar" style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #0F172A; color: #ffffff; padding: 0.85rem 1.5rem; border-radius: 9999px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); z-index: 1040; align-items: center; gap: 1.25rem;">
+    <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+        <span id="bulk-selected-count" style="background: #0641CC; color: #ffffff; padding: 0.15rem 0.55rem; border-radius: 999px; font-weight: 700; font-size: 0.8125rem;">0</span>
+        <span>Peserta Dipilih</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <button type="button" onclick="openBulkReassignModal()" style="padding: 0.45rem 1rem; background: #0641CC; color: #ffffff; border: none; border-radius: 999px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
+            <span>Pindahkan Pembimbing Massal</span>
+        </button>
+        <button type="button" onclick="toggleAllPenempatan({checked: false})" style="background: transparent; border: none; color: #94A3B8; font-size: 0.8125rem; cursor: pointer; padding: 0.25rem 0.5rem;">
+            Batal
+        </button>
+    </div>
+</div>
+
+{{-- MODAL BULK REASSIGN PEMBIMBING --}}
+<div id="modal-bulk-reassign" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); z-index: 1060; align-items: center; justify-content: center; padding: 1rem;">
+    <div style="background: #ffffff; border-radius: 14px; width: 100%; max-width: 520px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); padding: 1.75rem; border: 1px solid var(--neutral-200);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.85rem;">
+            <div>
+                <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--neutral-900); margin: 0;">Pindahkan Pembimbing Massal</h3>
+                <p style="font-size: 0.8rem; color: var(--neutral-500); margin: 0.2rem 0 0 0;">
+                    Alihkan <span id="bulk-modal-count" style="font-weight: 700; color: #0641CC;">0</span> penempatan peserta ke pembimbing baru.
+                </p>
+            </div>
+            <button type="button" onclick="closeBulkReassignModal()" style="background: transparent; border: none; cursor: pointer; color: var(--neutral-500); font-size: 1.25rem;">&times;</button>
+        </div>
+
+        <form method="POST" action="{{ route('admin.penempatan.bulk-reassign') }}">
+            @csrf
+            <div id="bulk-ids-container"></div>
+
+            <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.4rem;">
+                    Pilih Pembimbing Lapangan Baru <span style="color: #ef4444;">*</span>
+                </label>
+                <select name="pembimbing_id" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                    <option value="">-- Pilih Pembimbing Aktif --</option>
+                    @foreach($pembimbingList as $pem)
+                        <option value="{{ $pem->id }}">
+                            {{ $pem->nama }} (Beban: {{ $pem->mentee_aktif_count }} mentee aktif)
+                        </option>
+                    @endforeach
+                </select>
+                <small style="display: block; font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.35rem;">
+                    Sistem akan memvalidasi batas kapasitas <code>maks_peserta_aktif_per_pembimbing</code> (BR-13).
+                </small>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
+                <button type="button" onclick="closeBulkReassignModal()" style="padding: 0.5rem 1.25rem; background: var(--neutral-200); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
+                    Batal
+                </button>
+                <button type="submit" style="padding: 0.5rem 1.5rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
+                    Konfirmasi Pindah Pembimbing
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection

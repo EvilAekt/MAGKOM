@@ -132,6 +132,7 @@ class BidangController extends Controller
         );
 
         $statusLabel = $targetAktif ? 'diaktifkan' : 'dinonaktifkan';
+
         return redirect()->route('superadmin.bidang.index')
             ->with('success', "Bidang {$bidang->nama_bidang} berhasil {$statusLabel}.");
     }

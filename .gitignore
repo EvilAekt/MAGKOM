@@ -18,3 +18,13 @@ yarn-error.log
 /.idea
 /.vscode
 /scratch
+graphify-out/
+.strix/
+strix_runs/
+.testsprite/
+testsprite_out/
+__pycache__/
+*.pyc
+basefw*/
+claude_work/
+/.playwright-mcp

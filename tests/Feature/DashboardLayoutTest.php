@@ -32,7 +32,7 @@ class DashboardLayoutTest extends TestCase
     private function createDummyBladeView(): void
     {
         $dir = resource_path('views/testing');
-        if (!is_dir($dir)) {
+        if (! is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
 
@@ -71,7 +71,7 @@ BLADE;
 
     private function createUser(string $nama, string $email, RoleEnum $role): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = 'PasswordRahasia123!';
@@ -131,10 +131,12 @@ BLADE;
             // Menu Pembimbing
             $response->assertSee('Tugas Peserta');
             $response->assertSee('Reviu Logbook');
-            $response->assertSee('Penilaian Magang');
+            // Menu Profil & Pengaturan Pembimbing
+            $response->assertSee('Profil Saya');
+            $response->assertSee('Pengaturan Akun');
 
             // Tidak boleh ada menu Peserta/SuperAdmin
-            $response->assertDontSee('Profil Saya');
+            $response->assertDontSee('Pendaftaran Magang');
             $response->assertDontSee('Manajemen Staf');
             $response->assertDontSee('Jejak Audit Log');
         } finally {

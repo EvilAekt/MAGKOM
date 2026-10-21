@@ -4,15 +4,23 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Peserta;
 
+use App\Enums\JenjangEnum;
+use App\Enums\RealtimeEventTypeEnum;
+use App\Enums\StatusKetersediaanEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PendaftaranRequest;
 use App\Models\BulanMagang;
 use App\Models\JenisDokumen;
+use App\Models\Kuota;
 use App\Models\Pendaftaran;
+use App\Models\Penempatan;
 use App\Services\AuditService;
 use App\Services\BulanStatusService;
+use App\Services\RealtimeEventService;
+use App\Services\SuratDiterimaPdfService;
+use App\Support\Pengaturan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -45,8 +53,8 @@ class PendaftaranController extends Controller
         });
 
         $kategoriJurusan = match ($profil?->jenjang) {
-            \App\Enums\JenjangEnum::Smk => 'smk',
-            \App\Enums\JenjangEnum::D3, \App\Enums\JenjangEnum::S1 => 'mahasiswa',
+            JenjangEnum::Smk => 'smk',
+            JenjangEnum::D3, JenjangEnum::S1 => 'mahasiswa',
             default => null,
         };
 
@@ -58,16 +66,16 @@ class PendaftaranController extends Controller
                 });
             }
         }])
-        ->where('aktif', true)
-        ->orderBy('bulan_mulai', 'asc')
-        ->get()
-        ->filter(function ($bulan) {
-            return $this->bulanStatusService->status($bulan) === \App\Enums\StatusKetersediaanEnum::Tersedia;
-        });
+            ->where('aktif', true)
+            ->orderBy('bulan_mulai', 'asc')
+            ->get()
+            ->filter(function ($bulan) {
+                return $this->bulanStatusService->status($bulan) === StatusKetersediaanEnum::Tersedia;
+            });
 
         $kuotaList = collect();
         if ($profil && $profil->jurusan_id) {
-            $kuotaList = \App\Models\Kuota::with(['bulanMagang', 'jurusan'])
+            $kuotaList = Kuota::with(['bulanMagang', 'jurusan'])
                 ->where('jurusan_id', $profil->jurusan_id)
                 ->where('aktif', true)
                 ->whereHas('bulanMagang', function ($q) {
@@ -75,17 +83,17 @@ class PendaftaranController extends Controller
                 })
                 ->get()
                 ->filter(function ($kuota) {
-                    return $kuota->bulanMagang && $this->bulanStatusService->status($kuota->bulanMagang, $kuota) === \App\Enums\StatusKetersediaanEnum::Tersedia;
+                    return $kuota->bulanMagang && $this->bulanStatusService->status($kuota->bulanMagang, $kuota) === StatusKetersediaanEnum::Tersedia;
                 })
                 ->values();
         }
 
         return view('peserta.pendaftaran.index', [
-            'pendaftaranList'  => $pendaftaranList,
+            'pendaftaranList' => $pendaftaranList,
             'pendaftaranAktif' => $pendaftaranAktif,
-            'bulanAktifList'   => $bulanAktifList,
-            'profil'           => $profil,
-            'kuotaList'        => $kuotaList,
+            'bulanAktifList' => $bulanAktifList,
+            'profil' => $profil,
+            'kuotaList' => $kuotaList,
         ]);
     }
 
@@ -125,7 +133,7 @@ class PendaftaranController extends Controller
         ]);
 
         $profil = $user->profil;
-        $jenjang = $profil?->jenjang ?? \App\Enums\JenjangEnum::Smk;
+        $jenjang = $profil?->jenjang ?? JenjangEnum::Smk;
 
         $jenisDokumenList = JenisDokumen::where('aktif', true)
             ->where('jenjang', $jenjang->value)
@@ -139,7 +147,7 @@ class PendaftaranController extends Controller
             'jenisDokumenList' => $jenisDokumenList,
             'dokumenTerunggah' => $dokumenTerunggah,
             'profil' => $profil,
-            'maksMb' => \App\Support\Pengaturan::int('berkas_maks_mb', 2),
+            'maksMb' => Pengaturan::int('berkas_maks_mb', 2),
         ]);
     }
 
@@ -152,7 +160,7 @@ class PendaftaranController extends Controller
 
         $user = $request->user();
         $profil = $user->profil;
-        $jenjang = $profil?->jenjang ?? \App\Enums\JenjangEnum::Smk;
+        $jenjang = $profil?->jenjang ?? JenjangEnum::Smk;
 
         // Validasi kelengkapan seluruh dokumen wajib
         $dokumenWajibIds = JenisDokumen::where('aktif', true)
@@ -183,8 +191,23 @@ class PendaftaranController extends Controller
             detail: ['aksi' => 'Peserta mengajukan berkas lengkap pendaftaran']
         );
 
+        // Notifikasi Real-time SSE ke Admin (TASK-SSE-05)
+        app(RealtimeEventService::class)->publish(
+            RealtimeEventTypeEnum::PendaftaranBaru,
+            [
+                'title' => 'Pendaftaran Baru Masuk',
+                'message' => "Berkas dari {$user->nama} siap diverifikasi.",
+                'nomor_pendaftaran' => $pendaftaran->nomor_pendaftaran,
+                'action_url' => route('admin.pendaftaran.show', $pendaftaran->id),
+                'badge_target' => '#badge-antrean-menunggu',
+            ],
+            null,
+            'admin'
+        );
+
         return redirect()->route('peserta.pendaftaran.detail', $pendaftaran)
             ->with('success', 'Pendaftaran Anda berhasil diajukan dan sedang menunggu verifikasi berkas oleh admin.');
+
     }
 
     /**
@@ -216,7 +239,7 @@ class PendaftaranController extends Controller
     /**
      * Mengunduh Surat Keterangan Diterima PDF resmi (AC-16-1, F-16).
      */
-    public function unduhSuratDiterima(\App\Models\Penempatan $penempatan, \App\Services\SuratDiterimaPdfService $pdfService)
+    public function unduhSuratDiterima(Penempatan $penempatan, SuratDiterimaPdfService $pdfService)
     {
         $this->authorize('view', $penempatan);
 
@@ -226,7 +249,7 @@ class PendaftaranController extends Controller
     /**
      * Menyajikan pratinjau inline stream Surat Keterangan Diterima PDF resmi (AC-16-1, F-16).
      */
-    public function pratinjauSuratDiterima(\App\Models\Penempatan $penempatan, \App\Services\SuratDiterimaPdfService $pdfService)
+    public function pratinjauSuratDiterima(Penempatan $penempatan, SuratDiterimaPdfService $pdfService)
     {
         $this->authorize('view', $penempatan);
 

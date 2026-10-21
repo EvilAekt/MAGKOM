@@ -9,21 +9,17 @@ use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
-use App\Enums\StatusReviewProgresEnum;
-use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
-use App\Models\Dokumen;
 use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Logbook;
+use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\Penilaian;
-use App\Models\PenilaianRiwayat;
 use App\Models\PesertaProfil;
 use App\Models\Rubrik;
 use App\Models\SlotKhusus;
@@ -41,9 +37,13 @@ class EndToEndUatTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected Bidang $bidang;
+
     protected Jurusan $jurusanSmk;
 
     protected function setUp(): void
@@ -76,7 +76,7 @@ class EndToEndUatTest extends TestCase
         );
 
         // Siapkan Aktor: SuperAdmin, Admin, Pembimbing
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Admin MagKom';
         $this->superAdmin->email = 'superadmin.uat@kominfo.test';
         $this->superAdmin->password = 'secret123';
@@ -85,7 +85,7 @@ class EndToEndUatTest extends TestCase
         $this->superAdmin->status_aktif = true;
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Pengelola';
         $this->admin->email = 'admin.uat@kominfo.test';
         $this->admin->password = 'secret123';
@@ -94,7 +94,7 @@ class EndToEndUatTest extends TestCase
         $this->admin->status_aktif = true;
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan UAT';
         $this->pembimbing->email = 'pembimbing.uat@kominfo.test';
         $this->pembimbing->password = 'secret123';
@@ -187,7 +187,7 @@ class EndToEndUatTest extends TestCase
         );
 
         // Peserta baru
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Budi Santoso Siswa';
         $peserta->email = 'budi.santoso@sekolah.test';
         $peserta->password = 'secret123';
@@ -213,7 +213,7 @@ class EndToEndUatTest extends TestCase
             'durasi_bulan' => 3,
         ]);
         $daftarRes->assertRedirect();
-        $pendaftaran = \App\Models\Pendaftaran::where('user_id', $peserta->id)->firstOrFail();
+        $pendaftaran = Pendaftaran::where('user_id', $peserta->id)->firstOrFail();
         $this->assertEquals(StatusPendaftaranEnum::BerkasBelumLengkap, $pendaftaran->status);
 
         // 3. Upload Berkas Wajib ke Disk Private
@@ -258,7 +258,7 @@ class EndToEndUatTest extends TestCase
             'aktif' => true,
         ]);
 
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Citra Lestari';
         $peserta->email = 'citra@sekolah.test';
         $peserta->password = 'secret123';
@@ -276,7 +276,7 @@ class EndToEndUatTest extends TestCase
             'no_hp' => '08129876111',
         ]);
 
-        $pendaftaran = \App\Models\Pendaftaran::create([
+        $pendaftaran = Pendaftaran::create([
             'user_id' => $peserta->id,
             'bulan_magang_id' => $bulan->id,
             'kuota_id' => $kuota->id,
@@ -343,7 +343,7 @@ class EndToEndUatTest extends TestCase
             ['nama' => 'Surat Pengantar Sekolah', 'wajib' => true, 'aktif' => true]
         );
 
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Doni Waiting';
         $peserta->email = 'doni@sekolah.test';
         $peserta->password = 'secret123';
@@ -362,7 +362,7 @@ class EndToEndUatTest extends TestCase
         ]);
 
         // Pendaftaran saat kuota penuh
-        $pendaftaran = \App\Models\Pendaftaran::create([
+        $pendaftaran = Pendaftaran::create([
             'user_id' => $peserta->id,
             'bulan_magang_id' => $bulan->id,
             'kuota_id' => $kuota->id,
@@ -414,7 +414,7 @@ class EndToEndUatTest extends TestCase
             'dibuat_oleh' => $this->superAdmin->id,
         ]);
 
-        $pesertaKhusus = new User();
+        $pesertaKhusus = new User;
         $pesertaKhusus->nama = 'Eka Khusus';
         $pesertaKhusus->email = 'eka.khusus@instansi.test';
         $pesertaKhusus->password = 'secret123';
@@ -469,7 +469,7 @@ class EndToEndUatTest extends TestCase
             'status' => StatusPenempatanEnum::Aktif,
         ]);
 
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Fajar Pelaksana';
         $peserta->email = 'fajar@pelaksana.test';
         $peserta->password = 'secret123';
@@ -537,7 +537,7 @@ class EndToEndUatTest extends TestCase
      */
     public function test_uat_7_penilaian_dan_unduh_lembar_nilai(): void
     {
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Gita Nilai';
         $peserta->email = 'gita@nilai.test';
         $peserta->password = 'secret123';
@@ -615,7 +615,7 @@ class EndToEndUatTest extends TestCase
      */
     public function test_uat_8_masa_tenggang_nonaktif_otomatis_dan_audit_trail_komprehensif(): void
     {
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Hendra Selesai';
         $peserta->email = 'hendra@selesai.test';
         $peserta->password = 'secret123';
