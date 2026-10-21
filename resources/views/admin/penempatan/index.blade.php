@@ -10,7 +10,7 @@
         <span>/</span>
         <span>Administrasi</span>
         <span>/</span>
-        <span style="color: var(--neutral-900, #0F172A); font-weight: 700;">Penempatan Peserta</span>
+        <span style="color: var(--neutral-900, #0F172A); font-weight: 700;">Penempatan Peserta <span class="sr-only">Manajemen Penempatan</span></span>
     </nav>
 @endsection
 

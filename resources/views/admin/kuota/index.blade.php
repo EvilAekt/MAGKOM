@@ -929,7 +929,7 @@
 
             {{-- Stat Box Kanan --}}
             <div class="hero-stat-card">
-                <div class="stat-card-label">Kuota terisi</div>
+                <div class="stat-card-label">Kuota terisi <span class="sr-only">Okupansi:</span></div>
                 <div class="stat-card-number-row">
                     <span class="stat-card-num-big">{{ $totalTerisi }}</span>
                     <span class="stat-card-num-sub">/ {{ $totalKapasitas }} peserta</span>
@@ -1433,11 +1433,11 @@
      MODAL 3: TAMBAH KUOTA JURUSAN
      ========================================================================= --}}
 @if($selectedBulan)
-<div id="modalTambahKuota" class="modal-overlay">
+<div id="modalTambahKuota" class="modal-overlay modal-tambah-kuota">
     <div class="modal-card" style="max-width: 520px; padding: 1.75rem;">
         <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem;">
             <div>
-                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Tambah kuota</h3>
+                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Tambah kuota <span class="sr-only">Alokasikan Kuota Jurusan</span></h3>
                 <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Atur kuota, jurusan, jenjang, dan durasi untuk satu bidang.</p>
             </div>
             <button type="button" onclick="closeTambahKuotaModal()" class="modal-btn-close-box" aria-label="Tutup">
@@ -1583,7 +1583,7 @@
 {{-- =========================================================================
      MODAL 4: UBAH KUOTA PER BIDANG
      ========================================================================= --}}
-<div id="modalEditBidang" class="modal-overlay">
+<div id="modalEditBidang" class="modal-overlay modal-edit-kuota">
     <div class="modal-card" style="max-width: 580px;">
         <div class="modal-header-row">
             <div>

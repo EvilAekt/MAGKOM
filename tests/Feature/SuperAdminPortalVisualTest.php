@@ -107,7 +107,7 @@ class SuperAdminPortalVisualTest extends TestCase
         $response = $this->actingAs($this->superAdmin)->get(route('superadmin.bulan.index'));
 
         $response->assertStatus(200);
-        $response->assertSee('Manajemen Periode Bulan Magang');
+        $response->assertSee('Manajemen Bulan Magang');
         $response->assertSee($this->bulan->bulan_mulai->translatedFormat('F Y'));
         $response->assertSee('modal-tambah-bulan');
         $response->assertSee('modal-edit-bulan');

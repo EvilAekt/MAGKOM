@@ -183,6 +183,15 @@ class PendaftaranController extends Controller
             if ($keputusan === 'terima') {
                 $this->placementService->terimaBerkas($pendaftaran, $admin, $request->input('catatan'));
 
+                if ($request->filled('pembimbing_id')) {
+                    $pembimbing = User::findOrFail($request->input('pembimbing_id'));
+                    $bidang = $request->filled('bidang_id') ? Bidang::find($request->input('bidang_id')) : null;
+                    $this->placementService->tetapkanPenempatan($pendaftaran, $admin, $pembimbing, $bidang);
+
+                    return redirect()->route('admin.pendaftaran.show', $pendaftaran)
+                        ->with('success', 'Pendaftaran berhasil diterima dan langsung ditempatkan kepada pembimbing.');
+                }
+
                 return redirect()->route('admin.pendaftaran.show', $pendaftaran)
                     ->with('success', 'Berkas pendaftaran berhasil diterima. Silakan tetapkan pembimbing lapangan di menu Penempatan Peserta.');
             }

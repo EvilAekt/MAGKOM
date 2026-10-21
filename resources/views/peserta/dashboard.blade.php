@@ -892,7 +892,26 @@
 
 @section('content')
 
-{{-- 1. Hero Greeting Banner --}}
+<!-- 1. Gentelella Page Title Bar -->
+<x-gentelella.page-title
+    title="Dashboard Peserta"
+    description="Pantau progres magang, penugasan bimbingan, pengisian logbook harian, dan evaluasi hasil."
+>
+    @if($fase === 'aktif' && $penempatan)
+        <x-slot:actions>
+            <a href="{{ route('peserta.logbook.index') }}" class="btn btn-sm btn-primary" style="display: inline-flex; align-items: center; gap: 0.4rem; background: #0641CC; color: #ffffff; border-radius: 8px; font-weight: 700; padding: 0.5rem 1rem; text-decoration: none; box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                + Isi Logbook Mingguan
+            </a>
+            <a href="{{ route('peserta.tugas.index') }}" class="btn btn-sm" style="display: inline-flex; align-items: center; gap: 0.4rem; background: #ffffff; color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 600; padding: 0.5rem 1rem; text-decoration: none;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                Lihat Daftar Tugas
+            </a>
+        </x-slot:actions>
+    @endif
+</x-gentelella.page-title>
+
+{{-- 2. Hero Greeting Banner --}}
 @if($fase === 'aktif' && $penempatan)
     <div class="dashboard-hero">
         <div class="hero-content">
@@ -980,14 +999,10 @@
 
 {{-- FASE 1: ONBOARDING (Belum Mendaftar / Profil Baru) --}}
 @if($fase === 'onboarding')
-    <div class="onboarding-card">
-        <div class="card-header" style="margin-bottom: 8px;">
-            <div>
-                <h3 class="card-title">Panduan Alur Pendaftaran Magang</h3>
-                <p class="card-subtitle">Ikuti langkah-langkah di bawah ini untuk memulai pendaftaran magang di Dinas Kominfo Sleman.</p>
-            </div>
-        </div>
-
+    <x-gentelella.x-panel
+        title="Panduan Alur Pendaftaran Magang"
+        subtitle="Ikuti langkah-langkah di bawah ini untuk memulai pendaftaran magang di Dinas Kominfo Sleman."
+    >
         <div class="stepper-list">
             <div class="step-item {{ $profil ? 'completed' : 'active' }}">
                 <div class="step-badge">{{ $profil ? '✓' : '1' }}</div>
@@ -1034,32 +1049,30 @@
                 </a>
             @endif
         </div>
-    </div>
+    </x-gentelella.x-panel>
 @endif
 
 {{-- FASE 2: SELEKSI PENDAFTARAN (Pendaftaran Aktif Berjalan) --}}
 @if($fase === 'seleksi' && $pendaftaran)
-    <div class="status-tracker-card">
-        <div class="tracker-header">
-            <div>
-                <h3 class="card-title">Status Pendaftaran Magang Aktif</h3>
-                <p class="card-subtitle">Pengajuan nomor #{{ $pendaftaran->id }} sedang diproses dalam tahapan seleksi.</p>
-            </div>
-            <div>
-                @php
-                    $status = $pendaftaran->status;
-                    $badgeClass = match($status) {
-                        \App\Enums\StatusPendaftaranEnum::Diterima => 'badge-success',
-                        \App\Enums\StatusPendaftaranEnum::Diajukan, \App\Enums\StatusPendaftaranEnum::WaitingList => 'badge-warning',
-                        \App\Enums\StatusPendaftaranEnum::PerluPerbaikan, \App\Enums\StatusPendaftaranEnum::Ditolak, \App\Enums\StatusPendaftaranEnum::Dibatalkan => 'badge-danger',
-                        default => 'badge-neutral',
-                    };
-                @endphp
-                <span class="badge {{ $badgeClass }}" style="font-size: 13px; padding: 6px 14px;">
-                    ● {{ $status->label() }}
-                </span>
-            </div>
-        </div>
+    @php
+        $status = $pendaftaran->status;
+        $badgeClass = match($status) {
+            \App\Enums\StatusPendaftaranEnum::Diterima => 'badge-success',
+            \App\Enums\StatusPendaftaranEnum::Diajukan, \App\Enums\StatusPendaftaranEnum::WaitingList => 'badge-warning',
+            \App\Enums\StatusPendaftaranEnum::PerluPerbaikan, \App\Enums\StatusPendaftaranEnum::Ditolak, \App\Enums\StatusPendaftaranEnum::Dibatalkan => 'badge-danger',
+            default => 'badge-neutral',
+        };
+    @endphp
+
+    <x-gentelella.x-panel
+        title="Status Pendaftaran Magang Aktif"
+        subtitle="Pengajuan nomor #{{ $pendaftaran->id }} sedang diproses dalam tahapan seleksi."
+    >
+        <x-slot:actions>
+            <span class="badge {{ $badgeClass }}" style="font-size: 13px; padding: 6px 14px;">
+                ● {{ $status->label() }}
+            </span>
+        </x-slot:actions>
 
         <div class="info-strip">
             <div class="info-strip-item">
@@ -1109,7 +1122,7 @@
                 </a>
             @endif
         </div>
-    </div>
+    </x-gentelella.x-panel>
 @endif
 
 {{-- FASE 3: AKTIF MAGANG (Sedang Berjalan) --}}
@@ -1148,200 +1161,186 @@
         </a>
     </div>
 
-    {{-- Panel Metrik Terpadu (Unified KPI Card dengan Micro-Progress) --}}
-    <div class="kpi-unified-card">
-        <div class="kpi-unified-item">
-            <div class="kpi-icon-box kpi-icon-blue">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                </svg>
+    {{-- Gentelella Tile Count 4 Metrik Peserta Magang --}}
+    <div class="row tile_count" style="margin-bottom: 24px;">
+        <!-- Tile 1: Tugas Selesai -->
+        <x-gentelella.tile-stat
+            title="Tugas Selesai"
+            value="{{ $tugasSelesai }} / {{ $totalTugas }}"
+            icon="clipboard-check"
+            trendText="{{ $persenTugas }}% Tuntas"
+            trendType="{{ $persenTugas >= 80 ? 'success' : ($persenTugas >= 40 ? 'warning' : 'info') }}"
+            subText="{{ $tugasBelum }} tugas dalam proses"
+            col="col-md-3 col-sm-6"
+        >
+            <div class="micro-progress-bar" style="margin-top: 6px;">
+                <div class="micro-progress-fill progress-fill-blue" style="width: {{ $persenTugas }}%;"></div>
             </div>
-            <div class="kpi-details">
-                <span class="kpi-label">Tugas Selesai</span>
-                <span class="kpi-value">{{ $tugasSelesai }} / {{ $totalTugas }}</span>
-                <div class="micro-progress-bar">
-                    <div class="micro-progress-fill progress-fill-blue" style="width: {{ $persenTugas }}%;"></div>
-                </div>
-                <span class="kpi-subtext">{{ $persenTugas }}% tuntas &bull; {{ $tugasBelum }} dalam proses</span>
-            </div>
-        </div>
+        </x-gentelella.tile-stat>
 
-        <div class="kpi-unified-item">
-            <div class="kpi-icon-box kpi-icon-green">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                </svg>
+        <!-- Tile 2: Logbook Mingguan -->
+        <x-gentelella.tile-stat
+            title="Logbook Mingguan"
+            value="{{ $totalLogbook }} Laporan"
+            icon="book-open"
+            trendText="{{ $logbookPerluRevisi > 0 ? $logbookPerluRevisi . ' Perlu Revisi' : 'Tuntas' }}"
+            trendType="{{ $logbookPerluRevisi > 0 ? 'danger' : 'success' }}"
+            subText="{{ $logbookPerluRevisi > 0 ? 'Perlu perbaikan segera' : 'Aktivitas tercatat rapi' }}"
+            col="col-md-3 col-sm-6"
+        >
+            <div class="micro-progress-bar" style="margin-top: 6px;">
+                <div class="micro-progress-fill progress-fill-green" style="width: 100%;"></div>
             </div>
-            <div class="kpi-details">
-                <span class="kpi-label">Logbook Mingguan</span>
-                <span class="kpi-value">{{ $totalLogbook }} Laporan</span>
-                <div class="micro-progress-bar">
-                    <div class="micro-progress-fill progress-fill-green" style="width: 100%;"></div>
-                </div>
-                <span class="kpi-subtext">
-                    @if($logbookPerluRevisi > 0)
-                        <strong style="color: var(--red-600);">{{ $logbookPerluRevisi }} laporan perlu revisi</strong>
-                    @else
-                        Aktivitas tercatat rapi
-                    @endif
-                </span>
-            </div>
-        </div>
+        </x-gentelella.tile-stat>
 
-        <div class="kpi-unified-item">
-            <div class="kpi-icon-box kpi-icon-amber">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
+        <!-- Tile 3: Sisa Hari Magang -->
+        <x-gentelella.tile-stat
+            title="Sisa Hari Magang"
+            value="{{ $sisaHari !== null ? $sisaHari . ' Hari' : '-' }}"
+            icon="calendar"
+            trendText="Hari ke-{{ $hariBerjalan }}"
+            trendType="{{ $sisaHari !== null && $sisaHari <= 7 ? 'warning' : 'info' }}"
+            subText="Dari total {{ $totalHariMagang }} hari ({{ $persenHariMagang }}%)"
+            col="col-md-3 col-sm-6"
+        >
+            <div class="micro-progress-bar" style="margin-top: 6px;">
+                <div class="micro-progress-fill progress-fill-amber" style="width: {{ $persenHariMagang }}%;"></div>
             </div>
-            <div class="kpi-details">
-                <span class="kpi-label">Sisa Hari Magang</span>
-                <span class="kpi-value">{{ $sisaHari !== null ? $sisaHari . ' Hari' : '-' }}</span>
-                <div class="micro-progress-bar">
-                    <div class="micro-progress-fill progress-fill-amber" style="width: {{ $persenHariMagang }}%;"></div>
-                </div>
-                <span class="kpi-subtext">Hari ke-{{ $hariBerjalan }} dari {{ $totalHariMagang }} ({{ $persenHariMagang }}%)</span>
-            </div>
-        </div>
+        </x-gentelella.tile-stat>
 
-        <div class="kpi-unified-item">
-            <div class="kpi-icon-box kpi-icon-purple">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                </svg>
+        <!-- Tile 4: Status Evaluasi -->
+        <x-gentelella.tile-stat
+            title="Status Evaluasi"
+            value="{{ $isFinalNilai ? ($penilaian->predikat ?? 'A') . ' (' . number_format($penilaian->nilai_akhir, 1) . ')' : 'Dalam Proses' }}"
+            icon="award"
+            trendText="{{ $isFinalNilai ? 'Nilai final resmi' : '5 rubrik dinas' }}"
+            trendType="{{ $isFinalNilai ? 'success' : 'neutral' }}"
+            subText="{{ $isFinalNilai ? 'Evaluasi tuntas' : 'Penilaian pembimbing' }}"
+            col="col-md-3 col-sm-6"
+        >
+            <div class="micro-progress-bar" style="margin-top: 6px;">
+                <div class="micro-progress-fill progress-fill-purple" style="width: {{ $isFinalNilai ? 100 : 50 }}%;"></div>
             </div>
-            <div class="kpi-details">
-                <span class="kpi-label">Status Evaluasi</span>
-                <span class="kpi-value" style="font-size: 1.125rem;">
-                    {{ $isFinalNilai ? ($penilaian->predikat ?? 'A') . ' (' . number_format($penilaian->nilai_akhir, 1) . ')' : 'Dalam Proses' }}
-                </span>
-                <div class="micro-progress-bar">
-                    <div class="micro-progress-fill progress-fill-purple" style="width: {{ $isFinalNilai ? 100 : 50 }}%;"></div>
-                </div>
-                <span class="kpi-subtext">{{ $isFinalNilai ? 'Nilai final resmi' : '5 rubrik pembimbing' }}</span>
-            </div>
-        </div>
+        </x-gentelella.tile-stat>
     </div>
 
-    {{-- 2 Kolom: Tugas Mendesak & Logbook Terbaru --}}
-    <div class="dashboard-columns">
+    {{-- 2 Kolom Gentelella: Tugas Mendesak & Logbook Terbaru --}}
+    <div class="row">
         {{-- Kolom Tugas --}}
-        <div class="list-card">
-            <div class="list-card-header">
-                <h4 class="list-card-title">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--blue-600);">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                    </svg>
-                    Tugas Magang Mendesak
-                </h4>
-                <a href="{{ route('peserta.tugas.index') }}" style="font-size: 13px; color: var(--blue-600); text-decoration: none; font-weight: 600;">Lihat Semua &rarr;</a>
-            </div>
+        <div class="col-md-6 col-sm-12">
+            <x-gentelella.x-panel
+                title="Tugas Magang Mendesak"
+                subtitle="Daftar tugas bimbingan yang membutuhkan penyelesaian segera"
+            >
+                <x-slot:actions>
+                    <a href="{{ route('peserta.tugas.index') }}" style="font-size: 13px; color: #0641CC; text-decoration: none; font-weight: 600;">Lihat Semua &rarr;</a>
+                </x-slot:actions>
 
-            @if($tugasMendesak->isNotEmpty())
-                @foreach($tugasMendesak as $t)
-                    @php
-                        $deadlineCarbon = \Carbon\Carbon::parse($t->deadline)->startOfDay();
-                        $diffDays = now()->startOfDay()->diffInDays($deadlineCarbon, false);
-                    @endphp
-                    <div class="item-row">
-                        <div class="item-meta">
-                            <h4>{{ $t->judul }}</h4>
-                            <p style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-                                @if($diffDays < 0)
-                                    <span class="deadline-pill is-urgent">Lewat Tenggat</span>
-                                @elseif($diffDays === 0)
-                                    <span class="deadline-pill is-urgent">⚡ Hari Ini</span>
-                                @elseif($diffDays === 1)
-                                    <span class="deadline-pill is-urgent">⚠️ Besok</span>
-                                @elseif($diffDays <= 3)
-                                    <span class="deadline-pill is-warning">⏳ {{ $diffDays }} Hari Lagi</span>
-                                @else
-                                    <span class="deadline-pill">📅 {{ $deadlineCarbon->isoFormat('D MMM') }}</span>
-                                @endif
-                                <span>&bull; {{ $t->kategori ?? 'Tugas Lapangan' }}</span>
-                            </p>
+                @if($tugasMendesak->isNotEmpty())
+                    @foreach($tugasMendesak as $t)
+                        @php
+                            $deadlineCarbon = \Carbon\Carbon::parse($t->deadline)->startOfDay();
+                            $diffDays = now()->startOfDay()->diffInDays($deadlineCarbon, false);
+                        @endphp
+                        <div class="item-row">
+                            <div class="item-meta">
+                                <h4>{{ $t->judul }}</h4>
+                                <p style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                                    @if($diffDays < 0)
+                                        <span class="deadline-pill is-urgent">Lewat Tenggat</span>
+                                    @elseif($diffDays === 0)
+                                        <span class="deadline-pill is-urgent">⚡ Hari Ini</span>
+                                    @elseif($diffDays === 1)
+                                        <span class="deadline-pill is-urgent">⚠️ Besok</span>
+                                    @elseif($diffDays <= 3)
+                                        <span class="deadline-pill is-warning">⏳ {{ $diffDays }} Hari Lagi</span>
+                                    @else
+                                        <span class="deadline-pill">📅 {{ $deadlineCarbon->isoFormat('D MMM') }}</span>
+                                    @endif
+                                    <span>&bull; {{ $t->kategori ?? 'Tugas Lapangan' }}</span>
+                                </p>
+                            </div>
+                            <div>
+                                <a href="{{ route('peserta.tugas.show', $t) }}" class="btn btn-secondary" style="height: 32px; padding: 0 12px; font-size: 12px; white-space: nowrap;">
+                                    Kerjakan
+                                </a>
+                            </div>
                         </div>
-                        <div>
-                            <a href="{{ route('peserta.tugas.show', $t) }}" class="btn btn-secondary" style="height: 32px; padding: 0 12px; font-size: 12px; white-space: nowrap;">
-                                Kerjakan
-                            </a>
-                        </div>
+                    @endforeach
+                @else
+                    <div class="dashboard-empty-state">
+                        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 12px auto; color: var(--green-600);">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="dashboard-empty-title">Semua tugas selesai!</p>
+                        <p class="dashboard-empty-subtext">Tidak ada tugas yang menunggu pengerjaan saat ini.</p>
                     </div>
-                @endforeach
-            @else
-                <div class="dashboard-empty-state">
-                    <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 12px auto; color: var(--green-600);">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <p class="dashboard-empty-title">Semua tugas selesai!</p>
-                    <p class="dashboard-empty-subtext">Tidak ada tugas yang menunggu pengerjaan saat ini.</p>
-                </div>
-            @endif
+                @endif
+            </x-gentelella.x-panel>
         </div>
 
         {{-- Kolom Logbook --}}
-        <div class="list-card">
-            <div class="list-card-header">
-                <h4 class="list-card-title">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--blue-600);">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
-                    Logbook Mingguan Terkini
-                </h4>
-                <a href="{{ route('peserta.logbook.index') }}" style="font-size: 13px; color: var(--blue-600); text-decoration: none; font-weight: 600;">Lihat Semua &rarr;</a>
-            </div>
+        <div class="col-md-6 col-sm-12">
+            <x-gentelella.x-panel
+                title="Logbook Mingguan Terkini"
+                subtitle="Catatan kemajuan dan laporan kegiatan mingguan"
+            >
+                <x-slot:actions>
+                    <a href="{{ route('peserta.logbook.index') }}" style="font-size: 13px; color: #0641CC; text-decoration: none; font-weight: 600;">Lihat Semua &rarr;</a>
+                </x-slot:actions>
 
-            @if($logbookTerbaru->isNotEmpty())
-                @foreach($logbookTerbaru as $lb)
-                    @php
-                        $statusValue = $lb->status->value ?? (string)$lb->status;
-                    @endphp
-                    <div class="item-row">
-                        <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
-                            <span class="week-mini-badge">
-                                MG{{ $lb->minggu_ke ?? $loop->iteration }}
-                            </span>
-                            <div class="item-meta">
-                                <h4>Minggu ke-{{ $lb->minggu_ke ?? ($loop->iteration) }} &bull; {{ \Carbon\Carbon::parse($lb->tanggal)->isoFormat('D MMM Y') }}</h4>
-                                <p>{{ \Illuminate\Support\Str::limit($lb->kegiatan, 65) }}</p>
+                @if($logbookTerbaru->isNotEmpty())
+                    @foreach($logbookTerbaru as $lb)
+                        @php
+                            $statusValue = $lb->status->value ?? (string)$lb->status;
+                        @endphp
+                        <div class="item-row">
+                            <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
+                                <span class="week-mini-badge">
+                                    MG{{ $lb->minggu_ke ?? $loop->iteration }}
+                                </span>
+                                <div class="item-meta">
+                                    <h4>Minggu ke-{{ $lb->minggu_ke ?? ($loop->iteration) }} &bull; {{ \Carbon\Carbon::parse($lb->tanggal)->isoFormat('D MMM Y') }}</h4>
+                                    <p>{{ \Illuminate\Support\Str::limit($lb->kegiatan, 65) }}</p>
+                                </div>
+                            </div>
+                            <div>
+                                @if($statusValue === 'perlu_revisi' || $statusValue === 'ditolak')
+                                    <span class="badge badge-danger">Perlu Revisi</span>
+                                @elseif($statusValue === 'disetujui')
+                                    <span class="badge badge-success">Disetujui</span>
+                                @else
+                                    <span class="badge badge-info">Terkirim</span>
+                                @endif
                             </div>
                         </div>
-                        <div>
-                            @if($statusValue === 'perlu_revisi' || $statusValue === 'ditolak')
-                                <span class="badge badge-danger">Perlu Revisi</span>
-                            @elseif($statusValue === 'disetujui')
-                                <span class="badge badge-success">Disetujui</span>
-                            @else
-                                <span class="badge badge-info">Terkirim</span>
-                            @endif
-                        </div>
+                    @endforeach
+                @else
+                    <div class="dashboard-empty-state">
+                        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 12px auto; color: var(--neutral-400);">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        <p class="dashboard-empty-title">Belum ada catatan logbook mingguan</p>
+                        <p class="dashboard-empty-subtext">Catat aktivitas mingguan magang Anda secara rutin.</p>
                     </div>
-                @endforeach
-            @else
-                <div class="dashboard-empty-state">
-                    <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 12px auto; color: var(--neutral-400);">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    <p class="dashboard-empty-title">Belum ada catatan logbook mingguan</p>
-                    <p class="dashboard-empty-subtext">Catat aktivitas mingguan magang Anda secara rutin.</p>
-                </div>
-            @endif
+                @endif
+            </x-gentelella.x-panel>
         </div>
     </div>
 @endif
 
 {{-- FASE 4: SELESAI MAGANG (Pasca Penilaian / Kelulusan) --}}
 @if($fase === 'selesai' && $penempatan)
-    <div class="completion-card">
+    <x-gentelella.x-panel
+        title="Penyelesaian Program Magang Dinas Kominfo Sleman"
+        subtitle="🎉 Selamat! Masa Magang Telah Selesai"
+    >
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;">
             <div>
                 <span class="badge badge-success" style="font-size: 14px; padding: 6px 16px; margin-bottom: 12px;">
                     🎉 Selamat! Masa Magang Telah Selesai
                 </span>
-                <h2 style="font-size: 22px; font-weight: 800; color: var(--neutral-800); margin-bottom: 8px;">
-                    Penyelesaian Program Magang Dinas Kominfo Sleman
-                </h2>
-                <p style="font-size: 14px; color: var(--neutral-600); max-width: 650px; line-height: 1.5;">
+                <p style="font-size: 14px; color: var(--neutral-600); max-width: 650px; line-height: 1.5; margin-top: 8px;">
                     Anda telah menuntaskan seluruh kewajiban magang pada <strong>{{ $penempatan->bidang->nama_bidang ?? 'Dinas Kominfo Sleman' }}</strong> bersama pembimbing lapangan <strong>{{ $penempatan->pembimbing->nama ?? $penempatan->pembimbing->name ?? '-' }}</strong>.
                 </p>
             </div>
@@ -1381,7 +1380,8 @@
                 </a>
             @endif
         </div>
-    </div>
+    </x-gentelella.x-panel>
 @endif
 
 @endsection
+

@@ -1,47 +1,56 @@
-<div class="sa-grid sa-grid--metrics">
+<div class="row tile_count sa-grid sa-grid--metrics" role="region" aria-label="Metrik Utama SuperAdmin">
     {{-- Card 1: Total Pengguna --}}
-    <x-sa.metric 
-        label="Total pengguna" 
+    <x-gentelella.tile-stat 
+        title="Total pengguna" 
         :value="number_format($totalPengguna)" 
         icon="users"
-        tone="primary">
+        trendType="primary"
+        col="col-md-3 col-sm-6 col-xs-12"
+    >
         <span>Seluruh akun terdaftar</span>
         @if($stafPendingGantiPassword > 0)
-            <span> · {{ $stafPendingGantiPassword }} Staf Pending Sandi Awal</span>
+            <span> &bull; {{ $stafPendingGantiPassword }} Staf Pending Sandi Awal</span>
         @endif
-    </x-sa.metric>
+    </x-gentelella.tile-stat>
 
     {{-- Card 2: Menunggu Verifikasi --}}
-    <x-sa.metric 
-        label="Menunggu verifikasi" 
+    <x-gentelella.tile-stat 
+        title="Menunggu verifikasi" 
         :value="number_format($menungguVerifikasi)" 
         icon="clipboard-check"
-        tone="warning">
+        trendType="warning"
+        col="col-md-3 col-sm-6 col-xs-12"
+    >
         <span>Berkas perlu ditinjau</span>
-    </x-sa.metric>
+    </x-gentelella.tile-stat>
 
     {{-- Card 3: Peserta Aktif --}}
-    <x-sa.metric 
-        label="Peserta aktif" 
+    <x-gentelella.tile-stat 
+        title="Peserta aktif" 
         :value="number_format($pesertaAktif)" 
         icon="user-check"
-        tone="success">
-        <div>{{ $totalPesertaJalurUmum }} Jalur Umum · {{ $totalPesertaJalurKhusus }} Jalur Khusus</div>
+        trendType="success"
+        col="col-md-3 col-sm-6 col-xs-12"
+    >
+        <div>{{ $totalPesertaJalurUmum }} Jalur Umum &bull; {{ $totalPesertaJalurKhusus }} Jalur Khusus</div>
         <div>
             {{ $totalAlumni }} Alumni Selesai
             @if($totalPesertaMasaTenggang > 0)
                 ({{ $totalPesertaMasaTenggang }} Masa Tenggang)
             @endif
-            · {{ $totalPesertaMundur }} Mengundurkan Diri
+            &bull; {{ $totalPesertaMundur }} Mengundurkan Diri
         </div>
-    </x-sa.metric>
+    </x-gentelella.tile-stat>
 
     {{-- Card 4: Akun Nonaktif --}}
-    <x-sa.metric 
-        label="Akun nonaktif" 
+    <x-gentelella.tile-stat 
+        title="Akun nonaktif" 
         :value="number_format($akunNonaktif)" 
         icon="lock"
-        tone="danger">
+        trendType="danger"
+        col="col-md-3 col-sm-6 col-xs-12"
+    >
         <span>Akses ditangguhkan</span>
-    </x-sa.metric>
+    </x-gentelella.tile-stat>
 </div>
+

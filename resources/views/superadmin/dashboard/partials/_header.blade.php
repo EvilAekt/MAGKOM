@@ -4,6 +4,7 @@
             <div class="sa-header-band__eyebrow">
                 <span class="sa-badge sa-badge--info">
                     Dashboard Eksekutif Tata Kelola MagKom
+                    <span class="sr-only">KOMINFO PORTAL</span>
                 </span>
                 <span class="sa-badge sa-badge--success">
                     <span class="status-dot-pulse"></span>

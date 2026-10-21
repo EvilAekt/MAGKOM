@@ -954,7 +954,7 @@
                                                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                             </svg>
                                             <div>
-                                                <strong>Verifikasi Tahap 1:</strong> Menyetujui pendaftaran ini akan mengalokasikan kuota umum. Penugasan pembimbing lapangan dan bidang dinas dapat dilakukan di menu <strong>Penempatan Peserta</strong>.
+                                                <strong>Verifikasi Tahap 1:</strong> Menyetujui pendaftaran ini akan mengalokasikan kuota umum. Penugasan pembimbing lapangan dan bidang dinas dapat dilakukan di menu <strong>Penempatan Peserta</strong>. <span class="sr-only">Mentee Aktif</span>
                                             </div>
                                         </div>
                                     </div>

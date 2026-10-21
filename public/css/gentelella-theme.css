@@ -1,0 +1,706 @@
+/**
+ * =====================================================================
+ * GENTELELLA MODERN CSS FRAMEWORK INTEGRATION (MAGKOM TOKENS)
+ * Standar: Dinas Komunikasi dan Informatika Kabupaten Sleman
+ * Palet Resmi: Deep Navy (#0641CC), Bright Blue (#0751FF), Neutral Tokens
+ * =====================================================================
+ */
+
+/* 1. LAYOUT ARCHITECTURE & CONTAINERS */
+body.nav-md {
+    --sidebar-width: 230px;
+}
+
+body.nav-sm {
+    --sidebar-width: 70px;
+}
+
+.container.body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--neutral-150, #F5F7FB);
+}
+
+.main_container {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    width: 100%;
+}
+
+/* 2. SIDEBAR KIRI (left_col / col-md-3) */
+.left_col {
+    background-color: var(--blue-700, #0641CC);
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .left_col {
+    background-color: var(--neutral-50, #111C2E) !important;
+}
+
+.site_title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    transition: all 0.2s ease;
+}
+
+.site_title:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Profil Pengguna Cepat Gentelella */
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.profile_pic {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.img-circle.profile_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile_info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.profile_info span:first-child {
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 500;
+}
+
+.profile_info h2 {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile_role_chip {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    width: fit-content;
+    letter-spacing: 0.03em;
+    background: rgba(255, 255, 255, 0.18);
+    color: #FFFFFF;
+}
+
+/* Sidebar Navigation Menu */
+.main_menu_side {
+    padding: 0.75rem 0.5rem;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.main_menu_side::-webkit-scrollbar {
+    display: none;
+}
+
+.menu_section {
+    margin-bottom: 1rem;
+}
+
+.menu_section h3 {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 0.75rem 0.25rem;
+    margin: 0;
+}
+
+/* Sidebar Footer Actions */
+.sidebar-footer {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: auto;
+}
+
+.sidebar-footer a,
+.sidebar-footer button {
+    color: rgba(255, 255, 255, 0.75);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    text-decoration: none;
+}
+
+.sidebar-footer a:hover,
+.sidebar-footer button:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* 3. TOPBAR NAVIGATION */
+.top_nav {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    background: var(--neutral-0, #FFFFFF);
+    border-bottom: 1px solid var(--neutral-300, #CBD5E1);
+    height: var(--topbar-height, 60px);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    transition: margin-left 0.25s ease, width 0.25s ease;
+}
+
+.nav_menu {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+}
+
+.nav.toggle {
+    display: flex;
+    align-items: center;
+}
+
+#menu_toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--neutral-300, #CBD5E1);
+    background: var(--neutral-100, #F8FAFC);
+    color: var(--neutral-700, #333333);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+#menu_toggle:hover {
+    background: var(--neutral-200, #EEF0F5);
+    color: var(--blue-700, #0641CC);
+}
+
+#menu_toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(7, 81, 255, 0.35);
+}
+
+/* 4. RIGHT COLUMN CONTENT CANVAS */
+.right_col {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    background: var(--neutral-150, #F5F7FB);
+    padding: 1.5rem 2rem 3rem;
+    min-height: calc(100vh - var(--topbar-height, 60px) - 50px);
+    transition: margin-left 0.25s ease, width 0.25s ease;
+    flex: 1;
+}
+
+/* 5. GENTELELLA FOOTER */
+.gentelella-footer {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    background: var(--neutral-0, #FFFFFF);
+    border-top: 1px solid var(--neutral-300, #CBD5E1);
+    padding: 1rem 2rem;
+    font-size: 0.75rem;
+    color: var(--neutral-500, #7A8494);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    transition: margin-left 0.25s ease, width 0.25s ease;
+}
+
+/* 6. GENTELELLA TILE COUNT & STATS TILES */
+.tile_count {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -0.5rem 1.5rem;
+    width: calc(100% + 1rem);
+}
+
+.tile_stats_count {
+    padding: 0.5rem;
+    flex: 1 1 200px;
+    min-width: 180px;
+}
+
+.tile_stats_inner {
+    background: var(--neutral-0, #FFFFFF);
+    border: 1px solid var(--neutral-200, #EEF0F5);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tile_stats_inner:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+}
+
+.tile_stats_inner::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--blue-600, #0751FF);
+}
+
+.count_top {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--neutral-600, #666666);
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.count_icon {
+    display: inline-flex;
+    align-items: center;
+    color: var(--blue-600, #0751FF);
+}
+
+.count {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--neutral-800, #1D2530);
+    line-height: 1.2;
+    margin: 0.25rem 0;
+}
+
+.count_bottom {
+    font-size: 0.75rem;
+    color: var(--neutral-500, #7A8494);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: auto;
+}
+
+.trend-indicator {
+    font-style: normal;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.trend-success { color: var(--green-600, #16A34A); }
+.trend-warning { color: var(--amber-700, #92400E); }
+.trend-danger { color: var(--red-600, #DC2626); }
+.trend-info { color: var(--blue-600, #0751FF); }
+.trend-neutral { color: var(--neutral-500, #7A8494); }
+
+.count_subtext {
+    color: var(--neutral-500, #7A8494);
+}
+
+/* 7. GENTELELLA X-PANEL */
+.x_panel {
+    background: var(--neutral-0, #FFFFFF);
+    border: 1px solid var(--neutral-200, #EEF0F5);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.x_title {
+    border-bottom: 1px solid var(--neutral-200, #EEF0F5);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.x_title h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--neutral-800, #1D2530);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+}
+
+.x_title h2 small {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--neutral-500, #7A8494);
+}
+
+.x_badge {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.x_badge_primary { background: var(--blue-tint, #E6EEFF); color: var(--blue-700, #0641CC); }
+.x_badge_success { background: var(--green-100, #E8F7EE); color: var(--green-700, #166534); }
+.x_badge_warning { background: var(--amber-100, #FFFBEB); color: var(--amber-700, #92400E); }
+.x_badge_danger  { background: var(--red-100, #FEF2F2); color: var(--red-700, #991B1B); }
+.x_badge_info    { background: var(--sky-100, #E0F2FE); color: var(--blue-600, #0751FF); }
+
+.panel_toolbox {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+}
+
+.collapse-link,
+.close-link {
+    background: transparent;
+    border: 1px solid var(--neutral-300, #CBD5E1);
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--neutral-600, #666666);
+    transition: all 0.15s ease;
+}
+
+.collapse-link:hover {
+    background: var(--neutral-100, #F8FAFC);
+    color: var(--neutral-900, #05070B);
+    border-color: var(--neutral-400, #D0D3D9);
+}
+
+.close-link:hover {
+    background: var(--red-100, #FEF2F2);
+    color: var(--red-600, #DC2626);
+    border-color: var(--red-300, #FECACA);
+}
+
+.collapse-link:focus-visible,
+.close-link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(7, 81, 255, 0.35);
+}
+
+.panel_chevron {
+    transition: transform 0.2s ease;
+}
+
+.x_content {
+    font-size: 0.875rem;
+    color: var(--neutral-700, #333333);
+}
+
+/* 8. GENTELELLA PAGE TITLE */
+.page-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.title_left {
+    flex: 1;
+    min-width: 250px;
+}
+
+.page-title-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--neutral-800, #1D2530);
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.page-title-sub {
+    font-size: 0.875rem;
+    color: var(--neutral-600, #666666);
+    margin: 0;
+}
+
+.title_right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.page-title-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--blue-tint, #E6EEFF);
+    color: var(--blue-700, #0641CC);
+}
+
+/* 9. DARK MODE HARMONIZATION (WCAG 2.1 AA COMPLIANT) */
+[data-theme="dark"] .container.body {
+    background-color: var(--neutral-150, #0A0F1D);
+}
+
+[data-theme="dark"] .top_nav,
+[data-theme="dark"] .gentelella-footer {
+    background: var(--neutral-0, #182234);
+    border-color: var(--neutral-200, #26354D);
+}
+
+[data-theme="dark"] .right_col {
+    background: var(--neutral-150, #0A0F1D);
+}
+
+[data-theme="dark"] .tile_stats_inner {
+    background: var(--neutral-0, #182234);
+    border-color: var(--neutral-200, #26354D);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .tile_stats_inner:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .count_top,
+[data-theme="dark"] .count_subtext {
+    color: var(--neutral-500, #94A3B8);
+}
+
+[data-theme="dark"] .count {
+    color: var(--neutral-800, #F8FAFC);
+}
+
+[data-theme="dark"] .x_panel {
+    background: var(--neutral-0, #182234);
+    border-color: var(--neutral-200, #26354D);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .x_title {
+    border-bottom-color: var(--neutral-200, #26354D);
+}
+
+[data-theme="dark"] .x_title h2 {
+    color: var(--neutral-800, #F8FAFC);
+}
+
+[data-theme="dark"] .x_title h2 small {
+    color: var(--neutral-500, #94A3B8);
+}
+
+[data-theme="dark"] .x_content {
+    color: var(--neutral-700, #E2E8F0);
+}
+
+[data-theme="dark"] .collapse-link,
+[data-theme="dark"] .close-link {
+    background: var(--neutral-100, #0F172A);
+    border-color: var(--neutral-200, #26354D);
+    color: var(--neutral-500, #94A3B8);
+}
+
+[data-theme="dark"] .collapse-link:hover {
+    background: var(--neutral-200, #26354D);
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .close-link:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #F87171;
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+[data-theme="dark"] .page-title-heading {
+    color: var(--neutral-800, #F8FAFC);
+}
+
+[data-theme="dark"] .page-title-sub {
+    color: var(--neutral-500, #94A3B8);
+}
+
+[data-theme="dark"] #menu_toggle {
+    background: var(--neutral-100, #0F172A);
+    border-color: var(--neutral-200, #26354D);
+    color: var(--neutral-600, #CBD5E1);
+}
+
+[data-theme="dark"] #menu_toggle:hover {
+    background: var(--neutral-200, #26354D);
+    color: #93C5FD;
+}
+
+/* 10. RESPONSIVE BREAKPOINTS */
+/* Desktop Menciut (nav-sm) */
+@media (min-width: 992px) {
+    body.nav-sm .sidebar-brand-text,
+    body.nav-sm .profile_info,
+    body.nav-sm .menu_section h3,
+    body.nav-sm .nav-item-link span:not(.nav-item-icon),
+    body.nav-sm .nav-group-btn span.nav-group-btn-left span:not(.nav-item-icon),
+    body.nav-sm .nav-group-chevron,
+    body.nav-sm .nav-sub-menu {
+        display: none !important;
+    }
+
+    body.nav-sm .site_title {
+        padding: 1rem 0;
+        justify-content: center;
+    }
+
+    body.nav-sm .profile {
+        padding: 0.75rem 0;
+        justify-content: center;
+    }
+
+    body.nav-sm .nav-item-link,
+    body.nav-sm .nav-group-btn {
+        justify-content: center;
+        padding: 0.625rem 0;
+    }
+
+    body.nav-sm .sidebar-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+    }
+}
+
+/* Mobile & Tablet (< 992px) */
+@media (max-width: 991.98px) {
+    .left_col.dashboard-sidebar {
+        transform: translateX(-100%);
+        box-shadow: 0 24px 48px -8px rgba(15, 28, 51, 0.28);
+        width: 256px !important;
+    }
+
+    .left_col.dashboard-sidebar.drawer-open {
+        transform: translateX(0);
+    }
+
+    .top_nav,
+    .right_col,
+    .gentelella-footer {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .right_col {
+        padding: 1rem 1rem 2.5rem;
+    }
+
+    .tile_count {
+        margin: 0 -0.25rem 1rem;
+        width: calc(100% + 0.5rem);
+    }
+
+    .tile_stats_count {
+        padding: 0.25rem;
+        flex: 1 1 45%;
+        min-width: 140px;
+    }
+
+    .tile_stats_inner {
+        padding: 0.875rem 1rem;
+    }
+
+    .count {
+        font-size: 1.375rem;
+    }
+}
+
+/* Smartphone Layar Kecil (< 640px) */
+@media (max-width: 639.98px) {
+    .tile_stats_count {
+        flex: 1 1 100%;
+        min-width: 100%;
+    }
+
+    .page-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .title_right {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .x_title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .panel_toolbox {
+        align-self: flex-end;
+    }
+}

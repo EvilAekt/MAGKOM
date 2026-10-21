@@ -145,6 +145,7 @@ final class NextLevelEnhancementsTest extends TestCase
 
         $auditCount = AuditLog::where('entitas', 'logbook')
             ->whereIn('entitas_id', [$logbook1->id, $logbook2->id])
+            ->where('aksi', 'bulk_review_logbook')
             ->count();
         $this->assertSame(2, $auditCount);
     }

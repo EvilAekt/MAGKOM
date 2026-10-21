@@ -199,13 +199,15 @@ class PlacementService extends AuditedService
         ?User $pembimbing = null,
         ?Bidang $bidang = null
     ): Penempatan {
-        $p = $this->terimaBerkas($pendaftaran, $admin);
+        return DB::transaction(function () use ($pendaftaran, $admin, $pembimbing, $bidang) {
+            $p = $this->terimaBerkas($pendaftaran, $admin);
 
-        $pembimbingTerpilih = $pembimbing ?? User::where('role', RoleEnum::Pembimbing)
-            ->where('status_aktif', true)
-            ->firstOrFail();
+            $pembimbingTerpilih = $pembimbing ?? User::where('role', RoleEnum::Pembimbing)
+                ->where('status_aktif', true)
+                ->firstOrFail();
 
-        return $this->tetapkanPenempatan($p, $admin, $pembimbingTerpilih, $bidang);
+            return $this->tetapkanPenempatan($p, $admin, $pembimbingTerpilih, $bidang);
+        });
     }
 
     /**

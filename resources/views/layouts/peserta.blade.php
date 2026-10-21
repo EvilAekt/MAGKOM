@@ -19,6 +19,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
+    <!-- Gentelella Theme CSS -->
+    <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
+
     <!-- Anti-Flash Theme Script -->
     <script>
         (function() {
@@ -1817,6 +1820,7 @@
             });
         }
     </script>
+    <script src="{{ asset('js/gentelella-theme.js') }}"></script>
     @stack('scripts')
     <x-sse-toast-listener />
 </body>

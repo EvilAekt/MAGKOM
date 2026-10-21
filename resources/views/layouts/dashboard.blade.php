@@ -23,6 +23,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
+    <!-- Gentelella Theme CSS -->
+    <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
+
     <!-- Anti-Flash Theme Script -->
     <script>
         (function() {
@@ -84,8 +87,8 @@
             --shadow-subtle: 0 1px 3px rgba(15, 23, 42, 0.08);
             --shadow-raised: 0 4px 12px rgba(15, 23, 42, 0.10);
             --shadow-modal: 0 24px 48px -8px rgba(15, 28, 51, 0.28);
-            --sidebar-width: 256px;
-            --topbar-height: 64px;
+            --sidebar-width: 230px;
+            --topbar-height: 60px;
 
             --font-sans: 'Open Sans', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
@@ -1595,7 +1598,546 @@
             overflow: hidden;
             clip: rect(0, 0, 0, 0);
             white-space: nowrap;
-            border-width: 0;
+        /* =====================================================================
+           GENTELELLA MODERN CSS FRAMEWORK INTEGRATION (MAGKOM TOKENS)
+           ===================================================================== */
+        body.nav-md {
+            --sidebar-width: 230px;
+        }
+
+        body.nav-sm {
+            --sidebar-width: 70px;
+        }
+
+        .container.body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--neutral-150);
+        }
+
+        .main_container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            width: 100%;
+        }
+
+        /* Sidebar Kiri (left_col / col-md-3) */
+        .left_col {
+            background-color: var(--blue-700);
+            color: #FFFFFF;
+        }
+
+        [data-theme="dark"] .left_col {
+            background-color: var(--neutral-50, #111C2E);
+        }
+
+        .site_title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 1.125rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            transition: all 0.2s ease;
+        }
+
+        .site_title:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Profil Pengguna Cepat (Gentelella Profile) */
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 1rem 1.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .profile_pic {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .img-circle.profile_img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile_info {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .profile_info span:first-child {
+            font-size: 0.6875rem;
+            color: rgba(255, 255, 255, 0.75);
+            font-weight: 500;
+        }
+
+        .profile_info h2 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin: 0 0 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .profile_role_chip {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            width: fit-content;
+            letter-spacing: 0.03em;
+            background: rgba(255, 255, 255, 0.18);
+            color: #FFFFFF;
+        }
+
+        /* Sidebar Navigation Menu */
+        .main_menu_side {
+            padding: 0.75rem 0.5rem;
+            flex: 1;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .main_menu_side::-webkit-scrollbar {
+            display: none;
+        }
+
+        .menu_section {
+            margin-bottom: 1rem;
+        }
+
+        .menu_section h3 {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.5rem 0.75rem 0.25rem;
+            margin: 0;
+        }
+
+        /* Sidebar Footer Actions */
+        .sidebar-footer {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: auto;
+        }
+
+        .sidebar-footer a,
+        .sidebar-footer button {
+            color: rgba(255, 255, 255, 0.75);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+
+        .sidebar-footer a:hover,
+        .sidebar-footer button:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Top Navigation Gentelella */
+        .top_nav {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            background: var(--neutral-0);
+            border-bottom: 1px solid var(--neutral-300);
+            height: var(--topbar-height);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            transition: margin-left 0.25s ease, width 0.25s ease;
+        }
+
+        .nav_menu {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+        }
+
+        .nav.toggle {
+            display: flex;
+            align-items: center;
+        }
+
+        #menu_toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--neutral-300);
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #menu_toggle:hover {
+            background: var(--neutral-200);
+            color: var(--blue-700);
+        }
+
+        /* Right Column Content Canvas */
+        .right_col {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            background: var(--neutral-150);
+            padding: 1.5rem 2rem 3rem;
+            min-height: calc(100vh - var(--topbar-height) - 50px);
+            transition: margin-left 0.25s ease, width 0.25s ease;
+            flex: 1;
+        }
+
+        /* Footer Gentelella */
+        .gentelella-footer {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            background: var(--neutral-0);
+            border-top: 1px solid var(--neutral-300);
+            padding: 1rem 2rem;
+            font-size: 0.75rem;
+            color: var(--neutral-500);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            transition: margin-left 0.25s ease, width 0.25s ease;
+        }
+
+        [data-theme="dark"] .top_nav,
+        [data-theme="dark"] .gentelella-footer {
+            background: var(--neutral-0);
+            border-color: var(--neutral-200);
+        }
+
+        /* Mode Menciut Desktop (nav-sm) */
+        @media (min-width: 992px) {
+            body.nav-sm .sidebar-brand-text,
+            body.nav-sm .profile_info,
+            body.nav-sm .menu_section h3,
+            body.nav-sm .nav-item-link span:not(.nav-item-icon),
+            body.nav-sm .nav-group-btn span.nav-group-btn-left span:not(.nav-item-icon),
+            body.nav-sm .nav-group-chevron,
+            body.nav-sm .nav-sub-menu {
+                display: none !important;
+            }
+
+            body.nav-sm .site_title {
+                padding: 1rem 0;
+                justify-content: center;
+            }
+
+            body.nav-sm .profile {
+                padding: 0.75rem 0;
+                justify-content: center;
+            }
+
+            body.nav-sm .nav-item-link,
+            body.nav-sm .nav-group-btn {
+                justify-content: center;
+                padding: 0.625rem 0;
+            }
+
+            body.nav-sm .sidebar-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 0.5rem 0;
+            }
+        }
+
+        /* Mobile Breakpoint (< 992px) */
+        @media (max-width: 991.98px) {
+            .left_col.dashboard-sidebar {
+                transform: translateX(-100%);
+                box-shadow: var(--shadow-modal);
+                width: 256px !important;
+            }
+
+            .left_col.dashboard-sidebar.drawer-open {
+                transform: translateX(0);
+            }
+
+            .top_nav,
+            .right_col,
+            .gentelella-footer {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            .right_col {
+                padding: 1rem 1rem 2.5rem;
+            }
+        }
+
+        /* =====================================================================
+           KOMPONEN GENTELELLA TILE COUNT & X-PANEL STYLES
+           ===================================================================== */
+        .tile_count {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -0.5rem 1.5rem;
+            width: calc(100% + 1rem);
+        }
+
+        .tile_stats_count {
+            padding: 0.5rem;
+            flex: 1 1 200px;
+            min-width: 180px;
+        }
+
+        .tile_stats_inner {
+            background: var(--neutral-0);
+            border: 1px solid var(--neutral-200);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .tile_stats_inner::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--blue-600);
+        }
+
+        .count_top {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--neutral-600);
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .count_icon {
+            display: inline-flex;
+            align-items: center;
+            color: var(--blue-600);
+        }
+
+        .count {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--neutral-800);
+            line-height: 1.2;
+            margin: 0.25rem 0;
+        }
+
+        .count_bottom {
+            font-size: 0.75rem;
+            color: var(--neutral-500);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: auto;
+        }
+
+        .trend-indicator {
+            font-style: normal;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .trend-success { color: var(--green-600); }
+        .trend-warning { color: var(--amber-700); }
+        .trend-danger { color: var(--red-600); }
+        .trend-info { color: var(--blue-600); }
+        .trend-neutral { color: var(--neutral-500); }
+
+        .count_subtext {
+            color: var(--neutral-500);
+        }
+
+        /* X-Panel */
+        .x_panel {
+            background: var(--neutral-0);
+            border: 1px solid var(--neutral-200);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-subtle);
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .x_title {
+            border-bottom: 1px solid var(--neutral-200);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .x_title h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--neutral-800);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.625rem;
+        }
+
+        .x_title h2 small {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--neutral-500);
+        }
+
+        .x_badge {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .x_badge_primary { background: var(--blue-tint); color: var(--blue-700); }
+        .x_badge_success { background: var(--green-100); color: var(--green-700); }
+        .x_badge_warning { background: var(--amber-100); color: var(--amber-700); }
+        .x_badge_danger { background: var(--red-100); color: var(--red-700); }
+        .x_badge_info { background: var(--sky-100); color: var(--blue-600); }
+
+        .panel_toolbox {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .collapse-link {
+            background: transparent;
+            border: 1px solid var(--neutral-300);
+            border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--neutral-600);
+            transition: all 0.15s ease;
+        }
+
+        .collapse-link:hover {
+            background: var(--neutral-100);
+            color: var(--neutral-900);
+            border-color: var(--neutral-400);
+        }
+
+        .panel_chevron {
+            transition: transform 0.2s ease;
+        }
+
+        .x_content {
+            font-size: 0.875rem;
+            color: var(--neutral-700);
+        }
+
+        /* Page Title */
+        .page-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .title_left {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .page-title-heading {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neutral-800);
+            margin: 0 0 0.25rem;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title-sub {
+            font-size: 0.875rem;
+            color: var(--neutral-600);
+            margin: 0;
+        }
+
+        .title_right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            background: var(--blue-tint);
+            color: var(--blue-700);
         }
     </style>
 
@@ -1623,29 +2165,50 @@
         }
     @endphp
 
-    <div class="dashboard-container">
-        <!-- Backdrop Scrim Drawer Mobile -->
-        <div id="sidebarBackdrop" class="mobile-drawer-backdrop" onclick="toggleSidebar(false)"></div>
+    <div class="container body">
+        <div class="main_container dashboard-container">
+            <!-- Backdrop Scrim Drawer Mobile -->
+            <div id="sidebarBackdrop" class="mobile-drawer-backdrop" onclick="toggleGentelellaSidebar(false)"></div>
 
-        <!-- =====================================================================
-             SIDEBAR NAVIGASI
-             ===================================================================== -->
-        <aside id="mainSidebar" class="dashboard-sidebar" aria-label="Navigasi Utama">
-            <div class="sidebar-top-container">
-                <!-- Header Brand Sleman -->
-                <div class="sidebar-header">
-                    <div class="sidebar-brand-emblem">
-                        @include('partials.logo-sleman', ['width' => '32', 'height' => '32'])
+            <!-- =====================================================================
+                 1. LEFT COL SIDEBAR (Gentelella left_col)
+                 ===================================================================== -->
+            <aside id="mainSidebar" class="col-md-3 left_col dashboard-sidebar" aria-label="Navigasi Utama">
+                <div class="left_col scroll-view sidebar-top-container">
+                    <!-- 1.1 Header Brand Sleman (site_title) -->
+                    <div class="navbar nav_title sidebar-header" style="border: 0;">
+                        <a href="{{ route('landing') }}" class="site_title" title="Portal MagKom - Dinas Kominfo Sleman">
+                            <div class="sidebar-brand-emblem">
+                                @include('partials.logo-sleman', ['width' => '32', 'height' => '32'])
+                            </div>
+                            <div class="sidebar-brand-text">
+                                <span class="sidebar-brand-title">MagKom</span>
+                                <span class="sidebar-brand-subtitle">MAGANG KOMINFO &bull; Dinas Kominfo Sleman</span>
+                                <span class="sr-only">Portal MagKom - Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
+                            </div>
+                        </a>
                     </div>
-                    <div class="sidebar-brand-text">
-                        <span class="sidebar-brand-title">MagKom</span>
-                        <span class="sidebar-brand-subtitle">MAGANG KOMINFO</span>
-                        <span class="sr-only">Magang Kominfo - Dinas Kominfo Sleman</span>
-                    </div>
-                </div>
+                    <div class="clearfix"></div>
 
-                <!-- Menu Item Dinamis Berdasarkan Peran -->
-                <nav class="sidebar-nav">
+                    <!-- 1.2 Profil Pengguna Cepat (Gentelella profile) -->
+                    <div class="profile clearfix">
+                        <div class="profile_pic">
+                            @if($currentUser?->foto_url)
+                                <img src="{{ $currentUser->foto_url }}" alt="{{ $currentUser->nama }}" class="img-circle profile_img">
+                            @else
+                                <div class="avatar-circle-fallback">{{ strtoupper(substr($currentUser?->nama ?? 'U', 0, 1)) }}</div>
+                            @endif
+                        </div>
+                        <div class="profile_info">
+                            <span>Selamat Datang,</span>
+                            <h2>{{ $currentUser?->nama ?? 'Pengguna' }}</h2>
+                            <span class="profile_role_chip role-chip-badge {{ $userRole }}">{{ ucfirst($userRole) }}</span>
+                        </div>
+                    </div>
+
+                    <!-- 1.3 Menu Item Dinamis Berdasarkan Peran (Gentelella main_menu_side) -->
+                    <nav id="sidebar-menu" class="main_menu_side hidden-print main_menu sidebar-nav">
+                        <div class="menu_section">
                     @if($userRole === 'peserta')
                         <!-- NAVIGASI PESERTA (PRD 9.2) -->
                         <span class="nav-section-label">Area Peserta</span>
@@ -2226,33 +2789,51 @@
                             <span>{{ __('Akun & Preferensi') }}</span>
                         </a>
                     @endif
-                </nav>
-            </div>
+                        </div>
+                    </nav>
+                </div>
 
-            <!-- Footer Sidebar: Indikator Sistem Internal Kominfo (Figma Node 560-24892) -->
-            <div class="sidebar-footer">
-                <div class="sidebar-status-box" style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.625rem; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px;">
+                <!-- Status Box: Indikator Sistem Internal Kominfo (Figma Node 560-24892) -->
+                <div class="sidebar-status-box" style="margin: 0.5rem 0.75rem 0.25rem; padding: 0.4rem 0.6rem; display: flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px;">
                     <span class="status-dot-pulse"></span>
                     <span style="font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.85); letter-spacing: 0.01em;">Sistem internal Kominfo</span>
                 </div>
-            </div>
-        </aside>
 
-        <!-- =====================================================================
-             AREA KERJA UTAMA & TOPBAR
-             ===================================================================== -->
-        <div class="dashboard-main">
-            <!-- Topbar Header -->
-            <header class="dashboard-topbar">
-                <div class="topbar-left">
-                    <!-- Tombol Hamburger Mobile Drawer (44x44 target sentuh) -->
-                    <button type="button" class="mobile-toggle-btn" onclick="toggleSidebar(true)" aria-label="Buka navigasi menu">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
-                        </svg>
+                <!-- 1.4 Footer Sidebar: Aksi Cepat & Indikator Internal Kominfo -->
+                <div class="sidebar-footer hidden-small">
+                    <a href="{{ $userRole === 'superadmin' ? route('superadmin.pengaturan.index') : ($userRole === 'admin' ? route('admin.pengaturan.index') : ($userRole === 'pembimbing' ? route('pembimbing.pengaturan.index') : route('peserta.pengaturan.index'))) }}" title="Pengaturan Akun" aria-label="Pengaturan">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </a>
+                    <button type="button" onclick="applyPortalTheme(document.documentElement.getAttribute('data-pref-theme') === 'gelap' ? 'terang' : 'gelap')" title="Ganti Mode Gelap/Terang" aria-label="Ganti Tema">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                     </button>
+                    <form method="POST" action="{{ route('logout') }}" style="margin: 0; display: inline;">
+                        @csrf
+                        <button type="submit" title="Keluar / Logout" aria-label="Keluar" style="color: rgba(255,255,255,0.75);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        </button>
+                    </form>
+                </div>
+            </aside>
+
+            <!-- =====================================================================
+                 2. TOPBAR NAV (Gentelella top_nav)
+                 ===================================================================== -->
+            <div class="top_nav dashboard-topbar-wrapper">
+                <header class="nav_menu dashboard-topbar">
+                    <div class="topbar-left">
+                        <nav class="nav toggle" style="display: flex; align-items: center;">
+                            <a id="menu_toggle" role="button" aria-label="Toggle Menu Sidebar" onclick="toggleGentelellaSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></a>
+                        </nav>
+
+                        <!-- Tombol Hamburger Mobile Drawer (44x44 target sentuh) -->
+                        <button type="button" class="mobile-toggle-btn" onclick="toggleGentelellaSidebar(true)" aria-label="Buka navigasi menu">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="3" y1="12" x2="21" y2="12"></line>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <line x1="3" y1="18" x2="21" y2="18"></line>
+                            </svg>
+                        </button>
 
                     <!-- Breadcrumb Trail -->
                     <nav class="breadcrumb-trail" aria-label="Breadcrumb">
@@ -2377,8 +2958,8 @@
                 </div>
             </header>
 
-            <!-- Container Konten Dinamis -->
-            <main class="dashboard-content-area" id="mainContent">
+            <!-- Container Konten Dinamis (Gentelella right_col) -->
+            <main class="right_col dashboard-main dashboard-content-area" role="main" id="mainContent">
                 <!-- =====================================================================
                      GLOBAL FLASH ALERTS
                      ===================================================================== -->
@@ -2436,6 +3017,16 @@
                 <!-- Slot Konten Utama Halaman -->
                 @yield('content')
             </main>
+
+            <!-- =====================================================================
+                 4. FOOTER GENTELELLA
+                 ===================================================================== -->
+            <footer class="gentelella-footer">
+                <div class="pull-right">
+                    <span>Portal MagKom &bull; Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
+                </div>
+                <div class="clearfix"></div>
+            </footer>
         </div>
     </div>
 
@@ -2634,6 +3225,7 @@
 
     @yield('scripts')
     @stack('scripts')
+    <script src="{{ asset('js/gentelella-theme.js') }}"></script>
     <x-sse-toast-listener />
 </body>
 </html>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Magang Kominfo Sleman - Informasi Kuota & Pendaftaran')
+@section('title', 'Portal MagKom - Informasi Kuota & Pendaftaran Magang Kominfo')
 @section('meta_description', 'Transparansi kuota pendaftaran magang Dinas Komunikasi dan Informatika untuk siswa SMK dan mahasiswa D3/S1.')
 @section('og_title', 'Informasi Kuota Magang Dinas Kominfo - MagKom')
 @section('og_description', 'Lihat ketersediaan kuota magang per jurusan secara langsung dan transparan.')
@@ -1976,6 +1976,7 @@
         <div class="hero-grid">
             <!-- Left Hero Content -->
             <div>
+                <span class="sr-only">Magang Kominfo Sleman</span>
                 <div class="hero-pill">
                     <span class="green-dot"></span>
                     <span>Gelombang 2 dibuka · 1–15 Okt 2026</span>

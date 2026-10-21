@@ -223,7 +223,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
 
         // Memastikan Quick Actions Bar merender 5 pintasan 1-klik
         $response->assertSee('+ Akun Staf');
-        $response->assertSee('+ Periode Magang');
+        $response->assertSee('+ Bulan Magang');
         $response->assertSee('Tinjau Berkas');
         $response->assertSee('Penempatan Peserta');
         $response->assertSee('Ekspor Laporan');
