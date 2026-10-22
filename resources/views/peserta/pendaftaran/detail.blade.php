@@ -6,131 +6,46 @@
 @push('styles')
 <style>
     /* ========================================================
-       MAGKOM CORE DESIGN SYSTEM: DETAIL & BERKAS PENDAFTARAN
+       MAGKOM GENTELELLA DESIGN SYSTEM: DETAIL & BERKAS
        ======================================================== */
     .detail-pendaftaran-wrapper {
-        max-width: 1040px;
-        margin: 0 auto;
-        padding-bottom: 48px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding-bottom: 32px;
     }
 
-    /* Global Reset untuk Tombol & Lencana */
-    .detail-pendaftaran-wrapper button,
-    .detail-pendaftaran-wrapper .btn,
-    .modal-box button,
-    .modal-box-large button,
-    .modal-box .btn,
-    .modal-box-large .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        vertical-align: middle;
-        line-height: 1.25;
-        font-family: inherit;
-        font-weight: 600;
-        border-radius: 8px;
-        box-sizing: border-box;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    .detail-pendaftaran-wrapper .badge,
-    .modal-box-large .badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        line-height: 1;
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 5px 10px;
-        border-radius: 6px;
-        vertical-align: middle;
-        box-sizing: border-box;
-    }
-
-    /* 1. HERO BANNER KHAS MAGKOM */
-    .detail-hero {
-        background: linear-gradient(95deg, rgba(6, 65, 204, 0.96) 0%, rgba(7, 81, 255, 0.90) 55%, rgba(7, 81, 255, 0.82) 100%),
-                    url('{{ asset('images/pendaftaran_banner_bg.jpg') }}') right center / cover no-repeat;
-        border-radius: var(--radius-xl, 16px);
-        padding: 28px 32px;
-        color: #ffffff;
-        position: relative;
-        overflow: hidden;
-        margin-bottom: 24px;
-        box-shadow: 0 10px 25px -5px rgba(7, 81, 255, 0.25);
-    }
-
-    .detail-hero::before {
-        content: 'MAGKOM';
-        position: absolute;
-        right: -20px;
-        bottom: -25px;
-        font-size: 6rem;
-        font-weight: 900;
-        letter-spacing: -0.05em;
-        color: rgba(255, 255, 255, 0.06);
-        pointer-events: none;
-        user-select: none;
-    }
-
-    /* Top Action & Breadcrumb Bar di Atas Hero Banner */
+    /* Top Breadcrumb & Action Bar */
     .detail-top-bar {
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
         gap: 12px;
-        margin-bottom: 16px;
     }
 
-    .btn-top-back {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 7px 16px;
-        background: #ffffff;
-        border: 1px solid var(--neutral-300, #E2E8F0);
-        border-radius: 999px;
-        color: var(--neutral-700, #334155);
-        font-size: 0.8125rem;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    /* Hero Banner Registrasi MagKom */
+    .detail-hero {
+        background: linear-gradient(135deg, #0641CC 0%, #0751FF 60%, #1E40AF 100%);
+        border-radius: var(--radius-lg, 12px);
+        padding: 26px 30px;
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 25px -5px rgba(7, 81, 255, 0.25);
     }
 
-    .btn-top-back:hover {
-        background: #EFF6FF;
-        border-color: #93C5FD;
-        color: var(--blue-600, #0751FF);
-        transform: translateX(-2px);
-    }
-
-    .btn-top-cancel {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 7px 16px;
-        background: #FEF2F2;
-        border: 1px solid #FECACA;
-        border-radius: 999px;
-        color: #DC2626;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: 0 1px 2px rgba(220, 38, 38, 0.05);
-    }
-
-    .btn-top-cancel:hover {
-        background: #FEE2E2;
-        border-color: #F87171;
-        color: #B91C1C;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 5px rgba(220, 38, 38, 0.12);
+    .detail-hero::before {
+        content: 'MAGKOM';
+        position: absolute;
+        right: -15px;
+        bottom: -25px;
+        font-size: 5.5rem;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        color: rgba(255, 255, 255, 0.06);
+        pointer-events: none;
+        user-select: none;
     }
 
     .hero-main-content {
@@ -150,6 +65,7 @@
         padding: 4px 12px;
         background: rgba(255, 255, 255, 0.15);
         backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         border: 1px solid rgba(255, 255, 255, 0.25);
         border-radius: 6px;
         font-size: 0.75rem;
@@ -186,21 +102,12 @@
         color: #ffffff;
     }
 
-    /* 2. MODERN STEPPER STATUS TRACKER */
-    .stepper-card {
-        background: #ffffff;
-        border: 1px solid var(--neutral-200);
-        border-radius: 12px;
-        padding: 22px 28px;
-        margin-bottom: 24px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-    }
-
+    /* Stepper Status Timeline */
     .stepper-timeline {
         display: flex;
         justify-content: space-between;
         position: relative;
-        margin: 6px 0;
+        margin: 10px 0;
     }
 
     .stepper-timeline::before {
@@ -281,78 +188,43 @@
     .stepper-label {
         font-size: 0.8125rem;
         font-weight: 700;
-        color: var(--neutral-700);
+        color: var(--neutral-700, #334155);
         line-height: 1.3;
     }
 
     .stepper-step.active .stepper-label,
     .stepper-step.completed .stepper-label {
-        color: var(--neutral-900);
+        color: var(--neutral-900, #0F172A);
     }
 
-    /* 3. WIDGET PROGRESS KELENGKAPAN BERKAS */
-    .docs-summary-card {
-        background: #ffffff;
-        border: 1px solid var(--neutral-200);
-        border-radius: 12px;
-        padding: 24px;
-        margin-bottom: 24px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-    }
-
-    .docs-summary-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 16px;
-        margin-bottom: 16px;
-    }
-
-    .docs-summary-title {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: var(--neutral-900);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 0;
-    }
-
-    .docs-summary-subtitle {
-        font-size: 0.8125rem;
-        color: var(--neutral-600);
-        margin: 4px 0 0 0;
-    }
-
+    /* Progress Kelengkapan Berkas */
     .progress-bar-wrapper {
         background: #E2E8F0;
         border-radius: 999px;
         height: 10px;
         overflow: hidden;
-        margin-top: 8px;
+        margin-top: 10px;
     }
 
     .progress-bar-meter {
         height: 100%;
         border-radius: 999px;
-        transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: width 0.5s ease;
     }
 
-    /* 4. MODULAR DOCUMENT CARDS */
+    /* Modular Document Cards */
     .doc-card-modern {
         background: #ffffff;
-        border: 1.5px solid #E2E8F0;
+        border: 1px solid var(--neutral-300, #CBD5E1);
         border-radius: 12px;
         padding: 20px 22px;
         margin-bottom: 18px;
         transition: all 0.2s ease;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
     }
 
     .doc-card-modern:hover {
-        border-color: #BFDBFE;
-        box-shadow: 0 4px 12px rgba(7, 81, 255, 0.05);
+        border-color: #0751FF;
+        box-shadow: 0 4px 12px rgba(7, 81, 255, 0.06);
     }
 
     .doc-header-row {
@@ -374,30 +246,12 @@
     .doc-name {
         font-size: 0.9375rem;
         font-weight: 700;
-        color: var(--neutral-900);
-    }
-
-    .badge-doc-wajib {
-        background: #FEE2E2;
-        color: #991B1B;
-        font-size: 0.6875rem;
-        font-weight: 700;
-        padding: 2px 8px;
-        border-radius: 4px;
-    }
-
-    .badge-doc-opsional {
-        background: #F1F5F9;
-        color: #475569;
-        font-size: 0.6875rem;
-        font-weight: 600;
-        padding: 2px 8px;
-        border-radius: 4px;
+        color: var(--neutral-900, #0F172A);
     }
 
     .doc-instructions {
         font-size: 0.8125rem;
-        color: var(--neutral-600);
+        color: var(--neutral-600, #475569);
         margin-top: 4px;
         line-height: 1.45;
     }
@@ -413,11 +267,6 @@
         border-radius: 10px;
         gap: 16px;
         flex-wrap: wrap;
-        transition: border-color 0.2s ease;
-    }
-
-    .uploaded-box-modern:hover {
-        border-color: #CBD5E1;
     }
 
     .uploaded-left {
@@ -450,21 +299,14 @@
     .uploaded-filename {
         font-size: 0.875rem;
         font-weight: 700;
-        color: var(--neutral-900);
+        color: var(--neutral-900, #0F172A);
         word-break: break-all;
     }
 
     .uploaded-meta {
         font-size: 0.75rem;
-        color: var(--neutral-500);
+        color: var(--neutral-500, #64748B);
         margin-top: 2px;
-    }
-
-    .uploaded-actions {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
     }
 
     /* Dropzone Upload */
@@ -476,14 +318,12 @@
         background: #F0F7FF;
         cursor: pointer;
         transition: all 0.2s ease;
-        position: relative;
     }
 
     .dropzone-box-modern:hover,
     .dropzone-box-modern.dragover {
         border-color: #0751FF;
         background: #E6EEFF;
-        transform: translateY(-1px);
     }
 
     .dropzone-icon-circle {
@@ -502,16 +342,15 @@
     .dropzone-prompt {
         font-size: 0.875rem;
         font-weight: 700;
-        color: var(--neutral-800);
+        color: var(--neutral-800, #1E293B);
     }
 
     .dropzone-subtext {
         font-size: 0.75rem;
-        color: var(--neutral-600);
+        color: var(--neutral-600, #475569);
         margin-top: 3px;
     }
 
-    /* Selected File Bar */
     .selected-bar-modern {
         display: none;
         align-items: center;
@@ -526,54 +365,29 @@
         flex-wrap: wrap;
     }
 
-    /* 5. FOOTER FINALISASI PENDAFTARAN */
+    /* Final Submit Card */
     .submit-final-card {
         background: #ffffff;
-        border: 1.5px solid var(--neutral-200);
+        border: 1.5px solid var(--neutral-300, #CBD5E1);
         border-radius: 12px;
         padding: 22px 26px;
-        margin-top: 28px;
+        margin-top: 10px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
         gap: 18px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
-    .btn-submit-main {
-        height: 44px;
-        padding: 0 24px;
-        font-size: 0.875rem;
-        font-weight: 700;
-        background: #0751FF;
-        color: #ffffff;
-        border: 1px solid #0751FF;
-        box-shadow: 0 4px 12px rgba(7, 81, 255, 0.25);
-    }
-
-    .btn-submit-main:hover:not(:disabled) {
-        background: #0641CC;
-        box-shadow: 0 6px 16px rgba(7, 81, 255, 0.35);
-        transform: translateY(-1px);
-    }
-
-    .btn-submit-main:disabled {
-        background: #94A3B8;
-        border-color: #94A3B8;
-        cursor: not-allowed;
-        box-shadow: none;
-        opacity: 0.7;
-    }
-
-    /* 6. MODAL STYLING */
+    /* Modal Styling */
     .modal {
         display: none;
         position: fixed;
         inset: 0;
-        z-index: 100;
+        z-index: 1050;
         background: rgba(15, 23, 42, 0.65);
         backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
         align-items: center;
         justify-content: center;
         padding: 20px;
@@ -617,7 +431,7 @@
     .modal-title {
         font-size: 1.125rem;
         font-weight: 700;
-        color: var(--neutral-900);
+        color: var(--neutral-900, #0F172A);
         margin: 0;
     }
 
@@ -626,15 +440,10 @@
         border: none;
         font-size: 24px;
         cursor: pointer;
-        color: var(--neutral-500);
+        color: var(--neutral-500, #64748B);
         padding: 2px 6px;
         line-height: 1;
         border-radius: 6px;
-    }
-
-    .modal-close:hover {
-        color: var(--neutral-800);
-        background: #F1F5F9;
     }
 
     .modal-body-preview {
@@ -652,536 +461,48 @@
         margin-top: 14px;
     }
 
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    @media (max-width: 768px) {
-        .stepper-timeline {
-            overflow-x: auto;
-            padding-bottom: 10px;
-            justify-content: flex-start;
-            gap: 24px;
-        }
-        .stepper-timeline::before {
-            display: none;
-        }
-        .uploaded-box-modern {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .uploaded-actions {
-            width: 100%;
-            justify-content: flex-start;
-        }
-    }
-
-    /* ========================================================
-       SEMANTIC TOKENS & COMPONENTS (Detail & Berkas)
-       ======================================================== */
-    .hero-badge-status {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        padding: 7px 14px;
-        border-radius: 6px;
-    }
-    .hero-badge-status.belum-lengkap {
-        background: rgba(255, 255, 255, 0.2);
-        color: #ffffff;
-        border: 1px solid rgba(255, 255, 255, 0.35);
-    }
-    .hero-badge-status.diajukan {
-        background: #FEF3C7;
-        color: #92400E;
-    }
-    .hero-badge-status.waiting-list {
-        background: #DBEAFE;
-        color: #1E40AF;
-    }
-    .hero-badge-status.perlu-perbaikan {
-        background: #FED7AA;
-        color: #9A3412;
-    }
-    .hero-badge-status.diterima {
-        background: #D1FAE5;
-        color: #065F46;
-    }
-    .hero-badge-status.ditolak {
-        background: #FEE2E2;
-        color: #991B1B;
-    }
-    .hero-badge-status.dibatalkan {
-        background: #E2E8F0;
-        color: #475569;
-    }
-
-    /* Revisi Alert Box (AC-03-10) */
-    .detail-revisi-alert {
-        background: #FFFBEB;
-        border: 1.5px solid #FDE68A;
-        border-left: 5px solid #D97706;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 24px;
-        display: flex;
-        gap: 14px;
-        align-items: flex-start;
-    }
-    .detail-revisi-icon {
-        color: #D97706;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
-    .detail-revisi-title {
-        font-size: 0.9375rem;
-        font-weight: 700;
-        color: #92400E;
-        display: block;
-    }
-    .detail-revisi-box {
-        margin-top: 8px;
-        padding: 12px 16px;
-        background: #ffffff;
-        border-radius: 8px;
-        border: 1px solid #FDE68A;
-        font-size: 0.875rem;
-        color: var(--neutral-800);
-        line-height: 1.55;
-    }
-    .detail-revisi-instruction {
-        font-size: 0.8125rem;
-        color: #78350F;
-        margin-top: 8px;
-        margin-bottom: 0;
-    }
-
-    /* Diterima Magang Alert Box */
-    .detail-success-alert {
-        background: #ECFDF5;
-        border: 1.5px solid #A7F3D0;
-        border-left: 5px solid #10B981;
-        border-radius: 12px;
-        padding: 20px 24px;
-        margin-bottom: 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 16px;
-    }
-    .detail-success-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: #D1FAE5;
-        color: #065F46;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    .detail-success-title {
-        font-size: 1rem;
-        font-weight: 700;
-        color: #065F46;
-        display: block;
-    }
-    .detail-success-desc {
-        font-size: 0.8125rem;
-        color: #047857;
-        margin-top: 2px;
-    }
-    .btn-detail-preview-surat {
-        height: 40px;
-        padding: 0 16px;
-        font-size: 0.8125rem;
-        font-weight: 700;
-        background: #ffffff;
-        border: 1.5px solid #10B981;
-        color: #065F46;
-    }
-
-    /* Summary Header Badge */
-    .summary-badge-status {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        padding: 6px 12px;
-        border-radius: 6px;
-    }
-    .summary-badge-status.complete {
-        background: #DCFCE7;
-        color: #15803D;
-    }
-    .summary-badge-status.incomplete {
-        background: #EFF6FF;
-        color: #1D4ED8;
-    }
-
-    /* Document Status Badges */
-    .badge-doc-status {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 5px 10px;
-        border-radius: 6px;
-    }
-    .badge-doc-status.uploaded {
-        background: #DCFCE7;
-        color: #166534;
-    }
-    .badge-doc-status.pending {
-        background: #FEF3C7;
-        color: #92400E;
-    }
-
-    /* Submit Card Elements */
-    .submit-status-icon-box {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    .submit-status-icon-box.complete {
-        background: #DCFCE7;
-        color: #16A34A;
-    }
-    .submit-status-icon-box.incomplete {
-        background: #FEF3C7;
-        color: #D97706;
-    }
-    .submit-status-title {
-        font-size: 0.9375rem;
-        font-weight: 700;
-        display: block;
-    }
-    .submit-status-title.complete {
-        color: #15803D;
-    }
-    .submit-status-title.incomplete {
-        color: #92400E;
-    }
-    .submit-status-desc {
-        font-size: 0.8125rem;
-        color: var(--neutral-600);
-    }
-
-    /* Locked Card */
-    .locked-card {
-        margin-top: 24px;
-        padding: 16px 20px;
-        background: #ffffff;
-        border: 1.5px solid var(--neutral-200);
-        border-radius: 12px;
-        font-size: 0.8125rem;
-        color: var(--neutral-600);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-    }
-    .locked-card-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: #F1F5F9;
-        color: #64748B;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    /* Modal Warning Alert */
-    .modal-warning-box {
-        padding: 16px;
-        background: #FFFBEB;
-        border: 1.5px solid #FDE68A;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        display: flex;
-        gap: 12px;
-        align-items: flex-start;
-    }
-    .modal-warning-icon {
-        color: #D97706;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
-    .modal-warning-title {
-        color: #92400E;
-        font-size: 0.875rem;
-        font-weight: 700;
-    }
-    .modal-warning-desc {
-        font-size: 0.8125rem;
-        color: #78350F;
-        margin-top: 4px;
-        line-height: 1.5;
-        margin-bottom: 0;
-    }
-    .modal-footer-row {
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-        padding-top: 16px;
-        border-top: 1px solid #E2E8F0;
-    }
-
-    /* Preview Modal Styles */
-    .preview-modal-icon-box {
-        width: 38px;
-        height: 38px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        background: var(--blue-tint);
-        color: var(--blue-700);
-    }
-    .preview-modal-badge {
-        background: #EFF6FF;
-        color: #1D4ED8;
-        font-size: 0.6875rem;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-weight: 600;
-    }
     .preview-loading-overlay {
         position: absolute;
         inset: 0;
+        background: rgba(255, 255, 255, 0.9);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        background: rgba(255, 255, 255, 0.95);
         z-index: 10;
     }
+
     .preview-loading-spinner {
         width: 38px;
         height: 38px;
-        border: 3px solid #CBD5E1;
+        border: 3px solid #E2E8F0;
         border-top-color: #0751FF;
         border-radius: 50%;
-        animation: spin 0.7s linear infinite;
+        animation: spin 0.8s linear infinite;
         margin-bottom: 12px;
     }
-    .preview-loading-title {
-        font-size: 0.875rem;
-        font-weight: 700;
-        color: var(--neutral-800);
-    }
-    .preview-loading-desc {
-        font-size: 0.75rem;
-        color: var(--neutral-500);
-        margin-top: 4px;
-    }
 
-    /* ========================================================
-       DARK THEME HARMONIZATION (Detail & Berkas Pendaftaran)
-       ======================================================== */
-    [data-theme="dark"] .detail-hero {
-        background: linear-gradient(95deg, rgba(15, 23, 42, 0.94) 0%, rgba(30, 58, 138, 0.88) 55%, rgba(6, 65, 204, 0.45) 100%),
-                    url('{{ asset('images/pendaftaran_banner_bg.jpg') }}') right center / cover no-repeat;
-        border: 1px solid rgba(59, 130, 246, 0.25);
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    [data-theme="dark"] .hero-badge-status.diajukan {
-        background: rgba(120, 53, 15, 0.5);
-        border: 1px solid rgba(245, 158, 11, 0.45);
-        color: #FCD34D;
-    }
-    [data-theme="dark"] .hero-badge-status.waiting-list {
-        background: rgba(30, 58, 138, 0.5);
-        border: 1px solid rgba(96, 165, 250, 0.45);
-        color: #93C5FD;
-    }
-    [data-theme="dark"] .hero-badge-status.perlu-perbaikan {
-        background: rgba(154, 52, 18, 0.5);
-        border: 1px solid rgba(251, 146, 60, 0.45);
-        color: #FDBA74;
-    }
-    [data-theme="dark"] .hero-badge-status.diterima {
-        background: rgba(6, 78, 59, 0.5);
-        border: 1px solid rgba(52, 211, 153, 0.45);
-        color: #6EE7B7;
-    }
-    [data-theme="dark"] .hero-badge-status.ditolak {
-        background: rgba(127, 29, 29, 0.5);
-        border: 1px solid rgba(239, 68, 68, 0.45);
-        color: #FCA5A5;
-    }
-    [data-theme="dark"] .hero-badge-status.dibatalkan {
-        background: rgba(51, 65, 85, 0.5);
-        border: 1px solid rgba(100, 116, 139, 0.45);
-        color: #CBD5E1;
-    }
-
-    [data-theme="dark"] .btn-top-back {
-        background: #182234;
-        border-color: #26354D;
-        color: #CBD5E1;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    }
-
-    [data-theme="dark"] .btn-top-back:hover {
-        background: #1E293B;
-        border-color: #3B82F6;
-        color: #60A5FA;
-    }
-
-    [data-theme="dark"] .btn-top-cancel {
-        background: rgba(127, 29, 29, 0.25);
-        border-color: rgba(239, 68, 68, 0.4);
-        color: #FCA5A5;
-    }
-
-    [data-theme="dark"] .btn-top-cancel:hover {
-        background: rgba(127, 29, 29, 0.45);
-        border-color: #EF4444;
-        color: #FFFFFF;
-    }
-
-    [data-theme="dark"] .stepper-card,
-    [data-theme="dark"] .docs-summary-card,
+    /* Dark Mode Harmonization */
     [data-theme="dark"] .doc-card-modern,
-    [data-theme="dark"] .submit-final-card {
+    [data-theme="dark"] .submit-final-card,
+    [data-theme="dark"] .modal-box,
+    [data-theme="dark"] .modal-box-large {
         background: #182234 !important;
         border-color: #26354D !important;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
     }
 
-    [data-theme="dark"] .stepper-timeline::before {
-        background: #26354D;
-    }
-
-    [data-theme="dark"] .stepper-icon-circle {
-        background: #0F172A;
-        border-color: #334155;
-        color: #94A3B8;
-    }
-
-    [data-theme="dark"] .stepper-label {
-        color: #94A3B8;
-    }
-
-    [data-theme="dark"] .stepper-step.active .stepper-label,
-    [data-theme="dark"] .stepper-step.completed .stepper-label {
-        color: #F8FAFC;
-    }
-
-    /* Revisi Alert Box in Dark Mode */
-    [data-theme="dark"] .detail-revisi-alert {
-        background: rgba(120, 53, 15, 0.35) !important;
-        border-color: rgba(245, 158, 11, 0.4) !important;
-        border-left-color: #F59E0B !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-    }
-    [data-theme="dark"] .detail-revisi-icon {
-        color: #FBBF24 !important;
-    }
-    [data-theme="dark"] .detail-revisi-title {
-        color: #FCD34D !important;
-    }
-    [data-theme="dark"] .detail-revisi-box {
-        background: #0F172A !important;
-        border-color: #26354D !important;
-        color: #F8FAFC !important;
-    }
-    [data-theme="dark"] .detail-revisi-instruction {
-        color: #FEF3C7 !important;
-    }
-    [data-theme="dark"] .detail-revisi-instruction strong {
-        color: #FCD34D !important;
-    }
-
-    /* Diterima Alert Box in Dark Mode */
-    [data-theme="dark"] .detail-success-alert {
-        background: rgba(6, 78, 59, 0.25) !important;
-        border-color: rgba(52, 211, 153, 0.4) !important;
-        border-left-color: #34D399 !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-    }
-    [data-theme="dark"] .detail-success-icon {
-        background: rgba(16, 185, 129, 0.25) !important;
-        color: #34D399 !important;
-    }
-    [data-theme="dark"] .detail-success-title {
-        color: #6EE7B7 !important;
-    }
-    [data-theme="dark"] .detail-success-desc {
-        color: #A7F3D0 !important;
-    }
-    [data-theme="dark"] .btn-detail-preview-surat {
-        background: #1E293B !important;
-        border-color: rgba(52, 211, 153, 0.45) !important;
-        color: #6EE7B7 !important;
-    }
-    [data-theme="dark"] .btn-detail-preview-surat:hover {
-        background: #334155 !important;
-        color: #ffffff !important;
-    }
-
-    [data-theme="dark"] .docs-summary-title,
-    [data-theme="dark"] .doc-name {
+    [data-theme="dark"] .doc-name,
+    [data-theme="dark"] .modal-title,
+    [data-theme="dark"] .uploaded-filename {
         color: #F8FAFC !important;
     }
 
-    [data-theme="dark"] .docs-summary-subtitle,
     [data-theme="dark"] .doc-instructions,
     [data-theme="dark"] .uploaded-meta,
-    [data-theme="dark"] .dropzone-subtext,
-    [data-theme="dark"] .submit-status-desc {
+    [data-theme="dark"] .dropzone-subtext {
         color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .progress-bar-wrapper {
-        background: #26354D;
-    }
-
-    /* Summary Header Badge in Dark Mode */
-    [data-theme="dark"] .summary-badge-status.complete {
-        background: rgba(6, 78, 59, 0.4) !important;
-        border: 1px solid rgba(52, 211, 153, 0.4) !important;
-        color: #6EE7B7 !important;
-    }
-    [data-theme="dark"] .summary-badge-status.incomplete {
-        background: rgba(30, 58, 138, 0.4) !important;
-        border: 1px solid rgba(96, 165, 250, 0.4) !important;
-        color: #93C5FD !important;
-    }
-
-    /* Document Status Badges in Dark Mode */
-    [data-theme="dark"] .badge-doc-status.uploaded {
-        background: rgba(6, 78, 59, 0.4) !important;
-        border: 1px solid rgba(52, 211, 153, 0.4) !important;
-        color: #6EE7B7 !important;
-    }
-    [data-theme="dark"] .badge-doc-status.pending {
-        background: rgba(120, 53, 15, 0.4) !important;
-        border: 1px solid rgba(245, 158, 11, 0.4) !important;
-        color: #FCD34D !important;
-    }
-    [data-theme="dark"] .badge-doc-wajib {
-        background: rgba(127, 29, 29, 0.35) !important;
-        border: 1px solid rgba(239, 68, 68, 0.4) !important;
-        color: #FCA5A5 !important;
-    }
-    [data-theme="dark"] .badge-doc-opsional {
-        background: #1E293B;
-        color: #94A3B8;
     }
 
     [data-theme="dark"] .uploaded-box-modern {
@@ -1189,149 +510,28 @@
         border-color: #26354D !important;
     }
 
-    [data-theme="dark"] .uploaded-box-modern:hover {
-        border-color: #3B82F6 !important;
-    }
-
-    [data-theme="dark"] .uploaded-icon-badge.pdf {
-        background: rgba(127, 29, 29, 0.35) !important;
-        color: #F87171 !important;
-    }
-    [data-theme="dark"] .uploaded-icon-badge.img {
-        background: rgba(79, 70, 229, 0.35) !important;
-        color: #818CF8 !important;
-    }
-
-    [data-theme="dark"] .uploaded-filename {
-        color: #F8FAFC !important;
-    }
-
     [data-theme="dark"] .dropzone-box-modern {
         background: #0F172A !important;
         border-color: #26354D !important;
     }
 
-    [data-theme="dark"] .dropzone-box-modern:hover,
-    [data-theme="dark"] .dropzone-box-modern.dragover {
+    [data-theme="dark"] .dropzone-box-modern:hover {
         background: #182234 !important;
-        border-color: #2563EB !important;
-    }
-
-    [data-theme="dark"] .dropzone-icon-circle {
-        background: #182234;
-        color: #60A5FA;
-    }
-
-    [data-theme="dark"] .dropzone-prompt {
-        color: #F8FAFC !important;
-    }
-    [data-theme="dark"] .dropzone-prompt span {
-        color: #60A5FA !important;
-    }
-
-    [data-theme="dark"] .selected-bar-modern {
-        background: #0F172A;
-        border-color: #2563EB;
-        color: #F8FAFC;
-    }
-
-    /* Submit Status Elements in Dark Mode */
-    [data-theme="dark"] .submit-status-icon-box.complete {
-        background: rgba(6, 78, 59, 0.4) !important;
-        color: #34D399 !important;
-    }
-    [data-theme="dark"] .submit-status-icon-box.incomplete {
-        background: rgba(120, 53, 15, 0.4) !important;
-        color: #FBBF24 !important;
-    }
-    [data-theme="dark"] .submit-status-title.complete {
-        color: #6EE7B7 !important;
-    }
-    [data-theme="dark"] .submit-status-title.incomplete {
-        color: #FCD34D !important;
-    }
-
-    /* Locked Card in Dark Mode */
-    [data-theme="dark"] .locked-card {
-        background: #182234 !important;
-        border-color: #26354D !important;
-        color: #94A3B8 !important;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
-    }
-    [data-theme="dark"] .locked-card-icon {
-        background: #0F172A !important;
-        color: #94A3B8 !important;
-    }
-
-    /* Modal Warning in Dark Mode */
-    [data-theme="dark"] .modal-warning-box {
-        background: rgba(120, 53, 15, 0.35) !important;
-        border-color: rgba(245, 158, 11, 0.4) !important;
-    }
-    [data-theme="dark"] .modal-warning-icon {
-        color: #FBBF24 !important;
-    }
-    [data-theme="dark"] .modal-warning-title {
-        color: #FCD34D !important;
-    }
-    [data-theme="dark"] .modal-warning-desc {
-        color: #FEF3C7 !important;
-    }
-    [data-theme="dark"] .modal-footer-row {
-        border-top-color: #26354D !important;
-    }
-
-    /* Preview Modal Styles in Dark Mode */
-    [data-theme="dark"] .preview-modal-icon-box {
-        background: rgba(6, 65, 204, 0.35) !important;
-        color: #60A5FA !important;
-    }
-    [data-theme="dark"] .preview-modal-badge {
-        background: rgba(30, 58, 138, 0.4) !important;
-        border: 1px solid rgba(96, 165, 250, 0.4) !important;
-        color: #93C5FD !important;
-    }
-    [data-theme="dark"] .preview-loading-overlay {
-        background: rgba(15, 23, 42, 0.95) !important;
-    }
-    [data-theme="dark"] .preview-loading-spinner {
-        border-color: #334155 !important;
-        border-top-color: #3B82F6 !important;
-    }
-    [data-theme="dark"] .preview-loading-title {
-        color: #F8FAFC !important;
-    }
-    [data-theme="dark"] .preview-loading-desc {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .modal-box,
-    [data-theme="dark"] .modal-box-large {
-        background: #182234 !important;
-        border: 1px solid #26354D !important;
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .modal-header {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .modal-title {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .modal-close {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .modal-close:hover {
-        background: #1F2937 !important;
-        color: #F8FAFC !important;
+        border-color: #0751FF !important;
     }
 
     [data-theme="dark"] .modal-body-preview {
         background: #0F172A !important;
         border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .preview-loading-overlay {
+        background: rgba(15, 23, 42, 0.92) !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .progress-bar-wrapper {
+        background: #26354D;
     }
 </style>
 @endpush
@@ -1350,11 +550,9 @@
         $semuaWajibLengkap = ($uploadedWajib >= $totalWajib);
     @endphp
 
-    {{-- ========================================================
-         TOP ACTION & BREADCRUMB BAR (DI ATAS HERO BANNER)
-         ======================================================== --}}
+    {{-- Top Action & Breadcrumb Bar --}}
     <div class="detail-top-bar">
-        <a href="{{ route('peserta.pendaftaran.index') }}" class="btn-top-back">
+        <a href="{{ route('peserta.pendaftaran.index') }}" class="btn btn-secondary">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
@@ -1363,7 +561,7 @@
         </a>
 
         @if($bisaBatal)
-            <button type="button" class="btn-top-cancel" onclick="openCancelModal()" title="Batalkan pengajuan magang ini">
+            <button type="button" class="btn btn-danger" onclick="openCancelModal()" title="Batalkan pengajuan magang ini">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -1374,9 +572,7 @@
         @endif
     </div>
 
-    {{-- ========================================================
-         1. HERO BANNER KHAS MAGKOM
-         ======================================================== --}}
+    {{-- 1. Hero Banner Khas MagKom Sleman --}}
     <div class="detail-hero">
         <div class="hero-main-content">
             <div>
@@ -1388,30 +584,19 @@
                     NOMOR REGISTRASI: #REG-{{ str_pad((string)$pendaftaran->id, 5, '0', STR_PAD_LEFT) }}
                 </div>
                 <h1 class="hero-reg-title">
-                    Magang Periode {{ $pendaftaran->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
+                    Detail & Berkas Pendaftaran Periode {{ $pendaftaran->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
                 </h1>
                 <div class="hero-meta-pills">
                     <div class="hero-meta-pill">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                        </svg>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
                         <span>Jurusan: <strong>{{ $pendaftaran->kuota?->jurusan?->nama_jurusan }}</strong></span>
                     </div>
                     <div class="hero-meta-pill">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                         <span>Durasi: <strong>{{ $pendaftaran->durasi_bulan }} Bulan</strong></span>
                     </div>
                     <div class="hero-meta-pill">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                         <span>Dibuat: {{ $pendaftaran->created_at?->translatedFormat('d M Y') }}</span>
                     </div>
                 </div>
@@ -1419,60 +604,33 @@
 
             <div>
                 @if($val === 'berkas_belum_lengkap')
-                    <span class="hero-badge-status belum-lengkap">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-dasharray="4 4"></circle></svg>
-                        Berkas Belum Lengkap
-                    </span>
+                    <x-gentelella.badge variant="secondary" style="font-size: 0.8125rem; padding: 7px 14px;">Berkas Belum Lengkap</x-gentelella.badge>
                 @elseif($val === 'diajukan')
-                    <span class="hero-badge-status diajukan">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        Menunggu Verifikasi Admin
-                    </span>
+                    <x-gentelella.badge variant="warning" style="font-size: 0.8125rem; padding: 7px 14px;">Menunggu Verifikasi Admin</x-gentelella.badge>
                 @elseif($val === 'waiting_list')
-                    <span class="hero-badge-status waiting-list">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        Waiting List (Antrean Cadangan)
-                    </span>
+                    <x-gentelella.badge variant="info" style="font-size: 0.8125rem; padding: 7px 14px;">Waiting List (Antrean)</x-gentelella.badge>
                 @elseif($val === 'perlu_perbaikan')
-                    <span class="hero-badge-status perlu-perbaikan">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        Perlu Perbaikan Berkas
-                    </span>
+                    <x-gentelella.badge variant="warning" style="font-size: 0.8125rem; padding: 7px 14px;">Perlu Perbaikan Berkas</x-gentelella.badge>
                 @elseif($val === 'diterima')
-                    <span class="hero-badge-status diterima">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Diterima Magang
-                    </span>
+                    <x-gentelella.badge variant="success" style="font-size: 0.8125rem; padding: 7px 14px;">Diterima Magang</x-gentelella.badge>
                 @elseif($val === 'ditolak')
-                    <span class="hero-badge-status ditolak">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                        Pengajuan Ditolak
-                    </span>
+                    <x-gentelella.badge variant="danger" style="font-size: 0.8125rem; padding: 7px 14px;">Pengajuan Ditolak</x-gentelella.badge>
                 @elseif($val === 'dibatalkan')
-                    <span class="hero-badge-status dibatalkan">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        Dibatalkan
-                    </span>
+                    <x-gentelella.badge variant="secondary" style="font-size: 0.8125rem; padding: 7px 14px;">Dibatalkan</x-gentelella.badge>
                 @else
-                    <span class="hero-badge-status">{{ $val }}</span>
+                    <x-gentelella.badge variant="secondary">{{ $val }}</x-gentelella.badge>
                 @endif
             </div>
         </div>
     </div>
 
-    {{-- ========================================================
-         2. MODERN STEPPER STATUS TRACKER
-         ======================================================== --}}
-    <div class="stepper-card">
+    {{-- 2. Stepper Status Tracker Card --}}
+    <x-gentelella.card>
         <div class="stepper-timeline">
             {{-- Step 1: Berkas Persyaratan --}}
             <div class="stepper-step {{ $val === 'berkas_belum_lengkap' ? 'active' : 'completed' }}">
                 <div class="stepper-icon-circle">
-                    @if($val === 'berkas_belum_lengkap')
-                        1
-                    @else
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    @endif
+                    @if($val === 'berkas_belum_lengkap') 1 @else <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> @endif
                 </div>
                 <div class="stepper-phase">Tahap 1</div>
                 <div class="stepper-label">1. Berkas Persyaratan</div>
@@ -1515,333 +673,297 @@
                 </div>
             </div>
         </div>
-    </div>
+    </x-gentelella.card>
 
-    {{-- Alert Catatan Revisi Admin (AC-03-10) --}}
+    {{-- Alert Catatan Revisi Admin --}}
     @if($val === 'perlu_perbaikan')
-        <div class="detail-revisi-alert">
-            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="detail-revisi-icon">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-            </svg>
-            <div style="flex: 1;">
-                <strong class="detail-revisi-title">Catatan Perbaikan Berkas dari Tim Verifikator:</strong>
-                <div class="detail-revisi-box">
-                    "{{ $pendaftaran->catatan_admin ?? 'Harap tinjau kembali berkas persyaratan dan perbarui dokumen yang diminta.' }}"
+        <x-gentelella.card style="border-left: 5px solid #D97706; background: #FFFBEB;">
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #D97706; flex-shrink: 0; margin-top: 2px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <div style="flex: 1;">
+                    <strong style="font-size: 0.9375rem; font-weight: 700; color: #92400E; display: block;">
+                        Catatan Perbaikan Berkas dari Tim Verifikator:
+                    </strong>
+                    <div style="margin-top: 8px; padding: 12px 16px; background: #ffffff; border-radius: 8px; border: 1px solid #FDE68A; font-size: 0.875rem; color: #1E293B; line-height: 1.55;">
+                        "{{ $pendaftaran->catatan_admin ?? 'Harap tinjau kembali berkas persyaratan dan perbarui dokumen yang diminta.' }}"
+                    </div>
+                    <p style="font-size: 0.8125rem; color: #78350F; margin: 8px 0 0 0;">
+                        Silakan klik tombol <strong>Ganti Berkas</strong> pada dokumen terkait di bawah untuk memperbarui dokumen, kemudian tekan <strong>Ajukan Pendaftaran Ulang</strong>.
+                    </p>
                 </div>
-                <p class="detail-revisi-instruction">
-                    Silakan klik tombol <strong>Ganti Berkas</strong> pada dokumen terkait di bawah untuk memperbarui dokumen, kemudian tekan <strong>Ajukan Pendaftaran Ulang</strong>.
-                </p>
             </div>
-        </div>
+        </x-gentelella.card>
     @endif
 
-    {{-- Alert Kelulusan Diterima & Unduh Surat (AC-16-1, F-16) --}}
+    {{-- Alert Kelulusan Diterima & Unduh Surat --}}
     @if($val === 'diterima' && $pendaftaran->penempatan)
-        <div class="detail-success-alert">
-            <div style="display: flex; align-items: center; gap: 14px;">
-                <div class="detail-success-icon">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <strong class="detail-success-title">Selamat! Permohonan Magang Anda Telah Disetujui</strong>
-                    <div class="detail-success-desc">
-                        Surat Keterangan Diterima resmi bertanda tangan digital instansi siap dilihat langsung dan diunduh.
+        <x-gentelella.card style="border-left: 5px solid #10B981; background: #ECFDF5;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: #D1FAE5; color: #065F46; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <strong style="font-size: 1rem; font-weight: 700; color: #065F46; display: block;">
+                            Selamat! Permohonan Magang Anda Telah Disetujui
+                        </strong>
+                        <div style="font-size: 0.8125rem; color: #047857; margin-top: 2px;">
+                            Surat Keterangan Diterima resmi bertanda tangan digital instansi siap dilihat langsung dan diunduh.
+                        </div>
                     </div>
                 </div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <button type="button" class="btn btn-secondary" onclick="openDocPreview('{{ route('peserta.penempatan.surat-diterima.pratinjau', $pendaftaran->penempatan) }}', '{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}', 'Surat Keterangan Diterima Magang - #REG-{{ str_pad((string)$pendaftaran->id, 5, '0', STR_PAD_LEFT) }}', 'application/pdf')">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        Lihat Surat Diterima
+                    </button>
+                    <a href="{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}" class="btn btn-primary">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Unduh Surat Diterima (PDF)
+                    </a>
+                </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                <button type="button" class="btn btn-detail-preview-surat" onclick="openDocPreview('{{ route('peserta.penempatan.surat-diterima.pratinjau', $pendaftaran->penempatan) }}', '{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}', 'Surat Keterangan Diterima Magang - #REG-{{ str_pad((string)$pendaftaran->id, 5, '0', STR_PAD_LEFT) }}', 'application/pdf')">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                    Lihat Surat Diterima
-                </button>
-                <a href="{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}" class="btn btn-primary" style="height: 40px; padding: 0 18px; font-size: 0.8125rem; font-weight: 700;">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                    </svg>
-                    Unduh Surat Diterima (PDF)
-                </a>
-            </div>
-        </div>
+        </x-gentelella.card>
     @endif
 
-    {{-- ========================================================
-         3. WIDGET SUMMARY KELENGKAPAN BERKAS PERSYARATAN
-         ======================================================== --}}
-    <div class="docs-summary-card">
-        <div class="docs-summary-header">
-            <div>
-                <h2 class="docs-summary-title">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0751FF;">
-                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                    </svg>
-                    Berkas Persyaratan Magang
-                </h2>
-                <p class="docs-summary-subtitle">
-                    Format yang diizinkan: <strong>PDF, JPG, JPEG, PNG</strong> (Maksimal {{ $maksMb }} MB per berkas).
-                </p>
-            </div>
-            <div style="text-align: right;">
-                <span class="summary-badge-status {{ $semuaWajibLengkap ? 'complete' : 'incomplete' }}">
-                    {{ $uploadedWajib }} dari {{ $totalWajib }} Berkas Wajib ({{ $persen }}%)
-                </span>
-            </div>
-        </div>
+    {{-- 3. X-Panel Berkas Persyaratan Magang --}}
+    <x-gentelella.x-panel title="Berkas Persyaratan Magang" subtitle="Format yang diizinkan: PDF, JPG, JPEG, PNG (Maksimal {{ $maksMb }} MB per berkas).">
+        <x-slot:toolbar>
+            <x-gentelella.badge variant="{{ $semuaWajibLengkap ? 'success' : 'primary' }}">
+                {{ $uploadedWajib }} dari {{ $totalWajib }} Berkas Wajib ({{ $persen }}%)
+            </x-gentelella.badge>
+        </x-slot:toolbar>
 
-        <div class="progress-bar-wrapper">
+        <div class="progress-bar-wrapper" style="margin-bottom: 24px;">
             <div class="progress-bar-meter" style="width: {{ $persen }}%; background: {{ $semuaWajibLengkap ? '#10B981' : '#0751FF' }};"></div>
         </div>
-    </div>
 
-    {{-- ========================================================
-         4. DAFTAR KARTU DOKUMEN PERSYARATAN (MODULAR)
-         ======================================================== --}}
-    <div>
-        @foreach($jenisDokumenList as $jenis)
-            @php
-                $terunggah = $dokumenTerunggah->get($jenis->id);
-                $isPdf = $terunggah && str_contains(strtolower($terunggah->mime ?? ''), 'pdf');
-            @endphp
+        {{-- Daftar Kartu Dokumen Persyaratan --}}
+        <div>
+            @foreach($jenisDokumenList as $jenis)
+                @php
+                    $terunggah = $dokumenTerunggah->get($jenis->id);
+                    $isPdf = $terunggah && str_contains(strtolower($terunggah->mime ?? ''), 'pdf');
+                @endphp
 
-            <div class="doc-card-modern" id="card_doc_{{ $jenis->id }}">
-                <div class="doc-header-row">
-                    <div>
-                        <div class="doc-title-group">
-                            <span class="doc-name">{{ $jenis->nama }}</span>
-                            @if($jenis->wajib)
-                                <span class="badge-doc-wajib">Wajib</span>
-                            @else
-                                <span class="badge-doc-opsional">Opsional</span>
-                            @endif
-                        </div>
-                        <div class="doc-instructions">
-                            {{ $jenis->deskripsi ?? 'Dokumen resmi yang diterbitkan oleh instansi pendidikan asal.' }}
-                        </div>
-                    </div>
-
-                    <div>
-                        @if($terunggah)
-                            <span class="badge-doc-status uploaded">
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                Sudah Terunggah
-                            </span>
-                        @else
-                            <span class="badge-doc-status pending">
-                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                                Belum Diunggah
-                            </span>
-                        @endif
-                    </div>
-                </div>
-
-                {{-- Tampilan Berkas yang Sudah Diunggah --}}
-                @if($terunggah)
-                    @php
-                        $downloadUrl = $terunggah->getSignedDownloadUrl(5);
-                        $previewUrl = $terunggah->getSignedPreviewUrl(5);
-                    @endphp
-
-                    <div class="uploaded-box-modern">
-                        <div class="uploaded-left">
-                            <div class="uploaded-icon-badge {{ $isPdf ? 'pdf' : 'img' }}">
-                                @if($isPdf)
-                                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    </svg>
+                <div class="doc-card-modern" id="card_doc_{{ $jenis->id }}">
+                    <div class="doc-header-row">
+                        <div>
+                            <div class="doc-title-group">
+                                <span class="doc-name">{{ $jenis->nama }}</span>
+                                @if($jenis->wajib)
+                                    <x-gentelella.badge variant="danger" style="font-size: 0.6875rem;">Wajib</x-gentelella.badge>
                                 @else
-                                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                        <polyline points="21 15 16 10 5 21"></polyline>
-                                    </svg>
+                                    <x-gentelella.badge variant="secondary" style="font-size: 0.6875rem;">Opsional</x-gentelella.badge>
                                 @endif
                             </div>
-                            <div>
-                                <div class="uploaded-filename">{{ $terunggah->nama_asli }}</div>
-                                <div class="uploaded-meta">
-                                    {{ round($terunggah->ukuran / 1024, 1) }} KB &bull; Diunggah pada {{ $terunggah->created_at->translatedFormat('d M Y, H:i') }}
-                                </div>
+                            <div class="doc-instructions">
+                                {{ $jenis->deskripsi ?? 'Dokumen resmi yang diterbitkan oleh instansi pendidikan asal.' }}
                             </div>
                         </div>
 
-                        <div class="uploaded-actions">
-                            <button type="button" class="btn btn-primary" onclick="openDocPreview('{{ $previewUrl }}', '{{ $downloadUrl }}', '{{ addslashes($jenis->nama) }} - {{ addslashes($terunggah->nama_asli) }}', '{{ $terunggah->mime }}')" style="height: 36px; padding: 0 14px; font-size: 0.8125rem;" title="Lihat pratinjau berkas">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                                Lihat Berkas
-                            </button>
-
-                            <a href="{{ $downloadUrl }}" class="btn btn-secondary" style="height: 36px; padding: 0 14px; font-size: 0.8125rem;" title="Unduh berkas fisik">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                Unduh
-                            </a>
-
-                            @if($bisaUnggah)
-                                <button type="button" class="btn btn-secondary" onclick="toggleDropzone({{ $jenis->id }})" style="height: 36px; padding: 0 12px; font-size: 0.8125rem;">
-                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
-                                    </svg>
-                                    Ganti Berkas
-                                </button>
+                        <div>
+                            @if($terunggah)
+                                <x-gentelella.badge variant="success" style="font-size: 0.75rem;">
+                                    ✓ Sudah Terunggah
+                                </x-gentelella.badge>
+                            @else
+                                <x-gentelella.badge variant="warning" style="font-size: 0.75rem;">
+                                    ● Belum Diunggah
+                                </x-gentelella.badge>
                             @endif
                         </div>
                     </div>
-                @endif
 
-                {{-- Interactive Drag & Drop Dropzone --}}
-                @if($bisaUnggah)
-                    <div id="dropzone_wrapper_{{ $jenis->id }}" style="{{ $terunggah ? 'display: none; margin-top: 14px;' : 'margin-top: 8px;' }}">
-                        <form action="{{ route('peserta.berkas.unggah', $pendaftaran) }}" method="POST" enctype="multipart/form-data" id="form_upload_{{ $jenis->id }}" onsubmit="handleUploadSubmit(this, {{ $jenis->id }})">
-                            @csrf
-                            <input type="hidden" name="jenis_dokumen_id" value="{{ $jenis->id }}">
+                    {{-- Tampilan Berkas yang Sudah Diunggah --}}
+                    @if($terunggah)
+                        @php
+                            $downloadUrl = $terunggah->getSignedDownloadUrl(5);
+                            $previewUrl = $terunggah->getSignedPreviewUrl(5);
+                        @endphp
 
-                            <input type="file"
-                                   id="file_input_{{ $jenis->id }}"
-                                   name="file"
-                                   accept=".pdf,.jpg,.jpeg,.png"
-                                   style="display: none;"
-                                   onchange="handleFileSelected(this, {{ $jenis->id }}, {{ $maksMb }})">
+                        <div class="uploaded-box-modern">
+                            <div class="uploaded-left">
+                                <div class="uploaded-icon-badge {{ $isPdf ? 'pdf' : 'img' }}">
+                                    @if($isPdf)
+                                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                                    @else
+                                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                    @endif
+                                </div>
+                                <div>
+                                    <div class="uploaded-filename">{{ $terunggah->nama_asli }}</div>
+                                    <div class="uploaded-meta">
+                                        {{ round($terunggah->ukuran / 1024, 1) }} KB &bull; Diunggah pada {{ $terunggah->created_at->translatedFormat('d M Y, H:i') }}
+                                    </div>
+                                </div>
+                            </div>
 
-                            <div class="dropzone-box-modern"
-                                 id="dropzone_box_{{ $jenis->id }}"
-                                 onclick="document.getElementById('file_input_{{ $jenis->id }}').click()"
-                                 ondragover="handleDragOver(event, this)"
-                                 ondragleave="handleDragLeave(event, this)"
-                                 ondrop="handleDrop(event, this, {{ $jenis->id }}, {{ $maksMb }})">
-                                <div class="dropzone-icon-circle">
-                                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <button type="button" class="btn btn-primary" onclick="openDocPreview('{{ $previewUrl }}', '{{ $downloadUrl }}', '{{ addslashes($jenis->nama) }} - {{ addslashes($terunggah->nama_asli) }}', '{{ $terunggah->mime }}')" style="height: 36px; padding: 0 14px; font-size: 0.8125rem;">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    Lihat Berkas
+                                </button>
+
+                                <a href="{{ $downloadUrl }}" class="btn btn-secondary" style="height: 36px; padding: 0 14px; font-size: 0.8125rem;">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
-                                        <polyline points="17 8 12 3 7 8"></polyline>
-                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
                                     </svg>
-                                </div>
-                                <div class="dropzone-prompt">
-                                    Seret & lepas berkas ke sini, atau <span class="dropzone-link" style="text-decoration: underline;">Pilih File</span>
-                                </div>
-                                <div class="dropzone-subtext">
-                                    Format PDF, JPG, JPEG, atau PNG (Maksimal {{ $maksMb }} MB)
-                                </div>
-                            </div>
+                                    Unduh
+                                </a>
 
-                            {{-- Selected File Bar --}}
-                            <div class="selected-bar-modern" id="selected_bar_{{ $jenis->id }}">
-                                <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0751FF; flex-shrink: 0;">
-                                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                    </svg>
-                                    <span id="selected_name_{{ $jenis->id }}" style="font-weight: 700; color: inherit; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></span>
-                                    <span id="selected_size_{{ $jenis->id }}" style="font-size: 0.75rem; color: var(--neutral-500); flex-shrink: 0;"></span>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <button type="button" class="btn btn-secondary" onclick="resetFileSelection({{ $jenis->id }})" style="height: 32px; padding: 0 12px; font-size: 0.75rem;">
-                                        Batal
+                                @if($bisaUnggah)
+                                    <button type="button" class="btn btn-secondary" onclick="toggleDropzone({{ $jenis->id }})" style="height: 36px; padding: 0 12px; font-size: 0.8125rem;">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                                        </svg>
+                                        Ganti Berkas
                                     </button>
-                                    <button type="submit" class="btn btn-primary" id="btn_submit_{{ $jenis->id }}" style="height: 32px; padding: 0 16px; font-size: 0.75rem;">
-                                        Unggah File Sekarang
-                                    </button>
-                                </div>
+                                @endif
                             </div>
-                        </form>
-                    </div>
-                @endif
-            </div>
-        @endforeach
-    </div>
+                        </div>
+                    @endif
 
-    {{-- ========================================================
-         5. FINALISASI PENGAJUAN PENDAFTARAN
-         ======================================================== --}}
-    @if($bisaUnggah)
-        <div class="submit-final-card">
-            <div>
-                @if($semuaWajibLengkap)
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div class="submit-status-icon-box complete">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                        <div>
-                            <span class="submit-status-title complete">
-                                Seluruh berkas persyaratan wajib telah lengkap!
-                            </span>
-                            <span class="submit-status-desc">
-                                Klik tombol di samping untuk mengirimkan pengajuan ke tim verifikasi admin.
-                            </span>
-                        </div>
-                    </div>
-                @else
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div class="submit-status-icon-box incomplete">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                        </div>
-                        <div>
-                            <span class="submit-status-title incomplete">
-                                Masih ada berkas persyaratan bertanda [Wajib] yang belum diunggah.
-                            </span>
-                            <span class="submit-status-desc">
-                                Lengkapi seluruh berkas wajib di atas untuk mengaktifkan tombol pengajuan.
-                            </span>
-                        </div>
-                    </div>
-                @endif
-            </div>
+                    {{-- Dropzone Form Upload --}}
+                    @if($bisaUnggah)
+                        <div id="dropzone_wrapper_{{ $jenis->id }}" style="{{ $terunggah ? 'display: none; margin-top: 14px;' : 'margin-top: 8px;' }}">
+                            <form action="{{ route('peserta.berkas.unggah', $pendaftaran) }}" method="POST" enctype="multipart/form-data" id="form_upload_{{ $jenis->id }}" onsubmit="handleUploadSubmit(this, {{ $jenis->id }})">
+                                @csrf
+                                <input type="hidden" name="jenis_dokumen_id" value="{{ $jenis->id }}">
 
-            <form action="{{ route('peserta.pendaftaran.ajukan', $pendaftaran) }}" method="POST" id="formAjukanPendaftaran" onsubmit="handleAjukanSubmit(this)">
-                @csrf
-                <button type="submit" class="btn btn-submit-main" id="btnAjukanPendaftaran" {{ !$semuaWajibLengkap ? 'disabled' : '' }}>
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                    </svg>
-                    Ajukan Pendaftaran Sekarang
-                </button>
-            </form>
+                                <input type="file"
+                                       id="file_input_{{ $jenis->id }}"
+                                       name="file"
+                                       accept=".pdf,.jpg,.jpeg,.png"
+                                       style="display: none;"
+                                       onchange="handleFileSelected(this, {{ $jenis->id }}, {{ $maksMb }})">
+
+                                <div class="dropzone-box-modern"
+                                     id="dropzone_box_{{ $jenis->id }}"
+                                     onclick="document.getElementById('file_input_{{ $jenis->id }}').click()"
+                                     ondragover="handleDragOver(event, this)"
+                                     ondragleave="handleDragLeave(event, this)"
+                                     ondrop="handleDrop(event, this, {{ $jenis->id }}, {{ $maksMb }})">
+                                    <div class="dropzone-icon-circle">
+                                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                    </div>
+                                    <div class="dropzone-prompt">
+                                        Seret & lepas berkas ke sini, atau <span style="color: #0751FF; text-decoration: underline;">Pilih File</span>
+                                    </div>
+                                    <div class="dropzone-subtext">
+                                        Format PDF, JPG, JPEG, atau PNG (Maksimal {{ $maksMb }} MB)
+                                    </div>
+                                </div>
+
+                                {{-- Selected File Bar --}}
+                                <div class="selected-bar-modern" id="selected_bar_{{ $jenis->id }}">
+                                    <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0751FF; flex-shrink: 0;">
+                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                        </svg>
+                                        <span id="selected_name_{{ $jenis->id }}" style="font-weight: 700; color: inherit; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></span>
+                                        <span id="selected_size_{{ $jenis->id }}" style="font-size: 0.75rem; color: var(--neutral-500, #64748B); flex-shrink: 0;"></span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <button type="button" class="btn btn-secondary" onclick="resetFileSelection({{ $jenis->id }})" style="height: 32px; padding: 0 12px; font-size: 0.75rem;">
+                                            Batal
+                                        </button>
+                                        <button type="submit" class="btn btn-primary" id="btn_submit_{{ $jenis->id }}" style="height: 32px; padding: 0 16px; font-size: 0.75rem;">
+                                            Unggah File Sekarang
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
         </div>
-    @else
-        <div class="locked-card">
-            <div class="locked-card-icon">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+
+        {{-- Finalisasi Pengajuan Pendaftaran --}}
+        @if($bisaUnggah)
+            <div class="submit-final-card">
+                <div>
+                    @if($semuaWajibLengkap)
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: #D1FAE5; color: #065F46; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                            <div>
+                                <span style="font-size: 0.9375rem; font-weight: 700; color: #065F46; display: block;">
+                                    Seluruh berkas persyaratan wajib telah lengkap!
+                                </span>
+                                <span style="font-size: 0.8125rem; color: #047857;">
+                                    Klik tombol di samping untuk mengirimkan pengajuan ke tim verifikasi admin.
+                                </span>
+                            </div>
+                        </div>
+                    @else
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            </div>
+                            <div>
+                                <span style="font-size: 0.9375rem; font-weight: 700; color: #92400E; display: block;">
+                                    Masih ada berkas persyaratan bertanda [Wajib] yang belum diunggah.
+                                </span>
+                                <span style="font-size: 0.8125rem; color: #78350F;">
+                                    Lengkapi seluruh berkas wajib di atas untuk mengaktifkan tombol pengajuan.
+                                </span>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <form action="{{ route('peserta.pendaftaran.ajukan', $pendaftaran) }}" method="POST" id="formAjukanPendaftaran" onsubmit="handleAjukanSubmit(this)">
+                    @csrf
+                    <button type="submit" class="btn btn-primary" id="btnAjukanPendaftaran" {{ !$semuaWajibLengkap ? 'disabled' : '' }} style="height: 44px; padding: 0 24px; font-weight: 700;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                        Ajukan Pendaftaran Sekarang
+                    </button>
+                </form>
+            </div>
+        @else
+            <div style="display: flex; align-items: center; gap: 10px; padding: 16px 20px; background: #F8FAFC; border: 1px dashed var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.8125rem; color: var(--neutral-600, #475569);">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #64748B;">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                     <path d="M7 11V7a5 5 0 0110 0v4"></path>
                 </svg>
+                <span>Berkas pendaftaran saat ini terkunci karena telah diajukan atau sedang diproses oleh tim admin verifikator.</span>
             </div>
-            <span>Berkas pendaftaran saat ini terkunci karena telah diajukan atau sedang diproses oleh tim admin verifikator.</span>
-        </div>
-    @endif
-
+        @endif
+    </x-gentelella.x-panel>
 </div>
 
-{{-- ========================================================
-     6. MODAL KONFIRMASI PEMBATALAN PENDAFTARAN
-     ======================================================== --}}
+{{-- Modal Konfirmasi Pembatalan --}}
 @if($bisaBatal)
 <div class="modal" id="cancelModal" onclick="if(event.target === this) closeCancelModal()">
     <div class="modal-box">
         <div class="modal-header">
             <div>
                 <h3 class="modal-title">Konfirmasi Pembatalan Pendaftaran</h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 3px 0 0 0;">
+                <p style="font-size: 0.8125rem; color: var(--neutral-500, #64748B); margin: 3px 0 0 0;">
                     #REG-{{ str_pad((string)$pendaftaran->id, 5, '0', STR_PAD_LEFT) }} &bull; {{ $pendaftaran->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
                 </p>
             </div>
@@ -1851,25 +973,25 @@
         <form action="{{ route('peserta.pendaftaran.batalkan', $pendaftaran) }}" method="POST" id="formBatalkanPendaftaran" onsubmit="handleBatalSubmit(this)">
             @csrf
 
-            <div class="modal-warning-box">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="modal-warning-icon">
+            <div style="padding: 14px 16px; background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; margin-bottom: 18px; display: flex; gap: 12px; align-items: flex-start;">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #DC2626; flex-shrink: 0; margin-top: 2px;">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                 </svg>
                 <div>
-                    <strong class="modal-warning-title">Perhatian: Pembatalan Bersifat Final</strong>
-                    <p class="modal-warning-desc">
-                        Jika dibatalkan, status pendaftaran akan berubah menjadi <strong>Dibatalkan</strong> dan tidak dapat diaktifkan kembali. Sesuai aturan (BR-03), Anda tidak dapat membuat pengajuan baru pada bulan mulai yang sama, namun Anda dapat memilih bulan magang lain yang masih dibuka.
+                    <strong style="font-size: 0.875rem; color: #991B1B; display: block;">Perhatian: Pembatalan Bersifat Final</strong>
+                    <p style="font-size: 0.8125rem; color: #7F1D1D; margin: 4px 0 0 0; line-height: 1.45;">
+                        Jika dibatalkan, status pendaftaran akan berubah menjadi <strong>Dibatalkan</strong> dan tidak dapat diaktifkan kembali. Anda dapat memilih bulan magang lain yang masih dibuka.
                     </p>
                 </div>
             </div>
 
-            <p style="font-size: 0.875rem; color: var(--neutral-700); margin-bottom: 24px;">
+            <p style="font-size: 0.875rem; color: var(--neutral-700, #334155); margin-bottom: 24px;">
                 Apakah Anda yakin ingin membatalkan pengajuan pendaftaran magang ini?
             </p>
 
-            <div class="modal-footer-row">
-                <button type="button" class="btn btn-secondary" onclick="closeCancelModal()" style="height: 38px; padding: 0 16px; font-size: 0.8125rem;">Kembali</button>
-                <button type="submit" class="btn btn-danger" id="btnSubmitBatal" style="height: 38px; padding: 0 18px; font-size: 0.8125rem; background: #DC2626; border-color: #DC2626; color: #ffffff;">
+            <div style="display: flex; justify-content: flex-end; gap: 10px; padding-top: 14px; border-top: 1px solid var(--neutral-200, #E2E8F0);">
+                <button type="button" class="btn btn-secondary" onclick="closeCancelModal()">Kembali</button>
+                <button type="submit" class="btn btn-danger" id="btnSubmitBatal">
                     Ya, Batalkan Pendaftaran
                 </button>
             </div>
@@ -1878,14 +1000,12 @@
 </div>
 @endif
 
-{{-- ========================================================
-     7. MODAL IN-APP PRATINJAU DOKUMEN
-     ======================================================== --}}
+{{-- Modal In-App Pratinjau Dokumen --}}
 <div class="modal" id="docPreviewModal" onclick="if(event.target === this) closeDocPreview()" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
     <div class="modal-box-large">
         <div class="modal-header" style="margin-bottom: 0; padding-bottom: 14px;">
             <div style="display: flex; align-items: center; gap: 12px; overflow: hidden; padding-right: 12px;">
-                <div id="previewModalIcon" class="preview-modal-icon-box">
+                <div id="previewModalIcon" style="width: 38px; height: 38px; border-radius: 8px; background: #EFF6FF; color: #0751FF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 </div>
                 <div style="overflow: hidden;">
@@ -1893,62 +1013,39 @@
                         <h3 class="modal-title" id="previewModalTitle" style="font-size: 1rem; margin: 0; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
                             Pratinjau Dokumen
                         </h3>
-                        <span id="previewModalBadge" class="preview-modal-badge">PDF</span>
+                        <span id="previewModalBadge" class="badge badge-info">PDF</span>
                     </div>
-                    <p style="font-size: 0.75rem; color: var(--neutral-500); margin: 3px 0 0 0;">
+                    <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 3px 0 0 0;">
                         Tinjauan dokumen langsung di sistem &bull; Terproteksi otorisasi MagKom
                     </p>
                 </div>
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-                <a id="previewOpenNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="height: 34px; padding: 0 12px; font-size: 0.75rem;" title="Buka pratinjau di tab browser baru">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
-                        <polyline points="15 3 21 3 21 9"></polyline>
-                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                    </svg>
+                <a id="previewOpenNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="height: 34px; padding: 0 12px; font-size: 0.75rem;">
                     Tab Baru
                 </a>
-                <a id="previewDownloadBtn" href="#" class="btn btn-secondary" style="height: 34px; padding: 0 12px; font-size: 0.75rem;" title="Unduh berkas fisik">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
+                <a id="previewDownloadBtn" href="#" class="btn btn-secondary" style="height: 34px; padding: 0 12px; font-size: 0.75rem;">
                     Unduh
                 </a>
-                <button type="button" class="modal-close" onclick="closeDocPreview()" title="Tutup pratinjau (Esc)">&times;</button>
+                <button type="button" class="modal-close" onclick="closeDocPreview()">&times;</button>
             </div>
         </div>
 
         <div class="modal-body-preview">
-            {{-- Loading Indicator --}}
             <div id="previewLoading" class="preview-loading-overlay">
                 <div class="preview-loading-spinner"></div>
-                <div class="preview-loading-title">Memuat Pratinjau Dokumen...</div>
-                <div class="preview-loading-desc">Mengambil berkas aman dari disk privat MagKom</div>
+                <div style="font-size: 0.875rem; font-weight: 700;">Memuat Pratinjau Dokumen...</div>
             </div>
 
-            {{-- PDF Iframe Container --}}
             <iframe id="previewIframe" src="about:blank" style="width: 100%; height: 75vh; border: none; display: none;"></iframe>
 
-            {{-- Image Container (JPG/PNG) --}}
             <div id="previewImageWrapper" style="display: none; padding: 24px; width: 100%; height: 100%; text-align: center; overflow: auto; justify-content: center; align-items: center;">
-                <img id="previewImage" alt="Pratinjau Berkas" style="max-width: 100%; max-height: 70vh; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); object-fit: contain;">
+                <img id="previewImage" alt="Pratinjau Berkas" style="max-width: 100%; max-height: 70vh; border-radius: 8px; object-fit: contain;">
             </div>
 
-            {{-- Error State Container --}}
             <div id="previewError" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center;">
-                <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #D97706; margin-bottom: 12px;">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-                <div style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-800);">Tidak Dapat Memuat Pratinjau Langsung</div>
-                <div style="font-size: 0.8125rem; color: var(--neutral-600); margin: 6px 0 16px 0; max-width: 420px;">
-                    Format berkas atau konfigurasi browser tidak mendukung pratinjau inline. Silakan gunakan tombol unduh di bawah ini.
-                </div>
+                <div style="font-size: 0.9375rem; font-weight: 700; margin-bottom: 6px;">Tidak Dapat Memuat Pratinjau Langsung</div>
                 <a id="previewFallbackDownloadBtn" href="#" class="btn btn-primary" style="height: 38px; padding: 0 18px; font-size: 0.8125rem;">
                     Unduh Berkas Sekarang
                 </a>
@@ -1959,7 +1056,6 @@
 
 @push('scripts')
 <script>
-    // In-App Document Preview Modal Handler
     let previewTimer = null;
 
     function openDocPreview(previewUrl, downloadUrl, title, mime) {
@@ -1974,7 +1070,6 @@
         const imgWrapper = document.getElementById('previewImageWrapper');
         const img = document.getElementById('previewImage');
         const errBox = document.getElementById('previewError');
-        const iconContainer = document.getElementById('previewModalIcon');
 
         if (!modal) return;
 
@@ -2004,12 +1099,6 @@
 
         if (isPdf) {
             modalBadge.textContent = 'PDF';
-            modalBadge.style.background = '#FEE2E2';
-            modalBadge.style.color = '#DC2626';
-            if (iconContainer) {
-                iconContainer.style.background = '#FEE2E2';
-                iconContainer.style.color = '#DC2626';
-            }
             const finalPdfUrl = previewUrl.includes('#') ? previewUrl : (previewUrl + '#toolbar=0&navpanes=0');
             iframe.onload = function() {
                 handlePreviewLoaded();
@@ -2022,12 +1111,6 @@
             }, 600);
         } else {
             modalBadge.textContent = 'Gambar';
-            modalBadge.style.background = '#E0E7FF';
-            modalBadge.style.color = '#4F46E5';
-            if (iconContainer) {
-                iconContainer.style.background = '#E0E7FF';
-                iconContainer.style.color = '#4F46E5';
-            }
             img.onload = function() {
                 handlePreviewLoaded();
             };
@@ -2095,7 +1178,6 @@
         }
     }
 
-    // Keyboard navigation (Esc to close)
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' || e.key === 'Esc') {
             closeDocPreview();
@@ -2103,7 +1185,6 @@
         }
     });
 
-    // Toggle Replace Dropzone
     function toggleDropzone(id) {
         const wrapper = document.getElementById('dropzone_wrapper_' + id);
         if (wrapper) {
@@ -2111,7 +1192,6 @@
         }
     }
 
-    // Drag and Drop Event Handlers
     function handleDragOver(e, element) {
         e.preventDefault();
         e.stopPropagation();
@@ -2135,7 +1215,6 @@
         }
     }
 
-    // Client-side instant validation & file preview (AC-03-5)
     function handleFileSelected(input, jenisId, maksMb) {
         const file = input.files[0];
         if (!file) return;
@@ -2146,11 +1225,7 @@
 
         if (!allowedExtensions.includes(ext)) {
             const msg = 'Format berkas tidak diizinkan. Hanya file PDF, JPG, JPEG, atau PNG yang diterima.';
-            if (window.MagKomToast) {
-                window.MagKomToast.warning(msg);
-            } else {
-                alert(msg);
-            }
+            if (window.MagKomToast) window.MagKomToast.warning(msg); else alert(msg);
             input.value = '';
             resetFileSelection(jenisId);
             return;
@@ -2158,11 +1233,7 @@
 
         if (file.size > maxBytes) {
             const msg = `Ukuran berkas (${(file.size / (1024 * 1024)).toFixed(2)} MB) melebihi batas maksimal ${maksMb} MB.`;
-            if (window.MagKomToast) {
-                window.MagKomToast.warning(msg);
-            } else {
-                alert(msg);
-            }
+            if (window.MagKomToast) window.MagKomToast.warning(msg); else alert(msg);
             input.value = '';
             resetFileSelection(jenisId);
             return;
@@ -2185,7 +1256,6 @@
         if (bar) bar.style.display = 'none';
     }
 
-    // Anti Double-Submit pada Form Upload Berkas (AC-03-8)
     function handleUploadSubmit(form, jenisId) {
         const btn = document.getElementById('btn_submit_' + jenisId);
         if (btn) {
@@ -2194,7 +1264,6 @@
         }
     }
 
-    // Anti Double-Submit pada Form Ajukan Pendaftaran (AC-03-8)
     function handleAjukanSubmit(form) {
         const btn = document.getElementById('btnAjukanPendaftaran');
         if (btn) {
@@ -2203,7 +1272,6 @@
         }
     }
 
-    // Modal Konfirmasi Pembatalan (AC-03-9)
     function openCancelModal() {
         const modal = document.getElementById('cancelModal');
         if (modal) modal.classList.add('open');

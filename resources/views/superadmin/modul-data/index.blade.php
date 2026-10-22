@@ -135,7 +135,7 @@
     </div>
 
     {{-- FILTER TOOLBAR & SEARCH --}}
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-300); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <x-gentelella.card style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <form method="GET" action="{{ route('superadmin.modul.index', ['slug' => $modul->slug]) }}" style="display: flex; gap: 0.75rem; flex: 1; max-width: 500px;">
             <div style="position: relative; width: 100%;">
                 <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari data dalam modul {{ $modul->nama_modul }}..." style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem 0 2.25rem; font-size: 0.8125rem; font-family: inherit;">
@@ -152,10 +152,10 @@
         <div style="font-size: 0.8125rem; color: var(--neutral-600);">
             Total Data: <strong>{{ $records->total() }}</strong> baris
         </div>
-    </div>
+    </x-gentelella.card>
 
     {{-- TABEL DATA UNIVERSAL (Mendukung Dynamic JSON & Physical Table) --}}
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-300); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
+    <x-gentelella.x-panel title="Data Modul: {{ $modul->nama_modul }}" subtitle="Pengelolaan data operasional mandiri (Universal CRUD Engine)">
         @if($records->isEmpty())
             <div style="padding: 3.5rem 1.5rem; text-align: center;">
                 <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--neutral-100); margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
@@ -279,7 +279,7 @@
                 </div>
             @endif
         @endif
-    </div>
+    </x-gentelella.x-panel>
 </div>
 
 <!-- =====================================================================

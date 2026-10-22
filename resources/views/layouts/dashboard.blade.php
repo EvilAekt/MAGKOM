@@ -25,6 +25,7 @@
 
     <!-- Gentelella Theme CSS -->
     <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dashboard-cockpit-unified.css') }}">
 
     <!-- Anti-Flash Theme Script -->
     <script>
@@ -559,7 +560,7 @@
            ===================================================================== */
         .dashboard-sidebar {
             width: var(--sidebar-width);
-            background-color: var(--blue-700);
+            background: radial-gradient(120% 60% at 0% 0%, rgba(7, 81, 255, 0.45), transparent 60%), linear-gradient(180deg, #06318C, #061E5B);
             color: #FFFFFF;
             display: flex;
             flex-direction: column;
@@ -697,11 +698,39 @@
             box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--blue-600);
         }
 
-        /* Active Navigation Item (Figma: Surface Neutral 0, Text Blue 700) */
+        /* Active Navigation Item (Lovable Notch: Surface Neutral 150 with Inverted Radius) */
         .nav-item-link.active {
-            background-color: var(--neutral-0);
+            background-color: var(--neutral-150);
             color: var(--blue-700);
-            box-shadow: var(--shadow-subtle);
+            font-weight: 700;
+            border-radius: 8px 0 0 8px;
+            margin-right: -0.75rem;
+            padding-right: 1.5rem;
+            position: relative;
+            box-shadow: none;
+        }
+
+        .nav-item-link.active::before,
+        .nav-item-link.active::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .nav-item-link.active::before {
+            top: -12px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 4px 4px 0 4px var(--neutral-150);
+        }
+
+        .nav-item-link.active::after {
+            bottom: -12px;
+            border-top-right-radius: 10px;
+            box-shadow: 4px -4px 0 4px var(--neutral-150);
         }
 
         .nav-item-link.active svg {
@@ -810,9 +839,36 @@
         }
 
         .nav-sub-item.active {
-            background-color: var(--neutral-0);
+            background-color: var(--neutral-150);
             color: var(--blue-700);
             font-weight: 700;
+            border-radius: 6px 0 0 6px;
+            margin-right: -0.75rem;
+            padding-right: 1.25rem;
+            position: relative;
+        }
+
+        .nav-sub-item.active::before,
+        .nav-sub-item.active::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .nav-sub-item.active::before {
+            top: -10px;
+            border-bottom-right-radius: 8px;
+            box-shadow: 3px 3px 0 3px var(--neutral-150);
+        }
+
+        .nav-sub-item.active::after {
+            bottom: -10px;
+            border-top-right-radius: 8px;
+            box-shadow: 3px -3px 0 3px var(--neutral-150);
         }
 
         /* Pulse green dot status */
@@ -1817,15 +1873,53 @@
             color: var(--blue-700);
         }
 
-        /* Right Column Content Canvas */
+        /* Right Column Content Canvas (Lovable Blueprint Grid & Soft Canvas) */
         .right_col {
             margin-left: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
-            background: var(--neutral-150);
+            background-color: var(--neutral-150);
+            background-image:
+                linear-gradient(rgba(7, 81, 255, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(7, 81, 255, 0.035) 1px, transparent 1px);
+            background-size: 24px 24px;
             padding: 1.5rem 2rem 3rem;
             min-height: calc(100vh - var(--topbar-height) - 50px);
             transition: margin-left 0.25s ease, width 0.25s ease;
             flex: 1;
+        }
+
+        /* Topbar Center Search Box (Lovable Style) */
+        .topbar-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            max-width: 440px;
+            margin: 0 1.5rem;
+        }
+
+        .topbar-search-input {
+            width: 100%;
+            height: 36px;
+            background: var(--neutral-100);
+            border: 1px solid var(--neutral-300);
+            border-radius: 8px;
+            padding: 0 14px;
+            font-size: 0.8125rem;
+            color: var(--neutral-800);
+            outline: none;
+            transition: all 0.15s ease;
+        }
+
+        .topbar-search-input:focus {
+            background: var(--neutral-0);
+            border-color: var(--blue-600);
+            box-shadow: var(--focus-ring);
+        }
+
+        @media (max-width: 900px) {
+            .topbar-center {
+                display: none !important;
+            }
         }
 
         /* Footer Gentelella */
@@ -2847,6 +2941,13 @@
                     </nav>
                 </div>
 
+                <!-- Topbar Center Search (Lovable Clearview Style) -->
+                <div class="topbar-center" role="search">
+                    <div class="topbar-search-box">
+                        <input type="search" class="topbar-search-input" placeholder="Cari peserta, staf, atau NIM…  ⌘K" aria-label="Cari data atau peserta">
+                    </div>
+                </div>
+
                 <!-- Topbar Menu Pengguna -->
                 <div class="topbar-right">
                     <button type="button" id="userMenuBtn" class="user-menu-trigger" onclick="toggleUserMenu()" aria-expanded="false" aria-haspopup="true">
@@ -3225,7 +3326,14 @@
 
     @yield('scripts')
     @stack('scripts')
+    {{-- Mobile Floating Action Button (FAB) --}}
+    <button type="button" class="cv-mobile-fab" data-action="toggle-mobile-aside" aria-label="Buka Menu Tindakan">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Tindakan</span>
+    </button>
+
     <script src="{{ asset('js/gentelella-theme.js') }}"></script>
+    <script src="{{ asset('js/dashboard-cockpit-unified.js') }}"></script>
     <x-sse-toast-listener />
 </body>
 </html>

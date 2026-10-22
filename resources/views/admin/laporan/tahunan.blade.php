@@ -110,15 +110,15 @@
 
     <!-- 4 EXECUTIVE SUMMARY KPI CARDS -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-600); text-transform: uppercase;">Total Pendaftar Masuk</div>
             <div style="font-size: 2rem; font-weight: 900; color: var(--blue-700); margin-top: 0.25rem;">
                 {{ number_format($totalPendaftaran) }}
             </div>
             <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem;">Calon peserta yang mengajukan berkas</div>
-        </div>
+        </x-gentelella.card>
 
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="font-size: 0.75rem; font-weight: 700; color: var(--green-700); text-transform: uppercase;">Peserta Diterima Magang</div>
             <div style="font-size: 2rem; font-weight: 900; color: var(--green-700); margin-top: 0.25rem;">
                 {{ number_format($totalDiterima) }}
@@ -126,9 +126,9 @@
             <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem;">
                 Tingkat Penerimaan: <strong>{{ number_format($acceptanceRate, 1) }}%</strong>
             </div>
-        </div>
+        </x-gentelella.card>
 
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="font-size: 0.75rem; font-weight: 700; color: var(--purple-700, #7E22CE); text-transform: uppercase;">Alumni Magang Lulus</div>
             <div style="font-size: 2rem; font-weight: 900; color: var(--purple-700, #7E22CE); margin-top: 0.25rem;">
                 {{ number_format($totalSelesai) }}
@@ -136,15 +136,15 @@
             <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem;">
                 Tingkat Kelulusan: <strong>{{ number_format($completionRate, 1) }}%</strong>
             </div>
-        </div>
+        </x-gentelella.card>
 
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="font-size: 0.75rem; font-weight: 700; color: var(--amber-700); text-transform: uppercase;">Rata-rata Durasi Magang</div>
             <div style="font-size: 2rem; font-weight: 900; color: var(--amber-700); margin-top: 0.25rem;">
                 {{ $rataRataDurasi }} <span style="font-size: 1.125rem; font-weight: 600;">Bulan</span>
             </div>
             <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem;">Rentang normal 1 sampai 6 bulan</div>
-        </div>
+        </x-gentelella.card>
     </div>
 
     <!-- TREN BULANAN TABEL & PROGRESS -->

@@ -72,7 +72,7 @@
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- 1. FILTER & SEARCH CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow-subtle);">
+    <x-gentelella.card>
         <form method="GET" action="{{ route('superadmin.monitoring.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; flex: 1;">
                 <div style="position: relative; min-width: 260px; flex: 1;">
@@ -110,23 +110,24 @@
                 @endif
             </div>
         </form>
-    </div>
+    </x-gentelella.card>
 
     <!-- 2. DATA TABLE CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-            <div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">
-                    Daftar Peserta Magang Aktif
-                </h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.125rem 0 0 0;">
-                    Peserta yang sedang menjalankan masa magang di dinas Kominfo.
-                </p>
-            </div>
+    <x-gentelella.card
+        title="Daftar Peserta Magang Aktif"
+        subtitle="Peserta yang sedang menjalankan masa magang di dinas Kominfo."
+    >
+        <x-slot:icon>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-primary">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+        </x-slot:icon>
+
+        <x-slot:actions>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total: <strong>{{ method_exists($penempatanList, 'total') ? $penempatanList->total() : $penempatanList->count() }} Peserta Aktif</strong>
             </span>
-        </div>
+        </x-slot:actions>
 
         @if($penempatanList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
@@ -137,7 +138,7 @@
                 <p style="font-size: 0.8125rem; margin: 0;">Saat ini belum ada data penempatan aktif yang cocok dengan kriteria pencarian.</p>
             </div>
         @else
-            <div style="overflow-x: auto;">
+            <div style="overflow-x: auto; margin: -10px -20px -20px -20px;">
                 <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                     <thead>
                         <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
@@ -208,11 +209,11 @@
             </div>
 
             @if($penempatanList->hasPages())
-                <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200); background: var(--neutral-100);">
+                <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200); background: var(--neutral-100); margin: 0 -20px -20px -20px;">
                     {{ $penempatanList->links() }}
                 </div>
             @endif
         @endif
-    </div>
+    </x-gentelella.card>
 </div>
 @endsection

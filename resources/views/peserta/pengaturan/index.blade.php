@@ -5,32 +5,16 @@
 
 @push('styles')
 <style>
-    /* Settings Page Styles - Designed according to DS-MagKom & Reference */
+    /* ========================================================
+       MAGKOM GENTELELLA DESIGN SYSTEM: PESERTA PENGATURAN
+       ======================================================== */
     .settings-page {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding-bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding-bottom: 32px;
     }
 
-    .settings-header {
-        margin-bottom: 28px;
-    }
-
-    .settings-title {
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--neutral-800, #1D2530);
-        margin-bottom: 6px;
-        line-height: 1.3;
-    }
-
-    .settings-subtitle {
-        font-size: 14px;
-        color: var(--neutral-500, #7A8494);
-        line-height: 1.5;
-    }
-
-    /* 2-Column Responsive Grid */
     .settings-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -44,53 +28,30 @@
         }
     }
 
-    /* Card Box */
-    .settings-card {
-        background: #ffffff;
-        border: 1px solid var(--neutral-200, #EEF0F5);
-        border-radius: var(--radius-lg, 16px);
-        padding: 28px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-    }
-
-    .card-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--neutral-800, #1D2530);
-        margin-bottom: 6px;
-    }
-
-    .card-subtitle {
-        font-size: 13px;
-        color: var(--neutral-500, #7A8494);
-        margin-bottom: 22px;
-        line-height: 1.4;
-    }
-
     /* Info Akun Styles */
     .profile-mini-header {
         display: flex;
         align-items: center;
         gap: 16px;
-        padding-bottom: 22px;
-        margin-bottom: 22px;
-        border-bottom: 1px solid var(--neutral-200, #EEF0F5);
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--neutral-200, #E2E8F0);
     }
 
     .profile-mini-avatar {
         width: 54px;
         height: 54px;
         border-radius: 50%;
-        background: var(--blue-tint, #E6EEFF);
-        color: var(--blue-700, #0641CC);
-        font-size: 18px;
+        background: #EFF6FF;
+        color: #0751FF;
+        font-size: 1.125rem;
         font-weight: 700;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
         overflow: hidden;
-        border: 1px solid var(--blue-tint-line, #B3C8FF);
+        border: 2px solid #BFDBFE;
     }
 
     .profile-mini-avatar img {
@@ -99,78 +60,42 @@
         object-fit: cover;
     }
 
-    .profile-mini-meta {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .profile-mini-name {
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--neutral-800, #1D2530);
-    }
-
-    .profile-role-chip {
-        display: inline-flex;
-        align-items: center;
-        background: var(--blue-tint, #E6EEFF);
-        color: var(--blue-700, #0641CC);
-        font-size: 12px;
-        font-weight: 600;
-        padding: 3px 12px;
-        border-radius: 20px;
-        width: fit-content;
-    }
-
     .info-list {
         display: flex;
         flex-direction: column;
-        gap: 16px;
-        margin-bottom: 24px;
+        gap: 14px;
+        margin-bottom: 22px;
     }
 
     .info-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 14px;
+        font-size: 0.875rem;
     }
 
     .info-label {
-        color: var(--neutral-500, #7A8494);
-        font-weight: 400;
+        color: var(--neutral-500, #64748B);
     }
 
     .info-value {
-        color: var(--neutral-800, #1D2530);
+        color: var(--neutral-800, #1E293B);
         font-weight: 600;
         text-align: right;
     }
 
-    .status-badge-active {
-        display: inline-flex;
-        align-items: center;
-        background: var(--green-100, #E8F7EE);
-        color: var(--green-700, #166534);
-        padding: 2px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
     .callout-note {
-        background: var(--neutral-150, #F5F7FB);
-        border: 1px solid var(--neutral-200, #EEF0F5);
-        border-radius: var(--radius-md, 12px);
-        padding: 14px 18px;
-        font-size: 13px;
-        color: var(--neutral-600, #666666);
+        background: #F8FAFC;
+        border: 1px solid var(--neutral-200, #E2E8F0);
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-size: 0.8125rem;
+        color: var(--neutral-600, #475569);
         line-height: 1.5;
     }
 
     .callout-note a {
-        color: var(--blue-700, #0641CC);
+        color: #0751FF;
         font-weight: 600;
         text-decoration: none;
     }
@@ -179,46 +104,11 @@
         text-decoration: underline;
     }
 
-    /* Form Ganti Password */
-    .form-group-custom {
-        margin-bottom: 18px;
-    }
-
-    .form-label-custom {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--neutral-800, #1D2530);
-        margin-bottom: 6px;
-    }
-
+    /* Form Password */
     .input-password-wrapper {
         position: relative;
         display: flex;
         align-items: center;
-    }
-
-    .input-custom {
-        width: 100%;
-        height: 42px;
-        padding: 10px 42px 10px 14px;
-        border: 1px solid var(--neutral-400, #D0D3D9);
-        border-radius: var(--radius-default, 8px);
-        font-size: 14px;
-        color: var(--neutral-800, #1D2530);
-        background: #ffffff;
-        transition: border-color 0.2s, box-shadow 0.2s;
-        font-family: inherit;
-    }
-
-    .input-custom:focus {
-        outline: none;
-        border-color: var(--blue-700, #0641CC);
-        box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
-    }
-
-    .input-custom.is-invalid {
-        border-color: var(--red-600, #DC2626);
     }
 
     .toggle-password-btn {
@@ -227,122 +117,8 @@
         background: none;
         border: none;
         padding: 4px;
-        color: var(--neutral-500, #7A8494);
+        color: var(--neutral-500, #64748B);
         cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .toggle-password-btn:hover {
-        color: var(--neutral-800, #1D2530);
-    }
-
-    .form-hint {
-        font-size: 12px;
-        color: var(--neutral-500, #7A8494);
-        margin-top: 8px;
-        margin-bottom: 22px;
-    }
-
-    .form-feedback-error {
-        font-size: 12px;
-        color: var(--red-600, #DC2626);
-        margin-top: 4px;
-    }
-
-    .form-actions-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .btn-primary-custom {
-        background: var(--blue-700, #0641CC);
-        color: #ffffff;
-        border: 1px solid var(--blue-700, #0641CC);
-        border-radius: var(--radius-default, 8px);
-        padding: 9px 20px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s, transform 0.1s;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .btn-primary-custom:hover {
-        background: #0535A6;
-        border-color: #0535A6;
-    }
-
-    .btn-primary-custom:active {
-        transform: scale(0.99);
-    }
-
-    .btn-outline-custom {
-        background: #ffffff;
-        color: var(--neutral-700, #333333);
-        border: 1px solid var(--neutral-400, #D0D3D9);
-        border-radius: var(--radius-default, 8px);
-        padding: 9px 20px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s, border-color 0.2s;
-    }
-
-    .btn-outline-custom:hover {
-        background: var(--neutral-150, #F5F7FB);
-        border-color: var(--neutral-500, #7A8494);
-    }
-
-    /* Preferensi Section */
-    .pref-group {
-        margin-bottom: 22px;
-    }
-
-    .pref-label {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--neutral-800, #1D2530);
-        margin-bottom: 8px;
-    }
-
-    .language-select-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .language-select-custom {
-        width: 100%;
-        appearance: none;
-        -webkit-appearance: none;
-        padding: 10px 38px 10px 14px;
-        border: 1px solid var(--neutral-400, #D0D3D9);
-        border-radius: var(--radius-default, 8px);
-        background: #ffffff;
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--neutral-800, #1D2530);
-        cursor: pointer;
-        transition: border-color 0.2s, box-shadow 0.2s;
-        font-family: inherit;
-    }
-
-    .language-select-custom:focus {
-        outline: none;
-        border-color: var(--blue-700, #0641CC);
-        box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
-    }
-
-    .language-chevron-icon {
-        position: absolute;
-        right: 14px;
-        pointer-events: none;
-        color: var(--neutral-500, #7A8494);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -363,36 +139,24 @@
 
     .theme-card-option {
         position: relative;
-        border: 1px solid var(--neutral-400, #D0D3D9);
-        border-radius: var(--radius-md, 12px);
-        padding: 14px 12px;
+        border: 1.5px solid var(--neutral-300, #CBD5E1);
+        border-radius: 10px;
+        padding: 12px;
         cursor: pointer;
         transition: all 0.2s ease;
         background: #ffffff;
         display: flex;
         flex-direction: column;
-        gap: 10px;
-    }
-
-    [data-theme="dark"] .theme-card-option {
-        background: #182234;
-        border-color: #26354D;
+        gap: 8px;
     }
 
     .theme-card-option:hover {
-        border-color: var(--blue-600, #0751FF);
+        border-color: #0751FF;
     }
 
     .theme-card-option.selected {
-        border: 2px solid var(--blue-700, #0641CC) !important;
-        background: #ffffff;
-        box-shadow: 0 0 0 1px var(--blue-700, #0641CC);
-    }
-
-    [data-theme="dark"] .theme-card-option.selected {
-        border: 2px solid #3B82F6 !important;
-        background: #182234;
-        box-shadow: 0 0 0 1px #3B82F6;
+        border-color: #0641CC !important;
+        box-shadow: 0 0 0 2px rgba(7, 81, 255, 0.2);
     }
 
     .theme-card-option input[type="radio"] {
@@ -402,7 +166,7 @@
     }
 
     .theme-preview-box {
-        height: 38px;
+        height: 36px;
         border-radius: 6px;
         padding: 6px 10px;
         display: flex;
@@ -410,152 +174,43 @@
         gap: 6px;
     }
 
-    .preview-light {
-        background: #F1F5F9;
-        border: 1px solid #E2E8F0;
-    }
+    .preview-light { background: #F1F5F9; border: 1px solid #E2E8F0; }
+    .preview-dark { background: #1E293B; border: 1px solid #0F172A; }
+    .preview-system { background: linear-gradient(115deg, #F1F5F9 48%, #1E293B 48%); border: 1px solid #CBD5E1; }
 
-    .preview-dark {
-        background: #1E293B;
-        border: 1px solid #0F172A;
-    }
+    .preview-dot { width: 6px; height: 6px; border-radius: 50%; background: #94A3B8; }
+    .preview-bar { height: 4px; flex: 1; border-radius: 2px; background: #CBD5E1; }
+    .preview-dark .preview-dot { background: #60A5FA; }
+    .preview-dark .preview-bar { background: #334155; }
 
-    .preview-system {
-        background: linear-gradient(115deg, #F1F5F9 48%, #1E293B 48%);
-        border: 1px solid #CBD5E1;
-    }
-
-    .preview-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #94A3B8;
-    }
-
-    .preview-bar {
-        height: 4px;
-        flex: 1;
-        border-radius: 2px;
-        background: #CBD5E1;
-    }
-
-    .preview-dark .preview-dot {
-        background: #60A5FA;
-    }
-
-    .preview-dark .preview-bar {
-        background: #334155;
-    }
-
-    .preview-system .preview-dot {
-        background: #94A3B8;
-    }
-
-    .preview-system .preview-bar {
-        background: #64748B;
-    }
-
-    .theme-info-title {
-        font-size: 13px;
-        font-weight: 700;
-        color: var(--neutral-800, #1D2530);
-    }
-
-    .theme-info-desc {
-        font-size: 11px;
-        color: var(--neutral-500, #7A8494);
-        line-height: 1.3;
-    }
-
-    /* Dark Mode Harmonization ala Menu Tugas */
-    [data-theme="dark"] .settings-title {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .settings-subtitle {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .card-title {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .card-subtitle {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .profile-mini-header {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .profile-mini-name {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .profile-role-chip {
-        background: rgba(6, 65, 204, 0.35) !important;
-        border: 1px solid rgba(7, 81, 255, 0.5) !important;
-        color: #60A5FA !important;
-    }
-
-    [data-theme="dark"] .info-label {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .info-value {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .status-badge-active {
-        background: rgba(6, 78, 59, 0.5) !important;
-        color: #6EE7B7 !important;
-        border: 1px solid rgba(52, 211, 153, 0.4) !important;
-    }
-
-    [data-theme="dark"] .form-label-custom {
-        color: #E2E8F0 !important;
-    }
-
-    [data-theme="dark"] .pref-label {
-        color: #E2E8F0 !important;
-    }
-
-    [data-theme="dark"] .theme-info-title {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .theme-info-desc {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .btn-outline-custom {
-        background: #182234 !important;
-        border-color: #3E516E !important;
-        color: #E2E8F0 !important;
-    }
-
-    [data-theme="dark"] .btn-outline-custom:hover {
-        background: #1E293B !important;
-        border-color: #60A5FA !important;
-        color: #60A5FA !important;
-    }
+    /* Dark Mode Harmonization */
+    [data-theme="dark"] .profile-mini-header { border-bottom-color: #26354D !important; }
+    [data-theme="dark"] .info-label { color: #94A3B8 !important; }
+    [data-theme="dark"] .info-value { color: #F8FAFC !important; }
+    [data-theme="dark"] .callout-note { background: #0F172A !important; border-color: #26354D !important; color: #94A3B8 !important; }
+    [data-theme="dark"] .theme-card-option { background: #182234; border-color: #26354D; color: #F8FAFC; }
+    [data-theme="dark"] .theme-card-option.selected { border-color: #3B82F6 !important; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); }
 </style>
 @endpush
 
 @section('content')
 <div class="settings-page">
-    <!-- Header Halaman -->
-    <div class="settings-header">
-        <h1 class="settings-title">Akun saya</h1>
-        <p class="settings-subtitle">Kelola informasi akun dan kata sandi kamu.</p>
+
+    {{-- Header Halaman --}}
+    <div>
+        <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0 0 4px 0;">
+            Akun saya
+        </h1>
+        <p style="font-size: 0.875rem; color: var(--neutral-500, #64748B); margin: 0;">
+            Kelola informasi akun dan kata sandi kamu.
+        </p>
     </div>
 
-    <!-- Layout 2 Kolom Sesuai Referensi -->
+    {{-- Layout 2 Kolom Sesuai Referensi Gentelella --}}
     <div class="settings-grid">
-        <!-- Kolom Kiri 1: Informasi Akun -->
-        <div class="settings-card">
-            <h2 class="card-title">Informasi akun</h2>
 
+        {{-- Kolom Kiri: Informasi Akun --}}
+        <x-gentelella.x-panel title="Informasi akun" subtitle="Ringkasan data kredensial peserta terdaftar">
             <div class="profile-mini-header">
                 <div class="profile-mini-avatar">
                     @if($user->profil?->foto_url)
@@ -564,9 +219,13 @@
                         {{ strtoupper(substr($user->nama ?? $user->name ?? 'P', 0, 2)) }}
                     @endif
                 </div>
-                <div class="profile-mini-meta">
-                    <span class="profile-mini-name">{{ $user->nama ?? $user->name }}</span>
-                    <span class="profile-role-chip">Peserta Magang</span>
+                <div>
+                    <div style="font-size: 1rem; font-weight: 700; color: var(--neutral-800, #1E293B);">
+                        {{ $user->nama ?? $user->name }}
+                    </div>
+                    <x-gentelella.badge variant="info" style="margin-top: 4px;">
+                        Peserta Magang
+                    </x-gentelella.badge>
                 </div>
             </div>
 
@@ -586,7 +245,7 @@
                 <div class="info-row">
                     <span class="info-label">Status akun</span>
                     <span class="info-value">
-                        <span class="status-badge-active">Aktif</span>
+                        <x-gentelella.badge variant="success">Aktif</x-gentelella.badge>
                     </span>
                 </div>
                 <div class="info-row">
@@ -598,25 +257,22 @@
             <div class="callout-note">
                 Nama, email, dan biodata akun dapat diubah lewat menu <a href="{{ route('peserta.profil.show') }}">Profil & Biodata</a>.
             </div>
-        </div>
+        </x-gentelella.x-panel>
 
-        <!-- Kolom Kanan 1: Ganti Kata Sandi -->
-        <div class="settings-card">
-            <h2 class="card-title">Ganti kata sandi</h2>
-            <p class="card-subtitle">Gunakan kata sandi yang kuat dan belum pernah kamu pakai di tempat lain.</p>
-
+        {{-- Kolom Kanan: Ganti Kata Sandi --}}
+        <x-gentelella.x-panel title="Ganti kata sandi" subtitle="Gunakan kata sandi yang kuat dan belum pernah kamu pakai di tempat lain.">
             <form action="{{ route('peserta.pengaturan.password.update') }}" method="POST" id="passwordForm">
                 @csrf
                 @method('PUT')
 
-                <!-- Kata Sandi Saat Ini -->
-                <div class="form-group-custom">
-                    <label for="current_password" class="form-label-custom">Kata sandi saat ini</label>
+                {{-- Kata Sandi Saat Ini --}}
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="current_password" class="form-label" style="font-weight: 700;">Kata sandi saat ini</label>
                     <div class="input-password-wrapper">
                         <input type="password" 
                                name="current_password" 
                                id="current_password" 
-                               class="input-custom @error('current_password') is-invalid @enderror" 
+                               class="form-control @error('current_password') is-invalid @enderror" 
                                placeholder="••••••••" 
                                required>
                         <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('current_password', this)" aria-label="Lihat kata sandi">
@@ -627,18 +283,18 @@
                         </button>
                     </div>
                     @error('current_password')
-                        <div class="form-feedback-error">{{ $message }}</div>
+                        <span style="font-size: 0.75rem; color: #DC2626; display: block; margin-top: 4px;">{{ $message }}</span>
                     @enderror
                 </div>
 
-                <!-- Kata Sandi Baru -->
-                <div class="form-group-custom">
-                    <label for="password" class="form-label-custom">Kata sandi baru</label>
+                {{-- Kata Sandi Baru --}}
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="password" class="form-label" style="font-weight: 700;">Kata sandi baru</label>
                     <div class="input-password-wrapper">
                         <input type="password" 
                                name="password" 
                                id="password" 
-                               class="input-custom @error('password') is-invalid @enderror" 
+                               class="form-control @error('password') is-invalid @enderror" 
                                placeholder="••••••••" 
                                required>
                         <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('password', this)" aria-label="Lihat kata sandi">
@@ -649,18 +305,18 @@
                         </button>
                     </div>
                     @error('password')
-                        <div class="form-feedback-error">{{ $message }}</div>
+                        <span style="font-size: 0.75rem; color: #DC2626; display: block; margin-top: 4px;">{{ $message }}</span>
                     @enderror
                 </div>
 
-                <!-- Konfirmasi Kata Sandi Baru -->
-                <div class="form-group-custom">
-                    <label for="password_confirmation" class="form-label-custom">Konfirmasi kata sandi baru</label>
+                {{-- Konfirmasi Kata Sandi Baru --}}
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="password_confirmation" class="form-label" style="font-weight: 700;">Konfirmasi kata sandi baru</label>
                     <div class="input-password-wrapper">
                         <input type="password" 
                                name="password_confirmation" 
                                id="password_confirmation" 
-                               class="input-custom @error('password_confirmation') is-invalid @enderror" 
+                               class="form-control @error('password_confirmation') is-invalid @enderror" 
                                placeholder="••••••••" 
                                required>
                         <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('password_confirmation', this)" aria-label="Lihat kata sandi">
@@ -671,100 +327,101 @@
                         </button>
                     </div>
                     @error('password_confirmation')
-                        <div class="form-feedback-error">{{ $message }}</div>
+                        <span style="font-size: 0.75rem; color: #DC2626; display: block; margin-top: 4px;">{{ $message }}</span>
                     @enderror
                 </div>
 
-                <div class="form-hint">Minimal 8 karakter, kombinasi huruf dan angka.</div>
+                <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-bottom: 20px;">
+                    Minimal 8 karakter, kombinasi huruf dan angka.
+                </div>
 
-                <div class="form-actions-row">
-                    <button type="submit" class="btn-primary-custom">Simpan kata sandi</button>
-                    <button type="button" class="btn-outline-custom" onclick="document.getElementById('passwordForm').reset()">Batal</button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary">Simpan kata sandi</button>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('passwordForm').reset()">Batal</button>
                 </div>
             </form>
-        </div>
+        </x-gentelella.x-panel>
 
-        <!-- Kolom Kiri 2: Preferensi -->
-        <div class="settings-card">
-            <h2 class="card-title">{{ __('Preferensi') }}</h2>
+        {{-- Kolom Penuh: Preferensi --}}
+        <div style="grid-column: 1 / -1;">
+            <x-gentelella.x-panel title="{{ __('Preferensi') }}" subtitle="{{ __('Sesuaikan preferensi bahasa dan tema antarmuka portal.') }}">
+                <form action="{{ route('peserta.pengaturan.preferensi.update') }}" method="POST">
+                    @csrf
 
-            <form action="{{ route('peserta.pengaturan.preferensi.update') }}" method="POST">
-                @csrf
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                        {{-- Pilihan Bahasa --}}
+                        <div class="form-group">
+                            <label class="form-label" for="bahasaSelect" style="font-weight: 700;">{{ __('Bahasa') }}</label>
+                            <select name="bahasa" id="bahasaSelect" class="form-control">
+                                <option value="id" {{ ($bahasaAktif ?? 'id') === 'id' ? 'selected' : '' }}>{{ __('Indonesia') }}</option>
+                                <option value="en" {{ ($bahasaAktif ?? '') === 'en' ? 'selected' : '' }}>{{ __('English (US)') }}</option>
+                            </select>
+                            <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 4px; display: block;">
+                                {{ __('Berlaku untuk tampilan portal ini.') }}
+                            </span>
+                        </div>
 
-                <!-- Pilihan Bahasa -->
-                <div class="pref-group">
-                    <label class="pref-label" for="bahasaSelect">{{ __('Bahasa') }}</label>
-                    <div class="language-select-wrapper">
-                        <select name="bahasa" id="bahasaSelect" class="language-select-custom">
-                            <option value="id" {{ ($bahasaAktif ?? 'id') === 'id' ? 'selected' : '' }}>{{ __('Indonesia') }}</option>
-                            <option value="en" {{ ($bahasaAktif ?? '') === 'en' ? 'selected' : '' }}>{{ __('English (US)') }}</option>
-                        </select>
-                        <div class="language-chevron-icon" aria-hidden="true">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
-                            </svg>
+                        {{-- Pilihan Tema --}}
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight: 700;">{{ __('Tampilan') }}</label>
+                            <div class="theme-options-grid">
+                                <label class="theme-card-option {{ ($temaAktif ?? 'terang') === 'terang' ? 'selected' : '' }}" 
+                                       data-theme-val="terang" 
+                                       onclick="handleThemeSelection(this, 'terang')">
+                                    <input type="radio" name="tema" value="terang" {{ ($temaAktif ?? 'terang') === 'terang' ? 'checked' : '' }}>
+                                    <div class="theme-preview-box preview-light">
+                                        <span class="preview-dot"></span>
+                                        <span class="preview-bar"></span>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.8125rem; font-weight: 700;">{{ __('Terang') }}</div>
+                                        <div style="font-size: 0.6875rem; color: var(--neutral-500, #64748B);">{{ __('Mode default portal') }}</div>
+                                    </div>
+                                </label>
+
+                                <label class="theme-card-option {{ ($temaAktif ?? '') === 'gelap' ? 'selected' : '' }}" 
+                                       data-theme-val="gelap" 
+                                       onclick="handleThemeSelection(this, 'gelap')">
+                                    <input type="radio" name="tema" value="gelap" {{ ($temaAktif ?? '') === 'gelap' ? 'checked' : '' }}>
+                                    <div class="theme-preview-box preview-dark">
+                                        <span class="preview-dot"></span>
+                                        <span class="preview-bar"></span>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.8125rem; font-weight: 700;">{{ __('Gelap') }}</div>
+                                        <div style="font-size: 0.6875rem; color: var(--neutral-500, #64748B);">{{ __('Mode malam untuk penggunaan lama') }}</div>
+                                    </div>
+                                </label>
+
+                                <label class="theme-card-option {{ ($temaAktif ?? '') === 'sistem' ? 'selected' : '' }}" 
+                                       data-theme-val="sistem" 
+                                       onclick="handleThemeSelection(this, 'sistem')">
+                                    <input type="radio" name="tema" value="sistem" {{ ($temaAktif ?? '') === 'sistem' ? 'checked' : '' }}>
+                                    <div class="theme-preview-box preview-system">
+                                        <span class="preview-dot"></span>
+                                        <span class="preview-bar"></span>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.8125rem; font-weight: 700;">{{ __('Ikuti sistem') }}</div>
+                                        <div style="font-size: 0.6875rem; color: var(--neutral-500, #64748B);">{{ __('Sesuaikan tema dengan pengaturan OS') }}</div>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-hint" style="margin-bottom: 0;">{{ __('Berlaku untuk tampilan portal ini.') }}</div>
-                </div>
 
-                <!-- Pilihan Tampilan Tema -->
-                <div class="pref-group">
-                    <label class="pref-label">{{ __('Tampilan') }}</label>
-                    <div class="theme-options-grid">
-                        <!-- Pilihan Terang -->
-                        <label class="theme-card-option {{ ($temaAktif ?? 'terang') === 'terang' ? 'selected' : '' }}" 
-                               data-theme-val="terang" 
-                               onclick="handleThemeSelection(this, 'terang')">
-                            <input type="radio" name="tema" value="terang" {{ ($temaAktif ?? 'terang') === 'terang' ? 'checked' : '' }}>
-                            <div class="theme-preview-box preview-light">
-                                <span class="preview-dot"></span>
-                                <span class="preview-bar"></span>
-                            </div>
-                            <div>
-                                <div class="theme-info-title">{{ __('Terang') }}</div>
-                                <div class="theme-info-desc">{{ __('Mode default portal') }}</div>
-                            </div>
-                        </label>
-
-                        <!-- Pilihan Gelap -->
-                        <label class="theme-card-option {{ ($temaAktif ?? '') === 'gelap' ? 'selected' : '' }}" 
-                               data-theme-val="gelap" 
-                               onclick="handleThemeSelection(this, 'gelap')">
-                            <input type="radio" name="tema" value="gelap" {{ ($temaAktif ?? '') === 'gelap' ? 'checked' : '' }}>
-                            <div class="theme-preview-box preview-dark">
-                                <span class="preview-dot"></span>
-                                <span class="preview-bar"></span>
-                            </div>
-                            <div>
-                                <div class="theme-info-title">{{ __('Gelap') }}</div>
-                                <div class="theme-info-desc">{{ __('Mode malam untuk penggunaan lama') }}</div>
-                            </div>
-                        </label>
-
-                        <!-- Pilihan Ikuti Sistem -->
-                        <label class="theme-card-option {{ ($temaAktif ?? '') === 'sistem' ? 'selected' : '' }}" 
-                               data-theme-val="sistem" 
-                               onclick="handleThemeSelection(this, 'sistem')">
-                            <input type="radio" name="tema" value="sistem" {{ ($temaAktif ?? '') === 'sistem' ? 'checked' : '' }}>
-                            <div class="theme-preview-box preview-system">
-                                <span class="preview-dot"></span>
-                                <span class="preview-bar"></span>
-                            </div>
-                            <div>
-                                <div class="theme-info-title">{{ __('Ikuti sistem') }}</div>
-                                <div class="theme-info-desc">{{ __('Sesuaikan tema dengan pengaturan OS') }}</div>
-                            </div>
-                        </label>
+                    <div style="margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary">{{ __('Simpan preferensi') }}</button>
                     </div>
-                </div>
-
-                <button type="submit" class="btn-primary-custom" style="margin-top: 8px;">{{ __('Simpan preferensi') }}</button>
-            </form>
+                </form>
+            </x-gentelella.x-panel>
         </div>
+
     </div>
+
 </div>
 
+@push('scripts')
 <script>
     function togglePasswordVisibility(fieldId, btn) {
         const input = document.getElementById(fieldId);
@@ -773,7 +430,6 @@
         const isPassword = input.type === 'password';
         input.type = isPassword ? 'text' : 'password';
 
-        // Ganti ikon toggle
         if (isPassword) {
             btn.innerHTML = `
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -816,4 +472,5 @@
         } catch (e) {}
     });
 </script>
+@endpush
 @endsection

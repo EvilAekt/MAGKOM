@@ -102,7 +102,7 @@
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- 1. READ-ONLY NOTICE BANNER -->
-    <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; box-shadow: var(--shadow-subtle);">
+    <x-gentelella.card style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
         <div style="display: flex; align-items: center; gap: 1rem;">
             <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--blue-600); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -114,10 +114,10 @@
                 </p>
             </div>
         </div>
-    </div>
+    </x-gentelella.card>
 
     <!-- 2. PARTICIPANT OVERVIEW PROFILE CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.75rem 2rem; box-shadow: var(--shadow-subtle);">
+    <x-gentelella.card style="padding: 1.75rem 2rem;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
             <div style="display: flex; align-items: center; gap: 1.25rem;">
                 <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--blue-tint); border: 2px solid var(--blue-tint-line); color: var(--blue-700); font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
@@ -168,11 +168,11 @@
                 <small style="color: var(--neutral-600);">Durasi: {{ $penempatan->durasi_bulan ?? 1 }} Bulan</small>
             </div>
         </div>
-    </div>
+    </x-gentelella.card>
 
     <!-- 3. TAB SECTION CONTAINER -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
-        <div style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--neutral-200); background: var(--neutral-100); display: flex; gap: 0.75rem; flex-wrap: wrap;">
+    <x-gentelella.x-panel title="Rekam Jejak Pemantauan Bimbingan" subtitle="Supervisi komprehensif terhadap penugasan, logbook harian, dan snapshot nilai peserta">
+        <div style="padding: 0.75rem 0 1.25rem 0; border-bottom: 1px solid var(--neutral-200); display: flex; gap: 0.75rem; flex-wrap: wrap;">
             <button type="button" onclick="switchMonitorTab('tugas')" id="tabBtnTugas" style="padding: 0.55rem 1.25rem; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; cursor: pointer; background: var(--blue-600); color: #FFFFFF; transition: all 0.15s;">
                 Tugas & Progres ({{ $penempatan->tugas->count() }})
             </button>
@@ -350,7 +350,7 @@
                 </div>
             @endif
         </div>
-    </div>
+    </x-gentelella.x-panel>
 </div>
 
 <script>

@@ -1,34 +1,29 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Penilaian Magang - Portal MagKom')
+@section('page_title', 'Evaluasi Rubrik & Penilaian Magang')
+@section('page_description', 'Kelola lembar evaluasi kompetensi rubrik, catat riwayat revisi nilai, dan tetapkan kelulusan magang.')
+
+@section('breadcrumbs')
+    <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: var(--neutral-600, #64748B);">
+        <a href="{{ route('pembimbing.dashboard') }}" style="color: var(--neutral-600, #64748B); text-decoration: none;">Dashboard</a>
+        <span>/</span>
+        <span style="color: var(--neutral-900, #0F172A); font-weight: 700;">Penilaian Magang</span>
+    </nav>
+@endsection
+
+@section('page_actions')
+    <div style="display: flex; gap: 0.75rem;">
+        <a href="{{ route('pembimbing.penilaian.ekspor-bidang') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 38px; padding: 0 1.15rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.8125rem; border-radius: 8px; text-decoration: none; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Ekspor Rekap Bimbingan (CSV)</span>
+        </a>
+    </div>
+@endsection
 
 @section('content')
 <div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-
-
-    <!-- Header & Breadcrumbs -->
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-        <div>
-            <nav style="font-size: 0.8rem; color: var(--neutral-500); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-                <a href="{{ route('pembimbing.dashboard') }}" style="color: var(--neutral-600); text-decoration: none;">Dashboard</a>
-                <span>/</span>
-                <span style="color: var(--neutral-900); font-weight: 600;">Penilaian Magang</span>
-            </nav>
-            <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
-                Evaluasi Rubrik & Penilaian Magang (F-10, F-12)
-            </h1>
-            <p style="font-size: 0.875rem; color: var(--neutral-600); margin: 0.25rem 0 0 0;">
-                Kelola lembar evaluasi kompetensi rubrik, catat riwayat revisi nilai, dan tetapkan kelulusan magang.
-            </p>
-        </div>
-        <div>
-            <a href="{{ route('pembimbing.penilaian.ekspor-bidang') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.8125rem; border-radius: 8px; text-decoration: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>Ekspor Rekap Bimbingan (CSV)</span>
-            </a>
-        </div>
-    </div>
 
     <!-- Info Banner Panduan -->
     <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #0641CC; border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
@@ -92,7 +87,7 @@
     </div>
 
     <!-- Data Table Card -->
-    <div class="app-card" style="background: var(--neutral-0); border-radius: 14px; border: 1px solid var(--neutral-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
+    <x-gentelella.x-panel title="Daftar Evaluasi Nilai Mentee" subtitle="Rekap status draf, finalisasi rubrik, dan riwayat perbaikan nilai">
         @if($penempatanList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-500);">
                 <div style="width: 64px; height: 64px; background: var(--neutral-100); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: var(--neutral-400);">
@@ -108,10 +103,10 @@
                 </p>
             </div>
         @else
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
+            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
-                        <tr style="border-bottom: 1px solid var(--neutral-200); background: #f8fafc; color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        <tr class="headings" style="border-bottom: 1px solid var(--neutral-200); background: #f8fafc; color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                             <th style="padding: 1rem 1.5rem;">Peserta Magang</th>
                             <th style="padding: 1rem 1rem;">Institusi & Jurusan</th>
                             <th style="padding: 1rem 1rem;">Status Magang</th>
@@ -210,6 +205,6 @@
                 </div>
             @endif
         @endif
-    </div>
+    </x-gentelella.x-panel>
 </div>
 @endsection

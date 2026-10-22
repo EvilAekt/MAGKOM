@@ -108,10 +108,15 @@
 @section('content')
 <div style="max-width: 960px; margin: 0 auto;">
 
+    <x-gentelella.page-title
+        title="Lembar Evaluasi Nilai Magang"
+        description="Hasil evaluasi kompetensi akhir dan rincian skor 5 rubrik penilaian resmi kedinasan."
+    />
+
     @if(!$penempatan || !$isFinal)
         {{-- State Belum Ada Penilaian Final --}}
-        <div class="card" style="text-align: center; padding: 48px 24px;">
-            <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--amber-100); color: var(--amber-700); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+        <x-gentelella.card style="text-align: center; padding: 48px 24px;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--amber-100, #FEF3C7); color: var(--amber-700, #B45309); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
                 <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
@@ -128,7 +133,7 @@
                     | Pembimbing: <strong>{{ $penempatan->pembimbing?->name ?? 'Belum ditentukan' }}</strong>
                 </div>
             @endif
-        </div>
+        </x-gentelella.card>
     @else
         {{-- State Nilai Sudah Final --}}
         <div class="nilai-summary-card">
@@ -144,7 +149,7 @@
                 </p>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
                 <div class="nilai-score-box">
                     <div>
                         <div style="font-size: 11px; text-transform: uppercase; opacity: 0.8;">Nilai Akhir</div>
@@ -156,7 +161,7 @@
                     </div>
                 </div>
 
-                <a href="{{ route('peserta.nilai.unduh') }}" class="btn btn-unduh-nilai" style="background: #ffffff; color: var(--blue-700); height: 44px; padding: 0 20px; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <a href="{{ route('peserta.nilai.unduh') }}" class="btn btn-unduh-nilai" style="background: #ffffff; color: var(--blue-700); height: 44px; padding: 0 20px; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                     </svg>
@@ -166,14 +171,19 @@
         </div>
 
         {{-- Tabel Rincian 5 Rubrik Penilaian --}}
-        <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 24px;">
-            <div style="padding: 20px 24px; border-bottom: 1px solid var(--neutral-200);">
-                <h3 class="card-title">Rincian 5 Rubrik Penilaian</h3>
-                <p class="card-subtitle">Snapshot bobot dan skor masing-masing kompetensi evaluasi peserta.</p>
-            </div>
+        <x-gentelella.card
+            title="Rincian 5 Rubrik Penilaian"
+            subtitle="Snapshot bobot dan skor masing-masing kompetensi evaluasi peserta."
+            class="mb-4"
+        >
+            <x-slot:icon>
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-primary">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+            </x-slot:icon>
 
-            <div class="table-container">
-                <table class="table">
+            <div class="table-container" style="margin: -10px -20px -20px -20px;">
+                <table class="table" style="margin-bottom: 0;">
                     <thead>
                         <tr>
                             <th style="width: 50px;">No</th>
@@ -202,7 +212,7 @@
                                     <strong>{{ $kriteria }}</strong>
                                     @if($detail->rubrik?->deskripsi)
                                         <div style="font-size: 12px; color: var(--neutral-600); margin-top: 2px;">
-                                            {{ $detail->rubrik->deskripsi }}
+                                             {{ $detail->rubrik->deskripsi }}
                                         </div>
                                     @endif
                                 </td>
@@ -232,18 +242,18 @@
                     </tfoot>
                 </table>
             </div>
-        </div>
+        </x-gentelella.card>
 
         {{-- Catatan Evaluasi Pembimbing --}}
         @if($penilaian->catatan)
-            <div class="card">
-                <h4 style="font-size: 14px; font-weight: 700; color: var(--neutral-700); text-transform: uppercase; margin-bottom: 8px;">
-                    Catatan & Ulasan Pembimbing Lapangan:
-                </h4>
-                <div class="catatan-pembimbing-box" style="font-size: 14px; color: var(--neutral-800); line-height: 1.6; white-space: pre-line; padding: 14px; background: var(--neutral-100); border-radius: var(--radius-default); border-left: 3px solid var(--blue-600);">
-                    {{ $penilaian->catatan }}
+            <x-gentelella.callout
+                type="info"
+                title="Catatan & Ulasan Pembimbing Lapangan"
+            >
+                <div class="catatan-pembimbing-box" style="font-size: 14px; line-height: 1.6; white-space: pre-line; color: inherit;">
+                    "{{ $penilaian->catatan }}"
                 </div>
-            </div>
+            </x-gentelella.callout>
         @endif
     @endif
 

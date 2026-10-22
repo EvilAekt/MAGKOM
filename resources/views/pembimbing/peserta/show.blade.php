@@ -34,50 +34,52 @@
     </div>
 
     <!-- Header Profil Hero Card -->
-    <div style="background: #ffffff; border-radius: 16px; border: 1px solid var(--neutral-200); padding: 1.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
-        <div style="display: flex; align-items: center; gap: 1.25rem;">
-            <div style="width: 68px; height: 68px; border-radius: 16px; background: linear-gradient(135deg, #0641CC 0%, #3B82F6 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(6, 65, 204, 0.25);">
-                {{ strtoupper(substr($penempatan->peserta?->nama ?? 'P', 0, 2)) }}
+    <x-gentelella.card style="padding: 1.75rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 1.25rem;">
+                <div style="width: 68px; height: 68px; border-radius: 16px; background: linear-gradient(135deg, #0641CC 0%, #3B82F6 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(6, 65, 204, 0.25); flex-shrink: 0;">
+                    {{ strtoupper(substr($penempatan->peserta?->nama ?? 'P', 0, 2)) }}
+                </div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                        <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
+                            {{ $penempatan->peserta?->nama }}
+                        </h2>
+                        <span style="font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px; background: {{ $penempatan->status->value === 'aktif' ? '#d1fae5' : '#e0e7ff' }}; color: {{ $penempatan->status->value === 'aktif' ? '#065f46' : '#3730a3' }};">
+                            Status: {{ ucfirst($penempatan->status->value) }}
+                        </span>
+                        <span style="font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px; background: rgba(6, 65, 204, 0.08); color: #0641CC;">
+                            Jalur {{ ucfirst($penempatan->jalur?->value ?? 'Umum') }}
+                        </span>
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--neutral-600); margin-top: 0.25rem;">
+                        {{ $penempatan->peserta?->profil?->institusi ?? 'Institusi Belum Dilengkapi' }} &bull; {{ $penempatan->peserta?->profil?->jurusan?->nama_jurusan ?? 'Jurusan Belum Dilengkapi' }}
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--neutral-500); margin-top: 0.2rem;">
+                        Bidang: <strong>{{ $penempatan->bidang?->nama_bidang ?? '-' }}</strong> &bull; NIM/NISN: <strong>{{ $penempatan->peserta?->profil?->nim_nisn ?? '-' }}</strong>
+                    </div>
+                </div>
             </div>
-            <div>
-                <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-                    <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
-                        {{ $penempatan->peserta?->nama }}
-                    </h2>
-                    <span style="font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px; background: {{ $penempatan->status->value === 'aktif' ? '#d1fae5' : '#e0e7ff' }}; color: {{ $penempatan->status->value === 'aktif' ? '#065f46' : '#3730a3' }};">
-                        Status: {{ ucfirst($penempatan->status->value) }}
-                    </span>
-                    <span style="font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px; background: rgba(6, 65, 204, 0.08); color: #0641CC;">
-                        Jalur {{ ucfirst($penempatan->jalur?->value ?? 'Umum') }}
-                    </span>
-                </div>
-                <div style="font-size: 0.875rem; color: var(--neutral-600); margin-top: 0.25rem;">
-                    {{ $penempatan->peserta?->profil?->institusi ?? 'Institusi Belum Dilengkapi' }} &bull; {{ $penempatan->peserta?->profil?->jurusan?->nama_jurusan ?? 'Jurusan Belum Dilengkapi' }}
-                </div>
-                <div style="font-size: 0.8rem; color: var(--neutral-500); margin-top: 0.2rem;">
-                    Bidang: <strong>{{ $penempatan->bidang?->nama_bidang ?? '-' }}</strong> &bull; NIM/NISN: <strong>{{ $penempatan->peserta?->profil?->nim_nisn ?? '-' }}</strong>
-                </div>
-            </div>
-        </div>
 
-        <!-- Quick Action Buttons -->
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <a href="{{ route('pembimbing.logbook.index', ['penempatan_id' => $penempatan->id]) }}" style="padding: 0.5rem 0.85rem; background: var(--neutral-100); color: var(--neutral-700); font-size: 0.8rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                Logbook Mentee
-            </a>
-            <a href="{{ route('pembimbing.tugas.index', ['penempatan_id' => $penempatan->id]) }}" style="padding: 0.5rem 0.85rem; background: rgba(6, 65, 204, 0.08); color: #0641CC; font-size: 0.8rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-                Tugas Mentee
-            </a>
+            <!-- Quick Action Buttons -->
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <a href="{{ route('pembimbing.logbook.index', ['penempatan_id' => $penempatan->id]) }}" style="padding: 0.5rem 0.85rem; background: var(--neutral-100); color: var(--neutral-700); font-size: 0.8rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    Logbook Mentee
+                </a>
+                <a href="{{ route('pembimbing.tugas.index', ['penempatan_id' => $penempatan->id]) }}" style="padding: 0.5rem 0.85rem; background: rgba(6, 65, 204, 0.08); color: #0641CC; font-size: 0.8rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                    Tugas Mentee
+                </a>
+            </div>
         </div>
-    </div>
+    </x-gentelella.card>
 
     <!-- 3 Widget KPI Kinerja Mentee -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;">
         
         <!-- Widget 1: Tugas Mentee -->
-        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                 <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-500); text-transform: uppercase;">Penyelesaian Tugas</span>
                 <span style="font-size: 0.8rem; font-weight: 700; color: #0641CC;">
@@ -94,10 +96,10 @@
                 <span>{{ $tugasAktif }} tugas sedang berjalan</span>
                 <span>Tingkat Selesai: {{ $persenTugas }}%</span>
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- Widget 2: Logbook Harian -->
-        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                 <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-500); text-transform: uppercase;">Kedisiplinan Logbook</span>
                 <span style="font-size: 0.8rem; font-weight: 700; color: #d97706;">
@@ -117,10 +119,10 @@
             <div style="font-size: 0.75rem; color: var(--neutral-500); text-align: right;">
                 Rata-rata 1 entri per hari kerja dinas
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- Widget 3: Status Nilai Magang -->
-        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                 <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-500); text-transform: uppercase;">Status Penilaian</span>
                 @if($penempatan->penilaian?->status->value === 'final')
@@ -147,7 +149,7 @@
                     Kelola Nilai &rarr;
                 </a>
             </div>
-        </div>
+        </x-gentelella.card>
 
     </div>
 
@@ -166,7 +168,7 @@
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem;">
         
         {{-- Card Donut Chart: Komposisi Tugas --}}
-        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <x-gentelella.card style="padding: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
                 <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 10 10h-10z"></path></svg>
@@ -220,10 +222,10 @@
                     @endif
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
 
         {{-- Card Bar Chart: Timeline Logbook Mingguan --}}
-        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <x-gentelella.card style="padding: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
                 <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
@@ -271,7 +273,7 @@
                 <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #EF4444;"></span> Perlu Revisi</span>
                 <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #E2E8F0;"></span> Belum Terisi</span>
             </div>
-        </div>
+        </x-gentelella.card>
 
     </div>
 

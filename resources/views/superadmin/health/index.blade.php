@@ -112,34 +112,32 @@
 
     {{-- ALERT FEEDBACK NOTIFIKASI --}}
     @if(session('status_keberhasilan'))
-        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #065F46; padding: 1rem 1.25rem; border-radius: 10px; display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; font-weight: 600;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            <span>{{ session('status_keberhasilan') }}</span>
-        </div>
+        <x-gentelella.callout type="success" title="Operasi Berhasil">
+            {{ session('status_keberhasilan') }}
+        </x-gentelella.callout>
     @endif
 
     @if(session('status_kesalahan'))
-        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #991B1B; padding: 1rem 1.25rem; border-radius: 10px; display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; font-weight: 600;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            <span>{{ session('status_kesalahan') }}</span>
-        </div>
+        <x-gentelella.callout type="danger" title="Operasi Gagal">
+            {{ session('status_kesalahan') }}
+        </x-gentelella.callout>
     @endif
 
     {{-- 1. SLA UPTIME & HEALTH STATUS HERO BANNER --}}
     <div style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border-radius: 16px; padding: 1.75rem 2rem; color: #FFFFFF; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);">
         <div>
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
                 <span style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 800; background: rgba(16, 185, 129, 0.2); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.4); text-transform: uppercase; letter-spacing: 0.05em;">
                     <span style="width: 8px; height: 8px; border-radius: 50%; background: #34D399; box-shadow: 0 0 8px #34D399;"></span>
                     {{ $slaStatus }}
                 </span>
                 <span style="font-size: 0.8125rem; color: #94A3B8;">Tingkat Keandalan Layanan Instansi: <strong>{{ $slaPercent }}% Uptime</strong></span>
             </div>
-            <h2 style="font-size: 1.625rem; font-weight: 800; margin: 0; letter-spacing: -0.02em;">
+            <h2 style="font-size: 1.625rem; font-weight: 800; margin: 0; letter-spacing: -0.02em; color: #FFFFFF;">
                 Pusat Telemetri Infrastruktur Portal MagKom
             </h2>
             <p style="font-size: 0.875rem; color: #CBD5E1; margin: 0.35rem 0 0 0; max-width: 680px;">
-                Dinas Komunikasi dan Informatika Kabupaten Sleman — Sistem aktif memantau integritas data, ketersediaan disk storage, latensi query, dan thread pemrosesan.
+                Dinas Komunikasi dan Informatika Kabupaten Sleman &mdash; Sistem aktif memantau integritas data, ketersediaan disk storage, latensi query, dan thread pemrosesan.
             </p>
         </div>
 
@@ -160,18 +158,17 @@
     </div>
 
     {{-- 2. SUITE PEMELIHARAAN CEPAT (ONE-CLICK DIAGNOSTIC SUITE - 4 ACTIONS) --}}
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-300); border-radius: 14px; padding: 1.5rem; box-shadow: var(--shadow-subtle);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-            <div>
-                <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--neutral-900); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                    <span>Suite Pemeliharaan Cepat Proaktif (One-Click Diagnostic Suite)</span>
-                </h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.2rem 0 0 0;">Jalankan aksi pemeliharaan langsung untuk mencegah hambatan operasional dan memastikan kestabilan portal.</p>
-            </div>
-        </div>
+    <x-gentelella.card
+        title="Suite Pemeliharaan Cepat Proaktif (One-Click Diagnostic Suite)"
+        subtitle="Jalankan aksi pemeliharaan langsung untuk mencegah hambatan operasional dan memastikan kestabilan portal."
+    >
+        <x-slot:icon>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700, #0641CC)" stroke-width="2.5">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+        </x-slot:icon>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
             <!-- Aksi 1: Security Sweep -->
             <form action="{{ route('superadmin.health.security-sweep') }}" method="POST" onsubmit="return confirm('Jalankan pembersihan higienitas keamanan sistem sekarang? Token kedaluwarsa, berkas arsip sementara (>2 jam), dan pendaftar unverified (>72 jam) akan dibersihkan.');">
                 @csrf
@@ -208,156 +205,171 @@
                 </button>
             </form>
         </div>
-    </div>
+    </x-gentelella.card>
 
     {{-- 3. GRID TELEMETRI UTAMA --}}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
 
         {{-- KARTU 1: BASIS DATA --}}
-        <div class="health-card" style="border-top: 4px solid #0641CC;">
-            <div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                    <h3 style="font-size: 1rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-                        <span>Koneksi Basis Data</span>
-                    </h3>
-                    @if($dbStatus === 'OK')
-                        <span class="metric-badge-ok">● Terhubung (OK)</span>
-                    @else
-                        <span class="metric-badge-warn">⚠️ Bermasalah</span>
-                    @endif
-                </div>
+        <x-gentelella.card
+            title="Koneksi Basis Data"
+            style="border-top: 4px solid #0641CC;"
+        >
+            <x-slot:icon>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                </svg>
+            </x-slot:icon>
 
-                <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem;">
-                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-600);">Driver Basis Data:</span>
-                        <strong style="color: var(--neutral-900); text-transform: uppercase;">{{ $dbDriver }}</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-600);">Latensi Query (SELECT 1):</span>
-                        <strong style="color: {{ $dbLatency < 25 ? '#059669' : ($dbLatency < 100 ? '#D97706' : '#DC2626') }}; font-family: monospace;">{{ $dbLatency }} ms</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-600);">Nama Database:</span>
-                        <strong style="color: var(--neutral-900); font-family: monospace;">{{ $dbName }}</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: var(--neutral-600);">Jumlah Tabel Terdaftar:</span>
-                        <strong style="color: var(--blue-700);">{{ $totalTables }} Tabel</strong>
-                    </div>
+            <x-slot:actions>
+                @if($dbStatus === 'OK')
+                    <span class="metric-badge-ok">● Terhubung (OK)</span>
+                @else
+                    <span class="metric-badge-warn">⚠️ Bermasalah</span>
+                @endif
+            </x-slot:actions>
+
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
+                    <span style="color: var(--neutral-600);">Driver Basis Data:</span>
+                    <strong style="color: var(--neutral-900); text-transform: uppercase;">{{ $dbDriver }}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
+                    <span style="color: var(--neutral-600);">Latensi Query (SELECT 1):</span>
+                    <strong style="color: {{ $dbLatency < 25 ? '#059669' : ($dbLatency < 100 ? '#D97706' : '#DC2626') }}; font-family: monospace;">{{ $dbLatency }} ms</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
+                    <span style="color: var(--neutral-600);">Nama Database:</span>
+                    <strong style="color: var(--neutral-900); font-family: monospace;">{{ $dbName }}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--neutral-600);">Jumlah Tabel Terdaftar:</span>
+                    <strong style="color: var(--blue-700);">{{ $totalTables }} Tabel</strong>
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
 
         {{-- KARTU 2: PENYIMPANAN STORAGE & DISK --}}
-        <div class="health-card" style="border-top: 4px solid #10B981;">
-            <div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                    <h3 style="font-size: 1rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                        <span>Storage &amp; Kapasitas Disk</span>
-                    </h3>
-                    @if($isWritable)
-                        <span class="metric-badge-ok">● Izin Tulis Aktif</span>
-                    @else
-                        <span class="metric-badge-warn">⚠️ Read-Only</span>
-                    @endif
-                </div>
+        <x-gentelella.card
+            title="Storage &amp; Kapasitas Disk"
+            style="border-top: 4px solid #10B981;"
+        >
+            <x-slot:icon>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </x-slot:icon>
 
-                <div style="margin-bottom: 1rem;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.35rem;">
-                        <span style="color: var(--neutral-600);">Kapasitas Disk Terpakai:</span>
-                        <span style="color: var(--blue-700);">{{ $diskUsedPercent }}% (Sisa {{ $diskFreeGb }} GB)</span>
-                    </div>
-                    <div style="width: 100%; height: 8px; background: var(--neutral-200); border-radius: 9999px; overflow: hidden;">
-                        <div style="height: 100%; width: {{ min(100, $diskUsedPercent) }}%; background: {{ $diskUsedPercent > 85 ? '#DC2626' : '#10B981' }}; border-radius: 9999px;"></div>
-                    </div>
-                </div>
+            <x-slot:actions>
+                @if($isWritable)
+                    <span class="metric-badge-ok">● Izin Tulis Aktif</span>
+                @else
+                    <span class="metric-badge-warn">⚠️ Read-Only</span>
+                @endif
+            </x-slot:actions>
 
-                <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem;">
-                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-600);">Total Berkas Dokumen:</span>
-                        <strong style="color: var(--neutral-900);">{{ number_format($totalDokumenCount) }} Berkas</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-600);">Ukuran Berkas Dokumen:</span>
-                        <strong style="color: var(--blue-700);">{{ $totalDokumenMb }} MB</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: var(--neutral-600);">Snapshot Backup Terakhir:</span>
-                        <strong style="color: var(--neutral-700);">{{ $lastBackupTime ?? 'Belum ada cadangan' }}</strong>
-                    </div>
+            <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.35rem;">
+                    <span style="color: var(--neutral-600);">Kapasitas Disk Terpakai:</span>
+                    <span style="color: var(--blue-700);">{{ $diskUsedPercent }}% (Sisa {{ $diskFreeGb }} GB)</span>
+                </div>
+                <div style="width: 100%; height: 8px; background: var(--neutral-200); border-radius: 9999px; overflow: hidden;">
+                    <div style="height: 100%; width: {{ min(100, $diskUsedPercent) }}%; background: {{ $diskUsedPercent > 85 ? '#DC2626' : '#10B981' }}; border-radius: 9999px;"></div>
                 </div>
             </div>
-        </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
+                    <span style="color: var(--neutral-600);">Total Berkas Dokumen:</span>
+                    <strong style="color: var(--neutral-900);">{{ number_format($totalDokumenCount) }} Berkas</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
+                    <span style="color: var(--neutral-600);">Ukuran Berkas Dokumen:</span>
+                    <strong style="color: var(--blue-700);">{{ $totalDokumenMb }} MB</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--neutral-600);">Snapshot Backup Terakhir:</span>
+                    <strong style="color: var(--neutral-700);">{{ $lastBackupTime ?? 'Belum ada cadangan' }}</strong>
+                </div>
+            </div>
+        </x-gentelella.card>
 
         {{-- KARTU 3: RUNTIME & TELEMETRI FRAMEWORK --}}
-        <div class="health-card" style="border-top: 4px solid #7C3AED;">
-            <div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                    <h3 style="font-size: 1rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-                        <span>Runtime &amp; Threads</span>
-                    </h3>
-                    <span style="font-size: 0.72rem; font-weight: 700; color: #7C3AED; background: #F3E8FF; padding: 0.2rem 0.6rem; border-radius: 9999px;">
-                        PHP {{ $runtimeInfo['php_version'] }}
-                    </span>
-                </div>
+        <x-gentelella.card
+            title="Runtime & Threads"
+            style="border-top: 4px solid #7C3AED;"
+        >
+            <x-slot:icon>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2">
+                    <polyline points="4 17 10 11 4 5"></polyline>
+                    <line x1="12" y1="19" x2="20" y2="19"></line>
+                </svg>
+            </x-slot:icon>
 
-                <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem;">
-                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-600);">Laravel Framework:</span>
-                        <strong style="color: var(--neutral-900);">v{{ $runtimeInfo['laravel_version'] }} ({{ strtoupper($runtimeInfo['app_env']) }})</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-600);">Driver Cache / Session:</span>
-                        <strong style="color: var(--neutral-900);">{{ $runtimeInfo['cache_driver'] }} / {{ $runtimeInfo['session_driver'] }}</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-600);">Queue Failed Jobs:</span>
-                        <strong style="color: {{ $failedJobsCount > 0 ? '#DC2626' : '#059669' }};">{{ $failedJobsCount }} Gagal</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: var(--neutral-600);">Total Log Audit:</span>
-                        <strong style="color: #059669;">{{ number_format($totalAudit) }} Log</strong>
-                    </div>
+            <x-slot:actions>
+                <span style="font-size: 0.72rem; font-weight: 700; color: #7C3AED; background: #F3E8FF; padding: 0.2rem 0.6rem; border-radius: 9999px;">
+                    PHP {{ $runtimeInfo['php_version'] }}
+                </span>
+            </x-slot:actions>
+
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
+                    <span style="color: var(--neutral-600);">Laravel Framework:</span>
+                    <strong style="color: var(--neutral-900);">v{{ $runtimeInfo['laravel_version'] }} ({{ strtoupper($runtimeInfo['app_env']) }})</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
+                    <span style="color: var(--neutral-600);">Driver Cache / Session:</span>
+                    <strong style="color: var(--neutral-900);">{{ $runtimeInfo['cache_driver'] }} / {{ $runtimeInfo['session_driver'] }}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
+                    <span style="color: var(--neutral-600);">Queue Failed Jobs:</span>
+                    <strong style="color: {{ $failedJobsCount > 0 ? '#DC2626' : '#059669' }};">{{ $failedJobsCount }} Gagal</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--neutral-600);">Total Log Audit:</span>
+                    <strong style="color: #059669;">{{ number_format($totalAudit) }} Log</strong>
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
 
         {{-- KARTU 4: HIGIENITAS KEAMANAN --}}
-        <div class="health-card" style="border-top: 4px solid #DC2626;">
-            <div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                    <h3 style="font-size: 1rem; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                        <span>Higienitas Keamanan</span>
-                    </h3>
-                    <span class="{{ ($sweeperStats['pending_tokens'] > 0 || $sweeperStats['pending_temp_files'] > 0 || $sweeperStats['pending_unverified_users'] > 0) ? 'metric-badge-warn' : 'metric-badge-ok' }}">
-                        {{ ($sweeperStats['pending_tokens'] > 0 || $sweeperStats['pending_temp_files'] > 0 || $sweeperStats['pending_unverified_users'] > 0) ? 'Perlu Sweep' : 'Higienis' }}
-                    </span>
-                </div>
+        <x-gentelella.card
+            title="Higienitas Keamanan"
+            style="border-top: 4px solid #DC2626;"
+        >
+            <x-slot:icon>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </x-slot:icon>
 
-                <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem;">
-                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-600);">Token Reset Kedaluwarsa:</span>
-                        <strong style="color: {{ $sweeperStats['pending_tokens'] > 0 ? '#DC2626' : '#059669' }};">{{ $sweeperStats['pending_tokens'] }} Token</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-600);">Berkas ZIP Sementara (>2 jam):</span>
-                        <strong style="color: {{ $sweeperStats['pending_temp_files'] > 0 ? '#DC2626' : '#059669' }};">{{ $sweeperStats['pending_temp_files'] }} Berkas</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-600);">Pendaftar Unverified (>72 jam):</span>
-                        <strong style="color: {{ $sweeperStats['pending_unverified_users'] > 0 ? '#DC2626' : '#059669' }};">{{ $sweeperStats['pending_unverified_users'] }} Akun</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: var(--neutral-600);">Sweep Terakhir:</span>
-                        <strong style="color: var(--neutral-700);">{{ $sweeperStats['last_sweep_at'] ?? 'Belum ada catatan' }}</strong>
-                    </div>
+            <x-slot:actions>
+                <span class="{{ ($sweeperStats['pending_tokens'] > 0 || $sweeperStats['pending_temp_files'] > 0 || $sweeperStats['pending_unverified_users'] > 0) ? 'metric-badge-warn' : 'metric-badge-ok' }}">
+                    {{ ($sweeperStats['pending_tokens'] > 0 || $sweeperStats['pending_temp_files'] > 0 || $sweeperStats['pending_unverified_users'] > 0) ? 'Perlu Sweep' : 'Higienis' }}
+                </span>
+            </x-slot:actions>
+
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
+                    <span style="color: var(--neutral-600);">Token Reset Kedaluwarsa:</span>
+                    <strong style="color: {{ $sweeperStats['pending_tokens'] > 0 ? '#DC2626' : '#059669' }};">{{ $sweeperStats['pending_tokens'] }} Token</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
+                    <span style="color: var(--neutral-600);">Berkas ZIP Sementara (>2 jam):</span>
+                    <strong style="color: {{ $sweeperStats['pending_temp_files'] > 0 ? '#DC2626' : '#059669' }};">{{ $sweeperStats['pending_temp_files'] }} Berkas</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--neutral-300); padding-bottom: 0.5rem;">
+                    <span style="color: var(--neutral-600);">Pendaftar Unverified (>72 jam):</span>
+                    <strong style="color: {{ $sweeperStats['pending_unverified_users'] > 0 ? '#DC2626' : '#059669' }};">{{ $sweeperStats['pending_unverified_users'] }} Akun</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--neutral-600);">Sweep Terakhir:</span>
+                    <strong style="color: var(--neutral-700);">{{ $sweeperStats['last_sweep_at'] ?? 'Belum ada catatan' }}</strong>
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
 
     </div>
 </div>

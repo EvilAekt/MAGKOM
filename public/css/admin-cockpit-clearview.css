@@ -1,0 +1,388 @@
+/* ==========================================================================
+   Admin Cockpit Clearview Theme - MagKom Sleman
+   Mengadopsi Estetika Visual "Clearview Admin Console" ke dalam Arsitektur Gentelella
+   ========================================================================== */
+
+:root {
+  --cv-blue-950: #041238;
+  --cv-blue-900: #061e5b;
+  --cv-blue-800: #06318c;
+  --cv-blue-700: #0641cc;
+  --cv-blue-600: #0751ff;
+  --cv-blue-tint: #eff6ff;
+  --cv-paper: #f8fafc;
+  --cv-surface: #ffffff;
+  --cv-line: #e2e8f0;
+  --cv-line-strong: #cbd5e1;
+  --cv-ink: #0f172a;
+  --cv-ink-muted: #64748b;
+  --cv-ok: #10b981;
+  --cv-warn: #f59e0b;
+  --cv-bad: #ef4444;
+  --cv-contour: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300' viewBox='0 0 600 300' fill='none' stroke='white' stroke-opacity='.09' stroke-width='1.2'%3E%3Cpath d='M-20 220C80 180 120 250 220 200S380 90 480 130 620 60 640 40'/%3E%3Cpath d='M-20 250C90 210 140 280 240 230S390 120 500 160 630 90 650 70'/%3E%3Cpath d='M-20 190C70 150 110 220 200 170S370 60 460 100 610 30 630 10'/%3E%3Cpath d='M-20 280C100 240 160 300 260 260S400 150 520 190 640 120 660 100'/%3E%3Cellipse cx='470' cy='120' rx='60' ry='26'/%3E%3Cellipse cx='470' cy='120' rx='34' ry='14'/%3E%3Cellipse cx='470' cy='120' rx='12' ry='5'/%3E%3C/svg%3E");
+}
+
+/* 1. Cockpit 2-Column Grid Layout */
+.cv-cockpit-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1.5rem;
+  align-items: start;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .cv-cockpit-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cv-aside-sticky {
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (max-width: 1200px) {
+  .cv-aside-sticky {
+    position: static;
+  }
+}
+
+/* 2. Atmospheric Hero Banner */
+.cv-hero-banner {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  color: #ffffff;
+  background: var(--cv-contour) right -40px top -20px / 720px auto no-repeat,
+              radial-gradient(80% 120% at 100% 0%, rgba(7, 81, 255, 0.4), transparent 60%),
+              linear-gradient(160deg, var(--cv-blue-800), var(--cv-blue-900));
+  box-shadow: 0 8px 24px -4px rgba(6, 49, 140, 0.35);
+  padding: 1.75rem 2rem 0 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.cv-hero-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.cv-eyebrow {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cv-hero-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0.4rem 0;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.cv-hero-sub {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 65ch;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.cv-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+  border: 1.5px solid rgba(16, 185, 129, 0.6);
+  color: #6ee7b7;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: rgba(16, 185, 129, 0.12);
+  transform: rotate(-1deg);
+}
+
+.cv-stamp .dot-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+  animation: cvPulse 2s infinite;
+}
+
+@keyframes cvPulse {
+  50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+}
+
+/* 3. Integrated Four-Metric Dock with Gentelella tile_count support */
+.cv-hero-banner .tile_count {
+  margin: 1.75rem -2rem 0 -2rem !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(4, 18, 56, 0.45);
+  backdrop-filter: blur(8px);
+  padding: 0.25rem 0;
+}
+
+.cv-hero-banner .tile_stats_count {
+  border-bottom: 0 !important;
+  padding: 1rem 1.75rem !important;
+}
+
+.cv-hero-banner .tile_stats_count:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.cv-hero-banner .count_top,
+.cv-hero-banner .count_title {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+}
+
+.cv-hero-banner .count {
+  color: #ffffff !important;
+  font-size: 2.25rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+  margin: 0.35rem 0 !important;
+}
+
+.cv-hero-banner .count_bottom {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.72rem !important;
+}
+
+/* 4. Statusline Ribbon */
+.cv-statusline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--neutral-0, #ffffff);
+  border: 1px solid var(--neutral-300, #e2e8f0);
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  box-shadow: var(--shadow-subtle, 0 1px 3px rgba(0, 0, 0, 0.04));
+}
+
+.cv-statusline-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--neutral-700, #334155);
+}
+
+.cv-statusline-item dt {
+  color: var(--neutral-500, #64748b);
+  font-weight: 500;
+  margin: 0;
+}
+
+.cv-statusline-item dd {
+  margin: 0;
+  font-weight: 700;
+  color: var(--neutral-900, #0f172a);
+}
+
+/* 5. Attention SLA Hazard Card */
+.cv-attention-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.25rem;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  padding: 1.15rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.08);
+}
+
+.cv-attention-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: repeating-linear-gradient(-45deg, #f59e0b 0 8px, #fbbf24 8px 16px);
+}
+
+.cv-attention-count {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #d97706;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-align: center;
+}
+
+.cv-attention-count small {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 768px) {
+  .cv-attention-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 6. Segmented Quota Seat Bars (.cv-seg) */
+.cv-seg {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 3px;
+  height: 10px;
+  margin-top: 0.35rem;
+}
+
+.cv-seg i {
+  border-radius: 2px;
+  background: var(--neutral-200, #e2e8f0);
+  display: block;
+  height: 100%;
+}
+
+.cv-seg i.filled,
+.cv-seg i.f {
+  background: linear-gradient(180deg, #0751ff, #0641cc);
+}
+
+.cv-seg.full i.filled,
+.cv-seg.full i.f {
+  background: linear-gradient(180deg, #f59e0b, #d97706);
+}
+
+/* 7. Aside Todo & Quick Action List */
+.cv-todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cv-todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.85rem;
+  background: var(--neutral-100, #f8fafc);
+  border: 1px solid var(--neutral-300, #e2e8f0);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.cv-todo-item:hover {
+  background: var(--blue-tint, #eff6ff);
+  border-color: #bfdbfe;
+}
+
+.cv-todo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cv-todo-dot.danger {
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+.cv-todo-dot.warning {
+  background: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+
+.cv-todo-dot.info {
+  background: #0751ff;
+  box-shadow: 0 0 6px rgba(7, 81, 255, 0.4);
+}
+
+.cv-quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.cv-quick-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 38px;
+  padding: 0 0.875rem;
+  background: var(--neutral-100, #f8fafc);
+  border: 1px solid var(--neutral-300, #e2e8f0);
+  border-radius: 8px;
+  font-size: 0.775rem;
+  font-weight: 700;
+  color: var(--neutral-800, #1e293b);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.cv-quick-btn:hover {
+  background: var(--blue-tint, #eff6ff);
+  border-color: #93c5fd;
+  color: #0641cc;
+}
+
+.cv-quick-btn.primary {
+  grid-column: 1 / -1;
+  background: #0751ff;
+  border-color: #0751ff;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(7, 81, 255, 0.2);
+}
+
+.cv-quick-btn.primary:hover {
+  background: #0641cc;
+  color: #ffffff;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .cv-statusline {
+  background: #182234 !important;
+  border-color: #26354d !important;
+}
+
+[data-theme="dark"] .cv-attention-card {
+  background: #182234 !important;
+  border-color: #3b2a1a !important;
+}
+
+[data-theme="dark"] .cv-todo-item,
+[data-theme="dark"] .cv-quick-btn {
+  background: #111c2e !important;
+  border-color: #26354d !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .cv-quick-btn.primary {
+  background: #0751ff !important;
+  border-color: #0751ff !important;
+}

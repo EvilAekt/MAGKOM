@@ -1116,16 +1116,9 @@
         {{-- =====================================================================
              5. ALERT VALIDASI PEMBIMBING AKTIF
              ===================================================================== --}}
-        <div class="alert-validation-box">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-            <span>
-                Sistem otomatis memvalidasi agar total kuota tidak melebihi kapasitas bimbingan, yaitu jumlah Pembimbing aktif di setiap bidang.
-            </span>
-        </div>
+        <x-gentelella.callout type="info" class="alert-validation-box" title="Validasi Kapasitas Pembimbing">
+            Sistem otomatis memvalidasi agar total kuota tidak melebihi kapasitas bimbingan, yaitu jumlah Pembimbing aktif di setiap bidang.
+        </x-gentelella.callout>
     </div>
 
 </div>

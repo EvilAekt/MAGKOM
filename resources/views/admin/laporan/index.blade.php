@@ -117,73 +117,66 @@
 
     <!-- 1. SUMMARY METRICS CARDS -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-600); text-transform: uppercase;">Total Pengajuan</span>
             <div style="font-size: 1.75rem; font-weight: 900; color: var(--blue-700); margin-top: 0.25rem;">
                 {{ number_format($metricCards['total_pendaftaran']) }}
             </div>
             <small style="color: var(--neutral-600); font-size: 0.75rem;">Semua status pendaftaran</small>
-        </div>
+        </x-gentelella.card>
 
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <span style="font-size: 0.75rem; font-weight: 700; color: var(--green-700); text-transform: uppercase;">Peserta Diterima</span>
             <div style="font-size: 1.75rem; font-weight: 900; color: var(--green-700); margin-top: 0.25rem;">
                 {{ number_format($metricCards['total_diterima']) }}
             </div>
             <small style="color: var(--neutral-600); font-size: 0.75rem;">Lolos seleksi berkas & kuota</small>
-        </div>
+        </x-gentelella.card>
 
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <span style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600); text-transform: uppercase;">Penempatan Aktif</span>
             <div style="font-size: 1.75rem; font-weight: 900; color: var(--blue-600); margin-top: 0.25rem;">
                 {{ number_format($metricCards['penempatan_aktif']) }}
             </div>
             <small style="color: var(--neutral-600); font-size: 0.75rem;">Sedang menjalani bimbingan</small>
-        </div>
+        </x-gentelella.card>
 
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase;">Magang Selesai</span>
             <div style="font-size: 1.75rem; font-weight: 900; color: var(--neutral-800); margin-top: 0.25rem;">
                 {{ number_format($metricCards['penempatan_selesai']) }}
             </div>
             <small style="color: var(--neutral-600); font-size: 0.75rem;">Alumni & evaluasi final</small>
-        </div>
+        </x-gentelella.card>
 
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <span style="font-size: 0.75rem; font-weight: 700; color: var(--amber-700); text-transform: uppercase;">Realisasi Kuota Umum</span>
             <div style="font-size: 1.75rem; font-weight: 900; color: var(--amber-700); margin-top: 0.25rem;">
                 {{ number_format($metricCards['kuota_terisi']) }}
             </div>
             <small style="color: var(--neutral-600); font-size: 0.75rem;">Kursi terisi jalur online</small>
-        </div>
+        </x-gentelella.card>
 
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <span style="font-size: 0.75rem; font-weight: 700; color: var(--purple-700, #7E22CE); text-transform: uppercase;">Slot Khusus Terisi</span>
             <div style="font-size: 1.75rem; font-weight: 900; color: var(--purple-700, #7E22CE); margin-top: 0.25rem;">
                 {{ number_format($metricCards['slot_terisi']) }}
             </div>
             <small style="color: var(--neutral-600); font-size: 0.75rem;">Jalur kemitraan internal</small>
-        </div>
+        </x-gentelella.card>
     </div>
 
     <!-- 1.5 VISUAL ANALYTICS & INSIGHTS (AC-17-1) -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.25rem;">
         <!-- KARTU 1: TINGKAT KETERISIAN KUOTA PER JURUSAN -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle); display: flex; flex-direction: column;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; gap: 1rem;">
-                <div>
-                    <h3 style="font-size: 1rem; font-weight: 800; color: var(--neutral-900); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--blue-600);"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
-                        <span>Tingkat Keterisian Kuota per Jurusan</span>
-                    </h3>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.25rem 0 0 0;">
-                        Alokasi kursi reguler terhadap realisasi pendaftar diterima
-                    </p>
-                </div>
-                <span style="font-size: 0.75rem; font-weight: 700; color: var(--blue-700); background: var(--blue-tint, #EEF2FF); padding: 0.25rem 0.625rem; border-radius: 999px; white-space: nowrap;">
-                    Live Capacity
-                </span>
-            </div>
+        <x-gentelella.card title="Tingkat Keterisian Kuota per Jurusan"
+                           subtitle="Alokasi kursi reguler terhadap realisasi pendaftar diterima"
+                           badge="Live Capacity"
+                           badgeType="primary"
+                           style="display: flex; flex-direction: column;">
+            <x-slot:icon>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--blue-600);"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+            </x-slot:icon>
 
             <div style="display: flex; flex-direction: column; gap: 1rem; max-height: 280px; overflow-y: auto; padding-right: 0.25rem;" class="clean-scrollbar">
                 @forelse($analyticsKuotaJurusan ?? [] as $item)
@@ -215,24 +208,17 @@
                     </div>
                 @endforelse
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- KARTU 2: PROPORSI JENJANG PENDIDIKAN PESERTA -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle); display: flex; flex-direction: column;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; gap: 1rem;">
-                <div>
-                    <h3 style="font-size: 1rem; font-weight: 800; color: var(--neutral-900); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--green-600);"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        <span>Proporsi Jenjang Calon Peserta</span>
-                    </h3>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.25rem 0 0 0;">
-                        Komposisi pendaftar jenjang SMK vs Mahasiswa (D3/S1)
-                    </p>
-                </div>
-                <span style="font-size: 0.75rem; font-weight: 700; color: var(--green-800); background: var(--green-100, #DCFCE7); padding: 0.25rem 0.625rem; border-radius: 999px; white-space: nowrap;">
-                    Demografi
-                </span>
-            </div>
+        <x-gentelella.card title="Proporsi Jenjang Calon Peserta"
+                           subtitle="Komposisi pendaftar jenjang SMK vs Mahasiswa (D3/S1)"
+                           badge="Demografi"
+                           badgeType="success"
+                           style="display: flex; flex-direction: column;">
+            <x-slot:icon>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--green-600);"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </x-slot:icon>
 
             <!-- STACKED HORIZONTAL BAR -->
             @php
@@ -293,11 +279,13 @@
                 </div>
             </div>
 
-            <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--neutral-600);">
-                <span>Total Profil Calon Peserta Terdata</span>
-                <strong style="color: var(--neutral-900); font-weight: 800;">{{ number_format($totJenjang) }} Orang</strong>
-            </div>
-        </div>
+            <x-slot:footer>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--neutral-600); width: 100%;">
+                    <span>Total Profil Calon Peserta Terdata</span>
+                    <strong style="color: var(--neutral-900); font-weight: 800;">{{ number_format($totJenjang) }} Orang</strong>
+                </div>
+            </x-slot:footer>
+        </x-gentelella.card>
     </div>
 
     <!-- 2. TAB SWITCHER -->

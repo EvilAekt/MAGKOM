@@ -5,265 +5,125 @@
 
 @push('styles')
 <style>
-    /* Google Classroom Assignment View Layout */
+    /* ========================================================
+       MAGKOM GENTELELLA DESIGN SYSTEM: CLASSROOM TUGAS SHOW
+       ======================================================== */
     .classroom-assignment-container {
-        max-width: 1120px;
-        margin: 0 auto;
-    }
-
-    /* Back Navigation Pill */
-    .back-nav {
-        margin-bottom: 22px;
-    }
-
-    .back-link-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 6px 14px;
-        background: #ffffff;
-        border: 1px solid var(--neutral-300);
-        border-radius: 20px;
-        color: var(--neutral-700);
-        font-size: var(--text-sm);
-        font-weight: var(--fw-semibold);
-        text-decoration: none;
-        transition: all 0.15s ease;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-    }
-
-    .back-link-pill:hover {
-        background: var(--blue-tint);
-        border-color: var(--blue-600);
-        color: var(--blue-700);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
 
     /* 2 Kolom Asimetris Google Classroom (65% : 35%) */
     .classroom-assignment-grid {
         display: grid;
-        grid-template-columns: 1fr 370px;
-        gap: 28px;
+        grid-template-columns: 1fr 380px;
+        gap: 24px;
         align-items: start;
     }
 
-    /* Card Modern Base */
-    .card-modern {
-        background: #ffffff;
-        border: 1px solid var(--neutral-300);
-        border-radius: var(--radius-lg, 12px);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-        overflow: hidden;
-    }
-
-    /* Lembar Penugasan Utama (Kolom Kiri) */
-    .assignment-sheet-card {
-        padding: 32px 36px;
-        margin-bottom: 24px;
-    }
-
-    .assignment-header {
+    .assignment-header-row {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         gap: 20px;
         padding-bottom: 20px;
-        border-bottom: 1px solid var(--neutral-200);
-        margin-bottom: 24px;
+        border-bottom: 1px solid var(--neutral-200, #E2E8F0);
+        margin-bottom: 20px;
     }
 
-    .assignment-title-area {
-        display: flex;
-        align-items: flex-start;
-        gap: 18px;
-        flex: 1;
-    }
-
-    /* Ikon Dokumen Khas Google Classroom */
     .classroom-icon-circle {
-        width: 52px;
-        height: 52px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
-        background: #E8F0FE;
-        color: #1A73E8;
+        background: #EFF6FF;
+        color: #0751FF;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        box-shadow: 0 2px 6px rgba(26, 115, 232, 0.15);
-    }
-
-    .assignment-heading-wrap h1 {
-        font-size: var(--text-2xl);
-        font-weight: var(--fw-bold);
-        color: var(--neutral-900);
-        line-height: 1.3;
-        margin: 0 0 8px 0;
-        letter-spacing: -0.01em;
-    }
-
-    .assignment-meta-row {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
-        font-size: var(--text-sm);
-        color: var(--neutral-600);
-        line-height: 1.4;
+        box-shadow: 0 2px 6px rgba(7, 81, 255, 0.15);
     }
 
     .meta-chip {
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        padding: 3px 10px;
-        background: var(--neutral-100);
-        border: 1px solid var(--neutral-300);
+        padding: 4px 10px;
+        background: #F1F5F9;
+        border: 1px solid #CBD5E1;
         border-radius: 6px;
-        font-size: var(--text-xs);
-        font-weight: var(--fw-semibold);
-        color: var(--neutral-700);
-    }
-
-    /* Badge Tenggat Waktu di Kanan Atas */
-    .deadline-banner-box {
-        text-align: right;
-        flex-shrink: 0;
-    }
-
-    .deadline-label {
-        font-size: var(--text-xs);
-        text-transform: uppercase;
-        font-weight: var(--fw-bold);
-        color: var(--neutral-500);
-        letter-spacing: 0.04em;
-        margin-bottom: 4px;
-    }
-
-    .deadline-value {
-        font-size: var(--text-sm);
-        font-weight: var(--fw-bold);
-        color: var(--neutral-800);
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 6px;
-    }
-
-    .deadline-value.is-late {
-        color: var(--red-600);
-    }
-
-    /* Konten Instruksi & Panduan */
-    .section-eyebrow {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: var(--text-xs);
-        font-weight: var(--fw-bold);
-        color: var(--neutral-500);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        margin-bottom: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--neutral-700, #334155);
     }
 
     .instruction-body-text {
-        font-size: var(--text-base);
+        font-size: 0.9375rem;
         line-height: 1.7;
-        color: var(--neutral-800);
+        color: var(--neutral-800, #1E293B);
         white-space: pre-line;
         background: #FAFBFD;
-        border: 1px solid var(--neutral-250, #E9ECEF);
+        border: 1px solid #E2E8F0;
         border-radius: 10px;
         padding: 20px 24px;
     }
 
-    /* Timeline Riwayat Pengumpulan (Bawah Kiri) */
-    .submission-stream-card {
-        padding: 28px 36px;
+    .ref-link-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 6px;
+        background: #EFF6FF;
+        color: #1D4ED8;
+        text-decoration: none;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        border: 1px solid #BFDBFE;
+        transition: all 0.2s ease;
     }
 
-    .stream-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 14px;
-        border-bottom: 1px solid var(--neutral-200);
+    .ref-link-pill:hover {
+        background: #DBEAFE;
     }
 
-    .stream-title {
-        font-size: var(--text-lg);
-        font-weight: var(--fw-bold);
-        color: var(--neutral-900);
-        display: flex;
+    .file-lampiran-pill {
+        display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 6px;
+        background: #ffffff;
+        color: var(--neutral-800, #1E293B);
+        text-decoration: none;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        border: 1px solid #CBD5E1;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
     }
 
     .submission-timeline-item {
-        border: 1px solid var(--neutral-200);
+        border: 1px solid var(--neutral-300, #CBD5E1);
         background: #ffffff;
         border-radius: 10px;
         padding: 18px 22px;
         margin-bottom: 16px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-        transition: border-color 0.15s ease;
-    }
-
-    .submission-timeline-item:hover {
-        border-color: #BFDBFE;
-    }
-
-    .submission-top-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 10px;
-    }
-
-    .submission-author-info {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: var(--text-sm);
-        font-weight: var(--fw-semibold);
-        color: var(--neutral-800);
     }
 
     .submission-avatar-mini {
-        width: 26px;
-        height: 26px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
-        background: var(--blue-600);
+        background: #0751FF;
         color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: var(--text-2xs);
-        font-weight: var(--fw-bold);
-    }
-
-    .submission-desc {
-        font-size: var(--text-sm);
-        line-height: 1.6;
-        color: var(--neutral-800);
-        white-space: pre-line;
-    }
-
-    .submission-file-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 6px 12px;
-        background: var(--neutral-100);
-        border: 1px solid var(--neutral-300);
-        border-radius: 6px;
-        font-size: var(--text-xs);
-        font-weight: var(--fw-semibold);
-        color: var(--neutral-700);
-        margin-top: 10px;
+        font-size: 0.75rem;
+        font-weight: 700;
     }
 
     .feedback-bubble-box {
@@ -272,12 +132,11 @@
         background: #FEF3C7;
         border-left: 4px solid #D97706;
         border-radius: 8px;
-        font-size: var(--text-sm);
+        font-size: 0.875rem;
         color: #92400E;
         line-height: 1.5;
     }
 
-    /* Kolom Kanan: Panel "Tugas Anda" (Sticky Your Work) */
     .your-work-panel {
         position: sticky;
         top: 84px;
@@ -286,89 +145,6 @@
         gap: 20px;
     }
 
-    .your-work-card {
-        padding: 24px;
-    }
-
-    .your-work-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 16px;
-        border-bottom: 1px solid var(--neutral-200);
-        margin-bottom: 20px;
-    }
-
-    .your-work-title {
-        font-size: var(--text-lg);
-        font-weight: var(--fw-bold);
-        color: var(--neutral-900);
-        margin: 0;
-    }
-
-    .form-group-clean {
-        margin-bottom: 16px;
-    }
-
-    .form-label-clean {
-        font-size: var(--text-xs);
-        font-weight: var(--fw-bold);
-        color: var(--neutral-700);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 6px;
-    }
-
-    .textarea-clean {
-        width: 100%;
-        padding: 12px 14px;
-        border: 1.5px solid #94A3B8;
-        border-radius: 8px;
-        font-size: var(--text-sm);
-        color: var(--neutral-900);
-        background: #ffffff;
-        line-height: 1.5;
-        font-family: inherit;
-        resize: vertical;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        box-sizing: border-box;
-    }
-
-    .textarea-clean:focus {
-        outline: none;
-        border-color: #1A73E8;
-        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.18);
-        background: #ffffff;
-    }
-
-    .input-clean {
-        width: 100%;
-        height: 42px;
-        padding: 10px 14px 10px 38px;
-        border: 1.5px solid #94A3B8;
-        border-radius: 8px;
-        font-size: var(--text-sm);
-        color: var(--neutral-900);
-        background: #ffffff;
-        font-family: inherit;
-        line-height: 1.5;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        box-sizing: border-box;
-    }
-
-    .input-clean:focus {
-        outline: none;
-        border-color: #1A73E8;
-        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.18);
-        background: #ffffff;
-    }
-
-    .input-clean.is-invalid {
-        border-color: var(--red-600);
-    }
-
-    /* Custom File Upload Box */
     .file-upload-box {
         display: block;
         border: 1.5px dashed #93C5FD;
@@ -382,8 +158,8 @@
     }
 
     .file-upload-box:hover {
-        border-color: #1A73E8;
-        background: #E8F0FE;
+        border-color: #0751FF;
+        background: #E6EEFF;
     }
 
     .file-preview-pill {
@@ -394,7 +170,7 @@
         background: #EFF6FF;
         border: 1px solid #BFDBFE;
         border-radius: 6px;
-        font-size: var(--text-xs);
+        font-size: 0.75rem;
         color: #1E40AF;
         margin-top: 8px;
         font-weight: 600;
@@ -404,127 +180,20 @@
         display: flex;
     }
 
-    /* Tombol Serahkan Google Classroom */
-    .btn-turn-in-classroom {
-        width: 100%;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        font-size: var(--text-sm);
-        font-weight: var(--fw-bold);
-        border-radius: 8px;
-        background: #1A73E8;
-        color: #ffffff;
-        border: none;
-        cursor: pointer;
-        transition: background 0.15s ease, box-shadow 0.15s ease;
-        margin-top: 6px;
-        box-shadow: 0 2px 6px rgba(26, 115, 232, 0.25);
-    }
-
-    .btn-turn-in-classroom:hover:not(:disabled) {
-        background: #1557B0;
-        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.35);
-    }
-
-    .btn-turn-in-classroom:disabled {
-        background: var(--neutral-300);
-        color: var(--neutral-500);
-        cursor: not-allowed;
-        box-shadow: none;
-    }
-
-    /* Info Card Pembimbing */
-    .guidance-info-card {
-        padding: 20px 22px;
-        background: #F8FAFC;
-        border: 1px solid var(--neutral-250, #E2E8F0);
-        border-radius: var(--radius-lg, 12px);
-    }
-
-    .guidance-title {
-        font-size: var(--text-xs);
-        font-weight: var(--fw-bold);
-        text-transform: uppercase;
-        color: var(--neutral-600);
-        letter-spacing: 0.04em;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-bottom: 8px;
-    }
-
-    .guidance-desc {
-        font-size: var(--text-xs);
-        color: var(--neutral-600);
-        line-height: 1.55;
-    }
-
-    /* Responsif */
     @media (max-width: 1024px) {
         .classroom-assignment-grid {
             grid-template-columns: 1fr;
         }
-
         .your-work-panel {
             position: static;
         }
-
-        .assignment-sheet-card,
-        .submission-stream-card {
-            padding: 24px 20px;
-        }
     }
 
-    /* ========================================================
-       DARK THEME HARMONIZATION (Google Classroom Style)
-       ======================================================== */
-    [data-theme="dark"] .back-link-pill {
-        background: #182234;
-        border-color: #26354D;
-        color: #CBD5E1;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    }
-
-    [data-theme="dark"] .back-link-pill:hover {
-        background: #1E293B;
-        border-color: #3B82F6;
-        color: #60A5FA;
-    }
-
-    [data-theme="dark"] .card-modern,
-    [data-theme="dark"] .assignment-sheet-card,
-    [data-theme="dark"] .submission-stream-card,
-    [data-theme="dark"] .your-work-card {
-        background: #182234 !important;
+    /* Dark Mode Harmonization */
+    [data-theme="dark"] .instruction-body-text {
+        background: #0F172A !important;
         border-color: #26354D !important;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
-    }
-
-    [data-theme="dark"] .assignment-header,
-    [data-theme="dark"] .stream-header,
-    [data-theme="dark"] .your-work-header {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .classroom-icon-circle {
-        background: rgba(37, 99, 235, 0.2) !important;
-        color: #60A5FA !important;
-        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25) !important;
-    }
-
-    [data-theme="dark"] .assignment-heading-wrap h1,
-    [data-theme="dark"] .stream-title,
-    [data-theme="dark"] .your-work-title {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .assignment-meta-row,
-    [data-theme="dark"] .section-eyebrow,
-    [data-theme="dark"] .guidance-title {
-        color: #94A3B8 !important;
+        color: #E2E8F0 !important;
     }
 
     [data-theme="dark"] .meta-chip {
@@ -533,66 +202,9 @@
         color: #CBD5E1 !important;
     }
 
-    [data-theme="dark"] .deadline-label {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .deadline-value {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .instruction-body-text {
-        background: #0F172A !important;
-        border-color: #26354D !important;
-        color: #E2E8F0 !important;
-    }
-
     [data-theme="dark"] .submission-timeline-item {
         background: #0F172A !important;
         border-color: #26354D !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
-    }
-
-    [data-theme="dark"] .submission-timeline-item:hover {
-        border-color: #3B82F6 !important;
-    }
-
-    [data-theme="dark"] .submission-author-info {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .submission-desc {
-        color: #CBD5E1 !important;
-    }
-
-    [data-theme="dark"] .submission-file-chip {
-        background: #182234 !important;
-        border-color: #26354D !important;
-        color: #CBD5E1 !important;
-    }
-
-    [data-theme="dark"] .feedback-bubble-box {
-        background: rgba(120, 53, 15, 0.3) !important;
-        border-left: 4px solid #F59E0B !important;
-        color: #FEF3C7 !important;
-    }
-
-    [data-theme="dark"] .form-label-clean {
-        color: #E2E8F0 !important;
-    }
-
-    [data-theme="dark"] .textarea-clean,
-    [data-theme="dark"] .input-clean {
-        background: #0F172A !important;
-        border-color: #26354D !important;
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .textarea-clean:focus,
-    [data-theme="dark"] .input-clean:focus {
-        background: #0F172A !important;
-        border-color: #2563EB !important;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
     }
 
     [data-theme="dark"] .file-upload-box {
@@ -602,97 +214,13 @@
 
     [data-theme="dark"] .file-upload-box:hover {
         background: #182234 !important;
-        border-color: #2563EB !important;
+        border-color: #0751FF !important;
     }
 
-    [data-theme="dark"] .file-preview-pill {
-        background: #182234 !important;
-        border-color: #26354D !important;
-        color: #93C5FD !important;
-    }
-
-    [data-theme="dark"] .guidance-info-card {
-        background: #182234 !important;
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .guidance-desc {
-        color: #94A3B8 !important;
-    }
-
-    .ref-link-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 14px;
-        border-radius: 6px;
-        background: #EFF6FF;
-        color: #1D4ED8;
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 600;
-        border: 1px solid #BFDBFE;
-        transition: all 0.2s ease;
-    }
-    .ref-link-pill:hover {
-        background: #DBEAFE;
-    }
-    [data-theme="dark"] .ref-link-pill {
-        background: #0F172A;
-        border-color: #26354D;
-        color: #60A5FA;
-    }
-
-    .file-lampiran-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 14px;
-        border-radius: 6px;
-        background: #ffffff;
-        color: var(--neutral-800);
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 600;
-        border: 1px solid var(--neutral-300);
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        transition: all 0.2s ease;
-    }
     [data-theme="dark"] .file-lampiran-pill {
-        background: #0F172A;
-        border-color: #26354D;
-        color: #CBD5E1;
-    }
-
-    .empty-stream-box {
-        text-align: center;
-        padding: 36px 16px;
-        color: var(--neutral-500);
-        background: #FAFBFD;
-        border-radius: 8px;
-        border: 1px dashed var(--neutral-300);
-    }
-    [data-theme="dark"] .empty-stream-box {
-        background: #0F172A;
-        border-color: #26354D;
-        color: #94A3B8;
-    }
-    [data-theme="dark"] .empty-stream-box div {
-        color: #F8FAFC !important;
-    }
-
-    .task-completed-banner {
-        background: #ECFDF5;
-        border: 1px solid #A7F3D0;
-        border-radius: 8px;
-        padding: 16px;
-        text-align: center;
-        color: #065F46;
-    }
-    [data-theme="dark"] .task-completed-banner {
-        background: rgba(6, 78, 59, 0.3);
-        border-color: rgba(52, 211, 153, 0.4);
-        color: #A7F3D0;
+        background: #0F172A !important;
+        border-color: #26354D !important;
+        color: #CBD5E1 !important;
     }
 </style>
 @endpush
@@ -701,9 +229,9 @@
 <div class="classroom-assignment-container">
 
     {{-- Breadcrumb Navigasi Bersih --}}
-    <div class="back-nav">
-        <a href="{{ route('peserta.tugas.index') }}" class="back-link-pill">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+    <div>
+        <a href="{{ route('peserta.tugas.index') }}" class="btn btn-secondary" style="border-radius: 999px;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
             Kembali ke Daftar Tugas
@@ -727,20 +255,22 @@
         {{-- ============================================================
              KOLOM KIRI (65%): LEMBAR PENUGASAN & INSTRUKSI CLASSROOM
              ============================================================ --}}
-        <div>
-            {{-- Kartu Utama Penugasan --}}
-            <div class="card-modern assignment-sheet-card">
-                <div class="assignment-header">
-                    <div class="assignment-title-area">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+
+            {{-- 1. Lembar Penugasan Utama --}}
+            <x-gentelella.x-panel title="Lembar Penugasan Magang" subtitle="Diterbitkan oleh pembimbing lapangan kedinasan">
+                <div class="assignment-header-row">
+                    <div style="display: flex; align-items: flex-start; gap: 16px; flex: 1;">
                         <div class="classroom-icon-circle">
-                            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                         </div>
-
-                        <div class="assignment-heading-wrap">
-                            <h1>{{ $tugas->judul }}</h1>
-                            <div class="assignment-meta-row">
+                        <div>
+                            <h1 style="font-size: 1.375rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0 0 8px 0;">
+                                {{ $tugas->judul }}
+                            </h1>
+                            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 0.8125rem; color: var(--neutral-600, #475569);">
                                 <span>Pembimbing: <strong>{{ $mentorNama }}</strong></span>
                                 <span>&bull;</span>
                                 <span class="meta-chip">📁 {{ $kategoriNama }}</span>
@@ -749,24 +279,25 @@
                         </div>
                     </div>
 
-                    {{-- Tenggat Waktu di Kanan Atas --}}
-                    <div class="deadline-banner-box">
-                        <div class="deadline-label">Tenggat Waktu</div>
-                        <div class="deadline-value {{ $isTerlambat ? 'is-late' : '' }}">
+                    <div style="text-align: right; flex-shrink: 0;">
+                        <div style="font-size: 0.6875rem; text-transform: uppercase; font-weight: 700; color: var(--neutral-500, #64748B); letter-spacing: 0.04em; margin-bottom: 4px;">
+                            Tenggat Waktu
+                        </div>
+                        <div style="font-size: 0.9375rem; font-weight: 800; display: flex; align-items: center; justify-content: flex-end; gap: 6px; color: {{ $isTerlambat ? '#DC2626' : 'var(--neutral-800, #1E293B)' }};">
                             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             <span>{{ $deadline->translatedFormat('d M Y') }}</span>
                         </div>
                         @if($isTerlambat)
-                            <span style="font-size: 0.6875rem; color: var(--red-600); font-weight: 700;">(Lewat Tenggat)</span>
+                            <span style="font-size: 0.6875rem; color: #DC2626; font-weight: 700;">(Lewat Tenggat)</span>
                         @endif
                     </div>
                 </div>
 
-                {{-- Lembar Instruksi / Panduan Pengerjaan --}}
+                {{-- Panduan Pengerjaan --}}
                 <div>
-                    <div class="section-eyebrow">
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px;">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
@@ -779,8 +310,8 @@
 
                     {{-- Sumber Daya Panduan & Lampiran dari Pembimbing --}}
                     @if($tugas->file_lampiran || $tugas->link_referensi)
-                        <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--neutral-300); display: flex; flex-direction: column; gap: 8px;">
-                            <div style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase; letter-spacing: 0.04em;">
+                        <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--neutral-200, #E2E8F0); display: flex; flex-direction: column; gap: 8px;">
+                            <div style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700, #334155); text-transform: uppercase; letter-spacing: 0.04em;">
                                 Lampiran & Acuan dari Pembimbing:
                             </div>
 
@@ -805,29 +336,23 @@
                         </div>
                     @endif
                 </div>
-            </div>
+            </x-gentelella.x-panel>
 
-            {{-- Kartu Riwayat Progres & Umpan Balik Pembimbing --}}
-            <div class="card-modern submission-stream-card">
-                <div class="stream-header">
-                    <div class="stream-title">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #1A73E8;">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Riwayat Laporan Progres & Feedback
-                    </div>
-                    <span class="badge badge-info" style="font-size: 0.75rem;">
+            {{-- 2. Riwayat Laporan Progres & Umpan Balik --}}
+            <x-gentelella.x-panel title="Riwayat Laporan Progres & Feedback" subtitle="Daftar reviu dan penilaian kemajuan berkala oleh pembimbing">
+                <x-slot:toolbar>
+                    <x-gentelella.badge variant="info">
                         {{ $tugas->progresLogs->count() }} Laporan Terkirim
-                    </span>
-                </div>
+                    </x-gentelella.badge>
+                </x-slot:toolbar>
 
                 @if($tugas->progresLogs->isEmpty())
-                    <div class="empty-stream-box">
-                        <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 10px auto; color: var(--neutral-400);">
+                    <div style="text-align: center; padding: 36px 16px; border: 1px dashed var(--neutral-300, #CBD5E1); border-radius: 8px;">
+                        <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 10px auto; color: var(--neutral-400, #94A3B8);">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        <div style="font-size: var(--text-sm); font-weight: 600; color: var(--neutral-700); margin-bottom: 2px;">Belum Ada Laporan Progres</div>
-                        <p style="font-size: var(--text-xs); color: var(--neutral-500); margin: 0; max-width: 380px; margin: 0 auto;">
+                        <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-800, #1E293B); margin-bottom: 2px;">Belum Ada Laporan Progres</div>
+                        <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 0 auto; max-width: 380px;">
                             Gunakan panel di sebelah kanan untuk mengirimkan draf pengerjaan atau hasil tugas kepada pembimbing Anda.
                         </p>
                     </div>
@@ -837,28 +362,28 @@
                             $rev = $progres->status_review->value ?? (string)$progres->status_review;
                         @endphp
                         <div class="submission-timeline-item">
-                            <div class="submission-top-row">
-                                <div class="submission-author-info">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+                                <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8125rem; font-weight: 600;">
                                     <div class="submission-avatar-mini">{{ substr(auth()->user()->name ?? 'P', 0, 1) }}</div>
                                     <span>Laporan Progres &bull; {{ \Carbon\Carbon::parse($progres->tgl_lapor)->translatedFormat('d F Y') }}</span>
                                 </div>
 
                                 <div>
                                     @if($rev === 'diterima')
-                                        <span class="badge badge-success">✓ Diterima Pembimbing</span>
+                                        <x-gentelella.badge variant="success">✓ Diterima Pembimbing</x-gentelella.badge>
                                     @elseif($rev === 'perlu_revisi')
-                                        <span class="badge badge-danger">⚠️ Perlu Revisi</span>
+                                        <x-gentelella.badge variant="danger">⚠️ Perlu Revisi</x-gentelella.badge>
                                     @else
-                                        <span class="badge badge-info">⏳ Menunggu Reviu</span>
+                                        <x-gentelella.badge variant="info">⏳ Menunggu Reviu</x-gentelella.badge>
                                     @endif
                                 </div>
                             </div>
 
-                            <div class="submission-desc">{{ $progres->catatan }}</div>
+                            <div style="font-size: 0.875rem; line-height: 1.6; white-space: pre-line;">{{ $progres->catatan }}</div>
 
                             @if($progres->file)
-                                <div class="submission-file-chip">
-                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--red-600);">
+                                <div style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.75rem; font-weight: 600; margin-top: 10px;">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #DC2626;">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                                     </svg>
                                     <span>Lampiran berkas pengerjaan terunggah di server privat</span>
@@ -890,101 +415,93 @@
                         </div>
                     @endforeach
                 @endif
-            </div>
+            </x-gentelella.x-panel>
+
         </div>
 
         {{-- ============================================================
-             KOLOM KANAN (35%): WIDGET "TUGAS ANDA" (YOUR WORK CARD)
+             KOLOM KANAN (35%): WIDGET "TUGAS ANDA"
              ============================================================ --}}
         <div class="your-work-panel">
-            <div class="card-modern your-work-card">
-                <div class="your-work-header">
-                    <h3 class="your-work-title">Tugas Anda</h3>
+            <x-gentelella.x-panel title="Tugas Anda" subtitle="Serah terima pekerjaan kepada pembimbing">
+                <x-slot:toolbar>
                     @if($isSelesai)
-                        <span class="badge badge-success" style="font-size: 0.75rem; padding: 4px 10px;">Selesai</span>
+                        <x-gentelella.badge variant="success">Selesai</x-gentelella.badge>
                     @elseif($tugas->progresLogs->isNotEmpty())
-                        <span class="badge badge-warning" style="font-size: 0.75rem; padding: 4px 10px;">Diserahkan</span>
+                        <x-gentelella.badge variant="warning">Diserahkan</x-gentelella.badge>
                     @else
-                        <span class="badge badge-info" style="font-size: 0.75rem; padding: 4px 10px;">Ditugaskan</span>
+                        <x-gentelella.badge variant="info">Ditugaskan</x-gentelella.badge>
                     @endif
-                </div>
+                </x-slot:toolbar>
 
                 @if($isSelesai)
-                    <div class="task-completed-banner">
+                    <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 8px; padding: 20px; text-align: center; color: #065F46;">
                         <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin: 0 auto 8px auto; color: #10B981;">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <div style="font-size: var(--text-sm); font-weight: 700; margin-bottom: 2px;">Tugas Telah Selesai</div>
-                        <div style="font-size: var(--text-xs); line-height: 1.4;">Tugas ini telah ditinjau dan dinyatakan selesai oleh pembimbing lapangan Anda.</div>
+                        <div style="font-size: 0.9375rem; font-weight: 700; margin-bottom: 4px;">Tugas Telah Selesai</div>
+                        <div style="font-size: 0.8125rem; line-height: 1.45;">Tugas ini telah ditinjau dan dinyatakan selesai oleh pembimbing lapangan Anda.</div>
                     </div>
                 @else
                     <form action="{{ route('peserta.tugas.progres', $tugas) }}" method="POST" enctype="multipart/form-data" id="formProgresTugas">
                         @csrf
 
-                        {{-- 1. Lampiran Bukti / File Tugas (Di Atas) --}}
-                        <div class="form-group-clean">
-                            <label class="form-label-clean">
+                        {{-- 1. Lampiran Bukti / File Tugas --}}
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label class="form-label" style="font-weight: 700; display: flex; justify-content: space-between;">
                                 <span>Lampiran Bukti / File Tugas</span>
-                                <span style="font-size: 0.6875rem; color: var(--neutral-500); font-weight: 400;">Maks. 5MB</span>
+                                <span style="font-size: 0.6875rem; color: var(--neutral-500, #64748B); font-weight: 400;">Maks. 5MB</span>
                             </label>
 
                             <input type="file" id="file" name="file" accept=".pdf,.zip,.rar,.doc,.docx" style="display: none;" onchange="handleFileSelected(this)">
 
                             <label for="file" class="file-upload-box" id="dropzoneBox">
-                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #1A73E8; margin: 0 auto 6px auto; display: block;">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0751FF; margin: 0 auto 6px auto; display: block;">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                <div style="font-size: var(--text-xs); font-weight: 700; color: #1A73E8;">+ Tambah Berkas Lampiran</div>
-                                <div style="font-size: 0.6875rem; color: var(--neutral-500); margin-top: 2px;">PDF, ZIP, DOCX (Maksimal 5MB)</div>
+                                <div style="font-size: 0.8125rem; font-weight: 700; color: #0751FF;">+ Tambah Berkas Lampiran</div>
+                                <div style="font-size: 0.6875rem; color: var(--neutral-500, #64748B); margin-top: 2px;">PDF, ZIP, DOCX (Maksimal 5MB)</div>
                             </label>
 
                             <div id="filePreviewPill" class="file-preview-pill">
                                 <span id="fileNameDisplay" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 260px;"></span>
-                                <button type="button" onclick="clearSelectedFile()" style="background: none; border: none; color: var(--red-600); font-weight: 700; cursor: pointer; padding: 2px 6px;">✕</button>
+                                <button type="button" onclick="clearSelectedFile()" style="background: none; border: none; color: #DC2626; font-weight: 700; cursor: pointer; padding: 2px 6px;">✕</button>
                             </div>
 
                             @error('file')
-                                <span style="font-size: 0.75rem; color: var(--red-600); display: block; margin-top: 4px;">{{ $message }}</span>
+                                <span style="font-size: 0.75rem; color: #DC2626; display: block; margin-top: 4px;">{{ $message }}</span>
                             @enderror
                         </div>
 
-                        {{-- 2. Tautan Tugas / Repositori / Demo --}}
-                        <div class="form-group-clean" style="margin-top: 14px;">
-                            <label for="link" class="form-label-clean">
+                        {{-- 2. Tautan Tugas / Demo --}}
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label for="link" class="form-label" style="font-weight: 700; display: flex; justify-content: space-between;">
                                 <span>Tautan Tugas / Repositori / Demo</span>
-                                <span style="font-size: 0.6875rem; color: var(--neutral-500); font-weight: 400;">Opsional (https://)</span>
+                                <span style="font-size: 0.6875rem; color: var(--neutral-500, #64748B); font-weight: 400;">Opsional</span>
                             </label>
-                            <div style="position: relative; width: 100%; display: flex; align-items: center;">
-                                <span style="position: absolute; left: 13px; color: var(--neutral-500); pointer-events: none; display: flex; align-items: center;">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"></path>
-                                    </svg>
-                                </span>
-                                <input type="url" id="link" name="link"
-                                       class="input-clean @error('link') is-invalid @enderror"
-                                       placeholder="Contoh: https://github.com/... atau https://drive.google.com/..."
-                                       value="{{ old('link') }}">
-                            </div>
+                            <input type="url" id="link" name="link"
+                                   class="form-control @error('link') is-invalid @enderror"
+                                   placeholder="Contoh: https://github.com/... atau https://drive.google.com/..."
+                                   value="{{ old('link') }}">
                             @error('link')
-                                <span style="font-size: 0.75rem; color: var(--red-600); display: block; margin-top: 4px;">{{ $message }}</span>
+                                <span style="font-size: 0.75rem; color: #DC2626; display: block; margin-top: 4px;">{{ $message }}</span>
                             @enderror
                         </div>
 
-                        {{-- 3. Catatan Progres Pekerjaan (Di Bawah, Bergaris Tegas) --}}
-                        <div class="form-group-clean" style="margin-top: 14px;">
-                            <label for="catatan" class="form-label-clean">
-                                <span>Catatan Progres Pekerjaan <span style="color: var(--red-600);">*</span></span>
-                                <span id="catatanLengthHint" style="font-size: 0.6875rem; color: var(--neutral-500); font-weight: 400;">Rangkuman kemajuan</span>
+                        {{-- 3. Catatan Progres Pekerjaan --}}
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="catatan" class="form-label" style="font-weight: 700;">
+                                Catatan Progres Pekerjaan <span style="color: #DC2626;">*</span>
                             </label>
-                            <textarea id="catatan" name="catatan" rows="4" class="textarea-clean"
+                            <textarea id="catatan" name="catatan" rows="4" class="form-control @error('catatan') is-invalid @enderror"
                                       placeholder="Tuliskan ringkasan hasil kerja atau kendala pengerjaan..."
                                       required>{{ old('catatan') }}</textarea>
                             @error('catatan')
-                                <span style="font-size: 0.75rem; color: var(--red-600); display: block; margin-top: 4px;">{{ $message }}</span>
+                                <span style="font-size: 0.75rem; color: #DC2626; display: block; margin-top: 4px;">{{ $message }}</span>
                             @enderror
                         </div>
 
-                        <button type="submit" id="btnSubmitProgres" class="btn-turn-in-classroom">
+                        <button type="submit" id="btnSubmitProgres" class="btn btn-primary" style="width: 100%; height: 44px; font-weight: 700;">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                             </svg>
@@ -992,20 +509,20 @@
                         </button>
                     </form>
                 @endif
-            </div>
+            </x-gentelella.x-panel>
 
             {{-- Kartu Info Panduan Penilaian --}}
-            <div class="guidance-info-card">
-                <div class="guidance-title">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #1A73E8;">
+            <x-gentelella.card style="background: #F8FAFC; border: 1px dashed var(--neutral-300, #CBD5E1);">
+                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--neutral-600, #475569); letter-spacing: 0.04em; display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0751FF;">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     Informasi Pengerjaan
                 </div>
-                <div class="guidance-desc">
+                <div style="font-size: 0.8125rem; color: var(--neutral-600, #475569); line-height: 1.5;">
                     Setiap progres yang Anda kirimkan akan dievaluasi oleh pembimbing lapangan Anda untuk penilaian 5 rubrik kinerja magang.
                 </div>
-            </div>
+            </x-gentelella.card>
         </div>
 
     </div>
@@ -1034,14 +551,16 @@
         if (preview) preview.classList.remove('active');
     }
 
-    // Anti double submit
     document.getElementById('formProgresTugas')?.addEventListener('submit', function() {
         const btn = document.getElementById('btnSubmitProgres');
         if (btn) {
             btn.disabled = true;
-            btn.textContent = 'Mengirimkan Progres...';
+            btn.innerHTML = `<span style="display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:8px;"></span> Mengirimkan Progres...`;
         }
     });
 </script>
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
 @endpush
 @endsection

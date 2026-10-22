@@ -579,16 +579,8 @@
     </div>
 
     {{-- 3. DATA TABLE CARD --}}
-    <div class="admin-card">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: center; background: #ffffff;">
-            <div style="display: flex; align-items: center; gap: 0.6rem;">
-                <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">
-                    Data Penempatan Peserta
-                </h3>
-                <span style="padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: #EFF6FF; color: #1D4ED8;">
-                    {{ $penempatanList->total() }} Peserta
-                </span>
-            </div>
+    <x-gentelella.x-panel title="Data Penempatan Peserta" subtitle="Daftar peserta magang aktif dan riwayat penugasan pembimbing">
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
             <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
                 Menampilkan {{ $penempatanList->firstItem() ?? 0 }}–{{ $penempatanList->lastItem() ?? 0 }} dari {{ $penempatanList->total() }}
             </span>
@@ -609,8 +601,8 @@
                 <p style="font-size: 0.875rem; max-width: 460px; margin: 0 auto;">Belum ada peserta magang yang sesuai dengan kriteria filter yang dipilih.</p>
             </div>
         @else
-            <div style="overflow-x: auto;">
-                <table class="admin-table">
+            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                <table class="admin-table table jambo_table table-striped bulk_action">
                     <thead>
                         <tr>
                             <th style="width: 40px; text-align: center;">
@@ -750,7 +742,7 @@
                 </div>
             @endif
         @endif
-    </div>
+    </x-gentelella.x-panel>
 
 </div>
 

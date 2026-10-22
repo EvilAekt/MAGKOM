@@ -796,3 +796,613 @@
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* ==========================================================================
+   LOVABLE CLEARVIEW THEME EXTENSION (Gambar 1 & 2 Alignment)
+   Atmospheric Hero, 4-Metric Dock, Statusline Ribbon, Hazard Card, Cockpit
+   ========================================================================== */
+
+:root {
+  --cv-blue-950: #041238;
+  --cv-blue-900: #061e5b;
+  --cv-blue-800: #06318c;
+  --cv-blue-700: #0641cc;
+  --cv-blue-600: #0751ff;
+  --cv-blue-tint: #eff6ff;
+  --cv-paper: #f8fafc;
+  --cv-surface: #ffffff;
+  --cv-line: #e2e8f0;
+  --cv-line-strong: #cbd5e1;
+  --cv-ink: #0f172a;
+  --cv-ink-2: #334155;
+  --cv-ink-3: #64748b;
+  --cv-ok: #10b981;
+  --cv-ok-tint: #ecfdf5;
+  --cv-warn: #f59e0b;
+  --cv-warn-tint: #fffbeb;
+  --cv-bad: #ef4444;
+  --cv-bad-tint: #fef2f2;
+  --cv-contour: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300' viewBox='0 0 600 300' fill='none' stroke='white' stroke-opacity='.09' stroke-width='1.2'%3E%3Cpath d='M-20 220C80 180 120 250 220 200S380 90 480 130 620 60 640 40'/%3E%3Cpath d='M-20 250C90 210 140 280 240 230S390 120 500 160 630 90 650 70'/%3E%3Cpath d='M-20 190C70 150 110 220 200 170S370 60 460 100 610 30 630 10'/%3E%3Cpath d='M-20 280C100 240 160 300 260 260S400 150 520 190 640 120 660 100'/%3E%3Cpath d='M-20 160C60 120 100 190 180 140S360 30 440 70 600 0 620-20'/%3E%3Cellipse cx='470' cy='120' rx='60' ry='26'/%3E%3Cellipse cx='470' cy='120' rx='34' ry='14'/%3E%3Cellipse cx='470' cy='120' rx='12' ry='5'/%3E%3C/svg%3E");
+}
+
+/* 1. Cockpit 2-Column Grid Layout */
+.sa-cockpit-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1.5rem;
+  align-items: start;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .sa-cockpit-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sa-cockpit-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sa-aside-sticky {
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (max-width: 1200px) {
+  .sa-aside-sticky {
+    position: static;
+  }
+}
+
+.sa-greet {
+  font-size: 0.875rem;
+  color: var(--cv-ink-2);
+  margin: 0;
+}
+.sa-greet strong {
+  color: var(--cv-ink);
+  font-weight: 700;
+}
+
+/* 2. Atmospheric Hero Banner */
+.sa-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  color: #ffffff;
+  background: var(--cv-contour) right -40px top -20px / 720px auto no-repeat,
+              radial-gradient(80% 120% at 100% 0%, rgba(7, 81, 255, 0.45), transparent 60%),
+              linear-gradient(160deg, var(--cv-blue-800), var(--cv-blue-900));
+  box-shadow: 0 8px 24px -4px rgba(6, 49, 140, 0.35);
+  padding: 1.75rem 2rem 0 2rem;
+}
+
+.sa-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.sa-hero__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.sa-hero-eyebrow {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.sa-hero-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0.4rem 0;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.sa-hero-sub {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 65ch;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.sa-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+  border: 1.5px solid rgba(16, 185, 129, 0.8);
+  color: #a7f3d0;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.725rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transform: rotate(-1.5deg);
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.sa-stamp .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.3);
+  animation: pulseDot 2s infinite;
+}
+
+.sa-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-hero-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 36px;
+  padding: 0 0.9rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.btn-hero-ghost:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.btn-hero-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 36px;
+  padding: 0 1rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border: 1px solid #ffffff;
+  background: #ffffff;
+  color: var(--cv-blue-800);
+  box-shadow: 0 4px 14px -3px rgba(0, 0, 0, 0.35);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.btn-hero-primary:hover {
+  background: var(--cv-blue-tint);
+  color: var(--cv-blue-900);
+}
+.btn-hero-primary kbd {
+  font-family: monospace;
+  font-size: 0.6875rem;
+  border: 1px solid rgba(6, 49, 140, 0.25);
+  border-radius: 3px;
+  padding: 0 4px;
+  color: var(--cv-blue-800);
+}
+
+/* 3. Integrated 4-Metric Dock */
+.sa-hero-dock {
+  margin: 1.5rem -2rem 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(4, 18, 56, 0.35);
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 900px) {
+  .sa-hero-dock {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.sa-dock-metric {
+  padding: 1.15rem 1.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  text-decoration: none;
+  transition: background 0.15s ease;
+  display: flex;
+  flex-direction: column;
+}
+.sa-dock-metric:last-child {
+  border-right: 0;
+}
+.sa-dock-metric:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Gentelella tile-stat adapter inside sa-hero-dock */
+.sa-hero-dock .tile_stats_count {
+  background: transparent !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 1.15rem 1.5rem !important;
+  margin: 0 !important;
+  color: #ffffff !important;
+  transition: background 0.15s ease;
+}
+.sa-hero-dock .tile_stats_count:last-child {
+  border-right: 0 !important;
+}
+.sa-hero-dock .tile_stats_count:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+.sa-hero-dock .tile_stats_count .count_top,
+.sa-hero-dock .tile_stats_count .count_title {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+.sa-hero-dock .tile_stats_count .count {
+  font-size: 2.25rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  line-height: 1.1 !important;
+  margin: 0.35rem 0 !important;
+}
+.sa-hero-dock .tile_stats_count.warn .count {
+  color: #fde047 !important;
+}
+.sa-hero-dock .tile_stats_count.bad .count {
+  color: #fca5a5 !important;
+}
+.sa-hero-dock .tile_stats_count .count_bottom {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.75rem !important;
+}
+.sa-hero-dock .tile_stats_count .trend-indicator {
+  font-family: monospace;
+  font-weight: 700;
+}
+
+.sa-dock-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.sa-dock-val {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin: 0.35rem 0;
+  color: #ffffff;
+}
+
+.sa-dock-metric.warn .sa-dock-val {
+  color: #fde047;
+}
+.sa-dock-metric.bad .sa-dock-val {
+  color: #fca5a5;
+}
+
+.sa-dock-foot {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.35;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.sa-spark {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 16px;
+}
+.sa-spark i {
+  width: 3px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 1px;
+}
+.sa-spark i:last-child {
+  background: #ffffff;
+}
+
+/* 4. Statusline Horizontal Ribbon */
+.sa-statusline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  background: var(--cv-surface);
+  border: 1px solid var(--cv-line);
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.sa-statusline > div {
+  padding: 0.65rem 1rem;
+  border-right: 1px solid var(--cv-line);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.sa-statusline > div:last-child {
+  border-right: 0;
+  margin-left: auto;
+}
+.sa-statusline dt {
+  color: var(--cv-ink-3);
+  font-weight: 500;
+}
+.sa-statusline dd {
+  font-weight: 700;
+  color: var(--cv-ink);
+  margin: 0;
+}
+.sa-statusline-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cv-ok);
+  box-shadow: 0 0 0 2px var(--cv-ok-tint);
+}
+
+/* 5. Hazard Attention Card */
+.sa-attn-hazard {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.25rem;
+  align-items: center;
+  background: var(--cv-surface);
+  border: 1px solid var(--cv-line);
+  border-radius: 12px;
+  box-shadow: 0 3px 10px -2px rgba(15, 23, 42, 0.07);
+  padding: 1rem 1.25rem 1rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .sa-attn-hazard {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sa-attn-hazard::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: repeating-linear-gradient(-45deg, var(--cv-warn) 0 6px, #FBBF24 6px 12px);
+}
+
+.sa-attn-hazard__count {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--cv-warn);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-align: center;
+}
+.sa-attn-hazard__count small {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--cv-ink-3);
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
+.sa-attn-hazard__body h4 {
+  font-size: 0.925rem;
+  font-weight: 700;
+  color: var(--cv-ink);
+  margin: 0 0 0.35rem 0;
+}
+
+.sa-attn-hazard__chips {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sa-hazard-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  background: var(--cv-warn-tint);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: var(--cv-ink-2);
+}
+.sa-hazard-chip b {
+  font-family: monospace;
+  color: var(--cv-bad);
+  font-weight: 700;
+  margin-left: 0.35rem;
+}
+
+/* 6. Aside Sticky List & Quick Action Buttons */
+.cv-todo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cv-todo-list a {
+  display: grid;
+  grid-template-columns: 8px 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--cv-ink);
+  font-size: 0.8125rem;
+  transition: background 0.15s ease;
+}
+.cv-todo-list a:hover {
+  background: var(--cv-blue-tint);
+}
+
+.cv-todo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cv-warn);
+}
+.cv-todo-dot.bad { background: var(--cv-bad); }
+.cv-todo-dot.warn { background: var(--cv-warn); }
+.cv-todo-dot.info { background: var(--cv-blue-600); }
+
+.cv-todo-text b {
+  display: block;
+  font-weight: 700;
+  color: var(--cv-ink);
+  line-height: 1.25;
+}
+.cv-todo-text small {
+  display: block;
+  font-size: 0.725rem;
+  color: var(--cv-ink-3);
+  margin-top: 2px;
+}
+
+.cv-todo-go {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--cv-blue-700);
+}
+
+.cv-quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+.cv-quick-actions .btn-block {
+  grid-column: 1 / -1;
+  text-align: center;
+  justify-content: center;
+}
+
+/* 7. Segmented Quota Bars (.cv-seg) */
+.cv-seg {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 2px;
+  height: 9px;
+  margin-top: 6px;
+}
+.cv-seg i {
+  border-radius: 2px;
+  background: var(--cv-line);
+}
+.cv-seg i.f {
+  background: linear-gradient(180deg, var(--cv-blue-600), var(--cv-blue-700));
+}
+.cv-seg.full i.f {
+  background: linear-gradient(180deg, #F59E0B, #D97706);
+}
+
+/* 8. Audit Log Timeline Feed */
+.cv-feed {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+}
+.cv-feed-day {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--cv-ink-3);
+  padding: 0.5rem 0.75rem 0.25rem;
+  text-transform: uppercase;
+}
+.cv-feed-item {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.8125rem;
+}
+.cv-feed-time {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--cv-ink-3);
+}
+.cv-feed-content {
+  position: relative;
+  padding-left: 1.25rem;
+}
+.cv-feed-content::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  bottom: -16px;
+  width: 1px;
+  background: var(--cv-line-strong);
+}
+.cv-feed-item:last-child .cv-feed-content::before {
+  display: none;
+}
+.cv-feed-content::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cv-surface);
+  box-shadow: 0 0 0 2px var(--cv-blue-600);
+}
+.cv-feed-what {
+  color: var(--cv-ink);
+  line-height: 1.4;
+}
+.cv-feed-meta {
+  font-size: 0.725rem;
+  color: var(--cv-ink-3);
+  font-family: monospace;
+  margin-top: 2px;
+}
+

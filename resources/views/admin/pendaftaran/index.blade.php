@@ -789,115 +789,43 @@
         }
     </style>
 
-    {{-- ==========================================================================
-       1. SIGNATURE HERO BANNER
-       ========================================================================== --}}
-    <div class="adm-hero">
-        <div class="adm-hero-content">
-            <div class="adm-hero-left">
-                <div class="adm-hero-pill-row">
-                    <span class="adm-hero-status-pill">● Antrean Verifikasi Aktif</span>
-                    <span class="adm-hero-role-pill">Prinsip FIFO & SLA</span>
-                </div>
-                
-                <h1 class="adm-hero-title">
-                    Antrean Verifikasi Berkas Pendaftaran 📋
-                </h1>
-                
-                <p class="adm-hero-desc">
-                    Tinjau kelengkapan dokumen persyaratan calon peserta magang dan tetapkan keputusan secara objektif dan tertib.
-                </p>
+    <x-gentelella.page-title title="Seleksi & Verifikasi Berkas" description="Pusat validasi berkas pendaftaran calon peserta magang dan monitoring SLA permohonan dinas.">
+        <a href="{{ route('admin.dashboard') }}" class="btn-action-gentelella btn-action-primary" style="padding: 0.5rem 1rem; font-size: 0.8125rem;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span>Kembali ke Dashboard</span>
+        </a>
+        <a href="{{ route('admin.pendaftaran.download-zip', request()->query()) }}" class="btn-action-gentelella btn-action-success" style="padding: 0.5rem 1rem; font-size: 0.8125rem;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Unduh Bundel ZIP</span>
+        </a>
+    </x-gentelella.page-title>
 
-                <div class="adm-hero-meta-badges">
-                    <div class="adm-hero-chip">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                        <span>Menunggu Ditinjau: <strong>{{ number_format($queueStats['diajukan'] ?? 0) }} Berkas</strong></span>
-                    </div>
-                    <div class="adm-hero-chip">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        <span>Perlu Revisi: <strong>{{ number_format($queueStats['perlu_perbaikan'] ?? 0) }} Berkas</strong></span>
-                    </div>
-                    @if(($queueStats['sla_warning'] ?? 0) > 0)
-                        <div class="adm-hero-chip" style="background: rgba(220, 38, 38, 0.25); border-color: rgba(254, 202, 202, 0.4);">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                            <span>⚠️ <strong>{{ number_format($queueStats['sla_warning']) }} Berkas</strong> &gt; 3 Hari</span>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <div class="adm-hero-right">
-                <div class="adm-hero-date-badge">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    <span>{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}</span>
-                </div>
-
-                <div class="adm-hero-actions">
-                    <a href="{{ route('admin.dashboard') }}" class="adm-hero-glass-btn btn-solid">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                        <span>Kembali ke Dashboard</span>
-                    </a>
-                </div>
-            </div>
-        </div>
+    {{-- GENTELELLA TILE COUNT METRICS --}}
+    <div class="row tile_count" style="margin-bottom: 1.5rem;">
+        <x-gentelella.tile-stat 
+            title="Total Pengajuan" 
+            :value="number_format($queueStats['total'] ?? $pendaftaranList->total())" 
+            sub="Semua riwayat pendaftaran" 
+        />
+        <x-gentelella.tile-stat 
+            title="Menunggu Ditinjau" 
+            :value="number_format($queueStats['diajukan'] ?? 0)" 
+            sub="Prioritas antrean FIFO" 
+        />
+        <x-gentelella.tile-stat 
+            title="Perlu Revisi Dokumen" 
+            :value="number_format($queueStats['perlu_perbaikan'] ?? 0)" 
+            sub="Menunggu respon peserta" 
+        />
+        <x-gentelella.tile-stat 
+            title="Tertahan > 3 Hari" 
+            :value="number_format($queueStats['sla_warning'] ?? 0)" 
+            sub="Batas SLA verifikasi target" 
+        />
     </div>
 
-    {{-- ==========================================================================
-       2. UNIFIED KPI STRIP CARD
-       ========================================================================== --}}
-    <div class="adm-kpi-unified-card">
-        {{-- Item 1: Total Pengajuan --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box adm-kpi-icon-blue">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Total Pengajuan</span>
-                <span class="adm-kpi-val">{{ number_format($queueStats['total'] ?? $pendaftaranList->total()) }}</span>
-                <span class="adm-kpi-hint">Semua riwayat pendaftaran</span>
-            </div>
-        </div>
+    <x-gentelella.x-panel title="Daftar Permohonan Magang Masuk" sub="Manajemen antrean calon peserta magang Sleman">
 
-        {{-- Item 2: Menunggu Ditinjau --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box adm-kpi-icon-amber">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Menunggu Ditinjau</span>
-                <span class="adm-kpi-val">{{ number_format($queueStats['diajukan'] ?? 0) }}</span>
-                <span class="adm-kpi-hint">Prioritas antrean FIFO</span>
-            </div>
-        </div>
-
-        {{-- Item 3: Perlu Perbaikan --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box adm-kpi-icon-orange">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Perlu Revisi Dokumen</span>
-                <span class="adm-kpi-val">{{ number_format($queueStats['perlu_perbaikan'] ?? 0) }}</span>
-                <span class="adm-kpi-hint">Menunggu respon peserta</span>
-            </div>
-        </div>
-
-        {{-- Item 4: SLA Kritis --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box adm-kpi-icon-red">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Tertahan &gt; 3 Hari</span>
-                <span class="adm-kpi-val" style="color: {{ ($queueStats['sla_warning'] ?? 0) > 0 ? '#DC2626' : '#0F172A' }};">
-                    {{ number_format($queueStats['sla_warning'] ?? 0) }}
-                </span>
-                <span class="adm-kpi-hint" style="color: {{ ($queueStats['sla_warning'] ?? 0) > 0 ? '#DC2626' : '#64748B' }};">
-                    Batas SLA verifikasi target &le; 5 hari
-                </span>
-            </div>
-        </div>
-    </div>
 
     {{-- ==========================================================================
        3. FILTER & SEARCH TOOLBAR TERPADU
@@ -1173,6 +1101,7 @@
             </div>
         @endif
     </div>
+    </x-gentelella.x-panel>
 
 </div>
 @endsection

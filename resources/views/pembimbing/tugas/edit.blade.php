@@ -17,18 +17,6 @@
                 grid-template-columns: 1.8fr 1.2fr;
             }
         }
-        .form-card {
-            background: #ffffff;
-            border-radius: 14px;
-            border: 1px solid var(--neutral-200, #E2E8F0);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
-        }
-        @media (min-width: 640px) {
-            .form-card {
-                padding: 1.75rem;
-            }
-        }
         .form-label {
             display: block;
             font-size: 0.75rem;
@@ -40,9 +28,9 @@
         }
         .form-control-input {
             width: 100%;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid var(--neutral-300, #CBD5E1);
-            background: #F8FAFC;
+            background: var(--neutral-0, #FFFFFF);
             padding: 0.65rem 0.9rem;
             font-size: 0.875rem;
             color: var(--neutral-900, #0F172A);
@@ -51,7 +39,7 @@
         }
         .form-control-input:focus {
             outline: none;
-            background: #ffffff;
+            background: var(--neutral-0, #ffffff);
             border-color: #0641CC;
             box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.15);
         }
@@ -68,12 +56,12 @@
         .complexity-box {
             padding: 0.6rem 0.5rem;
             text-align: center;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid var(--neutral-300, #CBD5E1);
             font-size: 0.8rem;
             font-weight: 700;
             color: var(--neutral-600, #475569);
-            background: #F8FAFC;
+            background: var(--neutral-100, #F8FAFC);
             transition: all 0.2s ease;
             user-select: none;
         }
@@ -96,17 +84,34 @@
             box-shadow: 0 1px 3px rgba(99, 102, 241, 0.2);
         }
         .dropzone-box {
-            border: 2px dashed #CBD5E1;
-            border-radius: 14px;
+            border: 2px dashed var(--neutral-300, #CBD5E1);
+            border-radius: 10px;
             padding: 1.5rem 1.25rem;
             text-align: center;
             cursor: pointer;
-            background: #F8FAFC;
+            background: var(--neutral-100, #F8FAFC);
             transition: all 0.2s ease;
         }
         .dropzone-box:hover {
             border-color: #0641CC;
-            background: #EFF6FF;
+            background: var(--blue-tint, #EFF6FF);
+        }
+        [data-theme="dark"] .form-control-input {
+            background: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+        [data-theme="dark"] .form-label {
+            color: #94A3B8 !important;
+        }
+        [data-theme="dark"] .dropzone-box {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+        }
+        [data-theme="dark"] .complexity-box {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
         }
     </style>
 
@@ -136,12 +141,10 @@
             </a>
             <button type="submit" form="form-edit-tugas" style="padding: 0.55rem 1.25rem; background: #0641CC; color: #ffffff; font-size: 0.875rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; box-shadow: 0 2px 4px rgba(6, 65, 204, 0.2);">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Simpan Perubahan
+                <span>Simpan Perubahan</span>
             </button>
         </div>
     </div>
-
-
 
     <form id="form-edit-tugas" action="{{ route('pembimbing.tugas.update', $tugas) }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -152,7 +155,7 @@
             {{-- KOLOM UTAMA: DETAIL TUGAS --}}
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                 
-                <div class="form-card">
+                <x-gentelella.x-panel title="Detail Penugasan &amp; Instruksi" subtitle="Perbarui judul, instruksi, dan tautan acuan tugas" :toolbox="false">
                     {{-- Judul Tugas --}}
                     <div style="margin-bottom: 1.25rem;">
                         <label for="judul" class="form-label">
@@ -176,19 +179,17 @@
                         </label>
                         <input type="url" id="link_referensi" name="link_referensi" value="{{ old('link_referensi', $tugas->link_referensi) }}" class="form-control-input" placeholder="https://github.com/organisasi/repo atau https://figma.com/file/...">
                     </div>
-                </div>
+                </x-gentelella.x-panel>
 
                 {{-- Lampiran Dokumen Acuan --}}
-                <div class="form-card">
-                    <label class="form-label">Berkas Lampiran Acuan Tugas</label>
-                    
+                <x-gentelella.x-panel title="Berkas Lampiran Acuan Tugas" subtitle="Dokumen TOR, materi kerja, atau lembar spesifikasi" :toolbox="false">
                     @if($tugas->file_lampiran)
-                        <div style="padding: 0.85rem 1rem; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="padding: 0.85rem 1rem; background: var(--blue-tint, #EFF6FF); border: 1px solid var(--blue-tint-line, #BFDBFE); border-radius: 8px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
                             <div style="display: flex; align-items: center; gap: 0.65rem;">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                                 <div>
                                     <span style="font-size: 0.875rem; font-weight: 700; color: #1E40AF; display: block;">{{ $tugas->nama_file_lampiran ?: 'Berkas Lampiran Saat Ini' }}</span>
-                                    <small style="color: #64748B;">{{ $tugas->ukuran_file_lampiran ? number_format($tugas->ukuran_file_lampiran / 1024, 1) . ' KB' : '' }}</small>
+                                    <small style="color: var(--neutral-500, #64748B);">{{ $tugas->ukuran_file_lampiran ? number_format($tugas->ukuran_file_lampiran / 1024, 1) . ' KB' : '' }}</small>
                                 </div>
                             </div>
                             <a href="{{ route('pembimbing.tugas.lampiran', $tugas) }}" class="btn-link" style="font-size: 0.8125rem; font-weight: 700; color: #0641CC; text-decoration: none;">
@@ -208,7 +209,7 @@
                         <input type="file" id="file_lampiran" name="file_lampiran" style="display: none;" onchange="showSelectedFilename(this)">
                         <div id="file-selected-name" style="margin-top: 0.5rem; font-size: 0.8125rem; font-weight: 700; color: #0641CC; display: none;"></div>
                     </div>
-                </div>
+                </x-gentelella.x-panel>
 
             </div>
 
@@ -216,25 +217,24 @@
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                 
                 {{-- Info Peserta Penerima Tugas (Terkunci) --}}
-                <div class="form-card" style="background: #F8FAFC;">
-                    <span class="form-label">Penerima Tugas</span>
-                    <div style="display: flex; align-items: center; gap: 0.85rem; margin-top: 0.5rem;">
-                        <div style="width: 44px; height: 44px; border-radius: 12px; background: #DBEAFE; color: #1E40AF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; flex-shrink: 0;">
+                <x-gentelella.card title="Penerima Tugas" icon="fa fa-user">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;">
+                        <div style="width: 44px; height: 44px; border-radius: 8px; background: var(--blue-tint, #DBEAFE); color: #1E40AF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; flex-shrink: 0;">
                             {{ strtoupper(substr($tugas->penempatan?->peserta?->nama ?? 'P', 0, 1)) }}
                         </div>
                         <div>
-                            <div style="font-weight: 800; font-size: 0.95rem; color: #0F172A;">
+                            <div style="font-weight: 800; font-size: 0.95rem; color: var(--neutral-900, #0F172A);">
                                 {{ $tugas->penempatan?->peserta?->nama }}
                             </div>
-                            <small style="color: #64748B; font-size: 0.775rem;">
+                            <small style="color: var(--neutral-500, #64748B); font-size: 0.775rem;">
                                 {{ $tugas->penempatan?->bidang?->nama_bidang ?? 'Dinas Kominfo Sleman' }} &bull; Selesai {{ $tugas->penempatan?->tgl_selesai?->translatedFormat('d M Y') }}
                             </small>
                         </div>
                     </div>
-                </div>
+                </x-gentelella.card>
 
                 {{-- Parameter Penugasan --}}
-                <div class="form-card">
+                <x-gentelella.x-panel title="Parameter Penugasan" subtitle="Kategori, kompleksitas, dan tenggat waktu" :toolbox="false">
                     {{-- Kategori Tugas --}}
                     <div style="margin-bottom: 1.25rem;">
                         <label for="kategori" class="form-label">
@@ -274,12 +274,12 @@
                         </label>
                         <input type="date" id="deadline" name="deadline" value="{{ old('deadline', $tugas->deadline?->format('Y-m-d')) }}" required class="form-control-input">
                         @if($tugas->penempatan?->tgl_selesai)
-                            <small style="color: #64748B; font-size: 0.725rem; display: block; margin-top: 0.35rem;">
+                            <small style="color: var(--neutral-500, #64748B); font-size: 0.725rem; display: block; margin-top: 0.35rem;">
                                 Maks. tanggal {{ $tugas->penempatan->tgl_selesai->format('d/m/Y') }} (akhir magang peserta).
                             </small>
                         @endif
                     </div>
-                </div>
+                </x-gentelella.x-panel>
 
             </div>
 

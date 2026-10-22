@@ -160,47 +160,49 @@
     </style>
 
     {{-- 1. HEADER ALUMNI PROFILE CARD --}}
-    <div class="arsip-card" style="padding: 1.5rem 1.75rem; background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem;">
-        <div style="display: flex; align-items: center; gap: 1.25rem;">
-            <div style="width: 60px; height: 60px; border-radius: 50%; background: #0641CC; border: 3px solid #DBEAFE; color: #ffffff; font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                @if($profil?->foto_url)
-                    <img src="{{ $profil->foto_url }}" alt="{{ $peserta?->nama }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                @else
-                    {{ strtoupper(substr($peserta?->nama ?? 'A', 0, 2)) }}
-                @endif
-            </div>
-            <div>
-                <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-                    <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">
-                        {{ $peserta?->nama ?? '-' }}
-                    </h2>
-                    <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: {{ $penempatan->status?->value === 'selesai' ? '#ECFDF5' : '#F1F5F9' }}; color: {{ $penempatan->status?->value === 'selesai' ? '#065F46' : '#475569' }}; border: 1px solid {{ $penempatan->status?->value === 'selesai' ? '#A7F3D0' : '#CBD5E1' }};">
-                        {{ $penempatan->status?->label() }}
-                    </span>
-                    <span style="font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D;">
-                        Arsip Read-Only (Governance)
-                    </span>
+    <x-gentelella.card class="arsip-card" style="padding: 1.5rem 1.75rem; background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 1.25rem;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: #0641CC; border: 3px solid #DBEAFE; color: #ffffff; font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    @if($profil?->foto_url)
+                        <img src="{{ $profil->foto_url }}" alt="{{ $peserta?->nama }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    @else
+                        {{ strtoupper(substr($peserta?->nama ?? 'A', 0, 2)) }}
+                    @endif
                 </div>
-                <div style="font-size: 0.875rem; color: var(--neutral-600, #64748B); margin-top: 0.25rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <span>Email: <strong>{{ $peserta?->email }}</strong></span>
-                    <span>•</span>
-                    <span>NIM/NISN: <strong>{{ $profil?->nim_nisn ?? '-' }}</strong></span>
-                    <span>•</span>
-                    <span>Institusi: <strong>{{ $profil?->institusi ?? '-' }}</strong></span>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">
+                            {{ $peserta?->nama ?? '-' }}
+                        </h2>
+                        <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: {{ $penempatan->status?->value === 'selesai' ? '#ECFDF5' : '#F1F5F9' }}; color: {{ $penempatan->status?->value === 'selesai' ? '#065F46' : '#475569' }}; border: 1px solid {{ $penempatan->status?->value === 'selesai' ? '#A7F3D0' : '#CBD5E1' }};">
+                            {{ $penempatan->status?->label() }}
+                        </span>
+                        <span style="font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D;">
+                            Arsip Read-Only (Governance)
+                        </span>
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--neutral-600, #64748B); margin-top: 0.25rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <span>Email: <strong>{{ $peserta?->email }}</strong></span>
+                        <span>•</span>
+                        <span>NIM/NISN: <strong>{{ $profil?->nim_nisn ?? '-' }}</strong></span>
+                        <span>•</span>
+                        <span>Institusi: <strong>{{ $profil?->institusi ?? '-' }}</strong></span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        @if($penilaian)
-            <div style="background: #ffffff; border: 1px solid #BFDBFE; border-radius: 10px; padding: 0.65rem 1rem; text-align: right;">
-                <div style="font-size: 0.7rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Nilai Akhir Magang</div>
-                <div style="font-size: 1.35rem; font-weight: 900; color: #0641CC; line-height: 1.1; margin-top: 0.15rem;">
-                    {{ number_format((float) $penilaian->nilai_akhir, 2) }}
-                    <span style="font-size: 0.8125rem; font-weight: 800; color: #16A34A;">(Predikat {{ $penilaian->predikat ?? 'Lulus' }})</span>
+            @if($penilaian)
+                <div style="background: #ffffff; border: 1px solid #BFDBFE; border-radius: 10px; padding: 0.65rem 1rem; text-align: right;">
+                    <div style="font-size: 0.7rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Nilai Akhir Magang</div>
+                    <div style="font-size: 1.35rem; font-weight: 900; color: #0641CC; line-height: 1.1; margin-top: 0.15rem;">
+                        {{ number_format((float) $penilaian->nilai_akhir, 2) }}
+                        <span style="font-size: 0.8125rem; font-weight: 800; color: #16A34A;">(Predikat {{ $penilaian->predikat ?? 'Lulus' }})</span>
+                    </div>
                 </div>
-            </div>
-        @endif
-    </div>
+            @endif
+        </div>
+    </x-gentelella.card>
 
     {{-- 2. TAB CONTROLLER --}}
     <div class="arsip-tab-bar" role="tablist">

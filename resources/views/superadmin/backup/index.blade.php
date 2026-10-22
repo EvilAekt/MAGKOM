@@ -138,31 +138,46 @@
 
     {{-- 2. METRIK KPI --}}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
-        <div class="backup-stat-card" style="border-left: 4px solid #0641CC;">
-            <div>
-                <span style="font-size: 0.8rem; font-weight: 700; color: var(--neutral-600, #475569); display: block; margin-bottom: 0.25rem;">Total Snapshot Tersedia</span>
-                <span style="font-size: 1.85rem; font-weight: 800; color: #0641CC;">{{ number_format($totalBackups) }}</span>
-                <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); display: block; margin-top: 0.25rem;">Berkas cadangan valid</span>
+        <x-gentelella.card style="border-left: 4px solid #0641CC;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--neutral-600, #475569); display: block; margin-bottom: 0.25rem;">Total Snapshot Tersedia</span>
+                    <span style="font-size: 1.85rem; font-weight: 800; color: #0641CC;">{{ number_format($totalBackups) }}</span>
+                    <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); display: block; margin-top: 0.25rem;">Berkas cadangan valid</span>
+                </div>
+                <div style="width: 46px; height: 46px; border-radius: 10px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                </div>
             </div>
-            <div style="width: 46px; height: 46px; border-radius: 10px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-            </div>
-        </div>
+        </x-gentelella.card>
 
-        <div class="backup-stat-card" style="border-left: 4px solid #10B981;">
-            <div>
-                <span style="font-size: 0.8rem; font-weight: 700; color: var(--neutral-600, #475569); display: block; margin-bottom: 0.25rem;">Total Ukuran Berkas</span>
-                <span style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900, #0F172A);">{{ $totalSizeMb }} MB</span>
-                <span style="font-size: 0.75rem; color: #166534; display: block; margin-top: 0.25rem;">Tersimpan di storage lokal</span>
+        <x-gentelella.card style="border-left: 4px solid #10B981;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--neutral-600, #475569); display: block; margin-bottom: 0.25rem;">Total Ukuran Berkas</span>
+                    <span style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900, #0F172A);">{{ $totalSizeMb }} MB</span>
+                    <span style="font-size: 0.75rem; color: #166534; display: block; margin-top: 0.25rem;">Tersimpan di storage lokal</span>
+                </div>
+                <div style="width: 46px; height: 46px; border-radius: 10px; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                </div>
             </div>
-            <div style="width: 46px; height: 46px; border-radius: 10px; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-            </div>
-        </div>
+        </x-gentelella.card>
     </div>
 
     {{-- 3. TABEL DAFTAR BACKUP --}}
-    <div class="backup-container">
+    <x-gentelella.card
+        title="Daftar Snapshot Cadangan Basis Data"
+        subtitle="Arsip cadangan data magang Kominfo dengan validasi integritas checksum SHA-256."
+    >
+        <x-slot:icon>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-primary">
+                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+            </svg>
+        </x-slot:icon>
+
         @if($backupFiles->isEmpty())
             <div style="padding: 3.5rem 1.5rem; text-align: center; color: var(--neutral-600, #475569);">
                 <div style="width: 48px; height: 48px; border-radius: 50%; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
@@ -178,7 +193,7 @@
                 </form>
             </div>
         @else
-            <div style="overflow-x: auto;">
+            <div style="overflow-x: auto; margin: -10px -20px -20px -20px;">
                 <table class="backup-table">
                     <thead>
                         <tr>
@@ -226,7 +241,7 @@
                 </table>
             </div>
         @endif
-    </div>
+    </x-gentelella.card>
 
 </div>
 @endsection

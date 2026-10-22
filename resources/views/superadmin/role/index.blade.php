@@ -124,21 +124,17 @@
     </div>
 
     <!-- 3. TABEL MATRIKS HAK AKSES MENYELURUH (PRD Bab 3.1 & 3.3) -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-            <div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Matriks Wewenang & Hak Akses Modul</h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.125rem 0 0 0;">Standar pembagian otorisasi RBAC (Role-Based Access Control) MagKom.</p>
-            </div>
+    <x-gentelella.x-panel title="Matriks Wewenang & Hak Akses Modul" subtitle="Standar pembagian otorisasi RBAC (Role-Based Access Control) MagKom.">
+        <x-slot:toolbox>
             <a href="{{ route('superadmin.staf.index') }}" style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-600); text-decoration: none;">
                 Kelola Akun Staf &rarr;
             </a>
-        </div>
+        </x-slot:toolbox>
 
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.8125rem; text-align: left;">
+        <div class="table-responsive-gentelella" style="overflow-x: auto;">
+            <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.8125rem; text-align: left;">
                 <thead>
-                    <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <tr class="headings" style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         <th style="padding: 0.875rem 1.25rem; font-weight: 700;">Modul & Cakupan Fitur</th>
                         <th style="padding: 0.875rem 1rem; font-weight: 700; text-align: center; width: 130px;">SuperAdmin</th>
                         <th style="padding: 0.875rem 1rem; font-weight: 700; text-align: center; width: 130px;">Administrasi</th>
@@ -194,7 +190,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </x-gentelella.x-panel>
 
 </div>
 @endsection

@@ -973,10 +973,10 @@
 
     {{-- 5. Tampilan Tabel Alternatif (Table Mode) --}}
     <div id="classroomTableContainer" style="display: none; background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200, #E2E8F0); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+        <div class="table-responsive-gentelella" style="overflow-x: auto;">
+            <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                 <thead>
-                    <tr style="border-bottom: 1px solid var(--neutral-200, #E2E8F0); background: #f8fafc; color: var(--neutral-600, #64748B); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <tr class="headings" style="border-bottom: 1px solid var(--neutral-200, #E2E8F0); background: #f8fafc; color: var(--neutral-600, #64748B); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         <th style="padding: 1rem 1.5rem;">Tugas & Kategori</th>
                         <th style="padding: 1rem 1rem;">Peserta Magang</th>
                         <th style="padding: 1rem 1rem;">Kompleksitas</th>

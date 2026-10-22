@@ -128,16 +128,12 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-            <div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Master Program Studi & Jurusan</h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.125rem 0 0 0;">Daftar program kualifikasi akademik yang diakomodasi untuk seleksi magang.</p>
-            </div>
+    <x-gentelella.x-panel title="Master Program Studi & Jurusan" subtitle="Daftar program kualifikasi akademik yang diakomodasi untuk seleksi magang.">
+        <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total Jurusan: <strong>{{ method_exists($jurusanList, 'total') ? $jurusanList->total() : $jurusanList->count() }}</strong>
             </span>
-        </div>
+        </x-slot:toolbox>
 
         @if($jurusanList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
@@ -148,10 +144,10 @@
                 <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Jurusan Baru</strong> untuk menambahkan prodi baru.</p>
             </div>
         @else
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
+            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
-                        <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        <tr class="headings" style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                             <th style="padding: 1rem 1.25rem; font-weight: 700;">Nama Jurusan</th>
                             <th style="padding: 1rem 1rem; font-weight: 700; width: 240px;">Kategori Pendidikan</th>
                             <th style="padding: 1rem 1rem; font-weight: 700; width: 130px; text-align: center;">Status</th>
@@ -223,7 +219,7 @@
                 </div>
             @endif
         @endif
-    </div>
+    </x-gentelella.x-panel>
 </div>
 
 <!-- =====================================================================

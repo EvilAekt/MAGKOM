@@ -737,106 +737,41 @@
         }
     </style>
 
-    {{-- ==========================================================================
-       1. SIGNATURE HERO BANNER
-       ========================================================================== --}}
-    <div class="adm-hero">
-        <div class="adm-hero-content">
-            <div class="adm-hero-left">
-                <div class="adm-hero-pill-row">
-                    <span class="adm-hero-badge-tag">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        Penegakan Aturan FIFO (BR-05)
-                    </span>
-                    <span class="adm-hero-rule-pill">
-                        Sistem Cadangan Kuota
-                    </span>
-                </div>
-                <h1 class="adm-hero-title">Antrean Daftar Tunggu (Waiting List)</h1>
-                <p class="adm-hero-desc">
-                    Pengelolaan antrean cadangan peserta saat kuota jurusan penuh berdasarkan waktu pengajuan secara transparan, adil, dan objektif.
-                </p>
-                <div class="adm-hero-chips">
-                    <div class="adm-hero-chip">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        <span>{{ number_format($totalWaiting) }} Calon Peserta Menunggu</span>
-                    </div>
-                    @if($siapPromosiCount > 0)
-                        <div class="adm-hero-chip" style="background: rgba(16, 185, 129, 0.25); border-color: rgba(16, 185, 129, 0.5);">
-                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #10B981;"></span>
-                            <span>{{ $siapPromosiCount }} Siap Dipromosikan</span>
-                        </div>
-                    @endif
-                    <div class="adm-hero-chip">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
-                        <span>{{ $periodeCount }} Bulan Magang Terdampak</span>
-                    </div>
-                </div>
-            </div>
+    <x-gentelella.page-title title="Antrean Waiting List" description="Pengelolaan antrean cadangan peserta saat kuota jurusan penuh berdasarkan waktu pengajuan secara transparan, adil, dan objektif.">
+        <a href="{{ route('admin.dashboard') }}" class="btn-action-gentelella btn-action-primary" style="padding: 0.5rem 1rem; font-size: 0.8125rem;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span>Kembali ke Dashboard</span>
+        </a>
+    </x-gentelella.page-title>
 
-            <div class="adm-hero-right">
-                <div class="adm-hero-date-box">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    <span>Prioritas Otomatis Sesuai Timestamp Submit</span>
-                </div>
-            </div>
-        </div>
+    {{-- GENTELELLA TILE COUNT METRICS --}}
+    <div class="row tile_count" style="margin-bottom: 1.5rem;">
+        <x-gentelella.tile-stat 
+            title="Total Antrean Tunggu" 
+            :value="number_format($totalWaiting)" 
+            sub="Calon peserta terdaftar FIFO" 
+        />
+        <x-gentelella.tile-stat 
+            title="Bulan Magang Terdampak" 
+            :value="number_format($periodeCount)" 
+            sub="{{ $periodeCount }} Bulan Magang Terdampak" 
+        />
+        <x-gentelella.tile-stat 
+            title="Siap Dipromosikan" 
+            :value="number_format($siapPromosiCount)" 
+            sub="Kuota jurusan telah tersedia" 
+        />
+        <x-gentelella.tile-stat 
+            title="Penegakan Aturan" 
+            value="FIFO BR-05" 
+            sub="Prioritas waktu pendaftaran" 
+        />
     </div>
 
-    {{-- ==========================================================================
-       2. UNIFIED KPI STRIP CARD (METRIK TERPADU 4-KOLOM)
-       ========================================================================== --}}
-    <div class="adm-kpi-unified-card">
-        {{-- KPI 1: Total Waiting List --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box adm-kpi-icon-blue">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Total Antrean Tunggu</span>
-                <span class="adm-kpi-val">{{ number_format($totalWaiting) }}</span>
-                <span class="adm-kpi-hint">Calon peserta terdaftar FIFO</span>
-            </div>
-        </div>
+    <x-gentelella.x-panel title="Daftar Antrean Waiting List Calon Peserta" sub="Penegakan transparansi dan objektivitas penempatan magang">
 
-        {{-- KPI 2: Siap Dipromosikan --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box {{ $siapPromosiCount > 0 ? 'adm-kpi-icon-green' : 'adm-kpi-icon-amber' }}">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Siap Dipromosikan</span>
-                <span class="adm-kpi-val {{ $siapPromosiCount > 0 ? 'text-emerald-600' : 'text-slate-900' }}">{{ number_format($siapPromosiCount) }}</span>
-                <span class="adm-kpi-hint {{ $siapPromosiCount > 0 ? 'text-emerald-600' : 'text-slate-500' }}">
-                    {{ $siapPromosiCount > 0 ? 'Kursi kuota telah terbuka' : 'Menunggu kuota terbuka' }}
-                </span>
-            </div>
-        </div>
 
-        {{-- KPI 3: Kuota Tertahan --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box adm-kpi-icon-amber">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Tertahan Kuota Penuh</span>
-                <span class="adm-kpi-val text-amber-600">{{ number_format(max(0, $totalWaiting - $siapPromosiCount)) }}</span>
-                <span class="adm-kpi-hint">Menunggu penambahan kursi dinas</span>
-            </div>
-        </div>
 
-        {{-- KPI 4: Periode Terdampak --}}
-        <div class="adm-kpi-unified-item">
-            <div class="adm-kpi-icon-box adm-kpi-icon-indigo">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
-            </div>
-            <div class="adm-kpi-details">
-                <span class="adm-kpi-label">Bulan Magang</span>
-                <span class="adm-kpi-val" style="color: #4F46E5;">{{ $periodeCount }}</span>
-                <span class="adm-kpi-hint">Bulan dengan antrean aktif</span>
-            </div>
-        </div>
-    </div>
 
     {{-- ==========================================================================
        3. TOOLBAR PENCARIAN & KONTROL PENUTUPAN MASSAL
@@ -1074,6 +1009,7 @@
             @endif
         @endif
     </div>
+    </x-gentelella.x-panel>
 
 </div>
 @endsection

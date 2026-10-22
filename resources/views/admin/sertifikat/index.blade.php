@@ -333,27 +333,31 @@
 
     {{-- 2. METRIK RINGKASAN --}}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
-        <div class="cert-stat-card" style="border-left: 4px solid #0641CC;">
-            <div>
-                <span class="cert-stat-label">Siap Terbit Sertifikat</span>
-                <span style="font-size: 1.85rem; font-weight: 800; color: #0641CC;">{{ number_format($totalBersertifikat) }}</span>
-                <span class="cert-stat-hint">Nilai telah difinalisasi</span>
+        <x-gentelella.card class="cert-stat-card" hoverable="true" style="border-left: 4px solid #0641CC;">
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div>
+                    <span class="cert-stat-label">Siap Terbit Sertifikat</span>
+                    <span style="font-size: 1.85rem; font-weight: 800; color: #0641CC; display: block; line-height: 1.1;">{{ number_format($totalBersertifikat) }}</span>
+                    <span class="cert-stat-hint">Nilai telah difinalisasi</span>
+                </div>
+                <div style="width: 46px; height: 46px; border-radius: 10px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                </div>
             </div>
-            <div style="width: 46px; height: 46px; border-radius: 10px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-            </div>
-        </div>
+        </x-gentelella.card>
 
-        <div class="cert-stat-card" style="border-left: 4px solid #10B981;">
-            <div>
-                <span class="cert-stat-label">Total Alumni Selesai Magang</span>
-                <span class="cert-stat-val-dark" style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900, #0F172A);">{{ number_format($totalSelesai) }}</span>
-                <span class="cert-stat-hint-dark" style="font-size: 0.75rem; color: #166534; display: block; margin-top: 0.25rem;">Status Penempatan Selesai</span>
+        <x-gentelella.card class="cert-stat-card" hoverable="true" style="border-left: 4px solid #10B981;">
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div>
+                    <span class="cert-stat-label">Total Alumni Selesai Magang</span>
+                    <span class="cert-stat-val-dark" style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900, #0F172A); display: block; line-height: 1.1;">{{ number_format($totalSelesai) }}</span>
+                    <span class="cert-stat-hint-dark" style="font-size: 0.75rem; color: #166534; display: block; margin-top: 0.25rem;">Status Penempatan Selesai</span>
+                </div>
+                <div style="width: 46px; height: 46px; border-radius: 10px; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
             </div>
-            <div style="width: 46px; height: 46px; border-radius: 10px; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            </div>
-        </div>
+        </x-gentelella.card>
     </div>
 
     {{-- 3. FILTER & PENCARIAN --}}

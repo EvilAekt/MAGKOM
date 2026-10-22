@@ -105,6 +105,28 @@
         }, 250);
     };
 
+    /**
+     * Buka modal dialog Gentelella
+     */
+    window.openGentelellaModal = function (modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        modal.style.display = 'flex';
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    };
+
+    /**
+     * Tutup modal dialog Gentelella
+     */
+    window.closeGentelellaModal = function (modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        modal.style.display = 'none';
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    };
+
     // Inisialisasi preferensi sidebar & event listeners saat DOM siap
     document.addEventListener('DOMContentLoaded', function () {
         // 1. Pulihkan Preferensi Sidebar Desktop

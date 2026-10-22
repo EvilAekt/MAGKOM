@@ -60,7 +60,7 @@
         <div style="display: flex; flex-direction: column; gap: 1.5rem;">
             
             <!-- Task Info Card -->
-            <div style="background: #ffffff; border: 1px solid var(--neutral-200); border-radius: 14px; padding: 1.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <x-gentelella.card style="padding: 1.75rem;">
                 <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; align-items: center;">
                     <span style="padding: 0.2rem 0.6rem; background: #e0e7ff; color: #3730a3; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">
                         {{ $tugas->kategori }}
@@ -140,10 +140,10 @@
                         </div>
                     </div>
                 @endif
-            </div>
+            </x-gentelella.card>
 
             <!-- Progress Logs & Review List -->
-            <div style="background: #ffffff; border: 1px solid var(--neutral-200); border-radius: 14px; padding: 1.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <x-gentelella.card style="padding: 1.75rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.75rem;">
                     <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
                         Laporan Progres dari Peserta ({{ $tugas->progresLogs->count() }})
@@ -259,14 +259,14 @@
                         @endforeach
                     </div>
                 @endif
-            </div>
+            </x-gentelella.card>
         </div>
 
         <!-- Right Column: Mentee & Status Updates -->
         <div style="display: flex; flex-direction: column; gap: 1.5rem;">
             
             <!-- Mentee Card -->
-            <div style="background: #ffffff; border: 1px solid var(--neutral-200); border-radius: 14px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <x-gentelella.card style="padding: 1.5rem;">
                 <h3 style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500); margin: 0 0 1rem 0;">
                     Peserta Bimbingan
                 </h3>
@@ -300,10 +300,10 @@
                         Lihat Profil Lengkap Mentee &rarr;
                     </a>
                 </div>
-            </div>
+            </x-gentelella.card>
 
             <!-- Update Status Tugas Form -->
-            <div style="background: #ffffff; border: 1px solid var(--neutral-200); border-radius: 14px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <x-gentelella.card style="padding: 1.5rem;">
                 <h3 style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500); margin: 0 0 1rem 0;">
                     Perbarui Status Tugas
                 </h3>
@@ -331,7 +331,7 @@
                         Simpan Perubahan
                     </button>
                 </form>
-            </div>
+            </x-gentelella.card>
         </div>
     </div>
 </div>

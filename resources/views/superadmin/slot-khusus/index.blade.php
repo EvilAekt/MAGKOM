@@ -128,16 +128,12 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-            <div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Daftar Alokasi Slot Khusus Mitra</h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.125rem 0 0 0;">Monitoring kapasitas reservasi dan realisasi pendaftar jalur kemitraan.</p>
-            </div>
+    <x-gentelella.x-panel title="Daftar Alokasi Slot Khusus Mitra" subtitle="Monitoring kapasitas reservasi dan realisasi pendaftar jalur kemitraan.">
+        <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total: <strong>{{ method_exists($slotList, 'total') ? $slotList->total() : $slotList->count() }} Slot</strong>
             </span>
-        </div>
+        </x-slot:toolbox>
 
         @if($slotList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
@@ -148,10 +144,10 @@
                 <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Slot Khusus</strong> untuk mengalokasikan kuota mitra.</p>
             </div>
         @else
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
+            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
-                        <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        <tr class="headings" style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                             <th style="padding: 1rem 1.25rem; font-weight: 700;">Instansi / Keterangan</th>
                             <th style="padding: 1rem 1rem; font-weight: 700; width: 180px;">Bulan Magang</th>
                             <th style="padding: 1rem 1rem; font-weight: 700; text-align: center; width: 140px;">Kapasitas Slot</th>
@@ -189,7 +185,7 @@
                                 </td>
                                 <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
                                     @if($slot->aktif)
-                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(22, 163, 74, 0.2);">
+                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(220, 38, 38, 0.2);">
                                             <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--green-600);"></span>
                                             Aktif
                                         </span>
@@ -221,7 +217,7 @@
                 </div>
             @endif
         @endif
-    </div>
+    </x-gentelella.x-panel>
 </div>
 
 <!-- =====================================================================

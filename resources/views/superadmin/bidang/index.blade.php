@@ -131,17 +131,7 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-            <div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Daftar Bidang & Unit Kerja Diskominfo</h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.125rem 0 0 0;">Struktur organisasi dinas tempat alokasi bimbingan teknis magang.</p>
-            </div>
-            <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
-                Total Bidang: <strong>{{ method_exists($bidangList, 'total') ? $bidangList->total() : $bidangList->count() }}</strong>
-            </span>
-        </div>
-
+    <x-gentelella.x-panel title="Daftar Bidang & Unit Kerja Diskominfo" subtitle="Struktur organisasi dinas tempat alokasi bimbingan teknis magang.">
         @if($bidangList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
@@ -151,10 +141,10 @@
                 <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Bidang Baru</strong> untuk mendaftarkan unit kerja.</p>
             </div>
         @else
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
+            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
-                        <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        <tr class="headings" style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                             <th style="padding: 1rem 1.25rem; font-weight: 700;">Nama Bidang Dinas</th>
                             <th style="padding: 1rem 1rem; font-weight: 700;">Deskripsi Tugas & Fungsi</th>
                             <th style="padding: 1rem 1rem; font-weight: 700; text-align: center; width: 140px;">Jumlah Staf</th>
@@ -223,7 +213,7 @@
                 </div>
             @endif
         @endif
-    </div>
+    </x-gentelella.x-panel>
 </div>
 
 <!-- =====================================================================

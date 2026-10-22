@@ -561,7 +561,7 @@
 
     <div class="macro-metrics-grid">
         <!-- Kartu 1: Indeks Kepuasan Magang (IKM) -->
-        <div class="macro-card">
+        <x-gentelella.card class="macro-card" hoverable="true">
             <div>
                 <div class="macro-card-header">
                     <div>
@@ -581,14 +581,16 @@
                 </div>
             </div>
 
-            <div style="font-size: 0.775rem; color: var(--neutral-600, #64748B); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--neutral-200, #F1F5F9); padding-top: 0.65rem; margin-top: 0.5rem;">
-                <span>Skor Rata-Rata Komposit: <strong>{{ $kompositIkm }} / 5.0</strong></span>
-                <span style="color: #0641CC; font-weight: 600;">{{ $ikmPercent }}% Capaian</span>
-            </div>
-        </div>
+            <x-slot:footer>
+                <div style="font-size: 0.775rem; color: var(--neutral-600, #64748B); display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <span>Skor Rata-Rata Komposit: <strong>{{ $kompositIkm }} / 5.0</strong></span>
+                    <span style="color: #0641CC; font-weight: 600;">{{ $ikmPercent }}% Capaian</span>
+                </div>
+            </x-slot:footer>
+        </x-gentelella.card>
 
         <!-- Kartu 2: Net Promoter Score (NPS) -->
-        <div class="macro-card">
+        <x-gentelella.card class="macro-card" hoverable="true">
             <div>
                 <div class="macro-card-header">
                     <div>
@@ -617,21 +619,23 @@
                 </div>
             </div>
 
-            <div class="nps-legend-row" style="border-top: 1px solid var(--neutral-200, #F1F5F9); padding-top: 0.65rem; margin-top: 0.5rem;">
-                <span class="nps-legend-item">
-                    <span class="nps-dot" style="background: #10B981;"></span>
-                    <span><strong>{{ $promoters }}</strong> Promoters (9-10)</span>
-                </span>
-                <span class="nps-legend-item">
-                    <span class="nps-dot" style="background: #F59E0B;"></span>
-                    <span><strong>{{ $passives }}</strong> Passives (7-8)</span>
-                </span>
-                <span class="nps-legend-item">
-                    <span class="nps-dot" style="background: #EF4444;"></span>
-                    <span><strong>{{ $detractors }}</strong> Detractors (&le;6)</span>
-                </span>
-            </div>
-        </div>
+            <x-slot:footer>
+                <div class="nps-legend-row" style="width: 100%;">
+                    <span class="nps-legend-item">
+                        <span class="nps-dot" style="background: #10B981;"></span>
+                        <span><strong>{{ $promoters }}</strong> Promoters (9-10)</span>
+                    </span>
+                    <span class="nps-legend-item">
+                        <span class="nps-dot" style="background: #F59E0B;"></span>
+                        <span><strong>{{ $passives }}</strong> Passives (7-8)</span>
+                    </span>
+                    <span class="nps-legend-item">
+                        <span class="nps-dot" style="background: #EF4444;"></span>
+                        <span><strong>{{ $detractors }}</strong> Detractors (&le;6)</span>
+                    </span>
+                </div>
+            </x-slot:footer>
+        </x-gentelella.card>
     </div>
 
     {{-- 3. Grid 3 Pilar Dimensi Mutu Penyelenggaraan --}}

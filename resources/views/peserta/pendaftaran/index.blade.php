@@ -6,65 +6,22 @@
 @push('styles')
 <style>
     /* ========================================================
-       HERO BANNER & LAYOUT TOKENS
+       MAGKOM GENTELELLA DESIGN SYSTEM: PENDAFTARAN INDEX
        ======================================================== */
-    /* Global Reset untuk Perataan Tombol, Font & Lencana */
-    .pendaftaran-container button,
-    .pendaftaran-container .btn,
-    .modal-dialog-modern button,
-    .modal-dialog-modern .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        vertical-align: middle;
-        line-height: 1.25;
-        font-family: inherit;
-        font-weight: 600;
-        border-radius: 8px;
-        box-sizing: border-box;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        cursor: pointer;
+    .pendaftaran-container {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
     }
 
-    .pendaftaran-container .btn svg,
-    .pendaftaran-container button svg,
-    .modal-dialog-modern .btn svg,
-    .modal-dialog-modern button svg {
-        flex-shrink: 0;
-        margin: 0;
-    }
-
-    .pendaftaran-container .badge,
-    .modal-dialog-modern .badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        line-height: 1;
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 5px 10px;
-        border-radius: 6px;
-        vertical-align: middle;
-        box-sizing: border-box;
-    }
-
-    .pendaftaran-container .badge svg,
-    .modal-dialog-modern .badge svg {
-        flex-shrink: 0;
-        margin: 0;
-    }
-
+    /* Hero Banner MagKom Sleman */
     .pendaftaran-hero {
-        background: linear-gradient(95deg, rgba(6, 65, 204, 0.94) 0%, rgba(6, 65, 204, 0.85) 55%, rgba(6, 65, 204, 0.45) 100%),
-                    url('{{ asset('images/pendaftaran_banner_bg.jpg') }}') right center / cover no-repeat;
-        border-radius: var(--radius-xl, 16px);
-        padding: 30px 34px;
+        background: linear-gradient(135deg, #0641CC 0%, #0751FF 60%, #1E40AF 100%);
+        border-radius: var(--radius-lg, 12px);
+        padding: 28px 32px;
         color: #ffffff;
         position: relative;
         overflow: hidden;
-        margin-bottom: 28px;
         box-shadow: 0 10px 25px -5px rgba(7, 81, 255, 0.25);
         display: flex;
         justify-content: space-between;
@@ -76,12 +33,12 @@
     .pendaftaran-hero::before {
         content: 'MAGKOM';
         position: absolute;
-        right: -20px;
+        right: -15px;
         bottom: -25px;
-        font-size: 6rem;
+        font-size: 5.5rem;
         font-weight: 900;
         letter-spacing: -0.05em;
-        color: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.06);
         pointer-events: none;
         user-select: none;
     }
@@ -89,7 +46,7 @@
     .hero-text-content {
         position: relative;
         z-index: 2;
-        max-width: 620px;
+        max-width: 640px;
     }
 
     .hero-badge-tag {
@@ -99,6 +56,7 @@
         padding: 4px 12px;
         background: rgba(255, 255, 255, 0.15);
         backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         border: 1px solid rgba(255, 255, 255, 0.25);
         border-radius: 999px;
         font-size: 0.75rem;
@@ -122,11 +80,12 @@
         margin: 0 0 8px 0;
         line-height: 1.3;
         letter-spacing: -0.02em;
+        color: #ffffff;
     }
 
     .hero-desc {
         font-size: 0.875rem;
-        color: rgba(255, 255, 255, 0.88);
+        color: rgba(255, 255, 255, 0.9);
         line-height: 1.55;
         margin: 0 0 14px 0;
     }
@@ -148,12 +107,6 @@
         font-size: 0.75rem;
         font-weight: 500;
         color: #ffffff;
-        line-height: 1.25;
-    }
-
-    .hero-meta-pill svg {
-        flex-shrink: 0;
-        opacity: 0.9;
     }
 
     .hero-cta-box {
@@ -161,6 +114,7 @@
         z-index: 2;
         background: rgba(255, 255, 255, 0.12);
         backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.25);
         border-radius: var(--radius-lg, 12px);
         padding: 18px 22px;
@@ -171,38 +125,16 @@
         min-width: 250px;
     }
 
-    /* ========================================================
-       SPOTLIGHT CARD PENGAJUAN AKTIF (BR-03, BR-17)
-       ======================================================== */
-    .active-application-card {
-        background: #ffffff;
-        border: 2px solid #BFDBFE;
-        border-radius: var(--radius-lg, 14px);
-        box-shadow: 0 4px 20px rgba(7, 81, 255, 0.08);
-        padding: 24px;
-        margin-bottom: 28px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .active-card-decor {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #3B82F6, #1D4ED8, #059669);
-    }
-
+    /* Active Application Spotlight Card (Gentelella Standard) */
     .active-card-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         gap: 16px;
         flex-wrap: wrap;
-        margin-bottom: 18px;
+        margin-bottom: 16px;
         padding-bottom: 14px;
-        border-bottom: 1px solid var(--neutral-200);
+        border-bottom: 1px solid var(--neutral-200, #E2E8F0);
     }
 
     .active-reg-badge {
@@ -237,7 +169,7 @@
         font-size: 0.6875rem;
         text-transform: uppercase;
         font-weight: 700;
-        color: var(--neutral-500);
+        color: var(--neutral-500, #64748B);
         letter-spacing: 0.04em;
         margin-bottom: 4px;
     }
@@ -245,7 +177,7 @@
     .active-info-value {
         font-size: 0.9375rem;
         font-weight: 700;
-        color: var(--neutral-800);
+        color: var(--neutral-800, #1E293B);
     }
 
     .active-card-footer {
@@ -254,13 +186,13 @@
         align-items: center;
         gap: 16px;
         flex-wrap: wrap;
-        padding-top: 18px;
-        border-top: 1px dashed var(--neutral-200);
+        padding-top: 16px;
+        border-top: 1px dashed var(--neutral-200, #E2E8F0);
     }
 
     .active-card-note {
         font-size: 0.75rem;
-        color: var(--neutral-500);
+        color: var(--neutral-500, #64748B);
         margin: 0;
         line-height: 1.4;
         display: flex;
@@ -269,39 +201,7 @@
         max-width: 580px;
     }
 
-    .active-card-actions {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    /* ========================================================
-       KATALOG KUOTA BULAN MAGANG (VISUAL CARDS)
-       ======================================================== */
-    .kuota-section {
-        margin-bottom: 32px;
-    }
-
-    .section-header-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 18px;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .section-heading-title {
-        font-size: 1.125rem;
-        font-weight: 800;
-        color: var(--neutral-900);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 0;
-    }
-
+    /* Kuota Catalog Cards Grid */
     .kuota-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -310,7 +210,7 @@
 
     .kuota-card {
         background: #ffffff;
-        border: 1.5px solid var(--neutral-300, #E2E8F0);
+        border: 1px solid var(--neutral-300, #CBD5E1);
         border-radius: var(--radius-lg, 12px);
         padding: 20px;
         transition: all 0.25s ease;
@@ -321,21 +221,21 @@
     }
 
     .kuota-card:hover {
-        border-color: #3B82F6;
-        box-shadow: 0 8px 24px rgba(7, 81, 255, 0.1);
+        border-color: #0751FF;
+        box-shadow: 0 8px 24px rgba(7, 81, 255, 0.12);
         transform: translateY(-2px);
     }
 
     .kuota-month-name {
         font-size: 1.125rem;
         font-weight: 800;
-        color: var(--neutral-900);
+        color: var(--neutral-900, #0F172A);
         margin: 0 0 4px 0;
     }
 
     .kuota-dates {
         font-size: 0.75rem;
-        color: var(--neutral-500);
+        color: var(--neutral-500, #64748B);
         margin-bottom: 16px;
     }
 
@@ -362,17 +262,7 @@
         transition: width 0.3s ease;
     }
 
-    /* ========================================================
-       TABEL RIWAYAT PENDAFTARAN MODERN
-       ======================================================== */
-    .history-card-container {
-        background: #ffffff;
-        border: 1px solid var(--neutral-300, #E2E8F0);
-        border-radius: var(--radius-lg, 14px);
-        overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-    }
-
+    /* Custom Table Styles */
     .table-custom {
         width: 100%;
         border-collapse: collapse;
@@ -381,41 +271,36 @@
 
     .table-custom th {
         background: #F8FAFC;
-        padding: 14px 20px;
+        padding: 12px 18px;
         font-size: 0.75rem;
         font-weight: 700;
-        color: var(--neutral-600);
+        color: var(--neutral-600, #475569);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         border-bottom: 1px solid #E2E8F0;
     }
 
     .table-custom td {
-        padding: 16px 20px;
+        padding: 14px 18px;
         font-size: 0.875rem;
         border-bottom: 1px solid #F1F5F9;
-        color: var(--neutral-800);
+        color: var(--neutral-800, #1E293B);
         vertical-align: middle;
-    }
-
-    .table-custom tr:last-child td {
-        border-bottom: none;
     }
 
     .table-custom tr:hover td {
         background: #F8FAFC;
     }
 
-    /* ========================================================
-       MODAL PENGAJUAN BARU & CHIPS DURASI (AC-03-2, BR-08)
-       ======================================================== */
+    /* Modal Styling */
     .modal-backdrop-blur {
         display: none;
         position: fixed;
         inset: 0;
-        z-index: 1000;
+        z-index: 1050;
         background: rgba(15, 23, 42, 0.65);
         backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
         align-items: center;
         justify-content: center;
         padding: 20px;
@@ -446,11 +331,11 @@
     }
 
     .duration-chip-btn {
-        border: 1.5px solid var(--neutral-300, #CBD5E1);
+        border: 1.5px solid #CBD5E1;
         border-radius: 8px;
         background: #ffffff;
         padding: 8px 10px;
-        min-height: 54px;
+        min-height: 52px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -459,126 +344,46 @@
         cursor: pointer;
         transition: all 0.2s ease;
         user-select: none;
-        box-sizing: border-box;
     }
 
     .duration-chip-btn:hover {
-        border-color: #3B82F6;
+        border-color: #0751FF;
         background: #EFF6FF;
     }
 
     .duration-chip-btn.is-active {
-        border-color: var(--blue-600);
+        border-color: #0641CC;
         background: #EFF6FF;
-        color: var(--blue-700);
+        color: #0641CC;
         font-weight: 700;
         box-shadow: 0 0 0 2px rgba(7, 81, 255, 0.2);
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Dark Mode Harmonization */
+    [data-theme="dark"] .active-info-item,
+    [data-theme="dark"] .kuota-progress-box {
+        background: #0F172A !important;
+        border-color: #26354D !important;
     }
 
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(16px); }
-        to { opacity: 1; transform: translateY(0); }
+    [data-theme="dark"] .active-info-label,
+    [data-theme="dark"] .kuota-dates,
+    [data-theme="dark"] .active-card-note {
+        color: #94A3B8 !important;
     }
 
-    @media (max-width: 768px) {
-        .pendaftaran-hero {
-            padding: 20px;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .hero-cta-box {
-            width: 100%;
-            align-items: stretch;
-            text-align: left;
-        }
-
-        .duration-chips-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .active-card-footer {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 14px;
-        }
-
-        .active-card-actions {
-            margin-left: 0;
-            width: 100%;
-        }
-
-        .active-card-actions .btn {
-            width: 100%;
-            justify-content: center;
-        }
-    }
-
-    /* Dark Mode Harmonization ala Menu Tugas */
-    [data-theme="dark"] .active-application-card,
-    [data-theme="dark"] .active-card {
-        background: #182234 !important;
-        border: 1.5px solid #26354D !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    [data-theme="dark"] .active-info-value,
+    [data-theme="dark"] .kuota-month-name {
+        color: #F8FAFC !important;
     }
 
     [data-theme="dark"] .active-reg-badge {
         background: #0F172A !important;
         border-color: #26354D !important;
         color: #60A5FA !important;
-    }
-
-    [data-theme="dark"] .active-card-title,
-    [data-theme="dark"] .active-card-header h2 {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .active-card-subtitle,
-    [data-theme="dark"] .active-card-header p {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .active-card-header {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .active-grid-info {
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .active-info-item {
-        background: #0F172A !important;
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .active-info-label {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .active-info-value {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .active-info-value svg {
-        color: #94A3B8;
-    }
-
-    [data-theme="dark"] .active-info-value[style*="color: var(--blue-700)"],
-    [data-theme="dark"] .active-info-highlight {
-        color: #60A5FA !important;
-    }
-
-    [data-theme="dark"] .active-card-footer {
-        border-top-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .active-card-note {
-        color: #94A3B8 !important;
     }
 
     [data-theme="dark"] .kuota-card {
@@ -588,76 +393,12 @@
     }
 
     [data-theme="dark"] .kuota-card:hover {
-        border-color: #3B82F6 !important;
+        border-color: #0751FF !important;
         box-shadow: 0 8px 24px rgba(7, 81, 255, 0.2) !important;
-    }
-
-    [data-theme="dark"] .kuota-month-name,
-    [data-theme="dark"] .section-heading-title {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .kuota-dates {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .kuota-progress-box {
-        background: #0F172A !important;
-        border-color: #26354D !important;
     }
 
     [data-theme="dark"] .kuota-progress-bar-bg {
         background: #26354D !important;
-    }
-
-    .attention-callout-banner {
-        margin-bottom: 24px;
-        padding: 18px 20px;
-        background: #FFFBEB;
-        border: 1.5px solid #FDE68A;
-        border-radius: var(--radius-lg, 12px);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-
-    [data-theme="dark"] .attention-callout-banner {
-        background: rgba(120, 53, 15, 0.25) !important;
-        border-color: rgba(245, 158, 11, 0.4) !important;
-    }
-
-    [data-theme="dark"] .attention-callout-banner h3 {
-        color: #FCD34D !important;
-    }
-
-    [data-theme="dark"] .attention-callout-banner p {
-        color: #FEF3C7 !important;
-    }
-
-    [data-theme="dark"] .history-card {
-        background: #182234 !important;
-        border-color: #26354D !important;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25) !important;
-    }
-
-    [data-theme="dark"] .history-card-header {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .history-card-title {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .meta-pill {
-        background: #0F172A !important;
-        border-color: #26354D !important;
-        color: #CBD5E1 !important;
-    }
-
-    [data-theme="dark"] .table-custom {
-        background: #182234 !important;
     }
 
     [data-theme="dark"] .table-custom th {
@@ -682,14 +423,6 @@
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
     }
 
-    [data-theme="dark"] .modal-title-clean {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .modal-subtitle-clean {
-        color: #94A3B8 !important;
-    }
-
     [data-theme="dark"] .duration-chip-btn {
         background: #0F172A !important;
         border-color: #3E516E !important;
@@ -706,10 +439,6 @@
         background: rgba(30, 58, 138, 0.4) !important;
         color: #93C5FD !important;
     }
-
-    [data-theme="dark"] .field-label {
-        color: #E2E8F0 !important;
-    }
 </style>
 @endpush
 
@@ -721,7 +450,7 @@
     @endphp
 
     {{-- ========================================================
-         1. HERO HEADER BANNER MAGKOM
+         1. HERO HEADER BANNER MAGKOM (GENTELELLA PALETTE)
          ======================================================== --}}
     <div class="pendaftaran-hero">
         <div class="hero-text-content">
@@ -752,7 +481,7 @@
         </div>
 
         <div class="hero-cta-box">
-            <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,0.8); letter-spacing: 0.04em;">
+            <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,0.85); letter-spacing: 0.04em;">
                 Status Pengajuan
             </div>
             @if($pendaftaranAktif)
@@ -761,7 +490,7 @@
                     1 Pengajuan Aktif
                 </div>
                 <a href="{{ route('peserta.pendaftaran.detail', $pendaftaranAktif) }}" class="btn btn-secondary" style="width: 100%;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     Buka Berkas #REG-{{ str_pad((string)$pendaftaranAktif->id, 5, '0', STR_PAD_LEFT) }}
@@ -771,7 +500,7 @@
                     Siap Mengajukan
                 </div>
                 <button type="button" class="btn btn-primary" onclick="openModalPendaftaran()" style="width: 100%;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                     </svg>
                     Buat Pengajuan Baru
@@ -781,7 +510,7 @@
                     Profil Belum Lengkap
                 </div>
                 <a href="{{ route('peserta.profil.show') }}" class="btn btn-secondary" style="width: 100%;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                     Lengkapi Profil Dulu
@@ -791,41 +520,41 @@
     </div>
 
     {{-- ========================================================
-         2. ALERT PANDUAN PROFIL (AC-03-1)
+         2. ALERT PANDUAN PROFIL (JIKA BELUM LENGKAP)
          ======================================================== --}}
     @if(!$profilLengkap)
-        <div class="attention-callout-banner">
-            <div style="display: flex; align-items: flex-start; gap: 14px; flex: 1;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        <x-gentelella.card class="border-warning" style="border-left: 5px solid #F59E0B;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: flex-start; gap: 14px; flex: 1;">
+                    <div style="width: 40px; height: 40px; border-radius: 8px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1rem; font-weight: 700; color: #92400E; margin: 0 0 4px 0;">
+                            Lengkapi Biodata Profil Sebelum Mendaftar
+                        </h3>
+                        <p style="font-size: 0.8125rem; color: #78350F; margin: 0; line-height: 1.5;">
+                            Sesuai ketentuan dinas, data institusi pendidikan, NIM/NISN, jurusan, dan kontak darurat harus terverifikasi sebelum dapat membuat pengajuan baru.
+                        </p>
+                    </div>
+                </div>
+                <a href="{{ route('peserta.profil.show') }}" class="btn btn-primary" style="align-self: center;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                     </svg>
-                </div>
-                <div>
-                    <h3 style="font-size: 0.9375rem; font-weight: 700; color: #92400E; margin: 0 0 4px 0;">
-                        Lengkapi Biodata Profil Sebelum Mendaftar
-                    </h3>
-                    <p style="font-size: 0.8125rem; color: #78350F; margin: 0; line-height: 1.45;">
-                        Sesuai ketentuan dinas (AC-03-1), data institusi pendidikan, NIM/NISN, jurusan, dan kontak darurat harus terverifikasi sebelum dapat membuat pengajuan baru.
-                    </p>
-                </div>
+                    Lengkapi Profil Sekarang
+                </a>
             </div>
-            <a href="{{ route('peserta.profil.show') }}" class="btn btn-primary">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                </svg>
-                Lengkapi Profil Sekarang
-            </a>
-        </div>
+        </x-gentelella.card>
     @endif
 
     {{-- ========================================================
-         3. SPOTLIGHT CARD PENGAJUAN AKTIF (BR-03, BR-17)
+         3. SPOTLIGHT CARD PENGAJUAN AKTIF (GENTELELLA CARD)
          ======================================================== --}}
     @if($pendaftaranAktif)
-        <div class="active-application-card">
-            <div class="active-card-decor"></div>
-
+        <x-gentelella.card style="border-top: 4px solid #0751FF;">
             <div class="active-card-header">
                 <div>
                     <div class="active-reg-badge">
@@ -834,10 +563,10 @@
                         </svg>
                         #REG-{{ str_pad((string)$pendaftaranAktif->id, 5, '0', STR_PAD_LEFT) }}
                     </div>
-                    <h2 class="active-card-title" style="font-size: 1.125rem; font-weight: 800; margin: 6px 0 2px 0;">
+                    <h2 style="font-size: 1.125rem; font-weight: 800; margin: 8px 0 2px 0;">
                         Pengajuan Magang Aktif Sedang Diproses
                     </h2>
-                    <p class="active-card-subtitle" style="font-size: 0.8125rem; margin: 0;">
+                    <p style="font-size: 0.8125rem; color: var(--neutral-500, #64748B); margin: 0;">
                         Diajukan pada {{ $pendaftaranAktif->created_at->translatedFormat('d F Y, H:i') }} WIB
                     </p>
                 </div>
@@ -847,32 +576,27 @@
                         $valStatus = $pendaftaranAktif->status->value ?? (string)$pendaftaranAktif->status;
                     @endphp
                     @if($valStatus === 'berkas_belum_lengkap')
-                        <span class="badge badge-neutral" style="font-size: 0.75rem; padding: 6px 12px;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-dasharray="4 4"></circle></svg>
+                        <x-gentelella.badge variant="secondary" style="font-size: 0.75rem; padding: 6px 12px;">
                             Berkas Belum Lengkap
-                        </span>
+                        </x-gentelella.badge>
                     @elseif($valStatus === 'diajukan')
-                        <span class="badge badge-warning" style="font-size: 0.75rem; padding: 6px 12px;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <x-gentelella.badge variant="warning" style="font-size: 0.75rem; padding: 6px 12px;">
                             Menunggu Verifikasi Admin
-                        </span>
+                        </x-gentelella.badge>
                     @elseif($valStatus === 'waiting_list')
-                        <span class="badge badge-info" style="font-size: 0.75rem; padding: 6px 12px;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <x-gentelella.badge variant="info" style="font-size: 0.75rem; padding: 6px 12px;">
                             Waiting List (Antrean)
-                        </span>
+                        </x-gentelella.badge>
                     @elseif($valStatus === 'perlu_perbaikan')
-                        <span class="badge badge-warning" style="font-size: 0.75rem; padding: 6px 12px;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <x-gentelella.badge variant="warning" style="font-size: 0.75rem; padding: 6px 12px;">
                             Perlu Perbaikan Berkas
-                        </span>
+                        </x-gentelella.badge>
                     @elseif($valStatus === 'diterima')
-                        <span class="badge badge-success" style="font-size: 0.75rem; padding: 6px 12px;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <x-gentelella.badge variant="success" style="font-size: 0.75rem; padding: 6px 12px;">
                             Selamat! Diterima Magang
-                        </span>
+                        </x-gentelella.badge>
                     @else
-                        <span class="badge badge-neutral" style="font-size: 0.75rem; padding: 6px 12px;">{{ $valStatus }}</span>
+                        <x-gentelella.badge variant="secondary">{{ $valStatus }}</x-gentelella.badge>
                     @endif
                 </div>
             </div>
@@ -880,7 +604,7 @@
             <div class="active-grid-info">
                 <div class="active-info-item">
                     <div class="active-info-label">Periode Bulan Magang</div>
-                    <div class="active-info-value active-info-highlight" style="display: flex; align-items: center; gap: 6px;">
+                    <div class="active-info-value" style="display: flex; align-items: center; gap: 6px; color: #0751FF;">
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         <span>{{ $pendaftaranAktif->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}</span>
                     </div>
@@ -913,46 +637,32 @@
 
             <div class="active-card-footer">
                 <p class="active-card-note">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--blue-600); flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    <span>Sesuai ketentuan sistem (BR-03 & BR-17), pengajuan baru terkunci saat Anda masih memiliki pengajuan aktif yang sedang berjalan.</span>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0751FF; flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <span>Sesuai ketentuan sistem, pengajuan baru terkunci saat Anda masih memiliki pengajuan aktif yang sedang berjalan.</span>
                 </p>
 
-                <div class="active-card-actions">
+                <div style="margin-left: auto;">
                     <a href="{{ route('peserta.pendaftaran.detail', $pendaftaranAktif) }}" class="btn btn-primary">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         Buka Berkas & Detail Pengajuan
                     </a>
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
     @endif
 
     {{-- ========================================================
-         4. KATALOG KUOTA BULAN MAGANG TERSEDIA (VISUAL GRID)
+         4. KATALOG KUOTA BULAN MAGANG (X-PANEL GENTELELLA)
          ======================================================== --}}
     @if(!$pendaftaranAktif && $profilLengkap)
-        <div class="kuota-section">
-            <div class="section-header-row">
-                <div>
-                    <h2 class="section-heading-title">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--blue-600);">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        Pilihan Periode & Kuota Magang Tersedia
-                    </h2>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-500); margin: 2px 0 0 0;">
-                        Ketersediaan kuota resmi yang dialokasikan khusus untuk jurusan <strong>{{ $profil->jurusan?->nama_jurusan }}</strong>.
-                    </p>
-                </div>
-            </div>
-
+        <x-gentelella.x-panel title="Pilihan Periode & Kuota Magang Tersedia" subtitle="Ketersediaan kuota resmi yang dialokasikan khusus untuk jurusan {{ $profil->jurusan?->nama_jurusan }}">
             @if($kuotaList->isEmpty())
-                <div class="card" style="padding: 32px 20px; text-align: center; background: #F8FAFC; border: 1px dashed var(--neutral-300);">
-                    <div style="font-size: 1.75rem; margin-bottom: 8px;">📅</div>
-                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0 0 4px 0;">Belum Ada Kuota Magang Terbuka</h3>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-500); max-width: 460px; margin: 0 auto;">
+                <div style="text-align: center; padding: 36px 20px; background: #F8FAFC; border: 1px dashed var(--neutral-300, #CBD5E1); border-radius: 8px;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">📅</div>
+                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800, #1E293B); margin: 0 0 4px 0;">Belum Ada Kuota Magang Terbuka</h3>
+                    <p style="font-size: 0.8125rem; color: var(--neutral-500, #64748B); max-width: 460px; margin: 0 auto;">
                         Saat ini belum ada periode bulan magang yang dibuka untuk jurusan Anda. Silakan hubungi admin kedinasan atau pantau pengumuman berkala.
                     </p>
                 </div>
@@ -967,10 +677,10 @@
                         <div class="kuota-card">
                             <div>
                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                                    <span class="badge {{ $sisaKursi > 0 ? 'badge-success' : 'badge-warning' }}" style="font-size: 0.6875rem;">
+                                    <x-gentelella.badge variant="{{ $sisaKursi > 0 ? 'success' : 'warning' }}" style="font-size: 0.6875rem;">
                                         {{ $sisaKursi > 0 ? '✓ Kuota Tersedia' : 'Penuh (Waiting List)' }}
-                                    </span>
-                                    <span style="font-size: 0.6875rem; font-weight: 700; color: var(--neutral-500);">
+                                    </x-gentelella.badge>
+                                    <span style="font-size: 0.6875rem; font-weight: 700; color: var(--neutral-500, #64748B);">
                                         Total Kuota: {{ $kuotaItem->jumlah }}
                                     </span>
                                 </div>
@@ -986,7 +696,7 @@
                                         <span style="color: {{ $sisaKursi > 0 ? '#166534' : '#92400E' }};">
                                             {{ $sisaKursi > 0 ? "Tersisa {$sisaKursi} Kursi" : 'Kuota Penuh' }}
                                         </span>
-                                        <span style="color: var(--neutral-500);">
+                                        <span style="color: var(--neutral-500, #64748B);">
                                             {{ $kuotaItem->terisi }}/{{ $kuotaItem->jumlah }} Terisi
                                         </span>
                                     </div>
@@ -997,7 +707,7 @@
                             </div>
 
                             <button type="button" class="btn btn-secondary" onclick="openModalWithKuota('{{ $kuotaItem->id }}')" style="width: 100%;">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
                                 Pilih Periode Ini
@@ -1006,26 +716,17 @@
                     @endforeach
                 </div>
             @endif
-        </div>
+        </x-gentelella.x-panel>
     @endif
 
     {{-- ========================================================
-         5. TABEL RIWAYAT PENDAFTARAN MAGANG (SESUAI TEST & SPEK)
+         5. TABEL RIWAYAT PENDAFTARAN MAGANG (X-PANEL GENTELELLA)
          ======================================================== --}}
-    <div class="section-header-row" style="margin-top: 10px;">
-        <div>
-            <h2 class="section-heading-title" style="font-size: 1.25rem;">
-                Riwayat Pendaftaran Magang
-            </h2>
-            <p style="font-size: 0.8125rem; color: var(--neutral-500); margin: 2px 0 0 0;">
-                Daftar pengajuan magang yang telah Anda daftarkan di Dinas Kominfo Sleman.
-            </p>
-        </div>
-
-        <div>
+    <x-gentelella.x-panel title="Riwayat Pendaftaran Magang" subtitle="Daftar pengajuan magang yang telah Anda daftarkan di Dinas Kominfo Sleman.">
+        <x-slot:toolbar>
             @if($pendaftaranAktif)
-                <button type="button" class="btn btn-secondary" disabled title="Anda masih memiliki pengajuan aktif (BR-03 / BR-17)">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <button type="button" class="btn btn-secondary" disabled title="Anda masih memiliki pengajuan aktif">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                         <path d="M7 11V7a5 5 0 0110 0v4"></path>
                     </svg>
@@ -1033,39 +734,32 @@
                 </button>
             @elseif($profilLengkap)
                 <button type="button" class="btn btn-primary" onclick="openModalPendaftaran()">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                     </svg>
                     Buat Pengajuan Baru
                 </button>
             @else
                 <button type="button" class="btn btn-secondary" disabled title="Lengkapi profil terlebih dahulu">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
                     Buat Pengajuan Baru (Profil Belum Lengkap)
                 </button>
             @endif
-        </div>
-    </div>
+        </x-slot:toolbar>
 
-    <div class="history-card-container">
         @if($pendaftaranList->isEmpty())
             <div style="text-align: center; padding: 48px 24px;">
-                <div style="width: 56px; height: 56px; margin: 0 auto 16px auto; background: var(--blue-tint); color: var(--blue-600); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <div style="width: 56px; height: 56px; margin: 0 auto 16px auto; background: #EFF6FF; color: #0751FF; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                     <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                 </div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0 0 6px 0;">Belum Ada Pengajuan Magang</h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-500); max-width: 420px; margin: 0 auto 20px auto; line-height: 1.5;">
+                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800, #1E293B); margin: 0 0 6px 0;">Belum Ada Pengajuan Magang</h3>
+                <p style="font-size: 0.8125rem; color: var(--neutral-500, #64748B); max-width: 420px; margin: 0 auto 20px auto; line-height: 1.5;">
                     Anda belum pernah mengajukan permohonan magang. Klik tombol "Buat Pengajuan Baru" di atas untuk memilih periode bulan dan kuota magang.
                 </p>
                 @if($profilLengkap && !$pendaftaranAktif)
                     <button type="button" class="btn btn-primary" onclick="openModalPendaftaran()">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                         </svg>
                         Daftar Magang Sekarang
@@ -1089,23 +783,23 @@
                         @foreach($pendaftaranList as $item)
                             <tr>
                                 <td>
-                                    <strong style="color: var(--blue-700); font-weight: 800;">
+                                    <strong style="color: #0751FF; font-weight: 800;">
                                         #REG-{{ str_pad((string)$item->id, 5, '0', STR_PAD_LEFT) }}
                                     </strong>
                                 </td>
                                 <td>
-                                    <div style="font-weight: 700; color: var(--neutral-900);">
+                                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A);">
                                         {{ $item->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
                                     </div>
-                                    <div style="font-size: 0.75rem; color: var(--neutral-500);">
+                                    <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B);">
                                         Mulai: {{ $item->bulanMagang?->bulan_mulai ? $item->bulanMagang->bulan_mulai->translatedFormat('d M Y') : '-' }}
                                     </div>
                                 </td>
                                 <td>
-                                    <div style="font-weight: 600; color: var(--neutral-800);">
+                                    <div style="font-weight: 600; color: var(--neutral-800, #1E293B);">
                                         {{ $item->kuota?->jurusan?->nama_jurusan ?? '-' }}
                                     </div>
-                                    <div style="font-size: 0.75rem; color: var(--neutral-500);">
+                                    <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B);">
                                         Rencana: <strong>{{ $item->durasi_bulan }} Bulan</strong>
                                     </div>
                                 </td>
@@ -1114,50 +808,29 @@
                                         $val = $item->status->value ?? (string)$item->status;
                                     @endphp
                                     @if($val === 'berkas_belum_lengkap')
-                                        <span class="badge badge-neutral">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-dasharray="4 4"></circle></svg>
-                                            Berkas Belum Lengkap
-                                        </span>
+                                        <x-gentelella.badge variant="secondary">Berkas Belum Lengkap</x-gentelella.badge>
                                     @elseif($val === 'diajukan')
-                                        <span class="badge badge-warning">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                                            Menunggu Verifikasi
-                                        </span>
+                                        <x-gentelella.badge variant="warning">Menunggu Verifikasi</x-gentelella.badge>
                                     @elseif($val === 'waiting_list')
-                                        <span class="badge badge-info">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                            Waiting List
-                                        </span>
+                                        <x-gentelella.badge variant="info">Waiting List</x-gentelella.badge>
                                     @elseif($val === 'perlu_perbaikan')
-                                        <span class="badge badge-warning">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                            Perlu Perbaikan
-                                        </span>
+                                        <x-gentelella.badge variant="warning">Perlu Perbaikan</x-gentelella.badge>
                                     @elseif($val === 'diterima')
-                                        <span class="badge badge-success">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                            Diterima
-                                        </span>
+                                        <x-gentelella.badge variant="success">Diterima</x-gentelella.badge>
                                     @elseif($val === 'ditolak')
-                                        <span class="badge badge-danger">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                                            Ditolak
-                                        </span>
+                                        <x-gentelella.badge variant="danger">Ditolak</x-gentelella.badge>
                                     @elseif($val === 'dibatalkan')
-                                        <span class="badge badge-neutral">
-                                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                            Dibatalkan
-                                        </span>
+                                        <x-gentelella.badge variant="secondary">Dibatalkan</x-gentelella.badge>
                                     @else
-                                        <span class="badge badge-neutral">{{ $val }}</span>
+                                        <x-gentelella.badge variant="secondary">{{ $val }}</x-gentelella.badge>
                                     @endif
                                 </td>
-                                <td style="font-size: 0.8125rem; color: var(--neutral-600);">
+                                <td style="font-size: 0.8125rem; color: var(--neutral-600, #475569);">
                                     {{ $item->created_at->translatedFormat('d M Y, H:i') }}
                                 </td>
                                 <td style="text-align: right; white-space: nowrap;">
-                                    <a href="{{ route('peserta.pendaftaran.detail', $item) }}" class="btn btn-secondary" style="height: 34px; padding: 0 14px; font-size: 0.8125rem; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <a href="{{ route('peserta.pendaftaran.detail', $item) }}" class="btn btn-secondary" style="height: 34px; padding: 0 14px; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 6px;">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                         </svg>
@@ -1170,26 +843,26 @@
                 </table>
             </div>
         @endif
-    </div>
+    </x-gentelella.x-panel>
 </div>
 
 {{-- ========================================================
-     6. MODAL INTERAKTIF PENGAJUAN MAGANG BARU (AC-03-2, BR-08)
+     6. MODAL INTERAKTIF PENGAJUAN MAGANG BARU
      ======================================================== --}}
 @if($profilLengkap && !$pendaftaranAktif)
 <div class="modal-backdrop-blur" id="pendaftaranModal" onclick="if(event.target === this) closeModalPendaftaran()">
     <div class="modal-dialog-modern">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #E2E8F0;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--neutral-200, #E2E8F0);">
             <div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0 0 4px 0;">
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0 0 4px 0;">
                     Formulir Pengajuan Magang Baru
                 </h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-500); margin: 0;">
+                <p style="font-size: 0.8125rem; color: var(--neutral-500, #64748B); margin: 0;">
                     Pilih periode bulan magang dan tentukan rencana durasi magang Anda.
                 </p>
             </div>
-            <button type="button" onclick="closeModalPendaftaran()" aria-label="Tutup Formulir" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid #E2E8F0; background: #F8FAFC; color: var(--neutral-500); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: all 0.2s ease;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <button type="button" onclick="closeModalPendaftaran()" aria-label="Tutup Formulir" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid #CBD5E1; background: #F8FAFC; color: var(--neutral-500, #64748B); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0;">
+                &times;
             </button>
         </div>
 
@@ -1197,49 +870,42 @@
             @csrf
 
             <div style="display: flex; flex-direction: column; gap: 18px;">
-                {{-- 1. Info Jurusan Profil Peserta (AC-03-2) --}}
+                {{-- 1. Info Jurusan Profil Peserta --}}
                 <div style="padding: 14px 16px; background: #EFF6FF; border-radius: 10px; border: 1px solid #BFDBFE;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                        <span style="font-size: 0.6875rem; color: var(--blue-700); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Jurusan Terdaftar Anda</span>
-                        <span class="badge badge-info" style="font-size: 0.6875rem; padding: 2px 8px;">{{ strtoupper($profil->jenjang?->value ?? $profil->jenjang) }}</span>
+                        <span style="font-size: 0.6875rem; color: #1D4ED8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Jurusan Terdaftar Anda</span>
+                        <x-gentelella.badge variant="info" style="font-size: 0.6875rem; padding: 2px 8px;">{{ strtoupper($profil->jenjang?->value ?? $profil->jenjang) }}</x-gentelella.badge>
                     </div>
-                    <div style="font-size: 0.9375rem; font-weight: 800; color: var(--neutral-900);">
+                    <div style="font-size: 0.9375rem; font-weight: 800; color: var(--neutral-900, #0F172A);">
                         {{ $profil->jurusan?->nama_jurusan }}
                     </div>
-                    <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 2px;">
+                    <div style="font-size: 0.75rem; color: var(--neutral-600, #475569); margin-top: 2px;">
                         Institusi: {{ $profil->institusi }}
                     </div>
                 </div>
 
-                {{-- 2. Dropdown Periode Bulan Magang & Kuota Aktif (AC-03-2) --}}
-                <div class="form-group-clean">
-                    <label for="kuota_id" class="form-label-clean">
-                        <span>Pilih Periode Bulan Magang <span style="color: var(--red-600);">*</span></span>
+                {{-- 2. Dropdown Periode Bulan Magang & Kuota Aktif --}}
+                <div class="form-group">
+                    <label for="kuota_id" class="form-label" style="font-weight: 700;">
+                        Pilih Periode Bulan Magang <span style="color: #DC2626;">*</span>
                     </label>
-                    <div class="input-with-icon">
-                        <span class="input-leading-icon">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                        </span>
-                        <select id="kuota_id" name="kuota_id" class="form-control-custom" required onchange="handleKuotaChange(this)">
-                            <option value="">-- Pilih Periode Bulan Magang --</option>
-                            @foreach($kuotaList as $kuota)
-                                @php
-                                    $sisa = max(0, $kuota->jumlah - $kuota->terisi);
-                                    $bulanMulaiIso = $kuota->bulanMagang?->bulan_mulai?->format('Y-m-d');
-                                @endphp
-                                <option value="{{ $kuota->id }}"
-                                        data-bulan-id="{{ $kuota->bulan_magang_id }}"
-                                        data-bulan-mulai="{{ $bulanMulaiIso }}"
-                                        {{ old('kuota_id') == $kuota->id ? 'selected' : '' }}>
-                                    {{ $kuota->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
-                                    ({{ $sisa > 0 ? "Tersisa {$sisa} kursi" : 'Penuh (Waiting List)' }})
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <span style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 4px; display: block;">
+                    <select id="kuota_id" name="kuota_id" class="form-control" required onchange="handleKuotaChange(this)">
+                        <option value="">-- Pilih Periode Bulan Magang --</option>
+                        @foreach($kuotaList as $kuota)
+                            @php
+                                $sisa = max(0, $kuota->jumlah - $kuota->terisi);
+                                $bulanMulaiIso = $kuota->bulanMagang?->bulan_mulai?->format('Y-m-d');
+                            @endphp
+                            <option value="{{ $kuota->id }}"
+                                    data-bulan-id="{{ $kuota->bulan_magang_id }}"
+                                    data-bulan-mulai="{{ $bulanMulaiIso }}"
+                                    {{ old('kuota_id') == $kuota->id ? 'selected' : '' }}>
+                                {{ $kuota->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
+                                ({{ $sisa > 0 ? "Tersisa {$sisa} kursi" : 'Penuh (Waiting List)' }})
+                            </option>
+                        @endforeach
+                    </select>
+                    <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 4px; display: block;">
                         Hanya menampilkan bulan magang yang berstatus Tersedia untuk jurusan Anda.
                     </span>
                 </div>
@@ -1247,50 +913,49 @@
                 {{-- Hidden input bulan_magang_id yang diisi otomatis via JS dari select kuota_id --}}
                 <input type="hidden" id="bulan_magang_id" name="bulan_magang_id" value="{{ old('bulan_magang_id') }}">
 
-                {{-- 3. Pilihan Durasi Magang Berbasis Chip/Buttons (BR-08) --}}
-                <div class="form-group-clean">
-                    <label for="durasi_bulan" class="form-label-clean">
-                        <span>Rencana Durasi Magang <span style="color: var(--red-600);">*</span></span>
+                {{-- 3. Pilihan Durasi Magang Berbasis Chip/Buttons --}}
+                <div class="form-group">
+                    <label for="durasi_bulan" class="form-label" style="font-weight: 700;">
+                        Rencana Durasi Magang <span style="color: #DC2626;">*</span>
                     </label>
 
-                    {{-- Chip Buttons Interaktif untuk Pengalaman Pengguna yang Menarik --}}
                     <div class="duration-chips-grid">
                         @for($d = 1; $d <= 6; $d++)
                             <div class="duration-chip-btn {{ old('durasi_bulan', 3) == $d ? 'is-active' : '' }}" onclick="selectDurationChip({{ $d }})">
                                 <span style="font-size: 0.875rem; font-weight: 700;">{{ $d }} Bulan</span>
-                                <span style="font-size: 0.6875rem; color: {{ $d == 3 ? '#0284C7' : ($d == 6 ? '#059669' : 'var(--neutral-400)') }}; font-weight: 600;">
+                                <span style="font-size: 0.6875rem; color: {{ $d == 3 ? '#0284C7' : ($d == 6 ? '#059669' : '#64748B') }}; font-weight: 600;">
                                     {{ $d == 3 ? 'Standar' : ($d == 6 ? 'Maksimal' : 'Opsi') }}
                                 </span>
                             </div>
                         @endfor
                     </div>
 
-                    {{-- Native Select tersembunyi untuk fallback dan form submission POST --}}
+                    {{-- Native Select tersembunyi untuk submission POST --}}
                     <select id="durasi_bulan" name="durasi_bulan" style="display: none;" required onchange="updateEstimasiPeriode()">
                         @for($d = 1; $d <= 6; $d++)
                             <option value="{{ $d }}" {{ old('durasi_bulan', 3) == $d ? 'selected' : '' }}>{{ $d }} Bulan</option>
                         @endfor
                     </select>
 
-                    <span style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 6px; display: block;">
+                    <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 6px; display: block;">
                         Sesuai rekomendasi surat pengantar institusi pendidikan Anda (1 s/d 6 bulan).
                     </span>
                 </div>
 
-                {{-- Live Preview Rentang Tanggal (BR-08) --}}
+                {{-- Live Preview Rentang Tanggal --}}
                 <div id="previewPeriodeBox" style="display: none; padding: 14px 16px; background: #F8FAFC; border-radius: 10px; border: 1.5px dashed #CBD5E1; font-size: 0.8125rem;">
-                    <div style="font-weight: 700; color: var(--neutral-800); margin-bottom: 2px; display: flex; align-items: center; gap: 6px;">
+                    <div style="font-weight: 700; color: var(--neutral-800, #1E293B); margin-bottom: 2px; display: flex; align-items: center; gap: 6px;">
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         <span>Estimasi Rentang Pelaksanaan:</span>
                     </div>
-                    <div id="previewPeriodeText" style="color: var(--blue-700); font-weight: 800; font-size: 0.875rem;"></div>
+                    <div id="previewPeriodeText" style="color: #0751FF; font-weight: 800; font-size: 0.875rem;"></div>
                 </div>
             </div>
 
-            <div style="margin-top: 24px; display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 16px; border-top: 1px solid #E2E8F0;">
+            <div style="margin-top: 24px; display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 16px; border-top: 1px solid var(--neutral-200, #E2E8F0);">
                 <button type="button" class="btn btn-secondary" onclick="closeModalPendaftaran()">Batal</button>
                 <button type="submit" class="btn btn-primary" id="btnSubmitPendaftaran">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     Lanjut ke Pengunggahan Berkas
@@ -1331,7 +996,6 @@
             select.value = months;
             updateEstimasiPeriode();
         }
-        // Update styling chip buttons
         const chips = document.querySelectorAll('.duration-chip-btn');
         chips.forEach((chip, index) => {
             if (index + 1 === months) {
@@ -1393,9 +1057,7 @@
     });
 </script>
 <style>
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 @endpush
 @endsection

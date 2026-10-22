@@ -131,21 +131,11 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-            <div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Daftar Bulan Magang</h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.125rem 0 0 0;">Riwayat jadwal gelombang magang dan status penerimaan calon peserta.</p>
-            </div>
-            <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
-                Total: <strong>{{ $bulanList->total() }} Bulan Magang</strong>
-            </span>
-        </div>
-
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+    <x-gentelella.x-panel title="Daftar Bulan Magang" subtitle="Riwayat jadwal gelombang magang dan status penerimaan calon peserta.">
+        <div class="table-responsive-gentelella" style="overflow-x: auto;">
+            <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                 <thead>
-                    <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <tr class="headings" style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         <th style="padding: 1rem 1.25rem; font-weight: 700;">Bulan Magang</th>
                         <th style="padding: 1rem 1rem; font-weight: 700;">Jadwal Buka Pendaftaran</th>
                         <th style="padding: 1rem 1rem; font-weight: 700;">Override Status</th>
@@ -236,7 +226,7 @@
                 {{ $bulanList->links() }}
             </div>
         @endif
-    </div>
+    </x-gentelella.x-panel>
 </div>
 
 <!-- =====================================================================

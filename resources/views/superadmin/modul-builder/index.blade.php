@@ -164,37 +164,26 @@
         </div>
     @endif
 
-    {{-- STATS METRICS BAR --}}
-    <div class="catalog-stats-bar">
-        <div class="stat-card-widget">
-            <div class="stat-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-            </div>
-            <div class="stat-info">
-                <strong>{{ $modules->where('status_aktif', true)->count() }} <span style="font-size: 0.8125rem; font-weight: 600; color: var(--neutral-500);">/ {{ $modules->count() }}</span></strong>
-                <span>Modul Aktif</span>
-            </div>
-        </div>
-
-        <div class="stat-card-widget">
-            <div class="stat-icon" style="color: #059669; background: rgba(16, 185, 129, 0.1);">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-            </div>
-            <div class="stat-info">
-                <strong>{{ $modules->where('is_public_read', true)->count() }} Modul</strong>
-                <span>Akses Publik Terbuka</span>
-            </div>
-        </div>
-
-        <div class="stat-card-widget">
-            <div class="stat-icon" style="color: #7C3AED; background: rgba(139, 92, 246, 0.1);">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>
-            </div>
-            <div class="stat-info">
-                <strong>{{ number_format($modules->sum('records_count')) }} Baris</strong>
-                <span>Total Data Tersimpan</span>
-            </div>
-        </div>
+    {{-- STATS METRICS BAR (Gentelella Tile Stats) --}}
+    <div class="row tile_count" style="margin: 0 -10px 1.5rem -10px;">
+        <x-gentelella.tile-stat
+            col="col-md-4 col-sm-6 col-xs-12"
+            title="Modul Aktif"
+            :value="$modules->where('status_aktif', true)->count() . ' / ' . $modules->count()"
+            subText="Modul siap operasional"
+        />
+        <x-gentelella.tile-stat
+            col="col-md-4 col-sm-6 col-xs-12"
+            title="Akses Publik Terbuka"
+            :value="$modules->where('is_public_read', true)->count() . ' Modul'"
+            subText="Dapat diakses portal publik"
+        />
+        <x-gentelella.tile-stat
+            col="col-md-4 col-sm-6 col-xs-12"
+            title="Total Data Tersimpan"
+            :value="number_format($modules->sum('records_count')) . ' Baris'"
+            subText="Tercatat di basis data"
+        />
     </div>
 
     {{-- FILTER & SEARCH TOOLBAR --}}

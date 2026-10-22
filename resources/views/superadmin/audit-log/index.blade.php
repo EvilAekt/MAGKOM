@@ -188,7 +188,7 @@
     <!-- =====================================================================
          KOLOM KIRI: DAFTAR 15 KANAL DISCORD-STYLE
          ===================================================================== -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle); display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 1.5rem;">
+    <x-gentelella.card style="display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 1.5rem;">
         <div>
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
                 <span style="font-size: 0.75rem; font-weight: 800; color: var(--neutral-500); text-transform: uppercase; letter-spacing: 0.05em;"># KANAL PERISTIWA</span>
@@ -235,7 +235,7 @@
                 <span>Append-Only Immutable Guarantee</span>
             </div>
         </div>
-    </div>
+    </x-gentelella.card>
 
     <!-- =====================================================================
          KOLOM KANAN: HEADER KANAL, FILTER TOOLBAR & STREAM PERISTIWA
@@ -243,7 +243,7 @@
     <div style="display: flex; flex-direction: column; gap: 1.5rem; min-width: 0;">
 
         <!-- 1. ACTIVE CHANNEL HERO BANNER -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow-subtle); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <x-gentelella.card style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-left: 4px solid {{ $activeChannelMeta['color'] }};">
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <div style="width: 44px; height: 44px; border-radius: 10px; background: {{ $activeChannelMeta['color'] }}1A; color: {{ $activeChannelMeta['color'] }}; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 800;">
                     #
@@ -268,10 +268,10 @@
                     Total Rekaman: <strong>{{ method_exists($logs, 'total') ? number_format($logs->total()) : number_format($logs->count()) }} Baris</strong>
                 </span>
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- 2. FILTER TOOLBAR CARD -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.x-panel title="Pencarian &amp; Filter Aliran Audit" subtitle="Filter berdasarkan kata kunci, severity, staf pelaku, atau rentang waktu">
             <form method="GET" action="{{ $activeChannel === 'all-actions-stream' ? route('superadmin.audit-log.index') : route('superadmin.audit-log.channel', ['channel' => $activeChannel]) }}" style="display: flex; flex-direction: column; gap: 1rem;">
                 <input type="hidden" name="channel" value="{{ $activeChannel }}">
 
@@ -348,10 +348,10 @@
                     </button>
                 </div>
             </form>
-        </div>
+        </x-gentelella.x-panel>
 
         <!-- 3. DATA TABLE CARD -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.x-panel title="Aliran Peristiwa Audit" subtitle="Rekaman tersanitasi anti-tamper (append-only)">
             @if($logs->isEmpty())
                 <div style="padding: 3.5rem 1.5rem; text-align: center;">
                     <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--neutral-100); margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
@@ -495,7 +495,7 @@
                     </div>
                 @endif
             @endif
-        </div>
+        </x-gentelella.x-panel>
     </div>
 </div>
 

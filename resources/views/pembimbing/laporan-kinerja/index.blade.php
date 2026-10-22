@@ -32,7 +32,7 @@
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
         
         <!-- Total Mentee -->
-        <div style="background: #ffffff; border-radius: 12px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                 <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-600);">Total Mentee Dibimbing</span>
                 <div style="width: 32px; height: 32px; border-radius: 8px; background: #eff6ff; color: #0641CC; display: flex; align-items: center; justify-content: center;">
@@ -45,10 +45,10 @@
             <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem;">
                 {{ $totalMenteeAktif }} aktif berjalan &bull; {{ $totalMenteeSelesai }} selesai
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- Logbook Reviu -->
-        <div style="background: #ffffff; border-radius: 12px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                 <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-600);">Logbook Direview</span>
                 <div style="width: 32px; height: 32px; border-radius: 8px; background: #ecfdf5; color: #059669; display: flex; align-items: center; justify-content: center;">
@@ -61,10 +61,10 @@
             <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem;">
                 dari {{ $totalLogbookSubmitted }} catatan logbook terkirim
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- Tugas Diselesaikan -->
-        <div style="background: #ffffff; border-radius: 12px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                 <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-600);">Tugas Diselesaikan</span>
                 <div style="width: 32px; height: 32px; border-radius: 8px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center;">
@@ -77,10 +77,10 @@
             <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem;">
                 {{ $totalTugasSelesai }} selesai dari {{ $totalTugasDiberikan }} total tugas
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- Rata-rata Nilai -->
-        <div style="background: #ffffff; border-radius: 12px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                 <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-600);">Rata-rata Nilai Akhir</span>
                 <div style="width: 32px; height: 32px; border-radius: 8px; background: #f3e8ff; color: #7e22ce; display: flex; align-items: center; justify-content: center;">
@@ -93,7 +93,7 @@
             <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem;">
                 Kompetensi rubrik resmi Diskominfo
             </div>
-        </div>
+        </x-gentelella.card>
     </div>
 
     <!-- Tabel Rekapitulasi Portofolio Bimbingan -->

@@ -1,35 +1,32 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Direktori Peserta Bimbingan - Portal MagKom')
+@section('page_title', 'Direktori Peserta Bimbingan')
+@section('page_description', 'Kelola dan pantau seluruh peserta magang aktif maupun alumni bimbingan dinas.')
+
+@section('breadcrumbs')
+    <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: var(--neutral-600, #64748B);">
+        <a href="{{ route('pembimbing.dashboard') }}" style="color: var(--neutral-600, #64748B); text-decoration: none;">Dashboard</a>
+        <span>/</span>
+        <span style="color: var(--neutral-900, #0F172A); font-weight: 700;">Peserta Bimbingan</span>
+    </nav>
+@endsection
+
+@section('page_actions')
+    <div style="display: flex; gap: 0.75rem;">
+        <a href="{{ route('pembimbing.tugas.index') }}" class="btn" style="background: #0641CC; color: #ffffff; padding: 0.55rem 1.15rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Beri Tugas Baru
+        </a>
+    </div>
+@endsection
 
 @section('content')
 <div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- Breadcrumb & Header -->
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-        <div>
-            <nav style="font-size: 0.8rem; color: var(--neutral-500); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-                <a href="{{ route('pembimbing.dashboard') }}" style="color: var(--neutral-600); text-decoration: none;">Dashboard</a>
-                <span>/</span>
-                <span style="color: var(--neutral-900); font-weight: 600;">Peserta Bimbingan</span>
-            </nav>
-            <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
-                Direktori Peserta Bimbingan (Mentee Hub)
-            </h1>
-            <p style="font-size: 0.875rem; color: var(--neutral-600); margin: 0.25rem 0 0 0;">
-                Kelola dan pantau seluruh peserta magang aktif maupun alumni bimbingan dinas.
-            </p>
-        </div>
-        <div style="display: flex; gap: 0.75rem;">
-            <a href="{{ route('pembimbing.tugas.index') }}" class="btn" style="background: #0641CC; color: #ffffff; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                Beri Tugas Baru
-            </a>
-        </div>
-    </div>
 
     <!-- Tab Filter & Pencarian -->
     <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -78,11 +75,11 @@
     </div>
 
     <!-- Tabel Daftar Mentee -->
-    <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+    <x-gentelella.x-panel title="Daftar Mentee Bimbingan" subtitle="Monitoring progres durasi dan status evaluasi peserta magang">
+        <div class="table-responsive-gentelella" style="overflow-x: auto;">
+            <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                 <thead>
-                    <tr style="border-bottom: 1px solid var(--neutral-200); background: #f8fafc; color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <tr class="headings" style="border-bottom: 1px solid var(--neutral-200); background: #f8fafc; color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                         <th style="padding: 1rem 1.5rem;">Peserta Bimbingan</th>
                         <th style="padding: 1rem 1rem;">Asal Institusi & Jurusan</th>
                         <th style="padding: 1rem 1rem;">Jalur & Bidang</th>
@@ -216,7 +213,7 @@
                 {{ $penempatanList->links() }}
             </div>
         @endif
-    </div>
+    </x-gentelella.x-panel>
 
 </div>
 @endsection

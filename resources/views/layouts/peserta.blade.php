@@ -21,6 +21,7 @@
 
     <!-- Gentelella Theme CSS -->
     <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dashboard-cockpit-unified.css') }}">
 
     <!-- Anti-Flash Theme Script -->
     <script>
@@ -1821,7 +1822,13 @@
         }
     </script>
     <script src="{{ asset('js/gentelella-theme.js') }}"></script>
-    @stack('scripts')
+    <script src="{{ asset('js/dashboard-cockpit-unified.js') }}"></script>
+    {{-- Mobile Floating Action Button (FAB) --}}
+    <button type="button" class="cv-mobile-fab" data-action="toggle-mobile-aside" aria-label="Buka Menu Tindakan">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Tindakan</span>
+    </button>
+
     <x-sse-toast-listener />
 </body>
 </html>

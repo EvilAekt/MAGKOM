@@ -36,7 +36,7 @@
     </div>
 
     <!-- Filter Bar Card -->
-    <div style="background: #ffffff; border-radius: 12px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <x-gentelella.card style="padding: 1.25rem;">
         <form method="GET" action="{{ route('pembimbing.tugas.template.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
             <div style="flex: 2; min-width: 220px;">
                 <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Cari Template</label>
@@ -74,12 +74,12 @@
                 @endif
             </div>
         </form>
-    </div>
+    </x-gentelella.card>
 
     <!-- Template Grid Cards -->
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;">
         @forelse($templates as $tmpl)
-            <div style="background: #ffffff; border-radius: 12px; border: 1px solid var(--neutral-200); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: transform 0.15s ease, box-shadow 0.15s ease;">
+            <x-gentelella.card hoverable="true" style="padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.75rem;">
                         <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.2rem 0.6rem; border-radius: 6px; background: #eff6ff; color: #0641CC;">
@@ -122,23 +122,25 @@
                     @endif
                 </div>
 
-                <div style="border-top: 1px solid var(--neutral-200); padding-top: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
-                    <a href="{{ route('pembimbing.tugas.create', ['template_id' => $tmpl->id]) }}" style="font-size: 0.8125rem; font-weight: 600; color: #0641CC; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                        <span>Gunakan Template</span>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </a>
+                <x-slot:footer>
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <a href="{{ route('pembimbing.tugas.create', ['template_id' => $tmpl->id]) }}" style="font-size: 0.8125rem; font-weight: 600; color: #0641CC; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+                            <span>Gunakan Template</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
 
-                    @if($tmpl->pembimbing_id === auth()->id() || auth()->user()->isSuperAdmin())
-                        <form method="POST" action="{{ route('pembimbing.tugas.template.destroy', $tmpl) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus template ini?');" style="margin: 0;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" style="background: transparent; border: none; cursor: pointer; color: #ef4444; padding: 0.25rem; border-radius: 4px;" title="Hapus Template">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                            </button>
-                        </form>
-                    @endif
-                </div>
-            </div>
+                        @if($tmpl->pembimbing_id === auth()->id() || auth()->user()->isSuperAdmin())
+                            <form method="POST" action="{{ route('pembimbing.tugas.template.destroy', $tmpl) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus template ini?');" style="margin: 0;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" style="background: transparent; border: none; cursor: pointer; color: #ef4444; padding: 0.25rem; border-radius: 4px;" title="Hapus Template">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+                </x-slot:footer>
+            </x-gentelella.card>
         @empty
             <div style="grid-column: 1 / -1; background: #ffffff; border-radius: 12px; border: 1px dashed var(--neutral-300); padding: 3rem 1.5rem; text-align: center;">
                 <div style="width: 48px; height: 48px; border-radius: 50%; background: #eff6ff; color: #0641CC; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">
