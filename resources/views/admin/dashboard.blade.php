@@ -158,7 +158,11 @@
 @endpush
 
 @section('content')
-<div class="adm-cockpit-wrapper" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
+{{-- =========================================================================
+   Gentelella Cockpit Dashboard - Operasional Administrasi Dinas Kominfo Sleman
+   Standar Visual Gentelella Theme (Zero-Regression & Adaptive Responsive)
+   ========================================================================= --}}
+<div class="gentelella-dashboard-admin adm-cockpit-wrapper" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     {{-- 1. Atmospheric Hero Card, 4-Metric Dock & Statusline Ribbon --}}
     @include('admin.dashboard.partials._header')

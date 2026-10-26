@@ -3,8 +3,12 @@
 **Target Pelaksana**: Junior Full-Stack Developer & Model AI Eksekutor (Gemini Flash / Code Assistant)  
 **Tingkat Kesulitan**: Menengah (UI/UX Refactoring + Blade Integration)  
 **Tanggal Rilis**: 22 Oktober 2026  
-**Status**: DRAFT TUGAS SIAP DIEKSEKUSI  
+**Status**: DRAFT TUGAS OPERASIONAL (Dilanjutkan oleh [Senior Handbook 2026-10-26](file:///g:/MAGKOM/docs/plans/2026-10-26-kelanjutan-redesign-4-role-gentelella-senior-handbook.md))  
 **Target Utama**: Transformasi alur kerja operasional (Pendaftaran, Penempatan, Logbook, Penugasan Classroom, dan Evaluasi Rubrik) ke dalam standar **Gentelella Dashboard Template** dengan palet resmi **MagKom Kominfo Sleman** (*Deep Navy* `#0641CC` & *Kominfo Blue* `#0751FF`).
+
+> [!NOTE]
+> **Dokumen Kelanjutan & Handbook Eksekusi Lengkap 4 Role**:
+> Panduan mikro-level 18 file sisa dan checklist verifikasi komprehensif tersedia di: [docs/plans/2026-10-26-kelanjutan-redesign-4-role-gentelella-senior-handbook.md](file:///g:/MAGKOM/docs/plans/2026-10-26-kelanjutan-redesign-4-role-gentelella-senior-handbook.md).
 
 ---
 

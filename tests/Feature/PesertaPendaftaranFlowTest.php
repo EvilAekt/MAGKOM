@@ -70,7 +70,7 @@ class PesertaPendaftaranFlowTest extends TestCase
         $this->bulan = BulanMagang::create([
             'bulan_mulai' => '2026-11-01',
             'tgl_buka' => '2026-10-01',
-            'tgl_tutup' => '2026-10-25',
+            'tgl_tutup' => '2026-10-31',
             'aktif' => true,
         ]);
 

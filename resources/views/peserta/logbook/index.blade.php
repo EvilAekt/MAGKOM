@@ -921,6 +921,19 @@
 
 @section('content')
 <div class="logbook-wrapper">
+    <x-gentelella.page-title title="Logbook & Jurnal Mingguan Peserta" description="Catat ringkasan capaian aktivitas magang dan pantau evaluasi mingguan pembimbing lapangan.">
+        <x-slot:actions>
+            @if($penempatan)
+                <button type="button" class="btn btn-primary" onclick="openTambahModal()" style="height: 40px; padding: 0 16px; display: inline-flex; align-items: center; gap: 8px;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>+ Isi Logbook</span>
+                </button>
+            @endif
+        </x-slot:actions>
+    </x-gentelella.page-title>
+
     @if(!$penempatan)
         <div class="card-modern" style="border-left: 4px solid var(--amber-700); background: var(--amber-100); margin-bottom: 24px;">
             <div style="display: flex; align-items: flex-start; gap: 16px;">
@@ -1175,13 +1188,13 @@
 
                             <div style="display: flex; align-items: center; gap: 10px;" onclick="event.stopPropagation();">
                                 @if($isRevisi)
-                                    <span class="badge badge-danger">Perlu Revisi</span>
+                                    <x-gentelella.badge type="danger">Perlu Revisi</x-gentelella.badge>
                                 @elseif($statusValue === 'terkirim')
-                                    <span class="badge badge-info">Terkirim</span>
+                                    <x-gentelella.badge type="info">Terkirim</x-gentelella.badge>
                                 @elseif($statusValue === 'disetujui')
-                                    <span class="badge badge-success">Disetujui</span>
+                                    <x-gentelella.badge type="success">Disetujui</x-gentelella.badge>
                                 @else
-                                    <span class="badge badge-secondary">{{ ucfirst($statusValue) }}</span>
+                                    <x-gentelella.badge type="secondary">{{ ucfirst($statusValue) }}</x-gentelella.badge>
                                 @endif
 
                                 <button type="button" class="btn btn-secondary" style="height: 32px; padding: 0 12px; font-size: 0.75rem;"
@@ -1208,14 +1221,10 @@
                                 $catatanFeedback = $log->catatan_pembimbing ?? $log->catatan_review;
                             @endphp
                             @if($catatanFeedback)
-                                <div class="review-callout">
-                                    <div style="font-weight: 700; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
-                                        </svg>
-                                        Catatan Review Pembimbing Lapangan:
-                                    </div>
-                                    <div>{{ $catatanFeedback }}</div>
+                                <div style="margin-top: 14px;">
+                                    <x-gentelella.callout type="warning" title="Catatan Review Pembimbing Lapangan">
+                                        {{ $catatanFeedback }}
+                                    </x-gentelella.callout>
                                 </div>
                             @endif
 

@@ -522,34 +522,40 @@
 @endpush
 
 @section('content')
+{{-- =========================================================================
+   Gentelella Workspace Dashboard - Peserta Magang Dinas Kominfo Sleman
+   Standar Visual Gentelella Theme (Zero-Regression & Adaptive Responsive)
+   ========================================================================= --}}
+<div class="gentelella-dashboard-workspace" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
-{{-- 1. Header & Atmospheric Hero Greeting Banner --}}
-@include('peserta.dashboard.partials._header')
+    {{-- 1. Header & Atmospheric Hero Greeting Banner --}}
+    @include('peserta.dashboard.partials._header')
 
-{{-- 2. Cockpit 2-Column Asymmetrical Grid (Main 1fr + Sticky Aside 340px) --}}
-<div class="cv-cockpit-layout" style="width: 100%;">
+    {{-- 2. Cockpit 2-Column Asymmetrical Grid (Main 1fr + Sticky Aside 340px) --}}
+    <div class="cv-cockpit-layout" style="width: 100%;">
 
-    {{-- Kolom Utama: Berdasarkan Fase --}}
-    <div class="cv-cockpit-main" style="display: flex; flex-direction: column; gap: 1.5rem; min-width: 0;">
-        @if($fase === 'onboarding')
-            @include('peserta.dashboard.partials._phase_onboarding')
-        @elseif($fase === 'seleksi')
-            @include('peserta.dashboard.partials._phase_seleksi')
-        @elseif($fase === 'aktif')
-            @include('peserta.dashboard.partials._phase_aktif')
-        @elseif($fase === 'selesai')
-            @include('peserta.dashboard.partials._phase_selesai')
-        @endif
+        {{-- Kolom Utama: Berdasarkan Fase Magang --}}
+        <div class="cv-cockpit-main" style="display: flex; flex-direction: column; gap: 1.5rem; min-width: 0;">
+            @if($fase === 'onboarding')
+                @include('peserta.dashboard.partials._phase_onboarding')
+            @elseif($fase === 'seleksi')
+                @include('peserta.dashboard.partials._phase_seleksi')
+            @elseif($fase === 'aktif')
+                @include('peserta.dashboard.partials._phase_aktif')
+            @elseif($fase === 'selesai')
+                @include('peserta.dashboard.partials._phase_selesai')
+            @endif
+        </div>
+
+        {{-- Kolom Samping: Sticky Aside 340px --}}
+        <aside class="cv-aside-sticky">
+            @include('peserta.dashboard.partials._aside')
+        </aside>
+
     </div>
 
-    {{-- Kolom Samping: Sticky Aside 340px --}}
-    <aside class="cv-aside-sticky">
-        @include('peserta.dashboard.partials._aside')
-    </aside>
+    {{-- Slide-Over Drawer: Input Logbook Kilat --}}
+    @include('peserta.dashboard.partials._modal_quick_logbook')
 
 </div>
-
-{{-- Slide-Over Drawer: Input Logbook Kilat --}}
-@include('peserta.dashboard.partials._modal_quick_logbook')
-
 @endsection

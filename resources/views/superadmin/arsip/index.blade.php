@@ -82,10 +82,14 @@
 @endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+{{-- ==========================================================================
+   Indeks Bank Data Arsip & Rekam Jejak Alumni Magang - SuperAdmin
+   Standar Visual Gentelella Theme (MagKom Sleman)
+   ========================================================================== --}}
+<div class="gentelella-arsip-workspace" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- 1. TOOLBAR & FILTER CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow-subtle);">
+    <!-- 1. TOOLBAR & FILTER CARD (Gentelella Standard) -->
+    <div class="gentelella-filter-bar" style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow-subtle);">
         <form method="GET" action="{{ route('superadmin.arsip.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; flex: 1;">
                 <div style="position: relative; min-width: 280px; flex: 1;">

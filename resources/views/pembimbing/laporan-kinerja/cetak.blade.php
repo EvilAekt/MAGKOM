@@ -1,3 +1,7 @@
+{{-- ==========================================================================
+   Lembar Rekapitulasi Kinerja Pembimbing Lapangan ASN (MagKom Sleman)
+   Standar Dokumen Cetak Resmi gentelella Theme (A4 Clean Print Layout)
+   ========================================================================== --}}
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -91,13 +95,20 @@
 </head>
 <body>
 
-    <div class="no-print" style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 15px; margin-bottom: 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-family: sans-serif; font-size: 13px; color: #1e3a8a;">
-            Pratinjau Cetak Laporan Portofolio Mentoring ASN. Klik tombol di kanan untuk mencetak atau simpan ke PDF.
-        </span>
-        <button onclick="window.print()" style="font-family: sans-serif; background: #0641CC; color: #ffffff; border: none; padding: 8px 18px; border-radius: 6px; font-weight: bold; cursor: pointer;">
-            Cetak Dokumen
-        </button>
+    <div class="no-print" style="background: #EFF6FF; border: 1px solid #BFDBFE; padding: 12px 18px; margin-bottom: 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 18px;">📄</span>
+            <div>
+                <strong style="color: #1E3A8A; font-size: 13.5px; display: block;">Pratinjau Cetak Lembar Portofolio Mentoring ASN (Gentelella Standard)</strong>
+                <span style="font-size: 12px; color: #3B82F6;">Pastikan ukuran kertas A4 Portrait sebelum mencetak dokumen resmi dinas.</span>
+            </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <button onclick="window.print()" style="background: #0641CC; color: #ffffff; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(6, 65, 204, 0.25);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                Cetak Dokumen (Ctrl+P)
+            </button>
+        </div>
     </div>
 
     <!-- Kop Surat Dinas -->

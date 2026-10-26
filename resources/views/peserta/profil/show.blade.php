@@ -632,14 +632,7 @@
 
 
     {{-- Clean Page Header --}}
-    <div class="profile-header-clean">
-        <div>
-            <h1 class="profile-header-title">Biodata & Profil Peserta</h1>
-            <p class="profile-header-subtitle">
-                Kelola pasfoto, data akademik, serta kontak utama dan kontak darurat Anda secara terpadu.
-            </p>
-        </div>
-    </div>
+    <x-gentelella.page-title title="Biodata & Profil Peserta" description="Kelola pasfoto, data akademik, serta kontak utama dan kontak darurat Anda secara terpadu." />
 
     {{-- Formulir Biodata Utama Peserta (Membungkus Kedua Kolom) --}}
     <form action="{{ route('peserta.profil.simpan') }}" method="POST" id="formBiodataPeserta" enctype="multipart/form-data">
@@ -652,9 +645,9 @@
         <div class="profile-two-columns">
 
             {{-- ========================================================
-                 KOLOM KIRI: KARTU IDENTITAS PESERTA (PROFILE CARD)
+                 KOLOM KIRI: KARTU IDENTITAS PESERTA (PROFILE CARD GENTELELLA)
                  ======================================================== --}}
-            <div class="identity-card">
+            <x-gentelella.card class="identity-card" :hoverable="false">
                 <div class="identity-card-cover"></div>
 
                 <div class="identity-card-body">
@@ -776,12 +769,12 @@
                     </div>
 
                 </div>
-            </div>
+            </x-gentelella.card>
 
             {{-- ========================================================
-                 KOLOM KANAN: FORMULIR BIODATA BERSATU (UNIFIED FORM CARD)
+                 KOLOM KANAN: FORMULIR BIODATA BERSATU (UNIFIED FORM CARD GENTELELLA)
                  ======================================================== --}}
-            <div class="form-unified-card">
+            <x-gentelella.card class="form-unified-card" :hoverable="false">
 
                 {{-- SEKSI 1: INFORMASI AKADEMIK --}}
                 <div class="form-section-title-wrap">
@@ -1013,7 +1006,7 @@
                     </div>
                 </div>
 
-            </div>
+            </x-gentelella.card>
 
         </div>
 

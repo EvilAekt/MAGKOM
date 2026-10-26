@@ -1,8 +1,8 @@
 {{-- ==========================================================================
    Header & Statusline Ribbon - Dashboard Operasional Administrasi (MagKom Sleman)
-   Mengadopsi DNA Visual Lovable Clearview (Blueprint Grid & Sleman Navy)
+   Standar Visual Gentelella Theme (Clearview DNA & Sleman Navy #0641CC)
    ========================================================================== --}}
-<div class="cv-hero-banner">
+<div class="cv-hero-banner gentelella-hero-banner">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
         <div>
             <div class="cv-eyebrow">{{ now()->translatedFormat('l, d F Y') }} &bull; PORTAL RESMI KOMINFO SLEMAN</div>
@@ -20,7 +20,7 @@
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 <span>Ekspor Laporan</span>
             </a>
-            <a href="{{ route('admin.pendaftaran.index') }}" style="height: 40px; padding: 0 1.35rem; border-radius: 8px; background: #ffffff; color: var(--cv-blue-800, #06318c); border: none; text-decoration: none; font-size: 0.8125rem; font-weight: 800; display: inline-flex; align-items: center; gap: 0.45rem; box-shadow: 0 4px 14px rgba(0,0,0,0.25);">
+            <a href="{{ route('admin.pendaftaran.index') }}" style="height: 40px; padding: 0 1.35rem; border-radius: 8px; background: #ffffff; color: var(--blue-700, #0641CC); border: none; text-decoration: none; font-size: 0.8125rem; font-weight: 800; display: inline-flex; align-items: center; gap: 0.45rem; box-shadow: 0 4px 14px rgba(0,0,0,0.25);">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                 <span>Tinjau Berkas</span>
             </a>
@@ -32,7 +32,7 @@
 </div>
 
 {{-- Statusline Horizontal Ribbon --}}
-<div class="cv-statusline">
+<div class="cv-statusline gentelella-statusline">
     <div class="cv-statusline-item">
         <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,0.25);"></span>
         <dt>Landing Publik:</dt>

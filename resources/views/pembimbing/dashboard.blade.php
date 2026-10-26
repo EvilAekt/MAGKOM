@@ -369,7 +369,11 @@
 @endpush
 
 @section('content')
-<div class="cv-cockpit-layout" style="width: 100%;">
+{{-- =========================================================================
+   Gentelella Cockpit Dashboard - Pembimbing Lapangan Dinas Kominfo Sleman
+   Standar Visual Gentelella Theme (Zero-Regression & Adaptive Responsive)
+   ========================================================================= --}}
+<div class="gentelella-dashboard-pembimbing cv-cockpit-layout" style="width: 100%;">
 
     {{-- =========================================================================
        KOLOM UTAMA: HERO, METRIK, TAB CONTROLLER & PANELS

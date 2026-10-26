@@ -1,3 +1,8 @@
+{{-- ==========================================================================
+   Tab 3: Pelaksanaan & Bimbingan - SuperAdmin Master Cockpit
+   Standar Visual Gentelella Theme (MagKom Sleman)
+   ========================================================================== --}}
+<div class="gentelella-tab-pane gentelella-tab-bimbingan">
 {{-- 4 KARTU METRIK BIMBINGAN --}}
 <div class="sa-grid sa-grid--metrics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
     {{-- Metric 1: Total Tugas Aktif --}}
@@ -189,3 +194,4 @@
         </div>
     </div>
 </x-sa.panel>
+</div>

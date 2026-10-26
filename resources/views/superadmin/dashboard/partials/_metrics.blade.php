@@ -1,4 +1,4 @@
-<div class="row tile_count sa-hero-dock" role="region" aria-label="Metrik Utama SuperAdmin">
+<div class="row tile_count sa-metrics-dock-grid" role="region" aria-label="Metrik Utama SuperAdmin">
     {{-- Card 1: Total Pengguna --}}
     <x-gentelella.tile-stat 
         title="Total pengguna" 
@@ -7,7 +7,7 @@
         trendType="primary"
         trendText="+14"
         subText="minggu ini"
-        col="col-md-3 col-sm-6 col-xs-12 sa-dock-metric"
+        col="col-md-3 col-sm-6 col-xs-12 sa-metric-card-col"
     >
         <span class="sa-spark" aria-hidden="true">
             <i style="height: 40%"></i>
@@ -29,7 +29,7 @@
         trendType="warning"
         trendText="{{ $antreanMelebihiSla > 0 ? $antreanMelebihiSla . ' lewat SLA' : 'Tertib SLA' }}"
         subText="· FIFO"
-        col="col-md-3 col-sm-6 col-xs-12 sa-dock-metric warn"
+        col="col-md-3 col-sm-6 col-xs-12 sa-metric-card-col warn"
     >
         <span class="sa-sr-only">Berkas perlu ditinjau</span>
     </x-gentelella.tile-stat>
@@ -41,7 +41,7 @@
         icon="user-check"
         trendType="success"
         subText="7 masa tenggang · 9 selesai ≤ 14 hari"
-        col="col-md-3 col-sm-6 col-xs-12 sa-dock-metric"
+        col="col-md-3 col-sm-6 col-xs-12 sa-metric-card-col"
     >
         <span class="sa-spark" aria-hidden="true">
             <i style="height: 60%"></i>
@@ -71,7 +71,7 @@
         icon="lock"
         trendType="danger"
         subText="{{ $stafPendingGantiPassword > 0 ? $stafPendingGantiPassword . ' staf belum ganti sandi' : 'Akses ditangguhkan' }}"
-        col="col-md-3 col-sm-6 col-xs-12 sa-dock-metric bad"
+        col="col-md-3 col-sm-6 col-xs-12 sa-metric-card-col bad"
     >
         <span class="sa-sr-only">Akses ditangguhkan</span>
     </x-gentelella.tile-stat>

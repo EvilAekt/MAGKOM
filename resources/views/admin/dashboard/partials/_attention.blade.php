@@ -1,32 +1,26 @@
 {{-- ==========================================================================
    Attention SLA Hazard Card & Efisiensi Operasional - Dashboard Admin
+   Standar Visual Gentelella Theme (MagKom Sleman)
    ========================================================================== --}}
 @if($pengajuanSlaKritisCount > 0)
-    <div class="cv-attention-card">
-        <div class="cv-attention-count">
-            {{ $pengajuanSlaKritisCount }}
-            <small>LEWAT SLA</small>
-        </div>
-        <div>
-            <h4 style="font-size: 0.95rem; font-weight: 800; color: #9a3412; margin: 0 0 0.25rem 0;">
-                Berkas Terlama Menunggu Verifikasi Seleksi &mdash; Batas 3 Hari Kerja (BR-04)
-            </h4>
-            <p style="font-size: 0.8125rem; color: #78350f; margin: 0; line-height: 1.45;">
-                Terdapat <strong>{{ $pengajuanSlaKritisCount }} berkas</strong> calon peserta yang mendekati atau melewati batas waktu SLA verifikasi. Segera lakukan peninjauan berkas pendaftar berikut untuk menjaga mutu pelayanan seleksi.
-            </p>
-        </div>
-        <div>
-            <a href="{{ route('admin.pendaftaran.index') }}" class="adm-btn-action-primary" style="padding: 0.55rem 1.15rem; border-radius: 8px; font-weight: 700;">
-                <span>Buka Antrean &rarr;</span>
-            </a>
-        </div>
+    <div style="margin-bottom: 1rem;">
+        <x-gentelella.callout type="danger" title="Perhatian: Berkas Mendekati atau Melewati Batas Waktu SLA Verifikasi (BR-04)">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    Terdapat <strong>{{ $pengajuanSlaKritisCount }} berkas</strong> calon peserta yang mendekati atau melewati batas waktu SLA verifikasi (3 hari kerja). Segera lakukan peninjauan berkas pendaftar untuk menjaga mutu pelayanan seleksi.
+                </div>
+                <a href="{{ route('admin.pendaftaran.index') }}" class="btn btn-sm btn-danger" style="font-weight: 700; border-radius: 6px; text-decoration: none; padding: 0.45rem 1rem;">
+                    Buka Antrean Verifikasi &rarr;
+                </a>
+            </div>
+        </x-gentelella.callout>
     </div>
 @endif
 
-{{-- 3 Kartu Efisiensi Operasional --}}
+{{-- 3 Kartu Efisiensi Operasional Gentelella --}}
 <div class="row" style="margin-bottom: 0;">
     <div class="col-md-4 col-sm-4 col-xs-12">
-        <div class="x_panel" style="margin-bottom: 0.75rem; padding: 1rem 1.25rem; border-left: 4px solid var(--blue-600); border-radius: 10px;">
+        <x-gentelella.card style="margin-bottom: 0.75rem; padding: 1rem 1.25rem; border-left: 4px solid var(--blue-600); border-radius: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500); text-transform: uppercase;">Kecepatan Verifikasi Berkas</span>
@@ -39,11 +33,11 @@
                     <x-sa.icon name="clock" :size="20" />
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
     </div>
 
     <div class="col-md-4 col-sm-4 col-xs-12">
-        <div class="x_panel" style="margin-bottom: 0.75rem; padding: 1rem 1.25rem; border-left: 4px solid var(--green-600); border-radius: 10px;">
+        <x-gentelella.card style="margin-bottom: 0.75rem; padding: 1rem 1.25rem; border-left: 4px solid var(--green-600); border-radius: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500); text-transform: uppercase;">Tingkat Keterisian Kuota</span>
@@ -56,11 +50,11 @@
                     <x-sa.icon name="activity" :size="20" />
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
     </div>
 
     <div class="col-md-4 col-sm-4 col-xs-12">
-        <div class="x_panel" style="margin-bottom: 0.75rem; padding: 1rem 1.25rem; border-left: 4px solid #7C3AED; border-radius: 10px;">
+        <x-gentelella.card style="margin-bottom: 0.75rem; padding: 1rem 1.25rem; border-left: 4px solid #7C3AED; border-radius: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500); text-transform: uppercase;">Pendaftar 7 Hari Terakhir</span>
@@ -73,6 +67,6 @@
                     <x-sa.icon name="users" :size="20" />
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
     </div>
 </div>

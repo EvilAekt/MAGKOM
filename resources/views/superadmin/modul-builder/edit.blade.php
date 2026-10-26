@@ -17,17 +17,20 @@
 @endpush
 
 @section('content')
-<div class="studio-container">
+{{-- ==========================================================================
+   Modul Studio: Rancang Modul Kustom (Edit) - SuperAdmin
+   Standar Visual Gentelella Theme (MagKom Sleman)
+   ========================================================================== --}}
+<div class="studio-container gentelella-modul-studio">
 
     @if ($errors->any())
-        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #DC2626; padding: 1rem 1.25rem; border-radius: var(--studio-radius-md); font-size: 0.875rem;">
-            <strong style="display: block; margin-bottom: 0.35rem;">Terdapat kesalahan pada formulir modul:</strong>
+        <x-gentelella.callout type="danger" title="Terdapat kesalahan pada formulir modul:">
             <ul style="margin: 0; padding-left: 1.25rem;">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-        </div>
+        </x-gentelella.callout>
     @endif
 
     <form action="{{ route('superadmin.modul-builder.update', $modul) }}" method="POST" id="form-builder">

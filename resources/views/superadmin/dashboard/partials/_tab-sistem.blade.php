@@ -1,3 +1,8 @@
+{{-- ==========================================================================
+   Tab 4: Tata Kelola Sistem & Laporan - SuperAdmin Master Cockpit
+   Standar Visual Gentelella Theme (MagKom Sleman)
+   ========================================================================== --}}
+<div class="gentelella-tab-pane gentelella-tab-sistem">
 {{-- BAGIAN 1: HUB EKSPOR 4 LAPORAN RESMI DINAS 1-KLIK --}}
 <x-sa.panel title="Hub Ekspor Instan Laporan Resmi Dinas (AC-17-1)" subtitle="Unduh data rekapitulasi CSV/Excel untuk kebutuhan arsip dan pelaporan pimpinan Diskominfo Sleman" :href="route('admin.laporan.index')" linkText="Buka Filter Laporan Lanjutan &rarr;">
     <div class="sa-grid sa-grid--4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem;">
@@ -405,3 +410,4 @@
         <span>PHP {{ $systemSummary['php_version'] ?? phpversion() }}</span>
     </div>
 </x-sa.panel>
+</div>

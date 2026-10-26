@@ -12,23 +12,30 @@
     <link rel="stylesheet" href="{{ asset('css/superadmin-dashboard.css') }}">
 @endpush
 
+@section('content_area_class', 'gentelella-fluid-canvas')
+
 @section('content')
 <div class="sa-page">
-<div class="sa-cockpit-layout">
-    {{-- Kolom Kiri: Main Content & Tabs --}}
-    <div class="sa-cockpit-main">
-        {{-- Sapaan Contextual Eyebrow --}}
-        <p class="sa-greet">
-            Selamat pagi, <strong>SuperAdmin</strong> — ada <strong>{{ $antreanMelebihiSla ?: 4 }} berkas lewat SLA</strong> dan <strong>{{ $stafPendingGantiPassword ?: 2 }} staf belum ganti sandi</strong>.
-        </p>
+    {{-- Sapaan Contextual Eyebrow --}}
+    <p class="sa-greet">
+        Selamat pagi, <strong>SuperAdmin</strong> — ada <strong>{{ $antreanMelebihiSla ?: 4 }} berkas lewat SLA</strong> dan <strong>{{ $stafPendingGantiPassword ?: 2 }} staf belum ganti sandi</strong>.
+    </p>
 
-        {{-- Atmospheric Hero Banner with Integrated 4-Metric Dock --}}
-        <section class="sa-hero">
-            @include('superadmin.dashboard.partials._header')
-            @include('superadmin.dashboard.partials._metrics')
-        </section>
+    {{-- BARIS 1: Atmospheric Hero Studio Banner Full-Width --}}
+    <section class="sa-hero sa-hero--fullwidth">
+        @include('superadmin.dashboard.partials._header')
+    </section>
 
-        @php
+    {{-- BARIS 2: 4 Kartu Metrik Utama Tile Stats Full-Width Grid --}}
+    <section class="sa-metrics-row">
+        @include('superadmin.dashboard.partials._metrics')
+    </section>
+
+    {{-- BARIS 3: Split Body 12-Kolom (Mulai di bawah Metrik) --}}
+    <div class="sa-cockpit-layout">
+        {{-- Kolom Kiri: Main Content, Statusline, Attention, Tabs --}}
+        <div class="sa-cockpit-main">
+            @php
             $statusTextLabel = match($statusPublik->value ?? $statusPublik ?? 'tersedia') {
                 'tersedia' => 'Pendaftaran Tersedia',
                 'segera' => 'Segera Dibuka',
@@ -76,7 +83,7 @@
         </dl>
 
         {{-- Quick Action Shortcuts Strip (Untuk Preservasi Assertions Test Suite) --}}
-        <div class="sa-shortcuts" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 0.65rem 1rem; margin-top: -0.5rem;">
+        <div class="sa-shortcuts" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 0.65rem 1rem; margin-top: 0;">
             <div class="sa-shortcuts__list">
                 <span class="sa-shortcuts__label">Pintasan Tindakan:</span>
                 <a href="{{ route('superadmin.staf.index') }}" class="sa-shortcut-chip"><x-sa.icon name="user-plus" :size="13" /><span>+ Akun Staf</span></a>

@@ -1187,9 +1187,25 @@
             margin: 0 auto;
         }
 
+        .dashboard-content-area.gentelella-fluid-canvas {
+            max-width: 100% !important;
+            padding: 1.5rem 2rem;
+            margin: 0;
+            width: 100%;
+        }
+
         @media (max-width: 768px) {
             .dashboard-content-area {
                 padding: 1.25rem 1rem;
+            }
+            .dashboard-content-area.gentelella-fluid-canvas {
+                padding: 1rem 0.75rem;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .dashboard-content-area.gentelella-fluid-canvas {
+                padding: 1.75rem 2.5rem;
             }
         }
 
@@ -3060,7 +3076,7 @@
             </header>
 
             <!-- Container Konten Dinamis (Gentelella right_col) -->
-            <main class="right_col dashboard-main dashboard-content-area" role="main" id="mainContent">
+            <main class="right_col dashboard-main dashboard-content-area @yield('content_area_class')" role="main" id="mainContent">
                 <!-- =====================================================================
                      GLOBAL FLASH ALERTS
                      ===================================================================== -->

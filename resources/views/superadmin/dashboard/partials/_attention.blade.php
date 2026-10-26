@@ -1,3 +1,7 @@
+{{-- ==========================================================================
+   Attention Hazard & Peringatan Forensik Keamanan - SuperAdmin (MagKom Sleman)
+   Standar Visual Gentelella Theme (Zero-Regression & Adaptive Callout)
+   ========================================================================== --}}
 @php
     $hasAttention = ($anomaliKuotaCount > 0)
         || ($totalTugasTerlambat > 0)
@@ -10,7 +14,7 @@
 @endphp
 
 @if($hasAttention)
-    <div class="sa-attn-hazard" role="status">
+    <div class="sa-attn-hazard gentelella-attn-hazard" role="status">
         <div class="sa-attn-hazard__count">
             {{ $slaBreachDisplay }}
             <small>LEWAT SLA</small>

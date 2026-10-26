@@ -8,12 +8,8 @@
 
 
     {{-- Header Section --}}
-    <div class="profile-header-clean">
-        <div>
-            <h1 class="profile-header-title">Profil & Data Staf Administrasi</h1>
-            <p class="profile-header-subtitle">Kelola informasi identitas, foto profil, dan kontak operasional dinas Anda.</p>
-        </div>
-        <div class="profile-header-actions">
+    <x-gentelella.page-title title="Profil & Data Staf Administrasi" description="Kelola informasi identitas, foto profil, dan kontak operasional dinas Anda.">
+        <x-slot:actions>
             <a href="{{ route('admin.pengaturan.index') }}" class="btn-secondary-link">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
@@ -21,8 +17,8 @@
                 </svg>
                 <span>Pengaturan Akun & Preferensi</span>
             </a>
-        </div>
-    </div>
+        </x-slot:actions>
+    </x-gentelella.page-title>
 
     {{-- Main Form Container --}}
     <form action="{{ route('admin.profil.update') }}" method="POST" enctype="multipart/form-data" id="formProfilStaff">
@@ -35,8 +31,8 @@
 
         <div class="profile-two-columns">
             
-            {{-- KOLOM KIRI: IDENTITY CARD --}}
-            <div class="identity-card">
+            {{-- KOLOM KIRI: IDENTITY CARD GENTELELLA --}}
+            <x-gentelella.card class="identity-card" :hoverable="false">
                 <div class="identity-card-cover"></div>
                 <div class="identity-card-body">
                     
@@ -120,10 +116,10 @@
                     </div>
 
                 </div>
-            </div>
+            </x-gentelella.card>
 
-            {{-- KOLOM KANAN: FORM DETAIL PROFIL --}}
-            <div class="form-card-container">
+            {{-- KOLOM KANAN: FORM DETAIL PROFIL GENTELELLA --}}
+            <x-gentelella.card class="form-card-container" :hoverable="false">
 
                 {{-- SEKSI 1: IDENTITAS UTAMA --}}
                 <div class="form-section-title-wrap">
@@ -265,7 +261,7 @@
                     </div>
                 </div>
 
-            </div>
+            </x-gentelella.card>
 
         </div>
 

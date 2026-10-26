@@ -88,7 +88,7 @@
         @method('PUT')
 
         <!-- KARTU 1: KEBIJAKAN KUOTA & KAPASITAS MAGANG -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.75rem 2rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card :hoverable="false" style="padding: 1.75rem 2rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 1rem;">
                 <div style="width: 38px; height: 38px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
@@ -134,10 +134,10 @@
                     </span>
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- KARTU 2: ATURAN PELAKSANAAN & BERKAS -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.75rem 2rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card :hoverable="false" style="padding: 1.75rem 2rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 1rem;">
                 <div style="width: 38px; height: 38px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
@@ -183,10 +183,10 @@
                     </span>
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- KARTU 3: KEBIJAKAN RETENSI & MASA TENGGANG -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.75rem 2rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card :hoverable="false" style="padding: 1.75rem 2rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 1rem;">
                 <div style="width: 38px; height: 38px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -235,10 +235,10 @@
                     Jalankan Pemangkasan Log Sekarang
                 </button>
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- KARTU 4: SKALA AMBANG BATAS PREDIKAT NILAI (PRD 8.3 & 8.6) -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.75rem 2rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card :hoverable="false" style="padding: 1.75rem 2rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 1rem;">
                 <div style="width: 38px; height: 38px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
@@ -286,10 +286,10 @@
                     <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block;">Nilai Kurang (Default: &ge; 40)</span>
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- KARTU 5: SAKELAR MODUL FITUR TAMBAHAN (FEATURE TOGGLES) -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.75rem 2rem; box-shadow: var(--shadow-subtle);">
+        <x-gentelella.card :hoverable="false" style="padding: 1.75rem 2rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 1rem;">
                 <div style="width: 38px; height: 38px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -372,7 +372,7 @@
                     </label>
                 </div>
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- Tombol Aksi Bawah Form -->
         <div style="display: flex; justify-content: flex-end; padding-top: 0.5rem;">

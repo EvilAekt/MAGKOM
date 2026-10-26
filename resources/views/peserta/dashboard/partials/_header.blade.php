@@ -67,20 +67,16 @@
 
     {{-- Banner Alert Catatan Perhatian --}}
     @if($logbookPerluRevisi > 0)
-        <div class="attention-banner">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <span style="font-size: 20px; line-height: 1;">⚠️</span>
+        <x-gentelella.callout type="warning" title="Tindak Lanjut Diperlukan">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; width: 100%;">
                 <div>
-                    <strong class="attention-title">Tindak Lanjut Diperlukan:</strong>
-                    <span class="attention-desc">
-                        Terdapat <strong>{{ $logbookPerluRevisi }}</strong> laporan logbook mingguan yang memerlukan perbaikan dari pembimbing lapangan.
-                    </span>
+                    Terdapat <strong>{{ $logbookPerluRevisi }}</strong> laporan logbook mingguan yang memerlukan perbaikan dari pembimbing lapangan.
                 </div>
+                <a href="{{ route('peserta.logbook.index') }}" class="btn btn-sm btn-warning" style="font-weight: 700; text-decoration: none; border-radius: 6px;">
+                    Perbaiki Logbook Sekarang &rarr;
+                </a>
             </div>
-            <a href="{{ route('peserta.logbook.index') }}" class="btn-attention-action">
-                Perbaiki Logbook Sekarang &rarr;
-            </a>
-        </div>
+        </x-gentelella.callout>
     @endif
 @else
     <div class="dashboard-hero">

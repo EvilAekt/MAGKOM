@@ -1,3 +1,8 @@
+{{-- ==========================================================================
+   Tab 2: Monitoring Seleksi & Kuota - SuperAdmin Master Cockpit
+   Standar Visual Gentelella Theme (MagKom Sleman)
+   ========================================================================== --}}
+<div class="gentelella-tab-pane gentelella-tab-seleksi">
 {{-- BAGIAN 1: ANTREAN VERIFIKASI BERKAS TERTUNDA (FIFO BR-04) --}}
 <x-sa.panel title="Antrean Verifikasi Berkas Tertunda (FIFO)" subtitle="Pendaftar menunggu pemeriksaan berkas administrasi dan keputusan tim seleksi" :href="route('admin.pendaftaran.index')" linkText="Buka Antrean Lengkap &rarr;">
     @if($pendaftaranMenunggu->isEmpty())
@@ -181,4 +186,5 @@
             </div>
         </x-sa.panel>
     </div>
+</div>
 </div>

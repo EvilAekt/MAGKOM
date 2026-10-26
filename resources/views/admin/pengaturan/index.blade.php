@@ -10,26 +10,22 @@
 
 
     <!-- Header Halaman -->
-    <div class="settings-header">
-        <div>
-            <h1 class="settings-title">Akun & Preferensi Saya</h1>
-            <p class="settings-subtitle">Kelola informasi kredensial, keamanan kata sandi, dan tema tampilan portal dinas.</p>
-        </div>
-        <div>
+    <x-gentelella.page-title title="Akun & Preferensi Saya" description="Kelola informasi kredensial, keamanan kata sandi, dan tema tampilan portal dinas.">
+        <x-slot:actions>
             <a href="{{ route('admin.profil.show') }}" class="btn-profile-shortcut">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
                 <span>Lihat Profil Lengkap</span>
             </a>
-        </div>
-    </div>
+        </x-slot:actions>
+    </x-gentelella.page-title>
 
     <!-- Layout 2 Kolom Sesuai DS-MagKom -->
     <div class="settings-grid">
         
         <!-- Kolom Kiri: Informasi Akun -->
-        <div class="settings-card">
+        <x-gentelella.card class="settings-card" :hoverable="false">
             <h2 class="card-title">Informasi Akun</h2>
             <p class="card-subtitle">Ringkasan kredensial dan hak akses staf operasional.</p>
 
@@ -80,10 +76,10 @@
                 </svg>
                 <span>Foto pasfoto dan nomor telepon dinas dapat diperbarui di halaman <a href="{{ route('admin.profil.show') }}">Profil Saya</a>.</span>
             </div>
-        </div>
+        </x-gentelella.card>
 
         <!-- Kolom Kanan: Ganti Kata Sandi -->
-        <div class="settings-card">
+        <x-gentelella.card class="settings-card" :hoverable="false">
             <h2 class="card-title">Ganti Kata Sandi</h2>
             <p class="card-subtitle">Gunakan kombinasi sandi yang aman dan tidak digunakan di sistem lain.</p>
 
@@ -164,10 +160,10 @@
                     <button type="button" class="btn-outline-custom" onclick="document.getElementById('passwordForm').reset()">Batal</button>
                 </div>
             </form>
-        </div>
+        </x-gentelella.card>
 
         <!-- Kartu Penuh Bawah: Preferensi Tampilan & Bahasa -->
-        <div class="settings-card settings-card-wide">
+        <x-gentelella.card class="settings-card settings-card-wide" :hoverable="false">
             <h2 class="card-title">{{ __('Preferensi Antarmuka & Bahasa') }}</h2>
             <p class="card-subtitle">{{ __('Sesuaikan kenyamanan visual dan bahasa saat mengoperasikan dashboard MagKom.') }}</p>
 
@@ -248,7 +244,7 @@
                     <button type="submit" class="btn-primary-custom">{{ __('Simpan Preferensi Tampilan') }}</button>
                 </div>
             </form>
-        </div>
+        </x-gentelella.card>
 
     </div>
 

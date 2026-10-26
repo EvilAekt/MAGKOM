@@ -828,13 +828,13 @@
 /* 1. Cockpit 2-Column Grid Layout */
 .sa-cockpit-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: minmax(0, 1fr) 360px;
   gap: 1.5rem;
   align-items: start;
   width: 100%;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
   .sa-cockpit-layout {
     grid-template-columns: 1fr;
   }
@@ -855,7 +855,7 @@
   gap: 1.25rem;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
   .sa-aside-sticky {
     position: static;
   }
@@ -881,7 +881,12 @@
               radial-gradient(80% 120% at 100% 0%, rgba(7, 81, 255, 0.45), transparent 60%),
               linear-gradient(160deg, var(--cv-blue-800), var(--cv-blue-900));
   box-shadow: 0 8px 24px -4px rgba(6, 49, 140, 0.35);
-  padding: 1.75rem 2rem 0 2rem;
+  padding: 1.75rem 2rem;
+}
+
+.sa-hero--fullwidth {
+  width: 100%;
+  margin-bottom: 0.5rem;
 }
 
 .sa-hero::after {
@@ -1008,7 +1013,112 @@
   color: var(--cv-blue-800);
 }
 
-/* 3. Integrated 4-Metric Dock */
+/* 3. Fluid Top Metrics Grid (Gentelella Parity) */
+.sa-metrics-row {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.sa-metrics-dock-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1.25rem !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+@media (max-width: 1100px) {
+  .sa-metrics-dock-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .sa-metrics-dock-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.sa-metric-card-col {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  flex: initial !important;
+}
+
+.sa-metric-card-col .tile_stats_inner {
+  background: var(--neutral-0, #ffffff);
+  border: 1px solid var(--neutral-300, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-subtle, 0 1px 3px rgba(15, 23, 42, 0.08));
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sa-metric-card-col .tile_stats_inner:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.1);
+}
+
+.sa-metric-card-col .tile_stats_inner::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--cv-blue-600, #0751ff);
+}
+
+.sa-metric-card-col.warn .tile_stats_inner::before {
+  background: var(--cv-warn, #f59e0b) !important;
+}
+
+.sa-metric-card-col.bad .tile_stats_inner::before {
+  background: var(--cv-bad, #ef4444) !important;
+}
+
+.sa-metric-card-col .count {
+  font-size: 2.25rem !important;
+  font-weight: 800 !important;
+  color: var(--cv-ink, #0f172a) !important;
+  line-height: 1.1 !important;
+  margin: 0.25rem 0 !important;
+}
+
+.sa-metric-card-col.warn .count {
+  color: var(--cv-warn, #b45309) !important;
+}
+
+.sa-metric-card-col.bad .count {
+  color: var(--cv-bad, #b91c1c) !important;
+}
+
+.sa-metric-card-col .sa-spark {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+.sa-metric-card-col .sa-spark i {
+  width: 3px;
+  background: var(--cv-blue-600, #0751ff);
+  border-radius: 1px;
+  opacity: 0.85;
+}
+
+/* 3. Integrated 4-Metric Dock (Legacy Fallback) */
 .sa-hero-dock {
   margin: 1.5rem -2rem 0;
   display: grid;

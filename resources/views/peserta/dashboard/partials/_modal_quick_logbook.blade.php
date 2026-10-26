@@ -13,13 +13,10 @@
     </div>
 
     <div class="cv-drawer-body">
-        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid #FCD34D; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.25rem;">
-            <div style="font-weight: 700; color: #92400E; font-size: 0.825rem; display: flex; align-items: center; gap: 0.35rem;">
-                <span>⚠️</span> Aturan Kedisiplinan Pelaporan (BR-09)
-            </div>
-            <p style="font-size: 0.775rem; color: #78350F; margin: 0.25rem 0 0 0; line-height: 1.45;">
+        <div style="margin-bottom: 1.25rem;">
+            <x-gentelella.callout type="warning" title="Aturan Kedisiplinan Pelaporan (BR-09)">
                 Logbook wajib diisi maksimal <strong>H-1 hari kerja</strong>. Keterlambatan pengisian berakibat status kehadiran hangus dan tercatat dalam lembar evaluasi dinas.
-            </p>
+            </x-gentelella.callout>
         </div>
 
         <form method="POST" action="{{ route('peserta.logbook.store') }}" enctype="multipart/form-data" id="quickLogbookForm">

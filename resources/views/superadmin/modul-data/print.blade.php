@@ -1,3 +1,7 @@
+{{-- ==========================================================================
+   Format Cetak Dokumen Resmi Modul Dinamis - SuperAdmin
+   Standar Visual Cetak Gentelella Theme (MagKom Sleman)
+   ========================================================================== --}}
 <!DOCTYPE html>
 <html lang="id">
 <head>

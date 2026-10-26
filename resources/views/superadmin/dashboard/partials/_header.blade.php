@@ -1,3 +1,7 @@
+{{-- ==========================================================================
+   Header & Statusline - Dashboard Eksekutif Tata Kelola SuperAdmin
+   Standar Visual Gentelella Theme (MagKom Sleman Navy #0641CC)
+   ========================================================================== --}}
 @php
     $tglBukaFormatted = $bulanAktif && $bulanAktif->tgl_buka ? \Carbon\Carbon::parse($bulanAktif->tgl_buka)->format('d M') : '01 Nov';
     $tglTutupFormatted = $bulanAktif && $bulanAktif->tgl_tutup ? \Carbon\Carbon::parse($bulanAktif->tgl_tutup)->format('d M Y') : '15 Nov ' . date('Y');
@@ -9,7 +13,7 @@
     };
 @endphp
 
-<div class="sa-hero__head">
+<div class="sa-hero__head gentelella-sa-head">
     <div>
         <div class="sa-hero-eyebrow">
             <span>{{ strtoupper(\Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM Y · HH:mm [WIB]')) }}</span>
