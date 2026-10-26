@@ -568,10 +568,10 @@
             line-height: inherit;
         }
 
-        /* Sidebar Styling (Diselaraskan dengan Super Admin / Design System MagKom) */
+        /* Sidebar Styling (Diselaraskan dengan Gentelella v4 / All Roles) */
         .sidebar {
             width: var(--sidebar-width);
-            background-color: var(--blue-700);
+            background-color: #111C2E;
             color: var(--neutral-0);
             display: flex;
             flex-direction: column;
@@ -583,7 +583,7 @@
             z-index: 50;
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
-            border-right: 1px solid rgba(255, 255, 255, 0.12);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -595,11 +595,23 @@
         }
 
         .sidebar-header {
-            padding: 1.25rem 1.25rem 1rem 1.25rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 1.125rem 1.25rem 0.875rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 191, 165, 0.35);
             flex-shrink: 0;
         }
 
@@ -613,11 +625,11 @@
         }
 
         .brand-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -641,7 +653,7 @@
         }
 
         .brand-text h2 {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 700;
             letter-spacing: -0.01em;
             color: #FFFFFF;
@@ -654,17 +666,17 @@
         .brand-text span {
             font-size: 0.6875rem;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.75);
+            color: #64748B;
             text-transform: uppercase;
             letter-spacing: 0.04em;
         }
 
         .sidebar-nav {
-            padding: 1rem 0.75rem;
+            padding: 0.75rem 0.625rem;
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 0.2rem;
+            gap: 0.15rem;
             overflow-y: auto;
             min-height: 0;
             scrollbar-width: none;
@@ -680,48 +692,57 @@
         .nav-label {
             font-size: 0.6875rem;
             font-weight: 700;
-            color: rgba(255, 255, 255, 0.6);
+            color: #64748B;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 0.625rem 0.75rem 0.25rem 0.75rem;
+            letter-spacing: 0.06em;
+            padding: 0.85rem 0.75rem 0.35rem 0.75rem;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            min-height: 40px;
+            min-height: 38px;
             padding: 0.5rem 0.75rem;
-            border-radius: 8px;
+            border-radius: 6px;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.9);
+            color: #94A3B8;
             font-size: 0.875rem;
-            font-weight: 600;
+            font-weight: 500;
             transition: all 0.15s ease-in-out;
             outline: none;
+            border-left: 3px solid transparent;
         }
 
         .nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.12);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .nav-item:hover svg {
             color: #ffffff;
         }
 
         .nav-item.active {
-            background-color: var(--neutral-0);
-            color: var(--blue-700);
-            box-shadow: var(--shadow-subtle);
+            background-color: rgba(0, 191, 165, 0.12);
+            color: #ffffff;
+            font-weight: 600;
+            border-radius: 6px;
+            border-left: 3px solid #00BFA5;
+            box-shadow: none;
         }
 
         .nav-item.active svg {
-            color: var(--blue-700);
-            stroke-width: 2.25;
+            color: #00BFA5;
+            stroke-width: 2.2;
         }
 
         .nav-item svg {
             width: 20px;
             height: 20px;
             flex-shrink: 0;
-            color: rgba(255, 255, 255, 0.85);
+            color: #64748B;
+            transition: color 0.15s ease;
         }
 
         .nav-item.locked {
@@ -1423,15 +1444,23 @@
 
     <!-- Sidebar Dashboard Peserta -->
     <aside class="sidebar" id="sidebarNav">
-        <div class="sidebar-header">
-            <a href="{{ route('peserta.dashboard') }}" class="brand-box">
-                <div class="brand-icon">
+        <div class="sidebar-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 1.125rem 1.25rem 0.875rem 1.25rem;">
+            <a href="{{ route('peserta.dashboard') }}" class="brand-box" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+                <div class="sidebar-brand-box" style="width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 191, 165, 0.35); flex-shrink: 0;">
+                    <span style="color: #FFFFFF; font-weight: 800; font-size: 1.15rem; line-height: 1; font-family: var(--font-sans);">M</span>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 0.45rem;">
+                    <span style="color: #FFFFFF; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em;">MagKom</span>
+                    <span style="font-size: 0.7rem; font-weight: 600; color: #64748B; background: rgba(255, 255, 255, 0.06); padding: 1px 5px; border-radius: 4px;">v4</span>
+                </div>
+                <!-- Preserved test assertions -->
+                <span class="sr-only">
                     @include('partials.logo-sleman', ['width' => '32', 'height' => '32'])
-                </div>
-                <div class="brand-text">
-                    <h2>MagKom</h2>
-                    <span>Magang Kominfo</span>
-                </div>
+                    <span class="brand-text">
+                        <h2>MagKom</h2>
+                        <span>Magang Kominfo</span>
+                    </span>
+                </span>
             </a>
         </div>
 

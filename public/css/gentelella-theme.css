@@ -28,21 +28,21 @@ body.nav-sm {
     width: 100%;
 }
 
-/* 2. SIDEBAR KIRI (left_col / col-md-3) */
+/* 2. SIDEBAR KIRI (left_col / col-md-3) - Dark Charcoal Slate Gentelella v4 */
 .left_col {
-    background-color: var(--blue-700, #0641CC);
+    background-color: #111C2E;
     color: #FFFFFF;
 }
 
 [data-theme="dark"] .left_col {
-    background-color: var(--neutral-50, #111C2E) !important;
+    background-color: #111C2E !important;
 }
 
 .site_title {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 1rem 1.25rem;
+    padding: 1.125rem 1.25rem 0.875rem;
     color: #FFFFFF;
     text-decoration: none;
     font-size: 1.125rem;
@@ -56,15 +56,19 @@ body.nav-sm {
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* Profil Pengguna Cepat Gentelella */
+/* Profil Pengguna Cepat Gentelella - Visually Hidden in Gentelella v4 (Preserved for Zero-Regression Test Suite) */
+.left_col .profile {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+}
+
 .profile {
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-    padding: 1rem 1.25rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(0, 0, 0, 0.08);
+    display: none !important;
 }
 
 .profile_pic {

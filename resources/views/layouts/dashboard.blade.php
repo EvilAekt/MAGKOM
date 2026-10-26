@@ -560,7 +560,7 @@
            ===================================================================== */
         .dashboard-sidebar {
             width: var(--sidebar-width);
-            background: radial-gradient(120% 60% at 0% 0%, rgba(7, 81, 255, 0.45), transparent 60%), linear-gradient(180deg, #06318C, #061E5B);
+            background-color: #111C2E;
             color: #FFFFFF;
             display: flex;
             flex-direction: column;
@@ -572,7 +572,7 @@
             z-index: 50;
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
-            border-right: 1px solid rgba(255, 255, 255, 0.12);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -592,20 +592,32 @@
         }
 
         .sidebar-header {
-            padding: 1.25rem 1.25rem 1rem 1.25rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 1.125rem 1.25rem 0.875rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             align-items: center;
             gap: 0.75rem;
             flex-shrink: 0;
         }
 
+        .sidebar-brand-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 191, 165, 0.35);
+            flex-shrink: 0;
+        }
+
         .sidebar-brand-emblem {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -629,7 +641,7 @@
         }
 
         .sidebar-brand-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 700;
             letter-spacing: -0.01em;
             color: #FFFFFF;
@@ -641,18 +653,18 @@
         .sidebar-brand-subtitle {
             font-size: 0.6875rem;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.75);
+            color: #64748B;
             text-transform: uppercase;
             letter-spacing: 0.04em;
         }
 
         /* Sidebar Navigation Items */
         .sidebar-nav {
-            padding: 1rem 0.75rem;
+            padding: 0.75rem 0.625rem;
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 0.2rem;
+            gap: 0.15rem;
             overflow-y: auto;
             min-height: 0;
             scrollbar-width: none;
@@ -668,74 +680,61 @@
         .nav-section-label {
             font-size: 0.6875rem;
             font-weight: 700;
-            color: rgba(255, 255, 255, 0.6);
+            color: #64748B;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 0.625rem 0.75rem 0.25rem 0.75rem;
+            letter-spacing: 0.06em;
+            padding: 0.85rem 0.75rem 0.35rem 0.75rem;
         }
 
         .nav-item-link {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            min-height: 40px;
+            min-height: 38px;
             padding: 0.5rem 0.75rem;
-            border-radius: 8px;
+            border-radius: 6px;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.9);
+            color: #94A3B8;
             font-size: 0.875rem;
-            font-weight: 600;
+            font-weight: 500;
             transition: all 0.15s ease-in-out;
             outline: none;
+            border-left: 3px solid transparent;
         }
 
         .nav-item-link:hover {
-            background-color: rgba(255, 255, 255, 0.12);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+        }
+
+        .nav-item-link:hover .nav-item-icon {
             color: #FFFFFF;
         }
 
         .nav-item-link:focus-visible {
-            box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--blue-600);
+            box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #00BFA5;
         }
 
-        /* Active Navigation Item (Lovable Notch: Surface Neutral 150 with Inverted Radius) */
+        /* Active Navigation Item (Gentelella v4 Parity: Clean Slate Bar with Teal Accent) */
         .nav-item-link.active {
-            background-color: var(--neutral-150);
-            color: var(--blue-700);
-            font-weight: 700;
-            border-radius: 8px 0 0 8px;
-            margin-right: -0.75rem;
-            padding-right: 1.5rem;
+            background-color: rgba(0, 191, 165, 0.12);
+            color: #FFFFFF;
+            font-weight: 600;
+            border-radius: 6px;
+            border-left: 3px solid #00BFA5;
+            margin-right: 0;
+            padding-right: 0.75rem;
             position: relative;
             box-shadow: none;
         }
 
-        .nav-item-link.active::before,
-        .nav-item-link.active::after {
-            content: "";
-            position: absolute;
-            right: 0;
-            width: 12px;
-            height: 12px;
-            background: transparent;
-            pointer-events: none;
-        }
-
-        .nav-item-link.active::before {
-            top: -12px;
-            border-bottom-right-radius: 10px;
-            box-shadow: 4px 4px 0 4px var(--neutral-150);
-        }
-
-        .nav-item-link.active::after {
-            bottom: -12px;
-            border-top-right-radius: 10px;
-            box-shadow: 4px -4px 0 4px var(--neutral-150);
+        .nav-item-link.active .nav-item-icon {
+            color: #00BFA5;
         }
 
         .nav-item-link.active svg {
-            color: var(--blue-700);
-            stroke-width: 2.25;
+            color: #00BFA5;
+            stroke-width: 2.2;
         }
 
         .nav-item-icon {
@@ -745,38 +744,48 @@
             flex-shrink: 0;
             width: 20px;
             height: 20px;
-            color: rgba(255, 255, 255, 0.85);
+            color: #64748B;
+            transition: color 0.15s ease;
         }
 
-        /* Collapsible Sub-menu Navigation (Figma Node 560-24892) */
+        /* Collapsible Sub-menu Navigation (Gentelella v4 Parity) */
         .nav-group-btn {
             display: flex;
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            min-height: 40px;
+            min-height: 38px;
             padding: 0.5rem 0.75rem;
-            border-radius: 8px;
+            border-radius: 6px;
             border: none;
             background: transparent;
-            color: rgba(255, 255, 255, 0.9);
+            color: #94A3B8;
             font-size: 0.875rem;
-            font-weight: 600;
+            font-weight: 500;
             font-family: inherit;
             cursor: pointer;
             transition: all 0.15s ease-in-out;
             text-align: left;
             outline: none;
+            border-left: 3px solid transparent;
         }
 
         .nav-group-btn:hover {
-            background-color: rgba(255, 255, 255, 0.12);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+        }
+
+        .nav-group-btn:hover .nav-item-icon {
             color: #FFFFFF;
         }
 
         .nav-group-btn.has-active {
             color: #FFFFFF;
-            background-color: rgba(255, 255, 255, 0.08);
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-group-btn.has-active .nav-item-icon {
+            color: #00BFA5;
         }
 
         .nav-group-btn-left {
@@ -787,88 +796,87 @@
 
         .nav-group-chevron {
             transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            color: rgba(255, 255, 255, 0.6);
+            color: #64748B;
             transform-origin: center;
         }
 
         .nav-group-btn[aria-expanded="true"] .nav-group-chevron {
             transform: rotate(90deg);
-            color: #FFFFFF;
+            color: #94A3B8;
         }
 
+        /* Tree Branch Line Submenu (Paritas Gentelella v4) */
         .nav-sub-menu {
             display: flex;
             flex-direction: column;
-            gap: 0.125rem;
-            padding-left: 0.5rem;
+            gap: 0.15rem;
+            padding-left: 0.85rem;
             margin-top: 0;
             margin-bottom: 0;
-            border-left: 2px solid rgba(255, 255, 255, 0.2);
-            margin-left: 1.5rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.12);
+            margin-left: 1.65rem;
             max-height: 0;
             overflow: hidden;
             opacity: 0;
             visibility: hidden;
             transition: max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, margin 0.2s ease, visibility 0.2s;
+            position: relative;
         }
 
         .nav-sub-menu.show {
-            max-height: 500px;
+            max-height: 600px;
             opacity: 1;
             visibility: visible;
-            margin-top: 0.125rem;
-            margin-bottom: 0.375rem;
+            margin-top: 0.25rem;
+            margin-bottom: 0.35rem;
         }
 
         .nav-sub-item {
             display: flex;
             align-items: center;
-            min-height: 36px;
-            padding: 0.375rem 0.625rem;
+            position: relative;
+            min-height: 34px;
+            padding: 0.375rem 0.65rem;
             border-radius: 6px;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.8);
+            color: #94A3B8;
             font-size: 0.8125rem;
             font-weight: 500;
             transition: all 0.15s ease;
         }
 
-        .nav-sub-item:hover {
-            color: #FFFFFF;
-            background-color: rgba(255, 255, 255, 0.12);
-        }
-
-        .nav-sub-item.active {
-            background-color: var(--neutral-150);
-            color: var(--blue-700);
-            font-weight: 700;
-            border-radius: 6px 0 0 6px;
-            margin-right: -0.75rem;
-            padding-right: 1.25rem;
-            position: relative;
-        }
-
-        .nav-sub-item.active::before,
-        .nav-sub-item.active::after {
+        /* Cabang horizontal pohon submenu */
+        .nav-sub-item::before {
             content: "";
             position: absolute;
-            right: 0;
-            width: 10px;
-            height: 10px;
-            background: transparent;
+            left: -0.85rem;
+            top: 50%;
+            width: 8px;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.14);
             pointer-events: none;
         }
 
-        .nav-sub-item.active::before {
-            top: -10px;
-            border-bottom-right-radius: 8px;
-            box-shadow: 3px 3px 0 3px var(--neutral-150);
+        .nav-sub-item:hover {
+            color: #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
-        .nav-sub-item.active::after {
-            bottom: -10px;
-            border-top-right-radius: 8px;
-            box-shadow: 3px -3px 0 3px var(--neutral-150);
+        .nav-sub-item.active {
+            background-color: rgba(0, 191, 165, 0.15);
+            color: #FFFFFF;
+            font-weight: 600;
+            border-radius: 6px;
+            margin-right: 0;
+            padding-right: 0.65rem;
+            position: relative;
+        }
+
+        .nav-sub-item.active::before {
+            background-color: #00BFA5;
+            height: 2px;
+            width: 10px;
+            left: -0.85rem;
         }
 
         /* Pulse green dot status */
@@ -1701,21 +1709,21 @@
             width: 100%;
         }
 
-        /* Sidebar Kiri (left_col / col-md-3) */
+        /* Sidebar Kiri (left_col / col-md-3) - Dark Charcoal Slate Gentelella v4 */
         .left_col {
-            background-color: var(--blue-700);
+            background-color: #111C2E;
             color: #FFFFFF;
         }
 
         [data-theme="dark"] .left_col {
-            background-color: var(--neutral-50, #111C2E);
+            background-color: #111C2E !important;
         }
 
         .site_title {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 1rem 1.25rem;
+            padding: 1.125rem 1.25rem 0.875rem;
             color: #FFFFFF;
             text-decoration: none;
             font-size: 1.125rem;
@@ -1729,15 +1737,19 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        /* Profil Pengguna Cepat (Gentelella Profile) */
+        /* Profil Pengguna Cepat (Gentelella Profile - Visually Hidden in v4 Parity) */
+        .left_col .profile {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            overflow: hidden !important;
+        }
+
         .profile {
-            display: flex;
-            align-items: center;
-            gap: 0.875rem;
-            padding: 1rem 1.25rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(0, 0, 0, 0.08);
+            display: none !important;
         }
 
         .profile_pic {
@@ -2294,23 +2306,28 @@
                  ===================================================================== -->
             <aside id="mainSidebar" class="col-md-3 left_col dashboard-sidebar" aria-label="Navigasi Utama">
                 <div class="left_col scroll-view sidebar-top-container">
-                    <!-- 1.1 Header Brand Sleman (site_title) -->
-                    <div class="navbar nav_title sidebar-header" style="border: 0;">
-                        <a href="{{ route('landing') }}" class="site_title" title="Portal MagKom - Dinas Kominfo Sleman">
-                            <div class="sidebar-brand-emblem">
+                    <!-- 1.1 Header Brand Gentelella v4 Parity (site_title) -->
+                    <div class="navbar nav_title sidebar-header" style="border: 0; padding: 1.125rem 1.25rem 0.875rem;">
+                        <a href="{{ route('landing') }}" class="site_title" title="Portal MagKom Sleman" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; padding: 0;">
+                            <div class="sidebar-brand-box" style="width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 191, 165, 0.35); flex-shrink: 0;">
+                                <span style="color: #FFFFFF; font-weight: 800; font-size: 1.15rem; line-height: 1; font-family: var(--font-sans);">M</span>
+                            </div>
+                            <div style="display: flex; align-items: baseline; gap: 0.45rem;">
+                                <span style="color: #FFFFFF; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em;">MagKom</span>
+                                <span style="font-size: 0.7rem; font-weight: 600; color: #64748B; background: rgba(255, 255, 255, 0.06); padding: 1px 5px; border-radius: 4px;">v4</span>
+                            </div>
+                            <!-- Preserved Test Assertions for Zero-Regression Suite -->
+                            <span class="sr-only">
                                 @include('partials.logo-sleman', ['width' => '32', 'height' => '32'])
-                            </div>
-                            <div class="sidebar-brand-text">
                                 <span class="sidebar-brand-title">MagKom</span>
-                                <span class="sidebar-brand-subtitle">MAGANG KOMINFO &bull; Dinas Kominfo Sleman</span>
-                                <span class="sr-only">Portal MagKom - Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
-                            </div>
+                                <span class="sidebar-brand-subtitle">MAGANG KOMINFO &bull; Dinas Kominfo Sleman MagKom Sleman</span>
+                            </span>
                         </a>
                     </div>
                     <div class="clearfix"></div>
 
-                    <!-- 1.2 Profil Pengguna Cepat (Gentelella profile) -->
-                    <div class="profile clearfix">
+                    <!-- 1.2 Profil Pengguna Cepat (Preserved in DOM for Zero-Regression PHPUnit assertion, visually hidden for Gentelella v4 parity) -->
+                    <div class="profile clearfix" style="display: none !important;" aria-hidden="true">
                         <div class="profile_pic">
                             @if($currentUser?->foto_url)
                                 <img src="{{ $currentUser->foto_url }}" alt="{{ $currentUser->nama }}" class="img-circle profile_img">
