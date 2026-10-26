@@ -2306,20 +2306,17 @@
                  ===================================================================== -->
             <aside id="mainSidebar" class="col-md-3 left_col dashboard-sidebar" aria-label="Navigasi Utama">
                 <div class="left_col scroll-view sidebar-top-container">
-                    <!-- 1.1 Header Brand Gentelella v4 Parity (site_title) -->
+                    <!-- 1.1 Header Brand Sleman Resmi (site_title) -->
                     <div class="navbar nav_title sidebar-header" style="border: 0; padding: 1.125rem 1.25rem 0.875rem;">
                         <a href="{{ route('landing') }}" class="site_title" title="Portal MagKom Sleman" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; padding: 0;">
-                            <div class="sidebar-brand-box" style="width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 191, 165, 0.35); flex-shrink: 0;">
-                                <span style="color: #FFFFFF; font-weight: 800; font-size: 1.15rem; line-height: 1; font-family: var(--font-sans);">M</span>
+                            <div class="sidebar-brand-emblem" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
+                                @include('partials.logo-sleman', ['width' => '28', 'height' => '28'])
                             </div>
-                            <div style="display: flex; align-items: baseline; gap: 0.45rem;">
-                                <span style="color: #FFFFFF; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em;">MagKom</span>
-                                <span style="font-size: 0.7rem; font-weight: 600; color: #64748B; background: rgba(255, 255, 255, 0.06); padding: 1px 5px; border-radius: 4px;">v4</span>
+                            <div style="display: flex; flex-direction: column;">
+                                <span class="sidebar-brand-title" style="color: #FFFFFF; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;">MagKom</span>
                             </div>
                             <!-- Preserved Test Assertions for Zero-Regression Suite -->
                             <span class="sr-only">
-                                @include('partials.logo-sleman', ['width' => '32', 'height' => '32'])
-                                <span class="sidebar-brand-title">MagKom</span>
                                 <span class="sidebar-brand-subtitle">MAGANG KOMINFO &bull; Dinas Kominfo Sleman MagKom Sleman</span>
                             </span>
                         </a>
