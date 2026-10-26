@@ -3,7 +3,7 @@
 @section('title', 'Hub Cadangan Basis Data (Disaster Recovery) - SuperAdmin MagKom')
 
 @section('content')
-<div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 1400px; margin: 0 auto; width: 100%;">
+<div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%; margin: 0;">
 
     <style>
         .backup-stat-card {

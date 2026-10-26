@@ -9,7 +9,7 @@
 @endsection
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/superadmin-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/superadmin-dashboard.css') }}?v={{ file_exists(public_path('css/superadmin-dashboard.css')) ? filemtime(public_path('css/superadmin-dashboard.css')) : time() }}">
 @endpush
 
 @section('content_area_class', 'gentelella-fluid-canvas')
@@ -215,5 +215,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/superadmin-dashboard.js') }}" defer></script>
+    <script src="{{ asset('js/superadmin-dashboard.js') }}?v={{ file_exists(public_path('js/superadmin-dashboard.js')) ? filemtime(public_path('js/superadmin-dashboard.js')) : time() }}" defer></script>
 @endpush

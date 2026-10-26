@@ -4,8 +4,31 @@
    ========================================================================== */
 
 /* ===== Layout ===== */
-.sa-page { display: flex; flex-direction: column; gap: 1.5rem; }
-.sa-grid { display: grid; gap: 1rem; }
+.sa-page { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 1.5rem; 
+  width: 100%; 
+  max-width: 100%; 
+}
+
+.sa-table-container,
+.sa-filter-card,
+.audit-layout-grid,
+.modul-builder-grid,
+.telemetry-grid {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.table-responsive,
+.sa-table-responsive {
+  width: 100% !important;
+  overflow-x: auto;
+  border-radius: 10px;
+}
+
+.sa-grid { display: grid; gap: 1rem; width: 100%; }
 .sa-grid--1 { grid-template-columns: 1fr; }
 .sa-grid--metrics { grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
 .sa-grid--2 { grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); }

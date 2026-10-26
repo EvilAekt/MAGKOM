@@ -1177,35 +1177,42 @@
         }
 
         /* =====================================================================
-           CONTENT WORKSPACE AREA
+           CONTENT WORKSPACE AREA (Gentelella Parity)
            ===================================================================== */
         .dashboard-content-area {
             flex: 1;
-            padding: 2rem 2.5rem;
+            padding: 1.5rem 2rem;
             max-width: 1400px;
             width: 100%;
             margin: 0 auto;
         }
 
+        /* SuperAdmin & Fluid Mode: Menghilangkan batasan 1400px kaku & dead space */
+        body.role-superadmin .dashboard-content-area,
+        body.gentelella-fluid-body .dashboard-content-area,
         .dashboard-content-area.gentelella-fluid-canvas {
             max-width: 100% !important;
-            padding: 1.5rem 2rem;
-            margin: 0;
-            width: 100%;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 1.5rem 2rem !important;
         }
 
         @media (max-width: 768px) {
             .dashboard-content-area {
                 padding: 1.25rem 1rem;
             }
+            body.role-superadmin .dashboard-content-area,
+            body.gentelella-fluid-body .dashboard-content-area,
             .dashboard-content-area.gentelella-fluid-canvas {
-                padding: 1rem 0.75rem;
+                padding: 1rem 0.75rem !important;
             }
         }
 
         @media (min-width: 1600px) {
+            body.role-superadmin .dashboard-content-area,
+            body.gentelella-fluid-body .dashboard-content-area,
             .dashboard-content-area.gentelella-fluid-canvas {
-                padding: 1.75rem 2.5rem;
+                padding: 1.75rem 2.5rem !important;
             }
         }
 
@@ -2254,12 +2261,14 @@
     @yield('styles')
     @stack('styles')
 </head>
-<body>
+@php
+    /** @var \App\Models\User $currentUser */
+    $currentUser = auth()->user();
+    $userRole = $currentUser?->role?->value ?? 'peserta';
+    $isSuperAdmin = $userRole === 'superadmin' || request()->routeIs('superadmin.*');
+@endphp
+<body class="gentelella-body role-{{ $userRole }} {{ $isSuperAdmin ? 'gentelella-fluid-body' : '' }}">
     @php
-        /** @var \App\Models\User $currentUser */
-        $currentUser = auth()->user();
-        $userRole = $currentUser?->role?->value ?? 'peserta';
-
         // Pengecekan masa tenggang khusus Peserta (PRD AC-12-2)
         $penempatanGracePeriod = null;
         $graceDaysRemaining = null;
@@ -3076,7 +3085,7 @@
             </header>
 
             <!-- Container Konten Dinamis (Gentelella right_col) -->
-            <main class="right_col dashboard-main dashboard-content-area @yield('content_area_class')" role="main" id="mainContent">
+            <main class="right_col dashboard-main dashboard-content-area {{ $isSuperAdmin ? 'gentelella-fluid-canvas' : '' }} @yield('content_area_class')" role="main" id="mainContent">
                 <!-- =====================================================================
                      GLOBAL FLASH ALERTS
                      ===================================================================== -->
