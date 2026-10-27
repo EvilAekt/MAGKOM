@@ -45,7 +45,7 @@
     $penilaian = $penempatan->penilaian;
 @endphp
 
-<div style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 1280px; margin: 0 auto; width: 100%;">
+<div style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     <style>
         .arsip-card {

@@ -138,6 +138,15 @@
             --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.4);
             --shadow-raised: 0 4px 16px rgba(0, 0, 0, 0.5);
             --shadow-modal: 0 24px 48px -8px rgba(0, 0, 0, 0.7);
+
+            /* Cockpit & Gentelella Unified Theme Tokens (Passes WCAG AA) */
+            --cv-surface: #182234;
+            --cv-paper: #0F172A;
+            --cv-line: #26354D;
+            --cv-line-strong: #334155;
+            --cv-ink: #F8FAFC;
+            --cv-ink-2: #CBD5E1;
+            --cv-ink-3: #94A3B8;
         }
 
         [data-theme="dark"] body {
@@ -514,6 +523,126 @@
             color: #93C5FD;
         }
 
+        /* =====================================================================
+           MAGKOM DESIGN SYSTEM: PAGINATION COMPONENT
+           ===================================================================== */
+        .magkom-pagination-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 0.25rem 0;
+            font-size: 0.8125rem;
+            color: var(--neutral-700);
+        }
+
+        .magkom-pagination-summary {
+            color: var(--neutral-600);
+            font-size: 0.8125rem;
+        }
+
+        .magkom-pagination-summary strong {
+            color: var(--neutral-900);
+            font-weight: 700;
+        }
+
+        .magkom-pagination-list {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .magkom-page-item {
+            display: inline-flex;
+        }
+
+        .magkom-page-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+            padding: 0 0.65rem;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--neutral-700);
+            background: var(--neutral-0);
+            border: 1px solid var(--neutral-300, #D0D3D9);
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        a.magkom-page-link:hover {
+            background: var(--neutral-100);
+            color: var(--blue-700);
+            border-color: var(--blue-tint-line);
+        }
+
+        .magkom-page-item.active .magkom-page-link {
+            background: var(--blue-600);
+            color: #FFFFFF !important;
+            border-color: var(--blue-600);
+            font-weight: 700;
+        }
+
+        .magkom-page-item.disabled .magkom-page-link {
+            color: var(--neutral-400);
+            background: var(--neutral-150);
+            border-color: var(--neutral-200);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* GUARDRAIL: Cegah SVG pagination membengkak ke ukuran raksasa */
+        .magkom-pagination-nav svg,
+        .pagination svg,
+        nav[role="navigation"] svg {
+            width: 14px !important;
+            height: 14px !important;
+            max-width: 14px !important;
+            max-height: 14px !important;
+            display: inline-block !important;
+            vertical-align: middle;
+        }
+
+        /* Tema Gelap (Dark Mode Parity) */
+        [data-theme="dark"] .magkom-pagination-nav {
+            color: #94A3B8;
+        }
+        [data-theme="dark"] .magkom-pagination-summary {
+            color: #94A3B8;
+        }
+        [data-theme="dark"] .magkom-pagination-summary strong {
+            color: #F8FAFC;
+        }
+        [data-theme="dark"] .magkom-page-link {
+            background: var(--neutral-0);
+            border-color: var(--neutral-300);
+            color: #CBD5E1;
+        }
+        [data-theme="dark"] a.magkom-page-link:hover {
+            background: var(--neutral-100);
+            color: #93C5FD;
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        [data-theme="dark"] .magkom-page-item.active .magkom-page-link {
+            background: var(--blue-600);
+            color: #FFFFFF !important;
+            border-color: var(--blue-600);
+        }
+        [data-theme="dark"] .magkom-page-item.disabled .magkom-page-link {
+            background: rgba(30, 41, 59, 0.5);
+            border-color: rgba(51, 65, 85, 0.5);
+            color: #64748B;
+        }
+
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
@@ -549,7 +678,7 @@
 
         /* Layout Grid Container */
         .dashboard-container {
-            display: flex;
+            display: block;
             min-height: 100vh;
             width: 100%;
             position: relative;
@@ -1190,28 +1319,34 @@
         .dashboard-content-area {
             flex: 1;
             padding: 1.5rem 2rem;
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
+            width: calc(100% - var(--sidebar-width));
+            margin-left: var(--sidebar-width);
+            box-sizing: border-box;
         }
 
-        /* SuperAdmin & Fluid Mode: Menghilangkan batasan 1400px kaku & dead space */
+        /* SuperAdmin & Fluid Mode: Menghilangkan batasan 1400px kaku & dead space dengan mempertahankan offset sidebar */
         body.role-superadmin .dashboard-content-area,
         body.gentelella-fluid-body .dashboard-content-area,
         .dashboard-content-area.gentelella-fluid-canvas {
-            max-width: 100% !important;
-            width: 100% !important;
-            margin: 0 !important;
+            max-width: none !important;
+            width: calc(100% - var(--sidebar-width)) !important;
+            margin-left: var(--sidebar-width) !important;
+            margin-right: 0 !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
             padding: 1.5rem 2rem !important;
+            box-sizing: border-box !important;
         }
 
-        @media (max-width: 768px) {
-            .dashboard-content-area {
-                padding: 1.25rem 1rem;
-            }
+        @media (max-width: 991.98px) {
+            .dashboard-content-area,
             body.role-superadmin .dashboard-content-area,
             body.gentelella-fluid-body .dashboard-content-area,
             .dashboard-content-area.gentelella-fluid-canvas {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
                 padding: 1rem 0.75rem !important;
             }
         }
@@ -1703,7 +1838,7 @@
         }
 
         .main_container {
-            display: flex;
+            display: block;
             min-height: 100vh;
             position: relative;
             width: 100%;
@@ -1983,6 +2118,7 @@
             body.nav-sm .sidebar-brand-text,
             body.nav-sm .profile_info,
             body.nav-sm .menu_section h3,
+            body.nav-sm .nav-section-label,
             body.nav-sm .nav-item-link span:not(.nav-item-icon),
             body.nav-sm .nav-group-btn span.nav-group-btn-left span:not(.nav-item-icon),
             body.nav-sm .nav-group-chevron,
@@ -2522,27 +2658,6 @@
                             <span>{{ __('Laporan Kinerja ASN') }}</span>
                         </a>
 
-                        <span class="nav-section-label">{{ __('PENGATURAN') }}</span>
-
-                        <a href="{{ route('pembimbing.profil.show') }}" class="nav-item-link {{ request()->routeIs('pembimbing.profil.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </span>
-                            <span>{{ __('Profil Saya') }}</span>
-                        </a>
-
-                        <a href="{{ route('pembimbing.pengaturan.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.pengaturan.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                                </svg>
-                            </span>
-                            <span>{{ __('Pengaturan Akun') }}</span>
-                        </a>
 
                     @elseif($userRole === 'admin')
                         <!-- NAVIGASI ADMINISTRATOR (PRD 9.2) -->
@@ -2641,27 +2756,6 @@
                         </a>
                         @endif
 
-                        <span class="nav-section-label">{{ __('PENGATURAN') }}</span>
-
-                        <a href="{{ route('admin.profil.show') }}" class="nav-item-link {{ request()->routeIs('admin.profil.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </span>
-                            <span>{{ __('Profil Saya') }}</span>
-                        </a>
-
-                        <a href="{{ route('admin.pengaturan.index') }}" class="nav-item-link {{ request()->routeIs('admin.pengaturan.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                                </svg>
-                            </span>
-                            <span>{{ __('Pengaturan Akun') }}</span>
-                        </a>
 
                         <!-- GRUP: MODUL KUSTOM DINAMIS (ADMIN) -->
                         @if(isset($sidebarDynamicModules) && $sidebarDynamicModules->isNotEmpty())
@@ -2899,38 +2993,13 @@
                             @endforeach
                         @endif
 
-                        <!-- GRUP 3: AKUN & PROFIL PRIBADI -->
-                        <span class="nav-section-label">{{ __('AKUN PRIBADI') }}</span>
 
-                        <a href="{{ route('superadmin.profil.show') }}" class="nav-item-link {{ request()->routeIs('superadmin.profil.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </span>
-                            <span>{{ __('Profil Saya') }}</span>
-                        </a>
 
-                        <a href="{{ route('superadmin.akun.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.akun.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                                        </svg>
-                            </span>
-                            <span>{{ __('Akun & Preferensi') }}</span>
-                        </a>
                     @endif
                         </div>
                     </nav>
                 </div>
 
-                <!-- Status Box: Indikator Sistem Internal Kominfo (Figma Node 560-24892) -->
-                <div class="sidebar-status-box" style="margin: 0.5rem 0.75rem 0.25rem; padding: 0.4rem 0.6rem; display: flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px;">
-                    <span class="status-dot-pulse"></span>
-                    <span style="font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.85); letter-spacing: 0.01em;">Sistem internal Kominfo</span>
-                </div>
 
                 <!-- 1.4 Footer Sidebar: Aksi Cepat & Indikator Internal Kominfo -->
                 <div class="sidebar-footer hidden-small">
@@ -3097,6 +3166,7 @@
                     </div>
                 </div>
             </header>
+        </div>
 
             <!-- Container Konten Dinamis (Gentelella right_col) -->
             <main class="right_col dashboard-main dashboard-content-area {{ $isSuperAdmin ? 'gentelella-fluid-canvas' : '' }} @yield('content_area_class')" role="main" id="mainContent">

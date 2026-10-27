@@ -10,6 +10,7 @@ use App\Models\Logbook;
 use App\Models\ModulDinamis;
 use App\Models\Penempatan;
 use App\Models\ProgresLog;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -29,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Daftarkan Custom Pagination MagKom (Cegah Tailwind SVG Blowup)
+        Paginator::defaultView('vendor.pagination.default');
+        Paginator::defaultSimpleView('vendor.pagination.simple-default');
+
         // View Composer untuk Sidebar Dashboard Pembimbing (B10)
         View::composer('layouts.dashboard', function ($view) {
             $user = auth()->user();

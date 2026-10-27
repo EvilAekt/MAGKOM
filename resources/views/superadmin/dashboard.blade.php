@@ -82,21 +82,6 @@
             </div>
         </dl>
 
-        {{-- Quick Action Shortcuts Strip (Untuk Preservasi Assertions Test Suite) --}}
-        <div class="sa-shortcuts" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 0.65rem 1rem; margin-top: 0;">
-            <div class="sa-shortcuts__list">
-                <span class="sa-shortcuts__label">Pintasan Tindakan:</span>
-                <a href="{{ route('superadmin.staf.index') }}" class="sa-shortcut-chip"><x-sa.icon name="user-plus" :size="13" /><span>+ Akun Staf</span></a>
-                <a href="{{ route('superadmin.bulan.index') }}" class="sa-shortcut-chip"><x-sa.icon name="calendar" :size="13" /><span>+ Bulan Magang</span></a>
-                <a href="{{ route('admin.pendaftaran.index') }}" class="sa-shortcut-chip"><x-sa.icon name="clipboard-check" :size="13" /><span>Tinjau Berkas</span></a>
-                <a href="{{ route('admin.penempatan.index') }}" class="sa-shortcut-chip"><x-sa.icon name="clock" :size="13" /><span>Penempatan Peserta</span></a>
-                <a href="{{ route('admin.laporan.index') }}" class="sa-shortcut-chip"><x-sa.icon name="download" :size="13" /><span>Ekspor Laporan</span></a>
-                <a href="{{ route('superadmin.health.index') }}" class="sa-shortcut-chip"><x-sa.icon name="activity" :size="13" /><span>Telemetri Sistem</span></a>
-                <a href="{{ route('superadmin.backup.index') }}" class="sa-shortcut-chip"><x-sa.icon name="database" :size="13" /><span>Backup Hub</span></a>
-                <a href="{{ route('superadmin.staf.index') }}" class="sa-sr-only">Kelola Pengguna</a>
-                <a href="{{ route('superadmin.audit-log.index') }}" class="sa-sr-only">Audit Trail</a>
-            </div>
-        </div>
 
         {{-- Single Hazard Attention Card --}}
         @include('superadmin.dashboard.partials._attention')
@@ -190,21 +175,6 @@
             </ul>
         </x-gentelella.x-panel>
 
-        {{-- Widget 2: Aksi Cepat --}}
-        <x-gentelella.x-panel title="Aksi cepat">
-            <div class="cv-quick-actions">
-                <a href="{{ route('superadmin.staf.index') }}" class="btn-primary btn-block" style="padding: 0.6rem 1rem; border-radius: 8px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.35rem;">
-                    <x-sa.icon name="user-plus" :size="16" />
-                    <span>+ Tambah staf</span>
-                </a>
-                <a href="{{ route('superadmin.bulan.index') }}" class="btn-secondary" style="padding: 0.5rem 0.75rem; border-radius: 8px; font-weight: 600; text-decoration: none; text-align: center; font-size: 0.8125rem;">
-                    Buka periode
-                </a>
-                <a href="{{ route('superadmin.backup.index') }}" class="btn-secondary" style="padding: 0.5rem 0.75rem; border-radius: 8px; font-weight: 600; text-decoration: none; text-align: center; font-size: 0.8125rem;">
-                    Backup sekarang
-                </a>
-            </div>
-        </x-gentelella.x-panel>
     </aside>
 </div>
 

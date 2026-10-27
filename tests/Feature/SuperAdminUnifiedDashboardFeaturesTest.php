@@ -210,9 +210,9 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
     }
 
     /**
-     * Memastikan dashboard merender hero section dengan Quick Actions Toolbar lengkap.
+     * Memastikan hero section bersih tanpa toolbar pintasan yang redundant (Declutter UX).
      */
-    public function test_dashboard_renders_hero_with_quick_actions_toolbar(): void
+    public function test_dashboard_renders_hero_with_clean_decluttered_layout(): void
     {
         $this->withoutExceptionHandling();
         $response = $this->actingAs($this->superAdmin)->get(route('superadmin.dashboard'));
@@ -221,19 +221,9 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $response->assertSee('Dashboard Eksekutif Tata Kelola MagKom');
         $response->assertSee('Dashboard SuperAdmin');
 
-        // Memastikan Quick Actions Bar merender 5 pintasan 1-klik
-        $response->assertSee('+ Akun Staf');
-        $response->assertSee('+ Bulan Magang');
-        $response->assertSee('Tinjau Berkas');
-        $response->assertSee('Penempatan Peserta');
-        $response->assertSee('Ekspor Laporan');
-
-        // Memastikan route tautan pintasan benar
-        $response->assertSee(route('superadmin.staf.index'));
-        $response->assertSee(route('superadmin.bulan.index'));
-        $response->assertSee(route('admin.pendaftaran.index'));
-        $response->assertSee(route('admin.penempatan.index'));
-        $response->assertSee(route('admin.laporan.index'));
+        // Memastikan baris pintasan dan card aksi cepat tidak dirender (Clean UX)
+        $response->assertDontSee('Pintasan Tindakan:');
+        $response->assertDontSee('Aksi cepat');
     }
 
     /**

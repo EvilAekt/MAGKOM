@@ -272,8 +272,9 @@
 @push('styles')
 <style>
     .staff-profile-wrapper {
-        max-width: 1240px;
-        margin: 0 auto;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
         display: flex;
         flex-direction: column;
         gap: 24px;

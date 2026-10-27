@@ -81,7 +81,7 @@
 @endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 1080px;">
+<div style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     <form id="formPengaturanSistem" action="{{ route('superadmin.pengaturan.update') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.5rem;">
         @csrf

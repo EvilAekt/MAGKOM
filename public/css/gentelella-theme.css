@@ -22,7 +22,7 @@ body.nav-sm {
 }
 
 .main_container {
-    display: flex;
+    display: block;
     min-height: 100vh;
     position: relative;
     width: 100%;
@@ -596,6 +596,7 @@ body.nav-sm {
     body.nav-sm .sidebar-brand-text,
     body.nav-sm .profile_info,
     body.nav-sm .menu_section h3,
+    body.nav-sm .nav-section-label,
     body.nav-sm .nav-item-link span:not(.nav-item-icon),
     body.nav-sm .nav-group-btn span.nav-group-btn-left span:not(.nav-item-icon),
     body.nav-sm .nav-group-chevron,

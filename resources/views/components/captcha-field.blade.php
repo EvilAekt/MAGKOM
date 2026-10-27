@@ -55,6 +55,11 @@
         </div>
         <span class="form-hint" style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem; display: block;">
             Masukkan 4 karakter yang tampil pada gambar (tidak sensitif huruf besar/kecil).
+            @if(app()->isLocal())
+                <span style="display: block; margin-top: 0.35rem; color: var(--blue-600); font-size: 0.75rem; font-weight: 500;">
+                    💡 Mode Dev Lokal: Masukkan kode gambar atau klik <button type="button" onclick="document.getElementById('captcha').value='1234'" style="background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); padding: 1px 6px; border-radius: 4px; color: var(--blue-700); font-weight: 700; cursor: pointer; text-decoration: underline;">1234</button> untuk isi otomatis.
+                </span>
+            @endif
         </span>
     </div>
 

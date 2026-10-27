@@ -67,6 +67,18 @@
       s.addEventListener('change', function () { s.form.submit(); });
     });
 
+    // Time filter pills interactivity (Gentelella Network Activities)
+    var pillButtons = document.querySelectorAll('.gt-pill-btn');
+    pillButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        pillButtons.forEach(function (b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        var period = this.getAttribute('data-period');
+        window.dispatchEvent(new CustomEvent('magkom:trend-filter-changed', { detail: { period: period } }));
+      });
+    });
+
     select(initial(), false);
   });
 })();
+
