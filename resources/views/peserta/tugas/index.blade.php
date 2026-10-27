@@ -14,15 +14,16 @@
         gap: 24px;
     }
 
-    /* Class Banner Header Khas Gentelella MagKom */
+    /* Class Banner Header Khas Sleman MagKom */
     .classroom-banner {
-        background: linear-gradient(135deg, #0641CC 0%, #0751FF 60%, #1E40AF 100%);
-        border-radius: var(--radius-lg, 12px);
+        background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+        border-radius: 16px;
         padding: 28px 32px;
         color: #ffffff;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 10px 25px -5px rgba(7, 81, 255, 0.25);
+        box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
     .classroom-banner::before {
@@ -92,14 +93,14 @@
     }
 
     .tab-btn:hover {
-        color: #0751FF;
+        color: #2563eb;
         background: #F8FAFC;
         border-radius: 6px 6px 0 0;
     }
 
     .tab-btn.active {
-        color: #0751FF;
-        border-bottom-color: #0751FF;
+        color: #2563eb;
+        border-bottom-color: #2563eb;
         font-weight: 700;
     }
 
@@ -117,7 +118,7 @@
 
     .tab-btn.active .tab-count {
         background: #EFF6FF;
-        color: #0751FF;
+        color: #2563eb;
     }
 
     /* Classroom Assignment Stream Cards */
@@ -137,13 +138,14 @@
         gap: 18px;
         text-decoration: none;
         color: inherit;
+        cursor: pointer;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
         position: relative;
     }
 
     .assignment-card:hover {
-        border-color: #0751FF;
+        border-color: #2563eb;
         transform: translateY(-2px);
         box-shadow: 0 6px 18px rgba(7, 81, 255, 0.10);
     }
@@ -153,7 +155,7 @@
         height: 44px;
         border-radius: 50%;
         background: #EFF6FF;
-        color: #0751FF;
+        color: #2563eb;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -194,7 +196,7 @@
     }
 
     .assignment-card:hover .assignment-title {
-        color: #0751FF;
+        color: #2563eb;
     }
 
     .assignment-due {
@@ -267,7 +269,7 @@
     }
 
     [data-theme="dark"] .assignment-card:hover {
-        border-color: #0751FF !important;
+        border-color: #2563eb !important;
         box-shadow: 0 8px 24px rgba(7, 81, 255, 0.2) !important;
     }
 
@@ -409,7 +411,7 @@
         {{-- Daftar Assignment Stream --}}
         @if($tugasList->isEmpty())
             <div style="text-align: center; padding: 56px 24px; border: 1px dashed var(--neutral-300, #CBD5E1); border-radius: 8px;">
-                <div style="width: 64px; height: 64px; border-radius: 50%; background: #EFF6FF; color: #0751FF; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+                <div style="width: 64px; height: 64px; border-radius: 50%; background: #EFF6FF; color: #2563eb; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
                     <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                     </svg>
@@ -503,7 +505,7 @@
                                         <x-gentelella.badge variant="info">● Ditugaskan</x-gentelella.badge>
                                     @endif
 
-                                    <span style="font-size: 0.8125rem; font-weight: 600; color: #0751FF;">
+                                    <span style="font-size: 0.8125rem; font-weight: 600; color: #2563eb;">
                                         Buka Tugas &rarr;
                                     </span>
                                 </div>

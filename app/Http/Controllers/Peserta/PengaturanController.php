@@ -108,6 +108,12 @@ class PengaturanController extends Controller
             $request->session()->put('bahasa_portal', $bahasa);
         }
 
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json(['success' => true, 'tema' => $tema, 'bahasa' => $bahasa])
+                ->withCookie(cookie()->forever('tema_tampilan', $tema))
+                ->withCookie(cookie()->forever('bahasa_portal', $bahasa));
+        }
+
         return redirect()->route('peserta.pengaturan.index')
             ->with('success', 'Preferensi berhasil disimpan.')
             ->withCookie(cookie()->forever('tema_tampilan', $tema))

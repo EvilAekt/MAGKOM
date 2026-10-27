@@ -6,8 +6,8 @@
 @push('styles')
 <style>
     .nilai-summary-card {
-        background: linear-gradient(135deg, var(--blue-700) 0%, var(--blue-600) 100%);
-        border-radius: var(--radius-md);
+        background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+        border-radius: 16px;
         padding: 32px;
         color: #ffffff;
         margin-bottom: 24px;
@@ -16,6 +16,8 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 20px;
+        box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.12);
     }
     .nilai-score-box {
         display: flex;

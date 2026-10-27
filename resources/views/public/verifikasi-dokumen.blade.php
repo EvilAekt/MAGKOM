@@ -28,9 +28,14 @@
                     <p class="text-xs text-slate-500 font-medium">Pemerintah Kabupaten Sleman &bull; Magang Kominfo</p>
                 </div>
             </div>
-            <a href="{{ route('landing') }}" class="text-xs font-semibold text-blue-800 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors">
-                &larr; Portal Utama
-            </a>
+            <div class="flex items-center space-x-2">
+                <a href="{{ route('landing') }}" class="text-xs font-semibold text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 px-3 py-1.5 rounded-lg border border-slate-200 transition-colors">
+                    &larr; Portal Utama
+                </a>
+                <a href="{{ route('landing') }}#kuota" class="hidden sm:inline-flex text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg shadow-sm transition-colors">
+                    Pilih Kuota
+                </a>
+            </div>
         </div>
     </header>
 
@@ -189,8 +194,21 @@
 
     <!-- Footer Resmi -->
     <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
-        <p>&copy; {{ date('Y') }} Dinas Komunikasi dan Informatika Kabupaten Sleman. Seluruh hak cipta dilindungi.</p>
-        <p class="mt-1">Jl. Parasamya No. 1, Beran, Tridadi, Sleman, D.I. Yogyakarta 55511</p>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div>
+                <p>&copy; {{ date('Y') }} Dinas Komunikasi dan Informatika Kabupaten Sleman.</p>
+                <p class="mt-0.5 text-slate-400">Jl. Parasamya No. 1, Beran, Tridadi, Sleman, D.I. Yogyakarta 55511</p>
+            </div>
+            <div class="flex items-center space-x-3 text-slate-600 font-medium">
+                <a href="{{ route('landing') }}" class="hover:text-blue-600 transition-colors">Beranda</a>
+                <span>&bull;</span>
+                <a href="{{ route('landing') }}#kuota" class="hover:text-blue-600 transition-colors">Kuota Magang</a>
+                <span>&bull;</span>
+                <a href="{{ route('panduan-alur') }}" class="hover:text-blue-600 transition-colors">Peta Alur</a>
+                <span>&bull;</span>
+                <a href="{{ route('kebijakan-privasi') }}" class="hover:text-blue-600 transition-colors">Kebijakan Privasi</a>
+            </div>
+        </div>
     </footer>
 
 </body>

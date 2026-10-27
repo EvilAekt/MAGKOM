@@ -274,13 +274,13 @@ body.nav-sm {
 
 .tile_stats_inner {
     background: var(--neutral-0, #FFFFFF);
-    border: 1px solid var(--neutral-200, #EEF0F5);
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    border: 1px solid var(--neutral-200, #E2E8F0);
+    border-radius: 14px;
+    padding: 1.15rem 1.25rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.35rem;
     position: relative;
     overflow: hidden;
     height: 100%;
@@ -289,17 +289,7 @@ body.nav-sm {
 
 .tile_stats_inner:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
-}
-
-.tile_stats_inner::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: var(--blue-600, #0751FF);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
 }
 
 .count_top {

@@ -26,13 +26,14 @@
 
     /* Hero Banner Registrasi MagKom */
     .detail-hero {
-        background: linear-gradient(135deg, #0641CC 0%, #0751FF 60%, #1E40AF 100%);
-        border-radius: var(--radius-lg, 12px);
+        background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+        border-radius: 16px;
         padding: 26px 30px;
         color: #ffffff;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 10px 25px -5px rgba(7, 81, 255, 0.25);
+        box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
     .detail-hero::before {
@@ -156,8 +157,8 @@
     }
 
     .stepper-step.active .stepper-icon-circle {
-        background: #0751FF;
-        border-color: #0751FF;
+        background: #2563eb;
+        border-color: #2563eb;
         color: #ffffff;
         box-shadow: 0 0 0 5px rgba(7, 81, 255, 0.2);
     }
@@ -223,7 +224,7 @@
     }
 
     .doc-card-modern:hover {
-        border-color: #0751FF;
+        border-color: #2563eb;
         box-shadow: 0 4px 12px rgba(7, 81, 255, 0.06);
     }
 
@@ -322,7 +323,7 @@
 
     .dropzone-box-modern:hover,
     .dropzone-box-modern.dragover {
-        border-color: #0751FF;
+        border-color: #2563eb;
         background: #E6EEFF;
     }
 
@@ -331,7 +332,7 @@
         height: 44px;
         border-radius: 50%;
         background: #ffffff;
-        color: #0751FF;
+        color: #2563eb;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -358,7 +359,7 @@
         margin-top: 12px;
         padding: 12px 16px;
         background: #ffffff;
-        border: 1.5px solid #0751FF;
+        border: 1.5px solid #2563eb;
         border-radius: 8px;
         font-size: 0.8125rem;
         gap: 12px;
@@ -476,7 +477,7 @@
         width: 38px;
         height: 38px;
         border: 3px solid #E2E8F0;
-        border-top-color: #0751FF;
+        border-top-color: #2563eb;
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
         margin-bottom: 12px;
@@ -517,7 +518,7 @@
 
     [data-theme="dark"] .dropzone-box-modern:hover {
         background: #182234 !important;
-        border-color: #0751FF !important;
+        border-color: #2563eb !important;
     }
 
     [data-theme="dark"] .modal-body-preview {
@@ -744,7 +745,7 @@
         </x-slot:toolbar>
 
         <div class="progress-bar-wrapper" style="margin-bottom: 24px;">
-            <div class="progress-bar-meter" style="width: {{ $persen }}%; background: {{ $semuaWajibLengkap ? '#10B981' : '#0751FF' }};"></div>
+            <div class="progress-bar-meter" style="width: {{ $persen }}%; background: {{ $semuaWajibLengkap ? '#10B981' : '#2563eb' }};"></div>
         </div>
 
         {{-- Daftar Kartu Dokumen Persyaratan --}}
@@ -866,7 +867,7 @@
                                         </svg>
                                     </div>
                                     <div class="dropzone-prompt">
-                                        Seret & lepas berkas ke sini, atau <span style="color: #0751FF; text-decoration: underline;">Pilih File</span>
+                                        Seret & lepas berkas ke sini, atau <span style="color: #2563eb; text-decoration: underline;">Pilih File</span>
                                     </div>
                                     <div class="dropzone-subtext">
                                         Format PDF, JPG, JPEG, atau PNG (Maksimal {{ $maksMb }} MB)
@@ -876,7 +877,7 @@
                                 {{-- Selected File Bar --}}
                                 <div class="selected-bar-modern" id="selected_bar_{{ $jenis->id }}">
                                     <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
-                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0751FF; flex-shrink: 0;">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #2563eb; flex-shrink: 0;">
                                             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
                                             <polyline points="14 2 14 8 20 8"></polyline>
                                         </svg>
@@ -1005,7 +1006,7 @@
     <div class="modal-box-large">
         <div class="modal-header" style="margin-bottom: 0; padding-bottom: 14px;">
             <div style="display: flex; align-items: center; gap: 12px; overflow: hidden; padding-right: 12px;">
-                <div id="previewModalIcon" style="width: 38px; height: 38px; border-radius: 8px; background: #EFF6FF; color: #0751FF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <div id="previewModalIcon" style="width: 38px; height: 38px; border-radius: 8px; background: #EFF6FF; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 </div>
                 <div style="overflow: hidden;">

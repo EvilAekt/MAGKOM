@@ -21,9 +21,8 @@
 
     /* Banner Penempatan Magang */
     .banner-penempatan {
-        background: linear-gradient(95deg, rgba(6, 65, 204, 0.96) 0%, rgba(6, 65, 204, 0.88) 50%, rgba(6, 65, 204, 0.35) 100%),
-                    url('{{ asset('images/logbook_banner_bg.jpg') }}') right center / cover no-repeat;
-        border-radius: var(--radius-lg, 12px);
+        background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+        border-radius: 16px;
         padding: 32px 36px;
         color: #ffffff;
         margin-bottom: 24px;
@@ -32,7 +31,8 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 20px;
-        box-shadow: 0 6px 20px rgba(6, 65, 204, 0.16);
+        box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.12);
         position: relative;
         overflow: hidden;
         min-height: 185px;
@@ -1549,7 +1549,13 @@
                     select.value = preSelectMinggu;
                 }
             } else {
-                select.value = "";
+                // Otomatis pilih minggu aktif atau minggu pertama yang belum diisi
+                const availableOpt = Array.from(select.options).find(opt => opt.value !== "" && !opt.disabled);
+                if (availableOpt) {
+                    select.value = availableOpt.value;
+                } else {
+                    select.value = "";
+                }
             }
         }
 

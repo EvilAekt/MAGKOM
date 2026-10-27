@@ -37,7 +37,7 @@
         height: 48px;
         border-radius: 50%;
         background: #EFF6FF;
-        color: #0751FF;
+        color: #2563eb;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -117,7 +117,7 @@
         width: 28px;
         height: 28px;
         border-radius: 50%;
-        background: #0751FF;
+        background: #2563eb;
         color: #ffffff;
         display: flex;
         align-items: center;
@@ -149,16 +149,18 @@
         display: block;
         border: 1.5px dashed #93C5FD;
         border-radius: 8px;
-        padding: 16px;
+        padding: 18px 16px;
         background: #F0F7FF;
         text-align: center;
         cursor: pointer;
         transition: all 0.2s ease;
         text-decoration: none;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .file-upload-box:hover {
-        border-color: #0751FF;
+        border-color: #2563eb;
         background: #E6EEFF;
     }
 
@@ -178,6 +180,78 @@
 
     .file-preview-pill.active {
         display: flex;
+    }
+
+    /* Form Controls & Labels Harmonization */
+    .form-group {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        margin-bottom: 18px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .form-label {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        font-size: 0.8125rem !important;
+        font-weight: 700 !important;
+        color: var(--neutral-800, #1E293B) !important;
+        margin-bottom: 2px !important;
+        width: 100% !important;
+    }
+
+    .form-control {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        display: block !important;
+        padding: 10px 14px !important;
+        font-size: 0.875rem !important;
+        font-family: inherit !important;
+        line-height: 1.5 !important;
+        color: var(--neutral-800, #1E293B) !important;
+        background-color: #ffffff !important;
+        border: 1.5px solid var(--neutral-300, #CBD5E1) !important;
+        border-radius: 8px !important;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+    }
+
+    .form-control:focus {
+        outline: none !important;
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+    }
+
+    textarea.form-control {
+        min-height: 120px !important;
+        resize: vertical !important;
+    }
+
+    .btn-submit-progres {
+        width: 100% !important;
+        height: 46px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        background: #1b3860 !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-size: 0.875rem !important;
+        font-weight: 700 !important;
+        cursor: pointer !important;
+        box-shadow: 0 4px 12px rgba(27, 56, 96, 0.22) !important;
+        transition: all 0.2s ease !important;
+        text-decoration: none !important;
+    }
+
+    .btn-submit-progres:hover {
+        background: #122846 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 6px 16px rgba(27, 56, 96, 0.32) !important;
     }
 
     @media (max-width: 1024px) {
@@ -214,13 +288,23 @@
 
     [data-theme="dark"] .file-upload-box:hover {
         background: #182234 !important;
-        border-color: #0751FF !important;
+        border-color: #2563eb !important;
     }
 
     [data-theme="dark"] .file-lampiran-pill {
         background: #0F172A !important;
         border-color: #26354D !important;
         color: #CBD5E1 !important;
+    }
+
+    [data-theme="dark"] .form-control {
+        background-color: #0F172A !important;
+        border-color: #26354D !important;
+        color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .form-label {
+        color: #E2E8F0 !important;
     }
 </style>
 @endpush
@@ -258,7 +342,7 @@
         <div style="display: flex; flex-direction: column; gap: 24px;">
 
             {{-- 1. Lembar Penugasan Utama --}}
-            <x-gentelella.x-panel title="Lembar Penugasan Magang" subtitle="Diterbitkan oleh pembimbing lapangan kedinasan">
+            <x-gentelella.x-panel title="Lembar Penugasan Magang" subtitle="Diterbitkan oleh pembimbing lapangan kedinasan" :toolbox="false" :collapsible="false">
                 <div class="assignment-header-row">
                     <div style="display: flex; align-items: flex-start; gap: 16px; flex: 1;">
                         <div class="classroom-icon-circle">
@@ -270,9 +354,8 @@
                             <h1 style="font-size: 1.375rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0 0 8px 0;">
                                 {{ $tugas->judul }}
                             </h1>
-                            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 0.8125rem; color: var(--neutral-600, #475569);">
-                                <span>Pembimbing: <strong>{{ $mentorNama }}</strong></span>
-                                <span>&bull;</span>
+                            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.8125rem; color: var(--neutral-600, #475569);">
+                                <span>Pembimbing: <strong style="color: var(--neutral-800, #1E293B);">{{ $mentorNama }}</strong></span>
                                 <span class="meta-chip">📁 {{ $kategoriNama }}</span>
                                 <span class="meta-chip">⚡ Kompleksitas: {{ $kompleksitasNama }}</span>
                             </div>
@@ -339,7 +422,7 @@
             </x-gentelella.x-panel>
 
             {{-- 2. Riwayat Laporan Progres & Umpan Balik --}}
-            <x-gentelella.x-panel title="Riwayat Laporan Progres & Feedback" subtitle="Daftar reviu dan penilaian kemajuan berkala oleh pembimbing">
+            <x-gentelella.x-panel title="Riwayat Laporan Progres & Feedback" subtitle="Daftar reviu dan penilaian kemajuan berkala oleh pembimbing" :toolbox="false" :collapsible="false">
                 <x-slot:toolbar>
                     <x-gentelella.badge variant="info">
                         {{ $tugas->progresLogs->count() }} Laporan Terkirim
@@ -423,7 +506,7 @@
              KOLOM KANAN (35%): WIDGET "TUGAS ANDA"
              ============================================================ --}}
         <div class="your-work-panel">
-            <x-gentelella.x-panel title="Tugas Anda" subtitle="Serah terima pekerjaan kepada pembimbing">
+            <x-gentelella.x-panel title="Tugas Anda" subtitle="Serah terima pekerjaan kepada pembimbing" :toolbox="false" :collapsible="false">
                 <x-slot:toolbar>
                     @if($isSelesai)
                         <x-gentelella.badge variant="success">Selesai</x-gentelella.badge>
@@ -448,7 +531,7 @@
 
                         {{-- 1. Lampiran Bukti / File Tugas --}}
                         <div class="form-group" style="margin-bottom: 16px;">
-                            <label class="form-label" style="font-weight: 700; display: flex; justify-content: space-between;">
+                            <label class="form-label">
                                 <span>Lampiran Bukti / File Tugas</span>
                                 <span style="font-size: 0.6875rem; color: var(--neutral-500, #64748B); font-weight: 400;">Maks. 5MB</span>
                             </label>
@@ -456,10 +539,10 @@
                             <input type="file" id="file" name="file" accept=".pdf,.zip,.rar,.doc,.docx" style="display: none;" onchange="handleFileSelected(this)">
 
                             <label for="file" class="file-upload-box" id="dropzoneBox">
-                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0751FF; margin: 0 auto 6px auto; display: block;">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #2563eb; margin: 0 auto 6px auto; display: block;">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                <div style="font-size: 0.8125rem; font-weight: 700; color: #0751FF;">+ Tambah Berkas Lampiran</div>
+                                <div style="font-size: 0.8125rem; font-weight: 700; color: #2563eb;">+ Tambah Berkas Lampiran</div>
                                 <div style="font-size: 0.6875rem; color: var(--neutral-500, #64748B); margin-top: 2px;">PDF, ZIP, DOCX (Maksimal 5MB)</div>
                             </label>
 
@@ -475,7 +558,7 @@
 
                         {{-- 2. Tautan Tugas / Demo --}}
                         <div class="form-group" style="margin-bottom: 16px;">
-                            <label for="link" class="form-label" style="font-weight: 700; display: flex; justify-content: space-between;">
+                            <label for="link" class="form-label">
                                 <span>Tautan Tugas / Repositori / Demo</span>
                                 <span style="font-size: 0.6875rem; color: var(--neutral-500, #64748B); font-weight: 400;">Opsional</span>
                             </label>
@@ -490,8 +573,8 @@
 
                         {{-- 3. Catatan Progres Pekerjaan --}}
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label for="catatan" class="form-label" style="font-weight: 700;">
-                                Catatan Progres Pekerjaan <span style="color: #DC2626;">*</span>
+                            <label for="catatan" class="form-label">
+                                <span>Catatan Progres Pekerjaan <span style="color: #DC2626;">*</span></span>
                             </label>
                             <textarea id="catatan" name="catatan" rows="4" class="form-control @error('catatan') is-invalid @enderror"
                                       placeholder="Tuliskan ringkasan hasil kerja atau kendala pengerjaan..."
@@ -501,11 +584,11 @@
                             @enderror
                         </div>
 
-                        <button type="submit" id="btnSubmitProgres" class="btn btn-primary" style="width: 100%; height: 44px; font-weight: 700;">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <button type="submit" id="btnSubmitProgres" class="btn-submit-progres">
+                            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink: 0;">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                             </svg>
-                            Serahkan / Kirim Progres
+                            <span>Serahkan / Kirim Progres</span>
                         </button>
                     </form>
                 @endif
@@ -514,7 +597,7 @@
             {{-- Kartu Info Panduan Penilaian --}}
             <x-gentelella.card style="background: #F8FAFC; border: 1px dashed var(--neutral-300, #CBD5E1);">
                 <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--neutral-600, #475569); letter-spacing: 0.04em; display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0751FF;">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #2563eb;">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     Informasi Pengerjaan

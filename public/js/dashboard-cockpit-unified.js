@@ -87,12 +87,20 @@ document.addEventListener('DOMContentLoaded', function () {
             closeAllDrawers();
         } else if (action === 'toggle-mobile-aside') {
             e.preventDefault();
-            const aside = document.querySelector('.cv-aside-sticky');
+            const aside = document.querySelector('.cv-aside-sticky, .saas-cockpit-aside, aside.saas-cockpit-aside');
             if (aside) {
                 aside.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
     });
+
+    // Expose drawer helper globally
+    window.openMagkomDrawer = function(selector) {
+        openDrawer(selector);
+    };
+    window.closeMagkomDrawer = function() {
+        closeAllDrawers();
+    };
 
     // 3. Keyboard Escape to Close Drawers/Modals
     document.addEventListener('keydown', function (e) {

@@ -16,13 +16,14 @@
 
     /* Hero Banner MagKom Sleman */
     .pendaftaran-hero {
-        background: linear-gradient(135deg, #0641CC 0%, #0751FF 60%, #1E40AF 100%);
-        border-radius: var(--radius-lg, 12px);
+        background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+        border-radius: 16px;
         padding: 28px 32px;
         color: #ffffff;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 10px 25px -5px rgba(7, 81, 255, 0.25);
+        box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.12);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -221,7 +222,7 @@
     }
 
     .kuota-card:hover {
-        border-color: #0751FF;
+        border-color: #2563eb;
         box-shadow: 0 8px 24px rgba(7, 81, 255, 0.12);
         transform: translateY(-2px);
     }
@@ -347,16 +348,16 @@
     }
 
     .duration-chip-btn:hover {
-        border-color: #0751FF;
+        border-color: #2563eb;
         background: #EFF6FF;
     }
 
     .duration-chip-btn.is-active {
-        border-color: #0641CC;
+        border-color: #1b3860;
         background: #EFF6FF;
-        color: #0641CC;
+        color: #1b3860;
         font-weight: 700;
-        box-shadow: 0 0 0 2px rgba(7, 81, 255, 0.2);
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
     }
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -393,7 +394,7 @@
     }
 
     [data-theme="dark"] .kuota-card:hover {
-        border-color: #0751FF !important;
+        border-color: #2563eb !important;
         box-shadow: 0 8px 24px rgba(7, 81, 255, 0.2) !important;
     }
 
@@ -554,7 +555,7 @@
          3. SPOTLIGHT CARD PENGAJUAN AKTIF (GENTELELLA CARD)
          ======================================================== --}}
     @if($pendaftaranAktif)
-        <x-gentelella.card style="border-top: 4px solid #0751FF;">
+        <x-gentelella.card style="border-top: 4px solid #2563eb;">
             <div class="active-card-header">
                 <div>
                     <div class="active-reg-badge">
@@ -604,7 +605,7 @@
             <div class="active-grid-info">
                 <div class="active-info-item">
                     <div class="active-info-label">Periode Bulan Magang</div>
-                    <div class="active-info-value" style="display: flex; align-items: center; gap: 6px; color: #0751FF;">
+                    <div class="active-info-value" style="display: flex; align-items: center; gap: 6px; color: #2563eb;">
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         <span>{{ $pendaftaranAktif->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}</span>
                     </div>
@@ -637,7 +638,7 @@
 
             <div class="active-card-footer">
                 <p class="active-card-note">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0751FF; flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #2563eb; flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                     <span>Sesuai ketentuan sistem, pengajuan baru terkunci saat Anda masih memiliki pengajuan aktif yang sedang berjalan.</span>
                 </p>
 
@@ -748,7 +749,7 @@
 
         @if($pendaftaranList->isEmpty())
             <div style="text-align: center; padding: 48px 24px;">
-                <div style="width: 56px; height: 56px; margin: 0 auto 16px auto; background: #EFF6FF; color: #0751FF; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <div style="width: 56px; height: 56px; margin: 0 auto 16px auto; background: #EFF6FF; color: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                     <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
@@ -783,7 +784,7 @@
                         @foreach($pendaftaranList as $item)
                             <tr>
                                 <td>
-                                    <strong style="color: #0751FF; font-weight: 800;">
+                                    <strong style="color: #2563eb; font-weight: 800;">
                                         #REG-{{ str_pad((string)$item->id, 5, '0', STR_PAD_LEFT) }}
                                     </strong>
                                 </td>
@@ -948,7 +949,7 @@
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         <span>Estimasi Rentang Pelaksanaan:</span>
                     </div>
-                    <div id="previewPeriodeText" style="color: #0751FF; font-weight: 800; font-size: 0.875rem;"></div>
+                    <div id="previewPeriodeText" style="color: #2563eb; font-weight: 800; font-size: 0.875rem;"></div>
                 </div>
             </div>
 

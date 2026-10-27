@@ -170,6 +170,19 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->role === RoleEnum::Peserta;
     }
 
+    /**
+     * Memeriksa apakah pengguna memiliki peran tertentu (string atau RoleEnum).
+     */
+    public function hasRole(string|RoleEnum $role): bool
+    {
+        if ($role instanceof RoleEnum) {
+            return $this->role === $role;
+        }
+
+        $currentRoleValue = $this->role instanceof RoleEnum ? $this->role->value : (string) $this->role;
+        return strtolower($currentRoleValue) === strtolower($role);
+    }
+
     public function isStaf(): bool
     {
         return in_array($this->role, [

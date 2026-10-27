@@ -31,11 +31,16 @@
                 <div style="font-size: 0.95rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">
                     {{ $selectedJurusan->nama_jurusan }} ({{ strtoupper($selectedJurusan->kategori) }})
                 </div>
-                @if($selectedBulan)
-                    <div style="font-size: 0.8125rem; color: var(--neutral-600);">
-                        Periode Mulai: <strong>{{ \Carbon\CarbonImmutable::parse($selectedBulan->bulan_mulai)->translatedFormat('F Y') }}</strong>
-                    </div>
-                @endif
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: 0.35rem; flex-wrap: wrap;">
+                    @if($selectedBulan)
+                        <div style="font-size: 0.8125rem; color: var(--neutral-600);">
+                            Periode Mulai: <strong>{{ \Carbon\CarbonImmutable::parse($selectedBulan->bulan_mulai)->translatedFormat('F Y') }}</strong>
+                        </div>
+                    @endif
+                    <a href="{{ route('landing') }}#kuota" style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600); text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;">
+                        <span>&larr; Ganti Pilihan Kuota</span>
+                    </a>
+                </div>
             </div>
         </div>
     @endif

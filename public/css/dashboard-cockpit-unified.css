@@ -5,39 +5,34 @@
    ========================================================================== */
 
 :root {
-  /* Sleman Official Deep Navy Palette */
-  --cv-blue-950: #041238;
-  --cv-blue-900: #061E5B;
-  --cv-blue-800: #06318C;
-  --cv-blue-700: #0641CC;
-  --cv-blue-600: #0751FF;
-  --cv-blue-tint: #EFF6FF;
-  --cv-blue-tint-line: #BFDBFE;
+  /* Sleman Official Deep Navy Palette (Harmonisasi Landing Page) */
+  --cv-blue-950: #0f172a;
+  --cv-blue-900: #122846;
+  --cv-blue-800: #162e4f;
+  --cv-blue-700: #1b3860;
+  --cv-blue-600: #2563eb;
+  --cv-blue-tint: #f8fafc;
+  --cv-blue-tint-line: #e2e8f0;
 
   /* Surfaces & Paper Grid */
-  --cv-paper: #F7F9FC;
-  --cv-surface: #FFFFFF;
-  --cv-line: #E2E8F0;
-  --cv-line-strong: #CBD5E1;
-  --cv-ink: #0F172A;
+  --cv-paper: #f8fafc;
+  --cv-surface: #ffffff;
+  --cv-line: #e2e8f0;
+  --cv-line-strong: #cbd5e1;
+  --cv-ink: #0f172a;
   --cv-ink-2: #334155;
-  --cv-ink-3: #64748B;
+  --cv-ink-3: #64748b;
 
   /* Status Colors */
-  --cv-ok: #10B981;
-  --cv-ok-tint: #ECFDF5;
-  --cv-warn: #F59E0B;
-  --cv-warn-tint: #FFFBEB;
-  --cv-bad: #EF4444;
-  --cv-bad-tint: #FEF2F2;
+  --cv-ok: #16a34a;
+  --cv-ok-tint: #f0fdf4;
+  --cv-warn: #f59e0b;
+  --cv-warn-tint: #fffbeb;
+  --cv-bad: #ef4444;
+  --cv-bad-tint: #fef2f2;
 
-  /* Atmospheric SVG Contour Curves (Data-URI) */
-  --cv-contour: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300' viewBox='0 0 600 300' fill='none' stroke='white' stroke-opacity='.09' stroke-width='1.2'%3E%3Cpath d='M-20 220C80 180 120 250 220 200S380 90 480 130 620 60 640 40'/%3E%3Cpath d='M-20 250C90 210 140 280 240 230S390 120 500 160 630 90 650 70'/%3E%3Cpath d='M-20 190C70 150 110 220 200 170S370 60 460 100 610 30 630 10'/%3E%3Cpath d='M-20 280C100 240 160 300 260 260S400 150 520 190 640 120 660 100'/%3E%3Cpath d='M-20 160C60 120 100 190 180 140S360 30 440 70 600 0 620-20'/%3E%3Cellipse cx='470' cy='120' rx='60' ry='26'/%3E%3Cellipse cx='470' cy='120' rx='34' ry='14'/%3E%3Cellipse cx='470' cy='120' rx='12' ry='5'/%3E%3C/svg%3E");
-
-  /* Blueprint Grid Paper Background */
-  --cv-grid-paper:
-    linear-gradient(rgba(7, 81, 255, 0.04) 1px, transparent 1px) 0 0 / 24px 24px,
-    linear-gradient(90deg, rgba(7, 81, 255, 0.04) 1px, transparent 1px) 0 0 / 24px 24px;
+  /* Clean Paper Background */
+  --cv-grid-paper: none;
 }
 
 /* ==========================================================================
@@ -76,17 +71,16 @@
 }
 
 /* ==========================================================================
-   2. Atmospheric Hero Banner (Clearview Style)
+   2. Atmospheric Hero Banner (Soft, Simple, & Elegan)
    ========================================================================== */
 .cv-hero-banner {
   position: relative;
   overflow: hidden;
-  border-radius: 14px;
+  border-radius: 16px;
   color: #ffffff;
-  background: var(--cv-contour) right -40px top -20px / 720px auto no-repeat,
-              radial-gradient(80% 120% at 100% 0%, rgba(7, 81, 255, 0.45), transparent 60%),
-              linear-gradient(160deg, var(--cv-blue-800), var(--cv-blue-900));
-  box-shadow: 0 8px 24px -4px rgba(6, 49, 140, 0.35);
+  background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+  box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 1.75rem 2rem 0 2rem;
   margin-bottom: 0.5rem;
 }
@@ -97,31 +91,33 @@
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .cv-eyebrow {
-  font-family: monospace;
+  font-family: var(--font-display, 'Lexend', sans-serif);
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.78);
+  font-weight: 600;
+  color: #fbbf24;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .cv-hero-title {
-  font-size: 1.85rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-family: var(--font-display, 'Lexend', sans-serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   margin: 0.35rem 0;
   color: #ffffff;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .cv-hero-sub {
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.88);
   max-width: 65ch;
-  line-height: 1.45;
+  line-height: 1.5;
   margin: 0;
 }
 
@@ -129,25 +125,24 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  font-family: monospace;
+  font-family: var(--font-display, 'Lexend', sans-serif);
   font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  padding: 0.25rem 0.65rem;
-  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
   backdrop-filter: blur(4px);
   margin-top: 0.75rem;
-  transform: rotate(-1deg);
 }
 
 .cv-stamp .dot-pulse {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.4);
+  background: #22c55e;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.35);
 }
 
 /* ==========================================================================
@@ -157,8 +152,8 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   margin: 1.5rem -2rem 0 -2rem;
-  background: rgba(4, 18, 56, 0.55);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
@@ -190,10 +185,10 @@
 
 .cv-hero-dock .tile_stats_count .count {
   color: #ffffff !important;
-  font-size: 2rem !important;
-  font-weight: 800 !important;
-  font-family: monospace !important;
-  line-height: 1.15 !important;
+  font-size: 1.85rem !important;
+  font-weight: 700 !important;
+  font-family: var(--font-display, 'Lexend', sans-serif) !important;
+  line-height: 1.2 !important;
 }
 
 .cv-hero-dock .tile_stats_count .count_bottom {

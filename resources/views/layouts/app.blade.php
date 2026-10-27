@@ -946,10 +946,10 @@
                 <!-- Nav Menu -->
                 <nav class="nav-menu">
                     <a href="{{ route('landing') }}" class="nav-link active">Beranda</a>
-                    <a href="{{ route('landing') }}#kuota-section" class="nav-link">Bidang & kuota</a>
-                    <a href="{{ route('landing') }}#alur-section" class="nav-link">Alur magang</a>
-                    <a href="{{ route('landing') }}#pengumuman-section" class="nav-link">Pengumuman</a>
-                    <a href="#footer" class="nav-link">Hubungi kami</a>
+                    <a href="{{ route('landing') }}#kuota" class="nav-link">Bidang & kuota</a>
+                    <a href="{{ route('panduan-alur') }}" class="nav-link">Alur magang</a>
+                    <a href="{{ route('landing') }}#faq" class="nav-link">FAQ</a>
+                    <a href="{{ route('landing') }}#kontak" class="nav-link">Hubungi kami</a>
                 </nav>
 
                 <!-- Actions -->
@@ -1091,7 +1091,7 @@
                         </div>
                     @else
                         <a href="{{ route('login') }}" class="nav-action-link">Masuk</a>
-                        <a href="{{ route('landing') }}#kuota-section" class="btn btn-primary">Daftar magang</a>
+                        <a href="{{ route('landing') }}#kuota" class="btn btn-primary">Daftar magang</a>
                     @endauth
                 </div>
 
@@ -1158,14 +1158,14 @@
             @endauth
 
             <a href="{{ route('landing') }}" class="nav-link" onclick="toggleMobileDrawer()">Beranda</a>
-            <a href="{{ route('landing') }}#kuota-section" class="nav-link" onclick="toggleMobileDrawer()">Bidang & kuota</a>
-            <a href="{{ route('landing') }}#alur-section" class="nav-link" onclick="toggleMobileDrawer()">Alur magang</a>
-            <a href="{{ route('landing') }}#pengumuman-section" class="nav-link" onclick="toggleMobileDrawer()">Pengumuman</a>
-            <a href="#footer" class="nav-link" onclick="toggleMobileDrawer()">Hubungi kami</a>
+            <a href="{{ route('landing') }}#kuota" class="nav-link" onclick="toggleMobileDrawer()">Bidang & kuota</a>
+            <a href="{{ route('panduan-alur') }}" class="nav-link" onclick="toggleMobileDrawer()">Alur magang</a>
+            <a href="{{ route('landing') }}#faq" class="nav-link" onclick="toggleMobileDrawer()">FAQ</a>
+            <a href="{{ route('landing') }}#kontak" class="nav-link" onclick="toggleMobileDrawer()">Hubungi kami</a>
             @guest
                 <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
                     <a href="{{ route('login') }}" class="btn btn-outline" style="flex: 1; text-align: center;">Masuk</a>
-                    <a href="{{ route('landing') }}#kuota-section" class="btn btn-primary" style="flex: 1; text-align: center;" onclick="toggleMobileDrawer()">Daftar magang</a>
+                    <a href="{{ route('landing') }}#kuota" class="btn btn-primary" style="flex: 1; text-align: center;" onclick="toggleMobileDrawer()">Daftar magang</a>
                 </div>
             @endguest
         </div>

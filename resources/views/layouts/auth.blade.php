@@ -894,12 +894,17 @@
                     <span style="font-weight: 800; font-size: 0.9375rem; color: var(--neutral-900);">MAGKOM</span>
                 </div>
 
-                <a href="{{ route('landing') }}" class="back-link" title="Kembali ke beranda">
+                @php
+                    $isFromKuota = request()->hasAny(['bulan', 'jurusan', 'tipe', 'jumlah']);
+                    $authBackUrl = $isFromKuota ? route('landing') . '#kuota' : route('landing');
+                    $authBackText = $isFromKuota ? 'Pilih Kuota Lain' : 'Kembali ke beranda';
+                @endphp
+                <a href="{{ $authBackUrl }}" class="back-link" title="{{ $authBackText }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="19" y1="12" x2="5" y2="12"></line>
                         <polyline points="12 19 5 12 12 5"></polyline>
                     </svg>
-                    <span>Kembali ke beranda</span>
+                    <span>{{ $authBackText }}</span>
                 </a>
             </div>
 

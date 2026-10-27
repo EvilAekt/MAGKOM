@@ -121,4 +121,12 @@
     <p class="auth-footer-text">
         Belum punya akun magang? <a href="{{ route('register') }}">Register</a>
     </p>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.75rem; color: var(--neutral-400); display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="{{ route('landing') }}#kuota" style="color: var(--neutral-500); text-decoration: none;">Cek Kuota</a>
+        <span>&bull;</span>
+        <a href="{{ route('panduan.pdf') }}" style="color: var(--neutral-500); text-decoration: none;">Buku Panduan (PDF)</a>
+        <span>&bull;</span>
+        <a href="{{ route('kebijakan-privasi') }}" style="color: var(--neutral-500); text-decoration: none;">Kebijakan Privasi</a>
+    </div>
 @endsection

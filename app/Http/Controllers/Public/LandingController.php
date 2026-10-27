@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Enums\StatusKetersediaanEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Services\BulanStatusService;
@@ -84,6 +85,9 @@ class LandingController extends Controller
             'jurusanSmk' => $jurusanSmk,
             'jurusanMahasiswa' => $jurusanMahasiswa,
             'matriksKetersediaan' => $matriksKetersediaan,
+            'semuaBidang' => Bidang::with(['jurusan' => function ($q) {
+                $q->where('aktif', true);
+            }])->where('aktif', true)->get(),
             'sekarang' => $sekarang,
         ]);
     }

@@ -2314,7 +2314,7 @@
                     <strong>Aturan Bisnis Kunci (BR-01):</strong> Calon peserta hanya dapat mendaftar pada 1 bidang dalam 1 periode bulan yang sedang aktif.
                 </div>
 
-                <a id="inspectorCTA" href="{{ route('landing') }}#kuota-section" class="inspector-cta-btn">
+                <a id="inspectorCTA" href="{{ route('landing') }}#kuota" class="inspector-cta-btn">
                     <span>Lihat Kuota Tersedia Sekarang</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
@@ -2513,7 +2513,7 @@
         <section class="alur-cta-banner">
             <h3>Siap Bergabung dengan Tim Diskominfo?</h3>
             <p>Periksa ketersediaan kuota magang pada bidang pilihan Anda sekarang sebelum kuota bulan ini terpenuhi.</p>
-            <a href="{{ route('landing') }}#kuota-section" class="alur-btn-primary">
+            <a href="{{ route('landing') }}#kuota" class="alur-btn-primary">
                 <span>Lihat Kuota &amp; Jadwal Magang</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
@@ -2541,7 +2541,7 @@
             ],
             callout: '<strong>Aturan Bisnis Kunci (BR-01):</strong> Calon peserta hanya dapat mendaftar pada 1 bidang dalam 1 periode bulan yang sedang aktif.',
             ctaText: 'Lihat Kuota Tersedia Sekarang',
-            ctaUrl: '{{ route("landing") }}#kuota-section'
+            ctaUrl: '{{ route("landing") }}#kuota'
         },
         2: {
             phase: 'Fase 1: Pendaftaran & Kuota',
@@ -2575,8 +2575,8 @@
                 'Proposal Magang (Opsional, sangat disarankan untuk kelompok)'
             ],
             callout: '<strong>Validitas Dokumen:</strong> Pastikan berkas terbaca jelas dan tidak berbayang agar proses seleksi berkas berjalan lancar tanpa status perbaikan.',
-            ctaText: 'Pelajari Format Berkas',
-            ctaUrl: '{{ route("landing") }}#kuota-section'
+            ctaText: 'Unduh Panduan Lengkap PDF',
+            ctaUrl: '{{ route("panduan.pdf") }}'
         },
         4: {
             phase: 'Fase 2: Seleksi & Penempatan',

@@ -30,7 +30,7 @@
         color: var(--neutral-800, #1E293B);
     }
     .survei-option-label:hover {
-        border-color: #0641CC;
+        border-color: #1b3860;
         background: var(--blue-tint, #EFF6FF);
     }
     .survei-nps-label {
@@ -46,7 +46,7 @@
         transition: all 0.15s ease;
     }
     .survei-nps-label:hover {
-        border-color: #0641CC;
+        border-color: #1b3860;
         background: var(--blue-tint, #EFF6FF);
     }
     .survei-nps-score {
@@ -69,7 +69,7 @@
     }
     .survei-textarea:focus {
         outline: none;
-        border-color: #0641CC;
+        border-color: #1b3860;
         box-shadow: 0 0 0 2px rgba(6, 65, 204, 0.1);
     }
     [data-theme="dark"] .survei-label-q {
@@ -99,7 +99,7 @@
 <div style="max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- HERO HEADER -->
-    <div style="background: linear-gradient(135deg, #0641CC 0%, #0751FF 100%); border-radius: 12px; padding: 2rem; color: #ffffff; box-shadow: 0 4px 12px rgba(6, 65, 204, 0.15);">
+    <div style="background: linear-gradient(135deg, #1b3860 0%, #2563eb 100%); border-radius: 12px; padding: 2rem; color: #ffffff; box-shadow: 0 4px 12px rgba(6, 65, 204, 0.15);">
         <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; background: rgba(255, 255, 255, 0.2); padding: 0.25rem 0.75rem; border-radius: 999px;">
             Evaluasi Mutu Layanan Dinas
         </span>
@@ -118,7 +118,7 @@
                         Terakhir diperbarui pada: <strong>{{ $survei->updated_at->translatedFormat('d F Y, H:i') }} WIB</strong>. Anda dapat memperbarui penilaian ini kapan saja di bawah.
                     </p>
                 </div>
-                <div style="font-size: 0.875rem; font-weight: 800; color: #0641CC;">
+                <div style="font-size: 0.875rem; font-weight: 800; color: #1b3860;">
                     Skor NPS Anda: {{ $survei->skor_nps }}/10
                 </div>
             </div>

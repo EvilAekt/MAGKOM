@@ -58,7 +58,7 @@
 
     .identity-card-cover {
         height: 84px;
-        background: linear-gradient(135deg, var(--blue-700) 0%, var(--blue-600) 60%, #3B82F6 100%);
+        background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
         position: relative;
     }
 
@@ -81,7 +81,7 @@
         height: 92px;
         border-radius: 50%;
         border: 4px solid #ffffff;
-        box-shadow: 0 4px 14px rgba(7, 81, 255, 0.18);
+        box-shadow: 0 4px 14px rgba(27, 56, 96, 0.18);
         overflow: hidden;
         background: var(--blue-tint);
         display: flex;

@@ -14,16 +14,16 @@
     <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
     <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
 
-    <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
+    <!-- Google Fonts: Lexend & Source Sans 3 (Harmonisasi Desain Sistem Landing Page) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Gentelella Theme CSS -->
     <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard-cockpit-unified.css') }}">
 
-    <!-- Anti-Flash Theme Script -->
+    <!-- Anti-Flash Theme & Sidebar State Script -->
     <script>
         (function() {
             try {
@@ -38,52 +38,64 @@
                 }
                 document.documentElement.setAttribute('data-theme', effectiveTheme);
                 document.documentElement.setAttribute('data-pref-theme', savedPref);
+
+                // Anti-flicker untuk state sidebar collapsed di desktop
+                const savedSidebar = localStorage.getItem('magkom_peserta_sidebar_collapsed');
+                if (savedSidebar === 'true' && window.innerWidth > 1024) {
+                    document.documentElement.classList.add('sidebar-collapsed');
+                }
             } catch (e) {}
         })();
     </script>
 
     <style>
         :root {
-            /* MagKom / Warna Tokens (Design System DS-MagKom Bab 2.1) */
-            --blue-600: #0751FF;
-            --blue-700: #0641CC;
-            --blue-tint: #E6EEFF;
-            --blue-tint-line: #B3C8FF;
+            /* MagKom / Warna Tokens (Harmonisasi Landing Page DS-MagKom) */
+            --navy: #1b3860;
+            --navy-dark: #122846;
+            --blue-600: #1b3860; /* Sleman Navy Utama */
+            --blue-700: #122846; /* Sleman Navy Dark */
+            --blue-accent: #2563eb; /* Royal Blue Elegan */
+            --blue-tint: #f1f5f9;
+            --blue-tint-line: #e2e8f0;
+            --gold: #f59e0b;
+            --gold-bright: #fbbf24;
 
             --neutral-0: #FFFFFF;
             --neutral-100: #F8FAFC;
-            --neutral-150: #F5F7FB;
-            --neutral-200: #EEF0F5;
-            --neutral-400: #D0D3D9;
-            --neutral-500: #7A8494;
-            --neutral-600: #666666;
-            --neutral-700: #333333;
-            --neutral-800: #1D2530;
-            --neutral-900: #05070B;
+            --neutral-150: #F1F5F9;
+            --neutral-200: #E2E8F0;
+            --neutral-400: #CBD5E1;
+            --neutral-500: #64748B;
+            --neutral-600: #475569;
+            --neutral-700: #334155;
+            --neutral-800: #1E293B;
+            --neutral-900: #0F172A;
 
-            /* Status Tokens (WCAG 2.1 AA Compliant) */
-            --green-100: #E8F7EE;
+            /* Status Tokens Soft & Elegan */
+            --green-100: #F0FDF4;
             --green-600: #16A34A;
-            --green-700: #166534;
+            --green-700: #15803D;
 
             --amber-100: #FFFBEB;
             --amber-200: #FEF3C7;
             --amber-300: #FDE68A;
-            --amber-700: #92400E;
+            --amber-700: #B45309;
 
             --red-100: #FEF2F2;
             --red-200: #FEE2E2;
             --red-300: #FECACA;
             --red-600: #DC2626;
-            --red-700: #991B1B;
+            --red-700: #B91C1C;
 
-            --font-sans: 'Open Sans', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-display: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-sans: 'Source Sans 3', 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             
-            /* Tipografi Skala MagKom Resmi (Bab 2.2) */
+            /* Tipografi Skala MagKom Resmi */
             --text-2xs: 0.6875rem; /* 11px */
             --text-xs: 0.75rem;    /* 12px */
             --text-sm: 0.8125rem;  /* 13px */
-            --text-base: 0.875rem; /* 14px - Standar Body */
+            --text-base: 0.875rem; /* 14px */
             --text-md: 0.9375rem;  /* 15px */
             --text-lg: 1rem;       /* 16px */
             --text-xl: 1.125rem;   /* 18px */
@@ -96,12 +108,18 @@
             --fw-semibold: 600;
             --fw-bold: 700;
 
-            --radius-default: 8px;
-            --radius-md: 12px;
+            --radius-default: 10px;
+            --radius-md: 14px;
             --radius-lg: 16px;
             --radius-full: 9999px;
             --sidebar-width: 256px;
+            --sidebar-collapsed-width: 72px;
             --topbar-height: 64px;
+
+            /* Soft Diffuse Shadows */
+            --shadow-subtle: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+            --shadow-card: 0 10px 15px -3px rgba(15, 23, 42, 0.03), 0 4px 6px -4px rgba(15, 23, 42, 0.02);
         }
 
         /* Mode Gelap (Dark Mode Tokens - Modern Slate/Navy Theme ala Menu Tugas) */
@@ -535,8 +553,9 @@
             text-rendering: optimizeLegibility;
         }
 
-        /* Headings: SemiBold atau Bold Tegas dan Jelas sebagai Judul */
-        h1, h2 {
+        /* Headings: Lexend Font Tegas dan Jelas sebagai Judul (Sesuai Landing Page) */
+        h1, h2, h3, h4, h5, h6, .topbar-title, .brand-text h2, .site_title, .page-title h3, .tile_stats_count .count {
+            font-family: var(--font-display);
             color: var(--neutral-800);
             font-weight: var(--fw-bold);
             line-height: 1.3;
@@ -554,6 +573,19 @@
         .profile-hero h1, .profile-hero h2, .profile-hero h3,
         .pendaftaran-hero h1, .pendaftaran-hero h2, .pendaftaran-hero h3 {
             color: #ffffff;
+        }
+
+        /* Standardisasi Global Font & Tipografi (Selaras dengan Landing Page) */
+        body {
+            font-family: var(--font-sans, 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif);
+            background-color: var(--neutral-100, #f8fafc);
+            color: var(--neutral-800, #1e293b);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4, h5, h6, .font-display {
+            font-family: var(--font-display, 'Lexend', sans-serif) !important;
+            letter-spacing: -0.01em;
         }
 
         /* Teks semua di web (body): Regular */
@@ -581,7 +613,7 @@
             bottom: 0;
             left: 0;
             z-index: 50;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
             border-right: 1px solid rgba(255, 255, 255, 0.08);
             scrollbar-width: none;
@@ -724,17 +756,16 @@
         }
 
         .nav-item.active {
-            background-color: rgba(0, 191, 165, 0.12);
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.28) 0%, rgba(37, 99, 235, 0.16) 100%);
             color: #ffffff;
-            font-weight: 600;
-            border-radius: 6px;
-            border-left: 3px solid #00BFA5;
-            box-shadow: none;
+            border: 1px solid rgba(147, 197, 253, 0.35);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            font-weight: 700;
         }
 
         .nav-item.active svg {
-            color: #00BFA5;
-            stroke-width: 2.2;
+            color: #93c5fd;
+            stroke-width: 2.25;
         }
 
         .nav-item svg {
@@ -746,15 +777,16 @@
         }
 
         .nav-item.locked {
-            opacity: 0.55;
-            cursor: not-allowed;
+            opacity: 0.65;
+            cursor: pointer;
             background-color: transparent !important;
-            color: rgba(255, 255, 255, 0.6) !important;
+            color: rgba(255, 255, 255, 0.7) !important;
             user-select: none;
         }
 
         .nav-item.locked:hover {
-            background-color: rgba(255, 255, 255, 0.05) !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
         }
 
         .badge-locked {
@@ -811,12 +843,14 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .topbar {
             height: var(--topbar-height);
-            background: var(--neutral-0);
-            border-bottom: 1px solid var(--neutral-400);
+            background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.15);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -832,31 +866,93 @@
             gap: 16px;
         }
 
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
+        .sidebar-toggle-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            color: var(--neutral-700);
-            padding: 8px;
+            color: #ffffff;
+            width: 38px;
+            height: 38px;
             border-radius: var(--radius-default);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            padding: 0;
         }
 
-        .mobile-menu-btn:hover {
-            background: var(--neutral-200);
+        .sidebar-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-toggle-btn:focus-visible {
+            outline: 2px solid #93c5fd;
+            outline-offset: 2px;
+        }
+
+        .mobile-menu-btn {
+            display: none;
         }
 
         .topbar-title {
+            font-family: var(--font-display, 'Lexend', sans-serif);
             font-size: var(--text-xl);
-            font-weight: var(--fw-bold);
-            color: var(--neutral-800);
+            font-weight: 700;
+            color: #ffffff;
             line-height: 1.3;
+            letter-spacing: -0.01em;
         }
 
         .topbar-right {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
+        }
+
+        .topbar-theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            cursor: pointer;
+            color: #ffffff;
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-default, 8px);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            padding: 0;
+        }
+
+        .topbar-theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.22);
+            border-color: rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .topbar-theme-toggle-btn:focus-visible {
+            outline: 2px solid #93c5fd;
+            outline-offset: 2px;
+        }
+
+        html:not([data-theme="dark"]) .topbar-theme-toggle-btn .sun-icon {
+            display: none;
+        }
+
+        html:not([data-theme="dark"]) .topbar-theme-toggle-btn .moon-icon {
+            display: block;
+        }
+
+        html[data-theme="dark"] .topbar-theme-toggle-btn .sun-icon {
+            display: block;
+        }
+
+        html[data-theme="dark"] .topbar-theme-toggle-btn .moon-icon {
+            display: none;
         }
 
         /* Profile Dropdown */
@@ -868,9 +964,9 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 4px 12px 4px 6px;
-            background: var(--neutral-100);
-            border: 1px solid var(--neutral-400);
+            padding: 4px 14px 4px 6px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.22);
             border-radius: var(--radius-full);
             cursor: pointer;
             transition: all 0.2s ease;
@@ -880,38 +976,39 @@
 
         .user-chip-btn:hover,
         .user-chip-btn[aria-expanded="true"] {
-            background: var(--blue-tint);
-            border-color: var(--blue-tint-line);
-            box-shadow: 0 2px 6px rgba(7, 81, 255, 0.12);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
         .user-chip-btn:focus-visible {
-            outline: 2px solid var(--blue-600);
+            outline: 2px solid #93c5fd;
             outline-offset: 2px;
         }
 
         .dropdown-chevron {
-            color: var(--neutral-500);
+            color: rgba(255, 255, 255, 0.8);
             transition: transform 0.2s ease;
             margin-left: 2px;
         }
 
         .user-chip-btn[aria-expanded="true"] .dropdown-chevron {
             transform: rotate(180deg);
-            color: var(--blue-700);
+            color: #ffffff;
         }
 
         .user-avatar {
             width: 32px;
             height: 32px;
-            background: var(--blue-tint);
-            color: var(--blue-700);
+            background: #ffffff;
+            color: #1b3860;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: var(--text-sm);
-            font-weight: var(--fw-bold);
+            font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
         }
 
         .user-info {
@@ -921,15 +1018,16 @@
 
         .user-name {
             font-size: var(--text-base);
-            font-weight: var(--fw-semibold);
-            color: var(--neutral-800);
+            font-weight: 600;
+            color: #ffffff;
             line-height: 1.25;
         }
 
         .user-badge {
             font-size: var(--text-2xs);
-            color: var(--blue-600);
-            font-weight: var(--fw-semibold);
+            color: #93c5fd;
+            font-weight: 600;
+            letter-spacing: 0.02em;
         }
 
         .profile-dropdown-menu {
@@ -1093,6 +1191,7 @@
             margin-bottom: 24px;
             position: relative;
             transition: all 0.25s ease;
+            pointer-events: auto;
         }
 
         .toast-icon-badge {
@@ -1278,13 +1377,13 @@
             background: #1E293B !important;
         }
 
-        /* Common Components */
+        /* Common Components Soft & Elegan */
         .card {
             background: var(--neutral-0);
-            border: 1px solid var(--neutral-400);
+            border: 1px solid var(--neutral-200);
             border-radius: var(--radius-md);
             padding: 24px;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+            box-shadow: var(--shadow-subtle);
             margin-bottom: 24px;
         }
 
@@ -1298,14 +1397,14 @@
         .card-title {
             font-size: var(--text-xl);
             font-weight: var(--fw-bold);
-            color: var(--neutral-800);
+            color: var(--neutral-900);
             line-height: 1.3;
         }
 
         .card-subtitle {
             font-size: var(--text-sm);
             font-weight: var(--fw-normal);
-            color: var(--neutral-600);
+            color: var(--neutral-500);
             margin-top: 4px;
             line-height: 1.4;
         }
@@ -1315,8 +1414,8 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            height: 42px;
-            padding: 0 18px;
+            height: 40px;
+            padding: 0 16px;
             border-radius: var(--radius-default);
             font-size: var(--text-base);
             font-weight: var(--fw-semibold);
@@ -1330,22 +1429,26 @@
         .btn-primary {
             background: var(--blue-600);
             color: #ffffff;
+            box-shadow: var(--shadow-subtle);
         }
 
         .btn-primary:hover:not(:disabled) {
             background: var(--blue-700);
+            color: #ffffff;
+            transform: translateY(-1px);
         }
 
         .btn-secondary {
             background: #ffffff;
-            color: var(--blue-600);
-            border: 1px solid var(--blue-600);
+            color: var(--neutral-700);
+            border: 1px solid var(--neutral-200);
+            box-shadow: var(--shadow-subtle);
         }
 
         .btn-secondary:hover:not(:disabled) {
-            background: var(--blue-tint);
-            border-color: var(--blue-700);
-            color: var(--blue-700);
+            background: var(--neutral-100);
+            border-color: var(--neutral-400);
+            color: var(--neutral-900);
         }
 
         .btn:disabled {
@@ -1406,6 +1509,87 @@
             z-index: 45;
         }
 
+        /* Desktop Collapsed Sidebar (Mini-Sidebar Icon Only) */
+        @media (min-width: 1025px) {
+            html.sidebar-collapsed .sidebar {
+                width: var(--sidebar-collapsed-width);
+            }
+
+            html.sidebar-collapsed .main-wrapper {
+                margin-left: var(--sidebar-collapsed-width);
+            }
+
+            html.sidebar-collapsed .sidebar-header {
+                padding: 1.25rem 0.5rem 1rem 0.5rem;
+                justify-content: center;
+            }
+
+            html.sidebar-collapsed .brand-box {
+                justify-content: center;
+                gap: 0;
+                width: 100%;
+            }
+
+            html.sidebar-collapsed .brand-text {
+                display: none !important;
+            }
+
+            html.sidebar-collapsed .sidebar-nav {
+                padding: 1rem 0.5rem;
+                align-items: center;
+            }
+
+            html.sidebar-collapsed .nav-label {
+                display: none !important;
+            }
+
+            html.sidebar-collapsed .nav-item {
+                justify-content: center;
+                padding: 0.5rem 0;
+                width: 44px;
+                height: 40px;
+                min-height: 40px;
+                position: relative;
+            }
+
+            html.sidebar-collapsed .nav-item span:not(.badge-locked) {
+                display: none !important;
+            }
+
+            html.sidebar-collapsed .nav-item .badge-locked {
+                position: absolute;
+                top: 4px;
+                right: 4px;
+                margin-left: 0;
+                width: 14px;
+                height: 14px;
+                border-radius: 4px;
+            }
+
+            html.sidebar-collapsed .nav-item .badge-locked svg {
+                width: 9px;
+                height: 9px;
+            }
+
+            html.sidebar-collapsed .sidebar-footer {
+                padding: 1rem 0.5rem;
+                display: flex;
+                justify-content: center;
+            }
+
+            html.sidebar-collapsed .logout-btn {
+                width: 44px;
+                height: 40px;
+                min-height: 40px;
+                padding: 0;
+                justify-content: center;
+            }
+
+            html.sidebar-collapsed .logout-btn span {
+                display: none !important;
+            }
+        }
+
         /* Responsive Breakpoints */
         @media (max-width: 1024px) {
             .sidebar {
@@ -1421,11 +1605,7 @@
             }
 
             .main-wrapper {
-                margin-left: 0;
-            }
-
-            .mobile-menu-btn {
-                display: block;
+                margin-left: 0 !important;
             }
 
             .content-area {
@@ -1440,17 +1620,18 @@
     @stack('styles')
 </head>
 <body>
-    <div class="drawer-backdrop" id="drawerBackdrop" onclick="toggleSidebar()"></div>
+    <div class="drawer-backdrop" id="drawerBackdrop" onclick="toggleSidebarPeserta()"></div>
 
     <!-- Sidebar Dashboard Peserta -->
     <aside class="sidebar" id="sidebarNav">
-        <div class="sidebar-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 1.125rem 1.25rem 0.875rem 1.25rem;">
-            <a href="{{ route('peserta.dashboard') }}" class="brand-box" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
-                <div class="brand-icon" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
-                    @include('partials.logo-sleman', ['width' => '28', 'height' => '28'])
+        <div class="sidebar-header">
+            <a href="{{ route('peserta.dashboard') }}" class="brand-box" title="Portal Magang Diskominfo Sleman">
+                <div class="brand-icon">
+                    @include('partials.logo-sleman', ['width' => '32', 'height' => '32'])
                 </div>
-                <div style="display: flex; flex-direction: column;">
-                    <span style="color: #FFFFFF; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;">MagKom</span>
+                <div class="brand-text">
+                    <h2>DISKOMINFO</h2>
+                    <span>Portal Magang &bull; MAGKOM</span>
                 </div>
                 <!-- Preserved test assertions -->
                 <span class="sr-only">
@@ -1465,25 +1646,25 @@
         <nav class="sidebar-nav">
             <div class="nav-label">{{ __('Menu Utama') }}</div>
 
-            <a href="{{ route('peserta.dashboard') }}" class="nav-item {{ request()->routeIs('peserta.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('peserta.dashboard') }}" class="nav-item {{ request()->routeIs('peserta.dashboard') ? 'active' : '' }}" title="{{ __('Dashboard') }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
-                {{ __('Dashboard') }}
+                <span>{{ __('Dashboard') }}</span>
             </a>
 
-            <a href="{{ route('peserta.profil.show') }}" class="nav-item {{ request()->routeIs('peserta.profil.*') ? 'active' : '' }}">
+            <a href="{{ route('peserta.profil.show') }}" class="nav-item {{ request()->routeIs('peserta.profil.*') ? 'active' : '' }}" title="{{ __('Profil & Biodata') }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
-                {{ __('Profil & Biodata') }}
+                <span>{{ __('Profil & Biodata') }}</span>
             </a>
 
-            <a href="{{ route('peserta.pendaftaran.index') }}" class="nav-item {{ request()->routeIs('peserta.pendaftaran.*') ? 'active' : '' }}">
+            <a href="{{ route('peserta.pendaftaran.index') }}" class="nav-item {{ request()->routeIs('peserta.pendaftaran.*') ? 'active' : '' }}" title="{{ __('Pendaftaran Magang') }}">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
-                {{ __('Pendaftaran Magang') }}
+                <span>{{ __('Pendaftaran Magang') }}</span>
             </a>
 
             @php
@@ -1493,28 +1674,32 @@
             <div class="nav-label">{{ __('Pelaksanaan Magang') }}</div>
 
             @if($isDiterima)
-                <a href="{{ route('peserta.logbook.index') }}" class="nav-item {{ request()->routeIs('peserta.logbook.*') ? 'active' : '' }}">
+                <a href="{{ route('peserta.logbook.index') }}" class="nav-item {{ request()->routeIs('peserta.logbook.*') ? 'active' : '' }}" title="{{ __('Logbook Mingguan') }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
-                    {{ __('Logbook Mingguan') }}
+                    <span>{{ __('Logbook Mingguan') }}</span>
                 </a>
 
-                <a href="{{ route('peserta.tugas.index') }}" class="nav-item {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}">
+                <a href="{{ route('peserta.tugas.index') }}" class="nav-item {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}" title="{{ __('Tugas & Progres') }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                     </svg>
-                    {{ __('Tugas & Progres') }}
+                    <span>{{ __('Tugas & Progres') }}</span>
                 </a>
 
-                <a href="{{ route('peserta.nilai.show') }}" class="nav-item {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}">
+                <a href="{{ route('peserta.nilai.show') }}" class="nav-item {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}" title="{{ __('Lembar Nilai') }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
                     </svg>
-                    {{ __('Lembar Nilai') }}
+                    <span>{{ __('Lembar Nilai') }}</span>
                 </a>
             @else
-                <div class="nav-item locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
+                <div class="nav-item locked" 
+                     role="button" 
+                     tabindex="0" 
+                     onclick="notifyLockedFeature('{{ __('Logbook Mingguan') }}')" 
+                     title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
@@ -1524,7 +1709,11 @@
                     </span>
                 </div>
 
-                <div class="nav-item locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
+                <div class="nav-item locked" 
+                     role="button" 
+                     tabindex="0" 
+                     onclick="notifyLockedFeature('{{ __('Tugas & Progres') }}')" 
+                     title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                     </svg>
@@ -1534,7 +1723,11 @@
                     </span>
                 </div>
 
-                <div class="nav-item locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
+                <div class="nav-item locked" 
+                     role="button" 
+                     tabindex="0" 
+                     onclick="notifyLockedFeature('{{ __('Lembar Nilai') }}')" 
+                     title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
                     </svg>
@@ -1544,35 +1737,16 @@
                     </span>
                 </div>
             @endif
-
-            <div class="nav-label">{{ __('Tautan Luar') }}</div>
-
-            <a href="{{ route('landing') }}" class="nav-item" target="_blank">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                </svg>
-                {{ __('Lihat Kuota Landing ↗') }}
-            </a>
-
-            <div class="nav-label">{{ __('Pengaturan') }}</div>
-
-            <a href="{{ route('peserta.pengaturan.index') }}" class="nav-item {{ request()->routeIs('peserta.pengaturan.*') ? 'active' : '' }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-                {{ __('Pengaturan Akun') }}
-            </a>
         </nav>
 
         <div class="sidebar-footer">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="logout-btn">
+                <button type="submit" class="logout-btn" title="{{ __('Keluar Akun') }}">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                     </svg>
-                    {{ __('Keluar Akun') }}
+                    <span>{{ __('Keluar Akun') }}</span>
                 </button>
             </form>
         </div>
@@ -1582,8 +1756,13 @@
     <div class="main-wrapper">
         <header class="topbar">
             <div class="topbar-left">
-                <button type="button" class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="{{ __('Buka Menu') }}">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <button type="button" 
+                        class="sidebar-toggle-btn" 
+                        id="sidebarToggleBtn" 
+                        onclick="toggleSidebarPeserta()" 
+                        aria-label="{{ __('Buka / Tutup Sidebar') }}" 
+                        title="{{ __('Buka / Tutup Sidebar') }}">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
@@ -1591,6 +1770,21 @@
             </div>
 
             <div class="topbar-right">
+                {{-- Tombol Cepat Ganti Mode Gelap / Terang --}}
+                <button type="button" 
+                        class="topbar-theme-toggle-btn" 
+                        id="themeToggleBtn" 
+                        onclick="togglePortalThemeQuick()" 
+                        aria-label="{{ __('Ganti Mode Terang / Gelap') }}" 
+                        title="{{ __('Ganti Mode Terang / Gelap') }}">
+                    <svg class="sun-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <svg class="moon-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+
                 <div class="profile-dropdown-container">
                     <button type="button" 
                             class="user-chip-btn" 
@@ -1600,14 +1794,14 @@
                             aria-label="{{ __('Menu Profil Pengguna') }}"
                             onclick="toggleProfileMenu(event)">
                         <div class="user-avatar" style="overflow: hidden;">
-                            @if(auth()->user()->profil?->foto_url)
-                                <img src="{{ auth()->user()->profil->foto_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            @if(auth()->user()?->profil?->foto_url)
+                                <img src="{{ auth()->user()?->profil?->foto_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                             @else
-                                {{ strtoupper(substr(auth()->user()->nama ?? auth()->user()->name ?? 'P', 0, 1)) }}
+                                {{ strtoupper(substr(auth()->user()?->nama ?? auth()->user()?->name ?? 'P', 0, 1)) }}
                             @endif
                         </div>
                         <div class="user-info">
-                            <span class="user-name">{{ auth()->user()->nama ?? auth()->user()->name }}</span>
+                            <span class="user-name">{{ auth()->user()?->nama ?? auth()->user()?->name ?? 'Peserta' }}</span>
                             <span class="user-badge">{{ __('Peserta Magang') }}</span>
                         </div>
                         <svg class="dropdown-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -1618,15 +1812,15 @@
                     <div class="profile-dropdown-menu" id="userProfileMenu" role="menu" aria-labelledby="userProfileBtn">
                         <div class="dropdown-header">
                             <div class="dropdown-header-avatar" style="overflow: hidden;">
-                                @if(auth()->user()->profil?->foto_url)
-                                    <img src="{{ auth()->user()->profil->foto_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                @if(auth()->user()?->profil?->foto_url)
+                                    <img src="{{ auth()->user()?->profil?->foto_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                                 @else
-                                    {{ strtoupper(substr(auth()->user()->nama ?? auth()->user()->name ?? 'P', 0, 1)) }}
+                                    {{ strtoupper(substr(auth()->user()?->nama ?? auth()->user()?->name ?? 'P', 0, 1)) }}
                                 @endif
                             </div>
                             <div class="dropdown-header-meta">
-                                <span class="dropdown-header-name">{{ auth()->user()->nama ?? auth()->user()->name }}</span>
-                                <span class="dropdown-header-email">{{ auth()->user()->email }}</span>
+                                <span class="dropdown-header-name">{{ auth()->user()?->nama ?? auth()->user()?->name ?? 'Peserta' }}</span>
+                                <span class="dropdown-header-email">{{ auth()->user()?->email ?? '-' }}</span>
                                 <span class="dropdown-header-role">{{ __('Peserta Magang') }}</span>
                             </div>
                         </div>
@@ -1656,10 +1850,18 @@
 
                         <a href="{{ route('peserta.pengaturan.index') }}" class="dropdown-item" role="menuitem">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
-                            <span>{{ __('Ganti Kata Sandi') }}</span>
+                            <span>{{ __('Pengaturan Akun') }} <span style="font-size: 0.75rem; opacity: 0.7; font-weight: 400;">({{ __('Ganti Kata Sandi') }})</span></span>
                         </a>
+
+                        <button type="button" class="dropdown-item" onclick="togglePortalThemeQuick()" style="width: 100%; text-align: left; background: none; border: none; font-family: inherit; cursor: pointer;" role="menuitem">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                            </svg>
+                            <span>{{ __('Mode Tampilan (Terang / Gelap)') }}</span>
+                        </button>
 
                         <div class="dropdown-divider"></div>
 
@@ -1775,11 +1977,38 @@
                 });
             });
         });
-        function toggleSidebar() {
+        function toggleSidebarPeserta() {
+            const isMobile = window.innerWidth <= 1024;
             const sidebar = document.getElementById('sidebarNav');
             const backdrop = document.getElementById('drawerBackdrop');
-            sidebar.classList.toggle('open');
-            backdrop.classList.toggle('open');
+
+            if (isMobile) {
+                if (sidebar) sidebar.classList.toggle('open');
+                if (backdrop) backdrop.classList.toggle('open');
+            } else {
+                const html = document.documentElement;
+                const isCollapsed = html.classList.toggle('sidebar-collapsed');
+                try {
+                    localStorage.setItem('magkom_peserta_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+                } catch (e) {}
+            }
+        }
+
+        function toggleSidebar() {
+            toggleSidebarPeserta();
+        }
+
+        function notifyLockedFeature(featureName) {
+            if (window.MagKomToast) {
+                window.MagKomToast.show({
+                    type: 'warning',
+                    title: featureName + ' Masih Terkunci',
+                    message: 'Fitur ' + featureName + ' akan aktif secara otomatis setelah permohonan magang Anda disetujui & penempatan telah dimulai.',
+                    duration: 5000
+                });
+            } else {
+                alert(featureName + ' masih terkunci. Fitur akan terbuka setelah permohonan magang Anda disetujui.');
+            }
         }
 
         function toggleProfileMenu(e) {
@@ -1838,6 +2067,22 @@
             } catch (e) {}
         };
 
+        // Toggle Cepat Terang / Gelap Instan
+        window.togglePortalThemeQuick = function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const nextTheme = currentTheme === 'dark' ? 'terang' : 'gelap';
+            window.applyPortalTheme(nextTheme);
+            fetch("{{ route('peserta.pengaturan.preferensi.update') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify({ tema: nextTheme })
+            }).catch(() => {});
+        };
+
         // Listener jika OS tema berubah dan user memilih 'sistem'
         if (window.matchMedia) {
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
@@ -1850,6 +2095,7 @@
     </script>
     <script src="{{ asset('js/gentelella-theme.js') }}"></script>
     <script src="{{ asset('js/dashboard-cockpit-unified.js') }}"></script>
+    @stack('scripts')
     {{-- Mobile Floating Action Button (FAB) --}}
     <button type="button" class="cv-mobile-fab" data-action="toggle-mobile-aside" aria-label="Buka Menu Tindakan">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>

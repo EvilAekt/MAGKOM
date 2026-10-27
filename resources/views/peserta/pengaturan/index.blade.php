@@ -43,7 +43,7 @@
         height: 54px;
         border-radius: 50%;
         background: #EFF6FF;
-        color: #0751FF;
+        color: #2563eb;
         font-size: 1.125rem;
         font-weight: 700;
         display: flex;
@@ -95,7 +95,7 @@
     }
 
     .callout-note a {
-        color: #0751FF;
+        color: #2563eb;
         font-weight: 600;
         text-decoration: none;
     }
@@ -151,11 +151,11 @@
     }
 
     .theme-card-option:hover {
-        border-color: #0751FF;
+        border-color: #2563eb;
     }
 
     .theme-card-option.selected {
-        border-color: #0641CC !important;
+        border-color: #1b3860 !important;
         box-shadow: 0 0 0 2px rgba(7, 81, 255, 0.2);
     }
 
