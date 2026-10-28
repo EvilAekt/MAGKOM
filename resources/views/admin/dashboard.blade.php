@@ -5,7 +5,6 @@
 @section('breadcrumbs')
     <span class="breadcrumb-current">Dashboard</span>
 @endsection
-
 @push('styles')
     <style>
         .adm-table-spacious {

@@ -5,28 +5,28 @@
    ========================================================================== */
 
 :root {
-  /* Sleman Official Deep Navy Palette (Harmonisasi Landing Page) */
-  --cv-blue-950: #0f172a;
-  --cv-blue-900: #122846;
-  --cv-blue-800: #162e4f;
-  --cv-blue-700: #1b3860;
-  --cv-blue-600: #2563eb;
-  --cv-blue-tint: #f8fafc;
-  --cv-blue-tint-line: #e2e8f0;
+  /* Sleman Official Rebranded Palette (PRD-TASK-2026-10-28-UI-02) */
+  --cv-blue-950: #02275D;
+  --cv-blue-900: #01347C;
+  --cv-blue-800: #003566;
+  --cv-blue-700: #01347C;
+  --cv-blue-600: #3F51B5;
+  --cv-blue-tint: rgba(1, 52, 124, 0.08);
+  --cv-blue-tint-line: #3F51B5;
 
   /* Surfaces & Paper Grid */
   --cv-paper: #f8fafc;
   --cv-surface: #ffffff;
-  --cv-line: #e2e8f0;
-  --cv-line-strong: #cbd5e1;
-  --cv-ink: #0f172a;
+  --cv-line: #BBBBBB;
+  --cv-line-strong: #3F51B5;
+  --cv-ink: #212529;
   --cv-ink-2: #334155;
-  --cv-ink-3: #64748b;
+  --cv-ink-3: #AAAAAA;
 
   /* Status Colors */
   --cv-ok: #16a34a;
   --cv-ok-tint: #f0fdf4;
-  --cv-warn: #f59e0b;
+  --cv-warn: #FFCB05;
   --cv-warn-tint: #fffbeb;
   --cv-bad: #ef4444;
   --cv-bad-tint: #fef2f2;
@@ -371,9 +371,9 @@
   overflow: hidden;
   border-radius: 16px;
   color: #ffffff;
-  background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
-  box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, #01347C 0%, #003566 100%);
+  box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   padding: 1.75rem 2rem 1.75rem 2rem;
   margin-bottom: 1rem;
 }
@@ -619,12 +619,12 @@
 
 .cv-seg i.f,
 .cv-seg i.filled {
-  background: linear-gradient(180deg, var(--cv-blue-600), var(--cv-blue-700));
+  background: linear-gradient(180deg, #FBBF24, #F59E0B) !important;
 }
 
 .cv-seg.full i.f,
 .cv-seg.full i.filled {
-  background: linear-gradient(180deg, #F59E0B, #D97706);
+  background: linear-gradient(180deg, #F59E0B, #D97706) !important;
 }
 
 /* ==========================================================================
@@ -721,26 +721,41 @@
 }
 
 .cv-table-modern th {
-  background: #F8FAFC;
-  color: #475569;
+  background: var(--table-header-bg, #F1F5F9);
+  color: var(--table-header-color, #1E293B);
   font-weight: 700;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--cv-line);
+  border-bottom: 2px solid var(--table-header-border, var(--cv-line));
   text-align: left;
 }
 
 .cv-table-modern td {
   padding: 0.85rem 1rem;
-  border-bottom: 1px solid var(--cv-line);
+  border-bottom: 1px solid var(--table-row-border, var(--cv-line));
   vertical-align: middle;
-  color: var(--cv-ink);
+  color: var(--table-text-primary, var(--cv-ink));
 }
 
 .cv-table-modern tr:hover td {
-  background-color: #F8FAFC;
+  background-color: var(--table-row-hover, rgba(1, 52, 124, 0.04));
+}
+
+[data-theme="dark"] .cv-table-modern th {
+  background: var(--table-header-bg, #012758);
+  color: var(--table-header-color, #FFFFFF);
+  border-bottom-color: var(--table-header-border, #3F51B5);
+}
+
+[data-theme="dark"] .cv-table-modern td {
+  border-bottom-color: var(--table-row-border, rgba(63, 81, 181, 0.28));
+  color: var(--table-text-primary, #FFFFFF);
+}
+
+[data-theme="dark"] .cv-table-modern tr:hover td {
+  background-color: var(--table-row-hover, rgba(63, 81, 181, 0.18));
 }
 
 /* Vibrant Avatar Palettes (Image 1 Parity: JD, AS, RJ, EW, MK) */
@@ -982,4 +997,52 @@
   display: inline-block;
 }
 
+/* ==========================================================================
+   PRD-TASK-2026-10-28-UI-02: Card Styling Rebranding (Dual-Theme Standard)
+   ========================================================================== */
+.cv-stat-card, .metric-card-highlight {
+    background-color: var(--card-highlight-bg, #01347C) !important;
+    border: 1px solid var(--card-highlight-border, #3F51B5) !important;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 10px 20px -3px rgba(1, 52, 124, 0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cv-stat-card:hover, .metric-card-highlight:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 24px -2px rgba(1, 52, 124, 0.32);
+}
+
+.cv-stat-card .cv-stat-label, .metric-card-highlight .cv-stat-label {
+    color: var(--magkom-gray-light, #BBBBBB) !important;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cv-stat-card .cv-stat-value, .metric-card-highlight .cv-stat-value {
+    color: var(--magkom-pure-white, #FFFFFF) !important;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.cv-stat-card .cv-stat-badge, .metric-card-highlight .cv-stat-badge {
+    background-color: var(--magkom-sun-yellow, #FFCB05) !important;
+    color: var(--magkom-abyssal-navy, #02275D) !important;
+    font-weight: 700;
+    border-radius: 9999px;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+}
+
+/* Standard Content Cards (Tabel & Form) */
+.cv-card {
+    background-color: var(--card-surface, #FFFFFF) !important;
+    border: 1px solid var(--card-border, #BBBBBB) !important;
+    border-top: 3px solid var(--magkom-primary-blue, #01347C) !important;
+    border-radius: 12px;
+}
 

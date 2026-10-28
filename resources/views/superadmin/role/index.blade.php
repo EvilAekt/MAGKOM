@@ -12,38 +12,20 @@
 
 @push('styles')
 <style>
-    /* Dark Mode Overrides for SuperAdmin Roles & Permissions */
+    /* Dark Mode Overrides for SuperAdmin Roles & Permissions (DS-MagKom Industrial Standard) */
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
     }
 
     [data-theme="dark"] div[style*="background: var(--blue-tint)"] {
-        background-color: rgba(37, 99, 235, 0.15) !important;
-        border-color: rgba(59, 130, 246, 0.3) !important;
+        background-color: rgba(59, 130, 246, 0.18) !important;
+        border-color: rgba(147, 197, 253, 0.35) !important;
     }
 
     [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"] {
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table thead tr {
-        background-color: #141E30 !important;
-        border-bottom-color: #26354D !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table th {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table tbody tr {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table tbody tr:hover {
-        background-color: #162238 !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] span[style*="color: var(--neutral-900)"],
@@ -61,7 +43,7 @@
 @endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- 1. ALERT INFORMASI PRINSIP HAK AKSES FIGMA (SA-02) -->
     <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem;">
@@ -124,7 +106,7 @@
     </div>
 
     <!-- 3. TABEL MATRIKS HAK AKSES MENYELURUH (PRD Bab 3.1 & 3.3) -->
-    <x-gentelella.x-panel title="Matriks Wewenang & Hak Akses Modul" subtitle="Standar pembagian otorisasi RBAC (Role-Based Access Control) MagKom.">
+    <x-gentelella.x-panel class="has-table" title="Matriks Wewenang & Hak Akses Modul" subtitle="Standar pembagian otorisasi RBAC (Role-Based Access Control) MagKom.">
         <x-slot:toolbox>
             <a href="{{ route('superadmin.staf.index') }}" style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-600); text-decoration: none;">
                 Kelola Akun Staf &rarr;
@@ -134,17 +116,17 @@
         <div class="table-responsive-gentelella" style="overflow-x: auto;">
             <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.8125rem; text-align: left;">
                 <thead>
-                    <tr class="headings" style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        <th style="padding: 0.875rem 1.25rem; font-weight: 700;">Modul & Cakupan Fitur</th>
-                        <th style="padding: 0.875rem 1rem; font-weight: 700; text-align: center; width: 130px;">SuperAdmin</th>
-                        <th style="padding: 0.875rem 1rem; font-weight: 700; text-align: center; width: 130px;">Administrasi</th>
-                        <th style="padding: 0.875rem 1rem; font-weight: 700; text-align: center; width: 130px;">Pembimbing</th>
-                        <th style="padding: 0.875rem 1rem; font-weight: 700; text-align: center; width: 130px;">Peserta</th>
+                    <tr class="headings">
+                        <th>Modul & Cakupan Fitur</th>
+                        <th style="text-align: center; width: 130px;">SuperAdmin</th>
+                        <th style="text-align: center; width: 130px;">Administrasi</th>
+                        <th style="text-align: center; width: 130px;">Pembimbing</th>
+                        <th style="text-align: center; width: 130px;">Peserta</th>
                     </tr>
                 </thead>
                 <tbody style="divide-y: 1px solid var(--neutral-300);">
                     @foreach($matriksAkses as $akses)
-                        <tr style="border-bottom: 1px solid var(--neutral-300); transition: background 0.15s;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
+                        <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-300);">
                             <td style="padding: 0.875rem 1.25rem;">
                                 <div style="font-weight: 700; color: var(--neutral-900); font-size: 0.875rem;">{{ $akses['modul'] }}</div>
                                 <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.125rem;">{{ $akses['deskripsi'] }}</div>
@@ -153,7 +135,7 @@
                             <!-- SuperAdmin -->
                             <td style="padding: 0.875rem 1rem; text-align: center;">
                                 @if($akses['superadmin'])
-                                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: #F3E8FF; color: #7E22CE; font-weight: 800;">✓</span>
+                                    <span class="sa-check-icon" style="background: rgba(168, 85, 247, 0.18); color: #A855F7;">✓</span>
                                 @else
                                     <span style="color: var(--neutral-400); font-weight: 700;">—</span>
                                 @endif
@@ -162,7 +144,7 @@
                             <!-- Admin -->
                             <td style="padding: 0.875rem 1rem; text-align: center;">
                                 @if($akses['admin'])
-                                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--blue-tint); color: var(--blue-700); font-weight: 800;">✓</span>
+                                    <span class="sa-check-icon sa-check-blue">✓</span>
                                 @else
                                     <span style="color: var(--neutral-400); font-weight: 700;">—</span>
                                 @endif
@@ -171,7 +153,7 @@
                             <!-- Pembimbing -->
                             <td style="padding: 0.875rem 1rem; text-align: center;">
                                 @if($akses['pembimbing'])
-                                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--amber-100); color: var(--amber-700); font-weight: 800;">✓</span>
+                                    <span class="sa-check-icon" style="background: rgba(245, 158, 11, 0.18); color: #EAB308;">✓</span>
                                 @else
                                     <span style="color: var(--neutral-400); font-weight: 700;">—</span>
                                 @endif
@@ -180,7 +162,7 @@
                             <!-- Peserta -->
                             <td style="padding: 0.875rem 1rem; text-align: center;">
                                 @if($akses['peserta'])
-                                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--green-100); color: var(--green-700); font-weight: 800;">✓</span>
+                                    <span class="sa-check-icon" style="background: rgba(34, 197, 94, 0.18); color: #22C55E;">✓</span>
                                 @else
                                     <span style="color: var(--neutral-400); font-weight: 700;">—</span>
                                 @endif

@@ -3,6 +3,14 @@
    Standar Visual Gentelella Theme (Zero-Regression & Adaptive Callout)
    ========================================================================== --}}
 @php
+    /** @var int $anomaliKuotaCount */
+    /** @var int $totalTugasTerlambat */
+    /** @var int $totalAntreanDiajukan */
+    /** @var int $totalWaitingList */
+    /** @var int $antreanMelebihiSla */
+    /** @var int $stafPendingGantiPassword */
+    /** @var int $totalLogbookPending */
+
     $hasAttention = ($anomaliKuotaCount > 0)
         || ($totalTugasTerlambat > 0)
         || ($totalAntreanDiajukan > 0 || $totalWaitingList > 0)
@@ -52,7 +60,7 @@
         </div>
 
         <div>
-            <a href="{{ route('admin.pendaftaran.index') }}" class="btn-primary" style="padding: 0.5rem 1rem; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+            <a href="{{ route('admin.pendaftaran.index') }}" class="btn btn-primary" style="padding: 0.5rem 1rem; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
                 <span>Buka antrean</span> &rarr;
             </a>
         </div>

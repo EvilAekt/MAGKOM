@@ -22,20 +22,20 @@
 
 @push('styles')
 <style>
-    /* Dark Mode Overrides for SuperAdmin Staf Management */
+    /* Dark Mode Overrides for SuperAdmin Staf Management (DS-MagKom Industrial Standard) */
     [data-theme="dark"] .staf-filter-card,
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
     }
 
     [data-theme="dark"] input[type="text"],
     [data-theme="dark"] input[type="email"],
     [data-theme="dark"] input[type="password"],
     [data-theme="dark"] select {
-        background-color: #0F172A !important;
+        background-color: #011C44 !important;
         color: #F8FAFC !important;
-        border-color: #26354D !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] button[style*="background: var(--neutral-900)"] {
@@ -43,33 +43,18 @@
         color: #FFFFFF !important;
     }
 
-    [data-theme="dark"] table th {
-        background-color: #141E30 !important;
-        color: #94A3B8 !important;
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table td {
-        border-bottom-color: #26354D !important;
-        color: #CBD5E1 !important;
-    }
-
-    [data-theme="dark"] table tbody tr:hover td {
-        background-color: #162238 !important;
-    }
-
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
-        border-color: #26354D !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     /* Modal Dark Mode */
     [data-theme="dark"] #modalTambahStaf > div,
     [data-theme="dark"] #modalEditStaf > div,
     [data-theme="dark"] #modalResetSandi > div {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
         color: #F8FAFC !important;
     }
 
@@ -80,25 +65,25 @@
     }
 
     [data-theme="dark"] div[style*="background: var(--neutral-100)"] {
-        background-color: #111C2E !important;
-        border-color: #26354D !important;
+        background-color: #011C44 !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] button[style*="background: var(--neutral-100)"] {
-        background-color: #111C2E !important;
-        border-color: #26354D !important;
+        background-color: rgba(255, 255, 255, 0.06) !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
         color: #94A3B8 !important;
     }
 
     [data-theme="dark"] button[style*="background: var(--neutral-100)"]:hover {
-        background-color: #162238 !important;
+        background-color: rgba(63, 81, 181, 0.2) !important;
         color: #F8FAFC !important;
     }
 </style>
 @endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- 1. FILTER & TOOLBAR CARD -->
     <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow-subtle);">
@@ -142,7 +127,7 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel title="Daftar Akun Pengguna Internal" subtitle="Pengguna dinas yang bertugas pada portal seleksi dan pembimbingan.">
+    <x-gentelella.x-panel class="has-table" title="Daftar Akun Pengguna Internal" subtitle="Pengguna dinas yang bertugas pada portal seleksi dan pembimbingan.">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total: <strong>{{ method_exists($stafList, 'total') ? $stafList->total() : $stafList->count() }} Pengguna</strong>
@@ -161,25 +146,27 @@
             <div class="table-responsive-gentelella" style="overflow-x: auto;">
                 <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
-                        <tr class="headings" style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                            <th style="padding: 1rem 1.25rem; font-weight: 700;">Nama & Email</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; width: 220px;">Peran Akses</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Unit Kerja / Bidang</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; width: 130px; text-align: center;">Status Akun</th>
-                            <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right; width: 240px;">Aksi</th>
+                        <tr class="headings">
+                            <th>Nama & Email</th>
+                            <th style="width: 220px;">Peran Akses</th>
+                            <th>Unit Kerja / Bidang</th>
+                            <th style="width: 130px; text-align: center;">Status Akun</th>
+                            <th style="text-align: right; width: 240px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($stafList as $staf)
                             @php
-                                $roleBadgeBg = $staf->role->value === 'admin' ? '#F3E8FF' : 'var(--blue-tint)';
-                                $roleBadgeText = $staf->role->value === 'admin' ? '#6B21A8' : 'var(--blue-700)';
-                                $roleBorder = $staf->role->value === 'admin' ? 'rgba(107, 33, 168, 0.2)' : 'var(--blue-tint-line)';
+                                $badgeClass = match($staf->role->value) {
+                                    'admin' => 'sa-badge-purple',
+                                    'pembimbing' => 'sa-badge-blue',
+                                    default => 'sa-badge-neutral',
+                                };
                             @endphp
-                            <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
+                            <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
                                 <td style="padding: 1rem 1.25rem;">
                                     <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                        <div style="width: 36px; height: 36px; border-radius: 50%; background: {{ $roleBadgeBg }}; color: {{ $roleBadgeText }}; font-weight: 800; font-size: 0.875rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid {{ $roleBorder }};">
+                                        <div class="{{ $badgeClass }}" style="width: 36px; height: 36px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.875rem; flex-shrink: 0;">
                                             {{ strtoupper(substr($staf->nama, 0, 1)) }}
                                         </div>
                                         <div>
@@ -193,7 +180,7 @@
                                     </div>
                                 </td>
                                 <td style="padding: 1rem 1rem; white-space: nowrap;">
-                                    <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: {{ $roleBadgeBg }}; color: {{ $roleBadgeText }}; border: 1px solid {{ $roleBorder }};">
+                                    <span class="{{ $badgeClass }}">
                                         {{ $staf->role->label() }}
                                     </span>
                                     @if($staf->role->value === 'pembimbing')
@@ -243,7 +230,7 @@
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
                                     <div style="display: inline-flex; gap: 0.375rem; align-items: center; justify-content: flex-end;">
                                         <!-- Edit Profil Staf (AC-11-1) -->
-                                        <button type="button" onclick="openModalEdit('{{ $staf->id }}', '{{ addslashes($staf->nama) }}', '{{ addslashes($staf->email) }}', '{{ $staf->role->value }}', '{{ $staf->bidang_id ?? '' }}')" style="padding: 0.45rem 0.75rem; background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--neutral-800); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.25rem;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='var(--neutral-0)'">
+                                        <button type="button" onclick="openModalEdit('{{ $staf->id }}', '{{ addslashes($staf->nama) }}', '{{ addslashes($staf->email) }}', '{{ $staf->role->value }}', '{{ $staf->bidang_id ?? '' }}')" class="sa-btn-action-outline">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                             Edit
                                         </button>
@@ -251,14 +238,14 @@
                                         <!-- Regenerate Temporary Password Button (BR-15) -->
                                         <form action="{{ route('superadmin.staf.regenerate-password', $staf) }}" method="POST" style="display: inline-block; margin: 0;" onsubmit="return confirm('Buat kata sandi sementara baru untuk {{ addslashes($staf->nama) }}? Sesi aktif staf akan ditutup dan staf wajib mengganti kata sandi saat login.');">
                                             @csrf
-                                            <button type="submit" style="padding: 0.45rem 0.75rem; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: #0641CC; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.25rem;" title="Buat kata sandi sementara baru secara instan">
+                                            <button type="submit" class="sa-btn-action-ghost" title="Buat kata sandi sementara baru secara instan">
                                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                                                 Sandi Baru
                                             </button>
                                         </form>
 
                                         <!-- Reset Password Manual Form Button -->
-                                        <button type="button" onclick="openModalReset('{{ $staf->id }}', '{{ addslashes($staf->nama) }}')" style="padding: 0.45rem 0.75rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--neutral-800); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.25rem;" onmouseover="this.style.background='var(--neutral-200)'" onmouseout="this.style.background='var(--neutral-100)'">
+                                        <button type="button" onclick="openModalReset('{{ $staf->id }}', '{{ addslashes($staf->nama) }}')" class="sa-btn-action-outline">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                                             Reset
                                         </button>
@@ -267,7 +254,7 @@
                                         <form action="{{ route('superadmin.staf.toggle', $staf) }}" method="POST" style="display: inline-block; margin: 0;">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" onclick="return confirm('{{ $staf->status_aktif ? 'Nonaktifkan akun staf ini?' : 'Aktifkan kembali akun staf ini?' }}')" style="padding: 0.45rem 0.75rem; background: {{ $staf->status_aktif ? 'var(--red-100)' : 'var(--green-100)' }}; border: 1px solid {{ $staf->status_aktif ? 'var(--red-300)' : 'rgba(22, 163, 74, 0.25)' }}; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: {{ $staf->status_aktif ? 'var(--red-700)' : 'var(--green-700)' }}; cursor: pointer; transition: all 0.15s;">
+                                            <button type="submit" onclick="return confirm('{{ $staf->status_aktif ? 'Nonaktifkan akun staf ini?' : 'Aktifkan kembali akun staf ini?' }}')" class="{{ $staf->status_aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" style="{{ $staf->status_aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}">
                                                 {{ $staf->status_aktif ? 'Nonaktifkan' : 'Aktifkan' }}
                                             </button>
                                         </form>

@@ -2,25 +2,31 @@
 
 @section('title', 'Dashboard SuperAdmin - MagKom')
 @section('page_title', 'Dashboard SuperAdmin')
-@section('page_description', 'Akses penuh: kelola pengguna, role, rubrik, audit log, konfigurasi, dan seluruh modul Administrasi, Pembimbing, serta Peserta.')
+@section('page_description')
+@endsection
 
 @section('breadcrumbs')
     <span class="breadcrumb-current">Dashboard</span>
 @endsection
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/superadmin-dashboard.css') }}?v={{ file_exists(public_path('css/superadmin-dashboard.css')) ? filemtime(public_path('css/superadmin-dashboard.css')) : time() }}">
+    <link rel="stylesheet" href="{{ asset('css/superadmin-dashboard.css') }}?v={{ file_exists(public_path('css/superadmin-dashboard.css')) ? (string) filemtime(public_path('css/superadmin-dashboard.css')) : (string) time() }}">
 @endpush
 
 @section('content_area_class', 'gentelella-fluid-canvas')
 
 @section('content')
+@php
+    /** @var mixed $statusPublik */
+    /** @var int $totalWaitingList */
+    /** @var int $loginGagal24Jam */
+    /** @var \App\Models\BulanMagang|null $bulanAktif */
+    /** @var iterable<\App\Models\BulanMagang> $daftarBulan */
+    /** @var int $antreanMelebihiSla */
+    /** @var int $stafPendingGantiPassword */
+    /** @var bool|null $isOverrideStatus */
+@endphp
 <div class="sa-page">
-    {{-- Sapaan Contextual Eyebrow --}}
-    <p class="sa-greet">
-        Selamat pagi, <strong>SuperAdmin</strong> — ada <strong>{{ $antreanMelebihiSla ?: 4 }} berkas lewat SLA</strong> dan <strong>{{ $stafPendingGantiPassword ?: 2 }} staf belum ganti sandi</strong>.
-    </p>
-
     {{-- BARIS 1: Atmospheric Hero Studio Banner Full-Width --}}
     <section class="sa-hero sa-hero--fullwidth">
         @include('superadmin.dashboard.partials._header')
@@ -69,8 +75,9 @@
             <div>
                 <dt>Periode</dt>
                 <form method="GET" action="{{ route('superadmin.dashboard') }}" class="sa-period-form" style="margin: 0;">
-                    <label for="select-bulan" class="sa-sr-only">Pilih Bulan Magang:</label>
-                    <select id="select-bulan" name="bulan_id" data-auto-submit class="sa-select" style="border: 0; background: transparent; font-weight: 700; color: var(--cv-blue-700); cursor: pointer;">
+                    <label for="select-bulan" class="sa-sr-only">Bulan: {{ $bulanAktif ? $bulanAktif->nama_bulan : '-' }}</label>
+                    <a href="{{ route('superadmin.bulan.index') }}" class="sa-sr-only">+ Bulan Magang</a>
+                    <select id="select-bulan" name="bulan_id" data-auto-submit class="sa-select sa-select--period">
                         @foreach($daftarBulan as $b)
                             <option value="{{ $b->id }}" {{ $bulanAktif && $bulanAktif->id === $b->id ? 'selected' : '' }}>
                                 {{ $b->nama_bulan }} {{ $b->override_status ? '[' . strtoupper($b->override_status->value) . ']' : '' }}
@@ -185,5 +192,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/superadmin-dashboard.js') }}?v={{ file_exists(public_path('js/superadmin-dashboard.js')) ? filemtime(public_path('js/superadmin-dashboard.js')) : time() }}" defer></script>
+    <script src="{{ asset('js/superadmin-dashboard.js') }}?v={{ file_exists(public_path('js/superadmin-dashboard.js')) ? (string) filemtime(public_path('js/superadmin-dashboard.js')) : (string) time() }}" defer></script>
 @endpush

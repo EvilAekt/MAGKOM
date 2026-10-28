@@ -2,22 +2,32 @@
    Tab 4: Tata Kelola Sistem & Laporan - SuperAdmin Master Cockpit
    Standar Visual Gentelella Theme (MagKom Sleman)
    ========================================================================== --}}
+@php
+    /** @var int|null $loginGagal24Jam */
+    /** @var int|null $stafPendingGantiPassword */
+    /** @var int|null $berkasMaksMb */
+    /** @var array<string, mixed>|null $securityPosture */
+    /** @var \Illuminate\Support\Collection<int, \App\Models\AuditLog> $insidenKeamananTerbaru */
+    /** @var array<string, int>|null $auditTipeDistribution */
+    /** @var int $logbookMaksMundurHari */
+    /** @var int $masaTenggangBulan */
+    /** @var int $slotKhususDefault */
+    /** @var array<string, mixed> $systemHealth */
+    /** @var array<string, mixed> $systemSummary */
+@endphp
 <div class="gentelella-tab-pane gentelella-tab-sistem">
 {{-- BAGIAN 1: HUB EKSPOR 4 LAPORAN RESMI DINAS 1-KLIK --}}
-<x-sa.panel title="Hub Ekspor Instan Laporan Resmi Dinas (AC-17-1)" subtitle="Unduh data rekapitulasi CSV/Excel untuk kebutuhan arsip dan pelaporan pimpinan Diskominfo Sleman" :href="route('admin.laporan.index')" linkText="Buka Filter Laporan Lanjutan &rarr;">
+<x-sa.panel title="Hub Ekspor Instan Laporan Resmi Dinas" :href="route('admin.laporan.index')" linkText="Buka Filter Laporan Lanjutan &rarr;">
     <div class="sa-grid sa-grid--4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem;">
         {{-- Ekspor 1: Pendaftaran --}}
         <div class="sa-panel sa-panel--sub sa-export-card" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
             <div>
                 <div class="sa-export-card__header" style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
-                    <span class="sa-export-card__num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; background: var(--cv-blue-tint); color: var(--cv-blue-800); font-weight: 800; font-family: monospace; font-size: 0.8125rem;">01</span>
+                    <span class="sa-export-card__num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.8125rem;">01</span>
                     <h4 class="sa-panel__title" style="font-size: 0.9375rem; font-weight: 700; color: var(--cv-ink); margin: 0;">Laporan Pendaftaran</h4>
                 </div>
-                <p class="sa-panel__sub" style="font-size: 0.775rem; line-height: 1.5; color: var(--cv-ink-2); margin: 0;">
-                    Data registrasi peserta, asal institusi, jurusan, dan status keputusan seleksi.
-                </p>
             </div>
-            <a href="{{ route('admin.laporan.pendaftaran') }}" class="btn-primary sa-btn-sm sa-btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 6px; font-weight: 600; padding: 0.5rem 0.85rem; text-decoration: none;">
+            <a href="{{ route('admin.laporan.pendaftaran') }}" class="btn btn-primary sa-btn-sm sa-btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 6px; font-weight: 600; padding: 0.5rem 0.85rem; text-decoration: none;">
                 <x-sa.icon name="download" :size="14" />
                 <span>Unduh CSV Pendaftaran</span>
             </a>
@@ -27,14 +37,11 @@
         <div class="sa-panel sa-panel--sub sa-export-card" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
             <div>
                 <div class="sa-export-card__header" style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
-                    <span class="sa-export-card__num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; background: var(--cv-blue-tint); color: var(--cv-blue-800); font-weight: 800; font-family: monospace; font-size: 0.8125rem;">02</span>
+                    <span class="sa-export-card__num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.8125rem;">02</span>
                     <h4 class="sa-panel__title" style="font-size: 0.9375rem; font-weight: 700; color: var(--cv-ink); margin: 0;">Laporan Penempatan</h4>
                 </div>
-                <p class="sa-panel__sub" style="font-size: 0.775rem; line-height: 1.5; color: var(--cv-ink-2); margin: 0;">
-                    Alokasi bidang kerja, pembimbing lapangan yang ditunjuk, dan status masa dinas peserta.
-                </p>
             </div>
-            <a href="{{ route('admin.laporan.penempatan') }}" class="btn-primary sa-btn-sm sa-btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 6px; font-weight: 600; padding: 0.5rem 0.85rem; text-decoration: none;">
+            <a href="{{ route('admin.laporan.penempatan') }}" class="btn btn-primary sa-btn-sm sa-btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 6px; font-weight: 600; padding: 0.5rem 0.85rem; text-decoration: none;">
                 <x-sa.icon name="download" :size="14" />
                 <span>Unduh CSV Penempatan</span>
             </a>
@@ -44,14 +51,11 @@
         <div class="sa-panel sa-panel--sub sa-export-card" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
             <div>
                 <div class="sa-export-card__header" style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
-                    <span class="sa-export-card__num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; background: var(--cv-blue-tint); color: var(--cv-blue-800); font-weight: 800; font-family: monospace; font-size: 0.8125rem;">03</span>
+                    <span class="sa-export-card__num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.8125rem;">03</span>
                     <h4 class="sa-panel__title" style="font-size: 0.9375rem; font-weight: 700; color: var(--cv-ink); margin: 0;">Realisasi Kuota</h4>
                 </div>
-                <p class="sa-panel__sub" style="font-size: 0.775rem; line-height: 1.5; color: var(--cv-ink-2); margin: 0;">
-                    Perbandingan alokasi kuota umum vs slot khusus kemitraan beserta rasio keterisian per jurusan.
-                </p>
             </div>
-            <a href="{{ route('admin.laporan.kuota') }}" class="btn-primary sa-btn-sm sa-btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 6px; font-weight: 600; padding: 0.5rem 0.85rem; text-decoration: none;">
+            <a href="{{ route('admin.laporan.kuota') }}" class="btn btn-primary sa-btn-sm sa-btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 6px; font-weight: 600; padding: 0.5rem 0.85rem; text-decoration: none;">
                 <x-sa.icon name="download" :size="14" />
                 <span>Unduh CSV Kuota</span>
             </a>
@@ -61,14 +65,11 @@
         <div class="sa-panel sa-panel--sub sa-export-card" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
             <div>
                 <div class="sa-export-card__header" style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
-                    <span class="sa-export-card__num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; background: var(--cv-blue-tint); color: var(--cv-blue-800); font-weight: 800; font-family: monospace; font-size: 0.8125rem;">04</span>
+                    <span class="sa-export-card__num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.8125rem;">04</span>
                     <h4 class="sa-panel__title" style="font-size: 0.9375rem; font-weight: 700; color: var(--cv-ink); margin: 0;">Rekapitulasi Nilai</h4>
                 </div>
-                <p class="sa-panel__sub" style="font-size: 0.775rem; line-height: 1.5; color: var(--cv-ink-2); margin: 0;">
-                    Nilai akhir, predikat kelulusan (A/B/C/D/E), dan rekam hasil evaluasi peserta alumni (Akses Khusus).
-                </p>
             </div>
-            <a href="{{ route('admin.laporan.nilai') }}" class="btn-primary sa-btn-sm sa-btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 6px; font-weight: 600; padding: 0.5rem 0.85rem; text-decoration: none;">
+            <a href="{{ route('admin.laporan.nilai') }}" class="btn btn-primary sa-btn-sm sa-btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 6px; font-weight: 600; padding: 0.5rem 0.85rem; text-decoration: none;">
                 <x-sa.icon name="download" :size="14" />
                 <span>Unduh CSV Nilai</span>
             </a>
@@ -77,7 +78,7 @@
 </x-sa.panel>
 
 {{-- BAGIAN 2: PUSAT MONITORING KEAMANAN SISTEM & THREAT RADAR --}}
-<x-sa.panel title="Pusat Monitoring Keamanan Sistem & Threat Radar (PRD Bab 10)" subtitle="Pemantauan ancaman siber real-time, deteksi anomali autentikasi 24 jam, higienitas kredensial staf, dan imutabilitas jejak audit" :href="route('superadmin.audit-log.index')" linkText="Audit Lengkap &rarr;">
+<x-sa.panel title="Pusat Monitoring Keamanan Sistem & Threat Radar (PRD Bab 10)" :href="route('superadmin.audit-log.index')" linkText="Audit Lengkap &rarr;">
     <div class="sa-grid sa-grid--metrics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
         {{-- Kartu 1: Radar Anomali Login (24 Jam) --}}
         <div class="sa-panel sa-metric {{ ($loginGagal24Jam ?? 0) > 0 ? 'sa-metric--danger' : 'sa-metric--success' }}" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-left: 4px solid {{ ($loginGagal24Jam ?? 0) > 0 ? '#EF4444' : '#10B981' }}; border-radius: 12px; padding: 1.25rem;">
@@ -113,7 +114,7 @@
                 <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Vault Dokumen Privat (NFR-S2)</span>
                 <span class="sa-metric__icon" style="color: var(--cv-blue-600);"><x-sa.icon name="lock" :size="18" /></span>
             </div>
-            <div class="sa-metric__value" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; color: var(--cv-blue-800); line-height: 1.1;">
+            <div class="sa-metric__value sa-stat-val-primary" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">
                 Maks. {{ $berkasMaksMb ?? 2 }} <span class="sa-table-sub" style="font-size: 0.8125rem;">MB</span>
             </div>
             <div class="sa-metric__hint" style="font-size: 0.725rem; color: var(--cv-ink-2); margin-top: 0.35rem;">
@@ -261,7 +262,7 @@
                     <x-sa.icon name="shield" :size="16" />
                     <span class="sa-table-strong" style="font-size: 0.8125rem;">Matriks Peran & Hak Akses (Figma SA-02)</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; color: var(--cv-blue-700); font-size: 0.8125rem;">Lihat &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Lihat &rarr;</span>
             </a>
 
             <a href="{{ route('superadmin.jurusan.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
@@ -269,7 +270,7 @@
                     <x-sa.icon name="book-open" :size="16" />
                     <span class="sa-table-strong" style="font-size: 0.8125rem;">Master Jurusan & Program Studi</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; color: var(--cv-blue-700); font-size: 0.8125rem;">Kelola &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Kelola &rarr;</span>
             </a>
 
             <a href="{{ route('superadmin.bidang.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
@@ -277,7 +278,7 @@
                     <x-sa.icon name="layers" :size="16" />
                     <span class="sa-table-strong" style="font-size: 0.8125rem;">Master Bidang Kerja Diskominfo</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; color: var(--cv-blue-700); font-size: 0.8125rem;">Kelola &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Kelola &rarr;</span>
             </a>
 
             <a href="{{ route('superadmin.rubrik.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
@@ -285,7 +286,7 @@
                     <x-sa.icon name="award" :size="16" />
                     <span class="sa-table-strong" style="font-size: 0.8125rem;">Bobot Rubrik Penilaian Akhir</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; color: var(--cv-blue-700); font-size: 0.8125rem;">Atur &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Atur &rarr;</span>
             </a>
         </div>
     </x-sa.panel>
@@ -298,7 +299,7 @@
                     <x-sa.icon name="settings" :size="16" />
                     <span class="sa-table-strong" style="font-size: 0.8125rem;">Parameter Konfigurasi Global</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; color: var(--cv-blue-700); font-size: 0.8125rem;">Ubah &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Ubah &rarr;</span>
             </a>
 
             <a href="{{ route('superadmin.arsip.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
@@ -306,7 +307,7 @@
                     <x-sa.icon name="archive" :size="16" />
                     <span class="sa-table-strong" style="font-size: 0.8125rem;">Gudang Arsip Peserta Magang (F-12)</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; color: var(--cv-blue-700); font-size: 0.8125rem;">Buka &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Buka &rarr;</span>
             </a>
 
             <a href="{{ route('superadmin.audit-log.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
@@ -314,7 +315,7 @@
                     <x-sa.icon name="file-text" :size="16" />
                     <span class="sa-table-strong" style="font-size: 0.8125rem;">Jejak Audit Trail & Log Keamanan</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; color: var(--cv-blue-700); font-size: 0.8125rem;">Buka &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Buka &rarr;</span>
             </a>
 
             <a href="{{ route('superadmin.audit-log.export') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
@@ -330,7 +331,7 @@
                     <x-sa.icon name="activity" :size="16" />
                     <span class="sa-table-strong" style="font-size: 0.8125rem;">Telemetri Kesehatan & Storage Infrastruktur</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; color: var(--cv-blue-700); font-size: 0.8125rem;">Buka &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Buka &rarr;</span>
             </a>
 
             <a href="{{ route('superadmin.backup.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
@@ -338,18 +339,18 @@
                     <x-sa.icon name="database" :size="16" />
                     <span class="sa-table-strong" style="font-size: 0.8125rem;">Pusat Cadangan & Pemulihan Basis Data (Backup Hub)</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; color: var(--cv-blue-700); font-size: 0.8125rem;">Buka &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Buka &rarr;</span>
             </a>
         </div>
 
         <div class="sa-grid sa-grid--2 sa-param-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
             <div class="sa-panel sa-panel--sub" style="background: var(--cv-paper); border: 1px solid var(--cv-line); border-radius: 6px; padding: 0.5rem 0.75rem;">
                 <span class="sa-table-sub" style="font-family: monospace; font-size: 0.6875rem; display: block;">logbook_maks_mundur</span>
-                <strong style="font-size: 0.8125rem;">Maks. {{ $logbookMaksMundurHari }} Hari (BR-09)</strong>
+                <strong style="font-size: 0.8125rem;">Maks. {{ $logbookMaksMundurHari }} Hari</strong>
             </div>
             <div class="sa-panel sa-panel--sub" style="background: var(--cv-paper); border: 1px solid var(--cv-line); border-radius: 6px; padding: 0.5rem 0.75rem;">
                 <span class="sa-table-sub" style="font-family: monospace; font-size: 0.6875rem; display: block;">masa_tenggang_bulan</span>
-                <strong style="font-size: 0.8125rem;">{{ $masaTenggangBulan }} Bulan (BR-12)</strong>
+                <strong style="font-size: 0.8125rem;">{{ $masaTenggangBulan }} Bulan</strong>
             </div>
             <div class="sa-panel sa-panel--sub" style="background: var(--cv-paper); border: 1px solid var(--cv-line); border-radius: 6px; padding: 0.5rem 0.75rem;">
                 <span class="sa-table-sub" style="font-family: monospace; font-size: 0.6875rem; display: block;">berkas_maks_mb</span>
@@ -364,10 +365,11 @@
 </div>
 
 {{-- BAGIAN 4: STATUS KESEHATAN SISTEM & INFRASTRUKTUR (TDD Bab 10, NFR-O1) --}}
-<x-sa.panel title="Integritas Infrastruktur & Status Layanan (TDD Bab 10)" subtitle="Telemetri Infrastruktur &amp; Sistem &bull; Pemantauan integritas database MySQL/InnoDB, storage berkas privat terenkripsi, dan scheduler cron job" :href="route('health')" linkText="Buka Healthcheck API (/health) &rarr;">
+<x-sa.panel title="Integritas Infrastruktur & Status Layanan (TDD Bab 10)" :href="route('health')" linkText="Buka Healthcheck API (/health) &rarr;">
+    <span class="sa-sr-only">Telemetri Infrastruktur &amp; Sistem &bull; Pemantauan integritas database MySQL/InnoDB, storage berkas privat terenkripsi, dan scheduler cron job</span>
     <div class="sa-grid sa-grid--4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
         <div class="sa-panel sa-panel--sub sa-infra-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 1rem;">
-            <div style="color: var(--cv-blue-600); background: var(--cv-blue-tint); padding: 8px; border-radius: 8px;"><x-sa.icon name="database" :size="18" /></div>
+            <div class="sa-infra-icon sa-infra-icon--primary" style="padding: 8px; border-radius: 8px;"><x-sa.icon name="database" :size="18" /></div>
             <div>
                 <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">Koneksi Basis Data</span>
                 <span class="sa-table-sub" style="font-size: 0.75rem;">MySQL InnoDB / Normal</span>
@@ -375,7 +377,7 @@
         </div>
 
         <div class="sa-panel sa-panel--sub sa-infra-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 1rem;">
-            <div style="color: #10B981; background: #ECFDF5; padding: 8px; border-radius: 8px;"><x-sa.icon name="hard-drive" :size="18" /></div>
+            <div class="sa-infra-icon sa-infra-icon--success" style="padding: 8px; border-radius: 8px;"><x-sa.icon name="hard-drive" :size="18" /></div>
             <div>
                 <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">Private Disk Storage</span>
                 <span class="sa-table-sub" style="font-size: 0.75rem;">Disk Privat Terisolasi</span>
@@ -383,7 +385,7 @@
         </div>
 
         <div class="sa-panel sa-panel--sub sa-infra-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 1rem;">
-            <div style="color: var(--cv-blue-600); background: var(--cv-blue-tint); padding: 8px; border-radius: 8px;"><x-sa.icon name="clipboard-check" :size="18" /></div>
+            <div class="sa-infra-icon sa-infra-icon--primary" style="padding: 8px; border-radius: 8px;"><x-sa.icon name="clipboard-check" :size="18" /></div>
             <div>
                 <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">Audit Trail Append-Only</span>
                 <span class="sa-table-sub" style="font-size: 0.75rem;">{{ number_format($systemHealth['audit_count'] ?? 0) }} Rekaman Terarsip</span>
@@ -391,7 +393,7 @@
         </div>
 
         <div class="sa-panel sa-panel--sub sa-infra-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 1rem;">
-            <div style="color: #F59E0B; background: #FFFBEB; padding: 8px; border-radius: 8px;"><x-sa.icon name="clock" :size="18" /></div>
+            <div class="sa-infra-icon sa-infra-icon--warning" style="padding: 8px; border-radius: 8px;"><x-sa.icon name="clock" :size="18" /></div>
             <div>
                 <span class="sa-table-strong" style="display: block; font-size: 0.8125rem;">Scheduler Nonaktif Harian</span>
                 <span class="sa-table-sub" style="font-size: 0.75rem;">Terkonfigurasi di Kernel</span>

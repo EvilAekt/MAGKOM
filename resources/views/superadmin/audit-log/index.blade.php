@@ -15,7 +15,7 @@
 @endsection
 
 @section('page_actions')
-    <a href="{{ route('superadmin.audit-log.export', array_merge(request()->query(), ['channel' => $activeChannel])) }}" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 42px; padding: 0 1.25rem; background: var(--green-700); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border-radius: 8px; text-decoration: none; box-shadow: var(--shadow-subtle); transition: all 0.15s ease;">
+    <a href="{{ route('superadmin.audit-log.export', array_merge(request()->query(), ['channel' => $activeChannel])) }}" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 42px; padding: 0 1.25rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border-radius: 8px; text-decoration: none; box-shadow: var(--shadow-subtle); transition: all 0.15s ease;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
@@ -33,6 +33,8 @@
         grid-template-columns: 310px 1fr;
         gap: 1.5rem;
         align-items: start;
+        width: 100%;
+        max-width: 100%;
     }
 
     @media (max-width: 1024px) {
@@ -73,13 +75,14 @@
     }
 
     [data-theme="dark"] .discord-channel-link:hover {
-        background: #1E293B;
+        background: rgba(59, 130, 246, 0.15);
         color: #F8FAFC;
     }
 
     [data-theme="dark"] .discord-channel-link.active {
-        background: rgba(37, 99, 235, 0.2);
+        background: rgba(59, 130, 246, 0.25);
         color: #93C5FD;
+        border-left: 3px solid #3B82F6;
         border-color: rgba(59, 130, 246, 0.4);
     }
 
@@ -144,39 +147,29 @@
         border-color: rgba(239, 68, 68, 0.4);
     }
 
-    /* Dark Mode Overrides */
+    /* Dark Mode Overrides (DS-MagKom Industrial Standard) */
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
     }
 
     [data-theme="dark"] input[type="text"],
     [data-theme="dark"] input[type="date"],
     [data-theme="dark"] select {
-        background-color: #0F172A !important;
+        background-color: #011C44 !important;
         color: #F8FAFC !important;
-        border-color: #26354D !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
         color-scheme: dark;
     }
 
     [data-theme="dark"] div[style*="background: var(--neutral-100)"] {
-        background-color: #111C2E !important;
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table thead tr {
-        background-color: #141E30 !important;
-        border-bottom-color: #26354D !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table tbody tr:hover {
-        background-color: #162238 !important;
+        background-color: #011C44 !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] #modalLogDetail > div {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
         color: #F8FAFC !important;
     }
 </style>
@@ -361,16 +354,16 @@
                     <p style="font-size: 0.8125rem; color: var(--neutral-600); max-width: 440px; margin: 0 auto;">Belum ada aktivitas yang tercatat pada kanal ini dengan kriteria filter yang Anda tentukan.</p>
                 </div>
             @else
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.8125rem;">
+                <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                    <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.8125rem;">
                         <thead>
-                            <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-600); font-weight: 700; text-transform: uppercase; font-size: 0.6875rem; letter-spacing: 0.05em;">
-                                <th style="padding: 0.875rem 1rem;">Waktu (WIB)</th>
-                                <th style="padding: 0.875rem 1rem;">Kanal / Severity</th>
-                                <th style="padding: 0.875rem 1rem;">Aktor / Pelaku</th>
-                                <th style="padding: 0.875rem 1rem;">Aksi & Entitas</th>
-                                <th style="padding: 0.875rem 1rem;">Konteks HTTP</th>
-                                <th style="padding: 0.875rem 1rem; text-align: right;">Inspeksi</th>
+                            <tr class="headings">
+                                <th>Waktu (WIB)</th>
+                                <th>Kanal / Severity</th>
+                                <th>Aktor / Pelaku</th>
+                                <th>Aksi & Entitas</th>
+                                <th>Konteks HTTP</th>
+                                <th style="text-align: right;">Inspeksi</th>
                             </tr>
                         </thead>
                         <tbody style="divide-y: divide-gray-200;">
@@ -387,7 +380,7 @@
                                         default   => 'badge-severity-info',
                                     };
                                 @endphp
-                                <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;">
+                                <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
                                     <!-- Waktu -->
                                     <td style="padding: 0.875rem 1rem; vertical-align: top; white-space: nowrap;">
                                         <div style="font-weight: 700; color: var(--neutral-900);">{{ $log->waktu?->format('H:i:s') ?? '-' }}</div>
@@ -459,7 +452,7 @@
 
                                     <!-- Tombol Inspeksi Diff -->
                                     <td style="padding: 0.875rem 1rem; vertical-align: top; text-align: right; white-space: nowrap;">
-                                        <button type="button" onclick="openModalLogDetail({{ json_encode([
+                                        <button type="button" onclick="openModalLogDetail({{ (string) json_encode([
                                             'id' => $log->id,
                                             'waktu' => $log->waktu?->format('d M Y H:i:s') . ' WIB',
                                             'channel' => $channelMeta['label'],
@@ -478,7 +471,7 @@
                                             'detail' => $log->detail,
                                             'nilai_lama' => $log->nilai_lama,
                                             'nilai_baru' => $log->nilai_baru,
-                                        ]) }})" style="padding: 0.45rem 0.875rem; background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--neutral-800); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.35rem;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='var(--neutral-0)'">
+                                        ]) }})" class="sa-btn-action-outline">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                                             Diff &amp; Detail
                                         </button>

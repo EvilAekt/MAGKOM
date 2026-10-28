@@ -2,68 +2,82 @@
    Tab 3: Pelaksanaan & Bimbingan - SuperAdmin Master Cockpit
    Standar Visual Gentelella Theme (MagKom Sleman)
    ========================================================================== --}}
+@php
+    /** @var int $totalTugasAktif */
+    /** @var int $totalLogbookPending */
+    /** @var int $totalPenilaianSelesai */
+    /** @var int $totalPembimbing */
+    /** @var int $totalTugasTerlambat */
+    /** @var int $totalTugasMendekatiDeadline */
+    /** @var \Illuminate\Support\Collection<int, \App\Models\User> $pembimbingList */
+    /** @var int|null $maksBeban */
+    /** @var \Illuminate\Support\Collection<int, \App\Models\Penempatan> $pesertaMendekatiSelesai */
+    /** @var int $batasHariLogbookMundur */
+    /** @var int $masaTenggangUnduhNilaiHari */
+    /** @var int $passingGradeNilai */
+@endphp
 <div class="gentelella-tab-pane gentelella-tab-bimbingan">
 {{-- 4 KARTU METRIK BIMBINGAN --}}
-<div class="sa-grid sa-grid--metrics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+<div class="sa-grid sa-grid--metrics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
     {{-- Metric 1: Total Tugas Aktif --}}
     <div class="sa-panel sa-metric sa-metric--primary" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
         <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Total Tugas Aktif</div>
-        <div class="sa-metric__value" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; color: var(--cv-blue-800); line-height: 1.1;">{{ number_format($totalTugasAktif) }}</div>
+        <div class="sa-metric__value sa-stat-val-primary" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">{{ number_format($totalTugasAktif) }}</div>
         <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Sedang & belum dikerjakan</div>
     </div>
 
     {{-- Metric 2: Logbook Pending Reviu --}}
     <div class="sa-panel sa-metric sa-metric--warning" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-left: 4px solid #F59E0B; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
         <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Logbook Pending Reviu</div>
-        <div class="sa-metric__value" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; color: #D97706; line-height: 1.1;">{{ number_format($totalLogbookPending) }}</div>
+        <div class="sa-metric__value sa-stat-val-warning" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">{{ number_format($totalLogbookPending) }}</div>
         <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Menunggu catatan pembimbing</div>
     </div>
 
     {{-- Metric 3: Penilaian Final Selesai --}}
     <div class="sa-panel sa-metric sa-metric--success" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-left: 4px solid #10B981; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
         <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Penilaian Final Selesai</div>
-        <div class="sa-metric__value" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; color: #059669; line-height: 1.1;">{{ number_format($totalPenilaianSelesai) }}</div>
+        <div class="sa-metric__value sa-stat-val-success" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">{{ number_format($totalPenilaianSelesai) }}</div>
         <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Lembar nilai siap diunduh</div>
     </div>
 
     {{-- Metric 4: Staf Pembimbing Aktif --}}
     <div class="sa-panel sa-metric sa-metric--neutral" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
         <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Staf Pembimbing Aktif</div>
-        <div class="sa-metric__value" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; color: var(--cv-ink); line-height: 1.1;">{{ number_format($totalPembimbing) }}</div>
+        <div class="sa-metric__value sa-stat-val-neutral" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">{{ number_format($totalPembimbing) }}</div>
         <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Tersedia di Diskominfo</div>
     </div>
 </div>
 
 {{-- BARIS KARTU PENGAWASAN KEDISIPLINAN TUGAS (PRD F-08 & BR-16) --}}
-<div class="sa-grid sa-grid--2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+<div class="sa-grid sa-grid--2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
     {{-- Tugas Terlambat (Overdue) --}}
-    <div class="sa-panel sa-metric sa-metric--danger" style="background: var(--cv-surface); border: 1px solid {{ $totalTugasTerlambat > 0 ? '#FECACA' : 'var(--cv-line)' }}; border-left: 4px solid {{ $totalTugasTerlambat > 0 ? '#EF4444' : '#10B981' }}; border-radius: 12px; padding: 1.25rem;">
+    <div class="sa-panel sa-metric sa-metric--danger sa-task-overdue-card" style="border: 1px solid {{ $totalTugasTerlambat > 0 ? '#FECACA' : 'var(--cv-line)' }}; border-left: 4px solid {{ $totalTugasTerlambat > 0 ? '#EF4444' : '#10B981' }}; border-radius: 12px; padding: 1.25rem;">
         <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
             <div>
                 <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Tugas Terlambat (Overdue)</span>
-                <div class="sa-metric__value {{ $totalTugasTerlambat > 0 ? 'sa-color-danger' : '' }}" style="font-size: 1.85rem; font-weight: 800; font-family: monospace; color: {{ $totalTugasTerlambat > 0 ? '#DC2626' : 'var(--cv-ink)' }}; line-height: 1.2; margin-top: 2px;">
+                <div class="sa-metric__value sa-task-overdue-val {{ $totalTugasTerlambat > 0 ? 'sa-color-danger' : '' }}" style="font-size: 1.85rem; font-weight: 800; font-family: monospace; line-height: 1.2; margin-top: 2px;">
                     {{ $totalTugasTerlambat }} Tugas
                 </div>
             </div>
-            <div class="sa-metric__icon" style="color: {{ $totalTugasTerlambat > 0 ? '#EF4444' : '#10B981' }}; background: {{ $totalTugasTerlambat > 0 ? '#FEF2F2' : '#ECFDF5' }}; padding: 8px; border-radius: 8px;">
+            <div class="sa-metric__icon sa-task-overdue-icon {{ $totalTugasTerlambat > 0 ? 'is-danger' : 'is-success' }}" style="padding: 8px; border-radius: 8px;">
                 <x-sa.icon name="alert-circle" :size="20" />
             </div>
         </div>
-        <div class="sa-metric__hint {{ $totalTugasTerlambat > 0 ? 'sa-color-danger' : 'sa-color-success' }}" style="font-size: 0.8125rem; font-weight: 600; color: {{ $totalTugasTerlambat > 0 ? '#DC2626' : '#059669' }};">
+        <div class="sa-metric__hint sa-task-overdue-hint {{ $totalTugasTerlambat > 0 ? 'sa-color-danger' : 'sa-color-success' }}" style="font-size: 0.8125rem; font-weight: 600;">
             {{ $totalTugasTerlambat > 0 ? 'Melewati deadline tanpa status selesai' : 'Semua tugas berjalan tepat waktu' }}
         </div>
     </div>
 
     {{-- Mendekati Deadline (≤ 3 Hari) --}}
-    <div class="sa-panel sa-metric sa-metric--warning" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-left: 4px solid #F59E0B; border-radius: 12px; padding: 1.25rem;">
+    <div class="sa-panel sa-metric sa-metric--warning sa-task-deadline-card" style="border: 1px solid var(--cv-line); border-left: 4px solid #F59E0B; border-radius: 12px; padding: 1.25rem;">
         <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
             <div>
                 <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Mendekati Deadline (≤ 3 Hari)</span>
-                <div class="sa-metric__value" style="font-size: 1.85rem; font-weight: 800; font-family: monospace; color: #D97706; line-height: 1.2; margin-top: 2px;">
+                <div class="sa-metric__value sa-task-deadline-val" style="font-size: 1.85rem; font-weight: 800; font-family: monospace; line-height: 1.2; margin-top: 2px;">
                     {{ $totalTugasMendekatiDeadline }} Tugas
                 </div>
             </div>
-            <div class="sa-metric__icon" style="color: #F59E0B; background: #FFFBEB; padding: 8px; border-radius: 8px;">
+            <div class="sa-metric__icon sa-task-deadline-icon" style="padding: 8px; border-radius: 8px;">
                 <x-sa.icon name="clock" :size="20" />
             </div>
         </div>
@@ -74,11 +88,11 @@
 </div>
 
 {{-- MATRIKS BEBAN PEMBIMBING LAPANGAN (BR-13) --}}
-<x-sa.panel title="Matriks Utilisasi Beban Pembimbing Lapangan (BR-13)" subtitle="Batas maksimal beban mentee per pembimbing lapangan: {{ $maksBeban ? $maksBeban . ' Orang' : 'Tanpa Batas' }}">
+<x-sa.panel title="Matriks Utilisasi Beban Pembimbing Lapangan">
     <div class="sa-panel__extra-links" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
-        <a href="{{ route('admin.penempatan.index') }}" class="sa-link" style="font-weight: 600; color: var(--cv-blue-700); font-size: 0.8125rem;">Kelola Penempatan Peserta &rarr;</a>
+        <a href="{{ route('admin.penempatan.index') }}" class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Kelola Penempatan Peserta &rarr;</a>
         <span class="sa-link-separator" style="color: var(--cv-line-strong);">&bull;</span>
-        <a href="{{ route('superadmin.monitoring.index') }}" class="sa-link" style="font-weight: 600; color: var(--cv-blue-700); font-size: 0.8125rem;">Monitoring Peserta &rarr;</a>
+        <a href="{{ route('superadmin.monitoring.index') }}" class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Monitoring Peserta &rarr;</a>
     </div>
 
     @if($pembimbingList->isEmpty())
@@ -102,7 +116,7 @@
                                 <span class="sa-table-sub" style="font-size: 0.725rem;">{{ $p->email }}</span>
                             </div>
                         </div>
-                        <span class="sa-badge {{ $isOverload ? 'sa-badge--danger' : 'sa-badge--info' }}" style="font-weight: 700; border-radius: 999px; padding: 2px 8px; font-size: 0.75rem;">
+                        <span class="sa-badge sa-badge-mentee {{ $isOverload ? 'sa-badge--danger' : 'sa-badge--info' }}" style="font-weight: 700; border-radius: 999px; padding: 2px 8px; font-size: 0.75rem;">
                             {{ $menteeCount }} Mentee
                         </span>
                     </div>
@@ -126,7 +140,7 @@
 </x-sa.panel>
 
 {{-- PELACAK PESERTA MENDEKATI BATAS SELESAI (OFF-BOARDING TRACKER <= 14 HARI) --}}
-<x-sa.panel title="Pelacak Penyelesaian Magang Terdekat (Off-boarding Tracker)" subtitle="Peserta yang akan menyelesaikan masa dinas dalam 2 pekan ke depan untuk persiapan penilaian akhir dan Lembar Nilai" :href="route('superadmin.monitoring.index')" linkText="Lihat Semua Peserta Aktif &rarr;">
+<x-sa.panel title="Pelacak Penyelesaian Magang Terdekat (Off-boarding Tracker)" :href="route('superadmin.monitoring.index')" linkText="Lihat Semua Peserta Aktif &rarr;">
     @if($pesertaMendekatiSelesai->isEmpty())
         <x-sa.empty text="Tidak ada peserta yang mendekati akhir masa magang dalam 14 hari ke depan." icon="calendar" />
     @else
@@ -156,7 +170,7 @@
                                     <strong class="sa-table-strong">{{ $pName }}</strong>
                                 </div>
                             </td>
-                            <td><span class="sa-badge sa-badge--info" style="font-size: 0.75rem; border-radius: 4px;">{{ $pen->bidang?->nama_bidang ?? 'Diskominfo' }}</span></td>
+                            <td><span class="sa-badge sa-badge--info sa-badge-bidang" style="font-size: 0.75rem; border-radius: 4px;">{{ $pen->bidang?->nama_bidang ?? 'Diskominfo' }}</span></td>
                             <td style="color: var(--cv-ink-2);">{{ $pen->pembimbing?->nama ?? '-' }}</td>
                             <td style="font-family: monospace; font-size: 0.8125rem;">{{ \Carbon\Carbon::parse($pen->tgl_selesai)->format('d M Y') }}</td>
                             <td class="sa-text-right">
@@ -177,18 +191,18 @@
     <div class="sa-policy-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: center;">
         <div class="sa-policy-item" style="padding: 0.5rem 0;">
             <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">Toleransi Logbook Mundur</span>
-            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">Maks. {{ $batasHariLogbookMundur }} Hari (BR-09)</strong>
+            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">Maks. {{ $batasHariLogbookMundur }} Hari</strong>
         </div>
         <div class="sa-policy-item" style="padding: 0.5rem 0;">
             <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">Masa Tenggang Lembar Nilai</span>
-            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">{{ $masaTenggangUnduhNilaiHari }} Hari Pasca Nonaktif (BR-12)</strong>
+            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">{{ $masaTenggangUnduhNilaiHari }} Hari Pasca Nonaktif</strong>
         </div>
         <div class="sa-policy-item" style="padding: 0.5rem 0;">
             <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">Passing Grade Predikat</span>
-            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">Minimal Nilai {{ $passingGradeNilai }} (BR-11)</strong>
+            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">Minimal Nilai {{ $passingGradeNilai }}</strong>
         </div>
         <div class="sa-policy-item sa-policy-item--action" style="text-align: right;">
-            <a href="{{ route('superadmin.pengaturan.index') }}" class="sa-link" style="font-weight: 700; color: var(--cv-blue-700); font-size: 0.8125rem;">
+            <a href="{{ route('superadmin.pengaturan.index') }}" class="sa-link" style="font-weight: 700; font-size: 0.8125rem;">
                 Sesuaikan Parameter Sistem &rarr;
             </a>
         </div>

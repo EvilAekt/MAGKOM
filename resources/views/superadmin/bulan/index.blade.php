@@ -22,40 +22,22 @@
 
 @push('styles')
 <style>
-    /* Dark Mode Overrides for SuperAdmin Bulan */
+    /* Dark Mode Overrides for SuperAdmin Bulan (DS-MagKom Industrial Standard) */
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
     }
 
     [data-theme="dark"] div[style*="background: var(--blue-tint)"] {
-        background-color: rgba(37, 99, 235, 0.15) !important;
-        border-color: rgba(59, 130, 246, 0.3) !important;
+        background-color: rgba(59, 130, 246, 0.18) !important;
+        border-color: rgba(147, 197, 253, 0.35) !important;
     }
 
     [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table thead tr {
-        background-color: #141E30 !important;
-        border-bottom-color: #26354D !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table th {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table tbody tr {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table tbody tr:hover {
-        background-color: #162238 !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] span[style*="color: var(--neutral-900)"],
@@ -75,8 +57,8 @@
     /* Modals Dark Mode */
     [data-theme="dark"] #modal-tambah-bulan > div,
     [data-theme="dark"] #modal-edit-bulan > div {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
         color: #F8FAFC !important;
     }
 
@@ -88,27 +70,27 @@
     [data-theme="dark"] input[type="text"],
     [data-theme="dark"] input[type="date"],
     [data-theme="dark"] select {
-        background-color: #0F172A !important;
+        background-color: #011C44 !important;
         color: #F8FAFC !important;
-        border-color: #26354D !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
         color-scheme: dark;
     }
 
     [data-theme="dark"] button[style*="background: var(--neutral-100)"] {
-        background-color: #111C2E !important;
-        border-color: #26354D !important;
+        background-color: rgba(255, 255, 255, 0.06) !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
         color: #94A3B8 !important;
     }
 
     [data-theme="dark"] button[style*="background: var(--neutral-100)"]:hover {
-        background-color: #162238 !important;
+        background-color: rgba(63, 81, 181, 0.2) !important;
         color: #F8FAFC !important;
     }
 </style>
 @endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- 1. ALERT BANNER OPERASIONAL JADWAL -->
     <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; box-shadow: var(--shadow-subtle);">
@@ -131,24 +113,24 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel title="Daftar Bulan Magang" subtitle="Riwayat jadwal gelombang magang dan status penerimaan calon peserta.">
+    <x-gentelella.x-panel class="has-table" title="Daftar Bulan Magang" subtitle="Riwayat jadwal gelombang magang dan status penerimaan calon peserta.">
         <div class="table-responsive-gentelella" style="overflow-x: auto;">
             <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                 <thead>
-                    <tr class="headings" style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        <th style="padding: 1rem 1.25rem; font-weight: 700;">Bulan Magang</th>
-                        <th style="padding: 1rem 1rem; font-weight: 700;">Jadwal Buka Pendaftaran</th>
-                        <th style="padding: 1rem 1rem; font-weight: 700;">Override Status</th>
-                        <th style="padding: 1rem 1rem; font-weight: 700; width: 130px; text-align: center;">Status Aktif</th>
-                        <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right; width: 200px;">Aksi</th>
+                    <tr class="headings">
+                        <th>Bulan Magang</th>
+                        <th>Jadwal Buka Pendaftaran</th>
+                        <th>Override Status</th>
+                        <th style="width: 130px; text-align: center;">Status Aktif</th>
+                        <th style="text-align: right; width: 200px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($bulanList as $bulan)
-                        <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 1rem 1.25rem; font-weight: 700; color: var(--blue-700); font-size: 0.9375rem;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--blue-600);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+                        <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
+                            <td style="padding: 1rem 1.25rem; font-weight: 700; font-size: 0.9375rem;">
+                                <div class="sa-text-accent-blue" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
                                     {{ $bulan->bulan_mulai?->translatedFormat('F Y') }}
                                 </div>
                                 <div style="font-size: 0.75rem; color: var(--neutral-500); font-weight: 500; margin-top: 0.2rem;">
@@ -165,12 +147,12 @@
                             </td>
                             <td style="padding: 1rem 1rem; white-space: nowrap;">
                                 @if($bulan->override_status)
-                                    <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: 9999px; background: var(--blue-tint); color: var(--blue-700); font-weight: 700; font-size: 0.75rem; border: 1px solid var(--blue-tint-line);">
+                                    <span class="sa-badge-blue">
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"></circle></svg>
                                         Override: {{ strtoupper($bulan->override_status->value) }}
                                     </span>
                                 @else
-                                    <span style="display: inline-flex; align-items: center; gap: 0.375rem; color: var(--neutral-500); font-size: 0.8125rem; font-weight: 500;">
+                                    <span class="sa-badge-neutral">
                                         <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--neutral-400);"></span>
                                         Otomatis (Jadwal)
                                     </span>
@@ -191,7 +173,7 @@
                             </td>
                             <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
                                 <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
-                                    <button type="button" onclick="openEditBulanModal({{ $bulan->id }}, '{{ $bulan->bulan_mulai?->format('Y-m-d') }}', '{{ $bulan->tgl_buka?->format('Y-m-d') }}', '{{ $bulan->tgl_tutup?->format('Y-m-d') }}', '{{ $bulan->override_status?->value ?? '' }}')" style="padding: 0.45rem 0.875rem; background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--neutral-800); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.375rem;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='var(--neutral-0)'">
+                                    <button type="button" onclick="openEditBulanModal({{ $bulan->id }}, '{{ $bulan->bulan_mulai?->format('Y-m-d') }}', '{{ $bulan->tgl_buka?->format('Y-m-d') }}', '{{ $bulan->tgl_tutup?->format('Y-m-d') }}', '{{ $bulan->override_status?->value ?? '' }}')" class="sa-btn-action-outline">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                         Edit
                                     </button>
@@ -199,7 +181,7 @@
                                     <form method="POST" action="{{ route('superadmin.bulan.toggle', $bulan) }}" style="display: inline-block; margin: 0;" onsubmit="return confirm('Ubah status aktif bulan magang ini?');">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" style="padding: 0.45rem 0.875rem; background: {{ $bulan->aktif ? 'var(--red-100)' : 'var(--green-100)' }}; border: 1px solid {{ $bulan->aktif ? 'var(--red-300)' : 'rgba(22, 163, 74, 0.25)' }}; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: {{ $bulan->aktif ? 'var(--red-700)' : 'var(--green-700)' }}; cursor: pointer; transition: all 0.15s;">
+                                        <button type="submit" class="{{ $bulan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" style="{{ $bulan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}">
                                             {{ $bulan->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
                                         </button>
                                     </form>

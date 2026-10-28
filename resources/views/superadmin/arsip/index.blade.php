@@ -19,22 +19,22 @@
 
 @push('styles')
 <style>
-    /* Dark Mode Overrides for SuperAdmin Arsip */
+    /* Dark Mode Overrides for SuperAdmin Arsip (DS-MagKom Industrial Standard) */
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
     }
 
     [data-theme="dark"] div[style*="background: var(--blue-tint)"] {
-        background-color: rgba(37, 99, 235, 0.15) !important;
-        border-color: rgba(59, 130, 246, 0.3) !important;
+        background-color: rgba(59, 130, 246, 0.18) !important;
+        border-color: rgba(147, 197, 253, 0.35) !important;
     }
 
     [data-theme="dark"] input[type="text"],
     [data-theme="dark"] select {
-        background-color: #0F172A !important;
+        background-color: #011C44 !important;
         color: #F8FAFC !important;
-        border-color: #26354D !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] button[style*="background: var(--neutral-900)"] {
@@ -44,25 +44,7 @@
 
     [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"] {
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table thead tr {
-        background-color: #141E30 !important;
-        border-bottom-color: #26354D !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table th {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table tbody tr {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table tbody tr:hover {
-        background-color: #162238 !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] span[style*="color: var(--neutral-900)"],
@@ -86,7 +68,7 @@
    Indeks Bank Data Arsip & Rekam Jejak Alumni Magang - SuperAdmin
    Standar Visual Gentelella Theme (MagKom Sleman)
    ========================================================================== --}}
-<div class="gentelella-arsip-workspace" style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="gentelella-arsip-workspace sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- 1. TOOLBAR & FILTER CARD (Gentelella Standard) -->
     <div class="gentelella-filter-bar" style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow-subtle);">
@@ -143,22 +125,22 @@
                 <p style="font-size: 0.8125rem; margin: 0;">Belum ada peserta dengan status magang selesai, akun nonaktif, atau mengundurkan diri yang tersimpan.</p>
             </div>
         @else
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
+            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
-                        <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                            <th style="padding: 1rem 1.25rem; font-weight: 700;">Peserta & Institusi</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Jurusan / Bidang</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Jadwal Pelaksanaan</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Pembimbing Lapangan</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; text-align: center; width: 140px;">Nilai & Predikat</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; width: 150px; text-align: center;">Status Arsip</th>
-                            <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right; width: 140px;">Aksi</th>
+                        <tr class="headings">
+                            <th>Peserta & Institusi</th>
+                            <th>Jurusan / Bidang</th>
+                            <th>Jadwal Pelaksanaan</th>
+                            <th>Pembimbing Lapangan</th>
+                            <th style="text-align: center; width: 140px;">Nilai & Predikat</th>
+                            <th style="width: 150px; text-align: center;">Status Arsip</th>
+                            <th style="text-align: right; width: 140px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($arsipList as $item)
-                            <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
+                            <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
                                 <td style="padding: 1rem 1.25rem;">
                                     <div style="font-weight: 700; color: var(--neutral-900); font-size: 0.9375rem;">
                                         {{ $item->peserta?->nama }}

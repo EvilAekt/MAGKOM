@@ -30,23 +30,23 @@
             font-size: 0.875rem;
         }
         .backup-table th {
-            background: #F8FAFC;
+            background: var(--table-header-bg, #F1F5F9);
             padding: 0.85rem 1.25rem;
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--neutral-600, #475569);
-            border-bottom: 1px solid var(--neutral-200, #E2E8F0);
+            color: var(--table-header-color, #1E293B);
+            border-bottom: 2px solid var(--table-header-border, #CBD5E1);
         }
         .backup-table td {
             padding: 0.95rem 1.25rem;
-            border-bottom: 1px solid var(--neutral-200, #E2E8F0);
+            border-bottom: 1px solid var(--table-row-border, #EEF0F5);
             vertical-align: middle;
-            color: var(--neutral-800, #1E293B);
+            color: var(--table-text-primary, #05070B);
         }
         .backup-table tr:hover {
-            background: #F8FAFC;
+            background: var(--table-row-hover, rgba(1, 52, 124, 0.04));
         }
         [data-theme="dark"] .backup-stat-card {
             background: var(--neutral-0, #182234) !important;
@@ -62,16 +62,16 @@
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
         }
         [data-theme="dark"] .backup-table th {
-            background: var(--neutral-100, #0E1726) !important;
-            color: var(--neutral-400, #94A3B8) !important;
-            border-bottom-color: var(--neutral-200, #26354D) !important;
+            background: var(--table-header-bg, #012758) !important;
+            color: var(--table-header-color, #FFFFFF) !important;
+            border-bottom-color: var(--table-header-border, #3F51B5) !important;
         }
         [data-theme="dark"] .backup-table td {
-            color: var(--neutral-700, #E2E8F0) !important;
-            border-bottom-color: var(--neutral-200, #26354D) !important;
+            color: var(--table-text-primary, #FFFFFF) !important;
+            border-bottom-color: var(--table-row-border, rgba(63, 81, 181, 0.28)) !important;
         }
         [data-theme="dark"] .backup-table tr:hover {
-            background: var(--neutral-100, #141F30) !important;
+            background: var(--table-row-hover, rgba(63, 81, 181, 0.18)) !important;
         }
         [data-theme="dark"] .backup-checksum-badge {
             background: var(--neutral-100, #0F172A) !important;

@@ -12,17 +12,17 @@
 
 @push('styles')
 <style>
-    /* Dark Mode Overrides for SuperAdmin Monitoring Peserta */
+    /* Dark Mode Overrides for SuperAdmin Monitoring Peserta (DS-MagKom Industrial Standard) */
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
     }
 
     [data-theme="dark"] input[type="text"],
     [data-theme="dark"] select {
-        background-color: #0F172A !important;
+        background-color: #011C44 !important;
         color: #F8FAFC !important;
-        border-color: #26354D !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] button[style*="background: var(--neutral-900)"] {
@@ -32,25 +32,7 @@
 
     [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"] {
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table thead tr {
-        background-color: #141E30 !important;
-        border-bottom-color: #26354D !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table th {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table tbody tr {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table tbody tr:hover {
-        background-color: #162238 !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] span[style*="color: var(--neutral-900)"],
@@ -69,7 +51,7 @@
 @endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- 1. FILTER & SEARCH CARD -->
     <x-gentelella.card>
@@ -138,21 +120,21 @@
                 <p style="font-size: 0.8125rem; margin: 0;">Saat ini belum ada data penempatan aktif yang cocok dengan kriteria pencarian.</p>
             </div>
         @else
-            <div style="overflow-x: auto; margin: -10px -20px -20px -20px;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                     <thead>
-                        <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                            <th style="padding: 1rem 1.25rem; font-weight: 700;">Nama Peserta</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Institusi & Jurusan</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Pembimbing & Bidang</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Jadwal Bimbingan</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; text-align: center; width: 110px;">Jalur</th>
-                            <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right; width: 150px;">Aksi</th>
+                        <tr class="headings">
+                            <th>Nama Peserta</th>
+                            <th>Institusi & Jurusan</th>
+                            <th>Pembimbing & Bidang</th>
+                            <th>Jadwal Bimbingan</th>
+                            <th style="text-align: center; width: 110px;">Jalur</th>
+                            <th style="text-align: right; width: 150px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($penempatanList as $item)
-                            <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
+                            <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
                                 <td style="padding: 1rem 1.25rem;">
                                     <div style="font-weight: 700; color: var(--neutral-900); font-size: 0.9375rem;">
                                         {{ $item->peserta?->nama }}

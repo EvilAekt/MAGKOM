@@ -20,23 +20,23 @@
 }
 
 [data-theme="dark"] {
-    --studio-bg: #0F172A;
-    --studio-border: #26354D;
-    --studio-border-hover: #38BDF8;
-    --studio-card-bg: #182234;
-    --studio-row-bg: #111C2E;
-    --studio-row-border: #22324A;
-    --studio-primary: #38BDF8;
-    --studio-primary-glow: rgba(56, 189, 248, 0.16);
+    --studio-bg: #0B132B;
+    --studio-border: #3F51B5;
+    --studio-border-hover: #60A5FA;
+    --studio-card-bg: #003566;
+    --studio-row-bg: #002244;
+    --studio-row-border: rgba(63, 81, 181, 0.45);
+    --studio-primary: #3B82F6;
+    --studio-primary-glow: rgba(59, 130, 246, 0.18);
     --studio-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
     --studio-shadow-hover: 0 12px 30px -4px rgba(0, 0, 0, 0.6);
 }
 
 /* Base Container & Grid Layout */
 .studio-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
+    max-width: 100% !important;
+    margin: 0 !important;
+    width: 100% !important;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;

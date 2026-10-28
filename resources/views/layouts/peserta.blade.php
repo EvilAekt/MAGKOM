@@ -50,16 +50,16 @@
 
     <style>
         :root {
-            /* MagKom / Warna Tokens (Harmonisasi Landing Page DS-MagKom) */
-            --navy: #1b3860;
-            --navy-dark: #122846;
-            --blue-600: #1b3860; /* Sleman Navy Utama */
-            --blue-700: #122846; /* Sleman Navy Dark */
-            --blue-accent: #2563eb; /* Royal Blue Elegan */
-            --blue-tint: #f1f5f9;
-            --blue-tint-line: #e2e8f0;
-            --gold: #f59e0b;
-            --gold-bright: #fbbf24;
+            /* MagKom / Warna Tokens (PRD-TASK-2026-10-28-UI-02 Master Palette) */
+            --navy: #02275D;
+            --navy-dark: #003566;
+            --blue-600: #01347C; /* Sleman Navy Utama */
+            --blue-700: #003566; /* Sleman Navy Dark */
+            --blue-accent: #3F51B5; /* Royal Blue Elegan */
+            --blue-tint: rgba(1, 52, 124, 0.08);
+            --blue-tint-line: #3F51B5;
+            --gold: #FFC300;
+            --gold-bright: #FFCB05;
 
             --neutral-0: #FFFFFF;
             --neutral-100: #F8FAFC;
@@ -174,8 +174,9 @@
         }
 
         [data-theme="dark"] .topbar {
-            background-color: #111827;
-            border-bottom-color: #1F2937;
+            background: linear-gradient(135deg, #02275D 0%, #003566 100%) !important;
+            border-bottom: 1px solid rgba(63, 81, 181, 0.35) !important;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6) !important;
         }
 
         [data-theme="dark"] .topbar-title {
@@ -848,9 +849,9 @@
 
         .topbar {
             height: var(--topbar-height);
-            background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.15);
+            background: linear-gradient(135deg, #01347C 0%, #003566 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
             display: flex;
             align-items: center;
             justify-content: space-between;

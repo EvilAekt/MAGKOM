@@ -3,6 +3,9 @@
    Standar Visual Gentelella Theme (MagKom Sleman Navy #0641CC)
    ========================================================================== --}}
 @php
+    /** @var \App\Models\BulanMagang|null $bulanAktif */
+    /** @var mixed $statusPublik */
+
     $tglBukaFormatted = $bulanAktif && $bulanAktif->tgl_buka ? \Carbon\Carbon::parse($bulanAktif->tgl_buka)->format('d M') : '01 Nov';
     $tglTutupFormatted = $bulanAktif && $bulanAktif->tgl_tutup ? \Carbon\Carbon::parse($bulanAktif->tgl_tutup)->format('d M Y') : '15 Nov ' . date('Y');
     
@@ -20,9 +23,9 @@
             <span class="sa-sr-only">Dashboard Eksekutif Tata Kelola MagKom KOMINFO PORTAL</span>
         </div>
         <h1 class="sa-hero-title">Dashboard SuperAdmin</h1>
-        <p class="sa-hero-sub">
+        <span class="sa-sr-only">
             Akses penuh: kelola pengguna, role, rubrik, audit log, konfigurasi, dan seluruh modul Administrasi, Pembimbing, serta Peserta.
-        </p>
+        </span>
         
         <div class="sa-stamp">
             <span class="dot"></span>

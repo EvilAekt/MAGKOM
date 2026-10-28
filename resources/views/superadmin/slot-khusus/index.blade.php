@@ -22,40 +22,22 @@
 
 @push('styles')
 <style>
-    /* Dark Mode Overrides for SuperAdmin Slot Khusus */
+    /* Dark Mode Overrides for SuperAdmin Slot Khusus (DS-MagKom Industrial Standard) */
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
     }
 
     [data-theme="dark"] div[style*="background: var(--blue-tint)"] {
-        background-color: rgba(37, 99, 235, 0.15) !important;
-        border-color: rgba(59, 130, 246, 0.3) !important;
+        background-color: rgba(59, 130, 246, 0.18) !important;
+        border-color: rgba(147, 197, 253, 0.35) !important;
     }
 
     [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table thead tr {
-        background-color: #141E30 !important;
-        border-bottom-color: #26354D !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table th {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table tbody tr {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table tbody tr:hover {
-        background-color: #162238 !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] span[style*="color: var(--neutral-900)"],
@@ -75,8 +57,8 @@
     /* Modals Dark Mode */
     [data-theme="dark"] #modalTambahSlot > div,
     [data-theme="dark"] #modalEditSlot > div {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
         color: #F8FAFC !important;
     }
 
@@ -89,26 +71,26 @@
     [data-theme="dark"] input[type="number"],
     [data-theme="dark"] textarea,
     [data-theme="dark"] select {
-        background-color: #0F172A !important;
+        background-color: #011C44 !important;
         color: #F8FAFC !important;
-        border-color: #26354D !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] button[style*="background: var(--neutral-100)"] {
-        background-color: #111C2E !important;
-        border-color: #26354D !important;
+        background-color: rgba(255, 255, 255, 0.06) !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
         color: #94A3B8 !important;
     }
 
     [data-theme="dark"] button[style*="background: var(--neutral-100)"]:hover {
-        background-color: #162238 !important;
+        background-color: rgba(63, 81, 181, 0.2) !important;
         color: #F8FAFC !important;
     }
 </style>
 @endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- 1. ALERT BANNER ATURAN JALUR KHUSUS (F-06) -->
     <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; box-shadow: var(--shadow-subtle);">
@@ -128,7 +110,7 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel title="Daftar Alokasi Slot Khusus Mitra" subtitle="Monitoring kapasitas reservasi dan realisasi pendaftar jalur kemitraan.">
+    <x-gentelella.x-panel class="has-table" title="Daftar Alokasi Slot Khusus Mitra" subtitle="Monitoring kapasitas reservasi dan realisasi pendaftar jalur kemitraan.">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total: <strong>{{ method_exists($slotList, 'total') ? $slotList->total() : $slotList->count() }} Slot</strong>
@@ -147,18 +129,18 @@
             <div class="table-responsive-gentelella" style="overflow-x: auto;">
                 <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
-                        <tr class="headings" style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                            <th style="padding: 1rem 1.25rem; font-weight: 700;">Instansi / Keterangan</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; width: 180px;">Bulan Magang</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; text-align: center; width: 140px;">Kapasitas Slot</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; text-align: center; width: 140px;">Terpakai</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; width: 130px; text-align: center;">Status</th>
-                            <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right; width: 160px;">Aksi</th>
+                        <tr class="headings">
+                            <th>Instansi / Keterangan</th>
+                            <th style="width: 180px;">Bulan Magang</th>
+                            <th style="text-align: center; width: 140px;">Kapasitas Slot</th>
+                            <th style="text-align: center; width: 140px;">Terpakai</th>
+                            <th style="width: 130px; text-align: center;">Status</th>
+                            <th style="text-align: right; width: 160px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($slotList as $slot)
-                            <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
+                            <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
                                 <td style="padding: 1rem 1.25rem;">
                                     <div style="font-weight: 700; color: var(--neutral-900); font-size: 0.9375rem;">
                                         {{ $slot->nama_instansi }}
@@ -168,20 +150,26 @@
                                     </div>
                                 </td>
                                 <td style="padding: 1rem 1rem; white-space: nowrap;">
-                                    <span style="display: inline-flex; align-items: center; gap: 0.375rem; font-weight: 700; color: var(--blue-700); font-size: 0.8125rem;">
+                                    <span class="sa-text-accent-blue font-bold text-sm" style="display: inline-flex; align-items: center; gap: 0.375rem;">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
                                         {{ $slot->bulan_mulai?->translatedFormat('F Y') }}
                                     </span>
                                 </td>
                                 <td style="padding: 1rem 1rem; text-align: center;">
-                                    <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 32px; border-radius: 8px; font-size: 1rem; font-weight: 800; background: var(--neutral-100); color: var(--neutral-900); border: 1px solid var(--neutral-300);">
+                                    <span class="sa-badge-metric" style="min-width: 38px; height: 32px; justify-content: center; font-size: 0.9375rem;">
                                         {{ $slot->jumlah_slot }}
                                     </span>
                                 </td>
                                 <td style="padding: 1rem 1rem; text-align: center;">
-                                    <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 32px; border-radius: 8px; font-size: 1rem; font-weight: 800; background: {{ $slot->terpakai >= $slot->jumlah_slot ? 'var(--red-100)' : 'var(--blue-tint)' }}; color: {{ $slot->terpakai >= $slot->jumlah_slot ? 'var(--red-700)' : 'var(--blue-700)' }}; border: 1px solid {{ $slot->terpakai >= $slot->jumlah_slot ? 'var(--red-300)' : 'var(--blue-tint-line)' }};">
-                                        {{ $slot->terpakai }}
-                                    </span>
+                                    @if($slot->terpakai >= $slot->jumlah_slot)
+                                        <span class="sa-badge-metric" style="min-width: 38px; height: 32px; justify-content: center; font-size: 0.9375rem; background: var(--red-100); color: var(--red-700); border-color: var(--red-300);">
+                                            {{ $slot->terpakai }}
+                                        </span>
+                                    @else
+                                        <span class="sa-badge-metric" style="min-width: 38px; height: 32px; justify-content: center; font-size: 0.9375rem;">
+                                            {{ $slot->terpakai }}
+                                        </span>
+                                    @endif
                                 </td>
                                 <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
                                     @if($slot->aktif)
@@ -200,7 +188,7 @@
                                     <form action="{{ route('superadmin.slot-khusus.toggle', $slot) }}" method="POST" style="display: inline-block; margin: 0;">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" onclick="return confirm('{{ $slot->aktif ? 'Nonaktifkan slot khusus ini?' : 'Aktifkan kembali slot khusus ini?' }}')" style="padding: 0.45rem 0.875rem; background: {{ $slot->aktif ? 'var(--red-100)' : 'var(--green-100)' }}; border: 1px solid {{ $slot->aktif ? 'var(--red-300)' : 'rgba(22, 163, 74, 0.25)' }}; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: {{ $slot->aktif ? 'var(--red-700)' : 'var(--green-700)' }}; cursor: pointer; transition: all 0.15s;">
+                                        <button type="submit" onclick="return confirm('{{ $slot->aktif ? 'Nonaktifkan slot khusus ini?' : 'Aktifkan kembali slot khusus ini?' }}')" class="{{ $slot->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" style="{{ $slot->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.35);' }}">
                                             {{ $slot->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
                                         </button>
                                     </form>

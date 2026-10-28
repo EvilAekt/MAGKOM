@@ -48,16 +48,6 @@
         border-color: #26354D !important;
     }
 
-    [data-theme="dark"] table thead tr {
-        background-color: #141E30 !important;
-        border-bottom-color: #26354D !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table tbody tr:hover {
-        background-color: #162238 !important;
-    }
-
     [data-theme="dark"] input[type="text"],
     [data-theme="dark"] input[type="number"],
     [data-theme="dark"] input[type="date"],
@@ -173,18 +163,18 @@
             @php
                 $tableFields = $modul->fields->where('tampil_di_tabel', true);
             @endphp
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.8125rem;">
+            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.8125rem;">
                     <thead>
-                        <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-300); color: var(--neutral-600); font-weight: 700; text-transform: uppercase; font-size: 0.6875rem; letter-spacing: 0.05em;">
-                            <th style="padding: 0.875rem 1rem; width: 70px;">
+                        <tr class="headings">
+                            <th style="width: 70px;">
                                 {{ $modul->tipe_sumber === 'physical_table' ? strtoupper($modul->primary_key) : '#ID' }}
                             </th>
                             @foreach($tableFields as $f)
-                                <th style="padding: 0.875rem 1rem;">{{ $f->label }}</th>
+                                <th>{{ $f->label }}</th>
                             @endforeach
-                            <th style="padding: 0.875rem 1rem;">Dibuat</th>
-                            <th style="padding: 0.875rem 1rem; text-align: right; width: 130px;">Aksi</th>
+                            <th>Dibuat</th>
+                            <th style="text-align: right; width: 130px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -255,7 +245,7 @@
                                 </td>
 
                                 <td style="padding: 0.875rem 1rem; vertical-align: top; text-align: right; white-space: nowrap;">
-                                    <button type="button" onclick="openEditModal({{ json_encode($rowId) }}, {{ json_encode($rowData) }})" style="padding: 0.35rem 0.65rem; background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 600; color: var(--neutral-800); cursor: pointer; margin-right: 0.35rem;" title="Edit Baris">
+                                    <button type="button" onclick="openEditModal({{ (string) json_encode($rowId) }}, {{ (string) json_encode($rowData) }})" style="padding: 0.35rem 0.65rem; background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 600; color: var(--neutral-800); cursor: pointer; margin-right: 0.35rem;" title="Edit Baris">
                                         Edit
                                     </button>
 
@@ -382,7 +372,7 @@
 </div>
 
 <script>
-    const baseUrl = "{{ url('superadmin/modul/' . $modul->slug) }}";
+    const baseUrl = "{{ (string) url('superadmin/modul/' . $modul->slug) }}";
 
     function openCreateModal() {
         document.getElementById('modalFormTitle').textContent = 'Tambah Data Baru';

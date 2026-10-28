@@ -22,40 +22,22 @@
 
 @push('styles')
 <style>
-    /* Dark Mode Overrides for SuperAdmin Bidang */
+    /* Dark Mode Overrides for SuperAdmin Bidang (DS-MagKom Industrial Standard) */
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
     }
 
     [data-theme="dark"] div[style*="background: var(--blue-tint)"] {
-        background-color: rgba(37, 99, 235, 0.15) !important;
-        border-color: rgba(59, 130, 246, 0.3) !important;
+        background-color: rgba(59, 130, 246, 0.18) !important;
+        border-color: rgba(147, 197, 253, 0.35) !important;
     }
 
     [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table thead tr {
-        background-color: #141E30 !important;
-        border-bottom-color: #26354D !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table th {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table tbody tr {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table tbody tr:hover {
-        background-color: #162238 !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] span[style*="color: var(--neutral-900)"],
@@ -75,8 +57,8 @@
     /* Modals Dark Mode */
     [data-theme="dark"] #modalTambahBidang > div,
     [data-theme="dark"] #modalEditBidang > div {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
         color: #F8FAFC !important;
     }
 
@@ -87,26 +69,26 @@
 
     [data-theme="dark"] input[type="text"],
     [data-theme="dark"] textarea {
-        background-color: #0F172A !important;
+        background-color: #011C44 !important;
         color: #F8FAFC !important;
-        border-color: #26354D !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] button[style*="background: var(--neutral-100)"] {
-        background-color: #111C2E !important;
-        border-color: #26354D !important;
+        background-color: rgba(255, 255, 255, 0.06) !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
         color: #94A3B8 !important;
     }
 
     [data-theme="dark"] button[style*="background: var(--neutral-100)"]:hover {
-        background-color: #162238 !important;
+        background-color: rgba(63, 81, 181, 0.2) !important;
         color: #F8FAFC !important;
     }
 </style>
 @endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- 1. ALERT BANNER UNIT KERJA PENEMPATAN -->
     <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; box-shadow: var(--shadow-subtle);">
@@ -131,7 +113,7 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel title="Daftar Bidang & Unit Kerja Diskominfo" subtitle="Struktur organisasi dinas tempat alokasi bimbingan teknis magang.">
+    <x-gentelella.x-panel class="has-table" title="Daftar Bidang & Unit Kerja Diskominfo" subtitle="Struktur organisasi dinas tempat alokasi bimbingan teknis magang.">
         @if($bidangList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
@@ -144,17 +126,17 @@
             <div class="table-responsive-gentelella" style="overflow-x: auto;">
                 <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
-                        <tr class="headings" style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                            <th style="padding: 1rem 1.25rem; font-weight: 700;">Nama Bidang Dinas</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700;">Deskripsi Tugas & Fungsi</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; text-align: center; width: 140px;">Jumlah Staf</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; width: 130px; text-align: center;">Status</th>
-                            <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right; width: 200px;">Aksi</th>
+                        <tr class="headings">
+                            <th>Nama Bidang Dinas</th>
+                            <th>Deskripsi Tugas & Fungsi</th>
+                            <th style="text-align: center; width: 140px;">Jumlah Staf</th>
+                            <th style="width: 130px; text-align: center;">Status</th>
+                            <th style="text-align: right; width: 200px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($bidangList as $bidang)
-                            <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
+                            <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
                                 <td style="padding: 1rem 1.25rem; font-weight: 700; color: var(--neutral-900); white-space: nowrap;">
                                     <div style="font-size: 0.9375rem; color: var(--neutral-900);">
                                         {{ $bidang->nama_bidang }}
@@ -167,7 +149,7 @@
                                     {{ $bidang->deskripsi ?? '-' }}
                                 </td>
                                 <td style="padding: 1rem 1rem; text-align: center;">
-                                    <span style="display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.25rem 0.625rem; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); font-weight: 800; font-size: 0.875rem; border: 1px solid var(--blue-tint-line);">
+                                    <span class="sa-badge-blue">
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
                                         {{ $bidang->users_count }} Staf
                                     </span>
@@ -187,7 +169,7 @@
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
                                     <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
-                                        <button type="button" onclick="openModalEditBidang('{{ $bidang->id }}', '{{ addslashes($bidang->nama_bidang) }}', '{{ addslashes($bidang->deskripsi ?? '') }}')" style="padding: 0.45rem 0.875rem; background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--neutral-800); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.375rem;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='var(--neutral-0)'">
+                                        <button type="button" onclick="openModalEditBidang('{{ $bidang->id }}', '{{ addslashes($bidang->nama_bidang) }}', '{{ addslashes($bidang->deskripsi ?? '') }}')" class="sa-btn-action-outline">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                             Edit
                                         </button>
@@ -195,7 +177,7 @@
                                         <form action="{{ route('superadmin.bidang.toggle', $bidang) }}" method="POST" style="display: inline-block; margin: 0;">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" onclick="return confirm('{{ $bidang->aktif ? 'Nonaktifkan bidang ini?' : 'Aktifkan kembali bidang ini?' }}')" style="padding: 0.45rem 0.875rem; background: {{ $bidang->aktif ? 'var(--red-100)' : 'var(--green-100)' }}; border: 1px solid {{ $bidang->aktif ? 'var(--red-300)' : 'rgba(22, 163, 74, 0.25)' }}; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: {{ $bidang->aktif ? 'var(--red-700)' : 'var(--green-700)' }}; cursor: pointer; transition: all 0.15s;">
+                                            <button type="submit" onclick="return confirm('{{ $bidang->aktif ? 'Nonaktifkan bidang ini?' : 'Aktifkan kembali bidang ini?' }}')" class="{{ $bidang->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" style="{{ $bidang->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}">
                                                 {{ $bidang->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
                                             </button>
                                         </form>

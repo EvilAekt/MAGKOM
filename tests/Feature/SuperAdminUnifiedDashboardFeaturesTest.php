@@ -63,26 +63,32 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
             'aktif' => true,
         ]);
 
-        $this->jurusan = Jurusan::create([
+        $jurusan = Jurusan::create([
             'nama_jurusan' => 'Teknik Informatika',
             'kategori' => 'mahasiswa',
             'aktif' => true,
         ]);
+        assert($jurusan instanceof Jurusan);
+        $this->jurusan = $jurusan;
 
-        $this->bulan = BulanMagang::create([
+        $bulan = BulanMagang::create([
             'bulan_mulai' => now()->startOfMonth(),
             'tgl_buka' => now()->subDays(5)->toDateString(),
             'tgl_tutup' => now()->addDays(20)->toDateString(),
             'aktif' => true,
         ]);
+        assert($bulan instanceof BulanMagang);
+        $this->bulan = $bulan;
 
-        $this->kuota = Kuota::create([
+        $kuota = Kuota::create([
             'bulan_magang_id' => $this->bulan->id,
             'jurusan_id' => $this->jurusan->id,
             'jumlah' => 10,
             'terisi' => 2,
             'aktif' => true,
         ]);
+        assert($kuota instanceof Kuota);
+        $this->kuota = $kuota;
 
         // 1. Akun SuperAdmin
         $this->superAdmin = new User;
@@ -158,7 +164,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         ]);
 
         // Penempatan Aktif
-        $this->penempatan = Penempatan::create([
+        $penempatan = Penempatan::create([
             'pendaftaran_id' => $pendaftaran->id,
             'peserta_id' => $this->peserta->id,
             'pembimbing_id' => $this->pembimbing->id,
@@ -171,6 +177,8 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
             'tgl_selesai' => now()->addMonths(3)->endOfMonth(),
             'status' => StatusPenempatanEnum::Aktif,
         ]);
+        assert($penempatan instanceof Penempatan);
+        $this->penempatan = $penempatan;
 
         // Tugas Aktif
         Tugas::create([
@@ -275,11 +283,11 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $response->assertSee('Total Tugas Aktif');
         $response->assertSee('Logbook Pending Reviu');
         $response->assertSee('Penilaian Final Selesai');
-        $response->assertSee('Matriks Utilisasi Beban Pembimbing Lapangan (BR-13)');
+        $response->assertSee('Matriks Utilisasi Beban Pembimbing Lapangan');
         $response->assertSee('Pembimbing Lapangan Utama');
         $response->assertSee('1 Mentee');
         $response->assertSee('Toleransi Logbook Mundur');
-        $response->assertSee('Maks. 7 Hari (BR-09)');
+        $response->assertSee('Maks. 7 Hari');
     }
 
     /**
@@ -290,7 +298,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $response = $this->actingAs($this->superAdmin)->get(route('superadmin.dashboard'));
 
         $response->assertStatus(200);
-        $response->assertSee('Hub Ekspor Instan Laporan Resmi Dinas (AC-17-1)');
+        $response->assertSee('Hub Ekspor Instan Laporan Resmi Dinas');
 
         // Memastikan 4 Laporan Dinas tersedia dengan link ekspor CSV instan
         $response->assertSee('Laporan Pendaftaran');

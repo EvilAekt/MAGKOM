@@ -265,12 +265,12 @@
 
 .cv-seg i.filled,
 .cv-seg i.f {
-  background: linear-gradient(180deg, #0751ff, #0641cc);
+  background: linear-gradient(180deg, #FBBF24, #F59E0B) !important;
 }
 
 .cv-seg.full i.filled,
 .cv-seg.full i.f {
-  background: linear-gradient(180deg, #f59e0b, #d97706);
+  background: linear-gradient(180deg, #f59e0b, #d97706) !important;
 }
 
 /* 7. Aside Todo & Quick Action List */

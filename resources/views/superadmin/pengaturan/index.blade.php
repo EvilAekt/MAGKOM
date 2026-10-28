@@ -33,30 +33,38 @@
 
 @push('styles')
 <style>
-    /* Dark Mode Overrides for SuperAdmin Settings */
+    /* Dark Mode Overrides for SuperAdmin Settings (DS-MagKom Industrial Standard) */
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
     }
 
     [data-theme="dark"] a[href*="export-json"] {
-        background-color: #111C2E !important;
-        border-color: #26354D !important;
+        background-color: rgba(255, 255, 255, 0.06) !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
         color: #93C5FD !important;
     }
 
     [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
-    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
-        border-color: #26354D !important;
+    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"],
+    [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"] {
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] input[type="text"],
     [data-theme="dark"] input[type="number"],
     [data-theme="dark"] select {
-        background-color: #0F172A !important;
+        background-color: #011C44 !important;
         color: #F8FAFC !important;
-        border-color: #26354D !important;
+        border: 1px solid rgba(63, 81, 181, 0.45) !important;
+    }
+
+    [data-theme="dark"] input:focus,
+    [data-theme="dark"] select:focus {
+        border-color: #3B82F6 !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+        outline: none !important;
     }
 
     [data-theme="dark"] span[style*="color: var(--neutral-900)"],
@@ -69,19 +77,20 @@
 
     [data-theme="dark"] span[style*="color: var(--neutral-600)"],
     [data-theme="dark"] div[style*="color: var(--neutral-600)"],
-    [data-theme="dark"] p[style*="color: var(--neutral-600)"] {
+    [data-theme="dark"] p[style*="color: var(--neutral-600)"],
+    [data-theme="dark"] p[style*="color: var(--neutral-700)"] {
         color: #94A3B8 !important;
     }
 
     [data-theme="dark"] div[style*="background: var(--neutral-100)"] {
-        background-color: #111C2E !important;
-        border-color: #26354D !important;
+        background-color: #011C44 !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 </style>
 @endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     <form id="formPengaturanSistem" action="{{ route('superadmin.pengaturan.update') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.5rem;">
         @csrf

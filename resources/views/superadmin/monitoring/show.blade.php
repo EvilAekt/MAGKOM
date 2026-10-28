@@ -28,52 +28,34 @@
 
 @push('styles')
 <style>
-    /* Dark Mode Overrides for SuperAdmin Monitoring Detail */
+    /* Dark Mode Overrides for SuperAdmin Monitoring Detail (DS-MagKom Industrial Standard) */
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #182234 !important;
-        border-color: #26354D !important;
+        background-color: #003566 !important;
+        border-color: #3F51B5 !important;
     }
 
     [data-theme="dark"] div[style*="background: var(--blue-tint)"] {
-        background-color: rgba(37, 99, 235, 0.15) !important;
-        border-color: rgba(59, 130, 246, 0.3) !important;
+        background-color: rgba(59, 130, 246, 0.18) !important;
+        border-color: rgba(147, 197, 253, 0.35) !important;
     }
 
     [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
     [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"],
     [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
-        border-color: #26354D !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 
     [data-theme="dark"] a[style*="background: var(--neutral-0)"] {
-        background-color: #111C2E !important;
-        border-color: #26354D !important;
+        background-color: rgba(255, 255, 255, 0.06) !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
         color: #F8FAFC !important;
     }
 
     [data-theme="dark"] a[style*="background: var(--neutral-200)"] {
-        background-color: #111C2E !important;
-        border-color: #26354D !important;
+        background-color: rgba(255, 255, 255, 0.06) !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
         color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table thead tr {
-        background-color: #141E30 !important;
-        border-bottom-color: #26354D !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table th {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] table tbody tr {
-        border-bottom-color: #26354D !important;
-    }
-
-    [data-theme="dark"] table tbody tr:hover {
-        background-color: #162238 !important;
     }
 
     [data-theme="dark"] span[style*="color: var(--neutral-900)"],
@@ -92,14 +74,14 @@
     }
 
     [data-theme="dark"] div[style*="background: var(--neutral-100)"] {
-        background-color: #111C2E !important;
-        border-color: #26354D !important;
+        background-color: #011C44 !important;
+        border-color: rgba(63, 81, 181, 0.45) !important;
     }
 </style>
 @endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- 1. READ-ONLY NOTICE BANNER -->
     <x-gentelella.card style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
@@ -174,10 +156,10 @@
     <x-gentelella.x-panel title="Rekam Jejak Pemantauan Bimbingan" subtitle="Supervisi komprehensif terhadap penugasan, logbook harian, dan snapshot nilai peserta">
         <div style="padding: 0.75rem 0 1.25rem 0; border-bottom: 1px solid var(--neutral-200); display: flex; gap: 0.75rem; flex-wrap: wrap;">
             <button type="button" onclick="switchMonitorTab('tugas')" id="tabBtnTugas" style="padding: 0.55rem 1.25rem; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; cursor: pointer; background: var(--blue-600); color: #FFFFFF; transition: all 0.15s;">
-                Tugas & Progres ({{ $penempatan->tugas->count() }})
+                Tugas & Progres ({{ (string) $penempatan->tugas->count() }})
             </button>
             <button type="button" onclick="switchMonitorTab('logbook')" id="tabBtnLogbook" style="padding: 0.55rem 1.25rem; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: 1px solid var(--neutral-400); cursor: pointer; background: var(--neutral-0); color: var(--neutral-700); transition: all 0.15s;">
-                Logbook Harian ({{ $penempatan->logbooks->count() }})
+                Logbook Harian ({{ (string) $penempatan->logbooks->count() }})
             </button>
             <button type="button" onclick="switchMonitorTab('nilai')" id="tabBtnNilai" style="padding: 0.55rem 1.25rem; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: 1px solid var(--neutral-400); cursor: pointer; background: var(--neutral-0); color: var(--neutral-700); transition: all 0.15s;">
                 Penilaian & Lembar Nilai
@@ -220,7 +202,7 @@
                             </p>
                             <div style="font-size: 0.75rem; color: var(--neutral-600); border-top: 1px solid var(--neutral-300); padding-top: 0.625rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
                                 <span>Tenggat Waktu: <strong>{{ $tugas->deadline ? \Carbon\Carbon::parse($tugas->deadline)->format('d M Y') : '-' }}</strong></span>
-                                <span>Total Progres Dilaporkan: <strong>{{ $tugas->progresLogs->count() }} Laporan</strong></span>
+                                <span>Total Progres Dilaporkan: <strong>{{ (string) $tugas->progresLogs->count() }} Laporan</strong></span>
                             </div>
                         </div>
                     @endforeach
@@ -235,19 +217,19 @@
                     Belum ada catatan logbook harian yang diisi oleh peserta.
                 </p>
             @else
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+                <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                    <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                         <thead>
-                            <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase;">
-                                <th style="padding: 0.75rem 1rem; font-weight: 700; width: 140px;">Tanggal</th>
-                                <th style="padding: 0.75rem 1rem; font-weight: 700;">Aktivitas Harian</th>
-                                <th style="padding: 0.75rem 1rem; font-weight: 700; text-align: center; width: 130px;">Status</th>
-                                <th style="padding: 0.75rem 1rem; font-weight: 700; width: 220px;">Catatan Pembimbing</th>
+                            <tr class="headings">
+                                <th style="width: 140px;">Tanggal</th>
+                                <th>Aktivitas Harian</th>
+                                <th style="text-align: center; width: 130px;">Status</th>
+                                <th style="width: 220px;">Catatan Pembimbing</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($penempatan->logbooks->sortByDesc('tanggal') as $entry)
-                                <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
+                                <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
                                     <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--neutral-900); font-family: monospace; font-size: 0.8125rem;">
                                         {{ \Carbon\Carbon::parse($entry->tanggal)->format('d/m/Y') }}
                                     </td>
@@ -322,18 +304,18 @@
 
                 <!-- Detail Rubrik Table -->
                 <h4 style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.75rem;">Rincian Kriteria Rubrik Penilaian:</h4>
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+                <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                    <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                         <thead>
-                            <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase;">
-                                <th style="padding: 0.75rem 1rem; font-weight: 700;">Kriteria Kompetensi</th>
-                                <th style="padding: 0.75rem 1rem; font-weight: 700; text-align: center; width: 140px;">Bobot Snapshot</th>
-                                <th style="padding: 0.75rem 1rem; font-weight: 700; text-align: right; width: 140px;">Skor Pembimbing</th>
+                            <tr class="headings">
+                                <th>Kriteria Kompetensi</th>
+                                <th style="text-align: center; width: 140px;">Bobot Snapshot</th>
+                                <th style="text-align: right; width: 140px;">Skor Pembimbing</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($penilaian->details as $d)
-                                <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
+                                <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
                                     <td style="padding: 0.75rem 1rem; color: var(--neutral-900); font-weight: 600;">
                                         {{ $d->rubrik?->kriteria ?? 'Kriteria' }}
                                     </td>

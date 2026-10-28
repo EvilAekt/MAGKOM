@@ -1,10 +1,22 @@
 {{-- TAB RINGKASAN: LOVABLE COCKPIT (CARD 01 - 05) --}}
+@php
+    /** @var \Illuminate\Support\Collection<int, \App\Models\User> $penggunaTerbaru */
+    /** @var \Illuminate\Support\Collection<int, \App\Models\AuditLog> $auditTerbaru */
+    /** @var int $anomaliKuotaCount */
+    /** @var int $antreanMelebihiSla */
+    /** @var int|float $kepatuhanNilaiSelesaiPersen */
+    /** @var int $loginGagal24Jam */
+    /** @var int $stafPendingGantiPassword */
+    /** @var array<int, array{label: string, count: int}> $trenPendaftar */
+    /** @var array<string, int> $jenjangRaw */
+    /** @var \Illuminate\Support\Collection<int, mixed> $topInstitusi */
+@endphp
 
 {{-- BARIS 1: PENGGUNA TERBARU & AUDIT LOG TERBARU --}}
 <div class="row sa-grid sa-grid--2" style="margin-bottom: 1.25rem;">
     {{-- Card 01: Pengguna terbaru --}}
     <div class="col-md-7 col-sm-12 col-xs-12">
-        <x-gentelella.x-panel title="Pengguna terbaru" subtitle="5 akun terakhir yang terdaftar atau diubah">
+        <x-gentelella.x-panel title="Pengguna terbaru">
             <x-slot:actions>
                 <a href="{{ route('superadmin.staf.index') }}" class="sa-link" style="font-size: 0.8125rem; font-weight: 700; color: var(--cv-blue-700); text-decoration: none;">
                     <span>Kelola pengguna</span> &rarr;
@@ -83,7 +95,7 @@
 
     {{-- Card 02: Audit log terbaru --}}
     <div class="col-md-5 col-sm-12 col-xs-12">
-        <x-gentelella.x-panel title="Audit log terbaru" subtitle="Read-only · tidak dapat diubah">
+        <x-gentelella.x-panel title="Audit log terbaru">
             <x-slot:actions>
                 <a href="{{ route('superadmin.audit-log.index') }}" class="sa-link" style="font-size: 0.8125rem; font-weight: 700; color: var(--cv-blue-700); text-decoration: none;">
                     <span>Lihat semua</span> &rarr;
@@ -124,7 +136,7 @@
 <div class="row sa-grid sa-grid--3" style="margin-bottom: 1.25rem;">
     {{-- Card 03: KPI Dinas (Pusat Metrik Keberhasilan Produk PRD Bab 2.3) --}}
     <div class="col-md-4 col-sm-6 col-xs-12">
-        <x-gentelella.x-panel title="KPI dinas" subtitle="Target PRD bab 2.3">
+        <x-gentelella.x-panel title="KPI dinas">
             <span class="sa-sr-only">Pusat Metrik Keberhasilan Produk & KPI Dinas PRD Bab 2.3</span>
             <dl class="kv" style="margin: 0; display: flex; flex-direction: column; gap: 0.65rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--cv-line); padding-bottom: 0.4rem;">
@@ -171,7 +183,7 @@
 
     {{-- Card 04: Kuota Jurusan (Segmented Bars) --}}
     <div class="col-md-4 col-sm-6 col-xs-12">
-        <x-gentelella.x-panel title="Kuota November" subtitle="Utilisasi kursi per jurusan">
+        <x-gentelella.x-panel title="Kuota November">
             <x-slot:actions>
                 <a href="{{ route('admin.kuota.index') }}" class="sa-link" style="font-size: 0.75rem; font-weight: 700; color: var(--cv-blue-700); text-decoration: none;">
                     Atur &rarr;
@@ -205,7 +217,7 @@
 
     {{-- Card 05: Keamanan --}}
     <div class="col-md-4 col-sm-12 col-xs-12">
-        <x-gentelella.x-panel title="Keamanan" subtitle="24 jam terakhir">
+        <x-gentelella.x-panel title="Keamanan">
             <x-slot:actions>
                 <a href="{{ route('superadmin.health.index') }}" class="sa-link" style="font-size: 0.75rem; font-weight: 700; color: var(--cv-blue-700); text-decoration: none;">
                     Detail &rarr;
@@ -246,7 +258,7 @@
 <div class="row sa-grid sa-grid--main-aside" style="margin-bottom: 1.25rem;">
     {{-- KOLOM KIRI (8 Kolom): Tren Pendaftaran 12 Bulan Terakhir (Model: Network Activities) --}}
     <div class="col-md-8 col-sm-12 col-xs-12">
-        <x-gentelella.x-panel class="gt-analytics-card" title="Tren Pendaftaran 12 Bulan Terakhir" subtitle="Volume pendaftar magang dari seluruh institusi">
+        <x-gentelella.x-panel class="gt-analytics-card" title="Tren Pendaftaran 12 Bulan Terakhir">
             @php
                 // Hitung total dan nilai maksimum pendaftar 12 bulan
                 $totalPendaftar12Bulan = 0;
@@ -404,7 +416,7 @@
 
     {{-- KOLOM KANAN (4 Kolom): Demografi Institusi & Jenjang (Model: Top countries & Top referrers) --}}
     <div class="col-md-4 col-sm-12 col-xs-12">
-        <x-gentelella.x-panel class="gt-analytics-card" title="Demografi Asal Institusi & Jenjang Pendidikan (PRD 4.3)" subtitle="Sebaran calon peserta">
+        <x-gentelella.x-panel class="gt-analytics-card" title="Demografi Asal Institusi & Jenjang Pendidikan">
 
             @php
                 // Data Jenjang Pendidikan

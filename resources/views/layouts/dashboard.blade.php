@@ -48,13 +48,60 @@
 
     <style>
         :root {
-            /* MagKom / Warna Tokens (Design System DS-MagKom Bab 2.1) */
-            --blue-600: #0751FF;
-            --blue-700: #0641CC;
-            --blue-500: #2EA3F2;
-            --blue-tint: #E6EEFF;
-            --blue-tint-line: #B3C8FF;
-            --sky-100: #E0F2FE;
+            /* =========================================================================
+               11 Master CSS Peeper Tokens - MagKom Rebranded Palette (PRD-TASK-2026-10-28-UI-02)
+               ========================================================================= */
+            --magkom-primary-blue: #01347C;
+            --magkom-midnight-navy: #003566;
+            --magkom-abyssal-navy: #02275D;
+            --magkom-indigo-accent: #3F51B5;
+            --magkom-amber-gold: #FFC300;
+            --magkom-sun-yellow: #FFCB05;
+            --magkom-dark-charcoal: #212529;
+            --magkom-pure-black: #000000;
+            --magkom-gray-medium: #AAAAAA;
+            --magkom-gray-light: #BBBBBB;
+            --magkom-pure-white: #FFFFFF;
+
+            /* Backward-Compatibility & Semantic Aliases */
+            --brand-darkest: var(--magkom-abyssal-navy);
+            --brand-navy: var(--magkom-primary-blue);
+            --brand-accent: var(--magkom-indigo-accent);
+            --brand-ice: #E6EEFF;
+
+            --blue-600: var(--magkom-primary-blue);           /* Warna utama aksi/brand */
+            --blue-700: var(--magkom-midnight-navy);          /* Warna hover brand */
+            --blue-800: var(--magkom-abyssal-navy);
+            --blue-500: var(--magkom-indigo-accent);          /* Warna aksen terang */
+            --blue-tint: rgba(1, 52, 124, 0.08);              /* Background badge/highlight card */
+            --blue-tint-line: var(--magkom-indigo-accent);    /* Border pembatas aksen */
+            --hover-row-bg: rgba(1, 52, 124, 0.04);
+            --sky-100: #E6EEFF;
+
+            /* Header & Sidebar Tokens (Identik dengan Peserta) */
+            --topbar-bg-start: var(--magkom-primary-blue);
+            --topbar-bg-end: var(--magkom-midnight-navy);
+            --topbar-border: rgba(255, 255, 255, 0.14);
+            --topbar-text: var(--magkom-pure-white);
+            --topbar-text-muted: var(--magkom-gray-light);
+
+            --sidebar-bg: var(--magkom-abyssal-navy);
+            --sidebar-text: var(--magkom-gray-light);
+            --sidebar-active-bg: var(--magkom-primary-blue);
+            --sidebar-active-border: var(--magkom-amber-gold);
+
+            /* Card Tokens (Mode Terang) */
+            --card-surface: var(--magkom-pure-white);
+            --card-border: var(--magkom-gray-light);
+            --card-text-primary: var(--magkom-dark-charcoal);
+            --card-text-muted: var(--magkom-gray-medium);
+
+            /* Highlight / Metric Card Khusus (#01347C) */
+            --card-highlight-bg: var(--magkom-primary-blue);
+            --card-highlight-border: var(--magkom-indigo-accent);
+            --card-highlight-text: var(--magkom-pure-white);
+            --card-highlight-badge-bg: var(--magkom-sun-yellow);
+            --card-highlight-badge-text: var(--magkom-abyssal-navy);
 
             --neutral-0: #FFFFFF;
             --neutral-100: #F8FAFC;
@@ -74,7 +121,7 @@
 
             --amber-100: #FFFBEB;
             --amber-200: #FEF3C7;
-            --amber-300: #FDE68A;
+            --amber-300: var(--magkom-sun-yellow);
             --amber-700: #92400E;
 
             --red-100: #FEF2F2;
@@ -84,12 +131,12 @@
             --red-700: #991B1B;
 
             /* Focus & Elevation */
-            --focus-ring: 0 0 0 3px rgba(7, 81, 255, 0.25);
+            --focus-ring: 0 0 0 3px rgba(63, 81, 181, 0.35);
             --shadow-subtle: 0 1px 3px rgba(15, 23, 42, 0.08);
             --shadow-raised: 0 4px 12px rgba(15, 23, 42, 0.10);
             --shadow-modal: 0 24px 48px -8px rgba(15, 28, 51, 0.28);
             --sidebar-width: 230px;
-            --topbar-height: 60px;
+            --topbar-height: 64px;
 
             --font-sans: 'Open Sans', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
@@ -98,28 +145,62 @@
             --fw-medium: 500;
             --fw-semibold: 600;
             --fw-bold: 700;
+
+            /* Table Tokens - Light Mode (PRD-TASK-2026-10-28-PLAN4-REVAMP) */
+            --table-header-bg: #F1F5F9;
+            --table-header-color: #1E293B;
+            --table-header-border: #CBD5E1;
+            --table-row-border: #EEF0F5;
+            --table-row-zebra: #F8FAFC;
+            --table-row-hover: rgba(1, 52, 124, 0.04);
+            --table-text-primary: #05070B;
+            --table-text-secondary: #64748B;
         }
 
         /* Dark Mode Tokens & Overrides (DS-MagKom Industrial Standard) */
         [data-theme="dark"] {
-            --neutral-0: #182234;     /* Card surface */
-            --neutral-50: #111C2E;    /* Topbar & Sidebar */
-            --neutral-100: #0F172A;   /* Input background */
-            --neutral-150: #0A0F1D;   /* Main canvas background */
-            --neutral-200: #26354D;   /* Borders & Separators */
-            --neutral-300: #334155;   /* Secondary borders */
-            --neutral-400: #64748B;   /* Subdued text / icons / borders (Passes WCAG AA 4.5:1) */
-            --neutral-500: #94A3B8;   /* Muted labels & timestamps */
+            --neutral-0: var(--magkom-midnight-navy);     /* Card surface #003566 */
+            --neutral-50: var(--magkom-abyssal-navy);    /* Container sidebar/topbar gelap #02275D */
+            --neutral-100: var(--magkom-midnight-navy);   /* Input background */
+            --neutral-150: var(--magkom-dark-charcoal);   /* Main canvas background #212529 */
+            --neutral-200: #2C3A4E;   /* Borders & Separators */
+            --neutral-300: var(--magkom-indigo-accent);   /* Secondary borders / accent borders */
+            --neutral-400: var(--magkom-gray-medium);   /* Subdued text / icons / borders */
+            --neutral-500: var(--magkom-gray-light);   /* Muted labels & timestamps */
             --neutral-600: #CBD5E1;   /* Body text secondary */
             --neutral-700: #E2E8F0;   /* Body text primary */
-            --neutral-800: #F8FAFC;   /* Headings & prominent text */
-            --neutral-900: #FFFFFF;   /* Maximum contrast highlights */
+            --neutral-800: var(--magkom-pure-white);   /* Headings & prominent text */
+            --neutral-900: var(--magkom-pure-white);   /* Maximum contrast highlights */
 
             --blue-600: #3B82F6;
-            --blue-700: #2563EB;
-            --blue-tint: #1E3A8A;
-            --blue-tint-line: #3B82F6;
-            --sky-100: #182234;
+            --blue-700: #93C5FD;
+            --blue-tint: rgba(59, 130, 246, 0.18);
+            --blue-tint-line: rgba(147, 197, 253, 0.35);
+            --hover-row-bg: rgba(255, 255, 255, 0.06);
+            --sky-100: var(--magkom-midnight-navy);
+
+            /* Topbar Mode Gelap */
+            --topbar-bg-start: var(--magkom-abyssal-navy);
+            --topbar-bg-end: var(--magkom-midnight-navy);
+            --topbar-border: rgba(63, 81, 181, 0.35);
+
+            /* Sidebar Mode Gelap */
+            --sidebar-bg: #011C44;
+            --sidebar-text: var(--magkom-gray-light);
+            --sidebar-active-bg: var(--magkom-primary-blue);
+            --sidebar-active-border: var(--magkom-sun-yellow);
+
+            /* Card Mode Gelap */
+            --card-surface: var(--magkom-midnight-navy);
+            --card-border: var(--magkom-indigo-accent);
+            --card-text-primary: var(--magkom-pure-white);
+            --card-text-muted: var(--magkom-gray-light);
+
+            --card-highlight-bg: var(--magkom-abyssal-navy);
+            --card-highlight-border: var(--magkom-indigo-accent);
+            --card-highlight-text: var(--magkom-pure-white);
+            --card-highlight-badge-bg: var(--magkom-sun-yellow);
+            --card-highlight-badge-text: var(--magkom-pure-black);
 
             --green-100: rgba(16, 185, 129, 0.15);
             --green-600: #34D399;
@@ -127,26 +208,36 @@
 
             --amber-100: rgba(217, 119, 6, 0.15);
             --amber-200: rgba(245, 158, 11, 0.25);
-            --amber-700: #FCD34D;
+            --amber-700: var(--magkom-sun-yellow);
 
             --red-100: rgba(239, 68, 68, 0.15);
             --red-200: rgba(239, 68, 68, 0.25);
             --red-600: #F87171;
             --red-700: #FCA5A5;
 
-            --focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.35);
+            --focus-ring: 0 0 0 3px rgba(63, 81, 181, 0.35);
             --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.4);
             --shadow-raised: 0 4px 16px rgba(0, 0, 0, 0.5);
             --shadow-modal: 0 24px 48px -8px rgba(0, 0, 0, 0.7);
 
             /* Cockpit & Gentelella Unified Theme Tokens (Passes WCAG AA) */
-            --cv-surface: #182234;
-            --cv-paper: #0F172A;
-            --cv-line: #26354D;
-            --cv-line-strong: #334155;
-            --cv-ink: #F8FAFC;
-            --cv-ink-2: #CBD5E1;
-            --cv-ink-3: #94A3B8;
+            --cv-surface: var(--magkom-midnight-navy);
+            --cv-paper: #011C44;
+            --cv-line: #2C3A4E;
+            --cv-line-strong: var(--magkom-indigo-accent);
+            --cv-ink: var(--magkom-pure-white);
+            --cv-ink-2: var(--magkom-gray-light);
+            --cv-ink-3: var(--magkom-gray-medium);
+
+            /* Table Tokens - Dark Mode (PRD-TASK-2026-10-28-PLAN4-REVAMP) */
+            --table-header-bg: #012758;
+            --table-header-color: #FFFFFF;
+            --table-header-border: #3F51B5;
+            --table-row-border: rgba(63, 81, 181, 0.28);
+            --table-row-zebra: rgba(255, 255, 255, 0.03);
+            --table-row-hover: rgba(63, 81, 181, 0.18);
+            --table-text-primary: #FFFFFF;
+            --table-text-secondary: #94A3B8;
         }
 
         [data-theme="dark"] body {
@@ -154,14 +245,21 @@
             color: var(--neutral-700);
         }
 
-        /* Topbar & Breadcrumb */
+        /* Topbar & Breadcrumb Mode Gelap */
+        [data-theme="dark"] .top_nav,
+        [data-theme="dark"] .dashboard-topbar-wrapper {
+            background: linear-gradient(135deg, #02275D 0%, #003566 100%) !important;
+            border-bottom: 1px solid rgba(63, 81, 181, 0.35) !important;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6) !important;
+        }
+
         [data-theme="dark"] .dashboard-topbar {
-            background-color: var(--neutral-50);
-            border-bottom-color: var(--neutral-200);
+            background: transparent !important;
+            border-bottom: none !important;
         }
 
         [data-theme="dark"] .user-name-text {
-            color: var(--neutral-800);
+            color: #FFFFFF !important;
         }
 
         [data-theme="dark"] .user-dropdown-menu {
@@ -184,56 +282,69 @@
         }
 
         [data-theme="dark"] .breadcrumb-trail a {
-            color: var(--neutral-500);
+            color: rgba(255, 255, 255, 0.8) !important;
         }
 
         [data-theme="dark"] .breadcrumb-trail a:hover {
-            color: var(--blue-600);
+            color: #FFCB05 !important;
+            text-decoration: underline;
+        }
+
+        [data-theme="dark"] .breadcrumb-separator {
+            color: rgba(255, 255, 255, 0.4) !important;
         }
 
         [data-theme="dark"] .breadcrumb-current {
-            color: var(--neutral-800);
+            color: #FFFFFF !important;
         }
 
-        /* Sidebar Navigasi */
-        [data-theme="dark"] .dashboard-sidebar {
-            background-color: var(--neutral-50);
-            border-right-color: var(--neutral-200);
+        /* Sidebar Navigasi Mode Gelap */
+        [data-theme="dark"] .dashboard-sidebar,
+        [data-theme="dark"] .left_col {
+            background-color: #011C44 !important;
+            border-right-color: rgba(63, 81, 181, 0.2) !important;
         }
 
         [data-theme="dark"] .sidebar-header {
-            border-bottom-color: var(--neutral-200);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
         }
 
         [data-theme="dark"] .sidebar-brand-title {
-            color: var(--neutral-800);
+            color: #FFFFFF !important;
         }
 
         [data-theme="dark"] .sidebar-brand-subtitle {
-            color: var(--neutral-500);
+            color: var(--magkom-gray-light, #BBBBBB) !important;
+            opacity: 0.85;
         }
 
-        [data-theme="dark"] .nav-section-label {
-            color: var(--neutral-500);
+        [data-theme="dark"] .nav-section-label,
+        [data-theme="dark"] .menu_section h3 {
+            color: var(--magkom-gray-light, #BBBBBB) !important;
+            opacity: 0.85;
         }
 
         [data-theme="dark"] .nav-item-link {
-            color: var(--neutral-600);
+            color: var(--magkom-gray-light, #BBBBBB);
         }
 
         [data-theme="dark"] .nav-item-link:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--neutral-800);
+            background-color: rgba(63, 81, 181, 0.25);
+            color: #FFFFFF;
         }
 
         [data-theme="dark"] .nav-item-link.active {
-            background-color: var(--blue-tint);
-            color: #93C5FD;
-            border-left-color: var(--blue-tint-line);
+            background: linear-gradient(90deg, rgba(1, 52, 124, 0.8) 0%, rgba(2, 39, 93, 0.4) 100%) !important;
+            color: #FFFFFF !important;
+            border-left-color: #FFC300 !important;
         }
 
         [data-theme="dark"] .nav-item-icon {
-            color: inherit;
+            color: #AAAAAA;
+        }
+
+        [data-theme="dark"] .nav-item-link.active .nav-item-icon {
+            color: #FFCB05 !important;
         }
 
         /* Kartu & Kontainer Universal */
@@ -690,11 +801,11 @@
         }
 
         /* =====================================================================
-           SIDEBAR STYLING (Blue 700 #0641CC, 256px)
+           SIDEBAR STYLING (Rebranded Palette PRD-TASK-2026-10-28-UI-01)
            ===================================================================== */
         .dashboard-sidebar {
             width: var(--sidebar-width);
-            background-color: #111C2E;
+            background-color: #1B262C;
             color: #FFFFFF;
             display: flex;
             flex-direction: column;
@@ -706,7 +817,7 @@
             z-index: 50;
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            border-right: 1px solid rgba(50, 130, 184, 0.2);
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -727,7 +838,7 @@
 
         .sidebar-header {
             padding: 1.125rem 1.25rem 0.875rem 1.25rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(50, 130, 184, 0.2);
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -738,11 +849,11 @@
             width: 36px;
             height: 36px;
             border-radius: 8px;
-            background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%);
+            background: linear-gradient(135deg, #0F4C75 0%, #1B262C 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0, 191, 165, 0.35);
+            box-shadow: 0 2px 8px rgba(15, 76, 117, 0.4);
             flex-shrink: 0;
         }
 
@@ -750,8 +861,8 @@
             width: 36px;
             height: 36px;
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(187, 225, 250, 0.2) !important;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -778,7 +889,7 @@
             font-size: 1.1rem;
             font-weight: 700;
             letter-spacing: -0.01em;
-            color: #FFFFFF;
+            color: #FFFFFF !important;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -787,7 +898,8 @@
         .sidebar-brand-subtitle {
             font-size: 0.6875rem;
             font-weight: 600;
-            color: #64748B;
+            color: var(--magkom-gray-light, #BBBBBB) !important;
+            opacity: 0.85;
             text-transform: uppercase;
             letter-spacing: 0.04em;
         }
@@ -818,7 +930,8 @@
         .nav-section-label {
             font-size: 0.6875rem;
             font-weight: 700;
-            color: #64748B;
+            color: var(--magkom-gray-light, #BBBBBB) !important;
+            opacity: 0.85;
             text-transform: uppercase;
             letter-spacing: 0.06em;
             padding: 0.85rem 0.75rem 0.35rem 0.75rem;
@@ -832,7 +945,7 @@
             padding: 0.5rem 0.75rem;
             border-radius: 6px;
             text-decoration: none;
-            color: #94A3B8;
+            color: var(--sidebar-text, #BBBBBB);
             font-size: 0.875rem;
             font-weight: 500;
             transition: all 0.15s ease-in-out;
@@ -841,7 +954,7 @@
         }
 
         .nav-item-link:hover {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: rgba(63, 81, 181, 0.25);
             color: #FFFFFF;
         }
 
@@ -850,28 +963,28 @@
         }
 
         .nav-item-link:focus-visible {
-            box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #00BFA5;
+            box-shadow: 0 0 0 2px #02275D, 0 0 0 4px #FFC300;
         }
 
-        /* Active Navigation Item (Gentelella v4 Parity: Clean Slate Bar with Teal Accent) */
+        /* Active Navigation Item (Rebranded Sleman Blue Palette) */
         .nav-item-link.active {
-            background-color: rgba(0, 191, 165, 0.12);
-            color: #FFFFFF;
+            background: linear-gradient(90deg, rgba(1, 52, 124, 0.8) 0%, rgba(2, 39, 93, 0.4) 100%) !important;
+            color: #FFFFFF !important;
             font-weight: 600;
             border-radius: 6px;
-            border-left: 3px solid #00BFA5;
+            border-left: 4px solid var(--magkom-amber-gold, #FFC300) !important;
             margin-right: 0;
             padding-right: 0.75rem;
             position: relative;
-            box-shadow: none;
+            box-shadow: 0 2px 8px rgba(1, 52, 124, 0.4) !important;
         }
 
         .nav-item-link.active .nav-item-icon {
-            color: #00BFA5;
+            color: var(--magkom-sun-yellow, #FFCB05) !important;
         }
 
         .nav-item-link.active svg {
-            color: #00BFA5;
+            color: var(--magkom-sun-yellow, #FFCB05) !important;
             stroke-width: 2.2;
         }
 
@@ -882,11 +995,11 @@
             flex-shrink: 0;
             width: 20px;
             height: 20px;
-            color: #64748B;
+            color: var(--magkom-gray-medium, #AAAAAA);
             transition: color 0.15s ease;
         }
 
-        /* Collapsible Sub-menu Navigation (Gentelella v4 Parity) */
+        /* Collapsible Sub-menu Navigation */
         .nav-group-btn {
             display: flex;
             align-items: center;
@@ -897,7 +1010,7 @@
             border-radius: 6px;
             border: none;
             background: transparent;
-            color: #94A3B8;
+            color: var(--sidebar-text, #BBBBBB);
             font-size: 0.875rem;
             font-weight: 500;
             font-family: inherit;
@@ -909,7 +1022,7 @@
         }
 
         .nav-group-btn:hover {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: rgba(63, 81, 181, 0.25);
             color: #FFFFFF;
         }
 
@@ -919,11 +1032,12 @@
 
         .nav-group-btn.has-active {
             color: #FFFFFF;
-            background-color: rgba(255, 255, 255, 0.03);
+            background-color: rgba(1, 52, 124, 0.4);
+            border-left: 4px solid var(--magkom-amber-gold, #FFC300);
         }
 
         .nav-group-btn.has-active .nav-item-icon {
-            color: #00BFA5;
+            color: var(--magkom-sun-yellow, #FFCB05);
         }
 
         .nav-group-btn-left {
@@ -934,16 +1048,16 @@
 
         .nav-group-chevron {
             transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            color: #64748B;
+            color: var(--magkom-indigo-accent, #3F51B5);
             transform-origin: center;
         }
 
         .nav-group-btn[aria-expanded="true"] .nav-group-chevron {
             transform: rotate(90deg);
-            color: #94A3B8;
+            color: var(--magkom-sun-yellow, #FFCB05);
         }
 
-        /* Tree Branch Line Submenu (Paritas Gentelella v4) */
+        /* Tree Branch Line Submenu */
         .nav-sub-menu {
             display: flex;
             flex-direction: column;
@@ -977,7 +1091,7 @@
             padding: 0.375rem 0.65rem;
             border-radius: 6px;
             text-decoration: none;
-            color: #94A3B8;
+            color: var(--sidebar-text, #BBBBBB);
             font-size: 0.8125rem;
             font-weight: 500;
             transition: all 0.15s ease;
@@ -997,12 +1111,45 @@
 
         .nav-sub-item:hover {
             color: #FFFFFF;
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: rgba(63, 81, 181, 0.25);
         }
 
         .nav-sub-item.active {
-            background-color: rgba(0, 191, 165, 0.15);
+            background-color: var(--magkom-primary-blue, #01347C) !important;
+            color: #FFFFFF !important;
+            font-weight: 600;
+            border-radius: 6px;
+            margin-right: 0;
+            padding-right: 0.65rem;
+        }
+            border-radius: 6px;
+            text-decoration: none;
+            color: #BBE1FA;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+
+        /* Cabang horizontal pohon submenu */
+        .nav-sub-item::before {
+            content: "";
+            position: absolute;
+            left: -0.85rem;
+            top: 50%;
+            width: 8px;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.14);
+            pointer-events: none;
+        }
+
+        .nav-sub-item:hover {
             color: #FFFFFF;
+            background-color: rgba(50, 130, 184, 0.15);
+        }
+
+        .nav-sub-item.active {
+            background-color: #0F4C75 !important;
+            color: #FFFFFF !important;
             font-weight: 600;
             border-radius: 6px;
             margin-right: 0;
@@ -1011,7 +1158,7 @@
         }
 
         .nav-sub-item.active::before {
-            background-color: #00BFA5;
+            background-color: #3282B8;
             height: 2px;
             width: 10px;
             left: -0.85rem;
@@ -1092,8 +1239,8 @@
 
         .dashboard-topbar {
             height: var(--topbar-height);
-            background-color: var(--neutral-0);
-            border-bottom: 1px solid var(--neutral-400);
+            background: transparent !important;
+            border-bottom: none !important;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -1114,14 +1261,21 @@
             display: none;
             width: 44px;
             height: 44px;
-            border: 1px solid var(--neutral-400);
-            background: var(--neutral-0);
+            border: 1px solid rgba(255, 255, 255, 0.22) !important;
+            background: rgba(255, 255, 255, 0.12) !important;
             border-radius: 8px;
-            color: var(--neutral-800);
+            color: #FFFFFF !important;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.22) !important;
+            border-color: rgba(187, 225, 250, 0.4) !important;
+            color: #FFFFFF !important;
         }
 
         .mobile-toggle-btn:focus-visible {
@@ -1134,31 +1288,31 @@
             align-items: center;
             gap: 0.5rem;
             font-size: 0.8125rem;
-            color: var(--neutral-600);
+            color: var(--magkom-gray-light, #BBBBBB);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
         .breadcrumb-trail a {
-            color: var(--neutral-600);
+            color: rgba(255, 255, 255, 0.8) !important;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.15s;
         }
 
         .breadcrumb-trail a:hover {
-            color: var(--blue-600);
+            color: var(--magkom-sun-yellow, #FFCB05) !important;
             text-decoration: underline;
         }
 
         .breadcrumb-separator {
-            color: var(--neutral-400);
+            color: rgba(255, 255, 255, 0.4) !important;
             font-weight: 400;
         }
 
         .breadcrumb-current {
-            color: var(--neutral-800);
+            color: #FFFFFF !important;
             font-weight: 700;
         }
 
@@ -1166,42 +1320,88 @@
         .topbar-right {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
             position: relative;
+        }
+
+        /* Tombol Cepat Ganti Mode Gelap / Terang di Topbar */
+        .topbar-theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            cursor: pointer;
+            color: #FFFFFF;
+            width: 38px;
+            height: 38px;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .topbar-theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.22);
+            border-color: var(--magkom-sun-yellow, #FFCB05);
+            transform: translateY(-1px);
+            color: #FFFFFF;
+        }
+
+        .topbar-theme-toggle-btn:focus-visible {
+            outline: 2px solid var(--magkom-sun-yellow, #FFCB05);
+            outline-offset: 2px;
+        }
+
+        html:not([data-theme="dark"]) .topbar-theme-toggle-btn .sun-icon {
+            display: none;
+        }
+
+        html:not([data-theme="dark"]) .topbar-theme-toggle-btn .moon-icon {
+            display: block;
+        }
+
+        html[data-theme="dark"] .topbar-theme-toggle-btn .sun-icon {
+            display: block;
+        }
+
+        html[data-theme="dark"] .topbar-theme-toggle-btn .moon-icon {
+            display: none;
         }
 
         .user-menu-trigger {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.375rem 0.5rem;
-            border-radius: 8px;
-            border: 1px solid transparent;
-            background: transparent;
+            padding: 4px 14px 4px 4px !important;
+            border-radius: 9999px !important;
+            border: 1px solid rgba(255, 255, 255, 0.22) !important;
+            background: rgba(255, 255, 255, 0.12) !important;
             cursor: pointer;
             text-align: left;
             transition: all 0.15s ease-in-out;
             min-height: 44px;
             outline: none;
+            color: #FFFFFF !important;
         }
 
         .user-menu-trigger:hover {
-            background-color: var(--neutral-100);
-            border-color: var(--neutral-200);
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            border-color: rgba(255, 255, 255, 0.4) !important;
         }
 
         .user-menu-trigger:focus-visible {
-            box-shadow: var(--focus-ring);
-            border-color: var(--blue-600);
+            box-shadow: 0 0 0 3px rgba(255, 203, 5, 0.35);
+            border-color: #FFCB05;
         }
 
         .user-avatar {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background-color: var(--blue-tint);
-            border: 1px solid var(--blue-tint-line);
-            color: var(--blue-700);
+            background-color: var(--magkom-primary-blue, #01347C);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #FFFFFF;
             font-weight: 700;
             font-size: 0.875rem;
             display: flex;
@@ -1219,7 +1419,7 @@
         .user-name-text {
             font-size: 0.875rem;
             font-weight: 600;
-            color: var(--neutral-800);
+            color: #FFFFFF !important;
             line-height: 1.25;
             max-width: 160px;
             white-space: nowrap;
@@ -1227,7 +1427,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Role Badges (Design System Bab 3.3) */
+        /* Role Badges (Design System Bab 3.3 & PRD-TASK-2026-10-28-UI-02) */
         .role-chip-badge {
             display: inline-flex;
             align-items: center;
@@ -1242,9 +1442,10 @@
         .role-chip-badge.superadmin,
         .role-chip-badge.admin,
         .role-chip-badge.pembimbing {
-            background-color: var(--blue-tint);
-            color: var(--blue-700);
-            border: 1px solid var(--blue-tint-line);
+            background-color: var(--magkom-amber-gold, #FFC300) !important;
+            color: var(--magkom-abyssal-navy, #02275D) !important;
+            border: 1px solid rgba(255, 195, 0, 0.4) !important;
+            font-weight: 700 !important;
         }
 
         .role-chip-badge.peserta {
@@ -2014,12 +2215,13 @@
         }
 
         /* Top Navigation Gentelella */
-        .top_nav {
+        .top_nav, .dashboard-topbar-wrapper {
             margin-left: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
-            background: var(--neutral-0);
-            border-bottom: 1px solid var(--neutral-300);
-            height: var(--topbar-height);
+            background: linear-gradient(135deg, var(--topbar-bg-start, #01347C) 0%, var(--topbar-bg-end, #003566) 100%) !important;
+            border-bottom: var(--topbar-border, 1px solid rgba(255, 255, 255, 0.14)) !important;
+            box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+            height: var(--topbar-height, 64px);
             position: sticky;
             top: 0;
             z-index: 40;
@@ -2046,16 +2248,17 @@
             width: 36px;
             height: 36px;
             border-radius: 8px;
-            border: 1px solid var(--neutral-300);
-            background: var(--neutral-100);
-            color: var(--neutral-700);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.12);
+            color: #FFFFFF;
             cursor: pointer;
             transition: all 0.15s ease;
         }
 
         #menu_toggle:hover {
-            background: var(--neutral-200);
-            color: var(--blue-700);
+            background: rgba(255, 255, 255, 0.22);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: #FFFFFF;
         }
 
         /* Right Column Content Canvas (Lovable Blueprint Grid & Soft Canvas) */
@@ -2064,8 +2267,8 @@
             width: calc(100% - var(--sidebar-width));
             background-color: var(--neutral-150);
             background-image:
-                linear-gradient(rgba(7, 81, 255, 0.035) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(7, 81, 255, 0.035) 1px, transparent 1px);
+                linear-gradient(rgba(1, 52, 124, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(1, 52, 124, 0.035) 1px, transparent 1px);
             background-size: 24px 24px;
             padding: 1.5rem 2rem 3rem;
             min-height: calc(100vh - var(--topbar-height) - 50px);
@@ -2085,20 +2288,25 @@
         .topbar-search-input {
             width: 100%;
             height: 36px;
-            background: var(--neutral-100);
-            border: 1px solid var(--neutral-300);
+            background: rgba(255, 255, 255, 0.12) !important;
+            border: 1px solid rgba(255, 255, 255, 0.22) !important;
             border-radius: 8px;
             padding: 0 14px;
             font-size: 0.8125rem;
-            color: var(--neutral-800);
+            color: #FFFFFF !important;
             outline: none;
             transition: all 0.15s ease;
         }
 
+        .topbar-search-input::placeholder {
+            color: rgba(255, 255, 255, 0.65) !important;
+        }
+
         .topbar-search-input:focus {
-            background: var(--neutral-0);
-            border-color: var(--blue-600);
-            box-shadow: var(--focus-ring);
+            background: rgba(2, 39, 93, 0.85) !important;
+            border-color: var(--magkom-sun-yellow, #FFCB05) !important;
+            box-shadow: 0 0 0 3px rgba(255, 203, 5, 0.25) !important;
+            color: #FFFFFF !important;
         }
 
         @media (max-width: 900px) {
@@ -2123,9 +2331,144 @@
         }
 
         [data-theme="dark"] .top_nav,
+        [data-theme="dark"] .dashboard-topbar-wrapper {
+            background: linear-gradient(135deg, #02275D 0%, #003566 100%) !important;
+            border-bottom: 1px solid rgba(63, 81, 181, 0.35) !important;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6) !important;
+        }
+
         [data-theme="dark"] .gentelella-footer {
-            background: var(--neutral-0);
-            border-color: var(--neutral-200);
+            background: #003566;
+            border-color: #2C3A4E;
+        }
+
+        /* Gentelella Side Menu Link Styling */
+        .nav.side-menu > li > a {
+            color: var(--sidebar-text, #BBBBBB) !important;
+        }
+        .nav.side-menu > li > a i,
+        .nav.side-menu > li > a svg {
+            color: var(--magkom-gray-medium, #AAAAAA) !important;
+        }
+        .nav.side-menu > li > a:hover {
+            background: rgba(63, 81, 181, 0.25) !important;
+            color: #FFFFFF !important;
+        }
+        .nav.side-menu > li.active > a,
+        .nav.side-menu > li.current-page > a {
+            background: linear-gradient(90deg, rgba(1, 52, 124, 0.8) 0%, rgba(2, 39, 93, 0.4) 100%) !important;
+            color: #FFFFFF !important;
+            border-left: 4px solid var(--magkom-amber-gold, #FFC300) !important;
+            box-shadow: 0 2px 8px rgba(1, 52, 124, 0.4) !important;
+        }
+        .nav.side-menu > li.active > a svg,
+        .nav.side-menu > li.current-page > a svg {
+            color: var(--magkom-sun-yellow, #FFCB05) !important;
+        }
+
+        /* =====================================================================
+           CARD SURFACES REFACTORING (Mode Terang #01347C & Mode Gelap #003566/#02275D)
+           ===================================================================== */
+        /* Mode Terang: Highlight Card & Stat Card memakai #01347C */
+        html:not([data-theme="dark"]) .card-highlight,
+        html:not([data-theme="dark"]) .stat-card-accent,
+        html:not([data-theme="dark"]) .cv-stat-card {
+            background-color: #01347C !important;
+            border: 1px solid #3F51B5 !important;
+            box-shadow: 0 10px 20px -3px rgba(1, 52, 124, 0.22), 0 4px 6px -4px rgba(1, 52, 124, 0.15) !important;
+            color: #FFFFFF !important;
+        }
+        html:not([data-theme="dark"]) .card-highlight .card-title,
+        html:not([data-theme="dark"]) .stat-card-accent .stat-val,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-val,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-title {
+            color: #FFFFFF !important;
+            font-weight: 700;
+        }
+        html:not([data-theme="dark"]) .card-highlight .card-desc,
+        html:not([data-theme="dark"]) .stat-card-accent .stat-label,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-label,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-sub {
+            color: #BBBBBB !important;
+            font-weight: 600;
+        }
+        html:not([data-theme="dark"]) .cv-stat-badge {
+            background-color: #FFCB05 !important;
+            color: #02275D !important;
+            font-weight: 700;
+        }
+
+        /* Mode Terang: Container Card Utama (Tabel & Form) */
+        html:not([data-theme="dark"]) .x_panel,
+        html:not([data-theme="dark"]) .card,
+        html:not([data-theme="dark"]) .cv-card {
+            background-color: #FFFFFF;
+            border: 1px solid #BBBBBB;
+            border-top: 3px solid #01347C;
+            box-shadow: 0 2px 8px rgba(1, 52, 124, 0.04);
+        }
+        html:not([data-theme="dark"]) .x_title h2,
+        html:not([data-theme="dark"]) .card-title {
+            color: #212529 !important;
+            font-weight: 700;
+        }
+
+        /* Mode Gelap: Card memakai #003566 / #02275D dengan border #3F51B5 */
+        [data-theme="dark"] .x_panel,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .cv-stat-card,
+        [data-theme="dark"] .cv-card,
+        [data-theme="dark"] .tile_stats_inner {
+            background-color: #003566 !important;
+            border: 1px solid #3F51B5 !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .card-title,
+        [data-theme="dark"] .x_title h2,
+        [data-theme="dark"] .stat-val,
+        [data-theme="dark"] .cv-stat-val,
+        [data-theme="dark"] .cv-stat-title,
+        [data-theme="dark"] .tile_stats_inner .count,
+        [data-theme="dark"] .tile_stats_inner .stat-value {
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .cv-stat-label,
+        [data-theme="dark"] .cv-stat-sub,
+        [data-theme="dark"] .tile_stats_inner .count_top,
+        [data-theme="dark"] .tile_stats_inner .stat-label,
+        [data-theme="dark"] .tile_stats_inner .count_title,
+        [data-theme="dark"] .tile_stats_inner .count_bottom,
+        [data-theme="dark"] .tile_stats_inner .count_subtext {
+            color: #BBBBBB !important;
+        }
+        [data-theme="dark"] .tile_stats_inner .count_icon,
+        [data-theme="dark"] .tile_stats_inner .stat-icon {
+            color: #FFCB05 !important;
+        }
+
+        /* Action Buttons (Primary #01347C, Interactive #3F51B5) */
+        .btn-primary, .btn-primary-gradient {
+            background: #01347C !important;
+            border-color: #01347C !important;
+            color: #FFFFFF !important;
+        }
+        .btn-primary:hover, .btn-primary-gradient:hover {
+            background: #003566 !important;
+            border-color: #003566 !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .btn-primary,
+        [data-theme="dark"] .btn-primary-gradient {
+            background: #3F51B5 !important;
+            border-color: #3F51B5 !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .btn-primary:hover,
+        [data-theme="dark"] .btn-primary-gradient:hover {
+            background: #01347C !important;
+            border-color: #01347C !important;
+            color: #FFFFFF !important;
         }
 
         /* Mode Menciut Desktop (nav-sm) */
@@ -2205,11 +2548,11 @@
         }
 
         .tile_stats_inner {
-            background: var(--neutral-0);
-            border: 1px solid var(--neutral-200);
+            background: var(--card-highlight-bg, #01347C);
+            border: 1px solid var(--card-highlight-border, #3F51B5);
             border-radius: 12px;
             padding: 1rem 1.25rem;
-            box-shadow: var(--shadow-subtle);
+            box-shadow: 0 10px 20px -3px rgba(1, 52, 124, 0.22);
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
@@ -2225,7 +2568,7 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            background: var(--blue-600);
+            background: var(--magkom-amber-gold, #FFC300);
         }
 
         .count_top {
@@ -2790,6 +3133,7 @@
 
                     @elseif($userRole === 'superadmin')
                         <!-- NAVIGASI SUPERADMIN (Figma Node 560-24892 & PRD 9.2) -->
+                        <span class="sr-only">Sistem internal Kominfo</span>
                         <a href="{{ route('superadmin.dashboard') }}" class="nav-item-link {{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3071,8 +3415,23 @@
                     </div>
                 </div>
 
-                <!-- Topbar Menu Pengguna -->
+                <!-- Topbar Menu Pengguna & Theme Switcher -->
                 <div class="topbar-right">
+                    <!-- Tombol Cepat Ganti Mode Gelap / Terang (Harmonisasi Peserta MagKom) -->
+                    <button type="button" 
+                            class="topbar-theme-toggle-btn" 
+                            id="themeToggleBtn" 
+                            onclick="togglePortalThemeQuick()" 
+                            aria-label="{{ __('Ganti Mode Terang / Gelap') }}" 
+                            title="{{ __('Ganti Mode Terang / Gelap') }}">
+                        <svg class="sun-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <svg class="moon-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </button>
+
                     <button type="button" id="userMenuBtn" class="user-menu-trigger" onclick="toggleUserMenu()" aria-expanded="false" aria-haspopup="true">
                         <div class="user-avatar" style="overflow: hidden; padding: 0;">
                             @if($currentUser?->foto_url)
@@ -3347,6 +3706,13 @@
             try {
                 localStorage.setItem('magkom_theme', theme);
             } catch (e) {}
+        };
+
+        // Toggle Cepat Terang / Gelap Instan (Harmonisasi Peserta MagKom)
+        window.togglePortalThemeQuick = function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const nextTheme = currentTheme === 'dark' ? 'terang' : 'gelap';
+            window.applyPortalTheme(nextTheme);
         };
 
         if (window.matchMedia) {

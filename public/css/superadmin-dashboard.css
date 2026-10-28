@@ -65,6 +65,24 @@
   color: var(--neutral-900);
   margin: 0;
 }
+
+/* Selaras dengan Warna Header Tabel (thead th) */
+.sa-card-table-title,
+.x_panel.has-table .x_title h2,
+.x_panel:has(table) .x_title h2,
+.sa-panel--table .sa-panel__title,
+.sa-panel:has(table) .sa-panel__title {
+  color: #334155;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .sa-card-table-title,
+[data-theme="dark"] .x_panel.has-table .x_title h2,
+[data-theme="dark"] .x_panel:has(table) .x_title h2,
+[data-theme="dark"] .sa-panel--table .sa-panel__title,
+[data-theme="dark"] .sa-panel:has(table) .sa-panel__title {
+  color: #CBD5E1 !important;
+}
 .sa-panel__sub {
   font-size: 0.75rem;
   line-height: 1.5;
@@ -257,11 +275,14 @@
 .sa-tabpanel[hidden] {
   display: none;
 }
+/* Standard Executive Spacing untuk Tab Pane SuperAdmin */
+.gentelella-tab-pane,
 .sa-tabpanel {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding-top: 1.5rem;
+  gap: 1.75rem; /* 28px standard breathing room */
+  padding-top: 1.25rem;
+  padding-bottom: 2rem;
 }
 
 /* ===== Empty State ===== */
@@ -430,34 +451,50 @@
   opacity: 0.95;
 }
 
-/* ===== Tables ===== */
+/* ===== Tables (Modern Standard DS-MagKom PRD-TASK-2026-10-28-PLAN4-REVAMP) ===== */
 .sa-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
 }
+.sa-table thead tr {
+  background: var(--table-header-bg, #F1F5F9) !important;
+  border-bottom: 2px solid var(--table-header-border, #CBD5E1) !important;
+}
 .sa-table th {
   text-align: left;
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1rem;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--neutral-600);
-  background: var(--neutral-150);
-  border-bottom: 1px solid var(--neutral-400);
+  color: var(--table-header-color, #1E293B) !important;
+  background: var(--table-header-bg, #F1F5F9);
+  border-bottom: 2px solid var(--table-header-border, #CBD5E1);
 }
 .sa-table td {
   padding: 0.875rem 1rem;
-  color: var(--neutral-800);
-  border-bottom: 1px solid var(--neutral-200);
+  color: var(--table-text-primary, var(--neutral-800));
+  border-bottom: 1px solid var(--table-row-border, var(--neutral-200));
   vertical-align: middle;
 }
 .sa-table tr:last-child td {
   border-bottom: none;
 }
-.sa-table tr:hover td {
-  background: var(--neutral-100);
+.sa-table tbody tr:hover td {
+  background-color: var(--table-row-hover, rgba(1, 52, 124, 0.04)) !important;
+}
+[data-theme="dark"] .sa-table th {
+  background: var(--table-header-bg, #012758);
+  color: var(--table-header-color, #FFFFFF) !important;
+  border-bottom-color: var(--table-header-border, #3F51B5);
+}
+[data-theme="dark"] .sa-table td {
+  color: var(--table-text-primary, #FFFFFF);
+  border-bottom-color: var(--table-row-border, rgba(63, 81, 181, 0.28));
+}
+[data-theme="dark"] .sa-table tbody tr:hover td {
+  background-color: var(--table-row-hover, rgba(63, 81, 181, 0.18)) !important;
 }
 .sa-table-strong {
   font-weight: 700;
@@ -850,14 +887,25 @@
 
 /* Inversi Token Cockpit untuk Mode Gelap (Paritas Gentelella Dark & WCAG AA) */
 [data-theme="dark"] {
-  --cv-surface: #182234;
-  --cv-paper: #0f172a;
-  --cv-line: #26354d;
-  --cv-line-strong: #334155;
-  --cv-ink: #f8fafc;        /* Teks Judul & Angka: Putih Terang Kontras Maksimal */
+  --cv-surface: #003566;
+  --cv-paper: #002244;
+  --cv-line: #3f51b5;
+  --cv-line-strong: #5c6bc0;
+  --cv-ink: #ffffff;        /* Teks Judul & Angka: Putih Terang Kontras Maksimal */
   --cv-ink-2: #cbd5e1;      /* Teks Label & Body: Abu-abu Terang Sangat Jelas */
   --cv-ink-3: #94a3b8;      /* Teks Subjudul & Muted: Slate Terang Terbaca */
-  --cv-blue-tint: #1e3a8a;
+  --cv-blue-tint: rgba(59, 130, 246, 0.2);
+  --cv-blue-900: #93c5fd;
+  --cv-blue-800: #93c5fd;
+  --cv-blue-700: #60a5fa;
+  --cv-blue-600: #38bdf8;
+  --cv-ok: #34d399;
+  --cv-ok-tint: rgba(16, 185, 129, 0.2);
+  --cv-warn: #ffcb05;
+  --cv-warn-tint: rgba(245, 158, 11, 0.2);
+  --cv-bad: #f87171;
+  --cv-bad-tint: rgba(239, 68, 68, 0.2);
+  --cv-link-color: #60a5fa;
 }
 
 
@@ -917,7 +965,18 @@
               radial-gradient(80% 120% at 100% 0%, rgba(7, 81, 255, 0.45), transparent 60%),
               linear-gradient(160deg, var(--cv-blue-800), var(--cv-blue-900));
   box-shadow: 0 8px 24px -4px rgba(6, 49, 140, 0.35);
-  padding: 1.75rem 2rem;
+  padding: 2.75rem 2.5rem;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .sa-hero {
+    padding: 1.75rem 1.5rem;
+    min-height: auto;
+  }
 }
 
 .sa-hero--fullwidth {
@@ -936,27 +995,28 @@
 
 .sa-hero__head {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .sa-hero-eyebrow {
   font-family: monospace;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.75);
-  letter-spacing: 0.05em;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .sa-hero-title {
-  font-size: 2rem;
+  font-size: 2.375rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   margin: 0.4rem 0;
   color: #ffffff;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .sa-hero-sub {
@@ -971,10 +1031,10 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.85rem;
+  margin-top: 0.65rem;
   border: 1.5px solid rgba(16, 185, 129, 0.8);
   color: #a7f3d0;
-  padding: 0.25rem 0.65rem;
+  padding: 0.35rem 0.85rem;
   border-radius: 4px;
   font-family: monospace;
   font-size: 0.725rem;
@@ -1004,10 +1064,10 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  height: 36px;
-  padding: 0 0.9rem;
+  height: 42px;
+  padding: 0 1.25rem;
   border-radius: 8px;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 600;
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: rgba(255, 255, 255, 0.08);
@@ -1024,21 +1084,21 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  height: 36px;
-  padding: 0 1rem;
+  height: 42px;
+  padding: 0 1.25rem;
   border-radius: 8px;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 700;
   border: 1px solid #ffffff;
   background: #ffffff;
-  color: var(--cv-blue-800);
+  color: var(--cv-blue-800, #06318c);
   box-shadow: 0 4px 14px -3px rgba(0, 0, 0, 0.35);
   text-decoration: none;
   transition: all 0.15s ease;
 }
 .btn-hero-primary:hover {
-  background: var(--cv-blue-tint);
-  color: var(--cv-blue-900);
+  background: var(--cv-blue-tint, #eff6ff);
+  color: var(--cv-blue-900, #061e5b);
 }
 .btn-hero-primary kbd {
   font-family: monospace;
@@ -1046,7 +1106,43 @@
   border: 1px solid rgba(6, 49, 140, 0.25);
   border-radius: 3px;
   padding: 0 4px;
-  color: var(--cv-blue-800);
+  color: var(--cv-blue-800, #06318c);
+}
+
+/* Penyelarasan Warna Hero Banner dengan Header Gentelella saat Dark Mode */
+[data-theme="dark"] .sa-hero {
+  background: var(--cv-contour) right -40px top -20px / 720px auto no-repeat,
+              radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.28), transparent 60%),
+              linear-gradient(135deg, #02275D 0%, #003566 100%);
+  border: 1px solid rgba(63, 81, 181, 0.35);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] .sa-hero .btn-hero-primary {
+  background: #ffffff;
+  color: #02275D;
+  border-color: #ffffff;
+}
+
+[data-theme="dark"] .sa-hero .btn-hero-primary:hover {
+  background: #f1f5f9;
+  color: #003566;
+}
+
+[data-theme="dark"] .sa-hero .btn-hero-primary kbd {
+  color: #02275D;
+  border-color: rgba(2, 39, 93, 0.25);
+}
+
+[data-theme="dark"] .sa-hero .btn-hero-ghost {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .sa-hero .btn-hero-ghost:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
 }
 
 /* 3. Fluid Top Metrics Grid (Gentelella Parity) */
@@ -1084,74 +1180,262 @@
   flex: initial !important;
 }
 
-.sa-metric-card-col .tile_stats_inner {
-  background: var(--neutral-0, #ffffff);
-  border: 1px solid var(--neutral-300, #e2e8f0);
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  box-shadow: var(--shadow-subtle, 0 1px 3px rgba(15, 23, 42, 0.08));
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  position: relative;
-  overflow: hidden;
-  height: 100%;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* =========================================================================
+   1. KARTU METRIK MODE TERANG (Default: Putih Bersih Seragam dengan Card Lain)
+   ========================================================================= */
+.sa-metric-card-col .tile_stats_inner,
+html:not([data-theme="dark"]) .sa-metric-card-col .tile_stats_inner {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid var(--neutral-300, #e2e8f0) !important;
+  border-radius: 10px !important;
+  padding: 1rem 1.25rem !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.875rem !important;
+  position: relative !important;
+  overflow: hidden !important;
+  height: 100% !important;
+  min-height: 94px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .sa-metric-card-col .tile_stats_inner:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.1);
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08) !important;
 }
 
+/* Hapus border vertikal kiri 4px kaku lama */
 .sa-metric-card-col .tile_stats_inner::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--cv-blue-600, #0751ff);
+  display: none !important;
 }
 
-.sa-metric-card-col.warn .tile_stats_inner::before {
-  background: var(--cv-warn, #f59e0b) !important;
+/* Tipografi Mode Terang */
+html:not([data-theme="dark"]) .sa-metric-card-col .count,
+html:not([data-theme="dark"]) .sa-metric-card-col .stat-value {
+  color: #0f172a !important;
+  font-weight: 700 !important;
 }
 
-.sa-metric-card-col.bad .tile_stats_inner::before {
-  background: var(--cv-bad, #ef4444) !important;
+html:not([data-theme="dark"]) .sa-metric-card-col .count_top,
+html:not([data-theme="dark"]) .sa-metric-card-col .count_title,
+html:not([data-theme="dark"]) .sa-metric-card-col .stat-label {
+  color: #64748b !important;
+  font-weight: 600 !important;
 }
 
+html:not([data-theme="dark"]) .sa-metric-card-col .count_bottom,
+html:not([data-theme="dark"]) .sa-metric-card-col .stat-subtext {
+  color: #64748b !important;
+}
+
+/* 1. Icon Badge Kiri */
+.stat-icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+.stat-icon.teal {
+  background: rgba(26, 187, 156, 0.12) !important;
+  color: #1abb9c !important;
+}
+
+.stat-icon.yellow {
+  background: rgba(245, 159, 0, 0.12) !important;
+  color: #f59f00 !important;
+}
+
+.stat-icon.blue {
+  background: rgba(6, 111, 209, 0.12) !important;
+  color: #066fd1 !important;
+}
+
+.stat-icon.red {
+  background: rgba(214, 57, 57, 0.12) !important;
+  color: #d63939 !important;
+}
+
+/* 2. Konten Tengah (Typography Stack) */
+.stat-content {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.stat-label,
+.sa-metric-card-col .count_top,
+.sa-metric-card-col .count_title {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.4px !important;
+  color: #64748b !important;
+  line-height: 1.2 !important;
+}
+
+.stat-value-row {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 0.5rem !important;
+  flex-wrap: nowrap !important;
+}
+
+.stat-value,
 .sa-metric-card-col .count {
-  font-size: 2.25rem !important;
-  font-weight: 800 !important;
-  color: var(--cv-ink, #0f172a) !important;
-  line-height: 1.1 !important;
-  margin: 0.25rem 0 !important;
+  font-size: 1.65rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.5px !important;
+  color: #0f172a !important;
+  line-height: 1.15 !important;
+  margin: 0 !important;
 }
 
 .sa-metric-card-col.warn .count {
-  color: var(--cv-warn, #b45309) !important;
+  color: #0f172a !important;
 }
 
 .sa-metric-card-col.bad .count {
-  color: var(--cv-bad, #b91c1c) !important;
+  color: #0f172a !important;
 }
 
+/* Trend Percentage Pill */
+.stat-change {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  border-radius: 4px !important;
+  padding: 1px 5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  line-height: 1.2 !important;
+}
+
+.stat-change.up {
+  color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.1) !important;
+}
+
+.stat-change.down {
+  color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+.stat-subtext,
+.sa-metric-card-col .count_bottom {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #64748b !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.35 !important;
+}
+
+/* 3. Sparkline Kanan */
+.sa-metric-card-col .stat-spark,
 .sa-metric-card-col .sa-spark {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 16px;
-  margin-left: 0.5rem;
-  vertical-align: middle;
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 3px !important;
+  height: 32px !important;
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+  padding-right: 2px !important;
 }
 
+.sa-metric-card-col .stat-spark i,
 .sa-metric-card-col .sa-spark i {
-  width: 3px;
-  background: var(--cv-blue-600, #0751ff);
-  border-radius: 1px;
-  opacity: 0.85;
+  width: 3.5px !important;
+  border-radius: 1.5px !important;
+  transition: height 0.3s ease !important;
+}
+
+.stat-teal .stat-spark i,
+.stat-teal .sa-spark i {
+  background: #1abb9c !important;
+  opacity: 0.85 !important;
+}
+
+.stat-yellow .stat-spark i,
+.stat-yellow .sa-spark i {
+  background: #f59f00 !important;
+  opacity: 0.85 !important;
+}
+
+.stat-blue .stat-spark i,
+.stat-blue .sa-spark i {
+  background: #066fd1 !important;
+  opacity: 0.85 !important;
+}
+
+.stat-red .stat-spark i,
+.stat-red .sa-spark i {
+  background: #d63939 !important;
+  opacity: 0.85 !important;
+}
+
+/* =========================================================================
+   2. KARTU METRIK MODE GELAP (Navy #003566 Seragam dengan Card Lain di Dashboard)
+   ========================================================================= */
+[data-theme="dark"] .sa-metric-card-col .tile_stats_inner {
+  background-color: #003566 !important;
+  background: #003566 !important;
+  border: 1px solid #3f51b5 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .sa-metric-card-col .tile_stats_inner:hover {
+  border-color: #5c6bc0 !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Tipografi Mode Gelap */
+[data-theme="dark"] .stat-value,
+[data-theme="dark"] .sa-metric-card-col .count {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="dark"] .stat-label,
+[data-theme="dark"] .sa-metric-card-col .count_top,
+[data-theme="dark"] .sa-metric-card-col .count_title {
+  color: #cbd5e1 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="dark"] .stat-subtext,
+[data-theme="dark"] .sa-metric-card-col .count_bottom {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .stat-icon.teal {
+  background: rgba(26, 187, 156, 0.22) !important;
+  color: #20c997 !important;
+}
+
+[data-theme="dark"] .stat-icon.yellow {
+  background: rgba(245, 159, 0, 0.22) !important;
+  color: #fbbf24 !important;
+}
+
+[data-theme="dark"] .stat-icon.blue {
+  background: rgba(6, 111, 209, 0.22) !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .stat-icon.red {
+  background: rgba(214, 57, 57, 0.22) !important;
+  color: #f87171 !important;
 }
 
 /* 3. Integrated 4-Metric Dock (Legacy Fallback) */
@@ -1290,8 +1574,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  background: var(--cv-surface);
-  border: 1px solid var(--cv-line);
+  background: var(--cv-surface, #ffffff);
+  border: 1px solid var(--cv-line, #e2e8f0);
   border-radius: 10px;
   font-size: 0.8125rem;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
@@ -1299,7 +1583,7 @@
 
 .sa-statusline > div {
   padding: 0.65rem 1rem;
-  border-right: 1px solid var(--cv-line);
+  border-right: 1px solid var(--cv-line, #e2e8f0);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -1309,20 +1593,65 @@
   margin-left: auto;
 }
 .sa-statusline dt {
-  color: var(--cv-ink-3);
+  color: var(--cv-ink-3, #64748b);
   font-weight: 500;
 }
 .sa-statusline dd {
   font-weight: 700;
-  color: var(--cv-ink);
+  color: var(--cv-ink, #0f172a);
   margin: 0;
 }
 .sa-statusline-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--cv-ok);
-  box-shadow: 0 0 0 2px var(--cv-ok-tint);
+  background: var(--cv-ok, #10b981);
+  box-shadow: 0 0 0 2px var(--cv-ok-tint, rgba(16, 185, 129, 0.2));
+}
+
+#select-bulan,
+.sa-select--period {
+  background-color: #FFFFFF !important;
+  color: #1D2530 !important;
+  border: 1px solid #D0D3D9 !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 0.8125rem !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+}
+#select-bulan option {
+  background-color: #FFFFFF !important;
+  color: #1D2530 !important;
+}
+
+[data-theme="dark"] .sa-statusline {
+  background: #003566 !important;
+  border: 1px solid #3f51b5 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+[data-theme="dark"] .sa-statusline > div {
+  border-right-color: #3f51b5 !important;
+}
+[data-theme="dark"] .sa-statusline dt {
+  color: #cbd5e1 !important;
+}
+[data-theme="dark"] .sa-statusline dd {
+  color: #ffffff !important;
+}
+[data-theme="dark"] .sa-statusline-dot {
+  background: #10b981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3) !important;
+}
+[data-theme="dark"] .sa-select--period,
+[data-theme="dark"] #select-bulan {
+  background-color: #002855 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #3F51B5 !important;
+}
+[data-theme="dark"] #select-bulan option {
+  background-color: #002855 !important;
+  color: #FFFFFF !important;
 }
 
 /* 5. Hazard Attention Card */
@@ -1331,8 +1660,8 @@
   grid-template-columns: auto 1fr auto;
   gap: 1.25rem;
   align-items: center;
-  background: var(--cv-surface);
-  border: 1px solid var(--cv-line);
+  background: var(--cv-surface, #ffffff);
+  border: 1px solid var(--cv-line, #e2e8f0);
   border-radius: 12px;
   box-shadow: 0 3px 10px -2px rgba(15, 23, 42, 0.07);
   padding: 1rem 1.25rem 1rem 1.5rem;
@@ -1357,7 +1686,7 @@
 .sa-attn-hazard__count {
   font-size: 2.25rem;
   font-weight: 800;
-  color: var(--cv-warn);
+  color: var(--cv-warn, #d97706);
   line-height: 1;
   letter-spacing: -0.04em;
   text-align: center;
@@ -1366,7 +1695,7 @@
   display: block;
   font-size: 0.6875rem;
   font-weight: 700;
-  color: var(--cv-ink-3);
+  color: var(--cv-ink-3, #64748b);
   letter-spacing: 0.08em;
   margin-top: 4px;
 }
@@ -1374,7 +1703,7 @@
 .sa-attn-hazard__body h4 {
   font-size: 0.925rem;
   font-weight: 700;
-  color: var(--cv-ink);
+  color: var(--cv-ink, #0f172a);
   margin: 0 0 0.35rem 0;
 }
 
@@ -1391,15 +1720,38 @@
   font-size: 0.75rem;
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
-  background: var(--cv-warn-tint);
+  background: var(--cv-warn-tint, #fffbeb);
   border: 1px solid rgba(245, 158, 11, 0.25);
-  color: var(--cv-ink-2);
+  color: var(--cv-ink-2, #334155);
 }
 .sa-hazard-chip b {
   font-family: monospace;
-  color: var(--cv-bad);
+  color: var(--cv-bad, #ef4444);
   font-weight: 700;
   margin-left: 0.35rem;
+}
+
+[data-theme="dark"] .sa-attn-hazard {
+  background: #003566 !important;
+  border: 1px solid #3f51b5 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+[data-theme="dark"] .sa-attn-hazard__count {
+  color: #ffcb05 !important;
+}
+[data-theme="dark"] .sa-attn-hazard__count small {
+  color: #cbd5e1 !important;
+}
+[data-theme="dark"] .sa-attn-hazard__body h4 {
+  color: #ffffff !important;
+}
+[data-theme="dark"] .sa-hazard-chip {
+  background: rgba(245, 158, 11, 0.2) !important;
+  border: 1px solid rgba(253, 230, 138, 0.35) !important;
+  color: #fde68a !important;
+}
+[data-theme="dark"] .sa-hazard-chip b {
+  color: #f87171 !important;
 }
 
 /* 6. Aside Sticky List & Quick Action Buttons */
@@ -1481,11 +1833,13 @@
   border-radius: 2px;
   background: var(--cv-line);
 }
-.cv-seg i.f {
-  background: linear-gradient(180deg, var(--cv-blue-600), var(--cv-blue-700));
+.cv-seg i.f,
+.cv-seg i.filled {
+  background: linear-gradient(180deg, #FBBF24, #F59E0B) !important;
 }
-.cv-seg.full i.f {
-  background: linear-gradient(180deg, #F59E0B, #D97706);
+.cv-seg.full i.f,
+.cv-seg.full i.filled {
+  background: linear-gradient(180deg, #F59E0B, #D97706) !important;
 }
 
 /* 8. Audit Log Timeline Feed */
@@ -1539,7 +1893,11 @@
   height: 7px;
   border-radius: 50%;
   background: var(--cv-surface);
-  box-shadow: 0 0 0 2px var(--cv-blue-600);
+  box-shadow: 0 0 0 2px #F59E0B;
+}
+[data-theme="dark"] .cv-feed-content::after {
+  background: #003566;
+  box-shadow: 0 0 0 2px #FBBF24;
 }
 .cv-feed-what {
   color: var(--cv-ink);
@@ -1936,6 +2294,319 @@
 [data-theme="dark"] .gt-referrer-badge {
   color: #34d399;
 }
+
+/* ==========================================================================
+   PENYELARASAN KOMPREHENSIF COCKPIT SUPERADMIN (TASK-003 DS-MAGKOM)
+   Standarisasi Tombol, Kontras WCAG AA, dan Palet Dual-Theme (#003566 & #3F51B5)
+   ========================================================================== */
+
+/* 1. Standarisasi Tombol Primer & Sekunder (.sa-page) */
+.sa-page .btn-primary,
+.sa-page .btn.btn-primary {
+  background-color: #01347c !important;
+  border: 1px solid #01347c !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+}
+.sa-page .btn-primary:hover,
+.sa-page .btn.btn-primary:hover {
+  background-color: #0751ff !important;
+  border-color: #0751ff !important;
+  color: #ffffff !important;
+}
+
+.sa-page .btn-secondary,
+.sa-page .btn.btn-secondary {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+}
+.sa-page .btn-secondary:hover,
+.sa-page .btn.btn-secondary:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Mode Gelap Tombol */
+[data-theme="dark"] .sa-page .btn-primary,
+[data-theme="dark"] .sa-page .btn.btn-primary {
+  background-color: #3f51b5 !important;
+  border: 1px solid #3f51b5 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(63, 81, 181, 0.4) !important;
+}
+[data-theme="dark"] .sa-page .btn-primary:hover,
+[data-theme="dark"] .sa-page .btn.btn-primary:hover {
+  background-color: #01347c !important;
+  border-color: #5c6bc0 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .sa-page .btn-secondary,
+[data-theme="dark"] .sa-page .btn.btn-secondary {
+  background-color: #1b262c !important;
+  border: 1px solid #3f51b5 !important;
+  color: #cbd5e1 !important;
+}
+[data-theme="dark"] .sa-page .btn-secondary:hover,
+[data-theme="dark"] .sa-page .btn.btn-secondary:hover {
+  background-color: #0f4c75 !important;
+  border-color: #3282b8 !important;
+  color: #ffffff !important;
+}
+
+/* 2. Tautan Navigasi Kontras Tinggi (.sa-link) */
+.sa-link {
+  color: var(--blue-600, #0751ff);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.sa-link:hover {
+  color: var(--blue-700, #0641cc);
+  text-decoration: underline;
+}
+
+[data-theme="dark"] .sa-link {
+  color: #60a5fa !important;
+}
+[data-theme="dark"] .sa-link:hover {
+  color: #bae6fd !important;
+  text-decoration: underline !important;
+}
+
+/* 3. Tab 2: Pagu Kuota Dinas, Utilisasi & Slot Khusus */
+.sa-pagu-box {
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  border: 1px solid var(--cv-line, #e2e8f0);
+}
+[data-theme="dark"] .sa-pagu-box {
+  background: #003566 !important;
+  border: 1px solid #3f51b5 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+}
+[data-theme="dark"] .sa-pagu-box .sa-pagu-label {
+  color: #cbd5e1 !important;
+}
+[data-theme="dark"] .sa-pagu-box .sa-meter {
+  background: #002244 !important;
+}
+
+.sa-quota-stat {
+  color: var(--cv-blue-800, #06318c);
+}
+.sa-quota-stat.is-full {
+  color: #d97706;
+}
+[data-theme="dark"] .sa-quota-stat {
+  color: #93c5fd !important;
+}
+[data-theme="dark"] .sa-quota-stat.is-full {
+  color: #ffcb05 !important;
+}
+
+.sa-metric-val-purple {
+  color: #7c3aed;
+}
+[data-theme="dark"] .sa-metric-val-purple {
+  color: #c4b5fd !important;
+}
+
+.sa-badge-purple-shield {
+  background: #ede9fe;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+}
+[data-theme="dark"] .sa-badge-purple-shield {
+  background: rgba(167, 139, 250, 0.18) !important;
+  color: #ddd6fe !important;
+  border: 1px solid rgba(167, 139, 250, 0.35) !important;
+}
+
+/* 4. Tab 3: Metrik Bimbingan, Pengawasan Tugas, Matriks & Off-boarding */
+.sa-stat-val-primary {
+  color: var(--cv-blue-800, #06318c);
+}
+[data-theme="dark"] .sa-stat-val-primary {
+  color: #38bdf8 !important;
+}
+
+.sa-stat-val-warning {
+  color: #d97706;
+}
+[data-theme="dark"] .sa-stat-val-warning {
+  color: #ffcb05 !important;
+}
+
+.sa-stat-val-success {
+  color: #059669;
+}
+[data-theme="dark"] .sa-stat-val-success {
+  color: #34d399 !important;
+}
+
+.sa-stat-val-neutral {
+  color: var(--cv-ink, #0f172a);
+}
+[data-theme="dark"] .sa-stat-val-neutral {
+  color: #ffffff !important;
+}
+
+.sa-task-overdue-card {
+  background: var(--cv-surface, #ffffff);
+}
+[data-theme="dark"] .sa-task-overdue-card {
+  background: #003566 !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+.sa-task-overdue-icon.is-danger {
+  color: #ef4444;
+  background: #fef2f2;
+}
+.sa-task-overdue-icon.is-success {
+  color: #10b981;
+  background: #ecfdf5;
+}
+[data-theme="dark"] .sa-task-overdue-icon.is-danger {
+  color: #f87171 !important;
+  background: rgba(239, 68, 68, 0.2) !important;
+}
+[data-theme="dark"] .sa-task-overdue-icon.is-success {
+  color: #34d399 !important;
+  background: rgba(16, 185, 129, 0.2) !important;
+}
+[data-theme="dark"] .sa-task-overdue-val {
+  color: #f87171 !important;
+}
+[data-theme="dark"] .sa-task-overdue-hint {
+  color: #fca5a5 !important;
+}
+
+.sa-task-deadline-card {
+  background: var(--cv-surface, #ffffff);
+}
+[data-theme="dark"] .sa-task-deadline-card {
+  background: #003566 !important;
+  border-color: #3f51b5 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+.sa-task-deadline-icon {
+  color: #f59e0b;
+  background: #fffbeb;
+}
+[data-theme="dark"] .sa-task-deadline-icon {
+  color: #ffcb05 !important;
+  background: rgba(245, 158, 11, 0.2) !important;
+}
+[data-theme="dark"] .sa-task-deadline-val {
+  color: #ffcb05 !important;
+}
+
+.sa-badge-mentee,
+.sa-badge-bidang {
+  background: var(--blue-tint, #eff6ff);
+  color: var(--blue-700, #0641cc);
+}
+[data-theme="dark"] .sa-badge-mentee,
+[data-theme="dark"] .sa-badge-bidang {
+  background: rgba(59, 130, 246, 0.25) !important;
+  color: #93c5fd !important;
+  border: 1px solid rgba(147, 197, 253, 0.3) !important;
+}
+
+/* 5. Tab 4: Hub Ekspor 4 Laporan & Infrastruktur Telemetri */
+.sa-export-card__num {
+  background: var(--cv-blue-tint, #eff6ff);
+  color: var(--cv-blue-800, #06318c);
+}
+[data-theme="dark"] .sa-export-card__num {
+  background: rgba(59, 130, 246, 0.25) !important;
+  color: #93c5fd !important;
+  border: 1px solid rgba(147, 197, 253, 0.35) !important;
+}
+
+.sa-infra-icon--primary {
+  color: var(--cv-blue-600, #0751ff);
+  background: var(--cv-blue-tint, #eff6ff);
+}
+.sa-infra-icon--success {
+  color: #10b981;
+  background: #ecfdf5;
+}
+.sa-infra-icon--warning {
+  color: #f59e0b;
+  background: #fffbeb;
+}
+
+[data-theme="dark"] .sa-infra-icon--primary {
+  color: #38bdf8 !important;
+  background: rgba(59, 130, 246, 0.2) !important;
+}
+[data-theme="dark"] .sa-infra-icon--success {
+  color: #34d399 !important;
+  background: rgba(16, 185, 129, 0.2) !important;
+}
+[data-theme="dark"] .sa-infra-icon--warning {
+  color: #ffcb05 !important;
+  background: rgba(245, 158, 11, 0.2) !important;
+}
+
+/* 6. Penyelarasan Panel & Permukaan Cockpit Mode Gelap (#003566 & #3F51B5) */
+[data-theme="dark"] .sa-panel {
+  background: #003566;
+  border-color: #3f51b5;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+[data-theme="dark"] .sa-panel--sub {
+  background: #002244;
+  border-color: #3f51b5;
+}
+[data-theme="dark"] .sa-list-item--link {
+  background: #002244 !important;
+  border-color: #3f51b5 !important;
+}
+[data-theme="dark"] .sa-list-item--link:hover {
+  background: #003566 !important;
+  border-color: #5c6bc0 !important;
+}
+
+[data-theme="dark"] .sa-badge--info {
+  background: rgba(59, 130, 246, 0.2) !important;
+  color: #93c5fd !important;
+  border: 1px solid rgba(147, 197, 253, 0.3) !important;
+}
+[data-theme="dark"] .sa-badge--warning {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #fde68a !important;
+  border: 1px solid rgba(253, 230, 138, 0.35) !important;
+}
+[data-theme="dark"] .sa-badge--danger {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(252, 165, 165, 0.35) !important;
+}
+[data-theme="dark"] .sa-badge--success {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #6ee7b7 !important;
+  border: 1px solid rgba(110, 231, 183, 0.35) !important;
+}
+
 
 
 

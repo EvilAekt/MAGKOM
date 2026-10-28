@@ -127,18 +127,6 @@
             border-color: #26354D !important;
             color: #94A3B8 !important;
         }
-        [data-theme="dark"] table th {
-            background: #141E30 !important;
-            color: #94A3B8 !important;
-            border-bottom-color: #26354D !important;
-        }
-        [data-theme="dark"] table td {
-            color: #CBD5E1 !important;
-            border-bottom-color: #26354D !important;
-        }
-        [data-theme="dark"] table tbody tr:hover td {
-            background: #162238 !important;
-        }
         [data-theme="dark"] div[style*="background: #ffffff"],
         [data-theme="dark"] div[style*="background: #FFFFFF"],
         [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
@@ -212,11 +200,11 @@
         </button>
         <button type="button" class="arsip-tab-btn" onclick="switchArsipTab('tab-tugas', this)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-            <span>2. Riwayat Tugas ({{ $penempatan->tugas->count() }})</span>
+            <span>2. Riwayat Tugas ({{ (string) $penempatan->tugas->count() }})</span>
         </button>
         <button type="button" class="arsip-tab-btn" onclick="switchArsipTab('tab-logbook', this)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-            <span>3. Logbook Harian ({{ $penempatan->logbooks->count() }})</span>
+            <span>3. Logbook Harian ({{ (string) $penempatan->logbooks->count() }})</span>
         </button>
         <button type="button" class="arsip-tab-btn" onclick="switchArsipTab('tab-nilai', this)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
@@ -279,15 +267,15 @@
                 <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 1rem; font-size: 0.8125rem; display: flex; flex-direction: column; gap: 0.5rem;">
                     <div style="display: flex; justify-content: space-between;">
                         <span style="color: var(--neutral-600, #64748B);">Total Tugas Diberikan:</span>
-                        <strong>{{ $penempatan->tugas->count() }} Tugas</strong>
+                        <strong>{{ (string) $penempatan->tugas->count() }} Tugas</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
                         <span style="color: var(--neutral-600, #64748B);">Tugas Selesai:</span>
-                        <strong style="color: #16A34A;">{{ $penempatan->tugas->where('status.value', 'selesai')->count() }} Selesai</strong>
+                        <strong style="color: #16A34A;">{{ (string) $penempatan->tugas->where('status.value', 'selesai')->count() }} Selesai</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
                         <span style="color: var(--neutral-600, #64748B);">Total Logbook Terisi:</span>
-                        <strong style="color: #0641CC;">{{ $penempatan->logbooks->count() }} Entri</strong>
+                        <strong style="color: #0641CC;">{{ (string) $penempatan->logbooks->count() }} Entri</strong>
                     </div>
                 </div>
             </div>
@@ -341,14 +329,14 @@
                 Rekam Jejak Logbook Harian Magang (Read-Only)
             </h3>
             @if($penempatan->logbooks->isNotEmpty())
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.8125rem;">
+                <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                    <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.8125rem;">
                         <thead>
-                            <tr style="background: #F8FAFC; border-bottom: 1px solid var(--neutral-300, #CBD5E1); text-transform: uppercase; color: var(--neutral-600, #475569);">
-                                <th style="padding: 0.75rem; text-align: left;">Tanggal</th>
-                                <th style="padding: 0.75rem; text-align: left;">Minggu</th>
-                                <th style="padding: 0.75rem; text-align: left;">Aktivitas Magang</th>
-                                <th style="padding: 0.75rem; text-align: center;">Status</th>
+                            <tr class="headings">
+                                <th style="text-align: left;">Tanggal</th>
+                                <th style="text-align: left;">Minggu</th>
+                                <th style="text-align: left;">Aktivitas Magang</th>
+                                <th style="text-align: center;">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -392,14 +380,14 @@
             </div>
 
             @if($penilaian && $penilaian->details->isNotEmpty())
-                <div style="overflow-x: auto; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+                <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                    <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
                         <thead>
-                            <tr style="background: #F8FAFC; border-bottom: 1px solid var(--neutral-300, #CBD5E1); font-size: 0.75rem; text-transform: uppercase; color: var(--neutral-600, #475569);">
-                                <th style="padding: 0.75rem 1rem; text-align: left;">Kriteria Rubrik</th>
-                                <th style="padding: 0.75rem 1rem; text-align: center;">Bobot (%)</th>
-                                <th style="padding: 0.75rem 1rem; text-align: center;">Skor (0-100)</th>
-                                <th style="padding: 0.75rem 1rem; text-align: center;">Kontribusi Nilai</th>
+                            <tr class="headings">
+                                <th style="text-align: left;">Kriteria Rubrik</th>
+                                <th style="text-align: center;">Bobot (%)</th>
+                                <th style="text-align: center;">Skor (0-100)</th>
+                                <th style="text-align: center;">Kontribusi Nilai</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -439,7 +427,7 @@
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--neutral-200, #E2E8F0); background: #F8FAFC;">
                             <div>
                                 <div style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-900, #0F172A);">
-                                    {{ ucwords(str_replace('_', ' ', $dok->jenis_dokumen)) }}
+                                    {{ ucwords((string) str_replace('_', ' ', (string) $dok->jenis_dokumen)) }}
                                 </div>
                                 <div style="font-size: 0.72rem; color: var(--neutral-500, #64748B);">
                                     Terverifikasi saat seleksi
