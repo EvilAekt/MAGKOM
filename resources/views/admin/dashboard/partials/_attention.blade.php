@@ -18,9 +18,9 @@
 @endif
 
 {{-- 3 Kartu Efisiensi Operasional Gentelella --}}
-<div class="row" style="margin-bottom: 0;">
-    <div class="col-md-4 col-sm-4 col-xs-12">
-        <x-gentelella.card style="margin-bottom: 0.75rem; padding: 1rem 1.25rem; border-left: 4px solid var(--blue-600); border-radius: 10px;">
+<div class="adm-kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 0;">
+    <div>
+        <x-gentelella.card style="margin-bottom: 0; padding: 1.15rem 1.25rem; border-left: 4px solid var(--blue-600); border-radius: 12px; height: 100%;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500); text-transform: uppercase;">Kecepatan Verifikasi Berkas</span>
@@ -36,8 +36,8 @@
         </x-gentelella.card>
     </div>
 
-    <div class="col-md-4 col-sm-4 col-xs-12">
-        <x-gentelella.card style="margin-bottom: 0.75rem; padding: 1rem 1.25rem; border-left: 4px solid var(--green-600); border-radius: 10px;">
+    <div>
+        <x-gentelella.card style="margin-bottom: 0; padding: 1.15rem 1.25rem; border-left: 4px solid var(--green-600); border-radius: 12px; height: 100%;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500); text-transform: uppercase;">Tingkat Keterisian Kuota</span>
@@ -53,8 +53,8 @@
         </x-gentelella.card>
     </div>
 
-    <div class="col-md-4 col-sm-4 col-xs-12">
-        <x-gentelella.card style="margin-bottom: 0.75rem; padding: 1rem 1.25rem; border-left: 4px solid #7C3AED; border-radius: 10px;">
+    <div>
+        <x-gentelella.card style="margin-bottom: 0; padding: 1.15rem 1.25rem; border-left: 4px solid #7C3AED; border-radius: 12px; height: 100%;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500); text-transform: uppercase;">Pendaftar 7 Hari Terakhir</span>
