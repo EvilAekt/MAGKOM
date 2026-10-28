@@ -4,6 +4,7 @@
    ========================================================================== --}}
 
 {{-- PANEL 1: PERLU TINDAKAN HARI INI --}}
+<span class="sr-only">Status Operasional & Tim Kerja</span>
 <x-gentelella.card style="padding: 1.25rem;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.65rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">

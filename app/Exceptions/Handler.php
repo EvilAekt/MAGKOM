@@ -2,13 +2,37 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
 use Psr\Log\LogLevel;
 use Sentry\Laravel\Integration;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    /**
+     * Convert an authentication exception into a response.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($this->shouldReturnJson($request, $exception)) {
+            return response()->json(['message' => $exception->getMessage()], 401);
+        }
+
+        // Jangan simpan endpoint SSE realtime ke session url.intended agar pengguna
+        // tidak dialihkan ke stream teks mentah setelah login.
+        if ($request->is('realtime/*') || $request->routeIs('realtime.*')) {
+            return redirect()->to($exception->redirectTo() ?? route('login'));
+        }
+
+        return redirect()->guest($exception->redirectTo() ?? route('login'));
+    }
+
     /**
      * A list of exception types with their corresponding custom log levels.
      *

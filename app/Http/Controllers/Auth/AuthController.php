@@ -81,12 +81,21 @@ class AuthController extends Controller
                 detail: ['aksi' => 'login_berhasil']
             );
 
-            return redirect()->intended(match ($user->role) {
+            $targetDashboard = match ($user->role) {
                 RoleEnum::SuperAdmin => route('superadmin.dashboard'),
                 RoleEnum::Admin => route('admin.dashboard'),
                 RoleEnum::Pembimbing => route('pembimbing.dashboard'),
                 RoleEnum::Peserta => route('peserta.dashboard'),
-            });
+            };
+
+            $intended = session()->get('url.intended');
+            if ($intended && (str_contains($intended, '/realtime/stream') || str_contains($intended, '/realtime/'))) {
+                session()->forget('url.intended');
+
+                return redirect()->to($targetDashboard);
+            }
+
+            return redirect()->intended($targetDashboard);
         }
 
         $this->auditService->catat(

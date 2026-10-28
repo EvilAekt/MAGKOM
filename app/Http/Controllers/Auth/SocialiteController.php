@@ -110,6 +110,11 @@ class SocialiteController extends Controller
                 detail: ['aksi' => 'login_berhasil_oauth']
             );
 
+            $intended = session()->get('url.intended');
+            if ($intended && (str_contains($intended, '/realtime/stream') || str_contains($intended, '/realtime/'))) {
+                session()->forget('url.intended');
+            }
+
             return redirect()->intended(route('peserta.pendaftaran.index'));
         }
 
@@ -173,6 +178,11 @@ class SocialiteController extends Controller
                 nilaiBaru: ['email' => $existingUser->email, 'provider' => $provider, 'provider_id' => $providerId],
                 detail: ['aksi' => 'login_berhasil_oauth_taut_akun']
             );
+
+            $intended = session()->get('url.intended');
+            if ($intended && (str_contains($intended, '/realtime/stream') || str_contains($intended, '/realtime/'))) {
+                session()->forget('url.intended');
+            }
 
             return redirect()->intended(route('peserta.pendaftaran.index'))
                 ->with('success', 'Akun Google Anda berhasil ditautkan ke akun MagKom.');

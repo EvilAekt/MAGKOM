@@ -125,4 +125,25 @@ class RealtimeEventSseStreamTest extends TestCase
         $event->refresh();
         $this->assertNotNull($event->read_at);
     }
+
+    public function test_guest_redirected_to_login_does_not_poison_intended_url_with_sse_stream(): void
+    {
+        // 1. Tamu mengakses /realtime/stream
+        $this->get('/realtime/stream')->assertRedirect('/login');
+
+        // 2. Buat akun peserta dan login
+        $peserta = User::factory()->create([
+            'role' => RoleEnum::Peserta,
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => $peserta->email,
+            'password' => 'password123',
+        ]);
+
+        // 3. Harus dialihkan ke dashboard peserta, BUKAN ke /realtime/stream
+        $response->assertRedirect(route('peserta.dashboard'));
+        $this->assertAuthenticatedAs($peserta);
+    }
 }

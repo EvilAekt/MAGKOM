@@ -25,7 +25,7 @@
 
     <!-- Gentelella Theme CSS -->
     <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/dashboard-cockpit-unified.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dashboard-cockpit-unified.css') }}?v={{ file_exists(public_path('css/dashboard-cockpit-unified.css')) ? filemtime(public_path('css/dashboard-cockpit-unified.css')) : '1.0' }}">
 
     <!-- Anti-Flash Theme Script -->
     <script>
@@ -649,6 +649,11 @@
             padding: 0;
         }
 
+        html {
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: var(--font-sans);
             background-color: var(--neutral-150);
@@ -796,14 +801,18 @@
             gap: 0.15rem;
             overflow-y: auto;
             min-height: 0;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+            -ms-overflow-style: auto;
         }
 
         .sidebar-nav::-webkit-scrollbar {
-            display: none;
-            width: 0;
-            height: 0;
+            width: 4px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
         }
 
         .nav-section-label {
@@ -1945,11 +1954,17 @@
             padding: 0.75rem 0.5rem;
             flex: 1;
             overflow-y: auto;
-            scrollbar-width: none;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
         }
 
         .main_menu_side::-webkit-scrollbar {
-            display: none;
+            width: 4px;
+        }
+
+        .main_menu_side::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
         }
 
         .menu_section {
@@ -3168,7 +3183,7 @@
             </header>
         </div>
 
-            <!-- Container Konten Dinamis (Gentelella right_col) -->
+        <!-- Container Konten Dinamis (Gentelella right_col) -->
             <main class="right_col dashboard-main dashboard-content-area {{ $isSuperAdmin ? 'gentelella-fluid-canvas' : '' }} @yield('content_area_class')" role="main" id="mainContent">
                 <!-- =====================================================================
                      GLOBAL FLASH ALERTS

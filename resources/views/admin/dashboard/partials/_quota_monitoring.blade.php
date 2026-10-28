@@ -16,40 +16,45 @@
     @if($bulanAktif)
         @php
             $persenTotal = $totalKuotaUmum > 0 ? min(100, round(($totalKuotaTerisi / $totalKuotaUmum) * 100)) : 0;
+            $totalColor = $persenTotal >= 100 ? '#EF4444' : ($persenTotal >= 80 ? '#F59E0B' : 'var(--blue-600, #0641CC)');
         @endphp
-        <div style="padding: 1rem 1.25rem; background: var(--blue-tint, #EFF6FF); border: 1px solid var(--blue-tint-line, #BFDBFE); border-radius: 12px; margin-bottom: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="padding: 0.85rem 1.15rem; background: var(--neutral-100, #F8FAFC); border: 1px solid var(--neutral-300, #E2E8F0); border-radius: 10px; margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem; flex-wrap: wrap; gap: 0.5rem;">
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="font-size: 0.9rem; font-weight: 800; color: var(--blue-700, #0641CC);">Total Kapasitas Kursi Magang</span>
-                    <span class="x_badge x_badge_primary" style="font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 6px;">
+                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--neutral-800, #0F172A);">Total Kapasitas Kursi Magang</span>
+                    <span style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 9999px; background: var(--blue-tint, #EFF6FF); color: var(--blue-700, #0641CC); border: 1px solid var(--blue-tint-line, #BFDBFE);">
                         {{ $bulanAktif->bulan_mulai?->translatedFormat('F Y') }}
                     </span>
                 </div>
-                <div style="font-family: var(--font-mono, monospace); font-size: 0.875rem; font-weight: 800; color: var(--blue-700, #0641CC);">
-                    {{ $totalKuotaTerisi }} / {{ $totalKuotaUmum }} Kursi ({{ $persenTotal }}%)
+                <div style="font-family: var(--font-mono, monospace); font-size: 0.85rem; font-weight: 800; color: var(--neutral-800, #0F172A);">
+                    {{ $totalKuotaTerisi }} / {{ $totalKuotaUmum }} Kursi <span style="font-weight: 600; color: var(--neutral-500);">({{ $persenTotal }}%)</span>
                 </div>
             </div>
-            <div style="width: 100%; height: 8px; background: rgba(6, 65, 204, 0.15); border-radius: 9999px; overflow: hidden;">
-                <div style="height: 100%; width: {{ $persenTotal }}%; background: var(--blue-600, #0751FF); border-radius: 9999px; transition: width 0.5s ease;"></div>
+            <div style="width: 100%; height: 7px; background: var(--neutral-200, #E2E8F0); border-radius: 9999px; overflow: hidden;">
+                <div style="height: 100%; width: {{ $persenTotal }}%; background: {{ $totalColor }}; border-radius: 9999px; transition: width 0.4s ease;"></div>
             </div>
         </div>
     @endif
 
-    {{-- Daftar Progres Kuota Jurusan (Goals / Smooth Track Style - Gambar 2) --}}
+    {{-- Daftar Progres Kuota Jurusan (Functional Semantic Coloring) --}}
     @if($kuotaList->isEmpty())
         <p style="margin: 0; font-size: 0.85rem; color: var(--neutral-500); text-align: center; padding: 2rem 0;">Belum ada kuota jurusan yang dikonfigurasi untuk bulan ini.</p>
     @else
         <div class="cv-goal-list">
-            @php
-                // Palet multi-warna cerah dan estetik persis seperti di Gambar 2
-                $goalColors = ['#06B6D4', '#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899'];
-            @endphp
-
             @foreach($kuotaList as $index => $kuota)
                 @php
                     $pct = $kuota->jumlah > 0 ? min(100, round(($kuota->terisi / $kuota->jumlah) * 100)) : 0;
                     $sisa = max(0, $kuota->jumlah - $kuota->terisi);
-                    $color = $pct >= 100 ? '#EF4444' : $goalColors[$index % count($goalColors)];
+
+                    // Semantic Functional Coloring (Sleman Executive Design Standard):
+                    // - 100% (Penuh): Merah Rose #EF4444
+                    // - >= 80% (Hampir Penuh): Oranye Amber #F59E0B
+                    // - < 80% (Normal/Tersedia): Biru Kominfo Sleman #0641CC
+                    $barColor = match (true) {
+                        $pct >= 100 => '#EF4444',
+                        $pct >= 80  => '#F59E0B',
+                        default     => 'var(--blue-600, #0641CC)',
+                    };
                 @endphp
                 <div class="cv-goal-item">
                     <div class="cv-goal-header">
@@ -63,16 +68,18 @@
                         <div class="cv-goal-val-wrap">
                             <span class="cv-goal-val">{{ $kuota->terisi }} / {{ $kuota->jumlah }}</span>
                             @if($pct >= 100)
-                                <span class="cv-goal-pct full">Penuh</span>
+                                <span class="cv-goal-pct full" style="color: #DC2626; font-weight: 800; background: #FEE2E2; padding: 2px 8px; border-radius: 9999px; font-size: 0.72rem;">Penuh</span>
+                            @elseif($pct >= 80)
+                                <span class="cv-goal-pct" style="color: #D97706; font-weight: 700; background: #FEF3C7; padding: 2px 8px; border-radius: 9999px; font-size: 0.72rem;">Sisa {{ $sisa }}</span>
                             @else
-                                <span class="cv-goal-pct">Sisa {{ $sisa }}</span>
+                                <span class="cv-goal-pct" style="color: var(--neutral-600, #475569); font-weight: 600; font-size: 0.75rem;">Sisa {{ $sisa }} Kursi</span>
                             @endif
                         </div>
                     </div>
 
                     {{-- Continuous Smooth Progress Bar --}}
                     <div class="cv-goal-track">
-                        <div class="cv-goal-fill" style="width: {{ $pct }}%; background-color: {{ $color }};" role="progressbar" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="cv-goal-fill" style="width: {{ $pct }}%; background-color: {{ $barColor }};" role="progressbar" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </div>
             @endforeach

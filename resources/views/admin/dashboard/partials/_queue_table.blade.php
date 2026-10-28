@@ -8,21 +8,26 @@
     badgeType="warning"
 >
     <x-slot:actions>
-        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-            <div class="adm-filter-pills">
-                <button type="button" class="adm-pill-btn active" data-filter-target="#queueTable" data-filter-value="all">
-                    Semua ({{ $pendaftaranTerbaru->count() }})
-                </button>
-                <button type="button" class="adm-pill-btn" data-filter-target="#queueTable" data-filter-value="diajukan">
-                    Diajukan
-                </button>
-                <button type="button" class="adm-pill-btn" data-filter-target="#queueTable" data-filter-value="perlu_perbaikan">
-                    Perlu Perbaikan
-                </button>
-            </div>
-            <input type="text" data-table-search="#queueTable" placeholder="Cari nama, institusi..." style="padding: 0.35rem 0.75rem; border: 1px solid var(--cv-line, #CBD5E1); border-radius: 6px; font-size: 0.8rem; outline: none; min-width: 170px;">
-        </div>
+        <a href="{{ route('admin.pendaftaran.index') }}" class="cv-btn-view-all">
+            <span>Lihat Semua</span> &rarr;
+        </a>
     </x-slot:actions>
+
+    {{-- Filter Toolbar (Image 1 Parity: Full-Width Clean Filtering) --}}
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--cv-line, #E2E8F0);">
+        <div class="adm-filter-pills">
+            <button type="button" class="adm-pill-btn active" data-filter-target="#queueTable" data-filter-value="all">
+                Semua ({{ $pendaftaranTerbaru->count() }})
+            </button>
+            <button type="button" class="adm-pill-btn" data-filter-target="#queueTable" data-filter-value="diajukan">
+                Diajukan
+            </button>
+            <button type="button" class="adm-pill-btn" data-filter-target="#queueTable" data-filter-value="perlu_perbaikan">
+                Perlu Perbaikan
+            </button>
+        </div>
+        <input type="text" data-table-search="#queueTable" placeholder="Cari nama, institusi..." style="padding: 0.35rem 0.75rem; border: 1px solid var(--cv-line, #CBD5E1); border-radius: 6px; font-size: 0.8rem; outline: none; min-width: 200px;">
+    </div>
 
     @if($pendaftaranTerbaru->isEmpty())
         <div style="padding: 3rem 1.5rem; text-align: center; color: var(--neutral-500);">
@@ -51,16 +56,21 @@
                             $tgl = $item->diajukan_at ?? $item->created_at;
                             $umur = (int) $tgl->diffInDays(now());
                             $isCritical = $umur >= 3;
-                            $initial = strtoupper(substr($item->user?->nama ?? 'P', 0, 1));
+                            
+                            // Generate 2-letter initial (Image 1 Parity: JD, AS, RJ)
+                            $words = preg_split('/\s+/', trim($item->user?->nama ?? 'Peserta'));
+                            $initial = strtoupper(substr($words[0] ?? 'P', 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+                            $paletteIndex = (($loop->index) % 5) + 1;
+                            
                             $statusClass = $item->status->value === 'diajukan' ? 'status-diajukan' : 'status-perlu-perbaikan';
                         @endphp
                         <tr class="queue-row {{ $statusClass }}" data-status="{{ $item->status->value }}">
                             <td>
                                 <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                    <div class="adm-avatar-circle">{{ $initial }}</div>
+                                    <div class="adm-avatar-circle cv-avatar-palette-{{ $paletteIndex }}">{{ $initial }}</div>
                                     <div>
                                         <div style="font-weight: 700; color: var(--neutral-800); font-size: 0.9rem;">{{ $item->user?->nama }}</div>
-                                        <small style="color: var(--neutral-500); font-family: monospace;">{{ $item->nomor_pendaftaran }}</small>
+                                        <small style="color: var(--neutral-500); font-family: monospace; font-size: 0.75rem;">#{{ $item->nomor_pendaftaran }}</small>
                                     </div>
                                 </div>
                             </td>
@@ -82,9 +92,15 @@
                             </td>
                             <td style="text-align: center;">
                                 @if($item->status->value === 'diajukan')
-                                    <span class="x_badge x_badge_warning">Diajukan</span>
+                                    <span class="cv-status-dot-badge warning" title="Menunggu Verifikasi">
+                                        <span class="dot"></span>
+                                        <span>Diajukan</span>
+                                    </span>
                                 @else
-                                    <span class="x_badge x_badge_primary">Perlu Perbaikan</span>
+                                    <span class="cv-status-dot-badge info" title="Perlu Perbaikan">
+                                        <span class="dot"></span>
+                                        <span>Perlu Perbaikan</span>
+                                    </span>
                                 @endif
                             </td>
                             <td style="text-align: right; white-space: nowrap;">

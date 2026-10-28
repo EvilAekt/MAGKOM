@@ -1,32 +1,9 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Dashboard Operasional Administrasi - MagKom Sleman')
-@section('page_title', 'Dashboard Operasional Administrasi')
-@section('page_description', 'Pusat pengelolaan verifikasi berkas, kuota bidang dinas, penempatan, dan laporan magang.')
 
 @section('breadcrumbs')
     <span class="breadcrumb-current">Dashboard</span>
-@endsection
-
-@section('page_actions')
-    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-        <form method="GET" action="{{ route('admin.dashboard') }}" class="adm-period-form" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--neutral-0); border: 1px solid var(--neutral-300); padding: 0.35rem 0.85rem; border-radius: 8px;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--blue-600);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            <label for="selectBulan" style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-600); margin: 0; text-transform: uppercase;">Pilih Bulan: <span style="font-size: 0.7rem; color: var(--neutral-500);">(Bulan Magang)</span> <span class="sr-only">Bulan:</span></label>
-            <select name="bulan_id" id="selectBulan" onchange="this.form.submit()" style="background: transparent; border: none; font-size: 0.85rem; font-weight: 700; color: var(--neutral-800); outline: none; cursor: pointer;">
-                @foreach($daftarBulan as $b)
-                    <option value="{{ $b->id }}" {{ $bulanAktif && $bulanAktif->id === $b->id ? 'selected' : '' }}>
-                        {{ $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '' }}
-                    </option>
-                @endforeach
-            </select>
-        </form>
-
-        <a href="{{ route('admin.laporan.index') }}" class="btn-secondary" style="height: 38px; padding: 0 1rem; font-size: 0.8125rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.375rem; border-radius: 8px; text-decoration: none;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            <span>Ekspor Laporan</span>
-        </a>
-    </div>
 @endsection
 
 @push('styles')
