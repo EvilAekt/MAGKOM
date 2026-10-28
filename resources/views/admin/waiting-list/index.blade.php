@@ -580,6 +580,46 @@
             transform: translateY(-1px);
         }
 
+        /* Empty State */
+        .adm-empty-state-wrap {
+            padding: 4rem 1.5rem;
+            text-align: center;
+            color: #64748B;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .adm-empty-state-icon-box {
+            width: 56px;
+            height: 56px;
+            background: #EFF6FF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem auto;
+            color: #0641CC;
+            border: 1px solid #DBEAFE;
+        }
+
+        .adm-empty-state-title {
+            font-size: 1.125rem;
+            font-weight: 800;
+            color: #0F172A;
+            margin: 0 0 0.5rem 0;
+            letter-spacing: -0.01em;
+        }
+
+        .adm-empty-state-desc {
+            font-size: 0.875rem;
+            max-width: 480px;
+            margin: 0 auto 1.5rem auto;
+            line-height: 1.55;
+            color: #64748B;
+        }
+
         /* =====================================================================
            DARK MODE OVERRIDES (DS-MagKom Standards)
            ===================================================================== */
@@ -735,6 +775,24 @@
             background-color: #141E30 !important;
             border-top-color: #26354D !important;
         }
+
+        [data-theme="dark"] .adm-empty-state-wrap {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-empty-state-icon-box {
+            background-color: #1E293B;
+            border-color: #334155;
+            color: #60A5FA;
+        }
+
+        [data-theme="dark"] .adm-empty-state-title {
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-empty-state-desc {
+            color: #94A3B8;
+        }
     </style>
 
     <x-gentelella.page-title title="Antrean Waiting List" description="Pengelolaan antrean cadangan peserta saat kuota jurusan penuh berdasarkan waktu pengajuan secara transparan, adil, dan objektif.">
@@ -768,7 +826,7 @@
         />
     </div>
 
-    <x-gentelella.x-panel title="Daftar Antrean Waiting List Calon Peserta" sub="Penegakan transparansi dan objektivitas penempatan magang">
+    <x-gentelella.x-panel title="Daftar Antrean Waiting List Calon Peserta" subtitle="Penegakan transparansi dan objektivitas penempatan magang">
 
 
 
@@ -874,11 +932,47 @@
         </div>
 
         @if($waitingList->isEmpty())
-            <div style="padding: 2rem 1.5rem;">
-                <x-empty-state 
-                    title="Tidak Ada Antrean Waiting List" 
-                    description="Saat ini tidak ada pendaftaran calon peserta magang yang tertahan dalam antrean tunggu." 
-                />
+            @php
+                $isFiltered = request()->hasAny(['search', 'bulan_magang_id', 'jurusan_id']);
+            @endphp
+            <div class="adm-empty-state-wrap">
+                <div class="adm-empty-state-icon-box" aria-hidden="true">
+                    @if($isFiltered)
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    @else
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    @endif
+                </div>
+
+                <h3 class="adm-empty-state-title">
+                    {{ $isFiltered ? 'Tidak Ada Calon Peserta yang Cocok' : 'Tidak Ada Antrean Waiting List' }}
+                </h3>
+
+                <p class="adm-empty-state-desc">
+                    @if($isFiltered)
+                        Tidak ditemukan calon peserta magang dalam antrean yang sesuai dengan kata kunci pencarian atau kriteria filter yang diterapkan.
+                    @else
+                        Saat ini seluruh kuota jurusan masih mencukupi atau seluruh pendaftaran telah diproses. Calon peserta hanya masuk ke daftar antrean cadangan (<em>waiting list</em>) apabila kuota jurusan pada periode yang dipilih telah terpenuhi (FIFO BR-05).
+                    @endif
+                </p>
+
+                @if($isFiltered)
+                    <a href="{{ route('admin.waiting-list.index') }}" class="adm-btn-filter-reset" style="display: inline-flex; align-items: center; gap: 6px; padding: 0.5rem 1.25rem; font-size: 0.8125rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                        <span>Reset Filter Pencarian</span>
+                    </a>
+                @else
+                    <a href="{{ route('admin.dashboard') }}" class="adm-btn-action-review" style="display: inline-flex; align-items: center; gap: 6px; padding: 0.5rem 1.25rem; font-size: 0.8125rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        <span>Kembali ke Dashboard</span>
+                    </a>
+                @endif
             </div>
         @else
             <div style="overflow-x: auto;">

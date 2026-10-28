@@ -792,3 +792,17 @@
   }
 }
 
+/* ==========================================================================
+   14. Guardrail: Defensive SVG Sizing for Admin Components
+   Prevents unconstrained SVGs from exploding to viewport width in non-Tailwind contexts
+   ========================================================================== */
+.empty-state svg,
+.adm-table-card svg:not([width]),
+.x_content svg:not([width]),
+.adm-empty-state-wrap svg {
+  max-width: 48px;
+  max-height: 48px;
+  display: inline-block;
+}
+
+

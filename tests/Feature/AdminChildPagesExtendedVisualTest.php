@@ -188,5 +188,13 @@ class AdminChildPagesExtendedVisualTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Antrean Waiting List');
         $response->assertSee('FIFO');
+        $response->assertSee('Tidak Ada Antrean Waiting List');
+        $response->assertSee('adm-empty-state-wrap');
+
+        // Test filtered empty state
+        $responseFiltered = $this->actingAs($this->admin)->get(route('admin.waiting-list.index', ['search' => 'nonexistent_intern']));
+        $responseFiltered->assertStatus(200);
+        $responseFiltered->assertSee('Tidak Ada Calon Peserta yang Cocok');
+        $responseFiltered->assertSee('Reset Filter Pencarian');
     }
 }
