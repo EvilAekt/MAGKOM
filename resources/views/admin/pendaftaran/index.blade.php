@@ -1,6 +1,14 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Verifikasi Berkas Pendaftaran - Admin MagKom Sleman')
+@section('title', 'Verifikasi Berkas Pendaftaran Peserta - Admin MagKom Sleman')
+
+@section('breadcrumbs')
+    <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: #64748B;">
+        <a href="{{ route('admin.dashboard') }}" style="color: #64748B; text-decoration: none;">Dashboard</a>
+        <span>/</span>
+        <span style="color: #0F172A; font-weight: 700;">Verifikasi Berkas Pendaftaran Peserta</span>
+    </nav>
+@endsection
 
 @section('content')
 <div class="adm-verifikasi-wrapper">
@@ -789,7 +797,7 @@
         }
     </style>
 
-    <x-gentelella.page-title title="Seleksi & Verifikasi Berkas" description="Pusat validasi berkas pendaftaran calon peserta magang dan monitoring SLA permohonan dinas.">
+    <x-gentelella.page-title title="Verifikasi Berkas Pendaftaran Peserta" description="Pusat validasi berkas pendaftaran calon peserta magang dan monitoring SLA permohonan dinas.">
         <a href="{{ route('admin.dashboard') }}" class="btn-action-gentelella btn-action-primary" style="padding: 0.5rem 1rem; font-size: 0.8125rem;">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
             <span>Kembali ke Dashboard</span>

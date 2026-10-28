@@ -107,12 +107,21 @@ class AdminChildPagesVisualTest extends TestCase
         $response = $this->actingAs($this->admin)->get(route('admin.pendaftaran.index'));
 
         $response->assertStatus(200);
+        $response->assertSee('Verifikasi Berkas Pendaftaran Peserta');
+        $response->assertDontSee('Seleksi &amp; Verifikasi Berkas');
+        $response->assertDontSee('Seleksi & Verifikasi Berkas');
         $response->assertSee('Citra Lestari');
         $response->assertSee($this->pendaftaran->nomor_pendaftaran);
         $response->assertSee('Tinjau Berkas');
         // Memastikan quick filter dan filter form ada
         $response->assertSee('Diajukan');
         $response->assertSee('Semua Status');
+
+        // Memastikan halaman show menggunakan breadcrumb Verifikasi Berkas Pendaftaran Peserta yang konsisten
+        $showResponse = $this->actingAs($this->admin)->get(route('admin.pendaftaran.show', $this->pendaftaran));
+        $showResponse->assertStatus(200);
+        $showResponse->assertSee('Verifikasi Berkas Pendaftaran Peserta');
+        $showResponse->assertDontSee('Antrean Verifikasi');
     }
 
     public function test_admin_can_view_kuota_index_with_hero_metrics_and_modals(): void

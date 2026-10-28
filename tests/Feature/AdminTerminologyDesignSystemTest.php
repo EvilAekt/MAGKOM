@@ -144,6 +144,9 @@ class AdminTerminologyDesignSystemTest extends TestCase
         // Modul Pendaftaran
         $pendaftaranResponse = $this->actingAs($admin)->get(route('admin.pendaftaran.index'));
         $pendaftaranResponse->assertStatus(200);
+        $pendaftaranResponse->assertSee('Verifikasi Berkas Pendaftaran Peserta', false);
+        $pendaftaranResponse->assertDontSee('Seleksi &amp; Verifikasi Berkas', false);
+        $pendaftaranResponse->assertDontSee('Seleksi & Verifikasi Berkas', false);
         $pendaftaranResponse->assertSee('Bulan Magang', false);
         $pendaftaranResponse->assertSee('Semua Bulan', false);
         $pendaftaranResponse->assertDontSee('Periode Magang', false);
