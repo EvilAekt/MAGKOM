@@ -24,6 +24,11 @@ class DashboardLayoutTest extends TestCase
     {
         parent::setUp();
 
+        $localViewsPath = realpath(__DIR__ . '/../../resources/views');
+        if ($localViewsPath && is_dir($localViewsPath)) {
+            \Illuminate\Support\Facades\View::getFinder()->setPaths([$localViewsPath]);
+        }
+
         Route::get('/testing/dashboard-layout-view', function () {
             return view('testing.dashboard-dummy');
         })->middleware(['web', 'auth'])->name('testing.dashboard-dummy');
@@ -35,7 +40,8 @@ class DashboardLayoutTest extends TestCase
 
     private function createDummyBladeView(): void
     {
-        $dir = resource_path('views/testing');
+        $baseDir = realpath(__DIR__ . '/../../resources/views') ?: resource_path('views');
+        $dir = $baseDir . '/testing';
         if (! is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
@@ -58,7 +64,7 @@ class DashboardLayoutTest extends TestCase
 @endsection
 BLADE;
 
-        file_put_contents(resource_path('views/testing/dashboard-dummy.blade.php'), $viewContent);
+        file_put_contents($baseDir . '/testing/dashboard-dummy.blade.php', $viewContent);
 
         $pesertaViewContent = <<<'BLADE'
 @extends('layouts.peserta')
@@ -73,20 +79,21 @@ BLADE;
 @endsection
 BLADE;
 
-        file_put_contents(resource_path('views/testing/peserta-dummy.blade.php'), $pesertaViewContent);
+        file_put_contents($baseDir . '/testing/peserta-dummy.blade.php', $pesertaViewContent);
     }
 
     private function removeDummyBladeView(): void
     {
-        $file = resource_path('views/testing/dashboard-dummy.blade.php');
+        $baseDir = realpath(__DIR__ . '/../../resources/views') ?: resource_path('views');
+        $file = $baseDir . '/testing/dashboard-dummy.blade.php';
         if (file_exists($file)) {
             unlink($file);
         }
-        $filePeserta = resource_path('views/testing/peserta-dummy.blade.php');
+        $filePeserta = $baseDir . '/testing/peserta-dummy.blade.php';
         if (file_exists($filePeserta)) {
             unlink($filePeserta);
         }
-        $dir = resource_path('views/testing');
+        $dir = $baseDir . '/testing';
         if (is_dir($dir)) {
             @rmdir($dir);
         }
@@ -308,10 +315,6 @@ BLADE;
 
                 $response->assertOk();
 
-                if (strpos($response->getContent(), 'id="themeToggleBtn"') !== false) {
-                    $pos = strpos($response->getContent(), 'id="themeToggleBtn"');
-                    dd(substr($response->getContent(), max(0, $pos - 1000), 2000));
-                }
                 // AC-1: Header topbar bersih dari tombol theme toggle lama
                 $response->assertDontSee('id="themeToggleBtn"', false);
                 $response->assertDontSee('topbar-theme-toggle-btn', false);
