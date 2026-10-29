@@ -32,3 +32,4 @@ claude_work/
 .agents/mcp_config.json
 export-sokudo/
 testsprite_tests/
+.sokudo/

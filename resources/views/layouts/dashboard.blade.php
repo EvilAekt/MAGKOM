@@ -25,7 +25,7 @@
 
     <!-- Gentelella Theme CSS -->
     <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/dashboard-cockpit-unified.css') }}?v={{ file_exists(public_path('css/dashboard-cockpit-unified.css')) ? filemtime(public_path('css/dashboard-cockpit-unified.css')) : '1.0' }}">
+    <link rel="stylesheet" href="{{ asset('css/dashboard-cockpit-unified.css') }}?v={{ file_exists(public_path('css/dashboard-cockpit-unified.css')) ? (string) filemtime(public_path('css/dashboard-cockpit-unified.css')) : '1.0' }}">
 
     <!-- Anti-Flash Theme Script -->
     <script>
