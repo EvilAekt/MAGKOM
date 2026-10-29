@@ -64,15 +64,81 @@
             { judul: 'Pelaksanaan Magang', isi: 'Kerjakan tugas, isi logbook harian, dan unggah progres sesuai durasi magang.' },
             { judul: 'Kelulusan', isi: 'Unduh Lembar Nilai Magang dan sertifikat dalam bentuk PDF dari portal.' },
         ],
-        faqList: [
-            { q: 'Apakah saya bisa mendaftar lebih dari satu bidang?', a: 'Tidak. Setiap peserta hanya dapat memilih satu bidang dalam satu periode magang.' },
-            { q: 'Bagaimana cara saya mendaftarkan diri?', a: 'Klik tombol Daftar, buat akun, lengkapi data diri, lalu pilih bidang dan unggah berkas yang diminta.' },
-            { q: 'Apa saja bidang yang tersedia di MAGKOM?', a: 'Aplikasi Informatika, Statistik, Persandian, dan Sekretariat. Lihat sisa kuotanya di bagian Kuota per Bidang.' },
-            { q: 'Berapa lama durasi magang?', a: 'Durasi magang mengikuti surat pengantar dari sekolah atau kampus, umumnya 1 sampai 3 bulan.' },
-            { q: 'Mengapa saya tidak mendapatkan email verifikasi?', a: 'Periksa folder spam atau promosi. Jika tetap tidak ada, hubungi admin melalui kontak di bagian bawah halaman.' },
-            { q: 'Apakah magang ini dibayar?', a: 'Magang di Diskominfo Sleman tidak berbayar dan tidak memungut biaya apa pun.' },
-            { q: 'Apakah magang bisa dilakukan dari rumah (WFH)?', a: 'Tidak. Magang dilaksanakan secara luring di kantor Diskominfo Sleman.' },
-            { q: 'Kapan sertifikat magang bisa diunduh?', a: 'Setelah magang selesai dan nilai diinput pembimbing, sertifikat dapat diunduh dari portal MAGKOM.' },
+        faqCategories: [
+            {
+                id: 'syarat',
+                nama: 'Syarat dan Tata Cara Mendaftar',
+                items: [
+                    {
+                        q: 'Bagaimana alur dan tata cara mendaftar magang di Diskominfo Sleman?',
+                        a: 'Pendaftaran dilakukan secara mandiri atau kelompok melalui portal MAGKOM: (1) Buat akun portal, (2) Pilih formasi bidang dan bulan pelaksanaan yang masih tersedia kuotanya, (3) Unggah berkas persyaratan (Surat Pengantar Institusi, CV, Proposal, dan Transkrip/Rapor), (4) Tunggu verifikasi admin.'
+                    },
+                    {
+                        q: 'Apakah siswa SMK dan mahasiswa perguruan tinggi memiliki syarat yang berbeda?',
+                        a: 'Secara umum sama, namun untuk siswa SMK surat permohonan ditandatangani oleh Kepala Sekolah / Waka Hubin dan dilengkapi izin orang tua, sedangkan mahasiswa melampirkan surat pengantar resmi dari Fakultas/Jurusan.'
+                    },
+                    {
+                        q: 'Apakah bisa mendaftar lebih dari satu bidang atau bulan magang?',
+                        a: 'Tidak. Setiap peserta hanya dapat memilih satu bidang formasi dalam satu periode magang agar alokasi kuota adil bagi seluruh pendaftar.'
+                    }
+                ]
+            },
+            {
+                id: 'akun',
+                nama: 'Akun',
+                items: [
+                    {
+                        q: 'Bagaimana jika tidak menerima email verifikasi akun?',
+                        a: 'Silakan periksa folder Spam atau Promosi pada email Anda. Jika dalam 15 menit belum masuk, Anda dapat meminta kirim ulang link verifikasi melalui halaman login.'
+                    },
+                    {
+                        q: 'Apakah akun portal bisa digunakan untuk mendaftar periode berikutnya?',
+                        a: 'Akun Anda berlaku permanen di portal MAGKOM. Anda dapat menggunakannya kembali untuk melihat riwayat sertifikat atau mendaftar periode berikutnya setelah magang sebelumnya selesai.'
+                    }
+                ]
+            },
+            {
+                id: 'kuis',
+                nama: 'Kuis',
+                items: [
+                    {
+                        q: 'Apakah ada kuis atau tes kompetensi saat proses seleksi?',
+                        a: 'Beberapa bidang teknis seperti Aplikasi Informatika (Aptika) dan Persandian dapat menyertakan tes kompetensi dasar atau kuis teknis singkat untuk memastikan kecocokan dengan proyek yang akan dikerjakan.'
+                    },
+                    {
+                        q: 'Berapa lama proses verifikasi berkas oleh admin?',
+                        a: 'Proses verifikasi dan kurasi berkas administrasi membutuhkan waktu 1 hingga 3 hari kerja setelah pengajuan dikirimkan.'
+                    }
+                ]
+            },
+            {
+                id: 'benefit',
+                nama: 'Benefit Magang',
+                items: [
+                    {
+                        q: 'Apa saja fasilitas dan benefit yang didapatkan peserta magang?',
+                        a: 'Peserta mendapatkan bimbingan intensif dari Mentor ASN profesional, akses modul proyek nyata di pemerintahan, sertifikat resmi Diskominfo ber-QR code sah, serta penilaian kompetensi standar industri.'
+                    },
+                    {
+                        q: 'Apakah program magang di Diskominfo Sleman berbayar atau digaji?',
+                        a: 'Program magang Diskominfo Sleman 100% GRATIS (tidak dipungut biaya apa pun) dan bersifat non-komersial tanpa kompensasi uang saku (unpaid government internship).'
+                    }
+                ]
+            },
+            {
+                id: 'kewajiban',
+                nama: 'Kewajiban Peserta Magang',
+                items: [
+                    {
+                        q: 'Apa saja kewajiban dari peserta magang?',
+                        a: 'Peserta wajib: (1) Mematuhi jam kerja ASN Diskominfo (Senin–Kamis 07.30–15.30 WIB, Jumat 07.30–14.30 WIB), (2) Mengenakan seragam sekolah/almamater rapi dan bersepatu, (3) Mengerjakan penugasan proyek tepat waktu, (4) Mengisi logbook mingguan secara disiplin, dan (5) Menjaga etika serta kerahasiaan data kedinasan.'
+                    },
+                    {
+                        q: 'Apakah magang bisa dilaksanakan secara daring / WFH?',
+                        a: 'Tidak. Seluruh pelaksanaan magang di Diskominfo Sleman dilaksanakan secara luring (Work From Office) di lingkungan kantor Pemkab Sleman untuk memastikan pembimbingan maksimal.'
+                    }
+                ]
+            }
         ]
     };
 
@@ -464,71 +530,69 @@
     }
 
     // =========================================================================
-    // 4. FAQ ACCORDION CONTROLLER
+    // 4. FAQ CATEGORIZED ACCORDION CONTROLLER (Parity with User Reference)
     // =========================================================================
     function initFaqAccordion() {
-        const container = document.getElementById('faqAccordionContainer');
-        const btnToggleAll = document.getElementById('btnFaqToggleAll');
-        if (!container) return;
+        const stackContainer = document.getElementById('faqCategoryAccordion');
+        if (!stackContainer) return;
 
-        let isAllExpanded = false;
-        const initialCount = 5;
+        // Ambil seluruh item kategori yang ada
+        const categoryItems = stackContainer.querySelectorAll('.faq-category-item');
 
-        function renderFaqItems() {
-            container.innerHTML = '';
-            const items = isAllExpanded ? AppData.faqList : AppData.faqList.slice(0, initialCount);
+        categoryItems.forEach(function (catItem) {
+            const headerBtn = catItem.querySelector('.faq-category-header-btn');
+            const drawer = catItem.querySelector('.faq-questions-drawer');
+            const subQaItems = catItem.querySelectorAll('.faq-sub-qa-item');
 
-            items.forEach(function (faq, idx) {
-                const card = document.createElement('div');
-                card.className = 'faq-card';
+            if (headerBtn && drawer) {
+                headerBtn.addEventListener('click', function () {
+                    const isCurrentlyExpanded = catItem.classList.contains('is-expanded');
 
-                const trigger = document.createElement('button');
-                trigger.type = 'button';
-                trigger.className = 'faq-trigger-btn';
-                trigger.setAttribute('aria-expanded', 'false');
-                trigger.innerHTML = `
-                    <span>${faq.q}</span>
-                    <svg class="faq-icon-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19" class="icon-vert-line"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                `;
+                    // Tutup kategori lain agar accordion rapi sesuai referensi
+                    categoryItems.forEach(function (otherItem) {
+                        if (otherItem !== catItem) {
+                            otherItem.classList.remove('is-expanded');
+                            const otherBtn = otherItem.querySelector('.faq-category-header-btn');
+                            const otherDrawer = otherItem.querySelector('.faq-questions-drawer');
+                            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+                            if (otherDrawer) otherDrawer.style.display = 'none';
+                        }
+                    });
 
-                const answer = document.createElement('div');
-                answer.className = 'faq-answer-pane';
-                answer.style.display = 'none';
-                answer.textContent = faq.a;
-
-                trigger.addEventListener('click', function () {
-                    const expanded = trigger.getAttribute('aria-expanded') === 'true';
-                    trigger.setAttribute('aria-expanded', !expanded);
-                    answer.style.display = expanded ? 'none' : 'block';
-                    const vertLine = trigger.querySelector('.icon-vert-line');
-                    if (vertLine) {
-                        vertLine.style.display = expanded ? 'block' : 'none';
-                    }
+                    catItem.classList.toggle('is-expanded', !isCurrentlyExpanded);
+                    headerBtn.setAttribute('aria-expanded', !isCurrentlyExpanded ? 'true' : 'false');
+                    drawer.style.display = !isCurrentlyExpanded ? 'flex' : 'none';
                 });
-
-                card.appendChild(trigger);
-                card.appendChild(answer);
-                container.appendChild(card);
-            });
-
-            if (btnToggleAll) {
-                btnToggleAll.innerHTML = isAllExpanded 
-                    ? 'Tampilkan Lebih Sedikit <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg>'
-                    : 'Lihat Semua Pertanyaan <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>';
             }
-        }
 
-        if (btnToggleAll) {
-            btnToggleAll.addEventListener('click', function () {
-                isAllExpanded = !isAllExpanded;
-                renderFaqItems();
+            // Binding untuk sub-pertanyaan emas (Gold) di dalam kategori
+            subQaItems.forEach(function (qaItem) {
+                const qBtn = qaItem.querySelector('.faq-sub-question-btn');
+                const aPane = qaItem.querySelector('.faq-sub-answer-pane');
+
+                if (qBtn && aPane) {
+                    qBtn.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        const isCurrentlyOpen = qaItem.classList.contains('is-open');
+
+                        // Tutup pertanyaan lain di dalam kategori yang sama
+                        subQaItems.forEach(function (otherQa) {
+                            if (otherQa !== qaItem) {
+                                otherQa.classList.remove('is-open');
+                                const otherBtn = otherQa.querySelector('.faq-sub-question-btn');
+                                const otherPane = otherQa.querySelector('.faq-sub-answer-pane');
+                                if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+                                if (otherPane) otherPane.style.display = 'none';
+                            }
+                        });
+
+                        qaItem.classList.toggle('is-open', !isCurrentlyOpen);
+                        qBtn.setAttribute('aria-expanded', !isCurrentlyOpen ? 'true' : 'false');
+                        aPane.style.display = !isCurrentlyOpen ? 'block' : 'none';
+                    });
+                }
             });
-        }
-
-        renderFaqItems();
+        });
     }
 
     // =========================================================================
@@ -553,6 +617,9 @@
 
         function syncHeroHeight() {
             if (!slide1Box || !imgSlide) return;
+            imgSlide.style.height = '';
+            imgSlide.style.minHeight = '';
+            imgSlide.style.maxHeight = '';
             const h = slide1Box.offsetHeight;
             if (h > 0) {
                 imgSlide.style.height = h + 'px';

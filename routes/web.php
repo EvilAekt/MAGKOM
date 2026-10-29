@@ -74,6 +74,7 @@ use Illuminate\Support\Facades\Route;
 // Rute Publik (F-01, NFR-O1, NFR-R1, PRD 4.3 Poin 1, SEC-74)
 Route::get('/', LandingController::class)->name('landing');
 Route::get('/panduan-alur', AlurMagangController::class)->name('panduan-alur');
+Route::get('/peta-alur', [AlurMagangController::class, 'petaInteraktif'])->name('peta-alur');
 Route::get('/panduan-magang-pdf', [PanduanPdfController::class, 'download'])->name('panduan.pdf');
 Route::get('/health', HealthController::class)->name('health');
 Route::view('/kebijakan-privasi', 'public.kebijakan-privasi')->name('kebijakan-privasi');
