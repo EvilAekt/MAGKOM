@@ -169,10 +169,6 @@
             border-bottom-color: #1F2937;
         }
 
-        [data-theme="dark"] .sidebar-footer {
-            border-top-color: #1F2937;
-        }
-
         [data-theme="dark"] .topbar {
             background: linear-gradient(135deg, #02275D 0%, #003566 100%) !important;
             border-bottom: 1px solid rgba(63, 81, 181, 0.35) !important;
@@ -245,16 +241,6 @@
             border-color: #374151;
         }
 
-        [data-theme="dark"] .logout-btn {
-            background-color: #1F2937;
-            border-color: #374151;
-            color: #F87171;
-        }
-
-        [data-theme="dark"] .logout-btn:hover {
-            background-color: #7F1D1D;
-            color: #FFFFFF;
-        }
 
         [data-theme="dark"] .content-area {
             background-color: var(--neutral-150);
@@ -809,32 +795,82 @@
             color: #ffffff;
         }
 
+        /* =========================================================================
+           Sidebar Footer Standardized Toolbar (Pengaturan, Theme Toggle, Logout)
+           ========================================================================= */
         .sidebar-footer {
-            padding: 1rem 0.75rem;
+            padding: 0.75rem 1rem;
             border-top: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .logout-btn {
-            width: 100%;
+            background: rgba(0, 0, 0, 0.15);
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            min-height: 38px;
-            padding: 0.5rem 0.75rem;
-            background: rgba(255, 255, 255, 0.08);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            font-size: 0.8125rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.15s ease, border-color 0.15s ease;
+            justify-content: space-around;
+            margin-top: auto;
+            flex-shrink: 0;
         }
 
-        .logout-btn:hover {
-            background: rgba(220, 38, 38, 0.85);
-            border-color: rgba(220, 38, 38, 0.85);
+        [data-theme="dark"] .sidebar-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .sidebar-footer-form {
+            margin: 0;
+            padding: 0;
+            display: inline-flex;
+        }
+
+        .sidebar-footer a,
+        .sidebar-footer button,
+        .sidebar-footer .sidebar-footer-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50% !important;
+            color: rgba(255, 255, 255, 0.75);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer a:hover,
+        .sidebar-footer button:hover,
+        .sidebar-footer .sidebar-footer-btn:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-footer a:focus-visible,
+        .sidebar-footer button:focus-visible,
+        .sidebar-footer .sidebar-footer-btn:focus-visible {
+            outline: 2px solid var(--magkom-sun-yellow, #FFCB05);
+            outline-offset: 2px;
+        }
+
+        /* Dual-Icon State Sesuai AC-3 */
+        html:not([data-theme="dark"]) .sidebar-footer .sun-icon {
+            display: none !important;
+        }
+
+        html:not([data-theme="dark"]) .sidebar-footer .moon-icon {
+            display: block !important;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        html[data-theme="dark"] .sidebar-footer .sun-icon {
+            display: block !important;
+            color: var(--magkom-sun-yellow, #FFCB05) !important;
+        }
+
+        html[data-theme="dark"] .sidebar-footer .moon-icon {
+            display: none !important;
         }
 
         /* Layout Main Area */
@@ -913,48 +949,7 @@
             gap: 12px;
         }
 
-        .topbar-theme-toggle-btn {
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            cursor: pointer;
-            color: #ffffff;
-            width: 38px;
-            height: 38px;
-            border-radius: var(--radius-default, 8px);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            padding: 0;
-        }
 
-        .topbar-theme-toggle-btn:hover {
-            background: rgba(255, 255, 255, 0.22);
-            border-color: rgba(255, 255, 255, 0.35);
-            transform: translateY(-1px);
-        }
-
-        .topbar-theme-toggle-btn:focus-visible {
-            outline: 2px solid #93c5fd;
-            outline-offset: 2px;
-        }
-
-        html:not([data-theme="dark"]) .topbar-theme-toggle-btn .sun-icon {
-            display: none;
-        }
-
-        html:not([data-theme="dark"]) .topbar-theme-toggle-btn .moon-icon {
-            display: block;
-        }
-
-        html[data-theme="dark"] .topbar-theme-toggle-btn .sun-icon {
-            display: block;
-        }
-
-        html[data-theme="dark"] .topbar-theme-toggle-btn .moon-icon {
-            display: none;
-        }
 
         /* Profile Dropdown */
         .profile-dropdown-container {
@@ -1573,21 +1568,11 @@
             }
 
             html.sidebar-collapsed .sidebar-footer {
-                padding: 1rem 0.5rem;
-                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 0.75rem 0;
+                align-items: center;
                 justify-content: center;
-            }
-
-            html.sidebar-collapsed .logout-btn {
-                width: 44px;
-                height: 40px;
-                min-height: 40px;
-                padding: 0;
-                justify-content: center;
-            }
-
-            html.sidebar-collapsed .logout-btn span {
-                display: none !important;
             }
         }
 
@@ -1741,13 +1726,24 @@
         </nav>
 
         <div class="sidebar-footer">
-            <form action="{{ route('logout') }}" method="POST">
+            <a href="{{ route('peserta.pengaturan.index') }}" class="sidebar-footer-btn" title="{{ __('Pengaturan Akun') }}" aria-label="{{ __('Pengaturan Akun') }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </a>
+            <button type="button" id="sidebarThemeToggleBtn" class="sidebar-footer-btn" onclick="togglePortalThemeQuick()" title="{{ __('Ganti Mode Terang / Gelap') }}" aria-label="{{ __('Ganti Mode Terang / Gelap') }}" aria-pressed="false">
+                <svg class="sun-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <svg class="moon-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            </button>
+            <form action="{{ route('logout') }}" method="POST" class="sidebar-footer-form">
                 @csrf
-                <button type="submit" class="logout-btn" title="{{ __('Keluar Akun') }}">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                    </svg>
-                    <span>{{ __('Keluar Akun') }}</span>
+                <button type="submit" class="sidebar-footer-btn" title="{{ __('Keluar / Logout') }}" aria-label="{{ __('Keluar') }}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                 </button>
             </form>
         </div>
@@ -1771,21 +1767,6 @@
             </div>
 
             <div class="topbar-right">
-                {{-- Tombol Cepat Ganti Mode Gelap / Terang --}}
-                <button type="button" 
-                        class="topbar-theme-toggle-btn" 
-                        id="themeToggleBtn" 
-                        onclick="togglePortalThemeQuick()" 
-                        aria-label="{{ __('Ganti Mode Terang / Gelap') }}" 
-                        title="{{ __('Ganti Mode Terang / Gelap') }}">
-                    <svg class="sun-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                    <svg class="moon-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                    </svg>
-                </button>
-
                 <div class="profile-dropdown-container">
                     <button type="button" 
                             class="user-chip-btn" 
@@ -1856,13 +1837,6 @@
                             </svg>
                             <span>{{ __('Pengaturan Akun') }} <span style="font-size: 0.75rem; opacity: 0.7; font-weight: 400;">({{ __('Ganti Kata Sandi') }})</span></span>
                         </a>
-
-                        <button type="button" class="dropdown-item" onclick="togglePortalThemeQuick()" style="width: 100%; text-align: left; background: none; border: none; font-family: inherit; cursor: pointer;" role="menuitem">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                            </svg>
-                            <span>{{ __('Mode Tampilan (Terang / Gelap)') }}</span>
-                        </button>
 
                         <div class="dropdown-divider"></div>
 
@@ -2063,25 +2037,40 @@
             }
             document.documentElement.setAttribute('data-theme', effective);
             document.documentElement.setAttribute('data-pref-theme', theme);
+            const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
+            if (toggleBtn) {
+                toggleBtn.setAttribute('aria-pressed', effective === 'dark' ? 'true' : 'false');
+            }
             try {
                 localStorage.setItem('magkom_theme', theme);
             } catch (e) {}
         };
+
+        (function() {
+            const currentEffective = document.documentElement.getAttribute('data-theme') || 'light';
+            const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
+            if (toggleBtn) {
+                toggleBtn.setAttribute('aria-pressed', currentEffective === 'dark' ? 'true' : 'false');
+            }
+        })();
 
         // Toggle Cepat Terang / Gelap Instan
         window.togglePortalThemeQuick = function() {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
             const nextTheme = currentTheme === 'dark' ? 'terang' : 'gelap';
             window.applyPortalTheme(nextTheme);
-            fetch("{{ route('peserta.pengaturan.preferensi.update') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                },
-                body: JSON.stringify({ tema: nextTheme })
-            }).catch(() => {});
+            const preferensiUrl = "{{ Route::has('tema.update') ? route('tema.update') : (Route::has('peserta.pengaturan.preferensi.update') ? route('peserta.pengaturan.preferensi.update') : '#') }}";
+            if (preferensiUrl && preferensiUrl !== '#') {
+                fetch(preferensiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    body: JSON.stringify({ tema: nextTheme })
+                }).catch(function() {});
+            }
         };
 
         // Listener jika OS tema berubah dan user memilih 'sistem'
@@ -2089,7 +2078,12 @@
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
                 const currentPref = document.documentElement.getAttribute('data-pref-theme') || localStorage.getItem('magkom_theme');
                 if (currentPref === 'sistem') {
-                    document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                    const effective = e.matches ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', effective);
+                    const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
+                    if (toggleBtn) {
+                        toggleBtn.setAttribute('aria-pressed', effective === 'dark' ? 'true' : 'false');
+                    }
                 }
             });
         }
