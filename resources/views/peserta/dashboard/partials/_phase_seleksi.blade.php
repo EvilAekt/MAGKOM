@@ -1,29 +1,32 @@
 {{-- ==========================================================================
    Fase 2: Seleksi Pendaftaran (Pendaftaran Aktif Berjalan) - Dashboard Peserta
-   Desain Modern Clean SaaS (Linear / Shadcn UI Inspired)
+   Desain Modern Clean SaaS & DS-MagKom (Gentelella Parity)
    ========================================================================== --}}
+@php
+    /** @var \App\Models\Pendaftaran|null $pendaftaran */
+@endphp
 @if($pendaftaran)
     @php
         $status = $pendaftaran->status;
-        $statusStyle = match($status) {
-            \App\Enums\StatusPendaftaranEnum::Diterima => ['bg' => '#f0fdf4', 'color' => '#16a34a', 'border' => '#bbf7d0'],
-            \App\Enums\StatusPendaftaranEnum::Diajukan, \App\Enums\StatusPendaftaranEnum::WaitingList => ['bg' => '#fffbeb', 'color' => '#d97706', 'border' => '#fde68a'],
-            \App\Enums\StatusPendaftaranEnum::PerluPerbaikan, \App\Enums\StatusPendaftaranEnum::Ditolak, \App\Enums\StatusPendaftaranEnum::Dibatalkan => ['bg' => '#fef2f2', 'color' => '#dc2626', 'border' => '#fecaca'],
-            default => ['bg' => '#f8fafc', 'color' => '#64748b', 'border' => '#e2e8f0'],
+        $statusClass = match($status) {
+            \App\Enums\StatusPendaftaranEnum::Diterima => 'saas-status-success',
+            \App\Enums\StatusPendaftaranEnum::Diajukan, \App\Enums\StatusPendaftaranEnum::WaitingList => 'saas-status-warning',
+            \App\Enums\StatusPendaftaranEnum::PerluPerbaikan, \App\Enums\StatusPendaftaranEnum::Ditolak, \App\Enums\StatusPendaftaranEnum::Dibatalkan => 'saas-status-danger',
+            default => 'saas-status-default',
         };
     @endphp
 
     <div class="saas-card">
         <div class="saas-card-header">
             <div>
-                <h3 class="saas-item-title" style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0f172a); margin: 0;">
+                <h3 class="saas-item-title">
                     Status Pendaftaran Magang Aktif
                 </h3>
-                <p class="saas-card-subtitle" style="font-size: 0.8125rem; color: var(--neutral-500, #64748b); margin: 3px 0 0 0;">
+                <p class="saas-card-subtitle">
                     Pengajuan nomor <strong>#{{ $pendaftaran->id }}</strong> sedang dalam tahapan verifikasi berkas.
                 </p>
             </div>
-            <span style="font-size: 0.775rem; font-weight: 700; background: {{ $statusStyle['bg'] }}; color: {{ $statusStyle['color'] }}; border: 1px solid {{ $statusStyle['border'] }}; padding: 4px 12px; border-radius: 9999px;">
+            <span class="saas-status-pill {{ $statusClass }}">
                 ● {{ $status->label() }}
             </span>
         </div>
@@ -49,20 +52,25 @@
             </div>
 
             @if($pendaftaran->catatan_revisi)
-                <div class="saas-alert-catatan" style="margin-top: 18px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 14px 18px; display: flex; align-items: flex-start; gap: 12px;">
-                    <span style="font-size: 1.1rem; line-height: 1;">📝</span>
+                <div class="saas-alert-catatan">
+                    <span class="saas-alert-catatan-icon" aria-hidden="true">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </span>
                     <div>
-                        <h5 style="font-family: var(--font-display); font-size: 0.8125rem; font-weight: 700; color: #92400e; margin: 0 0 4px 0;">Catatan Verifikator Diskominfo:</h5>
-                        <p style="font-size: 0.8125rem; color: #b45309; line-height: 1.5; margin: 0;">
+                        <h5 class="saas-alert-catatan-title">Catatan Verifikator Diskominfo:</h5>
+                        <p class="saas-alert-catatan-desc">
                             {{ $pendaftaran->catatan_revisi }}
                         </p>
                     </div>
                 </div>
             @endif
 
-            <div class="saas-divider" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--neutral-150, #f1f5f9);">
+            <div class="saas-divider-actions">
                 <a href="{{ route('peserta.pendaftaran.detail', $pendaftaran) }}" class="saas-btn-primary">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-1.943-9.542-7z"></path>
                     </svg>
@@ -70,8 +78,8 @@
                 </a>
 
                 @if($pendaftaran->penempatan)
-                    <a href="{{ route('peserta.penempatan.surat-diterima.pratinjau', $pendaftaran->penempatan) }}" class="saas-btn-secondary" target="_blank">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <a href="{{ route('peserta.penempatan.surat-diterima.pratinjau', $pendaftaran->penempatan) }}" class="saas-btn-secondary" target="_blank" rel="noopener noreferrer">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         <span>Unduh Surat Diterima (PDF)</span>
