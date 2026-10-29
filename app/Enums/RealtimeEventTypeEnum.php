@@ -14,6 +14,7 @@ enum RealtimeEventTypeEnum: string
     case TugasBaru = 'tugas_baru';
     case TugasDikumpulkan = 'tugas_dikumpulkan';
     case AncamanKeamanan = 'ancaman_keamanan';
+    case TelemetriRoute = 'telemetri_route';
 
     public function label(): string
     {
@@ -26,6 +27,7 @@ enum RealtimeEventTypeEnum: string
             self::TugasBaru => 'Tugas Magang Baru Diterbitkan',
             self::TugasDikumpulkan => 'Pengumpulan Progres Tugas Mentee',
             self::AncamanKeamanan => 'Peringatan Keamanan Sistem',
+            self::TelemetriRoute => 'Telemetri Waktu Eksekusi Route',
         };
     }
 }

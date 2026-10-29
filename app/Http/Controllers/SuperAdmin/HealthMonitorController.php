@@ -8,6 +8,7 @@ use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Dokumen;
+use App\Models\RouteMetric;
 use App\Services\AuditService;
 use App\Services\SecuritySweepService;
 use Illuminate\Http\RedirectResponse;
@@ -107,6 +108,31 @@ class HealthMonitorController extends Controller
             $slaPercent = 94.20;
         }
 
+        // 8. Telemetri Real-Time Waktu Eksekusi Route (Native HTML5 Canvas 2D)
+        $recentRouteMetrics = RouteMetric::orderBy('id', 'desc')->limit(40)->get()->reverse()->values();
+        $chartRouteData = $recentRouteMetrics->map(fn (RouteMetric $m) => [
+            'id' => $m->id,
+            'method' => $m->method,
+            'route_name' => $m->route_name ?: $m->uri,
+            'uri' => $m->uri,
+            'status_code' => $m->status_code,
+            'duration_ms' => (float) $m->duration_ms,
+            'memory_mb' => (float) ($m->memory_mb ?? 0),
+            'time' => $m->created_at ? $m->created_at->format('H:i:s') : now()->format('H:i:s'),
+        ])->toArray();
+
+        $totalRouteRequests = RouteMetric::count();
+        $avgRouteDuration = round((float) (RouteMetric::avg('duration_ms') ?? 0), 2);
+        $maxRouteDuration = round((float) (RouteMetric::max('duration_ms') ?? 0), 2);
+
+        $durations = RouteMetric::orderBy('duration_ms', 'asc')->pluck('duration_ms')->toArray();
+        $countDurations = count($durations);
+        $p95RouteDuration = 0.0;
+        if ($countDurations > 0) {
+            $p95Index = (int) floor($countDurations * 0.95);
+            $p95RouteDuration = round((float) ($durations[min($p95Index, $countDurations - 1)] ?? 0), 2);
+        }
+
         return view('superadmin.health.index', [
             'dbStatus' => $dbStatus,
             'dbLatency' => $dbLatency,
@@ -127,6 +153,11 @@ class HealthMonitorController extends Controller
             'sweeperStats' => $sweeperStats,
             'slaStatus' => $slaStatus,
             'slaPercent' => $slaPercent,
+            'routeMetrics' => $chartRouteData,
+            'totalRouteRequests' => $totalRouteRequests,
+            'avgRouteDuration' => $avgRouteDuration,
+            'maxRouteDuration' => $maxRouteDuration,
+            'p95RouteDuration' => $p95RouteDuration,
         ]);
     }
 
@@ -136,8 +167,9 @@ class HealthMonitorController extends Controller
     public function runSecuritySweep(Request $request, SecuritySweepService $sweepService, AuditService $auditService): RedirectResponse
     {
         $results = $sweepService->sweep(dryRun: false);
+        $prunedMetrics = RouteMetric::pruneOld(days: 7, keepMax: 3000);
 
-        $msg = "Pembersihan keamanan berhasil: {$results['deleted_tokens']} token kedaluwarsa dibersihkan, {$results['deleted_temp_files']} berkas arsip sementara dihapus, dan {$results['deleted_unverified_users']} pendaftar unverified (>72 jam) dibersihkan.";
+        $msg = "Pembersihan keamanan berhasil: {$results['deleted_tokens']} token kedaluwarsa dibersihkan, {$results['deleted_temp_files']} berkas arsip sementara dihapus, {$results['deleted_unverified_users']} pendaftar unverified (>72 jam) dibersihkan, dan {$prunedMetrics} rekaman telemetri lama dipangkas.";
 
         $auditService->catat(
             tipe: TipeAuditEnum::Aksi,
@@ -163,7 +195,7 @@ class HealthMonitorController extends Controller
                 DB::statement('VACUUM');
             } else {
                 // Untuk MySQL / MariaDB, optimasi tabel utama
-                $tables = ['users', 'pendaftaran', 'dokumen', 'penempatan', 'tugas', 'logbook', 'audit_log'];
+                $tables = ['users', 'pendaftaran', 'dokumen', 'penempatan', 'tugas', 'logbook', 'audit_log', 'route_metrics'];
                 foreach ($tables as $table) {
                     try {
                         DB::statement("OPTIMIZE TABLE {$table}");
@@ -171,6 +203,8 @@ class HealthMonitorController extends Controller
                     }
                 }
             }
+
+            RouteMetric::pruneOld(days: 7, keepMax: 3000);
 
             $durationMs = round((microtime(true) - $start) * 1000, 2);
 

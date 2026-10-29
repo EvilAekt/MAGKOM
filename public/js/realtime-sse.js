@@ -67,7 +67,8 @@ class MagKomRealtimeEngine {
                 'logbook_direviu',
                 'tugas_baru',
                 'tugas_dikumpulkan',
-                'ancaman_keamanan'
+                'ancaman_keamanan',
+                'telemetri_route'
             ];
 
             events.forEach((eventType) => {
@@ -111,6 +112,15 @@ class MagKomRealtimeEngine {
     handleEvent(eventType, eventObj) {
         try {
             const data = JSON.parse(eventObj.data || '{}');
+
+            // Dispatch global event untuk subscriber frontend (seperti Canvas Telemetri)
+            window.dispatchEvent(new CustomEvent('magkom:realtime-event', { detail: { eventType, data } }));
+
+            if (eventType === 'telemetri_route') {
+                window.dispatchEvent(new CustomEvent('magkom:telemetry-route', { detail: data }));
+                return; // Jangan tampilkan toast/chime untuk telemetri route reguler
+            }
+
             this.playNotificationChime();
             this.showToast(data.title || 'Pemberitahuan Baru', data.message || '', eventType, data.action_url);
 

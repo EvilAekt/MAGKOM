@@ -122,6 +122,25 @@ Route::middleware('guest')->group(function () {
 // Logout
 Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Universal Dashboard Shortcut & Smart Role Redirect (F-02, PRD 4.3)
+Route::get('/dashboard', function () {
+    if (! auth()->check()) {
+        return redirect()->route('login');
+    }
+
+    $role = auth()->user()->role;
+    $enumRole = $role instanceof \App\Enums\RoleEnum ? $role : \App\Enums\RoleEnum::tryFrom((string) $role);
+
+    $targetRoute = match ($enumRole) {
+        \App\Enums\RoleEnum::SuperAdmin => 'superadmin.dashboard',
+        \App\Enums\RoleEnum::Admin => 'admin.dashboard',
+        \App\Enums\RoleEnum::Pembimbing => 'pembimbing.dashboard',
+        default => 'peserta.dashboard',
+    };
+
+    return redirect()->route($targetRoute);
+})->name('dashboard');
+
 // Verifikasi Email Calon Peserta (F-02 AC-02-4)
 Route::middleware('auth')->group(function () {
     Route::get('/email/verify', [VerificationController::class, 'notice'])->name('verification.notice');
