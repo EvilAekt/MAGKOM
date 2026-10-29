@@ -12,11 +12,20 @@
 
 @section('page_actions')
     <div class="health-header-actions">
-        <a href="{{ route('superadmin.backup.index') }}" class="btn btn-default btn-sm health-btn-action">
+        <!-- Live SSE Stream Badge -->
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>Live SSE Active</span>
+        </span>
+
+        <a href="{{ route('superadmin.backup.index') }}" class="btn btn-default btn-sm health-btn-action focus-visible:ring-2 focus-visible:ring-[#3F51B5]">
             <i class="fa fa-hdd-o" aria-hidden="true"></i>
             <span>Backup Hub</span>
         </a>
-        <a href="{{ route('superadmin.audit-log.index') }}" class="btn btn-dark btn-sm health-btn-action">
+        <a href="{{ route('superadmin.audit-log.index') }}" class="btn btn-dark btn-sm health-btn-action focus-visible:ring-2 focus-visible:ring-[#3F51B5]">
             <i class="fa fa-history" aria-hidden="true"></i>
             <span>Audit Trail Stream</span>
         </a>
@@ -29,7 +38,6 @@
        HEALTH TELEMETRY GENTELELLA PARITY STYLESHEET (DS-MAGKOM)
        ========================================================================== */
 
-    /* Container Spacing */
     .health-telemetry-container {
         display: flex;
         flex-direction: column;
@@ -41,6 +49,7 @@
         display: flex;
         gap: 0.75rem;
         align-items: center;
+        flex-wrap: wrap;
     }
 
     .health-btn-action {
@@ -52,90 +61,7 @@
         padding: 0.45rem 0.9rem;
     }
 
-    /* 1. SLA Hero Status Banner */
-    .health-hero-banner {
-        background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-        border-radius: 12px;
-        padding: 1.5rem 1.75rem;
-        color: #FFFFFF;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1.25rem;
-        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .health-hero-status-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.45rem;
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 800;
-        background: rgba(16, 185, 129, 0.2);
-        color: #34D399;
-        border: 1px solid rgba(16, 185, 129, 0.4);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .health-hero-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #34D399;
-        box-shadow: 0 0 8px #34D399;
-    }
-
-    .health-hero-title {
-        font-size: 1.5rem;
-        font-weight: 800;
-        margin: 0.35rem 0 0.2rem 0;
-        letter-spacing: -0.02em;
-        color: #FFFFFF;
-    }
-
-    .health-hero-subtitle {
-        font-size: 0.8125rem;
-        color: #CBD5E1;
-        margin: 0;
-        max-width: 650px;
-        line-height: 1.45;
-    }
-
-    .health-hero-telemetry-stats {
-        display: flex;
-        gap: 1.5rem;
-        align-items: center;
-    }
-
-    .health-hero-stat-box {
-        text-align: right;
-    }
-
-    .health-hero-stat-box:not(:last-child) {
-        border-right: 1px solid rgba(255, 255, 255, 0.15);
-        padding-right: 1.5rem;
-    }
-
-    .health-hero-stat-label {
-        font-size: 0.72rem;
-        color: #94A3B8;
-        text-transform: uppercase;
-        font-weight: 700;
-    }
-
-    .health-hero-stat-value {
-        font-size: 1.375rem;
-        font-weight: 800;
-        font-family: monospace;
-        line-height: 1.2;
-    }
-
-    /* 2. Maintenance Alert Banner */
+    /* Maintenance Alert Banner */
     .health-maintenance-banner {
         background: rgba(7, 81, 255, 0.06);
         border: 1px solid rgba(7, 81, 255, 0.2);
@@ -162,7 +88,7 @@
         font-size: 1.125rem;
     }
 
-    /* 3. 4 Hero Metric Cards (Gentelella Parity) */
+    /* Hero Metric Cards (Gentelella Parity) */
     .health-metrics-row {
         margin-left: -10px;
         margin-right: -10px;
@@ -235,7 +161,7 @@
 
     .icon-box-teal { background: rgba(16, 185, 129, 0.12); color: #059669; }
     .icon-box-blue { background: rgba(7, 81, 255, 0.12); color: #0751FF; }
-    .icon-box-amber { background: rgba(245, 158, 11, 0.12); color: #D97706; }
+    .icon-box-amber { background: rgba(245, 158, 11, 0.15); color: #212529; }
     .icon-box-purple { background: rgba(124, 58, 237, 0.12); color: #7C3AED; }
 
     .health-tile-value {
@@ -252,7 +178,7 @@
         margin-top: 0.35rem;
     }
 
-    /* 4. Canvas Real-Time Chart & Tooltip */
+    /* Canvas Real-Time Chart & Tooltip */
     .telemetry-kpi-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -366,10 +292,10 @@
     .dot-slow { background: #EF4444; }
 
     .color-fast { color: #10B981 !important; }
-    .color-normal { color: #F59E0B !important; }
+    .color-normal { color: #212529 !important; }
     .color-slow { color: #EF4444 !important; }
 
-    /* 5. Resource Usage & Metering Panel */
+    /* Resource Usage & Metering Panel */
     .resource-stat-list {
         display: flex;
         flex-direction: column;
@@ -402,65 +328,19 @@
         color: var(--neutral-900, #05070B);
     }
 
-    /* 6. Diagnostic Action Suite Buttons */
-    .health-diag-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 0.875rem;
-    }
-
-    .health-diag-btn {
-        width: 100%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.65rem 1rem;
-        font-weight: 700;
-        font-size: 0.8125rem;
-        border-radius: 6px;
-        transition: all 0.15s ease;
-    }
-
-    .health-diag-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    /* 7. Live SSE Indicator Pill */
-    .telemetry-live-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.2rem 0.65rem;
-        border-radius: 9999px;
-        font-size: 0.72rem;
-        font-weight: 700;
-        background: rgba(16, 185, 129, 0.12);
-        color: #059669;
-        border: 1px solid rgba(16, 185, 129, 0.25);
-    }
-
-    .telemetry-pulse-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #10B981;
-        animation: pulseLive 2s infinite;
-    }
-
-    @keyframes pulseLive {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-        70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-    }
-
-    /* 8. Top Accent Ribbon for Tables & Panels */
+    /* Top Accent Ribbon for Tables & Panels */
     .x_panel.has-table {
         border-top: 3px solid #01347C !important;
     }
 
-    /* 9. Dark Mode Overrides */
+    /* WCAG AA Amber-Gold Contrast Rule: Zero White Text on Amber Gold */
+    .badge-amber-gold {
+        background-color: #FFCB05 !important;
+        color: #212529 !important;
+        font-weight: 800;
+    }
+
+    /* Dark Mode Overrides */
     [data-theme="dark"] .health-tile-card {
         background: #111C2E !important;
         border-color: #26354D !important;
@@ -492,6 +372,10 @@
     [data-theme="dark"] .resource-stat-val {
         color: #F8FAFC !important;
     }
+
+    [data-theme="dark"] .color-normal {
+        color: #FDE68A !important;
+    }
 </style>
 @endpush
 
@@ -511,41 +395,23 @@
         </x-gentelella.callout>
     @endif
 
-    {{-- 1. SLA UPTIME & STATUS OPERASIONAL HERO BANNER --}}
-    <div class="health-hero-banner">
-        <div>
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
-                <span class="health-hero-status-pill">
-                    <span class="health-hero-dot"></span>
-                    {{ $slaStatus }}
-                </span>
-                <span style="font-size: 0.8125rem; color: #94A3B8;">
-                    Tingkat Keandalan Layanan Instansi: <strong style="color: #34D399;">{{ $slaPercent }}% Uptime</strong>
-                </span>
-            </div>
-            <h2 class="health-hero-title">
-                Pusat Telemetri Infrastruktur Portal MagKom
-            </h2>
-            <p class="health-hero-subtitle">
-                Dinas Komunikasi dan Informatika Kabupaten Sleman &mdash; Sistem aktif memantau integritas data, ketersediaan disk storage, latensi query, dan thread pemrosesan.
-            </p>
-        </div>
-
-        <div class="health-hero-telemetry-stats">
-            <div class="health-hero-stat-box">
-                <div class="health-hero-stat-label">Ping Latensi DB</div>
-                <div class="health-hero-stat-value" style="color: {{ $dbLatency < 25 ? '#34D399' : ($dbLatency < 100 ? '#FBBF24' : '#F87171') }};">
-                    {{ $dbLatency }} ms
-                </div>
-            </div>
-            <div class="health-hero-stat-box">
-                <div class="health-hero-stat-label">Event Log 24 Jam</div>
-                <div class="health-hero-stat-value" style="color: #60A5FA;">
-                    {{ number_format($audit24h) }}
-                </div>
-            </div>
-        </div>
-    </div>
+    {{-- 1. MASTER COCKPIT HUD & 6-METRIC COMMAND GRID (AC-1, AC-6) --}}
+    <x-telemetry.health-hud
+        :sla-status="$slaStatus"
+        :sla-percent="$slaPercent"
+        :db-latency="$dbLatency"
+        :db-driver="$dbDriver"
+        :total-tables="$totalTables"
+        :p95-route-duration="$p95RouteDuration"
+        :avg-route-duration="$avgRouteDuration"
+        :total-route-requests="$totalRouteRequests"
+        :audit24h="$audit24h"
+        :total-audit="$totalAudit"
+        :failed-jobs-count="$failedJobsCount"
+        :cache-driver="$runtimeInfo['cache_driver'] ?? 'file'"
+        :queue-driver="$runtimeInfo['queue_driver'] ?? 'sync'"
+        :is-writable="$isWritable"
+    />
 
     {{-- 2. SCHEDULED MAINTENANCE RUNBOOK ALERT BANNER --}}
     <div class="health-maintenance-banner">
@@ -556,12 +422,9 @@
             </div>
         </div>
         <div>
-            <form action="{{ route('superadmin.health.security-sweep') }}" method="POST" class="d-inline" onsubmit="return confirm('Jalankan uji coba pemeliharaan sanitasi keamanan proaktif sekarang?');">
-                @csrf
-                <button type="submit" class="btn btn-default btn-xs" style="font-weight: 700; border-radius: 4px;">
-                    <i class="fa fa-play text-primary"></i> Run Diagnostics Drill
-                </button>
-            </form>
+            <a href="#maintenanceSuite" class="btn btn-default btn-xs focus-visible:ring-2 focus-visible:ring-[#3F51B5]" style="font-weight: 700; border-radius: 4px;">
+                <i class="fa fa-wrench text-primary" aria-hidden="true"></i> Suite Pemeliharaan
+            </a>
         </div>
     </div>
 
@@ -576,9 +439,9 @@
                         <i class="fa fa-check-circle" aria-hidden="true"></i>
                     </div>
                 </div>
-                <div class="health-tile-value text-success">{{ $slaPercent }}%</div>
+                <div class="health-tile-value text-success">{{ $slaPercent !== null ? $slaPercent . '%' : 'N/A' }}</div>
                 <div class="health-tile-subtext">
-                    <i class="fa fa-shield text-success"></i> Status: {{ $slaStatus }}
+                    <i class="fa fa-shield text-success" aria-hidden="true"></i> Status: {{ $slaStatus }}
                 </div>
             </div>
         </div>
@@ -594,7 +457,7 @@
                 </div>
                 <div class="health-tile-value text-primary">{{ $p95RouteDuration }} ms</div>
                 <div class="health-tile-subtext">
-                    <i class="fa fa-line-chart text-info"></i> Rata-rata: {{ $avgRouteDuration }} ms (SLO &lt; 200ms)
+                    <i class="fa fa-line-chart text-info" aria-hidden="true"></i> Rata-rata: {{ $avgRouteDuration }} ms (SLO &lt; 200ms)
                 </div>
             </div>
         </div>
@@ -608,14 +471,14 @@
                         <i class="fa fa-bolt" aria-hidden="true"></i>
                     </div>
                 </div>
-                <div class="health-tile-value" style="color: #D97706;">{{ number_format($totalRouteRequests) }}</div>
+                <div class="health-tile-value" style="color: #212529;">{{ number_format($totalRouteRequests) }}</div>
                 <div class="health-tile-subtext">
-                    <i class="fa fa-history text-warning"></i> Event 24 Jam: {{ number_format($audit24h) }} log
+                    <i class="fa fa-history text-warning" aria-hidden="true"></i> Event 24 Jam: {{ number_format($audit24h) }} log
                 </div>
             </div>
         </div>
 
-        <!-- Tile 4: Koneksi Basis Data & Ping -->
+        <!-- Tile 4: Koneksi Basis Data & Ping (AC-6 Preserved) -->
         <div class="col-md-3 col-sm-6 col-xs-12 health-metric-col">
             <div class="health-tile-card border-purple">
                 <div class="health-tile-header">
@@ -626,15 +489,15 @@
                 </div>
                 <div class="health-tile-value" style="color: #7C3AED;">{{ $dbLatency }} ms</div>
                 <div class="health-tile-subtext">
-                    <i class="fa fa-server text-purple"></i> Driver: {{ strtoupper($dbDriver) }} ({{ $totalTables }} Tabel)
+                    <i class="fa fa-server text-purple" aria-hidden="true"></i> Driver: {{ strtoupper($dbDriver) }} ({{ $totalTables }} Tabel)
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- 4. ROW UTAMA: KURVA LATENSI 2D (8 KOLOM) & PENGGUNAAN SUMBER DAYA (4 KOLOM) --}}
+    {{-- 4. ROW UTAMA: KURVA LATENSI 2D (8 KOLOM) & CACHE DONUT + STORAGE (4 KOLOM) --}}
     <div class="row">
-        <!-- Kolom Kiri: Kurva Latensi Real-Time Canvas 2D SSE (8 Kolom) -->
+        <!-- Kolom Kiri: Kurva Latensi Real-Time Canvas 2D SSE (8 Kolom) (AC-5, AC-6) -->
         <div class="col-md-8 col-sm-12 col-xs-12">
             <x-gentelella.x-panel
                 title="<i class='fa fa-line-chart text-primary'></i> Telemetri Real-Time Waktu Eksekusi Route (Zero-Dependency Native HTML5 Canvas 2D)"
@@ -642,14 +505,18 @@
             >
                 <x-slot:actions>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span id="telemetryPulseBadge" class="telemetry-live-pill">
-                            <span class="telemetry-pulse-dot"></span>
+                        <span id="telemetryPulseBadge" class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold border"
+                              style="background: rgba(16, 185, 129, 0.12); color: #059669; border-color: rgba(16, 185, 129, 0.25);">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
                             <span id="telemetryStatusText">SSE Stream Live</span>
                         </span>
                     </div>
                 </x-slot:actions>
 
-                {{-- 4-KOLOM METRIK HERO TELEMETRI --}}
+                {{-- 4-KOLOM METRIK HERO TELEMETRI (AC-6 Preserved) --}}
                 <div class="telemetry-kpi-grid">
                     <div class="telemetry-kpi-card">
                         <span class="telemetry-kpi-label">Rata-Rata Latensi</span>
@@ -693,7 +560,7 @@
                     <canvas id="routeLatencyCanvas" height="280"></canvas>
                     <div id="canvasTooltip" class="telemetry-tooltip"></div>
                     <div id="canvasEmptyState" style="{{ count($routeMetrics) > 0 ? 'display: none;' : '' }} padding: 3rem; text-align: center; color: #94A3B8;">
-                        <i class="fa fa-info-circle fa-2x mb-2 text-info"></i>
+                        <i class="fa fa-info-circle fa-2x mb-2 text-info" aria-hidden="true"></i>
                         <div>Memulai pencatatan telemetri... Silakan navigasikan rute atau refresh untuk melihat kurva secara real-time.</div>
                     </div>
                 </div>
@@ -740,11 +607,12 @@
             </x-gentelella.x-panel>
         </div>
 
-        <!-- Kolom Kanan: Penggunaan Sumber Daya & Kapasitas (4 Kolom) -->
+        <!-- Kolom Kanan: Penggunaan Sumber Daya & Storage (4 Kolom) (AC-4, AC-6) -->
         <div class="col-md-4 col-sm-12 col-xs-12">
+            <!-- Storage & Kapasitas Disk (AC-6 Preserved) -->
             <x-gentelella.x-panel
                 title="<i class='fa fa-hdd-o text-success'></i> Storage & Kapasitas Disk"
-                subtitle="Alokasi disk server dan volume penyimpanan privat MagKom."
+                subtitle="Alokasi disk server, cache, dan volume penyimpanan privat MagKom."
             >
                 <!-- Metering Disk Bar -->
                 <div style="margin-bottom: 1.25rem;">
@@ -787,6 +655,14 @@
                     </div>
                     <div class="resource-stat-item">
                         <span class="resource-stat-label">
+                            <i class="fa fa-bolt text-warning" aria-hidden="true"></i> Driver Cache Sistem:
+                        </span>
+                        <span class="badge badge-primary" style="font-size: 0.72rem;">
+                            {{ strtoupper($runtimeInfo['cache_driver']) }}
+                        </span>
+                    </div>
+                    <div class="resource-stat-item">
+                        <span class="resource-stat-label">
                             <i class="fa fa-database text-info" aria-hidden="true"></i> Tabel Basis Data:
                         </span>
                         <span class="resource-stat-val">{{ $totalTables }} Tabel</span>
@@ -810,82 +686,14 @@
         </div>
     </div>
 
-    {{-- 5. ROW ENTERPRISE DATA TABLE: TELEMETRI RUTE HTTP TERKINI (12 KOLOM) --}}
+    {{-- 5. ROW ENTERPRISE DATA TABLE: TELEMETRI RUTE HTTP TERKINI (12 KOLOM) (AC-4) --}}
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <x-gentelella.x-panel
-                class="has-table"
-                title="<i class='fa fa-exchange text-primary'></i> Telemetri Rute HTTP Terkini (Last 40 Requests)"
-                subtitle="Rekaman aliran request real-time dari terminable middleware untuk profiling performa endpoint."
-            >
-                <div class="table-responsive">
-                    <table class="table table-striped jambo_table bulk_action">
-                        <thead>
-                            <tr class="headings">
-                                <th class="column-title" style="width: 100px;">WAKTU</th>
-                                <th class="column-title" style="width: 90px;">METODE</th>
-                                <th class="column-title">RUTE / ENDPOINT URI</th>
-                                <th class="column-title text-center" style="width: 110px;">STATUS HTTP</th>
-                                <th class="column-title text-right" style="width: 130px;">DURASI LATENSI</th>
-                                <th class="column-title text-right" style="width: 120px;">MEMORI RUNTIME</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($routeMetrics as $metric)
-                                @php
-                                    $ms = (float) $metric['duration_ms'];
-                                    $statusColor = $metric['status_code'] >= 500 ? 'danger' : ($metric['status_code'] >= 400 ? 'warning' : 'success');
-                                    $methodColor = match($metric['method']) {
-                                        'GET' => 'primary',
-                                        'POST' => 'success',
-                                        'DELETE' => 'danger',
-                                        default => 'warning'
-                                    };
-                                @endphp
-                                <tr class="even pointer">
-                                    <td class="font-mono text-muted" style="font-size: 0.75rem;">
-                                        <i class="fa fa-clock-o text-muted"></i> {{ $metric['time'] }}
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-{{ $methodColor }}" style="font-size: 0.6875rem; font-weight: 800;">
-                                            {{ $metric['method'] }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 700; color: var(--neutral-800, #1D2530);">
-                                            {{ $metric['route_name'] }}
-                                        </div>
-                                        <div class="font-mono text-muted" style="font-size: 0.72rem;">
-                                            {{ $metric['uri'] }}
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge badge-{{ $statusColor }}" style="font-size: 0.72rem; font-weight: 700;">
-                                            {{ $metric['status_code'] }}
-                                        </span>
-                                    </td>
-                                    <td class="text-right font-mono" style="font-weight: 700; color: {{ $ms < 50 ? '#059669' : ($ms < 200 ? '#D97706' : '#DC2626') }};">
-                                        {{ number_format($ms, 2) }} ms
-                                    </td>
-                                    <td class="text-right font-mono text-muted" style="font-size: 0.75rem;">
-                                        {{ $metric['memory_mb'] ?? '0' }} MB
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center py-4 text-muted">
-                                        <i class="fa fa-info-circle"></i> Belum ada rekaman metrik rute HTTP tersimpan.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </x-gentelella.x-panel>
+            <x-telemetry.endpoint-table :route-metrics="$routeMetrics" />
         </div>
     </div>
 
-    {{-- 6. ROW STATUS LAYANAN (6 KOLOM) & SUITE PEMELIHARAAN 1-KLIK (6 KOLOM) --}}
+    {{-- 6. ROW STATUS LAYANAN (6 KOLOM) & SUITE PEMELIHARAAN 1-KLIK (6 KOLOM) (AC-3, AC-6) --}}
     <div class="row">
         <!-- Kolom Kiri: Status Layanan Inti MagKom (6 Kolom) -->
         <div class="col-md-6 col-sm-12 col-xs-12">
@@ -900,7 +708,7 @@
                             <div class="text-muted" style="font-size: 0.72rem;">Driver: {{ strtoupper($dbDriver) }} &bull; Latensi Ping: {{ $dbLatency }} ms</div>
                         </div>
                         <span class="badge badge-success" style="font-size: 0.72rem;">
-                            <i class="fa fa-circle text-white"></i> {{ $dbStatus === 'OK' ? 'Operasional' : 'Degraded' }}
+                            <i class="fa fa-circle text-white" aria-hidden="true"></i> {{ $dbStatus === 'OK' ? 'Operasional' : 'Degraded' }}
                         </span>
                     </div>
 
@@ -910,7 +718,7 @@
                             <div class="text-muted" style="font-size: 0.72rem;">Path: storage/app/berkas &bull; {{ number_format($totalDokumenCount) }} Dokumen</div>
                         </div>
                         <span class="badge {{ $isWritable ? 'badge-success' : 'badge-danger' }}" style="font-size: 0.72rem;">
-                            <i class="fa fa-circle text-white"></i> {{ $isWritable ? 'Operasional' : 'Read-Only' }}
+                            <i class="fa fa-circle text-white" aria-hidden="true"></i> {{ $isWritable ? 'Operasional' : 'Read-Only' }}
                         </span>
                     </div>
 
@@ -920,7 +728,7 @@
                             <div class="text-muted" style="font-size: 0.72rem;">Endpoint: /realtime/stream &bull; Push Notification Aktif</div>
                         </div>
                         <span class="badge badge-success" style="font-size: 0.72rem;">
-                            <i class="fa fa-circle text-white"></i> Operasional
+                            <i class="fa fa-circle text-white" aria-hidden="true"></i> Operasional
                         </span>
                     </div>
 
@@ -930,7 +738,7 @@
                             <div class="text-muted" style="font-size: 0.72rem;">Driver: {{ $runtimeInfo['queue_driver'] }} &bull; Antrean Eksekusi</div>
                         </div>
                         <span class="badge {{ $failedJobsCount === 0 ? 'badge-success' : 'badge-danger' }}" style="font-size: 0.72rem;">
-                            <i class="fa fa-circle text-white"></i> {{ $failedJobsCount === 0 ? 'Operasional (0 Gagal)' : "$failedJobsCount Gagal" }}
+                            <i class="fa fa-circle text-white" aria-hidden="true"></i> {{ $failedJobsCount === 0 ? 'Operasional (0 Gagal)' : "$failedJobsCount Gagal" }}
                         </span>
                     </div>
 
@@ -940,57 +748,18 @@
                             <div class="text-muted" style="font-size: 0.72rem;">Sanitasi token dan berkas sementara kadaluarsa</div>
                         </div>
                         <span class="badge {{ ($sweeperStats['pending_tokens'] === 0 && $sweeperStats['pending_temp_files'] === 0) ? 'badge-success' : 'badge-warning' }}" style="font-size: 0.72rem;">
-                            <i class="fa fa-circle text-white"></i> {{ ($sweeperStats['pending_tokens'] === 0 && $sweeperStats['pending_temp_files'] === 0) ? 'Higienis' : 'Perlu Sweep' }}
+                            <i class="fa fa-circle text-white" aria-hidden="true"></i> {{ ($sweeperStats['pending_tokens'] === 0 && $sweeperStats['pending_temp_files'] === 0) ? 'Higienis' : 'Perlu Sweep' }}
                         </span>
                     </div>
                 </div>
             </x-gentelella.x-panel>
         </div>
 
-        <!-- Kolom Kanan: Suite Pemeliharaan Cepat Proaktif (6 Kolom) -->
+        <!-- Kolom Kanan: Suite Pemeliharaan Cepat Proaktif (6 Kolom) (AC-3, AC-6) -->
         <div class="col-md-6 col-sm-12 col-xs-12">
-            <x-gentelella.x-panel
-                title="<i class='fa fa-wrench text-warning'></i> Suite Pemeliharaan Cepat Proaktif"
-                subtitle="Jalankan aksi pemeliharaan langsung untuk mencegah hambatan operasional dan memastikan kestabilan portal."
-            >
-                <div class="health-diag-grid">
-                    <!-- Aksi 1: Security Sweep -->
-                    <form action="{{ route('superadmin.health.security-sweep') }}" method="POST" onsubmit="return confirm('Jalankan pembersihan higienitas keamanan sistem sekarang? Token kedaluwarsa, berkas arsip sementara (>2 jam), dan pendaftar unverified (>72 jam) akan dibersihkan.');">
-                        @csrf
-                        <button type="submit" class="btn btn-danger health-diag-btn">
-                            <i class="fa fa-shield"></i>
-                            <span>1. Security Sweep Higienis</span>
-                        </button>
-                    </form>
-
-                    <!-- Aksi 2: Optimasi Basis Data -->
-                    <form action="{{ route('superadmin.health.optimize-db') }}" method="POST" onsubmit="return confirm('Jalankan optimasi dan defragmentasi basis data sekarang? Perintah VACUUM/OPTIMIZE akan dijalankan pada tabel-tabel utama.');">
-                        @csrf
-                        <button type="submit" class="btn btn-primary health-diag-btn">
-                            <i class="fa fa-database"></i>
-                            <span>2. Optimasi &amp; Defrag Basis Data</span>
-                        </button>
-                    </form>
-
-                    <!-- Aksi 3: Bersihkan Seluruh Cache -->
-                    <form action="{{ route('superadmin.health.clear-cache') }}" method="POST" onsubmit="return confirm('Bersihkan seluruh cache aplikasi, views, konfigurasi, dan rute sekarang? Data cache akan di-refresh otomatis.');">
-                        @csrf
-                        <button type="submit" class="btn btn-success health-diag-btn">
-                            <i class="fa fa-refresh"></i>
-                            <span>3. Bersihkan Cache Sistem</span>
-                        </button>
-                    </form>
-
-                    <!-- Aksi 4: Uji Izin Tulis Storage Disk -->
-                    <form action="{{ route('superadmin.health.test-storage') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-info health-diag-btn">
-                            <i class="fa fa-pencil-square-o"></i>
-                            <span>4. Uji Tulis Storage Disk Probe</span>
-                        </button>
-                    </form>
-                </div>
-            </x-gentelella.x-panel>
+            <x-telemetry.maintenance-suite
+                :last-sweep-at="$sweeperStats['last_sweep_at'] ?? null"
+            />
         </div>
     </div>
 
@@ -1367,33 +1136,77 @@
     });
 
     /**
-     * Render dan Posisikan Tooltip Interaktif
+     * Render dan Posisikan Tooltip Interaktif (XSS-Safe DOM Nodes)
      */
     function showTooltip(p, containerWidth, containerHeight) {
         const ms = Number(p.duration_ms) || 0;
-        let statusBadgeClass = p.status_code >= 500 ? 'badge-danger' : (p.status_code >= 400 ? 'badge-warning' : 'badge-success');
-        let methodBadgeClass = p.method === 'POST' ? 'badge-success' : (p.method === 'DELETE' ? 'badge-danger' : (p.method === 'PUT' ? 'badge-warning' : 'badge-primary'));
+        const statusCode = Number(p.status_code) || 200;
+        const method = String(p.method || 'GET').toUpperCase();
 
-        tooltip.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 0.35rem;">
-                <span class="badge ${methodBadgeClass}" style="font-size: 0.6875rem;">${p.method}</span>
-                <span style="font-family: monospace; font-size: 0.72rem; color: #94A3B8;">${p.time || ''}</span>
-            </div>
-            <div style="font-weight: 700; color: #F8FAFC; font-size: 0.8125rem; word-break: break-all; margin-bottom: 0.25rem;">
-                ${p.route_name || p.uri}
-            </div>
-            <div style="font-family: monospace; font-size: 0.6875rem; color: #94A3B8; margin-bottom: 0.5rem;">
-                ${p.uri}
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 0.35rem 0.5rem; border-radius: 6px;">
-                <span>Durasi Eksekusi:</span>
-                <strong style="color: ${ms < 50 ? '#34D399' : (ms < 200 ? '#FBBF24' : '#F87171')}; font-size: 0.875rem; font-family: monospace;">${ms.toFixed(2)} ms</strong>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.35rem; font-size: 0.72rem; color: #CBD5E1;">
-                <span>Status: <strong class="badge ${statusBadgeClass}">${p.status_code}</strong></span>
-                <span>Memori: <strong>${p.memory_mb || '0'} MB</strong></span>
-            </div>
-        `;
+        let statusBadgeClass = statusCode >= 500 ? 'badge-danger' : (statusCode >= 400 ? 'badge-warning' : 'badge-success');
+        let methodBadgeClass = method === 'POST' ? 'badge-success' : (method === 'DELETE' ? 'badge-danger' : (method === 'PUT' ? 'badge-warning' : 'badge-primary'));
+
+        // Clear existing children safely
+        while (tooltip.firstChild) {
+            tooltip.removeChild(tooltip.firstChild);
+        }
+
+        const header = document.createElement('div');
+        header.style.cssText = 'display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 0.35rem;';
+
+        const methodBadge = document.createElement('span');
+        methodBadge.className = 'badge ' + methodBadgeClass;
+        methodBadge.style.fontSize = '0.6875rem';
+        methodBadge.textContent = method;
+
+        const timeSpan = document.createElement('span');
+        timeSpan.style.cssText = 'font-family: monospace; font-size: 0.72rem; color: #94A3B8;';
+        timeSpan.textContent = String(p.time || '');
+
+        header.appendChild(methodBadge);
+        header.appendChild(timeSpan);
+
+        const routeDiv = document.createElement('div');
+        routeDiv.style.cssText = 'font-weight: 700; color: #F8FAFC; font-size: 0.8125rem; word-break: break-all; margin-bottom: 0.25rem;';
+        routeDiv.textContent = String(p.route_name || p.uri || '-');
+
+        const uriDiv = document.createElement('div');
+        uriDiv.style.cssText = 'font-family: monospace; font-size: 0.6875rem; color: #94A3B8; margin-bottom: 0.5rem;';
+        uriDiv.textContent = String(p.uri || '');
+
+        const durBox = document.createElement('div');
+        durBox.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 0.35rem 0.5rem; border-radius: 6px;';
+        const durLabel = document.createElement('span');
+        durLabel.textContent = 'Durasi Eksekusi:';
+        const durVal = document.createElement('strong');
+        durVal.style.cssText = 'font-size: 0.875rem; font-family: monospace; color: ' + (ms < 50 ? '#34D399' : (ms < 200 ? '#FBBF24' : '#F87171')) + ';';
+        durVal.textContent = ms.toFixed(2) + ' ms';
+        durBox.appendChild(durLabel);
+        durBox.appendChild(durVal);
+
+        const metaRow = document.createElement('div');
+        metaRow.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-top: 0.35rem; font-size: 0.72rem; color: #CBD5E1;';
+        const statusSpan = document.createElement('span');
+        statusSpan.textContent = 'Status: ';
+        const statusStrong = document.createElement('strong');
+        statusStrong.className = 'badge ' + statusBadgeClass;
+        statusStrong.textContent = String(statusCode);
+        statusSpan.appendChild(statusStrong);
+
+        const memSpan = document.createElement('span');
+        memSpan.textContent = 'Memori: ';
+        const memStrong = document.createElement('strong');
+        memStrong.textContent = (Number(p.memory_mb) || 0).toFixed(2) + ' MB';
+        memSpan.appendChild(memStrong);
+
+        metaRow.appendChild(statusSpan);
+        metaRow.appendChild(memSpan);
+
+        tooltip.appendChild(header);
+        tooltip.appendChild(routeDiv);
+        tooltip.appendChild(uriDiv);
+        tooltip.appendChild(durBox);
+        tooltip.appendChild(metaRow);
 
         let tx = p.x + 15;
         if (tx + 230 > containerWidth) {
@@ -1475,20 +1288,35 @@
     }
 
     /**
-     * Tambahkan Baris Data ke Tabel Tersembunyi Aksesibilitas WCAG
+     * Tambahkan Baris Data ke Tabel Tersembunyi Aksesibilitas WCAG (XSS-Safe DOM Nodes)
      */
     function prependSrTableRow(item) {
         const tbody = document.getElementById('srTableBody');
         if (!tbody) return;
 
         const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${item.time || ''}</td>
-            <td>${item.method || ''}</td>
-            <td>${item.route_name || item.uri || ''}</td>
-            <td>${item.status_code || ''}</td>
-            <td>${item.duration_ms || ''} ms</td>
-        `;
+
+        const tdTime = document.createElement('td');
+        tdTime.textContent = String(item.time || '');
+
+        const tdMethod = document.createElement('td');
+        tdMethod.textContent = String(item.method || '');
+
+        const tdRoute = document.createElement('td');
+        tdRoute.textContent = String(item.route_name || item.uri || '');
+
+        const tdStatus = document.createElement('td');
+        tdStatus.textContent = String(item.status_code || '');
+
+        const tdDuration = document.createElement('td');
+        tdDuration.textContent = String(item.duration_ms || '') + ' ms';
+
+        tr.appendChild(tdTime);
+        tr.appendChild(tdMethod);
+        tr.appendChild(tdRoute);
+        tr.appendChild(tdStatus);
+        tr.appendChild(tdDuration);
+
         tbody.insertBefore(tr, tbody.firstChild);
 
         while (tbody.children.length > 50) {
