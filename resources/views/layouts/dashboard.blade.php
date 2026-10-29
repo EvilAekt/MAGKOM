@@ -1122,47 +1122,6 @@
             margin-right: 0;
             padding-right: 0.65rem;
         }
-            border-radius: 6px;
-            text-decoration: none;
-            color: #BBE1FA;
-            font-size: 0.8125rem;
-            font-weight: 500;
-            transition: all 0.15s ease;
-        }
-
-        /* Cabang horizontal pohon submenu */
-        .nav-sub-item::before {
-            content: "";
-            position: absolute;
-            left: -0.85rem;
-            top: 50%;
-            width: 8px;
-            height: 1px;
-            background-color: rgba(255, 255, 255, 0.14);
-            pointer-events: none;
-        }
-
-        .nav-sub-item:hover {
-            color: #FFFFFF;
-            background-color: rgba(50, 130, 184, 0.15);
-        }
-
-        .nav-sub-item.active {
-            background-color: #0F4C75 !important;
-            color: #FFFFFF !important;
-            font-weight: 600;
-            border-radius: 6px;
-            margin-right: 0;
-            padding-right: 0.65rem;
-            position: relative;
-        }
-
-        .nav-sub-item.active::before {
-            background-color: #3282B8;
-            height: 2px;
-            width: 10px;
-            left: -0.85rem;
-        }
 
         /* Pulse green dot status */
         @keyframes pulseDot {
@@ -1180,50 +1139,6 @@
             display: inline-block;
         }
 
-        /* Sidebar Footer / System Badge */
-        .sidebar-footer {
-            padding: 1rem 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(0, 0, 0, 0.08);
-            flex-shrink: 0;
-        }
-
-        .sidebar-status-box {
-            display: flex;
-            align-items: center;
-            gap: 0.625rem;
-            padding: 0.625rem 0.75rem;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #22C55E;
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
-            flex-shrink: 0;
-        }
-
-        .status-text-wrap {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-
-        .status-system-title {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #FFFFFF;
-            line-height: 1.2;
-        }
-
-        .status-system-desc {
-            font-size: 0.6875rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
 
         /* =====================================================================
            MAIN WRAPPER & TOPBAR
@@ -1324,50 +1239,7 @@
             position: relative;
         }
 
-        /* Tombol Cepat Ganti Mode Gelap / Terang di Topbar */
-        .topbar-theme-toggle-btn {
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            cursor: pointer;
-            color: #FFFFFF;
-            width: 38px;
-            height: 38px;
-            border-radius: 9999px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            padding: 0;
-            flex-shrink: 0;
-        }
 
-        .topbar-theme-toggle-btn:hover {
-            background: rgba(255, 255, 255, 0.22);
-            border-color: var(--magkom-sun-yellow, #FFCB05);
-            transform: translateY(-1px);
-            color: #FFFFFF;
-        }
-
-        .topbar-theme-toggle-btn:focus-visible {
-            outline: 2px solid var(--magkom-sun-yellow, #FFCB05);
-            outline-offset: 2px;
-        }
-
-        html:not([data-theme="dark"]) .topbar-theme-toggle-btn .sun-icon {
-            display: none;
-        }
-
-        html:not([data-theme="dark"]) .topbar-theme-toggle-btn .moon-icon {
-            display: block;
-        }
-
-        html[data-theme="dark"] .topbar-theme-toggle-btn .sun-icon {
-            display: block;
-        }
-
-        html[data-theme="dark"] .topbar-theme-toggle-btn .moon-icon {
-            display: none;
-        }
 
         .user-menu-trigger {
             display: flex;
@@ -2182,36 +2054,82 @@
             margin: 0;
         }
 
-        /* Sidebar Footer Actions */
+        /* =========================================================================
+           Sidebar Footer Standardized Toolbar (Pengaturan, Theme Toggle, Logout)
+           ========================================================================= */
         .sidebar-footer {
             padding: 0.75rem 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
             background: rgba(0, 0, 0, 0.15);
             display: flex;
             align-items: center;
             justify-content: space-around;
             margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        [data-theme="dark"] .sidebar-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .sidebar-footer-form {
+            margin: 0;
+            padding: 0;
+            display: inline-flex;
         }
 
         .sidebar-footer a,
-        .sidebar-footer button {
+        .sidebar-footer button,
+        .sidebar-footer .sidebar-footer-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50% !important;
             color: rgba(255, 255, 255, 0.75);
             background: transparent;
             border: none;
             cursor: pointer;
-            padding: 6px;
-            border-radius: 6px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.15s ease;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             text-decoration: none;
+            padding: 0;
+            flex-shrink: 0;
         }
 
         .sidebar-footer a:hover,
-        .sidebar-footer button:hover {
+        .sidebar-footer button:hover,
+        .sidebar-footer .sidebar-footer-btn:hover {
             color: #FFFFFF;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-footer a:focus-visible,
+        .sidebar-footer button:focus-visible,
+        .sidebar-footer .sidebar-footer-btn:focus-visible {
+            outline: 2px solid var(--magkom-sun-yellow, #FFCB05);
+            outline-offset: 2px;
+        }
+
+        /* Dual-Icon State Sesuai AC-3 */
+        html:not([data-theme="dark"]) .sidebar-footer .sun-icon {
+            display: none !important;
+        }
+
+        html:not([data-theme="dark"]) .sidebar-footer .moon-icon {
+            display: block !important;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        html[data-theme="dark"] .sidebar-footer .sun-icon {
+            display: block !important;
+            color: var(--magkom-sun-yellow, #FFCB05) !important;
+        }
+
+        html[data-theme="dark"] .sidebar-footer .moon-icon {
+            display: none !important;
         }
 
         /* Top Navigation Gentelella */
@@ -2503,7 +2421,9 @@
             body.nav-sm .sidebar-footer {
                 flex-direction: column;
                 gap: 0.5rem;
-                padding: 0.5rem 0;
+                padding: 0.75rem 0;
+                align-items: center;
+                justify-content: center;
             }
         }
 
@@ -2772,6 +2692,16 @@
     $currentUser = auth()->user();
     $userRole = $currentUser?->role?->value ?? 'peserta';
     $isSuperAdmin = $userRole === 'superadmin' || request()->routeIs('superadmin.*');
+    $pengaturanUrl = $userRole === 'superadmin' ? route('superadmin.pengaturan.index') : ($userRole === 'admin' ? route('admin.pengaturan.index') : ($userRole === 'pembimbing' ? route('pembimbing.pengaturan.index') : route('peserta.pengaturan.index')));
+    $preferensiUrl = Route::has('tema.update')
+        ? route('tema.update')
+        : ($userRole === 'superadmin'
+            ? route('superadmin.akun.preferensi.update')
+            : ($userRole === 'admin'
+                ? route('admin.pengaturan.preferensi.update')
+                : ($userRole === 'pembimbing'
+                    ? route('pembimbing.pengaturan.preferensi.update')
+                    : (Route::has('peserta.pengaturan.preferensi.update') ? route('peserta.pengaturan.preferensi.update') : '#'))));
 @endphp
 <body class="gentelella-body role-{{ $userRole }} {{ $isSuperAdmin ? 'gentelella-fluid-body' : '' }}">
     @php
@@ -3361,16 +3291,21 @@
 
 
                 <!-- 1.4 Footer Sidebar: Aksi Cepat & Indikator Internal Kominfo -->
-                <div class="sidebar-footer hidden-small">
-                    <a href="{{ $userRole === 'superadmin' ? route('superadmin.pengaturan.index') : ($userRole === 'admin' ? route('admin.pengaturan.index') : ($userRole === 'pembimbing' ? route('pembimbing.pengaturan.index') : route('peserta.pengaturan.index'))) }}" title="Pengaturan Akun" aria-label="Pengaturan">
+                <div class="sidebar-footer">
+                    <a href="{{ $pengaturanUrl }}" class="sidebar-footer-btn" title="{{ __('Pengaturan Akun') }}" aria-label="{{ __('Pengaturan Akun') }}">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     </a>
-                    <button type="button" onclick="applyPortalTheme(document.documentElement.getAttribute('data-pref-theme') === 'gelap' ? 'terang' : 'gelap')" title="Ganti Mode Gelap/Terang" aria-label="Ganti Tema">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <button type="button" id="sidebarThemeToggleBtn" class="sidebar-footer-btn" onclick="togglePortalThemeQuick()" title="{{ __('Ganti Mode Terang / Gelap') }}" aria-label="{{ __('Ganti Mode Terang / Gelap') }}" aria-pressed="false">
+                        <svg class="sun-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <svg class="moon-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
                     </button>
-                    <form method="POST" action="{{ route('logout') }}" style="margin: 0; display: inline;">
+                    <form method="POST" action="{{ route('logout') }}" class="sidebar-footer-form">
                         @csrf
-                        <button type="submit" title="Keluar / Logout" aria-label="Keluar" style="color: rgba(255,255,255,0.75);">
+                        <button type="submit" class="sidebar-footer-btn" title="{{ __('Keluar / Logout') }}" aria-label="{{ __('Keluar') }}">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                         </button>
                     </form>
@@ -3415,23 +3350,8 @@
                     </div>
                 </div>
 
-                <!-- Topbar Menu Pengguna & Theme Switcher -->
+                <!-- Topbar Menu Pengguna -->
                 <div class="topbar-right">
-                    <!-- Tombol Cepat Ganti Mode Gelap / Terang (Harmonisasi Peserta MagKom) -->
-                    <button type="button" 
-                            class="topbar-theme-toggle-btn" 
-                            id="themeToggleBtn" 
-                            onclick="togglePortalThemeQuick()" 
-                            aria-label="{{ __('Ganti Mode Terang / Gelap') }}" 
-                            title="{{ __('Ganti Mode Terang / Gelap') }}">
-                        <svg class="sun-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                        </svg>
-                        <svg class="moon-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                        </svg>
-                    </button>
-
                     <button type="button" id="userMenuBtn" class="user-menu-trigger" onclick="toggleUserMenu()" aria-expanded="false" aria-haspopup="true">
                         <div class="user-avatar" style="overflow: hidden; padding: 0;">
                             @if($currentUser?->foto_url)
@@ -3703,23 +3623,52 @@
             }
             document.documentElement.setAttribute('data-theme', effective);
             document.documentElement.setAttribute('data-pref-theme', theme);
+            const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
+            if (toggleBtn) {
+                toggleBtn.setAttribute('aria-pressed', effective === 'dark' ? 'true' : 'false');
+            }
             try {
                 localStorage.setItem('magkom_theme', theme);
             } catch (e) {}
         };
 
-        // Toggle Cepat Terang / Gelap Instan (Harmonisasi Peserta MagKom)
+        (function() {
+            const currentEffective = document.documentElement.getAttribute('data-theme') || 'light';
+            const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
+            if (toggleBtn) {
+                toggleBtn.setAttribute('aria-pressed', currentEffective === 'dark' ? 'true' : 'false');
+            }
+        })();
+
+        // Toggle Cepat Terang / Gelap Instan (Harmonisasi Seluruh Dashboard MagKom)
         window.togglePortalThemeQuick = function() {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
             const nextTheme = currentTheme === 'dark' ? 'terang' : 'gelap';
             window.applyPortalTheme(nextTheme);
+            const preferensiUrl = "{{ $preferensiUrl }}";
+            if (preferensiUrl && preferensiUrl !== '#') {
+                fetch(preferensiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    body: JSON.stringify({ tema: nextTheme })
+                }).catch(function() {});
+            }
         };
 
         if (window.matchMedia) {
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
                 const currentPref = document.documentElement.getAttribute('data-pref-theme') || localStorage.getItem('magkom_theme');
                 if (currentPref === 'sistem') {
-                    document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                    const effective = e.matches ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', effective);
+                    const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
+                    if (toggleBtn) {
+                        toggleBtn.setAttribute('aria-pressed', effective === 'dark' ? 'true' : 'false');
+                    }
                 }
             });
         }
