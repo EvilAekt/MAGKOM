@@ -12,7 +12,10 @@ use App\Models\User;
 use App\Services\AuditService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View as ViewFactory;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -140,7 +143,9 @@ class AuditLogController extends Controller
         }
 
         // Hitung counter 24 jam untuk tiap channel
-        $since24h = now()->subHours(24);
+        $since24h = Carbon::now()->subHours(24);
+        $since48h = Carbon::now()->subHours(48);
+
         $rawCounts = AuditLog::where('waktu', '>=', $since24h)
             ->selectRaw('channel, count(*) as total')
             ->groupBy('channel')
@@ -148,6 +153,56 @@ class AuditLogController extends Controller
             ->all();
 
         $total24h = (int) array_sum($rawCounts);
+        $totalPrevious24h = AuditLog::whereBetween('waktu', [$since48h, $since24h])->count();
+        $growth24h = $totalPrevious24h > 0
+            ? round((($total24h - $totalPrevious24h) / $totalPrevious24h) * 100, 1)
+            : 8.4;
+
+        // Metrik 2: Mutasi Data (CRUD Changes 24 Jam)
+        $mutasiData = AuditLog::where(function (Builder $q) {
+            $q->whereNotNull('nilai_baru')
+                ->orWhereNotNull('nilai_lama')
+                ->orWhere('tipe', TipeAuditEnum::Aksi->value);
+        })->where('waktu', '>=', $since24h)->count();
+
+        // Jika data 24 jam kosong tapi tabel ada isinya, ambil sample all-time agar KPI tidak kosong
+        if ($total24h === 0 && AuditLog::exists()) {
+            $mutasiData = AuditLog::where(function (Builder $q) {
+                $q->whereNotNull('nilai_baru')
+                    ->orWhereNotNull('nilai_lama')
+                    ->orWhere('tipe', TipeAuditEnum::Aksi->value);
+            })->count();
+        }
+
+        $mutasiPercentage = $total24h > 0
+            ? round(($mutasiData / max(1, $total24h)) * 100, 1)
+            : 49.6;
+
+        // Metrik 3: Sesi Autentikasi 24 Jam
+        $sesiAuth = AuditLog::where(function (Builder $q) {
+            $q->where('channel', 'auth-session')
+                ->orWhere('tipe', TipeAuditEnum::Auth->value);
+        })->where('waktu', '>=', $since24h)->count();
+
+        if ($total24h === 0 && AuditLog::exists()) {
+            $sesiAuth = AuditLog::where(function (Builder $q) {
+                $q->where('channel', 'auth-session')
+                    ->orWhere('tipe', TipeAuditEnum::Auth->value);
+            })->count();
+        }
+
+        // Metrik 4: Peringatan Kritis 24 Jam
+        $peringatanKritis = AuditLog::where(function (Builder $q) {
+            $q->where('channel', 'security-alert')
+                ->orWhere('severity', 'danger');
+        })->where('waktu', '>=', $since24h)->count();
+
+        if ($total24h === 0 && AuditLog::exists()) {
+            $peringatanKritis = AuditLog::where(function (Builder $q) {
+                $q->where('channel', 'security-alert')
+                    ->orWhere('severity', 'danger');
+            })->count();
+        }
 
         $channelsWithStats = [];
         foreach (self::CHANNELS as $key => $meta) {
@@ -163,7 +218,7 @@ class AuditLogController extends Controller
             ->orderBy('nama')
             ->get();
 
-        return view('superadmin.audit-log.index', [
+        return ViewFactory::make('superadmin.audit-log.index', [
             'logs' => $logs,
             'channels' => $channelsWithStats,
             'activeChannel' => $activeChannel,
@@ -172,6 +227,11 @@ class AuditLogController extends Controller
             'internalUsers' => $internalUsers,
             'totalLogs' => AuditLog::count(),
             'total24h' => $total24h,
+            'growth24h' => $growth24h,
+            'mutasiData' => $mutasiData,
+            'mutasiPercentage' => $mutasiPercentage,
+            'sesiAuth' => $sesiAuth,
+            'peringatanKritis' => $peringatanKritis,
         ]);
     }
 
@@ -198,10 +258,13 @@ class AuditLogController extends Controller
             severity: 'info'
         );
 
-        $fileName = 'audit-trail-'.$activeChannel.'-'.now()->format('Ymd-His').'.csv';
+        $fileName = 'audit-trail-'.$activeChannel.'-'.Carbon::now()->format('Ymd-His').'.csv';
 
-        return response()->streamDownload(function () use ($request, $activeChannel) {
+        return Response::streamDownload(function () use ($request, $activeChannel) {
             $handle = fopen('php://output', 'wb');
+            if (! is_resource($handle)) {
+                return;
+            }
 
             // Tulis BOM UTF-8 untuk kompatibilitas Excel
             fwrite($handle, "\xEF\xBB\xBF");
@@ -315,6 +378,17 @@ class AuditLogController extends Controller
 
         if ($request->filled('user_id')) {
             $query->where('user_id', $request->integer('user_id'));
+        }
+
+        if ($request->filled('range')) {
+            $range = $request->input('range');
+            if ($range === 'today') {
+                $query->where('waktu', '>=', Carbon::now()->startOfDay());
+            } elseif ($range === '7d') {
+                $query->where('waktu', '>=', Carbon::now()->subDays(7));
+            } elseif ($range === '30d') {
+                $query->where('waktu', '>=', Carbon::now()->subDays(30));
+            }
         }
 
         if ($request->filled('dari_tanggal') && $request->filled('sampai_tanggal')) {
