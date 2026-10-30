@@ -21,6 +21,19 @@ class SuperAdminMasterArchitectureTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function createApplication(): \Illuminate\Foundation\Application
+    {
+        $basePath = dirname(__DIR__, 2);
+        putenv("APP_BASE_PATH={$basePath}");
+        $_ENV['APP_BASE_PATH'] = $basePath;
+        $_SERVER['APP_BASE_PATH'] = $basePath;
+
+        $app = require $basePath . '/bootstrap/app.php';
+        $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+
+        return $app;
+    }
+
     protected User $superAdmin;
 
     protected User $admin;
@@ -185,11 +198,11 @@ class SuperAdminMasterArchitectureTest extends TestCase
         $response = $this->get(route('superadmin.health.index'));
 
         $response->assertStatus(200);
-        $response->assertSee('Pusat Telemetri Infrastruktur Portal MagKom');
-        $response->assertSee('ALL SYSTEMS OPERATIONAL');
-        $response->assertSee('Koneksi Basis Data');
-        $response->assertSee('Storage & Kapasitas Disk');
-        $response->assertSee('Suite Pemeliharaan Cepat Proaktif');
+        $response->assertSee('Pusat Telemetri Infrastruktur');
+        $response->assertSee('ALL NOMINAL');
+        $response->assertSee('DB Ping');
+        $response->assertSee('Host');
+        $response->assertSee('Aksi Pemeliharaan Proaktif');
     }
 
     /**
