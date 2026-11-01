@@ -2250,15 +2250,12 @@
             color: #FFFFFF;
         }
 
-        /* Right Column Content Canvas (Lovable Blueprint Grid & Soft Canvas) */
+        /* Right Column Content Canvas (Solid Soft Canvas) */
         .right_col {
             margin-left: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
             background-color: var(--neutral-150);
-            background-image:
-                linear-gradient(rgba(1, 52, 124, 0.035) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(1, 52, 124, 0.035) 1px, transparent 1px);
-            background-size: 24px 24px;
+            background-image: none !important;
             padding: 1.5rem 2rem 3rem;
             flex: 1 0 auto;
             min-height: auto;
