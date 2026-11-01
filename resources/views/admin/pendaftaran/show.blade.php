@@ -52,7 +52,7 @@
     }
 @endphp
 
-<div class="adm-workspace-wrapper" style="display: flex; flex-direction: column; gap: 1.25rem; max-width: 1400px; margin: 0 auto; width: 100%;">
+<div class="adm-workspace-wrapper" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
 
     <style>
         .adm-identity-bar {

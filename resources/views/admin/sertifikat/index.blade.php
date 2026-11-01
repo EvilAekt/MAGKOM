@@ -3,7 +3,7 @@
 @section('title', 'Hub Penerbitan Sertifikat Kelulusan - MagKom Sleman')
 
 @section('content')
-<div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 1400px; margin: 0 auto; width: 100%;">
+<div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     <style>
         .cert-header-bar {

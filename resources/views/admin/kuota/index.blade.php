@@ -21,8 +21,6 @@
             display: flex;
             flex-direction: column;
             gap: 1.75rem;
-            max-width: 1400px;
-            margin: 0 auto;
             width: 100%;
             font-family: inherit;
             color: #1E293B;

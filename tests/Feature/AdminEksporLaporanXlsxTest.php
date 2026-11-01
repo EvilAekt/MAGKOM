@@ -247,4 +247,121 @@ class AdminEksporLaporanXlsxTest extends TestCase
         $resNilai->assertOk();
         $this->assertStringContainsString('.xlsx', (string) $resNilai->headers->get('content-disposition'));
     }
+
+    public function test_admin_dapat_mengekspor_rekap_surat_penempatan_format_xlsx(): void
+    {
+        $peserta = User::factory()->create([
+            'nama' => 'Bakti Idaman',
+            'email' => 'bakti@example.com',
+            'role' => RoleEnum::Peserta,
+            'status_aktif' => true,
+        ]);
+
+        PesertaProfil::create([
+            'user_id' => $peserta->id,
+            'nim_nisn' => '24.03.2345',
+            'institusi' => 'Universitas Negeri Yogyakarta',
+            'jenjang' => 's1',
+            'jurusan_id' => $this->jurusan->id,
+            'no_hp' => '08123456789',
+        ]);
+
+        $pen = Penempatan::create([
+            'pendaftaran_id' => null,
+            'kuota_id' => null,
+            'slot_khusus_id' => $this->slotKhusus->id,
+            'peserta_id' => $peserta->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'bidang_id' => $this->bidang->id,
+            'jalur' => JalurEnum::Khusus,
+            'sumber' => SumberPenempatanEnum::Manual,
+            'tgl_mulai' => Carbon::parse('2026-11-01'),
+            'tgl_selesai' => Carbon::parse('2027-01-31'),
+            'status' => StatusPenempatanEnum::Aktif,
+        ]);
+
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.ekspor-surat-diterima', ['format' => 'xlsx']));
+
+        $response->assertOk();
+        $this->assertStringContainsString('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', (string) $response->headers->get('content-type'));
+        $this->assertStringContainsString('rekap-surat-diterima-', (string) $response->headers->get('content-disposition'));
+        $this->assertStringContainsString('.xlsx', (string) $response->headers->get('content-disposition'));
+
+        $tempZip = tempnam(sys_get_temp_dir(), 'test_rekap_xlsx_');
+        ob_start();
+        $response->sendContent();
+        $binary = ob_get_clean();
+        file_put_contents($tempZip, $binary);
+
+        $zip = new ZipArchive;
+        $this->assertTrue($zip->open($tempZip));
+        $sheetXml = $zip->getFromName('xl/worksheets/sheet1.xml');
+
+        $expectedNoSurat = '500.12/'.str_pad((string) $pen->id, 4, '0', STR_PAD_LEFT).'/DISKOMINFO/'.date('Y');
+
+        $this->assertStringContainsString('No Surat Diterima', $sheetXml);
+        $this->assertStringContainsString('Bakti Idaman', $sheetXml);
+        $this->assertStringContainsString($expectedNoSurat, $sheetXml);
+        $this->assertStringContainsString('Teknik Informatika', $sheetXml);
+
+        $stylesXml = $zip->getFromName('xl/styles.xml');
+        $this->assertStringContainsString('FF1E3A8A', $stylesXml);
+
+        $zip->close();
+        @unlink($tempZip);
+    }
+
+    public function test_ekspor_penempatan_mematuhi_filter_pencarian_dan_bidang(): void
+    {
+        $bidangLain = Bidang::create([
+            'nama_bidang' => 'Informasi dan Komunikasi Publik',
+            'kode_bidang' => 'IKP',
+            'aktif' => true,
+        ]);
+
+        $peserta1 = User::factory()->create(['nama' => 'Peserta Satu Egov', 'role' => RoleEnum::Peserta]);
+        $peserta2 = User::factory()->create(['nama' => 'Peserta Dua Ikp', 'role' => RoleEnum::Peserta]);
+
+        Penempatan::create([
+            'peserta_id' => $peserta1->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'bidang_id' => $this->bidang->id,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'status' => StatusPenempatanEnum::Aktif,
+            'tgl_mulai' => now(),
+            'tgl_selesai' => now()->addMonths(3),
+        ]);
+
+        Penempatan::create([
+            'peserta_id' => $peserta2->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'bidang_id' => $bidangLain->id,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'status' => StatusPenempatanEnum::Aktif,
+            'tgl_mulai' => now(),
+            'tgl_selesai' => now()->addMonths(3),
+        ]);
+
+        // Filter berdasarkan q=Satu
+        $resFilterQ = $this->actingAs($this->admin)->get(route('admin.penempatan.ekspor-surat-diterima', [
+            'format' => 'csv',
+            'q' => 'Satu',
+        ]));
+        $resFilterQ->assertOk();
+        $contentQ = $resFilterQ->streamedContent();
+        $this->assertStringContainsString('Peserta Satu Egov', $contentQ);
+        $this->assertStringNotContainsString('Peserta Dua Ikp', $contentQ);
+
+        // Filter berdasarkan bidang_id IKP
+        $resFilterBidang = $this->actingAs($this->admin)->get(route('admin.penempatan.ekspor-surat-diterima', [
+            'format' => 'csv',
+            'bidang_id' => $bidangLain->id,
+        ]));
+        $resFilterBidang->assertOk();
+        $contentBidang = $resFilterBidang->streamedContent();
+        $this->assertStringNotContainsString('Peserta Satu Egov', $contentBidang);
+        $this->assertStringContainsString('Peserta Dua Ikp', $contentBidang);
+    }
 }

@@ -1457,8 +1457,9 @@
             box-sizing: border-box;
         }
 
-        /* SuperAdmin & Fluid Mode: Menghilangkan batasan 1400px kaku & dead space dengan mempertahankan offset sidebar */
+        /* Admin, SuperAdmin & Fluid Mode: Menghilangkan batasan 1400px kaku & dead space dengan mempertahankan offset sidebar */
         body.role-superadmin .dashboard-content-area,
+        body.role-admin .dashboard-content-area,
         body.gentelella-fluid-body .dashboard-content-area,
         .dashboard-content-area.gentelella-fluid-canvas {
             max-width: none !important;
@@ -1474,6 +1475,7 @@
         @media (max-width: 991.98px) {
             .dashboard-content-area,
             body.role-superadmin .dashboard-content-area,
+            body.role-admin .dashboard-content-area,
             body.gentelella-fluid-body .dashboard-content-area,
             .dashboard-content-area.gentelella-fluid-canvas {
                 width: 100% !important;
@@ -1486,6 +1488,7 @@
 
         @media (min-width: 1600px) {
             body.role-superadmin .dashboard-content-area,
+            body.role-admin .dashboard-content-area,
             body.gentelella-fluid-body .dashboard-content-area,
             .dashboard-content-area.gentelella-fluid-canvas {
                 padding: 1.75rem 2.5rem !important;

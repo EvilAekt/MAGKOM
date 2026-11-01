@@ -25,17 +25,19 @@ use App\Models\User;
 use App\Services\AuditService;
 use App\Services\PlacementService;
 use App\Services\SuratDiterimaPdfService;
+use App\Services\XlsxExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class PenempatanController extends Controller
 {
     public function __construct(
         protected PlacementService $placementService,
-        protected AuditService $auditService
+        protected AuditService $auditService,
+        protected XlsxExportService $xlsxExportService
     ) {}
 
     public function index(Request $request): View
@@ -424,9 +426,10 @@ class PenempatanController extends Controller
     }
 
     /**
-     * Ekspor rekapitulasi data surat keterangan diterima magang ke format CSV (F-16).
+     * Ekspor rekapitulasi data surat keterangan diterima magang (F-16).
+     * Mendukung format XLSX resmi bergaris rapi (default pada UI) dan CSV sanitasi.
      */
-    public function exportRekapSuratDiterima(Request $request): StreamedResponse
+    public function exportRekapSuratDiterima(Request $request): Response
     {
         $query = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan', 'slotKhusus'])
             ->orderBy('tgl_mulai', 'desc');
@@ -434,11 +437,42 @@ class PenempatanController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->input('status'));
         }
+
+        if ($request->filled('pembimbing_id')) {
+            $query->where('pembimbing_id', $request->integer('pembimbing_id'));
+        }
+
         if ($request->filled('bidang_id')) {
             $query->where('bidang_id', $request->integer('bidang_id'));
         }
 
+        if ($request->filled('bulan_magang_id')) {
+            $bulanId = $request->integer('bulan_magang_id');
+            $bulanObj = BulanMagang::find($bulanId);
+            $query->where(function ($q) use ($bulanId, $bulanObj) {
+                $q->whereHas('pendaftaran', fn ($qp) => $qp->where('bulan_magang_id', $bulanId))
+                    ->orWhereHas('kuota', fn ($qk) => $qk->where('bulan_magang_id', $bulanId));
+
+                if ($bulanObj && $bulanObj->bulan_mulai) {
+                    $q->orWhere(function ($qk) use ($bulanObj) {
+                        $qk->whereYear('tgl_mulai', $bulanObj->bulan_mulai->year)
+                            ->whereMonth('tgl_mulai', $bulanObj->bulan_mulai->month);
+                    });
+                }
+            });
+        }
+
+        if ($request->filled('q')) {
+            $search = '%'.trim((string) $request->input('q')).'%';
+            $query->whereHas('peserta', function ($qu) use ($search) {
+                $qu->where('nama', 'like', $search)
+                    ->orWhere('email', 'like', $search)
+                    ->orWhereHas('profil', fn ($qp) => $qp->where('institusi', 'like', $search));
+            });
+        }
+
         $records = $query->get();
+        $format = strtolower((string) $request->input('format', 'csv'));
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::AksesData,
@@ -447,11 +481,62 @@ class PenempatanController extends Controller
             nilaiLama: null,
             nilaiBaru: null,
             detail: [
-                'aksi' => 'Ekspor rekapitulasi surat diterima magang (F-16)',
+                'aksi' => $format === 'xlsx'
+                    ? 'Ekspor rekapitulasi surat diterima magang XLSX (F-16)'
+                    : 'Ekspor rekapitulasi surat diterima magang CSV (F-16)',
+                'format' => $format,
                 'jumlah_baris' => $records->count(),
+                'filter' => $request->only(['status', 'pembimbing_id', 'bidang_id', 'bulan_magang_id', 'q']),
             ],
             user: $request->user()->id
         );
+
+        $headers = [
+            'No Penempatan',
+            'Nama Peserta',
+            'NIM/NISN',
+            'Institusi/Kampus',
+            'Jurusan',
+            'Bidang Penempatan',
+            'Pembimbing Lapangan',
+            'Jalur',
+            'Tanggal Mulai',
+            'Tanggal Selesai',
+            'Status',
+            'No Surat Diterima',
+        ];
+
+        if ($format === 'xlsx') {
+            $rows = [];
+            foreach ($records as $item) {
+                $jurusan = $item->kuota?->jurusan?->nama_jurusan
+                    ?? ($item->peserta?->profil?->jurusan?->nama_jurusan ?? '-');
+                $jalur = strtoupper($item->jalur instanceof JalurEnum ? $item->jalur->value : (string) ($item->jalur ?? 'REGULER'));
+                $noSurat = $item->no_surat ?? '500.12/'.str_pad((string) $item->id, 4, '0', STR_PAD_LEFT).'/DISKOMINFO/'.date('Y');
+
+                $rows[] = [
+                    $item->id,
+                    $item->peserta?->nama ?? '-',
+                    $item->peserta?->profil?->nim_nisn ?? '-',
+                    $item->peserta?->profil?->institusi ?? '-',
+                    $jurusan,
+                    $item->bidang?->nama_bidang ?? '-',
+                    $item->pembimbing?->nama ?? '-',
+                    $jalur,
+                    $item->tgl_mulai?->format('d/m/Y') ?? '-',
+                    $item->tgl_selesai?->format('d/m/Y') ?? '-',
+                    ucfirst($item->status?->value ?? '-'),
+                    $noSurat,
+                ];
+            }
+
+            return $this->xlsxExportService->downloadXlsx(
+                'rekap-surat-diterima-'.date('Ymd-His').'.xlsx',
+                'Rekap Penempatan & Surat',
+                $headers,
+                $rows
+            );
+        }
 
         $sanitize = function (mixed $val): string {
             if ($val === null) {
@@ -467,38 +552,30 @@ class PenempatanController extends Controller
 
         $fileName = 'rekap-surat-diterima-'.date('Ymd-His').'.csv';
 
-        return response()->streamDownload(function () use ($records, $sanitize) {
+        return response()->streamDownload(function () use ($records, $sanitize, $headers) {
             $handle = fopen('php://output', 'w');
             fwrite($handle, "\xEF\xBB\xBFsep=,\r\n");
-            fputcsv($handle, [
-                'No Penempatan',
-                'Nama Peserta',
-                'NIM/NISN',
-                'Institusi/Kampus',
-                'Jurusan',
-                'Bidang Penempatan',
-                'Pembimbing Lapangan',
-                'Jalur',
-                'Tanggal Mulai',
-                'Tanggal Selesai',
-                'Status',
-                'No Surat Diterima',
-            ]);
+            fputcsv($handle, $headers);
 
             foreach ($records as $item) {
+                $jurusan = $item->kuota?->jurusan?->nama_jurusan
+                    ?? ($item->peserta?->profil?->jurusan?->nama_jurusan ?? '-');
+                $jalur = strtoupper($item->jalur instanceof JalurEnum ? $item->jalur->value : (string) ($item->jalur ?? 'REGULER'));
+                $noSurat = $item->no_surat ?? '500.12/'.str_pad((string) $item->id, 4, '0', STR_PAD_LEFT).'/DISKOMINFO/'.date('Y');
+
                 fputcsv($handle, [
                     $sanitize($item->id),
                     $sanitize($item->peserta?->nama ?? '-'),
                     $sanitize($item->peserta?->profil?->nim_nisn ?? '-'),
                     $sanitize($item->peserta?->profil?->institusi ?? '-'),
-                    $sanitize($item->kuota?->jurusan?->nama_jurusan ?? ($item->peserta?->profil?->jurusan?->nama_jurusan ?? '-')),
+                    $sanitize($jurusan),
                     $sanitize($item->bidang?->nama_bidang ?? '-'),
                     $sanitize($item->pembimbing?->nama ?? '-'),
-                    $sanitize(strtoupper($item->jalur instanceof JalurEnum ? $item->jalur->value : (string) ($item->jalur ?? 'REGULER'))),
+                    $sanitize($jalur),
                     $sanitize($item->tgl_mulai?->format('d/m/Y') ?? '-'),
                     $sanitize($item->tgl_selesai?->format('d/m/Y') ?? '-'),
                     $sanitize(ucfirst($item->status?->value ?? '-')),
-                    $sanitize($item->no_surat ?? '500.12/'.str_pad((string) $item->id, 4, '0', STR_PAD_LEFT).'/DISKOMINFO/'.date('Y')),
+                    $sanitize($noSurat),
                 ]);
             }
 

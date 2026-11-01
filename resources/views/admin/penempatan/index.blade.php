@@ -15,14 +15,32 @@
 @endsection
 
 @section('page_actions')
-    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-        <a href="{{ route('admin.penempatan.ekspor-surat-diterima', request()->query()) }}" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--neutral-0, #FFFFFF); color: var(--neutral-800, #1E293B); border: 1px solid var(--neutral-300, #CBD5E1); padding: 0.6rem 1.15rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; text-decoration: none; box-shadow: var(--shadow-subtle, 0 1px 2px rgba(0,0,0,0.05)); transition: all 0.15s ease;">
+    <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+        {{-- Ekspor XLSX Resmi --}}
+        <a href="{{ route('admin.penempatan.ekspor-surat-diterima', array_merge(request()->query(), ['format' => 'xlsx'])) }}"
+           style="display: inline-flex; align-items: center; gap: 0.5rem; background: #059669; color: #FFFFFF; border: none; padding: 0.6rem 1.15rem; border-radius: 8px; font-weight: 700; font-size: 0.875rem; text-decoration: none; box-shadow: 0 1px 3px rgba(5, 150, 105, 0.25); transition: all 0.15s ease;"
+           onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'"
+           title="Unduh rekapitulasi data penempatan & surat diterima dalam format Microsoft Excel (.xlsx) dengan tabel bergaris rapi">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <path d="M8 13h8"></path>
+                <path d="M8 17h8"></path>
+                <path d="M10 9h4"></path>
+            </svg>
+            <span>Ekspor Rekap (.xlsx)</span>
+        </a>
+
+        {{-- Ekspor CSV Alternatif --}}
+        <a href="{{ route('admin.penempatan.ekspor-surat-diterima', array_merge(request()->query(), ['format' => 'csv'])) }}"
+           style="display: inline-flex; align-items: center; gap: 0.45rem; background: var(--neutral-0, #FFFFFF); color: var(--neutral-800, #1E293B); border: 1px solid var(--neutral-300, #CBD5E1); padding: 0.6rem 0.95rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; text-decoration: none; box-shadow: var(--shadow-subtle, 0 1px 2px rgba(0,0,0,0.05)); transition: all 0.15s ease;"
+           title="Unduh format data mentah CSV dengan pemisah koma terstandarisasi">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
-            <span>Ekspor Rekap Surat (CSV)</span>
+            <span>CSV</span>
         </a>
 
         @if(isset($slotKhususList) && $slotKhususList->isNotEmpty())
@@ -38,7 +56,7 @@
 @endsection
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 1400px; margin: 0 auto; width: 100%;">
+<div class="gentelella-penempatan-admin" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     <style>
         .admin-stat-card {
@@ -130,16 +148,26 @@
             color: #94A3B8 !important;
         }
 
-        [data-theme="dark"] a[href*="ekspor-surat-diterima"] {
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=csv"] {
             background: #111C2E !important;
             border-color: #26354D !important;
             color: #CBD5E1 !important;
         }
 
-        [data-theme="dark"] a[href*="ekspor-surat-diterima"]:hover {
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=csv"]:hover {
             background: #162238 !important;
             border-color: #3B82F6 !important;
             color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=xlsx"] {
+            background: #059669 !important;
+            color: #FFFFFF !important;
+            border: none !important;
+        }
+
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=xlsx"]:hover {
+            background: #047857 !important;
         }
 
         [data-theme="dark"] .admin-card {
@@ -230,6 +258,12 @@
             color: #60A5FA !important;
         }
 
+        [data-theme="dark"] .admin-table td span[style*="background: var(--neutral-100"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
         [data-theme="dark"] .modal-container {
             background-color: #182234 !important;
             border-color: #26354D !important;
@@ -318,7 +352,7 @@
     @endif
 
     {{-- 1. HERO STATS CARDS --}}
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; width: 100%;">
         {{-- Total Penempatan --}}
         <div class="admin-stat-card">
             <div>
@@ -635,13 +669,16 @@
                                 </td>
                                 {{-- Peserta Magang --}}
                                 <td>
+                                    @php
+                                        $cleanPesertaNama = str_replace(' (Peserta Magang)', '', (string) ($p->peserta?->nama ?? '-'));
+                                    @endphp
                                     <div style="display: flex; align-items: center; gap: 0.75rem;">
                                         <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #0641CC 0%, #2563EB 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; flex-shrink: 0; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
-                                            {{ strtoupper(substr($p->peserta?->nama ?? 'P', 0, 1)) }}
+                                            {{ strtoupper(substr($cleanPesertaNama, 0, 1)) }}
                                         </div>
                                         <div>
                                             <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;">
-                                                {{ $p->peserta?->nama }}
+                                                {{ $cleanPesertaNama }}
                                             </div>
                                             <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 0.1rem;">
                                                 {{ $p->peserta?->profil?->institusi ?? '-' }}
@@ -655,19 +692,22 @@
 
                                 {{-- Pembimbing Lapangan --}}
                                 <td>
-                                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A);">
-                                        {{ $p->pembimbing?->nama ?? 'Belum Ditentukan' }}
+                                    @php
+                                        $cleanPembimbingNama = str_replace(' (Pembimbing Lapangan)', '', (string) ($p->pembimbing?->nama ?? 'Belum Ditentukan'));
+                                    @endphp
+                                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;">
+                                        {{ $cleanPembimbingNama }}
                                     </div>
                                     @if($p->pembimbing)
-                                        <div style="font-size: 0.75rem; color: #0641CC; font-weight: 600; margin-top: 0.1rem;">
-                                            [{{ $p->pembimbing->bidang?->nama_bidang ?? 'Dinas Kominfo' }}]
+                                        <div style="display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem; flex-wrap: wrap;">
+                                            <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.725rem; color: var(--neutral-600, #475569); background: var(--neutral-100, #F1F5F9); padding: 0.15rem 0.5rem; border-radius: 6px; border: 1px solid var(--neutral-200, #E2E8F0); font-weight: 600;">
+                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                                                <span>{{ $p->pembimbing->mentee_aktif_count ?? 1 }} Mentee Aktif</span>
+                                            </span>
+                                            <button type="button" onclick="openPindahModal({{ $p->id }}, '{{ addslashes($cleanPesertaNama) }}', {{ $p->pembimbing_id ?? 'null' }})" style="border: none; background: none; color: #0641CC; font-size: 0.75rem; font-weight: 700; cursor: pointer; padding: 0; text-decoration: underline;">
+                                                Ganti
+                                            </button>
                                         </div>
-                                        <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 0.15rem;">
-                                            Beban: <strong>{{ $p->pembimbing->mentee_aktif_count ?? 1 }} Mentee Aktif</strong>
-                                        </div>
-                                        <button type="button" onclick="openPindahModal({{ $p->id }}, '{{ addslashes($p->peserta?->nama) }}', {{ $p->pembimbing_id ?? 'null' }})" style="border: none; background: none; color: #0641CC; font-size: 0.75rem; font-weight: 700; cursor: pointer; padding: 0; margin-top: 0.25rem; text-decoration: underline;">
-                                            Ganti Pembimbing
-                                        </button>
                                     @endif
                                 </td>
 

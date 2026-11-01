@@ -79,7 +79,7 @@ class AcceptedPesertaSeeder extends Seeder
 
         // 3. Pastikan Akun Pembimbing
         $pembimbing = User::firstOrNew(['email' => 'pembimbing@magkom.go.id']);
-        $pembimbing->nama = 'Budi Santoso, S.Kom (Pembimbing Lapangan)';
+        $pembimbing->nama = 'Budi Santoso, S.Kom';
         $pembimbing->password = Hash::make('Password123!');
         $pembimbing->role = RoleEnum::Pembimbing;
         $pembimbing->bidang_id = $bidangAptika->id;
@@ -90,7 +90,7 @@ class AcceptedPesertaSeeder extends Seeder
 
         // 4. Update Akun Peserta: peserta@magkom.go.id
         $peserta = User::firstOrNew(['email' => 'peserta@magkom.go.id']);
-        $peserta->nama = 'Naufal Pratama (Peserta Magang)';
+        $peserta->nama = 'Naufal Pratama';
         $peserta->password = Hash::make('Password123!');
         $peserta->role = RoleEnum::Peserta;
         $peserta->email_verified_at = now();
