@@ -138,12 +138,18 @@
     <aside class="sa-aside-sticky" aria-label="Pusat Tindakan Cepat">
         {{-- Widget 1: Perlu Tindakan Hari Ini --}}
         <x-gentelella.x-panel title="Perlu tindakan hari ini">
+            @php
+                $kuotaKritisNama = $kuotaKritis?->jurusan?->nama_jurusan ?? null;
+                $kuotaKritisTerisi = (int) ($kuotaKritis?->terisi ?? 0);
+                $kuotaKritisPagu = (int) ($kuotaKritis?->jumlah ?? 0);
+                $isKuotaKritisFull = $kuotaKritisPagu > 0 && $kuotaKritisTerisi >= $kuotaKritisPagu;
+            @endphp
             <ul class="cv-todo-list">
                 <li>
                     <a href="{{ route('admin.pendaftaran.index') }}">
-                        <span class="cv-todo-dot bad"></span>
+                        <span class="cv-todo-dot {{ $antreanMelebihiSla > 0 ? 'bad' : 'ok' }}"></span>
                         <span class="cv-todo-text">
-                            <b>{{ $antreanMelebihiSla ?: 4 }} berkas lewat SLA</b>
+                            <b>{{ $antreanMelebihiSla }} berkas lewat SLA</b>
                             <small>Antrean verifikasi</small>
                         </span>
                         <span class="cv-todo-go">Buka &rarr;</span>
@@ -151,9 +157,9 @@
                 </li>
                 <li>
                     <a href="{{ route('superadmin.staf.index') }}">
-                        <span class="cv-todo-dot bad"></span>
+                        <span class="cv-todo-dot {{ $stafPendingGantiPassword > 0 ? 'bad' : 'ok' }}"></span>
                         <span class="cv-todo-text">
-                            <b>{{ $stafPendingGantiPassword ?: 2 }} staf belum ganti sandi</b>
+                            <b>{{ $stafPendingGantiPassword }} staf belum ganti sandi</b>
                             <small>Staf & Pengguna</small>
                         </span>
                         <span class="cv-todo-go">Buka &rarr;</span>
@@ -161,9 +167,13 @@
                 </li>
                 <li>
                     <a href="{{ route('superadmin.bulan.index') }}">
-                        <span class="cv-todo-dot warn"></span>
+                        <span class="cv-todo-dot {{ $isKuotaKritisFull ? 'warn' : 'ok' }}"></span>
                         <span class="cv-todo-text">
-                            <b>Kuota DKV penuh (10/10)</b>
+                            @if($kuotaKritisNama)
+                                <b>Kuota {{ $kuotaKritisNama }} {{ $isKuotaKritisFull ? 'penuh' : 'terisi' }} ({{ $kuotaKritisTerisi }}/{{ $kuotaKritisPagu }})</b>
+                            @else
+                                <b>Pagu kuota: {{ $totalKuotaTerisi ?? 0 }}/{{ $kuotaMaksPagu ?? 12 }} kursi</b>
+                            @endif
                             <small>Periode & Kuota</small>
                         </span>
                         <span class="cv-todo-go">Buka &rarr;</span>
@@ -171,9 +181,9 @@
                 </li>
                 <li>
                     <a href="{{ route('superadmin.monitoring.index') }}">
-                        <span class="cv-todo-dot info"></span>
+                        <span class="cv-todo-dot {{ $totalWaitingList > 0 ? 'info' : 'ok' }}"></span>
                         <span class="cv-todo-text">
-                            <b>{{ $totalWaitingList ?: 4 }} peserta di waiting list</b>
+                            <b>{{ $totalWaitingList }} peserta di waiting list</b>
                             <small>Monitoring Peserta</small>
                         </span>
                         <span class="cv-todo-go">Buka &rarr;</span>

@@ -113,6 +113,7 @@
                             $actorName = $log->user?->nama ?? 'sistem';
                             $timeStr = $log->waktu ? $log->waktu->format('H:i') : '12:00';
                             $actionText = $log->aksi ?: ($log->detail['aksi'] ?? ($log->entitas ? 'Mutasi ' . $log->entitas : 'Aktivitas sistem'));
+                            $actionText = str_replace([' (AC-11-7)', '(AC-11-7)'], '', (string) $actionText);
                             $routeCode = $log->rute ?: ($log->entitas ? $log->entitas . '.mutation' : 'system.action');
                         @endphp
                         <li class="cv-feed-item" data-action="open-drawer" data-drawer="#drawerAuditDetail" data-user="{{ $actorName }}" data-action-name="{{ $actionText }}" data-ip="{{ $log->ip_address ?? '127.0.0.1' }}" data-waktu="{{ $timeStr }}" style="cursor: pointer;" title="Klik untuk inspeksi rincian audit">
@@ -193,25 +194,30 @@
 
             <div style="display: flex; flex-direction: column; gap: 0.85rem;">
                 @php
-                    $sampleKuota = [
-                        ['Teknik Informatika', 28, 30],
-                        ['Sistem Informasi', 19, 25],
-                        ['Ilmu Komunikasi', 12, 20],
-                    ];
+                    $displayKuotas = isset($kuotaList) ? $kuotaList->take(4) : collect();
                 @endphp
-                @foreach($sampleKuota as [$jurusanName, $terisi, $pagu])
+                @forelse($displayKuotas as $k)
+                    @php
+                        $jurusanName = $k->jurusan?->nama_jurusan ?? 'Jurusan';
+                        $terisi = (int) $k->terisi;
+                        $pagu = (int) $k->jumlah;
+                    @endphp
                     <div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; margin-bottom: 2px;">
                             <span style="font-weight: 600; color: var(--cv-ink);">{{ $jurusanName }}</span>
                             <span style="font-family: monospace; font-size: 0.75rem; color: var(--cv-ink-2);">{{ $terisi }}/{{ $pagu }}</span>
                         </div>
-                        <div class="cv-seg {{ $terisi >= $pagu ? 'full' : '' }}" role="img" aria-label="{{ $terisi }} dari {{ $pagu }} kursi terisi">
-                            @for($i = 0; $i < $pagu; $i++)
+                        <div class="cv-seg {{ $pagu > 0 && $terisi >= $pagu ? 'full' : '' }}" role="img" aria-label="{{ $terisi }} dari {{ $pagu }} kursi terisi">
+                            @for($i = 0; $i < min($pagu, 20); $i++)
                                 <i class="{{ $i < $terisi ? 'f' : '' }}"></i>
                             @endfor
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <div style="font-size: 0.8125rem; color: var(--cv-ink-3); padding: 0.5rem 0;">
+                        Belum ada kuota jurusan dialokasikan pada bulan aktif.
+                    </div>
+                @endforelse
             </div>
         </x-gentelella.x-panel>
     </div>
@@ -241,13 +247,13 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--cv-line); padding-bottom: 0.4rem;">
                     <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">Staf belum ganti sandi</dt>
                     <dd style="font-family: monospace; font-weight: 700; color: {{ $stafPendingGantiPassword > 0 ? 'var(--cv-bad)' : 'var(--cv-ok)' }}; margin: 0;">
-                        {{ $stafPendingGantiPassword ?: 2 }}
+                        {{ $stafPendingGantiPassword }}
                     </dd>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.2rem;">
                     <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">Backup terakhir</dt>
                     <dd style="font-family: monospace; font-weight: 700; color: var(--cv-ink); margin: 0;">
-                        09:47
+                        {{ $systemSummary['last_backup_short'] ?? '-' }}
                     </dd>
                 </div>
             </dl>
@@ -346,7 +352,7 @@
             </div>
 
             {{-- Area Grafik SVG Kurva Halus (Responsive & Zero-Dependency) --}}
-            <div class="gt-chart-wrapper" role="region" aria-label="Grafik kurva pendaftaran magang">
+            <div class="gt-chart-wrapper" role="region" aria-label="Grafik kurva pendaftaran magang" data-trend-datasets="{{ json_encode($trenDatasets ?? ['12m' => $trenPendaftar]) }}">
                 <svg class="gt-chart-svg" viewBox="0 0 800 180" preserveAspectRatio="none">
                     <defs>
                         <linearGradient id="gtTealGradient" x1="0%" y1="0%" x2="0%" y2="100%">

@@ -2,7 +2,6 @@
 
 @section('title', 'Bulan Magang - SuperAdmin MagKom Sleman')
 @section('page_title', 'Manajemen Bulan Magang')
-@section('page_description', 'Kelola jadwal pembukaan pendaftaran dan override status ketersediaan bulan magang.')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -92,28 +91,8 @@
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- 1. ALERT BANNER OPERASIONAL JADWAL -->
-    <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; box-shadow: var(--shadow-subtle);">
-        <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-600); color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-        </div>
-        <div>
-            <h2 style="font-size: 0.9375rem; font-weight: 700; color: var(--blue-700); margin: 0 0 0.25rem 0;">
-                Otomasi Siklus & Override Status Pendaftaran
-            </h2>
-            <p style="font-size: 0.8125rem; color: var(--neutral-700); margin: 0; line-height: 1.5;">
-                Secara default sistem menghitung status ketersediaan berdasarkan rentang tanggal buka-tutup pendaftaran. SuperAdmin dapat melakukan intervensi manual (Override) jika kuota telah habis atau terdapat kebijakan diskresi khusus dinas.
-            </p>
-        </div>
-    </div>
-
-    <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table" title="Daftar Bulan Magang" subtitle="Riwayat jadwal gelombang magang dan status penerimaan calon peserta.">
+    <!-- DATA TABLE CARD -->
+    <x-gentelella.x-panel class="has-table" title="Daftar Bulan Magang">
         <div class="table-responsive-gentelella" style="overflow-x: auto;">
             <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                 <thead>
@@ -140,9 +119,6 @@
                             <td style="padding: 1rem 1rem; color: var(--neutral-700); font-size: 0.8125rem;">
                                 <div style="font-weight: 600; color: var(--neutral-800);">
                                     {{ $bulan->tgl_buka?->format('d M Y') }} s/d {{ $bulan->tgl_tutup?->format('d M Y') }}
-                                </div>
-                                <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.15rem;">
-                                    Durasi pendaftaran dinas
                                 </div>
                             </td>
                             <td style="padding: 1rem 1rem; white-space: nowrap;">

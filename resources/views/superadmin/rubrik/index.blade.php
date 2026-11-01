@@ -2,7 +2,6 @@
 
 @section('title', 'Master Rubrik Penilaian - SuperAdmin MagKom')
 @section('page_title', 'Master Rubrik Penilaian Magang')
-@section('page_description', 'Kelola kriteria evaluasi kompetensi magang dengan penegakan total bobot tepat 100% (AC-10-4).')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -100,9 +99,9 @@
             </div>
 
             <div style="max-width: 580px;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
                     <h2 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
-                        Aturan Validasi Integritas Rubrik (AC-10-4)
+                        Aturan Validasi Integritas Rubrik
                     </h2>
                     @if($totalBobotAktif === 100)
                         <span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.15rem 0.5rem; border-radius: 9999px; background: var(--green-100); color: var(--green-700); font-size: 0.6875rem; font-weight: 700;">
@@ -116,9 +115,6 @@
                         </span>
                     @endif
                 </div>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0; line-height: 1.5;">
-                    Sistem mewajibkan total akumulasi bobot dari seluruh rubrik yang berstatus <strong>Aktif</strong> tepat bernilai <strong>100%</strong> agar instrumen penilaian sah digunakan oleh pembimbing lapangan saat evaluasi nilai akhir.
-                </p>
             </div>
         </div>
 
@@ -135,7 +131,7 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table" title="Daftar Kriteria Rubrik Penilaian" subtitle="Komponen penilaian kompetensi dan etika kerja peserta magang.">
+    <x-gentelella.x-panel class="has-table" title="Daftar Kriteria Rubrik Penilaian">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total Kriteria: <strong>{{ (string) $rubrikList->count() }}</strong>

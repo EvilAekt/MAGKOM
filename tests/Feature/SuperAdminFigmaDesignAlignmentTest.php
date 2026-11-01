@@ -231,7 +231,6 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Hak Akses dan Role Pengguna');
         $response->assertSee('Matriks Wewenang');
-        $response->assertSee('SuperAdmin Mewarisi Seluruh Hak Akses');
         $response->assertSee('Administrasi');
         $response->assertSee('Pembimbing');
         $response->assertSee('Peserta Magang');

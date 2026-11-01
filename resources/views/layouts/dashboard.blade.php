@@ -2375,6 +2375,9 @@
         html:not([data-theme="dark"]) .x_panel,
         html:not([data-theme="dark"]) .card,
         html:not([data-theme="dark"]) .cv-card,
+        html:not([data-theme="dark"]) .gentelella-card,
+        html:not([data-theme="dark"]) .gentelella-filter-bar,
+        html:not([data-theme="dark"]) .staf-filter-card,
         html:not([data-theme="dark"]) .sa-panel:not(.sa-panel--sub) {
             background-color: #FFFFFF;
             border: 1px solid #BBBBBB;
@@ -2401,6 +2404,9 @@
         [data-theme="dark"] .x_panel,
         [data-theme="dark"] .card,
         [data-theme="dark"] .cv-card,
+        [data-theme="dark"] .gentelella-card,
+        [data-theme="dark"] .gentelella-filter-bar,
+        [data-theme="dark"] .staf-filter-card,
         [data-theme="dark"] .sa-panel:not(.sa-panel--sub) {
             border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
         }

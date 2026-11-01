@@ -2,7 +2,6 @@
 
 @section('title', 'Katalog Modul Kustom - SuperAdmin MagKom')
 @section('page_title', 'Katalog Modul Kustom (Low-Code Studio)')
-@section('page_description', 'Kelola, konfigurasikan, dan pantau seluruh modul kustom yang aktif di portal MagKom Sleman.')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>

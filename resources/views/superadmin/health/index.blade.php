@@ -253,12 +253,16 @@
     .telemetry-card {
         background-color: var(--tel-card-bg) !important;
         border: 1px solid var(--tel-card-border) !important;
+        border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
         border-radius: 14px !important;
         padding: 16px !important;
         color: var(--tel-text-primary) !important;
         box-sizing: border-box !important;
         box-shadow: var(--tel-card-shadow) !important;
         transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.25s ease !important;
+    }
+    [data-theme="dark"] .telemetry-card {
+        border-top: 3.5px solid #3B82F6 !important;
     }
     .telemetry-card:hover {
         border-color: rgba(56, 189, 248, 0.4) !important;
@@ -779,15 +783,13 @@
         font-size: 9px !important;
     }
 
-    /* 14. Table & Scrollable Container Capping (Expanded Proportional Dimensions) */
+    /* 14. Table Container: Paginated & Non-Scrollable (Zero Scrollbar Parity) */
     .telemetry-table-container {
         position: relative !important;
-        contain: paint !important;
-        min-height: 360px !important;
-        max-height: 480px !important;
-        overflow-y: auto !important;
         overflow-x: auto !important;
-        border-radius: 0 0 14px 14px !important;
+        overflow-y: visible !important;
+        max-height: none !important;
+        min-height: auto !important;
     }
     .telemetry-table {
         width: 100% !important;
@@ -899,6 +901,148 @@
     }
     .telemetry-table-filter:focus {
         border-color: #38bdf8 !important;
+    }
+
+    /* 14b. Telemetry Table Pagination Footer & Controls */
+    .telemetry-table-footer {
+        padding: 0.75rem 1rem !important;
+        background: var(--tel-card-bg) !important;
+        border-top: 1px solid var(--tel-table-border) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.625rem !important;
+    }
+    .telemetry-pagination-row {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+    }
+    @media (min-width: 640px) {
+        .telemetry-pagination-row {
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+        }
+    }
+    .telemetry-pagination-bottom {
+        padding-top: 0.5rem !important;
+        border-top: 1px solid var(--tel-table-border) !important;
+    }
+    .telemetry-pagination-left {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+    }
+    .telemetry-pagination-counter,
+    .telemetry-pagination-lembar-info {
+        font-size: 0.75rem !important;
+        color: var(--tel-text-muted) !important;
+    }
+    .telemetry-per-page-container {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        font-size: 0.75rem !important;
+    }
+    .telemetry-per-page-label {
+        color: var(--tel-text-muted) !important;
+        font-weight: 500 !important;
+        font-size: 0.75rem !important;
+    }
+    .telemetry-per-page-group {
+        display: inline-flex !important;
+        align-items: center !important;
+        background: var(--tel-surface-elevated) !important;
+        border: 1px solid var(--tel-card-border) !important;
+        border-radius: 8px !important;
+        padding: 2px !important;
+        gap: 2px !important;
+    }
+    .telemetry-per-page-pill {
+        padding: 0.2rem 0.6rem !important;
+        border-radius: 6px !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        color: var(--tel-text-muted) !important;
+        background: transparent !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+        line-height: 1.25 !important;
+    }
+    .telemetry-per-page-pill:hover:not(.active) {
+        background: rgba(148, 163, 184, 0.15) !important;
+        color: var(--tel-text-primary) !important;
+    }
+    .telemetry-per-page-pill.active {
+        background: var(--magkom-primary-blue, #01347C) !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+    }
+    [data-theme="dark"] .telemetry-per-page-pill.active {
+        background: #3B82F6 !important;
+        color: #FFFFFF !important;
+    }
+    .telemetry-page-controls {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.25rem !important;
+    }
+    .telemetry-page-btn-nav {
+        padding: 0.25rem 0.5rem !important;
+        border-radius: 6px !important;
+        border: 1px solid var(--tel-card-border) !important;
+        background: transparent !important;
+        color: var(--tel-text-muted) !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+    }
+    .telemetry-page-btn-nav:hover:not(:disabled) {
+        background: rgba(148, 163, 184, 0.15) !important;
+        color: var(--tel-text-primary) !important;
+    }
+    .telemetry-page-btn-nav:disabled,
+    .telemetry-page-btn-nav.disabled {
+        opacity: 0.35 !important;
+        cursor: not-allowed !important;
+    }
+    .telemetry-page-num {
+        min-width: 28px !important;
+        height: 28px !important;
+        padding: 0 0.35rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 6px !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        color: var(--tel-text-muted) !important;
+        background: transparent !important;
+        border: 1px solid transparent !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+    }
+    .telemetry-page-num:hover:not(.active) {
+        background: rgba(148, 163, 184, 0.15) !important;
+        color: var(--tel-text-primary) !important;
+    }
+    .telemetry-page-num.active {
+        background: var(--magkom-primary-blue, #01347C) !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+    }
+    [data-theme="dark"] .telemetry-page-num.active {
+        background: #3B82F6 !important;
+        color: #FFFFFF !important;
+    }
+    .telemetry-page-ellipsis {
+        min-width: 20px !important;
+        text-align: center !important;
+        color: var(--tel-text-muted) !important;
+        font-size: 0.75rem !important;
+        user-select: none !important;
     }
 
     /* 15. Syslog Panel */
@@ -1398,6 +1542,8 @@
     let activePoint = null;
     let currentFilterMode = 'all';
     let currentTimeWindow = '15m';
+    let telemetryCurrentPage = 1;
+    let telemetryPerPage = 10;
 
     // Konfigurasi Padding & Margin Kanvas
     const padding = { top: 30, right: 35, bottom: 35, left: 55 };
@@ -1634,6 +1780,91 @@
     }
 
     /**
+     * Render Tombol Kontrol Paginasi Lembar Halaman Telemetri
+     */
+    function renderTelemetryPaginationControls(totalPages) {
+        const controlsContainer = document.getElementById('telemetryPageControls');
+        if (!controlsContainer) return;
+
+        controlsContainer.innerHTML = '';
+
+        // Tombol Prev
+        const prevBtn = document.createElement('button');
+        prevBtn.type = 'button';
+        prevBtn.className = 'telemetry-page-btn-nav' + (telemetryCurrentPage <= 1 ? ' disabled' : '');
+        prevBtn.disabled = telemetryCurrentPage <= 1;
+        prevBtn.innerHTML = '&laquo; Prev';
+        prevBtn.setAttribute('aria-label', 'Lembar Sebelumnya');
+        prevBtn.addEventListener('click', function() {
+            if (telemetryCurrentPage > 1) {
+                telemetryCurrentPage--;
+                filterTableByWindow(currentTimeWindow);
+            }
+        });
+        controlsContainer.appendChild(prevBtn);
+
+        // Hitung daftar halaman yang ditampilkan (Sliding window)
+        let pages = [];
+        if (totalPages <= 7) {
+            for (let i = 1; i <= totalPages; i++) pages.push(i);
+        } else {
+            pages.push(1);
+            if (telemetryCurrentPage > 3) {
+                pages.push('...');
+            }
+            const start = Math.max(2, telemetryCurrentPage - 1);
+            const end = Math.min(totalPages - 1, telemetryCurrentPage + 1);
+            for (let i = start; i <= end; i++) {
+                if (!pages.includes(i)) pages.push(i);
+            }
+            if (telemetryCurrentPage < totalPages - 2) {
+                pages.push('...');
+            }
+            if (!pages.includes(totalPages)) {
+                pages.push(totalPages);
+            }
+        }
+
+        pages.forEach(p => {
+            if (p === '...') {
+                const ellipsis = document.createElement('span');
+                ellipsis.className = 'telemetry-page-ellipsis';
+                ellipsis.textContent = '...';
+                controlsContainer.appendChild(ellipsis);
+            } else {
+                const pageBtn = document.createElement('button');
+                pageBtn.type = 'button';
+                pageBtn.className = 'telemetry-page-num' + (p === telemetryCurrentPage ? ' active' : '');
+                pageBtn.textContent = p;
+                pageBtn.setAttribute('aria-label', 'Lembar ' + p);
+                if (p === telemetryCurrentPage) {
+                    pageBtn.setAttribute('aria-current', 'page');
+                }
+                pageBtn.addEventListener('click', function() {
+                    telemetryCurrentPage = p;
+                    filterTableByWindow(currentTimeWindow);
+                });
+                controlsContainer.appendChild(pageBtn);
+            }
+        });
+
+        // Tombol Next
+        const nextBtn = document.createElement('button');
+        nextBtn.type = 'button';
+        nextBtn.className = 'telemetry-page-btn-nav' + (telemetryCurrentPage >= totalPages ? ' disabled' : '');
+        nextBtn.disabled = telemetryCurrentPage >= totalPages;
+        nextBtn.innerHTML = 'Next &raquo;';
+        nextBtn.setAttribute('aria-label', 'Lembar Selanjutnya');
+        nextBtn.addEventListener('click', function() {
+            if (telemetryCurrentPage < totalPages) {
+                telemetryCurrentPage++;
+                filterTableByWindow(currentTimeWindow);
+            }
+        });
+        controlsContainer.appendChild(nextBtn);
+    }
+
+    /**
      * Filter baris tabel endpoint berdasarkan rentang waktu terpilih (15m, 1h, 24h)
      */
     function filterTableByWindow(windowKey) {
@@ -1653,6 +1884,8 @@
 
         const query = (filterInput ? filterInput.value : '').toLowerCase().trim();
 
+        // 1. Kumpulkan baris yang memenuhi kriteria waktu dan teks
+        const matchedRows = [];
         rows.forEach((row, index) => {
             const tsAttr = row.getAttribute('data-timestamp');
             const ts = tsAttr ? parseInt(tsAttr, 10) : 0;
@@ -1674,16 +1907,65 @@
             const textMatch = !query || text.includes(query);
 
             if (timeMatch && textMatch) {
+                matchedRows.push(row);
+            }
+        });
+
+        // 2. Kalkulasi Halaman & Batas Slice
+        const totalRows = matchedRows.length;
+        const totalPages = Math.max(1, Math.ceil(totalRows / telemetryPerPage));
+        if (telemetryCurrentPage > totalPages) {
+            telemetryCurrentPage = totalPages;
+        }
+        if (telemetryCurrentPage < 1) {
+            telemetryCurrentPage = 1;
+        }
+
+        const startIndex = totalRows === 0 ? 0 : (telemetryCurrentPage - 1) * telemetryPerPage;
+        const endIndex = totalRows === 0 ? 0 : Math.min(startIndex + telemetryPerPage, totalRows);
+
+        // 3. Tampilkan hanya baris dalam subset lembar aktif (tanpa scrolling)
+        const activeRowsSet = new Set(matchedRows.slice(startIndex, endIndex));
+        rows.forEach(row => {
+            if (activeRowsSet.has(row)) {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
             }
         });
+
+        // 4. Update indikator counter & lembar
+        const startRowEl = document.getElementById('telemetryStartRow');
+        const endRowEl = document.getElementById('telemetryEndRow');
+        const totalRowsEl = document.getElementById('telemetryTotalRows');
+        const curPageEl = document.getElementById('telemetryCurrentPage');
+        const totalPagesEl = document.getElementById('telemetryTotalPages');
+
+        if (startRowEl) startRowEl.textContent = totalRows === 0 ? '0' : (startIndex + 1);
+        if (endRowEl) endRowEl.textContent = endIndex;
+        if (totalRowsEl) totalRowsEl.textContent = totalRows;
+        if (curPageEl) curPageEl.textContent = telemetryCurrentPage;
+        if (totalPagesEl) totalPagesEl.textContent = totalPages;
+
+        // 5. Render Tombol Paginasi Lembar
+        renderTelemetryPaginationControls(totalPages);
     }
+
+    // Interaktivitas Pill Per Page (10, 20, 30)
+    document.querySelectorAll('.telemetry-per-page-pill').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.telemetry-per-page-pill').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            telemetryPerPage = parseInt(this.getAttribute('data-per-page'), 10) || 10;
+            telemetryCurrentPage = 1;
+            filterTableByWindow(currentTimeWindow);
+        });
+    });
 
     // Interaktivitas Filter Input Table
     if (filterInput) {
         filterInput.addEventListener('input', function() {
+            telemetryCurrentPage = 1;
             filterTableByWindow(currentTimeWindow);
         });
     }
@@ -1696,6 +1978,7 @@
             });
             this.classList.add('active');
             currentTimeWindow = this.getAttribute('data-window') || '15m';
+            telemetryCurrentPage = 1;
 
             // 1. Gambar ulang grafik dengan rentang waktu terpilih
             draw();

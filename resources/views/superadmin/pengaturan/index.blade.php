@@ -2,7 +2,6 @@
 
 @section('title', 'Konfigurasi Sistem - SuperAdmin MagKom')
 @section('page_title', 'Parameter Konfigurasi Sistem')
-@section('page_description', 'Kelola batasan kebijakan teknis dan aturan operasional portal MagKom (AC-11-7).')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -33,6 +32,13 @@
 
 @push('styles')
 <style>
+    .gentelella-card {
+        border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+    }
+    [data-theme="dark"] .gentelella-card {
+        border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
+    }
+
     /* Dark Mode Overrides for SuperAdmin Settings (DS-MagKom Industrial Standard) */
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
         background-color: #003566 !important;
@@ -106,9 +112,6 @@
                     <h2 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900); margin: 0;">
                         Kebijakan Kuota & Kapasitas Magang
                     </h2>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.15rem 0 0 0;">
-                        Batasan daya tampung reguler, slot cadangan kemitraan, dan batas rasio pembimbingan.
-                    </p>
                 </div>
             </div>
 
@@ -118,9 +121,6 @@
                         Batas Kuota Umum Publik Per Bulan (Orang) <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="kuota_umum_maks_per_bulan" min="1" max="100" required value="{{ old('kuota_umum_maks_per_bulan', $pengaturan['kuota_umum_maks_per_bulan'] ?? 10) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
-                    <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
-                        Maksimal alokasi kuota reguler per bulan pendaftaran.
-                    </span>
                 </div>
 
                 <div>
@@ -128,9 +128,6 @@
                         Default Alokasi Slot Khusus (Orang) <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="slot_khusus_default" min="0" max="50" required value="{{ old('slot_khusus_default', $pengaturan['slot_khusus_default'] ?? 2) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
-                    <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
-                        Kapasitas cadangan kemitraan khusus internal (F-06).
-                    </span>
                 </div>
 
                 <div>
@@ -138,9 +135,6 @@
                         Beban Maksimal Mentee Per Pembimbing (Orang)
                     </label>
                     <input type="number" name="maks_peserta_aktif_per_pembimbing" min="1" max="50" value="{{ old('maks_peserta_aktif_per_pembimbing', $pengaturan['maks_peserta_aktif_per_pembimbing'] ?? 20) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
-                    <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
-                        Penegakan beban kerja pembimbing (BR-13). Kosongkan jika tanpa batas.
-                    </span>
                 </div>
             </div>
         </x-gentelella.card>
@@ -155,9 +149,6 @@
                     <h2 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900); margin: 0;">
                         Aturan Pelaksanaan, Logbook & Dokumen
                     </h2>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.15rem 0 0 0;">
-                        Ketentuan batas mundur entri jurnal harian, ukuran file dokumen, dan peringatan deadline tugas.
-                    </p>
                 </div>
             </div>
 
@@ -167,9 +158,6 @@
                         Batas Mundur Pengisian Logbook (Hari) <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="logbook_maks_mundur_hari" min="1" max="30" required value="{{ old('logbook_maks_mundur_hari', $pengaturan['logbook_maks_mundur_hari'] ?? 3) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
-                    <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
-                        Maksimal hari mundur pengisian logbook peserta (BR-09).
-                    </span>
                 </div>
 
                 <div>
@@ -177,9 +165,6 @@
                         Batas Ukuran Maksimal Berkas Upload (MB) <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="berkas_maks_mb" min="1" max="20" required value="{{ old('berkas_maks_mb', $pengaturan['berkas_maks_mb'] ?? 2) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
-                    <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
-                        Ukuran batas file berkas persyaratan dan lampiran (BR-04).
-                    </span>
                 </div>
 
                 <div>
@@ -187,9 +172,6 @@
                         Peringatan Mendekati Deadline Tugas (Hari) <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="deadline_mendekati_hari" min="1" max="14" required value="{{ old('deadline_mendekati_hari', $pengaturan['deadline_mendekati_hari'] ?? 3) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
-                    <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
-                        Masa aktif indikator mendekati batas waktu penugasan (BR-16).
-                    </span>
                 </div>
             </div>
         </x-gentelella.card>
@@ -204,9 +186,6 @@
                     <h2 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900); margin: 0;">
                         Kebijakan Retensi & Masa Tenggang Akun Alumni
                     </h2>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.15rem 0 0 0;">
-                        Masa aktif akun peserta setelah dinyatakan selesai magang sebelum dinonaktifkan permanen.
-                    </p>
                 </div>
             </div>
 
@@ -216,9 +195,6 @@
                         Durasi Masa Tenggang Akun Pasca Magang (Bulan) <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="masa_tenggang_bulan" min="1" max="12" required value="{{ old('masa_tenggang_bulan', $pengaturan['masa_tenggang_bulan'] ?? 1) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
-                    <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
-                        Rentang waktu akun peserta tetap aktif untuk mengunduh sertifikat dan lembar nilai (BR-10).
-                    </span>
                 </div>
 
                 <div>
@@ -226,9 +202,6 @@
                         Masa Retensi Log Akses Data (Hari) <span style="color: var(--red-600);">*</span>
                     </label>
                     <input type="number" name="retensi_audit_akses_data_hari" min="30" max="1825" required value="{{ old('retensi_audit_akses_data_hari', $pengaturan['retensi_audit_akses_data_hari'] ?? 365) }}" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
-                    <span style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.375rem; display: block; line-height: 1.4;">
-                        Batas retensi log akses data sebelum dipangkas otomatis (NFR-A5; default 365 hari / 1 tahun).
-                    </span>
                 </div>
             </div>
 
@@ -236,9 +209,6 @@
             <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
                 <div>
                     <span style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800);">Pemeliharaan Penyimpanan Audit Trail</span>
-                    <p style="font-size: 0.75rem; color: var(--neutral-600); margin: 0.15rem 0 0 0;">
-                        Menjalankan pemangkasan data log pembacaan (akses_data) manual saat ini juga tanpa menunggu jadwal bulanan.
-                    </p>
                 </div>
                 <button type="submit" form="formPurgeAudit" onclick="return confirm('Apakah Anda yakin ingin memicu pemangkasan log akses data audit yang melampaui batas retensi sekarang?')" class="btn btn-outline" style="font-size: 0.8125rem; color: var(--red-600); border-color: var(--red-300);">
                     Jalankan Pemangkasan Log Sekarang
@@ -246,7 +216,7 @@
             </div>
         </x-gentelella.card>
 
-        <!-- KARTU 4: SKALA AMBANG BATAS PREDIKAT NILAI (PRD 8.3 & 8.6) -->
+        <!-- KARTU 4: SKALA AMBANG BATAS PREDIKAT NILAI -->
         <x-gentelella.card :hoverable="false" style="padding: 1.75rem 2rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 1rem;">
                 <div style="width: 38px; height: 38px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
@@ -254,11 +224,8 @@
                 </div>
                 <div>
                     <h2 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900); margin: 0;">
-                        Skala Ambang Batas Predikat Nilai (PRD 8.3 & 8.6)
+                        Skala Ambang Batas Predikat Nilai
                     </h2>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.15rem 0 0 0;">
-                        Konfigurasi ambang skor minimum untuk predikat A, B, C, dan D (Di bawah ambang D otomatis predikat E).
-                    </p>
                 </div>
             </div>
 
@@ -310,17 +277,14 @@
                     <h2 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900); margin: 0;">
                         Sakelar Modul Fitur Tambahan (Feature Toggles)
                     </h2>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.15rem 0 0 0;">
-                        Kontrol fleksibilitas aktivasi modul lanjutan (Sertifikat Digital, Survei Kepuasan, dan Analitik Tahunan).
-                    </p>
                 </div>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 1.25rem;">
                 <!-- Toggle 1: Modul Sertifikat Digital -->
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-300); border-radius: 10px;">
-                    <div style="display: flex; align-items: flex-start; gap: 0.875rem;">
-                        <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center; margin-top: 2px;">
+                    <div style="display: flex; align-items: center; gap: 0.875rem;">
+                        <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="8" r="7"></circle>
                                 <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
@@ -328,9 +292,6 @@
                         </div>
                         <div>
                             <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-900);">Modul Sertifikat Digital Kelulusan</div>
-                            <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.15rem;">
-                                Mengaktifkan direktori sertifikat alumni, pratinjau, dan ekspor unduhan PDF sertifikat resmi (AC-12, BR-10).
-                            </div>
                         </div>
                     </div>
                     <label style="position: relative; display: inline-flex; align-items: center; cursor: pointer; user-select: none;">
@@ -341,17 +302,14 @@
 
                 <!-- Toggle 2: Modul Survei Kepuasan Magang -->
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-300); border-radius: 10px;">
-                    <div style="display: flex; align-items: flex-start; gap: 0.875rem;">
-                        <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--green-100); color: var(--green-700); display: flex; align-items: center; justify-content: center; margin-top: 2px;">
+                    <div style="display: flex; align-items: center; gap: 0.875rem;">
+                        <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--green-100); color: var(--green-700); display: flex; align-items: center; justify-content: center;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                             </svg>
                         </div>
                         <div>
                             <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-900);">Modul Survei Kepuasan & NPS Alumni</div>
-                            <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.15rem;">
-                                Mengaktifkan instrumen evaluasi kepuasan peserta (IKM) dan dasbor rekapitulasi rating operasional (PRD 4.3 Poin 4).
-                            </div>
                         </div>
                     </div>
                     <label style="position: relative; display: inline-flex; align-items: center; cursor: pointer; user-select: none;">
@@ -362,17 +320,14 @@
 
                 <!-- Toggle 3: Modul Analitik Tahunan Eksekutif -->
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-300); border-radius: 10px;">
-                    <div style="display: flex; align-items: flex-start; gap: 0.875rem;">
-                        <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--purple-100, #F3E8FF); color: var(--purple-700, #7E22CE); display: flex; align-items: center; justify-content: center; margin-top: 2px;">
+                    <div style="display: flex; align-items: center; gap: 0.875rem;">
+                        <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--purple-100, #F3E8FF); color: var(--purple-700, #7E22CE); display: flex; align-items: center; justify-content: center;">
                             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
                         </div>
                         <div>
                             <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-900);">Modul Analitik Tahunan Eksekutif</div>
-                            <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.15rem;">
-                                Mengaktifkan ringkasan tren tahunan, rasio seleksi peserta, dan ekspor CSV analitik (PRD 4.3 Poin 5).
-                            </div>
                         </div>
                     </div>
                     <label style="position: relative; display: inline-flex; align-items: center; cursor: pointer; user-select: none;">

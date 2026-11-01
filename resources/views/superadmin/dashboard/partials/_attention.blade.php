@@ -31,9 +31,18 @@
         <div class="sa-attn-hazard__body">
             <h4>Berkas terlama di antrean verifikasi</h4>
             <div class="sa-attn-hazard__chips">
-                <span class="sa-hazard-chip">Rizky Ananda <b>+2h</b></span>
-                <span class="sa-hazard-chip">Nadia Putri <b>+1h</b></span>
-                <span class="sa-hazard-chip">Yoga Pradana <b>+1h</b></span>
+                @if(isset($pendaftarTertua) && $pendaftarTertua->isNotEmpty())
+                    @foreach($pendaftarTertua as $pt)
+                        @php
+                            $ptName = $pt->user?->nama ?? 'Pendaftar';
+                            $hours = $pt->diajukan_at ? max(1, (int) $pt->diajukan_at->diffInHours(now())) : 1;
+                            $diffText = $hours >= 24 ? '+' . round($hours / 24) . 'h' : "+{$hours}j";
+                        @endphp
+                        <span class="sa-hazard-chip">{{ $ptName }} <b>{{ $diffText }}</b></span>
+                    @endforeach
+                @else
+                    <span class="sa-hazard-chip">Semua Berkas Terverifikasi</span>
+                @endif
             </div>
 
             {{-- Status Peringatan Terotorisasi untuk Keperluan Assertions Test Suite --}}

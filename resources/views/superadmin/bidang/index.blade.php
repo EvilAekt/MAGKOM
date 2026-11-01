@@ -2,7 +2,6 @@
 
 @section('title', 'Master Bidang - SuperAdmin MagKom')
 @section('page_title', 'Master Bidang Dinas Kominfo')
-@section('page_description', 'Kelola daftar unit kerja / bidang dinas tempat penempatan peserta magang di lingkungan Diskominfo Sleman.')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -90,30 +89,8 @@
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- 1. ALERT BANNER UNIT KERJA PENEMPATAN -->
-    <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; box-shadow: var(--shadow-subtle);">
-        <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-600); color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 21h18"></path>
-                <path d="M5 21V7l8-4v18"></path>
-                <path d="M19 21V11l-6-3"></path>
-                <path d="M9 9h1"></path>
-                <path d="M9 13h1"></path>
-                <path d="M9 17h1"></path>
-            </svg>
-        </div>
-        <div>
-            <h2 style="font-size: 0.9375rem; font-weight: 700; color: var(--blue-700); margin: 0 0 0.25rem 0;">
-                Unit Kerja Penempatan Magang
-            </h2>
-            <p style="font-size: 0.8125rem; color: var(--neutral-700); margin: 0; line-height: 1.5;">
-                Setiap peserta magang yang lolos seleksi akan ditempatkan di salah satu bidang unit kerja dinas di bawah bimbingan staf pembimbing lapangan terkait sesuai formasi penugasan.
-            </p>
-        </div>
-    </div>
-
-    <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table" title="Daftar Bidang & Unit Kerja Diskominfo" subtitle="Struktur organisasi dinas tempat alokasi bimbingan teknis magang.">
+    <!-- DATA TABLE CARD -->
+    <x-gentelella.x-panel class="has-table" title="Daftar Bidang & Unit Kerja Diskominfo">
         @if($bidangList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">

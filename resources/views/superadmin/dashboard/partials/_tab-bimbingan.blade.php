@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="sa-metric__hint" style="font-size: 0.8125rem; color: var(--cv-ink-2);">
-            Tenggat mendekati sesuai aturan BR-16
+            Tenggat mendekati batas akhir
         </div>
     </div>
 </div>

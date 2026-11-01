@@ -80,20 +80,65 @@ class BackupController extends Controller
                 File::put($targetPath, $dump);
             }
         } else {
-            // MySQL/PostgreSQL schema & data export
+            // MySQL/PostgreSQL schema & data export valid DDL & DML
             $filename = "backup-magkom-dump-{$timestamp}.sql";
             $targetPath = $this->backupDir.DIRECTORY_SEPARATOR.$filename;
 
             $tables = DB::select('SHOW TABLES');
             $sqlContent = "-- MagKom Database Snapshot Export: {$timestamp}\n";
-            $sqlContent .= "-- Driver: {$driver}\n\n";
+            $sqlContent .= "-- Driver: {$driver}\n";
+            $sqlContent .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
 
             foreach ($tables as $tableObj) {
                 $tableName = reset($tableObj);
-                $sqlContent .= "-- Table: {$tableName}\n";
-                $rows = DB::table($tableName)->get();
-                $sqlContent .= '-- Records count: '.count($rows)."\n\n";
+                if (! is_string($tableName) || empty($tableName)) {
+                    continue;
+                }
+
+                try {
+                    $createTableResult = DB::select("SHOW CREATE TABLE `{$tableName}`");
+                    if (! empty($createTableResult)) {
+                        $createRow = (array) $createTableResult[0];
+                        $createSql = $createRow['Create Table'] ?? reset($createRow);
+                        $sqlContent .= "DROP TABLE IF EXISTS `{$tableName}`;\n";
+                        $sqlContent .= $createSql.";\n\n";
+                    }
+                } catch (\Throwable $e) {
+                    $sqlContent .= "-- Could not retrieve CREATE TABLE for: {$tableName}\n";
+                }
+
+                // Dump records in chunked batches
+                try {
+                    $rows = DB::table($tableName)->get();
+                    if ($rows->isNotEmpty()) {
+                        foreach ($rows as $row) {
+                            $rowArr = (array) $row;
+                            $columns = array_keys($rowArr);
+                            $escapedColumns = array_map(fn ($col) => "`{$col}`", $columns);
+                            $escapedValues = array_map(function ($val) {
+                                if (is_null($val)) {
+                                    return 'NULL';
+                                }
+                                if (is_bool($val)) {
+                                    return $val ? '1' : '0';
+                                }
+                                if (is_numeric($val)) {
+                                    return (string) $val;
+                                }
+
+                                return "'".addslashes((string) $val)."'";
+                            }, array_values($rowArr));
+
+                            $sqlContent .= "INSERT INTO `{$tableName}` (".implode(', ', $escapedColumns).') VALUES ('.implode(', ', $escapedValues).");\n";
+                        }
+                        $sqlContent .= "\n";
+                    }
+                } catch (\Throwable $e) {
+                    $sqlContent .= "-- Could not dump records for: {$tableName}\n";
+                }
             }
+
+            $sqlContent .= "SET FOREIGN_KEY_CHECKS=1;\n";
             File::put($targetPath, $sqlContent);
         }
 

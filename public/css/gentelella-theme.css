@@ -949,6 +949,7 @@ body.nav-sm {
 .gentelella-filter-bar {
     background: var(--neutral-100, #F8FAFC);
     border: 1px solid var(--neutral-250, #E2E8F0);
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
     border-radius: 8px;
     padding: 1rem 1.25rem;
     margin-bottom: 1.25rem;
@@ -961,6 +962,7 @@ body.nav-sm {
 [data-theme="dark"] .gentelella-filter-bar {
     background: #141E30;
     border-color: #26354D;
+    border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
 }
 
 .gentelella-search-box {
@@ -1215,6 +1217,7 @@ body.nav-sm {
 .gentelella-card {
     background: #FFFFFF;
     border: 1px solid var(--neutral-300, #E2E8F0);
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
     border-radius: 12px;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
     overflow: hidden;
@@ -1604,6 +1607,7 @@ body.nav-sm {
 [data-theme="dark"] .gentelella-metric-card {
     background: #182234;
     border-color: #26354D;
+    border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 

@@ -213,7 +213,13 @@ class AuditLogController extends Controller
 
         $query = $this->buildFilterQuery($request, $activeChannel);
 
-        $logs = $query->paginate(30)->withQueryString();
+        $allowedPerPage = [10, 20, 30];
+        $perPage = (int) $request->input('per_page', 10);
+        if (! in_array($perPage, $allowedPerPage, true)) {
+            $perPage = 10;
+        }
+
+        $logs = $query->paginate($perPage)->withQueryString();
         $internalUsers = User::whereIn('role', [RoleEnum::SuperAdmin, RoleEnum::Admin, RoleEnum::Pembimbing])
             ->orderBy('nama')
             ->get();

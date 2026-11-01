@@ -25,11 +25,10 @@ class RoleController extends Controller
             RoleEnum::Peserta->value => User::where('role', RoleEnum::Peserta)->count(),
         ];
 
-        // Matriks hak akses 4 role sistem sesuai PRD Bab 3.1 & 3.3
+        // Matriks hak akses 4 role sistem
         $matriksAkses = [
             [
                 'modul' => 'Portal Publik & Registrasi Calon Peserta',
-                'deskripsi' => 'Akses informasi lowongan, jadwal pendaftaran, dan pembuatan akun baru',
                 'superadmin' => true,
                 'admin' => true,
                 'pembimbing' => true,
@@ -37,7 +36,6 @@ class RoleController extends Controller
             ],
             [
                 'modul' => 'Pemberkasan & Pendaftaran Magang Mandiri',
-                'deskripsi' => 'Pengisian formulir pendaftaran, unggah CV/transkrip, dan surat pengantar',
                 'superadmin' => true,
                 'admin' => false,
                 'pembimbing' => false,
@@ -45,7 +43,6 @@ class RoleController extends Controller
             ],
             [
                 'modul' => 'Verifikasi Berkas & Seleksi Administratif',
-                'deskripsi' => 'Pemeriksaan validitas berkas, keputusan terima, tolak, revisi, atau antrean',
                 'superadmin' => true,
                 'admin' => true,
                 'pembimbing' => false,
@@ -53,7 +50,6 @@ class RoleController extends Controller
             ],
             [
                 'modul' => 'Manajemen Kuota Bulanan & Jurusan',
-                'deskripsi' => 'Pengelolaan alokasi kursi per bidang/jurusan dan penyesuaian dinamis',
                 'superadmin' => true,
                 'admin' => true,
                 'pembimbing' => false,
@@ -61,7 +57,6 @@ class RoleController extends Controller
             ],
             [
                 'modul' => 'Penetapan Penempatan & Pembimbing Lapangan',
-                'deskripsi' => 'Alokasi peserta lolos ke bidang dinas dan penetapan mentor pembimbing',
                 'superadmin' => true,
                 'admin' => true,
                 'pembimbing' => false,
@@ -69,7 +64,6 @@ class RoleController extends Controller
             ],
             [
                 'modul' => 'Logbook Harian & Pengelolaan Tugas Proyek',
-                'deskripsi' => 'Pengisian aktivitas kerja harian peserta dan pemberian tugas oleh mentor',
                 'superadmin' => true,
                 'admin' => false,
                 'pembimbing' => true,
@@ -77,7 +71,6 @@ class RoleController extends Controller
             ],
             [
                 'modul' => 'Penilaian Kinerja & Pengesahan Sertifikat',
-                'deskripsi' => 'Evaluasi nilai berdasarkan rubrik resmi, persetujuan admin, & penerbitan sertifikat',
                 'superadmin' => true,
                 'admin' => true,
                 'pembimbing' => true,
@@ -85,7 +78,6 @@ class RoleController extends Controller
             ],
             [
                 'modul' => 'Manajemen Staf Internal & Akun Pegawai',
-                'deskripsi' => 'Pembuatan akun admin/pembimbing, reset kata sandi, dan status aktif',
                 'superadmin' => true,
                 'admin' => false,
                 'pembimbing' => false,
@@ -93,7 +85,6 @@ class RoleController extends Controller
             ],
             [
                 'modul' => 'Slot Khusus Kemitraan & Override Kuota',
-                'deskripsi' => 'Penguncian kursi jalur kemitraan kampus mitra tanpa mengurangi kuota umum',
                 'superadmin' => true,
                 'admin' => false,
                 'pembimbing' => false,
@@ -101,7 +92,6 @@ class RoleController extends Controller
             ],
             [
                 'modul' => 'Konfigurasi Parameter Sistem & Rubrik Bobot',
-                'deskripsi' => 'Pengaturan batas beban pembimbing (BR-13), batas nilai kelulusan, dan master data',
                 'superadmin' => true,
                 'admin' => false,
                 'pembimbing' => false,
@@ -109,7 +99,6 @@ class RoleController extends Controller
             ],
             [
                 'modul' => 'Jejak Audit Trail & Log Keamanan Sistem',
-                'deskripsi' => 'Pemantauan rekaman mutasi append-only, filter multi-kolom, & ekspor CSV compliance',
                 'superadmin' => true,
                 'admin' => false,
                 'pembimbing' => false,

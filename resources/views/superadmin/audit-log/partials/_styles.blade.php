@@ -69,6 +69,13 @@
     box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(59, 130, 246, 0.1);
 }
 
+[data-theme="dark"] .audit-panel-card,
+[data-theme="dark"] .audit-stream-card,
+[data-theme="dark"] .audit-table-card,
+[data-theme="dark"] .audit-diff-card {
+    border-top: 3.5px solid #3B82F6;
+}
+
 @media (min-width: 1024px) {
     .audit-header-card {
         flex-direction: row;
@@ -574,6 +581,7 @@
 .audit-panel-card {
     background: var(--sa-audit-surface);
     border: 1px solid var(--sa-audit-border);
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C);
     border-radius: 12px;
     padding: 1rem;
     display: flex;
@@ -790,6 +798,7 @@
 .audit-stream-card {
     background: var(--sa-audit-surface);
     border: 1px solid var(--sa-audit-border);
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     display: flex;
@@ -1044,6 +1053,7 @@
 .audit-table-card {
     background: var(--sa-audit-surface);
     border: 1px solid var(--sa-audit-border);
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C);
     border-radius: 12px;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
     overflow: hidden;
@@ -1398,23 +1408,35 @@
     background: var(--sa-audit-surface);
     border: 1px solid var(--sa-audit-border);
     border-radius: 12px;
-    padding: 0.75rem 1rem;
+    padding: 0.875rem 1.125rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
+.audit-pagination-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 @media (min-width: 640px) {
-    .audit-pagination-footer {
+    .audit-pagination-row {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
     }
 }
 
+.audit-pagination-bottom {
+    padding-top: 0.625rem;
+    border-top: 1px solid var(--sa-audit-border);
+}
+
 .audit-pagination-left {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.75rem;
 }
@@ -1434,6 +1456,74 @@
 }
 
 [data-theme="dark"] .audit-immutable-pill { color: #34D399; }
+
+/* PER-PAGE SELECTOR */
+.audit-per-page-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.audit-per-page-label {
+    color: var(--sa-audit-text-muted);
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+.audit-per-page-group {
+    display: inline-flex;
+    align-items: center;
+    background: var(--sa-audit-bg);
+    border: 1px solid var(--sa-audit-border);
+    border-radius: 8px;
+    padding: 2px;
+    gap: 2px;
+}
+
+.audit-per-page-pill {
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--sa-audit-text-muted);
+    text-decoration: none;
+    transition: all 0.15s ease;
+    line-height: 1.25;
+}
+
+.audit-per-page-pill:hover:not(.active) {
+    background: #E2E8F0;
+    color: var(--sa-audit-text-main);
+    text-decoration: none;
+}
+
+.audit-per-page-pill.active {
+    background: var(--sa-audit-blue);
+    color: #FFFFFF;
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="dark"] .audit-per-page-group {
+    background: #0F172A;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .audit-per-page-pill:hover:not(.active) {
+    background: #1E293B;
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .audit-per-page-pill.active {
+    background: #3B82F6;
+    color: #FFFFFF;
+}
+
+.audit-pagination-lembar-info {
+    font-size: 0.75rem;
+    color: var(--sa-audit-text-muted);
+}
 
 .audit-page-controls {
     display: flex;
@@ -1465,8 +1555,9 @@
 }
 
 .audit-page-num {
-    width: 28px;
+    min-width: 28px;
     height: 28px;
+    padding: 0 0.35rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1490,10 +1581,19 @@
     font-weight: 700;
 }
 
+.audit-page-ellipsis {
+    min-width: 20px;
+    text-align: center;
+    color: var(--sa-audit-text-muted);
+    font-size: 0.75rem;
+    user-select: none;
+}
+
 /* 8. FORENSIC DIFF INSPECTOR CARD */
 .audit-diff-card {
     background: var(--sa-audit-surface);
     border: 1px solid var(--sa-audit-border);
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     display: flex;

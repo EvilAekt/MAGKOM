@@ -2,7 +2,6 @@
 
 @section('title', 'Master Jurusan - SuperAdmin MagKom')
 @section('page_title', 'Master Data Jurusan')
-@section('page_description', 'Kelola daftar jurusan program pendidikan (SMK dan Perguruan Tinggi) untuk alokasi kuota magang.')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -90,27 +89,8 @@
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- 1. ALERT BANNER ATURAN PENONAKTIFAN (BR-12) -->
-    <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; box-shadow: var(--shadow-subtle);">
-        <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-600); color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-        </div>
-        <div>
-            <h2 style="font-size: 0.9375rem; font-weight: 700; color: var(--blue-700); margin: 0 0 0.25rem 0;">
-                Aturan Penonaktifan Jurusan (BR-12)
-            </h2>
-            <p style="font-size: 0.8125rem; color: var(--neutral-700); margin: 0; line-height: 1.5;">
-                Jurusan tidak dapat dinonaktifkan jika masih terikat dengan kuota aktif pada bulan pendaftaran berjalan atau masih memiliki peserta magang aktif yang ditempatkan di dinas.
-            </p>
-        </div>
-    </div>
-
-    <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table" title="Master Program Studi & Jurusan" subtitle="Daftar program kualifikasi akademik yang diakomodasi untuk seleksi magang.">
+    <!-- DATA TABLE CARD -->
+    <x-gentelella.x-panel class="has-table" title="Master Program Studi & Jurusan">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total Jurusan: <strong>{{ method_exists($jurusanList, 'total') ? $jurusanList->total() : $jurusanList->count() }}</strong>

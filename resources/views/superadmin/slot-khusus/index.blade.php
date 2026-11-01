@@ -2,7 +2,6 @@
 
 @section('title', 'Slot Khusus Internal - SuperAdmin MagKom')
 @section('page_title', 'Manajemen Slot Khusus Internal')
-@section('page_description', 'Kelola alokasi kuota khusus instansi kerjasama atau penugasan internal dinas (F-06).')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -92,25 +91,8 @@
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- 1. ALERT BANNER ATURAN JALUR KHUSUS (F-06) -->
-    <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; box-shadow: var(--shadow-subtle);">
-        <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-600); color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-            </svg>
-        </div>
-        <div>
-            <h2 style="font-size: 0.9375rem; font-weight: 700; color: var(--blue-700); margin: 0 0 0.25rem 0;">
-                Alokasi Jalur Khusus (F-06)
-            </h2>
-            <p style="font-size: 0.8125rem; color: var(--neutral-700); margin: 0; line-height: 1.5;">
-                Slot khusus tidak mengurangi kuota umum publik dan dialokasikan untuk kemitraan strategis lembaga/kampus atau penugasan kedinasan khusus atas instruksi pimpinan Kominfo.
-            </p>
-        </div>
-    </div>
-
-    <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table" title="Daftar Alokasi Slot Khusus Mitra" subtitle="Monitoring kapasitas reservasi dan realisasi pendaftar jalur kemitraan.">
+    <!-- DATA TABLE CARD -->
+    <x-gentelella.x-panel class="has-table" title="Daftar Alokasi Slot Khusus Mitra">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total: <strong>{{ method_exists($slotList, 'total') ? $slotList->total() : $slotList->count() }} Slot</strong>

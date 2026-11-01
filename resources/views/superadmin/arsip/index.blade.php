@@ -23,6 +23,7 @@
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
         background-color: #003566 !important;
         border-color: #3F51B5 !important;
+        border-top: 3.5px solid #3B82F6 !important;
     }
 
     [data-theme="dark"] div[style*="background: var(--blue-tint)"] {
@@ -101,7 +102,7 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
+    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-top: 3.5px solid var(--magkom-primary-blue, #01347C); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
         <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
             <div>
                 <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">

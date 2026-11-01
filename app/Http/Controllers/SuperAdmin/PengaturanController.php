@@ -15,6 +15,7 @@ use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class PengaturanController extends Controller
@@ -24,7 +25,7 @@ class PengaturanController extends Controller
     ) {}
 
     /**
-     * Menampilkan daftar konfigurasi sistem (AC-11-7, PRD 8.6).
+     * Menampilkan daftar konfigurasi sistem.
      */
     public function index(): View
     {
@@ -48,7 +49,7 @@ class PengaturanController extends Controller
     }
 
     /**
-     * Memperbarui parameter pengaturan sistem (AC-11-7, PRD 8.6).
+     * Memperbarui parameter pengaturan sistem.
      */
     public function update(Request $request): RedirectResponse
     {
@@ -142,32 +143,34 @@ class PengaturanController extends Controller
             ]);
         }
 
-        $nilaiLama = [];
-        $nilaiBaru = [];
+        DB::transaction(function () use ($settingsToSave, $request) {
+            $nilaiLama = [];
+            $nilaiBaru = [];
 
-        foreach ($settingsToSave as $kunci => $nilai) {
-            $record = Pengaturan::firstOrNew(['kunci' => $kunci]);
-            $nilaiLama[$kunci] = $record->nilai;
+            foreach ($settingsToSave as $kunci => $nilai) {
+                $record = Pengaturan::firstOrNew(['kunci' => $kunci]);
+                $nilaiLama[$kunci] = $record->nilai;
 
-            $record->nilai = $nilai;
-            $record->save();
+                $record->nilai = $nilai;
+                $record->save();
 
-            $nilaiBaru[$kunci] = $record->nilai;
-        }
+                $nilaiBaru[$kunci] = $record->nilai;
+            }
 
-        Pengaturan::clearCache();
+            Pengaturan::clearCache();
 
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'pengaturan',
-            idData: 0,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: $nilaiBaru,
-            detail: [
-                'aksi' => 'Memperbarui parameter konfigurasi sistem (AC-11-7)',
-                'superadmin_id' => $request->user()->id,
-            ]
-        );
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Aksi,
+                tabel: 'pengaturan',
+                idData: 0,
+                nilaiLama: $nilaiLama,
+                nilaiBaru: $nilaiBaru,
+                detail: [
+                    'aksi' => 'Memperbarui parameter konfigurasi sistem',
+                    'superadmin_id' => $request->user()->id,
+                ]
+            );
+        });
 
         return redirect()->route('superadmin.pengaturan.index')
             ->with('success', 'Konfigurasi sistem berhasil diperbarui.');

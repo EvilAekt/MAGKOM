@@ -2,7 +2,6 @@
 
 @section('title', 'Manajemen Staf Internal - SuperAdmin MagKom')
 @section('page_title', 'Manajemen Staf Internal')
-@section('page_description', 'Kelola akun staf dinas (Admin Verifikator & Pembimbing Lapangan), reset kata sandi, dan status aktifasi.')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -22,11 +21,21 @@
 
 @push('styles')
 <style>
+    .staf-filter-card {
+        background: var(--neutral-0);
+        border: 1px solid var(--neutral-400);
+        border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        box-shadow: var(--shadow-subtle);
+    }
+
     /* Dark Mode Overrides for SuperAdmin Staf Management (DS-MagKom Industrial Standard) */
     [data-theme="dark"] .staf-filter-card,
     [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
         background-color: #003566 !important;
         border-color: #3F51B5 !important;
+        border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
     }
 
     [data-theme="dark"] input[type="text"],
@@ -86,7 +95,7 @@
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     <!-- 1. FILTER & TOOLBAR CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow-subtle);">
+    <div class="staf-filter-card">
         <form method="GET" action="{{ route('superadmin.staf.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; flex: 1;">
                 <div style="position: relative; min-width: 240px; flex: 1;">
@@ -127,7 +136,7 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table" title="Daftar Akun Pengguna Internal" subtitle="Pengguna dinas yang bertugas pada portal seleksi dan pembimbingan.">
+    <x-gentelella.x-panel class="has-table" title="Daftar Akun Pengguna Internal">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total: <strong>{{ method_exists($stafList, 'total') ? $stafList->total() : $stafList->count() }} Pengguna</strong>

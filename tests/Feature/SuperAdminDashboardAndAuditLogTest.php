@@ -23,6 +23,7 @@ use Database\Seeders\JenisDokumenSeeder;
 use Database\Seeders\RubrikSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
@@ -485,5 +486,68 @@ class SuperAdminDashboardAndAuditLogTest extends TestCase
         $response->assertSee('Sertakan Hash HMAC-SHA256');
         $response->assertSee('Sertakan Snapshot Diff Mutasi');
         $response->assertSee('Unduh CSV');
+    }
+
+    /**
+     * Uji fitur pilihan menampilkan 10, 20, 30 entri per halaman dan navigasi lembar halaman (1, 2, 3, 4...).
+     */
+    public function test_superadmin_can_select_audit_log_per_page_options_and_navigate_lembar_pages(): void
+    {
+        DB::table('audit_log')->delete();
+
+        $rows = [];
+        for ($i = 1; $i <= 35; $i++) {
+            $rows[] = [
+                'request_id' => 'req-page-' . str_pad((string) $i, 3, '0', STR_PAD_LEFT),
+                'user_id' => $this->superAdmin->id,
+                'tipe' => TipeAuditEnum::Aksi->value,
+                'aksi' => 'Aksi audit log batch item #' . $i,
+                'entitas' => 'kuota',
+                'entitas_id' => $i,
+                'ip' => '127.0.0.1',
+                'waktu' => Carbon::now()->subMinutes(35 - $i),
+                'channel' => 'all-actions-stream',
+                'severity' => 'info',
+            ];
+        }
+        DB::table('audit_log')->insert($rows);
+
+        // 1. Default request (tanpa ?per_page): harus default ke 10 entri per halaman
+        $responseDefault = $this->actingAs($this->superAdmin)->get(URL::route('superadmin.audit-log.index'));
+        $responseDefault->assertOk();
+        $responseDefault->assertSee('Menampilkan:');
+        $responseDefault->assertSee('Lembar Halaman');
+        $responseDefault->assertSee('Lembar 1');
+        $responseDefault->assertSee('Lembar 2');
+        $responseDefault->assertSee('Lembar 3');
+        $responseDefault->assertSee('Lembar 4');
+        $responseDefault->assertSee('Aksi audit log batch item #35');
+        $responseDefault->assertDontSee('Aksi audit log batch item #20');
+
+        // 2. Request dengan per_page=20: 35 entri / 20 = 2 lembar halaman
+        $response20 = $this->actingAs($this->superAdmin)->get(URL::route('superadmin.audit-log.index', ['per_page' => 20]));
+        $response20->assertOk();
+        $response20->assertSee('Lembar Halaman <span class="font-bold text-slate-900 dark:text-white">1</span> dari <span class="font-bold text-slate-900 dark:text-white">2</span>', false);
+        $response20->assertSee('Aksi audit log batch item #35');
+        $response20->assertSee('Aksi audit log batch item #16');
+        $response20->assertDontSee('Aksi audit log batch item #15');
+
+        // 3. Request ke lembar halaman 2 dengan per_page=20
+        $response20Page2 = $this->actingAs($this->superAdmin)->get(URL::route('superadmin.audit-log.index', ['per_page' => 20, 'page' => 2]));
+        $response20Page2->assertOk();
+        $response20Page2->assertSee('Lembar Halaman <span class="font-bold text-slate-900 dark:text-white">2</span> dari <span class="font-bold text-slate-900 dark:text-white">2</span>', false);
+        $response20Page2->assertSee('Aksi audit log batch item #15');
+        $response20Page2->assertSee('Aksi audit log batch item #1');
+
+        // 4. Request dengan per_page=30: 35 entri / 30 = 2 lembar halaman
+        $response30 = $this->actingAs($this->superAdmin)->get(URL::route('superadmin.audit-log.index', ['per_page' => 30]));
+        $response30->assertOk();
+        $response30->assertSee('Aksi audit log batch item #6');
+        $response30->assertDontSee('Aksi audit log batch item #5');
+
+        // 5. Parameter tidak valid (?per_page=999) otomatis fallback ke 10
+        $responseInvalid = $this->actingAs($this->superAdmin)->get(URL::route('superadmin.audit-log.index', ['per_page' => 999]));
+        $responseInvalid->assertOk();
+        $responseInvalid->assertSee('Lembar Halaman <span class="font-bold text-slate-900 dark:text-white">1</span> dari <span class="font-bold text-slate-900 dark:text-white">4</span>', false);
     }
 }

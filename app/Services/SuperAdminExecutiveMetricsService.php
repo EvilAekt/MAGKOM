@@ -86,6 +86,14 @@ class SuperAdminExecutiveMetricsService
             ->take(5)
             ->get();
 
+        // 3 Pendaftar Tertua Menunggu Verifikasi untuk Hazard Attention Chips
+        $pendaftarTertua = Pendaftaran::with('user')
+            ->whereIn('status', [StatusPendaftaranEnum::Diajukan, StatusPendaftaranEnum::PerluPerbaikan])
+            ->orderBy('diajukan_at', 'asc')
+            ->orderBy('id', 'asc')
+            ->take(3)
+            ->get();
+
         // 2. Daftar Periode Bulan & Seleksi Periode Dinamis
         $daftarBulan = BulanMagang::where('aktif', true)
             ->orderBy('bulan_mulai', 'desc')
@@ -102,6 +110,13 @@ class SuperAdminExecutiveMetricsService
         }
 
         $kuotaData = $this->resolveKuotaData($bulanAktif);
+
+        // Kuota kritis (penuh atau rasio tertinggi) pada bulan aktif
+        $kuotaKritis = null;
+        if (isset($kuotaData['kuotaList']) && $kuotaData['kuotaList']->isNotEmpty()) {
+            $kuotaKritis = $kuotaData['kuotaList']->first(fn ($k) => $k->jumlah > 0 && $k->terisi >= $k->jumlah)
+                ?? $kuotaData['kuotaList']->sortByDesc(fn ($k) => $k->jumlah > 0 ? ($k->terisi / $k->jumlah) : 0)->first();
+        }
 
         // Pagu Kuota Kebijakan Bulanan Dinas (PRD BR-01, Bab 8.6)
         $kuotaMaksPagu = Pengaturan::int('kuota_umum_maks_per_bulan', 12);
@@ -178,8 +193,9 @@ class SuperAdminExecutiveMetricsService
         // 8. KPI Dinas & Monitoring Keamanan
         $kpiData = $this->resolveKpiAndSecurityData($bulanAktif, $berkasMaksMb);
 
-        // 9. Tren Pendaftar Bulanan 12 Bulan Terakhir
-        $trenPendaftar = $this->resolveTrenPendaftar();
+        // 9. Tren Pendaftar Bulanan 12 Bulan Terakhir (Single Aggregated Query)
+        $trenDatasets = $this->resolveTrenDatasets();
+        $trenPendaftar = $trenDatasets['12m'];
 
         return [
             'totalPengguna' => $totalPengguna,
@@ -199,6 +215,7 @@ class SuperAdminExecutiveMetricsService
             'totalAntreanDiajukan' => $totalAntreanDiajukan,
             'totalWaitingList' => $totalWaitingList,
             'pendaftaranMenunggu' => $pendaftaranMenunggu,
+            'pendaftarTertua' => $pendaftarTertua,
             'daftarBulan' => $daftarBulan,
             'bulanAktif' => $bulanAktif,
             'statusPublik' => $statusPublik,
@@ -208,6 +225,7 @@ class SuperAdminExecutiveMetricsService
             'totalKuotaTerisi' => $kuotaData['totalKuotaTerisi'],
             'kuotaMaksPagu' => $kuotaMaksPagu,
             'kuotaList' => $kuotaData['kuotaList'],
+            'kuotaKritis' => $kuotaKritis,
             'maksBeban' => $maksBeban,
             'pembimbingList' => $pembimbingList,
             'totalLogbookPending' => $totalLogbookPending,
@@ -239,6 +257,7 @@ class SuperAdminExecutiveMetricsService
             'securityPosture' => $kpiData['securityPosture'],
             'systemSummary' => $kpiData['systemSummary'],
             'trenPendaftar' => $trenPendaftar,
+            'trenDatasets' => $trenDatasets,
         ];
     }
 
@@ -367,11 +386,26 @@ class SuperAdminExecutiveMetricsService
             $dbConnected = false;
         }
 
+        $backupDir = storage_path('app/backups');
+        $lastBackupFormatted = 'Belum ada cadangan';
+        $lastBackupShort = '-';
+
+        if (\Illuminate\Support\Facades\File::isDirectory($backupDir)) {
+            $files = \Illuminate\Support\Facades\File::files($backupDir);
+            if (! empty($files)) {
+                usort($files, fn ($a, $b) => $b->getMTime() <=> $a->getMTime());
+                $mtime = $files[0]->getMTime();
+                $lastBackupFormatted = \Carbon\Carbon::createFromTimestamp($mtime)->translatedFormat('d M Y, H:i').' WIB';
+                $lastBackupShort = date('H:i', $mtime);
+            }
+        }
+
         $systemSummary = [
             'disk_free_gb' => $diskFreeGb,
             'disk_usage_percent' => $diskUsagePercent,
             'db_status' => $dbConnected ? 'Optimal' : 'Gangguan',
-            'last_backup' => now()->subHours(6)->translatedFormat('d M Y, H:i').' WIB',
+            'last_backup' => $lastBackupFormatted,
+            'last_backup_short' => $lastBackupShort,
             'active_sessions' => User::where('status_aktif', true)->count(),
             'php_version' => PHP_VERSION,
         ];
@@ -391,21 +425,76 @@ class SuperAdminExecutiveMetricsService
         ];
     }
 
-    protected function resolveTrenPendaftar(): array
+    /**
+     * Membangun dataset tren pendaftar (12 bulan, 6 bulan, 30 hari) dalam satu query tunggal.
+     *
+     * @return array<string, array<int, array{bulan: string, count: int}>>
+     */
+    protected function resolveTrenDatasets(): array
     {
-        $tren = [];
-        for ($i = 11; $i >= 0; $i--) {
-            $bulanCursor = now()->subMonths($i);
-            $start = $bulanCursor->copy()->startOfMonth();
-            $end = $bulanCursor->copy()->endOfMonth();
+        $start12m = now()->subMonths(11)->startOfMonth();
+        $registrations = Pendaftaran::where('created_at', '>=', $start12m)
+            ->get(['created_at']);
 
-            $count = Pendaftaran::whereBetween('created_at', [$start, $end])->count();
-            $tren[] = [
-                'bulan' => $bulanCursor->translatedFormat('M y'),
-                'count' => $count,
+        $monthlyCounts = [];
+        $thirtyDaysAgo = now()->subDays(30)->startOfDay();
+
+        foreach ($registrations as $r) {
+            if (! $r->created_at) {
+                continue;
+            }
+            $monthKey = $r->created_at->format('Y-m');
+            $monthlyCounts[$monthKey] = ($monthlyCounts[$monthKey] ?? 0) + 1;
+        }
+
+        // Tren 12 Bulan Terakhir
+        $tren12m = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $cursor = now()->subMonths($i);
+            $key = $cursor->format('Y-m');
+            $tren12m[] = [
+                'bulan' => $cursor->translatedFormat('M y'),
+                'count' => $monthlyCounts[$key] ?? 0,
             ];
         }
 
-        return $tren;
+        // Tren 6 Bulan Terakhir
+        $tren6m = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $cursor = now()->subMonths($i);
+            $key = $cursor->format('Y-m');
+            $tren6m[] = [
+                'bulan' => $cursor->translatedFormat('M y'),
+                'count' => $monthlyCounts[$key] ?? 0,
+            ];
+        }
+
+        // Tren 30 Hari Terakhir (dipecah dalam 6 interval 5 harian)
+        $tren30d = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $intervalStart = now()->subDays(($i + 1) * 5)->startOfDay();
+            $intervalEnd = now()->subDays($i * 5)->endOfDay();
+            $countInterval = 0;
+            foreach ($registrations as $r) {
+                if ($r->created_at && $r->created_at->between($intervalStart, $intervalEnd)) {
+                    $countInterval++;
+                }
+            }
+            $tren30d[] = [
+                'bulan' => $i === 0 ? 'Hari Ini' : 'H-'.($i * 5),
+                'count' => $countInterval,
+            ];
+        }
+
+        return [
+            '12m' => $tren12m,
+            '6m' => $tren6m,
+            '30d' => $tren30d,
+        ];
+    }
+
+    protected function resolveTrenPendaftar(): array
+    {
+        return $this->resolveTrenDatasets()['12m'];
     }
 }

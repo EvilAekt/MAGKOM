@@ -87,6 +87,9 @@
         @if(request('range'))
             <input type="hidden" name="range" value="{{ request('range') }}" id="formRangeInput">
         @endif
+        @if(request('per_page'))
+            <input type="hidden" name="per_page" value="{{ request('per_page') }}">
+        @endif
 
         {{-- Search within current channel --}}
         <div class="audit-filter-search-col">
@@ -384,48 +387,105 @@
     @endif
 </div>
 
-{{-- SECTION 6B: PAGINATION FOOTER BAR --}}
+{{-- SECTION 6B: PAGINATION FOOTER BAR (PER-PAGE & LEMBAR HALAMAN) --}}
 <footer class="audit-pagination-footer">
-    {{-- Left: Record Counter & Tamper-Proof Indicator --}}
-    <div class="audit-pagination-left">
-        <span class="audit-pagination-counter">
-            Menampilkan <span class="font-bold text-slate-900 dark:text-white">{{ $logs->firstItem() ?? 0 }} - {{ $logs->lastItem() ?? 0 }}</span> dari <span class="font-bold text-slate-900 dark:text-white tabular-nums">{{ number_format($logs->total()) }}</span> log
-        </span>
-        <span class="audit-immutable-pill">
-            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-            </svg>
-            Audit Log Immutable
-        </span>
+    {{-- BARIS 1: Record Counter & Kontrol Pilihan Menampilkan (10, 20, 30) --}}
+    <div class="audit-pagination-row audit-pagination-top">
+        <div class="audit-pagination-left">
+            <span class="audit-pagination-counter">
+                Menampilkan <span class="font-bold text-slate-900 dark:text-white">{{ $logs->firstItem() ?? 0 }} - {{ $logs->lastItem() ?? 0 }}</span> dari <span class="font-bold text-slate-900 dark:text-white tabular-nums">{{ number_format($logs->total()) }}</span> log
+            </span>
+            <span class="audit-immutable-pill">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+                Audit Log Immutable
+            </span>
+        </div>
+
+        <div class="audit-per-page-container">
+            <span class="audit-per-page-label">Menampilkan:</span>
+            <div class="audit-per-page-group" role="group" aria-label="Pilih jumlah entri log per halaman">
+                @php
+                    $currentPerPage = (int) request('per_page', 10);
+                @endphp
+                @foreach([10, 20, 30] as $size)
+                    @php
+                        $isSizeActive = ($currentPerPage === $size);
+                        $sizeUrl = request()->fullUrlWithQuery(['per_page' => $size, 'page' => 1]);
+                    @endphp
+                    <a 
+                        href="{{ $sizeUrl }}" 
+                        class="audit-per-page-pill {{ $isSizeActive ? 'active' : '' }}"
+                        @if($isSizeActive) aria-current="true" @endif
+                        title="Tampilkan {{ $size }} entri per halaman"
+                    >
+                        {{ $size }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
     </div>
 
-    {{-- Right: Pagination Buttons & Per-page select --}}
-    <div class="audit-pagination-right">
-        @if($logs->hasPages())
-            <div class="audit-page-controls">
+    {{-- BARIS 2: Pilihan Lembar Halaman (1, 2, 3, 4...) --}}
+    @php
+        $currentPage = $logs->currentPage();
+        $lastPage = max(1, $logs->lastPage());
+        
+        // Kalkulasi sliding window agar lembar 1..4 tampil sejak awal
+        $startPage = max(1, $currentPage - 2);
+        $endPage = min($lastPage, max($startPage + 3, $currentPage + 2));
+        
+        if ($endPage - $startPage < 3 && $lastPage >= 4) {
+            $startPage = max(1, $endPage - 3);
+        }
+    @endphp
+    <div class="audit-pagination-row audit-pagination-bottom">
+        <div class="audit-pagination-lembar-info">
+            Lembar Halaman <span class="font-bold text-slate-900 dark:text-white">{{ $currentPage }}</span> dari <span class="font-bold text-slate-900 dark:text-white">{{ $lastPage }}</span>
+        </div>
+
+        <div class="audit-pagination-right">
+            <div class="audit-page-controls" role="navigation" aria-label="Navigasi Lembar Halaman">
                 {{-- Previous Page Link --}}
                 @if($logs->onFirstPage())
-                    <button type="button" class="audit-page-btn-nav disabled" disabled>&larr; Prev</button>
+                    <button type="button" class="audit-page-btn-nav disabled" disabled aria-label="Lembar Sebelumnya">&laquo; Prev</button>
                 @else
-                    <a href="{{ $logs->previousPageUrl() }}" class="audit-page-btn-nav">&larr; Prev</a>
+                    <a href="{{ $logs->previousPageUrl() }}" class="audit-page-btn-nav" aria-label="Lembar Sebelumnya">&laquo; Prev</a>
                 @endif
 
-                {{-- Pagination Elements --}}
-                @foreach($logs->getUrlRange(max(1, $logs->currentPage() - 2), min($logs->lastPage(), $logs->currentPage() + 2)) as $page => $url)
-                    @if($page == $logs->currentPage())
-                        <span class="audit-page-num active">{{ $page }}</span>
-                    @else
-                        <a href="{{ $url }}" class="audit-page-num">{{ $page }}</a>
+                {{-- Lembar 1 jika window tidak mulai dari 1 --}}
+                @if($startPage > 1)
+                    <a href="{{ $logs->url(1) }}" class="audit-page-num" aria-label="Lembar 1">1</a>
+                    @if($startPage > 2)
+                        <span class="audit-page-ellipsis" aria-hidden="true">&hellip;</span>
                     @endif
-                @endforeach
+                @endif
+
+                {{-- Daftar Lembar Halaman --}}
+                @for($page = $startPage; $page <= $endPage; $page++)
+                    @if($page == $currentPage)
+                        <span class="audit-page-num active" aria-current="page" aria-label="Lembar {{ $page }}">{{ $page }}</span>
+                    @else
+                        <a href="{{ $logs->url($page) }}" class="audit-page-num" aria-label="Lembar {{ $page }}">{{ $page }}</a>
+                    @endif
+                @endfor
+
+                {{-- Lembar Terakhir jika endPage belum mencapai lastPage --}}
+                @if($endPage < $lastPage)
+                    @if($endPage < $lastPage - 1)
+                        <span class="audit-page-ellipsis" aria-hidden="true">&hellip;</span>
+                    @endif
+                    <a href="{{ $logs->url($lastPage) }}" class="audit-page-num" aria-label="Lembar {{ $lastPage }}">{{ $lastPage }}</a>
+                @endif
 
                 {{-- Next Page Link --}}
                 @if($logs->hasMorePages())
-                    <a href="{{ $logs->nextPageUrl() }}" class="audit-page-btn-nav">Next &rarr;</a>
+                    <a href="{{ $logs->nextPageUrl() }}" class="audit-page-btn-nav" aria-label="Lembar Selanjutnya">Next &raquo;</a>
                 @else
-                    <button type="button" class="audit-page-btn-nav disabled" disabled>Next &rarr;</button>
+                    <button type="button" class="audit-page-btn-nav disabled" disabled aria-label="Lembar Selanjutnya">Next &raquo;</button>
                 @endif
             </div>
-        @endif
+        </div>
     </div>
 </footer>

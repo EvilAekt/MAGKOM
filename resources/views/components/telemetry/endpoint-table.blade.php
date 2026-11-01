@@ -3,7 +3,7 @@
 ])
 
 {{-- 6. ROUTE TELEMETRY TABLE (AC-1, AC-2, AC-6: Capped Height, Clean Spacing, Dual-Theme Parity) --}}
-<div class="telemetry-card mb-0" style="padding: 0; overflow: hidden !important; contain: paint;">
+<div class="telemetry-card mb-0" style="padding: 0; overflow: hidden !important; contain: paint; border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;">
     <div class="telemetry-card-header" style="padding: 12px 16px; margin-bottom: 0;">
         <div style="display: flex; align-items: center; gap: 8px;">
             <span class="h-2 w-2 rounded-full bg-emerald-500" style="width: 8px; height: 8px; display: inline-block;"></span>
@@ -14,7 +14,7 @@
         <input type="text" id="endpointTableFilter" placeholder="Filter..." class="telemetry-table-filter" />
     </div>
 
-    <!-- Scrollable container capped at 320px to prevent infinite stretching -->
+    <!-- Container without vertical scroll: natural flow capped per page -->
     <div class="telemetry-table-container">
         <table class="telemetry-table" id="routeMetricsTable">
             <thead>
@@ -111,4 +111,42 @@
             </tbody>
         </table>
     </div>
+
+    {{-- FOOTER PAGINASI TELEMETRI: PER-PAGE & LEMBAR HALAMAN (NON-SCROLL) --}}
+    <footer class="telemetry-table-footer" id="telemetryTableFooter">
+        <div class="telemetry-pagination-row telemetry-pagination-top">
+            <div class="telemetry-pagination-left">
+                <span class="telemetry-pagination-counter" id="telemetryPaginationCounter">
+                    Menampilkan <span class="font-bold text-slate-900 dark:text-white" id="telemetryStartRow">1</span> - <span class="font-bold text-slate-900 dark:text-white" id="telemetryEndRow">{{ min(10, count($routeMetrics)) }}</span> dari <span class="font-bold text-slate-900 dark:text-white" id="telemetryTotalRows">{{ count($routeMetrics) }}</span> rute telemetri
+                </span>
+            </div>
+
+            <div class="telemetry-per-page-container">
+                <span class="telemetry-per-page-label">Menampilkan:</span>
+                <div class="telemetry-per-page-group" role="group" aria-label="Pilih jumlah baris rute per halaman">
+                    <button type="button" class="telemetry-per-page-pill active" data-per-page="10" title="Tampilkan 10 baris">10</button>
+                    <button type="button" class="telemetry-per-page-pill" data-per-page="20" title="Tampilkan 20 baris">20</button>
+                    <button type="button" class="telemetry-per-page-pill" data-per-page="30" title="Tampilkan 30 baris">30</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="telemetry-pagination-row telemetry-pagination-bottom">
+            <div class="telemetry-pagination-lembar-info" id="telemetryLembarInfo">
+                Lembar Halaman <span class="font-bold text-slate-900 dark:text-white" id="telemetryCurrentPage">1</span> dari <span class="font-bold text-slate-900 dark:text-white" id="telemetryTotalPages">{{ max(1, (int) ceil(count($routeMetrics) / 10)) }}</span>
+            </div>
+
+            <div class="telemetry-page-controls" id="telemetryPageControls" role="navigation" aria-label="Navigasi Lembar Halaman Telemetri">
+                <button type="button" class="telemetry-page-btn-nav disabled" disabled aria-label="Lembar Sebelumnya">&laquo; Prev</button>
+                <button type="button" class="telemetry-page-num active" aria-current="page" aria-label="Lembar 1">1</button>
+                @if(count($routeMetrics) > 10)
+                    <button type="button" class="telemetry-page-num" aria-label="Lembar 2">2</button>
+                @endif
+                @if(count($routeMetrics) > 20)
+                    <button type="button" class="telemetry-page-num" aria-label="Lembar 3">3</button>
+                @endif
+                <button type="button" class="telemetry-page-btn-nav {{ count($routeMetrics) <= 10 ? 'disabled' : '' }}" {{ count($routeMetrics) <= 10 ? 'disabled' : '' }} aria-label="Lembar Selanjutnya">Next &raquo;</button>
+            </div>
+        </div>
+    </footer>
 </div>
