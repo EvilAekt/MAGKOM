@@ -36,22 +36,22 @@
     <!-- Top Cockpit Header -->
     <div class="relative z-10 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4 mb-5"
          style="border-bottom: 1px solid rgba(96, 165, 250, 0.2);">
-        <div class="flex items-center gap-3">
-            <div class="flex h-9 w-9 items-center justify-center rounded-lg shadow-inner shrink-0"
-                 style="background: {{ $statusBg }}; color: {{ $statusColor }}; border: 1px solid {{ $statusBorder }}; width: 36px; height: 36px; min-width: 36px; min-height: 36px;">
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;" aria-hidden="true">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div class="telemetry-hud-icon-badge"
+                 style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; min-width: 36px; min-height: 36px; border-radius: 10px; background: {{ $statusBg }}; color: {{ $statusColor }}; border: 1px solid {{ $statusBorder }}; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); flex-shrink: 0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="width: 20px; height: 20px; max-width: 20px; max-height: 20px; display: block;" aria-hidden="true">
                     @if($isNominal)
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     @else
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     @endif
                 </svg>
             </div>
-            <div class="flex items-center gap-2.5 flex-wrap">
-                <h2 class="text-base sm:text-lg font-bold tracking-tight m-0" style="font-size: 1.125rem; color: #ffffff !important;">
+            <div style="display: flex; align-items: center; gap: 0.625rem; flex-wrap: wrap;">
+                <h2 class="text-base sm:text-lg font-bold tracking-tight m-0" style="font-size: 1.125rem; font-weight: 700; color: #ffffff !important; margin: 0; line-height: 1.3; letter-spacing: -0.01em;">
                     Pusat Telemetri Infrastruktur
                 </h2>
-                <span class="telemetry-status-pill pill-success">
+                <span class="telemetry-status-pill pill-success" style="display: inline-flex; align-items: center; gap: 0.35rem;">
                     <span class="status-dot"></span>
                     <span>{{ $isNominal ? 'ALL NOMINAL' : 'DEGRADED' }}</span>
                 </span>

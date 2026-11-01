@@ -651,6 +651,26 @@
         padding: 20px !important;
         color: #e2e8f0 !important;
     }
+    .telemetry-hud-icon-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+        border-radius: 10px !important;
+        flex-shrink: 0 !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+    }
+    .telemetry-hud-icon-badge svg {
+        display: block !important;
+        width: 20px !important;
+        height: 20px !important;
+        max-width: 20px !important;
+        max-height: 20px !important;
+        margin: auto !important;
+    }
     .telemetry-hud-card h1,
     .telemetry-hud-card h2,
     .telemetry-hud-card h3 {
@@ -916,12 +936,24 @@
         background-color: #0b1a2d !important;
     }
 
-    /* 17. Viewport Bottom Containment (Hard-Stop Bounded Gap & Zero Void) */
+    /* 17. Viewport Bottom Containment & Single Scrollbar Guarantee (Zero Void) */
+    html {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        scroll-behavior: smooth !important;
+    }
+    body {
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
+        overflow: visible !important;
+        min-height: 100vh !important;
+    }
     .health-telemetry-container {
         display: flex !important;
         flex-direction: column !important;
         margin-bottom: 0 !important;
         padding-bottom: 0 !important;
+        overflow: visible !important;
     }
     .telemetry-cockpit-shell {
         margin-bottom: 1.5rem !important; /* Jarak teratur 24px persis sebelum footer */
@@ -932,10 +964,12 @@
     .right_col {
         min-height: auto !important;
         padding-bottom: 0 !important;
+        overflow: visible !important;
     }
     .container.body,
     .main_container {
         min-height: auto !important;
+        overflow: visible !important;
     }
 </style>
 @endpush

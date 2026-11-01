@@ -761,6 +761,7 @@
         }
 
         html {
+            overflow-x: hidden;
             overflow-y: auto;
             scroll-behavior: smooth;
         }
@@ -774,6 +775,7 @@
             font-weight: var(--fw-regular);
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            overflow-y: visible;
         }
 
         /* Headings: SemiBold atau Bold Tegas dan Jelas sebagai Judul */
@@ -1902,6 +1904,8 @@
             overflow: hidden;
             clip: rect(0, 0, 0, 0);
             white-space: nowrap;
+        }
+
         /* =====================================================================
            GENTELELLA MODERN CSS FRAMEWORK INTEGRATION (MAGKOM TOKENS)
            ===================================================================== */
@@ -2113,22 +2117,33 @@
             outline-offset: 2px;
         }
 
-        /* Dual-Icon State Sesuai AC-3 */
-        html:not([data-theme="dark"]) .sidebar-footer .sun-icon {
+        /* Single-Icon State Dinamis Tombol Tema Sidebar (Bulan saat Terang, Lampu saat Gelap) */
+        html:not([data-theme="dark"]) .sidebar-footer .sun-icon,
+        html:not([data-theme="dark"]) .sidebar-footer .light-icon,
+        html:not([data-theme="dark"]) #sidebarThemeToggleBtn .sun-icon,
+        html:not([data-theme="dark"]) #sidebarThemeToggleBtn .light-icon {
             display: none !important;
         }
 
-        html:not([data-theme="dark"]) .sidebar-footer .moon-icon {
-            display: block !important;
+        html:not([data-theme="dark"]) .sidebar-footer .moon-icon,
+        html:not([data-theme="dark"]) #sidebarThemeToggleBtn .moon-icon {
+            display: inline-block !important;
             color: rgba(255, 255, 255, 0.85);
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
         }
 
-        html[data-theme="dark"] .sidebar-footer .sun-icon {
-            display: block !important;
+        html[data-theme="dark"] .sidebar-footer .sun-icon,
+        html[data-theme="dark"] .sidebar-footer .light-icon,
+        html[data-theme="dark"] #sidebarThemeToggleBtn .sun-icon,
+        html[data-theme="dark"] #sidebarThemeToggleBtn .light-icon {
+            display: inline-block !important;
             color: var(--magkom-sun-yellow, #FFCB05) !important;
+            filter: drop-shadow(0 0 6px rgba(255, 203, 5, 0.45));
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
         }
 
-        html[data-theme="dark"] .sidebar-footer .moon-icon {
+        html[data-theme="dark"] .sidebar-footer .moon-icon,
+        html[data-theme="dark"] #sidebarThemeToggleBtn .moon-icon {
             display: none !important;
         }
 
@@ -2192,45 +2207,6 @@
             min-height: calc(100vh - var(--topbar-height) - 50px);
             transition: margin-left 0.25s ease, width 0.25s ease;
             flex: 1;
-        }
-
-        /* Topbar Center Search Box (Lovable Style) */
-        .topbar-center {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            max-width: 440px;
-            margin: 0 1.5rem;
-        }
-
-        .topbar-search-input {
-            width: 100%;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.12) !important;
-            border: 1px solid rgba(255, 255, 255, 0.22) !important;
-            border-radius: 8px;
-            padding: 0 14px;
-            font-size: 0.8125rem;
-            color: #FFFFFF !important;
-            outline: none;
-            transition: all 0.15s ease;
-        }
-
-        .topbar-search-input::placeholder {
-            color: rgba(255, 255, 255, 0.65) !important;
-        }
-
-        .topbar-search-input:focus {
-            background: rgba(2, 39, 93, 0.85) !important;
-            border-color: var(--magkom-sun-yellow, #FFCB05) !important;
-            box-shadow: 0 0 0 3px rgba(255, 203, 5, 0.25) !important;
-            color: #FFFFFF !important;
-        }
-
-        @media (max-width: 900px) {
-            .topbar-center {
-                display: none !important;
-            }
         }
 
         /* Footer Gentelella */
@@ -3296,11 +3272,13 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     </a>
                     <button type="button" id="sidebarThemeToggleBtn" class="sidebar-footer-btn" onclick="togglePortalThemeQuick()" title="{{ __('Ganti Mode Terang / Gelap') }}" aria-label="{{ __('Ganti Mode Terang / Gelap') }}" aria-pressed="false">
-                        <svg class="sun-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" fill="currentColor" fill-opacity="0.25"></path>
+                            <path d="M9 18h6"></path>
+                            <path d="M10 22h4"></path>
                         </svg>
-                        <svg class="moon-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" fill="currentColor" fill-opacity="0.15"></path>
                         </svg>
                     </button>
                     <form method="POST" action="{{ route('logout') }}" class="sidebar-footer-form">
@@ -3341,13 +3319,6 @@
                             <span class="breadcrumb-current">{{ __('Dashboard') }}</span>
                         @endif
                     </nav>
-                </div>
-
-                <!-- Topbar Center Search (Lovable Clearview Style) -->
-                <div class="topbar-center" role="search">
-                    <div class="topbar-search-box">
-                        <input type="search" class="topbar-search-input" placeholder="Cari peserta, staf, atau NIM…  ⌘K" aria-label="Cari data atau peserta">
-                    </div>
                 </div>
 
                 <!-- Topbar Menu Pengguna -->
@@ -3625,7 +3596,11 @@
             document.documentElement.setAttribute('data-pref-theme', theme);
             const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
             if (toggleBtn) {
-                toggleBtn.setAttribute('aria-pressed', effective === 'dark' ? 'true' : 'false');
+                const isDark = effective === 'dark';
+                toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+                const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
+                toggleBtn.setAttribute('title', titleText);
+                toggleBtn.setAttribute('aria-label', titleText);
             }
             try {
                 localStorage.setItem('magkom_theme', theme);
@@ -3636,7 +3611,11 @@
             const currentEffective = document.documentElement.getAttribute('data-theme') || 'light';
             const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
             if (toggleBtn) {
-                toggleBtn.setAttribute('aria-pressed', currentEffective === 'dark' ? 'true' : 'false');
+                const isDark = currentEffective === 'dark';
+                toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+                const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
+                toggleBtn.setAttribute('title', titleText);
+                toggleBtn.setAttribute('aria-label', titleText);
             }
         })();
 
@@ -3667,7 +3646,11 @@
                     document.documentElement.setAttribute('data-theme', effective);
                     const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
                     if (toggleBtn) {
-                        toggleBtn.setAttribute('aria-pressed', effective === 'dark' ? 'true' : 'false');
+                        const isDark = effective === 'dark';
+                        toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+                        const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
+                        toggleBtn.setAttribute('title', titleText);
+                        toggleBtn.setAttribute('aria-label', titleText);
                     }
                 }
             });
