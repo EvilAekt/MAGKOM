@@ -469,7 +469,7 @@ class PenempatanController extends Controller
 
         return response()->streamDownload(function () use ($records, $sanitize) {
             $handle = fopen('php://output', 'w');
-            fwrite($handle, "\xEF\xBB\xBF");
+            fwrite($handle, "\xEF\xBB\xBFsep=,\r\n");
             fputcsv($handle, [
                 'No Penempatan',
                 'Nama Peserta',

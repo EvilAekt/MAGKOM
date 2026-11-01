@@ -20,6 +20,7 @@ use App\Services\ExportReportService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LaporanController extends Controller
@@ -194,43 +195,52 @@ class LaporanController extends Controller
 
     /**
      * Ekspor rekapitulasi data pendaftaran peserta (AC-17-1, F-17).
+     * Mendukung format XLSX (default untuk tabel rapi bergaris) dan CSV Sanitasi.
      */
-    public function pendaftaran(Request $request): StreamedResponse
+    public function pendaftaran(Request $request): Response
     {
         return $this->exportService->exportPendaftaran(
             $request->user(),
-            $request->only(['bulan_magang_id', 'status', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal'])
+            $request->only(['bulan_magang_id', 'status', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal']),
+            $request->input('format', 'csv')
         );
     }
 
     /**
      * Ekspor rekapitulasi data penempatan peserta (AC-17-1, F-17).
      */
-    public function penempatan(Request $request): StreamedResponse
+    public function penempatan(Request $request): Response
     {
         return $this->exportService->exportPenempatan(
             $request->user(),
-            $request->only(['status', 'jalur', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal'])
+            $request->only(['status', 'jalur', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal']),
+            $request->input('format', 'csv')
         );
     }
 
     /**
      * Ekspor realisasi kuota umum vs slot khusus (AC-17-1, F-17).
      */
-    public function kuota(Request $request): StreamedResponse
+    public function kuota(Request $request): Response
     {
-        return $this->exportService->exportRealisasiKuota($request->user());
+        return $this->exportService->exportRealisasiKuota(
+            $request->user(),
+            $request->input('format', 'csv')
+        );
     }
 
     /**
      * Ekspor rekapitulasi nilai peserta (Hanya SuperAdmin, AC-17-1, A-20).
      */
-    public function nilai(Request $request): StreamedResponse
+    public function nilai(Request $request): Response
     {
         if (! $request->user()->isSuperAdmin()) {
             throw new AuthorizationException('Rekapitulasi nilai hanya dapat diakses oleh SuperAdmin (PRD 3.3, A-20).');
         }
 
-        return $this->exportService->exportNilai($request->user());
+        return $this->exportService->exportNilai(
+            $request->user(),
+            $request->input('format', 'csv')
+        );
     }
 }

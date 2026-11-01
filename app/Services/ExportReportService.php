@@ -12,12 +12,15 @@ use App\Models\Penilaian;
 use App\Models\SlotKhusus;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportReportService
 {
     public function __construct(
-        protected AuditService $auditService
+        protected AuditService $auditService,
+        protected XlsxExportService $xlsxExportService
     ) {}
 
     /**
@@ -45,12 +48,13 @@ class ExportReportService
 
     /**
      * Ekspor rekapitulasi pengajuan pendaftaran (AC-17-1).
+     * Mendukung format XLSX (Tabel terformat & rapi) dan CSV Sanitasi (sep=,).
      *
      * @param  array<string, mixed>  $filters
      */
-    public function exportPendaftaran(User $user, array $filters = []): StreamedResponse
+    public function exportPendaftaran(User $user, array $filters = [], string $format = 'csv'): Response
     {
-        $query = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan']);
+        $query = Pendaftaran::with(['user.profil.jurusan', 'bulanMagang', 'kuota.jurusan']);
 
         if (! empty($filters['bulan_magang_id'])) {
             $query->where('bulan_magang_id', $filters['bulan_magang_id']);
@@ -80,9 +84,9 @@ class ExportReportService
             tabel: 'pendaftaran',
             idData: null,
             nilaiLama: null,
-            nilaiBaru: ['filter' => $filters, 'total_baris' => $records->count()],
+            nilaiBaru: ['filter' => $filters, 'total_baris' => $records->count(), 'format' => $format],
             detail: [
-                'aksi' => 'ekspor_pendaftaran_csv',
+                'aksi' => $format === 'xlsx' ? 'ekspor_pendaftaran_xlsx' : 'ekspor_pendaftaran_csv',
                 'entitas' => 'pendaftaran',
                 'jumlah_baris' => $records->count(),
                 'filter' => $filters,
@@ -94,19 +98,51 @@ class ExportReportService
             'Jurusan', 'Bulan Mulai', 'Durasi (Bulan)', 'Status', 'Tanggal Diajukan',
         ];
 
+        if ($format === 'xlsx') {
+            $rows = [];
+            foreach ($records as $p) {
+                $jurusanNama = $p->kuota?->jurusan?->nama_jurusan
+                    ?? ($p->user?->profil?->jurusan?->nama_jurusan ?? '-');
+
+                $rows[] = [
+                    $p->id,
+                    $p->user?->nama ?? '-',
+                    $p->user?->email ?? '-',
+                    $p->user?->profil?->nim_nisn ?? '-',
+                    $p->user?->profil?->institusi ?? '-',
+                    $jurusanNama,
+                    $p->bulanMagang?->bulan_mulai?->translatedFormat('F Y') ?? ($p->bulanMagang?->bulan_mulai?->format('F Y') ?? '-'),
+                    $p->durasi_bulan ?? 0,
+                    $p->status?->label() ?? (string) ($p->status?->value ?? '-'),
+                    $p->diajukan_at?->toDateTimeString() ?? $p->created_at->toDateTimeString(),
+                ];
+            }
+
+            return $this->xlsxExportService->downloadXlsx(
+                'rekap-pendaftaran-'.date('YmdHis').'.xlsx',
+                'Rekap Pendaftaran',
+                $headers,
+                $rows
+            );
+        }
+
         return response()->streamDownload(function () use ($headers, $records) {
             $handle = fopen('php://output', 'w');
-            fwrite($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
+            // UTF-8 BOM + direktif sep=, untuk kompatibilitas Microsoft Excel (AC-17-2)
+            fwrite($handle, "\xEF\xBB\xBFsep=,\r\n");
             fputcsv($handle, $headers);
 
             foreach ($records as $p) {
+                $jurusanNama = $p->kuota?->jurusan?->nama_jurusan
+                    ?? ($p->user?->profil?->jurusan?->nama_jurusan ?? '-');
+
                 fputcsv($handle, [
                     $this->sanitizeCell($p->id),
                     $this->sanitizeCell($p->user?->nama),
                     $this->sanitizeCell($p->user?->email),
                     $this->sanitizeCell($p->user?->profil?->nim_nisn),
                     $this->sanitizeCell($p->user?->profil?->institusi),
-                    $this->sanitizeCell($p->kuota?->jurusan?->nama_jurusan),
+                    $this->sanitizeCell($jurusanNama),
                     $this->sanitizeCell($p->bulanMagang?->bulan_mulai?->format('F Y')),
                     $this->sanitizeCell($p->durasi_bulan),
                     $this->sanitizeCell($p->status?->value),
@@ -125,9 +161,9 @@ class ExportReportService
      *
      * @param  array<string, mixed>  $filters
      */
-    public function exportPenempatan(User $user, array $filters = []): StreamedResponse
+    public function exportPenempatan(User $user, array $filters = [], string $format = 'csv'): Response
     {
-        $query = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan']);
+        $query = Penempatan::with(['peserta.profil.jurusan', 'pembimbing', 'bidang', 'kuota.jurusan', 'slotKhusus']);
 
         if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
@@ -156,9 +192,9 @@ class ExportReportService
             tabel: 'penempatan',
             idData: null,
             nilaiLama: null,
-            nilaiBaru: ['filter' => $filters, 'total_baris' => $records->count()],
+            nilaiBaru: ['filter' => $filters, 'total_baris' => $records->count(), 'format' => $format],
             detail: [
-                'aksi' => 'ekspor_penempatan_csv',
+                'aksi' => $format === 'xlsx' ? 'ekspor_penempatan_xlsx' : 'ekspor_penempatan_csv',
                 'entitas' => 'penempatan',
                 'jumlah_baris' => $records->count(),
                 'filter' => $filters,
@@ -171,24 +207,56 @@ class ExportReportService
             'Tanggal Mulai', 'Tanggal Selesai', 'Status Penempatan',
         ];
 
+        if ($format === 'xlsx') {
+            $rows = [];
+            foreach ($records as $pen) {
+                $jurusanNama = $pen->kuota?->jurusan?->nama_jurusan
+                    ?? ($pen->peserta?->profil?->jurusan?->nama_jurusan ?? '-');
+
+                $rows[] = [
+                    $pen->id,
+                    $pen->peserta?->nama ?? '-',
+                    $pen->peserta?->profil?->nim_nisn ?? '-',
+                    $pen->peserta?->profil?->institusi ?? '-',
+                    $jurusanNama,
+                    $pen->jalur?->label() ?? (string) ($pen->jalur?->value ?? '-'),
+                    $pen->pembimbing?->nama ?? '-',
+                    $pen->bidang?->nama_bidang ?? '-',
+                    $pen->tgl_mulai?->toDateString() ?? '-',
+                    $pen->tgl_selesai?->toDateString() ?? '-',
+                    $pen->status?->label() ?? (string) ($pen->status?->value ?? '-'),
+                ];
+            }
+
+            return $this->xlsxExportService->downloadXlsx(
+                'rekap-penempatan-'.date('YmdHis').'.xlsx',
+                'Rekap Penempatan',
+                $headers,
+                $rows
+            );
+        }
+
         return response()->streamDownload(function () use ($headers, $records) {
             $handle = fopen('php://output', 'w');
-            fwrite($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
+            fwrite($handle, "\xEF\xBB\xBFsep=,\r\n"); // UTF-8 BOM + sep=, directive
             fputcsv($handle, $headers);
 
             foreach ($records as $pen) {
+                $jurusanNama = $pen->kuota?->jurusan?->nama_jurusan
+                    ?? ($pen->peserta?->profil?->jurusan?->nama_jurusan ?? '-');
+
                 fputcsv($handle, [
                     $this->sanitizeCell($pen->id),
                     $this->sanitizeCell($pen->peserta?->nama),
                     $this->sanitizeCell($pen->peserta?->profil?->nim_nisn),
                     $this->sanitizeCell($pen->peserta?->profil?->institusi),
-                    $this->sanitizeCell($pen->kuota?->jurusan?->nama_jurusan),
-                    $this->sanitizeCell($pen->jalur?->value),
+                    $this->sanitizeCell($jurusanNama),
+                    $this->sanitizeCell($pen->jalur?->label() ?? $pen->jalur?->value),
                     $this->sanitizeCell($pen->pembimbing?->nama),
                     $this->sanitizeCell($pen->bidang?->nama_bidang),
                     $this->sanitizeCell($pen->tgl_mulai?->toDateString()),
                     $this->sanitizeCell($pen->tgl_selesai?->toDateString()),
-                    $this->sanitizeCell($pen->status?->value),
+                    $this->sanitizeCell($pen->status?->label() ?? $pen->status?->value),
                 ]);
             }
 
@@ -201,7 +269,7 @@ class ExportReportService
     /**
      * Ekspor realisasi kuota umum vs slot khusus (AC-17-1).
      */
-    public function exportRealisasiKuota(User $user): StreamedResponse
+    public function exportRealisasiKuota(User $user, string $format = 'csv'): Response
     {
         $kuotaList = Kuota::with(['bulanMagang', 'jurusan'])->get();
         $slotKhususList = SlotKhusus::all();
@@ -211,9 +279,9 @@ class ExportReportService
             tabel: 'kuota',
             idData: null,
             nilaiLama: null,
-            nilaiBaru: ['kuota_count' => $kuotaList->count(), 'slot_count' => $slotKhususList->count()],
+            nilaiBaru: ['kuota_count' => $kuotaList->count(), 'slot_count' => $slotKhususList->count(), 'format' => $format],
             detail: [
-                'aksi' => 'ekspor_realisasi_kuota_csv',
+                'aksi' => $format === 'xlsx' ? 'ekspor_realisasi_kuota_xlsx' : 'ekspor_realisasi_kuota_csv',
                 'entitas' => 'kuota_dan_slot',
                 'jumlah_baris' => $kuotaList->count() + $slotKhususList->count(),
             ]
@@ -221,9 +289,43 @@ class ExportReportService
 
         $headers = ['Kategori Kuota', 'Periode Bulan', 'Target/Jurusan', 'Alokasi Jumlah', 'Terisi', 'Sisa'];
 
+        if ($format === 'xlsx') {
+            $rows = [];
+            foreach ($kuotaList as $k) {
+                $sisa = max(0, $k->jumlah - $k->terisi);
+                $rows[] = [
+                    'Kuota Umum',
+                    $k->bulanMagang?->bulan_mulai?->format('F Y') ?? '-',
+                    $k->jurusan?->nama_jurusan ?? '-',
+                    $k->jumlah,
+                    $k->terisi,
+                    $sisa,
+                ];
+            }
+
+            foreach ($slotKhususList as $s) {
+                $sisaSlot = max(0, $s->jumlah - $s->terisi);
+                $rows[] = [
+                    'Slot Khusus',
+                    $s->bulan_mulai?->format('F Y') ?? '-',
+                    'Internal / Kerjasama',
+                    $s->jumlah,
+                    $s->terisi,
+                    $sisaSlot,
+                ];
+            }
+
+            return $this->xlsxExportService->downloadXlsx(
+                'realisasi-kuota-'.date('YmdHis').'.xlsx',
+                'Realisasi Kuota',
+                $headers,
+                $rows
+            );
+        }
+
         return response()->streamDownload(function () use ($headers, $kuotaList, $slotKhususList) {
             $handle = fopen('php://output', 'w');
-            fwrite($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
+            fwrite($handle, "\xEF\xBB\xBFsep=,\r\n"); // UTF-8 BOM + sep=, directive
             fputcsv($handle, $headers);
 
             foreach ($kuotaList as $k) {
@@ -259,7 +361,7 @@ class ExportReportService
     /**
      * Ekspor rekapitulasi penilaian peserta - HANYA KHUSUS SuperAdmin (AC-17-1, A-20).
      */
-    public function exportNilai(User $user): StreamedResponse
+    public function exportNilai(User $user, string $format = 'csv'): Response
     {
         if (! $user->isSuperAdmin()) {
             throw new AuthorizationException('Rekapitulasi nilai hanya dapat diekspor oleh SuperAdmin (AC-17-1).');
@@ -274,9 +376,9 @@ class ExportReportService
             tabel: 'penilaian',
             idData: null,
             nilaiLama: null,
-            nilaiBaru: ['total_baris' => $records->count()],
+            nilaiBaru: ['total_baris' => $records->count(), 'format' => $format],
             detail: [
-                'aksi' => 'ekspor_nilai_superadmin_csv',
+                'aksi' => $format === 'xlsx' ? 'ekspor_nilai_superadmin_xlsx' : 'ekspor_nilai_superadmin_csv',
                 'entitas' => 'penilaian',
                 'jumlah_baris' => $records->count(),
             ]
@@ -287,9 +389,33 @@ class ExportReportService
             'Pembimbing Lapangan', 'Nilai Akhir', 'Predikat', 'Status', 'Catatan Evaluasi',
         ];
 
+        if ($format === 'xlsx') {
+            $rows = [];
+            foreach ($records as $nilai) {
+                $rows[] = [
+                    $nilai->id,
+                    $nilai->penempatan?->peserta?->nama ?? '-',
+                    $nilai->penempatan?->peserta?->profil?->nim_nisn ?? '-',
+                    $nilai->penempatan?->peserta?->profil?->institusi ?? '-',
+                    $nilai->pembimbing?->nama ?? '-',
+                    $nilai->nilai_akhir,
+                    $nilai->predikat ?? '-',
+                    $nilai->status?->value ?? '-',
+                    $nilai->catatan ?? '-',
+                ];
+            }
+
+            return $this->xlsxExportService->downloadXlsx(
+                'rekap-nilai-magkom-'.date('YmdHis').'.xlsx',
+                'Rekap Nilai',
+                $headers,
+                $rows
+            );
+        }
+
         return response()->streamDownload(function () use ($headers, $records) {
             $handle = fopen('php://output', 'w');
-            fwrite($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Microsoft Excel compatibility
+            fwrite($handle, "\xEF\xBB\xBFsep=,\r\n"); // UTF-8 BOM + sep=, directive
             fputcsv($handle, $headers);
 
             foreach ($records as $nilai) {
@@ -322,7 +448,7 @@ class ExportReportService
     {
         return response()->streamDownload(function () use ($headers, $rows) {
             $handle = fopen('php://output', 'w');
-            fwrite($handle, "\xEF\xBB\xBF"); // UTF-8 BOM for Excel
+            fwrite($handle, "\xEF\xBB\xBFsep=,\r\n"); // UTF-8 BOM + sep=, directive
 
             $sanitizedHeaders = array_map([$this, 'sanitizeCell'], $headers);
             fputcsv($handle, $sanitizedHeaders);
