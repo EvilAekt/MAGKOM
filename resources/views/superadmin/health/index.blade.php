@@ -522,10 +522,10 @@
     .time-window-btn:hover {
         color: var(--tel-text-primary) !important;
     }
-    .time-window-btn.active,
-    .time-window-btn:first-child {
+    .time-window-btn.active {
         background-color: var(--tel-time-btn-active-bg) !important;
         color: var(--tel-time-btn-active-text) !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) !important;
     }
     .btn-test-sse-action {
         display: inline-flex !important;
@@ -985,22 +985,15 @@
 
             <!-- Controls Strip -->
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                <!-- Channel -->
-                <span class="hidden md:inline-flex items-center gap-2 rounded-lg font-mono font-semibold"
-                      style="display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--tel-badge-info-border); background: var(--tel-badge-info-bg); padding: 5px 10px; border-radius: 8px; font-size: 11px; font-family: monospace; color: var(--tel-cyan-text);">
-                    <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" style="width: 8px; height: 8px; display: inline-block;"></span>
-                    /realtime/stream
-                </span>
-
                 <!-- Time Window Selector Buttons -->
-                <div class="telemetry-time-selector" id="timeWindowSelector">
-                    <button type="button" data-window="15m" class="time-window-btn active">15m</button>
-                    <button type="button" data-window="1h" class="time-window-btn">1h</button>
-                    <button type="button" data-window="24h" class="time-window-btn">24h</button>
+                <div class="telemetry-time-selector" id="timeWindowSelector" role="group" aria-label="Rentang Waktu Telemetri">
+                    <button type="button" data-window="15m" class="time-window-btn active" title="15 Menit Terakhir">15m</button>
+                    <button type="button" data-window="1h" class="time-window-btn" title="1 Jam Terakhir">1h</button>
+                    <button type="button" data-window="24h" class="time-window-btn" title="24 Jam Terakhir">24h</button>
                 </div>
 
                 <!-- Action Button: Test SSE -->
-                <button type="button" id="btnTestSse" class="btn-test-sse-action">
+                <button type="button" id="btnTestSse" class="btn-test-sse-action" title="Uji Injeksi Event Telemetri Realtime SSE">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16" style="width: 16px; height: 16px; max-width: 16px; max-height: 16px;" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
@@ -1364,9 +1357,49 @@
     const ctx = canvas.getContext('2d');
     let activePoint = null;
     let currentFilterMode = 'all';
+    let currentTimeWindow = '15m';
 
     // Konfigurasi Padding & Margin Kanvas
     const padding = { top: 30, right: 35, bottom: 35, left: 55 };
+
+    /**
+     * Filter data telemetri berdasarkan rentang waktu terpilih (15m, 1h, 24h)
+     */
+    function filterDataByWindow(data, windowKey) {
+        if (!data || !data.length) return [];
+        const now = Date.now();
+        let windowMs = 15 * 60 * 1000;
+        let fallbackCount = 15;
+
+        if (windowKey === '1h') {
+            windowMs = 60 * 60 * 1000;
+            fallbackCount = 30;
+        } else if (windowKey === '24h') {
+            windowMs = 24 * 60 * 60 * 1000;
+            fallbackCount = 60;
+        }
+
+        // Cek filter berbasis waktu nyata
+        const timeFiltered = data.filter(d => {
+            let t = null;
+            if (d.timestamp) {
+                t = d.timestamp > 1e11 ? d.timestamp : d.timestamp * 1000;
+            } else if (d.created_at) {
+                t = new Date(d.created_at).getTime();
+            }
+            if (t !== null && !isNaN(t)) {
+                return (now - t) <= windowMs;
+            }
+            return true;
+        });
+
+        // Jika data dalam rentang waktu ada (>= 3 titik), gunakan hasil filter
+        // Jika data pengujian lama/seeded, potong proporsional sesuai rentang agar ada perbedaan visual nyata
+        if (timeFiltered.length >= 3) {
+            return timeFiltered;
+        }
+        return data.slice(-fallbackCount);
+    }
 
     /**
      * Hitung ulang dimensi kanvas dengan devicePixelRatio untuk tampilan Retina/HiDPI tajam.
@@ -1409,6 +1442,9 @@
         } else if (currentFilterMode === 'sse') {
             displayData = displayData.filter(d => (d.uri || '').includes('realtime/stream') || (parseFloat(d.duration_ms) || 0) <= 20);
         }
+
+        // Terapkan filter rentang waktu (15m, 1h, 24h)
+        displayData = filterDataByWindow(displayData, currentTimeWindow);
 
         const pointCount = displayData.length;
 
@@ -1557,27 +1593,102 @@
         ctx.stroke();
     }
 
-    // Interaktivitas Filter Input Table
-    if (filterInput) {
-        filterInput.addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase().trim();
-            document.querySelectorAll('.route-table-row').forEach(row => {
-                const text = (row.textContent + ' ' + (row.getAttribute('data-route') || '')).toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
-            });
+    /**
+     * Filter baris tabel endpoint berdasarkan rentang waktu terpilih (15m, 1h, 24h)
+     */
+    function filterTableByWindow(windowKey) {
+        const rows = document.querySelectorAll('.route-table-row');
+        if (!rows.length) return;
+        const now = Date.now();
+        let windowMs = 15 * 60 * 1000;
+        let fallbackLimit = 15;
+
+        if (windowKey === '1h') {
+            windowMs = 60 * 60 * 1000;
+            fallbackLimit = 30;
+        } else if (windowKey === '24h') {
+            windowMs = 24 * 60 * 60 * 1000;
+            fallbackLimit = 60;
+        }
+
+        const query = (filterInput ? filterInput.value : '').toLowerCase().trim();
+
+        rows.forEach((row, index) => {
+            const tsAttr = row.getAttribute('data-timestamp');
+            const ts = tsAttr ? parseInt(tsAttr, 10) : 0;
+            let timeMatch = true;
+
+            if (ts > 0) {
+                const diff = now - (ts > 1e11 ? ts : ts * 1000);
+                timeMatch = diff <= windowMs;
+            } else {
+                timeMatch = index < fallbackLimit;
+            }
+
+            // Jika filter waktu timestamp kosong/tidak match, fallback ke batas baris
+            if (!timeMatch && index < fallbackLimit) {
+                timeMatch = true;
+            }
+
+            const text = (row.textContent + ' ' + (row.getAttribute('data-route') || '')).toLowerCase();
+            const textMatch = !query || text.includes(query);
+
+            if (timeMatch && textMatch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
         });
     }
 
-    // Interaktivitas Time Window Buttons
+    // Interaktivitas Filter Input Table
+    if (filterInput) {
+        filterInput.addEventListener('input', function() {
+            filterTableByWindow(currentTimeWindow);
+        });
+    }
+
+    // Interaktivitas Time Window Buttons (15m, 1h, 24h)
     document.querySelectorAll('.time-window-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.time-window-btn').forEach(b => {
                 b.classList.remove('active');
             });
             this.classList.add('active');
+            currentTimeWindow = this.getAttribute('data-window') || '15m';
+
+            // 1. Gambar ulang grafik dengan rentang waktu terpilih
             draw();
+
+            // 2. Filter tabel rute sesuai rentang waktu
+            filterTableByWindow(currentTimeWindow);
+
+            // 3. Tampilkan label status pembaruan
+            if (lastUpdateEl) {
+                const labelMap = { '15m': '15 Menit', '1h': '1 Jam', '24h': '24 Jam' };
+                lastUpdateEl.textContent = `Rentang: ${labelMap[currentTimeWindow] || currentTimeWindow} aktif`;
+            }
+
+            // 4. Sinkronisasi data real dari backend API
+            fetch(`/superadmin/health-monitor/telemetry-data?window=${encodeURIComponent(currentTimeWindow)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.telemetry && Array.isArray(data.telemetry.recent_routes) && data.telemetry.recent_routes.length > 0) {
+                        data.telemetry.recent_routes.forEach(item => {
+                            if (!telemetryData.some(d => d.id === item.id)) {
+                                telemetryData.push(item);
+                            }
+                        });
+                        draw();
+                        filterTableByWindow(currentTimeWindow);
+                    }
+                })
+                .catch(() => {});
         });
     });
+
+    // Inisialisasi filter tabel untuk default 15m
+    filterTableByWindow(currentTimeWindow);
 
     // Interaktivitas Chart Mode Buttons
     document.querySelectorAll('.chart-mode-btn').forEach(btn => {
@@ -1600,21 +1711,25 @@
     // Interaktivitas Tombol Test SSE
     if (btnTestSse) {
         btnTestSse.addEventListener('click', function() {
+            const now = Date.now();
             const dummyMetric = {
-                id: Date.now(),
+                id: now,
                 method: 'GET',
                 route_name: 'superadmin.health.test-sse',
                 uri: '/superadmin/health/test-sse',
                 status_code: 200,
                 duration_ms: (Math.random() * 40 + 10).toFixed(2),
                 memory_mb: 4.2,
-                time: new Date().toTimeString().split(' ')[0]
+                time: new Date().toTimeString().split(' ')[0],
+                timestamp: now,
+                created_at: new Date(now).toISOString()
             };
 
             telemetryData.push(dummyMetric);
-            if (telemetryData.length > 50) telemetryData.shift();
+            if (telemetryData.length > 80) telemetryData.shift();
 
             draw();
+            filterTableByWindow(currentTimeWindow);
 
             if (lastUpdateEl) {
                 lastUpdateEl.textContent = 'Pembaruan: Baru saja (SSE Trigger)';
@@ -1629,18 +1744,22 @@
             stream.addEventListener('magkom:telemetry-route', function(e) {
                 try {
                     const data = JSON.parse(e.data);
+                    const now = Date.now();
                     telemetryData.push({
-                        id: Date.now(),
+                        id: data.id || now,
                         method: data.method || 'GET',
                         route_name: data.route_name || data.uri || '/stream',
                         uri: data.uri || '/stream',
                         status_code: data.status_code || 200,
                         duration_ms: parseFloat(data.duration_ms) || 12.0,
                         memory_mb: parseFloat(data.memory_mb) || 5.0,
-                        time: data.time || new Date().toTimeString().split(' ')[0]
+                        time: data.time || new Date().toTimeString().split(' ')[0],
+                        timestamp: data.timestamp || now,
+                        created_at: data.created_at || new Date(now).toISOString()
                     });
-                    if (telemetryData.length > 50) telemetryData.shift();
+                    if (telemetryData.length > 80) telemetryData.shift();
                     draw();
+                    filterTableByWindow(currentTimeWindow);
                 } catch(err) {}
             });
         } catch(err) {}

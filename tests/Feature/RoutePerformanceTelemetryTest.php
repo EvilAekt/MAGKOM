@@ -169,4 +169,53 @@ class RoutePerformanceTelemetryTest extends TestCase
             'uri' => '/realtime/stream',
         ]);
     }
+
+    public function test_health_monitor_telemetry_data_endpoint_returns_json_snapshot(): void
+    {
+        $superadmin = $this->createSuperAdmin();
+
+        $this->actingAs($superadmin);
+
+        RouteMetric::create([
+            'method' => 'GET',
+            'route_name' => 'peserta.dashboard',
+            'uri' => '/peserta/dashboard',
+            'status_code' => 200,
+            'duration_ms' => 28.5,
+            'memory_mb' => 14.2,
+            'user_id' => $superadmin->id,
+            'created_at' => now(),
+        ]);
+
+        $response = $this->get(route('superadmin.health.telemetry-data'));
+
+        $response->assertOk();
+        $response->assertJsonStructure([
+            'db' => ['status', 'latency_ms', 'driver', 'pool_active', 'pool_max', 'pool_percent'],
+            'php' => ['memory_used_mb', 'memory_peak_mb', 'memory_limit_mb', 'memory_percent'],
+            'cache' => ['driver', 'latency_ms', 'status'],
+            'storage' => ['is_writable', 'disk_free_gb', 'disk_total_gb', 'disk_used_percent'],
+            'telemetry' => ['p95_ms', 'p50_ms', 'total_requests', 'rpm', 'recent_routes'],
+            'timestamp',
+        ]);
+
+        $data = $response->json();
+        $this->assertTrue($data['db']['status']);
+        $this->assertGreaterThan(0, $data['telemetry']['total_requests']);
+        $this->assertNotEmpty($data['telemetry']['recent_routes']);
+    }
+
+    public function test_health_monitor_telemetry_data_supports_time_windows(): void
+    {
+        $superadmin = User::factory()->create(['role' => 'superadmin']);
+        $this->actingAs($superadmin);
+
+        foreach (['15m', '1h', '24h'] as $window) {
+            $response = $this->get(route('superadmin.health.telemetry-data', ['window' => $window]));
+            $response->assertOk();
+            $data = $response->json();
+            $this->assertEquals($window, $data['telemetry']['time_window']);
+            $this->assertIsArray($data['telemetry']['recent_routes']);
+        }
+    }
 }
