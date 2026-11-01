@@ -781,6 +781,8 @@
 
     /* 14. Table & Scrollable Container Capping (Expanded Proportional Dimensions) */
     .telemetry-table-container {
+        position: relative !important;
+        contain: paint !important;
         min-height: 360px !important;
         max-height: 480px !important;
         overflow-y: auto !important;
@@ -957,6 +959,10 @@
     }
     .telemetry-cockpit-shell {
         margin-bottom: 1.5rem !important; /* Jarak teratur 24px persis sebelum footer */
+        contain: layout style !important;
+    }
+    .telemetry-cockpit-shell > * {
+        min-height: 0 !important;
     }
     #mainContent,
     .dashboard-main,

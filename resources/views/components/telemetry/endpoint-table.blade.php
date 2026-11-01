@@ -3,7 +3,7 @@
 ])
 
 {{-- 6. ROUTE TELEMETRY TABLE (AC-1, AC-2, AC-6: Capped Height, Clean Spacing, Dual-Theme Parity) --}}
-<div class="telemetry-card mb-0 overflow-hidden" style="padding: 0;">
+<div class="telemetry-card mb-0" style="padding: 0; overflow: hidden !important; contain: paint;">
     <div class="telemetry-card-header" style="padding: 12px 16px; margin-bottom: 0;">
         <div style="display: flex; align-items: center; gap: 8px;">
             <span class="h-2 w-2 rounded-full bg-emerald-500" style="width: 8px; height: 8px; display: inline-block;"></span>
