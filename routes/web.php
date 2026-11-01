@@ -383,6 +383,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 
     // Telemetri Kesehatan Sistem & Infrastruktur
     Route::get('/health-monitor', [HealthMonitorController::class, 'index'])->name('health.index');
+    Route::get('/health-monitor/telemetry-data', [HealthMonitorController::class, 'telemetryData'])->name('health.telemetry-data');
     Route::post('/health-monitor/security-sweep', [HealthMonitorController::class, 'runSecuritySweep'])->name('health.security-sweep');
     Route::post('/health-monitor/optimize-db', [HealthMonitorController::class, 'optimizeDatabase'])->name('health.optimize-db');
     Route::post('/health-monitor/clear-cache', [HealthMonitorController::class, 'clearSystemCache'])->name('health.clear-cache');

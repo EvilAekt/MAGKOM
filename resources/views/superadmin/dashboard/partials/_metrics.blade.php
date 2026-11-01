@@ -36,11 +36,11 @@
         trendType="warning"
         :trendDirection="$antreanMelebihiSla > 0 ? 'down' : 'up'"
         :trendText="$antreanMelebihiSla > 0 ? $antreanMelebihiSla . ' SLA' : 'Tertib'"
-        subText="3 lewat SLA · FIFO"
+        subText="3 lewat SLA"
         :sparkBars="[75, 80, 70, 85, 90, 65, 60]"
         col="col-md-3 col-sm-6 col-xs-12 sa-metric-card-col warn"
     >
-        <span class="sa-sr-only">Berkas perlu ditinjau</span>
+        <span class="sa-sr-only">Berkas perlu ditinjau FIFO</span>
     </x-gentelella.tile-stat>
 
     {{-- Card 3: Peserta Aktif --}}

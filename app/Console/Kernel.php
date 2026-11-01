@@ -34,6 +34,12 @@ class Kernel extends ConsoleKernel
             ->dailyAt('03:00')
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
+
+        // Pemangkasan metrik telemetri & event outbox lama (Cegah Bloat Basis Data)
+        $schedule->call(function () {
+            \App\Models\RouteMetric::pruneOld(days: 3, keepMax: 3000);
+            app(\App\Services\RealtimeEventService::class)->pruneOldEvents(days: 3);
+        })->dailyAt('03:30')->timezone('Asia/Jakarta');
     }
 
     /**

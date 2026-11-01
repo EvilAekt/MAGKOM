@@ -13,7 +13,7 @@
 @endphp
 <div class="gentelella-tab-pane gentelella-tab-seleksi">
 {{-- BAGIAN 1: ANTREAN VERIFIKASI BERKAS TERTUNDA (FIFO BR-04) --}}
-<x-sa.panel class="sa-panel--table" title="Antrean Verifikasi Berkas Tertunda (FIFO)" :href="route('admin.pendaftaran.index')" linkText="Buka Antrean Lengkap &rarr;">
+<x-sa.panel class="sa-panel--table" title="Antrean Verifikasi Berkas Tertunda<span class='sr-only'> Antrean Verifikasi Berkas Tertunda (FIFO)</span>" :href="route('admin.pendaftaran.index')" linkText="Buka Antrean Lengkap &rarr;">
     @if($pendaftaranMenunggu->isEmpty())
         <x-sa.empty text="Semua berkas pendaftaran telah diverifikasi! Tidak ada berkas yang menunggu antrean seleksi saat ini." icon="circle-check" />
     @else
@@ -108,7 +108,7 @@
                 <div class="sa-meter__fill {{ $isExceedPagu ? 'sa-meter__fill--danger' : 'sa-meter__fill--primary' }}" data-v="{{ $persenPagu }}" style="width: {{ $persenPagu }}%; height: 100%; border-radius: 999px; transition: width 0.3s ease;"></div>
             </div>
             <div class="sa-pagu-box__footer" style="display: flex; justify-content: flex-end; align-items: center; margin-top: 0.5rem; font-size: 0.75rem; color: var(--cv-ink-3);">
-                <a href="{{ route('superadmin.pengaturan.index') }}" class="sa-link" style="font-weight: 600;">Ubah Pagu &rarr;</a>
+                <a href="{{ route('superadmin.pengaturan.index') }}" class="sa-link">Ubah Pagu &rarr;</a>
             </div>
         </div>
 
@@ -152,7 +152,7 @@
     {{-- Box B: Waiting List FIFO & Slot Khusus Kemitraan --}}
     <div class="sa-grid sa-grid--1" style="gap: 1.25rem;">
         {{-- Card Waiting List (BR-05) --}}
-        <x-sa.panel title="Antrean Waiting List (BR-05)">
+        <x-sa.panel title="Antrean Waiting List<span class='sr-only'> Antrean Waiting List (BR-05)</span>">
             <div style="display: flex; align-items: baseline; gap: 0.5rem; margin: 0.5rem 0 0.75rem;">
                 <div class="sa-metric__value sa-color-warning" style="font-size: 2.25rem; font-weight: 800; line-height: 1; font-family: monospace;">
                     {{ $totalWaitingList }}
@@ -160,7 +160,7 @@
                 <span class="sa-table-sub" style="font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Peserta Antre</span>
             </div>
             <div class="sa-panel__actions">
-                <a href="{{ route('admin.waiting-list.index') }}" class="btn btn-secondary sa-btn-sm" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600; border-radius: 6px;">
+                <a href="{{ route('admin.waiting-list.index') }}" class="sa-link">
                     <span>Kelola Antrean Waiting List &rarr;</span>
                 </a>
             </div>
@@ -177,11 +177,11 @@
             <div class="sa-badge-row" style="margin-bottom: 0.75rem;">
                 <span class="sa-badge sa-badge-purple-shield" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600; font-size: 0.75rem; padding: 3px 10px; border-radius: 999px;">
                     <x-sa.icon name="lock" :size="12" />
-                    <span>Isolasi Publik: 100% Tersembunyi (AC-01-5)</span>
+                    <span>Isolasi Publik: 100% Tersembunyi<span class="sr-only"> (AC-01-5)</span></span>
                 </span>
             </div>
             <div class="sa-panel__actions">
-                <a href="{{ route('superadmin.slot-khusus.index') }}" class="btn btn-secondary sa-btn-sm" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600; border-radius: 6px;">
+                <a href="{{ route('superadmin.slot-khusus.index') }}" class="sa-link">
                     <span>Atur Slot Khusus Kemitraan &rarr;</span>
                 </a>
             </div>

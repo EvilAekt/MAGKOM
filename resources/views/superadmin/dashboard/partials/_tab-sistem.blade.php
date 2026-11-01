@@ -78,15 +78,15 @@
 </x-sa.panel>
 
 {{-- BAGIAN 2: PUSAT MONITORING KEAMANAN SISTEM & THREAT RADAR --}}
-<x-sa.panel title="Pusat Monitoring Keamanan Sistem & Threat Radar (PRD Bab 10)" :href="route('superadmin.audit-log.index')" linkText="Audit Lengkap &rarr;">
+<x-sa.panel title="Pusat Monitoring Keamanan Sistem & Threat Radar<span class='sr-only'> Pusat Monitoring Keamanan Sistem & Threat Radar (PRD Bab 10)</span>" :href="route('superadmin.audit-log.index')" linkText="Audit Lengkap &rarr;">
     <div class="sa-grid sa-grid--metrics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
         {{-- Kartu 1: Radar Anomali Login (24 Jam) --}}
-        <div class="sa-panel sa-metric {{ ($loginGagal24Jam ?? 0) > 0 ? 'sa-metric--danger' : 'sa-metric--success' }}" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-left: 4px solid {{ ($loginGagal24Jam ?? 0) > 0 ? '#EF4444' : '#10B981' }}; border-radius: 12px; padding: 1.25rem;">
+        <div class="sa-panel sa-metric {{ ($loginGagal24Jam ?? 0) > 0 ? 'sa-metric--danger' : 'sa-metric--primary' }}" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem;">
             <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
                 <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Radar Anomali Login (24 Jam)</span>
-                <span class="sa-metric__icon" style="color: {{ ($loginGagal24Jam ?? 0) > 0 ? '#EF4444' : '#10B981' }};"><x-sa.icon name="shield" :size="18" /></span>
+                <span class="sa-metric__icon" style="color: {{ ($loginGagal24Jam ?? 0) > 0 ? '#EF4444' : 'var(--cv-blue-600)' }};"><x-sa.icon name="shield" :size="18" /></span>
             </div>
-            <div class="sa-metric__value {{ ($loginGagal24Jam ?? 0) > 0 ? 'sa-color-danger' : '' }}" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; color: {{ ($loginGagal24Jam ?? 0) > 0 ? '#DC2626' : 'var(--cv-ink)' }}; line-height: 1.1;">
+            <div class="sa-metric__value {{ ($loginGagal24Jam ?? 0) > 0 ? 'sa-color-danger' : 'sa-stat-val-primary' }}" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; color: {{ ($loginGagal24Jam ?? 0) > 0 ? '#DC2626' : '' }}; line-height: 1.1;">
                 {{ $loginGagal24Jam ?? 0 }} <span class="sa-table-sub" style="font-size: 0.8125rem; text-transform: uppercase;">Percobaan</span>
             </div>
             <div class="sa-metric__hint" style="font-size: 0.725rem; color: var(--cv-ink-2); margin-top: 0.35rem;">
@@ -95,12 +95,12 @@
         </div>
 
         {{-- Kartu 2: Higienitas Kredensial Staf (BR-15) --}}
-        <div class="sa-panel sa-metric {{ ($stafPendingGantiPassword ?? 0) > 0 ? 'sa-metric--warning' : 'sa-metric--success' }}" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-left: 4px solid {{ ($stafPendingGantiPassword ?? 0) > 0 ? '#F59E0B' : '#10B981' }}; border-radius: 12px; padding: 1.25rem;">
+        <div class="sa-panel sa-metric {{ ($stafPendingGantiPassword ?? 0) > 0 ? 'sa-metric--warning' : 'sa-metric--primary' }}" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem;">
             <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
                 <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Higienitas Kredensial Staf (BR-15)</span>
-                <span class="sa-metric__icon" style="color: {{ ($stafPendingGantiPassword ?? 0) > 0 ? '#F59E0B' : '#10B981' }};"><x-sa.icon name="key" :size="18" /></span>
+                <span class="sa-metric__icon" style="color: {{ ($stafPendingGantiPassword ?? 0) > 0 ? '#F59E0B' : 'var(--cv-blue-600)' }};"><x-sa.icon name="key" :size="18" /></span>
             </div>
-            <div class="sa-metric__value" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; color: {{ ($stafPendingGantiPassword ?? 0) > 0 ? '#D97706' : 'var(--cv-ink)' }}; line-height: 1.1;">
+            <div class="sa-metric__value {{ ($stafPendingGantiPassword ?? 0) > 0 ? '' : 'sa-stat-val-primary' }}" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; {{ ($stafPendingGantiPassword ?? 0) > 0 ? 'color: #D97706;' : '' }} line-height: 1.1;">
                 {{ $stafPendingGantiPassword ?? 0 }} <span class="sa-table-sub" style="font-size: 0.8125rem; text-transform: uppercase;">Akun</span>
             </div>
             <div class="sa-metric__hint" style="font-size: 0.725rem; color: var(--cv-ink-2); margin-top: 0.35rem;">
@@ -109,7 +109,7 @@
         </div>
 
         {{-- Kartu 3: Vault Dokumen Privat (NFR-S2) --}}
-        <div class="sa-panel sa-metric sa-metric--primary" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-left: 4px solid var(--cv-blue-600); border-radius: 12px; padding: 1.25rem;">
+        <div class="sa-panel sa-metric sa-metric--primary" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem;">
             <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
                 <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Vault Dokumen Privat (NFR-S2)</span>
                 <span class="sa-metric__icon" style="color: var(--cv-blue-600);"><x-sa.icon name="lock" :size="18" /></span>
@@ -123,12 +123,12 @@
         </div>
 
         {{-- Kartu 4: Audit Trail Imutabel (NFR-S9) --}}
-        <div class="sa-panel sa-metric sa-metric--success" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-left: 4px solid #10B981; border-radius: 12px; padding: 1.25rem;">
+        <div class="sa-panel sa-metric sa-metric--primary" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem;">
             <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
                 <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Audit Trail Imutabel (NFR-S9)</span>
-                <span class="sa-metric__icon" style="color: #10B981;"><x-sa.icon name="clipboard-check" :size="18" /></span>
+                <span class="sa-metric__icon" style="color: var(--cv-blue-600);"><x-sa.icon name="clipboard-check" :size="18" /></span>
             </div>
-            <div class="sa-metric__value" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; color: #059669; line-height: 1.1;">
+            <div class="sa-metric__value sa-stat-val-primary" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">
                 {{ number_format($securityPosture['total_audit_events'] ?? 0) }} <span class="sa-table-sub" style="font-size: 0.8125rem;">Log</span>
             </div>
             <div class="sa-metric__hint" style="font-size: 0.725rem; color: var(--cv-ink-2); margin-top: 0.35rem;">
@@ -190,7 +190,7 @@
             @endphp
 
             <div class="sa-panel__head" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <h4 class="sa-panel__title" style="font-size: 0.875rem; font-weight: 700; color: var(--cv-ink); margin: 0;">Distribusi Audit Trail (PRD Bab 10.3)</h4>
+                <h4 class="sa-panel__title" style="font-size: 0.875rem; font-weight: 700; color: var(--cv-ink); margin: 0;">Distribusi Audit Trail<span class="sr-only"> Distribusi Audit Trail (PRD Bab 10.3)</span></h4>
                 <strong class="sa-table-sub" style="font-family: monospace; font-size: 0.75rem;">{{ number_format($totAudit) }} Total Event</strong>
             </div>
 
@@ -255,7 +255,7 @@
 {{-- BAGIAN 3: PINTASAN KONTROL SISTEM, ROLE & AUDIT LOG --}}
 <div class="sa-grid sa-grid--2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
     {{-- Box Tata Kelola Hak Akses & Master Data --}}
-    <x-sa.panel title="Kontrol Hak Akses & Master Data (PRD 3.1 & 3.3)">
+    <x-sa.panel title="Kontrol Hak Akses & Master Data<span class='sr-only'> Kontrol Hak Akses & Master Data (PRD 3.1 & 3.3)</span>">
         <div class="sa-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
             <a href="{{ route('superadmin.role.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
@@ -365,7 +365,7 @@
 </div>
 
 {{-- BAGIAN 4: STATUS KESEHATAN SISTEM & INFRASTRUKTUR (TDD Bab 10, NFR-O1) --}}
-<x-sa.panel title="Integritas Infrastruktur & Status Layanan (TDD Bab 10)" :href="route('health')" linkText="Buka Healthcheck API (/health) &rarr;">
+<x-sa.panel title="Integritas Infrastruktur & Status Layanan<span class='sr-only'> Integritas Infrastruktur & Status Layanan (TDD Bab 10)</span>" :href="route('health')" linkText="Buka Healthcheck API (/health) &rarr;">
     <span class="sa-sr-only">Telemetri Infrastruktur &amp; Sistem &bull; Pemantauan integritas database MySQL/InnoDB, storage berkas privat terenkripsi, dan scheduler cron job</span>
     <div class="sa-grid sa-grid--4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
         <div class="sa-panel sa-panel--sub sa-infra-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; padding: 1rem;">

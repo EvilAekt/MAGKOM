@@ -85,7 +85,7 @@
         </div>
 
         <!-- Card 3: Pembimbing Lapangan -->
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow-subtle); border-top: 4px solid var(--amber-500);">
+        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow-subtle); border-top: 4px solid var(--amber-600, #D97706);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                 <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--amber-700); background: var(--amber-100); padding: 0.2rem 0.5rem; border-radius: 4px;">Pembimbing</span>
                 <span style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900);">{{ $roleCounts['pembimbing'] ?? 0 }}</span>

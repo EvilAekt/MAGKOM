@@ -29,7 +29,7 @@
         </div>
 
         <div class="sa-attn-hazard__body">
-            <h4>Berkas terlama di antrean verifikasi — batas 3 hari kerja</h4>
+            <h4>Berkas terlama di antrean verifikasi</h4>
             <div class="sa-attn-hazard__chips">
                 <span class="sa-hazard-chip">Rizky Ananda <b>+2h</b></span>
                 <span class="sa-hazard-chip">Nadia Putri <b>+1h</b></span>

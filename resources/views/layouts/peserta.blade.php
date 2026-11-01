@@ -854,22 +854,33 @@
             outline-offset: 2px;
         }
 
-        /* Dual-Icon State Sesuai AC-3 */
-        html:not([data-theme="dark"]) .sidebar-footer .sun-icon {
+        /* Single-Icon State Dinamis Tombol Tema Sidebar (Bulan saat Terang, Lampu saat Gelap) */
+        html:not([data-theme="dark"]) .sidebar-footer .sun-icon,
+        html:not([data-theme="dark"]) .sidebar-footer .light-icon,
+        html:not([data-theme="dark"]) #sidebarThemeToggleBtn .sun-icon,
+        html:not([data-theme="dark"]) #sidebarThemeToggleBtn .light-icon {
             display: none !important;
         }
 
-        html:not([data-theme="dark"]) .sidebar-footer .moon-icon {
-            display: block !important;
+        html:not([data-theme="dark"]) .sidebar-footer .moon-icon,
+        html:not([data-theme="dark"]) #sidebarThemeToggleBtn .moon-icon {
+            display: inline-block !important;
             color: rgba(255, 255, 255, 0.85);
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
         }
 
-        html[data-theme="dark"] .sidebar-footer .sun-icon {
-            display: block !important;
+        html[data-theme="dark"] .sidebar-footer .sun-icon,
+        html[data-theme="dark"] .sidebar-footer .light-icon,
+        html[data-theme="dark"] #sidebarThemeToggleBtn .sun-icon,
+        html[data-theme="dark"] #sidebarThemeToggleBtn .light-icon {
+            display: inline-block !important;
             color: var(--magkom-sun-yellow, #FFCB05) !important;
+            filter: drop-shadow(0 0 6px rgba(255, 203, 5, 0.45));
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
         }
 
-        html[data-theme="dark"] .sidebar-footer .moon-icon {
+        html[data-theme="dark"] .sidebar-footer .moon-icon,
+        html[data-theme="dark"] #sidebarThemeToggleBtn .moon-icon {
             display: none !important;
         }
 
@@ -1602,6 +1613,28 @@
                 padding: 0 16px;
             }
         }
+
+        /* Persistent Dark Navy Footer for Peserta Layout */
+        .gentelella-footer,
+        .peserta-footer {
+            background: #003566 !important;
+            border-top: 1px solid #2C3A4E !important;
+            padding: 0.85rem 2rem;
+            font-size: 0.75rem;
+            color: #94A3B8 !important;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 100%;
+            margin-top: auto;
+            box-sizing: border-box;
+        }
+
+        .gentelella-footer span,
+        .peserta-footer span {
+            color: #94A3B8 !important;
+            font-weight: 500;
+        }
     </style>
     @stack('styles')
 </head>
@@ -1733,11 +1766,13 @@
                 </svg>
             </a>
             <button type="button" id="sidebarThemeToggleBtn" class="sidebar-footer-btn" onclick="togglePortalThemeQuick()" title="{{ __('Ganti Mode Terang / Gelap') }}" aria-label="{{ __('Ganti Mode Terang / Gelap') }}" aria-pressed="false">
-                <svg class="sun-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" fill="currentColor" fill-opacity="0.25"></path>
+                    <path d="M9 18h6"></path>
+                    <path d="M10 22h4"></path>
                 </svg>
-                <svg class="moon-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" fill="currentColor" fill-opacity="0.15"></path>
                 </svg>
             </button>
             <form action="{{ route('logout') }}" method="POST" class="sidebar-footer-form">
@@ -1862,6 +1897,14 @@
 
             @yield('content')
         </main>
+
+        <!-- Footer Selaras Lintas Modul (Persistent Dark Navy) -->
+        <footer class="gentelella-footer peserta-footer">
+            <div class="pull-right">
+                <span>Portal MagKom &bull; Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
+            </div>
+            <div class="clearfix"></div>
+        </footer>
     </div>
 
     <script>
@@ -2039,7 +2082,11 @@
             document.documentElement.setAttribute('data-pref-theme', theme);
             const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
             if (toggleBtn) {
-                toggleBtn.setAttribute('aria-pressed', effective === 'dark' ? 'true' : 'false');
+                const isDark = effective === 'dark';
+                toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+                const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
+                toggleBtn.setAttribute('title', titleText);
+                toggleBtn.setAttribute('aria-label', titleText);
             }
             try {
                 localStorage.setItem('magkom_theme', theme);
@@ -2050,7 +2097,11 @@
             const currentEffective = document.documentElement.getAttribute('data-theme') || 'light';
             const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
             if (toggleBtn) {
-                toggleBtn.setAttribute('aria-pressed', currentEffective === 'dark' ? 'true' : 'false');
+                const isDark = currentEffective === 'dark';
+                toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+                const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
+                toggleBtn.setAttribute('title', titleText);
+                toggleBtn.setAttribute('aria-label', titleText);
             }
         })();
 
@@ -2082,7 +2133,11 @@
                     document.documentElement.setAttribute('data-theme', effective);
                     const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
                     if (toggleBtn) {
-                        toggleBtn.setAttribute('aria-pressed', effective === 'dark' ? 'true' : 'false');
+                        const isDark = effective === 'dark';
+                        toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+                        const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
+                        toggleBtn.setAttribute('title', titleText);
+                        toggleBtn.setAttribute('aria-label', titleText);
                     }
                 }
             });

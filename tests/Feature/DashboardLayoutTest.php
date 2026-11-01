@@ -28,9 +28,9 @@ class DashboardLayoutTest extends TestCase
     {
         parent::setUp();
 
-        $localViewsPath = realpath(__DIR__ . '/../../resources/views');
+        $localViewsPath = realpath(__DIR__.'/../../resources/views');
         if ($localViewsPath && is_dir($localViewsPath)) {
-            \Illuminate\Support\Facades\View::getFinder()->setPaths([$localViewsPath]);
+            View::getFinder()->setPaths([$localViewsPath]);
         }
 
         Route::get('/testing/dashboard-layout-view', function () {
@@ -44,8 +44,8 @@ class DashboardLayoutTest extends TestCase
 
     private function createDummyBladeView(): void
     {
-        $baseDir = realpath(__DIR__ . '/../../resources/views') ?: App::resourcePath('views');
-        $dir = $baseDir . '/testing';
+        $baseDir = realpath(__DIR__.'/../../resources/views') ?: App::resourcePath('views');
+        $dir = $baseDir.'/testing';
         if (! is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
@@ -68,7 +68,7 @@ class DashboardLayoutTest extends TestCase
 @endsection
 BLADE;
 
-        file_put_contents($baseDir . '/testing/dashboard-dummy.blade.php', $viewContent);
+        file_put_contents($baseDir.'/testing/dashboard-dummy.blade.php', $viewContent);
 
         $pesertaViewContent = <<<'BLADE'
 @extends('layouts.peserta')
@@ -83,21 +83,21 @@ BLADE;
 @endsection
 BLADE;
 
-        file_put_contents($baseDir . '/testing/peserta-dummy.blade.php', $pesertaViewContent);
+        file_put_contents($baseDir.'/testing/peserta-dummy.blade.php', $pesertaViewContent);
     }
 
     private function removeDummyBladeView(): void
     {
-        $baseDir = realpath(__DIR__ . '/../../resources/views') ?: App::resourcePath('views');
-        $file = $baseDir . '/testing/dashboard-dummy.blade.php';
+        $baseDir = realpath(__DIR__.'/../../resources/views') ?: App::resourcePath('views');
+        $file = $baseDir.'/testing/dashboard-dummy.blade.php';
         if (file_exists($file)) {
             unlink($file);
         }
-        $filePeserta = $baseDir . '/testing/peserta-dummy.blade.php';
+        $filePeserta = $baseDir.'/testing/peserta-dummy.blade.php';
         if (file_exists($filePeserta)) {
             unlink($filePeserta);
         }
-        $dir = $baseDir . '/testing';
+        $dir = $baseDir.'/testing';
         if (is_dir($dir)) {
             @rmdir($dir);
         }
@@ -314,7 +314,7 @@ BLADE;
             ];
 
             foreach ($roles as $label => $role) {
-                $user = $this->createUser("User {$label}", strtolower($label) . "@sleman.go.id", $role);
+                $user = $this->createUser("User {$label}", strtolower($label).'@sleman.go.id', $role);
                 $response = $this->actingAs($user)->get('/testing/dashboard-layout-view');
 
                 $response->assertOk();
@@ -424,5 +424,49 @@ BLADE;
         $respAdminLight->assertRedirect();
         $respAdminLight->assertSessionHas('tema_tampilan', 'terang');
         $respAdminLight->assertCookie('tema_tampilan', 'terang');
+    }
+
+    public function test_sidebar_theme_toggle_single_icon_css_and_markup_integrity(): void
+    {
+        $dashboardView = (string) file_get_contents(resource_path('views/layouts/dashboard.blade.php'));
+        $pesertaView = (string) file_get_contents(resource_path('views/layouts/peserta.blade.php'));
+
+        // 1. Verifikasi integrasi kurung kurawal CSS seimbang (tidak ada unclosed brace .sr-only)
+        preg_match('/<style>(.*?)<\/style>/s', $dashboardView, $dashMatch);
+        $this->assertNotEmpty($dashMatch);
+        $this->assertSame(
+            substr_count($dashMatch[1], '{'),
+            substr_count($dashMatch[1], '}'),
+            'CSS block in dashboard.blade.php must have perfectly balanced curly braces.'
+        );
+
+        preg_match('/<style>(.*?)<\/style>/s', $pesertaView, $pesertaMatch);
+        $this->assertNotEmpty($pesertaMatch);
+        $this->assertSame(
+            substr_count($pesertaMatch[1], '{'),
+            substr_count($pesertaMatch[1], '}'),
+            'CSS block in peserta.blade.php must have perfectly balanced curly braces.'
+        );
+
+        // 2. Verifikasi aturan CSS single-icon state (display: none vs display: inline-block)
+        $this->assertStringContainsString('html:not([data-theme="dark"]) .sidebar-footer .sun-icon', $dashboardView);
+        $this->assertStringContainsString('html[data-theme="dark"] .sidebar-footer .sun-icon', $dashboardView);
+        $this->assertStringContainsString('html[data-theme="dark"] .sidebar-footer .moon-icon', $dashboardView);
+
+        // 3. Verifikasi ketersediaan SVG bohlam lampu (lightbulb) dan bulan (moon)
+        $this->assertStringContainsString('class="sun-icon"', $dashboardView);
+        $this->assertStringContainsString('class="moon-icon"', $dashboardView);
+        $this->assertStringContainsString('M15 14', $dashboardView); // Lightbulb path
+        $this->assertStringContainsString('M20.354 15.354', $dashboardView); // Moon path
+
+        $this->assertStringContainsString('class="sun-icon"', $pesertaView);
+        $this->assertStringContainsString('class="moon-icon"', $pesertaView);
+        $this->assertStringContainsString('M15 14', $pesertaView);
+        $this->assertStringContainsString('M20.354 15.354', $pesertaView);
+
+        // 4. Verifikasi penghapusan fitur search topbar (Cari peserta, staf, atau NIM)
+        $this->assertStringNotContainsString('class="topbar-search-box"', $dashboardView);
+        $this->assertStringNotContainsString('class="topbar-search-input"', $dashboardView);
+        $this->assertStringNotContainsString('Cari peserta, staf, atau NIM', $dashboardView);
     }
 }

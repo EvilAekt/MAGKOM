@@ -18,7 +18,7 @@
     <div class="col-md-7 col-sm-12 col-xs-12">
         <x-gentelella.x-panel title="Pengguna terbaru">
             <x-slot:actions>
-                <a href="{{ route('superadmin.staf.index') }}" class="sa-link" style="font-size: 0.8125rem; font-weight: 700; color: var(--cv-blue-700); text-decoration: none;">
+                <a href="{{ route('superadmin.staf.index') }}" class="sa-link">
                     <span>Kelola pengguna</span> &rarr;
                 </a>
             </x-slot:actions>
@@ -80,8 +80,9 @@
                                         {{ $createdDate }}
                                     </td>
                                     <td style="padding: 0.65rem 0.75rem; text-align: right;">
-                                        <a href="{{ route('superadmin.staf.index') }}" style="color: var(--cv-blue-700); font-weight: 700; font-size: 0.75rem; text-decoration: none;">
-                                            Lihat
+                                        <a href="{{ route('superadmin.staf.index') }}" class="btn-table-action">
+                                            <span>Lihat</span>
+                                            <span aria-hidden="true">&rarr;</span>
                                         </a>
                                     </td>
                                 </tr>
@@ -97,7 +98,7 @@
     <div class="col-md-5 col-sm-12 col-xs-12">
         <x-gentelella.x-panel title="Audit log terbaru">
             <x-slot:actions>
-                <a href="{{ route('superadmin.audit-log.index') }}" class="sa-link" style="font-size: 0.8125rem; font-weight: 700; color: var(--cv-blue-700); text-decoration: none;">
+                <a href="{{ route('superadmin.audit-log.index') }}" class="sa-link">
                     <span>Lihat semua</span> &rarr;
                 </a>
             </x-slot:actions>
@@ -185,7 +186,7 @@
     <div class="col-md-4 col-sm-6 col-xs-12">
         <x-gentelella.x-panel title="Kuota November">
             <x-slot:actions>
-                <a href="{{ route('admin.kuota.index') }}" class="sa-link" style="font-size: 0.75rem; font-weight: 700; color: var(--cv-blue-700); text-decoration: none;">
+                <a href="{{ route('admin.kuota.index') }}" class="sa-link">
                     Atur &rarr;
                 </a>
             </x-slot:actions>
@@ -219,7 +220,7 @@
     <div class="col-md-4 col-sm-12 col-xs-12">
         <x-gentelella.x-panel title="Keamanan">
             <x-slot:actions>
-                <a href="{{ route('superadmin.health.index') }}" class="sa-link" style="font-size: 0.75rem; font-weight: 700; color: var(--cv-blue-700); text-decoration: none;">
+                <a href="{{ route('superadmin.health.index') }}" class="sa-link">
                     Detail &rarr;
                 </a>
             </x-slot:actions>

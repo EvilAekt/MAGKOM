@@ -21,6 +21,7 @@
         <div class="audit-panel-header">
             <div class="audit-panel-header-left">
                 <span class="audit-panel-title">Kanal Audit</span>
+                <span class="sr-only">KANAL PERISTIWA</span>
                 <span class="audit-panel-count-badge">15</span>
             </div>
             <span class="audit-panel-header-sub">24 Jam</span>

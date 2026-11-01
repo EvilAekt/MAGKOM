@@ -506,4 +506,35 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $response->assertSee('Pelacak Penyelesaian Magang Terdekat (Off-boarding Tracker)');
         $response->assertSee('5 Hari Lagi');
     }
+
+    /**
+     * Memastikan semua tombol aksi di dashboard superadmin menggunakan kelas sa-link atau btn-table-action
+     * yang seragam tanpa inline background yang merusak kontras saat di-hover/di-klik.
+     */
+    public function test_dashboard_action_buttons_and_table_actions_have_unified_sleek_styling(): void
+    {
+        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.dashboard'));
+        $response->assertStatus(200);
+
+        // 1. Tombol aksi tabel pengguna terbaru harus menggunakan btn-table-action tanpa inline style background
+        $response->assertSee('class="btn-table-action"', false);
+        $response->assertDontSee('class="btn-table-action" style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; font-size: 0.725rem; background: var(--cv-blue-tint, #EFF6FF);', false);
+
+        // 2. Tombol di tab seleksi harus menggunakan sa-link (bukan btn-secondary)
+        $response->assertSee('class="sa-link">', false);
+        $response->assertSee('Kelola Antrean Waiting List &rarr;', false);
+        $response->assertSee('Atur Slot Khusus Kemitraan &rarr;', false);
+
+        // 3. Pastikan CSS mendefinisikan aturan hover & focus solid Sleman Blue untuk kedua tombol
+        $themeCss = file_get_contents(public_path('css/gentelella-theme.css'));
+        $dashboardCss = file_get_contents(public_path('css/superadmin-dashboard.css'));
+
+        $this->assertStringContainsString('.btn-table-action', $themeCss);
+        $this->assertStringContainsString('.btn-table-action:hover', $themeCss);
+        $this->assertStringContainsString('var(--cv-blue-700, #0641CC) !important;', $themeCss);
+
+        $this->assertStringContainsString('.btn-table-action', $dashboardCss);
+        $this->assertStringContainsString('.btn-table-action:hover', $dashboardCss);
+        $this->assertStringContainsString('var(--cv-blue-700, #0641CC) !important;', $dashboardCss);
+    }
 }

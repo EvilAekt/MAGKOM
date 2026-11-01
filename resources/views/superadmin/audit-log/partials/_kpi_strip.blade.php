@@ -1,4 +1,4 @@
-{{-- SECTION 2: PURE AUDIT KPI METRICS STRIP (ZERO TELEMETRY, CLEAN ABOVE-THE-FOLD) --}}
+{{-- SECTION 2: GENTELELLA V4 4-UP AUDIT KPI METRICS STRIP --}}
 @php
     /** @var int $total24h */
     /** @var float|int|string $growth24h */
@@ -6,82 +6,101 @@
     /** @var float|int|string $mutasiPercentage */
     /** @var int $sesiAuth */
     /** @var int $peringatanKritis */
+
+    $growthNum = (float) $growth24h;
+    $growthPositive = $growthNum >= 0;
+    $growthLabel = rtrim(rtrim(number_format(abs($growthNum), 1, '.', ''), '0'), '.');
 @endphp
-<section class="audit-kpi-grid" aria-label="Ringkasan Jejak Audit">
-    {{-- Card 1: Total Peristiwa (24 Jam) --}}
-    <div class="audit-kpi-card">
-        <div class="audit-kpi-info">
-            <span class="audit-kpi-label">Total Log (24 Jam)</span>
-            <div class="audit-kpi-value">
-                {{ number_format($total24h) }}
+<section class="audit-kpi-row" aria-label="Ringkasan Jejak Audit">
+    {{-- Card 1: Total Log (24 Jam) --}}
+    <div class="audit-stat-card">
+        <div class="stat">
+            <div class="stat-icon green" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
             </div>
-            <div class="audit-kpi-subtext audit-subtext-emerald">
-                <span>&uarr; {{ $growth24h }}%</span>
-                <span class="audit-kpi-subtext-muted">24 Jam</span>
+            <div class="stat-content">
+                <div class="stat-label">Total Log (24 Jam)</div>
+                <div class="stat-value-row">
+                    <span class="stat-value">{{ number_format($total24h) }}</span>
+                    <span class="stat-change {{ $growthPositive ? 'up' : 'down' }}">
+                        {!! $growthPositive ? '&uarr;' : '&darr;' !!} {{ $growthLabel }}%
+                    </span>
+                </div>
+                <div class="stat-subtext">24-hr rolling activity stream</div>
             </div>
-        </div>
-        <div class="audit-kpi-icon-wrap audit-icon-blue">
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
         </div>
     </div>
 
     {{-- Card 2: Mutasi Data (CRUD Changes) --}}
-    <div class="audit-kpi-card">
-        <div class="audit-kpi-info">
-            <span class="audit-kpi-label">Mutasi Data</span>
-            <div class="audit-kpi-value">
-                {{ number_format($mutasiData) }}
+    <div class="audit-stat-card">
+        <div class="stat">
+            <div class="stat-icon blue" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                </svg>
             </div>
-            <div class="audit-kpi-subtext audit-subtext-blue">
-                <span class="badge-dot-blue"></span>
-                <span>{{ $mutasiPercentage }}%</span>
-                <span class="audit-kpi-subtext-muted">Diff Valid</span>
+            <div class="stat-content">
+                <div class="stat-label">Mutasi Data</div>
+                <div class="stat-value-row">
+                    <span class="stat-value">{{ number_format($mutasiData) }}</span>
+                    <span class="stat-change up">{{ $mutasiPercentage }}%</span>
+                </div>
+                <div class="stat-subtext">Diff state valid &amp; verified</div>
             </div>
-        </div>
-        <div class="audit-kpi-icon-wrap audit-icon-indigo">
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
-            </svg>
         </div>
     </div>
 
     {{-- Card 3: Sesi Autentikasi --}}
-    <div class="audit-kpi-card">
-        <div class="audit-kpi-info">
-            <span class="audit-kpi-label">Sesi Autentikasi</span>
-            <div class="audit-kpi-value">
-                {{ number_format($sesiAuth) }}
+    <div class="audit-stat-card">
+        <div class="stat">
+            <div class="stat-icon purple" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <polyline points="17 11 19 13 23 9"></polyline>
+                </svg>
             </div>
-            <div class="audit-kpi-subtext audit-subtext-emerald">
-                <span>&check; 100% Sah</span>
-                <span class="audit-kpi-subtext-muted">SSO &amp; RBAC</span>
+            <div class="stat-content">
+                <div class="stat-label">Sesi Autentikasi</div>
+                <div class="stat-value-row">
+                    <span class="stat-value">{{ number_format($sesiAuth) }}</span>
+                    <span class="stat-change up">&check; 100%</span>
+                </div>
+                <div class="stat-subtext">Sah via SSO &amp; RBAC guard</div>
             </div>
-        </div>
-        <div class="audit-kpi-icon-wrap audit-icon-emerald">
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-            </svg>
         </div>
     </div>
 
     {{-- Card 4: Peringatan Kritis --}}
-    <div class="audit-kpi-card">
-        <div class="audit-kpi-info">
-            <span class="audit-kpi-label">Peringatan Kritis</span>
-            <div class="audit-kpi-value">
-                {{ number_format($peringatanKritis) }}
+    <div class="audit-stat-card">
+        <div class="stat">
+            <div class="stat-icon {{ $peringatanKritis > 0 ? 'red' : 'yellow' }}" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
             </div>
-            <div class="audit-kpi-subtext audit-subtext-amber">
-                <span class="badge-dot-amber"></span>
-                <span>{{ $peringatanKritis > 0 ? 'Perlu Perhatian' : 'Terselesaikan' }}</span>
+            <div class="stat-content">
+                <div class="stat-label">Peringatan Kritis</div>
+                <div class="stat-value-row">
+                    <span class="stat-value">{{ number_format($peringatanKritis) }}</span>
+                    <span class="stat-change {{ $peringatanKritis > 0 ? 'down' : 'up' }}">
+                        {{ $peringatanKritis > 0 ? 'Perlu Aksi' : '✓ Aman' }}
+                    </span>
+                </div>
+                <div class="stat-subtext">
+                    {{ $peringatanKritis > 0 ? 'Perlu tindakan segera' : 'Zero unresolved security alert' }}
+                </div>
             </div>
-        </div>
-        <div class="audit-kpi-icon-wrap audit-icon-amber">
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-            </svg>
         </div>
     </div>
 </section>

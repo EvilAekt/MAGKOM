@@ -18,14 +18,18 @@ body.nav-sm {
 .container.body {
     width: 100%;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     background-color: var(--neutral-150, #F5F7FB);
 }
 
 .main_container {
-    display: block;
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
     position: relative;
     width: 100%;
+    flex: 1 0 auto;
 }
 
 /* 2. SIDEBAR KIRI (left_col / col-md-3) - Rebranded Palette PRD-TASK-2026-10-28-UI-02 */
@@ -239,24 +243,31 @@ body.nav-sm {
     width: calc(100% - var(--sidebar-width));
     background: var(--neutral-150, #F5F7FB);
     padding: 1.5rem 2rem 3rem;
-    min-height: calc(100vh - var(--topbar-height, 60px) - 50px);
+    flex: 1 0 auto;
+    min-height: auto;
     transition: margin-left 0.25s ease, width 0.25s ease;
-    flex: 1;
 }
 
-/* 5. GENTELELLA FOOTER */
+/* 5. GENTELELLA FOOTER (Persistent Dark Navy across Light & Dark Modes) */
 .gentelella-footer {
     margin-left: var(--sidebar-width);
     width: calc(100% - var(--sidebar-width));
-    background: var(--neutral-0, #FFFFFF);
-    border-top: 1px solid var(--neutral-300, #CBD5E1);
-    padding: 1rem 2rem;
+    margin-top: auto;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    background: #003566 !important;
+    border-top: 1px solid #2C3A4E !important;
+    padding: 0.85rem 2rem;
     font-size: 0.75rem;
-    color: var(--neutral-500, #7A8494);
+    color: #94A3B8 !important;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     transition: margin-left 0.25s ease, width 0.25s ease;
+}
+.gentelella-footer span {
+    color: #94A3B8 !important;
+    font-weight: 500;
 }
 
 /* 6. GENTELELLA TILE COUNT & STATS TILES */
@@ -351,12 +362,98 @@ body.nav-sm {
 .x_panel {
     background: var(--neutral-0, #FFFFFF);
     border: 1px solid var(--neutral-200, #EEF0F5);
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
     border-radius: 12px;
     padding: 1.25rem 1.5rem;
     margin-bottom: 1.5rem;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
     position: relative;
     transition: all 0.2s ease;
+}
+
+.sa-link,
+.sa-panel__head .sa-link,
+.toolbox_actions .sa-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 8px;
+    background: var(--cv-blue-tint, #EFF6FF) !important;
+    color: var(--cv-blue-700, #0641CC) !important;
+    border: 1px solid rgba(6, 65, 204, 0.25) !important;
+    text-decoration: none !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+}
+.sa-link span,
+.sa-panel__head .sa-link span,
+.toolbox_actions .sa-link span {
+    color: inherit !important;
+}
+.sa-link:hover,
+.sa-link:focus,
+.sa-link:active,
+.sa-panel__head .sa-link:hover,
+.sa-panel__head .sa-link:focus,
+.sa-panel__head .sa-link:active,
+.toolbox_actions .sa-link:hover,
+.toolbox_actions .sa-link:focus,
+.toolbox_actions .sa-link:active {
+    background: var(--cv-blue-700, #0641CC) !important;
+    color: #FFFFFF !important;
+    border-color: var(--cv-blue-700, #0641CC) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(6, 65, 204, 0.25);
+    text-decoration: none !important;
+}
+.sa-link:hover span,
+.sa-link:focus span,
+.sa-link:active span,
+.sa-panel__head .sa-link:hover span,
+.sa-panel__head .sa-link:focus span,
+.sa-panel__head .sa-link:active span,
+.toolbox_actions .sa-link:hover span,
+.toolbox_actions .sa-link:focus span,
+.toolbox_actions .sa-link:active span {
+    color: #FFFFFF !important;
+}
+.btn-table-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.725rem;
+    background: var(--cv-blue-tint, #EFF6FF) !important;
+    color: var(--cv-blue-700, #0641CC) !important;
+    border: 1px solid rgba(6, 65, 204, 0.25) !important;
+    text-decoration: none !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+}
+.btn-table-action span {
+    color: inherit !important;
+}
+.btn-table-action:hover,
+.btn-table-action:focus,
+.btn-table-action:active {
+    background: var(--cv-blue-700, #0641CC) !important;
+    color: #FFFFFF !important;
+    border-color: var(--cv-blue-700, #0641CC) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(6, 65, 204, 0.25);
+    text-decoration: none !important;
+}
+.btn-table-action:hover span,
+.btn-table-action:focus span,
+.btn-table-action:active span {
+    color: #FFFFFF !important;
 }
 
 .x_title {
@@ -521,8 +618,12 @@ body.nav-sm {
 }
 
 [data-theme="dark"] .gentelella-footer {
-    background: var(--neutral-0, #003566);
-    border-color: var(--neutral-200, #2C3A4E);
+    background: #003566 !important;
+    border-color: #2C3A4E !important;
+    color: #94A3B8 !important;
+}
+[data-theme="dark"] .gentelella-footer span {
+    color: #94A3B8 !important;
 }
 
 [data-theme="dark"] .right_col {
@@ -552,7 +653,33 @@ body.nav-sm {
 [data-theme="dark"] .x_panel {
     background: var(--card-surface, #003566) !important;
     border-color: var(--card-border, #3F51B5) !important;
+    border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .sa-link,
+[data-theme="dark"] .sa-panel__head .sa-link,
+[data-theme="dark"] .toolbox_actions .sa-link,
+[data-theme="dark"] .btn-table-action {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #93C5FD !important;
+    border-color: rgba(147, 197, 253, 0.3) !important;
+}
+[data-theme="dark"] .sa-link:hover,
+[data-theme="dark"] .sa-link:focus,
+[data-theme="dark"] .sa-link:active,
+[data-theme="dark"] .sa-panel__head .sa-link:hover,
+[data-theme="dark"] .sa-panel__head .sa-link:focus,
+[data-theme="dark"] .sa-panel__head .sa-link:active,
+[data-theme="dark"] .toolbox_actions .sa-link:hover,
+[data-theme="dark"] .toolbox_actions .sa-link:focus,
+[data-theme="dark"] .toolbox_actions .sa-link:active,
+[data-theme="dark"] .btn-table-action:hover,
+[data-theme="dark"] .btn-table-action:focus,
+[data-theme="dark"] .btn-table-action:active {
+    background: #2563EB !important;
+    color: #FFFFFF !important;
+    border-color: #3B82F6 !important;
 }
 
 [data-theme="dark"] .x_title {

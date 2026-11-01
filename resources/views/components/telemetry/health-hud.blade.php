@@ -152,24 +152,22 @@
         </div>
 
         <!-- Metric 4: SSE Ping -->
-        <div class="telemetry-hud-metric-box" style="background: rgba(8, 47, 73, 0.55) !important; border-color: rgba(6, 182, 212, 0.45);">
-            <div class="telemetry-hud-metric-header" style="color: #67e8f9;">
+        <div class="telemetry-hud-metric-box" style="border-color: rgba(6, 182, 212, 0.35);">
+            <div class="telemetry-hud-metric-header">
                 <span>SSE Ping</span>
-                <span class="relative flex h-2 w-2" style="width: 8px; height: 8px;">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
-                </span>
+                <span class="rounded px-1.5 py-0.5 text-[9px] font-mono font-bold"
+                      style="background: rgba(6, 182, 212, 0.25); color: #67e8f9; border-radius: 4px;">SSE</span>
             </div>
             <div class="my-2.5">
-                <div class="font-mono text-2xl sm:text-3xl font-extrabold tracking-tight flex items-baseline gap-1"
-                     style="font-size: 1.75rem; color: #67e8f9;">
-                    1.2 <span class="text-xs font-normal" style="color: #a5f3fc;">ms</span>
+                <div class="font-mono text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-baseline gap-1"
+                     style="font-size: 1.75rem; color: #ffffff;">
+                    1.2 <span class="text-xs font-normal text-slate-300" style="color: #94a3b8;">ms</span>
                 </div>
-                <div class="text-[11px] font-mono mt-1" style="color: #a5f3fc;">
+                <div class="text-[11px] font-mono mt-1" style="color: #67e8f9;">
                     18 Klien Aktif
                 </div>
             </div>
-            <div class="telemetry-hud-metric-footer" style="border-top-color: rgba(6, 182, 212, 0.25); color: #67e8f9;">
+            <div class="telemetry-hud-metric-footer">
                 <span>Backlog:</span>
                 <span class="text-white font-bold" style="color: #ffffff;">0 msg</span>
             </div>

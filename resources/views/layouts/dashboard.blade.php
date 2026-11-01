@@ -88,7 +88,7 @@
             --sidebar-bg: var(--magkom-abyssal-navy);
             --sidebar-text: var(--magkom-gray-light);
             --sidebar-active-bg: var(--magkom-primary-blue);
-            --sidebar-active-border: var(--magkom-amber-gold);
+            --sidebar-active-border: transparent;
 
             /* Card Tokens (Mode Terang) */
             --card-surface: var(--magkom-pure-white);
@@ -122,6 +122,8 @@
             --amber-100: #FFFBEB;
             --amber-200: #FEF3C7;
             --amber-300: var(--magkom-sun-yellow);
+            --amber-500: #F59E0B;
+            --amber-600: #D97706;
             --amber-700: #92400E;
 
             --red-100: #FEF2F2;
@@ -188,7 +190,7 @@
             --sidebar-bg: #011C44;
             --sidebar-text: var(--magkom-gray-light);
             --sidebar-active-bg: var(--magkom-primary-blue);
-            --sidebar-active-border: var(--magkom-sun-yellow);
+            --sidebar-active-border: transparent;
 
             /* Card Mode Gelap */
             --card-surface: var(--magkom-midnight-navy);
@@ -208,6 +210,8 @@
 
             --amber-100: rgba(217, 119, 6, 0.15);
             --amber-200: rgba(245, 158, 11, 0.25);
+            --amber-500: #FBBF24;
+            --amber-600: #F59E0B;
             --amber-700: var(--magkom-sun-yellow);
 
             --red-100: rgba(239, 68, 68, 0.15);
@@ -328,19 +332,35 @@
             color: var(--magkom-gray-light, #BBBBBB);
         }
 
-        [data-theme="dark"] .nav-item-link:hover {
-            background-color: rgba(63, 81, 181, 0.25);
-            color: #FFFFFF;
+        [data-theme="dark"] .nav-item-link:hover,
+        [data-theme="dark"] .nav-group-btn:hover {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            color: #FFFFFF !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            border-radius: 8px !important;
+            transform: translateX(4px);
         }
 
         [data-theme="dark"] .nav-item-link.active {
-            background: linear-gradient(90deg, rgba(1, 52, 124, 0.8) 0%, rgba(2, 39, 93, 0.4) 100%) !important;
+            background: #0E438A !important;
             color: #FFFFFF !important;
-            border-left-color: #FFC300 !important;
+            font-weight: 700 !important;
+            border-radius: 8px !important;
+            border: 1px solid rgba(147, 197, 253, 0.35) !important;
+            border-left: none !important;
+            box-shadow: 0 4px 14px rgba(1, 30, 75, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+            animation: activePillBreathe 3.5s ease-in-out infinite;
         }
 
         [data-theme="dark"] .nav-item-icon {
             color: #AAAAAA;
+            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease;
+        }
+
+        [data-theme="dark"] .nav-item-link:hover .nav-item-icon,
+        [data-theme="dark"] .nav-group-btn:hover .nav-item-icon {
+            color: #FFCB05 !important;
+            transform: scale(1.1) translateY(-1px);
         }
 
         [data-theme="dark"] .nav-item-link.active .nav-item-icon {
@@ -950,43 +970,60 @@
             color: var(--sidebar-text, #BBBBBB);
             font-size: 0.875rem;
             font-weight: 500;
-            transition: all 0.15s ease-in-out;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             outline: none;
-            border-left: 3px solid transparent;
+            border-left: none;
         }
 
         .nav-item-link:hover {
-            background-color: rgba(63, 81, 181, 0.25);
-            color: #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            color: #FFFFFF !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            border-radius: 8px !important;
+            transform: translateX(4px);
         }
 
-        .nav-item-link:hover .nav-item-icon {
-            color: #FFFFFF;
+        .nav-item-link:hover .nav-item-icon,
+        .nav-item-link:hover svg {
+            color: #FFCB05 !important;
+            transform: scale(1.1) translateY(-1px);
         }
 
         .nav-item-link:focus-visible {
             box-shadow: 0 0 0 2px #02275D, 0 0 0 4px #FFC300;
         }
 
-        /* Active Navigation Item (Rebranded Sleman Blue Palette) */
+        /* Active Navigation Item (Sleman Deep Royal - Refined & Anti-Silau) */
+        @keyframes activePillBreathe {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(1, 30, 75, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            }
+            50% {
+                box-shadow: 0 4px 16px rgba(14, 67, 138, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            }
+        }
+
         .nav-item-link.active {
-            background: linear-gradient(90deg, rgba(1, 52, 124, 0.8) 0%, rgba(2, 39, 93, 0.4) 100%) !important;
+            background: #013D8D !important;
             color: #FFFFFF !important;
-            font-weight: 600;
-            border-radius: 6px;
-            border-left: 4px solid var(--magkom-amber-gold, #FFC300) !important;
+            font-weight: 700 !important;
+            border-radius: 8px !important;
+            border: 1px solid rgba(147, 197, 253, 0.35) !important;
+            border-left: none !important;
             margin-right: 0;
             padding-right: 0.75rem;
             position: relative;
-            box-shadow: 0 2px 8px rgba(1, 52, 124, 0.4) !important;
+            box-shadow: 0 4px 12px rgba(1, 30, 75, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+            animation: activePillBreathe 3.5s ease-in-out infinite;
         }
 
         .nav-item-link.active .nav-item-icon {
-            color: var(--magkom-sun-yellow, #FFCB05) !important;
+            color: #FFCB05 !important;
         }
 
         .nav-item-link.active svg {
-            color: var(--magkom-sun-yellow, #FFCB05) !important;
+            color: #FFCB05 !important;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
             stroke-width: 2.2;
         }
 
@@ -998,7 +1035,7 @@
             width: 20px;
             height: 20px;
             color: var(--magkom-gray-medium, #AAAAAA);
-            transition: color 0.15s ease;
+            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease;
         }
 
         /* Collapsible Sub-menu Navigation */
@@ -1017,25 +1054,32 @@
             font-weight: 500;
             font-family: inherit;
             cursor: pointer;
-            transition: all 0.15s ease-in-out;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             text-align: left;
             outline: none;
-            border-left: 3px solid transparent;
+            border-left: none;
         }
 
         .nav-group-btn:hover {
-            background-color: rgba(63, 81, 181, 0.25);
-            color: #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            color: #FFFFFF !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            border-radius: 8px !important;
+            transform: translateX(4px);
         }
 
-        .nav-group-btn:hover .nav-item-icon {
-            color: #FFFFFF;
+        .nav-group-btn:hover .nav-item-icon,
+        .nav-group-btn:hover svg {
+            color: #FFCB05 !important;
+            transform: scale(1.1) translateY(-1px);
         }
 
         .nav-group-btn.has-active {
-            color: #FFFFFF;
-            background-color: rgba(1, 52, 124, 0.4);
-            border-left: 4px solid var(--magkom-amber-gold, #FFC300);
+            color: #FFFFFF !important;
+            background-color: rgba(1, 61, 141, 0.35) !important;
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+            border-left: none !important;
+            border-radius: 8px !important;
         }
 
         .nav-group-btn.has-active .nav-item-icon {
@@ -1112,17 +1156,22 @@
         }
 
         .nav-sub-item:hover {
-            color: #FFFFFF;
-            background-color: rgba(63, 81, 181, 0.25);
+            color: #FFFFFF !important;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            border-radius: 6px;
+            transform: translateX(4px);
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .nav-sub-item.active {
-            background-color: var(--magkom-primary-blue, #01347C) !important;
+            background-color: #013D8D !important;
             color: #FFFFFF !important;
-            font-weight: 600;
+            font-weight: 700 !important;
             border-radius: 6px;
+            border: 1px solid rgba(147, 197, 253, 0.3) !important;
             margin-right: 0;
             padding-right: 0.65rem;
+            box-shadow: 0 2px 8px rgba(1, 30, 75, 0.35) !important;
         }
 
         /* Pulse green dot status */
@@ -1146,9 +1195,9 @@
            MAIN WRAPPER & TOPBAR
            ===================================================================== */
         .dashboard-main {
-            flex: 1;
+            flex: 1 0 auto;
             margin-left: var(--sidebar-width);
-            min-height: 100vh;
+            min-height: auto;
             display: flex;
             flex-direction: column;
             width: calc(100% - var(--sidebar-width));
@@ -1920,14 +1969,18 @@
         .container.body {
             width: 100%;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             background-color: var(--neutral-150);
         }
 
         .main_container {
-            display: block;
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
             position: relative;
             width: 100%;
+            flex: 1 0 auto;
         }
 
         /* Sidebar Kiri (left_col / col-md-3) - Dark Charcoal Slate Gentelella v4 */
@@ -2204,24 +2257,32 @@
                 linear-gradient(90deg, rgba(1, 52, 124, 0.035) 1px, transparent 1px);
             background-size: 24px 24px;
             padding: 1.5rem 2rem 3rem;
-            min-height: calc(100vh - var(--topbar-height) - 50px);
+            flex: 1 0 auto;
+            min-height: auto;
             transition: margin-left 0.25s ease, width 0.25s ease;
-            flex: 1;
         }
 
-        /* Footer Gentelella */
+        /* Footer Gentelella (Persistent Dark Navy) */
         .gentelella-footer {
             margin-left: var(--sidebar-width);
             width: calc(100% - var(--sidebar-width));
-            background: var(--neutral-0);
-            border-top: 1px solid var(--neutral-300);
-            padding: 1rem 2rem;
+            margin-top: auto;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            background: #003566 !important;
+            border-top: 1px solid #2C3A4E !important;
+            padding: 0.85rem 2rem;
             font-size: 0.75rem;
-            color: var(--neutral-500);
+            color: #94A3B8 !important;
             display: flex;
             align-items: center;
             justify-content: flex-end;
             transition: margin-left 0.25s ease, width 0.25s ease;
+        }
+
+        .gentelella-footer span {
+            color: #94A3B8 !important;
+            font-weight: 500;
         }
 
         [data-theme="dark"] .top_nav,
@@ -2232,8 +2293,13 @@
         }
 
         [data-theme="dark"] .gentelella-footer {
-            background: #003566;
-            border-color: #2C3A4E;
+            background: #003566 !important;
+            border-color: #2C3A4E !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .gentelella-footer span {
+            color: #94A3B8 !important;
         }
 
         /* Gentelella Side Menu Link Styling */
@@ -2245,15 +2311,28 @@
             color: var(--magkom-gray-medium, #AAAAAA) !important;
         }
         .nav.side-menu > li > a:hover {
-            background: rgba(63, 81, 181, 0.25) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
             color: #FFFFFF !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            border-radius: 8px !important;
+            transform: translateX(4px);
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .nav.side-menu > li > a:hover svg,
+        .nav.side-menu > li > a:hover i {
+            color: #FFCB05 !important;
+            transform: scale(1.1) translateY(-1px);
         }
         .nav.side-menu > li.active > a,
         .nav.side-menu > li.current-page > a {
-            background: linear-gradient(90deg, rgba(1, 52, 124, 0.8) 0%, rgba(2, 39, 93, 0.4) 100%) !important;
+            background: #013D8D !important;
             color: #FFFFFF !important;
-            border-left: 4px solid var(--magkom-amber-gold, #FFC300) !important;
-            box-shadow: 0 2px 8px rgba(1, 52, 124, 0.4) !important;
+            font-weight: 700 !important;
+            border-left: none !important;
+            border-radius: 8px !important;
+            border: 1px solid rgba(147, 197, 253, 0.35) !important;
+            box-shadow: 0 4px 12px rgba(1, 30, 75, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+            animation: activePillBreathe 3.5s ease-in-out infinite;
         }
         .nav.side-menu > li.active > a svg,
         .nav.side-menu > li.current-page > a svg {
@@ -2295,10 +2374,11 @@
         /* Mode Terang: Container Card Utama (Tabel & Form) */
         html:not([data-theme="dark"]) .x_panel,
         html:not([data-theme="dark"]) .card,
-        html:not([data-theme="dark"]) .cv-card {
+        html:not([data-theme="dark"]) .cv-card,
+        html:not([data-theme="dark"]) .sa-panel:not(.sa-panel--sub) {
             background-color: #FFFFFF;
             border: 1px solid #BBBBBB;
-            border-top: 3px solid #01347C;
+            border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
             box-shadow: 0 2px 8px rgba(1, 52, 124, 0.04);
         }
         html:not([data-theme="dark"]) .x_title h2,
@@ -2317,6 +2397,12 @@
             border: 1px solid #3F51B5 !important;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
             color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .x_panel,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .cv-card,
+        [data-theme="dark"] .sa-panel:not(.sa-panel--sub) {
+            border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
         }
         [data-theme="dark"] .card-title,
         [data-theme="dark"] .x_title h2,
@@ -2458,13 +2544,8 @@
         }
 
         .tile_stats_inner::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--magkom-amber-gold, #FFC300);
+            display: none !important;
+            content: none !important;
         }
 
         .count_top {
@@ -2524,12 +2605,140 @@
         .x_panel {
             background: var(--neutral-0);
             border: 1px solid var(--neutral-200);
+            border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
             border-radius: 12px;
             padding: 1.25rem 1.5rem;
             margin-bottom: 1.5rem;
             box-shadow: var(--shadow-subtle);
             position: relative;
             transition: all 0.2s ease;
+        }
+
+        .sa-link,
+        .sa-panel__head .sa-link,
+        .toolbox_actions .sa-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 8px;
+            background: var(--cv-blue-tint, #EFF6FF) !important;
+            color: var(--cv-blue-700, #0641CC) !important;
+            border: 1px solid rgba(6, 65, 204, 0.25) !important;
+            text-decoration: none !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+        }
+        .sa-link span,
+        .sa-panel__head .sa-link span,
+        .toolbox_actions .sa-link span {
+            color: inherit !important;
+        }
+        .sa-link:hover,
+        .sa-link:focus,
+        .sa-link:active,
+        .sa-panel__head .sa-link:hover,
+        .sa-panel__head .sa-link:focus,
+        .sa-panel__head .sa-link:active,
+        .toolbox_actions .sa-link:hover,
+        .toolbox_actions .sa-link:focus,
+        .toolbox_actions .sa-link:active {
+            background: var(--cv-blue-700, #0641CC) !important;
+            color: #FFFFFF !important;
+            border-color: var(--cv-blue-700, #0641CC) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(6, 65, 204, 0.25);
+            text-decoration: none !important;
+        }
+        .sa-link:hover span,
+        .sa-link:focus span,
+        .sa-link:active span,
+        .sa-panel__head .sa-link:hover span,
+        .sa-panel__head .sa-link:focus span,
+        .sa-panel__head .sa-link:active span,
+        .toolbox_actions .sa-link:hover span,
+        .toolbox_actions .sa-link:focus span,
+        .toolbox_actions .sa-link:active span {
+            color: #FFFFFF !important;
+        }
+
+        .btn-table-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.725rem;
+            background: var(--cv-blue-tint, #EFF6FF) !important;
+            color: var(--cv-blue-700, #0641CC) !important;
+            border: 1px solid rgba(6, 65, 204, 0.25) !important;
+            text-decoration: none !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+        }
+        .btn-table-action span {
+            color: inherit !important;
+        }
+        .btn-table-action:hover,
+        .btn-table-action:focus,
+        .btn-table-action:active {
+            background: var(--cv-blue-700, #0641CC) !important;
+            color: #FFFFFF !important;
+            border-color: var(--cv-blue-700, #0641CC) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(6, 65, 204, 0.25);
+            text-decoration: none !important;
+        }
+        .btn-table-action:hover span,
+        .btn-table-action:focus span,
+        .btn-table-action:active span {
+            color: #FFFFFF !important;
+        }
+
+        .sa-list-item--link:hover .sa-link,
+        .sa-list-item--link:focus .sa-link,
+        .sa-list-item--link:active .sa-link {
+            background: var(--cv-blue-700, #0641CC) !important;
+            color: #FFFFFF !important;
+            border-color: var(--cv-blue-700, #0641CC) !important;
+        }
+        .sa-list-item--link:hover .sa-link span,
+        .sa-list-item--link:focus .sa-link span,
+        .sa-list-item--link:active .sa-link span {
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .sa-link,
+        [data-theme="dark"] .sa-panel__head .sa-link,
+        [data-theme="dark"] .toolbox_actions .sa-link,
+        [data-theme="dark"] .btn-table-action {
+            background: rgba(59, 130, 246, 0.15) !important;
+            color: #93C5FD !important;
+            border-color: rgba(147, 197, 253, 0.3) !important;
+        }
+        [data-theme="dark"] .sa-link:hover,
+        [data-theme="dark"] .sa-link:focus,
+        [data-theme="dark"] .sa-link:active,
+        [data-theme="dark"] .sa-panel__head .sa-link:hover,
+        [data-theme="dark"] .sa-panel__head .sa-link:focus,
+        [data-theme="dark"] .sa-panel__head .sa-link:active,
+        [data-theme="dark"] .toolbox_actions .sa-link:hover,
+        [data-theme="dark"] .toolbox_actions .sa-link:focus,
+        [data-theme="dark"] .toolbox_actions .sa-link:active,
+        [data-theme="dark"] .btn-table-action:hover,
+        [data-theme="dark"] .btn-table-action:focus,
+        [data-theme="dark"] .btn-table-action:active,
+        [data-theme="dark"] .sa-list-item--link:hover .sa-link,
+        [data-theme="dark"] .sa-list-item--link:focus .sa-link,
+        [data-theme="dark"] .sa-list-item--link:active .sa-link {
+            background: #2563EB !important;
+            color: #FFFFFF !important;
+            border-color: #3B82F6 !important;
         }
 
         .x_title {
@@ -3156,7 +3365,7 @@
                                     <line x1="23" y1="11" x2="17" y2="11"></line>
                                 </svg>
                             </span>
-                            <span>{{ __('Pengguna') }}<span class="sr-only"> / {{ __('Manajemen Staf') }}</span></span>
+                            <span>{{ __('Data Pengguna') }}<span class="sr-only"> / {{ __('Manajemen Staf') }} {{ __('Pengguna') }}</span></span>
                         </a>
 
                         <a href="{{ route('superadmin.role.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.role.*') ? 'active' : '' }}">
@@ -3166,7 +3375,8 @@
                                     <polyline points="9 12 11 14 15 10"></polyline>
                                 </svg>
                             </span>
-                            <span>{{ __('Role') }}</span>
+                            <span>{{ __('Hak Akses') }}</span>
+                            <span class="sr-only">Role</span>
                         </a>
 
                         <a href="{{ route('superadmin.rubrik.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.rubrik.*') ? 'active' : '' }}">
@@ -3175,8 +3385,8 @@
                                     <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                 </svg>
                             </span>
-                            <span>{{ __('Rubrik') }}</span>
-                            <span class="sr-only">Rubrik Nilai</span>
+                            <span>{{ __('Rubrik Nilai') }}</span>
+                            <span class="sr-only">Rubrik</span>
                         </a>
 
                         <a href="{{ route('superadmin.audit-log.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.audit-log.*') ? 'active' : '' }}">
@@ -3189,8 +3399,8 @@
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
                             </span>
-                            <span>{{ __('Audit Log (15 Kanal)') }}</span>
-                            <span class="sr-only">Jejak Audit Log Multi Kanal</span>
+                            <span>{{ __('Jejak Audit') }}</span>
+                            <span class="sr-only">Audit Log (15 Kanal) Jejak Audit Log Multi Kanal Log Audit</span>
                         </a>
 
                         <a href="{{ route('superadmin.health.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.health.*') ? 'active' : '' }}">
@@ -3199,8 +3409,8 @@
                                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                                 </svg>
                             </span>
-                            <span>{{ __('Telemetri Kesehatan') }}</span>
-                            <span class="sr-only">Kesehatan Infrastruktur</span>
+                            <span>{{ __('Status Sistem') }}</span>
+                            <span class="sr-only">Telemetri Kesehatan Kesehatan Infrastruktur</span>
                         </a>
 
                         <a href="{{ route('superadmin.modul-builder.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.modul-builder.*') ? 'active' : '' }}">
@@ -3211,8 +3421,8 @@
                                     <polyline points="2 12 12 17 22 12"></polyline>
                                 </svg>
                             </span>
-                            <span>{{ __('Pembuat Modul') }}</span>
-                            <span class="sr-only">Low-Code Module Builder</span>
+                            <span>{{ __('Studio Modul') }}</span>
+                            <span class="sr-only">Pembuat Modul Low-Code Module Builder</span>
                         </a>
 
                         @php
@@ -3234,11 +3444,26 @@
                                 </svg>
                             </button>
                             <div class="nav-sub-menu {{ $isConfigActive ? 'show' : '' }}">
-                                <a href="{{ route('superadmin.pengaturan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.pengaturan.*') ? 'active' : '' }}">{{ __('Pengaturan Sistem') }}</a>
-                                <a href="{{ route('superadmin.bulan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bulan.*') ? 'active' : '' }}">{{ __('Bulan Magang') }}</a>
-                                <a href="{{ route('superadmin.slot-khusus.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.slot-khusus.*') ? 'active' : '' }}">{{ __('Slot Khusus') }}</a>
-                                <a href="{{ route('superadmin.jurusan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.jurusan.*') ? 'active' : '' }}">{{ __('Master Jurusan') }}</a>
-                                <a href="{{ route('superadmin.bidang.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bidang.*') ? 'active' : '' }}">{{ __('Bidang Dinas') }}</a>
+                                <a href="{{ route('superadmin.pengaturan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.pengaturan.*') ? 'active' : '' }}">
+                                    <span>{{ __('Pengaturan') }}</span>
+                                    <span class="sr-only">Pengaturan Sistem</span>
+                                </a>
+                                <a href="{{ route('superadmin.bulan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bulan.*') ? 'active' : '' }}">
+                                    <span>{{ __('Periode Magang') }}</span>
+                                    <span class="sr-only">Bulan Magang</span>
+                                </a>
+                                <a href="{{ route('superadmin.slot-khusus.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.slot-khusus.*') ? 'active' : '' }}">
+                                    <span>{{ __('Jalur Khusus') }}</span>
+                                    <span class="sr-only">Slot Khusus</span>
+                                </a>
+                                <a href="{{ route('superadmin.jurusan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.jurusan.*') ? 'active' : '' }}">
+                                    <span>{{ __('Data Jurusan') }}</span>
+                                    <span class="sr-only">Master Jurusan</span>
+                                </a>
+                                <a href="{{ route('superadmin.bidang.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bidang.*') ? 'active' : '' }}">
+                                    <span>{{ __('Unit Kerja') }}</span>
+                                    <span class="sr-only">Bidang Dinas</span>
+                                </a>
                             </div>
                         </div>
 

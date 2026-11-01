@@ -29,6 +29,7 @@
             <h1 class="audit-page-title">
                 Jejak Audit &amp; Kepatuhan
             </h1>
+            <span class="sr-only">Jejak Audit Sistem</span>
             <div class="audit-integrity-badges">
                 <span class="badge-integrity-valid">
                     <span class="badge-dot-emerald"></span>
@@ -45,6 +46,7 @@
     <div class="audit-toolbar-row">
         {{-- Compact Search Input --}}
         <div class="audit-search-wrap">
+            <label for="headerSearchInput" class="sr-only">Aktor / Staf</label>
             <input 
                 type="text" 
                 id="headerSearchInput"
