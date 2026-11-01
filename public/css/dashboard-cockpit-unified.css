@@ -809,10 +809,17 @@
 }
 .cv-status-dot-badge.danger .dot { background: #F43F5E; }
 
+.cv-status-dot-badge.neutral {
+  color: #64748B;
+  background: rgba(100, 116, 139, 0.12);
+}
+.cv-status-dot-badge.neutral .dot { background: #94A3B8; }
+
 [data-theme="dark"] .cv-status-dot-badge.success { color: #34D399; background: rgba(16, 185, 129, 0.18); }
 [data-theme="dark"] .cv-status-dot-badge.info { color: #38BDF8; background: rgba(14, 165, 233, 0.18); }
 [data-theme="dark"] .cv-status-dot-badge.warning { color: #FBBF24; background: rgba(245, 158, 11, 0.18); }
 [data-theme="dark"] .cv-status-dot-badge.danger { color: #FB7185; background: rgba(244, 63, 94, 0.18); }
+[data-theme="dark"] .cv-status-dot-badge.neutral { color: #94A3B8; background: rgba(148, 163, 184, 0.18); }
 
 /* Modern Top-Right Action Button (Image 1 Parity: "View All ->") */
 .cv-btn-view-all {

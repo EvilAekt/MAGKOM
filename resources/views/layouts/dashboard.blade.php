@@ -2788,8 +2788,12 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin: 0;
+            margin: 0 0 0 auto;
             padding: 0;
+        }
+
+        .x_title .clearfix {
+            display: none;
         }
 
         .collapse-link {

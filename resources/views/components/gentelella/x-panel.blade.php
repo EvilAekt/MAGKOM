@@ -26,7 +26,7 @@
             @endif
 
             @if($toolbox)
-                <ul class="panel_toolbox" role="toolbar" aria-label="Aksi Panel">
+                <ul class="panel_toolbox" role="toolbar" aria-label="Aksi Panel" style="margin-left: auto;">
                     @if(isset($actions) && trim($actions))
                         <li class="toolbox_actions">{!! $actions !!}</li>
                     @endif
