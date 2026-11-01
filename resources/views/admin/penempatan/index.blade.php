@@ -106,6 +106,85 @@
         .admin-table tr:hover {
             background: #F8FAFC;
         }
+
+        /* Action Dropdown Menu (Opsi 1: More Actions) */
+        .action-dropdown-wrap {
+            position: relative;
+            display: inline-block;
+        }
+        .action-dropdown-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: #FFFFFF;
+            border: 1px solid var(--neutral-300, #CBD5E1);
+            border-radius: 6px;
+            color: var(--neutral-700, #334155);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        .action-dropdown-btn:hover,
+        .action-dropdown-btn.active {
+            background: #F1F5F9;
+            border-color: #94A3B8;
+            color: #0F172A;
+        }
+        .action-dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 4px);
+            min-width: 195px;
+            background: #FFFFFF;
+            border: 1px solid var(--neutral-200, #E2E8F0);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+            padding: 0.35rem;
+            z-index: 50;
+            flex-direction: column;
+            gap: 0.2rem;
+            text-align: left;
+        }
+        .action-dropdown-menu.show {
+            display: flex;
+        }
+        .action-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--neutral-700, #334155);
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.12s ease;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+        .action-dropdown-item:hover {
+            background: #F1F5F9;
+            color: #0F172A;
+        }
+        .action-dropdown-item.danger {
+            color: #DC2626;
+        }
+        .action-dropdown-item.danger:hover {
+            background: #FEF2F2;
+            color: #B91C1C;
+        }
+        .action-dropdown-divider {
+            height: 1px;
+            background-color: var(--neutral-200, #E2E8F0);
+            margin: 0.25rem 0;
+        }
         .modal-overlay {
             display: none;
             position: fixed;
@@ -262,6 +341,47 @@
             background: #111C2E !important;
             border-color: #26354D !important;
             color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-btn {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-btn:hover,
+        [data-theme="dark"] .action-dropdown-btn.active {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-menu {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-item {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-item:hover {
+            background: #233249 !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-item.danger {
+            color: #F87171 !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-item.danger:hover {
+            background: rgba(220, 38, 38, 0.15) !important;
+            color: #EF4444 !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-divider {
+            background-color: #26354D !important;
         }
 
         [data-theme="dark"] .modal-container {
@@ -635,7 +755,7 @@
                 <p style="font-size: 0.875rem; max-width: 460px; margin: 0 auto;">Belum ada peserta magang yang sesuai dengan kriteria filter yang dipilih.</p>
             </div>
         @else
-            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+            <div class="table-responsive-gentelella" style="overflow-x: auto; min-height: 250px; padding-bottom: 3.5rem;">
                 <table class="admin-table table jambo_table table-striped bulk_action">
                     <thead>
                         <tr>
@@ -647,7 +767,7 @@
                             <th>Jalur / Bidang Dinas</th>
                             <th>Bulan Magang</th>
                             <th>Status</th>
-                            <th style="text-align: right; width: 170px;">Aksi</th>
+                            <th style="text-align: right; width: 180px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -704,9 +824,6 @@
                                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
                                                 <span>{{ $p->pembimbing->mentee_aktif_count ?? 1 }} Mentee Aktif</span>
                                             </span>
-                                            <button type="button" onclick="openPindahModal({{ $p->id }}, '{{ addslashes($cleanPesertaNama) }}', {{ $p->pembimbing_id ?? 'null' }})" style="border: none; background: none; color: #0641CC; font-size: 0.75rem; font-weight: 700; cursor: pointer; padding: 0; text-decoration: underline;">
-                                                Ganti
-                                            </button>
                                         </div>
                                     @endif
                                 </td>
@@ -748,7 +865,7 @@
 
                                 {{-- Aksi --}}
                                 <td style="text-align: right;">
-                                    <div style="display: inline-flex; gap: 0.35rem; align-items: center;">
+                                    <div style="display: inline-flex; gap: 0.35rem; align-items: center; justify-content: flex-end;">
                                         <a href="{{ route('admin.penempatan.show', $p) }}" title="Lihat Detail Penempatan" style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.4rem 0.65rem; background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; border-radius: 6px; font-weight: 700; font-size: 0.75rem; text-decoration: none; transition: all 0.15s ease;" onmouseover="this.style.background='#E0E7FF'" onmouseout="this.style.background='#EEF2FF'">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                             <span>Detail</span>
@@ -759,15 +876,49 @@
                                             <span>Surat</span>
                                         </button>
 
-                                        <a href="{{ route('admin.penempatan.surat-diterima', $p) }}" title="Unduh Surat Diterima PDF" style="padding: 0.4rem 0.65rem; background: #ffffff; color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #CBD5E1); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.75rem; display: inline-flex; align-items: center;">
-                                            Unduh
-                                        </a>
-
-                                        @if($statusVal === 'aktif')
-                                            <button type="button" onclick="openBatalModal({{ $p->id }}, '{{ addslashes($p->peserta?->nama) }}')" style="padding: 0.4rem 0.65rem; background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; border-radius: 6px; font-weight: 600; font-size: 0.75rem; cursor: pointer;">
-                                                Batalkan
+                                        {{-- Dropdown Menu Aksi Lanjutan (Opsi 1) --}}
+                                        <div class="action-dropdown-wrap">
+                                            <button type="button" class="action-dropdown-btn" onclick="toggleRowDropdown(this, event)" title="Opsi & Aksi Lainnya">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="1.5"></circle>
+                                                    <circle cx="19" cy="12" r="1.5"></circle>
+                                                    <circle cx="5" cy="12" r="1.5"></circle>
+                                                </svg>
                                             </button>
-                                        @endif
+                                            <div class="action-dropdown-menu">
+                                                @if($p->pembimbing)
+                                                    <button type="button" class="action-dropdown-item" onclick="openPindahModal({{ $p->id }}, '{{ addslashes($cleanPesertaNama) }}', {{ $p->pembimbing_id ?? 'null' }})">
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                                            <circle cx="9" cy="7" r="4"></circle>
+                                                            <polyline points="16 11 18 13 22 9"></polyline>
+                                                        </svg>
+                                                        <span>Ganti Pembimbing</span>
+                                                    </button>
+                                                @endif
+
+                                                <a href="{{ route('admin.penempatan.surat-diterima', $p) }}" class="action-dropdown-item" title="Unduh File Surat Keterangan Diterima PDF">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                                    </svg>
+                                                    <span>Unduh Surat (PDF)</span>
+                                                </a>
+
+                                                @if($statusVal === 'aktif')
+                                                    <div class="action-dropdown-divider"></div>
+                                                    <button type="button" class="action-dropdown-item danger" onclick="openBatalModal({{ $p->id }}, '{{ addslashes($p->peserta?->nama) }}')">
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                                                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                                                        </svg>
+                                                        <span>Batalkan Penempatan</span>
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -1241,7 +1392,57 @@
         }
     }
 
+    function toggleRowDropdown(btn, event) {
+        event.stopPropagation();
+        const wrap = btn.closest('.action-dropdown-wrap');
+        if (!wrap) return;
+        const menu = wrap.querySelector('.action-dropdown-menu');
+        if (!menu) return;
+
+        const isOpen = menu.classList.contains('show');
+
+        // Tutup semua dropdown lain yang terbuka
+        document.querySelectorAll('.action-dropdown-menu.show').forEach(m => {
+            if (m !== menu) {
+                m.classList.remove('show');
+                m.closest('.action-dropdown-wrap')?.querySelector('.action-dropdown-btn')?.classList.remove('active');
+            }
+        });
+
+        if (!isOpen) {
+            menu.classList.add('show');
+            btn.classList.add('active');
+
+            // Cek apakah posisi dekat dengan bagian bawah viewport
+            const rect = menu.getBoundingClientRect();
+            if (rect.bottom > window.innerHeight - 20) {
+                menu.style.top = 'auto';
+                menu.style.bottom = 'calc(100% + 4px)';
+            } else {
+                menu.style.top = 'calc(100% + 4px)';
+                menu.style.bottom = 'auto';
+            }
+        } else {
+            menu.classList.remove('show');
+            btn.classList.remove('active');
+        }
+    }
+
+    // Auto-close dropdown saat klik di luar area
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.action-dropdown-wrap')) {
+            document.querySelectorAll('.action-dropdown-menu.show').forEach(m => {
+                m.classList.remove('show');
+                m.closest('.action-dropdown-wrap')?.querySelector('.action-dropdown-btn')?.classList.remove('active');
+            });
+        }
+    });
+
     function openPindahModal(penempatanId, namaPeserta, pembimbingId) {
+        document.querySelectorAll('.action-dropdown-menu.show').forEach(m => {
+            m.classList.remove('show');
+            m.closest('.action-dropdown-wrap')?.querySelector('.action-dropdown-btn')?.classList.remove('active');
+        });
         const modal = document.getElementById('modal-pindah-pembimbing');
         const nameEl = document.getElementById('pindah-peserta-nama');
         const formEl = document.getElementById('form-pindah-pembimbing');
