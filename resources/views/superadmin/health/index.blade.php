@@ -35,54 +35,518 @@
 @push('styles')
 <style>
     /* ==========================================================================
-       HEALTH TELEMETRY PURE SCOPED CSS & GENTELELLA PARITY (CANVAS a9ba81f3)
+       HEALTH TELEMETRY DUAL-THEME CSS ENGINE & COCKPIT PARITY
+       Architecture: Token Engine with Light Mode & Dark Mode Parity (WCAG 2.1 AA)
        ========================================================================== */
 
-    .health-telemetry-container {
-        display: flex;
-        flex-direction: column;
-        gap: 1.25rem;
-        width: 100%;
-        color: #1e293b;
+    /* 1. LIGHT MODE TOKENS (Default / MagKom Corporate Clean) */
+    :root,
+    html:not([data-theme="dark"]) {
+        --tel-shell-bg: #f8fafc;
+        --tel-shell-border: #e2e8f0;
+        --tel-shell-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+
+        --tel-card-bg: #ffffff;
+        --tel-card-border: #e2e8f0;
+        --tel-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+        --tel-card-header-bg: #f8fafc;
+        --tel-card-header-border: #e2e8f0;
+
+        --tel-surface-elevated: #f1f5f9;
+        --tel-surface-elevated-border: #e2e8f0;
+
+        --tel-text-primary: #0f172a;
+        --tel-text-secondary: #334155;
+        --tel-text-muted: #64748b;
+        --tel-accent-link: #0284c7;
+
+        /* HUD Command Cockpit Light Mode */
+        --tel-hud-bg: linear-gradient(135deg, #003566 0%, #012d59 100%);
+        --tel-hud-border: #002244;
+        --tel-hud-card-bg: rgba(255, 255, 255, 0.08);
+        --tel-hud-card-border: rgba(255, 255, 255, 0.15);
+
+        /* Table & Controls */
+        --tel-table-header-bg: #003566;
+        --tel-table-header-text: #ffffff;
+        --tel-table-row-hover: #f1f5f9;
+        --tel-table-border: #e2e8f0;
+
+        --tel-time-selector-bg: #e2e8f0;
+        --tel-time-selector-border: #cbd5e1;
+        --tel-time-btn-active-bg: #003566;
+        --tel-time-btn-active-text: #ffffff;
+        --tel-time-btn-color: #64748b;
+
+        --tel-canvas-bg: #0f172a;
+        --tel-progress-track-bg: #e2e8f0;
+
+        --tel-badge-success-bg: rgba(16, 185, 129, 0.12);
+        --tel-badge-success-text: #059669;
+        --tel-badge-success-border: rgba(16, 185, 129, 0.3);
+        --tel-badge-success-dot: #10b981;
+
+        --tel-badge-info-bg: rgba(2, 132, 199, 0.12);
+        --tel-badge-info-text: #0284c7;
+        --tel-badge-info-border: rgba(2, 132, 199, 0.3);
+        --tel-badge-info-dot: #0284c7;
+
+        --tel-sse-card-bg: rgba(6, 182, 212, 0.06);
+        --tel-sse-card-border: rgba(6, 182, 212, 0.35);
+        --tel-cyan-text: #0891b2;
+        --tel-cyan-value: #0e7490;
+
+        --tel-btn-sse-bg: #01347C;
+        --tel-btn-sse-hover: #02275D;
+
+        --tel-syslog-bg: #f8fafc;
+        --tel-syslog-border: #e2e8f0;
+        --tel-syslog-stream-bg: #f0fdf4;
+        --tel-syslog-stream-border: #bbf7d0;
+
+        --tel-row-stream-bg: rgba(6, 182, 212, 0.05);
+        --tel-row-spike-bg: rgba(239, 68, 68, 0.05);
     }
 
-    [data-theme="dark"] .health-telemetry-container {
-        color: #f1f5f9;
+    /* 2. DARK MODE TOKENS (Deep Space Navy - MagKom Parity) */
+    [data-theme="dark"] {
+        --tel-shell-bg: #002244;
+        --tel-shell-border: rgba(30, 58, 95, 0.8);
+        --tel-shell-shadow: 0 20px 45px rgba(0, 15, 30, 0.5);
+
+        --tel-card-bg: #001e38;
+        --tel-card-border: rgba(30, 58, 95, 0.8);
+        --tel-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+        --tel-card-header-bg: rgba(2, 24, 48, 0.75);
+        --tel-card-header-border: rgba(30, 58, 95, 0.7);
+
+        --tel-surface-elevated: rgba(2, 24, 48, 0.75);
+        --tel-surface-elevated-border: rgba(30, 58, 95, 0.6);
+
+        --tel-text-primary: #ffffff;
+        --tel-text-secondary: #cbd5e1;
+        --tel-text-muted: #94a3b8;
+        --tel-accent-link: #60a5fa;
+
+        /* HUD Command Cockpit Dark Mode */
+        --tel-hud-bg: linear-gradient(135deg, #003566 0%, #012d59 50%, #011f3f 100%);
+        --tel-hud-border: rgba(30, 64, 175, 0.4);
+        --tel-hud-card-bg: rgba(2, 24, 48, 0.8);
+        --tel-hud-card-border: rgba(30, 58, 95, 0.8);
+
+        /* Table & Controls */
+        --tel-table-header-bg: #002b54;
+        --tel-table-header-text: #ffffff;
+        --tel-table-row-hover: rgba(2, 24, 48, 0.5);
+        --tel-table-border: rgba(30, 58, 95, 0.4);
+
+        --tel-time-selector-bg: rgba(2, 24, 48, 0.9);
+        --tel-time-selector-border: rgba(30, 58, 95, 0.8);
+        --tel-time-btn-active-bg: #ffffff;
+        --tel-time-btn-active-text: #0f172a;
+        --tel-time-btn-color: #94a3b8;
+
+        --tel-canvas-bg: #030712;
+        --tel-progress-track-bg: #0b1a2d;
+
+        --tel-badge-success-bg: rgba(16, 185, 129, 0.18);
+        --tel-badge-success-text: #34d399;
+        --tel-badge-success-border: rgba(16, 185, 129, 0.4);
+        --tel-badge-success-dot: #34d399;
+
+        --tel-badge-info-bg: rgba(6, 182, 212, 0.2);
+        --tel-badge-info-text: #22d3ee;
+        --tel-badge-info-border: rgba(6, 182, 212, 0.4);
+        --tel-badge-info-dot: #22d3ee;
+
+        --tel-sse-card-bg: rgba(8, 47, 73, 0.45);
+        --tel-sse-card-border: rgba(6, 182, 212, 0.5);
+        --tel-cyan-text: #67e8f9;
+        --tel-cyan-value: #22d3ee;
+
+        --tel-btn-sse-bg: #01347C;
+        --tel-btn-sse-hover: #02275D;
+
+        --tel-syslog-bg: rgba(2, 24, 48, 0.6);
+        --tel-syslog-border: rgba(30, 58, 95, 0.4);
+        --tel-syslog-stream-bg: rgba(8, 47, 73, 0.45);
+        --tel-syslog-stream-border: rgba(6, 182, 212, 0.4);
+
+        --tel-row-stream-bg: rgba(8, 47, 73, 0.4);
+        --tel-row-spike-bg: rgba(76, 5, 25, 0.35);
+    }
+
+    /* 3. Typography & Global Box-Sizing Isolation */
+    .health-telemetry-container,
+    .telemetry-cockpit-shell {
+        color: var(--tel-text-primary) !important;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+    .telemetry-cockpit-shell h1,
+    .telemetry-cockpit-shell h3,
+    .telemetry-cockpit-shell h4,
+    .telemetry-cockpit-shell h5,
+    .telemetry-cockpit-shell h6 {
+        color: var(--tel-text-primary) !important;
+        font-family: inherit !important;
+        margin-top: 0 !important;
+    }
+    .telemetry-cockpit-shell p,
+    .telemetry-cockpit-shell span,
+    .telemetry-cockpit-shell div {
+        box-sizing: border-box;
+    }
+
+    /* Screen reader utility helper for clean HTML accessibility */
+    .sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
     }
 
     /* SVG Guardrails for Gentelella / Chromium Environment (AC-8) */
-    .health-telemetry-container svg {
+    .health-telemetry-container svg,
+    .telemetry-cockpit-shell svg {
         display: inline-block;
         vertical-align: middle;
         flex-shrink: 0;
     }
-    .health-telemetry-container svg:not([width]) {
+    .health-telemetry-container svg:not([width]),
+    .telemetry-cockpit-shell svg:not([width]) {
         width: 20px;
         height: 20px;
         max-width: 100%;
     }
 
-    /* 1. Header Toolbar Styles */
+    /* 4. Cockpit Master Shell */
+    .telemetry-cockpit-shell {
+        background-color: var(--tel-shell-bg) !important;
+        border: 1px solid var(--tel-shell-border) !important;
+        border-radius: 20px !important;
+        padding: 24px !important;
+        box-shadow: var(--tel-shell-shadow) !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+        transition: background-color 0.25s ease, border-color 0.25s ease !important;
+    }
+
+    @media (max-width: 768px) {
+        .telemetry-cockpit-shell {
+            padding: 14px !important;
+            border-radius: 14px !important;
+            gap: 16px !important;
+        }
+    }
+
+    /* 5. Primary Telemetry Cards */
+    .telemetry-card {
+        background-color: var(--tel-card-bg) !important;
+        border: 1px solid var(--tel-card-border) !important;
+        border-radius: 14px !important;
+        padding: 16px !important;
+        color: var(--tel-text-primary) !important;
+        box-sizing: border-box !important;
+        box-shadow: var(--tel-card-shadow) !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.25s ease !important;
+    }
+    .telemetry-card:hover {
+        border-color: rgba(56, 189, 248, 0.4) !important;
+    }
+    .telemetry-card.telemetry-card-sse {
+        background-color: var(--tel-sse-card-bg) !important;
+        border-color: var(--tel-sse-card-border) !important;
+    }
+
+    /* Card Header Bar */
+    .telemetry-card-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        border-bottom: 1px solid var(--tel-card-header-border) !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 14px !important;
+    }
+    .telemetry-card-title {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        color: var(--tel-text-primary) !important;
+        margin: 0 !important;
+    }
+
+    /* 6. Modern Status Pill Badges (Replaces Harsh Rectangle Badges) */
+    .telemetry-status-pill {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 3px 10px !important;
+        border-radius: 9999px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        box-sizing: border-box !important;
+        white-space: nowrap !important;
+        vertical-align: middle !important;
+    }
+    .telemetry-status-pill .status-dot {
+        width: 6px !important;
+        height: 6px !important;
+        min-width: 6px !important;
+        min-height: 6px !important;
+        border-radius: 50% !important;
+        display: inline-block !important;
+        flex-shrink: 0 !important;
+    }
+    .telemetry-status-pill.pill-success {
+        background-color: var(--tel-badge-success-bg) !important;
+        color: var(--tel-badge-success-text) !important;
+        border: 1px solid var(--tel-badge-success-border) !important;
+    }
+    .telemetry-status-pill.pill-success .status-dot {
+        background-color: var(--tel-badge-success-dot) !important;
+        box-shadow: 0 0 6px var(--tel-badge-success-dot) !important;
+    }
+    .telemetry-status-pill.pill-info {
+        background-color: var(--tel-badge-info-bg) !important;
+        color: var(--tel-badge-info-text) !important;
+        border: 1px solid var(--tel-badge-info-border) !important;
+    }
+    .telemetry-status-pill.pill-info .status-dot {
+        background-color: var(--tel-badge-info-dot) !important;
+        box-shadow: 0 0 6px var(--tel-badge-info-dot) !important;
+    }
+
+    /* 7. Secondary Elevated Surfaces (Subsystems & Maintenance Actions) */
+    .telemetry-action-card,
+    .telemetry-subsystem-box {
+        background-color: var(--tel-surface-elevated) !important;
+        border: 1px solid var(--tel-surface-elevated-border) !important;
+        border-radius: 12px !important;
+        padding: 12px 14px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        transition: all 0.2s ease !important;
+        color: var(--tel-text-primary) !important;
+    }
+    .telemetry-action-card:hover {
+        border-color: rgba(56, 189, 248, 0.5) !important;
+    }
+    .telemetry-subsystem-box.telemetry-subsystem-sse {
+        background-color: var(--tel-sse-card-bg) !important;
+        border-color: var(--tel-sse-card-border) !important;
+    }
+
+    /* 8. Action Buttons (Sweep, Vacuum, Purge, Probe) */
+    .btn-telemetry-action {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 6px 14px !important;
+        border-radius: 8px !important;
+        font-family: monospace !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: background-color 0.2s ease, transform 0.1s ease !important;
+        color: #ffffff !important;
+        text-decoration: none !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25) !important;
+        line-height: 1.4 !important;
+    }
+    .btn-telemetry-action:hover {
+        filter: brightness(1.15) !important;
+    }
+    .btn-telemetry-action:active {
+        transform: scale(0.96) !important;
+    }
+    .btn-telemetry-action.btn-sweep {
+        background-color: #e11d48 !important;
+    }
+    .btn-telemetry-action.btn-sweep:hover {
+        background-color: #be123c !important;
+    }
+    .btn-telemetry-action.btn-vacuum {
+        background-color: #0284c7 !important;
+    }
+    .btn-telemetry-action.btn-vacuum:hover {
+        background-color: #0369a1 !important;
+    }
+    .btn-telemetry-action.btn-purge {
+        background-color: #059669 !important;
+    }
+    .btn-telemetry-action.btn-purge:hover {
+        background-color: #047857 !important;
+    }
+    .btn-telemetry-action.btn-probe {
+        background-color: #0891b2 !important;
+    }
+    .btn-telemetry-action.btn-probe:hover {
+        background-color: #0e7490 !important;
+    }
+
+    /* 9. Donut Layout & Anti-Collision Isolation */
+    .telemetry-donut-layout {
+        display: flex !important;
+        align-items: center !important;
+        gap: 20px !important;
+        margin-top: 14px !important;
+        width: 100% !important;
+    }
+    @media (max-width: 640px) {
+        .telemetry-donut-layout {
+            flex-direction: column !important;
+        }
+    }
+    .telemetry-donut-svg-wrapper {
+        position: relative !important;
+        width: 112px !important;
+        height: 112px !important;
+        min-width: 112px !important;
+        min-height: 112px !important;
+        flex-shrink: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    .telemetry-donut-center-text {
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        pointer-events: none !important;
+        width: 100% !important;
+    }
+    .telemetry-donut-center-val {
+        font-family: monospace !important;
+        font-size: 20px !important;
+        font-weight: 800 !important;
+        color: var(--tel-text-primary) !important;
+        line-height: 1 !important;
+    }
+    .telemetry-donut-center-lbl {
+        font-family: monospace !important;
+        font-size: 9px !important;
+        font-weight: 700 !important;
+        color: var(--tel-badge-success-text) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        margin-top: 2px !important;
+    }
+    .telemetry-breakdown-list {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        width: 100% !important;
+        font-family: monospace !important;
+        font-size: 11px !important;
+    }
+    .telemetry-breakdown-item {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-bottom: 2px !important;
+    }
+    .telemetry-progress-track {
+        height: 6px !important;
+        background-color: var(--tel-progress-track-bg) !important;
+        border-radius: 9999px !important;
+        overflow: hidden !important;
+        border: 1px solid var(--tel-card-border) !important;
+    }
+    .telemetry-progress-fill {
+        height: 100% !important;
+        border-radius: 9999px !important;
+        transition: width 0.8s ease !important;
+    }
+
+    /* 10. Header Toolbar & Controls */
     .telemetry-header-toolbar {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        border-bottom: 1px solid #e2e8f0;
-        padding-bottom: 1rem;
-        margin-bottom: 1.25rem;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        border-bottom: 1px solid var(--tel-card-header-border) !important;
+        padding-bottom: 18px !important;
+        margin-bottom: 4px !important;
     }
     @media (min-width: 640px) {
         .telemetry-header-toolbar {
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
         }
     }
-    [data-theme="dark"] .telemetry-header-toolbar {
-        border-color: #1e293b;
+    .telemetry-time-selector {
+        display: inline-flex !important;
+        align-items: center !important;
+        background-color: var(--tel-time-selector-bg) !important;
+        border: 1px solid var(--tel-time-selector-border) !important;
+        border-radius: 8px !important;
+        padding: 3px !important;
+        gap: 3px !important;
+    }
+    .time-window-btn {
+        border: none !important;
+        background: transparent !important;
+        color: var(--tel-time-btn-color) !important;
+        padding: 4px 10px !important;
+        font-family: monospace !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        border-radius: 6px !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+    .time-window-btn:hover {
+        color: var(--tel-text-primary) !important;
+    }
+    .time-window-btn.active,
+    .time-window-btn:first-child {
+        background-color: var(--tel-time-btn-active-bg) !important;
+        color: var(--tel-time-btn-active-text) !important;
+    }
+    .btn-test-sse-action {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        background-color: var(--tel-btn-sse-bg) !important;
+        border: 1px solid rgba(59, 130, 246, 0.4) !important;
+        color: #ffffff !important;
+        padding: 6px 14px !important;
+        border-radius: 8px !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+    .btn-test-sse-action:hover {
+        background-color: var(--tel-btn-sse-hover) !important;
+        border-color: rgba(59, 130, 246, 0.8) !important;
     }
 
-    /* 2. Grid Layouts (Pure CSS Grid Parity - Non Tailwind Resilient) */
+    /* 11. Grids (Pure CSS Grid Parity) */
     .telemetry-command-grid {
         display: grid !important;
         grid-template-columns: repeat(6, 1fr) !important;
@@ -102,7 +566,7 @@
     .telemetry-kpi-row-grid {
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
-        gap: 12px !important;
+        gap: 14px !important;
     }
     @media (max-width: 992px) {
         .telemetry-kpi-row-grid {
@@ -113,6 +577,26 @@
         .telemetry-kpi-row-grid {
             grid-template-columns: 1fr !important;
         }
+    }
+
+    .telemetry-kpi-title {
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        color: var(--tel-text-muted) !important;
+    }
+    .telemetry-kpi-value {
+        font-family: monospace !important;
+        font-size: 1.5rem !important;
+        font-weight: 800 !important;
+        line-height: 1.2 !important;
+        color: var(--tel-text-primary) !important;
+        font-feature-settings: "tnum" 1 !important;
+    }
+    .telemetry-kpi-sub {
+        font-size: 11px !important;
+        font-family: monospace !important;
+        color: var(--tel-text-muted) !important;
+        margin-top: 6px !important;
     }
 
     .telemetry-split-8-4 {
@@ -159,101 +643,299 @@
         }
     }
 
-    /* 3. Canvas Real-Time Chart Area */
+    /* 12. HUD & Box Metrics (High-Contrast Isolation) */
+    .telemetry-hud-card {
+        background: var(--tel-hud-bg) !important;
+        border: 1px solid var(--tel-hud-border) !important;
+        border-radius: 16px !important;
+        padding: 20px !important;
+        color: #e2e8f0 !important;
+    }
+    .telemetry-hud-card h1,
+    .telemetry-hud-card h2,
+    .telemetry-hud-card h3 {
+        color: #ffffff !important;
+    }
+    .telemetry-hud-card p,
+    .telemetry-hud-card span:not([class*="text-"]):not([style*="color"]) {
+        color: #cbd5e1 !important;
+    }
+    .telemetry-hud-metric-box {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        background: var(--tel-hud-card-bg) !important;
+        border: 1px solid var(--tel-hud-card-border) !important;
+        border-radius: 12px !important;
+        padding: 14px !important;
+        min-height: 124px !important;
+        box-sizing: border-box !important;
+    }
+    .telemetry-hud-metric-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        color: #cbd5e1 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.06em !important;
+    }
+    .telemetry-hud-metric-footer {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding-top: 8px !important;
+        font-family: monospace !important;
+        font-size: 10px !important;
+        color: #94a3b8 !important;
+    }
+
+    /* 13. Canvas Real-Time Chart Area */
     .telemetry-canvas-wrapper {
-        position: relative;
-        width: 100%;
-        background: #030712;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #1E293B;
-        min-height: 280px;
+        position: relative !important;
+        width: 100% !important;
+        background: var(--tel-canvas-bg) !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        border: 1px solid #1E293B !important;
+        min-height: 280px !important;
     }
-
     #routeLatencyCanvas {
-        display: block;
-        width: 100%;
-        height: 280px;
+        display: block !important;
+        width: 100% !important;
+        height: 280px !important;
     }
-
     .telemetry-tooltip {
-        position: absolute;
-        display: none;
-        background: rgba(15, 23, 42, 0.95);
-        border: 1px solid rgba(56, 189, 248, 0.4);
-        color: #F8FAFC;
-        padding: 0.75rem;
-        border-radius: 8px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-        font-size: 0.75rem;
-        pointer-events: none;
-        z-index: 50;
-        min-width: 220px;
-        backdrop-filter: blur(6px);
+        position: absolute !important;
+        display: none !important;
+        background: rgba(15, 23, 42, 0.95) !important;
+        border: 1px solid rgba(56, 189, 248, 0.4) !important;
+        color: #F8FAFC !important;
+        padding: 0.75rem !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+        font-size: 0.75rem !important;
+        pointer-events: none !important;
+        z-index: 50 !important;
+        min-width: 220px !important;
+        backdrop-filter: blur(6px) !important;
     }
-
-    /* Laser Scanner Overlay */
     .telemetry-scanner-laser {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 48px;
-        width: 60px;
-        background: linear-gradient(to right, transparent, rgba(6, 182, 212, 0.15), transparent);
-        pointer-events: none;
-        animation: scannerPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        position: absolute !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        right: 48px !important;
+        width: 60px !important;
+        background: linear-gradient(to right, transparent, rgba(6, 182, 212, 0.15), transparent) !important;
+        pointer-events: none !important;
+        animation: scannerPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
     }
     .telemetry-scanner-line {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 48px;
-        width: 1px;
-        background: rgba(34, 211, 238, 0.8);
-        box-shadow: 0 0 8px rgba(34, 211, 238, 0.9);
-        pointer-events: none;
+        position: absolute !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        right: 48px !important;
+        width: 1px !important;
+        background: rgba(34, 211, 238, 0.8) !important;
+        box-shadow: 0 0 8px rgba(34, 211, 238, 0.9) !important;
+        pointer-events: none !important;
     }
     @keyframes scannerPulse {
         0%, 100% { opacity: 0.3; transform: translateX(0); }
         50% { opacity: 0.8; transform: translateX(-20px); }
     }
-
-    /* Threshold Grid Overlay */
     .telemetry-threshold-grid {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 1rem 1.25rem 2rem 1.25rem;
-        pointer-events: none;
-        opacity: 0.35;
-        font-family: monospace;
-        font-size: 9px;
+        position: absolute !important;
+        inset: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        padding: 1rem 1.25rem 2rem 1.25rem !important;
+        pointer-events: none !important;
+        opacity: 0.35 !important;
+        font-family: monospace !important;
+        font-size: 9px !important;
     }
 
-    /* Dark Mode Fallbacks */
-    [data-theme="dark"] .bg-white {
-        background-color: #0f172a !important;
-        border-color: #1e293b !important;
+    /* 14. Table & Scrollable Container Capping (Expanded Proportional Dimensions) */
+    .telemetry-table-container {
+        min-height: 360px !important;
+        max-height: 480px !important;
+        overflow-y: auto !important;
+        overflow-x: auto !important;
+        border-radius: 0 0 14px 14px !important;
     }
-    [data-theme="dark"] .text-slate-900 {
+    .telemetry-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 11px !important;
+    }
+    .telemetry-table thead th {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 10 !important;
+        background-color: var(--tel-table-header-bg) !important;
+        color: var(--tel-table-header-text) !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        font-size: 9px !important;
+        letter-spacing: 0.05em !important;
+        padding: 10px 12px !important;
+        border-bottom: 1px solid var(--tel-table-border) !important;
+        white-space: nowrap !important;
+    }
+    .telemetry-table td {
+        padding: 9px 12px !important;
+        border-bottom: 1px solid var(--tel-table-border) !important;
+        white-space: nowrap !important;
+    }
+    .route-table-row {
+        transition: background-color 0.15s ease !important;
+    }
+    .route-table-row:hover {
+        background-color: var(--tel-table-row-hover) !important;
+    }
+    .route-table-row.row-stream {
+        background-color: var(--tel-row-stream-bg) !important;
+    }
+    .route-table-row.row-spike {
+        background-color: var(--tel-row-spike-bg) !important;
+    }
+
+    /* Table Badges & Cell Types */
+    .method-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 2px 6px !important;
+        border-radius: 4px !important;
+        font-family: monospace !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        line-height: 1.2 !important;
+    }
+    .method-get {
+        background: rgba(59, 130, 246, 0.15) !important;
+        color: #3b82f6 !important;
+        border: 1px solid rgba(59, 130, 246, 0.3) !important;
+    }
+    .method-post {
+        background: rgba(16, 185, 129, 0.15) !important;
+        color: #10b981 !important;
+        border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    }
+    .method-delete {
+        background: rgba(239, 68, 68, 0.15) !important;
+        color: #ef4444 !important;
+        border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    }
+    .method-put {
+        background: rgba(245, 158, 11, 0.15) !important;
+        color: #f59e0b !important;
+        border: 1px solid rgba(245, 158, 11, 0.3) !important;
+    }
+    .status-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 2px 6px !important;
+        border-radius: 4px !important;
+        font-family: monospace !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        line-height: 1.2 !important;
+    }
+    .status-success {
+        background: rgba(16, 185, 129, 0.15) !important;
+        color: #10b981 !important;
+    }
+    .status-warning {
+        background: rgba(245, 158, 11, 0.15) !important;
+        color: #f59e0b !important;
+    }
+    .status-danger {
+        background: rgba(239, 68, 68, 0.15) !important;
+        color: #ef4444 !important;
+    }
+    .status-stream {
+        background: rgba(6, 182, 212, 0.15) !important;
+        color: #06b6d4 !important;
+    }
+    .telemetry-table-filter {
+        height: 28px !important;
+        width: 140px !important;
+        background: var(--tel-surface-elevated) !important;
+        border: 1px solid var(--tel-card-border) !important;
+        color: var(--tel-text-primary) !important;
+        border-radius: 6px !important;
+        padding: 2px 10px !important;
+        font-family: monospace !important;
+        font-size: 11px !important;
+        outline: none !important;
+    }
+    .telemetry-table-filter:focus {
+        border-color: #38bdf8 !important;
+    }
+
+    /* 15. Syslog Panel */
+    .telemetry-syslog-item {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 6px 10px !important;
+        border-radius: 8px !important;
+        font-family: monospace !important;
+        font-size: 11px !important;
+        background-color: var(--tel-syslog-bg) !important;
+        border: 1px solid var(--tel-syslog-border) !important;
+        margin-bottom: 6px !important;
+        color: var(--tel-text-secondary) !important;
+    }
+    .telemetry-syslog-item.stream-item {
+        background-color: var(--tel-syslog-stream-bg) !important;
+        border-color: var(--tel-syslog-stream-border) !important;
+    }
+
+    /* 16. Gentelella Dark Overrides (Scattered only in dark mode) */
+    [data-theme="dark"] .health-telemetry-container .bg-white,
+    [data-theme="dark"] .telemetry-cockpit-shell .bg-white {
+        background-color: #001e38 !important;
+        border-color: rgba(30, 58, 95, 0.8) !important;
         color: #f8fafc !important;
     }
-    [data-theme="dark"] .text-slate-800 {
-        color: #f1f5f9 !important;
+    [data-theme="dark"] .health-telemetry-container .border-slate-200,
+    [data-theme="dark"] .health-telemetry-container .border-slate-100,
+    [data-theme="dark"] .telemetry-cockpit-shell .border-slate-200,
+    [data-theme="dark"] .telemetry-cockpit-shell .border-slate-100 {
+        border-color: rgba(30, 58, 95, 0.8) !important;
     }
-    [data-theme="dark"] .text-slate-700 {
-        color: #e2e8f0 !important;
+    [data-theme="dark"] .health-telemetry-container .bg-slate-100,
+    [data-theme="dark"] .telemetry-cockpit-shell .bg-slate-100 {
+        background-color: #0b1a2d !important;
     }
-    [data-theme="dark"] .border-slate-200,
-    [data-theme="dark"] .border-slate-100 {
-        border-color: #1e293b !important;
+
+    /* 17. Viewport Bottom Containment (Hard-Stop Bounded Gap & Zero Void) */
+    .health-telemetry-container {
+        display: flex !important;
+        flex-direction: column !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
     }
-    [data-theme="dark"] .bg-slate-50\/70,
-    [data-theme="dark"] .bg-slate-50\/40,
-    [data-theme="dark"] .bg-slate-50 {
-        background-color: rgba(15, 23, 42, 0.6) !important;
+    .telemetry-cockpit-shell {
+        margin-bottom: 1.5rem !important; /* Jarak teratur 24px persis sebelum footer */
+    }
+    #mainContent,
+    .dashboard-main,
+    .dashboard-content-area,
+    .right_col {
+        min-height: auto !important;
+        padding-bottom: 0 !important;
+    }
+    .container.body,
+    .main_container {
+        min-height: auto !important;
     }
 </style>
 @endpush
@@ -274,356 +956,388 @@
         </x-gentelella.callout>
     @endif
 
-    {{-- 1. HEADER TOOLBAR & LIVE CONTROLS (AC-1: Zero Double Header) --}}
-    <header class="telemetry-header-toolbar">
-        <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003566] text-white font-bold text-sm shadow-md ring-2 ring-blue-500/20 shrink-0"
-                 style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background-color: #003566; color: #ffffff;">
-                MK
-            </div>
-            <div>
-                <div class="flex items-center gap-2.5 flex-wrap">
-                    <h1 class="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white m-0" style="font-size: 1.25rem; font-weight: 700; line-height: 1.75rem;">
-                        Telemetri Kesehatan Infrastruktur
-                    </h1>
-                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-mono font-bold text-emerald-600 dark:bg-emerald-950/70 dark:text-emerald-400 border border-emerald-500/30">
-                        <span class="relative flex h-2 w-2" style="width: 8px; height: 8px;">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+    <!-- COCKPIT MASTER SHELL (Deep Space Navy #002244 Parity) -->
+    <div class="telemetry-cockpit-shell">
+        <span class="sr-only">Panel Telemetri Kesehatan Infrastruktur Koneksi Basis Data Runtime</span>
+
+        {{-- 1. HEADER TOOLBAR & LIVE CONTROLS (AC-1: Zero Double Header) --}}
+        <header class="telemetry-header-toolbar">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl font-bold text-sm shadow-md shrink-0"
+                     style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background-color: var(--tel-btn-sse-bg); color: #ffffff; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(59, 130, 246, 0.3);">
+                    MK
+                </div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <h1 class="text-lg sm:text-xl font-bold tracking-tight m-0" style="font-size: 1.25rem; font-weight: 700; line-height: 1.75rem; color: var(--tel-text-primary) !important;">
+                            Telemetri Kesehatan Infrastruktur
+                        </h1>
+                        <span class="telemetry-status-pill pill-success">
+                            <span class="status-dot"></span>
+                            <span>Live 24ms</span>
                         </span>
-                        Live 24ms
+                    </div>
+                    <div class="text-xs font-mono mt-0.5" style="color: var(--tel-text-muted); font-size: 11px;">
+                        <span style="color: var(--tel-accent-link); font-weight: 600;">magkom-prod-01</span> &bull; Sleman DC
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Strip -->
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <!-- Channel -->
+                <span class="hidden md:inline-flex items-center gap-2 rounded-lg font-mono font-semibold"
+                      style="display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--tel-badge-info-border); background: var(--tel-badge-info-bg); padding: 5px 10px; border-radius: 8px; font-size: 11px; font-family: monospace; color: var(--tel-cyan-text);">
+                    <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" style="width: 8px; height: 8px; display: inline-block;"></span>
+                    /realtime/stream
+                </span>
+
+                <!-- Time Window Selector Buttons -->
+                <div class="telemetry-time-selector" id="timeWindowSelector">
+                    <button type="button" data-window="15m" class="time-window-btn active">15m</button>
+                    <button type="button" data-window="1h" class="time-window-btn">1h</button>
+                    <button type="button" data-window="24h" class="time-window-btn">24h</button>
+                </div>
+
+                <!-- Action Button: Test SSE -->
+                <button type="button" id="btnTestSse" class="btn-test-sse-action">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16" style="width: 16px; height: 16px; max-width: 16px; max-height: 16px;" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <span>Test SSE</span>
+                </button>
+            </div>
+        </header>
+
+        {{-- 2. UNIFIED COMMAND COCKPIT TELEMETRY CARD (HUD) (AC-2: 6 Kolom Simetris) --}}
+        <x-telemetry.health-hud
+            :sla-status="$slaStatus"
+            :sla-percent="$slaPercent"
+            :db-latency="$dbLatency"
+            :db-driver="$dbDriver"
+            :total-tables="$totalTables"
+            :p95-route-duration="$p95RouteDuration"
+            :avg-route-duration="$avgRouteDuration"
+            :total-route-requests="$totalRouteRequests"
+            :audit24h="$audit24h"
+            :total-audit="$totalAudit"
+            :failed-jobs-count="$failedJobsCount"
+            :cache-driver="$runtimeInfo['cache_driver'] ?? 'file'"
+            :queue-driver="$runtimeInfo['queue_driver'] ?? 'sync'"
+            :is-writable="$isWritable"
+        />
+
+        {{-- 3. 4 KEY STAT KPI CARDS ROW (AC-8: Safe SVG Dimensions) --}}
+        <div class="telemetry-kpi-row-grid">
+            <!-- Card 1: Uptime 30 Hari -->
+            <div class="telemetry-card">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="telemetry-kpi-title">Uptime 30 Hari</span>
+                    <span class="telemetry-status-pill pill-success" style="padding: 2px 8px; font-size: 10px;">
+                        <span class="status-dot"></span>
+                        <span>Normal</span>
                     </span>
                 </div>
-                <div class="text-xs font-mono text-slate-500 dark:text-slate-400 mt-0.5">
-                    <span class="text-[#01347C] dark:text-blue-400 font-semibold">magkom-prod-01</span> &bull; Sleman DC
+                <div style="margin-top: 10px; display: flex; align-items: baseline; justify-content: space-between;">
+                    <span class="telemetry-kpi-value">{{ $slaPercent !== null ? $slaPercent . '%' : '99.98%' }}</span>
+                    <svg class="h-6 w-20 text-emerald-500" viewBox="0 0 80 24" fill="none" width="80" height="24" style="width: 80px; height: 24px; max-width: 80px; max-height: 24px; color: #10b981;" aria-hidden="true">
+                        <path d="M0 16 L15 16 L25 15 L35 16 L45 14 L55 16 L65 15 L80 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
                 </div>
-            </div>
-        </div>
-
-        <!-- Controls Strip -->
-        <div class="flex items-center gap-2.5 flex-wrap">
-            <!-- Channel -->
-            <span class="hidden md:inline-flex items-center gap-2 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1.5 text-xs font-mono font-semibold text-cyan-700 dark:text-cyan-300">
-                <span class="h-2 w-2 rounded-full bg-cyan-500 animate-pulse" style="width: 8px; height: 8px;"></span>
-                /realtime/stream
-            </span>
-
-            <!-- Time Window Selector Buttons -->
-            <div class="inline-flex items-center rounded-lg bg-slate-200/90 p-1 text-xs font-semibold dark:bg-slate-800" id="timeWindowSelector">
-                <button type="button" data-window="15m" class="time-window-btn rounded-md bg-white px-3 py-1 text-slate-900 shadow-xs font-mono font-bold dark:bg-slate-700 dark:text-white cursor-pointer">15m</button>
-                <button type="button" data-window="1h" class="time-window-btn rounded-md px-3 py-1 text-slate-600 hover:text-slate-900 font-mono dark:text-slate-400 dark:hover:text-white cursor-pointer">1h</button>
-                <button type="button" data-window="24h" class="time-window-btn rounded-md px-3 py-1 text-slate-600 hover:text-slate-900 font-mono dark:text-slate-400 dark:hover:text-white cursor-pointer">24h</button>
+                <div class="telemetry-kpi-sub">SLO: 99.9%</div>
             </div>
 
-            <!-- Action Button: Test SSE -->
-            <button type="button" id="btnTestSse" class="inline-flex items-center gap-1.5 rounded-lg bg-[#01347C] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-[#02275D] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#3F51B5]">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16" style="width: 16px; height: 16px; max-width: 16px; max-height: 16px;" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                <span>Test SSE</span>
-            </button>
-        </div>
-    </header>
-
-    {{-- 2. UNIFIED COMMAND COCKPIT TELEMETRY CARD (HUD) (AC-2: 6 Kolom Simetris) --}}
-    <x-telemetry.health-hud
-        :sla-status="$slaStatus"
-        :sla-percent="$slaPercent"
-        :db-latency="$dbLatency"
-        :db-driver="$dbDriver"
-        :total-tables="$totalTables"
-        :p95-route-duration="$p95RouteDuration"
-        :avg-route-duration="$avgRouteDuration"
-        :total-route-requests="$totalRouteRequests"
-        :audit24h="$audit24h"
-        :total-audit="$totalAudit"
-        :failed-jobs-count="$failedJobsCount"
-        :cache-driver="$runtimeInfo['cache_driver'] ?? 'file'"
-        :queue-driver="$runtimeInfo['queue_driver'] ?? 'sync'"
-        :is-writable="$isWritable"
-    />
-
-    {{-- 3. 4 KEY STAT KPI CARDS ROW (AC-8: Safe SVG Dimensions) --}}
-    <div class="telemetry-kpi-row-grid">
-        <!-- Card 1: Uptime 30 Hari -->
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 transition-all hover:shadow-sm">
-            <div class="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
-                <span>Uptime 30 Hari</span>
-                <span class="rounded bg-emerald-50 text-emerald-700 px-2 py-0.5 text-[10px] font-mono font-bold dark:bg-emerald-950/70 dark:text-emerald-400">Normal</span>
-            </div>
-            <div class="mt-2.5 flex items-baseline justify-between">
-                <span class="font-mono text-2xl font-bold text-slate-900 dark:text-white">{{ $slaPercent !== null ? $slaPercent . '%' : '99.98%' }}</span>
-                <svg class="h-6 w-20 text-emerald-500" viewBox="0 0 80 24" fill="none" width="80" height="24" style="width: 80px; height: 24px; max-width: 80px; max-height: 24px;" aria-hidden="true">
-                    <path d="M0 16 L15 16 L25 15 L35 16 L45 14 L55 16 L65 15 L80 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-            </div>
-            <div class="mt-2 text-[11px] font-mono text-slate-400">0 insiden tercatat</div>
-        </div>
-
-        <!-- Card 2: HTTP P95 Latency -->
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 transition-all hover:shadow-sm">
-            <div class="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
-                <span>HTTP P95 Latency</span>
-                <span class="text-blue-600 dark:text-blue-400 font-mono text-[11px] font-semibold">&lt; 200ms SLO</span>
-            </div>
-            <div class="mt-2.5 flex items-baseline justify-between">
-                <div class="font-mono text-2xl font-bold text-slate-900 dark:text-white">
-                    {{ number_format((float) $p95RouteDuration, 1) }} <span class="text-xs font-normal text-slate-400">ms</span>
+            <!-- Card 2: HTTP P95 Latency -->
+            <div class="telemetry-card">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="telemetry-kpi-title">HTTP P95 Latency</span>
+                    <span class="font-mono text-[11px] font-semibold" style="color: #3b82f6;">&lt; 200ms SLO</span>
                 </div>
-                <svg class="h-6 w-20 text-blue-500" viewBox="0 0 80 24" fill="none" width="80" height="24" style="width: 80px; height: 24px; max-width: 80px; max-height: 24px;" aria-hidden="true">
-                    <path d="M0 18 L15 16 L30 19 L40 6 L50 17 L65 15 L80 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-            </div>
-            <div class="mt-2 text-[11px] font-mono text-slate-400">Maks: {{ (int) $maxRouteDuration }}ms</div>
-        </div>
-
-        <!-- Card 3: Volume Permintaan -->
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 transition-all hover:shadow-sm">
-            <div class="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
-                <span>Volume Permintaan</span>
-                <span class="text-indigo-600 dark:text-indigo-400 font-mono text-[11px] font-semibold">140 rps</span>
-            </div>
-            <div class="mt-2.5 flex items-baseline justify-between">
-                <div class="font-mono text-2xl font-bold text-slate-900 dark:text-white">
-                    {{ number_format($totalRouteRequests) }} <span class="text-xs font-normal text-slate-400">rpm</span>
-                </div>
-                <svg class="h-6 w-20 text-indigo-500" viewBox="0 0 80 24" fill="currentColor" width="80" height="24" style="width: 80px; height: 24px; max-width: 80px; max-height: 24px;" aria-hidden="true">
-                    <rect x="0" y="10" width="6" height="14" rx="1" />
-                    <rect x="10" y="7" width="6" height="17" rx="1" />
-                    <rect x="20" y="12" width="6" height="12" rx="1" />
-                    <rect x="30" y="4" width="6" height="20" rx="1" />
-                    <rect x="40" y="8" width="6" height="16" rx="1" />
-                    <rect x="50" y="6" width="6" height="18" rx="1" />
-                    <rect x="60" y="11" width="6" height="13" rx="1" />
-                    <rect x="70" y="9" width="6" height="15" rx="1" />
-                </svg>
-            </div>
-            <div class="mt-2 text-[11px] font-mono text-slate-400">94% GET &bull; 6% POST</div>
-        </div>
-
-        <!-- Card 4: SSE Stream Mandiri -->
-        <div class="rounded-xl border border-cyan-300/80 bg-cyan-50/40 p-4 shadow-xs dark:border-cyan-800 dark:bg-cyan-950/30 transition-all hover:shadow-sm">
-            <div class="flex items-center justify-between text-xs font-semibold text-cyan-800 dark:text-cyan-300">
-                <span>SSE Stream Mandiri</span>
-                <span class="rounded bg-cyan-100 text-cyan-800 px-2 py-0.5 text-[10px] font-mono font-bold dark:bg-cyan-900 dark:text-cyan-300">1.2ms</span>
-            </div>
-            <div class="mt-2.5 flex items-baseline justify-between">
-                <div class="font-mono text-2xl font-bold text-cyan-950 dark:text-cyan-100">
-                    18 <span class="text-xs font-normal text-cyan-600 dark:text-cyan-400">klien</span>
-                </div>
-                <div class="flex items-center gap-1">
-                    <span class="h-4 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 16px; display: inline-block;"></span>
-                    <span class="h-6 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 24px; display: inline-block; animation-delay: 75ms;"></span>
-                    <span class="h-3 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 12px; display: inline-block; animation-delay: 150ms;"></span>
-                    <span class="h-5 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 20px; display: inline-block; animation-delay: 100ms;"></span>
-                </div>
-            </div>
-            <div class="mt-2 text-[11px] font-mono text-cyan-700/80 dark:text-cyan-400">Buffer backlog: 0</div>
-        </div>
-    </div>
-
-    {{-- 4. SPLIT ROW: LATENCY CURVE (8 COLS) & REDIS CACHE DONUT + HOST RESOURCES (4 COLS) (AC-3, AC-4) --}}
-    <div class="telemetry-split-8-4">
-        <!-- Kolom Kiri: Kurva Latensi Real-Time Canvas 2D (8 Kolom Clean - AC-3) -->
-        <div>
-            <div class="rounded-xl border border-slate-200 bg-white shadow-xs dark:border-slate-800 dark:bg-slate-900 overflow-hidden flex flex-col justify-between mb-0">
-
-                <!-- Toolbar Header -->
-                <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/40">
-                    <div class="flex items-center gap-2">
-                        <span class="h-2 w-2 rounded-full bg-cyan-500 animate-pulse" style="width: 8px; height: 8px; display: inline-block;"></span>
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white m-0">
-                            Grafik Latensi HTTP &amp; SSE
-                        </h3>
+                <div style="margin-top: 10px; display: flex; align-items: baseline; justify-content: space-between;">
+                    <div class="telemetry-kpi-value">
+                        {{ number_format((float) $p95RouteDuration, 1) }} <span class="text-xs font-normal" style="color: var(--tel-text-muted); font-size: 0.75rem;">ms</span>
                     </div>
+                    <svg class="h-6 w-20 text-blue-500" viewBox="0 0 80 24" fill="none" width="80" height="24" style="width: 80px; height: 24px; max-width: 80px; max-height: 24px; color: #3b82f6;" aria-hidden="true">
+                        <path d="M0 18 L15 16 L30 19 L40 6 L50 17 L65 15 L80 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </div>
+                <div class="telemetry-kpi-sub">Target: &lt; 200ms</div>
+            </div>
 
-                    <!-- Mode Selectors -->
-                    <div class="inline-flex items-center rounded-lg bg-slate-200/80 p-0.5 text-[11px] font-mono font-medium dark:bg-slate-800" id="chartModeSelector">
-                        <button type="button" data-mode="all" class="chart-mode-btn rounded px-2.5 py-0.5 bg-[#01347C] text-white font-bold cursor-pointer">Semua</button>
-                        <button type="button" data-mode="p95" class="chart-mode-btn rounded px-2 py-0.5 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white cursor-pointer">P95</button>
-                        <button type="button" data-mode="sse" class="chart-mode-btn rounded px-2 py-0.5 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white cursor-pointer">SSE</button>
+            <!-- Card 3: Volume Permintaan -->
+            <div class="telemetry-card">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="telemetry-kpi-title">Volume Permintaan</span>
+                    <span class="font-mono text-[11px] font-semibold" style="color: #818cf8;">140 rps</span>
+                </div>
+                <div style="margin-top: 10px; display: flex; align-items: baseline; justify-content: space-between;">
+                    <div class="telemetry-kpi-value">
+                        {{ number_format($totalRouteRequests) }} <span class="text-xs font-normal" style="color: var(--tel-text-muted); font-size: 0.75rem;">rpm</span>
+                    </div>
+                    <svg class="h-6 w-20 text-indigo-500" viewBox="0 0 80 24" fill="currentColor" width="80" height="24" style="width: 80px; height: 24px; max-width: 80px; max-height: 24px; color: #6366f1;" aria-hidden="true">
+                        <rect x="0" y="10" width="6" height="14" rx="1" />
+                        <rect x="10" y="7" width="6" height="17" rx="1" />
+                        <rect x="20" y="12" width="6" height="12" rx="1" />
+                        <rect x="30" y="4" width="6" height="20" rx="1" />
+                        <rect x="40" y="8" width="6" height="16" rx="1" />
+                        <rect x="50" y="6" width="6" height="18" rx="1" />
+                        <rect x="60" y="11" width="6" height="13" rx="1" />
+                        <rect x="70" y="9" width="6" height="15" rx="1" />
+                    </svg>
+                </div>
+                <div class="telemetry-kpi-sub">GET: 94% &bull; POST: 6%</div>
+            </div>
+
+            <!-- Card 4: SSE Stream Mandiri -->
+            <div class="telemetry-card telemetry-card-sse">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 11px; font-weight: 600; color: var(--tel-cyan-text);">SSE Stream Mandiri</span>
+                    <span class="telemetry-status-pill pill-info" style="padding: 2px 8px; font-size: 10px;">
+                        <span class="status-dot"></span>
+                        <span>1.2ms</span>
+                    </span>
+                </div>
+                <div style="margin-top: 10px; display: flex; align-items: baseline; justify-content: space-between;">
+                    <div class="telemetry-kpi-value" style="color: var(--tel-cyan-value);">
+                        18 <span class="text-xs font-normal" style="color: var(--tel-cyan-text); font-size: 0.75rem;">klien</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <span class="h-4 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 16px; display: inline-block;"></span>
+                        <span class="h-6 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 24px; display: inline-block; animation-delay: 75ms;"></span>
+                        <span class="h-3 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 12px; display: inline-block; animation-delay: 150ms;"></span>
+                        <span class="h-5 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 20px; display: inline-block; animation-delay: 100ms;"></span>
                     </div>
                 </div>
-
-                <!-- Chart Canvas Area (AC-3: Zero Extra KPI Cards in Chart Box) -->
-                <div class="p-4">
-                    <div class="telemetry-canvas-wrapper" id="canvasContainer">
-
-                        <!-- Threshold Grid Lines Overlay -->
-                        <div class="telemetry-threshold-grid">
-                            <div style="border-bottom: 1px dashed #F43F5E; width: 100%; color: #FB7185; padding-bottom: 2px;">
-                                <span>300ms</span>
-                            </div>
-                            <div style="border-bottom: 1px dashed #FBBF24; width: 100%; color: #FDE68A; padding-bottom: 2px;">
-                                <span>200ms SLO</span>
-                            </div>
-                            <div style="border-bottom: 1px dashed #10B981; width: 100%; color: #6EE7B7; padding-bottom: 2px;">
-                                <span>100ms</span>
-                            </div>
-                            <div style="border-bottom: 1px dashed #64748B; width: 100%; color: #94A3B8;">
-                                <span>0ms</span>
-                            </div>
-                        </div>
-
-                        <!-- Scanner Laser Overlay -->
-                        <div class="telemetry-scanner-laser"></div>
-                        <div class="telemetry-scanner-line"></div>
-
-                        <!-- Native HTML5 Canvas 2D (AC-3, AC-9 Preserved: routeLatencyCanvas) -->
-                        <canvas id="routeLatencyCanvas" height="280"></canvas>
-                        <div id="canvasTooltip" class="telemetry-tooltip"></div>
-                    </div>
-
-                    <!-- Clean Trace Legend & Timeline (Canvas Parity) -->
-                    <div class="mt-3 flex items-center justify-between text-[11px] font-mono flex-wrap gap-2">
-                        <div class="flex items-center gap-4 text-slate-600 dark:text-slate-300">
-                            <span class="inline-flex items-center gap-1.5">
-                                <span class="h-2.5 w-2.5 rounded-full bg-emerald-500" style="width: 10px; height: 10px; display: inline-block;"></span>
-                                <span>P50: 24ms</span>
-                            </span>
-                            <span class="inline-flex items-center gap-1.5">
-                                <span class="h-2.5 w-2.5 rounded-full bg-sky-400" style="width: 10px; height: 10px; display: inline-block;"></span>
-                                <span>P95: {{ (int) $p95RouteDuration }}ms</span>
-                            </span>
-                            <span class="inline-flex items-center gap-1.5">
-                                <span class="h-2.5 w-2.5 rounded-full bg-cyan-400" style="width: 10px; height: 10px; display: inline-block;"></span>
-                                <span>SSE: 1.2ms</span>
-                            </span>
-                        </div>
-                        <div class="text-slate-400 text-[10px]">
-                            <span id="canvasLastUpdate">Pembaruan: Baru saja</span> &bull;
-                            SLO: <strong class="text-emerald-600 dark:text-emerald-400 font-bold">99.8%</strong>
-                        </div>
-                    </div>
-                </div>
-
+                <div class="telemetry-kpi-sub" style="color: var(--tel-cyan-text);">Status: 18 Terhubung</div>
             </div>
         </div>
 
-        <!-- Kolom Kanan: Redis Cache Donut + Host Resources (4 Kolom - AC-4) -->
-        <div>
-            <x-telemetry.cache-donut
-                :cache-stats="$cacheStats"
-                :host-resources="$hostResources"
-                :disk-used-percent="$diskUsedPercent"
-                :disk-free-gb="$diskFreeGb"
-                :is-writable="$isWritable"
-                :total-dokumen-count="$totalDokumenCount"
-                :total-dokumen-mb="$totalDokumenMb"
-            />
-        </div>
-    </div>
+        {{-- 4. SPLIT ROW: LATENCY CURVE (8 COLS) & REDIS CACHE DONUT + HOST RESOURCES (4 COLS) (AC-3, AC-4) --}}
+        <div class="telemetry-split-8-4">
+            <!-- Kolom Kiri: Kurva Latensi Real-Time Canvas 2D (8 Kolom Clean - AC-3) -->
+            <div>
+                <div class="telemetry-card mb-0 overflow-hidden" style="padding: 0;">
 
-    {{-- 5. SPLIT ROW: SUB-SYSTEMS (6 COLS) & AKSI PEMELIHARAAN (6 COLS) (AC-5) --}}
-    <div class="telemetry-split-6-6">
-        <!-- Kolom Kiri: Klaster Sub-Sistem (6 Kolom) -->
-        <div>
-            <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 mb-0">
-                <div class="mb-3.5 flex items-center justify-between border-b border-slate-100 pb-2.5 dark:border-slate-800">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Klaster Sub-Sistem</span>
-                    <span class="rounded bg-emerald-100 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-500/30">6/6 OPERASIONAL</span>
-                </div>
-
-                <div class="subsystem-grid font-mono text-[11px]">
-                    <!-- MySQL -->
-                    <div class="rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/60 transition-all hover:border-slate-300">
-                        <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[10px]">
-                            <span class="font-semibold">MySQL</span>
-                            <span class="h-2 w-2 rounded-full bg-emerald-500" style="width: 8px; height: 8px; display: inline-block;"></span>
-                        </div>
-                        <div class="mt-1 text-sm font-bold text-slate-900 dark:text-white">{{ $dbLatency > 0 ? $dbLatency : '0.39' }} ms</div>
-                    </div>
-
-                    <!-- Storage -->
-                    <div class="rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/60 transition-all hover:border-slate-300">
-                        <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[10px]">
-                            <span class="font-semibold">Storage</span>
-                            <span class="h-2 w-2 rounded-full {{ $isWritable ? 'bg-emerald-500' : 'bg-rose-500' }}" style="width: 8px; height: 8px; display: inline-block;"></span>
-                        </div>
-                        <div class="mt-1 text-sm font-bold text-slate-900 dark:text-white">{{ $isWritable ? '1.1 ms' : 'Read-Only' }}</div>
-                    </div>
-
-                    <!-- SSE Stream -->
-                    <div class="rounded-xl border border-cyan-300/80 bg-cyan-50/40 p-3 dark:border-cyan-800 dark:bg-cyan-950/30 transition-all hover:border-cyan-400">
-                        <div class="flex items-center justify-between text-cyan-800 dark:text-cyan-300 text-[10px]">
-                            <span class="font-semibold">SSE Stream</span>
+                    <!-- Toolbar Header -->
+                    <div class="telemetry-card-header" style="padding: 12px 16px; margin-bottom: 0;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
                             <span class="h-2 w-2 rounded-full bg-cyan-500 animate-pulse" style="width: 8px; height: 8px; display: inline-block;"></span>
+                            <h3 class="telemetry-card-title">
+                                Grafik Latensi HTTP &amp; SSE
+                            </h3>
                         </div>
-                        <div class="mt-1 text-sm font-bold text-cyan-950 dark:text-cyan-100">18 Klien</div>
+
+                        <!-- Mode Selectors -->
+                        <div class="inline-flex items-center rounded-lg p-0.5 text-[11px] font-mono font-medium"
+                             style="background: var(--tel-time-selector-bg); border: 1px solid var(--tel-time-selector-border); border-radius: 8px; display: inline-flex;" id="chartModeSelector">
+                            <button type="button" data-mode="all" class="chart-mode-btn rounded px-2.5 py-0.5 font-bold cursor-pointer"
+                                    style="border: none; border-radius: 6px; padding: 2px 10px; background-color: var(--tel-btn-sse-bg); color: #ffffff; cursor: pointer;">Semua</button>
+                            <button type="button" data-mode="p95" class="chart-mode-btn rounded px-2 py-0.5 cursor-pointer"
+                                    style="border: none; background: transparent; color: var(--tel-text-muted); padding: 2px 8px; cursor: pointer;">P95</button>
+                            <button type="button" data-mode="sse" class="chart-mode-btn rounded px-2 py-0.5 cursor-pointer"
+                                    style="border: none; background: transparent; color: var(--tel-text-muted); padding: 2px 8px; cursor: pointer;">SSE</button>
+                        </div>
                     </div>
 
-                    <!-- Job Queue -->
-                    <div class="rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/60 transition-all hover:border-slate-300">
-                        <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[10px]">
-                            <span class="font-semibold">Job Queue</span>
-                            <span class="h-2 w-2 rounded-full {{ $failedJobsCount === 0 ? 'bg-emerald-500' : 'bg-rose-500' }}" style="width: 8px; height: 8px; display: inline-block;"></span>
+                    <!-- Chart Canvas Area (AC-3: Zero Extra KPI Cards in Chart Box) -->
+                    <div style="padding: 16px;">
+                        <div class="telemetry-canvas-wrapper" id="canvasContainer">
+
+                            <!-- Threshold Grid Lines Overlay -->
+                            <div class="telemetry-threshold-grid">
+                                <div style="border-bottom: 1px dashed #F43F5E; width: 100%; color: #FB7185; padding-bottom: 2px;">
+                                    <span>300ms</span>
+                                </div>
+                                <div style="border-bottom: 1px dashed #FBBF24; width: 100%; color: #FDE68A; padding-bottom: 2px;">
+                                    <span>200ms SLO</span>
+                                </div>
+                                <div style="border-bottom: 1px dashed #10B981; width: 100%; color: #6EE7B7; padding-bottom: 2px;">
+                                    <span>100ms</span>
+                                </div>
+                                <div style="border-bottom: 1px dashed #64748B; width: 100%; color: #94A3B8;">
+                                    <span>0ms</span>
+                                </div>
+                            </div>
+
+                            <!-- Scanner Laser Overlay -->
+                            <div class="telemetry-scanner-laser"></div>
+                            <div class="telemetry-scanner-line"></div>
+
+                            <!-- Native HTML5 Canvas 2D (AC-3, AC-9 Preserved: routeLatencyCanvas) -->
+                            <canvas id="routeLatencyCanvas" height="280"></canvas>
+                            <div id="canvasTooltip" class="telemetry-tooltip"></div>
                         </div>
-                        <div class="mt-1 text-sm font-bold text-slate-900 dark:text-white">{{ $failedJobsCount === 0 ? '1.2k Jobs' : $failedJobsCount . ' Gagal' }}</div>
+
+                        <!-- Clean Trace Legend & Timeline (Canvas Parity) -->
+                        <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-family: monospace; flex-wrap: wrap; gap: 8px;">
+                            <div style="display: flex; align-items: center; gap: 16px; color: var(--tel-text-secondary);">
+                                <span style="display: inline-flex; align-items: center; gap: 6px;">
+                                    <span class="h-2.5 w-2.5 rounded-full bg-emerald-500" style="width: 10px; height: 10px; display: inline-block;"></span>
+                                    <span>P50: 24ms</span>
+                                </span>
+                                <span style="display: inline-flex; align-items: center; gap: 6px;">
+                                    <span class="h-2.5 w-2.5 rounded-full bg-sky-400" style="width: 10px; height: 10px; display: inline-block;"></span>
+                                    <span>P95: {{ (int) $p95RouteDuration }}ms</span>
+                                </span>
+                                <span style="display: inline-flex; align-items: center; gap: 6px;">
+                                    <span class="h-2.5 w-2.5 rounded-full bg-cyan-400" style="width: 10px; height: 10px; display: inline-block;"></span>
+                                    <span>SSE: 1.2ms</span>
+                                </span>
+                            </div>
+                            <div style="color: var(--tel-text-muted); font-size: 10px;">
+                                <span id="canvasLastUpdate">Pembaruan: Baru saja</span> &bull;
+                                SLO: <strong style="color: #10b981; font-weight: 700;">99.8%</strong>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Cron -->
-                    <div class="rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/60 transition-all hover:border-slate-300">
-                        <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[10px]">
-                            <span class="font-semibold">Cron</span>
-                            <span class="h-2 w-2 rounded-full bg-emerald-500" style="width: 8px; height: 8px; display: inline-block;"></span>
-                        </div>
-                        <div class="mt-1 text-sm font-bold text-slate-900 dark:text-white">5m Tick</div>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan: Redis Cache Donut + Host Resources (4 Kolom - AC-4) -->
+            <div>
+                <x-telemetry.cache-donut
+                    :cache-stats="$cacheStats"
+                    :host-resources="$hostResources"
+                    :disk-used-percent="$diskUsedPercent"
+                    :disk-free-gb="$diskFreeGb"
+                    :is-writable="$isWritable"
+                    :total-dokumen-count="$totalDokumenCount"
+                    :total-dokumen-mb="$totalDokumenMb"
+                />
+            </div>
+        </div>
+
+        {{-- 5. SPLIT ROW: SUB-SYSTEMS (6 COLS) & AKSI PEMELIHARAAN (6 COLS) (AC-5) --}}
+        <div class="telemetry-split-6-6">
+            <!-- Kolom Kiri: Klaster Sub-Sistem (6 Kolom) -->
+            <div>
+                <div class="telemetry-card mb-0">
+                    <div class="telemetry-card-header">
+                        <span class="telemetry-card-title">Klaster Sub-Sistem</span>
+                        <span class="telemetry-status-pill pill-success">
+                            <span class="status-dot"></span>
+                            <span>6/6 Operasional</span>
+                        </span>
                     </div>
 
-                    <!-- Audit Vault -->
-                    <div class="rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/60 transition-all hover:border-slate-300">
-                        <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[10px]">
-                            <span class="font-semibold">Audit Vault</span>
-                            <span class="h-2 w-2 rounded-full bg-emerald-500" style="width: 8px; height: 8px; display: inline-block;"></span>
+                    <div class="subsystem-grid font-mono text-[11px]">
+                        <!-- MySQL -->
+                        <div class="telemetry-subsystem-box">
+                            <div style="display: flex; flex-direction: column; width: 100%;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: var(--tel-text-muted);">
+                                    <span style="font-weight: 600;">MySQL</span>
+                                    <span class="h-2 w-2 rounded-full bg-emerald-500" style="width: 8px; height: 8px; display: inline-block;"></span>
+                                </div>
+                                <div style="margin-top: 4px; font-size: 14px; font-weight: 700; color: var(--tel-text-primary);">{{ $dbLatency > 0 ? $dbLatency : '0.39' }} ms</div>
+                            </div>
                         </div>
-                        <div class="mt-1 text-sm font-bold text-slate-900 dark:text-white">Sealed</div>
+
+                        <!-- Storage -->
+                        <div class="telemetry-subsystem-box">
+                            <div style="display: flex; flex-direction: column; width: 100%;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: var(--tel-text-muted);">
+                                    <span style="font-weight: 600;">Storage</span>
+                                    <span class="h-2 w-2 rounded-full {{ $isWritable ? 'bg-emerald-500' : 'bg-rose-500' }}" style="width: 8px; height: 8px; display: inline-block;"></span>
+                                </div>
+                                <div style="margin-top: 4px; font-size: 14px; font-weight: 700; color: var(--tel-text-primary);">{{ $isWritable ? '1.1 ms' : 'Read-Only' }}</div>
+                            </div>
+                        </div>
+
+                        <!-- SSE Stream -->
+                        <div class="telemetry-subsystem-box telemetry-subsystem-sse">
+                            <div style="display: flex; flex-direction: column; width: 100%;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: var(--tel-cyan-text);">
+                                    <span style="font-weight: 600;">SSE Stream</span>
+                                    <span class="h-2 w-2 rounded-full bg-cyan-500 animate-pulse" style="width: 8px; height: 8px; display: inline-block;"></span>
+                                </div>
+                                <div style="margin-top: 4px; font-size: 14px; font-weight: 700; color: var(--tel-cyan-value);">18 Klien</div>
+                            </div>
+                        </div>
+
+                        <!-- Job Queue -->
+                        <div class="telemetry-subsystem-box">
+                            <div style="display: flex; flex-direction: column; width: 100%;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: var(--tel-text-muted);">
+                                    <span style="font-weight: 600;">Job Queue</span>
+                                    <span class="h-2 w-2 rounded-full {{ $failedJobsCount === 0 ? 'bg-emerald-500' : 'bg-rose-500' }}" style="width: 8px; height: 8px; display: inline-block;"></span>
+                                </div>
+                                <div style="margin-top: 4px; font-size: 14px; font-weight: 700; color: var(--tel-text-primary);">{{ $failedJobsCount === 0 ? '1.2k Jobs' : $failedJobsCount . ' Gagal' }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Cron -->
+                        <div class="telemetry-subsystem-box">
+                            <div style="display: flex; flex-direction: column; width: 100%;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: var(--tel-text-muted);">
+                                    <span style="font-weight: 600;">Cron</span>
+                                    <span class="h-2 w-2 rounded-full bg-emerald-500" style="width: 8px; height: 8px; display: inline-block;"></span>
+                                </div>
+                                <div style="margin-top: 4px; font-size: 14px; font-weight: 700; color: var(--tel-text-primary);">5m Tick</div>
+                            </div>
+                        </div>
+
+                        <!-- Audit Vault -->
+                        <div class="telemetry-subsystem-box">
+                            <div style="display: flex; flex-direction: column; width: 100%;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: var(--tel-text-muted);">
+                                    <span style="font-weight: 600;">Audit Vault</span>
+                                    <span class="h-2 w-2 rounded-full bg-emerald-500" style="width: 8px; height: 8px; display: inline-block;"></span>
+                                </div>
+                                <div style="margin-top: 4px; font-size: 14px; font-weight: 700; color: var(--tel-text-primary);">Sealed</div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan: Aksi Pemeliharaan Proaktif (6 Kolom - AC-5) -->
+            <div>
+                <x-telemetry.maintenance-suite
+                    :last-sweep-at="$sweeperStats['last_sweep_at'] ?? null"
+                />
+            </div>
+        </div>
+
+        {{-- 6. ENTERPRISE ROUTE TELEMETRY TABLE (12 KOLOM - AC-6) --}}
+        <x-telemetry.endpoint-table :route-metrics="$routeMetrics" />
+
+        {{-- 7. LIVE SYSLOG PANEL (AC-7: Dual-Theme & WCAG 2.1 AA) --}}
+        <div class="telemetry-card mb-0">
+            <div class="telemetry-card-header">
+                <span class="telemetry-card-title">Log Realtime</span>
+                <span class="text-[10px] font-mono font-normal" style="color: var(--tel-text-muted);">Syslog</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 6px;" id="syslogList">
+                <div class="telemetry-syslog-item stream-item">
+                    <span style="color: var(--tel-text-muted);">12:20:00</span>
+                    <span class="rounded px-1.5 py-0.2 text-[9px] font-bold"
+                          style="background: rgba(6, 182, 212, 0.2); color: var(--tel-cyan-value); border: 1px solid rgba(6, 182, 212, 0.4); border-radius: 4px;">SSE</span>
+                    <span style="color: var(--tel-cyan-value); font-weight: 700;">/realtime/stream</span>
+                    <span style="color: var(--tel-text-secondary);">18 listeners (1.2ms)</span>
+                </div>
+
+                <div class="telemetry-syslog-item">
+                    <span style="color: var(--tel-text-muted);">12:18:11</span>
+                    {{-- WCAG AA Compliant: Dark text #212529 on Amber background --}}
+                    <span class="rounded px-1.5 py-0.2 text-[9px] font-bold" style="background-color: #FEF3C7; color: #212529; border: 1px solid #FCD34D; border-radius: 4px;">WARN</span>
+                    <span class="font-bold" style="color: #f59e0b;">LATENCY_SPIKE</span>
+                    <span style="color: var(--tel-text-secondary);">/health-monitor 241ms (pulih)</span>
+                </div>
+
+                <div class="telemetry-syslog-item">
+                    <span style="color: var(--tel-text-muted);">12:15:00</span>
+                    <span class="rounded px-1.5 py-0.2 text-[9px] font-bold"
+                          style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 4px;">CRON</span>
+                    <span style="color: #3b82f6; font-weight: 700;">TELEMETRY_AGG</span>
+                    <span style="color: var(--tel-text-secondary);">128 routes (12ms)</span>
                 </div>
             </div>
         </div>
 
-        <!-- Kolom Kanan: Aksi Pemeliharaan Proaktif (6 Kolom - AC-5) -->
-        <div>
-            <x-telemetry.maintenance-suite
-                :last-sweep-at="$sweeperStats['last_sweep_at'] ?? null"
-            />
-        </div>
     </div>
-
-    {{-- 6. ENTERPRISE ROUTE TELEMETRY TABLE (12 KOLOM - AC-6) --}}
-    <x-telemetry.endpoint-table :route-metrics="$routeMetrics" />
-
-    {{-- 7. LIVE SYSLOG PANEL (AC-7: Dual-Theme & WCAG 2.1 AA) --}}
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 mb-5">
-        <div class="mb-2.5 flex items-center justify-between border-b border-slate-100 pb-2 dark:border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
-            <span>Log Realtime</span>
-            <span class="text-[10px] font-mono text-slate-400 font-normal">Syslog</span>
-        </div>
-
-        <div class="space-y-1.5 font-mono text-[11px]" id="syslogList">
-            <div class="flex items-center gap-2 py-1 px-2 rounded-lg bg-cyan-50/50 dark:bg-cyan-950/30">
-                <span class="text-slate-400">12:20:00</span>
-                <span class="rounded bg-cyan-100 px-1.5 py-0.2 text-[9px] font-bold text-cyan-800 dark:bg-cyan-950 dark:text-cyan-300">SSE</span>
-                <span class="text-cyan-700 dark:text-cyan-400 font-bold">/realtime/stream</span>
-                <span class="text-slate-700 dark:text-slate-300">18 listeners (1.2ms)</span>
-            </div>
-
-            <div class="flex items-center gap-2 py-1 px-2 rounded-lg">
-                <span class="text-slate-400">12:18:11</span>
-                {{-- WCAG AA Compliant: Dark text #212529 on Amber background --}}
-                <span class="rounded px-1.5 py-0.2 text-[9px] font-bold text-[#212529]" style="background-color: #FEF3C7; color: #212529; border: 1px solid #FCD34D;">WARN</span>
-                <span class="font-bold text-amber-700 dark:text-amber-400" style="color: #D97706;">LATENCY_SPIKE</span>
-                <span class="text-slate-700 dark:text-slate-300">/health-monitor 241ms (pulih)</span>
-            </div>
-
-            <div class="flex items-center gap-2 py-1 px-2 rounded-lg bg-slate-50 dark:bg-slate-950/40">
-                <span class="text-slate-400">12:15:00</span>
-                <span class="rounded bg-blue-100 px-1.5 py-0.2 text-[9px] font-bold text-blue-800 dark:bg-blue-950 dark:text-blue-300">CRON</span>
-                <span class="text-slate-600 dark:text-slate-400 font-bold">TELEMETRY_AGG</span>
-                <span class="text-slate-700 dark:text-slate-300">128 routes (12ms)</span>
-            </div>
-        </div>
-    </div>
+    <!-- END COCKPIT MASTER SHELL -->
 
 </div>
 @endsection
@@ -848,7 +1562,7 @@
         filterInput.addEventListener('input', function(e) {
             const query = e.target.value.toLowerCase().trim();
             document.querySelectorAll('.route-table-row').forEach(row => {
-                const text = row.textContent.toLowerCase();
+                const text = (row.textContent + ' ' + (row.getAttribute('data-route') || '')).toLowerCase();
                 row.style.display = text.includes(query) ? '' : 'none';
             });
         });
@@ -858,11 +1572,9 @@
     document.querySelectorAll('.time-window-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.time-window-btn').forEach(b => {
-                b.classList.remove('bg-white', 'text-slate-900', 'shadow-xs', 'font-bold', 'dark:bg-slate-700', 'dark:text-white');
-                b.classList.add('text-slate-600', 'dark:text-slate-400');
+                b.classList.remove('active');
             });
-            this.classList.add('bg-white', 'text-slate-900', 'shadow-xs', 'font-bold', 'dark:bg-slate-700', 'dark:text-white');
-            this.classList.remove('text-slate-600', 'dark:text-slate-400');
+            this.classList.add('active');
             draw();
         });
     });
@@ -871,11 +1583,15 @@
     document.querySelectorAll('.chart-mode-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.chart-mode-btn').forEach(b => {
-                b.classList.remove('bg-[#01347C]', 'text-white', 'font-bold');
-                b.classList.add('text-slate-600', 'dark:text-slate-400');
+                b.classList.remove('active');
+                b.style.backgroundColor = 'transparent';
+                b.style.color = 'var(--tel-text-muted)';
+                b.style.fontWeight = 'normal';
             });
-            this.classList.add('bg-[#01347C]', 'text-white', 'font-bold');
-            this.classList.remove('text-slate-600', 'dark:text-slate-400');
+            this.classList.add('active');
+            this.style.backgroundColor = 'var(--tel-btn-sse-bg)';
+            this.style.color = '#ffffff';
+            this.style.fontWeight = 'bold';
             currentFilterMode = this.getAttribute('data-mode') || 'all';
             draw();
         });

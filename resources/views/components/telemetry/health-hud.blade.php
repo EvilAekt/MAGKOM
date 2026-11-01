@@ -48,49 +48,48 @@
                 </svg>
             </div>
             <div class="flex items-center gap-2.5 flex-wrap">
-                <h2 class="text-base sm:text-lg font-bold text-white tracking-tight m-0" style="font-size: 1.125rem;">
+                <h2 class="text-base sm:text-lg font-bold tracking-tight m-0" style="font-size: 1.125rem; color: #ffffff !important;">
                     Pusat Telemetri Infrastruktur
                 </h2>
-                <span class="inline-flex items-center rounded px-2 py-0.5 text-[10px] font-mono font-bold tracking-wider uppercase"
-                      style="background: {{ $statusBg }}; color: {{ $statusText }}; border: 1px solid {{ $statusBorder }};">
-                    {{ $isNominal ? 'ALL NOMINAL' : 'DEGRADED' }}
+                <span class="telemetry-status-pill pill-success">
+                    <span class="status-dot"></span>
+                    <span>{{ $isNominal ? 'ALL NOMINAL' : 'DEGRADED' }}</span>
                 </span>
             </div>
         </div>
 
-        <div class="flex items-center gap-2 font-mono text-xs text-slate-300">
+        <div class="flex items-center gap-2 font-mono text-xs">
             <span class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1"
-                  style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.1);">
+                  style="background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); color: #cbd5e1 !important;">
                 <span class="relative flex h-2 w-2" style="width: 8px; height: 8px;">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full {{ $isNominal ? 'bg-emerald-400' : 'bg-rose-400' }} opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 {{ $isNominal ? 'bg-emerald-500' : 'bg-rose-500' }}"></span>
                 </span>
-                <span>SLA Uptime: <strong class="text-white">{{ $slaPercent !== null ? $slaPercent . '%' : '99.98%' }}</strong></span>
+                <span style="color: #cbd5e1 !important;">SLA Uptime: <strong style="color: #ffffff !important; font-weight: 700;">{{ $slaPercent !== null ? $slaPercent . '%' : '99.98%' }}</strong></span>
             </span>
         </div>
     </div>
 
     <!-- Generous 6-Metric Command Grid (6-Kolom Desktop Parity: AC-2, AC-7) -->
-    <div class="telemetry-command-grid relative z-10"
-         style="display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 12px !important;">
+    <div class="telemetry-command-grid relative z-10">
 
         <!-- Metric 1: System Status -->
-        <div class="telemetry-hud-metric-box rounded-xl p-4 transition-all flex flex-col justify-between"
-             style="background: rgba(255, 255, 255, 0.05); border: 1px solid {{ $isNominal ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)' }};">
-            <div class="flex items-center justify-between text-xs font-semibold text-slate-300 uppercase tracking-wider">
+        <div class="telemetry-hud-metric-box" style="border-color: {{ $isNominal ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)' }};">
+            <div class="telemetry-hud-metric-header">
                 <span>Status Sistem</span>
                 <span class="h-2.5 w-2.5 rounded-full {{ $isNominal ? 'bg-emerald-400 shadow-[0_0_12px_#34d399]' : 'bg-rose-400 shadow-[0_0_12px_#f87171]' }} animate-pulse"
                       style="width: 10px; height: 10px; display: inline-block;"></span>
             </div>
             <div class="my-2.5">
-                <div class="font-mono text-2xl sm:text-3xl font-extrabold {{ $isNominal ? 'text-emerald-400' : 'text-rose-400' }} tracking-tight flex items-baseline gap-1.5">
+                <div class="font-mono text-2xl sm:text-3xl font-extrabold {{ $isNominal ? 'text-emerald-400' : 'text-rose-400' }} tracking-tight flex items-baseline gap-1.5"
+                     style="color: {{ $isNominal ? '#34d399' : '#f87171' }}; font-size: 1.75rem;">
                     {{ $isNominal ? '100%' : ($slaPercent ? $slaPercent.'%' : '98.5%') }}
-                    <span class="text-sm font-bold {{ $isNominal ? 'text-emerald-300' : 'text-rose-300' }} uppercase">
+                    <span class="text-sm font-bold uppercase" style="color: {{ $isNominal ? '#6ee7b7' : '#fca5a5' }};">
                         {{ $isNominal ? 'OK' : 'DEGRADED' }}
                     </span>
                 </div>
-                <div class="text-[11px] font-mono {{ $isNominal ? 'text-emerald-200/80' : 'text-rose-200/80' }} mt-1 flex items-center gap-1">
-                    <svg class="h-3.5 w-3.5 {{ $isNominal ? 'text-emerald-400' : 'text-rose-400' }} shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="14" height="14" style="width: 14px; height: 14px; max-width: 14px; max-height: 14px;" aria-hidden="true">
+                <div class="text-[11px] font-mono mt-1 flex items-center gap-1" style="color: {{ $isNominal ? '#a7f3d0' : '#fecdd3' }};">
+                    <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="14" height="14" style="width: 14px; height: 14px; max-width: 14px; max-height: 14px; color: {{ $isNominal ? '#34d399' : '#f87171' }};" aria-hidden="true">
                         @if($isNominal)
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                         @else
@@ -100,63 +99,61 @@
                     <span>{{ $isNominal ? '0 Gangguan' : 'Gangguan Terdeteksi' }}</span>
                 </div>
             </div>
-            <div class="pt-2 text-[10px] font-mono text-slate-400 flex justify-between"
-                 style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <div class="telemetry-hud-metric-footer">
                 <span>Integritas:</span>
-                <span class="{{ $isNominal ? 'text-emerald-400' : 'text-rose-400' }} font-bold">
+                <span class="{{ $isNominal ? 'text-emerald-400' : 'text-rose-400' }}" style="font-weight: 700; color: {{ $isNominal ? '#34d399' : '#f87171' }};">
                     {{ $isNominal ? 'Lulus' : 'Perlu Atensi' }}
                 </span>
             </div>
         </div>
 
         <!-- Metric 2: DB Ping (AC-2 Parity) -->
-        <div class="telemetry-hud-metric-box rounded-xl p-4 transition-all flex flex-col justify-between"
-             style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
-            <div class="flex items-center justify-between text-xs font-semibold text-slate-300 uppercase tracking-wider">
+        <div class="telemetry-hud-metric-box">
+            <div class="telemetry-hud-metric-header">
                 <span>DB Ping</span>
-                <span class="rounded bg-blue-500/20 px-1.5 py-0.5 text-[9px] font-mono font-bold text-blue-300">{{ strtoupper($dbDriver) }}</span>
+                <span class="rounded px-1.5 py-0.5 text-[9px] font-mono font-bold"
+                      style="background: rgba(59, 130, 246, 0.25); color: #93c5fd; border-radius: 4px;">{{ strtoupper($dbDriver) }}</span>
             </div>
             <div class="my-2.5">
-                <div class="font-mono text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-baseline gap-1">
-                    {{ $dbLatency > 0 ? $dbLatency : '0.39' }} <span class="text-xs font-normal text-slate-300">ms</span>
+                <div class="font-mono text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-baseline gap-1"
+                     style="font-size: 1.75rem; color: #ffffff;">
+                    {{ $dbLatency > 0 ? $dbLatency : '0.39' }} <span class="text-xs font-normal text-slate-300" style="color: #94a3b8;">ms</span>
                 </div>
-                <div class="text-[11px] font-mono text-cyan-300 mt-1">
+                <div class="text-[11px] font-mono mt-1" style="color: #67e8f9;">
                     SLO &lt; 5.0ms
                 </div>
             </div>
-            <div class="pt-2 text-[10px] font-mono text-slate-400 flex justify-between"
-                 style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <div class="telemetry-hud-metric-footer">
                 <span>Pool:</span>
-                <span class="text-white font-bold">12 / 100</span>
+                <span class="text-white font-bold" style="color: #ffffff;">12 / 100</span>
             </div>
         </div>
 
         <!-- Metric 3: P95 Latency -->
-        <div class="telemetry-hud-metric-box rounded-xl p-4 transition-all flex flex-col justify-between"
-             style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(245, 158, 11, 0.3);">
-            <div class="flex items-center justify-between text-xs font-semibold text-slate-300 uppercase tracking-wider">
+        <div class="telemetry-hud-metric-box" style="border-color: rgba(245, 158, 11, 0.4);">
+            <div class="telemetry-hud-metric-header">
                 <span>P95 Latency</span>
-                <span class="rounded bg-amber-500/20 px-1.5 py-0.5 text-[9px] font-mono font-bold text-amber-300">HTTP</span>
+                <span class="rounded px-1.5 py-0.5 text-[9px] font-mono font-bold"
+                      style="background: rgba(245, 158, 11, 0.25); color: #fde68a; border-radius: 4px;">HTTP</span>
             </div>
             <div class="my-2.5">
-                <div class="font-mono text-2xl sm:text-3xl font-extrabold text-amber-300 tracking-tight flex items-baseline gap-1">
-                    {{ (int) $p95RouteDuration }} <span class="text-xs font-normal text-slate-300">ms</span>
+                <div class="font-mono text-2xl sm:text-3xl font-extrabold tracking-tight flex items-baseline gap-1"
+                     style="font-size: 1.75rem; color: #fcd34d;">
+                    {{ (int) $p95RouteDuration }} <span class="text-xs font-normal text-slate-300" style="color: #94a3b8;">ms</span>
                 </div>
-                <div class="text-[11px] font-mono text-amber-200/80 mt-1">
+                <div class="text-[11px] font-mono mt-1" style="color: #fde68a;">
                     Target &lt; 200ms
                 </div>
             </div>
-            <div class="pt-2 text-[10px] font-mono text-slate-400 flex justify-between"
-                 style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <div class="telemetry-hud-metric-footer">
                 <span>Kepatuhan:</span>
-                <span class="text-emerald-400 font-bold">99.8%</span>
+                <span class="font-bold" style="color: #34d399;">99.8%</span>
             </div>
         </div>
 
         <!-- Metric 4: SSE Ping -->
-        <div class="telemetry-hud-metric-box rounded-xl p-4 transition-all flex flex-col justify-between"
-             style="background: rgba(8, 47, 73, 0.4); border: 1px solid rgba(6, 182, 212, 0.4);">
-            <div class="flex items-center justify-between text-xs font-semibold text-cyan-200 uppercase tracking-wider">
+        <div class="telemetry-hud-metric-box" style="background: rgba(8, 47, 73, 0.55) !important; border-color: rgba(6, 182, 212, 0.45);">
+            <div class="telemetry-hud-metric-header" style="color: #67e8f9;">
                 <span>SSE Ping</span>
                 <span class="relative flex h-2 w-2" style="width: 8px; height: 8px;">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
@@ -164,76 +161,66 @@
                 </span>
             </div>
             <div class="my-2.5">
-                <div class="font-mono text-2xl sm:text-3xl font-extrabold text-cyan-300 tracking-tight flex items-baseline gap-1">
-                    1.2 <span class="text-xs font-normal text-cyan-200/70">ms</span>
+                <div class="font-mono text-2xl sm:text-3xl font-extrabold tracking-tight flex items-baseline gap-1"
+                     style="font-size: 1.75rem; color: #67e8f9;">
+                    1.2 <span class="text-xs font-normal" style="color: #a5f3fc;">ms</span>
                 </div>
-                <div class="text-[11px] font-mono text-cyan-200 mt-1">
+                <div class="text-[11px] font-mono mt-1" style="color: #a5f3fc;">
                     18 Klien Aktif
                 </div>
             </div>
-            <div class="pt-2 text-[10px] font-mono text-cyan-300 flex justify-between"
-                 style="border-top: 1px solid rgba(6, 182, 212, 0.2);">
+            <div class="telemetry-hud-metric-footer" style="border-top-color: rgba(6, 182, 212, 0.25); color: #67e8f9;">
                 <span>Backlog:</span>
-                <span class="text-white font-bold">0 msg</span>
+                <span class="text-white font-bold" style="color: #ffffff;">0 msg</span>
             </div>
         </div>
 
         <!-- Metric 5: Throughput -->
-        <div class="telemetry-hud-metric-box rounded-xl p-4 transition-all flex flex-col justify-between"
-             style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
-            <div class="flex items-center justify-between text-xs font-semibold text-slate-300 uppercase tracking-wider">
+        <div class="telemetry-hud-metric-box">
+            <div class="telemetry-hud-metric-header">
                 <span>Throughput</span>
-                <span class="rounded bg-indigo-500/20 px-1.5 py-0.5 text-[9px] font-mono font-bold text-indigo-300">Trafik</span>
+                <span class="rounded px-1.5 py-0.5 text-[9px] font-mono font-bold"
+                      style="background: rgba(99, 102, 241, 0.25); color: #c7d2fe; border-radius: 4px;">Trafik</span>
             </div>
             <div class="my-2.5">
-                <div class="font-mono text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-baseline gap-1">
-                    141 <span class="text-xs font-normal text-slate-300">rps</span>
+                <div class="font-mono text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-baseline gap-1"
+                     style="font-size: 1.75rem; color: #ffffff;">
+                    141 <span class="text-xs font-normal text-slate-300" style="color: #94a3b8;">rps</span>
                 </div>
-                <div class="text-[11px] font-mono text-slate-300 mt-1">
+                <div class="text-[11px] font-mono mt-1" style="color: #94a3b8;">
                     Puncak: 210 rps
                 </div>
             </div>
-            <div class="pt-2 text-[10px] font-mono text-slate-400 flex justify-between"
-                 style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <div class="telemetry-hud-metric-footer">
                 <span>Total:</span>
-                <span class="text-white font-bold">8.4k rpm</span>
+                <span class="text-white font-bold" style="color: #ffffff;">8.4k rpm</span>
             </div>
         </div>
 
         <!-- Metric 6: Error Budget -->
-        <div class="telemetry-hud-metric-box rounded-xl p-4 transition-all flex flex-col justify-between"
-             style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
-            <div class="flex items-center justify-between text-xs font-semibold text-slate-300 uppercase tracking-wider">
+        <div class="telemetry-hud-metric-box">
+            <div class="telemetry-hud-metric-header">
                 <span>Error Budget</span>
-                <span class="rounded bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-mono font-bold text-emerald-300">SLA</span>
+                <span class="rounded px-1.5 py-0.5 text-[9px] font-mono font-bold"
+                      style="background: rgba(16, 185, 129, 0.25); color: #6ee7b7; border-radius: 4px;">SLA</span>
             </div>
             <div class="my-2.5">
-                <div class="font-mono text-2xl sm:text-3xl font-extrabold text-emerald-400 tracking-tight flex items-baseline gap-1">
-                    {{ $slaPercent !== null ? $slaPercent : '99.98' }}<span class="text-xs font-normal text-slate-300">%</span>
+                <div class="font-mono text-2xl sm:text-3xl font-extrabold tracking-tight flex items-baseline gap-1"
+                     style="font-size: 1.75rem; color: #34d399;">
+                    {{ $slaPercent !== null ? $slaPercent : '99.98' }}<span class="text-xs font-normal" style="color: #94a3b8;">%</span>
                 </div>
-                <div class="text-[11px] font-mono text-emerald-200/80 mt-1">
+                <div class="text-[11px] font-mono mt-1" style="color: #a7f3d0;">
                     Burn: 0.01x
                 </div>
             </div>
-            <div class="pt-2 text-[10px] font-mono text-slate-400 flex justify-between"
-                 style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <div class="telemetry-hud-metric-footer">
                 <span>Sisa:</span>
-                <span class="text-emerald-300 font-bold">43m 12s</span>
+                <span class="font-bold" style="color: #6ee7b7;">43m 12s</span>
             </div>
         </div>
 
     </div>
 
-    <!-- Bottom Telemetry Status Strip (Clean, Crisp, Direct) -->
-    <div class="relative z-10 mt-4 pt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs font-mono text-slate-300 gap-2"
-         style="border-top: 1px solid rgba(96, 165, 250, 0.2);">
-        <div class="flex items-center gap-2">
-            <span class="inline-block h-2 w-2 rounded-full {{ $isNominal ? 'bg-emerald-400' : 'bg-rose-400' }}" style="width: 8px; height: 8px;"></span>
-            <span>6 Klaster Aktif (MySQL, Redis, SSE, Storage, Cron, Audit)</span>
-        </div>
-        <div class="text-[11px] text-slate-400">
-            Sinkron: 1s &bull; <span style="color: #67E8F9;">#98F-24A</span>
-        </div>
-    </div>
+
 
 </div>

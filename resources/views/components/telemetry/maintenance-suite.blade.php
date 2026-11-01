@@ -3,115 +3,129 @@
 ])
 
 {{-- SUITE PEMELIHARAAN PROAKTIF (AC-5, AC-7 Canvas Parity) --}}
-<div id="maintenanceSuite" class="telemetry-maintenance-card rounded-xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900 transition-all hover:shadow-sm">
+<div id="maintenanceSuite" class="telemetry-card mb-0">
 
     <!-- Header -->
-    <div class="mb-3.5 flex items-center justify-between border-b border-slate-100 pb-2.5 dark:border-slate-800">
-        <div class="flex items-center gap-2">
-            <span class="flex h-5 w-5 items-center justify-center rounded-md text-white text-[10px] font-bold shadow-xs"
-                  style="background: #003566; width: 20px; height: 20px; min-width: 20px; min-height: 20px;">
-                ⚡
+    <div class="telemetry-card-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="flex h-6 w-6 items-center justify-center rounded-lg shadow-xs"
+                  style="width: 24px; height: 24px; min-width: 24px; min-height: 24px; display: inline-flex; align-items: center; justify-content: center; background: rgba(59, 130, 246, 0.15); color: #38bdf8; border: 1px solid rgba(59, 130, 246, 0.35); border-radius: 6px;">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" style="width: 14px; height: 14px; max-width: 14px; max-height: 14px;" aria-hidden="true">
+                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                </svg>
             </span>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white m-0">
+            <h3 class="telemetry-card-title">
                 Aksi Pemeliharaan Proaktif
             </h3>
         </div>
-        <span class="text-[10px] font-mono text-slate-400 rounded bg-slate-100 px-2 py-0.5 dark:bg-slate-800">
+        <span class="rounded px-2 py-0.5 text-[10px] font-mono"
+              style="background: var(--tel-surface-elevated); color: var(--tel-text-muted); border: 1px solid var(--tel-card-border); border-radius: 4px;">
             SuperAdmin
         </span>
     </div>
 
     <!-- 4 Action Cards Matrix with Distinct Logo/Icon per Action (Pure CSS Grid Parity) -->
-    <div class="maintenance-actions-grid"
-         style="display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important;">
+    <div class="maintenance-actions-grid">
 
         <!-- Action 1: Security Sweep -->
-        <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/40 p-3 hover:border-rose-400 hover:bg-rose-50/20 hover:shadow-xs transition-all dark:border-slate-800 dark:bg-slate-950/50 dark:hover:border-rose-900 dark:hover:bg-rose-950/20">
-            <div class="flex items-center gap-3">
-                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-500/15 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400 border border-rose-500/30 shadow-xs shrink-0"
-                      style="width: 36px; height: 36px; min-width: 36px; min-height: 36px;">
+        <div class="telemetry-action-card">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl"
+                      style="width: 36px; height: 36px; min-width: 36px; min-height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35); border-radius: 10px;">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16" style="width: 16px; height: 16px; max-width: 16px; max-height: 16px;" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                 </span>
-                <div class="flex items-center gap-1.5 flex-wrap">
-                    <h4 class="font-bold text-xs text-slate-900 dark:text-white m-0">Security Sweep</h4>
-                    <span class="rounded bg-rose-100 px-1 py-0.2 text-[8px] font-mono font-bold text-rose-700 dark:bg-rose-950 dark:text-rose-300">AUTH</span>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                        <h4 style="font-weight: 700; font-size: 12px; color: var(--tel-text-primary); margin: 0;">Security Sweep</h4>
+                        <span class="rounded text-[8px] font-mono font-bold"
+                              style="background: rgba(244, 63, 94, 0.25); color: #fda4af; padding: 1px 4px; border-radius: 3px;">AUTH</span>
+                    </div>
                 </div>
             </div>
-            <form action="{{ route('superadmin.health.security-sweep') }}" method="POST" class="m-0 shrink-0"
+            <form action="{{ route('superadmin.health.security-sweep') }}" method="POST" style="margin: 0; flex-shrink: 0;"
                   onsubmit="return confirm('Jalankan pembersihan higienitas keamanan sistem sekarang? Token kedaluwarsa, berkas arsip sementara (>2 jam), dan pendaftar unverified (>72 jam) akan dibersihkan.');">
                 @csrf
-                <button type="submit" class="rounded-lg bg-rose-600 px-3 py-1.5 text-[11px] font-mono font-bold text-white shadow-2xs hover:bg-rose-700 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#3F51B5] shrink-0">
+                <button type="submit" class="btn-telemetry-action btn-sweep">
                     Sweep
                 </button>
             </form>
         </div>
 
         <!-- Action 2: InnoDB Vacuum -->
-        <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/40 p-3 hover:border-blue-400 hover:bg-blue-50/20 hover:shadow-xs transition-all dark:border-slate-800 dark:bg-slate-950/50 dark:hover:border-blue-900 dark:hover:bg-blue-950/20">
-            <div class="flex items-center gap-3">
-                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600/15 text-[#01347C] dark:bg-blue-500/20 dark:text-blue-300 border border-blue-500/30 shadow-xs shrink-0"
-                      style="width: 36px; height: 36px; min-width: 36px; min-height: 36px;">
+        <div class="telemetry-action-card">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl"
+                      style="width: 36px; height: 36px; min-width: 36px; min-height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35); border-radius: 10px;">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16" style="width: 16px; height: 16px; max-width: 16px; max-height: 16px;" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7M4 7c0-2 1.5-3 3.5-3h9c2 0 3.5-1 3.5 3M4 7h16M4 12c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3" />
                     </svg>
                 </span>
-                <div class="flex items-center gap-1.5 flex-wrap">
-                    <h4 class="font-bold text-xs text-slate-900 dark:text-white m-0">InnoDB Vacuum</h4>
-                    <span class="rounded bg-blue-100 px-1 py-0.2 text-[8px] font-mono font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">DB</span>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                        <h4 style="font-weight: 700; font-size: 12px; color: var(--tel-text-primary); margin: 0;">InnoDB Vacuum</h4>
+                        <span class="rounded text-[8px] font-mono font-bold"
+                              style="background: rgba(59, 130, 246, 0.25); color: #93c5fd; padding: 1px 4px; border-radius: 3px;">DB</span>
+                    </div>
                 </div>
             </div>
-            <form action="{{ route('superadmin.health.optimize-db') }}" method="POST" class="m-0 shrink-0"
+            <form action="{{ route('superadmin.health.optimize-db') }}" method="POST" style="margin: 0; flex-shrink: 0;"
                   onsubmit="return confirm('Jalankan optimasi dan defragmentasi basis data sekarang? Perintah VACUUM/OPTIMIZE akan dijalankan pada tabel-tabel utama.');">
                 @csrf
-                <button type="submit" class="rounded-lg bg-[#01347C] px-3 py-1.5 text-[11px] font-mono font-bold text-white shadow-2xs hover:bg-[#02275D] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#3F51B5] shrink-0">
+                <button type="submit" class="btn-telemetry-action btn-vacuum">
                     Vacuum
                 </button>
             </form>
         </div>
 
         <!-- Action 3: Purge Cache -->
-        <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/40 p-3 hover:border-emerald-400 hover:bg-emerald-50/20 hover:shadow-xs transition-all dark:border-slate-800 dark:bg-slate-950/50 dark:hover:border-emerald-900 dark:hover:bg-emerald-950/20">
-            <div class="flex items-center gap-3">
-                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-500/30 shadow-xs shrink-0"
-                      style="width: 36px; height: 36px; min-width: 36px; min-height: 36px;">
+        <div class="telemetry-action-card">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl"
+                      style="width: 36px; height: 36px; min-width: 36px; min-height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 10px;">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16" style="width: 16px; height: 16px; max-width: 16px; max-height: 16px;" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                 </span>
-                <div class="flex items-center gap-1.5 flex-wrap">
-                    <h4 class="font-bold text-xs text-slate-900 dark:text-white m-0">Purge Cache</h4>
-                    <span class="rounded bg-emerald-100 px-1 py-0.2 text-[8px] font-mono font-bold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">REDIS</span>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                        <h4 style="font-weight: 700; font-size: 12px; color: var(--tel-text-primary); margin: 0;">Purge Cache</h4>
+                        <span class="rounded text-[8px] font-mono font-bold"
+                              style="background: rgba(16, 185, 129, 0.25); color: #6ee7b7; padding: 1px 4px; border-radius: 3px;">REDIS</span>
+                    </div>
                 </div>
             </div>
-            <form action="{{ route('superadmin.health.clear-cache') }}" method="POST" class="m-0 shrink-0"
+            <form action="{{ route('superadmin.health.clear-cache') }}" method="POST" style="margin: 0; flex-shrink: 0;"
                   onsubmit="return confirm('Bersihkan seluruh cache aplikasi, views, konfigurasi, dan rute sekarang? Data cache akan di-refresh otomatis.');">
                 @csrf
-                <button type="submit" class="rounded-lg bg-emerald-600 px-3 py-1.5 text-[11px] font-mono font-bold text-white shadow-2xs hover:bg-emerald-700 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#3F51B5] shrink-0">
+                <button type="submit" class="btn-telemetry-action btn-purge">
                     Purge
                 </button>
             </form>
         </div>
 
         <!-- Action 4: Storage Probe -->
-        <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/40 p-3 hover:border-cyan-400 hover:bg-cyan-50/20 hover:shadow-xs transition-all dark:border-slate-800 dark:bg-slate-950/50 dark:hover:border-cyan-900 dark:hover:bg-cyan-950/20">
-            <div class="flex items-center gap-3">
-                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-300 border border-cyan-500/30 shadow-xs shrink-0"
-                      style="width: 36px; height: 36px; min-width: 36px; min-height: 36px;">
+        <div class="telemetry-action-card">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl"
+                      style="width: 36px; height: 36px; min-width: 36px; min-height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.35); border-radius: 10px;">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16" style="width: 16px; height: 16px; max-width: 16px; max-height: 16px;" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                 </span>
-                <div class="flex items-center gap-1.5 flex-wrap">
-                    <h4 class="font-bold text-xs text-slate-900 dark:text-white m-0">Storage Probe</h4>
-                    <span class="rounded bg-cyan-100 px-1 py-0.2 text-[8px] font-mono font-bold text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300">I/O</span>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                        <h4 style="font-weight: 700; font-size: 12px; color: var(--tel-text-primary); margin: 0;">Storage Probe</h4>
+                        <span class="rounded text-[8px] font-mono font-bold"
+                              style="background: rgba(6, 182, 212, 0.25); color: #a5f3fc; padding: 1px 4px; border-radius: 3px;">I/O</span>
+                    </div>
                 </div>
             </div>
-            <form action="{{ route('superadmin.health.test-storage') }}" method="POST" class="m-0 shrink-0"
+            <form action="{{ route('superadmin.health.test-storage') }}" method="POST" style="margin: 0; flex-shrink: 0;"
                   onsubmit="return confirm('Jalankan pengujian I/O disk storage sekarang? Berkas probe sementara akan ditulis dan diverifikasi.');">
                 @csrf
-                <button type="submit" class="rounded-lg bg-cyan-600 px-3 py-1.5 text-[11px] font-mono font-bold text-white shadow-2xs hover:bg-cyan-700 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#3F51B5] shrink-0">
+                <button type="submit" class="btn-telemetry-action btn-probe">
                     Probe
                 </button>
             </form>
@@ -120,12 +134,12 @@
     </div>
 
     <!-- Action Footer with Status Info (Canvas Parity) -->
-    <div class="mt-3.5 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-400">
-        <span class="flex items-center gap-1.5">
+    <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--tel-card-border); display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-family: monospace; color: var(--tel-text-muted);">
+        <span style="display: inline-flex; align-items: center; gap: 6px;">
             <span class="h-1.5 w-1.5 rounded-full bg-emerald-500" style="width: 6px; height: 6px; display: inline-block;"></span>
             <span>Terakhir: {{ $lastSweepAt ?? '4m lalu' }}</span>
         </span>
-        <span class="text-slate-500">Timeout: 30s</span>
+        <span style="color: var(--tel-text-muted);">Timeout: 30s</span>
     </div>
 
 </div>
