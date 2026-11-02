@@ -3,7 +3,6 @@
    ========================================================================== --}}
 <x-gentelella.x-panel 
     title="Antrean Verifikasi Berkas Pendaftaran" 
-    subtitle="Tinjau dan proses berkas pendaftaran calon peserta magang yang membutuhkan verifikasi segera."
     badge="{{ $pendaftaranTerbaru->count() }} Berkas"
     badgeType="warning"
 >

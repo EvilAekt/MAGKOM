@@ -188,4 +188,48 @@ class AdminDashboardEnhancementTest extends TestCase
         $resPembimbing = $this->actingAs($this->pembimbing)->get(route('admin.dashboard'));
         $resPembimbing->assertForbidden();
     }
+
+    public function test_admin_dashboard_renders_clean_headers_without_cluttered_subtitles(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.dashboard'));
+
+        $response->assertOk();
+        $response->assertDontSee('Tinjau dan proses berkas pendaftaran calon peserta magang yang membutuhkan verifikasi segera.');
+        $response->assertDontSee('Realisasi alokasi kursi magang periode aktif dinas.');
+    }
+
+    public function test_admin_dashboard_cards_use_top_border_and_no_left_border(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.dashboard'));
+
+        $response->assertOk();
+        $content = $response->getContent();
+        $this->assertStringNotContainsString('border-left: 4px solid var(--blue-600);', $content);
+        $this->assertStringNotContainsString('border-left: 4px solid var(--green-600);', $content);
+        $this->assertStringNotContainsString('border-left: 4px solid #4F46E5;', $content);
+        $this->assertStringContainsString('border-top: 3.5px solid var(--blue-600); border-left: none;', $content);
+    }
+
+    public function test_admin_dashboard_quick_actions_uses_official_government_icon(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.dashboard'));
+
+        $response->assertOk();
+        $content = $response->getContent();
+        $this->assertStringNotContainsString('>⚡</span>', $content);
+        $this->assertStringContainsString('adm-quick-icon-badge', $content);
+        $this->assertStringContainsString('Aksi Cepat Admin', $content);
+    }
+
+    public function test_admin_dashboard_quota_has_pagination_component_matching_image_5(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.dashboard'));
+
+        $response->assertOk();
+        $response->assertSee('kuotaPaginationWrapper');
+        $response->assertSee('kuota-per-page-pill');
+        $response->assertSee('Lembar Halaman');
+        $response->assertSee('kuotaPageControls');
+        $response->assertSee('kuota-immutable-pill');
+    }
 }

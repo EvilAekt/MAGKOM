@@ -87,7 +87,9 @@
 <x-gentelella.card style="padding: 1.25rem;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.65rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="font-family: monospace; font-size: 0.75rem; font-weight: 800; color: #0751ff; background: rgba(7, 81, 255, 0.15); padding: 0.15rem 0.45rem; border-radius: 4px;">⚡</span>
+            <span class="adm-quick-icon-badge" style="width: 26px; height: 26px; border-radius: 6px; background: rgba(1, 52, 124, 0.08); color: var(--magkom-primary-blue, #01347C); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" aria-hidden="true">
+                <x-sa.icon name="compass" :size="16" />
+            </span>
             <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Aksi Cepat Admin</h3>
         </div>
     </div>
@@ -207,7 +209,7 @@
 
 {{-- PANEL 5: OFFBOARDING WATCHDOG (PERINGATAN SELESAI H-14) --}}
 @if(!$upcomingOffboardingList->isEmpty())
-    <x-gentelella.card style="padding: 1.25rem; border-left: 4px solid var(--amber-700, #B45309);">
+    <x-gentelella.card style="padding: 1.25rem; border-top: 3.5px solid var(--amber-700, #B45309); border-left: none;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.65rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem;">
                 <span style="font-family: monospace; font-size: 0.75rem; font-weight: 800; color: #b45309; background: rgba(245, 158, 11, 0.15); padding: 0.15rem 0.45rem; border-radius: 4px;">⏳</span>

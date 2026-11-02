@@ -333,7 +333,7 @@
 
     {{-- 2. METRIK RINGKASAN --}}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
-        <x-gentelella.card class="cert-stat-card" hoverable="true" style="border-left: 4px solid #0641CC;">
+        <x-gentelella.card class="cert-stat-card" hoverable="true" style="border-top: 3.5px solid #0641CC; border-left: none;">
             <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
                 <div>
                     <span class="cert-stat-label">Siap Terbit Sertifikat</span>
@@ -346,7 +346,7 @@
             </div>
         </x-gentelella.card>
 
-        <x-gentelella.card class="cert-stat-card" hoverable="true" style="border-left: 4px solid #10B981;">
+        <x-gentelella.card class="cert-stat-card" hoverable="true" style="border-top: 3.5px solid #10B981; border-left: none;">
             <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
                 <div>
                     <span class="cert-stat-label">Total Alumni Selesai Magang</span>

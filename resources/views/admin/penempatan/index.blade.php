@@ -445,7 +445,7 @@
 
     {{-- ALERT KREDENSIAL AKUN BARU JALUR KHUSUS --}}
     @if(session('akun_baru_dibuat'))
-        <div class="admin-card" style="border-left: 4px solid #10B981; background: #ECFDF5; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);">
+        <div class="admin-card" style="border-top: 3.5px solid #10B981; border-left: none; background: #ECFDF5; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);">
             <div style="display: flex; align-items: flex-start; gap: 0.85rem;">
                 <div style="width: 42px; height: 42px; border-radius: 10px; background: #D1FAE5; color: #059669; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
@@ -491,7 +491,7 @@
         </div>
 
         {{-- Peserta Aktif --}}
-        <div class="admin-stat-card" style="border-left: 4px solid #10B981;">
+        <div class="admin-stat-card" style="border-top: 3.5px solid #10B981; border-left: none;">
             <div>
                 <span style="font-size: 0.8125rem; font-weight: 600; color: #047857;">Peserta Magang Aktif</span>
                 <div style="font-size: 1.75rem; font-weight: 800; color: #059669; margin-top: 0.25rem; letter-spacing: -0.02em;">
@@ -543,7 +543,7 @@
 
         {{-- Menunggu Penempatan (Antrean Lolos Berkas) --}}
         @if(($penempatanStats['belum_ditempatkan'] ?? 0) > 0)
-            <div class="admin-stat-card" style="border-left: 4px solid #F59E0B; background: #FFFDF5;">
+            <div class="admin-stat-card" style="border-top: 3.5px solid #F59E0B; border-left: none; background: #FFFDF5;">
                 <div>
                     <span style="font-size: 0.8125rem; font-weight: 600; color: #B45309;">Menunggu Plotting</span>
                     <div style="font-size: 1.75rem; font-weight: 800; color: #D97706; margin-top: 0.25rem; letter-spacing: -0.02em;">
@@ -563,7 +563,7 @@
 
     {{-- 2. ANTREAN PESERTA LOLOS SELEKSI BERKAS (MENUNGGU PENETAPAN PEMBIMBING) --}}
     @if(isset($antreanBelumDitempatkan) && $antreanBelumDitempatkan->isNotEmpty())
-        <div class="admin-card" style="border-left: 4px solid #F59E0B; background: #FFFBEB;">
+        <div class="admin-card" style="border-top: 3.5px solid #F59E0B; border-left: none; background: #FFFBEB;">
             <div style="padding: 1.15rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #FDE68A; flex-wrap: wrap; gap: 0.75rem;">
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
                     <div style="width: 36px; height: 36px; border-radius: 8px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">

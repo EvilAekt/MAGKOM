@@ -1900,5 +1900,226 @@ body.nav-sm {
     padding: 0 !important;
 }
 
+/* 6. Dashboard Kuota Pagination - Image 5 Parity */
+.kuota-pagination-wrapper {
+    margin-top: 1.5rem !important;
+    padding-top: 1rem !important;
+    border-top: 1px solid var(--cv-line, #E2E8F0) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.85rem !important;
+    width: 100% !important;
+}
+
+.kuota-pagination-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+}
+
+.kuota-pagination-bottom {
+    padding-top: 0.75rem !important;
+    border-top: 1px solid var(--cv-line, #F1F5F9) !important;
+}
+
+.kuota-pagination-summary {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
+}
+
+.kuota-pagination-counter {
+    font-size: 0.8125rem !important;
+    color: var(--neutral-600, #475569) !important;
+    font-weight: 500 !important;
+}
+
+.kuota-immutable-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    color: #059669 !important;
+    background: #ECFDF5 !important;
+    border: 1px solid #A7F3D0 !important;
+    padding: 0.15rem 0.55rem !important;
+    border-radius: 9999px !important;
+}
+
+.kuota-per-page-container {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.65rem !important;
+    margin-left: auto !important;
+}
+
+.kuota-per-page-label {
+    font-size: 0.8125rem !important;
+    color: var(--neutral-600, #475569) !important;
+    font-weight: 600 !important;
+}
+
+.kuota-per-page-group {
+    display: inline-flex !important;
+    align-items: center !important;
+    background: #F1F5F9 !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 8px !important;
+    padding: 2px !important;
+    gap: 2px !important;
+}
+
+.kuota-per-page-pill {
+    padding: 0.25rem 0.65rem !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-size: 0.785rem !important;
+    font-weight: 600 !important;
+    background: transparent !important;
+    color: #64748B !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    line-height: 1.25 !important;
+}
+
+.kuota-per-page-pill:hover:not(.active) {
+    background: #E2E8F0 !important;
+    color: #0F172A !important;
+}
+
+.kuota-per-page-pill.active {
+    background: var(--blue-600, #01347C) !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    box-shadow: 0 1px 2px rgba(6, 65, 204, 0.2) !important;
+}
+
+.kuota-pagination-lembar-info {
+    font-size: 0.8125rem !important;
+    color: var(--neutral-600, #475569) !important;
+}
+
+.kuota-pagination-right {
+    margin-left: auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.kuota-page-controls {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+}
+
+.kuota-page-btn-nav {
+    padding: 0.3rem 0.75rem !important;
+    border-radius: 6px !important;
+    border: 1px solid #CBD5E1 !important;
+    background: #FFFFFF !important;
+    color: #64748B !important;
+    font-size: 0.785rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+}
+
+.kuota-page-btn-nav:hover:not(.disabled) {
+    background: #F1F5F9 !important;
+    color: #0F172A !important;
+}
+
+.kuota-page-btn-nav.disabled {
+    color: #94A3B8 !important;
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+    background: #F8FAFC !important;
+    border-color: #E2E8F0 !important;
+}
+
+.kuota-page-num {
+    min-width: 30px !important;
+    height: 30px !important;
+    padding: 0 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 6px !important;
+    border: none !important;
+    background: transparent !important;
+    font-size: 0.785rem !important;
+    font-weight: 600 !important;
+    color: #64748B !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+}
+
+.kuota-page-num:hover:not(.active) {
+    background: #F1F5F9 !important;
+    color: #0F172A !important;
+}
+
+.kuota-page-num.active {
+    background: var(--blue-600, #01347C) !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    box-shadow: 0 1px 2px rgba(6, 65, 204, 0.2) !important;
+}
+
+.kuota-page-ellipsis {
+    padding: 0 0.25rem !important;
+    color: var(--neutral-500, #94A3B8) !important;
+    font-size: 0.785rem !important;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .kuota-pagination-wrapper,
+[data-theme="dark"] .kuota-pagination-bottom {
+    border-color: #334155 !important;
+}
+[data-theme="dark"] .kuota-immutable-pill {
+    background: rgba(16, 185, 129, 0.15) !important;
+    border-color: rgba(52, 211, 153, 0.3) !important;
+    color: #34D399 !important;
+}
+[data-theme="dark"] .kuota-per-page-group {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+}
+[data-theme="dark"] .kuota-per-page-pill:hover:not(.active) {
+    background: #1E293B !important;
+    color: #F8FAFC !important;
+}
+[data-theme="dark"] .kuota-per-page-pill.active {
+    background: #3B82F6 !important;
+    color: #FFFFFF !important;
+}
+[data-theme="dark"] .kuota-page-btn-nav {
+    border-color: #334155 !important;
+    background: #1E293B !important;
+    color: #94A3B8 !important;
+}
+[data-theme="dark"] .kuota-page-btn-nav:hover:not(.disabled) {
+    background: #334155 !important;
+    color: #F8FAFC !important;
+}
+[data-theme="dark"] .kuota-page-btn-nav.disabled {
+    background: #0F172A !important;
+    border-color: #1E293B !important;
+    color: #64748B !important;
+}
+[data-theme="dark"] .kuota-page-num:hover:not(.active) {
+    background: #1E293B !important;
+    color: #F8FAFC !important;
+}
+[data-theme="dark"] .kuota-page-num.active {
+    background: #3B82F6 !important;
+    color: #FFFFFF !important;
+}
+
 
 
