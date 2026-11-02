@@ -1535,3 +1535,47 @@
   background: #0533A3;
 }
 
+/* =========================================================================
+   14. Hero Stat Cards Top Accent Border System
+   ========================================================================= */
+.admin-stat-card--blue {
+  border-top: 3.5px solid #2563EB !important;
+}
+
+.admin-stat-card--green {
+  border-top: 3.5px solid #10B981 !important;
+}
+
+.admin-stat-card--indigo {
+  border-top: 3.5px solid #4F46E5 !important;
+}
+
+.admin-stat-card--amber {
+  border-top: 3.5px solid #F59E0B !important;
+}
+
+.admin-stat-card--orange {
+  border-top: 3.5px solid #EA580C !important;
+}
+
+/* Dark Mode Harmonization */
+[data-theme="dark"] .admin-stat-card--blue {
+  border-top-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .admin-stat-card--green {
+  border-top-color: #10B981 !important;
+}
+
+[data-theme="dark"] .admin-stat-card--indigo {
+  border-top-color: #6366F1 !important;
+}
+
+[data-theme="dark"] .admin-stat-card--amber {
+  border-top-color: #F59E0B !important;
+}
+
+[data-theme="dark"] .admin-stat-card--orange {
+  border-top-color: #F97316 !important;
+}
+

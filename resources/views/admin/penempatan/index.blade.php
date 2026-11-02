@@ -643,7 +643,7 @@
     {{-- 1. HERO STATS CARDS --}}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; width: 100%;">
         {{-- Total Penempatan --}}
-        <div class="admin-stat-card">
+        <div class="admin-stat-card admin-stat-card--blue">
             <div>
                 <span style="font-size: 0.8125rem; font-weight: 600; color: var(--neutral-500, #64748B);">Total Penempatan</span>
                 <div style="font-size: 1.75rem; font-weight: 800; color: #0F172A; margin-top: 0.25rem; letter-spacing: -0.02em;">
@@ -660,7 +660,7 @@
         </div>
 
         {{-- Peserta Aktif --}}
-        <div class="admin-stat-card" style="border-top: 3.5px solid #10B981; border-left: none;">
+        <div class="admin-stat-card admin-stat-card--green">
             <div>
                 <span style="font-size: 0.8125rem; font-weight: 600; color: #047857;">Peserta Magang Aktif</span>
                 <div style="font-size: 1.75rem; font-weight: 800; color: #059669; margin-top: 0.25rem; letter-spacing: -0.02em;">
@@ -677,7 +677,7 @@
         </div>
 
         {{-- Selesai Magang --}}
-        <div class="admin-stat-card">
+        <div class="admin-stat-card admin-stat-card--indigo">
             <div>
                 <span style="font-size: 0.8125rem; font-weight: 600; color: #1E40AF;">Selesai Magang</span>
                 <div style="font-size: 1.75rem; font-weight: 800; color: #1E40AF; margin-top: 0.25rem; letter-spacing: -0.02em;">
@@ -694,7 +694,7 @@
         </div>
 
         {{-- Jalur Khusus (Kemitraan/Slot) --}}
-        <div class="admin-stat-card">
+        <div class="admin-stat-card admin-stat-card--amber">
             <div>
                 <span style="font-size: 0.8125rem; font-weight: 600; color: #B45309;">Jalur Khusus Mitra</span>
                 <div style="font-size: 1.75rem; font-weight: 800; color: #B45309; margin-top: 0.25rem; letter-spacing: -0.02em;">
@@ -712,7 +712,7 @@
 
         {{-- Menunggu Penempatan (Antrean Lolos Berkas) --}}
         @if(($penempatanStats['belum_ditempatkan'] ?? 0) > 0)
-            <div class="admin-stat-card" style="border-top: 3.5px solid #F59E0B; border-left: none; background: #FFFDF5;">
+            <div class="admin-stat-card admin-stat-card--orange" style="background: #FFFDF5;">
                 <div>
                     <span style="font-size: 0.8125rem; font-weight: 600; color: #B45309;">Menunggu Plotting</span>
                     <div style="font-size: 1.75rem; font-weight: 800; color: #D97706; margin-top: 0.25rem; letter-spacing: -0.02em;">
