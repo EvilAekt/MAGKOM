@@ -27,6 +27,9 @@
     <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard-cockpit-unified.css') }}?v={{ file_exists(public_path('css/dashboard-cockpit-unified.css')) ? (string) filemtime(public_path('css/dashboard-cockpit-unified.css')) : '1.0' }}">
 
+    <!-- Vite Asset Pipeline (PRD-TASK-VITE-01) -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <!-- Anti-Flash Theme Script -->
     <script>
         (function() {

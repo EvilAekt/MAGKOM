@@ -11,6 +11,7 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/superadmin-dashboard.css') }}?v={{ file_exists(public_path('css/superadmin-dashboard.css')) ? (string) filemtime(public_path('css/superadmin-dashboard.css')) : (string) time() }}">
+    @vite(['resources/css/pages/superadmin/dashboard.css', 'resources/js/pages/superadmin/dashboard.js'])
 @endpush
 
 @section('content_area_class', 'gentelella-fluid-canvas')

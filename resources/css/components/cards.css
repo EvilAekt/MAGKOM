@@ -1,0 +1,179 @@
+        /* =====================================================================
+           CARD SURFACES REFACTORING (Mode Terang #01347C & Mode Gelap #003566/#02275D)
+           ===================================================================== */
+        /* Mode Terang: Highlight Card & Stat Card memakai #01347C */
+        html:not([data-theme="dark"]) .card-highlight,
+        html:not([data-theme="dark"]) .stat-card-accent,
+        html:not([data-theme="dark"]) .cv-stat-card {
+            background-color: #01347C !important;
+            border: 1px solid #3F51B5 !important;
+            box-shadow: 0 10px 20px -3px rgba(1, 52, 124, 0.22), 0 4px 6px -4px rgba(1, 52, 124, 0.15) !important;
+            color: #FFFFFF !important;
+        }
+        html:not([data-theme="dark"]) .card-highlight .card-title,
+        html:not([data-theme="dark"]) .stat-card-accent .stat-val,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-val,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-title {
+            color: #FFFFFF !important;
+            font-weight: 700;
+        }
+        html:not([data-theme="dark"]) .card-highlight .card-desc,
+        html:not([data-theme="dark"]) .stat-card-accent .stat-label,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-label,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-sub {
+            color: #BBBBBB !important;
+            font-weight: 600;
+        }
+        html:not([data-theme="dark"]) .cv-stat-badge {
+            background-color: #FFCB05 !important;
+            color: #02275D !important;
+            font-weight: 700;
+        }
+
+        /* Mode Terang: Container Card Utama (Tabel & Form) */
+        html:not([data-theme="dark"]) .x_panel,
+        html:not([data-theme="dark"]) .card,
+        html:not([data-theme="dark"]) .cv-card,
+        html:not([data-theme="dark"]) .gentelella-card,
+        html:not([data-theme="dark"]) .gentelella-filter-bar,
+        html:not([data-theme="dark"]) .staf-filter-card,
+        html:not([data-theme="dark"]) .sa-panel:not(.sa-panel--sub) {
+            background-color: #FFFFFF;
+            border: 1px solid #BBBBBB;
+            border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+            box-shadow: 0 2px 8px rgba(1, 52, 124, 0.04);
+        }
+        html:not([data-theme="dark"]) .x_title h2,
+        html:not([data-theme="dark"]) .card-title {
+            color: #212529 !important;
+            font-weight: 700;
+        }
+
+        /* Mode Gelap: Card memakai #003566 / #02275D dengan border #3F51B5 */
+        [data-theme="dark"] .x_panel,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .cv-stat-card,
+        [data-theme="dark"] .cv-card,
+        [data-theme="dark"] .tile_stats_inner {
+            background-color: #003566 !important;
+            border: 1px solid #3F51B5 !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .x_panel,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .cv-card,
+        [data-theme="dark"] .gentelella-card,
+        [data-theme="dark"] .gentelella-filter-bar,
+        [data-theme="dark"] .staf-filter-card,
+        [data-theme="dark"] .sa-panel:not(.sa-panel--sub) {
+            border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
+        }
+        [data-theme="dark"] .card-title,
+        [data-theme="dark"] .x_title h2,
+        [data-theme="dark"] .stat-val,
+        [data-theme="dark"] .cv-stat-val,
+        [data-theme="dark"] .cv-stat-title,
+        [data-theme="dark"] .tile_stats_inner .count,
+        [data-theme="dark"] .tile_stats_inner .stat-value {
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .cv-stat-label,
+        [data-theme="dark"] .cv-stat-sub,
+        [data-theme="dark"] .tile_stats_inner .count_top,
+        [data-theme="dark"] .tile_stats_inner .stat-label,
+        [data-theme="dark"] .tile_stats_inner .count_title,
+        [data-theme="dark"] .tile_stats_inner .count_bottom,
+        [data-theme="dark"] .tile_stats_inner .count_subtext {
+            color: #BBBBBB !important;
+        }
+        [data-theme="dark"] .tile_stats_inner .count_icon,
+        [data-theme="dark"] .tile_stats_inner .stat-icon {
+            color: #FFCB05 !important;
+        }
+
+        /* Action Buttons (Primary #01347C, Interactive #3F51B5) */
+        .btn-primary, .btn-primary-gradient {
+            background: #01347C !important;
+            border-color: #01347C !important;
+            color: #FFFFFF !important;
+        }
+        .btn-primary:hover, .btn-primary-gradient:hover {
+            background: #003566 !important;
+            border-color: #003566 !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .btn-primary,
+        [data-theme="dark"] .btn-primary-gradient {
+            background: #3F51B5 !important;
+            border-color: #3F51B5 !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .btn-primary:hover,
+        [data-theme="dark"] .btn-primary-gradient:hover {
+            background: #01347C !important;
+            border-color: #01347C !important;
+            color: #FFFFFF !important;
+        }
+
+        /* Mode Menciut Desktop (nav-sm) */
+        @media (min-width: 992px) {
+            body.nav-sm .sidebar-brand-text,
+            body.nav-sm .profile_info,
+            body.nav-sm .menu_section h3,
+            body.nav-sm .nav-section-label,
+            body.nav-sm .nav-item-link span:not(.nav-item-icon),
+            body.nav-sm .nav-group-btn span.nav-group-btn-left span:not(.nav-item-icon),
+            body.nav-sm .nav-group-chevron,
+            body.nav-sm .nav-sub-menu {
+                display: none !important;
+            }
+
+            body.nav-sm .site_title {
+                padding: 1rem 0;
+                justify-content: center;
+            }
+
+            body.nav-sm .profile {
+                padding: 0.75rem 0;
+                justify-content: center;
+            }
+
+            body.nav-sm .nav-item-link,
+            body.nav-sm .nav-group-btn {
+                justify-content: center;
+                padding: 0.625rem 0;
+            }
+
+            body.nav-sm .sidebar-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 0.75rem 0;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Mobile Breakpoint (< 992px) */
+        @media (max-width: 991.98px) {
+            .left_col.dashboard-sidebar {
+                transform: translateX(-100%);
+                box-shadow: var(--shadow-modal);
+                width: 256px !important;
+            }
+
+            .left_col.dashboard-sidebar.drawer-open {
+                transform: translateX(0);
+            }
+
+            .top_nav,
+            .right_col,
+            .gentelella-footer {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            .right_col {
+                padding: 1rem 1rem 2.5rem;
+            }
+        }

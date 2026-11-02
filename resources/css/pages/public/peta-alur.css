@@ -1,0 +1,1270 @@
+/* ==========================================================================
+   MAGKOM PETA ALUR INTERAKTIF (FULLSCREEN STANDALONE SIMULATOR - 100vw x 100vh)
+   Portal MAGKOM - Diskominfo Kabupaten Sleman
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #f8fafc;
+    color: #0f172a;
+    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.peta-alur-fullscreen-app {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: #f0f7ff;
+}
+
+/* ==========================================================================
+   1. TOPBAR IMMERSIVE NAVIGATION (DAYLIGHT CIVIC TECH MAGKOM)
+   ========================================================================== */
+.peta-alur-topbar {
+    height: 60px;
+    background: linear-gradient(135deg, #1b3860 0%, #0f2444 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 2px solid rgba(2, 132, 199, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    gap: 1rem;
+    z-index: 40;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.25);
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-nav-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.4rem 0.85rem;
+    border-radius: 0.55rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-nav-back:hover {
+    background: rgba(2, 132, 199, 0.3);
+    border-color: #38bdf8;
+    color: #ffffff;
+    transform: translateX(-2px);
+}
+
+.topbar-branding {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.topbar-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(245, 158, 11, 0.18);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #f59e0b;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.topbar-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+/* Topbar Right Actions */
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-audio-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e2e8f0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-audio-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.btn-audio-toggle.is-active {
+    background: rgba(2, 132, 199, 0.35);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+.btn-topbar-register {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #16a34a;
+    border: 1px solid #22c55e;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.4rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
+}
+
+.btn-topbar-register:hover {
+    background: #15803d;
+    transform: scale(1.02);
+}
+
+/* ==========================================================================
+   2. MAIN WORKSPACE & 100% PANORAMIC VIEWPORT
+   ========================================================================== */
+.peta-alur-main-workspace {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    height: calc(100vh - 102px); /* 60px topbar + 42px mini-footer */
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    background: #f0f7ff;
+}
+
+/* 100% Edge-to-Edge Panoramic Viewport */
+.peta-alur-viewport {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 30%, #e0f2fe 0%, #f0f7ff 100%);
+}
+
+.panoramic-svg-canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: center center;
+    user-select: none;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+
+
+/* ==========================================================================
+   3. FLOATING POP-UP CHECKPOINT CARD (SESUAI GAMBAR 2 REFERENSI USER)
+   ========================================================================== */
+.in-scene-stage-hud,
+#missionHudOverlay {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 340px;
+    max-width: calc(100% - 3rem);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 1.25rem;
+    padding: 1.35rem 1.45rem;
+    box-shadow: 0 20px 40px -8px rgba(27, 56, 96, 0.16), 0 8px 16px -4px rgba(27, 56, 96, 0.08);
+    display: flex;
+    flex-direction: column;
+    z-index: 30;
+    color: #0f172a;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Minimized Pop-Up State */
+.in-scene-stage-hud.is-minimized,
+#missionHudOverlay.is-minimized {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-12px) scale(0.95);
+}
+
+.stage-hud-inner {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Pop-up Card Header */
+.popup-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+}
+
+.popup-stage-badge-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.popup-rhombus-pin {
+    width: 13px;
+    height: 13px;
+    transform: rotate(45deg);
+    border-radius: 2px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.popup-stage-num {
+    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    display: inline-block;
+}
+
+.btn-close-popup {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-close-popup:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #ef4444;
+    transform: scale(1.05);
+}
+
+/* Pop-up Card Title & Description */
+.popup-stage-title {
+    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #1b3860;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin: 0 0 0.45rem 0;
+    line-height: 1.35;
+}
+
+.popup-stage-desc {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: #475569;
+    margin: 0 0 1.15rem 0;
+}
+
+/* Pop-up Card Footer Navigation */
+.popup-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    justify-content: space-between;
+    padding-top: 0.8rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.btn-popup-nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-family: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.45rem 0.8rem;
+    border-radius: 0.55rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-popup-prev {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+}
+
+.btn-popup-prev:hover:not(:disabled) {
+    background: #e2e8f0;
+    color: #0f172a;
+    transform: translateX(-2px);
+}
+
+.btn-popup-next {
+    background: linear-gradient(135deg, #1b3860 0%, #0284c7 100%);
+    border: 1px solid #0284c7;
+    color: #ffffff;
+    flex: 1;
+    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+}
+
+.btn-popup-next:hover {
+    background: linear-gradient(135deg, #122846 0%, #0369a1 100%);
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+    transform: translateY(-1px);
+}
+
+.btn-popup-finish {
+    background: linear-gradient(135deg, #16a34a 0%, #059669 100%);
+    border: 1px solid #22c55e;
+    color: #ffffff;
+    flex: 1;
+    box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);
+}
+
+.btn-popup-finish:hover {
+    background: linear-gradient(135deg, #15803d 0%, #047857 100%);
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   4. BOTTOM TIMELINE TAB BAR (NAVY DISKOMINFO SLEMAN)
+   ========================================================================== */
+.peta-alur-bottom-bar {
+    height: 60px;
+    background: #1b3860;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    z-index: 35;
+    flex-shrink: 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.road-tab-btn {
+    background: transparent;
+    border: none;
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s ease;
+    text-align: left;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.road-tab-btn:last-child {
+    border-right: none;
+}
+
+.road-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.road-tab-btn.is-active {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.road-tab-top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.road-tab-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.num-1 { background: #e11d48; }
+.num-2 { background: #0284c7; }
+.num-3 { background: #0f766e; }
+.num-4 { background: #f59e0b; }
+
+.road-tab-col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.25;
+}
+
+.road-tab-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.road-tab-sub {
+    font-size: 0.68rem;
+    color: #93c5fd;
+    font-weight: 500;
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.road-tab-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.line-1 { background: #ef4444; }
+.line-2 { background: #38bdf8; }
+.line-3 { background: #34d399; }
+.line-4 { background: #fbbf24; }
+
+.road-tab-btn.is-active .road-tab-line {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   5. LIVING WORLD KEYFRAME ANIMATIONS (MERAPI, STARS, CAR, CHARACTERS)
+   ========================================================================== */
+.star-twinkle-1 { animation: starFlicker 3s infinite ease-in-out; }
+.star-twinkle-2 { animation: starFlicker 4.5s infinite ease-in-out 1s; }
+.star-twinkle-3 { animation: starFlicker 2.5s infinite ease-in-out 0.5s; }
+
+@keyframes starFlicker {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.3); }
+}
+
+.floating-cloud {
+    animation-name: cloudDrift;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+.cloud-speed-1 { animation-duration: 34s; }
+.cloud-speed-2 { animation-duration: 50s; animation-delay: -14s; }
+
+@keyframes cloudDrift {
+    0% { transform: translateX(-80px); }
+    100% { transform: translateX(1000px); }
+}
+
+.tower-beacon-pulse { animation: beaconPulse 1.2s infinite ease-in-out; }
+.tower-beacon-glow { animation: beaconGlow 1.2s infinite ease-in-out; }
+
+@keyframes beaconPulse {
+    0%, 100% { opacity: 0.4; transform: scale(0.85); transform-origin: 55px -34px; }
+    50% { opacity: 1; transform: scale(1.25); transform-origin: 55px -34px; }
+}
+
+@keyframes beaconGlow {
+    0%, 100% { opacity: 0.1; transform: scale(0.9); transform-origin: 55px -34px; }
+    50% { opacity: 0.5; transform: scale(1.6); transform-origin: 55px -34px; }
+}
+
+.car-headlight-beam {
+    animation: headlightBeamAura 2s infinite ease-in-out;
+    transform-origin: 16px 0px;
+}
+
+@keyframes headlightBeamAura {
+    0%, 100% { opacity: 0.78; transform: scaleY(0.95); }
+    50% { opacity: 0.98; transform: scaleY(1.05); }
+}
+
+.siren-strobe-beacon {
+    animation: sirenStrobe 0.8s infinite steps(2, start);
+}
+
+@keyframes sirenStrobe {
+    0% { fill: #f59e0b; filter: drop-shadow(0 0 5px #f59e0b); }
+    50% { fill: #ef4444; filter: drop-shadow(0 0 7px #ef4444); }
+}
+
+/* Merapi Volcanic Plume Drift */
+.merapi-steam-1 {
+    animation: merapiPlume 4s infinite ease-out;
+    transform-origin: 480px 75px;
+}
+.merapi-steam-2 {
+    animation: merapiPlume 5s infinite ease-out 1.8s;
+    transform-origin: 480px 75px;
+}
+
+@keyframes merapiPlume {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.6);
+    }
+    30% {
+        opacity: 0.55;
+        transform: translateY(-8px) scale(1);
+    }
+    70% {
+        opacity: 0.3;
+        transform: translateY(-18px) scale(1.4) translateX(5px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-28px) scale(1.8) translateX(12px);
+    }
+}
+
+/* Road Marking (Solid Static Highway Dashes on Asphalt) */
+.road-marking-animated {
+    stroke-dashoffset: 0;
+}
+
+/* Tree Gentle Sway */
+.tree-swaying {
+    animation: treeSway 3.8s infinite ease-in-out;
+    transform-origin: bottom center;
+}
+
+@keyframes treeSway {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    35% {
+        transform: rotate(1.4deg);
+    }
+    70% {
+        transform: rotate(-1.2deg);
+    }
+}
+
+/* Red-White Flag Waving at Diskominfo Building */
+.flag-waving {
+    animation: flagWave 1.6s infinite ease-in-out;
+    transform-origin: left center;
+}
+
+@keyframes flagWave {
+    0%, 100% {
+        transform: skewY(0deg) scaleX(1);
+    }
+    50% {
+        transform: skewY(-4deg) scaleX(0.95);
+    }
+}
+
+/* Street Lamps Warm Gentle Glow */
+.street-lamp-glow {
+    animation: streetLampPulsate 2.8s infinite alternate ease-in-out;
+    transform-origin: center;
+}
+
+@keyframes streetLampPulsate {
+    0% {
+        filter: drop-shadow(0 0 3px #fde047);
+        opacity: 0.85;
+    }
+    100% {
+        filter: drop-shadow(0 0 9px #fde047) drop-shadow(0 0 16px rgba(250, 204, 21, 0.6));
+        opacity: 1;
+    }
+}
+
+/* Checkpoint Ripple Wave Animation */
+.cp-ripple-1 {
+    animation: cpRippleWave 2.4s infinite ease-out;
+    transform-origin: center;
+}
+.cp-ripple-2 {
+    animation: cpRippleWave 2.4s infinite ease-out 0.9s;
+    transform-origin: center;
+}
+
+@keyframes cpRippleWave {
+    0% {
+        r: 14;
+        opacity: 0.65;
+    }
+    100% {
+        r: 34;
+        opacity: 0;
+    }
+}
+
+/* Card Popup Spring In */
+#modalStepDetailPanel {
+    animation: popupSpringIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popupSpringIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.cinematic-car-body {
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    transition: filter 0.2s ease;
+}
+
+.cinematic-car-body.is-dragging {
+    cursor: grabbing !important;
+    filter: drop-shadow(0 14px 28px rgba(2, 132, 199, 0.5)) !important;
+}
+
+/* Suspensi lokal halus pada child group mobil */
+.car-suspension-wrap {
+    animation: carSuspensionShake 0.75s infinite ease-in-out;
+}
+
+@keyframes carSuspensionShake {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-1.2px); }
+}
+
+#modalRoadCarTag {
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: center bottom;
+}
+
+#modalRoadCarGroup:hover #modalRoadCarTag,
+#modalRoadCarGroup.is-dragging #modalRoadCarTag {
+    opacity: 1;
+    transform: translate(0, -32px) scale(1.05);
+}
+
+.gps-pin-bounce {
+    animation: gpsPinFloating 1.8s infinite ease-in-out;
+}
+
+@keyframes gpsPinFloating {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+}
+
+.cp-pulse-halo {
+    animation: haloPulse 2.4s infinite ease-out;
+}
+
+@keyframes haloPulse {
+    0% { transform: scale(0.9); opacity: 0.4; }
+    50% { transform: scale(1.25); opacity: 0.15; }
+    100% { transform: scale(0.9); opacity: 0.4; }
+}
+
+.living-character-showcase {
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+}
+
+.char-scene-item {
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.laptop-screen-pulse { animation: screenGlow 1.8s infinite ease-in-out; }
+
+@keyframes screenGlow {
+    0%, 100% { fill: #38bdf8; opacity: 0.75; }
+    50% { fill: #7dd3fc; opacity: 1; }
+}
+
+.char-typing-arm {
+    animation: typingMotion 0.4s infinite alternate ease-in-out;
+    transform-origin: 31px 16px;
+}
+
+@keyframes typingMotion {
+    0% { transform: rotate(-3deg); }
+    100% { transform: rotate(3deg); }
+}
+
+.floating-account-particle {
+    animation: accountParticleFloat 2.5s infinite ease-in-out;
+}
+
+@keyframes accountParticleFloat {
+    0% { transform: translateY(0) scale(0.9); opacity: 0.7; }
+    50% { transform: translateY(-6px) scale(1.1); opacity: 1; }
+    100% { transform: translateY(0) scale(0.9); opacity: 0.7; }
+}
+
+.stamp-arm-anim {
+    animation: rubberStampAction 1.6s infinite cubic-bezier(0.2, 0.9, 0.3, 1);
+    transform-origin: 44px -8px;
+}
+
+@keyframes rubberStampAction {
+    0%, 60% { transform: translateY(0); }
+    70% { transform: translateY(11px); }
+    75% { transform: translateY(12px) scale(1.05, 0.92); }
+    85% { transform: translateY(0); }
+    100% { transform: translateY(0); }
+}
+
+.mentor-nod-anim {
+    animation: mentorNodding 2.6s infinite ease-in-out;
+    transform-origin: 46px 20px;
+}
+
+@keyframes mentorNodding {
+    0%, 100% { transform: rotate(0deg); }
+    30% { transform: rotate(4deg); }
+    60% { transform: rotate(-2deg); }
+    80% { transform: rotate(2deg); }
+}
+
+.char-jump-joy {
+    animation: internJumpCelebration 1.8s infinite ease-in-out;
+    transform-origin: 30px 42px;
+}
+
+@keyframes internJumpCelebration {
+    0%, 100% { transform: translateY(0) scale(1); }
+    40% { transform: translateY(-10px) scale(1.02); }
+    55% { transform: translateY(-12px) scale(1.03); }
+    70% { transform: translateY(0) scale(1, 0.96); }
+}
+
+.confetti-c1 { animation: confettiSpin1 2s infinite linear; transform-origin: center; }
+.confetti-c2 { animation: confettiSpin2 2.5s infinite linear; transform-origin: center; }
+.confetti-c3 { animation: confettiSpin1 1.8s infinite linear 0.4s; transform-origin: center; }
+
+@keyframes confettiSpin1 {
+    0% { transform: translateY(-5px) rotate(0deg); opacity: 0.9; }
+    50% { transform: translateY(8px) rotate(180deg); opacity: 1; }
+    100% { transform: translateY(18px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes confettiSpin2 {
+    0% { transform: translateY(-8px) rotate(0deg); opacity: 0.8; }
+    50% { transform: translateY(6px) rotate(-180deg); opacity: 1; }
+    100% { transform: translateY(20px) rotate(-360deg); opacity: 0; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .peta-alur-topbar {
+        height: auto;
+        padding: 0.75rem 1rem;
+        flex-wrap: wrap;
+    }
+    .peta-alur-main-workspace {
+        height: calc(100vh - 120px);
+    }
+    .in-scene-stage-hud,
+    #missionHudOverlay {
+        top: auto;
+        left: 1rem;
+        right: 1rem;
+        bottom: 5.5rem;
+        width: auto;
+        max-width: none;
+        max-height: 48%;
+    }
+    .in-scene-stage-hud.is-minimized,
+    #missionHudOverlay.is-minimized {
+        display: none;
+    }
+    .virtual-analog-container {
+        bottom: 4.8rem;
+        left: 0.75rem;
+        transform: scale(0.88);
+        transform-origin: bottom left;
+    }
+}
+
+/* ==========================================================================
+   4. VIRTUAL ANALOG JOYSTICK HUD (2D SIDE-SCROLLER CONTROLLER)
+   ========================================================================== */
+.virtual-analog-container {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    z-index: 25;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+}
+
+.analog-top-controls {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.analog-horn-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    background: rgba(15, 23, 42, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(250, 204, 21, 0.5);
+    color: #facc15;
+    font-family: 'Lexend', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    padding: 0.32rem 0.95rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35);
+    transition: all 0.15s ease;
+}
+
+.analog-horn-btn:hover {
+    background: rgba(234, 179, 8, 0.25);
+    border-color: #facc15;
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(250, 204, 21, 0.55);
+    transform: translateY(-1.5px);
+}
+
+.analog-horn-btn:active,
+.analog-horn-btn.is-pressed {
+    background: rgba(234, 179, 8, 0.5);
+    border-color: #ffffff;
+    color: #ffffff;
+    box-shadow: 0 0 22px rgba(250, 204, 21, 0.75);
+    transform: scale(0.92);
+}
+
+.analog-base {
+    position: relative;
+    width: 130px;
+    height: 64px;
+    background: rgba(15, 23, 42, 0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 2px solid rgba(56, 189, 248, 0.4);
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.35), inset 0 2px 6px rgba(0, 0, 0, 0.3);
+    cursor: grab;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    touch-action: none;
+}
+
+.analog-base.is-active {
+    border-color: #38bdf8;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.45), inset 0 2px 8px rgba(0, 0, 0, 0.4);
+    cursor: grabbing;
+}
+
+.analog-axis-guide {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.analog-steer-btn {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 38px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #38bdf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 8;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.btn-steer-left {
+    left: 0;
+    border-top-left-radius: 32px;
+    border-bottom-left-radius: 32px;
+}
+
+.btn-steer-right {
+    right: 0;
+    border-top-right-radius: 32px;
+    border-bottom-right-radius: 32px;
+}
+
+.analog-steer-btn:hover {
+    background: rgba(56, 189, 248, 0.18);
+    color: #ffffff;
+    text-shadow: 0 0 10px #38bdf8;
+}
+
+.analog-steer-btn:active,
+.analog-steer-btn.is-pressed {
+    background: rgba(56, 189, 248, 0.35);
+    color: #ffffff;
+    transform: scale(0.9);
+}
+
+.steer-arrow-char {
+    font-size: 0.95rem;
+    font-weight: 900;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.btn-steer-left .steer-arrow-char {
+    animation: guideArrowPulse 1.4s infinite alternate ease-in-out;
+}
+
+.btn-steer-right .steer-arrow-char {
+    animation: guideArrowPulse 1.4s infinite alternate ease-in-out 0.7s;
+}
+
+@keyframes guideArrowPulse {
+    0% { transform: scale(0.88); opacity: 0.65; }
+    100% { transform: scale(1.15); opacity: 1; text-shadow: 0 0 6px #38bdf8; }
+}
+
+.guide-label {
+    font-family: 'Lexend', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: #94a3b8;
+    opacity: 0.45;
+}
+
+.analog-thumb {
+    position: absolute;
+    left: calc(50% - 24px);
+    top: calc(50% - 24px);
+    width: 48px;
+    height: 48px;
+    background: radial-gradient(circle at 35% 30%, #38bdf8 0%, #0284c7 65%, #0369a1 100%);
+    border: 2.5px solid #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    cursor: grab;
+    will-change: transform;
+    touch-action: none;
+}
+
+.analog-thumb:active,
+.analog-base.is-active .analog-thumb {
+    cursor: grabbing;
+    box-shadow: 0 6px 16px rgba(56, 189, 248, 0.7), inset 0 2px 6px rgba(255, 255, 255, 0.6);
+}
+
+.analog-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    pointer-events: none;
+}
+
+.analog-hint-text {
+    font-family: 'Lexend', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(15, 23, 42, 0.8);
+    background: rgba(15, 23, 42, 0.55);
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    backdrop-filter: blur(4px);
+}
+
+.analog-kbd-hint {
+    font-size: 0.64rem;
+    color: #cbd5e1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.analog-kbd-hint strong {
+    color: #facc15;
+}
+
+/* ==========================================================================
+   5. CAR WHEELS & PEDESTRIAN WALKING ANIMATIONS
+   ========================================================================== */
+.car-wheel-group {
+    transform-origin: 0 0;
+    will-change: transform;
+}
+
+.animated-pedestrian {
+    animation: pedestrianSway 1s infinite alternate ease-in-out;
+    transform-origin: center bottom;
+}
+
+.walker-1 {
+    animation-duration: 0.9s;
+}
+
+.walker-2 {
+    animation-duration: 1.1s;
+    animation-delay: 0.3s;
+}
+
+@keyframes pedestrianSway {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-2px); }
+}
+
+.walker-leg-1 {
+    animation: walkLeg1 0.6s infinite alternate ease-in-out;
+    transform-origin: 5px 15px;
+}
+
+.walker-leg-2 {
+    animation: walkLeg2 0.6s infinite alternate ease-in-out;
+    transform-origin: 11px 15px;
+}
+
+@keyframes walkLeg1 {
+    0% { transform: rotate(-16deg); }
+    100% { transform: rotate(16deg); }
+}
+
+@keyframes walkLeg2 {
+    0% { transform: rotate(16deg); }
+    100% { transform: rotate(-16deg); }
+}
+
+/* Smooth road dashes animation */
+.road-marking-animated {
+    stroke-dashoffset: 0;
+}
+
+/* ==========================================================================
+   6. WEBTOON POP-UP SPEECH BUBBLE (BALON KOMIK TAHAPAN MAGANG)
+   ========================================================================== */
+.webtoon-speech-bubble {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(20px, -40px) scale(0.7);
+    transform-origin: 20px 0px;
+    transition: opacity 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.webtoon-speech-bubble.is-active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(20px, -52px) scale(1);
+}
+
+#webtoonBubble4 {
+    transform: translate(-35px, -40px) scale(0.7);
+}
+
+#webtoonBubble4.is-active {
+    transform: translate(-35px, -52px) scale(1);
+}
+
+/* ==========================================================================
+   7. MINI FOOTER SELARAS LANDING PAGE UTAMA MAGKOM
+   ========================================================================== */
+.peta-alur-mini-footer {
+    height: 42px;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1.5rem;
+    z-index: 35;
+    flex-shrink: 0;
+}
+
+.peta-footer-inner {
+    width: 100%;
+    max-width: 1400px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+.peta-footer-copy {
+    font-weight: 500;
+}
+
+.peta-footer-links {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.peta-footer-link {
+    color: #0284c7;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.15s ease;
+}
+
+.peta-footer-link:hover {
+    color: #1b3860;
+    text-decoration: underline;
+}
+
+.peta-footer-sep {
+    color: #cbd5e1;
+    font-size: 0.7rem;
+}
+
+/* ==========================================================================
+   8. EFEK VISUAL KLAKSON MOBIL & ANIMASI KARAKTER UTUH
+   ========================================================================== */
+.car-horn-ripples {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+}
+
+.car-horn-ripples.active-horn {
+    opacity: 1;
+}
+
+.car-horn-ripples.active-horn .horn-wave-1 {
+    animation: hornWavePop 0.38s ease-out forwards;
+}
+
+.car-horn-ripples.active-horn .horn-wave-2 {
+    animation: hornWavePop 0.38s ease-out 0.05s forwards;
+}
+
+.car-horn-ripples.active-horn .horn-wave-3 {
+    animation: hornWavePop 0.38s ease-out 0.1s forwards;
+}
+
+@keyframes hornWavePop {
+    0% {
+        opacity: 0;
+        transform: scale(0.7) translateX(0);
+    }
+    40% {
+        opacity: 1;
+        transform: scale(1.1) translateX(4px);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.35) translateX(14px);
+    }
+}
+
+.car-headlight-beam.horn-flash {
+    opacity: 1 !important;
+    filter: drop-shadow(0 0 14px #facc15) drop-shadow(0 0 24px rgba(254, 240, 138, 0.9));
+    animation: headlightHornFlash 0.38s ease-out;
+}
+
+@keyframes headlightHornFlash {
+    0%, 100% { opacity: 0.65; }
+    50% { opacity: 1; transform: scaleY(1.18); }
+}
+
+/* Karakter Utuh Wave & Breathing Animation */
+.char-wave-arm {
+    animation: charArmWaveAnim 1.6s infinite ease-in-out;
+    transform-origin: 33px 20px;
+}
+
+@keyframes charArmWaveAnim {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(14deg); }
+    75% { transform: rotate(-8deg); }
+}
+
+/* Checkpoint Buildings Styling */
+.checkpoint-building {
+    filter: drop-shadow(0 8px 18px rgba(15, 23, 42, 0.14));
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.checkpoint-building:hover {
+    filter: drop-shadow(0 12px 26px rgba(2, 132, 199, 0.22));
+}
+
+

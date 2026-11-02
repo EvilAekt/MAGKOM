@@ -15,6 +15,9 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="{{ asset('css/peta-alur-fullscreen.css') }}?v={{ time() }}">
+
+    <!-- Vite Asset Pipeline -->
+    @vite(['resources/css/pages/public/peta-alur.css', 'resources/js/pages/public/peta-alur.js'])
 </head>
 <body>
 

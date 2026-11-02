@@ -10,6 +10,7 @@
 --}}
 
 @push('styles')
+    @vite(['resources/css/pages/superadmin/audit-log.css'])
     @include('superadmin.audit-log.partials._styles')
 @endpush
 

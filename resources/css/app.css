@@ -1,0 +1,19 @@
+/* =========================================================================
+   MAGKOM MAIN APPLICATION STYLESHEET (Vite Asset Pipeline)
+   Organized by Architectural Layers (Base, Components, Layouts)
+   ========================================================================= */
+
+/* Base Design Tokens & CSS Peeper System */
+@import './base/variables.css';
+@import './base/reset.css';
+
+/* Shared Industrial Components */
+@import './components/pagination.css';
+@import './components/notifications.css';
+@import './components/cards.css';
+@import './components/tables.css';
+
+/* Unified Dashboard & Layout Rules */
+@import './layouts/gentelella.css';
+@import './layouts/dashboard.css';
+@import './layouts/dashboard-cockpit.css';

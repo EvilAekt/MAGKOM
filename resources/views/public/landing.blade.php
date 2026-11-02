@@ -28,6 +28,9 @@
     <link rel="stylesheet" href="{{ asset('css/landing-modern.css') }}?v={{ filemtime(public_path('css/landing-modern.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/landing-peta-alur-modal.css') }}?v={{ filemtime(public_path('css/landing-peta-alur-modal.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/landing-faq-redesign.css') }}?v={{ filemtime(public_path('css/landing-faq-redesign.css')) }}">
+
+    <!-- Vite Asset Pipeline -->
+    @vite(['resources/css/pages/public/landing.css', 'resources/css/pages/public/landing-peta-alur-modal.css', 'resources/css/pages/public/landing-faq.css', 'resources/js/pages/public/landing.js'])
 </head>
 <body class="magkom-landing-body">
 

@@ -1,0 +1,289 @@
+        /* =====================================================================
+           GLOBAL FLASH ALERTS & STATUS BANNERS (Design System Bab 3.4)
+           ===================================================================== */
+        .alerts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ========================================================
+           MODERN TOAST NOTIFICATION COMPONENT (Floating Top-Right)
+           ======================================================== */
+        .alerts-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 420px;
+            width: calc(100vw - 48px);
+            pointer-events: none;
+        }
+
+        .alerts-container .app-alert,
+        .alerts-container .app-toast {
+            pointer-events: auto;
+            margin-bottom: 0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+            animation: toastSlideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .alerts-container .app-alert.toast-hiding,
+        .alerts-container .app-toast.toast-hiding {
+            animation: toastSlideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes toastSlideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        @keyframes toastSlideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(50px) scale(0.96);
+            }
+        }
+
+        .app-alert,
+        .app-toast {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 18px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            position: relative;
+            transition: all 0.25s ease;
+        }
+
+        .alert-icon-badge,
+        .toast-icon-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .alert-icon-badge.success,
+        .toast-icon-badge.success {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        .alert-icon-badge.error,
+        .toast-icon-badge.error {
+            background: #FEF2F2;
+            color: #EF4444;
+        }
+
+        .alert-icon-badge.warning,
+        .toast-icon-badge.warning {
+            background: #FFFBEB;
+            color: #F59E0B;
+        }
+
+        .alert-icon-badge.info,
+        .toast-icon-badge.info {
+            background: #EFF6FF;
+            color: #3B82F6;
+        }
+
+        .alert-body,
+        .toast-content {
+            flex: 1;
+            min-width: 0;
+            padding-top: 1px;
+        }
+
+        .alert-title,
+        .toast-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: #0F172A;
+            line-height: 1.35;
+            margin-bottom: 2px;
+        }
+
+        .alert-desc,
+        .toast-desc {
+            font-size: 0.84375rem;
+            font-weight: 400;
+            color: #64748B;
+            line-height: 1.45;
+        }
+
+        .alert-desc ul,
+        .toast-desc ul {
+            margin: 4px 0 0 16px;
+            padding: 0;
+        }
+
+        .alert-close-btn,
+        .toast-close-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #94A3B8;
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+        }
+
+        .alert-close-btn:hover,
+        .toast-close-btn:hover {
+            color: #475569;
+            background: #F1F5F9;
+        }
+
+        /* Dark Theme Support for Alerts */
+        [data-theme="dark"] .app-alert,
+        [data-theme="dark"] .app-toast {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        [data-theme="dark"] .alert-title,
+        [data-theme="dark"] .toast-title {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .alert-desc,
+        [data-theme="dark"] .toast-desc {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .alert-icon-badge.success,
+        [data-theme="dark"] .toast-icon-badge.success {
+            background: rgba(16, 185, 129, 0.18) !important;
+            color: #34D399 !important;
+        }
+
+        [data-theme="dark"] .alert-icon-badge.error,
+        [data-theme="dark"] .toast-icon-badge.error {
+            background: rgba(239, 68, 68, 0.18) !important;
+            color: #F87171 !important;
+        }
+
+        [data-theme="dark"] .alert-icon-badge.warning,
+        [data-theme="dark"] .toast-icon-badge.warning {
+            background: rgba(245, 158, 11, 0.18) !important;
+            color: #FBBF24 !important;
+        }
+
+        [data-theme="dark"] .alert-icon-badge.info,
+        [data-theme="dark"] .toast-icon-badge.info {
+            background: rgba(59, 130, 246, 0.18) !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .alert-close-btn,
+        [data-theme="dark"] .toast-close-btn {
+            color: #64748B !important;
+        }
+
+        [data-theme="dark"] .alert-close-btn:hover,
+        [data-theme="dark"] .toast-close-btn:hover {
+            color: #CBD5E1 !important;
+            background: #1E293B !important;
+        }
+
+        /* Banner Masa Tenggang Peserta (PRD AC-12-2) */
+        .grace-period-banner {
+            background-color: var(--sky-100);
+            border: 1px solid var(--blue-tint-line);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .grace-period-banner {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .grace-banner-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.875rem;
+        }
+
+        .grace-banner-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: var(--blue-700);
+        }
+
+        .grace-banner-desc {
+            font-size: 0.8125rem;
+            color: var(--neutral-700);
+            margin-top: 0.125rem;
+        }
+
+        .grace-banner-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--blue-600);
+            color: #FFFFFF;
+            padding: 0.625rem 1.125rem;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.15s;
+            white-space: nowrap;
+            min-height: 44px;
+        }
+
+        .grace-banner-btn:hover {
+            background-color: var(--blue-700);
+        }
+
+        /* Backdrop Scrim untuk Mobile Drawer */
+        .mobile-drawer-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(29, 37, 48, 0.5);
+            z-index: 45;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-drawer-backdrop.active {
+            display: block;
+            opacity: 1;
+        }
