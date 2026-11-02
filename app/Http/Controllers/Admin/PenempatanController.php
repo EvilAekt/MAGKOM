@@ -25,6 +25,7 @@ use App\Services\AuditService;
 use App\Services\PlacementService;
 use App\Services\SuratDiterimaPdfService;
 use App\Services\XlsxExportService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -436,9 +437,11 @@ class PenempatanController extends Controller
             nilaiLama: null,
             nilaiBaru: null,
             detail: [
-                'aksi' => $format === 'xlsx'
-                    ? 'Ekspor rekapitulasi surat diterima magang XLSX (F-16)'
-                    : 'Ekspor rekapitulasi surat diterima magang CSV (F-16)',
+                'aksi' => match ($format) {
+                    'xlsx' => 'Ekspor rekapitulasi surat diterima magang XLSX (F-16)',
+                    'pdf' => 'Ekspor rekapitulasi surat diterima magang PDF (F-16)',
+                    default => 'Ekspor rekapitulasi surat diterima magang CSV (F-16)',
+                },
                 'format' => $format,
                 'jumlah_baris' => $records->count(),
                 'filter' => $request->only(['status', 'pembimbing_id', 'bidang_id', 'bulan_magang_id', 'q']),
@@ -460,6 +463,16 @@ class PenempatanController extends Controller
             'Status',
             'No Surat Diterima',
         ];
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('pdf.rekap-penempatan', [
+                'records' => $records,
+                'generatedAt' => now(),
+                'filter' => $request->only(['status', 'pembimbing_id', 'bidang_id', 'bulan_magang_id', 'q']),
+            ])->setPaper('a4', 'landscape');
+
+            return $pdf->download('rekap-surat-diterima-'.date('Ymd-His').'.pdf');
+        }
 
         if ($format === 'xlsx') {
             $rows = [];

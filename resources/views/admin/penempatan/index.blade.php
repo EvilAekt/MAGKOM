@@ -16,32 +16,105 @@
 
 @section('page_actions')
     <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
-        {{-- Ekspor XLSX Resmi --}}
-        <a href="{{ route('admin.penempatan.ekspor-surat-diterima', array_merge(request()->query(), ['format' => 'xlsx'])) }}"
-           style="display: inline-flex; align-items: center; gap: 0.5rem; background: #059669; color: #FFFFFF; border: none; padding: 0.6rem 1.15rem; border-radius: 8px; font-weight: 700; font-size: 0.875rem; text-decoration: none; box-shadow: 0 1px 3px rgba(5, 150, 105, 0.25); transition: all 0.15s ease;"
-           onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'"
-           title="Unduh rekapitulasi data penempatan & surat diterima dalam format Microsoft Excel (.xlsx) dengan tabel bergaris rapi">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <path d="M8 13h8"></path>
-                <path d="M8 17h8"></path>
-                <path d="M10 9h4"></path>
-            </svg>
-            <span>Ekspor Rekap (.xlsx)</span>
-        </a>
+        {{-- Unified Export Popover Trigger & Container --}}
+        <div class="adm-export-dropdown-wrap">
+            <button type="button" 
+                    id="btnToggleExportPopover" 
+                    class="adm-btn-export-main" 
+                    aria-expanded="false" 
+                    aria-haspopup="menu" 
+                    aria-controls="admExportPopover"
+                    title="Pilih dan unduh rekap data penempatan (Excel, CSV, PDF)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Ekspor Rekap</span>
+                <svg id="admExportCaretSvg" class="adm-export-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
 
-        {{-- Ekspor CSV Alternatif --}}
-        <a href="{{ route('admin.penempatan.ekspor-surat-diterima', array_merge(request()->query(), ['format' => 'csv'])) }}"
-           style="display: inline-flex; align-items: center; gap: 0.45rem; background: var(--neutral-0, #FFFFFF); color: var(--neutral-800, #1E293B); border: 1px solid var(--neutral-300, #CBD5E1); padding: 0.6rem 0.95rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; text-decoration: none; box-shadow: var(--shadow-subtle, 0 1px 2px rgba(0,0,0,0.05)); transition: all 0.15s ease;"
-           title="Unduh format data mentah CSV dengan pemisah koma terstandarisasi">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            <span>CSV</span>
-        </a>
+            {{-- Floating Dropdown Popover Container --}}
+            <div id="admExportPopover" class="adm-export-popover" style="display: none;" role="menu" aria-label="Menu Pilihan Format Ekspor">
+                <div class="adm-popover-pointer"></div>
+                <div class="adm-popover-header">
+                    <div>
+                        <div class="adm-popover-title">Ekspor Rekap Cepat</div>
+                        <div class="adm-popover-desc">Data hasil filter aktif</div>
+                    </div>
+                    <span class="adm-popover-row-count tabular-nums">
+                        {{ number_format($penempatanList->total()) }} Baris
+                    </span>
+                </div>
+
+                <div class="adm-popover-formats" role="radiogroup" aria-label="Format Berkas">
+                    {{-- Format 1: Excel (.xlsx) - Rekomendasi --}}
+                    <label class="adm-format-card adm-format-selected" id="cardFormatXlsx" onclick="handleAdmExportFormatChange('xlsx')">
+                        <div class="adm-format-content">
+                            <input type="radio" name="popover_export_format" id="radioFormatXlsx" value="xlsx" checked class="adm-format-radio" onchange="handleAdmExportFormatChange('xlsx')">
+                            <div class="adm-format-details">
+                                <div class="adm-format-name-wrap">
+                                    <span class="adm-format-name">Microsoft Excel</span>
+                                    <span class="badge-format-ext badge-ext-xlsx">.xlsx</span>
+                                </div>
+                                <p class="adm-format-desc">Tabel resmi bergaris rapi &amp; filterable</p>
+                            </div>
+                        </div>
+                        <div class="adm-format-meta">
+                            <span class="adm-badge-recommend">Rekomendasi</span>
+                        </div>
+                    </label>
+
+                    {{-- Format 2: CSV Tabular (.csv) --}}
+                    <label class="adm-format-card" id="cardFormatCsv" onclick="handleAdmExportFormatChange('csv')">
+                        <div class="adm-format-content">
+                            <input type="radio" name="popover_export_format" id="radioFormatCsv" value="csv" class="adm-format-radio" onchange="handleAdmExportFormatChange('csv')">
+                            <div class="adm-format-details">
+                                <div class="adm-format-name-wrap">
+                                    <span class="adm-format-name">CSV Tabular</span>
+                                    <span class="badge-format-ext badge-ext-csv">.csv</span>
+                                </div>
+                                <p class="adm-format-desc">Data mentah teks pemisah koma terstandarisasi</p>
+                            </div>
+                        </div>
+                        <div class="adm-format-meta">
+                            <span class="adm-badge-quick">Cepat</span>
+                        </div>
+                    </label>
+
+                    {{-- Format 3: Dokumen Resmi PDF (.pdf) --}}
+                    <label class="adm-format-card" id="cardFormatPdf" onclick="handleAdmExportFormatChange('pdf')">
+                        <div class="adm-format-content">
+                            <input type="radio" name="popover_export_format" id="radioFormatPdf" value="pdf" class="adm-format-radio" onchange="handleAdmExportFormatChange('pdf')">
+                            <div class="adm-format-details">
+                                <div class="adm-format-name-wrap">
+                                    <span class="adm-format-name">Dokumen Resmi (.pdf)</span>
+                                    <span class="badge-format-ext badge-ext-pdf">.pdf</span>
+                                </div>
+                                <p class="adm-format-desc">Rekapitulasi cetak ber-kop resmi kedinasan</p>
+                            </div>
+                        </div>
+                        <div class="adm-format-meta">
+                            <span class="adm-badge-legal">Legal Sah</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="adm-popover-cta">
+                    <button type="button" class="adm-btn-popover-cancel" onclick="toggleAdmExportPopover(false)">
+                        Batal
+                    </button>
+                    <button type="button" id="btnDoExportDownload" class="adm-btn-popover-download" onclick="triggerPenempatanExport()">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        <span id="btnExportDownloadText">Unduh Excel (.xlsx)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
 
         @if(isset($slotKhususList) && $slotKhususList->isNotEmpty())
             <button type="button" onclick="openManualModal()" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #0641CC; color: #FFFFFF; border: none; padding: 0.6rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: all 0.15s ease;" onmouseover="this.style.background='#0533A3'" onmouseout="this.style.background='#0641CC'">
@@ -1692,6 +1765,108 @@
             document.body.style.overflow = '';
         }
     }
+
+    // =========================================================================
+    // EXPORT REKAP POPOVER MANAGEMENT
+    // =========================================================================
+    function toggleAdmExportPopover(forceOpen = null) {
+        const popover = document.getElementById('admExportPopover');
+        const trigger = document.getElementById('btnToggleExportPopover');
+        const wrap = trigger ? trigger.closest('.adm-export-dropdown-wrap') : null;
+        if (!popover) return;
+
+        const shouldOpen = forceOpen !== null ? forceOpen : popover.style.display === 'none';
+        if (shouldOpen) {
+            popover.style.display = 'flex';
+            if (trigger) trigger.setAttribute('aria-expanded', 'true');
+            if (wrap) wrap.classList.add('is-open');
+        } else {
+            popover.style.display = 'none';
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+            if (wrap) wrap.classList.remove('is-open');
+        }
+    }
+
+    function handleAdmExportFormatChange(format) {
+        const cards = document.querySelectorAll('.adm-format-card');
+        cards.forEach(c => c.classList.remove('adm-format-selected'));
+
+        const radio = document.getElementById('radioFormat' + format.charAt(0).toUpperCase() + format.slice(1));
+        if (radio) radio.checked = true;
+
+        const card = document.getElementById('cardFormat' + format.charAt(0).toUpperCase() + format.slice(1));
+        if (card) card.classList.add('adm-format-selected');
+
+        const btnText = document.getElementById('btnExportDownloadText');
+        if (btnText) {
+            if (format === 'xlsx') {
+                btnText.textContent = 'Unduh Excel (.xlsx)';
+            } else if (format === 'csv') {
+                btnText.textContent = 'Unduh CSV (.csv)';
+            } else if (format === 'pdf') {
+                btnText.textContent = 'Unduh PDF (.pdf)';
+            }
+        }
+    }
+
+    function triggerPenempatanExport(forcedFormat = null) {
+        let format = forcedFormat;
+        if (!format) {
+            const selectedRadio = document.querySelector('input[name="popover_export_format"]:checked');
+            format = selectedRadio ? selectedRadio.value : 'xlsx';
+        }
+
+        const currentUrl = new URL(window.location.href);
+        const exportUrl = new URL("{{ route('admin.penempatan.ekspor-surat-diterima') }}", window.location.origin);
+
+        // Salin seluruh filter query string aktif
+        currentUrl.searchParams.forEach((val, key) => {
+            if (key !== 'page') {
+                exportUrl.searchParams.set(key, val);
+            }
+        });
+
+        exportUrl.searchParams.set('format', format);
+
+        // Tutup popover
+        toggleAdmExportPopover(false);
+
+        // Jalankan download file
+        window.location.href = exportUrl.toString();
+    }
+
+    // Event listener click outside & Escape key
+    document.addEventListener('DOMContentLoaded', function() {
+        const trigger = document.getElementById('btnToggleExportPopover');
+        const popover = document.getElementById('admExportPopover');
+
+        if (trigger) {
+            trigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleAdmExportPopover();
+            });
+        }
+
+        if (popover) {
+            popover.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (popover && popover.style.display !== 'none') {
+                if (!popover.contains(e.target) && trigger && !trigger.contains(e.target)) {
+                    toggleAdmExportPopover(false);
+                }
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && popover && popover.style.display !== 'none') {
+                toggleAdmExportPopover(false);
+            }
+        });
+    });
 </script>
 
 {{-- FLOATING BULK ACTION BAR --}}
