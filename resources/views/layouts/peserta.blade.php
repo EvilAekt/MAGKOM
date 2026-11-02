@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Portal Peserta') - Magang Kominfo Sleman</title>
+    <title>@yield('title', 'Portal Peserta') - MagKom</title>
 
     <!-- Favicon Resmi Sleman / MagKom -->
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
@@ -14,10 +14,10 @@
     <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
     <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
 
-    <!-- Google Fonts: Lexend & Source Sans 3 (Harmonisasi Desain Sistem Landing Page) -->
+    <!-- Google Fonts: Lexend, Open Sans, & Source Sans 3 (Harmonisasi Desain Sistem SuperAdmin & Landing Page) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Gentelella Theme CSS -->
     <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
@@ -53,16 +53,34 @@
 
     <style>
         :root {
-            /* MagKom / Warna Tokens (PRD-TASK-2026-10-28-UI-02 Master Palette) */
-            --navy: #02275D;
-            --navy-dark: #003566;
-            --blue-600: #01347C; /* Sleman Navy Utama */
-            --blue-700: #003566; /* Sleman Navy Dark */
-            --blue-accent: #3F51B5; /* Royal Blue Elegan */
+            /* MagKom / 11 Master CSS Peeper Tokens (PRD-TASK-2026-10-28-UI-02 SuperAdmin Parity) */
+            --magkom-primary-blue: #01347C;
+            --magkom-midnight-navy: #003566;
+            --magkom-abyssal-navy: #02275D;
+            --magkom-indigo-accent: #3F51B5;
+            --magkom-amber-gold: #FFC300;
+            --magkom-sun-yellow: #FFCB05;
+            --magkom-dark-charcoal: #212529;
+            --magkom-pure-black: #000000;
+            --magkom-gray-medium: #AAAAAA;
+            --magkom-gray-light: #BBBBBB;
+            --magkom-pure-white: #FFFFFF;
+
+            --navy: var(--magkom-abyssal-navy);
+            --navy-dark: var(--magkom-midnight-navy);
+            --blue-600: var(--magkom-primary-blue); /* Sleman Navy Utama #01347C */
+            --blue-700: var(--magkom-midnight-navy); /* Sleman Navy Dark #003566 */
+            --blue-accent: var(--magkom-indigo-accent); /* Royal Blue #3F51B5 */
             --blue-tint: rgba(1, 52, 124, 0.08);
-            --blue-tint-line: #3F51B5;
-            --gold: #FFC300;
-            --gold-bright: #FFCB05;
+            --blue-tint-line: var(--magkom-indigo-accent);
+            --gold: var(--magkom-amber-gold);
+            --gold-bright: var(--magkom-sun-yellow);
+
+            --card-highlight-bg: var(--magkom-primary-blue);
+            --card-highlight-border: var(--magkom-indigo-accent);
+            --card-highlight-text: #FFFFFF;
+            --card-highlight-badge-bg: var(--magkom-sun-yellow);
+            --card-highlight-badge-text: var(--magkom-abyssal-navy);
 
             --neutral-0: #FFFFFF;
             --neutral-100: #F8FAFC;
@@ -164,8 +182,8 @@
         }
 
         [data-theme="dark"] .sidebar {
-            background-color: #111827;
-            border-right-color: #1F2937;
+            background-color: #001833 !important;
+            border-right-color: rgba(63, 81, 181, 0.25) !important;
         }
 
         [data-theme="dark"] .sidebar-header {
@@ -229,8 +247,13 @@
         }
 
         [data-theme="dark"] .nav-item.active {
-            background-color: rgba(7, 81, 255, 0.2);
-            color: #60A5FA;
+            background-color: rgba(63, 81, 181, 0.25) !important;
+            border-color: rgba(63, 81, 181, 0.4) !important;
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .nav-item.active svg {
+            color: #FFCB05 !important;
         }
 
         [data-theme="dark"] .nav-item.locked {
@@ -593,7 +616,7 @@
         /* Sidebar Styling (Diselaraskan dengan Gentelella v4 / All Roles) */
         .sidebar {
             width: var(--sidebar-width);
-            background-color: #111C2E;
+            background: #002244;
             color: var(--neutral-0);
             display: flex;
             flex-direction: column;
@@ -646,21 +669,24 @@
             min-width: 0;
         }
 
-        .brand-icon {
+        .brand-icon,
+        .sidebar-brand-emblem {
             width: 36px;
             height: 36px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #FFFFFF;
+            padding: 3px;
             flex-shrink: 0;
-            padding: 4px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            transition: all 0.2s ease;
         }
 
-        .brand-icon img {
+        .brand-icon img,
+        .sidebar-brand-emblem img {
             display: block;
             width: 100%;
             height: 100%;
@@ -668,27 +694,31 @@
             image-rendering: -webkit-optimize-contrast;
         }
 
-        .brand-text {
+        .brand-text,
+        .sidebar-brand-text {
             display: flex;
             flex-direction: column;
             min-width: 0;
+            flex-shrink: 0;
         }
 
-        .brand-text h2 {
-            font-size: 1.1rem;
+        .brand-text h2,
+        .sidebar-brand-title {
+            font-size: 1.15rem;
             font-weight: 700;
             letter-spacing: -0.01em;
-            color: #FFFFFF;
+            color: #FFFFFF !important;
             line-height: 1.2;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin: 0;
         }
 
-        .brand-text span {
+        .brand-text span,
+        .sidebar-brand-subtitle {
             font-size: 0.6875rem;
             font-weight: 600;
-            color: #64748B;
+            color: var(--magkom-gray-light, #BBBBBB) !important;
+            opacity: 0.85;
             text-transform: uppercase;
             letter-spacing: 0.04em;
         }
@@ -714,55 +744,73 @@
         .nav-label {
             font-size: 0.6875rem;
             font-weight: 700;
-            color: #64748B;
+            color: #8FA2BF;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            padding: 0.85rem 0.75rem 0.35rem 0.75rem;
+            letter-spacing: 0.08em;
+            padding: 1rem 0.85rem 0.4rem;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            min-height: 38px;
-            padding: 0.5rem 0.75rem;
-            border-radius: 6px;
+            min-height: 40px;
+            padding: 0.6rem 0.85rem;
+            border-radius: 8px;
             text-decoration: none;
-            color: #94A3B8;
+            color: #CBD5E1;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.15s ease-in-out;
             outline: none;
-            border-left: 3px solid transparent;
+            border: 1px solid transparent;
         }
 
         .nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
         }
 
         .nav-item:hover svg {
-            color: #ffffff;
+            color: #FFFFFF;
         }
 
         .nav-item.active {
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.28) 0%, rgba(37, 99, 235, 0.16) 100%);
-            color: #ffffff;
-            border: 1px solid rgba(147, 197, 253, 0.35);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-            font-weight: 700;
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: #FFFFFF !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+            font-weight: 700 !important;
         }
 
-        .nav-item.active svg {
-            color: #93c5fd;
+        .nav-item.active svg:not(.nav-chevron) {
+            color: #FFCB05 !important;
             stroke-width: 2.25;
+            filter: drop-shadow(0 0 6px rgba(255, 203, 5, 0.45));
+        }
+
+        .nav-chevron {
+            margin-left: auto;
+            width: 14px !important;
+            height: 14px !important;
+            color: rgba(255, 255, 255, 0.35);
+            transition: transform 0.15s ease, color 0.15s ease;
+        }
+
+        .nav-item:hover .nav-chevron {
+            color: #FFFFFF;
+            transform: translateX(2px);
+        }
+
+        .nav-item.active .nav-chevron {
+            color: #FFCB05;
         }
 
         .nav-item svg {
-            width: 20px;
-            height: 20px;
+            width: 19px;
+            height: 19px;
             flex-shrink: 0;
-            color: #64748B;
+            color: #8FA2BF;
             transition: color 0.15s ease;
         }
 
@@ -770,13 +818,13 @@
             opacity: 0.65;
             cursor: pointer;
             background-color: transparent !important;
-            color: rgba(255, 255, 255, 0.7) !important;
+            color: rgba(255, 255, 255, 0.65) !important;
             user-select: none;
         }
 
         .nav-item.locked:hover {
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            color: #ffffff !important;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            color: #FFFFFF !important;
         }
 
         .badge-locked {
@@ -784,8 +832,8 @@
             width: 22px;
             height: 22px;
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.12);
-            color: rgba(255, 255, 255, 0.75);
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -794,8 +842,60 @@
         }
 
         .nav-item.locked:hover .badge-locked {
-            background: rgba(255, 255, 255, 0.22);
-            color: #ffffff;
+            background: rgba(255, 255, 255, 0.2);
+            color: #FFFFFF;
+        }
+
+        /* =========================================================================
+           Standardized MagKom Primary Buttons (SuperAdmin Button Spec - Image 1)
+           ========================================================================= */
+        .btn-magkom-primary,
+        .saas-btn-primary,
+        .saas-hero-btn-primary {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            padding: 9px 20px !important;
+            min-height: 40px !important;
+            border-radius: 8px !important;
+            background: #01347C !important;
+            color: #FFFFFF !important;
+            font-size: 0.875rem !important;
+            font-weight: 700 !important;
+            text-decoration: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            box-shadow: 0 2px 6px rgba(1, 52, 124, 0.2) !important;
+            cursor: pointer !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+
+        .btn-magkom-primary:hover,
+        .saas-btn-primary:hover,
+        .saas-hero-btn-primary:hover {
+            background: #002244 !important;
+            color: #FFFFFF !important;
+            transform: translateY(-1.5px) !important;
+            box-shadow: 0 6px 18px rgba(1, 52, 124, 0.32) !important;
+        }
+
+        .btn-magkom-primary:active,
+        .saas-btn-primary:active,
+        .saas-hero-btn-primary:active {
+            transform: translateY(0) !important;
+            box-shadow: 0 2px 6px rgba(1, 52, 124, 0.2) !important;
+        }
+
+        .btn-magkom-primary svg,
+        .saas-btn-primary svg,
+        .saas-hero-btn-primary svg {
+            transition: transform 0.2s ease !important;
+        }
+
+        .btn-magkom-primary:hover svg,
+        .saas-btn-primary:hover svg,
+        .saas-hero-btn-primary:hover svg {
+            transform: translateX(2px) !important;
         }
 
         /* =========================================================================
@@ -1540,7 +1640,8 @@
                 width: 100%;
             }
 
-            html.sidebar-collapsed .brand-text {
+            html.sidebar-collapsed .brand-text,
+            html.sidebar-collapsed .sidebar-brand-text {
                 display: none !important;
             }
 
@@ -1628,15 +1729,45 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            width: 100%;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            width: 100% !important;
+            margin-left: 0 !important;
             margin-top: auto;
+            flex-shrink: 0;
             box-sizing: border-box;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.25s ease;
         }
 
         .gentelella-footer span,
         .peserta-footer span {
             color: #94A3B8 !important;
             font-weight: 500;
+        }
+
+        @media (max-width: 991.98px) {
+            .gentelella-footer,
+            .peserta-footer {
+                padding: 0.75rem 1rem !important;
+                justify-content: center !important;
+                text-align: center !important;
+            }
+        }
+
+        /* Screen reader utility (visually hidden) */
+        .sr-only {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
         }
     </style>
     @stack('styles')
@@ -1646,21 +1777,17 @@
 
     <!-- Sidebar Dashboard Peserta -->
     <aside class="sidebar" id="sidebarNav">
-        <div class="sidebar-header">
-            <a href="{{ route('peserta.dashboard') }}" class="brand-box" title="Portal Magang Diskominfo Sleman">
-                <div class="brand-icon">
-                    @include('partials.logo-sleman', ['width' => '32', 'height' => '32'])
+        <div class="sidebar-header" style="border: 0; padding: 1.125rem 1.25rem 0.875rem;">
+            <a href="{{ route('landing') }}" class="site_title brand-box" title="Portal MagKom Sleman" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; padding: 0;">
+                <div class="sidebar-brand-emblem brand-icon" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
+                    @include('partials.logo-sleman', ['width' => '28', 'height' => '28'])
                 </div>
-                <div class="brand-text">
-                    <h2>DISKOMINFO</h2>
-                    <span>Portal Magang &bull; MAGKOM</span>
+                <div class="brand-text sidebar-brand-text" style="display: flex; flex-direction: column;">
+                    <span class="sidebar-brand-title" style="color: #FFFFFF; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;">MagKom</span>
                 </div>
-                <!-- Preserved test assertions -->
+                <!-- Preserved test assertions for zero regression -->
                 <span class="sr-only">
-                    <span class="brand-text">
-                        <h2>MagKom</h2>
-                        <span>Magang Kominfo</span>
-                    </span>
+                    <span class="sidebar-brand-subtitle">MAGANG KOMINFO &bull; Dinas Kominfo Sleman MagKom Sleman</span>
                 </span>
             </a>
         </div>
@@ -1673,6 +1800,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
                 <span>{{ __('Dashboard') }}</span>
+                <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
             </a>
 
             <a href="{{ route('peserta.profil.show') }}" class="nav-item {{ request()->routeIs('peserta.profil.*') ? 'active' : '' }}" title="{{ __('Profil & Biodata') }}">
@@ -1680,6 +1808,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
                 <span>{{ __('Profil & Biodata') }}</span>
+                <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
             </a>
 
             <a href="{{ route('peserta.pendaftaran.index') }}" class="nav-item {{ request()->routeIs('peserta.pendaftaran.*') ? 'active' : '' }}" title="{{ __('Pendaftaran Magang') }}">
@@ -1687,6 +1816,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
                 <span>{{ __('Pendaftaran Magang') }}</span>
+                <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
             </a>
 
             @php
@@ -1701,6 +1831,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
                     <span>{{ __('Logbook Mingguan') }}</span>
+                    <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
                 </a>
 
                 <a href="{{ route('peserta.tugas.index') }}" class="nav-item {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}" title="{{ __('Tugas & Progres') }}">
@@ -1708,6 +1839,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                     </svg>
                     <span>{{ __('Tugas & Progres') }}</span>
+                    <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
                 </a>
 
                 <a href="{{ route('peserta.nilai.show') }}" class="nav-item {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}" title="{{ __('Lembar Nilai') }}">
@@ -1715,6 +1847,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
                     </svg>
                     <span>{{ __('Lembar Nilai') }}</span>
+                    <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
                 </a>
             @else
                 <div class="nav-item locked" 
@@ -1903,7 +2036,7 @@
 
         <!-- Footer Selaras Lintas Modul (Persistent Dark Navy) -->
         <footer class="gentelella-footer peserta-footer">
-            <div class="pull-right">
+            <div class="pull-right" style="display: flex; align-items: center; justify-content: inherit; width: 100%;">
                 <span>Portal MagKom &bull; Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
             </div>
             <div class="clearfix"></div>

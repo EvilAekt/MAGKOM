@@ -8,6 +8,9 @@
     /** @var \App\Models\Penempatan|null $penempatan */
     /** @var \App\Models\User $user */
 @endphp
+@php
+    $timKelompok = $kelompokMagang ?? $user->kelompokMagang;
+@endphp
 @if($fase === 'aktif' && $penempatan)
     <div class="saas-card saas-hero-banner">
         <div class="saas-hero-inner">
@@ -17,6 +20,12 @@
                         <span class="saas-dot-pulse"></span>
                         Status Penempatan: Magang Aktif
                     </span>
+                    @if($timKelompok)
+                        <span class="saas-badge-kelompok-hero" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 203, 5, 0.18); border: 1px solid rgba(255, 203, 5, 0.5); color: #FFFFFF; font-size: 0.775rem; font-weight: 700; padding: 4px 12px; border-radius: 9999px;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFCB05" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <span>Kelompok: <strong>{{ $timKelompok->nama_kelompok }}</strong> ({{ $timKelompok->anggota->count() + 1 }} Orang)</span>
+                        </span>
+                    @endif
                     <span class="saas-badge-gold">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -29,7 +38,7 @@
                 </div>
 
                 <h1 class="saas-header-title">
-                    Halo, {{ $user->nama ?? 'Peserta Magang' }}
+                    Halo, {{ $user->nama_tampil ?? $user->nama ?? 'Peserta Magang' }}
                 </h1>
                 
                 <p class="saas-header-desc">
@@ -84,16 +93,23 @@
                         </svg>
                         Pemkab Sleman
                     </span>
-                    <span class="saas-badge-portal-hero">
-                        Portal Pendaftaran & Seleksi Magang
-                    </span>
+                    @if($timKelompok)
+                        <span class="saas-badge-kelompok-hero" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 203, 5, 0.18); border: 1px solid rgba(255, 203, 5, 0.5); color: #FFFFFF; font-size: 0.775rem; font-weight: 700; padding: 4px 12px; border-radius: 9999px;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFCB05" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <span>Kelompok: <strong>{{ $timKelompok->nama_kelompok }}</strong> ({{ $timKelompok->anggota->count() + 1 }} Orang)</span>
+                        </span>
+                    @else
+                        <span class="saas-badge-portal-hero">
+                            Portal Pendaftaran & Seleksi Magang
+                        </span>
+                    @endif
                     <span class="saas-hero-date">
                         {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}
                     </span>
                 </div>
 
                 <h1 class="saas-header-title">
-                    Halo, {{ $user->nama ?? 'Peserta Magang' }}
+                    Halo, {{ $user->nama_tampil ?? $user->nama ?? 'Peserta Magang' }}
                 </h1>
 
                 <p class="saas-header-desc">

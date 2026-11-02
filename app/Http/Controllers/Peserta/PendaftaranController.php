@@ -104,6 +104,14 @@ class PendaftaranController extends Controller
         $validated['user_id'] = $user->id;
         $validated['status'] = StatusPendaftaranEnum::BerkasBelumLengkap;
 
+        if ($user->kelompokMagang) {
+            $validated['tipe'] = 'kelompok';
+            $validated['kelompok_magang_id'] = $user->kelompokMagang->id;
+        } else {
+            $validated['tipe'] = 'mandiri';
+            $validated['kelompok_magang_id'] = null;
+        }
+
         $pendaftaran = Pendaftaran::create($validated);
 
         $this->auditService->catat(

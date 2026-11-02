@@ -10,6 +10,58 @@
     /** @var \App\Models\PesertaProfil|null $profil */
 @endphp
 
+@php
+    $timKelompok = $kelompokMagang ?? $user->kelompokMagang;
+@endphp
+
+@if($timKelompok)
+    {{-- CARD ANGGOTA KELOMPOK MAGANG (SUPERADMIN PARITY) --}}
+    <div class="saas-card saas-aside-card" style="margin-bottom: 1.25rem;">
+        <div class="saas-aside-section-title">
+            <span class="saas-aside-title-icon">
+                <span class="saas-icon-badge-blue" aria-hidden="true" style="color: var(--magkom-primary-blue, #01347C);">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </span>
+                <span style="font-weight: 700; color: var(--neutral-900);">Tim: {{ $timKelompok->nama_kelompok }}</span>
+            </span>
+            <span class="saas-badge-portal" style="font-size: 0.725rem; font-weight: 700; background: var(--blue-tint); color: var(--magkom-primary-blue, #01347C); border-color: rgba(1, 52, 124, 0.25);">
+                {{ ($timKelompok->anggota->count() + 1) }} Orang
+            </span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.75rem;">
+            {{-- Ketua Tim --}}
+            <div style="background: rgba(1, 52, 124, 0.05); border: 1.5px solid rgba(1, 52, 124, 0.2); border-radius: 0.625rem; padding: 0.65rem 0.85rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <strong style="font-size: 0.8125rem; color: var(--neutral-900);">{{ $user->nama }}</strong>
+                    <span style="font-size: 0.6875rem; background: var(--magkom-primary-blue, #01347C); color: #FFFFFF; padding: 0.15rem 0.55rem; border-radius: 9999px; font-weight: 700;">Ketua Tim</span>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.25rem;">
+                    {{ $user->email }} &bull; {{ $user->no_telp ?? '-' }}
+                </div>
+            </div>
+
+            {{-- Rekan Anggota --}}
+            @foreach($timKelompok->anggota as $idx => $ang)
+                <div style="background: var(--neutral-100, #F8FAFC); border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 0.625rem; padding: 0.65rem 0.85rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800);">{{ $ang->nama }}</span>
+                        <span style="font-size: 0.6875rem; background: var(--neutral-200, #E2E8F0); color: var(--neutral-600); padding: 0.1rem 0.45rem; border-radius: 9999px; font-weight: 600;">Anggota {{ $idx + 2 }}</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem;">
+                        {{ $ang->nim_nisn ? 'NIM: ' . $ang->nim_nisn . ' • ' : '' }}{{ $ang->no_hp ?? $ang->email ?? '-' }}
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+@endif
+
 @if($fase === 'aktif' && $penempatan)
     {{-- CARD 1: PROFIL PEMBIMBING LAPANGAN --}}
     <div class="saas-card saas-aside-card">

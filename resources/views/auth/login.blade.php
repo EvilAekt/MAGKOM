@@ -7,7 +7,7 @@
 
 
     <!-- Header Form Login -->
-    <h1 class="auth-title">Selamat Datang di MagKom</h1>
+    <h1 class="auth-title">Selamat Datang</h1>
     <p class="auth-subtitle">Masuk untuk mengakses sistem magang terpadu Kominfo</p>
 
     <!-- Form Kredensial Email & Password -->

@@ -20,8 +20,18 @@ class ProfilController extends Controller
     public function show(Request $request): View
     {
         $user = $request->user();
+        $user->loadMissing(['kelompokMagang.anggota']);
         $profil = $user->profil;
         $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
+
+        $kelompokMagang = $user->kelompokMagang;
+        if (! $kelompokMagang) {
+            $kelompokMagang = $user->pendaftaran()
+                ->whereNotNull('kelompok_magang_id')
+                ->with('kelompokMagang.anggota')
+                ->latest()
+                ->first()?->kelompokMagang;
+        }
 
         $penempatan = Penempatan::with(['bidang', 'pembimbing'])
             ->where('peserta_id', $user->id)
@@ -47,6 +57,7 @@ class ProfilController extends Controller
             'penempatan' => $penempatan,
             'persentaseLengkap' => $persentaseLengkap,
             'checklist' => $checklist,
+            'kelompokMagang' => $kelompokMagang,
         ]);
     }
 

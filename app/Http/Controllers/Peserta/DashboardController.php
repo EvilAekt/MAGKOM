@@ -23,6 +23,7 @@ class DashboardController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user();
+        $user->loadMissing(['kelompokMagang.anggota']);
         $profil = $user->profil;
 
         // Ambil pendaftaran terbaru peserta
@@ -32,6 +33,7 @@ class DashboardController extends Controller
             'dokumen.jenisDokumen',
             'penempatan.pembimbing',
             'penempatan.bidang',
+            'kelompokMagang.anggota',
         ])
             ->where('user_id', $user->id)
             ->latest()
@@ -106,6 +108,7 @@ class DashboardController extends Controller
             'sisaHari' => $sisaHari,
             'penilaian' => $penilaian,
             'isFinalNilai' => $isFinalNilai,
+            'kelompokMagang' => $user->kelompokMagang ?? $pendaftaran?->kelompokMagang,
         ]);
     }
 }

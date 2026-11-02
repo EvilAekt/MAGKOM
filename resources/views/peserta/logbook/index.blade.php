@@ -19,9 +19,10 @@
         padding: 24px;
     }
 
-    /* Banner Penempatan Magang */
+    /* Banner Penempatan Magang (SuperAdmin Studio Parity) */
     .banner-penempatan {
-        background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+        background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                    linear-gradient(135deg, #01347C 0%, #003566 100%);
         border-radius: 16px;
         padding: 32px 36px;
         color: #ffffff;
@@ -31,7 +32,7 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 20px;
-        box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.18);
+        box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
         border: 1px solid rgba(255, 255, 255, 0.12);
         position: relative;
         overflow: hidden;

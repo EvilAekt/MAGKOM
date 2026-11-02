@@ -140,6 +140,22 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Relasi ke data kelompok magang jika user merupakan ketua tim.
+     */
+    public function kelompokMagang(): HasOne
+    {
+        return $this->hasOne(KelompokMagang::class, 'ketua_user_id');
+    }
+
+    /**
+     * Nama tampilan (menampilkan nama kelompok jika terdaftar sebagai tim).
+     */
+    public function getNamaTampilAttribute(): string
+    {
+        return $this->kelompokMagang?->nama_kelompok ?? $this->nama;
+    }
+
+    /**
      * Relasi ke peserta yang dibimbing (sebagai pembimbing).
      */
     public function penempatanBimbingan(): HasMany

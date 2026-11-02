@@ -1917,7 +1917,7 @@
                 <span class="alur-filter-title">Tipe Permohonan:</span>
                 <div class="pill-group" role="radiogroup" aria-label="Filter Tipe Permohonan">
                     <button type="button" class="pill-btn active" onclick="setSimTipe('mandiri')">Mandiri (1 Orang)</button>
-                    <button type="button" class="pill-btn" onclick="setSimTipe('kelompok')">Kelompok (2–5 Orang)</button>
+                    <button type="button" class="pill-btn" onclick="setSimTipe('kelompok')">Kelompok (2–4 Orang)</button>
                 </div>
             </div>
 
@@ -2757,11 +2757,11 @@
         if (currentSimJenjang === 'smk' && currentSimTipe === 'mandiri') {
             text = '<strong>Simulasi Siswa SMK (Mandiri):</strong> Pendaftaran perseorangan untuk Prakerin/PKL SMK. Berkas wajib: Surat Pengantar Sekolah berstempel resmi, CV siswa, dan Rapor semester terakhir (PDF maks. 2MB).';
         } else if (currentSimJenjang === 'smk' && currentSimTipe === 'kelompok') {
-            text = '<strong>Simulasi Siswa SMK (Kelompok 2–5 Orang):</strong> Pendaftaran PKL beregu dari SMK yang sama. Ketua kelompok menginput data seluruh anggota + melampirkan Surat Pengantar kolektif dan Proposal Magang Tim.';
+            text = '<strong>Simulasi Siswa SMK (Kelompok 2–4 Orang):</strong> Pendaftaran PKL beregu dari SMK yang sama. Ketua kelompok menginput data seluruh anggota + melampirkan Surat Pengantar kolektif dan Proposal Magang Tim.';
         } else if (currentSimJenjang === 'mahasiswa' && currentSimTipe === 'mandiri') {
             text = '<strong>Simulasi Mahasiswa D3/S1 (Mandiri):</strong> Magang riset/industri perseorangan. Berkas wajib: Surat Pengantar Fakultas/Jurusan, CV memuat portofolio proyek/keahlian, dan Transkrip Kumulatif resmi.';
         } else if (currentSimJenjang === 'mahasiswa' && currentSimTipe === 'kelompok') {
-            text = '<strong>Simulasi Mahasiswa D3/S1 (Kelompok 2–5 Orang):</strong> Magang proyek tim atau riset kelompok. Wajib melampirkan Proposal Proyek Magang yang memuat pembagian peran anggota tim.';
+            text = '<strong>Simulasi Mahasiswa D3/S1 (Kelompok 2–4 Orang):</strong> Magang proyek tim atau riset kelompok. Wajib melampirkan Proposal Proyek Magang yang memuat pembagian peran anggota tim.';
         } else {
             text = '<strong>Peta Alur Penuh (Semua Jenjang):</strong> Menampilkan visualisasi siklus lengkap pendaftaran mandiri untuk seluruh formasi SMK dan Perguruan Tinggi di Diskominfo.';
         }

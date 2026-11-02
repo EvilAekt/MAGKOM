@@ -14,34 +14,22 @@
         gap: 24px;
     }
 
-    /* Hero Banner MagKom Sleman */
+    /* Hero Banner MagKom Sleman (SuperAdmin Studio Parity) */
     .pendaftaran-hero {
-        background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+        background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                    linear-gradient(135deg, #01347C 0%, #003566 100%);
         border-radius: 16px;
         padding: 28px 32px;
         color: #ffffff;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.18);
+        box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
         border: 1px solid rgba(255, 255, 255, 0.12);
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 24px;
         flex-wrap: wrap;
-    }
-
-    .pendaftaran-hero::before {
-        content: 'MAGKOM';
-        position: absolute;
-        right: -15px;
-        bottom: -25px;
-        font-size: 5.5rem;
-        font-weight: 900;
-        letter-spacing: -0.05em;
-        color: rgba(255, 255, 255, 0.06);
-        pointer-events: none;
-        user-select: none;
     }
 
     .hero-text-content {
@@ -353,11 +341,11 @@
     }
 
     .duration-chip-btn.is-active {
-        border-color: #1b3860;
+        border-color: #01347C;
         background: #EFF6FF;
-        color: #1b3860;
+        color: #01347C;
         font-weight: 700;
-        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        box-shadow: 0 0 0 2px rgba(1, 52, 124, 0.2);
     }
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

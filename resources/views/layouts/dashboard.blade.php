@@ -2280,6 +2280,11 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
             transition: margin-left 0.25s ease, width 0.25s ease;
         }
 
@@ -2515,6 +2520,12 @@
             .gentelella-footer {
                 margin-left: 0 !important;
                 width: 100% !important;
+            }
+
+            .gentelella-footer {
+                padding: 0.75rem 1rem !important;
+                justify-content: center !important;
+                text-align: center !important;
             }
 
             .right_col {
@@ -3735,7 +3746,7 @@
                  4. FOOTER GENTELELLA
                  ===================================================================== -->
             <footer class="gentelella-footer">
-                <div class="pull-right">
+                <div class="pull-right" style="display: flex; align-items: center; justify-content: inherit; width: 100%;">
                     <span>Portal MagKom &bull; Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
                 </div>
                 <div class="clearfix"></div>

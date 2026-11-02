@@ -14,29 +14,17 @@
         gap: 24px;
     }
 
-    /* Class Banner Header Khas Sleman MagKom */
+    /* Class Banner Header Khas Sleman MagKom (SuperAdmin Studio Parity) */
     .classroom-banner {
-        background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+        background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                    linear-gradient(135deg, #01347C 0%, #003566 100%);
         border-radius: 16px;
         padding: 28px 32px;
         color: #ffffff;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.18);
+        box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
         border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .classroom-banner::before {
-        content: 'CLASSROOM';
-        position: absolute;
-        right: -20px;
-        bottom: -25px;
-        font-size: 5rem;
-        font-weight: 900;
-        letter-spacing: -0.05em;
-        color: rgba(255, 255, 255, 0.06);
-        pointer-events: none;
-        user-select: none;
     }
 
     .banner-title {

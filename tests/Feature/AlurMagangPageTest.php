@@ -42,7 +42,7 @@ class AlurMagangPageTest extends TestCase
         $response->assertSee('Siswa SMK (PKL)');
         $response->assertSee('Mahasiswa (D3/S1)');
         $response->assertSee('Mandiri (1 Orang)');
-        $response->assertSee('Kelompok (2–5 Orang)');
+        $response->assertSee('Kelompok (2–4 Orang)');
 
         // Toggle Graph vs Roadmap View
         $response->assertSee('id="btn-view-graph"', false);

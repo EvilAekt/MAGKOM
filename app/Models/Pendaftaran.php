@@ -22,6 +22,8 @@ class Pendaftaran extends Model
         'user_id',
         'bulan_magang_id',
         'kuota_id',
+        'tipe',
+        'kelompok_magang_id',
         'durasi_bulan',
         'status',
         'verifikator_id',
@@ -40,6 +42,11 @@ class Pendaftaran extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function kelompokMagang(): BelongsTo
+    {
+        return $this->belongsTo(KelompokMagang::class, 'kelompok_magang_id');
     }
 
     public function bulanMagang(): BelongsTo

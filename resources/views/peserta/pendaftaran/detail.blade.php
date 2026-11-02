@@ -24,29 +24,17 @@
         gap: 12px;
     }
 
-    /* Hero Banner Registrasi MagKom */
+    /* Hero Banner Registrasi MagKom (SuperAdmin Studio Parity) */
     .detail-hero {
-        background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+        background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                    linear-gradient(135deg, #01347C 0%, #003566 100%);
         border-radius: 16px;
         padding: 26px 30px;
         color: #ffffff;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.18);
+        box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
         border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .detail-hero::before {
-        content: 'MAGKOM';
-        position: absolute;
-        right: -15px;
-        bottom: -25px;
-        font-size: 5.5rem;
-        font-weight: 900;
-        letter-spacing: -0.05em;
-        color: rgba(255, 255, 255, 0.06);
-        pointer-events: none;
-        user-select: none;
     }
 
     .hero-main-content {
@@ -596,6 +584,17 @@
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                         <span>Durasi: <strong>{{ $pendaftaran->durasi_bulan }} Bulan</strong></span>
                     </div>
+                    @if(($pendaftaran->tipe ?? 'mandiri') === 'kelompok' || $pendaftaran->kelompokMagang)
+                        <div class="hero-meta-pill" style="background: rgba(59, 130, 246, 0.25); border-color: rgba(147, 197, 253, 0.4);">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <span>Tipe: <strong>Kelompok ({{ $pendaftaran->kelompokMagang?->nama_kelompok ?? 'Tim' }})</strong></span>
+                        </div>
+                    @else
+                        <div class="hero-meta-pill">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            <span>Tipe: <strong>Mandiri</strong></span>
+                        </div>
+                    @endif
                     <div class="hero-meta-pill">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                         <span>Dibuat: {{ $pendaftaran->created_at?->translatedFormat('d M Y') }}</span>
@@ -624,6 +623,22 @@
             </div>
         </div>
     </div>
+
+    @if(($pendaftaran->tipe ?? 'mandiri') === 'kelompok' || $pendaftaran->kelompokMagang)
+        <div style="background: #EFF6FF; border: 1.5px solid #93C5FD; border-radius: 0.75rem; padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 0.85rem;">
+            <div style="width: 28px; height: 28px; border-radius: 6px; background: #0751FF; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <div>
+                <strong style="color: #1E3A8A; font-size: 0.875rem; display: block; margin-bottom: 2px;">
+                    Pengunggahan Berkas Kolektif — {{ $pendaftaran->kelompokMagang?->nama_kelompok ?? 'Kelompok' }}
+                </strong>
+                <p style="font-size: 0.8125rem; color: #1E40AF; margin: 0; line-height: 1.45;">
+                    Pengajuan ini terdaftar atas nama kelompok. Seluruh berkas (Surat Pengantar Magang dan proposal/CV) diunggah secara kolektif (1 file gabungan resmi) yang memuat identitas seluruh anggota tim.
+                </p>
+            </div>
+        </div>
+    @endif
 
     {{-- 2. Stepper Status Tracker Card --}}
     <x-gentelella.card>

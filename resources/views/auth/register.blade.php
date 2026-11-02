@@ -5,18 +5,27 @@
 
 @section('content')
 
+    @php
+        $isKuotaLocked = (isset($selectedJurusan) && $selectedJurusan) || request('jurusan');
+        $initialTipe = old('tipe_pendaftaran', $selectedTipe ?? request('tipe', 'mandiri'));
+        $initialJumlah = (int) old('jumlah_kelompok', old('redirect_jumlah', $selectedJumlah ?? request('jumlah', 2)));
+        if ($initialJumlah < 2 || $initialJumlah > 4) {
+            $initialJumlah = 2;
+        }
+    @endphp
 
     <!-- Header Form Register -->
-    <h1 class="auth-title">Register Akun MagKom</h1>
+    <h1 class="auth-title">Register Akun</h1>
     <p class="auth-subtitle">Daftarkan akun Anda untuk memulai proses seleksi magang di Dinas Kominfo.</p>
 
     @if(isset($selectedJurusan) && $selectedJurusan)
-        <div style="background: linear-gradient(135deg, rgba(7, 81, 255, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%); border: 1px solid rgba(7, 81, 255, 0.22); border-radius: 0.875rem; padding: 1rem 1.15rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.85rem;">
-            <div style="width: 2.5rem; height: 2.5rem; border-radius: 0.625rem; background: var(--blue-600); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(7, 81, 255, 0.25);">
-                @if($selectedTipe === 'kelompok')
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <!-- Kartu Ringkasan Kuota Pilihan (Terpadu & Bersih) -->
+        <div style="background: linear-gradient(135deg, rgba(1, 52, 124, 0.05) 0%, rgba(63, 81, 181, 0.08) 100%); border: 1.5px solid rgba(1, 52, 124, 0.2); border-radius: 0.875rem; padding: 1.1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.85rem;">
+            <div style="width: 2.75rem; height: 2.75rem; border-radius: 0.625rem; background: var(--blue-600); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(1, 52, 124, 0.25);">
+                @if(($selectedTipe ?? request('tipe')) === 'kelompok')
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 @else
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 @endif
             </div>
             <div style="flex: 1; min-width: 0;">
@@ -24,11 +33,11 @@
                     <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--blue-700);">
                         Pilihan Magang Terpilih
                     </span>
-                    <span style="font-size: 0.75rem; font-weight: 700; padding: 0.15rem 0.65rem; border-radius: 9999px; background: {{ $selectedTipe === 'kelompok' ? '#dbeafe' : '#e0e7ff' }}; color: {{ $selectedTipe === 'kelompok' ? '#1e40af' : '#3730a3' }};">
-                        {{ $selectedTipe === 'kelompok' ? 'Kelompok (' . $selectedJumlah . ' Orang)' : 'Mandiri (1 Orang)' }}
+                    <span style="font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 9999px; background: {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? '#dbeafe' : '#e0e7ff' }}; color: {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? '#1e40af' : '#3730a3' }};">
+                        {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? 'Kelompok (' . ($selectedJumlah ?? request('jumlah', 2)) . ' Orang)' : 'Mandiri (1 Orang)' }}
                     </span>
                 </div>
-                <div style="font-size: 0.95rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">
+                <div style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">
                     {{ $selectedJurusan->nama_jurusan }} ({{ strtoupper($selectedJurusan->kategori) }})
                 </div>
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: 0.35rem; flex-wrap: wrap;">
@@ -41,29 +50,17 @@
                         <span>&larr; Ganti Pilihan Kuota</span>
                     </a>
                 </div>
-            </div>
-        </div>
-    @endif
-
-    @if(($selectedTipe ?? request('tipe')) === 'kelompok')
-        <div style="background: #EFF6FF; border: 1.5px solid #93C5FD; border-radius: 0.75rem; padding: 0.875rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.75rem;">
-            <div style="width: 28px; height: 28px; border-radius: 6px; background: #0751FF; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-            </div>
-            <div style="font-size: 0.8125rem; color: #1E40AF; line-height: 1.5;">
-                <strong style="color: #1E3A8A; display: block; margin-bottom: 2px;">Pendaftaran Akun Ketua / Perwakilan Kelompok:</strong>
-                Anda mendaftar sebagai perwakilan kelompok ({{ $selectedJumlah ?? request('jumlah', 2) }} orang). Rekan tim Anda <strong>tidak perlu membuat akun terpisah</strong>. Seluruh identitas & berkas rekan tim akan dimasukkan langsung pada formulir permohonan magang setelah akun ini aktif.
+                @if(($selectedTipe ?? request('tipe')) === 'kelompok')
+                    <div style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed rgba(1, 52, 124, 0.2); font-size: 0.8rem; color: #1e40af; line-height: 1.45;">
+                        <strong style="color: #1e3a8a;">Pendaftaran Ketua Tim:</strong> Anda mendaftar sebagai perwakilan tim untuk <strong>{{ $selectedJumlah ?? request('jumlah', 2) }} orang</strong>. Rekan tim tidak perlu membuat akun terpisah, data rekan tim diisi lengkap pada formulir ini.
+                    </div>
+                @endif
             </div>
         </div>
     @endif
 
     <!-- Form Registrasi Akun Baru -->
-    <form action="{{ route('register') }}" method="POST" novalidate>
+    <form action="{{ route('register') }}" method="POST" id="formRegister" novalidate>
         @csrf
 
         @if(request('bulan'))
@@ -79,9 +76,79 @@
             <input type="hidden" name="redirect_jumlah" value="{{ request('jumlah') }}">
         @endif
 
-        <!-- Field Username -->
+        @if($isKuotaLocked)
+            {{-- Mode Terkunci: Tipe & Kuota sudah dipilih dari Landing Page --}}
+            <input type="hidden" name="tipe_pendaftaran" id="inputTipePendaftaran" value="{{ $initialTipe }}">
+            <input type="hidden" name="jumlah_kelompok" id="inputJumlahKelompok" value="{{ $initialJumlah }}">
+        @else
+            {{-- Mode Pendaftaran Langsung: Pilihan Mandiri vs Kelompok (Maks. 4 Orang) --}}
+            <div id="sectionPilihTipe" style="margin-bottom: 1.25rem;">
+                <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-700); margin-bottom: 0.5rem;">
+                    Tipe Pendaftaran Magang
+                </label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; background: #F1F5F9; padding: 0.25rem; border-radius: 0.625rem; border: 1px solid #CBD5E1;">
+                    <label class="tipe-pilihan-btn" id="labelTipeMandiri" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.6rem 0.75rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s;">
+                        <input type="radio" name="tipe_pendaftaran" value="mandiri" id="radioMandiri" style="display: none;" {{ $initialTipe === 'mandiri' ? 'checked' : '' }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <span>Mandiri (1 Orang)</span>
+                    </label>
+                    <label class="tipe-pilihan-btn" id="labelTipeKelompok" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.6rem 0.75rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s;">
+                        <input type="radio" name="tipe_pendaftaran" value="kelompok" id="radioKelompok" style="display: none;" {{ $initialTipe === 'kelompok' ? 'checked' : '' }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        <span>Kelompok (2–4 Orang)</span>
+                    </label>
+                </div>
+
+                <!-- Selector Jumlah Tim yang Tegas (Hanya jika Kelompok dipilih secara manual) -->
+                <div id="sectionPilihJumlahTim" style="display: {{ $initialTipe === 'kelompok' ? 'block' : 'none' }}; margin-top: 0.75rem; padding: 0.75rem 0.875rem; background: #EFF6FF; border: 1.5px solid #93C5FD; border-radius: 0.625rem;">
+                    <div style="font-size: 0.8125rem; font-weight: 600; color: #1E40AF; margin-bottom: 0.4rem;">
+                        Pilih Jumlah Anggota Tim (Termasuk Ketua, Maks. 4 Orang):
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button type="button" class="btn-jumlah-pilihan {{ $initialJumlah === 2 ? 'is-active' : '' }}" data-jumlah="2" style="flex: 1; padding: 0.5rem; border-radius: 0.5rem; border: 1.5px solid {{ $initialJumlah === 2 ? 'var(--blue-600)' : '#CBD5E1' }}; background: {{ $initialJumlah === 2 ? 'var(--blue-600)' : '#fff' }}; color: {{ $initialJumlah === 2 ? '#fff' : '#1E293B' }}; font-size: 0.8125rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">2 Orang</button>
+                        <button type="button" class="btn-jumlah-pilihan {{ $initialJumlah === 3 ? 'is-active' : '' }}" data-jumlah="3" style="flex: 1; padding: 0.5rem; border-radius: 0.5rem; border: 1.5px solid {{ $initialJumlah === 3 ? 'var(--blue-600)' : '#CBD5E1' }}; background: {{ $initialJumlah === 3 ? 'var(--blue-600)' : '#fff' }}; color: {{ $initialJumlah === 3 ? '#fff' : '#1E293B' }}; font-size: 0.8125rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">3 Orang</button>
+                        <button type="button" class="btn-jumlah-pilihan {{ $initialJumlah === 4 ? 'is-active' : '' }}" data-jumlah="4" style="flex: 1; padding: 0.5rem; border-radius: 0.5rem; border: 1.5px solid {{ $initialJumlah === 4 ? 'var(--blue-600)' : '#CBD5E1' }}; background: {{ $initialJumlah === 4 ? 'var(--blue-600)' : '#fff' }}; color: {{ $initialJumlah === 4 ? '#fff' : '#1E293B' }}; font-size: 0.8125rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">4 Orang</button>
+                    </div>
+                    <input type="hidden" name="jumlah_kelompok" id="inputJumlahKelompok" value="{{ $initialJumlah }}">
+                </div>
+            </div>
+        @endif
+
+        <!-- Section Khusus Kelompok: Nama Kelompok -->
+        <div id="sectionNamaKelompok" style="display: none; margin-bottom: 1.25rem;">
+            <div class="form-group">
+                <label for="nama_kelompok" class="form-label sr-only">Nama Kelompok</label>
+                <div class="input-wrapper">
+                    <span class="input-icon-left" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </span>
+                    <input 
+                        type="text" 
+                        id="nama_kelompok" 
+                        name="nama_kelompok" 
+                        value="{{ old('nama_kelompok') }}" 
+                        class="form-input" 
+                        placeholder="nama kelompok (contoh: Tim Inovasi Sleman)"
+                        aria-label="Nama Kelompok"
+                    >
+                </div>
+                <span class="form-hint">Nama kelompok yang akan tampil pada berkas pendaftaran & dashboard magang.</span>
+            </div>
+        </div>
+
+        <!-- Header Field Akun Pendaftar / Ketua -->
+        <div id="labelHeaderAkun" style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-700); margin-bottom: 0.5rem;">
+            Identitas Akun Calon Peserta
+        </div>
+
+        <!-- Field Username / Nama Pendaftar -->
         <div class="form-group">
-            <label for="username" class="form-label sr-only">Username</label>
+            <label for="username" class="form-label sr-only" id="labelUsernameText">Nama Lengkap / Username</label>
             <div class="input-wrapper">
                 <span class="input-icon-left" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -97,9 +164,9 @@
                     required 
                     autofocus 
                     class="form-input" 
-                    placeholder="username"
-                    autocomplete="username"
-                    aria-label="Username"
+                    placeholder="nama lengkap"
+                    autocomplete="name"
+                    aria-label="Nama Lengkap"
                 >
             </div>
         </div>
@@ -188,6 +255,105 @@
             <span class="form-hint">Minimal 8 karakter kombinasi huruf dan angka.</span>
         </div>
 
+        <!-- Section Anggota Tim (Khusus Kelompok - FIX Sesuai Kuota Terpilih, Maksimal 4 Orang) -->
+        <div id="sectionAnggotaTim" style="display: none; margin-bottom: 1.5rem; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 0.875rem; padding: 1.125rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.875rem; flex-wrap: wrap; gap: 0.5rem;">
+                <div>
+                    <h3 style="font-size: 0.9rem; font-weight: 700; color: var(--navy, #02275D); margin: 0;">Anggota Kelompok (<span id="textTotalAnggota">2</span> Orang)</h3>
+                    <p style="font-size: 0.75rem; color: var(--neutral-600, #475569); margin: 0.2rem 0 0;">Ketua tim otomatis sebagai Anggota 1. Data rekan tim Anda diisi lengkap sesuai kuota fix.</p>
+                </div>
+                <span id="badgeJumlahAnggota" style="font-size: 0.75rem; font-weight: 700; background: #DBEAFE; color: #1E40AF; padding: 0.2rem 0.65rem; border-radius: 9999px;">
+                    Slot Fix: <span id="textTotalBadge">2</span> Orang
+                </span>
+            </div>
+
+            <!-- List Kartu Anggota Fix Sesuai Kuota Terpilih -->
+            <div id="containerAnggotaRekan" style="display: flex; flex-direction: column; gap: 0.875rem;">
+                <!-- Baris Anggota 1 (Ketua - Preview Ringkas) -->
+                <div style="background: #FFFFFF; border: 1.5px dashed #93C5FD; border-radius: 0.625rem; padding: 0.75rem 0.875rem; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 0.625rem;">
+                        <span style="width: 24px; height: 24px; border-radius: 50%; background: #0751FF; color: #fff; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center;">1</span>
+                        <div>
+                            <div style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-900, #0F172A);" id="previewKetuaNama">Nama Ketua Tim</div>
+                            <div style="font-size: 0.75rem; color: #0751FF; font-weight: 600;">Ketua Tim / Pemilik Akun</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kartu Anggota 2 (Rekan 1) -->
+                <div class="card-anggota-rekan" id="cardAnggota2" data-index="0" style="background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 0.625rem; padding: 0.875rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem;">
+                        <span class="label-anggota-ke" style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-700, #003566);">Anggota 2</span>
+                        <span style="font-size: 0.7rem; color: #DC2626; font-weight: 600;">*Wajib</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin-bottom: 0.5rem;">
+                        <div>
+                            <input type="text" id="inputAnggota0Nama" name="anggota[0][nama]" value="{{ old('anggota.0.nama') }}" class="form-input input-anggota-field" placeholder="Nama Lengkap *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                        <div>
+                            <input type="text" id="inputAnggota0Nim" name="anggota[0][nim_nisn]" value="{{ old('anggota.0.nim_nisn') }}" class="form-input input-anggota-field" placeholder="NIM / NISN *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;">
+                        <div>
+                            <input type="tel" id="inputAnggota0Hp" name="anggota[0][no_hp]" value="{{ old('anggota.0.no_hp') }}" class="form-input input-anggota-field" placeholder="No. WhatsApp / HP *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                        <div>
+                            <input type="email" id="inputAnggota0Email" name="anggota[0][email]" value="{{ old('anggota.0.email') }}" class="form-input input-anggota-field" placeholder="Email Aktif *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kartu Anggota 3 (Rekan 2) -->
+                <div class="card-anggota-rekan" id="cardAnggota3" data-index="1" style="display: none; background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 0.625rem; padding: 0.875rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem;">
+                        <span class="label-anggota-ke" style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-700, #003566);">Anggota 3</span>
+                        <span style="font-size: 0.7rem; color: #DC2626; font-weight: 600;">*Wajib</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin-bottom: 0.5rem;">
+                        <div>
+                            <input type="text" id="inputAnggota1Nama" name="anggota[1][nama]" value="{{ old('anggota.1.nama') }}" class="form-input input-anggota-field" placeholder="Nama Lengkap *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                        <div>
+                            <input type="text" id="inputAnggota1Nim" name="anggota[1][nim_nisn]" value="{{ old('anggota.1.nim_nisn') }}" class="form-input input-anggota-field" placeholder="NIM / NISN *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;">
+                        <div>
+                            <input type="tel" id="inputAnggota1Hp" name="anggota[1][no_hp]" value="{{ old('anggota.1.no_hp') }}" class="form-input input-anggota-field" placeholder="No. WhatsApp / HP *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                        <div>
+                            <input type="email" id="inputAnggota1Email" name="anggota[1][email]" value="{{ old('anggota.1.email') }}" class="form-input input-anggota-field" placeholder="Email Aktif *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kartu Anggota 4 (Rekan 3) -->
+                <div class="card-anggota-rekan" id="cardAnggota4" data-index="2" style="display: none; background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 0.625rem; padding: 0.875rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem;">
+                        <span class="label-anggota-ke" style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-700, #003566);">Anggota 4</span>
+                        <span style="font-size: 0.7rem; color: #DC2626; font-weight: 600;">*Wajib</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin-bottom: 0.5rem;">
+                        <div>
+                            <input type="text" id="inputAnggota2Nama" name="anggota[2][nama]" value="{{ old('anggota.2.nama') }}" class="form-input input-anggota-field" placeholder="Nama Lengkap *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                        <div>
+                            <input type="text" id="inputAnggota2Nim" name="anggota[2][nim_nisn]" value="{{ old('anggota.2.nim_nisn') }}" class="form-input input-anggota-field" placeholder="NIM / NISN *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;">
+                        <div>
+                            <input type="tel" id="inputAnggota2Hp" name="anggota[2][no_hp]" value="{{ old('anggota.2.no_hp') }}" class="form-input input-anggota-field" placeholder="No. WhatsApp / HP *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                        <div>
+                            <input type="email" id="inputAnggota2Email" name="anggota[2][email]" value="{{ old('anggota.2.email') }}" class="form-input input-anggota-field" placeholder="Email Aktif *" style="font-size: 0.8125rem; padding: 0.55rem 0.75rem;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Checkbox Persetujuan Kebijakan Privasi -->
         <div style="margin-bottom: 1.5rem; font-size: 0.8125rem;">
             <label style="display: flex; align-items: flex-start; gap: 0.625rem; cursor: pointer; color: var(--neutral-600); line-height: 1.4;">
@@ -235,4 +401,191 @@
     <p class="auth-footer-text">
         Sudah punya akun? <a href="{{ route('login') }}">Login</a>
     </p>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const isKuotaLocked = {{ $isKuotaLocked ? 'true' : 'false' }};
+            let currentTipe = '{{ $initialTipe }}';
+            let currentJumlah = {{ $initialJumlah }};
+
+            const inputTipePendaftaran = document.getElementById('inputTipePendaftaran');
+            const inputJumlahKelompok = document.getElementById('inputJumlahKelompok');
+            const radioMandiri = document.getElementById('radioMandiri');
+            const radioKelompok = document.getElementById('radioKelompok');
+            const labelMandiri = document.getElementById('labelTipeMandiri');
+            const labelKelompok = document.getElementById('labelTipeKelompok');
+            const sectionPilihJumlahTim = document.getElementById('sectionPilihJumlahTim');
+            const btnJumlahPills = document.querySelectorAll('.btn-jumlah-pilihan');
+
+            const sectionNamaKelompok = document.getElementById('sectionNamaKelompok');
+            const sectionAnggotaTim = document.getElementById('sectionAnggotaTim');
+            const labelHeaderAkun = document.getElementById('labelHeaderAkun');
+            const inputUsername = document.getElementById('username');
+            const previewKetuaNama = document.getElementById('previewKetuaNama');
+            const inputNamaKelompok = document.getElementById('nama_kelompok');
+
+            const cardAnggota2 = document.getElementById('cardAnggota2');
+            const cardAnggota3 = document.getElementById('cardAnggota3');
+            const cardAnggota4 = document.getElementById('cardAnggota4');
+            const textTotalAnggota = document.getElementById('textTotalAnggota');
+            const textTotalBadge = document.getElementById('textTotalBadge');
+
+            function applyJumlah(total) {
+                total = parseInt(total, 10);
+                if (isNaN(total) || total < 2 || total > 4) {
+                    total = 2;
+                }
+                currentJumlah = total;
+                if (inputJumlahKelompok) {
+                    inputJumlahKelompok.value = total;
+                }
+                if (textTotalAnggota) textTotalAnggota.textContent = total;
+                if (textTotalBadge) textTotalBadge.textContent = total;
+
+                // Update styling tombol jumlah tim jika ada
+                btnJumlahPills.forEach(btn => {
+                    const btnJml = parseInt(btn.getAttribute('data-jumlah'), 10);
+                    const isActive = (btnJml === total);
+                    btn.classList.toggle('is-active', isActive);
+                    btn.style.borderColor = isActive ? 'var(--blue-600)' : '#CBD5E1';
+                    btn.style.background = isActive ? 'var(--blue-600)' : '#FFFFFF';
+                    btn.style.color = isActive ? '#FFFFFF' : '#1E293B';
+                });
+
+                const isKelompok = (currentTipe === 'kelompok');
+
+                // Konfigurasi kartu rekan 1 (Anggota 2) -> Aktif jika kelompok
+                if (cardAnggota2) {
+                    cardAnggota2.style.display = isKelompok ? 'block' : 'none';
+                    cardAnggota2.querySelectorAll('.input-anggota-field').forEach(input => {
+                        input.disabled = !isKelompok;
+                        if (isKelompok) {
+                            input.setAttribute('required', 'required');
+                        } else {
+                            input.removeAttribute('required');
+                        }
+                    });
+                }
+
+                // Konfigurasi kartu rekan 2 (Anggota 3) -> Aktif jika total >= 3
+                const showCard3 = isKelompok && (total >= 3);
+                if (cardAnggota3) {
+                    cardAnggota3.style.display = showCard3 ? 'block' : 'none';
+                    cardAnggota3.querySelectorAll('.input-anggota-field').forEach(input => {
+                        input.disabled = !showCard3;
+                        if (showCard3) {
+                            input.setAttribute('required', 'required');
+                        } else {
+                            input.removeAttribute('required');
+                        }
+                    });
+                }
+
+                // Konfigurasi kartu rekan 3 (Anggota 4) -> Aktif jika total >= 4
+                const showCard4 = isKelompok && (total >= 4);
+                if (cardAnggota4) {
+                    cardAnggota4.style.display = showCard4 ? 'block' : 'none';
+                    cardAnggota4.querySelectorAll('.input-anggota-field').forEach(input => {
+                        input.disabled = !showCard4;
+                        if (showCard4) {
+                            input.setAttribute('required', 'required');
+                        } else {
+                            input.removeAttribute('required');
+                        }
+                    });
+                }
+            }
+
+            function applyTipe(tipe) {
+                currentTipe = tipe;
+                const isKelompok = (tipe === 'kelompok');
+
+                if (inputTipePendaftaran) {
+                    inputTipePendaftaran.value = tipe;
+                }
+
+                if (!isKuotaLocked) {
+                    if (isKelompok) {
+                        if (radioKelompok) radioKelompok.checked = true;
+                        if (labelKelompok) {
+                            labelKelompok.style.background = '#FFFFFF';
+                            labelKelompok.style.color = 'var(--blue-600)';
+                            labelKelompok.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+                            labelKelompok.style.border = '1px solid #93C5FD';
+                        }
+                        if (labelMandiri) {
+                            labelMandiri.style.background = 'transparent';
+                            labelMandiri.style.color = '#64748B';
+                            labelMandiri.style.boxShadow = 'none';
+                            labelMandiri.style.border = '1px solid transparent';
+                        }
+                        if (sectionPilihJumlahTim) sectionPilihJumlahTim.style.display = 'block';
+                    } else {
+                        if (radioMandiri) radioMandiri.checked = true;
+                        if (labelMandiri) {
+                            labelMandiri.style.background = '#FFFFFF';
+                            labelMandiri.style.color = 'var(--blue-600)';
+                            labelMandiri.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+                            labelMandiri.style.border = '1px solid #93C5FD';
+                        }
+                        if (labelKelompok) {
+                            labelKelompok.style.background = 'transparent';
+                            labelKelompok.style.color = '#64748B';
+                            labelKelompok.style.boxShadow = 'none';
+                            labelKelompok.style.border = '1px solid transparent';
+                        }
+                        if (sectionPilihJumlahTim) sectionPilihJumlahTim.style.display = 'none';
+                    }
+                }
+
+                if (isKelompok) {
+                    if (sectionNamaKelompok) sectionNamaKelompok.style.display = 'block';
+                    if (sectionAnggotaTim) sectionAnggotaTim.style.display = 'block';
+                    if (labelHeaderAkun) labelHeaderAkun.textContent = 'Identitas Akun Ketua Kelompok';
+                    if (inputUsername) inputUsername.placeholder = 'nama lengkap ketua tim';
+                    if (inputNamaKelompok) inputNamaKelompok.setAttribute('required', 'required');
+                } else {
+                    if (sectionNamaKelompok) sectionNamaKelompok.style.display = 'none';
+                    if (sectionAnggotaTim) sectionAnggotaTim.style.display = 'none';
+                    if (labelHeaderAkun) labelHeaderAkun.textContent = 'Identitas Akun Calon Peserta';
+                    if (inputUsername) inputUsername.placeholder = 'nama lengkap';
+                    if (inputNamaKelompok) inputNamaKelompok.removeAttribute('required');
+                }
+
+                applyJumlah(currentJumlah);
+            }
+
+            if (!isKuotaLocked) {
+                if (labelMandiri) {
+                    labelMandiri.addEventListener('click', function() {
+                        applyTipe('mandiri');
+                    });
+                }
+                if (labelKelompok) {
+                    labelKelompok.addEventListener('click', function() {
+                        applyTipe('kelompok');
+                    });
+                }
+
+                btnJumlahPills.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const targetJumlah = parseInt(this.getAttribute('data-jumlah'), 10);
+                        applyJumlah(targetJumlah);
+                    });
+                });
+            }
+
+            if (inputUsername && previewKetuaNama) {
+                inputUsername.addEventListener('input', function() {
+                    previewKetuaNama.textContent = this.value.trim() ? this.value.trim() : 'Nama Ketua Tim';
+                });
+                if (inputUsername.value.trim()) {
+                    previewKetuaNama.textContent = inputUsername.value.trim();
+                }
+            }
+
+            // Inisialisasi awal
+            applyTipe(currentTipe);
+        });
+    </script>
 @endsection

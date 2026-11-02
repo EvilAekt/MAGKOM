@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ __('Magang Kominfo Sleman 2026 – Pendaftaran MAGKOM') }}</title>
+    <title>{{ __('MAGKOM – Portal Magang Diskominfo Sleman 2026') }}</title>
     <meta name="description" content="{{ __('Daftar magang di Diskominfo Sleman: lihat persyaratan, kuota per bidang, dan tahapan pendaftaran.') }}">
     
     <!-- Open Graph Meta Tags -->
@@ -39,11 +39,11 @@
          ======================================================================= -->
     <header class="landing-header">
         <div class="landing-header-container">
-            <a href="{{ route('landing') }}" class="landing-brand" title="Dinas Komunikasi dan Informatika Kabupaten Sleman">
+            <a href="{{ route('landing') }}" class="landing-brand" title="MAGKOM - Portal Magang Diskominfo Kabupaten Sleman">
                 @include('partials.logo-sleman', ['class' => 'brand-logo-img', 'width' => '38', 'height' => '38', 'style' => 'width: 38px; height: 38px; object-fit: contain;'])
                 <span class="brand-text">
-                    <span class="brand-name">DISKOMINFO SLEMAN</span>
-                    <span class="brand-sub">Portal Magang · MAGKOM</span>
+                    <span class="brand-name">MAGKOM</span>
+                    <span class="brand-sub">Portal Magang · Diskominfo Sleman</span>
                 </span>
             </a>
 

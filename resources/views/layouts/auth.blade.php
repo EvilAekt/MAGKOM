@@ -15,10 +15,10 @@
     <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
     <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
 
-    <!-- Google Fonts: Open Sans (Design System DS-MagKom Bab 2.2) -->
+    <!-- Google Fonts: Lexend (Heading/Display), Source Sans 3 (Body/Form) & Open Sans (DS Fallback) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
     <!-- Vite Asset Pipeline (PRD-TASK-VITE-01) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -44,13 +44,13 @@
 
     <style>
         :root {
-            /* MagKom / Warna Tokens (Design System DS-MagKom Bab 2.1) */
-            --blue-600: #0751FF;
-            --blue-700: #0641CC;
+            /* MagKom / Warna Tokens (Design System DS-MagKom Bab 2.1 & Master Palette PRD-TASK-2026-10-28-UI-02) */
+            --blue-600: #01347C;
+            --blue-700: #003566;
             --blue-50: #EEF4FF;
             --blue-100: #E0EBFF;
-            --blue-tint: #E6EEFF;
-            --blue-tint-line: #B3C8FF;
+            --blue-tint: rgba(1, 52, 124, 0.08);
+            --blue-tint-line: #3F51B5;
 
             --neutral-0: #FFFFFF;
             --neutral-50: #F8FAFC;
@@ -75,7 +75,9 @@
             --red-600: #DC2626;
             --red-700: #B91C1C;
 
-            /* Tipografi Bobot Standar MagKom (Plan 2026-10-16) */
+            /* Tipografi Tokens Selaras Landing Page (Lexend & Source Sans 3) */
+            --font-display: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-sans: 'Source Sans 3', 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             --fw-regular: 400;
             --fw-medium: 500;
             --fw-semibold: 600;
@@ -139,7 +141,16 @@
         [data-theme="dark"] .form-input:focus,
         [data-theme="dark"] input:focus {
             border-color: var(--blue-600) !important;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35) !important;
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.35) !important;
+        }
+
+        [data-theme="dark"] .btn-primary {
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(63, 81, 181, 0.4);
+        }
+
+        [data-theme="dark"] .btn-primary:hover {
+            background-color: var(--blue-700) !important;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(63, 81, 181, 0.6);
         }
 
         [data-theme="dark"] .form-input::placeholder,
@@ -263,7 +274,7 @@
         }
 
         body {
-            font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+            font-family: var(--font-sans);
             background-color: var(--neutral-0);
             color: var(--neutral-800);
             min-height: 100vh;
@@ -272,19 +283,33 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Headings: SemiBold atau Bold Tegas dan Jelas sebagai Judul */
+        /* Headings: Lexend (Harmonis & Selaras dengan Landing Page) */
         h1, h2 {
+            font-family: var(--font-display);
             font-weight: var(--fw-bold);
             color: var(--neutral-900);
+            letter-spacing: -0.02em;
         }
 
         h3, h4, h5, h6 {
+            font-family: var(--font-display);
             font-weight: var(--fw-semibold);
             color: var(--neutral-900);
+            letter-spacing: -0.01em;
+        }
+
+        .auth-title {
+            font-family: var(--font-display) !important;
+            letter-spacing: -0.02em;
+        }
+
+        .visual-headline {
+            font-family: var(--font-display) !important;
         }
 
         /* Teks semua di web (body): Regular */
-        p, span.text-body, td, li {
+        p, span.text-body, td, li, input, button, select, textarea {
+            font-family: var(--font-sans);
             font-weight: var(--fw-regular);
         }
 
@@ -299,6 +324,9 @@
         @media (min-width: 1024px) {
             .auth-container {
                 grid-template-columns: 1fr 1fr;
+                height: 100vh;
+                max-height: 100vh;
+                overflow: hidden;
             }
         }
 
@@ -319,6 +347,11 @@
         @media (min-width: 1024px) {
             .auth-visual-panel {
                 display: flex;
+                height: 100vh;
+                max-height: 100vh;
+                position: sticky;
+                top: 0;
+                overflow: hidden;
             }
         }
 
@@ -449,6 +482,42 @@
             }
         }
 
+        @media (min-width: 1024px) {
+            .auth-form-panel {
+                height: 100vh;
+                max-height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+                scroll-behavior: smooth;
+            }
+        }
+
+        /* Custom Subtle Modern Scrollbar untuk Panel Form Kanan */
+        .auth-form-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .auth-form-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .auth-form-panel::-webkit-scrollbar-thumb {
+            background: var(--neutral-300);
+            border-radius: 9999px;
+        }
+
+        .auth-form-panel::-webkit-scrollbar-thumb:hover {
+            background: var(--neutral-400);
+        }
+
+        [data-theme="dark"] .auth-form-panel::-webkit-scrollbar-thumb {
+            background: var(--neutral-300);
+        }
+
+        [data-theme="dark"] .auth-form-panel::-webkit-scrollbar-thumb:hover {
+            background: var(--neutral-400);
+        }
+
         .auth-form-header-bar {
             display: flex;
             align-items: center;
@@ -459,7 +528,7 @@
 
         @media (max-width: 1023px) {
             .auth-form-header-bar {
-                justify-content: space-between;
+                justify-content: flex-end;
             }
         }
 
@@ -583,7 +652,7 @@
         .form-input:focus {
             outline: none;
             border-color: var(--blue-600);
-            box-shadow: 0 0 0 3px rgba(7, 81, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(1, 52, 124, 0.18);
         }
 
         .toggle-password-btn {
@@ -627,15 +696,24 @@
             border: none;
             border-radius: 0.5rem;
             cursor: pointer;
-            transition: background-color 0.15s ease, transform 0.05s ease;
+            box-shadow: 0 4px 12px rgba(1, 52, 124, 0.2);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .btn-primary:hover {
             background-color: var(--blue-700);
+            box-shadow: 0 6px 16px rgba(1, 52, 124, 0.3);
+            transform: translateY(-1px);
         }
 
         .btn-primary:active {
-            transform: scale(0.99);
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(1, 52, 124, 0.2);
+        }
+
+        .btn-primary:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(1, 52, 124, 0.35);
         }
 
         .btn-google {
@@ -890,13 +968,8 @@
 
         <!-- Panel Kanan (Form Interaktif) -->
         <main class="auth-form-panel">
-            <!-- Header Bar (Back Link & Mobile Brand) -->
+            <!-- Header Bar (Back Link) -->
             <div class="auth-form-header-bar">
-                <div class="mobile-brand" style="display: flex; align-items: center; gap: 0.5rem;">
-                    @include('partials.logo-sleman', ['width' => '28', 'height' => '28', 'style' => 'width: 28px; height: 28px; object-fit: contain;'])
-                    <span style="font-weight: 800; font-size: 0.9375rem; color: var(--neutral-900);">MAGKOM</span>
-                </div>
-
                 @php
                     $isFromKuota = request()->hasAny(['bulan', 'jurusan', 'tipe', 'jumlah']);
                     $authBackUrl = $isFromKuota ? route('landing') . '#kuota' : route('landing');

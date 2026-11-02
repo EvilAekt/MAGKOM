@@ -34,10 +34,11 @@
        1. Atmospheric Hero Banner (Sleman Navy Solid Gradient)
        -------------------------------------------------------------------------- */
     .saas-hero-banner {
-        background: linear-gradient(135deg, #1b3860 0%, #152d4e 100%) !important;
+        background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                    linear-gradient(135deg, #01347C 0%, #003566 100%) !important;
         border: 1px solid rgba(255, 255, 255, 0.12) !important;
         border-radius: 16px;
-        box-shadow: 0 4px 20px -2px rgba(27, 56, 96, 0.18), 0 1px 3px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25), 0 1px 3px rgba(0, 0, 0, 0.05);
         padding: 28px 32px;
         color: #ffffff !important;
         position: relative;
@@ -173,25 +174,40 @@
     }
 
     .saas-hero-btn-primary {
-        background: #2563eb;
+        background: #01347C !important;
         color: #ffffff !important;
-        padding: 10px 18px;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 0.84rem;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        transition: all 0.15s ease;
+        padding: 9px 20px !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 0.875rem !important;
+        text-decoration: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        box-shadow: 0 2px 6px rgba(1, 52, 124, 0.2) !important;
+        cursor: pointer !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
 
     .saas-hero-btn-primary:hover {
-        background: #1d4ed8;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+        background: #002244 !important;
+        color: #ffffff !important;
+        transform: translateY(-1.5px) !important;
+        box-shadow: 0 6px 18px rgba(1, 52, 124, 0.32) !important;
+    }
+
+    .saas-hero-btn-primary:active {
+        transform: translateY(0) !important;
+        box-shadow: 0 2px 6px rgba(1, 52, 124, 0.2) !important;
+    }
+
+    .saas-hero-btn-primary svg {
+        transition: transform 0.2s ease !important;
+    }
+
+    .saas-hero-btn-primary:hover svg {
+        transform: translateX(2px) !important;
     }
 
     .saas-hero-btn-secondary {
@@ -397,11 +413,12 @@
         top: 24px;
     }
 
-    /* Base Card */
+    /* Base Card (SuperAdmin Parity) */
     .saas-card {
         background: #ffffff;
         border: 1px solid var(--neutral-200, #e2e8f0);
-        border-radius: 16px;
+        border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+        border-radius: 14px;
         box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
         overflow: hidden;
@@ -464,9 +481,9 @@
         border: 1px solid #bfdbfe;
     }
 
-    /* Buttons */
+    /* Buttons (SuperAdmin Primary #01347C) */
     .saas-btn-primary {
-        background: #1b3860;
+        background: var(--magkom-primary-blue, #01347C);
         color: #ffffff !important;
         padding: 10px 18px;
         border-radius: 10px;
@@ -476,14 +493,14 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        border: 1px solid #162e4f;
-        box-shadow: 0 2px 6px rgba(27, 56, 96, 0.18);
+        border: 1px solid var(--magkom-midnight-navy, #003566);
+        box-shadow: 0 2px 6px rgba(1, 52, 124, 0.22);
         transition: all 0.15s ease;
     }
 
     .saas-btn-primary:hover {
-        background: #162e4f;
-        box-shadow: 0 4px 12px rgba(27, 56, 96, 0.25);
+        background: var(--magkom-midnight-navy, #003566);
+        box-shadow: 0 4px 12px rgba(1, 52, 124, 0.32);
         transform: translateY(-1px);
     }
 
@@ -592,7 +609,7 @@
         height: 44px;
         border-radius: 12px;
         background: #eff6ff;
-        color: #1b3860;
+        color: #01347C;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -655,21 +672,29 @@
         justify-content: center;
         gap: 8px;
         width: 100%;
-        padding: 8px 14px;
+        padding: 9px 16px;
         border-radius: 8px;
-        background: #f8fafc;
-        border: 1px solid var(--neutral-200, #e2e8f0);
-        color: #1b3860;
+        background: #01347C;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: #FFFFFF !important;
         font-size: 0.8125rem;
-        font-weight: 600;
+        font-weight: 700;
         text-decoration: none;
-        transition: all 0.15s ease;
+        box-shadow: 0 2px 6px rgba(1, 52, 124, 0.2);
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .saas-btn-whatsapp:hover {
-        background: #eff6ff;
-        border-color: #93c5fd;
-        color: #2563eb;
+        background: #002244;
+        color: #FFFFFF !important;
+        transform: translateY(-1.5px);
+        box-shadow: 0 6px 18px rgba(1, 52, 124, 0.32);
+    }
+
+    .saas-btn-whatsapp:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 6px rgba(1, 52, 124, 0.2);
     }
 
     /* Quick Action 2x2 Grid */
@@ -1110,7 +1135,7 @@
     .saas-week-tag {
         font-size: 0.725rem;
         font-weight: 700;
-        color: #1b3860;
+        color: #01347C;
         background: #eff6ff;
         padding: 2px 6px;
         border-radius: 4px;
@@ -1456,10 +1481,11 @@
         color: #C4B5FD !important;
     }
 
-    /* Dark Cards & Panels */
+    /* Dark Cards & Panels (SuperAdmin Parity) */
     [data-theme="dark"] .saas-card {
         background: #182234 !important;
         border-color: #26354D !important;
+        border-top: 3.5px solid var(--magkom-indigo-accent, #3F51B5) !important;
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3) !important;
         color: #E2E8F0 !important;
     }
@@ -1819,10 +1845,132 @@
         color: #F8FAFC !important;
     }
 
-    [data-theme="dark"] .cv-slide-drawer input:focus,
-    [data-theme="dark"] .cv-slide-drawer textarea:focus {
-        border-color: #2563EB !important;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3) !important;
+    /* ==========================================================================
+       Responsive & Multi-Device Fit Optimization (Desktop, Tablet, Mobile)
+       ========================================================================== */
+    @media (max-width: 1199.98px) {
+        .saas-cockpit-grid {
+            grid-template-columns: 1fr !important;
+            gap: 20px;
+        }
+
+        .saas-cockpit-aside {
+            width: 100% !important;
+            position: static !important;
+        }
+
+        .saas-hero-inner {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 20px !important;
+        }
+
+        .saas-hero-right {
+            width: 100% !important;
+            align-items: flex-start !important;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023.98px) {
+        .saas-kpi-grid.tile_count {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 14px !important;
+            margin: 0 0 1.5rem 0 !important;
+            width: 100% !important;
+        }
+
+        .saas-kpi-grid .tile_stats_count {
+            padding: 0 !important;
+            min-width: 0 !important;
+            flex: none !important;
+        }
+
+        .saas-phase-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .saas-dashboard-workspace {
+            gap: 16px;
+        }
+
+        .saas-hero-banner {
+            padding: 20px 18px !important;
+            border-radius: 12px !important;
+        }
+
+        .saas-header-title {
+            font-size: 1.35rem !important;
+        }
+
+        .saas-header-desc {
+            font-size: 0.825rem !important;
+        }
+
+        .saas-header-periode {
+            font-size: 0.75rem !important;
+            padding: 4px 10px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .saas-hero-action-buttons {
+            flex-direction: column !important;
+            width: 100% !important;
+            gap: 8px !important;
+        }
+
+        .saas-hero-btn-primary,
+        .saas-hero-btn-secondary,
+        .saas-btn-primary {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 10px 16px !important;
+            box-sizing: border-box !important;
+        }
+
+        .saas-hero-link-sk {
+            width: 100% !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+        }
+
+        .saas-kpi-grid.tile_count {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            margin: 0 0 1.25rem 0 !important;
+            width: 100% !important;
+        }
+
+        .saas-kpi-grid .tile_stats_count {
+            padding: 0 !important;
+            min-width: 100% !important;
+            flex: none !important;
+        }
+
+        .saas-statusline {
+            grid-template-columns: 1fr !important;
+            padding: 12px 16px !important;
+            gap: 10px !important;
+        }
+
+        .saas-card {
+            padding: 18px 16px !important;
+            border-radius: 12px !important;
+        }
+
+        .saas-card-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 10px !important;
+        }
+
+        .saas-phase-grid {
+            grid-template-columns: 1fr !important;
+        }
     }
 </style>
 @endpush
@@ -1837,6 +1985,42 @@
     @if($fase === 'aktif' && $penempatan)
         @include('peserta.dashboard.partials._kpi_bar')
     @endif
+
+    {{-- Statusline Horizontal Ribbon (SuperAdmin Parity) --}}
+    @php
+        $timKelompokData = $kelompokMagang ?? $user->kelompokMagang;
+    @endphp
+    <div class="saas-statusline" role="region" aria-label="Statusline MagKom Peserta" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 16px; background: var(--neutral-0, #ffffff); border: 1px solid var(--neutral-200, #e2e8f0); border-top: 3.5px solid var(--magkom-primary-blue, #01347C); border-radius: 12px; padding: 14px 20px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);">
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Status Magang</span>
+            <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                <span class="saas-dot-pulse"></span>
+                <span>{{ $fase === 'aktif' ? 'Magang Aktif' : ($fase === 'selesai' ? 'Magang Tuntas' : 'Seleksi / Onboarding') }}</span>
+            </span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Tipe Pendaftaran</span>
+            <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                @if($timKelompokData)
+                    <span style="color: var(--magkom-amber-gold, #FFC300); font-weight: 700;">Kelompok (Ketua Tim)</span>
+                @else
+                    <span>Mandiri (Individu)</span>
+                @endif
+            </span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Bidang Penempatan</span>
+            <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600;">
+                {{ $penempatan->bidang->nama_bidang ?? 'Dinas Kominfo Sleman' }}
+            </span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Pembimbing Lapangan</span>
+            <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600;">
+                {{ $penempatan->pembimbing->nama ?? 'Tim Diskominfo Sleman' }}
+            </span>
+        </div>
+    </div>
 
     {{-- 3. Cockpit 2-Column Grid (Main Content + Aside Context) --}}
     <div class="saas-cockpit-grid">

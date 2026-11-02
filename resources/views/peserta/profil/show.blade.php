@@ -57,8 +57,9 @@
     }
 
     .identity-card-cover {
-        height: 84px;
-        background: linear-gradient(135deg, #1b3860 0%, #162e4f 100%);
+        height: 96px;
+        background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                    linear-gradient(135deg, #01347C 0%, #003566 100%);
         position: relative;
     }
 
@@ -72,16 +73,16 @@
 
     .avatar-interactive-wrapper {
         position: relative;
-        margin-top: -46px;
+        margin-top: -50px;
         margin-bottom: 14px;
     }
 
     .avatar-preview-box {
-        width: 92px;
-        height: 92px;
+        width: 96px;
+        height: 96px;
         border-radius: 50%;
         border: 4px solid #ffffff;
-        box-shadow: 0 4px 14px rgba(27, 56, 96, 0.18);
+        box-shadow: 0 4px 14px rgba(1, 52, 124, 0.22);
         overflow: hidden;
         background: var(--blue-tint);
         display: flex;
@@ -333,8 +334,8 @@
     }
 
     .form-section-icon-badge.blue {
-        background: var(--blue-tint);
-        color: var(--blue-600);
+        background: rgba(1, 52, 124, 0.08);
+        color: var(--magkom-primary-blue, #01347C);
     }
 
     .form-section-icon-badge.emerald {
@@ -426,8 +427,8 @@
 
     .field-input:focus {
         outline: none;
-        border-color: var(--blue-600);
-        box-shadow: 0 0 0 3px rgba(7, 81, 255, 0.14);
+        border-color: var(--magkom-primary-blue, #01347C);
+        box-shadow: 0 0 0 3px rgba(1, 52, 124, 0.18);
     }
 
     .field-input:disabled,
@@ -484,9 +485,9 @@
     .btn-submit-profil {
         height: 46px;
         padding: 0 28px;
-        background: var(--blue-600);
+        background: var(--magkom-primary-blue, #01347C);
         color: #ffffff;
-        border: none;
+        border: 1px solid rgba(255, 255, 255, 0.18);
         border-radius: 8px;
         font-size: 0.9375rem;
         font-weight: 700;
@@ -494,13 +495,27 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        box-shadow: 0 4px 14px rgba(7, 81, 255, 0.22);
-        transition: background-color 0.15s ease, transform 0.15s ease;
+        box-shadow: 0 4px 14px rgba(1, 52, 124, 0.25);
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-submit-profil:hover {
-        background: var(--blue-700);
-        transform: translateY(-1px);
+        background: #002244;
+        transform: translateY(-1.5px);
+        box-shadow: 0 6px 18px rgba(1, 52, 124, 0.35);
+    }
+
+    .btn-submit-profil:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 6px rgba(1, 52, 124, 0.2);
+    }
+
+    .btn-submit-profil svg {
+        transition: transform 0.2s ease;
+    }
+
+    .btn-submit-profil:hover svg {
+        transform: translateX(2px);
     }
 
     .btn-submit-profil:disabled {
@@ -622,6 +637,33 @@
 
     [data-theme="dark"] .field-label {
         color: #E2E8F0 !important;
+    }
+
+    [data-theme="dark"] .profile-right-column table {
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .profile-right-column table tr {
+        border-color: #26354D !important;
+    }
+
+    [data-theme="dark"] .profile-right-column table thead tr {
+        background: #111C2E !important;
+        color: #94A3B8 !important;
+    }
+
+    [data-theme="dark"] .profile-right-column table tbody tr {
+        background: #182234 !important;
+        color: #F8FAFC !important;
+    }
+
+    [data-theme="dark"] .btn-submit-profil {
+        background: var(--magkom-primary-blue, #01347C) !important;
+        color: #ffffff !important;
+    }
+
+    [data-theme="dark"] .btn-submit-profil:hover {
+        background: #002244 !important;
     }
 </style>
 @endpush
@@ -772,9 +814,101 @@
             </x-gentelella.card>
 
             {{-- ========================================================
-                 KOLOM KANAN: FORMULIR BIODATA BERSATU (UNIFIED FORM CARD GENTELELLA)
+                 KOLOM KANAN: FORMULIR BIODATA BERSATU & DATA KELOMPOK
                  ======================================================== --}}
-            <x-gentelella.card class="form-unified-card" :hoverable="false">
+            <div class="profile-right-column" style="display: flex; flex-direction: column; gap: 24px;">
+
+                @if($kelompokMagang)
+                    <x-gentelella.card class="form-unified-card" :hoverable="false" style="border-top: 3.5px solid var(--magkom-primary-blue, #01347C);">
+                        <div class="form-section-title-wrap" style="margin-bottom: 16px;">
+                            <div class="form-section-icon-badge blue" style="background: rgba(1, 52, 124, 0.08); color: var(--magkom-primary-blue, #01347C);">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                                    <h3 class="form-section-heading" style="color: var(--magkom-midnight-navy, #003566);">
+                                        Tim Kelompok: {{ $kelompokMagang->nama_kelompok }}
+                                    </h3>
+                                    <span style="font-size: 0.75rem; font-weight: 700; background: rgba(1, 52, 124, 0.08); color: var(--magkom-primary-blue, #01347C); padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(1, 52, 124, 0.2);">
+                                        {{ $kelompokMagang->anggota->count() + 1 }} Peserta Terdaftar
+                                    </span>
+                                </div>
+                                <p class="form-section-desc">
+                                    Informasi tim dan rekan anggota yang terdaftar bersama Anda dalam pengajuan magang kelompok. Anda terdaftar sebagai <strong>Ketua Tim / Penanggung Jawab</strong>.
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Roster Table --}}
+                        <div style="overflow-x: auto; margin-top: 14px; border: 1px solid var(--neutral-200); border-radius: 10px;">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 0.825rem; text-align: left;">
+                                <thead>
+                                    <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-200); color: var(--neutral-700);">
+                                        <th style="padding: 10px 14px; font-weight: 700; width: 44px;">No</th>
+                                        <th style="padding: 10px 14px; font-weight: 700;">Nama Peserta</th>
+                                        <th style="padding: 10px 14px; font-weight: 700;">Peran</th>
+                                        <th style="padding: 10px 14px; font-weight: 700;">NIM / NISN</th>
+                                        <th style="padding: 10px 14px; font-weight: 700;">Kontak (No. HP & Email)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{-- Baris Ketua Tim --}}
+                                    <tr style="border-bottom: 1px solid var(--neutral-200); background: rgba(1, 52, 124, 0.02);">
+                                        <td style="padding: 10px 14px; font-weight: 700; color: var(--neutral-500);">1</td>
+                                        <td style="padding: 10px 14px;">
+                                            <div style="font-weight: 700; color: var(--neutral-900);">{{ $user->nama ?? $user->name }}</div>
+                                            <div style="font-size: 0.725rem; color: var(--neutral-500);">{{ $profil?->institusi ?? 'Institusi Terdaftar' }}</div>
+                                        </td>
+                                        <td style="padding: 10px 14px;">
+                                            <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; font-weight: 800; background: #FEF3C7; color: #92400E; padding: 2px 8px; border-radius: 6px; border: 1px solid #FCD34D;">
+                                                ★ Ketua Tim
+                                            </span>
+                                        </td>
+                                        <td style="padding: 10px 14px; font-family: monospace; font-size: 0.8rem; color: var(--neutral-700);">
+                                            {{ $profil?->nim_nisn ?? '-' }}
+                                        </td>
+                                        <td style="padding: 10px 14px;">
+                                            <div style="color: var(--neutral-800); font-weight: 500;">{{ $profil?->no_hp ?? $user->no_telp ?? '-' }}</div>
+                                            <div style="font-size: 0.725rem; color: var(--neutral-500);">{{ $user->email }}</div>
+                                        </td>
+                                    </tr>
+
+                                    {{-- Baris Anggota Tim --}}
+                                    @forelse($kelompokMagang->anggota as $idx => $anggota)
+                                        <tr style="border-bottom: 1px solid var(--neutral-200);">
+                                            <td style="padding: 10px 14px; font-weight: 600; color: var(--neutral-500);">{{ $idx + 2 }}</td>
+                                            <td style="padding: 10px 14px;">
+                                                <div style="font-weight: 600; color: var(--neutral-900);">{{ $anggota->nama }}</div>
+                                            </td>
+                                            <td style="padding: 10px 14px;">
+                                                <span style="display: inline-block; font-size: 0.7rem; font-weight: 700; background: var(--neutral-100); color: var(--neutral-700); padding: 2px 8px; border-radius: 6px; border: 1px solid var(--neutral-300);">
+                                                    Anggota
+                                                </span>
+                                            </td>
+                                            <td style="padding: 10px 14px; font-family: monospace; font-size: 0.8rem; color: var(--neutral-700);">
+                                                {{ $anggota->nim_nisn ?? '-' }}
+                                            </td>
+                                            <td style="padding: 10px 14px;">
+                                                <div style="color: var(--neutral-800);">{{ $anggota->no_hp ?? '-' }}</div>
+                                                <div style="font-size: 0.725rem; color: var(--neutral-500);">{{ $anggota->email ?? '-' }}</div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" style="padding: 14px; text-align: center; color: var(--neutral-500); font-size: 0.8rem;">
+                                                Belum ada rekan anggota kelompok yang ditambahkan.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </x-gentelella.card>
+                @endif
+
+                <x-gentelella.card class="form-unified-card" :hoverable="false" style="border-top: 3.5px solid var(--magkom-primary-blue, #01347C);">
 
                 {{-- SEKSI 1: INFORMASI AKADEMIK --}}
                 <div class="form-section-title-wrap">
@@ -1007,6 +1141,8 @@
                 </div>
 
             </x-gentelella.card>
+
+            </div>
 
         </div>
 

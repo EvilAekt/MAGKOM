@@ -236,7 +236,7 @@
         align-items: center !important;
         justify-content: center !important;
         gap: 8px !important;
-        background: #1b3860 !important;
+        background: #01347C !important;
         color: #ffffff !important;
         border: none !important;
         border-radius: 8px !important;

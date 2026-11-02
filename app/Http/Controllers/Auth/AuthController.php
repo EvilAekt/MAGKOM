@@ -9,6 +9,7 @@ use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
+use App\Models\KelompokMagang;
 use App\Models\User;
 use App\Rules\CaptchaRule;
 use App\Rules\TurnstileRule;
@@ -17,6 +18,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
@@ -131,12 +133,31 @@ class AuthController extends Controller
             $request->merge(['nama' => $request->input('username')]);
         }
 
+        $isKelompok = $request->input('tipe_pendaftaran') === 'kelompok' || $request->input('redirect_tipe') === 'kelompok';
+
         $rules = [
             'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'no_telp' => ['sometimes', 'required', 'string', 'max:20', 'regex:/^[0-9\+\-\s]+$/'],
             'password' => ['required', 'string', Password::min(8)],
+            'tipe_pendaftaran' => ['nullable', 'string', 'in:mandiri,kelompok'],
         ];
+
+        if ($isKelompok) {
+            $rules['nama_kelompok'] = ['required', 'string', 'max:150'];
+
+            $targetJumlah = (int) ($request->input('redirect_jumlah') ?: $request->input('jumlah_kelompok', 0));
+            if ($targetJumlah >= 2 && $targetJumlah <= 4) {
+                $rules['anggota'] = ['required', 'array', 'size:'.($targetJumlah - 1)];
+            } else {
+                $rules['anggota'] = ['required', 'array', 'min:1', 'max:3'];
+            }
+
+            $rules['anggota.*.nama'] = ['required', 'string', 'max:255'];
+            $rules['anggota.*.nim_nisn'] = ['required', 'string', 'max:50'];
+            $rules['anggota.*.no_hp'] = ['required', 'string', 'max:30'];
+            $rules['anggota.*.email'] = ['required', 'email', 'max:255'];
+        }
 
         if ($turnstileEnabled) {
             $rules['cf-turnstile-response'] = ['required', new TurnstileRule(isRegistration: true)];
@@ -149,15 +170,37 @@ class AuthController extends Controller
 
         $validated = $request->validate($rules);
 
-        $user = new User;
-        $user->nama = $validated['nama'];
-        $user->email = $validated['email'];
-        $user->no_telp = $validated['no_telp'] ?? $request->input('no_telp');
-        $user->password = Hash::make($validated['password']);
-        $user->role = RoleEnum::Peserta;
-        $user->status_aktif = true;
-        $user->email_verified_at = now();
-        $user->save();
+        $user = DB::transaction(function () use ($validated, $request, $isKelompok) {
+            $user = new User;
+            $user->nama = $validated['nama'];
+            $user->email = $validated['email'];
+            $user->no_telp = $validated['no_telp'] ?? $request->input('no_telp');
+            $user->password = Hash::make($validated['password']);
+            $user->role = RoleEnum::Peserta;
+            $user->status_aktif = true;
+            $user->email_verified_at = now();
+            $user->save();
+
+            if ($isKelompok && ! empty($validated['nama_kelompok'])) {
+                $kelompok = KelompokMagang::create([
+                    'ketua_user_id' => $user->id,
+                    'nama_kelompok' => $validated['nama_kelompok'],
+                ]);
+
+                if (! empty($validated['anggota'])) {
+                    foreach ($validated['anggota'] as $anggotaData) {
+                        $kelompok->anggota()->create([
+                            'nama' => $anggotaData['nama'],
+                            'nim_nisn' => $anggotaData['nim_nisn'] ?? null,
+                            'no_hp' => $anggotaData['no_hp'] ?? null,
+                            'email' => $anggotaData['email'] ?? null,
+                        ]);
+                    }
+                }
+            }
+
+            return $user;
+        });
 
         event(new Registered($user));
 
@@ -169,7 +212,7 @@ class AuthController extends Controller
             idData: $user->id,
             nilaiLama: null,
             nilaiBaru: ['nama' => $user->nama, 'email' => $user->email, 'no_telp' => $user->no_telp, 'role' => $user->role->value],
-            detail: ['aksi' => 'registrasi_peserta_baru']
+            detail: ['aksi' => 'registrasi_peserta_baru', 'tipe' => $isKelompok ? 'kelompok' : 'mandiri']
         );
 
         if ($request->filled('redirect_bulan') || $request->filled('redirect_jurusan')) {
@@ -177,14 +220,18 @@ class AuthController extends Controller
                 'pendaftaran_preferensi' => [
                     'bulan_id' => $request->input('redirect_bulan'),
                     'jurusan_id' => $request->input('redirect_jurusan'),
-                    'tipe' => $request->input('redirect_tipe', 'mandiri'),
-                    'jumlah' => (int) $request->input('redirect_jumlah', 1),
+                    'tipe' => $isKelompok ? 'kelompok' : $request->input('redirect_tipe', 'mandiri'),
+                    'jumlah' => $isKelompok ? (count($validated['anggota'] ?? []) + 1) : (int) $request->input('redirect_jumlah', 1),
                 ],
             ]);
         }
 
+        $suksesMsg = $isKelompok
+            ? 'Pendaftaran akun kelompok berhasil! Selamat datang '.($user->nama_tampil).'. Silakan lengkapi profil ketua tim.'
+            : 'Pendaftaran akun berhasil. Silakan lengkapi profil biodata Anda.';
+
         return redirect()->route('peserta.profil.show')
-            ->with('success', 'Pendaftaran akun berhasil. Silakan lengkapi profil biodata Anda.');
+            ->with('success', $suksesMsg);
     }
 
     public function logout(Request $request): RedirectResponse

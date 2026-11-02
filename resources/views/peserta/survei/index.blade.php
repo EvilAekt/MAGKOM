@@ -30,7 +30,7 @@
         color: var(--neutral-800, #1E293B);
     }
     .survei-option-label:hover {
-        border-color: #1b3860;
+        border-color: #01347C;
         background: var(--blue-tint, #EFF6FF);
     }
     .survei-nps-label {
@@ -46,7 +46,7 @@
         transition: all 0.15s ease;
     }
     .survei-nps-label:hover {
-        border-color: #1b3860;
+        border-color: #01347C;
         background: var(--blue-tint, #EFF6FF);
     }
     .survei-nps-score {
@@ -69,8 +69,8 @@
     }
     .survei-textarea:focus {
         outline: none;
-        border-color: #1b3860;
-        box-shadow: 0 0 0 2px rgba(6, 65, 204, 0.1);
+        border-color: #01347C;
+        box-shadow: 0 0 0 2px rgba(1, 52, 124, 0.15);
     }
     [data-theme="dark"] .survei-label-q {
         color: #F8FAFC !important;
@@ -98,8 +98,8 @@
 @section('content')
 <div style="max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- HERO HEADER -->
-    <div style="background: linear-gradient(135deg, #1b3860 0%, #2563eb 100%); border-radius: 12px; padding: 2rem; color: #ffffff; box-shadow: 0 4px 12px rgba(6, 65, 204, 0.15);">
+    <!-- HERO HEADER (SuperAdmin Studio Parity) -->
+    <div style="background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%), linear-gradient(135deg, #01347C 0%, #003566 100%); border-radius: 12px; padding: 2rem; color: #ffffff; box-shadow: 0 4px 16px rgba(1, 52, 124, 0.25);">
         <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; background: rgba(255, 255, 255, 0.2); padding: 0.25rem 0.75rem; border-radius: 999px;">
             Evaluasi Mutu Layanan Dinas
         </span>
@@ -118,7 +118,7 @@
                         Terakhir diperbarui pada: <strong>{{ $survei->updated_at->translatedFormat('d F Y, H:i') }} WIB</strong>. Anda dapat memperbarui penilaian ini kapan saja di bawah.
                     </p>
                 </div>
-                <div style="font-size: 0.875rem; font-weight: 800; color: #1b3860;">
+                <div style="font-size: 0.875rem; font-weight: 800; color: #01347C;">
                     Skor NPS Anda: {{ $survei->skor_nps }}/10
                 </div>
             </div>
