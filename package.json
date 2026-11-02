@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "echo \"[Linter] Laravel Pint: ./vendor/bin/pint --test\"",
-    "format": "echo \"[Formatter] Laravel Pint: ./vendor/bin/pint\"",
-    "test": "echo \"[Test Suite] Jalankan: php artisan test\"",
-    "typecheck": "echo \"[Type Check] PHPStan / Psalm / TypeScript check\""
+    "lint": "./vendor/bin/pint --test",
+    "format": "./vendor/bin/pint",
+    "test": "php artisan test",
+    "typecheck": "./vendor/bin/phpstan analyse --memory-limit=1G"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
