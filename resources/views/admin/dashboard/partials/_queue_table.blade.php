@@ -7,7 +7,7 @@
     badgeType="warning"
 >
     <x-slot:actions>
-        <a href="{{ route('admin.pendaftaran.index') }}" class="cv-btn-view-all">
+        <a href="{{ route('admin.pendaftaran.index') }}" class="sa-link cv-btn-view-all">
             <span>Lihat Semua</span> &rarr;
         </a>
     </x-slot:actions>

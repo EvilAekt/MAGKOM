@@ -2132,5 +2132,450 @@ body.nav-sm {
     color: #FFFFFF !important;
 }
 
+/* ==========================================================================
+   PENYELARASAN TOMBOL & NAVIGASI SELURUH MODUL ADMINISTRASI KE SUPERADMIN
+   (DS-MAGKOM Standards: Token-Only, Zero Inline Override, Micro-Interactions)
+   ========================================================================== */
+
+/* Quick Action Grid Buttons & Action Links */
+.cv-quick-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.4rem !important;
+    height: 38px !important;
+    padding: 0 0.875rem !important;
+    background: var(--cv-blue-tint, #EFF6FF) !important;
+    border: 1px solid rgba(6, 65, 204, 0.25) !important;
+    border-radius: 8px !important;
+    font-size: 0.775rem !important;
+    font-weight: 700 !important;
+    color: var(--cv-blue-700, #0641CC) !important;
+    text-decoration: none !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.cv-quick-btn svg {
+    color: inherit !important;
+    stroke: currentColor !important;
+    transition: color 0.15s ease, transform 0.15s ease !important;
+}
+
+.cv-quick-btn:hover,
+.cv-quick-btn:focus,
+.cv-quick-btn:active {
+    background: var(--cv-blue-700, #0641CC) !important;
+    border-color: var(--cv-blue-700, #0641CC) !important;
+    color: #FFFFFF !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(6, 65, 204, 0.25) !important;
+    text-decoration: none !important;
+}
+
+.cv-quick-btn:hover svg,
+.cv-quick-btn:focus svg,
+.cv-quick-btn:active svg {
+    color: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+    transform: scale(1.08) !important;
+}
+
+.cv-quick-btn:hover span,
+.cv-quick-btn:focus span,
+.cv-quick-btn:active span {
+    color: #FFFFFF !important;
+}
+
+.cv-quick-btn.primary {
+    grid-column: 1 / -1 !important;
+    background: var(--magkom-primary-blue, #01347C) !important;
+    border-color: var(--magkom-primary-blue, #01347C) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 2px 6px rgba(1, 52, 124, 0.25) !important;
+}
+
+.cv-quick-btn.primary:hover,
+.cv-quick-btn.primary:focus,
+.cv-quick-btn.primary:active {
+    background: #0751FF !important;
+    border-color: #0751FF !important;
+    color: #FFFFFF !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 14px rgba(7, 81, 255, 0.35) !important;
+}
+
+/* SuperAdmin-Compliant Action Links (.sa-link, .cv-link-action, .cv-btn-view-all) */
+.sa-link,
+.cv-link-action,
+.cv-btn-view-all {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    padding: 0.35rem 0.75rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    background: var(--cv-blue-tint, #EFF6FF) !important;
+    color: var(--cv-blue-700, #0641CC) !important;
+    border: 1px solid rgba(6, 65, 204, 0.25) !important;
+    text-decoration: none !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    white-space: nowrap !important;
+}
+
+.sa-link span,
+.cv-link-action span,
+.cv-btn-view-all span {
+    color: inherit !important;
+}
+
+.sa-link:hover,
+.sa-link:focus,
+.sa-link:active,
+.cv-link-action:hover,
+.cv-link-action:focus,
+.cv-link-action:active,
+.cv-btn-view-all:hover,
+.cv-btn-view-all:focus,
+.cv-btn-view-all:active {
+    background: var(--cv-blue-700, #0641CC) !important;
+    color: #FFFFFF !important;
+    border-color: var(--cv-blue-700, #0641CC) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(6, 65, 204, 0.25) !important;
+    text-decoration: none !important;
+}
+
+.sa-link:hover span,
+.sa-link:focus span,
+.sa-link:active span,
+.cv-link-action:hover span,
+.cv-link-action:focus span,
+.cv-link-action:active span,
+.cv-btn-view-all:hover span,
+.cv-btn-view-all:focus span,
+.cv-btn-view-all:active span {
+    color: #FFFFFF !important;
+}
+
+.cv-link-action--warning {
+    background: rgba(245, 158, 11, 0.12) !important;
+    border: 1px solid rgba(245, 158, 11, 0.3) !important;
+    color: var(--amber-700, #B45309) !important;
+}
+
+.cv-link-action--warning:hover,
+.cv-link-action--warning:focus {
+    background: #B45309 !important;
+    border-color: #B45309 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 10px rgba(180, 83, 9, 0.25) !important;
+}
+
+.cv-link-action--warning:hover span,
+.cv-link-action--warning:focus span {
+    color: #FFFFFF !important;
+}
+
+/* 1. Tombol Tinjau Berkas & Aksi Baris Tabel */
+.adm-btn-tinjau {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    padding: 0.35rem 0.75rem !important;
+    background: var(--cv-blue-tint, #EFF6FF) !important;
+    border: 1px solid rgba(6, 65, 204, 0.25) !important;
+    color: var(--cv-blue-700, #0641CC) !important;
+    border-radius: 6px !important;
+    font-size: 0.775rem !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    white-space: nowrap !important;
+}
+
+.adm-btn-tinjau:hover,
+.adm-btn-tinjau:focus {
+    background: var(--cv-blue-700, #0641CC) !important;
+    border-color: var(--cv-blue-700, #0641CC) !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(6, 65, 204, 0.25) !important;
+    text-decoration: none !important;
+}
+
+.adm-btn-tinjau:hover svg,
+.adm-btn-tinjau:focus svg {
+    stroke: #FFFFFF !important;
+}
+
+.adm-btn-action-review {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    padding: 0.35rem 0.75rem !important;
+    background: var(--cv-blue-tint, #EFF6FF) !important;
+    border: 1px solid rgba(6, 65, 204, 0.25) !important;
+    color: var(--cv-blue-700, #0641CC) !important;
+    border-radius: 6px !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.adm-btn-action-review:hover,
+.adm-btn-action-review:focus {
+    background: var(--cv-blue-700, #0641CC) !important;
+    border-color: var(--cv-blue-700, #0641CC) !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(6, 65, 204, 0.25) !important;
+    text-decoration: none !important;
+}
+
+.adm-btn-action-review:hover svg,
+.adm-btn-action-review:focus svg {
+    stroke: #FFFFFF !important;
+}
+
+.adm-btn-action-promote {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.adm-btn-action-promote:hover {
+    background: #059669 !important;
+    border-color: #059669 !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25) !important;
+}
+
+/* 2. Standarisasi Tombol Primer Modul Admin */
+.btn-action-gentelella.btn-action-primary:hover,
+.btn-primary-action:hover,
+.btn-primary-custom:hover,
+.btn-toolbar-primary:hover,
+.adm-btn-filter-submit:hover {
+    background-color: #0751FF !important;
+    border-color: #0751FF !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(7, 81, 255, 0.25) !important;
+}
+
+/* 3. Standarisasi Tombol Sekunder & Outline Modul Admin */
+.btn-outline,
+.btn-outline-action,
+.btn-outline-custom,
+.btn-edit-action,
+.cert-btn-back,
+.btn-toolbar-secondary,
+.btn-profile-shortcut,
+.btn-secondary-link {
+    background-color: var(--cv-blue-tint, #EFF6FF) !important;
+    border: 1px solid rgba(6, 65, 204, 0.25) !important;
+    color: var(--cv-blue-700, #0641CC) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-outline:hover,
+.btn-outline-action:hover,
+.btn-outline-custom:hover,
+.btn-edit-action:hover,
+.cert-btn-back:hover,
+.btn-toolbar-secondary:hover,
+.btn-profile-shortcut:hover,
+.btn-secondary-link:hover,
+.adm-btn-filter-reset:hover {
+    background-color: var(--cv-blue-700, #0641CC) !important;
+    border-color: var(--cv-blue-700, #0641CC) !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(6, 65, 204, 0.25) !important;
+    text-decoration: none !important;
+}
+
+/* 4. Filter Tabs & Status Pills */
+.adm-status-tab:hover:not(.active) {
+    color: var(--magkom-primary-blue, #01347C) !important;
+    background: var(--cv-blue-tint, #EFF6FF) !important;
+}
+
+.btn-status-pill:hover:not(.active),
+.btn-jenjang-pill:hover:not(.active) {
+    background: #E2E8F0 !important;
+    color: #0F172A !important;
+}
+
+/* 5. Dark Mode Overrides Seluruh Modul Administrasi */
+[data-theme="dark"] .cv-quick-btn {
+    background: rgba(59, 130, 246, 0.15) !important;
+    border-color: rgba(147, 197, 253, 0.3) !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .cv-quick-btn:hover {
+    background: #2563EB !important;
+    border-color: #3B82F6 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .cv-quick-btn:hover svg {
+    stroke: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cv-quick-btn.primary {
+    background: #01347C !important;
+    border-color: #3F51B5 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cv-quick-btn.primary:hover {
+    background: #2563EB !important;
+    border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .sa-link,
+[data-theme="dark"] .cv-link-action,
+[data-theme="dark"] .cv-btn-view-all {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #93C5FD !important;
+    border-color: rgba(147, 197, 253, 0.3) !important;
+}
+
+[data-theme="dark"] .sa-link:hover,
+[data-theme="dark"] .sa-link:focus,
+[data-theme="dark"] .sa-link:active,
+[data-theme="dark"] .cv-link-action:hover,
+[data-theme="dark"] .cv-link-action:focus,
+[data-theme="dark"] .cv-link-action:active,
+[data-theme="dark"] .cv-btn-view-all:hover,
+[data-theme="dark"] .cv-btn-view-all:focus,
+[data-theme="dark"] .cv-btn-view-all:active {
+    background: #2563EB !important;
+    color: #FFFFFF !important;
+    border-color: #3B82F6 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .sa-link:hover span,
+[data-theme="dark"] .cv-link-action:hover span,
+[data-theme="dark"] .cv-btn-view-all:hover span {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cv-link-action--warning {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #FCD34D !important;
+    border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="dark"] .cv-link-action--warning:hover {
+    background: #D97706 !important;
+    border-color: #F59E0B !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-outline:hover,
+[data-theme="dark"] .btn-outline-action:hover,
+[data-theme="dark"] .btn-outline-custom:hover,
+[data-theme="dark"] .btn-edit-action:hover,
+[data-theme="dark"] .cert-btn-back:hover,
+[data-theme="dark"] .btn-toolbar-secondary:hover,
+[data-theme="dark"] .btn-profile-shortcut:hover,
+[data-theme="dark"] .btn-secondary-link:hover,
+[data-theme="dark"] .adm-btn-filter-reset:hover {
+    background-color: #2563EB !important;
+    border-color: #3B82F6 !important;
+    color: #FFFFFF !important;
+}
+    border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .cv-link-action {
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .cv-link-action:hover,
+[data-theme="dark"] .cv-link-action:focus {
+    background: rgba(59, 130, 246, 0.18) !important;
+    border-color: rgba(147, 197, 253, 0.3) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cv-btn-view-all {
+    border-color: rgba(63, 81, 181, 0.45) !important;
+    background: #111C2E !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .cv-btn-view-all:hover {
+    background: rgba(59, 130, 246, 0.2) !important;
+    color: #93C5FD !important;
+    border-color: #3B82F6 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .adm-btn-tinjau,
+[data-theme="dark"] .adm-btn-action-review {
+    background: rgba(59, 130, 246, 0.15) !important;
+    border-color: rgba(147, 197, 253, 0.3) !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .adm-btn-tinjau:hover,
+[data-theme="dark"] .adm-btn-tinjau:focus,
+[data-theme="dark"] .adm-btn-action-review:hover,
+[data-theme="dark"] .adm-btn-action-review:focus {
+    background: #2563EB !important;
+    border-color: #3B82F6 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .adm-btn-tinjau:hover svg,
+[data-theme="dark"] .adm-btn-action-review:hover svg {
+    stroke: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-action-gentelella.btn-action-primary:hover,
+[data-theme="dark"] .btn-primary-action:hover,
+[data-theme="dark"] .btn-primary-custom:hover,
+[data-theme="dark"] .btn-toolbar-primary:hover,
+[data-theme="dark"] .adm-btn-filter-submit:hover {
+    background-color: #2563EB !important;
+    border-color: #3B82F6 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-outline:hover,
+[data-theme="dark"] .btn-outline-action:hover,
+[data-theme="dark"] .btn-outline-custom:hover,
+[data-theme="dark"] .btn-edit-action:hover,
+[data-theme="dark"] .cert-btn-back:hover,
+[data-theme="dark"] .btn-toolbar-secondary:hover,
+[data-theme="dark"] .btn-profile-shortcut:hover,
+[data-theme="dark"] .btn-secondary-link:hover,
+[data-theme="dark"] .adm-btn-filter-reset:hover {
+    background-color: rgba(59, 130, 246, 0.2) !important;
+    border-color: #3B82F6 !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .adm-status-tab:hover:not(.active) {
+    color: #93C5FD !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+}
+
+[data-theme="dark"] .btn-status-pill:hover:not(.active),
+[data-theme="dark"] .btn-jenjang-pill:hover:not(.active) {
+    background: #1E293B !important;
+    color: #F8FAFC !important;
+}
+
 
 

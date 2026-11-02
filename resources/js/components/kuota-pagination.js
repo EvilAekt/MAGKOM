@@ -57,39 +57,29 @@ export function initKuotaPagination() {
             if (currentPage <= 1) {
                 btnPrev.classList.add('disabled');
                 btnPrev.disabled = true;
-                btnPrev.style.opacity = '0.45';
-                btnPrev.style.cursor = 'not-allowed';
-                btnPrev.style.background = '#F8FAFC';
-                btnPrev.style.borderColor = '#E2E8F0';
-                btnPrev.style.color = '#94A3B8';
             } else {
                 btnPrev.classList.remove('disabled');
                 btnPrev.disabled = false;
-                btnPrev.style.opacity = '1';
-                btnPrev.style.cursor = 'pointer';
-                btnPrev.style.background = '#FFFFFF';
-                btnPrev.style.borderColor = '#CBD5E1';
-                btnPrev.style.color = '#64748B';
             }
+            btnPrev.style.removeProperty('background');
+            btnPrev.style.removeProperty('borderColor');
+            btnPrev.style.removeProperty('color');
+            btnPrev.style.removeProperty('cursor');
+            btnPrev.style.removeProperty('opacity');
         }
         if (btnNext) {
             if (currentPage >= totalPages) {
                 btnNext.classList.add('disabled');
                 btnNext.disabled = true;
-                btnNext.style.opacity = '0.45';
-                btnNext.style.cursor = 'not-allowed';
-                btnNext.style.background = '#F8FAFC';
-                btnNext.style.borderColor = '#E2E8F0';
-                btnNext.style.color = '#94A3B8';
             } else {
                 btnNext.classList.remove('disabled');
                 btnNext.disabled = false;
-                btnNext.style.opacity = '1';
-                btnNext.style.cursor = 'pointer';
-                btnNext.style.background = '#FFFFFF';
-                btnNext.style.borderColor = '#CBD5E1';
-                btnNext.style.color = '#64748B';
             }
+            btnNext.style.removeProperty('background');
+            btnNext.style.removeProperty('borderColor');
+            btnNext.style.removeProperty('color');
+            btnNext.style.removeProperty('cursor');
+            btnNext.style.removeProperty('opacity');
         }
 
         // Render page numbers (Sliding window 1, 2, 3, 4... exactly like Image 5)
@@ -142,15 +132,12 @@ export function initKuotaPagination() {
             const size = parseInt(pill.getAttribute('data-per-page'), 10);
             if (size === perPage) {
                 pill.classList.add('active');
-                pill.style.background = 'var(--blue-600, #01347C)';
-                pill.style.color = '#FFFFFF';
-                pill.style.fontWeight = '700';
             } else {
                 pill.classList.remove('active');
-                pill.style.background = 'transparent';
-                pill.style.color = '#64748B';
-                pill.style.fontWeight = '600';
             }
+            pill.style.removeProperty('background');
+            pill.style.removeProperty('color');
+            pill.style.removeProperty('font-weight');
         });
     }
 
@@ -160,28 +147,9 @@ export function initKuotaPagination() {
         btn.className = 'kuota-page-num' + (pageNum === currentPage ? ' active' : '');
         btn.textContent = pageNum.toString();
         btn.setAttribute('aria-label', `Lembar ${pageNum}`);
-        btn.style.minWidth = '30px';
-        btn.style.height = '30px';
-        btn.style.padding = '0 6px';
-        btn.style.borderRadius = '6px';
-        btn.style.fontSize = '0.785rem';
-        btn.style.cursor = 'pointer';
-        btn.style.display = 'inline-flex';
-        btn.style.alignItems = 'center';
-        btn.style.justifyContent = 'center';
-        btn.style.transition = 'all 0.15s ease';
 
         if (pageNum === currentPage) {
             btn.setAttribute('aria-current', 'page');
-            btn.style.background = 'var(--blue-600, #01347C)';
-            btn.style.color = '#FFFFFF';
-            btn.style.fontWeight = '700';
-            btn.style.border = 'none';
-        } else {
-            btn.style.background = 'transparent';
-            btn.style.color = '#64748B';
-            btn.style.fontWeight = '600';
-            btn.style.border = '1px solid transparent';
         }
 
         btn.addEventListener('click', () => {

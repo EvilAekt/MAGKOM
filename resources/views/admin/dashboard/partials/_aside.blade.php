@@ -126,8 +126,8 @@
             <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Jadwal Pendaftaran</h3>
         </div>
         @if($bulanAktif)
-            <a href="{{ route('admin.kuota.index', ['bulan_magang_id' => $bulanAktif->id]) }}" style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600); text-decoration: none;">
-                Atur &rarr;
+            <a href="{{ route('admin.kuota.index', ['bulan_magang_id' => $bulanAktif->id]) }}" class="sa-link cv-link-action">
+                <span>Atur</span> &rarr;
             </a>
         @endif
     </div>
@@ -174,8 +174,8 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--blue-600);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Pembimbing Lapangan</h3>
         </div>
-        <a href="{{ route('admin.penempatan.index') }}" style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600); text-decoration: none;">
-            Kelola &rarr;
+        <a href="{{ route('admin.penempatan.index') }}" class="sa-link cv-link-action">
+            <span>Kelola</span> &rarr;
         </a>
     </div>
 
@@ -215,8 +215,8 @@
                 <span style="font-family: monospace; font-size: 0.75rem; font-weight: 800; color: #b45309; background: rgba(245, 158, 11, 0.15); padding: 0.15rem 0.45rem; border-radius: 4px;">⏳</span>
                 <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Offboarding Watchdog</h3>
             </div>
-            <a href="{{ route('admin.sertifikat.index') }}" style="font-size: 0.75rem; font-weight: 700; color: var(--amber-700); text-decoration: none;">
-                Sertifikat &rarr;
+            <a href="{{ route('admin.sertifikat.index') }}" class="sa-link cv-link-action cv-link-action--warning">
+                <span>Sertifikat</span> &rarr;
             </a>
         </div>
 

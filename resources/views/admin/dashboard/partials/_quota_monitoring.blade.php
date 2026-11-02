@@ -6,7 +6,7 @@
     title="Alokasi & Keterisian Kuota Magang Periode" 
 >
     <x-slot:actions>
-        <a href="{{ route('admin.kuota.index') }}" class="btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.775rem; font-weight: 700; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+        <a href="{{ route('admin.kuota.index') }}" class="sa-link">
             <span>Kelola Kuota</span> &rarr;
         </a>
     </x-slot:actions>
@@ -103,9 +103,9 @@
                 <div class="kuota-per-page-container" style="display: inline-flex; align-items: center; gap: 0.65rem; margin-left: auto;">
                     <span class="kuota-per-page-label" style="font-size: 0.8125rem; color: var(--neutral-600, #475569); font-weight: 600;">Menampilkan:</span>
                     <div class="kuota-per-page-group" role="group" aria-label="Pilih jumlah kuota per halaman" style="display: inline-flex; align-items: center; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 8px; padding: 2px; gap: 2px;">
-                        <button type="button" class="kuota-per-page-pill active" data-per-page="10" title="Tampilkan 10 kuota per halaman" style="padding: 0.25rem 0.65rem; border: none; border-radius: 6px; font-size: 0.785rem; font-weight: 700; background: var(--blue-600, #01347C); color: #FFFFFF; cursor: pointer; transition: all 0.15s ease;">10</button>
-                        <button type="button" class="kuota-per-page-pill" data-per-page="20" title="Tampilkan 20 kuota per halaman" style="padding: 0.25rem 0.65rem; border: none; border-radius: 6px; font-size: 0.785rem; font-weight: 600; background: transparent; color: #64748B; cursor: pointer; transition: all 0.15s ease;">20</button>
-                        <button type="button" class="kuota-per-page-pill" data-per-page="30" title="Tampilkan 30 kuota per halaman" style="padding: 0.25rem 0.65rem; border: none; border-radius: 6px; font-size: 0.785rem; font-weight: 600; background: transparent; color: #64748B; cursor: pointer; transition: all 0.15s ease;">30</button>
+                        <button type="button" class="kuota-per-page-pill active" data-per-page="10" title="Tampilkan 10 kuota per halaman">10</button>
+                        <button type="button" class="kuota-per-page-pill" data-per-page="20" title="Tampilkan 20 kuota per halaman">20</button>
+                        <button type="button" class="kuota-per-page-pill" data-per-page="30" title="Tampilkan 30 kuota per halaman">30</button>
                     </div>
                 </div>
             </div>
@@ -118,11 +118,11 @@
 
                 <div class="kuota-pagination-right" style="margin-left: auto;">
                     <div class="kuota-page-controls" id="kuotaPageControls" role="navigation" aria-label="Navigasi Lembar Halaman Kuota" style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                        <button type="button" class="kuota-page-btn-nav disabled" id="kuotaBtnPrev" disabled aria-label="Lembar Sebelumnya" style="padding: 0.3rem 0.75rem; border-radius: 6px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #64748B; font-size: 0.785rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease;">&laquo; Prev</button>
+                        <button type="button" class="kuota-page-btn-nav disabled" id="kuotaBtnPrev" disabled aria-label="Lembar Sebelumnya">&laquo; Prev</button>
                         <div class="kuota-page-numbers" id="kuotaPageNumbers" style="display: inline-flex; align-items: center; gap: 0.25rem;">
                             {{-- Dynamically rendered by JS --}}
                         </div>
-                        <button type="button" class="kuota-page-btn-nav {{ $kuotaList->count() <= 10 ? 'disabled' : '' }}" id="kuotaBtnNext" {{ $kuotaList->count() <= 10 ? 'disabled' : '' }} aria-label="Lembar Selanjutnya" style="padding: 0.3rem 0.75rem; border-radius: 6px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #64748B; font-size: 0.785rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease;">Next &raquo;</button>
+                        <button type="button" class="kuota-page-btn-nav {{ $kuotaList->count() <= 10 ? 'disabled' : '' }}" id="kuotaBtnNext" {{ $kuotaList->count() <= 10 ? 'disabled' : '' }} aria-label="Lembar Selanjutnya">Next &raquo;</button>
                     </div>
                 </div>
             </div>
