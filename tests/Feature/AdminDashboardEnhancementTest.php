@@ -232,4 +232,14 @@ class AdminDashboardEnhancementTest extends TestCase
         $response->assertSee('kuotaPageControls');
         $response->assertSee('kuota-immutable-pill');
     }
+
+    public function test_admin_dashboard_metrics_dock_renders_full_width_grid_structure(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.dashboard'));
+
+        $response->assertOk();
+        $content = $response->getContent();
+        $this->assertStringContainsString('adm-metrics-dock-grid', $content);
+        $this->assertStringContainsString('adm-metric-card-col', $content);
+    }
 }

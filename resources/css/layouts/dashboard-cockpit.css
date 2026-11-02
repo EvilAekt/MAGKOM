@@ -474,29 +474,33 @@
 }
 
 /* 4-Metric Grid Dock within Hero Banner (Strict 4-Columns on Desktop) */
+.adm-metrics-dock-grid,
 .cv-hero-banner .tile_count,
 .gentelella-hero-banner .tile_count {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  gap: 0.75rem !important;
+  gap: 1rem !important;
   width: 100% !important;
   margin: 1.25rem 0 0 0 !important;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 1100px) {
+  .adm-metrics-dock-grid,
   .cv-hero-banner .tile_count,
   .gentelella-hero-banner .tile_count {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 640px) {
+  .adm-metrics-dock-grid,
   .cv-hero-banner .tile_count,
   .gentelella-hero-banner .tile_count {
     grid-template-columns: 1fr !important;
   }
 }
 
+.adm-metric-card-col,
 .cv-hero-banner .tile_stats_count,
 .gentelella-hero-banner .tile_stats_count {
   flex: none !important;
@@ -505,6 +509,7 @@
   padding: 0 !important;
 }
 
+.adm-metric-card-col .tile_stats_inner,
 .cv-hero-banner .tile_stats_inner,
 .gentelella-hero-banner .tile_stats_inner {
   padding: 0.95rem 1rem !important;

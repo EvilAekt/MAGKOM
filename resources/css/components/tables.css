@@ -226,6 +226,120 @@
             border-color: #3B82F6 !important;
         }
 
+        /* =====================================================================
+           UNIFIED TABLE ACTION BUTTONS (Detail, Surat, Review, Dropdown)
+           ===================================================================== */
+        .btn-table-action-detail,
+        a[title="Lihat Detail Penempatan"] {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.4rem 0.65rem;
+            background: #EEF2FF;
+            color: #4338CA;
+            border: 1px solid #C7D2FE;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-decoration: none;
+            transition: all 0.18s ease;
+            cursor: pointer;
+        }
+
+        .btn-table-action-detail:hover,
+        a[title="Lihat Detail Penempatan"]:hover {
+            background: #0641CC !important;
+            color: #FFFFFF !important;
+            border-color: #0641CC !important;
+            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
+            transform: translateY(-1px);
+        }
+
+        .btn-table-action-detail:hover svg,
+        a[title="Lihat Detail Penempatan"]:hover svg {
+            color: #FFFFFF !important;
+            stroke: #FFFFFF !important;
+        }
+
+        .btn-table-action-surat,
+        button[title="Pratinjau Surat Keterangan Diterima Langsung"] {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.4rem 0.65rem;
+            background: #EFF6FF;
+            color: #1D4ED8;
+            border: 1px solid #DBEAFE;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .btn-table-action-surat:hover,
+        button[title="Pratinjau Surat Keterangan Diterima Langsung"]:hover {
+            background: #0641CC !important;
+            color: #FFFFFF !important;
+            border-color: #0641CC !important;
+            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
+            transform: translateY(-1px);
+        }
+
+        .btn-table-action-surat:hover svg,
+        button[title="Pratinjau Surat Keterangan Diterima Langsung"]:hover svg {
+            color: #FFFFFF !important;
+            stroke: #FFFFFF !important;
+        }
+
+        .action-dropdown-btn:hover,
+        .action-dropdown-btn.active {
+            background: #0641CC !important;
+            border-color: #0641CC !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
+            transform: translateY(-1px);
+        }
+
+        .action-dropdown-btn:hover svg,
+        .action-dropdown-btn.active svg,
+        .action-dropdown-btn:hover circle,
+        .action-dropdown-btn.active circle {
+            stroke: #FFFFFF !important;
+            fill: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .btn-table-action-detail {
+            background: #1E1B4B !important;
+            color: #A5B4FC !important;
+            border-color: #3730A3 !important;
+        }
+
+        [data-theme="dark"] .btn-table-action-detail:hover {
+            background: #2563EB !important;
+            border-color: #3B82F6 !important;
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .btn-table-action-surat {
+            background: #172554 !important;
+            color: #93C5FD !important;
+            border-color: #1E40AF !important;
+        }
+
+        [data-theme="dark"] .btn-table-action-surat:hover {
+            background: #2563EB !important;
+            border-color: #3B82F6 !important;
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-btn:hover,
+        [data-theme="dark"] .action-dropdown-btn.active {
+            background: #2563EB !important;
+            border-color: #3B82F6 !important;
+            color: #FFFFFF !important;
+        }
+
         .x_title {
             border-bottom: 1px solid var(--neutral-200);
             padding-bottom: 0.75rem;

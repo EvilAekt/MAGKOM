@@ -1,14 +1,14 @@
 {{-- ==========================================================================
    Four-Metric Dock & Operational Efficiency - Dashboard Admin (MagKom Sleman)
    ========================================================================== --}}
-<div class="row tile_count" role="region" aria-label="Metrik Operasional Administrasi">
+<div class="row tile_count adm-metrics-dock-grid" role="region" aria-label="Metrik Operasional Administrasi">
     {{-- Tile 1: Verifikasi Tertunda / Perlu Verifikasi Segera --}}
     <x-gentelella.tile-stat
         title="Verifikasi Tertunda"
         :value="number_format($pengajuanMenunggu)"
         icon="clipboard-check"
         trendType="{{ $pengajuanSlaKritisCount > 0 ? 'danger' : 'warning' }}"
-        col="col-md-3 col-sm-6 col-xs-12"
+        col="col-md-3 col-sm-6 col-xs-12 adm-metric-card-col"
     >
         @if($pengajuanSlaKritisCount > 0)
             <span style="color: #fca5a5; font-weight: 700;">⚠️ {{ $pengajuanSlaKritisCount }} Perlu Verifikasi Segera</span>
@@ -23,7 +23,7 @@
         :value="$realisasiKuotaPersen . '%'"
         icon="calendar"
         trendType="primary"
-        col="col-md-3 col-sm-6 col-xs-12"
+        col="col-md-3 col-sm-6 col-xs-12 adm-metric-card-col"
     >
         <span>{{ $totalKuotaTerisi }}/{{ $totalKuotaUmum }} Kursi &bull; Keterisian Kuota Magang Periode</span>
     </x-gentelella.tile-stat>
@@ -34,7 +34,7 @@
         :value="number_format($waitingListCount)"
         icon="clock"
         trendType="info"
-        col="col-md-3 col-sm-6 col-xs-12"
+        col="col-md-3 col-sm-6 col-xs-12 adm-metric-card-col"
     >
         <span>{{ $perluPerbaikan }} Revisi Dokumen &bull; Daftar tunggu antrean</span>
     </x-gentelella.tile-stat>
@@ -45,7 +45,7 @@
         :value="number_format($pesertaAktifCount)"
         icon="user-check"
         trendType="success"
-        col="col-md-3 col-sm-6 col-xs-12"
+        col="col-md-3 col-sm-6 col-xs-12 adm-metric-card-col"
     >
         <span>Sedang bertugas di dinas</span>
     </x-gentelella.tile-stat>

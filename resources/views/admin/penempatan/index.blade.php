@@ -107,6 +107,66 @@
             background: #F8FAFC;
         }
 
+        /* Action Table Buttons: Detail & Surat */
+        .btn-table-action-detail {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.4rem 0.65rem;
+            background: #EEF2FF;
+            color: #4338CA;
+            border: 1px solid #C7D2FE;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-decoration: none;
+            transition: all 0.18s ease;
+            cursor: pointer;
+        }
+        .btn-table-action-detail svg {
+            transition: stroke 0.18s ease;
+        }
+        .btn-table-action-detail:hover {
+            background: #0641CC !important;
+            color: #FFFFFF !important;
+            border-color: #0641CC !important;
+            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
+            transform: translateY(-1px);
+        }
+        .btn-table-action-detail:hover svg {
+            color: #FFFFFF !important;
+            stroke: #FFFFFF !important;
+        }
+
+        .btn-table-action-surat {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.4rem 0.65rem;
+            background: #EFF6FF;
+            color: #1D4ED8;
+            border: 1px solid #DBEAFE;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .btn-table-action-surat svg {
+            transition: stroke 0.18s ease;
+        }
+        .btn-table-action-surat:hover {
+            background: #0641CC !important;
+            color: #FFFFFF !important;
+            border-color: #0641CC !important;
+            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
+            transform: translateY(-1px);
+        }
+        .btn-table-action-surat:hover svg {
+            color: #FFFFFF !important;
+            stroke: #FFFFFF !important;
+        }
+
         /* Action Dropdown Menu (Opsi 1: More Actions) */
         .action-dropdown-wrap {
             position: relative;
@@ -123,14 +183,26 @@
             border-radius: 6px;
             color: var(--neutral-700, #334155);
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.18s ease;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
         .action-dropdown-btn:hover,
         .action-dropdown-btn.active {
-            background: #F1F5F9;
-            border-color: #94A3B8;
-            color: #0F172A;
+            background: #0641CC !important;
+            border-color: #0641CC !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
+            transform: translateY(-1px);
+        }
+        .action-dropdown-btn:hover svg,
+        .action-dropdown-btn.active svg {
+            stroke: #FFFFFF !important;
+            fill: #FFFFFF !important;
+        }
+        .action-dropdown-btn:hover circle,
+        .action-dropdown-btn.active circle {
+            fill: #FFFFFF !important;
+            stroke: #FFFFFF !important;
         }
         .action-dropdown-menu {
             display: none;
@@ -343,6 +415,30 @@
             color: #94A3B8 !important;
         }
 
+        [data-theme="dark"] .btn-table-action-detail {
+            background: #1E1B4B !important;
+            color: #A5B4FC !important;
+            border-color: #3730A3 !important;
+        }
+
+        [data-theme="dark"] .btn-table-action-detail:hover {
+            background: #2563EB !important;
+            border-color: #3B82F6 !important;
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .btn-table-action-surat {
+            background: #172554 !important;
+            color: #93C5FD !important;
+            border-color: #1E40AF !important;
+        }
+
+        [data-theme="dark"] .btn-table-action-surat:hover {
+            background: #2563EB !important;
+            border-color: #3B82F6 !important;
+            color: #FFFFFF !important;
+        }
+
         [data-theme="dark"] .action-dropdown-btn {
             background: #111C2E !important;
             border-color: #26354D !important;
@@ -351,9 +447,9 @@
 
         [data-theme="dark"] .action-dropdown-btn:hover,
         [data-theme="dark"] .action-dropdown-btn.active {
-            background: #162238 !important;
+            background: #2563EB !important;
             border-color: #3B82F6 !important;
-            color: #60A5FA !important;
+            color: #FFFFFF !important;
         }
 
         [data-theme="dark"] .action-dropdown-menu {
@@ -866,12 +962,12 @@
                                 {{-- Aksi --}}
                                 <td style="text-align: right;">
                                     <div style="display: inline-flex; gap: 0.35rem; align-items: center; justify-content: flex-end;">
-                                        <a href="{{ route('admin.penempatan.show', $p) }}" title="Lihat Detail Penempatan" style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.4rem 0.65rem; background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; border-radius: 6px; font-weight: 700; font-size: 0.75rem; text-decoration: none; transition: all 0.15s ease;" onmouseover="this.style.background='#E0E7FF'" onmouseout="this.style.background='#EEF2FF'">
+                                        <a href="{{ route('admin.penempatan.show', $p) }}" class="btn-table-action-detail" title="Lihat Detail Penempatan">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                             <span>Detail</span>
                                         </a>
 
-                                        <button type="button" onclick="openSuratPreview('{{ route('admin.penempatan.surat-diterima.pratinjau', $p) }}', '{{ route('admin.penempatan.surat-diterima', $p) }}', 'Surat Diterima - {{ addslashes($p->peserta?->nama) }}')" title="Pratinjau Surat Keterangan Diterima Langsung" style="display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.4rem 0.65rem; background: #EFF6FF; color: #1D4ED8; border: 1px solid #DBEAFE; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: all 0.15s ease;" onmouseover="this.style.background='#DBEAFE'" onmouseout="this.style.background='#EFF6FF'">
+                                        <button type="button" onclick="openSuratPreview('{{ route('admin.penempatan.surat-diterima.pratinjau', $p) }}', '{{ route('admin.penempatan.surat-diterima', $p) }}', 'Surat Diterima - {{ addslashes($p->peserta?->nama) }}')" class="btn-table-action-surat" title="Pratinjau Surat Keterangan Diterima Langsung">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                             <span>Surat</span>
                                         </button>

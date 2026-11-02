@@ -574,8 +574,14 @@
         }
         .adm-btn-action-review:hover {
             border-color: #0641CC;
-            background: #EFF6FF;
+            background: #0641CC !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35);
             transform: translateY(-1px);
+        }
+        .adm-btn-action-review:hover svg {
+            color: #FFFFFF !important;
+            stroke: #FFFFFF !important;
         }
 
         /* Empty State */
@@ -764,9 +770,9 @@
         }
 
         [data-theme="dark"] .adm-btn-action-review:hover {
-            background-color: #162238 !important;
+            background-color: #2563EB !important;
             border-color: #3B82F6 !important;
-            color: #60A5FA !important;
+            color: #FFFFFF !important;
         }
 
         [data-theme="dark"] .adm-table-card div[style*="background: #ffffff"] {

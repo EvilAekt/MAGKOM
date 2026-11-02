@@ -129,22 +129,89 @@
   50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
 }
 
-/* 3. Integrated Four-Metric Dock with Gentelella tile_count support */
+/* 3. Integrated Four-Metric Dock with Gentelella tile_count & Grid Dock support */
+.adm-metrics-dock-grid,
+.cv-hero-banner .tile_count.adm-metrics-dock-grid,
 .cv-hero-banner .tile_count {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 1rem !important;
+  width: calc(100% + 4rem) !important;
+  max-width: calc(100% + 4rem) !important;
   margin: 1.75rem -2rem 0 -2rem !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(4, 18, 56, 0.45);
-  backdrop-filter: blur(8px);
-  padding: 0.25rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background: rgba(4, 18, 56, 0.45) !important;
+  backdrop-filter: blur(8px) !important;
+  padding: 1.25rem 2rem !important;
+  box-sizing: border-box !important;
 }
 
+@media (max-width: 1100px) {
+  .adm-metrics-dock-grid,
+  .cv-hero-banner .tile_count.adm-metrics-dock-grid,
+  .cv-hero-banner .tile_count {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+    padding: 1rem 1.5rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .adm-metrics-dock-grid,
+  .cv-hero-banner .tile_count.adm-metrics-dock-grid,
+  .cv-hero-banner .tile_count {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    padding: 1rem 1rem !important;
+  }
+}
+
+.adm-metric-card-col,
+.cv-hero-banner .tile_stats_count.adm-metric-card-col,
 .cv-hero-banner .tile_stats_count {
-  border-bottom: 0 !important;
-  padding: 1rem 1.75rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: initial !important;
+  border: none !important;
+  border-right: none !important;
+  border-left: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
 }
 
+.adm-metric-card-col:not(:last-child),
 .cv-hero-banner .tile_stats_count:not(:last-child) {
-  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  border-right: none !important;
+}
+
+.adm-metric-card-col .tile_stats_inner,
+.cv-hero-banner .tile_stats_count .tile_stats_inner,
+.cv-hero-banner .tile_stats_inner {
+  height: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  background: var(--card-highlight-bg, #01347C) !important;
+  border: 1px solid var(--card-highlight-border, #3F51B5) !important;
+  border-radius: 14px !important;
+  padding: 1.15rem 1.25rem !important;
+  box-shadow: 0 10px 20px -3px rgba(1, 52, 124, 0.22) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+
+.adm-metric-card-col .tile_stats_inner:hover,
+.cv-hero-banner .tile_stats_count .tile_stats_inner:hover,
+.cv-hero-banner .tile_stats_inner:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 14px 24px -2px rgba(1, 52, 124, 0.35) !important;
+  border-color: rgba(96, 165, 250, 0.6) !important;
 }
 
 .cv-hero-banner .count_top,
