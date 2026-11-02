@@ -1,19 +1,74 @@
-name: Strix Security Scan
+name: MagKom CI Quality Gate & Security Audit
 
 on:
   push:
-    branches: [ main, master, test-1 ]
+    branches: [ main, master, test-1, test-2 ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, test-2 ]
 
 permissions:
   contents: read
   security-events: write
 
 jobs:
+  quality-gate:
+    name: PHP 8.3, Pint, PHPStan, Tests & Vite Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install NPM Dependencies & Build Vite Assets
+        run: |
+          npm ci
+          npm run build
+
+      - name: Setup PHP Environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, pdo_mysql, sqlite3, fileinfo, gd, curl, zip
+          coverage: none
+
+      - name: Prepare Environment File
+        run: |
+          cp .env.example .env
+
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Check Platform Requirements (PHP 8.3)
+        run: composer check-platform-reqs
+
+      - name: Run Laravel Pint Code Style Linter
+        run: ./vendor/bin/pint --test
+
+      - name: Run Larastan / PHPStan Static Analysis
+        run: ./vendor/bin/phpstan analyse --memory-limit=1G
+
+      - name: Generate Application Key
+        run: php artisan key:generate --force
+
+      - name: Run Feature & Unit Tests
+        env:
+          APP_ENV: testing
+          APP_KEY: base64:2fl+Ktvkfl+Fuz4Qp/1SeSgqqN7DVBhhY+GwYqS1nvg=
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+        run: |
+          php artisan test
+
   strix-security-audit:
     name: Strix AI Penetration & Vulnerability Gate
     runs-on: ubuntu-latest
+    needs: quality-gate
 
     steps:
       - name: Checkout Source Code
@@ -24,8 +79,8 @@ jobs:
       - name: Setup PHP Environment
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, sqlite3, fileinfo, gd
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, pdo_mysql, sqlite3, fileinfo, gd, curl, zip
           coverage: none
 
       - name: Prepare Environment File
