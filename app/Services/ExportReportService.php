@@ -11,6 +11,7 @@ use App\Models\Penempatan;
 use App\Models\Penilaian;
 use App\Models\SlotKhusus;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -85,7 +86,11 @@ class ExportReportService
             nilaiLama: null,
             nilaiBaru: ['filter' => $filters, 'total_baris' => $records->count(), 'format' => $format],
             detail: [
-                'aksi' => $format === 'xlsx' ? 'ekspor_pendaftaran_xlsx' : 'ekspor_pendaftaran_csv',
+                'aksi' => match ($format) {
+                    'xlsx' => 'ekspor_pendaftaran_xlsx',
+                    'pdf' => 'ekspor_pendaftaran_pdf',
+                    default => 'ekspor_pendaftaran_csv',
+                },
                 'entitas' => 'pendaftaran',
                 'jumlah_baris' => $records->count(),
                 'filter' => $filters,
@@ -96,6 +101,16 @@ class ExportReportService
             'ID', 'Nama Peserta', 'Email', 'NIM/NISN', 'Institusi',
             'Jurusan', 'Bulan Mulai', 'Durasi (Bulan)', 'Status', 'Tanggal Diajukan',
         ];
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('pdf.rekap-pendaftaran', [
+                'records' => $records,
+                'generatedAt' => now(),
+                'filters' => $filters,
+            ])->setPaper('a4', 'landscape');
+
+            return $pdf->download('rekap-pendaftaran-'.date('YmdHis').'.pdf');
+        }
 
         if ($format === 'xlsx') {
             $rows = [];

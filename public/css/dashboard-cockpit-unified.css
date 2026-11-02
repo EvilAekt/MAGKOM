@@ -1302,6 +1302,11 @@
   animation: admPopoverFadeIn 0.15s ease-out;
 }
 
+.adm-export-popover.adm-export-popover-right {
+  left: auto;
+  right: 0;
+}
+
 @keyframes admPopoverFadeIn {
   from {
     opacity: 0;
@@ -1323,6 +1328,11 @@
   border-top: 1px solid var(--neutral-200, #E2E8F0);
   border-left: 1px solid var(--neutral-200, #E2E8F0);
   transform: rotate(45deg);
+}
+
+.adm-popover-pointer.adm-pointer-right {
+  left: auto;
+  right: 24px;
 }
 
 .adm-popover-header {
