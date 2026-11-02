@@ -8,6 +8,8 @@ use App\Enums\RealtimeEventTypeEnum;
 use App\Models\RealtimeEvent;
 use App\Models\RouteMetric;
 use App\Models\User;
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,15 +17,15 @@ class RoutePerformanceTelemetryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function createApplication(): \Illuminate\Foundation\Application
+    public function createApplication(): Application
     {
         $basePath = dirname(__DIR__, 2);
         putenv("APP_BASE_PATH={$basePath}");
         $_ENV['APP_BASE_PATH'] = $basePath;
         $_SERVER['APP_BASE_PATH'] = $basePath;
 
-        $app = require $basePath . '/bootstrap/app.php';
-        $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        $app = require $basePath.'/bootstrap/app.php';
+        $app->make(Kernel::class)->bootstrap();
 
         return $app;
     }

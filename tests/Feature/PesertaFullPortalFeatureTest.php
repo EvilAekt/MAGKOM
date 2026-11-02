@@ -62,7 +62,7 @@ class PesertaFullPortalFeatureTest extends TestCase
         parent::setUp();
 
         $this->originalViewPaths = View::getFinder()->getPaths();
-        $localViewsPath = realpath(__DIR__ . '/../../resources/views');
+        $localViewsPath = realpath(__DIR__.'/../../resources/views');
         if ($localViewsPath && is_dir($localViewsPath)) {
             View::getFinder()->setPaths([$localViewsPath]);
         }
@@ -133,7 +133,7 @@ class PesertaFullPortalFeatureTest extends TestCase
 
     protected function tearDown(): void
     {
-        if (!empty($this->originalViewPaths)) {
+        if (! empty($this->originalViewPaths)) {
             View::getFinder()->setPaths($this->originalViewPaths);
         }
 

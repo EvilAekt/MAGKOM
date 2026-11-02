@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Models\RouteMetric;
+use App\Services\RealtimeEventService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -37,8 +39,8 @@ class Kernel extends ConsoleKernel
 
         // Pemangkasan metrik telemetri & event outbox lama (Cegah Bloat Basis Data)
         $schedule->call(function () {
-            \App\Models\RouteMetric::pruneOld(days: 3, keepMax: 3000);
-            app(\App\Services\RealtimeEventService::class)->pruneOldEvents(days: 3);
+            RouteMetric::pruneOld(days: 3, keepMax: 3000);
+            app(RealtimeEventService::class)->pruneOldEvents(days: 3);
         })->dailyAt('03:30')->timezone('Asia/Jakarta');
     }
 

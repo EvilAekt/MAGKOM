@@ -24,7 +24,9 @@ use App\Models\SlotKhusus;
 use App\Models\Tugas;
 use App\Models\User;
 use App\Support\Pengaturan;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class SuperAdminExecutiveMetricsService
 {
@@ -390,12 +392,12 @@ class SuperAdminExecutiveMetricsService
         $lastBackupFormatted = 'Belum ada cadangan';
         $lastBackupShort = '-';
 
-        if (\Illuminate\Support\Facades\File::isDirectory($backupDir)) {
-            $files = \Illuminate\Support\Facades\File::files($backupDir);
+        if (File::isDirectory($backupDir)) {
+            $files = File::files($backupDir);
             if (! empty($files)) {
                 usort($files, fn ($a, $b) => $b->getMTime() <=> $a->getMTime());
                 $mtime = $files[0]->getMTime();
-                $lastBackupFormatted = \Carbon\Carbon::createFromTimestamp($mtime)->translatedFormat('d M Y, H:i').' WIB';
+                $lastBackupFormatted = Carbon::createFromTimestamp($mtime)->translatedFormat('d M Y, H:i').' WIB';
                 $lastBackupShort = date('H:i', $mtime);
             }
         }

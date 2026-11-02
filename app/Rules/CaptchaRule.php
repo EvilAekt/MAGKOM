@@ -23,6 +23,7 @@ class CaptchaRule implements ValidationRule
     {
         if (! is_string($value)) {
             $fail('Kode verifikasi keamanan (captcha) wajib diisi.');
+
             return;
         }
 

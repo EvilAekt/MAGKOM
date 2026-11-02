@@ -180,6 +180,7 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         $currentRoleValue = $this->role instanceof RoleEnum ? $this->role->value : (string) $this->role;
+
         return strtolower($currentRoleValue) === strtolower($role);
     }
 

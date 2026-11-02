@@ -167,4 +167,3 @@ class SuperAdminBackendStabilityTest extends TestCase
         $response->assertSee('cv-dyn-action', false);
     }
 }
-

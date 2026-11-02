@@ -156,7 +156,8 @@ class HealthMonitorController extends Controller
                 if (! empty($maxConn)) {
                     $dbPoolMax = (int) $maxConn[0]->Value;
                 }
-            } catch (\Throwable $ignored) {}
+            } catch (\Throwable $ignored) {
+            }
         }
 
         // Real PHP Memory Telemetry
@@ -406,7 +407,8 @@ class HealthMonitorController extends Controller
                 if (! empty($maxConn)) {
                     $dbPoolMax = (int) $maxConn[0]->Value;
                 }
-            } catch (\Throwable $ignored) {}
+            } catch (\Throwable $ignored) {
+            }
         }
         $dbPoolPercent = $dbPoolMax > 0 ? (int) round(($dbPoolActive / $dbPoolMax) * 100) : 0;
 

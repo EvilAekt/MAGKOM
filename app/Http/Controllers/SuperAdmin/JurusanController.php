@@ -123,12 +123,12 @@ class JurusanController extends Controller
                     ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusan->id));
             })
                 ->whereIn('status', [
-                StatusPendaftaranEnum::Diajukan,
-                StatusPendaftaranEnum::WaitingList,
-                StatusPendaftaranEnum::PerluPerbaikan,
-                StatusPendaftaranEnum::BerkasBelumLengkap,
-                StatusPendaftaranEnum::Diterima,
-            ])
+                    StatusPendaftaranEnum::Diajukan,
+                    StatusPendaftaranEnum::WaitingList,
+                    StatusPendaftaranEnum::PerluPerbaikan,
+                    StatusPendaftaranEnum::BerkasBelumLengkap,
+                    StatusPendaftaranEnum::Diterima,
+                ])
                 ->exists();
 
             if ($hasActivePendaftaran) {

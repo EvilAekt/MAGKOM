@@ -33,7 +33,7 @@ class PanduanPdfController extends Controller
         $pdf = Pdf::loadView('pdf.buku-panduan-magang', [
             'bidangList' => $bidangList,
             'logoBase64' => $logoBase64,
-            'nomorJuknis' => '500.12/JUKNIS-MAGKOM/' . date('Y'),
+            'nomorJuknis' => '500.12/JUKNIS-MAGKOM/'.date('Y'),
             'tahun' => date('Y'),
         ]);
 

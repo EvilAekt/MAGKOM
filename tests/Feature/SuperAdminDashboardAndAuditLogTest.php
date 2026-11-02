@@ -21,6 +21,8 @@ use App\Models\SlotKhusus;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
 use Database\Seeders\RubrikSeeder;
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -29,8 +31,8 @@ use Tests\TestCase;
 
 // Pastikan controller dan resource views dari worktree di-load terlebih dahulu
 $worktreeRoot = dirname(__DIR__, 2);
-if (file_exists($worktreeRoot . '/app/Http/Controllers/SuperAdmin/AuditLogController.php')) {
-    require_once $worktreeRoot . '/app/Http/Controllers/SuperAdmin/AuditLogController.php';
+if (file_exists($worktreeRoot.'/app/Http/Controllers/SuperAdmin/AuditLogController.php')) {
+    require_once $worktreeRoot.'/app/Http/Controllers/SuperAdmin/AuditLogController.php';
 }
 
 class SuperAdminDashboardAndAuditLogTest extends TestCase
@@ -56,17 +58,17 @@ class SuperAdminDashboardAndAuditLogTest extends TestCase
     /**
      * Pastikan aplikasi berjalan penuh di root worktree saat ini.
      */
-    public function createApplication(): \Illuminate\Foundation\Application
+    public function createApplication(): Application
     {
         $worktreeRoot = dirname(__DIR__, 2);
-        putenv('APP_BASE_PATH=' . $worktreeRoot);
+        putenv('APP_BASE_PATH='.$worktreeRoot);
         $_ENV['APP_BASE_PATH'] = $worktreeRoot;
 
-        $app = require $worktreeRoot . '/bootstrap/app.php';
-        $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        $app = require $worktreeRoot.'/bootstrap/app.php';
+        $app->make(Kernel::class)->bootstrap();
 
-        $app['config']->set('view.paths', [$worktreeRoot . '/resources/views']);
-        $app['view.finder']->setPaths([$worktreeRoot . '/resources/views']);
+        $app['config']->set('view.paths', [$worktreeRoot.'/resources/views']);
+        $app['view.finder']->setPaths([$worktreeRoot.'/resources/views']);
 
         return $app;
     }
@@ -498,10 +500,10 @@ class SuperAdminDashboardAndAuditLogTest extends TestCase
         $rows = [];
         for ($i = 1; $i <= 35; $i++) {
             $rows[] = [
-                'request_id' => 'req-page-' . str_pad((string) $i, 3, '0', STR_PAD_LEFT),
+                'request_id' => 'req-page-'.str_pad((string) $i, 3, '0', STR_PAD_LEFT),
                 'user_id' => $this->superAdmin->id,
                 'tipe' => TipeAuditEnum::Aksi->value,
-                'aksi' => 'Aksi audit log batch item #' . $i,
+                'aksi' => 'Aksi audit log batch item #'.$i,
                 'entitas' => 'kuota',
                 'entitas_id' => $i,
                 'ip' => '127.0.0.1',
