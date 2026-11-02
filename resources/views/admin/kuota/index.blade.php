@@ -586,6 +586,7 @@
             flex-direction: column;
             gap: 0.35rem;
             margin-bottom: 1rem;
+            min-width: 0;
         }
 
         .form-row-group label {
@@ -597,11 +598,16 @@
         .form-row-group input,
         .form-row-group select {
             height: 42px;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
             border: 1px solid #CBD5E1;
             border-radius: 8px;
             padding: 0 0.875rem;
             font-size: 0.875rem;
             font-family: inherit;
+            text-overflow: ellipsis;
         }
 
         .input-calendar-wrap {
@@ -1160,7 +1166,7 @@
             </div>
 
             {{-- 2. Tanggal Buka & Tanggal Tutup (Grid 2 Kolom) --}}
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem;">
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.875rem; width: 100%;">
                 <div class="form-row-group">
                     <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal buka</label>
                     <div class="input-calendar-wrap">
@@ -1308,7 +1314,7 @@
             </div>
 
             {{-- 2. Tanggal Buka & Tanggal Tutup (Grid 2 Kolom) --}}
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem;">
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.875rem; width: 100%;">
                 <div class="form-row-group">
                     <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Tanggal buka</label>
                     <div class="input-calendar-wrap">
@@ -1445,7 +1451,7 @@
             <input type="hidden" name="bulan_magang_id" value="{{ $selectedBulan->id }}">
 
             {{-- 1. Baris 1: Bulan (Read-Only) & Bidang (Dropdown) --}}
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem;">
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.875rem; width: 100%;">
                 <div class="form-row-group">
                     <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Bulan</label>
                     <input type="text" 
@@ -1507,7 +1513,7 @@
             </div>
 
             {{-- 4. Baris 4: Jumlah Kuota, Durasi Minimum, Durasi Maksimum (3 Kolom) --}}
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; width: 100%;">
                 <div class="form-row-group">
                     <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Jumlah kuota <span style="color: #DC2626;">*</span></label>
                     <input type="number" 

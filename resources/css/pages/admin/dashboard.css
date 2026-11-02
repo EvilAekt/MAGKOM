@@ -664,3 +664,17 @@
 .adm-kuota-callout-wrap {
   margin-top: 1.25rem;
 }
+
+/* 12. Modal Form Controls Hardening */
+.modal-card .form-row-group {
+  min-width: 0 !important;
+}
+
+.modal-card .form-row-group input,
+.modal-card .form-row-group select {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  text-overflow: ellipsis;
+}
