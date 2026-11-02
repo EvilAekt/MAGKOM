@@ -17,6 +17,8 @@ use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\PesertaProfil;
 use App\Models\User;
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Database\Seeders\JenisDokumenSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -38,6 +40,9 @@ class PesertaPendaftaranFlowTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        Carbon::setTestNow(Carbon::parse('2026-10-15 10:00:00', 'Asia/Jakarta'));
+        CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-10-15 10:00:00', 'Asia/Jakarta'));
 
         Storage::fake('private');
         $this->seed(JenisDokumenSeeder::class);
@@ -81,6 +86,14 @@ class PesertaPendaftaranFlowTest extends TestCase
             'terisi' => 0,
             'aktif' => true,
         ]);
+    }
+
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow();
+        CarbonImmutable::setTestNow();
+
+        parent::tearDown();
     }
 
     public function test_peserta_can_view_pendaftaran_index_and_available_periods(): void

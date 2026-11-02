@@ -46,7 +46,7 @@ class BrandingDesignSystemTest extends TestCase
     }
 
     /**
-     * Memastikan halaman landing memuat logo Sleman, teks MAGANG KOMINFO, dan tidak ada teks keliru.
+     * Memastikan halaman landing memuat logo Sleman, teks branding MAGKOM, dan tidak ada teks keliru.
      */
     public function test_landing_page_displays_new_logo_and_magang_kominfo_branding(): void
     {
@@ -56,8 +56,9 @@ class BrandingDesignSystemTest extends TestCase
         // Memuat logo Sleman
         $response->assertSee('images/logo-sleman.png', false);
 
-        // Memuat branding baru
-        $response->assertSee('MAGANG KOMINFO', false);
+        // Memuat branding resmi Diskominfo Sleman dan Portal Magang MAGKOM
+        $response->assertSee('DISKOMINFO SLEMAN', false);
+        $response->assertSee('Portal Magang · MAGKOM', false);
         $response->assertSee('Magang Kominfo Sleman', false);
 
         // Memastikan teks lama / terbalik tidak muncul

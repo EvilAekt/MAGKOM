@@ -158,17 +158,38 @@ class BidangJurusanMappingTest extends TestCase
     }
 
     /**
-     * Memastikan portal publik / landing page merender badge bidang penempatan pada jurusan terkait.
+     * Memastikan portal publik / landing page merender tag bidang penempatan dari relasi database pada jurusan terkait.
      */
     public function test_landing_page_renders_bidang_badges_for_majors(): void
     {
         $response = $this->get(route('landing'));
         $response->assertStatus(200);
 
-        // Memastikan chip bidang ada di kartu-kartu kejuruan landing page
-        $response->assertSee('bidang-chip-ikp', false);
-        $response->assertSee('bidang-chip-egov', false);
-        $response->assertSee('bidang-chip-iti', false);
-        $response->assertSee('bidang-chip-sekretariat', false);
+        // Memastikan label dan tag bidang penempatan menggunakan styling desain aktual
+        $response->assertSee('Penempatan:', false);
+        $response->assertSee('class="jurusan-tag"', false);
+
+        // Ambil data bidang dari database
+        $ikp = Bidang::where('nama_bidang', 'like', '%IKP%')->firstOrFail();
+        $egov = Bidang::where('nama_bidang', 'like', '%EGOV%')->firstOrFail();
+        $iti = Bidang::where('nama_bidang', 'like', '%ITI%')->firstOrFail();
+        $sekretariat = Bidang::where('nama_bidang', 'like', '%Sekretariat%')->firstOrFail();
+
+        // 1. Memastikan nama bidang penempatan dari relasi database muncul di kartu kuota landing
+        $response->assertSee(e($ikp->nama_bidang), false);
+        $response->assertSee(e($egov->nama_bidang), false);
+        $response->assertSee(e($iti->nama_bidang), false);
+        $response->assertSee(e($sekretariat->nama_bidang), false);
+
+        // 2. Verifikasi keterikatan relasi: Jurusan TKJ memiliki penempatan di ITI
+        $jurusanTkj = Jurusan::where('nama_jurusan', 'like', '%TKJ%')->firstOrFail();
+        $tkjBidangNames = $jurusanTkj->bidang->pluck('nama_bidang')->toArray();
+        $this->assertContains($iti->nama_bidang, $tkjBidangNames);
+
+        // 3. Verifikasi keterikatan relasi: Jurusan Statistik memiliki penempatan di IKP
+        $jurusanStatistik = Jurusan::where('nama_jurusan', 'Statistik')->firstOrFail();
+        $statistikBidangNames = $jurusanStatistik->bidang->pluck('nama_bidang')->toArray();
+        $this->assertContains($ikp->nama_bidang, $statistikBidangNames);
+        $this->assertNotContains($iti->nama_bidang, $statistikBidangNames);
     }
 }
