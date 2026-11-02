@@ -144,6 +144,10 @@ class MagKomRealtimeEngine {
         toast.className = `app-toast ${config.variantClass} flex items-start gap-3.5 p-4 rounded-2xl shadow-xl transition-all duration-300 pointer-events-auto`;
         toast.setAttribute('role', 'alert');
 
+        const safeActionUrl = actionUrl && (actionUrl.startsWith('/') || actionUrl.startsWith('http://') || actionUrl.startsWith('https://'))
+            ? this.escapeHtml(actionUrl)
+            : null;
+
         toast.innerHTML = `
             <div class="toast-icon-badge flex-shrink-0">
                 ${config.icon}
@@ -154,9 +158,9 @@ class MagKomRealtimeEngine {
                     <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">Baru saja</span>
                 </div>
                 <div class="toast-desc text-xs mt-1 leading-relaxed">${this.escapeHtml(message)}</div>
-                ${actionUrl ? `
+                ${safeActionUrl ? `
                     <div class="mt-2.5">
-                        <a href="${actionUrl}" class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 text-[11px] font-semibold rounded-lg shadow-sm transition">
+                        <a href="${safeActionUrl}" class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 text-[11px] font-semibold rounded-lg shadow-sm transition">
                             Lihat Rincian &rarr;
                         </a>
                     </div>

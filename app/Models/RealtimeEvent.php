@@ -42,9 +42,9 @@ class RealtimeEvent extends Model
      */
     public function scopeForUser(Builder $query, User $user): Builder
     {
-        $roleValue = is_object($user->role) && enum_exists(get_class($user->role))
-            ? $user->role->value
-            : (string) $user->role;
+        $roleValue = $user->role instanceof \BackedEnum
+            ? (string) $user->role->value
+            : (string) ($user->role?->value ?? $user->role ?? '');
 
         return $query->where(function (Builder $q) use ($user, $roleValue) {
             $q->where('user_id', $user->id)

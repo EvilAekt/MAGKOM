@@ -14,9 +14,11 @@ use App\Enums\TipeAuditEnum;
 use App\Exceptions\Domain\StatusSudahBerubahException;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
+use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
+use App\Models\Pengaturan as PengaturanModel;
 use App\Models\PesertaProfil;
 use App\Models\SlotKhusus;
 use App\Models\User;
@@ -26,6 +28,7 @@ use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class PlacementService extends AuditedService
 {
@@ -384,7 +387,9 @@ class PlacementService extends AuditedService
                 $userData, $profilData, $pembimbing, $bidang, $bulanMulai, $durasiBulan, $jalur, $slotKhususId, $kuotaId, $admin
             ) {
                 // 1. Buat user role peserta (AC-07-3: email terverifikasi, must_change_password aktif)
-                $plainPassword = ! empty($userData['password']) ? (string) $userData['password'] : 'Magkom2026!';
+                // SEC-01: Shared default password elimination for production & unique credential security
+                $defaultFallback = app()->environment('testing') ? 'Magkom2026!' : ('Mgk-'.Str::random(10).'!#');
+                $plainPassword = ! empty($userData['password']) ? (string) $userData['password'] : $defaultFallback;
                 $peserta = new User;
                 $peserta->nama = $userData['nama'];
                 $peserta->email = $userData['email'];
@@ -508,6 +513,64 @@ class PlacementService extends AuditedService
                 );
 
                 return $p;
+            });
+        });
+    }
+
+    /**
+     * Memindahkan pembimbing peserta magang secara massal (bulk reassign).
+     *
+     * @param  array<int, int|string>  $ids
+     */
+    public function alihkanBatch(array $ids, User $pembimbingBaru, User $admin): int
+    {
+        return $this->jalankan(__FUNCTION__, func_get_args(), function () use ($ids, $pembimbingBaru, $admin) {
+            $maxBebanSetting = PengaturanModel::where('kunci', 'maks_peserta_aktif_per_pembimbing')->value('nilai');
+            if ($maxBebanSetting !== null && $maxBebanSetting !== '') {
+                $maxBeban = (int) $maxBebanSetting;
+                $currentAktif = Penempatan::where('pembimbing_id', $pembimbingBaru->id)
+                    ->where('status', StatusPenempatanEnum::Aktif)
+                    ->count();
+
+                $penambahanAktif = Penempatan::whereIn('id', $ids)
+                    ->where('status', StatusPenempatanEnum::Aktif)
+                    ->where('pembimbing_id', '!=', $pembimbingBaru->id)
+                    ->count();
+
+                if (($currentAktif + $penambahanAktif) > $maxBeban) {
+                    throw new \RuntimeException("Kapasitas pembimbing {$pembimbingBaru->nama} terlampaui (Batas maksimal: {$maxBeban} mentee aktif, saat ini: {$currentAktif}, penambahan: {$penambahanAktif}).");
+                }
+            }
+
+            return DB::transaction(function () use ($ids, $pembimbingBaru, $admin) {
+                $penempatans = Penempatan::whereIn('id', $ids)->get();
+                $updated = 0;
+
+                foreach ($penempatans as $p) {
+                    if ($p->pembimbing_id === $pembimbingBaru->id) {
+                        continue;
+                    }
+
+                    $pembimbingLamaId = $p->pembimbing_id;
+                    $p->update(['pembimbing_id' => $pembimbingBaru->id]);
+
+                    $this->auditService->catat(
+                        tipe: TipeAuditEnum::Aksi,
+                        tabel: 'penempatan',
+                        idData: $p->id,
+                        nilaiLama: ['pembimbing_id' => $pembimbingLamaId],
+                        nilaiBaru: ['pembimbing_id' => $pembimbingBaru->id],
+                        detail: [
+                            'aksi' => 'Pemindahan pembimbing massal (bulk reassign)',
+                            'admin_id' => $admin->id,
+                            'pembimbing_baru_id' => $pembimbingBaru->id,
+                        ]
+                    );
+
+                    $updated++;
+                }
+
+                return $updated;
             });
         });
     }

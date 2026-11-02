@@ -19,7 +19,6 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Pengaturan;
 use App\Models\SlotKhusus;
 use App\Models\User;
 use App\Services\AuditService;
@@ -28,7 +27,6 @@ use App\Services\SuratDiterimaPdfService;
 use App\Services\XlsxExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -345,59 +343,16 @@ class PenempatanController extends Controller
             ->where('status_aktif', true)
             ->firstOrFail();
 
-        $ids = $request->input('penempatan_ids');
+        $ids = (array) $request->input('penempatan_ids');
 
-        // Validasi kuota kapasitas maksimal pembimbing (BR-13)
-        $maxBebanSetting = Pengaturan::where('kunci', 'maks_peserta_aktif_per_pembimbing')->value('nilai');
-        if ($maxBebanSetting !== null && $maxBebanSetting !== '') {
-            $maxBeban = (int) $maxBebanSetting;
-            $currentAktif = Penempatan::where('pembimbing_id', $pembimbingBaru->id)
-                ->where('status', StatusPenempatanEnum::Aktif)
-                ->count();
+        try {
+            $count = $this->placementService->alihkanBatch($ids, $pembimbingBaru, $admin);
 
-            $penambahanAktif = Penempatan::whereIn('id', $ids)
-                ->where('status', StatusPenempatanEnum::Aktif)
-                ->where('pembimbing_id', '!=', $pembimbingBaru->id)
-                ->count();
-
-            if (($currentAktif + $penambahanAktif) > $maxBeban) {
-                return back()->with('error', "Kapasitas pembimbing {$pembimbingBaru->nama} terlampaui (Batas maksimal: {$maxBeban} mentee aktif, saat ini: {$currentAktif}, penambahan: {$penambahanAktif}).");
-            }
+            return redirect()->route('admin.penempatan.index')
+                ->with('success', "Sebanyak {$count} penempatan peserta berhasil dialihkan ke {$pembimbingBaru->nama}.");
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        $count = DB::transaction(function () use ($ids, $pembimbingBaru, $admin) {
-            $penempatans = Penempatan::whereIn('id', $ids)->get();
-            $updated = 0;
-
-            foreach ($penempatans as $p) {
-                if ($p->pembimbing_id === $pembimbingBaru->id) {
-                    continue;
-                }
-
-                $pembimbingLamaId = $p->pembimbing_id;
-                $p->update(['pembimbing_id' => $pembimbingBaru->id]);
-
-                $this->auditService->catat(
-                    tipe: TipeAuditEnum::Aksi,
-                    tabel: 'penempatan',
-                    idData: $p->id,
-                    nilaiLama: ['pembimbing_id' => $pembimbingLamaId],
-                    nilaiBaru: ['pembimbing_id' => $pembimbingBaru->id],
-                    detail: [
-                        'aksi' => 'Pemindahan pembimbing massal (bulk reassign)',
-                        'admin_id' => $admin->id,
-                        'pembimbing_baru_id' => $pembimbingBaru->id,
-                    ]
-                );
-
-                $updated++;
-            }
-
-            return $updated;
-        });
-
-        return redirect()->route('admin.penempatan.index')
-            ->with('success', "Sebanyak {$count} penempatan peserta berhasil dialihkan ke {$pembimbingBaru->nama}.");
     }
 
     /**

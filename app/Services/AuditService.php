@@ -205,7 +205,13 @@ class AuditService
                 'mime' => $nilai->getClientMimeType(),
             ],
             is_array($nilai) => collect($nilai)->map(function ($val, $key) {
-                if (in_array(strtolower((string) $key), self::KUNCI_RAHASIA, true)) {
+                $k = strtolower((string) $key);
+                if (in_array($k, self::KUNCI_RAHASIA, true) ||
+                    str_contains($k, 'password') ||
+                    str_contains($k, 'token') ||
+                    str_contains($k, 'secret') ||
+                    str_contains($k, 'kredensial') ||
+                    str_contains($k, 'credential')) {
                     return '[DISAMARKAN]';
                 }
 

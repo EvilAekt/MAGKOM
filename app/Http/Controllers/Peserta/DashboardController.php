@@ -80,7 +80,7 @@ class DashboardController extends Controller
 
         // Sisa Hari Magang
         $sisaHari = null;
-        $tglSelesai = $penempatan?->tgl_selesai ?? $penempatan?->tanggal_selesai;
+        $tglSelesai = $penempatan?->tgl_selesai;
         if ($penempatan && $tglSelesai) {
             $diff = now()->startOfDay()->diffInDays(Carbon::parse($tglSelesai)->startOfDay(), false);
             $sisaHari = max(0, (int) $diff);

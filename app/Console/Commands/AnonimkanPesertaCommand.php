@@ -95,7 +95,7 @@ class AnonimkanPesertaCommand extends Command
             $user->provider = null;
             $user->provider_id = null;
             $user->status_aktif = false;
-            $user->remember_token = null;
+            $user->setRememberToken(null);
             $user->save();
 
             // 4. Pencatatan audit trail forensik append-only

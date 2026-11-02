@@ -34,7 +34,7 @@ class SecurityHeaders
         if (app()->isProduction()) {
             $response->headers->set(
                 'Content-Security-Policy',
-                "default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
+                "default-src 'self'; img-src 'self' data: https:; script-src 'self' https://challenges.cloudflare.com https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; frame-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
             );
         }
 

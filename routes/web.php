@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\RoleEnum;
 use App\Http\Controllers\Admin\AnalitikTahunanController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\KuotaController;
@@ -120,8 +121,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
-// Logout
-Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
+// Logout (SEC-04: POST only with CSRF protection)
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Universal Dashboard Shortcut & Smart Role Redirect (F-02, PRD 4.3)
 Route::get('/dashboard', function () {
@@ -130,12 +131,12 @@ Route::get('/dashboard', function () {
     }
 
     $role = auth()->user()->role;
-    $enumRole = $role instanceof \App\Enums\RoleEnum ? $role : \App\Enums\RoleEnum::tryFrom((string) $role);
+    $enumRole = $role instanceof RoleEnum ? $role : RoleEnum::tryFrom((string) $role);
 
     $targetRoute = match ($enumRole) {
-        \App\Enums\RoleEnum::SuperAdmin => 'superadmin.dashboard',
-        \App\Enums\RoleEnum::Admin => 'admin.dashboard',
-        \App\Enums\RoleEnum::Pembimbing => 'pembimbing.dashboard',
+        RoleEnum::SuperAdmin => 'superadmin.dashboard',
+        RoleEnum::Admin => 'admin.dashboard',
+        RoleEnum::Pembimbing => 'pembimbing.dashboard',
         default => 'peserta.dashboard',
     };
 

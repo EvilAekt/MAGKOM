@@ -56,7 +56,9 @@ class TugasRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function ($validator) {
-            $penempatanId = $this->input('penempatan_id') ?? $this->route('tugas')?->penempatan_id;
+            $tugas = $this->route('tugas');
+            $tugasPenempatanId = is_object($tugas) && isset($tugas->penempatan_id) ? $tugas->penempatan_id : null;
+            $penempatanId = $this->input('penempatan_id') ?? $tugasPenempatanId;
             $deadlineInput = $this->input('deadline');
 
             if ($penempatanId && $deadlineInput) {

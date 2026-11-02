@@ -519,7 +519,7 @@ class ModulDataController extends Controller
             abort(401);
         }
 
-        $userRole = is_object($user->role) && property_exists($user->role, 'value') ? $user->role->value : (string) $user->role;
+        $userRole = $user->role instanceof \BackedEnum ? (string) $user->role->value : (string) ($user->role?->value ?? $user->role ?? '');
         if (! $modul->canRolePerformAction($userRole, $action)) {
             abort(403, "Akses Ditolak: Role Anda ({$userRole}) tidak memiliki izin untuk aksi [{$action}] pada modul {$modul->nama_modul}.");
         }
@@ -571,7 +571,7 @@ class ModulDataController extends Controller
             return;
         }
 
-        $userRole = is_object($user->role) && property_exists($user->role, 'value') ? $user->role->value : (string) $user->role;
+        $userRole = $user->role instanceof \BackedEnum ? (string) $user->role->value : (string) ($user->role?->value ?? $user->role ?? '');
         if (strtolower($userRole) === 'superadmin') {
             return;
         }
@@ -600,7 +600,7 @@ class ModulDataController extends Controller
             return;
         }
 
-        $userRole = is_object($user->role) && property_exists($user->role, 'value') ? $user->role->value : (string) $user->role;
+        $userRole = $user->role instanceof \BackedEnum ? (string) $user->role->value : (string) ($user->role?->value ?? $user->role ?? '');
         if (strtolower($userRole) === 'superadmin') {
             return;
         }
@@ -744,13 +744,17 @@ class ModulDataController extends Controller
 
         foreach ($modul->fields as $field) {
             if ($field->tipe_data === 'relation' && ! empty($field->relasi_tabel)) {
-                $table = $field->relasi_tabel;
-                $displayCol = $field->relasi_kolom_tampil ?: 'nama';
+                $table = (string) $field->relasi_tabel;
+                $displayCol = (string) ($field->relasi_kolom_tampil ?: 'nama');
 
-                if (Schema::hasTable($table)) {
+                // SEC-05: Strict SQL identifier validation & schema column check
+                if (preg_match('/^[a-zA-Z0-9_]+$/', $table) &&
+                    preg_match('/^[a-zA-Z0-9_]+$/', $displayCol) &&
+                    Schema::hasTable($table) &&
+                    Schema::hasColumn($table, $displayCol)) {
                     try {
                         $rows = DB::table($table)
-                            ->select(['id', DB::raw("`{$displayCol}` as label")])
+                            ->select(['id', "{$displayCol} as label"])
                             ->limit(100)
                             ->get();
 

@@ -62,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
 
             // Injeksi Modul Dinamis Aktif ke Sidebar Dashboard
             if ($user) {
-                $userRole = is_object($user->role) && property_exists($user->role, 'value') ? $user->role->value : (string) $user->role;
+                $userRole = $user->role instanceof \BackedEnum ? (string) $user->role->value : (string) ($user->role?->value ?? $user->role ?? '');
                 $userRoleLower = strtolower($userRole);
 
                 $allModules = Cache::remember('dynamic_modules_sidebar', 3600, function () {

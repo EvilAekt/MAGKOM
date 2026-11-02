@@ -184,7 +184,7 @@ class Penempatan extends Model
 
             $statusPengisian = 'belum_diisi';
             if ($logbook) {
-                $statusVal = $logbook->status->value ?? (string) $logbook->status;
+                $statusVal = $logbook->status instanceof \BackedEnum ? $logbook->status->value : (string) ($logbook->status?->value ?? $logbook->status ?? '');
                 $statusPengisian = $statusVal;
             } elseif ($isMendatang) {
                 $statusPengisian = 'mendatang';
