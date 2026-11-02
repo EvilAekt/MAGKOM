@@ -85,9 +85,12 @@ class AdminKuotaRevampTest extends TestCase
         $response = $this->actingAs($admin)->get(route('admin.kuota.index'));
         $response->assertStatus(200);
 
-        // Section header
+        // Section header & x-panel card container
+        $response->assertSee('x_panel', false);
+        $response->assertSee('x_title', false);
         $response->assertSee('Kuota per bidang', false);
         $response->assertSee('Tambah kuota', false);
+        $response->assertSee('btn-tambah-kuota-header', false);
 
         // Kolom Thead
         $response->assertSee('Bidang', false);

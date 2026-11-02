@@ -1005,24 +1005,23 @@
     {{-- =========================================================================
          4. SECTION & TABEL KUOTA PER BIDANG
          ========================================================================= --}}
-    <div>
-        <div class="section-header-row">
-            <div>
-                <h2 class="section-title">Kuota per bidang</h2>
-                <p class="section-desc">Tentukan jumlah kuota, jurusan, jenjang, dan rentang durasi magang.</p>
-            </div>
-            @if($selectedBulan)
-                <button type="button" onclick="openTambahKuotaModal()" class="btn-primary-action">
+    <x-gentelella.x-panel 
+        title="Kuota per bidang" 
+        subtitle="Tentukan jumlah kuota, jurusan, jenjang, dan rentang durasi magang."
+    >
+        @if($selectedBulan)
+            <x-slot:actions>
+                <button type="button" onclick="openTambahKuotaModal()" class="btn-primary-action btn-tambah-kuota-header">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
                     <span>Tambah kuota</span>
                 </button>
-            @endif
-        </div>
+            </x-slot:actions>
+        @endif
 
-        <div class="card-table-wrap" style="margin-top: 1rem;">
+        <div class="card-table-wrap">
             <div style="overflow-x: auto;">
                 <table class="table-bidang">
                     <thead>
@@ -1114,10 +1113,12 @@
         {{-- =====================================================================
              5. ALERT VALIDASI PEMBIMBING AKTIF
              ===================================================================== --}}
-        <x-gentelella.callout type="info" class="alert-validation-box" title="Validasi Kapasitas Pembimbing">
-            Sistem otomatis memvalidasi agar total kuota tidak melebihi kapasitas bimbingan, yaitu jumlah Pembimbing aktif di setiap bidang.
-        </x-gentelella.callout>
-    </div>
+        <div class="adm-kuota-callout-wrap">
+            <x-gentelella.callout type="info" class="alert-validation-box" title="Validasi Kapasitas Pembimbing">
+                Sistem otomatis memvalidasi agar total kuota tidak melebihi kapasitas bimbingan, yaitu jumlah Pembimbing aktif di setiap bidang.
+            </x-gentelella.callout>
+        </div>
+    </x-gentelella.x-panel>
 
 </div>
 

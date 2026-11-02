@@ -1220,3 +1220,18 @@
     border-radius: 12px;
 }
 
+/* Kuota per Bidang Panel Enhancements */
+.btn-tambah-kuota-header {
+  padding: 0.45rem 1rem !important;
+  font-size: 0.8125rem !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.adm-kuota-callout-wrap {
+  margin-top: 1.25rem;
+}
+
