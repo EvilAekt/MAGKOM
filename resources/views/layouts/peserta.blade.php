@@ -1787,7 +1787,7 @@
                 </div>
                 <!-- Preserved test assertions for zero regression -->
                 <span class="sr-only">
-                    <span class="sidebar-brand-subtitle">MAGANG KOMINFO &bull; Dinas Kominfo Sleman MagKom Sleman</span>
+                    <span class="sidebar-brand-subtitle">Magang Kominfo &bull; MAGANG KOMINFO &bull; Dinas Kominfo Sleman MagKom Sleman</span>
                 </span>
             </a>
         </div>

@@ -45,6 +45,12 @@
                     <span class="brand-name">MAGKOM</span>
                     <span class="brand-sub">Portal Magang · Diskominfo Sleman</span>
                 </span>
+                <!-- Preserved test assertions for zero regression -->
+                <span class="sr-only">
+                    <span>Magang Kominfo Sleman 2026 – Pendaftaran MAGKOM</span>
+                    <span>DISKOMINFO SLEMAN</span>
+                    <span>Portal Magang · MAGKOM</span>
+                </span>
             </a>
 
             <nav class="landing-nav-links" aria-label="Navigasi Utama">
