@@ -60,6 +60,231 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
             color: #FFFFFF !important;
         }
+
+        /* =========================================================================
+           GENTELELLA MODERN TILE-STAT COMPONENT (Dual Theme & Universal Parity)
+           ========================================================================= */
+        .tile_stats_inner.stat {
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+            border: 1px solid var(--neutral-300, #e2e8f0) !important;
+            border-radius: 12px !important;
+            padding: 1rem 1.25rem !important;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 0.875rem !important;
+            position: relative !important;
+            overflow: hidden !important;
+            height: 100% !important;
+            min-height: 94px !important;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+        }
+
+        .tile_stats_inner.stat:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08) !important;
+        }
+
+        .tile_stats_inner.stat::before {
+            display: none !important;
+        }
+
+        /* Tipografi Mode Terang */
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .count,
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .stat-value {
+            color: #0f172a !important;
+            font-weight: 700 !important;
+        }
+
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .count_top,
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .count_title,
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .stat-label {
+            color: #64748b !important;
+            font-weight: 600 !important;
+        }
+
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .count_bottom,
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .stat-subtext {
+            color: #64748b !important;
+        }
+
+        /* 1. Icon Badge Kiri */
+        .tile_stats_inner.stat .stat-icon {
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
+        }
+
+        .tile_stats_inner.stat .stat-icon.teal {
+            background: rgba(26, 187, 156, 0.12) !important;
+            color: #1abb9c !important;
+        }
+
+        .tile_stats_inner.stat .stat-icon.yellow {
+            background: rgba(245, 159, 0, 0.12) !important;
+            color: #f59f00 !important;
+        }
+
+        .tile_stats_inner.stat .stat-icon.blue {
+            background: rgba(6, 111, 209, 0.12) !important;
+            color: #066fd1 !important;
+        }
+
+        .tile_stats_inner.stat .stat-icon.red {
+            background: rgba(214, 57, 57, 0.12) !important;
+            color: #d63939 !important;
+        }
+
+        /* 2. Konten Tengah (Typography Stack) */
+        .tile_stats_inner.stat .stat-content {
+            flex: 1 !important;
+            min-width: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 2px !important;
+        }
+
+        .tile_stats_inner.stat .stat-label,
+        .tile_stats_inner.stat .count_top,
+        .tile_stats_inner.stat .count_title {
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.4px !important;
+            color: #64748b !important;
+            line-height: 1.2 !important;
+        }
+
+        .tile_stats_inner.stat .stat-value-row {
+            display: flex !important;
+            align-items: baseline !important;
+            gap: 0.5rem !important;
+            flex-wrap: nowrap !important;
+        }
+
+        .tile_stats_inner.stat .stat-value,
+        .tile_stats_inner.stat .count {
+            font-size: 1.65rem !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.5px !important;
+            color: #0f172a !important;
+            line-height: 1.15 !important;
+            margin: 0 !important;
+        }
+
+        /* Trend Percentage Pill */
+        .tile_stats_inner.stat .stat-change {
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            border-radius: 4px !important;
+            padding: 1px 5px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 2px !important;
+            line-height: 1.2 !important;
+        }
+
+        .tile_stats_inner.stat .stat-change.up {
+            color: #10b981 !important;
+            background: rgba(16, 185, 129, 0.1) !important;
+        }
+
+        .tile_stats_inner.stat .stat-change.down {
+            color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.1) !important;
+        }
+
+        .tile_stats_inner.stat .stat-subtext,
+        .tile_stats_inner.stat .count_bottom {
+            font-size: 12px !important;
+            font-weight: 400 !important;
+            color: #64748b !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            line-height: 1.35 !important;
+        }
+
+        /* 3. Sparkline Kanan */
+        .tile_stats_inner.stat .stat-spark,
+        .tile_stats_inner.stat .sa-spark {
+            display: flex !important;
+            align-items: flex-end !important;
+            gap: 3px !important;
+            height: 32px !important;
+            margin-left: auto !important;
+            flex-shrink: 0 !important;
+            padding-right: 2px !important;
+        }
+
+        .tile_stats_inner.stat .stat-spark i,
+        .tile_stats_inner.stat .sa-spark i {
+            width: 3.5px !important;
+            border-radius: 1.5px !important;
+            transition: height 0.3s ease !important;
+        }
+
+        .tile_stats_inner.stat.stat-teal .stat-spark i,
+        .tile_stats_inner.stat.stat-teal .sa-spark i {
+            background: #1abb9c !important;
+            opacity: 0.85 !important;
+        }
+
+        .tile_stats_inner.stat.stat-yellow .stat-spark i,
+        .tile_stats_inner.stat.stat-yellow .sa-spark i {
+            background: #f59f00 !important;
+            opacity: 0.85 !important;
+        }
+
+        .tile_stats_inner.stat.stat-blue .stat-spark i,
+        .tile_stats_inner.stat.stat-blue .sa-spark i {
+            background: #066fd1 !important;
+            opacity: 0.85 !important;
+        }
+
+        .tile_stats_inner.stat.stat-red .stat-spark i,
+        .tile_stats_inner.stat.stat-red .sa-spark i {
+            background: #d63939 !important;
+            opacity: 0.85 !important;
+        }
+
+        /* Mode Gelap Tile-Stat */
+        [data-theme="dark"] .tile_stats_inner.stat {
+            background-color: #003566 !important;
+            background: #003566 !important;
+            border: 1px solid #3f51b5 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        [data-theme="dark"] .tile_stats_inner.stat:hover {
+            border-color: #5c6bc0 !important;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        [data-theme="dark"] .tile_stats_inner.stat .stat-value,
+        [data-theme="dark"] .tile_stats_inner.stat .count {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+        }
+
+        [data-theme="dark"] .tile_stats_inner.stat .stat-label,
+        [data-theme="dark"] .tile_stats_inner.stat .count_top,
+        [data-theme="dark"] .tile_stats_inner.stat .count_title {
+            color: #cbd5e1 !important;
+            font-weight: 600 !important;
+        }
+
+        [data-theme="dark"] .tile_stats_inner.stat .stat-subtext,
+        [data-theme="dark"] .tile_stats_inner.stat .count_bottom {
+            color: #cbd5e1 !important;
+        }
         [data-theme="dark"] .x_panel,
         [data-theme="dark"] .card,
         [data-theme="dark"] .cv-card,

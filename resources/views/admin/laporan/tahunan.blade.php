@@ -42,48 +42,58 @@
     </div>
 
     <!-- 2. 4 EXECUTIVE SUMMARY HERO KPI CARDS -->
-    <div class="tahunan-kpi-grid">
-        <div class="tahunan-kpi-card card-pendaftar">
-            <div class="tahunan-kpi-header">
-                <span class="tahunan-kpi-label">Total Pendaftar Masuk</span>
-                <span class="badge badge-neutral" style="font-size: 0.6875rem;">Tahunan</span>
-            </div>
-            <div class="tahunan-kpi-value">{{ number_format($totalPendaftaran) }}</div>
-            <div class="tahunan-kpi-sub">Calon peserta yang mengajukan berkas</div>
-        </div>
+    <div class="row tile_count tahunan-kpi-grid" style="margin-bottom: 1.5rem; width: 100%;">
+        <x-gentelella.tile-stat 
+            title="Total Pendaftar Masuk" 
+            :value="number_format($totalPendaftaran)" 
+            icon="user-plus"
+            color="blue"
+            trendText="Tahunan"
+            trendDirection="up"
+            subText="Calon peserta yang mengajukan berkas" 
+            :sparkBars="[35, 50, 45, 65, 70, 85, 95]"
+            class="card-pendaftar"
+            col="col-xs-12"
+        />
 
-        <div class="tahunan-kpi-card card-diterima">
-            <div class="tahunan-kpi-header">
-                <span class="tahunan-kpi-label">Peserta Diterima Magang</span>
-                <span class="badge badge-success" style="font-size: 0.6875rem;">{{ number_format($acceptanceRate, 1) }}% Lolos</span>
-            </div>
-            <div class="tahunan-kpi-value">{{ number_format($totalDiterima) }}</div>
-            <div class="tahunan-kpi-sub">
-                Tingkat Penerimaan: <strong>{{ number_format($acceptanceRate, 1) }}%</strong>
-            </div>
-        </div>
+        <x-gentelella.tile-stat 
+            title="Peserta Diterima Magang" 
+            :value="number_format($totalDiterima)" 
+            icon="user-check"
+            color="teal"
+            trendText="{{ number_format($acceptanceRate, 1) }}% Lolos"
+            trendDirection="up"
+            subText="Tingkat Penerimaan: {{ number_format($acceptanceRate, 1) }}%" 
+            :sparkBars="[25, 40, 50, 65, 75, 85, 95]"
+            class="card-diterima"
+            col="col-xs-12"
+        />
 
-        <div class="tahunan-kpi-card card-alumni">
-            <div class="tahunan-kpi-header">
-                <span class="tahunan-kpi-label">Peserta Selesai Magang</span>
-                <span class="badge badge-info" style="font-size: 0.6875rem;">{{ number_format($completionRate, 1) }}% Selesai</span>
-            </div>
-            <div class="tahunan-kpi-value">{{ number_format($totalSelesai) }}</div>
-            <div class="tahunan-kpi-sub">
-                Tingkat Penyelesaian: <strong>{{ number_format($completionRate, 1) }}%</strong>
-            </div>
-        </div>
+        <x-gentelella.tile-stat 
+            title="Peserta Selesai Magang" 
+            :value="number_format($totalSelesai)" 
+            icon="award"
+            color="yellow"
+            trendText="{{ number_format($completionRate, 1) }}% Selesai"
+            trendDirection="up"
+            subText="Tingkat Penyelesaian: {{ number_format($completionRate, 1) }}%" 
+            :sparkBars="[30, 45, 55, 65, 75, 85, 100]"
+            class="card-alumni"
+            col="col-xs-12"
+        />
 
-        <div class="tahunan-kpi-card card-durasi">
-            <div class="tahunan-kpi-header">
-                <span class="tahunan-kpi-label">Rata-rata Durasi Magang</span>
-                <span class="badge badge-neutral" style="font-size: 0.6875rem;">Standar</span>
-            </div>
-            <div class="tahunan-kpi-value">
-                {{ $rataRataDurasi }} <span style="font-size: 1.125rem; font-weight: 600;">Bulan</span>
-            </div>
-            <div class="tahunan-kpi-sub">Rentang normal 1 sampai 6 bulan</div>
-        </div>
+        <x-gentelella.tile-stat 
+            title="Rata-rata Durasi Magang" 
+            value="{{ $rataRataDurasi }} Bulan" 
+            icon="clock"
+            color="blue"
+            trendText="Standar"
+            trendDirection="up"
+            subText="Rentang normal 1 sampai 6 bulan" 
+            :sparkBars="[40, 40, 50, 50, 60, 60, 50]"
+            class="card-durasi"
+            col="col-xs-12"
+        />
     </div>
 
     <!-- 3. 2-COLUMN GRID: TREN PENYERAPAN BULANAN (KIRI) & GRAFIK PLAN GROWTH (KANAN) -->

@@ -7,46 +7,54 @@
         title="Verifikasi Tertunda"
         :value="number_format($pengajuanMenunggu)"
         icon="clipboard-check"
-        trendType="{{ $pengajuanSlaKritisCount > 0 ? 'danger' : 'warning' }}"
+        color="yellow"
+        trendType="{{ $pengajuanSlaKritisCount > 0 ? 'warning' : 'success' }}"
+        :trendDirection="$pengajuanSlaKritisCount > 0 ? 'down' : 'up'"
+        :trendText="$pengajuanSlaKritisCount > 0 ? $pengajuanSlaKritisCount . ' SLA' : 'Tertib'"
+        subText="{{ $pengajuanSlaKritisCount > 0 ? $pengajuanSlaKritisCount . ' lewat SLA · Perlu Verifikasi Segera' : 'Tertib · Perlu Verifikasi Segera' }}"
+        :sparkBars="[75, 80, 70, 85, 90, 65, 60]"
         col="col-md-3 col-sm-6 col-xs-12 adm-metric-card-col"
-    >
-        @if($pengajuanSlaKritisCount > 0)
-            <span style="color: #fca5a5; font-weight: 700;">⚠️ {{ $pengajuanSlaKritisCount }} Perlu Verifikasi Segera</span>
-        @else
-            <span>Perlu Verifikasi Segera</span>
-        @endif
-    </x-gentelella.tile-stat>
+    />
 
     {{-- Tile 2: Kapasitas Kuota Terisi / Keterisian Kuota Magang Periode --}}
     <x-gentelella.tile-stat
         title="Kapasitas Kuota Terisi"
         :value="$realisasiKuotaPersen . '%'"
         icon="calendar"
-        trendType="primary"
+        color="blue"
+        trendType="info"
+        trendDirection="up"
+        trendText="Okupansi"
+        subText="{{ $totalKuotaTerisi }}/{{ $totalKuotaUmum }} Kursi · Keterisian Kuota Magang Periode"
+        :sparkBars="[40, 50, 60, 68, 75, 82, 90]"
         col="col-md-3 col-sm-6 col-xs-12 adm-metric-card-col"
-    >
-        <span>{{ $totalKuotaTerisi }}/{{ $totalKuotaUmum }} Kursi &bull; Keterisian Kuota Magang Periode</span>
-    </x-gentelella.tile-stat>
+    />
 
     {{-- Tile 3: Antrean Waiting List --}}
     <x-gentelella.tile-stat
         title="Antrean Waiting List"
         :value="number_format($waitingListCount)"
         icon="clock"
-        trendType="info"
+        color="teal"
+        trendType="success"
+        trendDirection="up"
+        trendText="Antrean"
+        subText="{{ $perluPerbaikan }} Revisi Dokumen · Daftar tunggu antrean"
+        :sparkBars="[30, 45, 40, 55, 50, 65, 70]"
         col="col-md-3 col-sm-6 col-xs-12 adm-metric-card-col"
-    >
-        <span>{{ $perluPerbaikan }} Revisi Dokumen &bull; Daftar tunggu antrean</span>
-    </x-gentelella.tile-stat>
+    />
 
     {{-- Tile 4: Peserta Magang Aktif --}}
     <x-gentelella.tile-stat
         title="Peserta Magang Aktif"
         :value="number_format($pesertaAktifCount)"
         icon="user-check"
+        color="teal"
         trendType="success"
+        trendDirection="up"
+        trendText="Aktif"
+        subText="Sedang bertugas di dinas"
+        :sparkBars="[35, 55, 45, 65, 70, 85, 100]"
         col="col-md-3 col-sm-6 col-xs-12 adm-metric-card-col"
-    >
-        <span>Sedang bertugas di dinas</span>
-    </x-gentelella.tile-stat>
+    />
 </div>

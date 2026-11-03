@@ -171,39 +171,47 @@
     </x-gentelella.card>
 
     {{-- QUICK STATS PROGRESS ROW (4 TILE-STAT GENTELELLA) --}}
-    <div class="row top_tiles" style="margin-bottom: 0;">
-        <div class="col-md-3 col-sm-6 col-xs-12">
-            <x-gentelella.tile-stat 
-                title="Tugas Selesai" 
-                value="{{ $tugasSelesaiCount }} / {{ $tugasCount }}" 
-                icon="fa fa-tasks" 
-                color="blue" 
-                trend="Tugas Magang" />
-        </div>
-        <div class="col-md-3 col-sm-6 col-xs-12">
-            <x-gentelella.tile-stat 
-                title="Total Logbook" 
-                value="{{ $logbookCount }} Minggu" 
-                icon="fa fa-book" 
-                color="green" 
-                trend="Jurnal Harian" />
-        </div>
-        <div class="col-md-3 col-sm-6 col-xs-12">
-            <x-gentelella.tile-stat 
-                title="Nilai Akhir" 
-                value="{{ $nilaiAkhir !== null ? number_format((float) $nilaiAkhir, 2) : 'Belum Ada' }}" 
-                icon="fa fa-star" 
-                color="orange" 
-                trend="{{ $penempatan->penilaian?->predikat ?? 'Evaluasi' }}" />
-        </div>
-        <div class="col-md-3 col-sm-6 col-xs-12">
-            <x-gentelella.tile-stat 
-                title="Durasi Magang" 
-                value="{{ $penempatan->total_minggu }} Minggu" 
-                icon="fa fa-calendar" 
-                color="purple" 
-                trend="Total Periode" />
-        </div>
+    <div class="row tile_count" style="margin-bottom: 1.5rem; width: 100%;">
+        <x-gentelella.tile-stat 
+            title="Tugas Selesai" 
+            value="{{ $tugasSelesaiCount }} / {{ $tugasCount }}" 
+            icon="clipboard-check" 
+            color="blue" 
+            trendText="Tugas" 
+            trendDirection="up"
+            subText="Tugas magang tuntas"
+            :sparkBars="[30, 50, 40, 60, 70, 85, 100]"
+        />
+        <x-gentelella.tile-stat 
+            title="Total Logbook" 
+            value="{{ $logbookCount }} Minggu" 
+            icon="book-open" 
+            color="teal" 
+            trendText="Jurnal" 
+            trendDirection="up"
+            subText="Jurnal mingguan terisi"
+            :sparkBars="[40, 50, 60, 70, 80, 90, 100]"
+        />
+        <x-gentelella.tile-stat 
+            title="Nilai Akhir" 
+            value="{{ $nilaiAkhir !== null ? number_format((float) $nilaiAkhir, 2) : 'Belum Ada' }}" 
+            icon="award" 
+            color="yellow" 
+            trendText="{{ $penempatan->penilaian?->predikat ?? 'Evaluasi' }}" 
+            trendDirection="up"
+            subText="Predikat evaluasi dinas"
+            :sparkBars="[50, 65, 60, 75, 80, 90, 95]"
+        />
+        <x-gentelella.tile-stat 
+            title="Durasi Magang" 
+            value="{{ $penempatan->total_minggu }} Minggu" 
+            icon="calendar" 
+            color="blue" 
+            trendText="Periode" 
+            trendDirection="up"
+            subText="Total periode dinas"
+            :sparkBars="[40, 50, 60, 70, 80, 90, 100]"
+        />
     </div>
 
     {{-- 2 COLUMNS GRID: INFORMASI DETAIL --}}

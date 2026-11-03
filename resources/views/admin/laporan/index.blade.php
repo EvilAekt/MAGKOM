@@ -116,54 +116,73 @@
     @endpush
 
     <!-- 1. SUMMARY METRICS CARDS -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
-        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-600); text-transform: uppercase;">Total Pengajuan</span>
-            <div style="font-size: 1.75rem; font-weight: 900; color: var(--blue-700); margin-top: 0.25rem;">
-                {{ number_format($metricCards['total_pendaftaran']) }}
-            </div>
-            <small style="color: var(--neutral-600); font-size: 0.75rem;">Semua status pendaftaran</small>
-        </x-gentelella.card>
-
-        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--green-700); text-transform: uppercase;">Peserta Diterima</span>
-            <div style="font-size: 1.75rem; font-weight: 900; color: var(--green-700); margin-top: 0.25rem;">
-                {{ number_format($metricCards['total_diterima']) }}
-            </div>
-            <small style="color: var(--neutral-600); font-size: 0.75rem;">Lolos seleksi berkas & kuota</small>
-        </x-gentelella.card>
-
-        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600); text-transform: uppercase;">Penempatan Aktif</span>
-            <div style="font-size: 1.75rem; font-weight: 900; color: var(--blue-600); margin-top: 0.25rem;">
-                {{ number_format($metricCards['penempatan_aktif']) }}
-            </div>
-            <small style="color: var(--neutral-600); font-size: 0.75rem;">Sedang menjalani bimbingan</small>
-        </x-gentelella.card>
-
-        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700); text-transform: uppercase;">Magang Selesai</span>
-            <div style="font-size: 1.75rem; font-weight: 900; color: var(--neutral-800); margin-top: 0.25rem;">
-                {{ number_format($metricCards['penempatan_selesai']) }}
-            </div>
-            <small style="color: var(--neutral-600); font-size: 0.75rem;">Alumni & evaluasi final</small>
-        </x-gentelella.card>
-
-        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--amber-700); text-transform: uppercase;">Realisasi Kuota Umum</span>
-            <div style="font-size: 1.75rem; font-weight: 900; color: var(--amber-700); margin-top: 0.25rem;">
-                {{ number_format($metricCards['kuota_terisi']) }}
-            </div>
-            <small style="color: var(--neutral-600); font-size: 0.75rem;">Kursi terisi jalur online</small>
-        </x-gentelella.card>
-
-        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
-            <span style="font-size: 0.75rem; font-weight: 700; color: var(--purple-700, #7E22CE); text-transform: uppercase;">Slot Khusus Terisi</span>
-            <div style="font-size: 1.75rem; font-weight: 900; color: var(--purple-700, #7E22CE); margin-top: 0.25rem;">
-                {{ number_format($metricCards['slot_terisi']) }}
-            </div>
-            <small style="color: var(--neutral-600); font-size: 0.75rem;">Jalur kemitraan internal</small>
-        </x-gentelella.card>
+    <div class="row tile_count" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; width: 100%; margin-bottom: 1.5rem;">
+        <x-gentelella.tile-stat 
+            title="Total Pengajuan" 
+            :value="number_format($metricCards['total_pendaftaran'])" 
+            icon="file-text"
+            color="blue"
+            trendText="Total"
+            trendDirection="up"
+            subText="Semua status pendaftaran" 
+            :sparkBars="[35, 50, 45, 65, 70, 85, 95]"
+            col="col-xs-12"
+        />
+        <x-gentelella.tile-stat 
+            title="Peserta Diterima" 
+            :value="number_format($metricCards['total_diterima'])" 
+            icon="user-check"
+            color="teal"
+            trendText="Diterima"
+            trendDirection="up"
+            subText="Lolos seleksi berkas & kuota" 
+            :sparkBars="[25, 40, 50, 65, 75, 85, 95]"
+            col="col-xs-12"
+        />
+        <x-gentelella.tile-stat 
+            title="Penempatan Aktif" 
+            :value="number_format($metricCards['penempatan_aktif'])" 
+            icon="activity"
+            color="blue"
+            trendText="Aktif"
+            trendDirection="up"
+            subText="Sedang menjalani bimbingan" 
+            :sparkBars="[40, 50, 60, 68, 75, 82, 90]"
+            col="col-xs-12"
+        />
+        <x-gentelella.tile-stat 
+            title="Magang Selesai" 
+            :value="number_format($metricCards['penempatan_selesai'])" 
+            icon="award"
+            color="teal"
+            trendText="Selesai"
+            trendDirection="up"
+            subText="Alumni & evaluasi final" 
+            :sparkBars="[30, 45, 55, 65, 75, 85, 100]"
+            col="col-xs-12"
+        />
+        <x-gentelella.tile-stat 
+            title="Realisasi Kuota Umum" 
+            :value="number_format($metricCards['kuota_terisi'])" 
+            icon="calendar"
+            color="yellow"
+            trendText="Umum"
+            trendDirection="up"
+            subText="Kursi terisi jalur online" 
+            :sparkBars="[40, 50, 60, 70, 65, 80, 85]"
+            col="col-xs-12"
+        />
+        <x-gentelella.tile-stat 
+            title="Slot Khusus Terisi" 
+            :value="number_format($metricCards['slot_terisi'])" 
+            icon="briefcase"
+            color="blue"
+            trendText="Mitra"
+            trendDirection="up"
+            subText="Jalur kemitraan internal" 
+            :sparkBars="[20, 30, 40, 35, 50, 60, 70]"
+            col="col-xs-12"
+        />
     </div>
 
     <!-- 1.5 VISUAL ANALYTICS & INSIGHTS (AC-17-1) -->

@@ -189,29 +189,44 @@
   border-right: none !important;
 }
 
-.adm-metric-card-col .tile_stats_inner,
-.cv-hero-banner .tile_stats_count .tile_stats_inner,
-.cv-hero-banner .tile_stats_inner {
+.adm-metric-card-col .tile_stats_inner.stat,
+.cv-hero-banner .tile_stats_count .tile_stats_inner.stat {
   height: 100% !important;
   width: 100% !important;
   box-sizing: border-box !important;
   display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  background: var(--card-highlight-bg, #01347C) !important;
-  border: 1px solid var(--card-highlight-border, #3F51B5) !important;
-  border-radius: 14px !important;
-  padding: 1.15rem 1.25rem !important;
-  box-shadow: 0 10px 20px -3px rgba(1, 52, 124, 0.22) !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid var(--neutral-300, #e2e8f0) !important;
+  border-radius: 12px !important;
+  padding: 1rem 1.25rem !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
 }
 
-.adm-metric-card-col .tile_stats_inner:hover,
-.cv-hero-banner .tile_stats_count .tile_stats_inner:hover,
-.cv-hero-banner .tile_stats_inner:hover {
+.adm-metric-card-col .tile_stats_inner.stat:hover,
+.cv-hero-banner .tile_stats_count .tile_stats_inner.stat:hover {
   transform: translateY(-2px) !important;
-  box-shadow: 0 14px 24px -2px rgba(1, 52, 124, 0.35) !important;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12) !important;
   border-color: rgba(96, 165, 250, 0.6) !important;
+}
+
+/* Dark Mode Parity */
+[data-theme="dark"] .adm-metric-card-col .tile_stats_inner.stat,
+[data-theme="dark"] .cv-hero-banner .tile_stats_count .tile_stats_inner.stat {
+  background-color: #003566 !important;
+  background: #003566 !important;
+  border: 1px solid #3f51b5 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .adm-metric-card-col .tile_stats_inner.stat:hover,
+[data-theme="dark"] .cv-hero-banner .tile_stats_count .tile_stats_inner.stat:hover {
+  border-color: #5c6bc0 !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6) !important;
 }
 
 .cv-hero-banner .count_top,

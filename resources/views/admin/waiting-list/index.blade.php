@@ -811,22 +811,42 @@
         <x-gentelella.tile-stat 
             title="Total Antrean Tunggu" 
             :value="number_format($totalWaiting)" 
-            sub="Calon peserta terdaftar FIFO" 
+            icon="users"
+            color="blue"
+            trendText="Antrean"
+            trendDirection="up"
+            subText="Calon peserta terdaftar FIFO" 
+            :sparkBars="[40, 55, 50, 65, 70, 80, 90]"
         />
         <x-gentelella.tile-stat 
             title="Bulan Magang Terdampak" 
             :value="number_format($periodeCount)" 
-            sub="{{ $periodeCount }} Bulan Magang Terdampak" 
+            icon="calendar"
+            color="yellow"
+            trendText="Periode"
+            trendDirection="up"
+            subText="{{ $periodeCount }} Bulan Magang Terdampak" 
+            :sparkBars="[30, 45, 40, 50, 60, 55, 70]"
         />
         <x-gentelella.tile-stat 
             title="Siap Dipromosikan" 
             :value="number_format($siapPromosiCount)" 
-            sub="Kuota jurusan telah tersedia" 
+            icon="user-check"
+            color="teal"
+            trendText="Tersedia"
+            trendDirection="up"
+            subText="Kuota jurusan telah tersedia" 
+            :sparkBars="[20, 35, 40, 60, 75, 85, 100]"
         />
         <x-gentelella.tile-stat 
             title="Penegakan Aturan" 
             value="FIFO BR-05" 
-            sub="Prioritas waktu pendaftaran" 
+            icon="shield"
+            color="blue"
+            trendText="BR-05"
+            trendDirection="up"
+            subText="Prioritas waktu pendaftaran" 
+            :sparkBars="[60, 60, 60, 60, 60, 60, 60]"
         />
     </div>
 

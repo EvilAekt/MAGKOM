@@ -641,93 +641,75 @@
     @endif
 
     {{-- 1. HERO STATS CARDS --}}
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; width: 100%;">
+    <div class="row tile_count" style="margin-bottom: 1.5rem; width: 100%;">
         {{-- Total Penempatan --}}
-        <div class="admin-stat-card admin-stat-card--blue">
-            <div>
-                <span style="font-size: 0.8125rem; font-weight: 600; color: var(--neutral-500, #64748B);">Total Penempatan</span>
-                <div style="font-size: 1.75rem; font-weight: 800; color: #0F172A; margin-top: 0.25rem; letter-spacing: -0.02em;">
-                    {{ number_format($penempatanStats['total'] ?? $penempatanList->total()) }}
-                </div>
-                <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.35rem;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-                    Semua riwayat peserta
-                </span>
-            </div>
-            <div style="width: 48px; height: 48px; border-radius: 12px; background: #EFF6FF; color: #1D4ED8; display: flex; align-items: center; justify-content: center;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-            </div>
-        </div>
+        <x-gentelella.tile-stat 
+            title="Total Penempatan" 
+            :value="number_format($penempatanStats['total'] ?? $penempatanList->total())" 
+            icon="users"
+            color="blue"
+            trendText="Total"
+            trendDirection="up"
+            subText="Semua riwayat peserta" 
+            :sparkBars="[35, 50, 45, 65, 70, 85, 95]"
+            class="admin-stat-card admin-stat-card--blue"
+        />
 
         {{-- Peserta Aktif --}}
-        <div class="admin-stat-card admin-stat-card--green">
-            <div>
-                <span style="font-size: 0.8125rem; font-weight: 600; color: #047857;">Peserta Magang Aktif</span>
-                <div style="font-size: 1.75rem; font-weight: 800; color: #059669; margin-top: 0.25rem; letter-spacing: -0.02em;">
-                    {{ number_format($penempatanStats['aktif'] ?? 0) }}
-                </div>
-                <span style="font-size: 0.75rem; color: #059669; display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.35rem;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    Sedang masa bimbingan
-                </span>
-            </div>
-            <div style="width: 48px; height: 48px; border-radius: 12px; background: #D1FAE5; color: #059669; display: flex; align-items: center; justify-content: center;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            </div>
-        </div>
+        <x-gentelella.tile-stat 
+            title="Peserta Magang Aktif" 
+            :value="number_format($penempatanStats['aktif'] ?? 0)" 
+            icon="user-check"
+            color="teal"
+            trendText="Aktif"
+            trendDirection="up"
+            subText="Sedang masa bimbingan" 
+            :sparkBars="[40, 50, 60, 68, 75, 82, 90]"
+            class="admin-stat-card admin-stat-card--green"
+        />
 
         {{-- Selesai Magang --}}
-        <div class="admin-stat-card admin-stat-card--indigo">
-            <div>
-                <span style="font-size: 0.8125rem; font-weight: 600; color: #1E40AF;">Selesai Magang</span>
-                <div style="font-size: 1.75rem; font-weight: 800; color: #1E40AF; margin-top: 0.25rem; letter-spacing: -0.02em;">
-                    {{ number_format($penempatanStats['selesai'] ?? 0) }}
-                </div>
-                <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.35rem;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    Telah tuntas & dinilai
-                </span>
-            </div>
-            <div style="width: 48px; height: 48px; border-radius: 12px; background: #DBEAFE; color: #1E40AF; display: flex; align-items: center; justify-content: center;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-            </div>
-        </div>
+        <x-gentelella.tile-stat 
+            title="Selesai Magang" 
+            :value="number_format($penempatanStats['selesai'] ?? 0)" 
+            icon="award"
+            color="blue"
+            trendText="Selesai"
+            trendDirection="up"
+            subText="Telah tuntas & dinilai" 
+            :sparkBars="[25, 40, 45, 60, 70, 80, 90]"
+            class="admin-stat-card admin-stat-card--indigo"
+        />
 
         {{-- Jalur Khusus (Kemitraan/Slot) --}}
-        <div class="admin-stat-card admin-stat-card--amber">
-            <div>
-                <span style="font-size: 0.8125rem; font-weight: 600; color: #B45309;">Jalur Khusus Mitra</span>
-                <div style="font-size: 1.75rem; font-weight: 800; color: #B45309; margin-top: 0.25rem; letter-spacing: -0.02em;">
-                    {{ number_format($penempatanStats['khusus'] ?? 0) }}
-                </div>
-                <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.35rem;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-                    MoU & kuota terproteksi
-                </span>
-            </div>
-            <div style="width: 48px; height: 48px; border-radius: 12px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg>
-            </div>
-        </div>
+        <x-gentelella.tile-stat 
+            title="Jalur Khusus Mitra" 
+            :value="number_format($penempatanStats['khusus'] ?? 0)" 
+            icon="briefcase"
+            color="yellow"
+            trendText="Mitra"
+            trendDirection="up"
+            subText="MoU & kuota terproteksi" 
+            :sparkBars="[30, 40, 35, 50, 45, 55, 60]"
+            class="admin-stat-card admin-stat-card--amber"
+        />
 
         {{-- Menunggu Penempatan (Antrean Lolos Berkas) --}}
         @if(($penempatanStats['belum_ditempatkan'] ?? 0) > 0)
-            <div class="admin-stat-card admin-stat-card--orange" style="background: #FFFDF5;">
-                <div>
-                    <span style="font-size: 0.8125rem; font-weight: 600; color: #B45309;">Menunggu Plotting</span>
-                    <div style="font-size: 1.75rem; font-weight: 800; color: #D97706; margin-top: 0.25rem; letter-spacing: -0.02em;">
-                        {{ number_format($penempatanStats['belum_ditempatkan'] ?? 0) }}
-                    </div>
-                    <span style="font-size: 0.75rem; color: #B45309; display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.35rem;">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        Lolos berkas (Tahap 1)
-                    </span>
-                </div>
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: #FEF3C7; color: #B45309; display: flex; align-items: center; justify-content: center;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                </div>
-            </div>
+            <x-gentelella.tile-stat 
+                title="Menunggu Plotting" 
+                :value="number_format($penempatanStats['belum_ditempatkan'] ?? 0)" 
+                icon="clock"
+                color="yellow"
+                trendType="warning"
+                trendText="Tahap 1"
+                trendDirection="down"
+                subText="Lolos berkas pendaftaran" 
+                :sparkBars="[50, 60, 55, 70, 65, 80, 75]"
+                class="admin-stat-card admin-stat-card--orange"
+            />
         @endif
+    </div>
     </div>
 
     {{-- 2. ANTREAN PESERTA LOLOS SELEKSI BERKAS (MENUNGGU PENETAPAN PEMBIMBING) --}}
