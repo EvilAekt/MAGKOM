@@ -133,7 +133,7 @@
             --radius-md: 14px;
             --radius-lg: 16px;
             --radius-full: 9999px;
-            --sidebar-width: 256px;
+            --sidebar-width: 230px;
             --sidebar-collapsed-width: 72px;
             --topbar-height: 64px;
 
@@ -181,9 +181,10 @@
             color: var(--neutral-700);
         }
 
-        [data-theme="dark"] .sidebar {
-            background-color: #001833 !important;
-            border-right-color: rgba(63, 81, 181, 0.25) !important;
+        [data-theme="dark"] .sidebar,
+        [data-theme="dark"] .dashboard-sidebar {
+            background-color: #011C44 !important;
+            border-right: 1px solid rgba(63, 81, 181, 0.35) !important;
         }
 
         [data-theme="dark"] .sidebar-header {
@@ -613,11 +614,14 @@
             line-height: inherit;
         }
 
-        /* Sidebar Styling (Diselaraskan dengan Gentelella v4 / All Roles) */
-        .sidebar {
+        /* =====================================================================
+           SIDEBAR STYLING (SuperAdmin Parity Spec - Image 1 & Gentelella Cockpit)
+           ===================================================================== */
+        .sidebar,
+        .dashboard-sidebar {
             width: var(--sidebar-width);
-            background: #002244;
-            color: var(--neutral-0);
+            background-color: #1B262C;
+            color: #FFFFFF;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -626,22 +630,28 @@
             bottom: 0;
             left: 0;
             z-index: 50;
-            transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
-            scrollbar-width: none;
-            -ms-overflow-style: none;
+            border-right: 1px solid rgba(50, 130, 184, 0.2);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+            -ms-overflow-style: auto;
         }
 
-        .sidebar::-webkit-scrollbar {
-            display: none;
-            width: 0;
-            height: 0;
+        .sidebar::-webkit-scrollbar,
+        .dashboard-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb,
+        .dashboard-sidebar::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
         }
 
         .sidebar-header {
             padding: 1.125rem 1.25rem 0.875rem 1.25rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(50, 130, 184, 0.2);
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -652,11 +662,11 @@
             width: 36px;
             height: 36px;
             border-radius: 8px;
-            background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%);
+            background: linear-gradient(135deg, #0F4C75 0%, #1B262C 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0, 191, 165, 0.35);
+            box-shadow: 0 2px 8px rgba(15, 76, 117, 0.4);
             flex-shrink: 0;
         }
 
@@ -675,12 +685,13 @@
             height: 36px;
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.08) !important;
-            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            border: 1px solid rgba(187, 225, 250, 0.2) !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 3px;
+            color: #FFFFFF;
             flex-shrink: 0;
+            padding: 4px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
             transition: all 0.2s ease;
         }
@@ -723,6 +734,7 @@
             letter-spacing: 0.04em;
         }
 
+        /* Sidebar Navigation Items */
         .sidebar-nav {
             padding: 0.75rem 0.625rem;
             flex: 1;
@@ -731,100 +743,138 @@
             gap: 0.15rem;
             overflow-y: auto;
             min-height: 0;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+            -ms-overflow-style: auto;
         }
 
         .sidebar-nav::-webkit-scrollbar {
-            display: none;
-            width: 0;
-            height: 0;
+            width: 4px;
         }
 
-        .nav-label {
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
+        }
+
+        .nav-label,
+        .nav-section-label {
             font-size: 0.6875rem;
             font-weight: 700;
-            color: #8FA2BF;
+            color: var(--magkom-gray-light, #BBBBBB) !important;
+            opacity: 0.85;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            padding: 1rem 0.85rem 0.4rem;
+            letter-spacing: 0.06em;
+            padding: 0.85rem 0.75rem 0.35rem 0.75rem;
         }
 
-        .nav-item {
+        .nav-item,
+        .nav-item-link {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            min-height: 40px;
-            padding: 0.6rem 0.85rem;
-            border-radius: 8px;
+            min-height: 38px;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
             text-decoration: none;
-            color: #CBD5E1;
+            color: var(--sidebar-text, #BBBBBB);
             font-size: 0.875rem;
-            font-weight: 600;
-            transition: all 0.15s ease-in-out;
+            font-weight: 500;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             outline: none;
             border: 1px solid transparent;
+            border-left: none;
         }
 
-        .nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.06);
-            color: #FFFFFF;
-        }
-
-        .nav-item:hover svg {
-            color: #FFFFFF;
-        }
-
-        .nav-item.active {
-            background: rgba(255, 255, 255, 0.08) !important;
+        .nav-item:hover,
+        .nav-item-link:hover {
+            background-color: rgba(255, 255, 255, 0.08) !important;
             color: #FFFFFF !important;
             border: 1px solid rgba(255, 255, 255, 0.14) !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-            font-weight: 700 !important;
+            border-radius: 8px !important;
+            transform: translateX(4px);
         }
 
-        .nav-item.active svg:not(.nav-chevron) {
+        .nav-item:hover .nav-item-icon,
+        .nav-item:hover svg,
+        .nav-item-link:hover .nav-item-icon,
+        .nav-item-link:hover svg {
             color: #FFCB05 !important;
-            stroke-width: 2.25;
-            filter: drop-shadow(0 0 6px rgba(255, 203, 5, 0.45));
+            transform: scale(1.1) translateY(-1px);
         }
 
-        .nav-chevron {
-            margin-left: auto;
-            width: 14px !important;
-            height: 14px !important;
-            color: rgba(255, 255, 255, 0.35);
-            transition: transform 0.15s ease, color 0.15s ease;
+        .nav-item:focus-visible,
+        .nav-item-link:focus-visible {
+            box-shadow: 0 0 0 2px #02275D, 0 0 0 4px #FFC300;
         }
 
-        .nav-item:hover .nav-chevron {
-            color: #FFFFFF;
-            transform: translateX(2px);
+        /* Active Navigation Item (Sleman Deep Royal - Refined & Anti-Silau) */
+        @keyframes activePillBreathe {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(1, 30, 75, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            }
+            50% {
+                box-shadow: 0 4px 16px rgba(14, 67, 138, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            }
         }
 
-        .nav-item.active .nav-chevron {
-            color: #FFCB05;
+        .nav-item.active,
+        .nav-item-link.active {
+            background: #013D8D !important;
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+            border-radius: 8px !important;
+            border: 1px solid rgba(147, 197, 253, 0.35) !important;
+            border-left: none !important;
+            margin-right: 0;
+            padding-right: 0.75rem;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(1, 30, 75, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+            animation: activePillBreathe 3.5s ease-in-out infinite;
         }
 
-        .nav-item svg {
-            width: 19px;
-            height: 19px;
+        .nav-item.active .nav-item-icon,
+        .nav-item.active svg:not(.nav-chevron),
+        .nav-item-link.active .nav-item-icon,
+        .nav-item-link.active svg {
+            color: #FFCB05 !important;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+            stroke-width: 2.2;
+        }
+
+        .nav-item-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
-            color: #8FA2BF;
-            transition: color 0.15s ease;
+            width: 20px;
+            height: 20px;
+            color: var(--magkom-gray-medium, #AAAAAA);
+            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease;
         }
 
-        .nav-item.locked {
-            opacity: 0.65;
-            cursor: pointer;
+        .nav-item svg,
+        .nav-item-link svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            transition: color 0.15s ease, transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .nav-item.locked,
+        .nav-item-link.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
             background-color: transparent !important;
-            color: rgba(255, 255, 255, 0.65) !important;
+            color: rgba(255, 255, 255, 0.6) !important;
             user-select: none;
         }
 
-        .nav-item.locked:hover {
+        .nav-item.locked:hover,
+        .nav-item-link.locked:hover {
             background-color: rgba(255, 255, 255, 0.08) !important;
             color: #FFFFFF !important;
+            transform: none !important;
         }
 
         .badge-locked {
@@ -841,7 +891,13 @@
             transition: all 0.2s ease;
         }
 
-        .nav-item.locked:hover .badge-locked {
+        .badge-locked svg {
+            width: 13px !important;
+            height: 13px !important;
+        }
+
+        .nav-item.locked:hover .badge-locked,
+        .nav-item-link.locked:hover .badge-locked {
             background: rgba(255, 255, 255, 0.2);
             color: #FFFFFF;
         }
@@ -1650,34 +1706,40 @@
                 align-items: center;
             }
 
-            html.sidebar-collapsed .nav-label {
+            html.sidebar-collapsed .nav-label,
+            html.sidebar-collapsed .nav-section-label {
                 display: none !important;
             }
 
-            html.sidebar-collapsed .nav-item {
+            html.sidebar-collapsed .nav-item,
+            html.sidebar-collapsed .nav-item-link {
                 justify-content: center;
                 padding: 0.5rem 0;
                 width: 44px;
-                height: 40px;
-                min-height: 40px;
+                height: 38px;
+                min-height: 38px;
                 position: relative;
+                margin: 0 auto;
             }
 
-            html.sidebar-collapsed .nav-item span:not(.badge-locked) {
+            html.sidebar-collapsed .nav-item span:not(.badge-locked),
+            html.sidebar-collapsed .nav-item-link span:not(.badge-locked):not(.nav-item-icon) {
                 display: none !important;
             }
 
-            html.sidebar-collapsed .nav-item .badge-locked {
+            html.sidebar-collapsed .nav-item .badge-locked,
+            html.sidebar-collapsed .nav-item-link .badge-locked {
                 position: absolute;
-                top: 4px;
-                right: 4px;
+                top: 3px;
+                right: 3px;
                 margin-left: 0;
                 width: 14px;
                 height: 14px;
                 border-radius: 4px;
             }
 
-            html.sidebar-collapsed .nav-item .badge-locked svg {
+            html.sidebar-collapsed .nav-item .badge-locked svg,
+            html.sidebar-collapsed .nav-item-link .badge-locked svg {
                 width: 9px;
                 height: 9px;
             }
@@ -1776,7 +1838,7 @@
     <div class="drawer-backdrop" id="drawerBackdrop" onclick="toggleSidebarPeserta()"></div>
 
     <!-- Sidebar Dashboard Peserta -->
-    <aside class="sidebar" id="sidebarNav">
+    <aside class="sidebar dashboard-sidebar" id="sidebarNav" aria-label="Navigasi Utama">
         <div class="sidebar-header" style="border: 0; padding: 1.125rem 1.25rem 0.875rem;">
             <a href="{{ route('landing') }}" class="site_title brand-box" title="Portal MagKom Sleman" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; padding: 0;">
                 <div class="sidebar-brand-emblem brand-icon" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">
@@ -1793,99 +1855,122 @@
         </div>
 
         <nav class="sidebar-nav">
-            <div class="nav-label">{{ __('Menu Utama') }}</div>
+            <span class="nav-section-label">{{ __('Menu Utama') }}</span>
 
-            <a href="{{ route('peserta.dashboard') }}" class="nav-item {{ request()->routeIs('peserta.dashboard') ? 'active' : '' }}" title="{{ __('Dashboard') }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                </svg>
+            <a href="{{ route('peserta.dashboard') }}" class="nav-item-link {{ request()->routeIs('peserta.dashboard') ? 'active' : '' }}" title="{{ __('Dashboard') }}">
+                <span class="nav-item-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                </span>
                 <span>{{ __('Dashboard') }}</span>
-                <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
             </a>
 
-            <a href="{{ route('peserta.profil.show') }}" class="nav-item {{ request()->routeIs('peserta.profil.*') ? 'active' : '' }}" title="{{ __('Profil & Biodata') }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                </svg>
+            <a href="{{ route('peserta.profil.show') }}" class="nav-item-link {{ request()->routeIs('peserta.profil.*') ? 'active' : '' }}" title="{{ __('Profil & Biodata') }}">
+                <span class="nav-item-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </span>
                 <span>{{ __('Profil & Biodata') }}</span>
-                <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
             </a>
 
-            <a href="{{ route('peserta.pendaftaran.index') }}" class="nav-item {{ request()->routeIs('peserta.pendaftaran.*') ? 'active' : '' }}" title="{{ __('Pendaftaran Magang') }}">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
+            <a href="{{ route('peserta.pendaftaran.index') }}" class="nav-item-link {{ request()->routeIs('peserta.pendaftaran.*') ? 'active' : '' }}" title="{{ __('Pendaftaran Magang') }}">
+                <span class="nav-item-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                    </svg>
+                </span>
                 <span>{{ __('Pendaftaran Magang') }}</span>
-                <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
             </a>
 
             @php
                 $isDiterima = auth()->user()?->hasPenempatanMagang();
             @endphp
 
-            <div class="nav-label">{{ __('Pelaksanaan Magang') }}</div>
+            <span class="nav-section-label">{{ __('Pelaksanaan Magang') }}</span>
 
             @if($isDiterima)
-                <a href="{{ route('peserta.logbook.index') }}" class="nav-item {{ request()->routeIs('peserta.logbook.*') ? 'active' : '' }}" title="{{ __('Logbook Mingguan') }}">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
+                <a href="{{ route('peserta.logbook.index') }}" class="nav-item-link {{ request()->routeIs('peserta.logbook.*') ? 'active' : '' }}" title="{{ __('Logbook Mingguan') }}">
+                    <span class="nav-item-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                    </span>
                     <span>{{ __('Logbook Mingguan') }}</span>
-                    <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
                 </a>
 
-                <a href="{{ route('peserta.tugas.index') }}" class="nav-item {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}" title="{{ __('Tugas & Progres') }}">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                    </svg>
+                <a href="{{ route('peserta.tugas.index') }}" class="nav-item-link {{ request()->routeIs('peserta.tugas.*') ? 'active' : '' }}" title="{{ __('Tugas & Progres') }}">
+                    <span class="nav-item-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                    </span>
                     <span>{{ __('Tugas & Progres') }}</span>
-                    <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
                 </a>
 
-                <a href="{{ route('peserta.nilai.show') }}" class="nav-item {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}" title="{{ __('Lembar Nilai') }}">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                    </svg>
+                <a href="{{ route('peserta.nilai.show') }}" class="nav-item-link {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}" title="{{ __('Lembar Nilai') }}">
+                    <span class="nav-item-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="7"></circle>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                        </svg>
+                    </span>
                     <span>{{ __('Lembar Nilai') }}</span>
-                    <svg class="nav-chevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
                 </a>
             @else
-                <div class="nav-item locked" 
+                <div class="nav-item-link locked" 
                      role="button" 
                      tabindex="0" 
                      onclick="notifyLockedFeature('{{ __('Logbook Mingguan') }}')" 
                      title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
+                    <span class="nav-item-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                    </span>
                     <span>{{ __('Logbook Mingguan') }}</span>
                     <span class="badge-locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}" aria-label="{{ __('Terkunci') }}">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </span>
                 </div>
 
-                <div class="nav-item locked" 
+                <div class="nav-item-link locked" 
                      role="button" 
                      tabindex="0" 
                      onclick="notifyLockedFeature('{{ __('Tugas & Progres') }}')" 
                      title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                    </svg>
+                    <span class="nav-item-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                    </span>
                     <span>{{ __('Tugas & Progres') }}</span>
                     <span class="badge-locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}" aria-label="{{ __('Terkunci') }}">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </span>
                 </div>
 
-                <div class="nav-item locked" 
+                <div class="nav-item-link locked" 
                      role="button" 
                      tabindex="0" 
                      onclick="notifyLockedFeature('{{ __('Lembar Nilai') }}')" 
                      title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                    </svg>
+                    <span class="nav-item-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="7"></circle>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                        </svg>
+                    </span>
                     <span>{{ __('Lembar Nilai') }}</span>
                     <span class="badge-locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}" aria-label="{{ __('Terkunci') }}">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>

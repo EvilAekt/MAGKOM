@@ -1,0 +1,859 @@
+/* =========================================================================
+   MAGKOM PESERTA: DETAIL TUGAS & CLASSROOM TURN-IN PANEL
+   Pola Google Classroom Persis (Tanpa Riwayat, Tanpa Feedback, Sesuai Gambar 1)
+   ========================================================================= */
+
+.classroom-assignment-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 10px 0;
+}
+
+/* Navigation: Tombol Kembali */
+.classroom-top-nav {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.btn-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
+    background: #ffffff;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 7px 16px;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.btn-back-link:hover {
+    color: #01347C;
+    border-color: #01347C;
+    background: #F8FAFC;
+    transform: translateX(-2px);
+    box-shadow: 0 3px 8px rgba(1, 52, 124, 0.12);
+}
+
+.btn-back-link svg {
+    transition: transform 0.2s ease;
+}
+
+.btn-back-link:hover svg {
+    transform: translateX(-2px);
+}
+
+.classroom-assignment-grid {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 28px;
+    align-items: stretch;
+}
+
+@media (max-width: 991px) {
+    .classroom-assignment-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================================
+   KOLOM KIRI: LEMBAR PENUGASAN BERSIH (PERSIS GAMBAR 1)
+   ========================================================================= */
+.classroom-sheet-main {
+    background: #FFFFFF;
+    border: 1px solid #D8E2EC;
+    border-radius: 14px;
+    padding: 24px 28px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.classroom-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.classroom-icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #2563EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.classroom-title-content {
+    flex: 1;
+}
+
+.classroom-assignment-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #1E293B;
+    line-height: 1.35;
+    margin: 0 0 8px 0;
+}
+
+.classroom-assignment-meta-author {
+    font-size: 0.8125rem;
+    color: #475569;
+    margin-bottom: 4px;
+}
+
+.classroom-assignment-meta-due {
+    font-size: 0.8125rem;
+    color: #475569;
+}
+
+.btn-dots-menu {
+    background: none;
+    border: none;
+    color: #64748B;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease;
+}
+
+.btn-dots-menu:hover {
+    background-color: #F1F5F9;
+    color: #1E293B;
+}
+
+.classroom-sheet-divider {
+    border: none;
+    border-top: 1px solid #E2E8F0;
+    margin: 18px 0 22px 0;
+}
+
+.classroom-instruction-body {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: #334155;
+    white-space: pre-line;
+    flex: 1;
+}
+
+/* =========================================================================
+   KOLOM KANAN: PANEL TUGAS ANDA & KOMENTAR PRIBADI (PERSIS GAMBAR 1)
+   ========================================================================= */
+.your-work-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 20px;
+}
+
+/* Card 1: Tugas Anda */
+.classroom-work-card {
+    background: #F0F4F9;
+    border: 1px solid #D8E2EC;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.classroom-work-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.classroom-work-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: #1E293B;
+}
+
+.classroom-work-status {
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+/* Merah HANYA jika melewati tenggat dan belum dikumpulkan (missing / overdue) */
+.classroom-work-status.status-missing {
+    color: #DC2626 !important;
+}
+
+/* Ditugaskan sebelum tenggat: abu-abu netral, bukan merah */
+.classroom-work-status.status-assigned {
+    color: #475569 !important;
+}
+
+/* Diserahkan: hijau sukses, BUKAN merah */
+.classroom-work-status.status-turned-in {
+    color: #16A34A !important;
+}
+
+/* Selesai: hijau */
+.classroom-work-status.status-done {
+    color: #10B981 !important;
+}
+
+/* Daftar Lampiran Terpilih */
+.attached-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.attached-item-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #FFFFFF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.08);
+}
+
+.attached-item-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.attached-item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #EFF6FF;
+    color: #2563EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.attached-item-info {
+    overflow: hidden;
+}
+
+.attached-item-name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #1E293B;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.attached-item-meta {
+    font-size: 0.6875rem;
+    color: #64748B;
+    margin-top: 1px;
+}
+
+.attached-item-remove {
+    background: none;
+    border: none;
+    color: #94A3B8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.attached-item-remove:hover {
+    color: #DC2626;
+    background-color: #FEE2E2;
+}
+
+/* Tombol "+ Tambah berkas" (Outlined Pill) */
+.btn-dropdown-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.btn-add-attachment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    border: 1.5px solid #2563EB;
+    background: #FFFFFF;
+    color: #2563EB;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-add-attachment:hover {
+    background: #EFF6FF;
+}
+
+/* Dropdown Menu (Hanya Link & File) */
+.classroom-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    z-index: 50;
+    overflow: hidden;
+    padding: 6px 0;
+}
+
+.classroom-dropdown-menu.show {
+    display: block;
+    animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 18px;
+    border: none;
+    background: none;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1E293B;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.dropdown-item-action:hover {
+    background-color: #F1F5F9;
+    color: #2563EB;
+}
+
+.dropdown-item-action svg {
+    color: #475569;
+}
+
+.dropdown-item-action:hover svg {
+    color: #2563EB;
+}
+
+/* Tombol Utama "Serahkan" (Pill Rounded) */
+.btn-serahkan-work {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 18px;
+    border-radius: 9999px;
+    border: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-serahkan-work.disabled {
+    background: #CBD5E1;
+    color: #64748B;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn-serahkan-work.active {
+    background: #2563EB;
+    color: #FFFFFF;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+}
+
+.btn-serahkan-work.active:hover {
+    background: #1D4ED8;
+}
+
+.work-caption-note {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: #64748B;
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+/* Card 2: Komentar Pribadi */
+.private-comments-card {
+    background: #F0F4F9;
+    border: 1px solid #D8E2EC;
+    border-radius: 14px;
+    padding: 18px 20px;
+}
+
+.private-comments-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1E293B;
+    margin-bottom: 12px;
+}
+
+.private-comment-trigger-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #2563EB;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 0;
+    text-align: left;
+}
+
+.private-comment-trigger-btn:hover {
+    text-decoration: underline;
+}
+
+.private-comments-textarea-wrap {
+    margin-top: 8px;
+}
+
+.private-comments-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-family: inherit;
+    resize: none;
+    min-height: 60px;
+    background: #FFFFFF;
+    color: #0F172A;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.private-comments-textarea:focus {
+    outline: none;
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* =========================================================================
+   MODAL DIALOG (LINK & FILE)
+   ========================================================================= */
+.classroom-modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1050;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.classroom-modal-backdrop.show {
+    display: flex;
+    animation: backdropFadeIn 0.2s ease-out;
+}
+
+@keyframes backdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.classroom-modal-dialog {
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    overflow: hidden;
+    animation: modalScaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.classroom-modal-dialog.modal-link-size {
+    max-width: 440px;
+}
+
+.classroom-modal-dialog.modal-file-size {
+    max-width: 680px;
+    height: 520px;
+    display: flex;
+    flex-direction: column;
+}
+
+.classroom-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.classroom-modal-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0F172A;
+}
+
+.classroom-modal-close {
+    background: none;
+    border: none;
+    color: #94A3B8;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.15s ease;
+}
+
+.classroom-modal-close:hover {
+    color: #1E293B;
+}
+
+.classroom-modal-body {
+    padding: 22px;
+}
+
+.classroom-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 22px;
+    border-top: 1px solid #E2E8F0;
+    background: #FAFBFD;
+}
+
+/* Tab Navigation for File Modal */
+.classroom-modal-tabs {
+    display: flex;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 0 22px;
+    background: #FFFFFF;
+}
+
+.classroom-modal-tab-btn {
+    padding: 12px 18px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.classroom-modal-tab-btn:hover {
+    color: #2563EB;
+}
+
+.classroom-modal-tab-btn.active {
+    color: #2563EB;
+    border-bottom-color: #2563EB;
+}
+
+.classroom-tab-panel {
+    display: none;
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+.classroom-tab-panel.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Upload Dropzone Tab */
+.file-dropzone-box {
+    border: 2px dashed #93C5FD;
+    border-radius: 12px;
+    background: #F8FAFC;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-dropzone-box:hover,
+.file-dropzone-box.drag-over {
+    background: #EFF6FF;
+    border-color: #2563EB;
+}
+
+.cloud-upload-illustration {
+    margin-bottom: 16px;
+    color: #3B82F6;
+}
+
+.btn-browse-file {
+    padding: 8px 22px;
+    border-radius: 20px;
+    background: #2563EB;
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: background-color 0.15s ease;
+}
+
+.btn-browse-file:hover {
+    background: #1D4ED8;
+}
+
+.dropzone-label-text {
+    font-size: 0.8125rem;
+    color: #475569;
+}
+
+.dropzone-sub-text {
+    font-size: 0.6875rem;
+    color: #94A3B8;
+    margin-top: 4px;
+}
+
+/* Recent Files Tab */
+.recent-files-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.recent-files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    max-height: 330px;
+    overflow-y: auto;
+    padding: 2px;
+}
+
+.recent-file-card {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    background: #FFFFFF;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+}
+
+.recent-file-card:hover {
+    border-color: #93C5FD;
+    background: #F8FAFC;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.recent-file-card.selected {
+    border-color: #2563EB;
+    background: #EFF6FF;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.recent-file-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #EFF6FF;
+    color: #2563EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.recent-file-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0F172A;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.recent-file-meta {
+    font-size: 0.6875rem;
+    color: #64748B;
+    margin-top: 2px;
+}
+
+.recent-empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: #64748B;
+    text-align: center;
+}
+
+/* Submitted Work Link Pill */
+.submitted-item-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: background 0.15s ease;
+}
+
+.submitted-item-card:hover {
+    background: #DBEAFE;
+}
+
+/* Dark Mode Harmonization */
+[data-theme="dark"] .classroom-sheet-main {
+    background: transparent !important;
+}
+
+[data-theme="dark"] .classroom-assignment-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .classroom-assignment-meta-author,
+[data-theme="dark"] .classroom-assignment-meta-due,
+[data-theme="dark"] .classroom-instruction-body {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .classroom-sheet-main {
+    background: #182234 !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .btn-back-link {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .btn-back-link:hover {
+    background: #1E293B !important;
+    border-color: #38BDF8 !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .classroom-sheet-divider {
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .classroom-work-card,
+[data-theme="dark"] .private-comments-card,
+[data-theme="dark"] .classroom-modal-dialog,
+[data-theme="dark"] .classroom-dropdown-menu,
+[data-theme="dark"] .recent-file-card {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .classroom-work-title,
+[data-theme="dark"] .classroom-modal-title,
+[data-theme="dark"] .recent-file-title,
+[data-theme="dark"] .private-comments-header,
+[data-theme="dark"] .attached-item-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .file-dropzone-box {
+    background: #182234 !important;
+    border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .dropdown-item-action {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .dropdown-item-action:hover {
+    background-color: #1E293B !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .classroom-modal-header,
+[data-theme="dark"] .classroom-modal-footer,
+[data-theme="dark"] .classroom-modal-tabs {
+    border-color: #26354D !important;
+    background: #0F172A !important;
+}
+
+[data-theme="dark"] .private-comments-textarea {
+    background-color: #0F172A !important;
+    border-color: #26354D !important;
+    color: #E2E8F0 !important;
+}
+
+@keyframes spinClassroom {
+    to { transform: rotate(360deg); }
+}

@@ -35,8 +35,8 @@
         
         {{-- Card 1: Tugas Bimbingan / Tugas Magang Mendesak --}}
         <div class="saas-card x_panel">
-            <div class="saas-card-header x_title">
-                <div>
+            <div class="saas-card-header x_title" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: nowrap;">
+                <div style="min-width: 0;">
                     <h3 class="saas-item-title">
                         Tugas Magang Mendesak
                     </h3>
@@ -44,8 +44,9 @@
                         Tugas bimbingan dalam proses pengerjaan
                     </p>
                 </div>
-                <a href="{{ route('peserta.tugas.index') }}" class="saas-link-more">
-                    Lihat Semua &rarr;
+                <a href="{{ route('peserta.tugas.index') }}" class="saas-link-more" title="Lihat Semua Tugas">
+                    <span>Lihat Semua</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
             </div>
 
@@ -89,8 +90,8 @@
 
         {{-- Card 2: Logbook Mingguan / Logbook Mingguan Terkini --}}
         <div class="saas-card x_panel">
-            <div class="saas-card-header x_title">
-                <div>
+            <div class="saas-card-header x_title" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: nowrap;">
+                <div style="min-width: 0;">
                     <h3 class="saas-item-title">
                         Logbook Mingguan Terkini
                     </h3>
@@ -98,8 +99,9 @@
                         Catatan aktivitas dan jurnal berkala
                     </p>
                 </div>
-                <a href="{{ route('peserta.logbook.index') }}" class="saas-link-more">
-                    Lihat Semua &rarr;
+                <a href="{{ route('peserta.logbook.index') }}" class="saas-link-more" title="Lihat Semua Logbook">
+                    <span>Lihat Semua</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
             </div>
 

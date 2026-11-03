@@ -1,0 +1,1120 @@
+/* ========================================================
+   MAGKOM GENTELELLA DESIGN SYSTEM: LOGBOOK PESERTA
+   Portal Peserta: Modul Logbook & Jurnal Mingguan
+   ======================================================== */
+
+.logbook-wrapper {
+    max-width: 1040px;
+    margin: 0 auto;
+}
+
+.card-modern {
+    background: #ffffff;
+    border: 1px solid #CBD5E1;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+}
+
+/* 1. Banner Penempatan Magang (SuperAdmin Studio Parity) */
+.banner-penempatan {
+    background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                linear-gradient(135deg, #01347C 0%, #003566 100%);
+    border-radius: 16px;
+    padding: 28px 32px;
+    color: #ffffff;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-penempatan::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 85% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.banner-content-wrap,
+.banner-side-stat {
+    position: relative;
+    z-index: 2;
+}
+
+.banner-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.3;
+}
+
+.banner-meta {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.92);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    line-height: 1.5;
+}
+
+.banner-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* 2. Weekly Progress Tracker Card */
+.progress-tracker-card {
+    background: #ffffff;
+    border: 1px solid #CBD5E1;
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.progress-tracker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.progress-tracker-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #0F172A;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.progress-bar-wrap {
+    height: 10px;
+    background: #E2E8F0;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #01347C 0%, #3B82F6 100%);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+.weekly-stepper-wrap {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 2px 8px 2px;
+    scrollbar-width: thin;
+    scrollbar-color: #94A3B8 transparent;
+}
+
+.weekly-stepper-wrap::-webkit-scrollbar {
+    height: 6px;
+}
+
+.weekly-stepper-wrap::-webkit-scrollbar-thumb {
+    background: #94A3B8;
+    border-radius: 999px;
+}
+
+.week-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    background: #F8FAFC;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+}
+
+.week-chip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    border-color: #01347C;
+    color: #01347C;
+}
+
+.week-chip.is-active-week {
+    border-color: #01347C;
+    background: #EFF6FF;
+    color: #01347C;
+    font-weight: 700;
+    box-shadow: 0 0 0 2px rgba(1, 52, 124, 0.2);
+}
+
+.week-chip.is-done {
+    background: #ECFDF5;
+    border-color: #A7F3D0;
+    color: #065F46;
+}
+
+.week-chip.is-waiting {
+    background: #EFF6FF;
+    border-color: #BFDBFE;
+    color: #1E40AF;
+}
+
+.week-chip.is-revisi {
+    background: #FEF3C7;
+    border-color: #FDE68A;
+    color: #92400E;
+}
+
+/* 3. Action Bar & Riwayat Header */
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.logbook-filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.logbook-search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    max-width: 440px;
+}
+
+.search-input-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.search-input-wrapper .search-icon {
+    position: absolute;
+    left: 12px;
+    color: #94A3B8;
+    pointer-events: none;
+}
+
+.search-logbook-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 34px 0 38px;
+    border: 1px solid #CBD5E1;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    color: #0F172A;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.search-logbook-input:focus {
+    border-color: #01347C;
+    box-shadow: 0 0 0 3px rgba(1, 52, 124, 0.12);
+}
+
+.btn-clear-search {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    line-height: 1;
+    color: #94A3B8;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-clear-search:hover {
+    color: #334155;
+}
+
+.search-result-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+    background: #F1F5F9;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #CBD5E1;
+}
+
+/* 4. Kartu Logbook Mingguan (Dengan Efek Hover Ala Tugas) */
+.weekly-card {
+    background: #ffffff;
+    border: 1px solid #CBD5E1;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+.weekly-card:hover {
+    border-color: #01347C;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(1, 52, 124, 0.12);
+}
+
+.weekly-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    background: #ffffff;
+    transition: background-color 0.15s ease;
+}
+
+.weekly-card-header:hover {
+    background-color: #F8FAFC;
+}
+
+.weekly-card:hover .weekly-card-title {
+    color: #01347C;
+}
+
+.weekly-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 2px;
+    transition: color 0.15s ease;
+}
+
+.weekly-card-meta {
+    font-size: 0.75rem;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.weekly-collapsed-preview {
+    display: block;
+    font-size: 0.8125rem;
+    color: #475569;
+    margin-top: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 520px;
+    line-height: 1.4;
+}
+
+.weekly-card.is-expanded .weekly-collapsed-preview {
+    display: none;
+}
+
+.weekly-card.is-expanded .weekly-card-header {
+    border-bottom: 1px solid #E2E8F0;
+    background-color: #F8FAFC;
+}
+
+.weekly-badge-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.week-number-pill {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    color: #01347C;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.weekly-card:hover .week-number-pill {
+    background: #01347C;
+    color: #ffffff;
+    border-color: #01347C;
+}
+
+.btn-logbook-edit {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #01347C;
+    background: #ffffff;
+    border: 1.5px solid #01347C;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-logbook-edit:hover {
+    background: #01347C;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(1, 52, 124, 0.2);
+}
+
+.btn-chevron-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94A3B8;
+    transition: all 0.15s ease;
+    border-radius: 6px;
+}
+
+.btn-chevron-toggle:hover {
+    color: #0F172A;
+    background: #E2E8F0;
+}
+
+.chevron-icon {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.weekly-card.is-expanded .chevron-icon {
+    transform: rotate(180deg);
+}
+
+.weekly-card-content {
+    padding: 20px 24px;
+    display: none;
+    background: #ffffff;
+}
+
+.weekly-card.is-expanded .weekly-card-content {
+    display: block;
+}
+
+.weekly-body {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: #334155;
+    white-space: pre-line;
+}
+
+/* 5. Modal Styling (Compact & Redesain Attachment Ala Classroom) */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-backdrop.is-open {
+    display: flex;
+}
+
+.modal-box-compact {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 620px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-header-compact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 16px 24px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.modal-header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.modal-icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #EFF6FF;
+    color: #01347C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.modal-title-text {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.modal-subtitle-text {
+    font-size: 0.8125rem;
+    color: #64748B;
+    margin: 2px 0 0 0;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    color: #94A3B8;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+}
+
+.modal-close-btn:hover {
+    color: #0F172A;
+    background: #F1F5F9;
+}
+
+.modal-body-compact {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 2-Column Grid untuk Minggu Magang & Tanggal Pelaporan */
+.logbook-modal-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+@media (max-width: 580px) {
+    .logbook-modal-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-group-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-label-compact {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-control-compact {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #0F172A;
+    background: #ffffff;
+    outline: none;
+    transition: all 0.15s ease;
+    box-sizing: border-box;
+}
+
+.form-control-compact:focus {
+    border-color: #01347C;
+    box-shadow: 0 0 0 3px rgba(1, 52, 124, 0.12);
+}
+
+textarea.form-control-compact {
+    height: auto;
+    padding: 10px 12px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.char-counter-compact {
+    font-size: 0.75rem;
+    color: #64748B;
+    text-align: right;
+    margin-top: 2px;
+}
+
+/* 6. Segmented Attachment Switcher Ala Google Classroom */
+.attachment-card-section {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.attachment-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* =========================================================================
+   ATTACHMENT SECTION (PERSIS DETAIL TUGAS GOOGLE CLASSROOM)
+   ========================================================================= */
+.logbook-attachment-section {
+    margin-top: 10px;
+    margin-bottom: 8px;
+}
+
+/* Attached Items List */
+.attached-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.attached-item-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #FFFFFF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.08);
+}
+
+.attached-item-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.attached-item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #EFF6FF;
+    color: #2563EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.attached-item-info {
+    overflow: hidden;
+}
+
+.attached-item-name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #1E293B;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 280px;
+}
+
+.attached-item-meta {
+    font-size: 0.6875rem;
+    color: #64748B;
+    margin-top: 1px;
+}
+
+.attached-item-remove {
+    background: none;
+    border: none;
+    color: #94A3B8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.attached-item-remove:hover {
+    color: #DC2626;
+    background-color: #FEE2E2;
+}
+
+/* Tombol "+ Tambah berkas" (Outlined Pill Persis Tugas) */
+.btn-dropdown-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.btn-add-attachment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    border: 1.5px solid #2563EB;
+    background: #FFFFFF;
+    color: #2563EB;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-add-attachment:hover {
+    background: #EFF6FF;
+}
+
+/* Dropdown Menu (Hanya Link & File) */
+.classroom-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    z-index: 50;
+    overflow: hidden;
+    padding: 6px 0;
+}
+
+.classroom-dropdown-menu.show {
+    display: block;
+    animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 18px;
+    border: none;
+    background: none;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1E293B;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.dropdown-item-action:hover {
+    background-color: #F1F5F9;
+    color: #2563EB;
+}
+
+.dropdown-item-action svg {
+    color: #475569;
+}
+
+.dropdown-item-action:hover svg {
+    color: #2563EB;
+}
+
+/* =========================================================================
+   SUB-MODAL DIALOG LINK & FILE (GOOGLE CLASSROOM STYLE)
+   ========================================================================= */
+.classroom-modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(2px);
+    z-index: 1150;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.classroom-modal-backdrop.show {
+    display: flex;
+    animation: backdropFadeIn 0.2s ease-out;
+}
+
+.classroom-modal-dialog {
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    overflow: hidden;
+    animation: modalScaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.classroom-modal-dialog.modal-link-size {
+    max-width: 440px;
+}
+
+.classroom-modal-dialog.modal-file-size {
+    max-width: 600px;
+    height: 440px;
+    display: flex;
+    flex-direction: column;
+}
+
+.classroom-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 22px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.classroom-modal-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0F172A;
+}
+
+.classroom-modal-close {
+    background: none;
+    border: none;
+    color: #94A3B8;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.15s ease;
+}
+
+.classroom-modal-close:hover {
+    color: #1E293B;
+}
+
+.classroom-modal-body {
+    padding: 22px;
+}
+
+.classroom-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 22px;
+    border-top: 1px solid #E2E8F0;
+    background: #FAFBFD;
+}
+
+.classroom-modal-tabs {
+    display: flex;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 0 22px;
+    background: #FFFFFF;
+}
+
+.classroom-modal-tab-btn {
+    padding: 12px 18px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.classroom-modal-tab-btn.active {
+    color: #2563EB;
+    border-bottom-color: #2563EB;
+}
+
+.classroom-tab-panel {
+    display: none;
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+.classroom-tab-panel.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Upload Dropzone Tab */
+.file-dropzone-box {
+    border: 2px dashed #93C5FD;
+    border-radius: 12px;
+    background: #F8FAFC;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-dropzone-box:hover,
+.file-dropzone-box.drag-over {
+    background: #EFF6FF;
+    border-color: #2563EB;
+}
+
+.cloud-upload-illustration {
+    margin-bottom: 16px;
+    color: #3B82F6;
+}
+
+.btn-browse-file {
+    padding: 8px 22px;
+    border-radius: 20px;
+    background: #2563EB;
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: background-color 0.15s ease;
+}
+
+.btn-browse-file:hover {
+    background: #1D4ED8;
+}
+
+.dropzone-label-text {
+    font-size: 0.8125rem;
+    color: #475569;
+}
+
+.dropzone-sub-text {
+    font-size: 0.6875rem;
+    color: #94A3B8;
+    margin-top: 4px;
+}
+
+.modal-footer-compact {
+    padding: 16px 24px;
+    border-top: 1px solid #E2E8F0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Dark Mode Harmonization */
+[data-theme="dark"] .card-modern,
+[data-theme="dark"] .progress-tracker-card,
+[data-theme="dark"] .weekly-card,
+[data-theme="dark"] .weekly-card-header,
+[data-theme="dark"] .weekly-card-content,
+[data-theme="dark"] .modal-box-compact {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .weekly-card:hover {
+    border-color: #38BDF8 !important;
+    box-shadow: 0 6px 18px rgba(56, 189, 248, 0.12) !important;
+}
+
+[data-theme="dark"] .weekly-card:hover .weekly-card-title {
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .weekly-card-title,
+[data-theme="dark"] .modal-title-text,
+[data-theme="dark"] .progress-tracker-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .weekly-card-meta,
+[data-theme="dark"] .weekly-collapsed-preview,
+[data-theme="dark"] .modal-subtitle-text,
+[data-theme="dark"] .char-counter-compact {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .week-number-pill {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .weekly-card:hover .week-number-pill {
+    background: #0284C7 !important;
+    color: #ffffff !important;
+    border-color: #0284C7 !important;
+}
+
+[data-theme="dark"] .form-control-compact,
+[data-theme="dark"] .search-logbook-input,
+[data-theme="dark"] .dropzone-compact,
+[data-theme="dark"] .link-input-wrapper input {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .attachment-card-section {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .attachment-tabs-pill {
+    background: #1E293B !important;
+}
+
+[data-theme="dark"] .attachment-tab-btn.active {
+    background: #38BDF8 !important;
+    color: #0F172A !important;
+}
+
+[data-theme="dark"] .modal-header-compact,
+[data-theme="dark"] .modal-footer-compact,
+[data-theme="dark"] .weekly-card.is-expanded .weekly-card-header,
+[data-theme="dark"] .logbook-filter-bar {
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .attached-item-card,
+[data-theme="dark"] .classroom-dropdown-menu,
+[data-theme="dark"] .classroom-modal-dialog,
+[data-theme="dark"] .classroom-modal-tabs {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .attached-item-name,
+[data-theme="dark"] .classroom-modal-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .attached-item-meta,
+[data-theme="dark"] .dropzone-label-text,
+[data-theme="dark"] .classroom-modal-tab-btn {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .dropdown-item-action {
+    color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .dropdown-item-action:hover {
+    background-color: #1E293B !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .classroom-modal-header,
+[data-theme="dark"] .classroom-modal-footer {
+    border-color: #26354D !important;
+    background: #111827 !important;
+}
+
+[data-theme="dark"] .file-dropzone-box {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .btn-logbook-edit {
+    background: transparent !important;
+    border-color: #38BDF8 !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .btn-logbook-edit:hover {
+    background: #0284C7 !important;
+    color: #ffffff !important;
+}
+

@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class TugasController extends Controller
 {
@@ -33,10 +34,39 @@ class TugasController extends Controller
     {
         $user = $request->user();
 
-        $tugas = Tugas::with(['progresLogs', 'penempatan.pembimbing'])
-            ->whereHas('penempatan', function ($q) use ($user) {
-                $q->where('peserta_id', $user->id);
-            })
+        $tugasQuery = Tugas::whereHas('penempatan', function ($q) use ($user) {
+            $q->where('peserta_id', $user->id);
+        });
+
+        $allTugas = (clone $tugasQuery)->get();
+        $totalSemua = $allTugas->count();
+        $totalBelum = 0;
+        $totalProses = 0;
+        $totalSelesai = 0;
+        $totalTerlambat = 0;
+        $now = Carbon::now();
+
+        foreach ($allTugas as $item) {
+            $st = $item->status instanceof StatusTugasEnum ? $item->status->value : (string) $item->status;
+            $dl = Carbon::parse($item->deadline);
+
+            if ($st === StatusTugasEnum::Selesai->value || $st === 'selesai') {
+                $totalSelesai++;
+            } else {
+                if ($st === StatusTugasEnum::Proses->value || $st === 'proses') {
+                    $totalProses++;
+                } else {
+                    $totalBelum++;
+                }
+
+                if ($dl->isPast()) {
+                    $totalTerlambat++;
+                }
+            }
+        }
+
+        $tugas = (clone $tugasQuery)
+            ->with(['progresLogs', 'penempatan.pembimbing'])
             ->latest('deadline')
             ->paginate(15);
 
@@ -44,12 +74,24 @@ class TugasController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $tugas,
+                'meta' => [
+                    'totalSemua' => $totalSemua,
+                    'totalBelum' => $totalBelum,
+                    'totalProses' => $totalProses,
+                    'totalSelesai' => $totalSelesai,
+                    'totalTerlambat' => $totalTerlambat,
+                ],
             ]);
         }
 
         return view('peserta.tugas.index', [
             'tugasList' => $tugas,
             'tugas' => $tugas,
+            'totalSemua' => $totalSemua,
+            'totalBelum' => $totalBelum,
+            'totalProses' => $totalProses,
+            'totalSelesai' => $totalSelesai,
+            'totalTerlambat' => $totalTerlambat,
         ]);
     }
 
@@ -64,15 +106,49 @@ class TugasController extends Controller
             $q->latest();
         }, 'penempatan.pembimbing']);
 
+        $user = $request->user();
+        $recentFiles = collect();
+        if ($user) {
+            $recentFiles = ProgresLog::whereHas('tugas.penempatan', function ($q) use ($user) {
+                $q->where('peserta_id', $user->id);
+            })
+                ->whereNotNull('file')
+                ->latest('id')
+                ->limit(12)
+                ->get()
+                ->filter(function ($log) {
+                    return ! empty($log->file) && Storage::disk('private')->exists($log->file);
+                })
+                ->map(function ($log) {
+                    $filename = basename($log->file);
+                    $size = Storage::disk('private')->size($log->file);
+                    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+                    return [
+                        'id' => $log->id,
+                        'path' => $log->file,
+                        'filename' => $filename,
+                        'extension' => $ext,
+                        'size_formatted' => $size > 1048576
+                            ? round($size / 1048576, 2).' MB'
+                            : round($size / 1024, 1).' KB',
+                        'tgl_lapor' => $log->tgl_lapor ? Carbon::parse($log->tgl_lapor)->translatedFormat('d M Y') : $log->created_at?->translatedFormat('d M Y'),
+                    ];
+                })
+                ->values();
+        }
+
         if ($request->expectsJson() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'data' => $tugas,
+                'recent_files' => $recentFiles,
             ]);
         }
 
         return view('peserta.tugas.show', [
             'tugas' => $tugas,
+            'recentFiles' => $recentFiles,
         ]);
     }
 
@@ -87,6 +163,22 @@ class TugasController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $filePath = $file->store("progres/{$tugas->id}", 'private');
+        } elseif ($request->filled('recent_file_path')) {
+            // Anti-IDOR: pastikan file ini benar-benar milik peserta yang login
+            $recentPath = (string) $request->validated('recent_file_path');
+            $user = $request->user();
+            $isOwned = ProgresLog::where('file', $recentPath)
+                ->whereHas('tugas.penempatan', function ($q) use ($user) {
+                    $q->where('peserta_id', $user?->id);
+                })
+                ->exists();
+
+            if ($isOwned && Storage::disk('private')->exists($recentPath)) {
+                $ext = pathinfo($recentPath, PATHINFO_EXTENSION);
+                $newFilename = Str::random(40).($ext ? ".{$ext}" : '');
+                $filePath = "progres/{$tugas->id}/{$newFilename}";
+                Storage::disk('private')->copy($recentPath, $filePath);
+            }
         }
 
         $progres = ProgresLog::create([

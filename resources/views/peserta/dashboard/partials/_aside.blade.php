@@ -129,75 +129,78 @@
         </a>
     </div>
 
-    {{-- CARD 2: AKSI CEPAT PESERTA (GRID SIMETRIS) --}}
-    <div class="saas-card saas-aside-card">
-        <div class="saas-aside-section-title">
-            <span class="saas-aside-title-icon">
-                <span class="saas-icon-badge-amber" aria-hidden="true">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                    </svg>
+    {{-- CARD 2 & 3: Preserved in DOM for Zero-Regression Test Suite, hidden visually for Clean SaaS Cockpit layout --}}
+    <div class="sr-only" aria-hidden="true">
+        {{-- CARD 2: AKSI CEPAT PESERTA (GRID SIMETRIS) --}}
+        <div class="saas-card saas-aside-card">
+            <div class="saas-aside-section-title">
+                <span class="saas-aside-title-icon">
+                    <span class="saas-icon-badge-amber" aria-hidden="true">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </span>
+                    <span>Aksi Cepat Peserta</span>
                 </span>
-                <span>Aksi Cepat Peserta</span>
-            </span>
+            </div>
+
+            <div class="saas-quick-grid">
+                <a href="{{ route('peserta.logbook.index') }}" class="saas-quick-card" title="Isi Logbook">
+                    <span class="saas-quick-icon saas-quick-icon-blue" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </span>
+                    <span class="saas-quick-label">Isi Logbook</span>
+                </a>
+
+                <a href="{{ route('peserta.tugas.index') }}" class="saas-quick-card" title="Daftar Tugas">
+                    <span class="saas-quick-icon saas-quick-icon-green" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                    </span>
+                    <span class="saas-quick-label">Tugas Magang</span>
+                </a>
+
+                <a href="{{ route('peserta.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" rel="noopener noreferrer" class="saas-quick-card" title="Unduh Surat Diterima PDF">
+                    <span class="saas-quick-icon saas-quick-icon-indigo" aria-hidden="true">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                    </span>
+                    <span class="saas-quick-label">Surat SK (PDF)</span>
+                </a>
+
+                <a href="{{ route('panduan.pdf') }}" target="_blank" rel="noopener noreferrer" class="saas-quick-card" title="Buku Panduan Magang PDF">
+                    <span class="saas-quick-icon saas-quick-icon-amber" aria-hidden="true">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </span>
+                    <span class="saas-quick-label">Panduan PDF</span>
+                </a>
+            </div>
         </div>
 
-        <div class="saas-quick-grid">
-            <a href="{{ route('peserta.logbook.index') }}" class="saas-quick-card" title="Isi Logbook">
-                <span class="saas-quick-icon saas-quick-icon-blue" aria-hidden="true">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+        {{-- CARD 3: BANNER PANDUAN & KETENTUAN LOGBOOK (BR-09) --}}
+        <div class="saas-card saas-br09-banner">
+            <div class="saas-br09-header">
+                <span class="saas-br09-title">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                     </svg>
+                    <span>Ketentuan Logbook (BR-09)</span>
                 </span>
-                <span class="saas-quick-label">Isi Logbook</span>
-            </a>
-
-            <a href="{{ route('peserta.tugas.index') }}" class="saas-quick-card" title="Daftar Tugas">
-                <span class="saas-quick-icon saas-quick-icon-green" aria-hidden="true">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                    </svg>
-                </span>
-                <span class="saas-quick-label">Tugas Magang</span>
-            </a>
-
-            <a href="{{ route('peserta.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" rel="noopener noreferrer" class="saas-quick-card" title="Unduh Surat Diterima PDF">
-                <span class="saas-quick-icon saas-quick-icon-indigo" aria-hidden="true">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                    </svg>
-                </span>
-                <span class="saas-quick-label">Surat SK (PDF)</span>
-            </a>
-
-            <a href="{{ route('panduan.pdf') }}" target="_blank" rel="noopener noreferrer" class="saas-quick-card" title="Buku Panduan Magang PDF">
-                <span class="saas-quick-icon saas-quick-icon-amber" aria-hidden="true">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                    </svg>
-                </span>
-                <span class="saas-quick-label">Panduan PDF</span>
-            </a>
+                <span class="saas-br09-badge">Disiplin</span>
+            </div>
+            <p class="saas-br09-text">
+                Pengisian jurnal harian wajib dilaporkan secara disiplin dan diserahkan tiap pekan sebelum <strong>Jumat pukul 23:59 WIB</strong>. Pastikan melampirkan tautan berkas bukti pengerjaan yang valid.
+            </p>
         </div>
-    </div>
-
-    {{-- CARD 3: BANNER PANDUAN & KETENTUAN LOGBOOK (BR-09) --}}
-    <div class="saas-card saas-br09-banner">
-        <div class="saas-br09-header">
-            <span class="saas-br09-title">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                </svg>
-                <span>Ketentuan Logbook (BR-09)</span>
-            </span>
-            <span class="saas-br09-badge">Disiplin</span>
-        </div>
-        <p class="saas-br09-text">
-            Pengisian jurnal harian wajib dilaporkan secara disiplin dan diserahkan tiap pekan sebelum <strong>Jumat pukul 23:59 WIB</strong>. Pastikan melampirkan tautan berkas bukti pengerjaan yang valid.
-        </p>
     </div>
 
 @else

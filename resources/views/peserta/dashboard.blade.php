@@ -462,13 +462,37 @@
     .saas-link-more {
         font-family: var(--font-display, 'Lexend', sans-serif);
         font-size: 0.8125rem;
-        color: #2563eb;
-        text-decoration: none;
         font-weight: 600;
+        color: var(--magkom-primary-blue, #01347C) !important;
+        background: rgba(1, 52, 124, 0.08);
+        border: 1px solid rgba(1, 52, 124, 0.2);
+        padding: 6px 14px;
+        border-radius: 6px;
+        text-decoration: none !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        box-shadow: 0 1px 2px rgba(1, 52, 124, 0.06);
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .saas-link-more:hover {
-        text-decoration: underline;
+        background: var(--magkom-primary-blue, #01347C);
+        color: #ffffff !important;
+        border-color: var(--magkom-primary-blue, #01347C);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(1, 52, 124, 0.25);
+        text-decoration: none !important;
+    }
+
+    .saas-link-more svg {
+        transition: transform 0.2s ease;
+    }
+
+    .saas-link-more:hover svg {
+        transform: translateX(3px);
     }
 
     .saas-badge-portal {
@@ -527,22 +551,29 @@
     }
 
     .saas-btn-detail {
-        padding: 6px 12px;
-        font-size: 0.775rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 14px;
+        font-size: 0.8125rem;
         font-weight: 600;
-        color: var(--neutral-700, #334155);
+        color: var(--magkom-primary-blue, #01347C);
         background: #ffffff;
-        border: 1px solid var(--neutral-200, #e2e8f0);
-        border-radius: 8px;
+        border: 1.5px solid rgba(1, 52, 124, 0.3);
+        border-radius: 6px;
         text-decoration: none;
-        white-space: nowrap;
-        transition: all 0.15s ease;
+        white-space: nowrap !important;
+        flex-shrink: 0;
+        box-shadow: 0 1px 2px rgba(1, 52, 124, 0.08);
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .saas-btn-detail:hover {
-        background: #f1f5f9;
-        border-color: #94a3b8;
-        color: #0f172a;
+        background: var(--magkom-primary-blue, #01347C);
+        border-color: var(--magkom-primary-blue, #01347C);
+        color: #ffffff !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(1, 52, 124, 0.25);
     }
 
     .saas-btn-revisi {
@@ -672,15 +703,16 @@
         justify-content: center;
         gap: 8px;
         width: 100%;
-        padding: 9px 16px;
+        min-height: 42px;
+        padding: 10px 18px;
         border-radius: 8px;
         background: #01347C;
         border: 1px solid rgba(255, 255, 255, 0.18);
         color: #FFFFFF !important;
-        font-size: 0.8125rem;
+        font-size: 0.875rem;
         font-weight: 700;
         text-decoration: none;
-        box-shadow: 0 2px 6px rgba(1, 52, 124, 0.2);
+        box-shadow: 0 2px 6px rgba(1, 52, 124, 0.25);
         cursor: pointer;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -689,7 +721,7 @@
         background: #002244;
         color: #FFFFFF !important;
         transform: translateY(-1.5px);
-        box-shadow: 0 6px 18px rgba(1, 52, 124, 0.32);
+        box-shadow: 0 6px 18px rgba(1, 52, 124, 0.35);
     }
 
     .saas-btn-whatsapp:active {
@@ -1523,16 +1555,28 @@
         color: #F8FAFC !important;
     }
 
+    [data-theme="dark"] .saas-link-more {
+        background: rgba(59, 130, 246, 0.15) !important;
+        border-color: rgba(96, 165, 250, 0.35) !important;
+        color: #93C5FD !important;
+    }
+
+    [data-theme="dark"] .saas-link-more:hover {
+        background: #2563EB !important;
+        color: #FFFFFF !important;
+        border-color: #2563EB !important;
+    }
+
     [data-theme="dark"] .saas-btn-detail {
-        background: #0F172A !important;
-        border-color: #26354D !important;
-        color: #E2E8F0 !important;
+        background: rgba(1, 52, 124, 0.25) !important;
+        border-color: rgba(147, 197, 253, 0.4) !important;
+        color: #93C5FD !important;
     }
 
     [data-theme="dark"] .saas-btn-detail:hover {
-        background: #1E293B !important;
+        background: #01347C !important;
         border-color: #60A5FA !important;
-        color: #F8FAFC !important;
+        color: #FFFFFF !important;
     }
 
     /* Dark Aside Context */
@@ -1564,14 +1608,14 @@
     }
 
     [data-theme="dark"] .saas-btn-whatsapp {
-        background: #0F172A !important;
-        border-color: #26354D !important;
-        color: #93C5FD !important;
+        background: #01347C !important;
+        border-color: rgba(255, 255, 255, 0.18) !important;
+        color: #FFFFFF !important;
     }
 
     [data-theme="dark"] .saas-btn-whatsapp:hover {
-        background: #1E293B !important;
-        border-color: #60A5FA !important;
+        background: #002244 !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
         color: #FFFFFF !important;
     }
 
