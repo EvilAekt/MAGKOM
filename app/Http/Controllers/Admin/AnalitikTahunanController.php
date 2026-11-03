@@ -11,6 +11,7 @@ use App\Enums\StatusPenilaianEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\BulanMagang;
+use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\Penilaian;
@@ -132,6 +133,12 @@ class AnalitikTahunanController extends Controller
         $acceptanceRate = $totalPendaftaran > 0 ? round(($totalDiterima / $totalPendaftaran) * 100, 1) : 0.0;
         $completionRate = $totalDiterima > 0 ? round(($totalSelesai / $totalDiterima) * 100, 1) : 0.0;
 
+        // Total alokasi kuota tahunan dari periode bulan magang
+        $kuotaTahunan = (int) Kuota::whereHas('bulanMagang', function ($q) use ($tahun) {
+            $q->whereYear('bulan_mulai', $tahun);
+        })->sum('jumlah');
+        $totalKuota = $kuotaTahunan > 0 ? $kuotaTahunan : max($totalDiterima, 1);
+
         // Rata-rata durasi magang (bulan)
         $avgDurasi = (clone $pendaftaranQuery)->where('status', StatusPendaftaranEnum::Diterima)->avg('durasi_bulan');
         $rataRataDurasi = $avgDurasi ? round((float) $avgDurasi, 1) : 3.0;
@@ -223,11 +230,20 @@ class AnalitikTahunanController extends Controller
             }
         }
 
+        $bulanAktifCount = 0;
+        foreach ($trenBulanan as $b) {
+            if ($b['pendaftar'] > 0 || $b['diterima'] > 0 || $b['selesai'] > 0) {
+                $bulanAktifCount++;
+            }
+        }
+
         return [
             'totalPendaftaran' => $totalPendaftaran,
             'totalDiterima' => $totalDiterima,
             'totalSelesai' => $totalSelesai,
             'totalPenempatan' => $totalPenempatan,
+            'totalKuota' => $totalKuota,
+            'bulanAktifCount' => $bulanAktifCount,
             'acceptanceRate' => $acceptanceRate,
             'completionRate' => $completionRate,
             'rataRataDurasi' => $rataRataDurasi,

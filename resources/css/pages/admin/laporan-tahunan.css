@@ -1,0 +1,826 @@
+/* =========================================================================
+   MAGKOM — Dashboard Analitik Rekapitulasi Tahunan Stylesheet
+   Scope: resources/views/admin/laporan/tahunan.blade.php
+   Theme: Light & Dark Mode (DS-MagKom Standards)
+   ========================================================================= */
+
+.tahunan-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* -------------------------------------------------------------------------
+   1. TOP TOOLBAR & YEAR SELECTOR
+   ------------------------------------------------------------------------- */
+.tahunan-toolbar {
+    background: var(--neutral-0, #FFFFFF);
+    border: 1px solid var(--neutral-300, #E2E8F0);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.tahunan-filter-form {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.tahunan-filter-label {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--neutral-800, #1E293B);
+}
+
+.tahunan-select-tahun {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--neutral-400, #CBD5E1);
+    border-radius: 8px;
+    font-weight: 700;
+    color: var(--blue-800, #01347C);
+    background: var(--neutral-0, #FFFFFF);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tahunan-select-tahun:focus {
+    outline: none;
+    border-color: var(--blue-600, #01347C);
+    box-shadow: 0 0 0 3px rgba(1, 52, 124, 0.12);
+}
+
+.tahunan-filter-desc {
+    font-size: 0.8125rem;
+    color: var(--neutral-600, #64748B);
+}
+
+.tahunan-toolbar-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Tombol 1: Hub Laporan Utama (Outline Refined & Clean) */
+.btn-tahunan-hub {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5625rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--neutral-700, #334155);
+    background: var(--neutral-0, #FFFFFF);
+    border: 1px solid rgba(1, 52, 124, 0.18);
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn-tahunan-hub svg {
+    transition: transform 0.2s ease;
+}
+
+.btn-tahunan-hub:hover {
+    background: var(--neutral-100, #F8FAFC);
+    border-color: var(--blue-600, #01347C);
+    color: var(--blue-700, #01347C);
+    box-shadow: 0 2px 6px rgba(1, 52, 124, 0.08);
+}
+
+.btn-tahunan-hub:hover svg {
+    transform: translateX(-3px);
+}
+
+/* Tombol 2: Unduh Rekap CSV (Solid Sleman Navy & Accented) */
+.btn-tahunan-unduh {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5625rem 1.125rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #FFFFFF !important;
+    background: var(--magkom-primary-blue, #01347C);
+    border: 1px solid var(--magkom-indigo-accent, #3F51B5);
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(1, 52, 124, 0.22);
+}
+
+.btn-tahunan-unduh:hover {
+    background: #002759;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(1, 52, 124, 0.32);
+    transform: translateY(-1px);
+}
+
+/* -------------------------------------------------------------------------
+   2. 4 EXECUTIVE SUMMARY HERO KPI CARDS
+   ------------------------------------------------------------------------- */
+.tahunan-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.tahunan-kpi-card {
+    background: var(--neutral-0, #FFFFFF);
+    border: 1px solid var(--neutral-300, #E2E8F0);
+    border-radius: 12px;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tahunan-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(1, 52, 124, 0.08);
+}
+
+/* Top Accent Border Strip */
+.tahunan-kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+}
+
+.tahunan-kpi-card.card-pendaftar::before {
+    background: linear-gradient(90deg, #01347C, #3F51B5);
+}
+
+.tahunan-kpi-card.card-diterima::before {
+    background: linear-gradient(90deg, #059669, #10B981);
+}
+
+.tahunan-kpi-card.card-alumni::before {
+    background: linear-gradient(90deg, #7C3AED, #8B5CF6);
+}
+
+.tahunan-kpi-card.card-durasi::before {
+    background: linear-gradient(90deg, #D97706, #F59E0B);
+}
+
+.tahunan-kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tahunan-kpi-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--neutral-600, #64748B);
+}
+
+.tahunan-kpi-badge {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+}
+
+.tahunan-kpi-value {
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1.15;
+    margin-top: 0.4rem;
+}
+
+.card-pendaftar .tahunan-kpi-value {
+    color: var(--blue-700, #01347C);
+}
+
+.card-diterima .tahunan-kpi-value {
+    color: var(--green-700, #059669);
+}
+
+.card-alumni .tahunan-kpi-value {
+    color: var(--purple-700, #7E22CE);
+}
+
+.card-durasi .tahunan-kpi-value {
+    color: var(--amber-700, #B45309);
+}
+
+.tahunan-kpi-sub {
+    font-size: 0.75rem;
+    color: var(--neutral-600, #64748B);
+    margin-top: 0.35rem;
+}
+
+/* -------------------------------------------------------------------------
+   3. 2-COLUMN GRID (TREN TABEL KIRI & GRAFIK PLAN GROWTH KANAN)
+   ------------------------------------------------------------------------- */
+.tahunan-mid-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+@media (max-width: 1024px) {
+    .tahunan-mid-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.tahunan-table-card,
+.tahunan-chart-card,
+.goals-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tahunan-chart-card .plan-growth-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 100%;
+    margin: 0;
+}
+
+/* -------------------------------------------------------------------------
+   GOALS CARD (Target & Capaian Kinerja Magang)
+   ------------------------------------------------------------------------- */
+.goals-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.goals-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--neutral-200, #F1F5F9);
+}
+
+.goals-header .tahunan-section-title {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: var(--neutral-900, #0F172A);
+}
+
+.goals-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    flex-grow: 1;
+    justify-content: space-around;
+}
+
+.goal-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.goal-item-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.875rem;
+}
+
+.goal-label {
+    font-weight: 700;
+    color: var(--neutral-800, #1E293B);
+}
+
+.goal-value {
+    font-weight: 700;
+    color: var(--neutral-600, #64748B);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.8125rem;
+}
+
+.goal-bar-track {
+    width: 100%;
+    height: 6px;
+    background: var(--neutral-200, #E2E8F0);
+    border-radius: 9999px;
+    overflow: hidden;
+    position: relative;
+}
+
+.goal-bar-fill {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.goal-bar-fill.goal-teal {
+    background: #14B8A6;
+    box-shadow: 0 0 8px rgba(20, 184, 166, 0.4);
+}
+
+.goal-bar-fill.goal-green {
+    background: #22C55E;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+}
+
+.goal-bar-fill.goal-blue {
+    background: #3B82F6;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+}
+
+.goal-bar-fill.goal-amber {
+    background: #F59E0B;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+}
+
+.goal-bar-fill.goal-purple {
+    background: #A855F7;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+}
+
+.tahunan-section-card {
+    background: var(--neutral-0, #FFFFFF);
+    border: 1px solid var(--neutral-300, #E2E8F0);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.tahunan-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tahunan-section-title {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: var(--neutral-900, #0F172A);
+    margin: 0;
+}
+
+.tahunan-section-desc {
+    font-size: 0.8125rem;
+    color: var(--neutral-600, #64748B);
+    margin: 0.25rem 0 0 0;
+}
+
+/* Standalone "Plan growth" Section Card & Inner Wrapper */
+.plan-growth-section-card {
+    padding: 1.5rem;
+}
+
+.plan-growth-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    background: linear-gradient(180deg, rgba(1, 52, 124, 0.02) 0%, rgba(1, 52, 124, 0.06) 100%);
+    border: 1px solid rgba(1, 52, 124, 0.1);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem 1rem;
+}
+
+.plan-growth-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.plan-growth-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--neutral-900, #0F172A);
+}
+
+.plan-growth-subtitle {
+    font-size: 0.75rem;
+    color: var(--neutral-600, #64748B);
+    margin-top: 0.15rem;
+}
+
+.plan-growth-badge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    background: rgba(1, 52, 124, 0.08);
+    color: var(--blue-700, #01347C);
+    border: 1px solid rgba(1, 52, 124, 0.15);
+}
+
+.plan-growth-svg-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: visible;
+}
+
+.plan-growth-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+}
+
+/* Legend dots */
+.plan-growth-legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed rgba(1, 52, 124, 0.1);
+    flex-wrap: wrap;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--neutral-700, #334155);
+}
+
+.plan-growth-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.legend-dot.pendaftar {
+    background: #10B981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.legend-dot.diterima {
+    background: #3F51B5;
+    box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+}
+
+.legend-dot.alumni {
+    background: #F59E0B;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+/* Interactive SVG Hover Tooltip */
+.plan-growth-tooltip {
+    position: absolute;
+    pointer-events: none;
+    z-index: 30;
+    background: rgba(15, 23, 42, 0.95);
+    color: #FFFFFF;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+    opacity: 0;
+    transform: translate(-50%, -100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(4px);
+    white-space: nowrap;
+}
+
+.plan-growth-crosshair {
+    position: absolute;
+    top: 10px;
+    bottom: 30px;
+    width: 1px;
+    border-left: 1px dashed rgba(63, 81, 181, 0.5);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+}
+
+/* -------------------------------------------------------------------------
+   4. TREN PENYERAPAN BULANAN TABEL & SEGMENTED PROPORTIONAL BAR
+   ------------------------------------------------------------------------- */
+.tahunan-table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.tahunan-table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.tahunan-table thead tr {
+    border-bottom: 2px solid var(--neutral-300, #E2E8F0);
+    font-size: 0.8125rem;
+    color: var(--neutral-600, #64748B);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.tahunan-table thead th {
+    padding: 0.75rem 0.875rem;
+    font-weight: 700;
+}
+
+.tahunan-table tbody tr {
+    border-bottom: 1px solid var(--neutral-200, #F1F5F9);
+    font-size: 0.875rem;
+    transition: background 0.15s ease;
+}
+
+.tahunan-table tbody tr:hover {
+    background: rgba(1, 52, 124, 0.02);
+}
+
+.tahunan-table tbody td {
+    padding: 0.75rem 0.875rem;
+}
+
+/* Segmented Proportional Bar (Pengganti garis horizontal polos) */
+.proportional-bar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.proportional-bar-track {
+    display: flex;
+    height: 10px;
+    border-radius: 9999px;
+    overflow: hidden;
+    background: var(--neutral-200, #E2E8F0);
+    flex-grow: 1;
+    position: relative;
+}
+
+.proportional-bar-fill {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #01347C, #3F51B5);
+    transition: width 0.5s ease;
+}
+
+.proportional-bar-ratio {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--neutral-700, #334155);
+    min-width: 42px;
+    text-align: right;
+}
+
+/* -------------------------------------------------------------------------
+   5. GRID BAWAH: TOP INSTITUSI & DISTRIBUSI JENJANG
+   ------------------------------------------------------------------------- */
+.tahunan-bottom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 1.5rem;
+}
+
+.tahunan-jenjang-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.tahunan-jenjang-card {
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.tahunan-jenjang-card:hover {
+    transform: translateY(-2px);
+}
+
+.tahunan-jenjang-card.smk {
+    background: var(--blue-50, #EFF6FF);
+    border: 1px solid var(--blue-200, #BFDBFE);
+}
+
+.tahunan-jenjang-card.d3 {
+    background: var(--emerald-50, #ECFDF5);
+    border: 1px solid var(--emerald-200, #A7F3D0);
+}
+
+.tahunan-jenjang-card.s1 {
+    background: var(--purple-50, #FAF5FF);
+    border: 1px solid var(--purple-200, #E9D5FF);
+}
+
+.tahunan-jenjang-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.tahunan-jenjang-card.smk .tahunan-jenjang-label {
+    color: var(--blue-800, #1E40AF);
+}
+
+.tahunan-jenjang-card.d3 .tahunan-jenjang-label {
+    color: var(--emerald-800, #065F46);
+}
+
+.tahunan-jenjang-card.s1 .tahunan-jenjang-label {
+    color: var(--purple-800, #581C87);
+}
+
+.tahunan-jenjang-value {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-top: 0.25rem;
+}
+
+.tahunan-jenjang-card.smk .tahunan-jenjang-value {
+    color: var(--blue-900, #1E3A8A);
+}
+
+.tahunan-jenjang-card.d3 .tahunan-jenjang-value {
+    color: var(--emerald-900, #064E3B);
+}
+
+.tahunan-jenjang-card.s1 .tahunan-jenjang-value {
+    color: var(--purple-900, #3B0764);
+}
+
+/* Guard Banner Proteksi Mutu Nilai (A-20) */
+.tahunan-a20-banner {
+    background: var(--neutral-50, #F8FAFC);
+    border: 1px dashed var(--neutral-400, #94A3B8);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    color: var(--neutral-600, #64748B);
+    font-size: 0.8125rem;
+}
+
+/* -------------------------------------------------------------------------
+   6. DARK MODE OVERRIDES (DS-MagKom Standards)
+   ------------------------------------------------------------------------- */
+[data-theme="dark"] .tahunan-toolbar,
+[data-theme="dark"] .tahunan-kpi-card,
+[data-theme="dark"] .tahunan-section-card {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .tahunan-filter-label,
+[data-theme="dark"] .tahunan-section-title,
+[data-theme="dark"] .plan-growth-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .tahunan-filter-desc,
+[data-theme="dark"] .tahunan-section-desc,
+[data-theme="dark"] .plan-growth-subtitle,
+[data-theme="dark"] .tahunan-kpi-sub,
+[data-theme="dark"] .tahunan-kpi-label {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .tahunan-select-tahun {
+    background-color: #0F172A !important;
+    border-color: #26354D !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .btn-tahunan-hub {
+    background: #111C2E !important;
+    border-color: #26354D !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .btn-tahunan-hub:hover {
+    background: #162238 !important;
+    border-color: #3B82F6 !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .btn-tahunan-unduh {
+    background: #003566 !important;
+    border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .btn-tahunan-unduh:hover {
+    background: #01347C !important;
+}
+
+[data-theme="dark"] .plan-growth-wrapper {
+    background: linear-gradient(180deg, rgba(63, 81, 181, 0.06) 0%, rgba(63, 81, 181, 0.16) 100%) !important;
+    border-color: rgba(63, 81, 181, 0.25) !important;
+}
+
+[data-theme="dark"] .goals-header {
+    border-bottom-color: #26354D !important;
+}
+
+[data-theme="dark"] .goal-label {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .goal-value {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .goal-bar-track {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .plan-growth-badge {
+    background: rgba(63, 81, 181, 0.25) !important;
+    color: #93C5FD !important;
+    border-color: rgba(63, 81, 181, 0.4) !important;
+}
+
+[data-theme="dark"] .plan-growth-legend {
+    border-top-color: rgba(255, 255, 255, 0.08) !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .tahunan-table thead tr {
+    border-bottom-color: #26354D !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .tahunan-table tbody tr {
+    border-bottom-color: #26354D !important;
+}
+
+[data-theme="dark"] .tahunan-table tbody tr:hover {
+    background: #162238 !important;
+}
+
+[data-theme="dark"] .proportional-bar-track {
+    background: #26354D !important;
+}
+
+[data-theme="dark"] .proportional-bar-ratio {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .tahunan-jenjang-card.smk {
+    background: rgba(30, 58, 138, 0.25) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+[data-theme="dark"] .tahunan-jenjang-card.d3 {
+    background: rgba(6, 78, 59, 0.25) !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+[data-theme="dark"] .tahunan-jenjang-card.s1 {
+    background: rgba(88, 28, 135, 0.25) !important;
+    border-color: rgba(168, 85, 247, 0.3) !important;
+}
+
+[data-theme="dark"] .tahunan-jenjang-card.smk .tahunan-jenjang-value,
+[data-theme="dark"] .tahunan-jenjang-card.smk .tahunan-jenjang-label {
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .tahunan-jenjang-card.d3 .tahunan-jenjang-value,
+[data-theme="dark"] .tahunan-jenjang-card.d3 .tahunan-jenjang-label {
+    color: #6EE7B7 !important;
+}
+
+[data-theme="dark"] .tahunan-jenjang-card.s1 .tahunan-jenjang-value,
+[data-theme="dark"] .tahunan-jenjang-card.s1 .tahunan-jenjang-label {
+    color: #D8B4FE !important;
+}
+
+[data-theme="dark"] .tahunan-a20-banner {
+    background: #111C2E !important;
+    border-color: #334155 !important;
+    color: #94A3B8 !important;
+}
+
