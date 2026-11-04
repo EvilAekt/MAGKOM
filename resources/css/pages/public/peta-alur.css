@@ -1141,6 +1141,20 @@ html, body {
     transform: translate(-35px, -52px) scale(1);
 }
 
+.btn-webtoon-action {
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.18s ease;
+}
+
+.btn-webtoon-action:hover {
+    filter: brightness(1.12);
+}
+
+.btn-webtoon-action:active {
+    transform: scale(0.96);
+}
+
 /* ==========================================================================
    7. MINI FOOTER SELARAS LANDING PAGE UTAMA MAGKOM
    ========================================================================== */

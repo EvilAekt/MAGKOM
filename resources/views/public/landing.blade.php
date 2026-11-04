@@ -26,11 +26,10 @@
 
     <!-- Stylesheet Scoped Modern Landing -->
     <link rel="stylesheet" href="{{ asset('css/landing-modern.css') }}?v={{ filemtime(public_path('css/landing-modern.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/landing-peta-alur-modal.css') }}?v={{ filemtime(public_path('css/landing-peta-alur-modal.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/landing-faq-redesign.css') }}?v={{ filemtime(public_path('css/landing-faq-redesign.css')) }}">
 
     <!-- Vite Asset Pipeline -->
-    @vite(['resources/css/pages/public/landing.css', 'resources/css/pages/public/landing-peta-alur-modal.css', 'resources/css/pages/public/landing-faq.css', 'resources/js/pages/public/landing.js'])
+    @vite(['resources/css/pages/public/landing.css', 'resources/css/pages/public/landing-faq.css', 'resources/js/pages/public/landing.js'])
 </head>
 <body class="magkom-landing-body">
 
@@ -57,14 +56,14 @@
                 <a href="#beranda" class="landing-nav-link">Beranda</a>
                 <a href="#kuota" class="landing-nav-link">Kuota</a>
                 <a href="#tahapan" class="landing-nav-link">Tahapan</a>
-                <a href="{{ route('panduan-alur') }}" class="landing-nav-link" onclick="if(typeof openPetaAlurModal === 'function') { openPetaAlurModal(event); }">Peta Alur</a>
+                <a href="#tahapan" class="landing-nav-link">Peta Alur</a>
                 <a href="#faq" class="landing-nav-link">FAQ</a>
             </nav>
 
             <div class="landing-auth-group">
                 @guest
                     <a href="{{ route('login') }}" class="btn-header-login">Login</a>
-                    <a href="{{ route('register') }}" class="btn-header-register">Daftar</a>
+                    <a href="#kuota" class="btn-header-register">Daftar</a>
                 @else
                     @php
                         $user = auth()->user();
@@ -126,7 +125,7 @@
                                     <p class="hero-period-info">
                                         Pendaftaran 1–15 Okt 2026 · mulai 2 Nov 2026
                                     </p>
-                                    <a href="{{ route('register') }}" class="btn-hero-cta">
+                                    <a href="#kuota" class="btn-hero-cta">
                                         Daftar Sekarang
                                     </a>
                                 </div>
@@ -1161,8 +1160,5 @@
 
     <!-- Interactive Script -->
     <script src="{{ asset('js/landing-interactive.js') }}?v={{ filemtime(public_path('js/landing-interactive.js')) }}"></script>
-
-    <!-- Modal Interaktif Peta Alur Magang (Hybrid Quick Preview) -->
-    @include('public.partials._peta_alur_modal')
 </body>
 </html>

@@ -9,7 +9,6 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/css/pages/public/landing.css',
                 'resources/css/pages/public/landing-faq.css',
-                'resources/css/pages/public/landing-peta-alur-modal.css',
                 'resources/css/pages/public/panduan-alur.css',
                 'resources/css/pages/public/peta-alur.css',
                 'resources/css/pages/superadmin/dashboard.css',

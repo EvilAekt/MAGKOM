@@ -134,5 +134,13 @@ class PetaAlurPageTest extends TestCase
         $response->assertSee('ADMINISTRASI & SELEKSI', false);
         $response->assertSee('PELAKSANAAN MAGANG', false);
         $response->assertSee('KELULUSAN & SERTIFIKAT', false);
+
+        // Verifikasi tombol navigasi antar pos (Lanjut Pos) langsung memanggil selectModalStep
+        $response->assertSee('selectModalStep(2)', false);
+        $response->assertSee('selectModalStep(3)', false);
+        $response->assertSee('selectModalStep(4)', false);
+
+        // Verifikasi tombol Daftar Sekarang diarahkan langsung ke section kuota landing page
+        $response->assertSee(route('landing').'#kuota', false);
     }
 }

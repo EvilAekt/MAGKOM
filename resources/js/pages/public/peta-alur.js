@@ -912,12 +912,14 @@
 
     function animateCarToStep(targetStep) {
         const targetX = STEP_X_COORDS[targetStep] || 280;
+        // Tutup speech bubble selama perjalanan mobil agar animasi pergerakan bersih dan dinamis
+        updateWebtoonBubbles(0);
+
         driveCarToX(targetX, () => {
+            currentStep = targetStep;
             updateCharacterScene(targetStep);
             updateWebtoonBubbles(targetStep);
         });
-        updateCharacterScene(targetStep);
-        updateWebtoonBubbles(targetStep);
     }
 
     function updateCharacterScene(stepNum) {
@@ -930,8 +932,19 @@
     }
 
     window.selectModalStep = function(stepNum) {
-        currentStep = stepNum;
-        updateWebtoonBubbles(stepNum);
+        stepNum = parseInt(stepNum, 10);
+        if (isNaN(stepNum) || stepNum < 1 || stepNum > 4) return;
+        initAudioContext();
+
+        const targetX = STEP_X_COORDS[stepNum] || 280;
+        // Jika mobil sudah berada di pos tersebut (selisih < 10px), langsung pastikan bubble dan karakter aktif
+        if (Math.abs(carX - targetX) < 10) {
+            currentStep = stepNum;
+            updateCharacterScene(stepNum);
+            updateWebtoonBubbles(stepNum);
+            return;
+        }
+
         animateCarToStep(stepNum);
     };
 

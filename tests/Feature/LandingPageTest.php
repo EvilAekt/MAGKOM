@@ -181,10 +181,11 @@ class LandingPageTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        // Memastikan tombol eksplorasi alur interaktif menautkan ke rute peta-alur dan modal alur tersedia
+        // Memastikan tombol eksplorasi alur interaktif menautkan ke rute peta-alur dan pop up modal telah dihapus
         $response->assertSee(route('peta-alur'));
         $response->assertSee('Peta Alur Interaktif');
-        $response->assertSee('petaAlurModal');
+        $response->assertSee('href="#tahapan"', false);
+        $response->assertDontSee('id="petaAlurModal"', false);
 
         // Pastikan rute peta alur publik dapat diakses
         $petaResponse = $this->get(route('peta-alur'));
