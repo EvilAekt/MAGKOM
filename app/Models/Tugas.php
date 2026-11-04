@@ -20,6 +20,7 @@ class Tugas extends Model
     protected $table = 'tugas';
 
     protected $fillable = [
+        'batch_id',
         'penempatan_id',
         'judul',
         'deskripsi',
@@ -31,12 +32,15 @@ class Tugas extends Model
         'kompleksitas',
         'deadline',
         'status',
+        'status_publikasi',
+        'jadwal_publikasi',
     ];
 
     protected $casts = [
         'kompleksitas' => KompleksitasEnum::class,
         'status' => StatusTugasEnum::class,
         'deadline' => 'date',
+        'jadwal_publikasi' => 'datetime',
         'ukuran_file_lampiran' => 'integer',
     ];
 
@@ -71,6 +75,45 @@ class Tugas extends Model
     {
         return $query->where('status', '!=', StatusTugasEnum::Selesai->value)
             ->whereDate('deadline', '<', Carbon::today());
+    }
+
+    /**
+     * Scope untuk tugas yang sudah aktif dipublikasikan ke peserta.
+     */
+    public function scopeDipublikasikan(Builder $query): Builder
+    {
+        return $query->where('status_publikasi', 'dipublikasikan');
+    }
+
+    /**
+     * Scope untuk tugas terjadwal yang menunggu waktu publikasi.
+     */
+    public function scopeTerjadwal(Builder $query): Builder
+    {
+        return $query->where('status_publikasi', 'terjadwal');
+    }
+
+    /**
+     * Scope untuk tugas yang masih berstatus draft.
+     */
+    public function scopeDraft(Builder $query): Builder
+    {
+        return $query->where('status_publikasi', 'draft');
+    }
+
+    public function isDipublikasikan(): bool
+    {
+        return $this->status_publikasi === 'dipublikasikan';
+    }
+
+    public function isTerjadwal(): bool
+    {
+        return $this->status_publikasi === 'terjadwal';
+    }
+
+    public function isDraft(): bool
+    {
+        return $this->status_publikasi === 'draft';
     }
 
     public function penempatan(): BelongsTo

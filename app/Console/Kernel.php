@@ -14,6 +14,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        // Publikasi otomatis tugas terjadwal setiap menit (Asia/Jakarta)
+        $schedule->command('magkom:publikasikan-tugas-terjadwal')
+            ->everyMinute()
+            ->withoutOverlapping();
+
         $schedule->command('magkom:nonaktifkan-peserta')
             ->dailyAt('00:01')
             ->timezone('Asia/Jakarta')

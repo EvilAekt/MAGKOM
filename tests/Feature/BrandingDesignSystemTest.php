@@ -57,8 +57,8 @@ class BrandingDesignSystemTest extends TestCase
         $response->assertSee('images/logo-sleman.png', false);
 
         // Memuat branding resmi Diskominfo Sleman dan Portal Magang MAGKOM
-        $response->assertSee('DISKOMINFO SLEMAN', false);
-        $response->assertSee('Portal Magang · MAGKOM', false);
+        $response->assertSee('MAGKOM', false);
+        $response->assertSee('Portal Magang · Diskominfo Sleman', false);
         $response->assertSee('Magang Kominfo Sleman', false);
 
         // Memastikan teks lama / terbalik tidak muncul
@@ -124,7 +124,7 @@ class BrandingDesignSystemTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertSee('images/logo-sleman.png', false);
-        $response->assertSee('Magang Kominfo', false);
+        $response->assertSee('MAGANG KOMINFO', false);
         $response->assertDontSee('KOMINFO PORTAL', false);
         $response->assertDontSee('KOMINFO MAGANG', false);
     }

@@ -45,7 +45,7 @@ class LandingPageTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertSee('Magang Kominfo Sleman 2026 – Pendaftaran MAGKOM');
+        $response->assertSee('MAGKOM – Portal Magang Diskominfo Sleman 2026');
         $response->assertSee('meta name="description"', false);
         $response->assertSee('Daftar magang di Diskominfo Sleman', false);
         $response->assertSee('property="og:title"', false);

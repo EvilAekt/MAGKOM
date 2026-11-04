@@ -5,11 +5,11 @@ Portal manajemen magang Dinas Komunikasi dan Informatika (Kominfo)
 
 | Metadata | Keterangan |
 |---|---|
-| **Versi PRD** | 1.1 (Draft untuk review; revisi dari 1.0) |
-| **Tanggal** | 7 Oktober 2026 |
-| **Status** | Draft; belum disetujui Product Owner |
+| **Versi PRD** | 1.2 (Adendum Pendaftaran Kelompok, Modul Dinamis, Logbook Mingguan, dan Keselarasan Baseline Aktual) |
+| **Tanggal** | 2 November 2026 |
+| **Status** | Approved Engineering Baseline |
 | **Penyusun / Reviewer** | Tim Pengembang MagKom |
-| **Dokumen pendamping** | [`02-TDD-MagKom.md`](file:///g:/MAGKOM/docs/02-TDD-MagKom.md) (Dokumen Desain Teknis), [`03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md`](file:///g:/MAGKOM/docs/03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md) |
+| **Dokumen pendamping** | [`02-TDD-MagKom.md`](file:///g:/MAGKOM/docs/02-TDD-MagKom.md) (Dokumen Desain Teknis v1.2), [`03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md`](file:///g:/MAGKOM/docs/03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md), [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](file:///g:/MAGKOM/docs/04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) v1.2 |
 | **Sumber** | Rancangan Sistem MagKom Revisi 4 dan keputusan lanjutan. Dokumen ini **berdiri sendiri**: Revisi 4 tidak perlu dibuka untuk memahaminya (ringkasan perubahan ada di [Lampiran A](#lampiran-a-riwayat-revisi)) |
 | **Tech stack wajib** | **Laravel 10** dengan **PHP 8.3** (alasan dan batasan ada di TDD) |
 
@@ -91,7 +91,9 @@ Acceptance criteria (AC) ditulis **"Jika [kondisi atau aksi], maka [hasil]"**. S
 | **Waiting List** | Antrean pendaftar yang lolos verifikasi berkas tetapi kuota umum bulan itu sudah penuh |
 | **Masa Tenggang** | Periode setelah magang ditetapkan selesai (default 1 bulan) saat akun peserta baca-saja |
 | **Pembimbing** | Pegawai Kominfo yang membimbing dan menilai peserta. Saat ini satu orang |
-| **Logbook** | Catatan kegiatan harian peserta, satu entri per tanggal |
+| **Logbook** | Catatan kegiatan mingguan peserta, satu entri ringkasan per minggu (`minggu_ke`) |
+| **Pendaftaran Kelompok** | Pengajuan magang rombongan/kelompok (maksimal 4 orang: 1 ketua bertindak sebagai pemilik akun pendaftaran + hingga 3 anggota) |
+| **Modul Dinamis** | Modul aplikasi kustom yang dapat dibuat oleh SuperAdmin secara low-code (CRUD builder), mendukung skema dinamis (EAV/JSON) maupun tabel fisik |
 | **Rubrik** | Daftar kriteria penilaian beserta bobotnya (total 100) |
 | **Predikat** | Huruf mutu (A sampai E) yang diturunkan dari nilai akhir |
 | **Lembar Nilai** | Dokumen PDF berisi rincian dan nilai akhir peserta |
@@ -109,7 +111,7 @@ Dinas Kominfo secara rutin menerima siswa dan mahasiswa magang dari jenjang SMK,
 
 1. Menyediakan satu pintu pendaftaran online dengan informasi jurusan, bulan mulai, status, dan sisa kuota umum yang selalu terbarui.
 2. Mengotomatiskan verifikasi pendaftar, alokasi kuota, dan penempatan, tanpa risiko kuota minus saat diakses bersamaan.
-3. Menyediakan ruang kerja digital bagi peserta untuk menerima tugas, melaporkan progres, dan mengisi logbook harian.
+3. Menyediakan ruang kerja digital bagi peserta untuk menerima tugas, melaporkan progres, dan mengisi logbook mingguan.
 4. Membantu Pembimbing memantau progres dan menilai berbasis rubrik yang terukur dan konsisten.
 5. Menyediakan arsip data magang yang rapi, dengan jejak audit lengkap untuk kebutuhan akuntabilitas internal.
 
@@ -194,12 +196,13 @@ Prioritas memakai MoSCoW dan dipetakan ke rilis: R1 (Must), R2 (Should), R3 (Cou
 | **F-01** | Landing page publik | Daftar jurusan (SMK dan Mahasiswa), bulan mulai, status Tersedia/Tutup/Segera, sisa kuota umum | Must | R1 | F-05, F-11 |
 | **F-02** | Akun peserta | Registrasi, login, verifikasi email, reset password, profil | Must | R1 | – |
 | **F-03** | Pendaftaran dan berkas | Formulir pendaftaran dan unggah berkas dari dashboard setelah login | Must | R1 | F-01, F-02, F-11 |
+| **F-03A** | Pendaftaran kelompok | Registrasi dan pengajuan magang rombongan (1 ketua + maks 3 anggota), kuota atomik rombongan | Must | R1/R2 | F-02, F-03, F-05 |
 | **F-04** | Verifikasi dan keputusan | Admin meninjau dan memutuskan; Perlu Perbaikan; Waiting List | Must | R1 | F-03, F-05 |
 | **F-05** | Kuota umum | Kuota per bulan dan jurusan, aman dari akses bersamaan | Must | R1 | F-11 |
 | **F-06** | Slot khusus | Slot jalur khusus per bulan, diatur SuperAdmin, tidak tampil publik | Must | R1 | F-11 |
 | **F-07** | Penempatan | Penempatan online dan manual, penetapan dan pemindahan Pembimbing | Must | R1 | F-04, F-05, F-06 |
 | **F-08** | Tugas dan progres | Pembimbing memberi tugas, peserta unggah progres, umpan balik | Must | R1 | F-07 |
-| **F-09** | Logbook harian | Catatan kegiatan harian per penempatan | Must | R1 | F-07 |
+| **F-09** | Logbook mingguan | Catatan kegiatan mingguan (`minggu_ke`), capaian, kendala, rencana minggu depan | Must | R1 | F-07 |
 | **F-10** | Penilaian dan Lembar Nilai | Rubrik berbobot, nilai akhir, PDF Lembar Nilai | Must | R1 | F-07, F-11 |
 | **F-11** | Master data dan akun staf | Jurusan, bidang, bulan, rubrik, status landing page, akun staf, pengaturan | Must | R1 | – |
 | **F-12** | Masa tenggang dan nonaktif otomatis | Baca-saja setelah selesai, lalu nonaktif otomatis | Must | R1 | F-10 |
@@ -210,6 +213,7 @@ Prioritas memakai MoSCoW dan dipetakan ke rilis: R1 (Must), R2 (Should), R3 (Cou
 | **F-17** | Laporan dan ekspor | Laporan internal dan ekspor CSV/Excel | Should | R2 | F-07, F-10 |
 | **F-18** | Login Google | Continue with Google khusus Peserta | Could | R3 | F-02 |
 | **F-19** | Login Facebook | Menyusul setelah Google stabil (butuh review Meta) | Could | R3 | F-18 |
+| **F-20** | Dynamic CRUD Module Builder | SuperAdmin membuat modul CRUD kustom (low-code), skema dinamis/tabel fisik, RBAC granular, soft deletes | Should | R2 | F-11, F-13 |
 
 ### 4.2 Rencana Rilis
 
@@ -262,6 +266,8 @@ Aturan di bab ini adalah rujukan utama. Contoh tanggal memakai zona waktu WIB (`
 | **BR-15** | Akun staf dibuat SuperAdmin dengan `must_change_password`: staf wajib mengganti password saat login pertama. Hal yang sama berlaku untuk akun peserta jalur khusus yang dibuat manual `[Usulan]`. Password tidak pernah disimpan atau dicatat dalam bentuk asli |
 | **BR-16** | Status Terlambat pada tugas **dihitung saat dibaca** (deadline sudah lewat dan status belum Selesai), bukan disimpan atau dijadwalkan. Penanda "mendekati deadline" muncul bila sisa waktu ≤ 3 hari (`deadline_mendekati_hari`) |
 | **BR-17** | Peserta hanya boleh memiliki **satu pendaftaran aktif** pada satu waktu (status `berkas_belum_lengkap`, `diajukan`, `perlu_perbaikan`, `waiting_list`, atau `diterima` dengan penempatan belum selesai). Mencegah peserta menempati dua kuota sekaligus `[Usulan]` (A-15) |
+| **BR-18** | **Pendaftaran Kelompok:** Pendaftaran magang kelompok dibatasi maksimal 4 orang (1 ketua bertindak sebagai pemilik akun pendaftaran + maksimal 3 rekan anggota). Anggota kelompok wajib melampirkan identitas lengkap (nama, NIM/NISN, nomor HP, email). Saat diterima, alokasi kuota umum dipotong sejumlah total mentee dalam kelompok tersebut secara atomik (`terisi += count(anggota) + 1`). Jika sisa kuota tidak mencukupi seluruh anggota kelompok, pendaftaran dialihkan ke Waiting List atau ditolak `[Addendum v1.2]` |
+| **BR-19** | **Modul Dinamis (Low-Code):** SuperAdmin memiliki wewenang penuh mendesain skema modul kustom (tipe sumber `dynamic` dengan penyimpanan payload JSON pada `modul_dinamis_data` atau `physical_table` dengan reverse-engineering tabel basis data). Matriks izin sub-aksi (`list`, `create`, `read`, `update`, `delete`) wajib didefinisikan per peran (RBAC granular). Pilihan audit logging (`log_aksi`) dan eksposur katalog baca publik (`is_public_read`) diatur per modul. Penghapusan data record modul bersifat soft delete `[Addendum v1.2]` |
 
 ---
 
@@ -307,7 +313,7 @@ flowchart TD
     A[Penempatan aktif] --> B[Pembimbing memberi tugas]
     B --> C[Peserta mengunggah progres]
     C --> D[Pembimbing memberi umpan balik]
-    A --> E[Peserta mengisi logbook harian]
+    A --> E[Peserta mengisi logbook mingguan]
     D --> F[Pembimbing mengisi rubrik penilaian]
     E --> F
     F --> G[Penilaian final, Pembimbing menetapkan Selesai]
@@ -447,6 +453,18 @@ stateDiagram-v2
 | **AC-03-9** | Jika peserta membatalkan pendaftaran yang belum diterima (setelah dialog konfirmasi), maka status menjadi `dibatalkan` dan final |
 | **AC-03-10** | Dashboard menampilkan status, catatan Admin terakhir, timeline perubahan status, dan petunjuk "cek status di dashboard" |
 
+### F-03A Pendaftaran Kelompok (R1/R2 Addendum)
+**Aktor**: Calon peserta (Ketua), Rekan Anggota, Admin. **Prasyarat**: Pendaftaran bertipe `kelompok`.
+
+| ID | Acceptance Criteria |
+|---|---|
+| **AC-03A-1** | Jika pendaftar memilih tipe pendaftaran `kelompok` saat registrasi, maka field `nama_kelompok` wajib diisi dan akun user yang dibuat ditetapkan sebagai Ketua Tim |
+| **AC-03A-2** | Formulir anggota kelompok menerima 1 sampai 3 rekan anggota (total rombongan kelompok maksimal 4 orang termasuk Ketua). Jika input anggota melebihi 3 orang, sistem menolak request dengan validasi error |
+| **AC-03A-3** | Setiap rekan anggota wajib memiliki data valid: nama lengkap, NIM/NISN, nomor HP (format Indonesia valid), dan alamat email aktif |
+| **AC-03A-4** | Jika pendaftaran kelompok berasal dari redirect kuota (misal kuota kelompok 3 orang), maka jumlah anggota yang diinput wajib sesuai dengan kuota yang dipilih (`redirect_jumlah`) |
+| **AC-03A-5** | Dashboard dan profil peserta akun kelompok menampilkan nama kelompok sebagai identitas utama (`nama_tampil`), badge ketua tim, dan roster lengkap seluruh anggota kelompok beserta status berkasnya |
+| **AC-03A-6** | Saat pendaftaran kelompok diputuskan Diterima oleh Admin, alokasi kuota umum dipotong sejumlah total mentee kelompok secara atomik (`terisi += jumlah_mentee`) dalam satu transaksi database (BR-05, BR-18) |
+
 ### F-04 Verifikasi dan Keputusan (R1)
 **Aktor**: Admin, SuperAdmin.
 
@@ -511,15 +529,15 @@ stateDiagram-v2
 | **AC-08-6** | Jika penempatan sudah selesai (masa tenggang) atau nonaktif, maka seluruh aksi tulis peserta ditolak (halaman baca-saja) |
 | **AC-08-7** | Tugas dapat diedit Pembimbing selama belum selesai; penghapusan tugas tidak tersedia pada versi ini `[Usulan]` |
 
-### F-09 Logbook Harian (R1)
+### F-09 Logbook Mingguan (R1)
 **Aktor**: Peserta (mengisi), Pembimbing (meninjau).
 
 | ID | Acceptance Criteria |
 |---|---|
 | **AC-09-1** | Jika peserta belum punya penempatan aktif, maka menu Logbook terkunci dengan pesan informatif |
-| **AC-09-2** | Jika peserta menyimpan entri, maka tanggal harus dalam rentang magang, tidak di masa depan, dan ≥ hari ini dikurangi `logbook_maks_mundur_hari`; hanya satu entri per tanggal. Pelanggaran memunculkan pesan validasi |
+| **AC-09-2** | Jika peserta menyimpan entri, maka entri dicatat per minggu magang (`minggu_ke`), rentang tanggal dalam periode magang, tidak di masa depan, dan tepat satu entri per `minggu_ke` per penempatan (BR-09). Pelanggaran memunculkan pesan validasi |
 | **AC-09-3** | Jika entri berstatus `perlu_revisi` atau masih dalam batas mundur, maka peserta dapat mengeditnya selama penempatan aktif. Setelah diedit, status kembali `terkirim` |
-| **AC-09-4** | Jika Pembimbing membuka logbook bimbingannya, maka ia dapat memfilter peserta dan tanggal serta menandai `perlu_revisi` dengan catatan wajib. Tidak ada approval wajib |
+| **AC-09-4** | Jika Pembimbing membuka logbook bimbingannya, maka ia dapat memfilter peserta dan minggu magang serta menandai `perlu_revisi` dengan catatan wajib. Tidak ada approval wajib |
 | **AC-09-5** | Jika penempatan sudah selesai atau nonaktif, maka logbook baca-saja |
 | **AC-09-6** | (R2, F-15) Jika entri memuat lampiran, maka berkas PDF (batas ukuran bab 8.4) atau tautan `https` tersimpan; tautan ditampilkan dengan `rel="noopener noreferrer"` dan skema selain `https` ditolak |
 
@@ -584,6 +602,18 @@ stateDiagram-v2
 | **AC-18-1** | (F-18, R3) Jika peserta memilih Continue with Google, maka akun dibuat atau ditautkan sesuai aturan keamanan di TDD bab 8; hanya role Peserta. Staf tidak dapat memakai login sosial |
 | **AC-19-1** | (F-19, R3) Login Facebook mengikuti aturan yang sama dengan F-18 setelah aplikasi lolos review penyedia |
 
+### F-20 Dynamic CRUD Module Builder (SuperAdmin Low-Code)
+**Aktor**: SuperAdmin (membangun dan mengelola skema), Pengguna Terotorisasi (mengakses/mengisi data), Tamu Publik (katalog informasi baca-saja jika diaktifkan).
+
+| ID | Acceptance Criteria |
+|---|---|
+| **AC-20-1** | Jika SuperAdmin membuka Module Builder, maka ia dapat membuat modul CRUD baru dengan menentukan nama modul, slug URL unik, ikon, tipe sumber (`dynamic` atau `physical_table`), primary key (auto-increment `id` atau manual seperti `kode_aset`), dan role target (BR-19) |
+| **AC-20-2** | Jika SuperAdmin memilih tipe `physical_table`, maka sistem menyediakan API reverse-engineering untuk menampilkan daftar tabel basis data (`superadmin.modul-builder.api.tables`) dan menginspeksi struktur kolomnya (`superadmin.modul-builder.api.inspect`) secara aman |
+| **AC-20-3** | Jika SuperAdmin mendefinisikan field modul, maka ia dapat memilih tipe input (text, textarea, number, select, date, file, boolean, email), label, urutan, serta menandai atribut `wajib`, `tampil_di_tabel`, dan `dapat_dicari`. Jika primary key manual digunakan, sistem memvalidasi keunikan nilai sebelum simpan untuk mencegah tabrakan data |
+| **AC-20-4** | Jika SuperAdmin mengonfigurasi matriks izin sub-aksi (`izin_aksi`: `list`, `create`, `read`, `update`, `delete` per peran), maka pengguna dengan peran yang tidak tercantum dalam izin sub-aksi ditolak dengan kode respons HTTP 403 Forbidden |
+| **AC-20-5** | Jika SuperAdmin mengatur preferensi audit log per sub-aksi (`log_aksi`), maka aksi yang bernilai `true` akan mencatat mutasi data ke tabel `audit_log`, sedangkan aksi yang bernilai `false` tidak memicu pencatatan audit |
+| **AC-20-6** | Jika opsi `is_public_read` diaktifkan pada modul, maka endpoint katalog publik `/katalog/{slug}` dan `/katalog/{slug}/{id}` dapat diakses oleh publik/guest tanpa login. Seluruh data rekaman modul yang dihapus menggunakan soft deletes (`deleted_at`) |
+
 ---
 
 ## 8. Spesifikasi Data dan Form
@@ -617,13 +647,17 @@ Semua pesan validasi berbahasa Indonesia. "Wajib" berarti tidak boleh kosong.
 | | email | Wajib, format email valid, maksimal 255 karakter, unik, disimpan huruf kecil |
 | | password | Wajib, minimal 8 karakter, memuat huruf dan angka, harus sama dengan konfirmasi |
 | | persetujuan | Wajib dicentang (Kebijakan Privasi) |
+| | tipe_pendaftaran | Wajib: `mandiri` atau `kelompok` |
+| | nama_kelompok | Wajib bila tipe `kelompok`, 3 sampai 100 karakter |
+| | anggota (kelompok) | Array 1 sampai 3 rekan anggota: `nama` (wajib), `nim_nisn` (wajib), `no_hp` (wajib), `email` (wajib, valid) |
 | **Profil peserta** | nama | Wajib, 3 sampai 100 karakter |
 | | no_hp | Wajib, 10 sampai 15 digit, diawali `08`, `62`, atau `+62` |
 | | nim_nisn | Wajib, 5 sampai 20 karakter alfanumerik |
 | | institusi | Wajib, 3 sampai 150 karakter |
 | | jenjang | Wajib, salah satu dari `smk`, `d3`, `s1` |
 | | jurusan | Wajib, jurusan aktif, kategorinya sesuai jenjang (A-18) |
-| **Pendaftaran** | jurusan | Wajib; nilai awal dari profil; kategori sesuai jenjang |
+| **Pendaftaran** | tipe | Wajib: `mandiri` atau `kelompok` |
+| | jurusan | Wajib; nilai awal dari profil; kategori sesuai jenjang |
 | | bulan mulai | Wajib; hanya bulan Tersedia dengan kuota aktif untuk jurusan itu |
 | | durasi | Wajib, bilangan bulat 1 sampai 6 |
 | **Berkas** | jenis dan file | Sesuai bab 8.4 |
@@ -653,15 +687,24 @@ Semua pesan validasi berbahasa Indonesia. "Wajib" berarti tidak boleh kosong.
 | | file | Opsional; PDF, JPG, atau PNG sesuai bab 8.4 |
 | **Review progres** | status | Wajib: `diterima` atau `perlu_revisi` |
 | | feedback | Wajib untuk `perlu_revisi`; maksimal 2000 karakter |
-| **Logbook** | tanggal | Wajib; sesuai BR-09 |
+| **Logbook** | minggu_ke | Wajib, bilangan bulat 1 sampai durasi magang dalam minggu |
 | | kegiatan | Wajib, 10 sampai 2000 karakter |
-| | lampiran (R2) | PDF atau tautan `https`, masing-masing opsional |
+| | rencana_minggu_depan | Opsional, maksimal 2000 karakter |
+| | lampiran | PDF atau tautan `https`, masing-masing opsional |
 | **Review logbook** | catatan | Wajib bila ditandai `perlu_revisi`, maksimal 1000 karakter |
 | **Penilaian** | skor per kriteria | Bilangan bulat 0 sampai 100; semua kriteria wajib untuk `final` |
 | | catatan | Opsional, maksimal 2000 karakter |
 | | alasan perubahan | Wajib saat mengubah nilai tersimpan, minimal 10 karakter |
 | **Rubrik** | kriteria | Wajib, 3 sampai 100 karakter |
 | | bobot | Bilangan bulat 1 sampai 100; total bobot aktif harus 100 |
+| **Modul Dinamis** | nama_modul | Wajib, 3 sampai 100 karakter |
+| | slug | Wajib, format slug URL unik |
+| | tipe_sumber | Wajib: `dynamic` atau `physical_table` |
+| | primary_key | Wajib, nama identifier PK (`id` atau manual) |
+| | target_roles | Array role terotorisasi (`superadmin`, `admin`, dll.) |
+| | izin_aksi | JSON konfigurasi izin per aksi (`list`, `create`, `read`, `update`, `delete`) |
+| | log_aksi | JSON toggle audit logging per sub-aksi |
+| | is_public_read | Boolean (aktifkan katalog publik tanpa login) |
 
 ### 8.3 Rubrik Awal dan Skala Nilai `[Usulan]`
 
@@ -921,12 +964,13 @@ Fitur dianggap selesai bila **semua** butir berikut terpenuhi:
 | **F-01** | BR-02, BR-04 | NFR-P1, NFR-U2 | `bulan_magang`, `kuota`, `jurusan` | AC-01-1 sampai 6 | Landing page |
 | **F-02** | BR-14, BR-15 | NFR-S2 sampai S5, S10 | `users`, `peserta_profil` | AC-02-1 sampai 10 | Auth, profil |
 | **F-03** | BR-03, BR-04, BR-17 | NFR-S6, S7 | `pendaftaran`, `dokumen`, `jenis_dokumen` | AC-03-1 sampai 10 | Pendaftaran, berkas |
+| **F-03A** | BR-18 | NFR-D1, S7 | `kelompok_magang`, `kelompok_anggota`, `pendaftaran` | AC-03A-1 sampai 6 | Registrasi kelompok, profil, antrean |
 | **F-04** | BR-05, BR-06 | NFR-D1, A1 | `pendaftaran`, `penempatan` | AC-04-1 sampai 9 | Antrean, detail, Waiting List |
 | **F-05** | BR-01, BR-07, BR-12 | NFR-D1 | `kuota` | AC-05-1 sampai 6 | Kuota umum |
 | **F-06** | BR-02 | NFR-D1, R-08 | `slot_khusus` | AC-06-1 sampai 5 | Slot khusus |
 | **F-07** | BR-05, BR-07, BR-08, BR-13 | NFR-D1, S7 | `penempatan` | AC-07-1 sampai 7 | Penempatan, input manual |
 | **F-08** | BR-16 | NFR-S1, S7 | `tugas`, `progres_log` | AC-08-1 sampai 7 | Tugas, review |
-| **F-09** | BR-09 | NFR-S1, S8 | `logbook` | AC-09-1 sampai 6 | Logbook |
+| **F-09** | BR-09 | NFR-S1, S8 | `logbook` | AC-09-1 sampai 6 | Logbook mingguan |
 | **F-10** | BR-10 | NFR-D4 | `rubrik`, `penilaian`, `penilaian_detail`, `penilaian_riwayat` | AC-10-1 sampai 7 | Form penilaian, nilai |
 | **F-11** | BR-12, BR-15 | NFR-Q3 | `jurusan`, `bidang`, `bulan_magang`, `rubrik`, `pengaturan`, `users` | AC-11-1 sampai 8 | Master data, akun staf, pengaturan |
 | **F-12** | BR-11 | NFR-D3 | `penempatan`, `users` | AC-12-1 sampai 5 | Banner masa tenggang |
@@ -937,12 +981,25 @@ Fitur dianggap selesai bila **semua** butir berikut terpenuhi:
 | **F-17** | BR-10 | NFR-S13, A1 | semua | AC-17-1, 17-2 | Laporan |
 | **F-18** | – | NFR-S9 | `users` | AC-18-1 | Registrasi, login |
 | **F-19** | – | NFR-S9 | `users` | AC-19-1 | Registrasi, login |
+| **F-20** | BR-19 | NFR-S6, NFR-A1 | `modul_dinamis`, `modul_dinamis_field`, `modul_dinamis_data` | AC-20-1 sampai 6 | SuperAdmin module builder, data CRUD, katalog |
 
 ---
 
 ## Lampiran A: Riwayat Revisi
 
-### A.1 Perubahan v1.0 ke v1.1 (7 Oktober 2026)
+### A.1 Perubahan v1.1 ke v1.2 (2 November 2026)
+
+| Bagian | Perubahan | Alasan |
+|---|---|---|
+| Metadata & Status | Naik ke versi **1.2**, status *Approved Engineering Baseline* | Sinkronisasi dengan codebase implementasi aktual per audit November 2026 |
+| Glosarium (1.2) | Ditambah istilah **Pendaftaran Kelompok** dan **Modul Dinamis**; definisi Logbook diperjelas sebagai mingguan | Akurasi istilah operasional lapangan |
+| Scope Fitur (4.1) | Ditambah **F-03A** (Pendaftaran Kelompok) dan **F-20** (Dynamic CRUD Module Builder) | Mencatat fitur yang sudah hidup di source code tetapi belum ada di PRD v1.1 |
+| Aturan Bisnis (Bab 5) | Ditambah **BR-18** (pendaftaran rombongan maks 4 orang, kuota atomik rombongan) dan **BR-19** (modul dinamis low-code, RBAC sub-aksi, audit toggle, soft delete). BR-09 dipertegas mingguan | Kepastian aturan bisnis dan perlindungan integritas kuota |
+| AC Bab 7 | Ditambah **AC-03A-1 s/d 6** dan **AC-20-1 s/d 6**. AC-09-2 dan AC-09-4 diselaraskan ke format mingguan (`minggu_ke`) | Kontrak testing fungsional formal |
+| Form Bab 8 | Ditambah form registrasi kelompok (nama kelompok, rekan anggota), modul dinamis, dan penyesuaian logbook mingguan | Acuan developer dan UI/UX |
+| Matriks Keterlacakan (Bab 13) | Memetakan F-03A dan F-20 ke aturan bisnis, tabel database, dan AC | Integritas keterlacakan |
+
+### A.2 Perubahan v1.0 ke v1.1 (7 Oktober 2026)
 
 | Bagian | Perubahan | Alasan |
 |---|---|---|

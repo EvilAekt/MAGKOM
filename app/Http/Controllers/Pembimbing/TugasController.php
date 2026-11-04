@@ -17,11 +17,14 @@ use App\Models\Tugas;
 use App\Models\TugasTemplate;
 use App\Services\AuditService;
 use App\Services\RealtimeEventService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class TugasController extends Controller
@@ -156,63 +159,151 @@ class TugasController extends Controller
     }
 
     /**
-     * Memberikan tugas baru kepada peserta bimbingan (AC-08).
+     * Memberikan tugas baru kepada satu atau beberapa peserta bimbingan (AC-08).
      */
     public function store(TugasRequest $request): JsonResponse|RedirectResponse
     {
-        $penempatan = Penempatan::findOrFail($request->validated('penempatan_id'));
+        $penempatanIds = $request->input('penempatan_ids', []);
+        if (empty($penempatanIds) && $request->filled('penempatan_id')) {
+            $penempatanIds = [(int) $request->input('penempatan_id')];
+        }
 
-        // Penegakan batasan hak akses & isolasi SuperAdmin (AC-08-5)
-        Gate::authorize('create', [Tugas::class, $penempatan]);
+        $penempatans = Penempatan::with(['peserta.profil.jurusan', 'bidang'])
+            ->whereIn('id', $penempatanIds)
+            ->get();
 
-        $payload = $request->validated();
-        unset($payload['file_lampiran']);
+        if ($penempatans->isEmpty()) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Peserta bimbingan tidak ditemukan.',
+                ], 422);
+            }
 
-        $tugas = Tugas::create($payload);
+            return back()->withErrors(['penempatan_ids' => 'Minimal satu peserta magang harus dipilih.'])->withInput();
+        }
+
+        // Penegakan batasan hak akses & isolasi SuperAdmin (AC-08-5) untuk setiap mentee
+        foreach ($penempatans as $penempatan) {
+            Gate::authorize('create', [Tugas::class, $penempatan]);
+        }
+
+        // Tentukan aksi dan status publikasi
+        $aksiPublikasi = $request->input('aksi_publikasi', 'sekarang');
+        $statusPublikasi = match ($aksiPublikasi) {
+            'terjadwal' => 'terjadwal',
+            'draft' => 'draft',
+            default => 'dipublikasikan',
+        };
+
+        $jadwalPublikasi = null;
+        if ($statusPublikasi === 'terjadwal') {
+            $tglPub = $request->input('tgl_publikasi');
+            $wktPub = $request->input('waktu_publikasi') ?: '08:00';
+            $jadwalPublikasi = Carbon::parse("{$tglPub} {$wktPub}", 'Asia/Jakarta');
+        }
+
+        // Penanganan lampiran fisik (disimpan 1 kali untuk seluruh batch penugasan)
+        $batchId = (string) Str::uuid();
+        $filePath = null;
+        $fileName = null;
+        $fileSize = null;
 
         if ($request->hasFile('file_lampiran')) {
             $file = $request->file('file_lampiran');
-            $path = $file->store("tugas/{$tugas->id}", 'private');
-            $tugas->update([
-                'file_lampiran' => $path,
-                'nama_file_lampiran' => $file->getClientOriginalName(),
-                'ukuran_file_lampiran' => $file->getSize(),
-            ]);
+            $filePath = $file->store("tugas/{$batchId}", 'private');
+            $fileName = $file->getClientOriginalName();
+            $fileSize = $file->getSize();
         }
 
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'tugas',
-            idData: $tugas->id,
-            nilaiLama: null,
-            nilaiBaru: $tugas->only(['judul', 'kategori', 'kompleksitas', 'deadline', 'link_referensi', 'nama_file_lampiran']),
-            detail: ['aksi' => 'buat_tugas']
-        );
+        $createdTugasList = [];
 
-        // Notifikasi Real-time SSE ke Peserta Mentee (TASK-SSE-06)
-        if ($penempatan->peserta_id) {
-            app(RealtimeEventService::class)->publish(
-                RealtimeEventTypeEnum::TugasBaru,
-                [
-                    'title' => 'Tugas Magang Baru',
-                    'message' => "Pembimbing memberikan tugas: {$tugas->judul}.",
-                    'deadline' => $tugas->deadline?->format('d/m/Y H:i'),
-                    'action_url' => route('peserta.tugas.index'),
-                ],
-                $penempatan->peserta_id
-            );
-        }
+        DB::transaction(function () use (
+            $penempatans,
+            $batchId,
+            $request,
+            $filePath,
+            $fileName,
+            $fileSize,
+            $statusPublikasi,
+            $jadwalPublikasi,
+            $aksiPublikasi,
+            &$createdTugasList
+        ) {
+            foreach ($penempatans as $penempatan) {
+                $tugas = Tugas::create([
+                    'batch_id' => $batchId,
+                    'penempatan_id' => $penempatan->id,
+                    'judul' => $request->validated('judul'),
+                    'deskripsi' => $request->validated('deskripsi'),
+                    'link_referensi' => $request->validated('link_referensi'),
+                    'file_lampiran' => $filePath,
+                    'nama_file_lampiran' => $fileName,
+                    'ukuran_file_lampiran' => $fileSize,
+                    'kategori' => $request->validated('kategori'),
+                    'kompleksitas' => $request->validated('kompleksitas'),
+                    'deadline' => $request->validated('deadline'),
+                    'status' => StatusTugasEnum::Belum,
+                    'status_publikasi' => $statusPublikasi,
+                    'jadwal_publikasi' => $jadwalPublikasi,
+                ]);
+
+                $this->auditService->catat(
+                    tipe: TipeAuditEnum::Aksi,
+                    tabel: 'tugas',
+                    idData: $tugas->id,
+                    nilaiLama: null,
+                    nilaiBaru: $tugas->only([
+                        'batch_id',
+                        'judul',
+                        'kategori',
+                        'kompleksitas',
+                        'deadline',
+                        'link_referensi',
+                        'nama_file_lampiran',
+                        'status_publikasi',
+                        'jadwal_publikasi',
+                    ]),
+                    detail: ['aksi' => 'buat_tugas', 'aksi_publikasi' => $aksiPublikasi]
+                );
+
+                // Notifikasi Real-time SSE ke Peserta Mentee (jika langsung dipublikasikan)
+                if ($statusPublikasi === 'dipublikasikan' && $penempatan->peserta_id) {
+                    app(RealtimeEventService::class)->publish(
+                        RealtimeEventTypeEnum::TugasBaru,
+                        [
+                            'title' => 'Tugas Magang Baru',
+                            'message' => "Pembimbing memberikan tugas: {$tugas->judul}.",
+                            'deadline' => $tugas->deadline?->format('d/m/Y H:i'),
+                            'action_url' => route('peserta.tugas.index'),
+                        ],
+                        $penempatan->peserta_id
+                    );
+                }
+
+                $createdTugasList[] = $tugas;
+            }
+        });
+
+        $count = count($createdTugasList);
+        $message = match ($statusPublikasi) {
+            'terjadwal' => "Tugas berhasil dijadwalkan untuk {$count} mentee pada ".$jadwalPublikasi?->format('d/m/Y H:i').' WIB.',
+            'draft' => "Draf tugas untuk {$count} mentee berhasil disimpan.",
+            default => "Tugas baru berhasil diberikan kepada {$count} mentee.",
+        };
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
-
             return redirect()->route('pembimbing.tugas.index')
-                ->with('success', 'Tugas baru berhasil diberikan kepada mentee.');
+                ->with('success', $message);
         }
+
+        $primaryTugas = ! empty($createdTugasList) ? $createdTugasList[0]->load('penempatan.peserta') : null;
 
         return response()->json([
             'success' => true,
-            'message' => 'Tugas baru berhasil dibuat.',
-            'data' => $tugas->load('penempatan.peserta'),
+            'message' => $message,
+            'data' => $primaryTugas,
+            'items' => collect($createdTugasList)->map(fn ($t) => $t->load('penempatan.peserta')),
         ], 201);
     }
 

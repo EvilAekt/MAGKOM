@@ -4,9 +4,10 @@
 
 | Metadata | Keterangan |
 |---|---|
-| **Versi** | 1.1 (Draft untuk review) |
-| **Tanggal** | 7 Oktober 2026 |
-| **Pendamping** | [`01-PRD-MagKom.md`](file:///g:/MAGKOM/docs/01-PRD-MagKom.md) v1.1. PRD menjelaskan **apa dan mengapa**; dokumen ini menjelaskan **bagaimana** membangunnya |
+| **Versi** | 1.2 (Adendum Pendaftaran Kelompok, Modul Dinamis, Asset Pipeline Vite 6 & Modular Frontend, dan 31 Domain Models) |
+| **Tanggal** | 2 November 2026 |
+| **Status** | Approved Engineering Baseline |
+| **Pendamping** | [`01-PRD-MagKom.md`](file:///g:/MAGKOM/docs/01-PRD-MagKom.md) v1.2. PRD menjelaskan **apa dan mengapa**; dokumen ini menjelaskan **bagaimana** membangunnya |
 | **Pembaca** | Developer, reviewer kode, dan tim infrastruktur |
 | **Status kode contoh** | Kode di dokumen ini adalah **ilustrasi pola**, bukan kode final. Nama kolom dan kelas mengikuti dokumen ini; detail mengikuti kondisi proyek |
 
@@ -45,7 +46,7 @@ Hal-hal berikut sengaja dibuat sederhana karena skala sistem kecil (sekitar 15 p
 | **Framework** | **Laravel 10.x** | Wajib (D-01). Sudah tidak menerima patch keamanan resmi sejak Februari 2025; lihat ADR-01 |
 | **Bahasa** | **PHP 8.3** (minimum dan rekomendasi) | PHP 8.1 EOL sejak akhir 2025; PHP 8.2 berakhir akhir 2026. Kunci di `composer.json` dengan platform PHP 8.3. Fitur yang dipakai: enum, constructor property promotion, named arguments, `declare(strict_types=1)` |
 | **Database** | MySQL 8.0.16 ke atas atau MariaDB 10.5 ke atas, engine **InnoDB** | InnoDB wajib karena row lock. Versi minimum dipilih agar `CHECK constraint` ditegakkan |
-| **Frontend** | Blade, Vite (bawaan Laravel 10), Tailwind CSS, Alpine.js `[Usulan]` | Disesuaikan dengan desain Figma. Bila memakai CSP ketat, gunakan build `@alpinejs/csp` |
+| **Frontend** | Blade, Vite 6, Vanilla CSS (Design Tokens, Scoped CSS), Vanilla JavaScript (Modular ES Modules) | Desain portal native Diskominfo Sleman. Tanpa framework eksternal CSS/JS (Tailwind/Bootstrap/Alpine/React/jQuery dilarang sesuai aturan arsitektur permanen); aset dikelola modular di `resources/` dan dibundle Vite (lihat ADR-09) |
 | **Autentikasi** | Laravel Breeze 1.x (Blade stack) dengan `MustVerifyEmail` | Pakai versi Breeze yang kompatibel dengan Laravel 10. Laravel Socialite untuk login sosial (R3) |
 | **PDF** | `barryvdh/laravel-dompdf` | Kunci di `composer.lock` |
 | **Ekspor (R2)** | CSV dengan `fputcsv` atau `maatwebsite/excel` untuk XLSX `[Usulan]` | Sanitasi formula injection wajib (AC-17-2) |
@@ -100,7 +101,8 @@ magkom/
 │   │   │   │                             # BulanController, BulanStatusController, RubrikController,
 │   │   │   │                             # SlotKhususController, PenempatanMasterController,
 │   │   │   │                             # PesertaManualController, ArsipPesertaController,
-│   │   │   │                             # AuditLogController, PengaturanController
+│   │   │   │                             # AuditLogController, PengaturanController,
+│   │   │   │                             # ModulBuilderController, ModulDataController
 │   │   │   ├── Admin/                    # KuotaController, PendaftaranController, WaitingListController,
 │   │   │   │                             # PenempatanController, LaporanController
 │   │   │   ├── Pembimbing/               # TugasController, ProgresReviewController,
@@ -111,7 +113,13 @@ magkom/
 │   │   ├── Middleware/                   # EnsureUserHasRole, EnsureParticipantWritable,
 │   │   │                                 # EnsurePasswordChanged, LogAuditTrail, SecurityHeaders
 │   │   └── Requests/                     # Form Request per aksi tulis
-│   ├── Models/                           # 20 Domain Model (User, PesertaProfil, Jurusan, Bidang, dll.)
+│   ├── Models/                           # 31 Domain Model (User, PesertaProfil, KelompokMagang, KelompokAnggota,
+│   │                                     # Jurusan, Bidang, BulanMagang, Kuota, SlotKhusus, Pendaftaran,
+│   │                                     # Dokumen, JenisDokumen, Penempatan, Tugas, TugasTemplate,
+│   │                                     # ProgresLog, Logbook, Rubrik, Penilaian, PenilaianDetail,
+│   │                                     # PenilaianRiwayat, AgendaBimbingan, DokumenVerifikasi, DokumenPribadi,
+│   │                                     # DokumenKelulusan, SurveiKepuasan, RealtimeEvent, ModulDinamis,
+│   │                                     # ModulDinamisField, ModulDinamisData, AuditLog)
 │   ├── Policies/                         # PendaftaranPolicy, DokumenPolicy, PenempatanPolicy,
 │   │                                     # TugasPolicy, LogbookPolicy, PenilaianPolicy
 │   ├── Services/                         # QuotaAllocationService, PlacementService, BulanStatusService,
@@ -119,10 +127,14 @@ magkom/
 │   │                                     # AuditedService (abstract base)
 │   ├── Support/                          # Pengaturan, PeriodeMagang
 │   └── Providers/                        # AppServiceProvider, AuthServiceProvider
-├── resources/views/                      # Blade views: public, auth, superadmin, admin, pembimbing, peserta, pdf
+├── resources/
+│   ├── css/                              # Vanilla CSS scoped: base/, components/, layouts/, pages/, app.css
+│   ├── js/                               # Vanilla ES Modules: components/, pages/, services/, app.js
+│   └── views/                            # Blade markup-only (bebas inline <style> dan <script>)
 ├── database/                             # Migrations, factories, seeders
 ├── storage/app/private/documents/        # Berkas pendaftar dan lampiran logbook (disk privat)
 ├── routes/web.php
+├── vite.config.js                        # Bundler Vite 6 dengan 17 modul entry points
 └── config/
 ```
 
@@ -442,23 +454,26 @@ class NonaktifkanPesertaSelesai extends Command
 
 ### 6.1 Prinsip Desain
 - Database Engine: **InnoDB** (MySQL 8.0.16+).
-- Soft deletes / Hard delete tidak digunakan: entitas dinonaktifkan via flag boolean (`aktif` atau `status_aktif`).
+- Soft deletes / Hard delete: Entitas inti dinonaktifkan via flag boolean (`aktif` atau `status_aktif`). Modul dinamis dan entitas pendukung tertentu mendukung `deleted_at` (soft deletes).
 - Timezone: `Asia/Jakarta`.
 - Append-only untuk `audit_log`.
 
-### 6.2 Diagram ERD (20 Tabel Domain)
+### 6.2 Diagram ERD (32 Tabel Domain & Operasional)
 
 ```mermaid
 erDiagram
     users ||--o| peserta_profil : "memiliki profil"
+    users ||--o| kelompok_magang : "ketua tim"
+    kelompok_magang ||--o{ kelompok_anggota : "memiliki anggota"
     jurusan ||--o{ peserta_profil : "jurusan peserta"
     jurusan ||--o{ kuota : "kuota jurusan"
     bulan_magang ||--o{ kuota : "kuota bulanan"
     users ||--o{ pendaftaran : "mendaftar"
+    kelompok_magang ||--o{ pendaftaran : "mendaftar kelompok"
     bulan_magang ||--o{ pendaftaran : "periode dipilih"
     kuota ||--o{ pendaftaran : "alokasi kuota"
     jenis_dokumen ||--o{ dokumen : "tipe berkas"
-    pendaftaran ||--o{ dokumen : "unggah dokumen"
+    pendaftaran ||--o{ dokumen : "unggah berkas"
     pendaftaran ||--o| penempatan : "realisasi penempatan"
     users ||--o{ penempatan : "peserta"
     users ||--o{ penempatan : "pembimbing"
@@ -466,37 +481,60 @@ erDiagram
     slot_khusus ||--o{ penempatan : "alokasi jalur khusus"
     bidang ||--o{ penempatan : "penugasan bidang"
     penempatan ||--o{ tugas : "diberikan tugas"
+    tugas_template ||--o{ tugas : "template acuan"
     tugas ||--o{ progres_log : "laporan progres"
-    penempatan ||--o{ logbook : "catatan harian"
+    penempatan ||--o{ logbook : "catatan mingguan"
+    penempatan ||--o{ agenda_bimbingan : "sesi mentoring"
+    penempatan ||--o{ dokumen_verifikasi : "verifikasi syarat"
+    users ||--o{ dokumen_pribadi : "dokumen profil"
+    penempatan ||--o{ dokumen_kelulusan : "sertifikat dan kelulusan"
+    penempatan ||--o{ survei_kepuasan : "umpan balik magang"
     penempatan ||--o| penilaian : "lembar penilaian"
     penilaian ||--o{ penilaian_detail : "rincian kriteria"
     rubrik ||--o{ penilaian_detail : "kriteria acuan"
     penilaian ||--o{ penilaian_riwayat : "log perubahan nilai"
+    modul_dinamis ||--o{ modul_dinamis_field : "definisi field"
+    modul_dinamis ||--o{ modul_dinamis_data : "rekaman data"
+    users ||--o{ realtime_events : "notifikasi sse"
     users ||--o{ audit_log : "jejak aktivitas"
 ```
 
-### 6.3 Daftar 20 Tabel Domain
+### 6.3 Daftar 32 Tabel Domain dan Operasional
 
-1. `users` (id, nama, email, email_verified_at, password, role, provider, provider_id, bidang_id, status_aktif, must_change_password, dibuat_oleh, remember_token, timestamps)
-2. `peserta_profil` (id, user_id [unique], nim_nisn, institusi, jurusan_id, jenjang, no_hp, timestamps)
-3. `jurusan` (id, nama_jurusan [unique], kategori, aktif, timestamps)
-4. `bidang` (id, nama_bidang, deskripsi, aktif, timestamps)
-5. `bulan_magang` (id, bulan_mulai [unique], tgl_buka, tgl_tutup, override_status, aktif, timestamps)
-6. `kuota` (id, bulan_magang_id, jurusan_id, jumlah, terisi, aktif, unique[bulan_magang_id, jurusan_id], timestamps)
-7. `slot_khusus` (id, bulan_mulai [unique], jumlah, terisi, aktif, dibuat_oleh, timestamps)
-8. `jenis_dokumen` (id, kode, nama, jenjang, wajib, aktif, unique[kode, jenjang], timestamps)
-9. `pendaftaran` (id, user_id, bulan_magang_id, kuota_id, durasi_bulan, status, verifikator_id, catatan, diajukan_at, diputuskan_at, timestamps)
-10. `dokumen` (id, pendaftaran_id, jenis_dokumen_id, path, nama_asli, mime, ukuran, hash, unique[pendaftaran_id, jenis_dokumen_id], timestamps)
-11. `penempatan` (id, pendaftaran_id [unique null], peserta_id, kuota_id, slot_khusus_id, bidang_id, pembimbing_id, jalur, sumber, dibuat_oleh, tgl_mulai, tgl_selesai, tgl_ditetapkan_selesai, tgl_nonaktif, status, timestamps)
-12. `tugas` (id, penempatan_id, judul, deskripsi, kategori, kompleksitas, deadline, status, timestamps)
-13. `progres_log` (id, tugas_id, catatan, file, tgl_lapor, status_review, feedback, timestamps)
-14. `logbook` (id, penempatan_id, tanggal, kegiatan, file_laporan, link_laporan, status, catatan_pembimbing, unique[penempatan_id, tanggal], timestamps)
-15. `rubrik` (id, kriteria, bobot, aktif, timestamps)
-16. `penilaian` (id, penempatan_id [unique], pembimbing_id, nilai_akhir, predikat, catatan, status, timestamps)
-17. `penilaian_detail` (id, penilaian_id, rubrik_id, skor, bobot_snapshot, unique[penilaian_id, rubrik_id], timestamps)
-18. `penilaian_riwayat` (id, penilaian_id, diubah_oleh, nilai_lama [json], nilai_baru [json], alasan, waktu)
-19. `audit_log` (id, request_id, user_id, tipe, aksi, entitas, entitas_id, nilai_lama [json], nilai_baru [json], detail [json], metode, rute, status_http, durasi_ms, ip, user_agent, waktu)
-20. `pengaturan` (id, kunci [unique], nilai, timestamps)
+Rincian struktur kolom, tipe data, indeks, dan relasi foreign key mengacu penuh pada kamus data resmi di [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](file:///g:/MAGKOM/docs/04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) v1.2:
+
+1. `users` (Akun pengguna portal, role RBAC, bidang, kontak, status aktif)
+2. `peserta_profil` (Data profil lengkap mentee, NIM/NISN, institusi, kontak darurat, persetujuan wali)
+3. `kelompok_magang` (Header rombongan/kelompok magang, ketua tim, nama kelompok)
+4. `kelompok_anggota` (Roster rekan anggota kelompok magang, maks 3 rekan)
+5. `jurusan` (Master data kejuruan/prodi SMK dan Perguruan Tinggi)
+6. `bidang` (Master data unit kerja/bidang penempatan internal Dinas Kominfo)
+7. `bulan_magang` (Periode pembukaan magang bulanan)
+8. `kuota` (Alokasi kuota penerimaan per bulan dan per jurusan)
+9. `slot_khusus` (Slot penerimaan jalur khusus non-publik)
+10. `jenis_dokumen` (Master persyaratan administrasi berkas per jenjang)
+11. `pendaftaran` (Pengajuan magang mentee mandiri atau kelompok)
+12. `dokumen` (Berkas fisik administrasi pendaftaran)
+13. `penempatan` (Record resmi peserta magang aktif dan alokasi pembimbing)
+14. `tugas` (Tugas proyek yang diberikan pembimbing kepada mentee)
+15. `tugas_template` (Katalog template tugas standar pembimbing)
+16. `progres_log` (Laporan progres dan milestone tugas oleh mentee)
+17. `logbook` (Catatan kegiatan mingguan `minggu_ke` dan rencana minggu depan)
+18. `agenda_bimbingan` (Jadwal dan catatan sesi tatap muka mentoring pembimbing)
+19. `rubrik` (Kriteria dan bobot standar penilaian akhir)
+20. `penilaian` (Lembar penilaian komprehensif mentee oleh pembimbing)
+21. `penilaian_detail` (Snapshot skor dan bobot rubrik per kriteria)
+22. `penilaian_riwayat` (Audit trail perubahan nilai beserta alasan modifikasi)
+23. `dokumen_verifikasi` (Verifikasi dokumen persyaratan lanjutan pasca-diterima)
+24. `dokumen_pribadi` (Berkas arsip personal mentee)
+25. `dokumen_kelulusan` (Arsip lembar nilai dan sertifikat digital)
+26. `survei_kepuasan` (Kuesioner evaluasi dan rating program magang)
+27. `realtime_events` (Queue buffer event Server-Sent Events `/realtime/stream`)
+28. `modul_dinamis` (Header skema modul CRUD low-code buatan SuperAdmin)
+29. `modul_dinamis_field` (Definisi atribut kolom, validasi, dan tipe input modul kustom)
+30. `modul_dinamis_data` (Penyimpanan rekaman data modul dinamis skema EAV/JSON)
+31. `audit_log` (Pencatatan immutable jejak audit sistem, request ID, dan mutasi data)
+32. `pengaturan` (Konfigurasi parameter operasional sistem dalam key-value)
 
 ---
 
@@ -516,7 +554,7 @@ erDiagram
 | **Peserta** | `POST /peserta/pendaftaran/{id}/berkas` | auth, verified, role:peserta | Upload Berkas Pendaftaran (F-03) |
 | **Peserta** | `GET /berkas/{dokumen}/unduh` | auth, signed | Unduh Berkas Privat (F-03, F-04) |
 | **Peserta** | `GET /peserta/tugas`, `POST .../{id}/progres` | auth, verified, role:peserta, participant.writable | Kerjakan Tugas (F-08) |
-| **Peserta** | `GET/POST /peserta/logbook`, `PUT .../{id}` | auth, verified, role:peserta, participant.writable | Isi Logbook Harian (F-09) |
+| **Peserta** | `GET/POST /peserta/logbook`, `PUT .../{id}` | auth, verified, role:peserta, participant.writable | Isi Logbook Mingguan (F-09) |
 | **Peserta** | `GET /peserta/nilai`, `GET .../lembar-nilai` | auth, verified, role:peserta | Nilai & Unduh PDF (F-10) |
 | **Admin** | `GET /admin/dashboard` | auth, role:admin,superadmin | Dashboard Admin |
 | **Admin** | `GET /admin/kuota`, `PUT /admin/kuota/{bulan}` | auth, role:admin,superadmin | Manajemen Kuota Umum (F-05) |
@@ -902,11 +940,14 @@ Uji serupa untuk slot khusus dan untuk dua Admin yang memutuskan pendaftaran yan
 | ADR | Keputusan | Alasan | Konsekuensi |
 |---|---|---|---|
 | **ADR-01** | Memakai **Laravel 10** dan PHP 8.3 | Keputusan owner (D-01) | Laravel 10 tidak lagi menerima patch keamanan. Mitigasi di bab 3 dan R-01. Jadwal upgrade ke versi yang masih didukung: setelah R1 stabil. Test yang kuat adalah jaring pengaman upgrade |
-| **ADR-02** | Aplikasi server-rendered (Blade), bukan SPA | Skala kecil, tim kecil, landing page butuh SEO, permukaan serangan lebih kecil | Interaksi kaya dibatasi pada Alpine.js |
+| **ADR-02** | Aplikasi server-rendered (Blade), bukan SPA | Skala kecil, tim kecil, landing page butuh SEO, permukaan serangan lebih kecil | Interaksi dinamis ditangani Vanilla ES Modules terstruktur di `resources/js/` |
 | **ADR-03** | Service layer dan Policy; Controller tipis | Aturan bisnis dapat diuji tanpa HTTP dan tidak tersebar | Sedikit lebih banyak berkas untuk fitur sederhana |
 | **ADR-04** | Pessimistic locking (`lockForUpdate`) untuk kuota | Kontensi rendah, tetapi kebenaran harus mutlak; lebih sederhana daripada optimistic locking dan retry | Transaksi harus singkat dan urutan kunci konsisten |
 | **ADR-05** | Audit log di database, append-only, hak database dibatasi | Akuntabilitas tanpa infrastruktur tambahan | Pemangkasan harus lewat akun pemeliharaan terpisah |
 | **ADR-06** | Zona waktu aplikasi `Asia/Jakarta` | Sistem satu instansi dan satu zona waktu | Jangan mengubah zona waktu server atau database setelah ada data |
 | **ADR-07** | Tanpa queue pada R1 | Satu-satunya email adalah verifikasi dan reset; volume sangat kecil | Bila SMTP lambat, pindahkan pengiriman email ke queue `database` |
 | **ADR-08** | Data tidak dihapus; master dan akun dinonaktifkan | Jejak audit dan arsip | Tidak ada rute `DELETE`; kebijakan retensi menunggu OQ-08 |
+| **ADR-09** | Migrasi Asset Pipeline ke Vite 6 & Modular Frontend | Menjamin keamanan CSP ketat tanpa `'unsafe-inline'`, modularitas kode CSS/JS, dan cache-busting otomatis | Blade murni sebagai markup template semantic; dilarang menulis `<style>` dan `<script>` di Blade; semua asset di `resources/css` & `resources/js` |
+| **ADR-10** | Pola Arsitektur Pendaftaran Kelompok & Kuota Rombongan | Memfasilitasi pendaftar magang rombongan institusi (maks 4 mentee) dengan 1 akun ketua terautentikasi | Normalisasi anggota di `kelompok_anggota`; alokasi kuota dilakukan atomik sejumlah total anggota (`terisi += n`); validasi kapasitas ketat |
+| **ADR-11** | Pola Arsitektur Modul Dinamis Low-Code (Hybrid EAV/Physical) | Memungkinkan SuperAdmin membangun modul pendataan baru secara instan tanpa migrasi kode/DB | Validasi skema dinamis dikelola level aplikasi; granular RBAC sub-aksi (`izin_aksi`); toggle audit log (`log_aksi`); soft deletes untuk rekaman data |
 

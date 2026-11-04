@@ -1,106 +1,71 @@
-> Diperbarui: 2026-10-13 | commit: 1553e56 | mode: A
+> Diperbarui: 2026-11-02 | audit: Task-DOC-004 | status: Synced
 
 # Panduan Praktis Pengembang (DEV-GUIDE.md)
 
-Panduan ini disusun untuk membantu pengembang baru melakukan orientasi cepat, memahami alur kerja baku di Portal MagKom, dan menghindari kesalahan umum saat berkontribusi.
+> [!IMPORTANT]
+> **Dokumen Induk Panduan Pengembangan:**  
+> Untuk panduan langkah-demi-langkah setup lingkungan, git workflow, dan quality gates (Pint & PHPStan), silakan mengacu langsung pada dokumen induk:  
+> 📖 [**`docs/DEVELOPMENT-GUIDE.md`**](file:///g:/MAGKOM/docs/DEVELOPMENT-GUIDE.md)
 
 ---
 
 ## 1. Menjalankan Lingkungan Lokal
 
-### Prasyarat
-- PHP 8.2+ dengan ekstensi `pdo_mysql`, `mbstring`, `openssl`, `gd`, `zip`
-- Composer 2.x
-- Node.js 20+ / 24+ & npm
-- MySQL / MariaDB Server
+### Prasyarat Wajib
+- **PHP 8.3** (Platform locked di `composer.json`)
+- **Composer 2.2+**
+- **Node.js v20+** & **npm 10+**
+- **MySQL 8.0+ / MariaDB 10.4+ (InnoDB)**
 
-### Langkah Menjalankan:
+### Menjalankan Server Pengembangan:
 ```bash
-# 1. Pasang dependensi PHP dan Node
+# 1. Pastikan dependensi terpasang
 composer install
 npm install
 
-# 2. Siapkan file konfigurasi lingkungan
-cp .env.example .env
-php artisan key:generate
-
-# 3. Jalankan migrasi dan seeder awal
-php artisan migrate --seed
-
-# 4. Jalankan Dev Server Laravel & Vite secara paralel
-php artisan serve
+# 2. Jalankan Laravel & Vite (Hot Module Replacement)
+# Terminal 1:
+php artisan serve --port=8000
+# Terminal 2:
 npm run dev
 ```
-Akses antarmuka web di: `http://localhost:8000`.
+Akses antarmuka web di: `http://localhost:8000` (atau port yang ditentukan pada environment Anda).
 
 ---
 
 ## 2. Konvensi Menambah Fitur Baru
 
-### A. Menambah Halaman / Route Baru
-1. Tentukan namespace domain controller yang sesuai di `app/Http/Controllers/` (`Admin/`, `Pembimbing/`, `Peserta/`, `SuperAdmin/`, atau `Public/`).
-2. Buat controller dengan strict typing:
-   ```php
-   <?php
-   declare(strict_types=1);
-   namespace App\Http\Controllers\Peserta;
-   
-   use App\Http\Controllers\Controller;
-   use Illuminate\View\View;
-   
-   class ContohFiturController extends Controller
-   {
-       public function index(): View
-       {
-           return view('peserta.contoh-fitur.index');
-       }
-   }
-   ```
-3. Daftarkan route di `routes/web.php` dalam grup middleware dan prefix yang tepat:
-   - Peserta: grup `role:peserta`
-   - Pembimbing: grup `role:pembimbing,admin,superadmin`
-   - Admin: grup `role:admin,superadmin`
-   - SuperAdmin: grup `role:superadmin`
-4. Selalu beri penamaan eksplisit (`->name('peserta.contoh.index')`).
+Sesuai aturan arsitektur permanen [`AGENTS.md`](file:///g:/MAGKOM/.agents/rules/AGENTS.md), patuhi pemisahan tanggung jawab berikut:
 
-### B. Menambah Komponen UI Baru
-1. Buat berkas blade di `resources/views/components/<nama-komponen>.blade.php`.
-2. Gunakan directive `@props([...])` untuk mendeklarasikan properti dengan nilai bawaan.
-3. Gunakan CSS Custom Properties (`var(--blue-600)`, `var(--neutral-100)`, dll.) agar warna selalu seragam dengan DS-MagKom.
-4. Panggil komponen di view menggunakan sintaks `<x-nama-komponen ... />`.
+### A. Backend Layered Architecture
+1. **Route (`routes/web.php`)**: Daftarkan rute dalam grup middleware yang tepat (`role:peserta`, `role:pembimbing`, `role:admin`, atau `role:superadmin`). Selalu beri nama rute eksplisit (`->name(...)`).
+2. **Controller (`app/Http/Controllers/`)**: Bersifat tipis (*thin controller*). Hanya bertugas menerima request, validasi via Form Request, otorisasi via Policy, mendelegasikan ke Service, dan mengembalikan View/Redirect.
+3. **Form Request (`app/Http/Requests/`)**: Validasi input formulir dan otorisasi dasar.
+4. **Service (`app/Services/`)**: Pusat aturan bisnis, mutasi multi-tabel dengan DB transaction (`lockForUpdate`), dan penulisan jejak audit.
+5. **Model (`app/Models/`)**: Definisi relasi Eloquent, casting (`$casts`), accessor/mutator, dan scope. Wajib mendaftarkan `$fillable` eksplisit (dilarang `$guarded = []`).
 
-### C. Menambah Endpoint API Baru
-1. Daftarkan di `routes/api.php`.
-2. Bungkus dengan middleware `auth:sanctum` jika membutuhkan sesi pengguna terotentikasi.
-3. Kembalikan response berformat JSON standar:
-   ```json
-   {
-     "success": true,
-     "message": "Data berhasil dimuat",
-     "data": {}
-   }
-   ```
-
-### D. Menambah Tabel & Model Database Baru
-1. Buat migration dan model sekaligus:
-   ```bash
-   php artisan make:model NamaEntitas -m
-   ```
-2. Definisikan kolom dengan tipe data presisi, foreign key ber-cascade atau restrict, dan index pada kolom pencarian sering.
-3. Pada Model Eloquent (`app/Models/NamaEntitas.php`):
-   - Deklarasikan `$fillable` secara eksplisit (dilarang menggunakan `$guarded = []` kosong untuk mencegah vulnerability Mass Assignment).
-   - Definisikan relasi method (`belongsTo`, `hasMany`).
-   - Sambungkan event audit trail jika entitas ini bernilai transaksional sensitif.
+### B. Frontend Asset Architecture
+1. **DILARANG MENULIS CSS ATAU JS DI BLADE**:
+   - Dilarang membuat tag `<style>` atau `<script>` di dalam file Blade (`resources/views/**/*.blade.php`).
+   - Dilarang menggunakan inline event listener (`onclick`, `onchange`, `onsubmit`, dll.).
+   - Dilarang menambahkan atribut `style="..."` statis di Blade.
+2. **CSS Berada di `resources/css/`**:
+   - Manfaatkan design tokens di `resources/css/base/variables.css`.
+   - Gunakan file CSS yang scoped sesuai komponen/layout/halaman.
+3. **JavaScript Berada di `resources/js/`**:
+   - Gunakan ES Modules modular (`import`/`export`).
+   - Gunakan `addEventListener` terstruktur dan cegah multiple attachment listener.
+4. **Asset Build Vite**:
+   - Semua asset frontend dibundle melalui Vite 6 (`vite.config.js`). Jalankan `npm run build` sebelum rilis.
 
 ---
 
-## 3. Jebakan Umum & Peringatan Penting (Common Gotchas)
+## 3. Peringatan Keamanan & Integritas Data
 
-1. **JANGAN Menaruh Berkas Pelamar di `public/`**:
-   - Berkas pendaftaran peserta (KTP, KTM, Bukti Asuransi) mengandung data pribadi sensitif (UU PDP). Simpan selalu via `DocumentStorageService` di private disk (`storage/app/berkas/`), dan hanya sediakan akses via `temporarySignedRoute`.
-2. **Jangan Lupa `must_change_password` pada Staf**:
-   - Seluruh grup rute staf internal (`admin`, `pembimbing`, `superadmin`) diproteksi middleware `must_change_password`. Jika akun staf di-generate otomatis dengan password default, mereka wajib diarahkan ke rute `/password/ganti` sebelum bisa membuka dashboard.
-3. **Format Tanggal & Zona Waktu**:
-   - Seluruh perbandingan waktu dan deadline kuota pendaftaran mengacu pada zona waktu `Asia/Jakarta` (WIB). Gunakan `Carbon::now('Asia/Jakarta')` untuk validasi batas waktu pendaftaran.
-4. **Pembaruan Dokumentasi Otomatis**:
-   - Setelah Anda menambah route, model, atau layout baru, selalu jalankan workflow `/update-docs` agar dokumen di `docs/architecture/` tetap sinkron dengan kode sumber.
+1. **Berkas Privat & UU PDP**:
+   - Berkas pendaftar (KTP, KTM, Bukti Asuransi, Proposal) wajib disimpan di private disk lokal (`storage/app/private/documents/`).
+   - Akses unduhan hanya melalui controller privat dengan Policy check dan `URL::temporarySignedRoute()`. Jangan pernah mengekspos berkas ke folder publik `public/`.
+2. **Pessimistic Locking untuk Kuota**:
+   - Setiap mutasi kuota atau slot khusus wajib menggunakan `lockForUpdate()` di dalam transaksi database untuk mencegah kontensi *race condition*.
+3. **Audit Trail Masking**:
+   - Seluruh mutasi data transaksional otomatis dicatat ke `audit_log`. Parameter sensitif (password, token, credential) otomatis di-mask oleh `AuditService`.

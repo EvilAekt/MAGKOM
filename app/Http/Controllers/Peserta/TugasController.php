@@ -34,9 +34,10 @@ class TugasController extends Controller
     {
         $user = $request->user();
 
-        $tugasQuery = Tugas::whereHas('penempatan', function ($q) use ($user) {
-            $q->where('peserta_id', $user->id);
-        });
+        $tugasQuery = Tugas::dipublikasikan()
+            ->whereHas('penempatan', function ($q) use ($user) {
+                $q->where('peserta_id', $user->id);
+            });
 
         $allTugas = (clone $tugasQuery)->get();
         $totalSemua = $allTugas->count();

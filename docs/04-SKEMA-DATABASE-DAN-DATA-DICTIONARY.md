@@ -1,6 +1,6 @@
 # Kamus Data, Skema Database & Seeder MagKom
 
-Dokumen ini memuat spesifikasi menyeluruh untuk 20 tabel domain database MagKom (Magang Kominfo) menggunakan engine **InnoDB** pada **MySQL 8.0.16+** / **MariaDB 10.5+**.
+Dokumen ini memuat spesifikasi menyeluruh untuk 32 tabel domain dan operasional database MagKom (Magang Kominfo) menggunakan engine **InnoDB** pada **MySQL 8.0.16+** / **MariaDB 10.5+**.
 
 ---
 
@@ -25,17 +25,31 @@ erDiagram
     bidang ||--o{ penempatan : "bidang kerja"
     penempatan ||--o{ tugas : "diberikan tugas"
     tugas ||--o{ progres_log : "laporan progres"
-    penempatan ||--o{ logbook : "catatan harian"
+    penempatan ||--o{ logbook : "catatan harian/mingguan"
     penempatan ||--o| penilaian : "lembar nilai"
     penilaian ||--o{ penilaian_detail : "rincian kriteria"
     rubrik ||--o{ penilaian_detail : "rubrik acuan"
     penilaian ||--o{ penilaian_riwayat : "riwayat perubahan"
     users ||--o{ audit_log : "pelaku aktivitas"
+    users ||--o{ kelompok_magang : "ketua kelompok"
+    kelompok_magang ||--o{ kelompok_anggota : "beranggotakan"
+    kelompok_magang ||--o{ pendaftaran : "kelompok pendaftar"
+    penempatan ||--o{ agenda_bimbingan : "sesi bimbingan"
+    users ||--o{ agenda_bimbingan : "pembimbing agenda"
+    penempatan ||--o{ dokumen_verifikasi : "dokumen sah terbit"
+    penempatan ||--o| survei_kepuasan : "survei pasca magang"
+    users ||--o{ tugas_template : "template tugas pembimbing"
+    users ||--o{ realtime_events : "notifikasi realtime SSE"
+    bidang ||--o{ bidang_jurusan : "pemetaan bidang"
+    jurusan ||--o{ bidang_jurusan : "pemetaan jurusan"
+    modul_dinamis ||--o{ modul_dinamis_field : "struktur kolom"
+    modul_dinamis ||--o{ modul_dinamis_data : "baris data modul"
+    users ||--o{ route_metrics : "telemetri request"
 ```
 
 ---
 
-## 2. Kamus Data 20 Tabel Domain
+## 2. Kamus Data 32 Tabel Domain & Operasional
 
 ### 1. `users`
 Menyimpan akun seluruh pengguna sistem (SuperAdmin, Admin, Pembimbing, Peserta).
@@ -45,6 +59,7 @@ Menyimpan akun seluruh pengguna sistem (SuperAdmin, Admin, Pembimbing, Peserta).
 | `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
 | `nama` | VARCHAR(100) | Tidak | - | Nama lengkap pengguna |
 | `email` | VARCHAR(255) | Tidak | - | Alamat email (**UNIQUE**) |
+| `no_telp` | VARCHAR(20) | Ya | NULL | Nomor telepon pengguna |
 | `email_verified_at` | TIMESTAMP | Ya | NULL | Waktu verifikasi email |
 | `password` | VARCHAR(255) | Ya | NULL | Bcrypt hash (null bila via OAuth) |
 | `role` | VARCHAR(20) | Tidak | - | `superadmin`, `admin`, `pembimbing`, `peserta` |
@@ -55,6 +70,7 @@ Menyimpan akun seluruh pengguna sistem (SuperAdmin, Admin, Pembimbing, Peserta).
 | `must_change_password`| BOOLEAN | Tidak | FALSE | Penanda wajib ubah password saat login |
 | `dibuat_oleh` | BIGINT UNSIGNED | Ya | NULL | FK ke `users.id` (pembuat akun) |
 | `remember_token` | VARCHAR(100) | Ya | NULL | Token sesi "ingat saya" |
+| `foto` | VARCHAR(255) | Ya | NULL | Path berkas foto profil pengguna |
 | `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Waktu pembuatan / update |
 
 **Indeks**: `UNIQUE(email)`, `INDEX(role, status_aktif)`, `UNIQUE(provider, provider_id)`.
@@ -73,6 +89,9 @@ Data biodata pelengkap khusus pengguna dengan peran `peserta`.
 | `jurusan_id` | BIGINT UNSIGNED | Tidak | - | FK ke `jurusan.id` |
 | `jenjang` | VARCHAR(5) | Tidak | - | Enum: `smk`, `d3`, `s1` |
 | `no_hp` | VARCHAR(20) | Tidak | - | Nomor WhatsApp / Telepon aktif |
+| `kontak_darurat` | VARCHAR(20) | Ya | NULL | Nomor kontak darurat keluarga/wali |
+| `foto` | VARCHAR(255) | Ya | NULL | Path pasfoto biodata peserta |
+| `persetujuan_wali_at` | TIMESTAMP | Ya | NULL | Waktu persetujuan orang tua/wali (khusus SMK) |
 | `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
 
 ---
@@ -110,6 +129,7 @@ Periode pembukaan magang (selalu tanggal 1 pada bulan terkait).
 |---|---|---|---|---|
 | `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
 | `bulan_mulai` | DATE | Tidak | - | Tanggal 1 bulan magang (**UNIQUE**) |
+| `nama_bulan` | VARCHAR(50) | Ya | NULL | Nama representasi bulan (misal: Januari 2027) |
 | `tgl_buka` | DATE | Tidak | - | Tanggal mulai pendaftaran dibuka |
 | `tgl_tutup` | DATE | Tidak | - | Tanggal penutupan pendaftaran |
 | `override_status` | VARCHAR(10) | Ya | NULL | `tersedia`, `tutup`, `segera`, atau NULL |
@@ -178,6 +198,8 @@ Pengajuan pendaftaran calon peserta magang.
 | `user_id` | BIGINT UNSIGNED | Tidak | - | FK ke `users.id` (calon peserta) |
 | `bulan_magang_id` | BIGINT UNSIGNED | Tidak | - | FK ke `bulan_magang.id` |
 | `kuota_id` | BIGINT UNSIGNED | Tidak | - | FK ke `kuota.id` |
+| `tipe` | VARCHAR(20) | Tidak | 'mandiri' | Tipe pendaftaran: `mandiri` atau `kelompok` |
+| `kelompok_magang_id` | BIGINT UNSIGNED | Ya | NULL | FK ke `kelompok_magang.id` (jika pendaftaran kelompok) |
 | `durasi_bulan` | TINYINT UNSIGNED | Tidak | - | Nilai 1 sampai 6 (**CHECK**) |
 | `status` | VARCHAR(25) | Tidak | `berkas_belum_lengkap` | Status alur seleksi |
 | `verifikator_id` | BIGINT UNSIGNED | Ya | NULL | FK ke `users.id` (Admin pemutus) |
@@ -186,7 +208,7 @@ Pengajuan pendaftaran calon peserta magang.
 | `diputuskan_at` | TIMESTAMP | Ya | NULL | Waktu keputusan verifikasi |
 | `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
 
-**Indeks**: `UNIQUE(user_id, bulan_magang_id)`, `INDEX(bulan_magang_id, status)`, `INDEX(status, diajukan_at)`.  
+**Indeks**: `UNIQUE(user_id, bulan_magang_id)`, `INDEX(bulan_magang_id, status)`, `INDEX(status, diajukan_at)`, `INDEX(kelompok_magang_id)`.  
 **Constraint**: `CHECK(durasi_bulan BETWEEN 1 AND 6)`.
 
 ---
@@ -247,6 +269,8 @@ Instruksi penugasan kerja yang diberikan pembimbing.
 | `penempatan_id` | BIGINT UNSIGNED | Tidak | - | FK ke `penempatan.id` |
 | `judul` | VARCHAR(150) | Tidak | - | Judul tugas |
 | `deskripsi` | TEXT | Ya | NULL | Deskripsi dan instruksi pengerjaan |
+| `lampiran` | VARCHAR(255) | Ya | NULL | Berkas lampiran acuan tugas dari pembimbing |
+| `link` | VARCHAR(255) | Ya | NULL | Tautan URL referensi tugas |
 | `kategori` | VARCHAR(50) | Tidak | - | Kategori tugas (free text) |
 | `kompleksitas` | VARCHAR(10) | Tidak | - | `rendah`, `sedang`, `tinggi` |
 | `deadline` | DATE | Tidak | - | Batas akhir pengumpulan |
@@ -264,6 +288,7 @@ Laporan progres pekerjaan yang diunggah peserta.
 | `tugas_id` | BIGINT UNSIGNED | Tidak | - | FK ke `tugas.id` |
 | `catatan` | TEXT | Tidak | - | Penjelasan progres pekerjaan |
 | `file` | VARCHAR(255) | Ya | NULL | Berkas lampiran di disk privat |
+| `link` | VARCHAR(255) | Ya | NULL | Tautan hasil kerja (e.g. GitHub, Figma, Google Drive) |
 | `tgl_lapor` | DATE | Tidak | - | Tanggal pengiriman laporan |
 | `status_review` | VARCHAR(15) | Tidak | `menunggu` | `menunggu`, `diterima`, `perlu_revisi` |
 | `feedback` | TEXT | Ya | NULL | Umpan balik dari pembimbing |
@@ -272,12 +297,13 @@ Laporan progres pekerjaan yang diunggah peserta.
 ---
 
 ### 14. `logbook`
-Catatan aktivitas harian peserta selama masa magang aktif.
+Catatan aktivitas mingguan/harian peserta selama masa magang aktif.
 
 | Kolom | Tipe Data | Nullable | Default | Keterangan |
 |---|---|---|---|---|
 | `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
 | `penempatan_id` | BIGINT UNSIGNED | Tidak | - | FK ke `penempatan.id` |
+| `minggu_ke` | TINYINT UNSIGNED | Tidak | 1 | Nomor minggu penempatan pelaksanaan magang |
 | `tanggal` | DATE | Tidak | - | Tanggal kegiatan |
 | `kegiatan` | TEXT | Tidak | - | Rincian aktivitas yang dilakukan |
 | `file_laporan` | VARCHAR(255) | Ya | NULL | Berkas PDF lampiran (opsional R2) |
@@ -359,6 +385,7 @@ Tabel penampung jejak audit komprehensif berstatus append-only.
 | `request_id` | VARCHAR(36) | Tidak | - | UUID penanda unik request |
 | `user_id` | BIGINT UNSIGNED | Ya | NULL | FK ke `users.id` (pelaku) |
 | `tipe` | VARCHAR(15) | Tidak | - | `auth`, `aksi`, `service`, `akses_data` |
+| `channel` | VARCHAR(20) | Tidak | 'web' | Kanal audit log (`web`, `api`, `console`, `system`) |
 | `aksi` | VARCHAR(100) | Tidak | - | Nama tindakan bisnis |
 | `entitas` | VARCHAR(60) | Ya | NULL | Nama model / tabel terkait |
 | `entitas_id` | BIGINT UNSIGNED | Ya | NULL | ID entitas |
@@ -373,7 +400,7 @@ Tabel penampung jejak audit komprehensif berstatus append-only.
 | `user_agent` | VARCHAR(255) | Ya | NULL | User Agent browser klien |
 | `waktu` | TIMESTAMP | Tidak | CURRENT_TIMESTAMP | Timestamp pencatatan |
 
-**Indeks**: `INDEX(user_id, waktu)`, `INDEX(entitas, entitas_id)`, `INDEX(request_id)`, `INDEX(tipe, waktu)`.
+**Indeks**: `INDEX(user_id, waktu)`, `INDEX(entitas, entitas_id)`, `INDEX(request_id)`, `INDEX(tipe, waktu)`, `INDEX(channel)`.
 
 ---
 
@@ -386,6 +413,238 @@ Tabel pasangan key-value untuk seluruh parameter konfigurasi aplikasi dinamis.
 | `kunci` | VARCHAR(100) | Tidak | - | Key konfigurasi unik (**UNIQUE**) |
 | `nilai` | TEXT | Ya | NULL | Nilai konfigurasi (string/JSON) |
 | `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+
+---
+
+### 21. `agenda_bimbingan`
+Jadwal dan notulensi sesi bimbingan tatap muka atau daring antara pembimbing dan peserta.
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `penempatan_id` | BIGINT UNSIGNED | Tidak | - | FK ke `penempatan.id` (cascade delete) |
+| `pembimbing_id` | BIGINT UNSIGNED | Tidak | - | FK ke `users.id` (pembimbing, cascade delete) |
+| `judul_kegiatan` | VARCHAR(150) | Tidak | - | Topik / materi sesi bimbingan |
+| `tipe` | VARCHAR(20) | Tidak | 'tatap_muka' | `tatap_muka` atau `daring` |
+| `tgl_bimbingan` | DATE | Tidak | - | Tanggal pelaksanaan bimbingan |
+| `jam_mulai` | VARCHAR(10) | Tidak | '09:00' | Waktu pelaksanaan (format HH:mm) |
+| `lokasi_ruang` | VARCHAR(150) | Ya | NULL | Ruang kerja kantor atau link meeting virtual |
+| `notulensi_arahan` | TEXT | Ya | NULL | Catatan, evaluasi, dan arahan pembimbing |
+| `status` | VARCHAR(20) | Tidak | 'terjadwal' | `terjadwal`, `selesai`, `dibatalkan` |
+| `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+
+**Indeks**: `INDEX(pembimbing_id, status)`, `INDEX(penempatan_id, status)`, `INDEX(tgl_bimbingan)`.
+
+---
+
+### 22. `dokumen_verifikasi`
+Pencatatan kode verifikasi keabsahan digital dokumen resmi (Surat Penerimaan, Lembar Nilai, Sertifikat).
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `kode_unik` | VARCHAR(64) | Tidak | - | Hash kode unik acak (**UNIQUE**) untuk QR verification |
+| `tipe_dokumen` | VARCHAR(32) | Tidak | - | `surat_diterima`, `lembar_nilai`, `sertifikat` |
+| `penempatan_id` | BIGINT UNSIGNED | Tidak | - | FK ke `penempatan.id` (cascade delete) |
+| `nomor_dokumen` | VARCHAR(100) | Tidak | - | Nomor surat resmi instansi |
+| `tanggal_terbit` | DATE | Tidak | - | Tanggal penerbitan dokumen |
+| `status_keabsahan` | VARCHAR(20) | Tidak | 'sah' | `sah`, `dicabut`, `kedaluwarsa` |
+| `metadata` | JSON | Ya | NULL | Metadata penandatangan, instansi, dan payload |
+| `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+
+**Indeks**: `UNIQUE(kode_unik)`, `INDEX(kode_unik, status_keabsahan)`, `INDEX(penempatan_id)`.
+
+---
+
+### 23. `survei_kepuasan`
+Evaluasi kepuasan peserta pasca pelaksanaan magang (Indeks Kepuasan & Net Promoter Score).
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `penempatan_id` | BIGINT UNSIGNED | Tidak | - | FK ke `penempatan.id` (**UNIQUE**, cascade delete) |
+| `skor_mentoring` | UNSIGNED TINYINT | Tidak | - | Skala 1 - 5 (kualitas bimbingan) |
+| `skor_tugas` | UNSIGNED TINYINT | Tidak | - | Skala 1 - 5 (kesesuaian penugasan) |
+| `skor_fasilitas` | UNSIGNED TINYINT | Tidak | - | Skala 1 - 5 (dukungan sarana kantor) |
+| `skor_nps` | UNSIGNED TINYINT | Tidak | - | Skala 0 - 10 (Net Promoter Score) |
+| `umpan_balik` | TEXT | Ya | NULL | Uraian kesan dan kritik konstruktif |
+| `saran` | TEXT | Ya | NULL | Usulan perbaikan operasional magang |
+| `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+
+**Indeks**: `UNIQUE(penempatan_id)`, `INDEX(skor_nps)`.
+
+---
+
+### 24. `tugas_template`
+Pustaka template penugasan siap pakai yang dapat digunakan pembimbing untuk delegasi tugas cepat.
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `pembimbing_id` | BIGINT UNSIGNED | Ya | NULL | FK ke `users.id` (pemilik template, null jika global) |
+| `judul` | VARCHAR(150) | Tidak | - | Judul rancangan tugas |
+| `deskripsi` | TEXT | Ya | NULL | Petunjuk teknis pengerjaan |
+| `kategori` | VARCHAR(50) | Tidak | 'Umum' | Kategori tugas |
+| `kompleksitas` | VARCHAR(10) | Tidak | 'sedang' | `rendah`, `sedang`, `tinggi` |
+| `link_referensi` | VARCHAR(255) | Ya | NULL | Tautan dokumentasi/panduan |
+| `is_global` | BOOLEAN | Tidak | FALSE | Flag template lintas pembimbing |
+| `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+
+**Indeks**: `INDEX(pembimbing_id, kategori)`, `INDEX(is_global)`.
+
+---
+
+### 25. `realtime_events`
+Penampung antrean notifikasi instan Server-Sent Events (SSE) `/realtime/stream` (RFC 8895).
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `user_id` | BIGINT UNSIGNED | Ya | NULL | FK ke `users.id` (null jika siaran broadcast role) |
+| `role` | VARCHAR(30) | Ya | NULL | Role target siaran (`admin`, `pembimbing`, dll.) |
+| `event_type` | VARCHAR(50) | Tidak | - | Jenis event (e.g. `pendaftaran_baru`, `logbook_baru`) |
+| `payload` | JSON | Tidak | - | Muatan data notifikasi JSON tersanitasi |
+| `read_at` | TIMESTAMP | Ya | NULL | Waktu pengguna membaca/membuka notifikasi |
+| `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+
+**Indeks**: `INDEX(role)`, `INDEX(event_type)`, `INDEX(read_at)`, `INDEX(user_id, created_at)`, `INDEX(role, created_at)`.
+
+---
+
+### 26. `bidang_jurusan`
+Tabel relasi many-to-many antara Unit Kerja (Bidang) di Kominfo dan Jurusan yang relevan.
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `bidang_id` | BIGINT UNSIGNED | Tidak | - | FK ke `bidang.id` (cascade delete) |
+| `jurusan_id` | BIGINT UNSIGNED | Tidak | - | FK ke `jurusan.id` (cascade delete) |
+| `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+
+**Constraint**: `UNIQUE(bidang_id, jurusan_id)`.
+
+---
+
+### 27. `modul_dinamis`
+Metadata konfigurasi modul builder dinamis low-code SuperAdmin.
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `nama_modul` | VARCHAR(100) | Tidak | - | Nama modul dinamis |
+| `slug` | VARCHAR(100) | Tidak | - | Identifier unik URL (**UNIQUE**) |
+| `tipe_sumber` | VARCHAR(20) | Tidak | 'dynamic' | `dynamic` (JSON EAV) atau `physical_table` |
+| `nama_tabel_fisik` | VARCHAR(64) | Ya | NULL | Nama tabel fisik jika physical table |
+| `primary_key` | VARCHAR(64) | Tidak | 'id' | Nama primary key tabel fisik |
+| `is_manual_pk` | BOOLEAN | Tidak | FALSE | Flag apakah primary key diisi manual |
+| `deskripsi` | TEXT | Ya | NULL | Keterangan tujuan modul |
+| `ikon` | VARCHAR(50) | Tidak | 'box' | Identifier icon Lucide / SVG |
+| `target_roles` | JSON | Tidak | - | Array peran yang diizinkan mengakses |
+| `izin_aksi` | JSON | Ya | NULL | Granular RBAC (`create`, `edit`, `delete`, dll.) |
+| `log_aksi` | JSON | Ya | NULL | Konfigurasi pencatatan audit log per aksi modul |
+| `status_aktif` | BOOLEAN | Tidak | TRUE | Status aktif publikasi modul |
+| `is_public_read` | BOOLEAN | Tidak | FALSE | Flag apakah modul dapat dibaca publik tanpa login |
+| `scope_mode` | VARCHAR(20) | Tidak | 'none' | `none`, `bidang_scope`, `creator_scope` |
+| `urutan` | UNSIGNED INT | Tidak | 0 | Urutan render pada sidebar navigasi |
+| `dibuat_oleh` | BIGINT UNSIGNED | Ya | NULL | FK ke `users.id` (SuperAdmin pembuat) |
+| `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+
+**Indeks**: `UNIQUE(slug)`, `INDEX(status_aktif)`.
+
+---
+
+### 28. `modul_dinamis_field`
+Definisi atribut, kolom form, tipe input, dan validasi untuk modul dinamis.
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `modul_id` | BIGINT UNSIGNED | Tidak | - | FK ke `modul_dinamis.id` (cascade delete) |
+| `nama_kolom` | VARCHAR(60) | Tidak | - | Nama field identifier snake_case |
+| `label` | VARCHAR(100) | Tidak | - | Label antarmuka form |
+| `tipe_data` | VARCHAR(30) | Tidak | - | `text`, `number`, `textarea`, `select`, `multiselect`, `date`, `datetime`, `file`, `boolean`, `relation` |
+| `opsi_pilihan` | JSON | Ya | NULL | Array opsi jika tipe `select` / `multiselect` |
+| `relasi_tabel` | VARCHAR(60) | Ya | NULL | Tabel target referensi relasi |
+| `relasi_kolom_tampil`| VARCHAR(60) | Ya | NULL | Kolom yang ditampilkan sebagai label relasi |
+| `wajib` | BOOLEAN | Tidak | FALSE | Flag input mandatory |
+| `tampil_di_tabel` | BOOLEAN | Tidak | TRUE | Ditampilkan pada grid tabel daftar |
+| `dapat_dicari` | BOOLEAN | Tidak | TRUE | Diikutsertakan dalam query pencarian |
+| `dapat_difilter` | BOOLEAN | Tidak | FALSE | Tersedia pada dropdown filter |
+| `placeholder` | VARCHAR(150) | Ya | NULL | Teks placeholder input |
+| `bantuan_teks` | VARCHAR(255) | Ya | NULL | Teks instruksi kecil di bawah field |
+| `urutan` | UNSIGNED INT | Tidak | 0 | Urutan field pada form |
+| `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+
+**Indeks**: `UNIQUE(modul_id, nama_kolom)`, `INDEX(modul_id, urutan)`.
+
+---
+
+### 29. `modul_dinamis_data`
+Penyimpanan baris data untuk modul bertipe dynamic (hybrid JSON EAV) dengan soft deletes.
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `modul_id` | BIGINT UNSIGNED | Tidak | - | FK ke `modul_dinamis.id` (cascade delete) |
+| `data` | JSON | Tidak | - | Key-value data baris tersanitasi |
+| `files_metadata` | JSON | Ya | NULL | Metadata berkas lampiran yang diunggah |
+| `created_by` | BIGINT UNSIGNED | Ya | NULL | FK ke `users.id` (pembuat entri) |
+| `updated_by` | BIGINT UNSIGNED | Ya | NULL | FK ke `users.id` (pengubah entri) |
+| `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+| `deleted_at` | TIMESTAMP | Ya | NULL | Soft delete timestamp |
+
+**Indeks**: `INDEX(modul_id, created_at)`.
+
+---
+
+### 30. `route_metrics`
+Telemetri performa rute HTTP server, latensi eksekusi, dan konsumsi memori.
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `method` | VARCHAR(10) | Tidak | - | HTTP Method (`GET`, `POST`, dll.) |
+| `route_name` | VARCHAR(150) | Ya | NULL | Nama rute terdaftar di Laravel |
+| `uri` | VARCHAR(255) | Tidak | - | Request URI yang diakses |
+| `status_code` | UNSIGNED SMALLINT | Tidak | - | HTTP Response status code (e.g. 200, 404, 500) |
+| `duration_ms` | DECIMAL(8,2) | Tidak | - | Durasi eksekusi request dalam milidetik |
+| `memory_mb` | DECIMAL(8,2) | Ya | NULL | Penggunaan memori puncak dalam Megabyte |
+| `user_id` | BIGINT UNSIGNED | Ya | NULL | FK ke `users.id` (jika terautentikasi) |
+| `ip` | VARCHAR(45) | Ya | NULL | IP address klien |
+| `created_at` | TIMESTAMP | Tidak | CURRENT_TIMESTAMP | Waktu pencatatan telemetri |
+
+**Indeks**: `INDEX(created_at)`, `INDEX(route_name, created_at)`, `INDEX(status_code, created_at)`.
+
+---
+
+### 31. `kelompok_magang`
+Pengelompokan pendaftar jalur rombongan/kelompok (maksimal 4 orang) yang dipimpin oleh seorang ketua.
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `ketua_user_id` | BIGINT UNSIGNED | Tidak | - | FK ke `users.id` (ketua pendaftar, cascade delete) |
+| `nama_kelompok` | VARCHAR(150) | Tidak | - | Nama tim / instansi kelompok magang |
+| `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+
+**Indeks**: `INDEX(ketua_user_id)`.
+
+---
+
+### 32. `kelompok_anggota`
+Data mentee anggota kelompok magang (selain ketua) di bawah satu kelompok magang.
+
+| Kolom | Tipe Data | Nullable | Default | Keterangan |
+|---|---|---|---|---|
+| `id` | BIGINT UNSIGNED | Tidak | Auto Inc | Primary Key |
+| `kelompok_magang_id` | BIGINT UNSIGNED | Tidak | - | FK ke `kelompok_magang.id` (cascade delete) |
+| `nama` | VARCHAR(255) | Tidak | - | Nama lengkap anggota |
+| `nim_nisn` | VARCHAR(50) | Ya | NULL | NIM / NISN anggota |
+| `no_hp` | VARCHAR(30) | Ya | NULL | Nomor telepon / WhatsApp anggota |
+| `email` | VARCHAR(255) | Ya | NULL | Alamat email anggota |
+| `created_at` / `updated_at` | TIMESTAMP | Ya | NULL | Timestamps |
+
+**Indeks**: `INDEX(kelompok_magang_id)`.
 
 ---
 

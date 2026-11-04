@@ -61,12 +61,14 @@ class DashboardController extends Controller
             $fase = 'seleksi';
         }
 
-        // Statistik & KPI Tugas
-        $totalTugas = $penempatan?->tugas->count() ?? 0;
-        $tugasSelesai = $penempatan?->tugas->where('status', StatusTugasEnum::Selesai)->count() ?? 0;
-        $tugasBelum = $penempatan?->tugas->whereIn('status', [StatusTugasEnum::Belum, StatusTugasEnum::Proses])->count() ?? 0;
+        // Statistik & KPI Tugas (hanya tugas yang sudah dipublikasikan)
+        $publishedTugas = $penempatan?->tugas->filter(fn ($t) => $t->status_publikasi === 'dipublikasikan') ?? collect();
+        $totalTugas = $publishedTugas->count();
+        $tugasSelesai = $publishedTugas->where('status', StatusTugasEnum::Selesai)->count();
+        $tugasBelum = $publishedTugas->whereIn('status', [StatusTugasEnum::Belum, StatusTugasEnum::Proses])->count();
         $tugasMendesak = $penempatan
             ? $penempatan->tugas()
+                ->dipublikasikan()
                 ->whereIn('status', [StatusTugasEnum::Belum, StatusTugasEnum::Proses])
                 ->orderBy('deadline', 'asc')
                 ->take(4)
