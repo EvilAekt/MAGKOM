@@ -159,6 +159,9 @@
             letter-spacing: 0.4px !important;
             color: #64748b !important;
             line-height: 1.2 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
         }
 
         .tile_stats_inner.stat .stat-value-row {
@@ -284,6 +287,37 @@
         [data-theme="dark"] .tile_stats_inner.stat .stat-subtext,
         [data-theme="dark"] .tile_stats_inner.stat .count_bottom {
             color: #cbd5e1 !important;
+        }
+
+        /* 4. Grid Khusus 3x2 Metrik Hub Laporan Admin (Proporsional & Seimbang) */
+        .adm-laporan-kpi-grid {
+            display: grid !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 1.25rem !important;
+            width: 100% !important;
+            margin-bottom: 1.75rem !important;
+        }
+
+        .adm-laporan-kpi-grid .tile_stats_count {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            flex: initial !important;
+        }
+
+        @media (max-width: 1100px) {
+            .adm-laporan-kpi-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 1rem !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .adm-laporan-kpi-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.875rem !important;
+            }
         }
         [data-theme="dark"] .x_panel,
         [data-theme="dark"] .card,

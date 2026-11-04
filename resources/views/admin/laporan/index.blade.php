@@ -115,8 +115,9 @@
     </style>
     @endpush
 
-    <!-- 1. SUMMARY METRICS CARDS -->
-    <div class="row tile_count" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; width: 100%; margin-bottom: 1.5rem;">
+    <!-- 1. SUMMARY METRICS CARDS (3x2 BALANCED GRID) -->
+    <div class="row tile_count adm-laporan-kpi-grid" role="region" aria-label="Metrik Ringkasan Laporan">
+        {{-- Card 1: Total Pengajuan --}}
         <x-gentelella.tile-stat 
             title="Total Pengajuan" 
             :value="number_format($metricCards['total_pendaftaran'])" 
@@ -124,10 +125,11 @@
             color="blue"
             trendText="Total"
             trendDirection="up"
-            subText="Semua status pendaftaran" 
+            subText="Semua berkas masuk portal" 
             :sparkBars="[35, 50, 45, 65, 70, 85, 95]"
-            col="col-xs-12"
         />
+
+        {{-- Card 2: Peserta Diterima --}}
         <x-gentelella.tile-stat 
             title="Peserta Diterima" 
             :value="number_format($metricCards['total_diterima'])" 
@@ -137,8 +139,9 @@
             trendDirection="up"
             subText="Lolos seleksi berkas & kuota" 
             :sparkBars="[25, 40, 50, 65, 75, 85, 95]"
-            col="col-xs-12"
         />
+
+        {{-- Card 3: Penempatan Aktif --}}
         <x-gentelella.tile-stat 
             title="Penempatan Aktif" 
             :value="number_format($metricCards['penempatan_aktif'])" 
@@ -146,10 +149,11 @@
             color="blue"
             trendText="Aktif"
             trendDirection="up"
-            subText="Sedang menjalani bimbingan" 
+            subText="Sedang menjalani masa magang" 
             :sparkBars="[40, 50, 60, 68, 75, 82, 90]"
-            col="col-xs-12"
         />
+
+        {{-- Card 4: Magang Selesai --}}
         <x-gentelella.tile-stat 
             title="Magang Selesai" 
             :value="number_format($metricCards['penempatan_selesai'])" 
@@ -157,21 +161,23 @@
             color="teal"
             trendText="Selesai"
             trendDirection="up"
-            subText="Alumni & evaluasi final" 
+            subText="Telah tuntas dinas & dinilai" 
             :sparkBars="[30, 45, 55, 65, 75, 85, 100]"
-            col="col-xs-12"
         />
+
+        {{-- Card 5: Realisasi Kuota Umum --}}
         <x-gentelella.tile-stat 
             title="Realisasi Kuota Umum" 
             :value="number_format($metricCards['kuota_terisi'])" 
             icon="calendar"
             color="yellow"
-            trendText="Umum"
+            trendText="Reguler"
             trendDirection="up"
-            subText="Kursi terisi jalur online" 
+            subText="Kursi terisi jalur online dinas" 
             :sparkBars="[40, 50, 60, 70, 65, 80, 85]"
-            col="col-xs-12"
         />
+
+        {{-- Card 6: Slot Khusus Terisi --}}
         <x-gentelella.tile-stat 
             title="Slot Khusus Terisi" 
             :value="number_format($metricCards['slot_terisi'])" 
@@ -179,9 +185,8 @@
             color="blue"
             trendText="Mitra"
             trendDirection="up"
-            subText="Jalur kemitraan internal" 
+            subText="Alokasi MoU kemitraan dinas" 
             :sparkBars="[20, 30, 40, 35, 50, 60, 70]"
-            col="col-xs-12"
         />
     </div>
 
