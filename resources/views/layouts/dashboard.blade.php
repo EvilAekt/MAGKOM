@@ -1285,6 +1285,25 @@
             font-weight: 700;
         }
 
+        .topbar-title {
+            font-family: var(--font-display, 'Lexend', sans-serif);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .topbar-title {
+                font-size: 1rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
         /* Topbar Right (User Info & Menu) */
         .topbar-right {
             display: flex;
@@ -1460,9 +1479,10 @@
             box-sizing: border-box;
         }
 
-        /* Admin, SuperAdmin & Fluid Mode: Menghilangkan batasan 1400px kaku & dead space dengan mempertahankan offset sidebar */
+        /* Admin, SuperAdmin, Pembimbing & Fluid Mode: Menghilangkan batasan 1400px kaku & dead space dengan mempertahankan offset sidebar */
         body.role-superadmin .dashboard-content-area,
         body.role-admin .dashboard-content-area,
+        body.role-pembimbing .dashboard-content-area,
         body.gentelella-fluid-body .dashboard-content-area,
         .dashboard-content-area.gentelella-fluid-canvas {
             max-width: none !important;
@@ -1479,6 +1499,7 @@
             .dashboard-content-area,
             body.role-superadmin .dashboard-content-area,
             body.role-admin .dashboard-content-area,
+            body.role-pembimbing .dashboard-content-area,
             body.gentelella-fluid-body .dashboard-content-area,
             .dashboard-content-area.gentelella-fluid-canvas {
                 width: 100% !important;
@@ -3099,16 +3120,7 @@
                             <span>{{ __('Tugas Peserta') }}</span>
                         </a>
 
-                        <a href="{{ route('pembimbing.tugas.template.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.tugas.template.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                    <line x1="8" y1="21" x2="16" y2="21"></line>
-                                    <line x1="12" y1="17" x2="12" y2="21"></line>
-                                </svg>
-                            </span>
-                            <span>{{ __('Bank Template') }}</span>
-                        </a>
+
 
                         <a href="{{ route('pembimbing.logbook.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
@@ -3117,7 +3129,7 @@
                                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                 </svg>
                             </span>
-                            <span>{{ __('Reviu Logbook') }}</span>
+                            <span>{{ __('Review Logbook') }}</span>
                         </a>
 
                         <a href="{{ route('pembimbing.agenda.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.agenda.*') ? 'active' : '' }}">
@@ -3344,7 +3356,7 @@
                             </button>
                             <div class="nav-sub-menu {{ $isOperasionalPembimbingActive ? 'show' : '' }}">
                                 <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.penilaian.*') ? 'active' : '' }}">{{ __('Penilaian Peserta') }}</a>
-                                <a href="{{ route('pembimbing.logbook.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">{{ __('Reviu Logbook') }}</a>
+                                <a href="{{ route('pembimbing.logbook.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">{{ __('Review Logbook') }}</a>
                                 <a href="{{ route('pembimbing.tugas.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.tugas.*') ? 'active' : '' }}">{{ __('Tugas Magang') }}</a>
                                 <a href="{{ route('pembimbing.agenda.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.agenda.*') ? 'active' : '' }}">{{ __('Agenda Bimbingan') }}</a>
                                 <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">{{ __('Laporan Kinerja') }}</a>
@@ -3558,16 +3570,20 @@
                             </svg>
                         </button>
 
-                    <!-- Breadcrumb Trail -->
-                    <nav class="breadcrumb-trail" aria-label="Breadcrumb">
-                        <a href="{{ route('landing') }}">{{ __('Beranda') }}</a>
-                        <span class="breadcrumb-separator">/</span>
-                        @hasSection('breadcrumbs')
-                            @yield('breadcrumbs')
-                        @else
-                            <span class="breadcrumb-current">{{ __('Dashboard') }}</span>
-                        @endif
-                    </nav>
+                    @hasSection('topbar_title')
+                        <h1 class="topbar-title">@yield('topbar_title')</h1>
+                    @else
+                        <!-- Breadcrumb Trail -->
+                        <nav class="breadcrumb-trail" aria-label="Breadcrumb">
+                            <a href="{{ route('landing') }}">{{ __('Beranda') }}</a>
+                            <span class="breadcrumb-separator">/</span>
+                            @hasSection('breadcrumbs')
+                                @yield('breadcrumbs')
+                            @else
+                                <span class="breadcrumb-current">{{ __('Dashboard') }}</span>
+                            @endif
+                        </nav>
+                    @endif
                 </div>
 
                 <!-- Topbar Menu Pengguna -->

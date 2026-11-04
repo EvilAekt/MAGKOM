@@ -1,9 +1,9 @@
 {{-- ==========================================================================
-   Tab 2: Pusat Antrean Reviu Cepat (Action Hub) - Dashboard Pembimbing
+   Tab 2: Pusat Antrean Review Cepat (Action Hub) - Dashboard Pembimbing
    ========================================================================== --}}
 <!-- Antrean Seluruh Logbook Harian Terkirim -->
 <x-gentelella.x-panel
-    title="Seluruh Antrean Logbook Menunggu Reviu ({{ $allPendingLogbooks->count() }})"
+    title="Seluruh Antrean Logbook Menunggu Review ({{ $allPendingLogbooks->count() }})"
     subtitle="Logbook harian terkirim dari mentee yang belum diberikan catatan/konfirmasi pembimbing."
 >
     <x-slot:actions>
@@ -24,7 +24,7 @@
                     <th style="padding: 0.875rem 1rem;">Kegiatan / Aktivitas Kerja</th>
                     <th style="padding: 0.875rem 1rem;">Lampiran</th>
                     <th style="padding: 0.875rem 1rem;">Diajukan</th>
-                    <th style="padding: 0.875rem 1.5rem; text-align: right;">Aksi Reviu</th>
+                    <th style="padding: 0.875rem 1.5rem; text-align: right;">Aksi Review</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,7 +76,7 @@
                 @empty
                     <tr>
                         <td colspan="6" style="padding: 2rem; text-align: center; color: var(--neutral-500, #64748B);">
-                            Tidak ada antrean logbook harian yang menunggu reviu.
+                            Tidak ada antrean logbook harian yang menunggu review.
                         </td>
                     </tr>
                 @endforelse

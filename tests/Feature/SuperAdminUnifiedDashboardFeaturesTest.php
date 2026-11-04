@@ -281,7 +281,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Total Tugas Aktif');
-        $response->assertSee('Logbook Pending Reviu');
+        $response->assertSee('Logbook Pending Review');
         $response->assertSee('Penilaian Final Selesai');
         $response->assertSee('Matriks Utilisasi Beban Pembimbing Lapangan');
         $response->assertSee('Pembimbing Lapangan Utama');

@@ -23,7 +23,7 @@ enum RealtimeEventTypeEnum: string
             self::StatusPendaftaran => 'Pembaruan Status Pendaftaran',
             self::KuotaBerubah => 'Pembaruan Ketersediaan Kuota',
             self::LogbookBaru => 'Setoran Logbook Harian Mentee',
-            self::LogbookDireviu => 'Reviu Logbook Harian Selesai',
+            self::LogbookDireviu => 'Review Logbook Harian Selesai',
             self::TugasBaru => 'Tugas Magang Baru Diterbitkan',
             self::TugasDikumpulkan => 'Pengumpulan Progres Tugas Mentee',
             self::AncamanKeamanan => 'Peringatan Keamanan Sistem',

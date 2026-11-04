@@ -75,16 +75,40 @@ class PenilaianController extends Controller
 
         $penempatan = $query->latest()->paginate(15)->withQueryString();
 
+        $baseCounter = Penempatan::where(function ($q) use ($user) {
+            if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                $q->where('pembimbing_id', $user->id);
+            }
+        });
+
+        $totalMentee = (clone $baseCounter)->count();
+        $countBelumDinilai = (clone $baseCounter)->whereDoesntHave('penilaian')->count();
+        $countDraft = (clone $baseCounter)->whereHas('penilaian', fn ($q) => $q->where('status', 'draft'))->count();
+        $countFinal = (clone $baseCounter)->whereHas('penilaian', fn ($q) => $q->where('status', 'final'))->count();
+
+        $persenBelum = $totalMentee > 0 ? (int) round(($countBelumDinilai / $totalMentee) * 100) : 0;
+        $persenDraft = $totalMentee > 0 ? (int) round(($countDraft / $totalMentee) * 100) : 0;
+        $persenFinal = $totalMentee > 0 ? (int) round(($countFinal / $totalMentee) * 100) : 0;
+
+        $data = [
+            'penempatanList' => $penempatan,
+            'totalMentee' => $totalMentee,
+            'countBelumDinilai' => $countBelumDinilai,
+            'countDraft' => $countDraft,
+            'countFinal' => $countFinal,
+            'persenBelum' => $persenBelum,
+            'persenDraft' => $persenDraft,
+            'persenFinal' => $persenFinal,
+        ];
+
         if ($request->expectsJson() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'data' => $penempatan,
+                'data' => $data,
             ]);
         }
 
-        return view('pembimbing.penilaian.index', [
-            'penempatanList' => $penempatan,
-        ]);
+        return view('pembimbing.penilaian.index', $data);
     }
 
     /**

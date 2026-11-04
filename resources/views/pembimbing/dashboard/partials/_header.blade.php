@@ -4,7 +4,7 @@
 <!-- 1. Gentelella Page Title Bar -->
 <x-gentelella.page-title
     title="Dashboard Pembimbing"
-    description="Pusat komando pemantauan bimbingan magang, reviu tugas & logbook, serta evaluasi rubrik dinas."
+    description="Pusat komando pemantauan bimbingan magang, review tugas & logbook, serta evaluasi rubrik dinas."
 >
     <x-slot:actions>
         <a href="{{ route('pembimbing.tugas.create') }}" class="btn btn-sm" style="display: inline-flex; align-items: center; gap: 0.4rem; background: #0641CC; color: #ffffff; border-radius: 8px; font-weight: 700; padding: 0.5rem 1rem; text-decoration: none; box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);">
@@ -45,7 +45,7 @@
             </a>
             <button type="button" onclick="switchPembimbingTab('tab-antrean')" style="display: inline-flex; align-items: center; gap: 0.45rem; background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8125rem; font-weight: 600; cursor: pointer; transition: background 0.2s ease;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>
-                Reviu Antrean Hari Ini
+                Review Antrean Hari Ini
                 @if($logbookPendingCount + $progresPendingCount > 0)
                     <span style="background: #f59e0b; color: #78350f; font-size: 0.7rem; font-weight: 800; padding: 0.1rem 0.45rem; border-radius: 999px;">
                         {{ $logbookPendingCount + $progresPendingCount }}

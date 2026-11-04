@@ -1,29 +1,107 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Reviu Logbook Harian - Portal MagKom')
-@section('page_title', 'Reviu Logbook Harian Peserta')
-@section('page_description', 'Tinjau catatan aktivitas harian mentee, periksa lampiran hasil kerja, dan berikan bimbingan terarah.')
+@section('title', 'Review Logbook Harian - Portal MagKom')
+@section('topbar_title', 'Review Logbook Harian Peserta')
+@section('content_area_class', 'gentelella-fluid-canvas')
 
-@section('breadcrumbs')
-    <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: var(--neutral-600, #64748B);">
-        <a href="{{ route('pembimbing.dashboard') }}" style="color: var(--neutral-600, #64748B); text-decoration: none;">Dashboard</a>
-        <span>/</span>
-        <span style="color: var(--neutral-900, #0F172A); font-weight: 700;">Reviu Logbook</span>
-    </nav>
-@endsection
+@push('styles')
+    @vite(['resources/css/pages/pembimbing/logbook-index.css'])
+@endpush
 
 @section('content')
-<div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="classroom-container">
 
+    {{-- 1. Classroom Hero Banner Khas Sleman MagKom --}}
+    @php
+        $authUser = auth()->user();
+        $bidangNama = $authUser->bidang?->nama_bidang ?? 'Dinas Komunikasi dan Informatika Sleman';
+    @endphp
 
-    <!-- Filter Bar Card -->
-    <x-gentelella.card title="Filter & Pencarian Logbook" icon="fa fa-filter">
-        <form method="GET" action="{{ route('pembimbing.logbook.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
-            
-            <!-- Filter Peserta -->
-            <div style="flex: 1; min-width: 200px;">
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Peserta Magang</label>
-                <select name="penempatan_id" class="form-control" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-100); color: inherit;">
+    <div class="classroom-banner">
+        <div class="banner-top-row">
+            <div>
+                <h1 class="banner-title">Review Logbook Harian Peserta</h1>
+                <div class="banner-subtitle">
+                    <span>Bidang: <strong>{{ $bidangNama }}</strong></span>
+                    <span>&bull;</span>
+                    <span>Pembimbing: <strong>{{ $authUser->nama }}</strong></span>
+                    <span>&bull;</span>
+                    <span><strong>{{ $countMenunggu }} Logbook Menunggu Review</strong></span>
+                </div>
+            </div>
+            <div>
+                <a href="{{ route('pembimbing.logbook.index', ['status' => 'terkirim']) }}" class="btn-create-task">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                    Review Menunggu ({{ $countMenunggu }})
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {{-- 2. Tile Stats MagKom Gentelella (4 Metrik Logbook) --}}
+    <div class="tiles-grid">
+        <x-gentelella.tile-stat
+            title="Total Logbook"
+            value="{{ $totalLogbook }}"
+            color="teal"
+            trendDirection="up"
+            trendText="{{ $totalLogbook }} Entri"
+            subText="Akumulasi aktivitas harian"
+            :sparkBars="[30, 45, 55, 60, 70, 78, 85, 92, 100]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <x-gentelella.tile-stat
+            title="Perlu Review"
+            value="{{ $countMenunggu }}"
+            color="yellow"
+            trendType="{{ $countMenunggu > 0 ? 'warning' : 'success' }}"
+            trendDirection="{{ $countMenunggu > 0 ? 'down' : 'up' }}"
+            trendText="{{ $countMenunggu > 0 ? $countMenunggu . ' Menunggu' : 'Tuntas' }}"
+            subText="Menunggu verifikasi pembimbing"
+            :sparkBars="[60, 75, 85, 70, 90, 80, 65, 50, 40]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <x-gentelella.tile-stat
+            title="Disetujui"
+            value="{{ $countDisetujui }}"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="{{ $persenDisetujui }}%"
+            subText="Aktivitas valid & diterima"
+            :sparkBars="[25, 40, 50, 60, 70, 80, 85, 92, 98]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <x-gentelella.tile-stat
+            title="Perlu Revisi"
+            value="{{ $countRevisi }}"
+            color="red"
+            trendType="danger"
+            trendDirection="down"
+            trendText="{{ $countRevisi > 0 ? $countRevisi . ' Revisi' : 'Nihil' }}"
+            subText="Catatan perbaikan dikirim"
+            :sparkBars="[40, 30, 45, 20, 35, 25, 15, 10, 5]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+    </div>
+
+    {{-- 3. Filter Bar Card Modern --}}
+    <div class="logbook-filter-card">
+        <form method="GET" action="{{ route('pembimbing.logbook.index') }}" class="logbook-filter-form">
+            <div class="filter-group">
+                <label>Peserta Magang</label>
+                <select name="penempatan_id" class="filter-control">
                     <option value="">Semua Peserta Bimbingan</option>
                     @foreach($penempatanList as $pen)
                         <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
@@ -33,10 +111,9 @@
                 </select>
             </div>
 
-            <!-- Filter Status -->
-            <div style="flex: 1; min-width: 160px;">
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Status Reviu</label>
-                <select name="status" class="form-control" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-100); color: inherit;">
+            <div class="filter-group">
+                <label>Status Review</label>
+                <select name="status" class="filter-control">
                     <option value="">Semua Status</option>
                     <option value="terkirim" {{ request('status') === 'terkirim' ? 'selected' : '' }}>Terkirim (Menunggu)</option>
                     <option value="disetujui" {{ request('status') === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
@@ -44,58 +121,47 @@
                 </select>
             </div>
 
-            <!-- Filter Tanggal -->
-            <div style="width: 170px;">
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Tanggal Logbook</label>
-                <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="form-control" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: var(--neutral-100); color: inherit;">
+            <div class="filter-group filter-group-date">
+                <label>Tanggal Logbook</label>
+                <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="filter-control">
             </div>
 
-            <!-- Pencarian Isi Aktivitas -->
-            <div style="flex: 1; min-width: 200px;">
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">Cari Aktivitas</label>
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari uraian kegiatan..." class="form-control" style="width: 100%; height: 40px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.85rem; font-size: 0.875rem; background: var(--neutral-100); color: inherit;">
+            <div class="filter-group">
+                <label>Cari Aktivitas</label>
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari uraian kegiatan..." class="filter-control">
             </div>
 
-            <div style="display: flex; gap: 0.5rem;">
-                <button type="submit" class="btn btn-primary" style="height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
-                    <i class="fa fa-filter"></i> Terapkan
+            <div class="filter-actions">
+                <button type="submit" class="btn-filter-apply">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                    <span>Terapkan</span>
                 </button>
                 @if(request()->hasAny(['penempatan_id', 'status', 'tanggal', 'q']))
-                    <a href="{{ route('pembimbing.logbook.index') }}" class="btn btn-default" style="height: 40px; padding: 0 1rem; background: var(--neutral-200); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center;">
-                        <i class="fa fa-undo" style="margin-right: 0.35rem;"></i> Reset
-                    </a>
+                    <a href="{{ route('pembimbing.logbook.index') }}" class="btn-filter-reset">Reset</a>
                 @endif
             </div>
         </form>
-    </x-gentelella.card>
+    </div>
 
-    <!-- Data Table Card -->
+    {{-- 4. Tabel Logbook Khas Classroom --}}
     <x-gentelella.x-panel title="Catatan Kegiatan Harian Peserta" subtitle="Menampilkan riwayat pelaporan logbook dinas">
-        @if($logbooks->isEmpty())
-            <div style="padding: 3.5rem 1.5rem; text-align: center; color: var(--neutral-500);">
-                <div style="width: 56px; height: 56px; background: var(--neutral-100); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; color: var(--neutral-400);">
-                    <i class="fa fa-book" style="font-size: 1.75rem;"></i>
-                </div>
-                <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.35rem;">Belum Ada Catatan Logbook</h4>
-                <p style="font-size: 0.85rem; max-width: 460px; margin: 0 auto;">Belum ada entri logbook harian yang sesuai dengan kriteria filter saat ini.</p>
-            </div>
-        @else
-            <x-gentelella.table :hover="true" :striped="false" class="jambo_table bulk_action">
+        <div class="table-logbook-wrapper">
+            <table class="table-logbook">
                 <thead>
-                    <tr class="headings" style="border-bottom: 1px solid var(--neutral-200); background: #f8fafc; color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        <th style="padding: 1rem 0.5rem 1rem 1.25rem; width: 40px; text-align: center;">
-                            <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)" title="Pilih Semua" style="cursor: pointer; width: 16px; height: 16px; accent-color: #0641CC;">
+                    <tr>
+                        <th class="checkbox-col">
+                            <input type="checkbox" id="selectAllCheckbox" class="logbook-checkbox" title="Pilih Semua">
                         </th>
-                        <th style="padding: 1rem 1.25rem; width: 130px;">Tanggal</th>
-                        <th style="padding: 1rem 1rem;">Peserta Magang</th>
-                        <th style="padding: 1rem 1rem;">Aktivitas Kegiatan</th>
-                        <th style="padding: 1rem 1rem;">Lampiran</th>
-                        <th style="padding: 1rem 1rem;">Status Reviu</th>
-                        <th style="padding: 1rem 1.5rem; text-align: right;">Aksi</th>
+                        <th style="width: 120px;">Tanggal</th>
+                        <th>Peserta Magang</th>
+                        <th>Aktivitas Kegiatan</th>
+                        <th>Lampiran</th>
+                        <th>Status Review</th>
+                        <th style="text-align: right;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($logbooks as $log)
+                    @forelse($logbooks as $log)
                         @php
                             $statusVal = is_object($log->status) ? $log->status->value : $log->status;
                             $badgeVariant = match($statusVal) {
@@ -103,228 +169,170 @@
                                 'perlu_revisi' => 'danger',
                                 default => 'warning'
                             };
+                            $initials = collect(explode(' ', $log->penempatan?->peserta?->nama ?? 'P'))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
                         @endphp
-                        <tr style="border-bottom: 1px solid var(--neutral-100); transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 1rem 0.5rem 1rem 1.25rem; text-align: center;">
-                                <input type="checkbox" class="logbook-checkbox" value="{{ $log->id }}" onchange="updateBulkBar()" {{ $statusVal === 'disetujui' ? 'disabled' : '' }} style="cursor: pointer; width: 16px; height: 16px; accent-color: #0641CC;">
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="logbook-checkbox" value="{{ $log->id }}" {{ $statusVal === 'disetujui' ? 'disabled' : '' }}>
                             </td>
-                            <td style="padding: 1rem 1.25rem; font-weight: 700; color: var(--neutral-900); white-space: nowrap;">
-                                {{ \Carbon\Carbon::parse($log->tanggal)->format('d M Y') }}
+                            <td>
+                                <span class="date-badge">
+                                    {{ \Carbon\Carbon::parse($log->tanggal)->format('d M Y') }}
+                                </span>
                             </td>
-                            <td style="padding: 1rem 1rem;">
-                                <div style="font-weight: 600; color: var(--neutral-900);">
-                                    {{ $log->penempatan?->peserta?->nama }}
+                            <td>
+                                <div class="mentee-identity-flex">
+                                    <div class="avatar-initials-circle">
+                                        {{ strtoupper($initials) }}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 700; color: #0F172A;">
+                                            {{ $log->penempatan?->peserta?->nama }}
+                                        </div>
+                                        <div style="font-size: 0.75rem; color: #64748B;">
+                                            {{ $log->penempatan?->bidang?->nama_bidang ?? 'Dinas Kominfo' }}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div style="font-size: 0.75rem; color: var(--neutral-500);">
-                                    {{ $log->penempatan?->bidang?->nama_bidang ?? 'Dinas Kominfo' }}
-                                </div>
                             </td>
-                            <td style="padding: 1rem 1rem; color: var(--neutral-800); max-width: 360px;">
-                                <div style="line-height: 1.5; font-size: 0.85rem;">
+                            <td>
+                                <div class="activity-desc-box">
                                     {{ $log->kegiatan }}
                                 </div>
                                 @if($log->catatan_pembimbing)
-                                    <div style="margin-top: 0.4rem; font-size: 0.75rem; color: #92400e; background: #fef3c7; padding: 0.35rem 0.6rem; border-radius: 6px; border-left: 3px solid #d97706;">
+                                    <div class="supervisor-notes-box">
                                         <strong>Catatan Pembimbing:</strong> {{ $log->catatan_pembimbing }}
                                     </div>
                                 @endif
                             </td>
-                            <td style="padding: 1rem 1rem;">
-                                <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                            <td>
+                                <div style="display: flex; flex-direction: column; gap: 4px;">
                                     @if($log->file_laporan)
-                                        <a href="{{ route('peserta.logbook.lampiran', $log) }}" target="_blank" rel="noopener noreferrer" style="color: #059669; font-size: 0.75rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                                            <i class="fa fa-file-pdf-o"></i> Berkas PDF
+                                        <a href="{{ route('peserta.logbook.lampiran', $log) }}" target="_blank" rel="noopener noreferrer" style="color: #059669; font-size: 0.8125rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                                            <span>Berkas PDF</span>
                                         </a>
                                     @endif
                                     @if($log->link_laporan)
-                                        <a href="{{ $log->link_laporan }}" target="_blank" rel="noopener noreferrer" style="color: #0641CC; font-size: 0.75rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                                            <i class="fa fa-external-link"></i> Tautan Kerja ↗
+                                        <a href="{{ $log->link_laporan }}" target="_blank" rel="noopener noreferrer" style="color: #01347C; font-size: 0.8125rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                            <span>Tautan Kerja ↗</span>
                                         </a>
                                     @endif
                                     @if(!$log->file_laporan && !$log->link_laporan)
-                                        <span style="color: var(--neutral-400); font-size: 0.75rem;">Tanpa Lampiran</span>
+                                        <span style="color: #94A3B8; font-size: 0.75rem;">Tanpa Lampiran</span>
                                     @endif
                                 </div>
                             </td>
-                            <td style="padding: 1rem 1rem;">
+                            <td>
                                 <x-gentelella.badge :variant="$badgeVariant">
                                     {{ ucfirst(str_replace('_', ' ', $statusVal)) }}
                                 </x-gentelella.badge>
                             </td>
-                            <td style="padding: 1rem 1.5rem; text-align: right;">
-                                <button type="button" onclick="openReviewModal({{ $log->id }}, '{{ addslashes($log->penempatan?->peserta?->nama ?? 'Peserta') }}', '{{ $log->tanggal?->format('d M Y') }}', '{{ $statusVal }}', '{{ addslashes($log->catatan_pembimbing ?? '') }}')" class="btn btn-sm btn-primary" style="padding: 0.4rem 0.85rem; background: #0641CC; color: #ffffff; border: none; border-radius: 6px; font-weight: 600; font-size: 0.775rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2); display: inline-flex; align-items: center; gap: 0.35rem;">
-                                    <i class="fa fa-pencil-square-o"></i> Reviu
+                            <td style="text-align: right;">
+                                <button type="button" 
+                                    class="btn-logbook-action btn-open-review-modal"
+                                    data-log-id="{{ $log->id }}"
+                                    data-peserta-nama="{{ $log->penempatan?->peserta?->nama ?? 'Peserta' }}"
+                                    data-tanggal="{{ \Carbon\Carbon::parse($log->tanggal)->format('d M Y') }}"
+                                    data-status="{{ $statusVal }}"
+                                    data-catatan="{{ $log->catatan_pembimbing ?? '' }}">
+                                    <span>Review</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 </button>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="7" class="table-empty-td">
+                                Belum ada entri logbook harian yang sesuai dengan filter saat ini.
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
-            </x-gentelella.table>
+            </table>
+        </div>
 
-            @if($logbooks->hasPages())
-                <div style="padding: 1rem 1.5rem; border-top: 1px solid var(--neutral-200); background: #fafafa;">
-                    {{ $logbooks->links() }}
-                </div>
-            @endif
+        @if($logbooks->hasPages())
+            <div style="margin-top: 24px;">
+                {{ $logbooks->links() }}
+            </div>
         @endif
     </x-gentelella.x-panel>
 
-
 </div>
 
-<!-- MODAL REVIU LOGBOOK (AC-09-3, AC-09-4) -->
-<div id="modal-review-logbook" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
-    <div style="background: #ffffff; border-radius: 16px; max-width: 500px; width: 100%; padding: 1.75rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 1px solid var(--neutral-200);">
-        
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+{{-- 5. MODAL REVIEW LOGBOOK (AC-09-3, AC-09-4) --}}
+<div id="modal-review-logbook" class="modal-overlay">
+    <div class="modal-dialog-box">
+        <div class="modal-header-bar">
             <div>
-                <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--neutral-900); margin: 0;">Reviu Catatan Logbook</h3>
-                <p style="font-size: 0.8rem; color: var(--neutral-500); margin: 0.25rem 0 0 0;" id="review-modal-subtitle"></p>
+                <h3 class="modal-title">Review Catatan Logbook</h3>
+                <p class="modal-subtitle" id="review-modal-subtitle"></p>
             </div>
-            <button type="button" onclick="closeReviewModal()" style="background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400); line-height: 1;">&times;</button>
+            <button type="button" class="modal-close-btn" data-modal-close="#modal-review-logbook">&times;</button>
         </div>
 
-        <form method="POST" id="form-review-logbook" action="" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+        <form method="POST" id="form-review-logbook" action="" class="modal-form">
             @csrf
 
-            <!-- Status Evaluasi -->
             <div>
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #334155; margin-bottom: 0.35rem; display: block;">
                     Status Evaluasi <span style="color: #ef4444;">*</span>
                 </label>
-                <select name="status" id="review-status-select" required onchange="handleStatusChange(this.value)" class="form-control" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
+                <select name="status" id="review-status-select" required class="filter-control">
                     <option value="terkirim">Terkirim / Sesuai Standar</option>
+                    <option value="disetujui">Disetujui</option>
                     <option value="perlu_revisi">Perlu Revisi / Perbaikan (AC-09-4)</option>
                 </select>
             </div>
 
-            <!-- Template Respon Cepat (Pilar 1) -->
             <div>
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #334155; margin-bottom: 0.35rem; display: block;">
                     Template Umpan Balik Cepat
                 </label>
-                <select id="quick-canned-select" onchange="applyCannedResponse(this.value)" class="form-control" style="width: 100%; height: 38px; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0 0.75rem; font-size: 0.8125rem; background: var(--neutral-50);">
+                <select id="quick-canned-select" class="filter-control">
                     <option value="">-- Pilih Template Komentar --</option>
-                    <option value="Laporan kegiatan terverifikasi lengkap dan sesuai arahan penugasan dinas.">Laporan Lengkap & Sesuai Arahan</option>
+                    <option value="Laporan kegiatan terverifikasi lengkap dan sesuai arahan penugasan dinas.">Laporan Lengkap &amp; Sesuai Arahan</option>
                     <option value="Mohon lengkapi dokumentasi output pekerjaan atau lampirkan tautan bukti hasil kerja.">Minta Lampiran / Bukti Kerja</option>
                     <option value="Uraian aktivitas terlalu singkat, mohon dirinci poin pekerjaan dan kendala yang dihadapi.">Uraian Terlalu Singkat</option>
                     <option value="Kerja bagus! Konsistensi dan kedisiplinan pelaporan sudah sangat memuaskan.">Apresiasi Kedisiplinan</option>
                 </select>
             </div>
 
-            <!-- Catatan Pembimbing (Wajib jika Perlu Revisi / AC-09-4) -->
             <div>
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-700); display: block; margin-bottom: 0.35rem;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #334155; margin-bottom: 0.35rem; display: block;">
                     Catatan Pembimbing <span id="catatan-required-star" style="color: #ef4444; display: none;">* (Wajib diisi jika perlu revisi)</span>
                 </label>
-                <textarea name="catatan_pembimbing" id="review-catatan-textarea" rows="3" placeholder="Tuliskan catatan apresiasi, koreksi, atau instruksi perbaikan untuk peserta..." class="form-control" style="width: 100%; border: 1px solid var(--neutral-300); border-radius: 8px; padding: 0.75rem; font-size: 0.875rem; font-family: inherit;"></textarea>
-                <span id="catatan-hint" style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem; display: block;">
-                    Catatan ini akan langsung terlihat pada lembar riwayat logbook mentee.
-                </span>
+                <textarea name="catatan_pembimbing" id="review-catatan-textarea" rows="3" placeholder="Tuliskan catatan apresiasi, koreksi, atau instruksi perbaikan..." class="filter-control" style="height: auto; padding: 10px;"></textarea>
             </div>
 
-            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="closeReviewModal()" class="btn btn-default" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
-                    Batal
-                </button>
-                <button type="submit" class="btn btn-primary" style="height: 40px; padding: 0 1.5rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
-                    Simpan Evaluasi
-                </button>
+            <div class="modal-footer-actions">
+                <button type="button" class="btn-modal-cancel" data-modal-close="#modal-review-logbook">Batal</button>
+                <button type="submit" class="btn-modal-submit">Simpan Evaluasi</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- FLOATING BULK APPROVAL ACTION BAR (Pilar 1) -->
-<div id="bulk-action-bar" style="display: none; position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: #1e293b; color: #ffffff; padding: 0.75rem 1.75rem; border-radius: 999px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); z-index: 999; align-items: center; gap: 1.25rem; border: 1px solid rgba(255,255,255,0.15);">
-    <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600;">
-        <span id="bulk-selected-count" style="background: #0641CC; color: #ffffff; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.8rem; font-weight: 800;">0</span>
-        <span>Logbook Terpilih</span>
+{{-- 6. FLOATING BULK APPROVAL ACTION BAR --}}
+<div id="bulk-action-bar" class="bulk-floating-bar">
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <span id="bulk-selected-count" class="bulk-count-badge">0</span>
+        <span style="font-size: 0.875rem; font-weight: 600;">Logbook Terpilih</span>
     </div>
-    <form id="form-bulk-review" method="POST" action="{{ route('pembimbing.logbook.bulk-review') }}" style="display: inline-flex; align-items: center; gap: 0.75rem; margin: 0;">
+    <form id="form-bulk-review" method="POST" action="{{ route('pembimbing.logbook.bulk-review') }}" style="display: inline-flex; align-items: center; gap: 10px; margin: 0;">
         @csrf
         <div id="bulk-hidden-inputs"></div>
-        <button type="submit" style="height: 36px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 700; font-size: 0.8125rem; border: none; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
+        <button type="submit" class="btn-bulk-approve">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
             <span>Setujui Terpilih (1-Klik)</span>
         </button>
     </form>
-    <button type="button" onclick="clearBulkSelection()" style="background: transparent; border: none; color: #94a3b8; font-size: 0.8125rem; cursor: pointer; text-decoration: underline;">
-        Batal
-    </button>
+    <button type="button" id="btnCancelBulk" class="btn-bulk-cancel">Batal</button>
 </div>
 
-<script>
-    function openReviewModal(logId, namaPeserta, tanggal, status, catatan) {
-        document.getElementById('review-modal-subtitle').innerText = namaPeserta + ' • Tanggal: ' + tanggal;
-        document.getElementById('form-review-logbook').action = '/pembimbing/logbook/' + logId + '/review';
-        document.getElementById('review-status-select').value = status;
-        document.getElementById('review-catatan-textarea').value = catatan;
-        document.getElementById('quick-canned-select').value = '';
-        handleStatusChange(status);
-        document.getElementById('modal-review-logbook').style.display = 'flex';
-    }
-
-    function closeReviewModal() {
-        document.getElementById('modal-review-logbook').style.display = 'none';
-    }
-
-    function handleStatusChange(status) {
-        const star = document.getElementById('catatan-required-star');
-        const textarea = document.getElementById('review-catatan-textarea');
-        if (status === 'perlu_revisi') {
-            star.style.display = 'inline';
-            textarea.setAttribute('required', 'required');
-        } else {
-            star.style.display = 'none';
-            textarea.removeAttribute('required');
-        }
-    }
-
-    function applyCannedResponse(val) {
-        if (!val) return;
-        const textarea = document.getElementById('review-catatan-textarea');
-        textarea.value = val;
-    }
-
-    // BULK SELECTION LOGIC
-    function toggleSelectAll(masterCheckbox) {
-        const checkboxes = document.querySelectorAll('.logbook-checkbox:not(:disabled)');
-        checkboxes.forEach(cb => {
-            cb.checked = masterCheckbox.checked;
-        });
-        updateBulkBar();
-    }
-
-    function updateBulkBar() {
-        const checkedBoxes = document.querySelectorAll('.logbook-checkbox:checked');
-        const bar = document.getElementById('bulk-action-bar');
-        const countSpan = document.getElementById('bulk-selected-count');
-        const hiddenInputsContainer = document.getElementById('bulk-hidden-inputs');
-
-        if (checkedBoxes.length > 0) {
-            countSpan.innerText = checkedBoxes.length;
-            hiddenInputsContainer.innerHTML = '';
-            checkedBoxes.forEach(cb => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'logbook_ids[]';
-                input.value = cb.value;
-                hiddenInputsContainer.appendChild(input);
-            });
-            bar.style.display = 'flex';
-        } else {
-            bar.style.display = 'none';
-            hiddenInputsContainer.innerHTML = '';
-        }
-    }
-
-    function clearBulkSelection() {
-        const checkboxes = document.querySelectorAll('.logbook-checkbox');
-        checkboxes.forEach(cb => cb.checked = false);
-        const master = document.getElementById('selectAllCheckbox');
-        if (master) master.checked = false;
-        updateBulkBar();
-    }
-</script>
+@push('scripts')
+    @vite(['resources/js/pages/pembimbing/logbook-index.js'])
+@endpush
 @endsection

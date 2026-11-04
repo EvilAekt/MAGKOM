@@ -48,12 +48,20 @@ class AgendaBimbinganController extends Controller
         }
         $totalTerjadwal = (clone $baseQuery)->where('status', 'terjadwal')->count();
         $totalSelesai = (clone $baseQuery)->where('status', 'selesai')->count();
+        $totalAgenda = $totalTerjadwal + $totalSelesai;
+        $totalTatapMuka = (clone $baseQuery)->where('tipe', 'tatap_muka')->count();
+        $totalDaring = (clone $baseQuery)->where('tipe', 'daring')->count();
+        $persenSelesai = $totalAgenda > 0 ? (int) round(($totalSelesai / $totalAgenda) * 100) : 0;
 
         return view('pembimbing.agenda.index', [
             'agendaList' => $agendaList,
             'daftarMentee' => $daftarMentee,
             'totalTerjadwal' => $totalTerjadwal,
             'totalSelesai' => $totalSelesai,
+            'totalAgenda' => $totalAgenda,
+            'totalTatapMuka' => $totalTatapMuka,
+            'totalDaring' => $totalDaring,
+            'persenSelesai' => $persenSelesai,
         ]);
     }
 

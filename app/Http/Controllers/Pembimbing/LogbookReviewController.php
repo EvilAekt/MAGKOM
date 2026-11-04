@@ -74,9 +74,31 @@ class LogbookReviewController extends Controller
             ->where('status', StatusPenempatanEnum::Aktif)
             ->get();
 
+        $baseCounter = Logbook::whereHas('penempatan', function ($q) use ($user) {
+            if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                $q->where('pembimbing_id', $user->id);
+            }
+        });
+
+        $totalLogbook = (clone $baseCounter)->count();
+        $countMenunggu = (clone $baseCounter)->where('status', StatusLogbookEnum::Terkirim)->count();
+        $countDisetujui = (clone $baseCounter)->where('status', StatusLogbookEnum::Disetujui)->count();
+        $countRevisi = (clone $baseCounter)->where('status', StatusLogbookEnum::PerluRevisi)->count();
+
+        $persenDisetujui = $totalLogbook > 0 ? (int) round(($countDisetujui / $totalLogbook) * 100) : 0;
+        $persenMenunggu = $totalLogbook > 0 ? (int) round(($countMenunggu / $totalLogbook) * 100) : 0;
+        $persenRevisi = $totalLogbook > 0 ? (int) round(($countRevisi / $totalLogbook) * 100) : 0;
+
         $data = [
             'logbooks' => $logbooks,
             'penempatanList' => $penempatanList,
+            'totalLogbook' => $totalLogbook,
+            'countMenunggu' => $countMenunggu,
+            'countDisetujui' => $countDisetujui,
+            'countRevisi' => $countRevisi,
+            'persenDisetujui' => $persenDisetujui,
+            'persenMenunggu' => $persenMenunggu,
+            'persenRevisi' => $persenRevisi,
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {
@@ -118,7 +140,7 @@ class LogbookReviewController extends Controller
             app(RealtimeEventService::class)->publish(
                 RealtimeEventTypeEnum::LogbookDireviu,
                 [
-                    'title' => 'Catatan Logbook Telah Direviu',
+                    'title' => 'Catatan Logbook Telah Direview',
                     'message' => 'Pembimbing telah meninjau catatan logbook harian Anda.',
                     'action_url' => route('peserta.logbook.index'),
                 ],
@@ -160,7 +182,7 @@ class LogbookReviewController extends Controller
                 ->count();
 
             if ($unauthorizedCount > 0) {
-                abort(403, 'Akses ditolak: Anda hanya dapat mereviu logbook peserta bimbingan Anda.');
+                abort(403, 'Akses ditolak: Anda hanya dapat mereview logbook peserta bimbingan Anda.');
             }
         }
 

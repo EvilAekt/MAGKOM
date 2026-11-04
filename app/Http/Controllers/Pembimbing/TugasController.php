@@ -76,17 +76,24 @@ class TugasController extends Controller
             });
         }
 
-        $tugasList = $query->latest()->paginate(15)->withQueryString();
+        $tugasList = $query->latest()->paginate(10)->withQueryString();
 
-        // Ambil daftar penempatan mentee aktif untuk dropdown buat tugas
-        $penempatanList = Penempatan::with(['peserta.profil.jurusan', 'bidang'])
+        // Ambil daftar penempatan mentee aktif lengkap dengan tugas dan progres untuk stream mentee (10 per halaman)
+        $penempatanBaseQuery = Penempatan::with([
+            'peserta.profil.jurusan',
+            'bidang',
+            'tugas' => function ($q) {
+                $q->with('progresLogs')->latest();
+            },
+        ])
             ->where(function ($q) use ($user) {
                 if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
                     $q->where('pembimbing_id', $user->id);
                 }
             })
-            ->where('status', StatusPenempatanEnum::Aktif)
-            ->get();
+            ->where('status', StatusPenempatanEnum::Aktif);
+
+        $penempatanList = (clone $penempatanBaseQuery)->latest('id')->paginate(10)->withQueryString();
 
         // Hitung metrik agregat status tugas untuk banner dan tab classroom
         $baseMetricsQuery = Tugas::whereHas('penempatan', function ($q) use ($user) {
@@ -109,10 +116,21 @@ class TugasController extends Controller
             })->count(),
         ];
 
+        $selectedPenempatanId = $request->integer('penempatan_id') ?: null;
+        $selectedPenempatan = null;
+        if ($selectedPenempatanId) {
+            $selectedPenempatan = $penempatanList->firstWhere('id', $selectedPenempatanId);
+            if (! $selectedPenempatan) {
+                $selectedPenempatan = (clone $penempatanBaseQuery)->firstWhere('id', $selectedPenempatanId);
+            }
+        }
+
         $data = [
             'tugasList' => $tugasList,
             'penempatanList' => $penempatanList,
             'counts' => $counts,
+            'selectedPenempatanId' => $selectedPenempatanId,
+            'selectedPenempatan' => $selectedPenempatan,
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {
@@ -323,8 +341,34 @@ class TugasController extends Controller
             ]);
         }
 
+        $user = $request->user();
+        $querySiblings = Tugas::with(['penempatan.peserta.profil', 'progresLogs'])
+            ->whereHas('penempatan', function ($q) use ($user) {
+                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                    $q->where('pembimbing_id', $user->id);
+                }
+            });
+
+        if ($tugas->batch_id) {
+            $querySiblings->where('batch_id', $tugas->batch_id);
+        } else {
+            $querySiblings->where('penempatan_id', $tugas->penempatan_id);
+        }
+
+        $siblingTugasList = $querySiblings->oldest('id')->get();
+        if ($siblingTugasList->isEmpty()) {
+            $siblingTugasList = collect([$tugasData]);
+        }
+
+        $currentIndex = $siblingTugasList->search(fn ($item) => $item->id === $tugas->id);
+        $prevTugas = ($currentIndex !== false && $currentIndex > 0) ? $siblingTugasList->get($currentIndex - 1) : null;
+        $nextTugas = ($currentIndex !== false && $currentIndex < $siblingTugasList->count() - 1) ? $siblingTugasList->get($currentIndex + 1) : null;
+
         return view('pembimbing.tugas.show', [
             'tugas' => $tugasData,
+            'siblingTugasList' => $siblingTugasList,
+            'prevTugas' => $prevTugas,
+            'nextTugas' => $nextTugas,
         ]);
     }
 

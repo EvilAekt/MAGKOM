@@ -54,7 +54,7 @@ class SeedDummyPesertaCommand extends Command
                 ['9', 'Indra Kurniawan', 'indra.kurniawan@upnyk.ac.id', 'UPN Veteran', 'Penempatan Batal Pra-Mulai (Kuota Balik)'],
                 ['10', 'Joko Susilo', 'joko.susilo@ugm.ac.id', 'UGM', 'Penempatan Aktif (Minggu Pertama)'],
                 ['11', 'Kartika Putri', 'kartika.putri@uny.ac.id', 'UNY', 'Penempatan Aktif Teladan (Tugas & Logbook OK)'],
-                ['12', 'Lukman Hakim', 'lukman.hakim@upnyk.ac.id', 'UPN Veteran', 'Logbook SLA Breached (>3 Hari Belum Reviu)'],
+                ['12', 'Lukman Hakim', 'lukman.hakim@upnyk.ac.id', 'UPN Veteran', 'Logbook SLA Breached (>3 Hari Belum Review)'],
                 ['13', 'Maya Anggraini', 'maya.anggraini@amikom.ac.id', 'Amikom', 'Tugas Terlambat (Overdue BR-16)'],
                 ['14', 'Naufal Rizky', 'naufal.rizky@uii.ac.id', 'UII', 'Tugas Mendapat Catatan Revisi'],
                 ['15', 'Olivia Tan', 'olivia.tan@komdigi.go.id', 'Poltek SSN', 'Penempatan Jalur Slot Khusus Mitra'],

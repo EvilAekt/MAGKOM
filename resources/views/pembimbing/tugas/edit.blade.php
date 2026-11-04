@@ -1,302 +1,411 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Edit Tugas: ' . $tugas->judul . ' - Portal MagKom')
+@section('topbar_title', 'Edit Tugas Mentee')
+
+@push('styles')
+    @vite(['resources/css/pages/pembimbing/tugas-edit.css'])
+@endpush
+
+@push('scripts')
+    @vite(['resources/js/pages/pembimbing/tugas-edit.js'])
+@endpush
 
 @section('content')
-<div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 1400px; margin: 0 auto; width: 100%;">
+<div class="tugas-workspace">
 
-    <style>
-        .classroom-layout-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            align-items: start;
-        }
-        @media (min-width: 1024px) {
-            .classroom-layout-grid {
-                grid-template-columns: 1.8fr 1.2fr;
-            }
-        }
-        .form-label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--neutral-600, #475569);
-            margin-bottom: 0.45rem;
-        }
-        .form-control-input {
-            width: 100%;
-            border-radius: 8px;
-            border: 1px solid var(--neutral-300, #CBD5E1);
-            background: var(--neutral-0, #FFFFFF);
-            padding: 0.65rem 0.9rem;
-            font-size: 0.875rem;
-            color: var(--neutral-900, #0F172A);
-            transition: all 0.2s ease;
-            box-sizing: border-box;
-        }
-        .form-control-input:focus {
-            outline: none;
-            background: var(--neutral-0, #ffffff);
-            border-color: #0641CC;
-            box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.15);
-        }
-        .complexity-option {
-            cursor: pointer;
-            position: relative;
-        }
-        .complexity-option input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .complexity-box {
-            padding: 0.6rem 0.5rem;
-            text-align: center;
-            border-radius: 8px;
-            border: 1px solid var(--neutral-300, #CBD5E1);
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--neutral-600, #475569);
-            background: var(--neutral-100, #F8FAFC);
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-        .complexity-option input[value="rendah"]:checked + .complexity-box {
-            background: #ECFDF5;
-            border-color: #10B981;
-            color: #047857;
-            box-shadow: 0 1px 3px rgba(16, 185, 129, 0.2);
-        }
-        .complexity-option input[value="sedang"]:checked + .complexity-box {
-            background: #FFFBEB;
-            border-color: #F59E0B;
-            color: #B45309;
-            box-shadow: 0 1px 3px rgba(245, 158, 11, 0.2);
-        }
-        .complexity-option input[value="tinggi"]:checked + .complexity-box {
-            background: #EEF2FF;
-            border-color: #6366F1;
-            color: #4338CA;
-            box-shadow: 0 1px 3px rgba(99, 102, 241, 0.2);
-        }
-        .dropzone-box {
-            border: 2px dashed var(--neutral-300, #CBD5E1);
-            border-radius: 10px;
-            padding: 1.5rem 1.25rem;
-            text-align: center;
-            cursor: pointer;
-            background: var(--neutral-100, #F8FAFC);
-            transition: all 0.2s ease;
-        }
-        .dropzone-box:hover {
-            border-color: #0641CC;
-            background: var(--blue-tint, #EFF6FF);
-        }
-        [data-theme="dark"] .form-control-input {
-            background: #0F172A !important;
-            border-color: #26354D !important;
-            color: #F8FAFC !important;
-        }
-        [data-theme="dark"] .form-label {
-            color: #94A3B8 !important;
-        }
-        [data-theme="dark"] .dropzone-box {
-            background: #111C2E !important;
-            border-color: #26354D !important;
-        }
-        [data-theme="dark"] .complexity-box {
-            background: #111C2E !important;
-            border-color: #26354D !important;
-            color: #CBD5E1 !important;
-        }
-    </style>
-
-    {{-- Top Action & Breadcrumb Navigation --}}
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); padding-bottom: 1rem;">
-        <div>
-            <nav style="font-size: 0.8rem; color: var(--neutral-500, #64748B); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem;">
-                <a href="{{ route('pembimbing.dashboard') }}" style="color: var(--neutral-600, #475569); text-decoration: none;">Dashboard</a>
-                <span>/</span>
-                <a href="{{ route('pembimbing.tugas.index') }}" style="color: var(--neutral-600, #475569); text-decoration: none;">Tugas Peserta</a>
-                <span>/</span>
-                <a href="{{ route('pembimbing.tugas.show', $tugas) }}" style="color: var(--neutral-600, #475569); text-decoration: none;">{{ Str::limit($tugas->judul, 25) }}</a>
-                <span>/</span>
-                <span style="color: var(--neutral-900, #0F172A); font-weight: 700;">Edit Tugas</span>
+    {{-- Top Action & Header Bar (Sesuai Gaya Google Classroom Workspace) --}}
+    <div class="tugas-topbar">
+        <div class="tugas-topbar-left">
+            <div class="tugas-icon-circle" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="4" width="14" height="17" rx="2"></rect>
+                    <path d="M9 3h6v3H9zM8.5 11h7M8.5 15h7"></path>
+                </svg>
+            </div>
+            <h1 class="tugas-page-title">Edit Tugas Mentee</h1>
+            <span class="sr-only">Classroom Workspace</span>
+            <nav aria-label="Breadcrumb" class="sr-only">
+                <a href="{{ route('pembimbing.dashboard') }}">Dashboard</a> /
+                <a href="{{ route('pembimbing.tugas.index') }}">Tugas Peserta</a> /
+                <a href="{{ route('pembimbing.tugas.show', $tugas) }}">{{ Str::limit($tugas->judul, 25) }}</a> /
+                <span>Edit Tugas</span>
             </nav>
-            <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">
-                Edit Tugas Mentee
-            </h1>
-            <p style="font-size: 0.875rem; color: var(--neutral-500, #64748B); margin: 0.25rem 0 0 0;">
-                Perbarui instruksi, target capaian, kategori, batas waktu, atau berkas acuan penugasan.
-            </p>
         </div>
 
-        <div style="display: flex; gap: 0.75rem; align-items: center;">
-            <a href="{{ route('pembimbing.tugas.show', $tugas) }}" style="padding: 0.55rem 1.15rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); font-size: 0.875rem; font-weight: 700; border-radius: 8px; text-decoration: none; border: 1px solid var(--neutral-200, #E2E8F0);">
-                Batal
-            </a>
-            <button type="submit" form="form-edit-tugas" style="padding: 0.55rem 1.25rem; background: #0641CC; color: #ffffff; font-size: 0.875rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; box-shadow: 0 2px 4px rgba(6, 65, 204, 0.2);">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <div class="tugas-topbar-actions">
+            <button type="submit" form="formEditTugasClassroom" class="tugas-btn-primary-action" id="btnSubmitEdit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
                 <span>Simpan Perubahan</span>
             </button>
+
+            <a href="{{ route('pembimbing.tugas.show', $tugas) }}" class="tugas-btn-cancel">
+                Batal
+            </a>
         </div>
     </div>
 
-    <form id="form-edit-tugas" action="{{ route('pembimbing.tugas.update', $tugas) }}" method="POST" enctype="multipart/form-data">
+    {{-- Alert Validasi Backend --}}
+    @if ($errors->any())
+        <div class="tugas-alert-error" role="alert" style="background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 12px 16px; color: #991b1b; font-size: 14px;">
+            <strong style="display: block; margin-bottom: 4px;">Harap periksa kembali isian formulir:</strong>
+            <ul style="margin: 0; padding-left: 20px;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    {{-- Main Two-Column Form --}}
+    <form id="formEditTugasClassroom" action="{{ route('pembimbing.tugas.update', $tugas) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
         @csrf
         @method('PUT')
 
-        <div class="classroom-layout-grid">
-            
-            {{-- KOLOM UTAMA: DETAIL TUGAS --}}
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                
-                <x-gentelella.x-panel title="Detail Penugasan &amp; Instruksi" subtitle="Perbarui judul, instruksi, dan tautan acuan tugas" :toolbox="false">
-                    {{-- Judul Tugas --}}
-                    <div style="margin-bottom: 1.25rem;">
-                        <label for="judul" class="form-label">
-                            Judul Tugas <span style="color: #DC2626;">*</span>
-                        </label>
-                        <input type="text" id="judul" name="judul" value="{{ old('judul', $tugas->judul) }}" required maxlength="150" class="form-control-input" placeholder="Contoh: Implementasi Desain UI Portal Sleman" style="font-size: 1rem; font-weight: 600;">
+        {{-- Locked Mentee ID --}}
+        <input type="hidden" name="penempatan_id" value="{{ $tugas->penempatan_id }}">
+
+        {{-- Fallback Kompleksitas agar validasi backend tetap terpenuhi tanpa membebani UI --}}
+        <input type="hidden" name="kompleksitas" value="{{ old('kompleksitas', $tugas->kompleksitas?->value ?? 'sedang') }}">
+
+        {{-- Hidden Real File Input --}}
+        <input type="file" name="file_lampiran" id="realFileInput" style="display: none;" accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.zip,.png,.jpg,.jpeg">
+
+        {{-- Hidden Real Link Input --}}
+        <input type="hidden" name="link_referensi" id="realLinkInput" value="{{ old('link_referensi', $tugas->link_referensi) }}">
+
+        {{-- Hidden Real Deadline Input --}}
+        <input type="hidden" name="deadline" id="realDeadlineInput" value="{{ old('deadline', $tugas->deadline?->format('Y-m-d')) }}">
+
+        <div class="tugas-body-layout">
+
+            {{-- Kolom Kiri: Canvas Penugasan Utama --}}
+            <main class="tugas-main-column">
+
+                {{-- Panel 1: Judul dan Instruksi Pengerjaan --}}
+                <section class="tugas-card">
+                    @php
+                        $hasInitialJudul = !empty(old('judul', $tugas->judul));
+                    @endphp
+                    <div class="tugas-field-filled {{ $hasInitialJudul ? 'has-value' : '' }} {{ $errors->has('judul') ? 'has-error' : '' }}">
+                        <label for="inputJudul" class="tugas-field-filled-label"><span class="sr-only">Judul Penugasan</span><span aria-hidden="true">Judul*</span></label>
+                        <input id="inputJudul" 
+                               type="text" 
+                               name="judul" 
+                               required 
+                               maxlength="150" 
+                               autocomplete="off"
+                               spellcheck="false"
+                               value="{{ old('judul', $tugas->judul) }}" 
+                               class="tugas-input-clean">
                     </div>
 
-                    {{-- Deskripsi Tugas --}}
-                    <div style="margin-bottom: 1.25rem;">
-                        <label for="deskripsi" class="form-label">
-                            Instruksi &amp; Deskripsi Tugas
-                        </label>
-                        <textarea id="deskripsi" name="deskripsi" rows="8" class="form-control-input" placeholder="Tuliskan panduan langkah pengerjaan, batasan teknis, dan target hasil yang diharapkan...">{{ old('deskripsi', $tugas->deskripsi) }}</textarea>
+                    <div class="tugas-instruction-box {{ $errors->has('deskripsi') ? 'has-error' : '' }}">
+                        <label for="editorPetunjukVisual" class="tugas-instruction-label">Petunjuk (opsional)</label>
+                        <div id="editorPetunjukVisual" 
+                             class="tugas-visual-editor" 
+                             contenteditable="true" 
+                             role="textbox" 
+                             aria-multiline="true">{!! old('deskripsi', $tugas->deskripsi) !!}</div>
+                        <textarea id="inputPetunjuk" 
+                                  name="deskripsi" 
+                                  style="display: none;">{{ old('deskripsi', $tugas->deskripsi) }}</textarea>
+
+                        {{-- Rich Format Toolbar --}}
+                        <div class="tugas-format-toolbar">
+                            <button type="button" class="tugas-tool-btn" id="toolBtnBold" aria-label="Tebal" title="Tebal (Ctrl+B)">
+                                <strong>B</strong>
+                            </button>
+                            <button type="button" class="tugas-tool-btn" id="toolBtnItalic" aria-label="Miring" title="Miring (Ctrl+I)">
+                                <em>I</em>
+                            </button>
+                            <button type="button" class="tugas-tool-btn" id="toolBtnUnderline" aria-label="Garis bawah" title="Garis bawah (Ctrl+U)">
+                                <u>U</u>
+                            </button>
+                            <button type="button" class="tugas-tool-btn" id="toolBtnList" aria-label="Daftar bernomor" title="Daftar Bernomor">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                                    <path d="M10 6h10M10 12h10M10 18h10M4 6h2M4 12h2M4 18h2"></path>
+                                </svg>
+                            </button>
+                            <button type="button" class="tugas-tool-btn" id="toolBtnClear" aria-label="Hapus format" title="Hapus Format">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                                    <path d="M6 5h12M12 5l-3 14M5 19l14-14"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                {{-- Panel 2: Lampirkan (Upload File & Tambahkan Link) --}}
+                <section class="tugas-card tugas-card--accent">
+                    <div class="tugas-lampiran-header">
+                        <h2 class="tugas-lampiran-title">Lampirkan</h2>
+                        <span class="sr-only">Materi Acuan</span>
+                        <span class="tugas-lampiran-meta">(opsional)</span>
                     </div>
 
-                    {{-- Link Referensi Tambahan --}}
-                    <div>
-                        <label for="link_referensi" class="form-label">
-                            Tautan Referensi Eksternal (URL)
-                        </label>
-                        <input type="url" id="link_referensi" name="link_referensi" value="{{ old('link_referensi', $tugas->link_referensi) }}" class="form-control-input" placeholder="https://github.com/organisasi/repo atau https://figma.com/file/...">
-                    </div>
-                </x-gentelella.x-panel>
-
-                {{-- Lampiran Dokumen Acuan --}}
-                <x-gentelella.x-panel title="Berkas Lampiran Acuan Tugas" subtitle="Dokumen TOR, materi kerja, atau lembar spesifikasi" :toolbox="false">
+                    {{-- Berkas yang Sedang Terpasang Saat Ini --}}
                     @if($tugas->file_lampiran)
-                        <div style="padding: 0.85rem 1rem; background: var(--blue-tint, #EFF6FF); border: 1px solid var(--blue-tint-line, #BFDBFE); border-radius: 8px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                            <div style="display: flex; align-items: center; gap: 0.65rem;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        <div class="tugas-existing-file-card">
+                            <div class="tugas-existing-file-info">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2" aria-hidden="true">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
                                 <div>
-                                    <span style="font-size: 0.875rem; font-weight: 700; color: #1E40AF; display: block;">{{ $tugas->nama_file_lampiran ?: 'Berkas Lampiran Saat Ini' }}</span>
-                                    <small style="color: var(--neutral-500, #64748B);">{{ $tugas->ukuran_file_lampiran ? number_format($tugas->ukuran_file_lampiran / 1024, 1) . ' KB' : '' }}</small>
+                                    <span class="tugas-existing-file-name">{{ $tugas->nama_file_lampiran ?: 'Berkas Lampiran Saat Ini' }}</span>
+                                    @if($tugas->ukuran_file_lampiran)
+                                        <span class="tugas-existing-file-size">({{ number_format($tugas->ukuran_file_lampiran / 1024, 1) }} KB)</span>
+                                    @endif
                                 </div>
                             </div>
-                            <a href="{{ route('pembimbing.tugas.lampiran', $tugas) }}" class="btn-link" style="font-size: 0.8125rem; font-weight: 700; color: #0641CC; text-decoration: none;">
+                            <a href="{{ route('pembimbing.tugas.lampiran', $tugas) }}" class="tugas-btn-file-download" title="Unduh berkas lampiran">
                                 Unduh Lampiran &darr;
                             </a>
                         </div>
                     @endif
 
-                    <div class="dropzone-box" onclick="document.getElementById('file_lampiran').click()">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" style="margin: 0 auto 0.5rem auto;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                        <p style="margin: 0; font-size: 0.875rem; font-weight: 700; color: var(--neutral-700, #334155);">
-                            Klik untuk mengganti berkas lampiran (Opsional)
-                        </p>
-                        <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: var(--neutral-500, #64748B);">
-                            PDF, Word, Excel, PPT, ZIP, Gambar (Maks. 10 MB)
-                        </p>
-                        <input type="file" id="file_lampiran" name="file_lampiran" style="display: none;" onchange="showSelectedFilename(this)">
-                        <div id="file-selected-name" style="margin-top: 0.5rem; font-size: 0.8125rem; font-weight: 700; color: #0641CC; display: none;"></div>
-                    </div>
-                </x-gentelella.x-panel>
-
-            </div>
-
-            {{-- KOLOM KANAN: PARAMETER, DEADLINE & PESERTA --}}
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                
-                {{-- Info Peserta Penerima Tugas (Terkunci) --}}
-                <x-gentelella.card title="Penerima Tugas" icon="fa fa-user">
-                    <div style="display: flex; align-items: center; gap: 0.85rem;">
-                        <div style="width: 44px; height: 44px; border-radius: 8px; background: var(--blue-tint, #DBEAFE); color: #1E40AF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; flex-shrink: 0;">
-                            {{ strtoupper(substr($tugas->penempatan?->peserta?->nama ?? 'P', 0, 1)) }}
+                    <div class="tugas-lampiran-selector-box">
+                        <div class="tugas-circle-action-item">
+                            <button type="button" class="tugas-circle-btn" id="btnTriggerUploadFile" aria-label="Buka dialog upload berkas" title="Upload File Baru">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M12 16V4M7 9l5-5 5 5M5 20h14"></path>
+                                </svg>
+                            </button>
+                            <span class="tugas-circle-label">{{ $tugas->file_lampiran ? 'Ganti File' : 'Upload File' }}</span>
                         </div>
-                        <div>
-                            <div style="font-weight: 800; font-size: 0.95rem; color: var(--neutral-900, #0F172A);">
-                                {{ $tugas->penempatan?->peserta?->nama }}
-                            </div>
-                            <small style="color: var(--neutral-500, #64748B); font-size: 0.775rem;">
+
+                        <div class="tugas-circle-action-item">
+                            <button type="button" class="tugas-circle-btn" id="btnTriggerAddLink" aria-label="Buka dialog tautan" title="Tambahkan Link">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"></path>
+                                </svg>
+                            </button>
+                            <span class="tugas-circle-label">Link</span>
+                        </div>
+                    </div>
+
+                    {{-- Attached Preview Cards Containers --}}
+                    <div class="tugas-attached-list" id="attachedFilesContainer"></div>
+                    <div class="tugas-attached-list" id="attachedLinksContainer"></div>
+                </section>
+
+            </main>
+
+            {{-- Kolom Kanan: Parameter Penugasan --}}
+            <aside class="tugas-side-column" aria-label="Parameter Penugasan">
+                <span class="sr-only">Parameter Penugasan</span>
+
+                {{-- Parameter 1: Penerima Tugas (Terkunci Sesuai Penugasan Mentee) --}}
+                <div class="tugas-side-group">
+                    <label class="tugas-side-label">Penerima Tugas</label>
+                    @php
+                        $pesertaNama = $tugas->penempatan?->peserta?->nama ?? 'Peserta Magang';
+                        $initialPeserta = strtoupper(substr($pesertaNama, 0, 1));
+                    @endphp
+                    <div class="tugas-locked-mentee-card">
+                        <div class="tugas-locked-avatar" aria-hidden="true">
+                            {{ $initialPeserta }}
+                        </div>
+                        <div class="tugas-locked-info">
+                            <span class="tugas-locked-name">{{ $pesertaNama }}</span>
+                            <span class="tugas-locked-sub">
                                 {{ $tugas->penempatan?->bidang?->nama_bidang ?? 'Dinas Kominfo Sleman' }} &bull; Selesai {{ $tugas->penempatan?->tgl_selesai?->translatedFormat('d M Y') }}
-                            </small>
+                            </span>
                         </div>
                     </div>
-                </x-gentelella.card>
+                </div>
 
-                {{-- Parameter Penugasan --}}
-                <x-gentelella.x-panel title="Parameter Penugasan" subtitle="Kategori, kompleksitas, dan tenggat waktu" :toolbox="false">
-                    {{-- Kategori Tugas --}}
-                    <div style="margin-bottom: 1.25rem;">
-                        <label for="kategori" class="form-label">
-                            Kategori Tugas <span style="color: #DC2626;">*</span>
-                        </label>
-                        <input type="text" id="kategori" name="kategori" value="{{ old('kategori', $tugas->kategori) }}" required maxlength="50" class="form-control-input" placeholder="Contoh: Pemrograman, Desain, Analisis, Jaringan">
-                    </div>
+                {{-- Parameter 2: Kategori Bidang (Google Classroom Custom Select) --}}
+                <div class="tugas-side-group tugas-custom-select-group" id="groupKategoriSelect">
+                    <label class="tugas-side-label" id="lblKategori">Kategori Bidang <span class="req">*</span></label>
 
-                    {{-- Tingkat Kompleksitas --}}
-                    <div style="margin-bottom: 1.25rem;">
-                        <label class="form-label">
-                            Tingkat Kompleksitas <span style="color: #DC2626;">*</span>
-                        </label>
+                    {{-- Native select tersembunyi untuk kompatibilitas form & PHPUnit --}}
+                    <select id="selectKategori" name="kategori" required style="display: none;">
                         @php
-                            $currentKompleksitas = old('kompleksitas', $tugas->kompleksitas?->value ?? 'sedang');
+                            $defaultKat = old('kategori', $tugas->kategori ?? '');
+                            $kategoriOptions = [
+                                'Pengembangan Web',
+                                'UI/UX Design',
+                                'Jaringan & Keamanan',
+                                'Analisis Data',
+                                'Administrasi TI',
+                                'Dokumentasi Teknis',
+                                'Pengujian Sistem',
+                            ];
                         @endphp
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
-                            <label class="complexity-option">
-                                <input type="radio" name="kompleksitas" value="rendah" {{ $currentKompleksitas === 'rendah' ? 'checked' : '' }}>
-                                <div class="complexity-box">Rendah</div>
-                            </label>
-                            <label class="complexity-option">
-                                <input type="radio" name="kompleksitas" value="sedang" {{ $currentKompleksitas === 'sedang' ? 'checked' : '' }}>
-                                <div class="complexity-box">Sedang</div>
-                            </label>
-                            <label class="complexity-option">
-                                <input type="radio" name="kompleksitas" value="tinggi" {{ $currentKompleksitas === 'tinggi' ? 'checked' : '' }}>
-                                <div class="complexity-box">Tinggi</div>
-                            </label>
+                        <option value="" disabled {{ empty($defaultKat) ? 'selected' : '' }}>Pilih kategori bidang</option>
+                        @foreach ($kategoriOptions as $kat)
+                            <option value="{{ $kat }}" {{ $defaultKat === $kat ? 'selected' : '' }}>
+                                {{ $kat }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    {{-- Custom Trigger & Listbox ala Google Classroom --}}
+                    <div class="tugas-select-wrapper">
+                        <button type="button" 
+                                class="tugas-custom-select-trigger {{ empty($defaultKat) ? 'is-placeholder' : '' }}" 
+                                id="btnTriggerKategori" 
+                                aria-haspopup="listbox" 
+                                aria-expanded="false">
+                            <span class="trigger-text" id="btnTriggerKategoriText">{{ !empty($defaultKat) ? $defaultKat : 'Pilih kategori bidang' }}</span>
+                            <svg class="trigger-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M6 9l6 6 6-6"></path>
+                            </svg>
+                        </button>
+
+                        <ul class="tugas-custom-select-menu" id="menuKategoriList" role="listbox" aria-labelledby="lblKategori" tabindex="-1">
+                            @foreach ($kategoriOptions as $kat)
+                                @php $isSel = (!empty($defaultKat) && $defaultKat === $kat); @endphp
+                                <li class="tugas-custom-select-option {{ $isSel ? 'is-selected' : '' }}" 
+                                    role="option" 
+                                    aria-selected="{{ $isSel ? 'true' : 'false' }}"
+                                    data-value="{{ $kat }}">
+                                    <span>{{ $kat }}</span>
+                                    @if ($isSel)
+                                        <svg class="option-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+
+                {{-- Parameter 3: Tenggat Waktu (Deadline) --}}
+                <div class="tugas-side-group">
+                    <label class="tugas-side-label">Tenggat <span class="req">*</span></label>
+                    @php
+                        $initDeadline = old('deadline', $tugas->deadline?->format('Y-m-d'));
+                        $deadlineCarbon = $initDeadline ? \Carbon\Carbon::parse($initDeadline) : null;
+                        $deadlineIndoFormatted = $deadlineCarbon ? $deadlineCarbon->isoFormat('dddd, D MMM Y') : 'Pilih tenggat waktu';
+                    @endphp
+                    <button type="button" class="tugas-side-trigger" id="btnTriggerDeadline" aria-haspopup="dialog">
+                        <svg class="trigger-icon-left" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                            <rect x="3.5" y="5" width="17" height="15" rx="2"></rect>
+                            <path d="M3.5 10h17M8 3v4M16 3v4"></path>
+                        </svg>
+                        <span class="trigger-text" id="txtSelectedDeadlineDisplay">{{ $deadlineIndoFormatted }}</span>
+                        <svg class="trigger-icon-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M6 9l6 6 6-6"></path>
+                        </svg>
+                    </button>
+                    @if($tugas->penempatan?->tgl_selesai)
+                        <div class="tugas-side-hint">
+                            Berakhir pukul 23.59 WIB. Maks. tanggal {{ $tugas->penempatan->tgl_selesai->format('d/m/Y') }} (akhir magang peserta).
                         </div>
-                    </div>
+                    @endif
+                </div>
 
-                    {{-- Batas Waktu / Deadline --}}
-                    <div>
-                        <label for="deadline" class="form-label">
-                            Batas Waktu (Deadline) <span style="color: #DC2626;">*</span>
-                        </label>
-                        <input type="date" id="deadline" name="deadline" value="{{ old('deadline', $tugas->deadline?->format('Y-m-d')) }}" required class="form-control-input">
-                        @if($tugas->penempatan?->tgl_selesai)
-                            <small style="color: var(--neutral-500, #64748B); font-size: 0.725rem; display: block; margin-top: 0.35rem;">
-                                Maks. tanggal {{ $tugas->penempatan->tgl_selesai->format('d/m/Y') }} (akhir magang peserta).
-                            </small>
-                        @endif
-                    </div>
-                </x-gentelella.x-panel>
-
-            </div>
+            </aside>
 
         </div>
+
     </form>
 
-</div>
+    {{-- Modal Dialog: Upload File --}}
+    <div class="tugas-modal-backdrop" id="modalUploadFileDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalUpload">
+        <div class="tugas-dialog tugas-dialog--upload">
+            <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalUpload">Upload File Baru</div>
 
-<script>
-function showSelectedFilename(input) {
-    const display = document.getElementById('file-selected-name');
-    if (input.files && input.files[0]) {
-        display.textContent = 'Berkas dipilih: ' + input.files[0].name;
-        display.style.display = 'block';
-    } else {
-        display.style.display = 'none';
-    }
-}
-</script>
+            <div class="tugas-dropzone" id="tugasDropzoneArea" tabindex="0" role="button" aria-label="Area drag and drop upload berkas">
+                <svg width="84" height="62" viewBox="0 0 150 110" aria-hidden="true" class="tugas-dropzone-cloud">
+                    <defs>
+                        <linearGradient id="cloudGradEdit" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#4cc760"></stop>
+                            <stop offset="1" stop-color="#b8e3fb"></stop>
+                        </linearGradient>
+                    </defs>
+                    <path d="M38 100a30 30 0 0 1-2-60 38 38 0 0 1 72-8 28 28 0 0 1 8 56z" fill="url(#cloudGradEdit)" stroke="#222" stroke-width="1.5"></path>
+                    <path d="M75 82V52M62 64l13-13 13 13" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <button type="button" class="tugas-dropzone-btn-choose" id="btnBrowseFile">Pilih File</button>
+                <div class="tugas-dropzone-hint">atau tarik file ke sini</div>
+                <div class="tugas-dropzone-format">PDF, ZIP, DOCX, XLS, PPT, Gambar · maks. 10MB</div>
+            </div>
+
+            {{-- Selected File Info Preview inside Modal --}}
+            <div id="modalSelectedFileInfo" style="display: none; margin-top: 14px; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    <div style="min-width: 0;">
+                        <div id="modalFileNameTxt" style="font-size: 13px; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
+                        <div id="modalFileSizeTxt" style="font-size: 12px; color: #64748b;"></div>
+                    </div>
+                </div>
+                <button type="button" id="btnRemoveModalFile" style="background: none; border: none; cursor: pointer; color: #ef4444;" title="Hapus berkas">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+            </div>
+
+            <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="tugas-dialog-btn-text" id="btnCancelUploadFile">Batal</button>
+                <button type="button" class="tugas-dialog-btn-pill" id="btnSubmitUploadFile" disabled>Upload</button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Dialog: Tambahkan Link --}}
+    <div class="tugas-modal-backdrop" id="modalAddLinkDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalLink">
+        <div class="tugas-dialog tugas-dialog--link">
+            <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalLink">Kelola Tautan Referensi</div>
+
+            <div style="margin-top: 18px;">
+                <div class="tugas-field-filled" style="padding: 8px 14px;">
+                    <label for="inputModalLinkUrl" class="tugas-field-filled-label">Link*</label>
+                    <input type="url" id="inputModalLinkUrl" placeholder="https://example.com/..." class="tugas-input-clean" style="font-size: 15px;" value="{{ old('link_referensi', $tugas->link_referensi) }}">
+                </div>
+                <div id="linkErrorHint" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e; display: none;">*Wajib diisi url valid</div>
+            </div>
+
+            <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="tugas-dialog-btn-text" id="btnCancelAddLink">Batal</button>
+                <button type="button" class="tugas-dialog-btn-pill" id="btnSubmitAddLink">Simpan Tautan</button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Popup Calendar Tenggat (Datepicker Popup) --}}
+    <div class="tugas-calendar-popup" id="popupCalendarDeadline" role="dialog" aria-modal="false" aria-label="Kalender Tenggat Waktu">
+        <div class="tugas-cal-header">
+            <div class="tugas-cal-nav-group">
+                <button type="button" class="tugas-cal-nav-btn" id="calPrevMonth" aria-label="Bulan sebelumnya">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"></path></svg>
+                </button>
+                <span class="tugas-cal-label" id="calHeaderMonth">Bulan</span>
+                <button type="button" class="tugas-cal-nav-btn" id="calNextMonth" aria-label="Bulan berikutnya">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"></path></svg>
+                </button>
+            </div>
+            <div class="tugas-cal-nav-group">
+                <span class="tugas-cal-label" id="calHeaderYear">Tahun</span>
+            </div>
+        </div>
+
+        <div class="tugas-cal-grid-days">
+            <span class="tugas-cal-day-name">M</span>
+            <span class="tugas-cal-day-name">S</span>
+            <span class="tugas-cal-day-name">S</span>
+            <span class="tugas-cal-day-name">R</span>
+            <span class="tugas-cal-day-name">K</span>
+            <span class="tugas-cal-day-name">J</span>
+            <span class="tugas-cal-day-name">S</span>
+        </div>
+
+        <div class="tugas-cal-grid-dates" id="calDatesGrid"></div>
+
+        <div class="tugas-cal-footer">
+            <button type="button" class="tugas-dialog-btn-text" id="calBtnClear">Hapus</button>
+            <div>
+                <button type="button" class="tugas-dialog-btn-text" id="calBtnCancel">Batal</button>
+                <button type="button" class="tugas-dialog-btn-text" id="calBtnOk" style="font-weight: 700;">Oke</button>
+            </div>
+        </div>
+    </div>
+
+</div>
 @endsection

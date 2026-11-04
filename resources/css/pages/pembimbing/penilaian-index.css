@@ -1,0 +1,378 @@
+/* ========================================================
+   MAGKOM GENTELELLA DESIGN SYSTEM: PENILAIAN RUBRIK INDEX
+   Portal Pembimbing: Evaluasi Rubrik & Penilaian Magang
+   ======================================================== */
+
+.classroom-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+
+/* 1. Classroom Hero Banner Khas Sleman MagKom */
+.classroom-banner {
+    background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                linear-gradient(135deg, #01347C 0%, #003566 100%);
+    border-radius: 16px;
+    padding: 28px 32px;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.banner-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+}
+
+.banner-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+}
+
+.banner-subtitle {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.92);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    line-height: 1.5;
+}
+
+.btn-create-task {
+    background: #ffffff;
+    color: #01347C;
+    text-decoration: none;
+    padding: 0.65rem 1.35rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+}
+
+.btn-create-task:hover {
+    background: #f8fafc;
+    color: #002244;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+}
+
+/* 2. Tile Stats Grid MagKom Gentelella */
+.tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.tiles-grid .tile_stats_count {
+    width: 100% !important;
+    padding: 0 !important;
+    float: none !important;
+    margin: 0 !important;
+}
+
+.tiles-grid .tile_stats_inner.stat {
+    border-radius: 12px !important;
+    padding: 1.15rem 1.25rem !important;
+    background: #ffffff !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05) !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease !important;
+}
+
+.tiles-grid .tile_stats_inner.stat:hover {
+    transform: translateY(-2.5px) !important;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+    border-color: #CBD5E1 !important;
+}
+
+.tiles-grid .stat-spark {
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 3.5px !important;
+    height: 36px !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+    padding-left: 8px !important;
+}
+
+.tiles-grid .stat-spark i {
+    width: 4px !important;
+    border-radius: 2px !important;
+    transition: height 0.3s ease !important;
+}
+
+.tiles-grid .stat-yellow .stat-change.down {
+    color: #d97706 !important;
+    background: rgba(245, 158, 11, 0.12) !important;
+}
+
+/* 3. Guide Banner Panduan Rubrik */
+.rubrik-guide-banner {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-left: 4px solid #01347C;
+    border-radius: 12px;
+    padding: 1.15rem 1.35rem;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.rubrik-guide-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #01347C;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.rubrik-guide-content {
+    flex: 1;
+}
+
+.rubrik-guide-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #1E3A8A;
+    margin: 0 0 4px 0;
+}
+
+.rubrik-guide-desc {
+    font-size: 0.8125rem;
+    color: #1E40AF;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* 4. Filter Bar Card */
+.penilaian-filter-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #E2E8F0;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    margin-bottom: 24px;
+}
+
+.penilaian-filter-form {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.filter-group-search {
+    flex: 2;
+    min-width: 220px;
+}
+
+.filter-group label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #475569;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.filter-control {
+    width: 100%;
+    height: 38px;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 0.875rem;
+    background: #F8FAFC;
+    color: #0F172A;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.filter-control:focus {
+    border-color: #01347C;
+    background: #ffffff;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-filter-apply {
+    height: 38px;
+    padding: 0 18px;
+    background: #01347C;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+}
+
+.btn-filter-apply:hover {
+    background: #002244;
+}
+
+.btn-filter-reset {
+    height: 38px;
+    padding: 0 14px;
+    background: #E2E8F0;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+}
+
+.btn-filter-reset:hover {
+    background: #CBD5E1;
+}
+
+/* 5. Table Modern Khas Classroom */
+.table-penilaian-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+
+.table-penilaian {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.table-penilaian thead th {
+    padding: 12px 16px;
+    background: #F8FAFC;
+    color: #64748B;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.table-penilaian tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #F1F5F9;
+    vertical-align: middle;
+}
+
+.table-penilaian tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-penilaian tbody tr:hover td {
+    background-color: #F8FAFC;
+}
+
+.avatar-initials-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    border: 1px solid #BFDBFE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    flex-shrink: 0;
+}
+
+.mentee-identity-flex {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.score-badge {
+    font-weight: 800;
+    font-size: 0.9375rem;
+    color: #0F172A;
+}
+
+.score-predicate {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    color: #64748B;
+    margin-left: 4px;
+}
+
+.btn-penilaian-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid #01347C;
+    background: #01347C;
+    color: #ffffff;
+    transition: all 0.18s ease;
+}
+
+.btn-penilaian-action:hover {
+    background: #002244;
+    border-color: #002244;
+}
+
+.btn-penilaian-action.btn-secondary-action {
+    background: #F1F5F9;
+    color: #334155;
+    border-color: #CBD5E1;
+}
+
+.btn-penilaian-action.btn-secondary-action:hover {
+    background: #E2E8F0;
+    color: #01347C;
+}
+
+.table-empty-td {
+    padding: 3.5rem 1.5rem !important;
+    text-align: center;
+    color: #64748B;
+}

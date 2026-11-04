@@ -112,7 +112,7 @@ final class PembimbingDashboardEnhancementTest extends TestCase
         $response->assertOk();
         $response->assertSee('Dashboard Pembimbing');
         $response->assertSee('1. Ringkasan Utama');
-        $response->assertSee('2. Pusat Antrean Reviu');
+        $response->assertSee('2. Pusat Antrean Review');
         $response->assertSee('3. Monitoring Mentee 360°');
         $response->assertSee('4. Evaluasi Rubrik');
         $response->assertSee('Beban Mentee Aktif');
@@ -289,7 +289,7 @@ final class PembimbingDashboardEnhancementTest extends TestCase
         $response->assertOk();
         // 1. Quick Action Hero
         $response->assertSee('Beri Tugas Baru');
-        $response->assertSee('Reviu Antrean Hari Ini');
+        $response->assertSee('Review Antrean Hari Ini');
         $response->assertSee('Kelola Nilai Magang');
 
         // 2. Komposisi Jenjang Mentee

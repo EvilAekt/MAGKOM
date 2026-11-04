@@ -56,8 +56,8 @@
             <button type="button" class="task-filter-btn" onclick="filterDashboardTasks('mendesak', this)">
                 Mendesak <span class="filter-badge">{{ $tugasPrioritasPembimbing->filter(fn($t) => $t->is_overdue || $t->is_due_soon)->count() }}</span>
             </button>
-            <button type="button" class="task-filter-btn" onclick="filterDashboardTasks('reviu', this)">
-                Perlu Reviu <span class="filter-badge">{{ $tugasPrioritasPembimbing->where('pending_progres_count', '>', 0)->count() }}</span>
+            <button type="button" class="task-filter-btn" onclick="filterDashboardTasks('review', this)">
+                Perlu Review <span class="filter-badge">{{ $tugasPrioritasPembimbing->where('pending_progres_count', '>', 0)->count() }}</span>
             </button>
             <a href="{{ route('pembimbing.tugas.index') }}" style="font-size: 0.8125rem; font-weight: 600; color: #0641CC; text-decoration: none; margin-left: 8px;">
                 Lihat Seluruh Tugas &rarr;
@@ -158,7 +158,7 @@
                             </a>
                         @else
                             <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}" class="btn-task-action btn-task-action-secondary">
-                                <span>Reviu & Detail</span>
+                                <span>Review & Detail</span>
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                             </a>
                         @endif
@@ -322,10 +322,10 @@
         </x-gentelella.x-panel>
     </div>
 
-    <!-- Kolom Kanan: Antrean Reviu Logbook -->
+    <!-- Kolom Kanan: Antrean Review Logbook -->
     <div class="col-md-6 col-sm-12">
         <x-gentelella.x-panel
-            title="Antrean Reviu Logbook ({{ $pendingLogbooks->count() }})"
+            title="Antrean Review Logbook ({{ $pendingLogbooks->count() }})"
             subtitle="Logbook harian menunggu validasi pembimbing"
         >
             <x-slot:actions>
@@ -377,7 +377,7 @@
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
                     <span style="font-size: 0.875rem; font-weight: 600; color: var(--neutral-700, #334155);">Tidak Ada Antrean Logbook</span>
-                    <span style="font-size: 0.75rem;">Semua entri logbook harian peserta bimbingan telah direviu.</span>
+                    <span style="font-size: 0.75rem;">Semua entri logbook harian peserta bimbingan telah direview.</span>
                 </div>
             @endforelse
         </x-gentelella.x-panel>

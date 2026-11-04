@@ -26,9 +26,9 @@
         <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Sedang & belum dikerjakan</div>
     </div>
 
-    {{-- Metric 2: Logbook Pending Reviu --}}
+    {{-- Metric 2: Logbook Pending Review --}}
     <div class="sa-panel sa-metric sa-metric--warning" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Logbook Pending Reviu</div>
+        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Logbook Pending Review</div>
         <div class="sa-metric__value sa-stat-val-warning" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">{{ number_format($totalLogbookPending) }}</div>
         <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Menunggu catatan pembimbing</div>
     </div>

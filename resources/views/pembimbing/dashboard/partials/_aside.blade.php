@@ -1,12 +1,12 @@
 {{-- ==========================================================================
-   Sticky Aside (Perlu Reviu Hari Ini & Aksi Cepat) - Dashboard Pembimbing
+   Sticky Aside (Perlu Review Hari Ini & Aksi Cepat) - Dashboard Pembimbing
    ========================================================================== --}}
-{{-- PANEL 1: PERLU REVIU HARI INI --}}
+{{-- PANEL 1: PERLU REVIEW HARI INI --}}
 <x-gentelella.card style="padding: 1.25rem;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.65rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span style="font-family: monospace; font-size: 0.75rem; font-weight: 800; color: #d97706; background: rgba(245, 158, 11, 0.15); padding: 0.15rem 0.45rem; border-radius: 4px;">!</span>
-            <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Perlu Reviu Hari Ini</h3>
+            <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Perlu Review Hari Ini</h3>
         </div>
     </div>
 
@@ -21,7 +21,7 @@
                             <small style="color: var(--neutral-500); font-size: 0.7rem;">Menunggu Konfirmasi Pembimbing</small>
                         </div>
                     </div>
-                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600);">Reviu &rarr;</span>
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600);">Review &rarr;</span>
                 </button>
             </li>
         @endif
@@ -88,7 +88,7 @@
 
         @if($logbookPendingCount === 0 && $progresPendingCount === 0 && $tugasOverdueCount === 0 && $inactiveLogbookMentees->count() === 0)
             <li style="padding: 1.5rem 0.5rem; text-align: center; color: var(--neutral-500); font-size: 0.8125rem;">
-                <span style="color: #10b981; font-weight: 700; display: block; margin-bottom: 0.25rem;">✓ Seluruh Reviu Tuntas</span>
+                <span style="color: #10b981; font-weight: 700; display: block; margin-bottom: 0.25rem;">✓ Seluruh Review Tuntas</span>
                 Tidak ada antrean tugas atau logbook tertunda saat ini.
             </li>
         @endif

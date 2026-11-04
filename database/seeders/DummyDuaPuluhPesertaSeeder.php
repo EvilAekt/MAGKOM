@@ -549,7 +549,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
                 'pembimbing_id' => $pembimbing->id,
                 'nilai_akhir' => 78.50,
                 'predikat' => 'B',
-                'catatan' => 'Draft penilaian awal bimbingan, masih menunggu reviu laporan akhir.',
+                'catatan' => 'Draft penilaian awal bimbingan, masih menunggu review laporan akhir.',
                 'status' => StatusPenilaianEnum::Draft,
             ]
         );

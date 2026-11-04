@@ -269,7 +269,7 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         // 2. Verifikasi markup accordion pada grup Pembimbing (Figma Node 560-24892)
         $response->assertSee('Pembimbing');
         $response->assertSee('Penilaian Peserta');
-        $response->assertSee('Reviu Logbook');
+        $response->assertSee('Review Logbook');
         $response->assertSee('Tugas Magang');
         $response->assertSee('Agenda Bimbingan');
         $response->assertSee('Laporan Kinerja');

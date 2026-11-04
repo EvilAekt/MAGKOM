@@ -47,7 +47,7 @@
             </div>
         </x-gentelella.card>
 
-        <!-- Logbook Reviu -->
+        <!-- Logbook Review -->
         <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                 <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-600);">Logbook Direview</span>

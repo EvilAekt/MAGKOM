@@ -1,14 +1,14 @@
 {{-- ==========================================================================
-   Slide-Over Drawer / Modal Cepat: Reviu Logbook Harian Mentee - Pembimbing
+   Slide-Over Drawer / Modal Cepat: Review Logbook Harian Mentee - Pembimbing
    Standar Visual Gentelella Theme (MagKom Sleman)
    ========================================================================== --}}
 <div class="cv-slide-drawer gentelella-drawer" id="drawerReviewLogbook" role="dialog" aria-modal="true" aria-labelledby="drawerReviewLogbookTitle">
     <div class="cv-drawer-header" style="background: var(--blue-700, #0641CC); color: #ffffff; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h3 class="cv-drawer-title" id="drawerReviewLogbookTitle" style="color: #ffffff; font-size: 1.1rem; font-weight: 700; margin: 0;">Reviu Logbook Mentee</h3>
+            <h3 class="cv-drawer-title" id="drawerReviewLogbookTitle" style="color: #ffffff; font-size: 1.1rem; font-weight: 700; margin: 0;">Review Logbook Mentee</h3>
             <span class="cv-dyn-tanggal" style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.85);">Tanggal Aktivitas</span>
         </div>
-        <button type="button" class="cv-drawer-close" data-action="close-drawer" aria-label="Tutup reviu" style="background: rgba(255, 255, 255, 0.15); border: none; color: #ffffff; width: 32px; height: 32px; border-radius: 50%; font-size: 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+        <button type="button" class="cv-drawer-close" data-action="close-drawer" aria-label="Tutup review" style="background: rgba(255, 255, 255, 0.15); border: none; color: #ffffff; width: 32px; height: 32px; border-radius: 50%; font-size: 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">
             &times;
         </button>
     </div>

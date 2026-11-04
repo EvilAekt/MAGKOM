@@ -389,7 +389,7 @@ class PembimbingDashboardMetricsService
             $aktivitas->push([
                 'tipe' => 'progres',
                 'judul' => 'Unggahan Progres: '.($pr->tugas?->penempatan?->peserta?->nama ?? 'Peserta'),
-                'keterangan' => ($pr->tugas?->judul ?? 'Tugas').' • '.($pr->catatan ?? 'Menunggu reviu evaluasi'),
+                'keterangan' => ($pr->tugas?->judul ?? 'Tugas').' • '.($pr->catatan ?? 'Menunggu review evaluasi'),
                 'waktu' => $pr->created_at ?? now(),
                 'badge' => 'Tugas',
                 'badge_color' => '#2563EB',

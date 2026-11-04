@@ -104,6 +104,11 @@ class PesertaController extends Controller
         $countAktif = (clone $baseCounter)->where('status', StatusPenempatanEnum::Aktif)->count();
         $countSelesai = (clone $baseCounter)->where('status', StatusPenempatanEnum::Selesai)->count();
         $countPerhatian = count($perhatianIds);
+        $totalMentee = $countAktif + $countSelesai;
+
+        $persenAktif = $totalMentee > 0 ? (int) round(($countAktif / $totalMentee) * 100) : 0;
+        $persenPerhatian = $countAktif > 0 ? (int) round(($countPerhatian / $countAktif) * 100) : 0;
+        $persenSelesai = $totalMentee > 0 ? (int) round(($countSelesai / $totalMentee) * 100) : 0;
 
         $data = [
             'penempatanList' => $penempatanList,
@@ -112,6 +117,10 @@ class PesertaController extends Controller
             'countPerhatian' => $countPerhatian,
             'countSelesai' => $countSelesai,
             'perhatianIds' => $perhatianIds,
+            'totalMentee' => $totalMentee,
+            'persenAktif' => $persenAktif,
+            'persenPerhatian' => $persenPerhatian,
+            'persenSelesai' => $persenSelesai,
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {

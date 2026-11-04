@@ -63,7 +63,7 @@
                     <span>Higienitas Kredensial Staf: {{ $stafPendingGantiPassword }} akun staf belum mengganti sandi awal.</span>
                 @endif
                 @if($totalLogbookPending > 0)
-                    <span>Logbook Pending Reviu: {{ $totalLogbookPending }} logbook menunggu reviu pembimbing lapangan.</span>
+                    <span>Logbook Pending Review: {{ $totalLogbookPending }} logbook menunggu review pembimbing lapangan.</span>
                 @endif
             </div>
         </div>

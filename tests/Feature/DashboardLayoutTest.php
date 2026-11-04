@@ -164,7 +164,7 @@ BLADE;
 
             // Menu Pembimbing
             $response->assertSee('Tugas Peserta');
-            $response->assertSee('Reviu Logbook');
+            $response->assertSee('Review Logbook');
             // Menu Profil & Pengaturan Pembimbing
             $response->assertSee('Profil Saya');
             $response->assertSee('Pengaturan Akun');

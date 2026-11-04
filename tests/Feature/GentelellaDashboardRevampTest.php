@@ -349,7 +349,7 @@ final class GentelellaDashboardRevampTest extends TestCase
         $response->assertSee('tile_count', false);
         $response->assertSee('tile_stats_count', false);
         $response->assertSee('Beban Mentee Aktif');
-        $response->assertSee('Reviu Logbook');
+        $response->assertSee('Review Logbook');
         $response->assertSee('Progres Tugas');
         $response->assertSee('Tugas Berjalan');
 

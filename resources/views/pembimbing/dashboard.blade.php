@@ -2,7 +2,7 @@
 
 @section('title', 'Dashboard Operasional Pembimbing - MagKom Sleman')
 @section('page_title', 'Dashboard Pembimbing')
-@section('page_description', 'Pusat komando pemantauan bimbingan magang, reviu tugas & logbook, serta evaluasi rubrik dinas.')
+@section('page_description', 'Pusat komando pemantauan bimbingan magang, review tugas & logbook, serta evaluasi rubrik dinas.')
 
 @section('breadcrumbs')
     <span class="breadcrumb-current">Dashboard Pembimbing</span>
@@ -405,7 +405,7 @@
                     <line x1="16" y1="13" x2="8" y2="13"></line>
                     <line x1="16" y1="17" x2="8" y2="17"></line>
                 </svg>
-                2. Pusat Antrean Reviu
+                2. Pusat Antrean Review
                 @if($logbookPendingCount + $progresPendingCount > 0)
                     <span class="tab-badge badge-amber">{{ $logbookPendingCount + $progresPendingCount }}</span>
                 @endif
@@ -467,7 +467,7 @@
     </div>
 
     {{-- =========================================================================
-       KOLOM SAMPING: STICKY ASIDE 340PX (PERLU REVIU & AKSI CEPAT)
+       KOLOM SAMPING: STICKY ASIDE 340PX (PERLU REVIEW & AKSI CEPAT)
        ========================================================================= --}}
     <aside class="cv-aside-sticky">
         @include('pembimbing.dashboard.partials._aside')
@@ -475,7 +475,7 @@
 
 </div>
 
-{{-- Slide-Over Drawer: Reviu Logbook Mentee --}}
+{{-- Slide-Over Drawer: Review Logbook Mentee --}}
 @include('pembimbing.dashboard.partials._modal_review_logbook')
 
 @push('scripts')
@@ -551,7 +551,7 @@
                 } else {
                     row.style.display = 'none';
                 }
-            } else if (filterType === 'reviu') {
+            } else if (filterType === 'reviu' || filterType === 'review') {
                 if (hasPending) {
                     row.style.display = 'flex';
                     visibleCount++;

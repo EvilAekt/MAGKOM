@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Buat Tugas Baru - Dashboard Pembimbing MAGKOM')
+@section('topbar_title', 'Buat Tugas Baru')
 
 @push('styles')
     @vite(['resources/css/pages/pembimbing/tugas-create.css'])

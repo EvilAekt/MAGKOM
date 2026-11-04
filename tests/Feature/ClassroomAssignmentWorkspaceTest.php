@@ -111,6 +111,8 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
             ->get(route('pembimbing.tugas.create'));
 
         $response->assertOk();
+        $response->assertSee('<h1 class="topbar-title">Buat Tugas Baru</h1>', false);
+        $response->assertDontSee('<nav class="breadcrumb-trail"', false);
         $response->assertSee('Buat Tugas Baru');
         $response->assertSee('Classroom Workspace');
         $response->assertSee('formBuatTugasClassroom');
@@ -185,13 +187,7 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('classroom-banner', false);
-        $response->assertSee('Manajemen Penugasan & Progres (F-08)', false);
-        $response->assertSee('1 Tugas');
-        $response->assertSee('Semua Tugas');
-        $response->assertSee('Ditugaskan');
-        $response->assertSee('Sedang Dikerjakan');
-        $response->assertSee('Selesai');
-        $response->assertSee('classroomCardContainer', false);
+        $response->assertSee('Tugas & Progres Magang', false);
         $response->assertSee('Pengembangan Antarmuka Dashboard Portal MagKom');
         $response->assertSee('Mentee Satu');
         $response->assertSee('+ Buat Tugas Baru');

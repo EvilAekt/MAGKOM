@@ -14,9 +14,9 @@
         col="col-md-3 col-sm-6"
     />
 
-    <!-- Tile 2: Reviu Logbook -->
+    <!-- Tile 2: Review Logbook -->
     <x-gentelella.tile-stat
-        title="Reviu Logbook"
+        title="Review Logbook"
         value="{{ $logbookPendingCount }}"
         icon="book-open"
         trendText="{{ $logbookPendingCount > 0 ? $logbookPendingCount . ' Perlu Tindak Lanjut' : 'Tuntas' }}"
