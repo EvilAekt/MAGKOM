@@ -132,21 +132,6 @@
 <div class="gentelella-penempatan-admin" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     <style>
-        .admin-stat-card {
-            background: #ffffff;
-            border-radius: 14px;
-            border: 1px solid var(--neutral-200, #E2E8F0);
-            padding: 1.25rem 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .admin-stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-        }
         .admin-card {
             background: #ffffff;
             border-radius: 14px;
@@ -359,19 +344,6 @@
         /* =====================================================================
            DARK MODE OVERRIDES (DS-MagKom Standards)
            ===================================================================== */
-        [data-theme="dark"] .admin-stat-card {
-            background-color: #182234 !important;
-            border-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .admin-stat-card div div {
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .admin-stat-card span[style*="color: var(--neutral-500"] {
-            color: #94A3B8 !important;
-        }
-
         [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=csv"] {
             background: #111C2E !important;
             border-color: #26354D !important;
@@ -709,7 +681,6 @@
                 class="admin-stat-card admin-stat-card--orange"
             />
         @endif
-    </div>
     </div>
 
     {{-- 2. ANTREAN PESERTA LOLOS SELEKSI BERKAS (MENUNGGU PENETAPAN PEMBIMBING) --}}

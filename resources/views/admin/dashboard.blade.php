@@ -140,10 +140,34 @@
    ========================================================================= --}}
 <div class="gentelella-dashboard-admin adm-cockpit-wrapper" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
-    {{-- 1. Atmospheric Hero Card, 4-Metric Dock & Statusline Ribbon --}}
+    {{-- 1. Atmospheric Hero Studio Banner Mandiri --}}
     @include('admin.dashboard.partials._header')
 
-    {{-- 2. Asymmetrical Cockpit 2-Column Grid (Main 1fr + Sticky Aside 340px) --}}
+    {{-- 2. Four-Metric Cards Row (Separated below banner, SuperAdmin parity) --}}
+    <section class="adm-metrics-row">
+        @include('admin.dashboard.partials._metrics')
+    </section>
+
+    {{-- 3. Statusline Horizontal Ribbon --}}
+    <div class="cv-statusline gentelella-statusline">
+        <div class="cv-statusline-item">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #10B981; box-shadow: 0 0 0 2px rgba(16,185,129,0.25);"></span>
+            <dt>Portal Pendaftaran:</dt>
+            <dd>Aktif</dd>
+        </div>
+        <div style="width: 1px; height: 16px; background: var(--neutral-300);"></div>
+        <div class="cv-statusline-item">
+            <dt>Standar SLA:</dt>
+            <dd>Maks. 3 Hari Kerja</dd>
+        </div>
+        <div style="width: 1px; height: 16px; background: var(--neutral-300);"></div>
+        <div class="cv-statusline-item">
+            <dt>Rasio Pembimbing:</dt>
+            <dd>{{ $pembimbingWorkload->isNotEmpty() ? round($pembimbingWorkload->avg('aktif_count'), 1) : 0 }} / 8 Mentee</dd>
+        </div>
+    </div>
+
+    {{-- 4. Asymmetrical Cockpit 2-Column Grid (Main 1fr + Sticky Aside 340px) --}}
     <div class="cv-cockpit-layout">
         {{-- Kolom Utama: Attention, Antrean Verifikasi & Kuota Monitoring --}}
         <div class="cv-cockpit-main" style="display: flex; flex-direction: column; gap: 1.5rem; min-width: 0;">

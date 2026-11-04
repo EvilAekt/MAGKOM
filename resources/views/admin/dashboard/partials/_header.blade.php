@@ -34,26 +34,4 @@
             </a>
         </div>
     </div>
-
-    {{-- Integrated Four-Metric Dock --}}
-    @include('admin.dashboard.partials._metrics')
-</div>
-
-{{-- Statusline Horizontal Ribbon --}}
-<div class="cv-statusline gentelella-statusline">
-    <div class="cv-statusline-item">
-        <span style="width: 8px; height: 8px; border-radius: 50%; background: #10B981; box-shadow: 0 0 0 2px rgba(16,185,129,0.25);"></span>
-        <dt>Portal Pendaftaran:</dt>
-        <dd>Aktif</dd>
-    </div>
-    <div style="width: 1px; height: 16px; background: var(--neutral-300);"></div>
-    <div class="cv-statusline-item">
-        <dt>Standar SLA:</dt>
-        <dd>Maks. 3 Hari Kerja</dd>
-    </div>
-    <div style="width: 1px; height: 16px; background: var(--neutral-300);"></div>
-    <div class="cv-statusline-item">
-        <dt>Rasio Pembimbing:</dt>
-        <dd>{{ $pembimbingWorkload->isNotEmpty() ? round($pembimbingWorkload->avg('aktif_count'), 1) : 0 }} / 8 Mentee</dd>
-    </div>
 </div>
