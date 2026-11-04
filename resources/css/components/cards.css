@@ -39,7 +39,7 @@
         html:not([data-theme="dark"]) .staf-filter-card,
         html:not([data-theme="dark"]) .sa-panel:not(.sa-panel--sub) {
             background-color: #FFFFFF;
-            border: 1px solid #BBBBBB;
+            border: 1.5px solid #CBD5E1;
             border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
             box-shadow: 0 2px 8px rgba(1, 52, 124, 0.04);
         }
@@ -56,7 +56,7 @@
         [data-theme="dark"] .cv-card,
         [data-theme="dark"] .tile_stats_inner {
             background-color: #003566 !important;
-            border: 1px solid #3F51B5 !important;
+            border: 1.5px solid #3F51B5 !important;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
             color: #FFFFFF !important;
         }
@@ -67,7 +67,7 @@
         .tile_stats_inner.stat {
             background-color: #ffffff !important;
             background: #ffffff !important;
-            border: 1px solid var(--neutral-300, #e2e8f0) !important;
+            border: 1.5px solid #CBD5E1 !important;
             border-radius: 12px !important;
             padding: 1rem 1.25rem !important;
             box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
@@ -261,7 +261,7 @@
         [data-theme="dark"] .tile_stats_inner.stat {
             background-color: #003566 !important;
             background: #003566 !important;
-            border: 1px solid #3f51b5 !important;
+            border: 1.5px solid #3f51b5 !important;
             border-radius: 12px !important;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
         }

@@ -105,8 +105,11 @@ class PendaftaranController extends Controller
             }
         }
 
-        // AC-04-1: Pagination 25 per halaman
-        $pendaftaranList = $query->paginate(25)->withQueryString();
+        $perPage = (int) $request->input('per_page', 5);
+        if (! in_array($perPage, [5, 10, 25, 50], true)) {
+            $perPage = 5;
+        }
+        $pendaftaranList = $query->paginate($perPage)->withQueryString();
         $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
         $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
 

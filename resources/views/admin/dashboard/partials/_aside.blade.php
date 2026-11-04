@@ -5,10 +5,12 @@
 
 {{-- PANEL 1: PERLU TINDAKAN HARI INI --}}
 <span class="sr-only">Status Operasional & Tim Kerja</span>
-<x-gentelella.card style="padding: 1.25rem;">
+<x-gentelella.card style="padding: 1.25rem; border-top: 3.5px solid #F59E0B;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.65rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="font-family: monospace; font-size: 0.75rem; font-weight: 800; color: #d97706; background: rgba(245, 158, 11, 0.15); padding: 0.15rem 0.45rem; border-radius: 4px;">!</span>
+            <span class="adm-aside-icon-badge warning" aria-hidden="true">
+                <x-sa.icon name="clipboard-check" :size="15" />
+            </span>
             <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Perlu Tindakan Hari Ini</h3>
         </div>
     </div>
@@ -75,20 +77,23 @@
         @endif
 
         @if($pengajuanMenunggu === 0 && $waitingListCount === 0 && $perluPerbaikan === 0 && $pengajuanSlaKritisCount === 0)
-            <li style="padding: 1.5rem 0.5rem; text-align: center; color: var(--neutral-500); font-size: 0.8125rem;">
-                <span style="color: #10b981; font-weight: 700; display: block; margin-bottom: 0.25rem;">✓ Semua Beres</span>
-                Tidak ada antrean kritis yang membutuhkan tindakan segera hari ini.
+            <li class="adm-aside-empty-item">
+                <div class="adm-aside-empty-badge" aria-hidden="true">
+                    <x-sa.icon name="check-circle" :size="20" />
+                </div>
+                <strong class="adm-aside-empty-title">Semua Beres</strong>
+                <p class="adm-aside-empty-desc">Tidak ada antrean kritis yang membutuhkan tindakan segera hari ini.</p>
             </li>
         @endif
     </ul>
 </x-gentelella.card>
 
 {{-- PANEL 2: AKSI CEPAT ADMIN --}}
-<x-gentelella.card style="padding: 1.25rem;">
+<x-gentelella.card style="padding: 1.25rem; border-top: 3.5px solid #01347C;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.65rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span class="adm-quick-icon-badge" style="width: 26px; height: 26px; border-radius: 6px; background: rgba(1, 52, 124, 0.08); color: var(--magkom-primary-blue, #01347C); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" aria-hidden="true">
-                <x-sa.icon name="compass" :size="16" />
+            <span class="adm-aside-icon-badge primary adm-quick-icon-badge" aria-hidden="true">
+                <x-sa.icon name="compass" :size="15" />
             </span>
             <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Aksi Cepat Admin</h3>
         </div>
@@ -119,14 +124,16 @@
 </x-gentelella.card>
 
 {{-- PANEL 3: JADWAL & STATUS PENDAFTARAN PERIODE INI --}}
-<x-gentelella.card style="padding: 1.25rem;">
+<x-gentelella.card style="padding: 1.25rem; border-top: 3.5px solid var(--blue-600, #0641CC);">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.65rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--blue-600);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span class="adm-aside-icon-badge primary" aria-hidden="true">
+                <x-sa.icon name="calendar" :size="15" />
+            </span>
             <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Jadwal Pendaftaran</h3>
         </div>
         @if($bulanAktif)
-            <a href="{{ route('admin.kuota.index', ['bulan_magang_id' => $bulanAktif->id]) }}" class="sa-link cv-link-action">
+            <a href="{{ route('admin.kuota.index', ['bulan_magang_id' => $bulanAktif->id]) }}" class="adm-btn-micro">
                 <span>Atur</span> &rarr;
             </a>
         @endif
@@ -139,26 +146,35 @@
             $isBuka = $tglBuka && $tglTutup && now()->between($tglBuka, $tglTutup);
             $sisaHari = $tglTutup && $tglTutup->isFuture() ? (int) now()->diffInDays($tglTutup, false) : 0;
         @endphp
-        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <div style="padding: 0.85rem 1rem; background: var(--neutral-100, #F8FAFC); border: 1px solid var(--neutral-300, #E2E8F0); border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-500); text-transform: uppercase; display: block; margin-bottom: 0.2rem;">
-                        {{ $bulanAktif->bulan_mulai?->translatedFormat('F Y') }}
-                    </span>
-                    <span style="font-size: 0.875rem; font-weight: 800; color: var(--neutral-800); display: block;">
+        <div class="adm-schedule-card">
+            {{-- Baris Periode & Status Pill --}}
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+                <span class="adm-schedule-period">
+                    {{ $bulanAktif->bulan_mulai?->translatedFormat('F Y') }}
+                </span>
+                <span class="adm-schedule-pill {{ $isBuka ? 'is-open' : 'is-closed' }}">
+                    <span class="dot-status"></span>
+                    <span>{{ $isBuka ? 'Dibuka' : 'Ditutup' }}</span>
+                </span>
+            </div>
+
+            {{-- Baris Batas Akhir Tanggal --}}
+            <div class="adm-schedule-deadline-row">
+                <div style="display: flex; align-items: center; gap: 0.4rem; color: var(--neutral-700);">
+                    <x-sa.icon name="calendar" :size="14" />
+                    <span style="font-size: 0.8125rem; font-weight: 700;">
                         Batas: {{ $tglTutup ? $tglTutup->translatedFormat('d M Y') : '-' }}
                     </span>
-                    <small style="color: var(--neutral-500); font-size: 0.75rem; margin-top: 0.15rem; display: block;">
-                        @if($isBuka && $sisaHari >= 0)
-                            Tersisa <strong style="color: var(--blue-600);">{{ $sisaHari }} hari kalender</strong>
-                        @else
-                            Pendaftaran tidak sedang berlangsung
-                        @endif
-                    </small>
                 </div>
-                <span class="x_badge {{ $isBuka ? 'x_badge_success' : 'x_badge_primary' }}" style="font-size: 0.75rem; padding: 0.3rem 0.65rem; border-radius: 999px;">
-                    {{ $isBuka ? '● Dibuka' : '● Ditutup' }}
-                </span>
+            </div>
+
+            {{-- Helper Note Status --}}
+            <div class="adm-schedule-note {{ $isBuka ? 'note-open' : 'note-closed' }}">
+                @if($isBuka && $sisaHari >= 0)
+                    <span>Tersisa <strong>{{ $sisaHari }} hari kalender</strong></span>
+                @else
+                    <span>Pendaftaran tidak sedang berlangsung</span>
+                @endif
             </div>
             <span class="sr-only">Timeline Gelombang Magang</span>
         </div>
@@ -168,13 +184,15 @@
 </x-gentelella.card>
 
 {{-- PANEL 4: DISTRIBUSI PEMBIMBING LAPANGAN --}}
-<x-gentelella.card style="padding: 1.25rem;">
+<x-gentelella.card style="padding: 1.25rem; border-top: 3.5px solid #059669;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.65rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--blue-600);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span class="adm-aside-icon-badge success" aria-hidden="true">
+                <x-sa.icon name="users" :size="15" />
+            </span>
             <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Pembimbing Lapangan</h3>
         </div>
-        <a href="{{ route('admin.penempatan.index') }}" class="sa-link cv-link-action">
+        <a href="{{ route('admin.penempatan.index') }}" class="adm-btn-micro">
             <span>Kelola</span> &rarr;
         </a>
     </div>
@@ -212,10 +230,12 @@
     <x-gentelella.card style="padding: 1.25rem; border-top: 3.5px solid var(--amber-700, #B45309); border-left: none;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 0.65rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <span style="font-family: monospace; font-size: 0.75rem; font-weight: 800; color: #b45309; background: rgba(245, 158, 11, 0.15); padding: 0.15rem 0.45rem; border-radius: 4px;">⏳</span>
+                <span class="adm-aside-icon-badge warning" aria-hidden="true">
+                    <x-sa.icon name="clock" :size="15" />
+                </span>
                 <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Offboarding Watchdog</h3>
             </div>
-            <a href="{{ route('admin.sertifikat.index') }}" class="sa-link cv-link-action cv-link-action--warning">
+            <a href="{{ route('admin.sertifikat.index') }}" class="adm-btn-micro">
                 <span>Sertifikat</span> &rarr;
             </a>
         </div>

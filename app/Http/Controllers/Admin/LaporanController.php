@@ -130,7 +130,11 @@ class LaporanController extends Controller
                 $pQuery->where('created_at', '<=', $request->input('sampai_tanggal').' 23:59:59');
             }
 
-            $pendaftaranData = $pQuery->paginate(10)->withQueryString();
+            $perPage = (int) $request->input('per_page', 5);
+            if (! in_array($perPage, [5, 10, 25, 50], true)) {
+                $perPage = 5;
+            }
+            $pendaftaranData = $pQuery->paginate($perPage)->withQueryString();
         } elseif ($tab === 'penempatan') {
             $penQuery = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan', 'slotKhusus'])
                 ->orderBy('tgl_mulai', 'desc');

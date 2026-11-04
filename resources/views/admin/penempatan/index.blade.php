@@ -135,7 +135,7 @@
         .admin-card {
             background: #ffffff;
             border-radius: 14px;
-            border: 1px solid var(--neutral-200, #E2E8F0);
+            border: 1.5px solid #CBD5E1;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             overflow: hidden;
         }
@@ -1049,11 +1049,14 @@
                 </table>
             </div>
 
-            @if($penempatanList->hasPages())
-                <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200, #E2E8F0); background: #ffffff;">
-                    {{ $penempatanList->links() }}
-                </div>
-            @endif
+            <div style="padding: 1rem 1.25rem; border-top: 1px solid var(--neutral-200, #E2E8F0); background: #ffffff;">
+                <x-gentelella.pagination-bar 
+                    :paginator="$penempatanList" 
+                    :perPageOptions="[5, 10, 25]" 
+                    entity="peserta magang" 
+                    badgeText="Penempatan Aktif" 
+                />
+            </div>
         @endif
     </x-gentelella.x-panel>
 

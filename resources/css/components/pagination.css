@@ -198,18 +198,24 @@
             cursor: pointer;
             transition: all 0.15s ease;
             line-height: 1.25;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .kuota-per-page-pill:hover:not(.active) {
             background: #E2E8F0;
             color: #0F172A;
+            text-decoration: none;
         }
 
         .kuota-per-page-pill.active {
             background: var(--blue-600, #0641CC);
-            color: #FFFFFF;
+            color: #FFFFFF !important;
             font-weight: 700;
             box-shadow: 0 1px 2px rgba(6, 65, 204, 0.2);
+            text-decoration: none;
         }
 
         .kuota-pagination-lembar-info {
@@ -233,11 +239,16 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.15s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .kuota-page-btn-nav:hover:not(.disabled) {
             background: #F1F5F9;
             color: #0F172A;
+            text-decoration: none;
         }
 
         .kuota-page-btn-nav.disabled {
@@ -245,6 +256,7 @@
             cursor: not-allowed;
             opacity: 0.5;
             background: transparent;
+            text-decoration: none;
         }
 
         .kuota-page-num {
@@ -262,11 +274,13 @@
             color: var(--neutral-600, #64748B);
             cursor: pointer;
             transition: all 0.15s ease;
+            text-decoration: none;
         }
 
         .kuota-page-num:hover:not(.active) {
             background: #F1F5F9;
             color: #0F172A;
+            text-decoration: none;
         }
 
         .kuota-page-num.active {
@@ -274,6 +288,7 @@
             color: #FFFFFF !important;
             font-weight: 700;
             box-shadow: 0 1px 2px rgba(6, 65, 204, 0.2);
+            text-decoration: none;
         }
 
         .kuota-page-ellipsis {

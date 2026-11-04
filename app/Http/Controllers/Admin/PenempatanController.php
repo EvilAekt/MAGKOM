@@ -81,7 +81,11 @@ class PenempatanController extends Controller
             });
         }
 
-        $penempatanList = $query->paginate(15)->withQueryString();
+        $perPage = (int) $request->input('per_page', 5);
+        if (! in_array($perPage, [5, 10, 25, 50], true)) {
+            $perPage = 5;
+        }
+        $penempatanList = $query->paginate($perPage)->withQueryString();
 
         $pembimbingList = User::where('role', RoleEnum::Pembimbing)
             ->where('status_aktif', true)

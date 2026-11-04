@@ -356,13 +356,8 @@
 
     <!-- 3. TAB 1: REKAP PENDAFTARAN -->
     @if($tab === 'pendaftaran')
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
-                <div>
-                    <h2 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0 0 0.25rem 0;">Laporan Rekapitulasi Pendaftaran</h2>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Data calon peserta pendaftaran magang berdasarkan bulan magang dan status keputusan.</p>
-                </div>
-
+        <x-gentelella.x-panel class="has-table" title="Laporan Rekapitulasi Pendaftaran" subtitle="Data calon peserta pendaftaran magang berdasarkan bulan magang dan status keputusan.">
+            <x-slot:actions>
                 {{-- Unified Export Popover Trigger & Container (Pendaftaran) --}}
                 <div class="adm-export-dropdown-wrap" style="position: relative;">
                     <button type="button" 
@@ -462,10 +457,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </x-slot:actions>
 
             <!-- Toolbar Filter -->
-            <form method="GET" action="{{ route('admin.laporan.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; background: var(--neutral-100); padding: 1rem; border-radius: 8px; margin-bottom: 1.25rem; border: 1px solid var(--neutral-300);">
+            <form method="GET" action="{{ route('admin.laporan.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; background: var(--neutral-100, #F8FAFC); padding: 1rem 1.25rem; border-radius: 10px; margin-bottom: 1.25rem; border: 1.5px solid #CBD5E1;">
                 <input type="hidden" name="tab" value="pendaftaran">
 
                 <div style="display: flex; flex-direction: column; gap: 0.25rem;">
@@ -524,77 +519,130 @@
                 </div>
             </form>
 
-            <!-- Table Preview -->
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
-                    <thead>
-                        <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase;">
-                            <th style="padding: 0.75rem 1rem;">No. Registrasi</th>
-                            <th style="padding: 0.75rem 1rem;">Nama & Institusi</th>
-                            <th style="padding: 0.75rem 1rem;">Jurusan Pilihan</th>
-                            <th style="padding: 0.75rem 1rem;">Bulan Mulai</th>
-                            <th style="padding: 0.75rem 1rem;">Durasi</th>
-                            <th style="padding: 0.75rem 1rem;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($pendaftaranData as $p)
-                            <tr style="border-bottom: 1px solid var(--neutral-300);">
-                                <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--blue-700);">
-                                    {{ $p->nomor_pendaftaran }}
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    <div style="font-weight: 600;">{{ $p->user?->nama }}</div>
-                                    <small style="color: var(--neutral-600);">{{ $p->asal_instansi ?? ($p->user?->profil?->institusi ?? '-') }}</small>
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    {{ $p->kuota?->jurusan?->nama_jurusan ?? '-' }}
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    {{ $p->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    {{ $p->durasi_bulan }} Bulan
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    <span class="role-chip-badge" style="background: var(--neutral-200); color: var(--neutral-800); border: 1px solid var(--neutral-400);">
-                                        {{ $p->status?->label() }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @empty
+            <!-- Table Preview (Contained & Clean) -->
+            <div class="adm-table-container">
+                <div class="adm-table-meta-bar">
+                    <div style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">
+                        Menampilkan <strong style="color: #0F172A;">{{ $pendaftaranData->firstItem() ?? 0 }}–{{ $pendaftaranData->lastItem() ?? 0 }}</strong> dari <strong style="color: #0F172A;">{{ $pendaftaranData->total() }}</strong> data rekapitulasi
+                    </div>
+                    @if(request()->hasAny(['bulan_magang_id', 'status', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal']))
+                        <span style="font-size: 0.75rem; color: #0284C7; background: #E0F2FE; padding: 0.2rem 0.65rem; border-radius: 9999px; font-weight: 700;">
+                            Filter Aktif Diterapkan
+                        </span>
+                    @endif
+                </div>
+
+                <div style="overflow-x: auto; width: 100%;">
+                    <table class="adm-table">
+                        <thead>
                             <tr>
-                                <td colspan="6" style="padding: 2.5rem; text-align: center; color: var(--neutral-600);">
-                                    Tidak ada data pendaftaran yang sesuai dengan filter.
-                                </td>
+                                <th style="width: 16%; text-align: left;">No. Registrasi</th>
+                                <th style="width: 26%; text-align: left;">Nama & Institusi</th>
+                                <th style="width: 22%; text-align: left;">Jurusan Pilihan</th>
+                                <th style="width: 16%; text-align: left;">Bulan Mulai</th>
+                                <th style="width: 10%; text-align: left;">Durasi</th>
+                                <th style="width: 10%; text-align: left;">Status</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse($pendaftaranData as $p)
+                                @php
+                                    $val = $p->status?->value ?? (string)$p->status;
+                                    $statusDotType = match($val) {
+                                        'diterima' => 'success',
+                                        'diajukan' => 'warning',
+                                        'waiting_list' => 'info',
+                                        'ditolak', 'dibatalkan' => 'danger',
+                                        'perlu_perbaikan' => 'warning',
+                                        default => 'neutral',
+                                    };
+                                @endphp
+                                <tr>
+                                    {{-- No. Registrasi --}}
+                                    <td>
+                                        <span class="adm-reg-pill">
+                                            {{ $p->nomor_pendaftaran }}
+                                        </span>
+                                        <div style="font-size: 0.725rem; color: #64748B; margin-top: 0.35rem;">
+                                            {{ $p->created_at?->translatedFormat('d M Y') ?? '-' }}
+                                        </div>
+                                    </td>
+
+                                    {{-- Nama & Institusi --}}
+                                    <td>
+                                        <div class="adm-cell-stack">
+                                            <div class="adm-cell-title">
+                                                {{ $p->user?->nama ?? 'Calon Peserta' }}
+                                            </div>
+                                            <div class="adm-cell-sub">
+                                                {{ $p->asal_instansi ?? ($p->user?->profil?->institusi ?? '-') }}
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    {{-- Jurusan Pilihan --}}
+                                    <td>
+                                        <div style="font-weight: 600; color: #1E293B; font-size: 0.85rem;">
+                                            {{ $p->kuota?->jurusan?->nama_jurusan ?? '-' }}
+                                        </div>
+                                    </td>
+
+                                    {{-- Bulan Mulai --}}
+                                    <td>
+                                        <div style="font-weight: 600; color: #0F172A; font-size: 0.85rem;">
+                                            {{ $p->bulanMagang?->bulan_mulai?->translatedFormat('F Y') ?? '-' }}
+                                        </div>
+                                    </td>
+
+                                    {{-- Durasi --}}
+                                    <td>
+                                        <span style="font-weight: 600; color: #475569; font-size: 0.85rem;">
+                                            {{ $p->durasi_bulan }} Bulan
+                                        </span>
+                                    </td>
+
+                                    {{-- Status --}}
+                                    <td>
+                                        <span class="cv-status-dot-badge {{ $statusDotType }}">
+                                            <span class="dot"></span>
+                                            <span>{{ $p->status?->label() ?? ucfirst($val) }}</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="adm-table-empty">
+                                        Tidak ada data pendaftaran yang sesuai dengan filter.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            @if($pendaftaranData->hasPages())
-                <div style="margin-top: 1rem;">
-                    {{ $pendaftaranData->links() }}
+            @if($pendaftaranData->isNotEmpty())
+                <div style="margin-top: 1.25rem; padding-top: 0.5rem;">
+                    <x-gentelella.pagination-bar 
+                        :paginator="$pendaftaranData" 
+                        :perPageOptions="[5, 10, 25]" 
+                        entity="data rekapitulasi" 
+                        badgeText="Rekapitulasi Berkas" 
+                    />
                 </div>
             @endif
-        </div>
+        </x-gentelella.x-panel>
     @endif
 
     <!-- 4. TAB 2: DATA PENEMPATAN -->
     @if($tab === 'penempatan')
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
-                <div>
-                    <h2 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0 0 0.25rem 0;">Laporan Data Penempatan Magang</h2>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Rekapitulasi penempatan aktif, selesai, serta pembagian pembimbing dan jalur magang.</p>
-                </div>
-
+        <x-gentelella.x-panel class="has-table" title="Laporan Data Penempatan Magang" subtitle="Rekapitulasi penempatan aktif, selesai, serta pembagian pembimbing dan jalur magang.">
+            <x-slot:actions>
                 <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
                     <a href="{{ route('admin.laporan.penempatan', array_merge(request()->all(), ['format' => 'xlsx'])) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 40px; padding: 0 1.15rem; background: #166534; color: #FFFFFF; font-weight: 700; font-size: 0.84rem; text-decoration: none; border-radius: 8px; box-shadow: 0 1px 3px rgba(22, 101, 52, 0.25); transition: background 0.15s ease;"
+                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 1rem; background: #166534; color: #FFFFFF; font-weight: 700; font-size: 0.8rem; text-decoration: none; border-radius: 6px; box-shadow: 0 1px 3px rgba(22, 101, 52, 0.25); transition: background 0.15s ease;"
                        title="Unduh data penempatan berformat Microsoft Excel (.xlsx)">
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                             <polyline points="14 2 14 8 20 8"></polyline>
                             <path d="M8 13h8"></path>
@@ -604,16 +652,16 @@
                         <span>Ekspor Excel (.xlsx)</span>
                     </a>
                     <a href="{{ route('admin.laporan.penempatan', array_merge(request()->all(), ['format' => 'csv'])) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 40px; padding: 0 0.95rem; background: #FFFFFF; color: #475569; font-weight: 600; font-size: 0.84rem; text-decoration: none; border-radius: 8px; border: 1px solid #CBD5E1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;"
+                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 0.85rem; background: #FFFFFF; color: #475569; font-weight: 600; font-size: 0.8rem; text-decoration: none; border-radius: 6px; border: 1.5px solid #CBD5E1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;"
                        title="Unduh format data mentah CSV">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                         <span>Ekspor CSV</span>
                     </a>
                 </div>
-            </div>
+            </x-slot:actions>
 
             <!-- Toolbar Filter Penempatan -->
-            <form method="GET" action="{{ route('admin.laporan.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; background: var(--neutral-100); padding: 1rem; border-radius: 8px; margin-bottom: 1.25rem; border: 1px solid var(--neutral-300);">
+            <form method="GET" action="{{ route('admin.laporan.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; background: var(--neutral-100, #F8FAFC); padding: 1rem 1.25rem; border-radius: 10px; margin-bottom: 1.25rem; border: 1.5px solid #CBD5E1;">
                 <input type="hidden" name="tab" value="penempatan">
 
                 <div style="display: flex; flex-direction: column; gap: 0.25rem;">
@@ -669,78 +717,115 @@
                 </div>
             </form>
 
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
-                    <thead>
-                        <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase;">
-                            <th style="padding: 0.75rem 1rem;">Nama Peserta</th>
-                            <th style="padding: 0.75rem 1rem;">Pembimbing Lapangan</th>
-                            <th style="padding: 0.75rem 1rem;">Jalur / Sumber</th>
-                            <th style="padding: 0.75rem 1rem;">Rentang Waktu Magang</th>
-                            <th style="padding: 0.75rem 1rem;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($penempatanData as $pen)
-                            <tr style="border-bottom: 1px solid var(--neutral-300);">
-                                <td style="padding: 0.75rem 1rem;">
-                                    <div style="font-weight: 600;">{{ $pen->peserta?->nama }}</div>
-                                    <small style="color: var(--neutral-600);">{{ $pen->peserta?->profil?->institusi ?? '-' }}</small>
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    {{ $pen->pembimbing?->nama ?? '-' }}
-                                    @if($pen->bidang)
-                                        <br><small style="color: var(--neutral-600);">{{ $pen->bidang->nama_bidang }}</small>
-                                    @endif
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    <span style="font-weight: 700; color: {{ $pen->jalur?->value === 'khusus' ? 'var(--purple-700, #7E22CE)' : 'var(--blue-700)' }};">
-                                        {{ $pen->jalur?->label() }}
-                                    </span>
-                                    <small style="color: var(--neutral-600);">({{ $pen->sumber?->label() }})</small>
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    {{ $pen->tgl_mulai?->format('d/m/Y') }} s/d {{ $pen->tgl_selesai?->format('d/m/Y') }}
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    <span class="role-chip-badge" style="background: var(--blue-tint); color: var(--blue-700); border: 1px solid var(--blue-tint-line);">
-                                        {{ $pen->status?->label() }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @empty
+            <div class="adm-table-container">
+                <div class="adm-table-meta-bar">
+                    <div style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">
+                        Menampilkan <strong style="color: #0F172A;">{{ $penempatanData->firstItem() ?? 0 }}–{{ $penempatanData->lastItem() ?? 0 }}</strong> dari <strong style="color: #0F172A;">{{ $penempatanData->total() }}</strong> data penempatan
+                    </div>
+                    @if(request()->hasAny(['status', 'jalur', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal']))
+                        <span style="font-size: 0.75rem; color: #0284C7; background: #E0F2FE; padding: 0.2rem 0.65rem; border-radius: 9999px; font-weight: 700;">
+                            Filter Aktif Diterapkan
+                        </span>
+                    @endif
+                </div>
+
+                <div style="overflow-x: auto; width: 100%;">
+                    <table class="adm-table">
+                        <thead>
                             <tr>
-                                <td colspan="5" style="padding: 2.5rem; text-align: center; color: var(--neutral-600);">
-                                    Tidak ada data penempatan yang sesuai dengan filter.
-                                </td>
+                                <th style="width: 26%; text-align: left;">Peserta Magang</th>
+                                <th style="width: 22%; text-align: left;">Pembimbing Lapangan</th>
+                                <th style="width: 18%; text-align: left;">Jalur / Sumber</th>
+                                <th style="width: 20%; text-align: left;">Rentang Waktu Magang</th>
+                                <th style="width: 14%; text-align: left;">Status</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse($penempatanData as $pen)
+                                @php
+                                    $stVal = $pen->status?->value ?? (string)$pen->status;
+                                    $penStatusDot = match($stVal) {
+                                        'aktif' => 'success',
+                                        'selesai' => 'info',
+                                        'mengundurkan_diri' => 'danger',
+                                        default => 'neutral',
+                                    };
+                                @endphp
+                                <tr>
+                                    {{-- Peserta Magang --}}
+                                    <td>
+                                        <div class="adm-cell-stack">
+                                            <div class="adm-cell-title">
+                                                {{ $pen->peserta?->nama ?? 'Peserta Magang' }}
+                                            </div>
+                                            <div class="adm-cell-sub">
+                                                {{ $pen->peserta?->profil?->institusi ?? '-' }}
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    {{-- Pembimbing --}}
+                                    <td>
+                                        <div style="font-weight: 600; color: #1E293B; font-size: 0.875rem;">
+                                            {{ $pen->pembimbing?->nama ?? '-' }}
+                                        </div>
+                                        @if($pen->bidang)
+                                            <div class="adm-cell-sub">{{ $pen->bidang->nama_bidang }}</div>
+                                        @endif
+                                    </td>
+
+                                    {{-- Jalur / Sumber --}}
+                                    <td>
+                                        <span style="font-weight: 700; font-size: 0.8125rem; color: {{ $pen->jalur?->value === 'khusus' ? '#7E22CE' : '#0641CC' }};">
+                                            {{ $pen->jalur?->label() }}
+                                        </span>
+                                        <small style="color: #64748B; display: block;">({{ $pen->sumber?->label() }})</small>
+                                    </td>
+
+                                    {{-- Rentang Waktu --}}
+                                    <td>
+                                        <div style="font-weight: 600; color: #0F172A; font-size: 0.8125rem;">
+                                            {{ $pen->tgl_mulai?->format('d M Y') }} s/d {{ $pen->tgl_selesai?->format('d M Y') }}
+                                        </div>
+                                    </td>
+
+                                    {{-- Status --}}
+                                    <td>
+                                        <span class="cv-status-dot-badge {{ $penStatusDot }}">
+                                            <span class="dot"></span>
+                                            <span>{{ $pen->status?->label() ?? ucfirst($stVal) }}</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="adm-table-empty">
+                                        Tidak ada data penempatan yang sesuai dengan filter.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             @if($penempatanData->hasPages())
-                <div style="margin-top: 1rem;">
+                <div style="margin-top: 1.25rem; padding-top: 0.5rem;">
                     {{ $penempatanData->links() }}
                 </div>
             @endif
-        </div>
+        </x-gentelella.x-panel>
     @endif
 
     <!-- 5. TAB 3: REALISASI KUOTA & SLOT -->
     @if($tab === 'kuota')
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
-                <div>
-                    <h2 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0 0 0.25rem 0;">Laporan Realisasi Kuota Umum vs Slot Khusus</h2>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Monitoring kapasitas kuota per jurusan dan alokasi slot khusus kemitraan.</p>
-                </div>
-
+        <x-gentelella.x-panel class="has-table" title="Laporan Realisasi Kuota Umum vs Slot Khusus" subtitle="Monitoring kapasitas kuota per jurusan dan alokasi slot khusus kemitraan.">
+            <x-slot:actions>
                 <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
                     <a href="{{ route('admin.laporan.kuota', ['format' => 'xlsx']) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 40px; padding: 0 1.15rem; background: #166534; color: #FFFFFF; font-weight: 700; font-size: 0.84rem; text-decoration: none; border-radius: 8px; box-shadow: 0 1px 3px rgba(22, 101, 52, 0.25); transition: background 0.15s ease;"
+                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 1rem; background: #166534; color: #FFFFFF; font-weight: 700; font-size: 0.8rem; text-decoration: none; border-radius: 6px; box-shadow: 0 1px 3px rgba(22, 101, 52, 0.25); transition: background 0.15s ease;"
                        title="Unduh realisasi kuota berformat Microsoft Excel (.xlsx)">
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                             <polyline points="14 2 14 8 20 8"></polyline>
                             <path d="M8 13h8"></path>
@@ -750,101 +835,97 @@
                         <span>Ekspor Excel (.xlsx)</span>
                     </a>
                     <a href="{{ route('admin.laporan.kuota', ['format' => 'csv']) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 40px; padding: 0 0.95rem; background: #FFFFFF; color: #475569; font-weight: 600; font-size: 0.84rem; text-decoration: none; border-radius: 8px; border: 1px solid #CBD5E1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;"
+                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 0.85rem; background: #FFFFFF; color: #475569; font-weight: 600; font-size: 0.8rem; text-decoration: none; border-radius: 6px; border: 1.5px solid #CBD5E1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;"
                        title="Unduh format CSV">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                         <span>Ekspor CSV</span>
                     </a>
                 </div>
-            </div>
+            </x-slot:actions>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
                 <!-- Tabel Kuota Umum -->
                 <div>
                     <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.75rem;">Realisasi Kuota Umum Per Jurusan</h3>
-                    <div style="overflow-x: auto; border: 1px solid var(--neutral-300); border-radius: 8px;">
-                        <table style="width: 100%; border-collapse: collapse; font-size: 0.8125rem; text-align: left;">
-                            <thead style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-300);">
-                                <tr>
-                                    <th style="padding: 0.625rem 0.75rem;">Bulan Magang</th>
-                                    <th style="padding: 0.625rem 0.75rem;">Jurusan</th>
-                                    <th style="padding: 0.625rem 0.75rem; text-align: center;">Kapasitas</th>
-                                    <th style="padding: 0.625rem 0.75rem; text-align: center;">Terisi</th>
-                                    <th style="padding: 0.625rem 0.75rem; text-align: center;">Sisa</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($kuotaData as $k)
-                                    <tr style="border-bottom: 1px solid var(--neutral-200);">
-                                        <td style="padding: 0.625rem 0.75rem; font-weight: 600;">
-                                            {{ $k->bulanMagang?->bulan_mulai?->translatedFormat('M Y') }}
-                                        </td>
-                                        <td style="padding: 0.625rem 0.75rem;">{{ $k->jurusan?->nama_jurusan }}</td>
-                                        <td style="padding: 0.625rem 0.75rem; text-align: center;">{{ $k->jumlah }}</td>
-                                        <td style="padding: 0.625rem 0.75rem; text-align: center; font-weight: 700; color: var(--amber-700);">{{ $k->terisi }}</td>
-                                        <td style="padding: 0.625rem 0.75rem; text-align: center; font-weight: 700; color: var(--green-700);">
-                                            {{ max(0, $k->jumlah - $k->terisi) }}
-                                        </td>
+                    <div class="adm-table-container">
+                        <div style="overflow-x: auto; width: 100%;">
+                            <table class="adm-table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left;">Bulan Magang</th>
+                                        <th style="text-align: left;">Jurusan</th>
+                                        <th class="th-center" style="width: 90px; text-align: center;">Kapasitas</th>
+                                        <th class="th-center" style="width: 80px; text-align: center;">Terisi</th>
+                                        <th class="th-center" style="width: 80px; text-align: center;">Sisa</th>
                                     </tr>
-                                @empty
-                                    <tr><td colspan="5" style="padding: 1rem; text-align: center;">Tidak ada data kuota.</td></tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @forelse($kuotaData as $k)
+                                        <tr>
+                                            <td style="font-weight: 600;">
+                                                {{ $k->bulanMagang?->bulan_mulai?->translatedFormat('M Y') }}
+                                            </td>
+                                            <td>{{ $k->jurusan?->nama_jurusan }}</td>
+                                            <td class="td-center">{{ $k->jumlah }}</td>
+                                            <td class="td-center" style="font-weight: 700; color: #D97706;">{{ $k->terisi }}</td>
+                                            <td class="td-center" style="font-weight: 700; color: #16A34A;">
+                                                {{ max(0, $k->jumlah - $k->terisi) }}
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr><td colspan="5" class="adm-table-empty">Tidak ada data kuota.</td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Tabel Slot Khusus -->
                 <div>
                     <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.75rem;">Realisasi Slot Khusus Kemitraan</h3>
-                    <div style="overflow-x: auto; border: 1px solid var(--neutral-300); border-radius: 8px;">
-                        <table style="width: 100%; border-collapse: collapse; font-size: 0.8125rem; text-align: left;">
-                            <thead style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-300);">
-                                <tr>
-                                    <th style="padding: 0.625rem 0.75rem;">Bulan Magang</th>
-                                    <th style="padding: 0.625rem 0.75rem; text-align: center;">Alokasi Slot</th>
-                                    <th style="padding: 0.625rem 0.75rem; text-align: center;">Terisi</th>
-                                    <th style="padding: 0.625rem 0.75rem; text-align: center;">Sisa Slot</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($slotKhususData as $sk)
-                                    <tr style="border-bottom: 1px solid var(--neutral-200);">
-                                        <td style="padding: 0.625rem 0.75rem; font-weight: 600;">
-                                            {{ $sk->bulan_mulai?->translatedFormat('F Y') }}
-                                        </td>
-                                        <td style="padding: 0.625rem 0.75rem; text-align: center;">{{ $sk->jumlah }}</td>
-                                        <td style="padding: 0.625rem 0.75rem; text-align: center; font-weight: 700; color: var(--purple-700, #7E22CE);">{{ $sk->terisi }}</td>
-                                        <td style="padding: 0.625rem 0.75rem; text-align: center; font-weight: 700; color: var(--green-700);">{{ $sk->sisa }}</td>
+                    <div class="adm-table-container">
+                        <div style="overflow-x: auto; width: 100%;">
+                            <table class="adm-table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left;">Bulan Magang</th>
+                                        <th class="th-center" style="width: 100px; text-align: center;">Alokasi Slot</th>
+                                        <th class="th-center" style="width: 90px; text-align: center;">Terisi</th>
+                                        <th class="th-center" style="width: 90px; text-align: center;">Sisa Slot</th>
                                     </tr>
-                                @empty
-                                    <tr><td colspan="4" style="padding: 1rem; text-align: center;">Tidak ada data slot khusus.</td></tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @forelse($slotKhususData as $sk)
+                                        <tr>
+                                            <td style="font-weight: 600;">
+                                                {{ $sk->bulan_mulai?->translatedFormat('F Y') }}
+                                            </td>
+                                            <td class="td-center">{{ $sk->jumlah }}</td>
+                                            <td class="td-center" style="font-weight: 700; color: #7E22CE;">{{ $sk->terisi }}</td>
+                                            <td class="td-center" style="font-weight: 700; color: #16A34A;">{{ $sk->sisa }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr><td colspan="4" class="adm-table-empty">Tidak ada data slot khusus.</td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </x-gentelella.x-panel>
     @endif
 
     <!-- 6. TAB 4: REKAP NILAI (SUPERADMIN EXCLUSIVE) -->
     @if($tab === 'nilai' && $isSuperAdmin)
-        <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-subtle);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
-                <div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <h2 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Laporan Rekapitulasi Nilai & Kelulusan</h2>
-                        <span class="role-chip-badge" style="background: var(--blue-tint); color: var(--blue-700); font-weight: 700;">SuperAdmin Only (A-20)</span>
-                    </div>
-                    <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.25rem 0 0 0;">Evaluasi hasil penilaian kompetensi, skor akhir, dan predikat resmi seluruh peserta magang.</p>
-                </div>
-
+        <x-gentelella.x-panel class="has-table" title="Laporan Rekapitulasi Nilai & Kelulusan" subtitle="Evaluasi hasil penilaian kompetensi, skor akhir, dan predikat resmi seluruh peserta magang.">
+            <x-slot:actions>
                 <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
                     <a href="{{ route('admin.laporan.nilai', ['format' => 'xlsx']) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 40px; padding: 0 1.15rem; background: #166534; color: #FFFFFF; font-weight: 700; font-size: 0.84rem; text-decoration: none; border-radius: 8px; box-shadow: 0 1px 3px rgba(22, 101, 52, 0.25); transition: background 0.15s ease;"
+                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 1rem; background: #166534; color: #FFFFFF; font-weight: 700; font-size: 0.8rem; text-decoration: none; border-radius: 6px; box-shadow: 0 1px 3px rgba(22, 101, 52, 0.25); transition: background 0.15s ease;"
                        title="Unduh rekapitulasi nilai berformat Microsoft Excel (.xlsx)">
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                             <polyline points="14 2 14 8 20 8"></polyline>
                             <path d="M8 13h8"></path>
@@ -854,70 +935,105 @@
                         <span>Ekspor Excel (.xlsx)</span>
                     </a>
                     <a href="{{ route('admin.laporan.nilai', ['format' => 'csv']) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 40px; padding: 0 0.95rem; background: #FFFFFF; color: #475569; font-weight: 600; font-size: 0.84rem; text-decoration: none; border-radius: 8px; border: 1px solid #CBD5E1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;"
+                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 0.85rem; background: #FFFFFF; color: #475569; font-weight: 600; font-size: 0.8rem; text-decoration: none; border-radius: 6px; border: 1.5px solid #CBD5E1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;"
                        title="Unduh format CSV">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                         <span>Ekspor CSV</span>
                     </a>
                 </div>
-            </div>
+            </x-slot:actions>
 
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
-                    <thead>
-                        <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase;">
-                            <th style="padding: 0.75rem 1rem;">Nama Peserta</th>
-                            <th style="padding: 0.75rem 1rem;">NIM / Institusi</th>
-                            <th style="padding: 0.75rem 1rem;">Pembimbing</th>
-                            <th style="padding: 0.75rem 1rem; text-align: center;">Nilai Akhir</th>
-                            <th style="padding: 0.75rem 1rem; text-align: center;">Predikat</th>
-                            <th style="padding: 0.75rem 1rem;">Status Evaluasi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($nilaiData as $nl)
-                            <tr style="border-bottom: 1px solid var(--neutral-300);">
-                                <td style="padding: 0.75rem 1rem; font-weight: 600;">
-                                    {{ $nl->penempatan?->peserta?->nama }}
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    <div>{{ $nl->penempatan?->peserta?->profil?->nim_nisn ?? '-' }}</div>
-                                    <small style="color: var(--neutral-600);">{{ $nl->penempatan?->peserta?->profil?->institusi ?? '-' }}</small>
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    {{ $nl->pembimbing?->nama ?? '-' }}
-                                </td>
-                                <td style="padding: 0.75rem 1rem; text-align: center; font-weight: 900; font-size: 1rem; color: var(--blue-700);">
-                                    {{ $nl->nilai_akhir }}
-                                </td>
-                                <td style="padding: 0.75rem 1rem; text-align: center;">
-                                    <span class="role-chip-badge" style="background: var(--green-100); color: var(--green-800); border: 1px solid var(--green-600); font-weight: 800;">
-                                        {{ $nl->predikat }}
-                                    </span>
-                                </td>
-                                <td style="padding: 0.75rem 1rem;">
-                                    <span class="role-chip-badge" style="background: {{ $nl->status?->value === 'final' ? 'var(--green-100)' : 'var(--amber-100)' }}; color: {{ $nl->status?->value === 'final' ? 'var(--green-800)' : 'var(--amber-800)' }};">
-                                        {{ strtoupper($nl->status?->value ?? 'DRAFT') }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @empty
+            <div class="adm-table-container">
+                <div class="adm-table-meta-bar">
+                    <div style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">
+                        Menampilkan <strong style="color: #0F172A;">{{ $nilaiData->firstItem() ?? 0 }}–{{ $nilaiData->lastItem() ?? 0 }}</strong> dari <strong style="color: #0F172A;">{{ $nilaiData->total() }}</strong> data penilaian
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto; width: 100%;">
+                    <table class="adm-table">
+                        <thead>
                             <tr>
-                                <td colspan="6" style="padding: 2.5rem; text-align: center; color: var(--neutral-600);">
-                                    Belum ada data penilaian tersimpan di sistem.
-                                </td>
+                                <th style="width: 24%; text-align: left;">Peserta Magang</th>
+                                <th style="width: 20%; text-align: left;">NIM / Institusi</th>
+                                <th style="width: 20%; text-align: left;">Pembimbing</th>
+                                <th class="th-center" style="width: 12%; text-align: center;">Nilai Akhir</th>
+                                <th class="th-center" style="width: 12%; text-align: center;">Predikat</th>
+                                <th class="th-center" style="width: 12%; text-align: center;">Status Evaluasi</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse($nilaiData as $nl)
+                                @php
+                                    $nlStatus = $nl->status?->value ?? (string)$nl->status;
+                                    $nlDotType = $nlStatus === 'final' ? 'success' : 'warning';
+                                @endphp
+                                <tr>
+                                    {{-- Peserta Magang --}}
+                                    <td>
+                                        <div class="adm-cell-stack">
+                                            <div class="adm-cell-title">
+                                                {{ $nl->penempatan?->peserta?->nama ?? 'Peserta Magang' }}
+                                            </div>
+                                            <div class="adm-cell-sub">
+                                                {{ $nl->penempatan?->peserta?->profil?->institusi ?? '-' }}
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    {{-- NIM / Institusi --}}
+                                    <td>
+                                        <div style="font-weight: 600; color: #1E293B;">{{ $nl->penempatan?->peserta?->profil?->nim_nisn ?? '-' }}</div>
+                                        <div class="adm-cell-sub">{{ $nl->penempatan?->peserta?->profil?->institusi ?? '-' }}</div>
+                                    </td>
+
+                                    {{-- Pembimbing --}}
+                                    <td>
+                                        <div style="font-weight: 600; color: #1E293B;">
+                                            {{ $nl->pembimbing?->nama ?? '-' }}
+                                        </div>
+                                    </td>
+
+                                    {{-- Nilai Akhir --}}
+                                    <td class="td-center">
+                                        <span style="font-weight: 900; font-size: 1.05rem; color: #0641CC;">
+                                            {{ $nl->nilai_akhir }}
+                                        </span>
+                                    </td>
+
+                                    {{-- Predikat --}}
+                                    <td class="td-center">
+                                        <span style="display: inline-block; background: #DCFCE7; color: #166534; border: 1.5px solid #86EFAC; font-weight: 800; font-size: 0.775rem; padding: 0.2rem 0.65rem; border-radius: 9999px;">
+                                            {{ $nl->predikat }}
+                                        </span>
+                                    </td>
+
+                                    {{-- Status Evaluasi --}}
+                                    <td class="td-center">
+                                        <span class="cv-status-dot-badge {{ $nlDotType }}">
+                                            <span class="dot"></span>
+                                            <span>{{ strtoupper($nlStatus) }}</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="adm-table-empty">
+                                        Belum ada data penilaian tersimpan di sistem.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             @if($nilaiData->hasPages())
-                <div style="margin-top: 1rem;">
+                <div style="margin-top: 1.25rem; padding-top: 0.5rem;">
                     {{ $nilaiData->links() }}
                 </div>
             @endif
-        </div>
+        </x-gentelella.x-panel>
     @endif
 
 </div>

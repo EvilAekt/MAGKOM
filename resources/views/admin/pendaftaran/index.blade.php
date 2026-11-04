@@ -294,7 +294,7 @@
 
         /* 3. TABLE WRAPPER (SEAMLESS SINGLE CARD) */
         .adm-table-container {
-            border: 1px solid #E2E8F0;
+            border: 1.5px solid #CBD5E1;
             border-radius: 12px;
             overflow: hidden;
             background: #FFFFFF;
@@ -824,8 +824,13 @@
                     </table>
                 </div>
 
-                <div style="padding: 1.25rem 1.5rem; border-top: 1px solid #E2E8F0; background: #F8FAFC;">
-                    {{ $pendaftaranList->links() }}
+                <div style="padding: 1rem 1.25rem; border-top: 1px solid #E2E8F0; background: #F8FAFC;">
+                    <x-gentelella.pagination-bar 
+                        :paginator="$pendaftaranList" 
+                        :perPageOptions="[5, 10, 25]" 
+                        entity="berkas pendaftaran" 
+                        badgeText="Pendaftaran Terverifikasi" 
+                    />
                 </div>
             @endif
         </div>

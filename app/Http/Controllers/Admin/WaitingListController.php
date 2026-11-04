@@ -60,7 +60,11 @@ class WaitingListController extends Controller
             });
         }
 
-        $waitingList = $query->paginate(20)->withQueryString();
+        $perPage = (int) $request->input('per_page', 10);
+        if (! in_array($perPage, [10, 20, 50], true)) {
+            $perPage = 10;
+        }
+        $waitingList = $query->paginate($perPage)->withQueryString();
 
         $bulanAntreanIds = Pendaftaran::where('status', StatusPendaftaranEnum::WaitingList)
             ->distinct()

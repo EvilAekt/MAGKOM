@@ -1120,11 +1120,14 @@
                 </table>
             </div>
 
-            @if($waitingList->hasPages())
-                <div style="padding: 1.25rem 1.5rem; border-top: 1px solid #E2E8F0; background: #ffffff;">
-                    {{ $waitingList->links() }}
-                </div>
-            @endif
+            <div style="padding: 1rem 1.25rem; border-top: 1px solid #E2E8F0; background: #ffffff;">
+                <x-gentelella.pagination-bar 
+                    :paginator="$waitingList" 
+                    :perPageOptions="[10, 20, 50]" 
+                    entity="antrean peserta" 
+                    badgeText="Antrean FIFO" 
+                />
+            </div>
         @endif
     </div>
     </x-gentelella.x-panel>
