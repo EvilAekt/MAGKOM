@@ -1,0 +1,831 @@
+/* ==========================================================================
+   Detail Penempatan Peserta - Admin Stylesheet
+   Executive Identity Banner, Asymmetric Split-Grid, Metric Tiles & Dark Mode
+   ========================================================================== */
+
+.penempatan-detail-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* ==========================================================================
+   1. Executive Identity Hero Banner
+   ========================================================================== */
+.penempatan-hero-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.penempatan-hero-left {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    min-width: 0;
+    flex: 1;
+}
+
+.penempatan-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #06318C 0%, #2563EB 100%);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    font-weight: 800;
+    border: 3px solid #EFF6FF;
+    flex-shrink: 0;
+    overflow: hidden;
+    box-shadow: 0 4px 12px -2px rgba(6, 49, 140, 0.25);
+}
+
+.penempatan-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.penempatan-identity-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.penempatan-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+}
+
+.penempatan-name {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.status-badge-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.status-dot-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.jalur-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.725rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.penempatan-meta-chips {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 0.8125rem;
+    color: #64748B;
+}
+
+.meta-chip-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.775rem;
+    color: #475569;
+}
+
+.meta-chip-item strong {
+    color: #0F172A;
+    font-weight: 700;
+}
+
+.penempatan-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.btn-hero-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-hero-preview {
+    background: #FFFFFF;
+    color: #0641CC;
+    border: 1px solid #BFDBFE;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn-hero-preview:hover {
+    background: #EFF6FF;
+    border-color: #93C5FD;
+    color: #0533A8;
+}
+
+.btn-hero-reassign {
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #DBEAFE;
+}
+
+.btn-hero-reassign:hover {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.btn-hero-cancel {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
+
+.btn-hero-cancel:hover {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+/* ==========================================================================
+   2. Modern 4 Metric Tiles Grid
+   ========================================================================== */
+.penempatan-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    width: 100%;
+}
+
+@media (max-width: 991px) {
+    .penempatan-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 540px) {
+    .penempatan-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.metric-tile-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 1.15rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.metric-tile-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px -4px rgba(15, 23, 42, 0.08);
+    border-color: #CBD5E1;
+}
+
+.metric-tile-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.metric-tile-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.metric-tile-icon-box {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.metric-tile-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.2;
+}
+
+.metric-tile-sub {
+    font-size: 0.775rem;
+    color: #64748B;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.metric-progress-track {
+    height: 5px;
+    background: #F1F5F9;
+    border-radius: 999px;
+    overflow: hidden;
+    width: 100%;
+    margin-top: 0.25rem;
+}
+
+.metric-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+/* ==========================================================================
+   3. Asymmetric Split-Grid (Kolom Utama 62% : Sidebar 38%)
+   ========================================================================== */
+.penempatan-split-grid {
+    display: grid;
+    grid-template-columns: 1fr 390px;
+    gap: 1.5rem;
+    align-items: start;
+    width: 100%;
+}
+
+@media (max-width: 1080px) {
+    .penempatan-split-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.penempatan-main-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
+.penempatan-side-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
+/* ==========================================================================
+   4. Section Panel Components & Field Cards
+   ========================================================================== */
+.sk-official-banner {
+    background: linear-gradient(135deg, #06318C 0%, #061E5B 100%);
+    border-radius: 12px;
+    padding: 1.15rem 1.45rem;
+    color: #FFFFFF;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+    box-shadow: 0 4px 14px -2px rgba(6, 49, 140, 0.25);
+}
+
+.sk-official-label {
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #93C5FD;
+    margin-bottom: 0.25rem;
+}
+
+.sk-official-number {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    letter-spacing: 0.02em;
+}
+
+.sk-official-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #DBEAFE;
+}
+
+.penempatan-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (max-width: 640px) {
+    .penempatan-fields-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.field-tile-card {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 1rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    transition: border-color 0.15s ease;
+}
+
+.field-tile-card:hover {
+    border-color: #CBD5E1;
+}
+
+.field-tile-label {
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.field-tile-value {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.4;
+}
+
+/* Timeline Magang Mini */
+.internship-timeline-box {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 1.15rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.timeline-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8125rem;
+}
+
+.timeline-track-wrap {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 0.5rem;
+}
+
+.timeline-bar-line {
+    position: absolute;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: 4px;
+    background: #E2E8F0;
+    border-radius: 999px;
+    z-index: 1;
+}
+
+.timeline-bar-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #2563EB 0%, #1D4ED8 100%);
+    border-radius: 999px;
+}
+
+.timeline-points-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.timeline-point-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.timeline-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 3px solid #2563EB;
+    box-shadow: 0 0 0 2px #EFF6FF;
+}
+
+.timeline-dot.is-active {
+    background: #2563EB;
+    border-color: #FFFFFF;
+    box-shadow: 0 0 0 3px #93C5FD;
+}
+
+.timeline-dot.is-end {
+    border-color: #64748B;
+}
+
+.timeline-point-label {
+    font-size: 0.725rem;
+    font-weight: 700;
+    color: #475569;
+}
+
+.timeline-point-date {
+    font-size: 0.7rem;
+    color: #64748B;
+}
+
+/* ==========================================================================
+   5. Sidebar Components (Pembimbing & Berkas)
+   ========================================================================== */
+.mentor-profile-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.mentor-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: #EFF6FF;
+    color: #2563EB;
+    border: 1px solid #DBEAFE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.mentor-info-name {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.3;
+}
+
+.mentor-info-email {
+    font-size: 0.8125rem;
+    color: #64748B;
+    margin-top: 0.15rem;
+}
+
+.mentor-stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding-top: 0.875rem;
+}
+
+.mentor-capacity-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    background: #ECFDF5;
+    color: #065F46;
+    border: 1px solid #A7F3D0;
+    border-radius: 6px;
+    font-size: 0.775rem;
+    font-weight: 700;
+}
+
+/* Document PDF Tile Card */
+.doc-pdf-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #BFDBFE;
+    background: #EFF6FF;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.doc-pdf-card:hover {
+    background: #EBF3FF;
+    border-color: #93C5FD;
+}
+
+.doc-pdf-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.doc-pdf-icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: #2563EB;
+    border: 1px solid #DBEAFE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.doc-pdf-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #1E40AF;
+    line-height: 1.3;
+}
+
+.doc-pdf-sub {
+    font-size: 0.725rem;
+    color: #3B82F6;
+    margin-top: 0.15rem;
+}
+
+.doc-pdf-actions {
+    display: flex;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+
+.btn-doc-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.btn-doc-view {
+    background: #FFFFFF;
+    color: #2563EB;
+    border: 1px solid #BFDBFE;
+}
+
+.btn-doc-view:hover {
+    background: #EFF6FF;
+    color: #1D4ED8;
+}
+
+.btn-doc-download {
+    background: #2563EB;
+    color: #FFFFFF;
+    border: 1px solid #2563EB;
+}
+
+.btn-doc-download:hover {
+    background: #1D4ED8;
+    border-color: #1D4ED8;
+}
+
+.verified-doc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
+    transition: background-color 0.15s ease;
+}
+
+.verified-doc-item:hover {
+    background: #F1F5F9;
+}
+
+.verified-doc-name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #1E293B;
+}
+
+/* ==========================================================================
+   6. Dark Mode Styles
+   ========================================================================== */
+[data-theme="dark"] .penempatan-hero-card {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .penempatan-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .meta-chip-item {
+    background: #131C2C !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .meta-chip-item strong {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .btn-hero-preview {
+    background: #131C2C !important;
+    border-color: #26354D !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .btn-hero-reassign {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .btn-hero-cancel {
+    background: rgba(220, 38, 38, 0.15) !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+    color: #FCA5A5 !important;
+}
+
+[data-theme="dark"] .metric-tile-card {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .metric-tile-value {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .field-tile-card,
+[data-theme="dark"] .internship-timeline-box {
+    background: #131C2C !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .field-tile-value,
+[data-theme="dark"] .mentor-info-name,
+[data-theme="dark"] .verified-doc-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .mentor-avatar {
+    background: #101B2C !important;
+    border-color: #26354D !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .mentor-profile-card {
+    border-bottom-color: #26354D !important;
+}
+
+[data-theme="dark"] .doc-pdf-card {
+    background: #131E30 !important;
+    border-color: #1E3A8A !important;
+}
+
+[data-theme="dark"] .doc-pdf-icon-box {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .doc-pdf-title {
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .doc-pdf-sub {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .btn-doc-view {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .verified-doc-item {
+    background: #131C2C !important;
+    border-color: #26354D !important;
+}
+
+/* ==========================================================================
+   7. Legacy Field Labels & Modal Overlays
+   ========================================================================== */
+.field-label {
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--neutral-500, #64748B);
+    margin-bottom: 0.25rem;
+}
+
+.field-value {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--neutral-900, #0F172A);
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    padding: 1rem;
+}
+
+.modal-container {
+    background: var(--neutral-0, #ffffff);
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--neutral-300, #E2E8F0);
+}
+
+[data-theme="dark"] .field-label {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .field-value {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .modal-container {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .modal-container select,
+[data-theme="dark"] .modal-container textarea {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}
+

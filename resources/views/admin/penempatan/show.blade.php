@@ -53,302 +53,337 @@
     };
 
     $noSuratResmi = $penempatan->no_surat ?? ('500.12/' . str_pad((string) $penempatan->id, 4, '0', STR_PAD_LEFT) . '/DISKOMINFO/' . date('Y'));
+
+    $tugasPersen = $tugasCount > 0 ? min(100, round(($tugasSelesaiCount / $tugasCount) * 100)) : 0;
+    $startDate = $penempatan->tgl_mulai ? \Carbon\Carbon::parse($penempatan->tgl_mulai) : null;
+    $endDate = $penempatan->tgl_selesai ? \Carbon\Carbon::parse($penempatan->tgl_selesai) : null;
+    $today = today('Asia/Jakarta');
+    $timelinePersen = 0;
+    if ($startDate && $endDate && $endDate->gt($startDate)) {
+        if ($today->lt($startDate)) {
+            $timelinePersen = 0;
+        } elseif ($today->gt($endDate)) {
+            $timelinePersen = 100;
+        } else {
+            $totalDays = $startDate->diffInDays($endDate);
+            $passedDays = $startDate->diffInDays($today);
+            $timelinePersen = $totalDays > 0 ? min(100, round(($passedDays / $totalDays) * 100)) : 0;
+        }
+    }
 @endphp
 
-<div class="gentelella-penempatan-admin" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
+<div class="penempatan-detail-wrapper">
 
-    <style>
-        .field-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--neutral-500, #64748B);
-            margin-bottom: 0.25rem;
-        }
-        .field-value {
-            font-size: 0.9375rem;
-            font-weight: 600;
-            color: var(--neutral-900, #0F172A);
-        }
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1050;
-            padding: 1rem;
-        }
-        .modal-container {
-            background: var(--neutral-0, #ffffff);
-            border-radius: 12px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            width: 100%;
-            overflow: hidden;
-            border: 1px solid var(--neutral-300, #E2E8F0);
-        }
-        [data-theme="dark"] .field-label {
-            color: #94A3B8 !important;
-        }
-        [data-theme="dark"] .field-value {
-            color: #F8FAFC !important;
-        }
-        [data-theme="dark"] .modal-container {
-            background: #182234 !important;
-            border-color: #26354D !important;
-            color: #F8FAFC !important;
-        }
-        [data-theme="dark"] .modal-container select,
-        [data-theme="dark"] .modal-container textarea {
-            background: #0F172A !important;
-            border-color: #26354D !important;
-            color: #F8FAFC !important;
-        }
-    </style>
+    {{-- 1. EXECUTIVE IDENTITY HERO BANNER --}}
+    <div class="penempatan-hero-card">
+        <div class="penempatan-hero-left">
+            <div class="penempatan-avatar">
+                @if($profil?->foto_url)
+                    <img src="{{ $profil->foto_url }}" alt="{{ $peserta?->nama }}">
+                @else
+                    {{ strtoupper(substr($peserta?->nama ?? 'P', 0, 2)) }}
+                @endif
+            </div>
 
-    {{-- TOP HERO CARD GENTELELLA --}}
-    <x-gentelella.card variant="default">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
-                <div style="width: 64px; height: 64px; border-radius: 50%; background: #0641CC; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; border: 3px solid #DBEAFE; flex-shrink: 0; overflow: hidden;">
-                    @if($profil?->foto_url)
-                        <img src="{{ $profil->foto_url }}" alt="{{ $peserta?->nama }}" style="width: 100%; height: 100%; object-fit: cover;">
+            <div class="penempatan-identity-content">
+                <div class="penempatan-title-row">
+                    <h2 class="penempatan-name">{{ $peserta?->nama ?? '-' }}</h2>
+                    <span class="status-badge-dot" style="background: {{ $badgeStyle['bg'] }}; color: {{ $badgeStyle['color'] }}; border: 1px solid {{ $badgeStyle['border'] }};">
+                        <span class="status-dot-indicator" style="background: {{ $badgeStyle['dot'] }};"></span>
+                        <span>{{ $statusObj ? $statusObj->label() : ucfirst($statusVal) }}</span>
+                    </span>
+                    @if($penempatan->slotKhusus)
+                        <span class="jalur-badge-pill" style="background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">
+                            Jalur Khusus: {{ $penempatan->slotKhusus->nama_mitra }}
+                        </span>
                     @else
-                        {{ strtoupper(substr($peserta?->nama ?? 'P', 0, 2)) }}
+                        <span class="jalur-badge-pill" style="background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1;">
+                            Jalur Reguler
+                        </span>
                     @endif
                 </div>
-                <div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.25rem;">
-                        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">
-                            {{ $peserta?->nama ?? '-' }}
-                        </h2>
-                        <x-gentelella.badge :variant="$badgeVariant">
-                            {{ $statusObj ? $statusObj->label() : ucfirst($statusVal) }}
-                        </x-gentelella.badge>
-                        @if($penempatan->slotKhusus)
-                            <span style="font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">
-                                Jalur Khusus: {{ $penempatan->slotKhusus->nama_mitra }}
-                            </span>
-                        @else
-                            <span style="font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #475569); border: 1px solid var(--neutral-300, #CBD5E1);">
-                                Jalur Reguler
-                            </span>
-                        @endif
-                    </div>
-                    <div style="font-size: 0.875rem; color: var(--neutral-600, #64748B); display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
-                        <span><strong>NIM/NISN:</strong> {{ $profil?->nim_nisn ?? '-' }}</span>
-                        <span>•</span>
-                        <span><strong>Institusi:</strong> {{ $profil?->institusi ?? '-' }}</span>
-                        <span>•</span>
-                        <span><strong>No. Surat:</strong> {{ $noSuratResmi }}</span>
-                    </div>
+
+                <div class="penempatan-meta-chips">
+                    <span class="meta-chip-item">
+                        <span>NIM/NISN:</span>
+                        <strong>{{ $profil?->nim_nisn ?? '-' }}</strong>
+                    </span>
+                    <span class="meta-chip-item">
+                        <span>Institusi:</span>
+                        <strong>{{ $profil?->institusi ?? '-' }}</strong>
+                    </span>
+                    <span class="meta-chip-item">
+                        <span>Jurusan:</span>
+                        <strong>{{ $penempatan->kuota?->jurusan?->nama_jurusan ?? ($profil?->jurusan?->nama_jurusan ?? '-') }}</strong>
+                    </span>
                 </div>
-            </div>
-
-            {{-- Action Buttons Toolbar --}}
-            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                <a href="{{ route('admin.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" style="padding: 0.5rem 0.9rem; background: var(--neutral-0, #ffffff); color: #0641CC; border: 1px solid var(--blue-tint-line, #BFDBFE); border-radius: 8px; font-size: 0.8125rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                    <span>Pratinjau Surat</span>
-                </a>
-
-                @if($statusVal === 'aktif')
-                    <button type="button" onclick="openPindahModal()" style="padding: 0.5rem 0.9rem; background: var(--blue-tint, #EFF6FF); color: #0641CC; border: 1px solid var(--blue-tint-line, #DBEAFE); border-radius: 8px; font-size: 0.8125rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
-                        <span>Pindah Pembimbing</span>
-                    </button>
-
-                    <button type="button" onclick="openBatalModal()" style="padding: 0.5rem 0.9rem; background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; border-radius: 8px; font-size: 0.8125rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        <span>Batalkan Penempatan</span>
-                    </button>
-                @endif
             </div>
         </div>
-    </x-gentelella.card>
 
-    {{-- QUICK STATS PROGRESS ROW (4 TILE-STAT GENTELELLA) --}}
-    <div class="row tile_count" style="margin-bottom: 1.5rem; width: 100%;">
-        <x-gentelella.tile-stat 
-            title="Tugas Selesai" 
-            value="{{ $tugasSelesaiCount }} / {{ $tugasCount }}" 
-            icon="clipboard-check" 
-            color="blue" 
-            trendText="Tugas" 
-            trendDirection="up"
-            subText="Tugas magang tuntas"
-            :sparkBars="[30, 50, 40, 60, 70, 85, 100]"
-        />
-        <x-gentelella.tile-stat 
-            title="Total Logbook" 
-            value="{{ $logbookCount }} Minggu" 
-            icon="book-open" 
-            color="teal" 
-            trendText="Jurnal" 
-            trendDirection="up"
-            subText="Jurnal mingguan terisi"
-            :sparkBars="[40, 50, 60, 70, 80, 90, 100]"
-        />
-        <x-gentelella.tile-stat 
-            title="Nilai Akhir" 
-            value="{{ $nilaiAkhir !== null ? number_format((float) $nilaiAkhir, 2) : 'Belum Ada' }}" 
-            icon="award" 
-            color="yellow" 
-            trendText="{{ $penempatan->penilaian?->predikat ?? 'Evaluasi' }}" 
-            trendDirection="up"
-            subText="Predikat evaluasi dinas"
-            :sparkBars="[50, 65, 60, 75, 80, 90, 95]"
-        />
-        <x-gentelella.tile-stat 
-            title="Durasi Magang" 
-            value="{{ $penempatan->total_minggu }} Minggu" 
-            icon="calendar" 
-            color="blue" 
-            trendText="Periode" 
-            trendDirection="up"
-            subText="Total periode dinas"
-            :sparkBars="[40, 50, 60, 70, 80, 90, 100]"
-        />
+        <div class="penempatan-hero-actions">
+            <a href="{{ route('admin.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" class="btn-hero-action btn-hero-preview" title="Buka pratinjau surat keputusan resmi">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span>Pratinjau Surat</span>
+            </a>
+
+            @if($statusVal === 'aktif')
+                <button type="button" onclick="openPindahModal()" class="btn-hero-action btn-hero-reassign" title="Alihkan peserta ke pembimbing lapangan lain">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+                    <span>Pindah Pembimbing</span>
+                </button>
+
+                <button type="button" onclick="openBatalModal()" class="btn-hero-action btn-hero-cancel" title="Batalkan alokasi magang peserta">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <span>Batalkan Penempatan</span>
+                </button>
+            @endif
+        </div>
     </div>
 
-    {{-- 2 COLUMNS GRID: INFORMASI DETAIL --}}
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem;">
+    {{-- 2. MODERN 4 METRIC STATS TILES --}}
+    <div class="penempatan-metrics-grid">
+        {{-- Stat 1: Tugas Selesai --}}
+        <div class="metric-tile-card">
+            <div class="metric-tile-top">
+                <span class="metric-tile-title">Tugas Selesai</span>
+                <div class="metric-tile-icon-box" style="background: #EFF6FF; color: #2563EB;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                </div>
+            </div>
+            <div class="metric-tile-value">{{ $tugasSelesaiCount }} / {{ $tugasCount }}</div>
+            <div class="metric-progress-track">
+                <div class="metric-progress-fill" style="width: {{ $tugasPersen }}%; background: #2563EB;"></div>
+            </div>
+            <div class="metric-tile-sub">
+                <span>{{ $tugasCount > 0 ? $tugasPersen . '% tugas magang tuntas' : 'Belum ada tugas diberikan' }}</span>
+            </div>
+        </div>
+
+        {{-- Stat 2: Total Logbook --}}
+        <div class="metric-tile-card">
+            <div class="metric-tile-top">
+                <span class="metric-tile-title">Total Logbook</span>
+                <div class="metric-tile-icon-box" style="background: #ECFDF5; color: #059669;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                </div>
+            </div>
+            <div class="metric-tile-value">{{ $logbookCount }} Minggu</div>
+            <div class="metric-tile-sub">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Jurnal aktivitas kedinasan</span>
+            </div>
+        </div>
+
+        {{-- Stat 3: Nilai Akhir --}}
+        <div class="metric-tile-card">
+            <div class="metric-tile-top">
+                <span class="metric-tile-title">Nilai Akhir</span>
+                <div class="metric-tile-icon-box" style="background: #FFFBEB; color: #D97706;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                </div>
+            </div>
+            <div class="metric-tile-value">
+                {{ $nilaiAkhir !== null ? number_format((float) $nilaiAkhir, 2) : 'Belum Ada' }}
+            </div>
+            <div class="metric-tile-sub">
+                <span style="font-weight: 700; color: {{ $nilaiAkhir !== null ? '#D97706' : '#64748B' }};">
+                    {{ $penempatan->penilaian?->predikat ? 'Predikat: ' . $penempatan->penilaian->predikat : 'Evaluasi pembimbing' }}
+                </span>
+            </div>
+        </div>
+
+        {{-- Stat 4: Durasi Magang --}}
+        <div class="metric-tile-card">
+            <div class="metric-tile-top">
+                <span class="metric-tile-title">Durasi Magang</span>
+                <div class="metric-tile-icon-box" style="background: #EEF2FF; color: #4F46E5;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </div>
+            </div>
+            <div class="metric-tile-value">{{ $penempatan->total_minggu }} Minggu</div>
+            <div class="metric-tile-sub">
+                <span>{{ $startDate ? $startDate->translatedFormat('d M') : '-' }} s/d {{ $endDate ? $endDate->translatedFormat('d M Y') : '-' }}</span>
+            </div>
+        </div>
+    </div>
+
+    {{-- 3. ASYMMETRIC SPLIT-GRID (KOLOM UTAMA 62% : SIDEBAR 38%) --}}
+    <div class="penempatan-split-grid">
         
-        {{-- Card 1: Data Penempatan & Surat --}}
-        <x-gentelella.x-panel title="Informasi Penempatan &amp; Surat Resmi" subtitle="Rincian alokasi kedinasan dan nomor surat resmi" :toolbox="false">
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <div>
-                    <div class="field-label">Nomor Surat Keputusan</div>
-                    <div class="field-value" style="font-family: ui-monospace, monospace; color: #0641CC;">
-                        {{ $noSuratResmi }}
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div>
-                        <div class="field-label">Bidang Penempatan</div>
-                        <div class="field-value">{{ $penempatan->bidang?->nama_bidang ?? 'Dinas Kominfo Sleman' }}</div>
-                    </div>
-                    <div>
-                        <div class="field-label">Jalur Pendaftaran</div>
-                        <div class="field-value">
-                            @if($penempatan->slotKhusus)
-                                <span style="color: #B45309;">Khusus ({{ $penempatan->slotKhusus->nama_mitra }})</span>
-                            @else
-                                <span>Reguler (Kuota Umum)</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div>
-                        <div class="field-label">Tanggal Mulai</div>
-                        <div class="field-value">
-                            {{ $penempatan->tgl_mulai ? \Carbon\Carbon::parse($penempatan->tgl_mulai)->translatedFormat('d F Y') : '-' }}
-                        </div>
-                    </div>
-                    <div>
-                        <div class="field-label">Tanggal Selesai</div>
-                        <div class="field-value">
-                            {{ $penempatan->tgl_selesai ? \Carbon\Carbon::parse($penempatan->tgl_selesai)->translatedFormat('d F Y') : '-' }}
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="field-label">Jurusan Terdaftar</div>
-                    <div class="field-value">
-                        {{ $penempatan->kuota?->jurusan?->nama_jurusan ?? ($profil?->jurusan?->nama_jurusan ?? '-') }}
-                    </div>
-                </div>
-            </div>
-        </x-gentelella.x-panel>
-
-        {{-- Card 2: Pembimbing Lapangan --}}
-        <x-gentelella.x-panel title="Pembimbing Lapangan" subtitle="Staf pembimbing teknis yang ditugaskan" :toolbox="false">
-            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-                @if($pembimbing)
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="width: 52px; height: 52px; border-radius: 50%; background: #0641CC; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 800; flex-shrink: 0;">
-                            {{ strtoupper(substr($pembimbing->nama, 0, 2)) }}
-                        </div>
+        {{-- ==================== KOLOM KIRI (UTAMA, ~62%) ==================== --}}
+        <div class="penempatan-main-col">
+            <x-gentelella.x-panel title="Informasi Penempatan &amp; Surat Resmi" subtitle="Rincian alokasi kedinasan dan nomor surat resmi" :toolbox="false">
+                <div style="display: flex; flex-direction: column; gap: 1.15rem;">
+                    {{-- Banner Surat Keputusan Kedinasan --}}
+                    <div class="sk-official-banner">
                         <div>
-                            <div style="font-size: 1rem; font-weight: 800; color: var(--neutral-900, #0F172A);">
-                                {{ $pembimbing->nama }}
-                            </div>
-                            <div style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
-                                {{ $pembimbing->email }}
-                            </div>
+                            <div class="sk-official-label">Nomor Surat Keputusan Kedinasan</div>
+                            <div class="sk-official-number">{{ $noSuratResmi }}</div>
+                        </div>
+                        <div class="sk-official-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <span>Resmi Diskominfo Sleman</span>
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--neutral-200, #E2E8F0);">
-                        <div>
-                            <div class="field-label">NIP Pembimbing</div>
-                            <div class="field-value" style="font-family: ui-monospace, monospace;">
-                                {{ $pembimbing->nip ?? '-' }}
-                            </div>
+                    {{-- 2x2 Field Grid --}}
+                    <div class="penempatan-fields-grid">
+                        <div class="field-tile-card">
+                            <span class="field-tile-label">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M9 21V9"></path></svg>
+                                <span>Bidang Penempatan</span>
+                            </span>
+                            <span class="field-tile-value">{{ $penempatan->bidang?->nama_bidang ?? 'Dinas Kominfo Sleman' }}</span>
                         </div>
-                        <div>
-                            <div class="field-label">Beban Mentee</div>
-                            <div class="field-value">
-                                {{ $pembimbing->mentee_aktif_count ?? 0 }} Mentee Aktif
-                            </div>
-                        </div>
-                    </div>
-                @else
-                    <div style="text-align: center; padding: 2rem 1rem; color: var(--neutral-500, #64748B);">
-                        <p style="margin: 0; font-size: 0.875rem;">Belum ada pembimbing lapangan yang ditugaskan.</p>
-                    </div>
-                @endif
-            </div>
-        </x-gentelella.x-panel>
 
-        {{-- Card 3: Dokumen Magang & Unduhan --}}
-        <x-gentelella.x-panel title="Berkas &amp; Dokumen Magang" subtitle="Arsip dokumen persyaratan dan surat diterima" :toolbox="false">
-            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                {{-- Surat Diterima PDF --}}
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--blue-tint-line, #BFDBFE); background: var(--blue-tint, #EFF6FF);">
-                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0641CC" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                        <div>
-                            <div style="font-size: 0.8125rem; font-weight: 700; color: #1E40AF;">Surat Keterangan Diterima Magang</div>
-                            <div style="font-size: 0.75rem; color: #3B82F6;">PDF Resmi Tanda Tangan Basah / Stempel</div>
+                        <div class="field-tile-card">
+                            <span class="field-tile-label">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                                <span>Jalur Pendaftaran</span>
+                            </span>
+                            <span class="field-tile-value">
+                                @if($penempatan->slotKhusus)
+                                    <span style="color: #B45309;">Khusus ({{ $penempatan->slotKhusus->nama_mitra }})</span>
+                                @else
+                                    <span>Reguler (Kuota Umum)</span>
+                                @endif
+                            </span>
+                        </div>
+
+                        <div class="field-tile-card">
+                            <span class="field-tile-label">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                                <span>Jurusan Terdaftar</span>
+                            </span>
+                            <span class="field-tile-value">{{ $penempatan->kuota?->jurusan?->nama_jurusan ?? ($profil?->jurusan?->nama_jurusan ?? '-') }}</span>
+                        </div>
+
+                        <div class="field-tile-card">
+                            <span class="field-tile-label">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span>Periode Magang</span>
+                            </span>
+                            <span class="field-tile-value">
+                                {{ $startDate ? $startDate->translatedFormat('d M Y') : '-' }} s/d {{ $endDate ? $endDate->translatedFormat('d M Y') : '-' }}
+                            </span>
                         </div>
                     </div>
-                    <div style="display: flex; gap: 0.35rem;">
-                        <a href="{{ route('admin.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" style="padding: 0.35rem 0.65rem; background: var(--neutral-0, #ffffff); color: #0641CC; border: 1px solid var(--blue-tint-line, #BFDBFE); border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-decoration: none;">
-                            Lihat
-                        </a>
-                        <a href="{{ route('admin.penempatan.surat-diterima', $penempatan) }}" style="padding: 0.35rem 0.65rem; background: #0641CC; color: #ffffff; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-decoration: none;">
-                            Unduh
-                        </a>
+
+                    {{-- Timeline Box --}}
+                    <div class="internship-timeline-box">
+                        <div class="timeline-title-row">
+                            <span style="font-weight: 700; color: #1E293B;">Rentang Masa Magang</span>
+                            <span style="font-weight: 700; color: #2563EB;">{{ $penempatan->total_minggu }} Minggu Periode</span>
+                        </div>
+                        <div class="timeline-track-wrap">
+                            <div class="timeline-bar-line">
+                                <div class="timeline-bar-progress" style="width: {{ $timelinePersen }}%;"></div>
+                            </div>
+                            <div class="timeline-points-row">
+                                <div class="timeline-point-item">
+                                    <div class="timeline-dot"></div>
+                                    <span class="timeline-point-label">Mulai</span>
+                                    <span class="timeline-point-date">{{ $startDate ? $startDate->translatedFormat('d M Y') : '-' }}</span>
+                                </div>
+                                <div class="timeline-point-item">
+                                    <div class="timeline-dot {{ $timelinePersen > 0 && $timelinePersen < 100 ? 'is-active' : '' }}"></div>
+                                    <span class="timeline-point-label">{{ $timelinePersen >= 100 ? 'Tuntas' : 'Berjalan' }}</span>
+                                    <span class="timeline-point-date">{{ $timelinePersen }}%</span>
+                                </div>
+                                <div class="timeline-point-item">
+                                    <div class="timeline-dot is-end"></div>
+                                    <span class="timeline-point-label">Selesai</span>
+                                    <span class="timeline-point-date">{{ $endDate ? $endDate->translatedFormat('d M Y') : '-' }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </x-gentelella.x-panel>
+        </div>
 
-                {{-- Berkas Pendaftaran jika ada --}}
-                @if($penempatan->pendaftaran && $penempatan->pendaftaran->dokumen->isNotEmpty())
-                    @foreach($penempatan->pendaftaran->dokumen as $dok)
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.85rem; border-radius: 8px; border: 1px solid var(--neutral-300, #E2E8F0); background: var(--neutral-100, #F8FAFC);">
-                            <div style="font-size: 0.8125rem; font-weight: 600; color: var(--neutral-900, #1E293B);">
-                                {{ ucwords(str_replace('_', ' ', $dok->jenis_dokumen)) }}
+        {{-- ==================== KOLOM KANAN (SIDEBAR, ~38%) ==================== --}}
+        <div class="penempatan-side-col">
+            {{-- Panel Pembimbing Lapangan --}}
+            <x-gentelella.x-panel title="Pembimbing Lapangan" subtitle="Staf pembimbing teknis yang ditugaskan" :toolbox="false">
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    @if($pembimbing)
+                        <div class="mentor-profile-card">
+                            <div class="mentor-avatar">
+                                {{ strtoupper(substr($pembimbing->nama, 0, 2)) }}
                             </div>
-                            <x-gentelella.badge variant="success">
-                                Terverifikasi
-                            </x-gentelella.badge>
+                            <div>
+                                <div class="mentor-info-name">{{ $pembimbing->nama }}</div>
+                                <div class="mentor-info-email">{{ $pembimbing->email }}</div>
+                            </div>
                         </div>
-                    @endforeach
-                @else
-                    <div style="font-size: 0.8125rem; color: var(--neutral-500, #64748B); text-align: center; padding: 0.75rem;">
-                        Tidak ada berkas unggahan tambahan.
+
+                        <div class="mentor-stat-row">
+                            <div>
+                                <div class="field-label">NIP Pembimbing</div>
+                                <div class="field-value" style="font-family: ui-monospace, monospace; font-size: 0.875rem;">
+                                    {{ $pembimbing->nip ?? '-' }}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="field-label">Beban Mentee</div>
+                                <div>
+                                    <span class="mentor-capacity-badge">
+                                        {{ $pembimbing->mentee_aktif_count ?? 0 }} Mentee Aktif
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div style="text-align: center; padding: 2rem 1rem; color: #64748B;">
+                            <p style="margin: 0; font-size: 0.875rem;">Belum ada pembimbing lapangan yang ditugaskan.</p>
+                        </div>
+                    @endif
+                </div>
+            </x-gentelella.x-panel>
+
+            {{-- Panel Berkas & Dokumen Magang --}}
+            <x-gentelella.x-panel title="Berkas &amp; Dokumen Magang" subtitle="Arsip dokumen persyaratan dan surat diterima" :toolbox="false">
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    {{-- Surat Keterangan Diterima Magang --}}
+                    <div class="doc-pdf-card">
+                        <div class="doc-pdf-info">
+                            <div class="doc-pdf-icon-box">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            </div>
+                            <div>
+                                <div class="doc-pdf-title">Surat Keterangan Diterima Magang</div>
+                                <div class="doc-pdf-sub">PDF Resmi Tanda Tangan Basah / Stempel</div>
+                            </div>
+                        </div>
+                        <div class="doc-pdf-actions">
+                            <a href="{{ route('admin.penempatan.surat-diterima.pratinjau', $penempatan) }}" target="_blank" class="btn-doc-action btn-doc-view">
+                                Lihat
+                            </a>
+                            <a href="{{ route('admin.penempatan.surat-diterima', $penempatan) }}" class="btn-doc-action btn-doc-download">
+                                Unduh
+                            </a>
+                        </div>
                     </div>
-                @endif
-            </div>
-        </x-gentelella.x-panel>
+
+                    {{-- Berkas Pendaftaran jika ada --}}
+                    @if($penempatan->pendaftaran && $penempatan->pendaftaran->dokumen->isNotEmpty())
+                        @foreach($penempatan->pendaftaran->dokumen as $dok)
+                            <div class="verified-doc-item">
+                                <span class="verified-doc-name">{{ ucwords(str_replace('_', ' ', $dok->jenis_dokumen)) }}</span>
+                                <x-gentelella.badge variant="success">
+                                    Terverifikasi
+                                </x-gentelella.badge>
+                            </div>
+                        @endforeach
+                    @else
+                        <div style="font-size: 0.8125rem; color: #64748B; text-align: center; padding: 0.75rem;">
+                            Tidak ada berkas unggahan tambahan.
+                        </div>
+                    @endif
+                </div>
+            </x-gentelella.x-panel>
+        </div>
 
     </div>
 

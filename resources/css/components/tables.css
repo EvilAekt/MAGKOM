@@ -691,3 +691,100 @@
             background: var(--blue-tint);
             color: var(--blue-700);
         }
+
+        /* =====================================================================
+           Tabel Bidang & Kuota Components (Proportional Table & Major Chips)
+           ===================================================================== */
+        .table-bidang {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: left;
+        }
+
+        .table-bidang thead th {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 1rem 1.25rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .table-bidang tbody tr {
+            border-bottom: 1px solid #F1F5F9;
+            transition: background 0.15s ease;
+        }
+
+        .table-bidang tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .table-bidang tbody tr:hover {
+            background: #F8FAFC;
+        }
+
+        .table-bidang td {
+            padding: 1.1rem 1.25rem;
+            vertical-align: middle;
+        }
+
+        [data-theme="dark"] .table-bidang thead th {
+            background-color: #141E30 !important;
+            border-bottom-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .table-bidang tbody tr {
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .table-bidang tbody tr:hover {
+            background-color: #162238 !important;
+        }
+
+        /* =====================================================================
+           Jurusan Tags / Chips Component
+           ===================================================================== */
+        .jurusan-tags-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.375rem;
+            max-width: 100%;
+        }
+
+        .jurusan-tag-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.55rem;
+            background: #F8FAFC;
+            color: #334155;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.35;
+            white-space: normal;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+
+        .jurusan-tag-item:hover {
+            background: #F1F5F9;
+            border-color: #CBD5E1;
+            color: #0F172A;
+        }
+
+        [data-theme="dark"] .jurusan-tag-item {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .jurusan-tag-item:hover {
+            background: #283548 !important;
+            border-color: #475569 !important;
+            color: #F8FAFC !important;
+        }

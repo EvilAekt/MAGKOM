@@ -374,11 +374,40 @@
             font-size: 0.9375rem;
         }
 
+        /* Jurusan Tags / Micro-Chips */
+        .jurusan-tags-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.375rem;
+            max-width: 100%;
+        }
+
+        .jurusan-tag-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.55rem;
+            background: #F8FAFC;
+            color: #334155;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.35;
+            white-space: normal;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+
+        .jurusan-tag-item:hover {
+            background: #F1F5F9;
+            border-color: #CBD5E1;
+            color: #0F172A;
+        }
+
         .jurusan-text-muted {
             color: #475569;
             font-size: 0.8125rem;
             line-height: 1.45;
-            max-width: 320px;
         }
 
         /* Jenjang Badges */
@@ -829,6 +858,16 @@
         [data-theme="dark"] .jurusan-text-muted {
             color: #94A3B8 !important;
         }
+        [data-theme="dark"] .jurusan-tag-item {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #CBD5E1 !important;
+        }
+        [data-theme="dark"] .jurusan-tag-item:hover {
+            background: #283548 !important;
+            border-color: #475569 !important;
+            color: #F8FAFC !important;
+        }
         [data-theme="dark"] .badge-jenjang-pill {
             background: rgba(37, 99, 235, 0.2) !important;
             color: #93C5FD !important;
@@ -1034,13 +1073,13 @@
                 <table class="table-bidang">
                     <thead>
                         <tr>
-                            <th style="width: 220px;">Bidang</th>
-                            <th>Jurusan yang Dibutuhkan</th>
-                            <th style="width: 140px;">Jenjang</th>
-                            <th style="width: 120px;">Durasi</th>
-                            <th style="width: 150px;">Kuota Terisi</th>
-                            <th style="width: 120px;">Kapasitas</th>
-                            <th style="width: 90px; text-align: right;">Aksi</th>
+                            <th style="width: 22%; min-width: 200px;">Bidang</th>
+                            <th style="width: 38%; min-width: 260px;">Jurusan yang Dibutuhkan</th>
+                            <th style="width: 9%; min-width: 85px;">Jenjang</th>
+                            <th style="width: 9%; min-width: 85px;">Durasi</th>
+                            <th style="width: 11%; min-width: 115px;">Kuota Terisi</th>
+                            <th style="width: 6%; min-width: 80px;">Kapasitas</th>
+                            <th style="width: 5%; min-width: 75px; text-align: right;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1058,8 +1097,14 @@
 
                                 {{-- 2. Jurusan yang Dibutuhkan --}}
                                 <td>
-                                    <div class="jurusan-text-muted">
-                                        {{ $item['jurusan_names'] }}
+                                    <div class="jurusan-tags-wrap">
+                                        @if(!empty($item['jurusan_list']) && count($item['jurusan_list']) > 0)
+                                            @foreach($item['jurusan_list'] as $j)
+                                                <span class="jurusan-tag-item">{{ $j->nama_jurusan }}</span>
+                                            @endforeach
+                                        @else
+                                            <span class="jurusan-text-muted">{{ $item['jurusan_names'] }}</span>
+                                        @endif
                                     </div>
                                 </td>
 
