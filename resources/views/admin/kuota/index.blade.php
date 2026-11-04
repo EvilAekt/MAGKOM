@@ -98,16 +98,18 @@
             border-color: #1D4ED8;
         }
 
-        /* 2. Hero Card Biru Modern (Persis Dashboard Gambar 2) */
+        /* 2. Hero Card Biru Signature Sleman (Konsisten dengan Dashboard Admin / Gambar 2) */
         .hero-banner-blue {
-            background: linear-gradient(95deg, rgba(6, 65, 204, 0.96) 0%, rgba(6, 65, 204, 0.88) 45%, rgba(6, 65, 204, 0.38) 100%),
-                        url('{{ asset('images/dashboard_hero_bg.jpg') }}') right center / cover no-repeat;
+            background: var(--cv-contour) right -40px top -20px / 720px auto no-repeat,
+                        radial-gradient(80% 120% at 100% 0%, rgba(7, 81, 255, 0.4), transparent 60%),
+                        linear-gradient(160deg, #06318C 0%, #061E5B 100%);
             border-radius: 16px;
             padding: 2rem 2.25rem;
             color: #FFFFFF;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(6, 65, 204, 0.25), 0 8px 10px -6px rgba(6, 65, 204, 0.15);
+            box-shadow: 0 8px 24px -4px rgba(6, 49, 140, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -120,8 +122,9 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 85% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+            border-radius: inherit;
             pointer-events: none;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
         }
 
         .hero-left-content {
