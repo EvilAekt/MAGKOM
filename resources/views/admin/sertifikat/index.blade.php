@@ -475,7 +475,7 @@
             </div>
 
             @if($alumniList->hasPages())
-                <div class="cert-pagination-wrap" style="padding: 1rem 1.5rem; border-top: 1px solid var(--neutral-200, #E2E8F0);">
+                <div class="cert-pagination-wrap adm-table-footer">
                     {{ $alumniList->links() }}
                 </div>
             @endif

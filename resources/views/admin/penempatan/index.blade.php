@@ -877,8 +877,9 @@
                 <p style="font-size: 0.875rem; max-width: 460px; margin: 0 auto;">Belum ada peserta magang yang sesuai dengan kriteria filter yang dipilih.</p>
             </div>
         @else
-            <div class="table-responsive-gentelella" style="overflow-x: auto; min-height: 250px; padding-bottom: 3.5rem;">
-                <table class="admin-table table jambo_table table-striped bulk_action">
+            <div class="adm-table-container">
+                <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                    <table class="admin-table table jambo_table table-striped bulk_action">
                     <thead>
                         <tr>
                             <th style="width: 40px; text-align: center;">
@@ -1049,13 +1050,14 @@
                 </table>
             </div>
 
-            <div style="padding: 1rem 1.25rem; border-top: 1px solid var(--neutral-200, #E2E8F0); background: #ffffff;">
-                <x-gentelella.pagination-bar 
-                    :paginator="$penempatanList" 
-                    :perPageOptions="[5, 10, 25]" 
-                    entity="peserta magang" 
-                    badgeText="Penempatan Aktif" 
-                />
+                <div class="adm-table-footer">
+                    <x-gentelella.pagination-bar 
+                        :paginator="$penempatanList" 
+                        :perPageOptions="[5, 10, 25]" 
+                        entity="peserta magang" 
+                        badgeText="Penempatan Aktif" 
+                    />
+                </div>
             </div>
         @endif
     </x-gentelella.x-panel>

@@ -619,18 +619,18 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            @if($pendaftaranData->isNotEmpty())
-                <div style="margin-top: 1.25rem; padding-top: 0.5rem;">
-                    <x-gentelella.pagination-bar 
-                        :paginator="$pendaftaranData" 
-                        :perPageOptions="[5, 10, 25]" 
-                        entity="data rekapitulasi" 
-                        badgeText="Rekapitulasi Berkas" 
-                    />
-                </div>
-            @endif
+                @if($pendaftaranData->isNotEmpty())
+                    <div class="adm-table-footer">
+                        <x-gentelella.pagination-bar 
+                            :paginator="$pendaftaranData" 
+                            :perPageOptions="[5, 10, 25]" 
+                            entity="data rekapitulasi" 
+                            badgeText="Rekapitulasi Berkas" 
+                        />
+                    </div>
+                @endif
+            </div>
         </x-gentelella.x-panel>
     @endif
 
@@ -807,13 +807,13 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            @if($penempatanData->hasPages())
-                <div style="margin-top: 1.25rem; padding-top: 0.5rem;">
-                    {{ $penempatanData->links() }}
-                </div>
-            @endif
+                @if($penempatanData->hasPages())
+                    <div class="adm-table-footer">
+                        {{ $penempatanData->links() }}
+                    </div>
+                @endif
+            </div>
         </x-gentelella.x-panel>
     @endif
 
@@ -1026,13 +1026,13 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            @if($nilaiData->hasPages())
-                <div style="margin-top: 1.25rem; padding-top: 0.5rem;">
-                    {{ $nilaiData->links() }}
-                </div>
-            @endif
+                @if($nilaiData->hasPages())
+                    <div class="adm-table-footer">
+                        {{ $nilaiData->links() }}
+                    </div>
+                @endif
+            </div>
         </x-gentelella.x-panel>
     @endif
 

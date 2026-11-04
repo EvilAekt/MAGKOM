@@ -1120,7 +1120,7 @@
                 </table>
             </div>
 
-            <div style="padding: 1rem 1.25rem; border-top: 1px solid #E2E8F0; background: #ffffff;">
+            <div class="adm-table-footer">
                 <x-gentelella.pagination-bar 
                     :paginator="$waitingList" 
                     :perPageOptions="[10, 20, 50]" 

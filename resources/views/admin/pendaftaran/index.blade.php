@@ -824,7 +824,7 @@
                     </table>
                 </div>
 
-                <div style="padding: 1rem 1.25rem; border-top: 1px solid #E2E8F0; background: #F8FAFC;">
+                <div class="adm-table-footer">
                     <x-gentelella.pagination-bar 
                         :paginator="$pendaftaranList" 
                         :perPageOptions="[5, 10, 25]" 

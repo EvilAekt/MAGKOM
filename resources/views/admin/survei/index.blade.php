@@ -861,7 +861,7 @@
             </div>
 
             @if($daftarSurvei->hasPages())
-                <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--neutral-200, #E2E8F0);">
+                <div class="adm-table-footer">
                     {{ $daftarSurvei->links() }}
                 </div>
             @endif

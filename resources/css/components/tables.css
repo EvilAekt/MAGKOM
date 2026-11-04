@@ -128,6 +128,24 @@
             border-bottom-color: #26354D;
         }
 
+        /* Footer Paginasi Kartu Tabel Terpadu */
+        .adm-table-footer {
+            padding: 0.875rem 1.25rem;
+            background: #F8FAFC;
+            border-top: 1.5px solid #CBD5E1;
+        }
+
+        [data-theme="dark"] .adm-table-footer {
+            background: #0E1726;
+            border-top-color: #26354D;
+        }
+
+        .adm-table-footer .kuota-pagination-wrapper {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+            border-top: none !important;
+        }
+
         /* Standarisasi Tabel Admin (.adm-table) - Kesejajaran Presisi */
         .adm-table {
             width: 100%;
