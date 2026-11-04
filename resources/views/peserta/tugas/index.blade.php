@@ -63,7 +63,7 @@
     </div>
 
     {{-- 3. X-Panel Daftar Penugasan & Stream --}}
-    <x-gentelella.x-panel title="Daftar Penugasan & Proyek Magang" subtitle="Tinjau materi instruksi, penugasan ditugaskan, sedang dikerjakan, dan serahkan laporan progres kepada pembimbing.">
+    <x-gentelella.x-panel title="Daftar Penugasan & Proyek Magang">
         {{-- Tab Filter Navigasi Segmented Pill 3 Tab: Semua Tugas, Selesai, Lewat Tenggat --}}
         <div class="classroom-tabs" role="tablist" aria-label="Filter Penugasan">
             <button type="button" class="tab-pill active" data-filter="all" role="tab" aria-selected="true">

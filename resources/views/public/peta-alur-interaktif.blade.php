@@ -848,76 +848,127 @@
                     </g>
                 </g>
 
-                <!-- LAYER 8: MOBIL KARTUN BIRU TAMPAK SAMPING SESUAI GAMBAR 1 PENGGUNA -->
-                <g id="modalRoadCarGroup" transform="translate(280, 390)" class="cinematic-car-body" role="slider" aria-label="Mobil Kartun Biru Sleman (Dapat Digerakkan dengan Analog / Panah Keyboard)" tabindex="0" style="cursor: grab;">
+                <!-- LAYER 8: NISSAN SKYLINE GT-R R34 (BAYSIDE BLUE) SESUAI GAMBAR PENGGUNA TANPA TULISAN -->
+                <g id="modalRoadCarGroup" transform="translate(280, 390)" class="cinematic-car-body" role="slider" aria-label="Nissan Skyline GT-R R34 Bayside Blue (Dapat Digerakkan dengan Analog / Panah Keyboard)" tabindex="0" style="cursor: grab;">
                     <!-- Wrapper Suspensi Halus Mobil (Gerak Lokal, Tidak Menimpa Posisi Dunia Mobil) -->
                     <g class="car-suspension-wrap">
-                        <!-- Sorotan Lampu Depan LED di Atas Aspal (Menyorot ke Arah Kanan) -->
-                        <polygon class="car-headlight-beam" id="carHeadlightBeam" points="52,4 160,-14 160,26 52,18" fill="url(#headlightGrad)" opacity="0.65"/>
+                        <!-- Sorotan Lampu Depan LED Xenon di Atas Aspal (Menyorot ke Arah Kanan) -->
+                        <polygon class="car-headlight-beam" id="carHeadlightBeam" points="72,8 190,-12 190,26 72,18" fill="url(#headlightGrad)" opacity="0.68"/>
 
-                        <!-- Efek Visual Gelombang Suara Klakson Mobil (( 📢 )) -->
+                        <!-- Efek Visual Gelombang Suara Klakson Sport (( 📢 )) -->
                         <g id="carHornRipples" class="car-horn-ripples" pointer-events="none">
-                            <path class="horn-wave horn-wave-1" d="M 58,-4 Q 68,6 58,16" fill="none" stroke="#facc15" stroke-width="2.5" stroke-linecap="round"/>
-                            <path class="horn-wave horn-wave-2" d="M 66,-10 Q 80,6 66,22" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
-                            <path class="horn-wave horn-wave-3" d="M 74,-16 Q 92,6 74,28" fill="none" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
+                            <path class="horn-wave horn-wave-1" d="M 76,0 Q 86,10 76,20" fill="none" stroke="#facc15" stroke-width="2.5" stroke-linecap="round"/>
+                            <path class="horn-wave horn-wave-2" d="M 84,-6 Q 98,10 84,26" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+                            <path class="horn-wave horn-wave-3" d="M 92,-12 Q 110,10 92,32" fill="none" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
                         </g>
 
-                        <!-- Bayangan Mobil di Atas Aspal -->
-                        <ellipse cx="0" cy="30" rx="58" ry="7" fill="#0f172a" opacity="0.35"/>
+                        <!-- Bayangan Bawah Mobil di Atas Aspal (Ground Shadow GT-R R34) -->
+                        <ellipse cx="0" cy="27" rx="80" ry="6.5" fill="#090d16" opacity="0.5"/>
+                        <rect x="-70" y="24" width="144" height="3.5" rx="1.75" fill="#020617" opacity="0.65"/>
 
-                        <!-- RODA BELAKANG (Bisa Berputar) -->
-                        <g id="carWheelRear" transform="translate(-32, 22)" class="car-wheel-group">
-                            <circle cx="0" cy="0" r="14" fill="#1e293b"/>
-                            <circle cx="0" cy="0" r="8.5" fill="#94a3b8"/>
-                            <circle cx="0" cy="0" r="3.5" fill="#e2e8f0"/>
-                            <line x1="-7" y1="0" x2="7" y2="0" stroke="#475569" stroke-width="1.8"/>
-                            <line x1="0" y1="-7" x2="0" y2="7" stroke="#475569" stroke-width="1.8"/>
+                        <!-- Pipa Knalpot Balap Stainless Chrome Besar (JDM Big Single Exhaust Tip) -->
+                        <ellipse cx="-72" cy="21" rx="4" ry="3.5" fill="#64748b" stroke="#cbd5e1" stroke-width="1.2"/>
+                        <ellipse cx="-72" cy="21" rx="2.5" ry="2" fill="#090d16"/>
+
+                        <!-- SPOILER BELAKANG IKONIK SKYLINE GT-R R34 (REAR WING AERO) -->
+                        <!-- Tiang Spoiler Kiri & Kanan -->
+                        <path d="M -56,3 L -59,-13 L -55,-13 L -52,3 Z" fill="#1d4ed8"/>
+                        <path d="M -46,3 L -48,-13 L -44,-13 L -42,3 Z" fill="#2563eb"/>
+                        <!-- Bilah Sayap Atas Aerodinamis GT-R R34 -->
+                        <path d="M -66,-13 Q -51,-17 -36,-13 L -35,-10.5 Q -51,-14.5 -65,-10.5 Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
+                        <polygon points="-66,-13 -63,-7 -59,-7 -62,-13" fill="#1e3a8a"/>
+                        <polygon points="-40,-13 -37,-7 -33,-7 -36,-13" fill="#1e40af"/>
+
+                        <!-- BODI UTAMA NISSAN SKYLINE GT-R R34 (WARNA BAYSIDE BLUE #2563eb DENGAN LEKUKAN AGRESIF) -->
+                        <!-- Siluet Silindris & Garis Panel Aerokit Samping -->
+                        <path d="M 76,21 L 78,14 Q 77,9 74,7 L 66,6 L 20,2 L 16,1 L -4,-16 L -32,-16 L -54,2 L -68,3 L -72,8 L -73,14 L -70,21 L -58,21 Q -56,10 -42,6 Q -28,10 -26,21 L 26,21 Q 28,10 42,6 Q 56,10 58,21 Z"
+                              fill="#2563eb" stroke="#1d4ed8" stroke-width="1.8" stroke-linejoin="round"/>
+
+                        <!-- Highlight Kilap Atas Bodi & Kap Mesin Bayside Blue -->
+                        <path d="M 74,7 L 66,6 L 20,2 L 16,1 L -4,-16 L -32,-16 L -34,-14 L -4,-14 L 14,3 L 64,8 Z" fill="#60a5fa" opacity="0.45"/>
+
+                        <!-- Garis Karakter Bahu Bodi (Muscular Shoulder Line R34) -->
+                        <path d="M -68,6 Q -10,6 64,8" stroke="#1e40af" stroke-width="1.2" fill="none"/>
+                        <!-- Fender Flare Depan & Belakang Berotot (GT-R Widebody) -->
+                        <path d="M -58,21 Q -56,7 -42,4 Q -28,7 -26,21" stroke="#1e3a8a" stroke-width="1.4" fill="none"/>
+                        <path d="M 26,21 Q 28,7 42,4 Q 56,7 58,21" stroke="#1e3a8a" stroke-width="1.4" fill="none"/>
+
+                        <!-- Front Lip Spoiler & Side Skirt Aerodinamis Hitam Matte -->
+                        <rect x="62" y="19" width="16" height="3" rx="1" fill="#0f172a"/>
+                        <rect x="-24" y="20" width="50" height="2.5" rx="0.8" fill="#0f172a"/>
+                        <rect x="-71" y="19" width="12" height="3" rx="1" fill="#0f172a"/>
+
+                        <!-- KABIN & KACA JENDELA GELAP COUPE (DARK TINTED GLASS) -->
+                        <!-- Kaca Samping Tinted Hitam Pekat -->
+                        <path d="M 14,1 L -3,-14 L -30,-14 L -49,1 Z" fill="#090d16" stroke="#020617" stroke-width="1.5"/>
+                        <!-- Pantulan Garis Diagonal Kaca Samping -->
+                        <polygon points="8,1 0,1 -10,-14 -2,-14" fill="#ffffff" opacity="0.2"/>
+                        <polygon points="-16,1 -24,1 -34,-14 -26,-14" fill="#ffffff" opacity="0.12"/>
+                        <!-- Pilar B Hitam Matte R34 -->
+                        <rect x="-14" y="-14" width="4" height="15" fill="#020617"/>
+                        <!-- Spion Samping Aerodinamis Bayside Blue -->
+                        <path d="M 13,0 Q 18,-2 19,2 Q 15,3 12,2 Z" fill="#2563eb" stroke="#1d4ed8" stroke-width="0.8"/>
+
+                        <!-- LAMPU DEPAN MENYIPIT XENON KHAS SKYLINE R34 -->
+                        <polygon points="64,5 73,6 72,10 63,9" fill="#0f172a" stroke="#64748b" stroke-width="0.8"/>
+                        <circle cx="68" cy="7.5" r="2.2" fill="#e0f2fe" style="filter: drop-shadow(0 0 4px #38bdf8);"/>
+                        <circle cx="68" cy="7.5" r="1.2" fill="#ffffff"/>
+
+                        <!-- LAMPU BELAKANG BULAT IKONIK SKYLINE GT-R -->
+                        <ellipse cx="-70" cy="7" rx="2.5" ry="4" fill="#ef4444" stroke="#991b1b" stroke-width="0.8"/>
+                        <circle cx="-70" cy="7" r="1.5" fill="#fca5a5"/>
+
+                        <!-- Lubang Pendingin Rem Bumper Depan (Intercooler & Brake Air Duct) -->
+                        <polygon points="68,13 75,13 74,18 67,18" fill="#020617"/>
+                        <line x1="68" y1="15" x2="74" y2="15" stroke="#334155" stroke-width="0.6"/>
+
+                        <!-- Garis Pintu Coupe & Gagang Pintu Halus -->
+                        <path d="M -24,3 L -24,20" stroke="#172554" stroke-width="1.2"/>
+                        <rect x="-18" y="6" width="7" height="1.8" rx="0.9" fill="#1e40af"/>
+
+                        <!-- RODA BELAKANG (Bisa Berputar - Velg Racing 6-Spoke NISMO LM GT4 Style) -->
+                        <g id="carWheelRear" transform="translate(-42, 21)" class="car-wheel-group">
+                            <!-- Ban Luar Karet Hitam Sporty (Profil Rendah) -->
+                            <circle cx="0" cy="0" r="14" fill="#18181b" stroke="#090d16" stroke-width="1"/>
+                            <!-- Tapak Velg Dalam -->
+                            <circle cx="0" cy="0" r="10.5" fill="#27272a"/>
+                            <!-- Cakram Rem Ventilasi Perak Logam -->
+                            <circle cx="0" cy="0" r="8.5" fill="#94a3b8" stroke="#cbd5e1" stroke-width="0.6"/>
+                            <circle cx="0" cy="0" r="6.5" fill="none" stroke="#64748b" stroke-width="0.6" stroke-dasharray="1.5,1.5"/>
+                            <!-- Kaliper Rem Sport Anodized Blue -->
+                            <path d="M 5,-5 Q 8,0 5,5" stroke="#38bdf8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <!-- Palang Velg Racing Bintang 6 Hitam Glossy (NISMO LM GT4 Style) -->
+                            <circle cx="0" cy="0" r="3.2" fill="#09090b" stroke="#27272a" stroke-width="0.8"/>
+                            <circle cx="0" cy="0" r="1.2" fill="#cbd5e1"/>
+                            <line x1="0" y1="-2.5" x2="0" y2="-10" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
+                            <line x1="2.2" y1="-1.2" x2="8.6" y2="-5" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
+                            <line x1="2.2" y1="1.2" x2="8.6" y2="5" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
+                            <line x1="0" y1="2.5" x2="0" y2="10" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
+                            <line x1="-2.2" y1="1.2" x2="-8.6" y2="5" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
+                            <line x1="-2.2" y1="-1.2" x2="-8.6" y2="-5" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
                         </g>
 
-                        <!-- RODA DEPAN (Bisa Berputar) -->
-                        <g id="carWheelFront" transform="translate(32, 22)" class="car-wheel-group">
-                            <circle cx="0" cy="0" r="14" fill="#1e293b"/>
-                            <circle cx="0" cy="0" r="8.5" fill="#94a3b8"/>
-                            <circle cx="0" cy="0" r="3.5" fill="#e2e8f0"/>
-                            <line x1="-7" y1="0" x2="7" y2="0" stroke="#475569" stroke-width="1.8"/>
-                            <line x1="0" y1="-7" x2="0" y2="7" stroke="#475569" stroke-width="1.8"/>
+                        <!-- RODA DEPAN (Bisa Berputar - Velg Racing 6-Spoke NISMO LM GT4 Style) -->
+                        <g id="carWheelFront" transform="translate(42, 21)" class="car-wheel-group">
+                            <!-- Ban Luar Karet Hitam Sporty (Profil Rendah) -->
+                            <circle cx="0" cy="0" r="14" fill="#18181b" stroke="#090d16" stroke-width="1"/>
+                            <!-- Tapak Velg Dalam -->
+                            <circle cx="0" cy="0" r="10.5" fill="#27272a"/>
+                            <!-- Cakram Rem Ventilasi Perak Logam -->
+                            <circle cx="0" cy="0" r="8.5" fill="#94a3b8" stroke="#cbd5e1" stroke-width="0.6"/>
+                            <circle cx="0" cy="0" r="6.5" fill="none" stroke="#64748b" stroke-width="0.6" stroke-dasharray="1.5,1.5"/>
+                            <!-- Kaliper Rem Sport Anodized Blue -->
+                            <path d="M 5,-5 Q 8,0 5,5" stroke="#38bdf8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <!-- Palang Velg Racing Bintang 6 Hitam Glossy (NISMO LM GT4 Style) -->
+                            <circle cx="0" cy="0" r="3.2" fill="#09090b" stroke="#27272a" stroke-width="0.8"/>
+                            <circle cx="0" cy="0" r="1.2" fill="#cbd5e1"/>
+                            <line x1="0" y1="-2.5" x2="0" y2="-10" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
+                            <line x1="2.2" y1="-1.2" x2="8.6" y2="-5" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
+                            <line x1="2.2" y1="1.2" x2="8.6" y2="5" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
+                            <line x1="0" y1="2.5" x2="0" y2="10" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
+                            <line x1="-2.2" y1="1.2" x2="-8.6" y2="5" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
+                            <line x1="-2.2" y1="-1.2" x2="-8.6" y2="-5" stroke="#09090b" stroke-width="2.2" stroke-linecap="round"/>
                         </g>
-
-                        <!-- Bumper Belakang Abu-abu Perak -->
-                        <rect x="-56" y="16" width="12" height="7" rx="3.5" fill="#cbd5e1" stroke="#64748b" stroke-width="1"/>
-                        <!-- Bumper Depan Abu-abu Perak -->
-                        <rect x="46" y="16" width="12" height="7" rx="3.5" fill="#cbd5e1" stroke="#64748b" stroke-width="1"/>
-
-                        <!-- BODI UTAMA MOBIL BIRU KARTUN (PERSIS GAMBAR 1 REFERENSI PENGGUNA) -->
-                        <path d="M -52,18 L -48,18 C -48,8 -16,8 -16,18 L 16,18 C 16,8 48,8 48,18 L 54,18 C 55,10 54,-1 46,-6 C 40,-10 32,-12 28,-18 C 20,-32 4,-48 -12,-48 C -32,-48 -46,-30 -50,-14 C -54,-6 -54,10 -52,18 Z"
-                              fill="#38bdf8" stroke="#0284c7" stroke-width="2.8" stroke-linejoin="round"/>
-
-                        <!-- Pintu & Panel Bawah Mobil Biru Kartun -->
-                        <path d="M -36,-14 C -34,-26 -24,-40 -10,-40 C 2,-40 16,-28 22,-14 L 22,14 L -36,14 Z" fill="#0ea5e9" opacity="0.32"/>
-                        <line x1="2" y1="-40" x2="2" y2="16" stroke="#0284c7" stroke-width="2.2"/>
-
-                        <!-- KACA DEPAN & JENDELA DENGAN PANTULAN CAHAYA (GAMBAR 1) -->
-                        <!-- Kaca Depan (Kanan) -->
-                        <path d="M 5,-14 L 5,-36 C 14,-35 22,-24 25,-14 Z" fill="#f1f5f9" stroke="#0284c7" stroke-width="1.6"/>
-                        <polygon points="12,-14 20,-14 16,-32 10,-32" fill="#ffffff" opacity="0.85"/>
-
-                        <!-- Kaca Belakang (Kiri) -->
-                        <path d="M -1,-14 L -1,-36 C -12,-36 -24,-26 -28,-14 Z" fill="#f1f5f9" stroke="#0284c7" stroke-width="1.6"/>
-                        <polygon points="-8,-14 -16,-14 -12,-32 -5,-32" fill="#ffffff" opacity="0.85"/>
-
-                        <!-- Gagang Pintu Horizontal Biru Tua -->
-                        <rect x="-8" y="0" width="10" height="3" rx="1.5" fill="#0369a1"/>
-
-                        <!-- LAMPU DEPAN BULAT KUNING (GAMBAR 1) -->
-                        <ellipse cx="49" cy="6" rx="4.5" ry="6.5" fill="#facc15" stroke="#eab308" stroke-width="1.2"/>
-                        <ellipse cx="48" cy="4.5" rx="2" ry="3" fill="#fef08a"/>
-
-                        <!-- LAMPU REM BELAKANG MERAH OVAL (GAMBAR 1) -->
-                        <ellipse cx="-49" cy="7" rx="3.5" ry="6" fill="#ef4444" stroke="#dc2626" stroke-width="1.2"/>
-
-                        <!-- Badge Mini DISKOMINFO di Pintu Mobil -->
-                        <rect x="-18" y="5" width="34" height="7" rx="2" fill="#1b3860"/>
-                        <text x="-1" y="10.5" text-anchor="middle" font-size="4.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif" letter-spacing="0.5">KOMINFO</text>
                     </g>
                 </g>
             </svg>
@@ -926,18 +977,11 @@
     </div>
 
     <!-- =========================================================================
-         3. FOOTER MINIMALIS SELARAS LANDING PAGE UTAMA
+         3. FOOTER PERSISTENT SLEMAN NAVY (SELARAS DASHBOARD MAGKOM)
          ========================================================================= -->
     <footer class="peta-alur-mini-footer">
         <div class="peta-footer-inner">
             <span class="peta-footer-copy">&copy; {{ date('Y') }} Dinas Komunikasi dan Informatika Kabupaten Sleman. MAGKOM — Sistem Penerimaan Mahasiswa Magang.</span>
-            <div class="peta-footer-links">
-                <a href="{{ route('landing') }}" class="peta-footer-link">Beranda</a>
-                <span class="peta-footer-sep">•</span>
-                <a href="{{ route('login') }}" class="peta-footer-link">Masuk</a>
-                <span class="peta-footer-sep">•</span>
-                <a href="{{ route('register') }}" class="peta-footer-link">Registrasi</a>
-            </div>
         </div>
     </footer>
 

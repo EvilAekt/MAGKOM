@@ -11,7 +11,6 @@
 <div class="logbook-wrapper">
     <x-gentelella.page-title 
         title="Logbook & Jurnal Mingguan Peserta" 
-        description="Catat ringkasan capaian aktivitas magang dan pantau evaluasi mingguan pembimbing lapangan." 
     />
 
     @if(!$penempatan)
@@ -134,7 +133,6 @@
         <div class="action-bar">
             <div>
                 <h2 style="font-size: 1.25rem; font-weight: 800; color: #0F172A; margin: 0;">Riwayat Jurnal Mingguan</h2>
-                <p style="font-size: 0.875rem; color: #475569; margin: 4px 0 0 0;">Daftar aktivitas dan evaluasi mingguan yang telah Anda laporkan kepada pembimbing lapangan</p>
             </div>
 
             <div style="display: flex; align-items: center; gap: 12px;">

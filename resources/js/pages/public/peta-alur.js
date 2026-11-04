@@ -131,29 +131,32 @@
             if (!isAudioEnabled || !audioCtx) return;
             try {
                 const now = audioCtx.currentTime;
-                // Dual-Tone Klakson Mobil Harmonis Otomotif (F4 349.23Hz & A4 440.00Hz)
+                // Dual-Tone Klakson Mobil Ringan, Halus & Merdu (F4 349.23Hz & A4 440.00Hz - Triangle Waves)
                 [349.23, 440.00].forEach((freq) => {
                     const osc = audioCtx.createOscillator();
                     const filter = audioCtx.createBiquadFilter();
                     const gain = audioCtx.createGain();
 
-                    osc.type = 'sawtooth';
+                    // Menggunakan triangle wave agar tidak cempreng/kasar
+                    osc.type = 'triangle';
                     osc.frequency.setValueAtTime(freq, now);
 
+                    // Lowpass filter yang lebih hangat dan lembut (950Hz)
                     filter.type = 'lowpass';
-                    filter.frequency.setValueAtTime(1400, now);
+                    filter.frequency.setValueAtTime(950, now);
 
-                    gain.gain.setValueAtTime(0.001, now);
-                    gain.gain.linearRampToValueAtTime(0.088, now + 0.02);
-                    gain.gain.setValueAtTime(0.088, now + 0.22);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+                    // Gain lebih ringan & nyaman di telinga (0.038)
+                    gain.gain.setValueAtTime(0.0001, now);
+                    gain.gain.linearRampToValueAtTime(0.038, now + 0.04);
+                    gain.gain.setValueAtTime(0.038, now + 0.20);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
 
                     osc.connect(filter);
                     filter.connect(gain);
                     gain.connect(audioCtx.destination);
 
                     osc.start(now);
-                    osc.stop(now + 0.4);
+                    osc.stop(now + 0.36);
                 });
             } catch(e) {}
         },
@@ -161,26 +164,28 @@
             if (!isAudioEnabled || !audioCtx || isEngineHumming) return;
             try {
                 const now = audioCtx.currentTime;
-                // Dual Oscillator Suara Mesin Mobil Mantap & Berisi (Sawtooth 68Hz + Harmonic Sine 136Hz)
+                // Suara Mesin Halus & Ringan (Triangle 72Hz + Harmonic Sine 144Hz)
                 engineOsc = audioCtx.createOscillator();
                 engineHarmonicOsc = audioCtx.createOscillator();
                 engineFilter = audioCtx.createBiquadFilter();
                 engineGain = audioCtx.createGain();
 
-                engineOsc.type = 'sawtooth';
-                engineOsc.frequency.setValueAtTime(68, now);
-                engineOsc.frequency.linearRampToValueAtTime(82, now + 0.25);
+                // Gelombang triangle memberikan getaran mesin yang empuk dan halus
+                engineOsc.type = 'triangle';
+                engineOsc.frequency.setValueAtTime(72, now);
+                engineOsc.frequency.linearRampToValueAtTime(86, now + 0.25);
 
                 engineHarmonicOsc.type = 'sine';
-                engineHarmonicOsc.frequency.setValueAtTime(136, now);
-                engineHarmonicOsc.frequency.linearRampToValueAtTime(164, now + 0.25);
+                engineHarmonicOsc.frequency.setValueAtTime(144, now);
+                engineHarmonicOsc.frequency.linearRampToValueAtTime(172, now + 0.25);
 
+                // Lowpass filter hangat 220Hz untuk memotong frekuensi tajam
                 engineFilter.type = 'lowpass';
-                engineFilter.frequency.setValueAtTime(260, now);
+                engineFilter.frequency.setValueAtTime(220, now);
 
-                // Gain mantap lebih renyah & jelas (0.062)
+                // Gain lembut dan ringan (0.028)
                 engineGain.gain.setValueAtTime(0.0001, now);
-                engineGain.gain.linearRampToValueAtTime(0.062, now + 0.12);
+                engineGain.gain.linearRampToValueAtTime(0.028, now + 0.14);
 
                 engineOsc.connect(engineFilter);
                 engineHarmonicOsc.connect(engineFilter);
@@ -198,7 +203,7 @@
                 const now = audioCtx.currentTime;
                 engineGain.gain.cancelScheduledValues(now);
                 engineGain.gain.setValueAtTime(engineGain.gain.value, now);
-                engineGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+                engineGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
                 setTimeout(() => {
                     if (engineOsc) {
                         try { engineOsc.stop(); engineOsc.disconnect(); } catch (err) {}
@@ -217,7 +222,7 @@
                         engineGain = null;
                     }
                     isEngineHumming = false;
-                }, 150);
+                }, 170);
             } catch (e) {
                 isEngineHumming = false;
             }
@@ -468,8 +473,8 @@
 
             const driveSpeed = 6.5;
             carVelocity = inputDirection * driveSpeed;
-            carX += carVelocity;
 
+            carX += carVelocity;
             carX = Math.max(ROAD_MIN_X, Math.min(ROAD_MAX_X, carX));
 
             const wheelRadius = 14;
@@ -519,10 +524,10 @@
         }
 
         if (wheelRear) {
-            wheelRear.setAttribute('transform', `translate(-32, 22) rotate(${wheelAngle.toFixed(1)})`);
+            wheelRear.setAttribute('transform', `translate(-42, 21) rotate(${wheelAngle.toFixed(1)})`);
         }
         if (wheelFront) {
-            wheelFront.setAttribute('transform', `translate(32, 22) rotate(${wheelAngle.toFixed(1)})`);
+            wheelFront.setAttribute('transform', `translate(42, 21) rotate(${wheelAngle.toFixed(1)})`);
         }
 
         if (roadProgress) {
