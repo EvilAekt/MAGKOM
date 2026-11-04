@@ -491,7 +491,7 @@
     </style>
 
     {{-- PAGE HEADER WITH ACTIONS --}}
-    <x-gentelella.page-title title="Verifikasi Berkas Pendaftaran Peserta" description="Pusat validasi berkas pendaftaran calon peserta magang dan monitoring SLA permohonan dinas.">
+    <x-gentelella.page-title title="Verifikasi Berkas Pendaftaran Peserta">
         <a href="{{ route('admin.dashboard') }}" class="btn-action-gentelella btn-action-primary" style="padding: 0.5rem 1rem; font-size: 0.8125rem;">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
             <span>Kembali ke Dashboard</span>
@@ -550,7 +550,7 @@
     </div>
 
     {{-- 2. MAIN X-PANEL CARD --}}
-    <x-gentelella.x-panel title="Daftar Permohonan Magang Masuk" subtitle="Manajemen antrean calon peserta magang Sleman">
+    <x-gentelella.x-panel title="Daftar Permohonan Magang Masuk">
 
         {{-- 2A. FILTER & SEARCH TOOLBAR TERPADU --}}
         @php

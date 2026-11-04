@@ -799,7 +799,7 @@
         }
     </style>
 
-    <x-gentelella.page-title title="Antrean Waiting List" description="Pengelolaan antrean cadangan peserta saat kuota jurusan penuh berdasarkan waktu pengajuan secara transparan, adil, dan objektif.">
+    <x-gentelella.page-title title="Antrean Waiting List">
         <a href="{{ route('admin.dashboard') }}" class="btn-action-gentelella btn-action-primary" style="padding: 0.5rem 1rem; font-size: 0.8125rem;">
             <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
             <span>Kembali ke Dashboard</span>
@@ -850,7 +850,7 @@
         />
     </div>
 
-    <x-gentelella.x-panel title="Daftar Antrean Waiting List Calon Peserta" subtitle="Penegakan transparansi dan objektivitas penempatan magang">
+    <x-gentelella.x-panel title="Daftar Antrean Waiting List Calon Peserta">
 
 
 

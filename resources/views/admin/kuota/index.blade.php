@@ -849,7 +849,7 @@
     <div class="kuota-page-header">
         <div>
             <h1 class="kuota-page-title">Bulan &amp; kuota</h1>
-            <p class="kuota-page-subtitle">Atur bulan pendaftaran dan kuota magang per bidang.</p>
+            <p class="kuota-page-subtitle sr-only">Atur bulan pendaftaran dan kuota magang per bidang.</p>
         </div>
     </div>
 
@@ -1012,8 +1012,7 @@
          4. SECTION & TABEL KUOTA PER BIDANG
          ========================================================================= --}}
     <x-gentelella.x-panel 
-        title="Kuota per bidang" 
-        subtitle="Tentukan jumlah kuota, jurusan, jenjang, dan rentang durasi magang."
+        title="Kuota per bidang"
     >
         @if($selectedBulan)
             <x-slot:actions>

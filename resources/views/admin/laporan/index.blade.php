@@ -2,7 +2,7 @@
 
 @section('title', 'Hub Laporan & Ekspor - Admin MagKom')
 @section('page_title', 'Hub Laporan & Ekspor Data')
-@section('page_description', 'Rekapitulasi berkas pendaftaran, alokasi kuota, penempatan, dan evaluasi peserta magang (AC-17-1, AC-17-2).')
+@section('page_description', '')
 
 @section('breadcrumbs')
     <span class="breadcrumb-current">Laporan & Ekspor</span>
@@ -194,7 +194,6 @@
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.25rem;">
         <!-- KARTU 1: TINGKAT KETERISIAN KUOTA PER JURUSAN -->
         <x-gentelella.card title="Tingkat Keterisian Kuota per Jurusan"
-                           subtitle="Alokasi kursi reguler terhadap realisasi pendaftar diterima"
                            badge="Live Capacity"
                            badgeType="primary"
                            style="display: flex; flex-direction: column;">
@@ -236,7 +235,6 @@
 
         <!-- KARTU 2: PROPORSI JENJANG PENDIDIKAN PESERTA -->
         <x-gentelella.card title="Proporsi Jenjang Calon Peserta"
-                           subtitle="Komposisi pendaftar jenjang SMK vs Mahasiswa (D3/S1)"
                            badge="Demografi"
                            badgeType="success"
                            style="display: flex; flex-direction: column;">
@@ -356,7 +354,7 @@
 
     <!-- 3. TAB 1: REKAP PENDAFTARAN -->
     @if($tab === 'pendaftaran')
-        <x-gentelella.x-panel class="has-table" title="Laporan Rekapitulasi Pendaftaran" subtitle="Data calon peserta pendaftaran magang berdasarkan bulan magang dan status keputusan.">
+        <x-gentelella.x-panel class="has-table" title="Laporan Rekapitulasi Pendaftaran">
             <x-slot:actions>
                 {{-- Unified Export Popover Trigger & Container (Pendaftaran) --}}
                 <div class="adm-export-dropdown-wrap" style="position: relative;">
@@ -636,7 +634,7 @@
 
     <!-- 4. TAB 2: DATA PENEMPATAN -->
     @if($tab === 'penempatan')
-        <x-gentelella.x-panel class="has-table" title="Laporan Data Penempatan Magang" subtitle="Rekapitulasi penempatan aktif, selesai, serta pembagian pembimbing dan jalur magang.">
+        <x-gentelella.x-panel class="has-table" title="Laporan Data Penempatan Magang">
             <x-slot:actions>
                 <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
                     <a href="{{ route('admin.laporan.penempatan', array_merge(request()->all(), ['format' => 'xlsx'])) }}"
@@ -819,7 +817,7 @@
 
     <!-- 5. TAB 3: REALISASI KUOTA & SLOT -->
     @if($tab === 'kuota')
-        <x-gentelella.x-panel class="has-table" title="Laporan Realisasi Kuota Umum vs Slot Khusus" subtitle="Monitoring kapasitas kuota per jurusan dan alokasi slot khusus kemitraan.">
+        <x-gentelella.x-panel class="has-table" title="Laporan Realisasi Kuota Umum vs Slot Khusus">
             <x-slot:actions>
                 <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
                     <a href="{{ route('admin.laporan.kuota', ['format' => 'xlsx']) }}"
@@ -919,7 +917,7 @@
 
     <!-- 6. TAB 4: REKAP NILAI (SUPERADMIN EXCLUSIVE) -->
     @if($tab === 'nilai' && $isSuperAdmin)
-        <x-gentelella.x-panel class="has-table" title="Laporan Rekapitulasi Nilai & Kelulusan" subtitle="Evaluasi hasil penilaian kompetensi, skor akhir, dan predikat resmi seluruh peserta magang.">
+        <x-gentelella.x-panel class="has-table" title="Laporan Rekapitulasi Nilai & Kelulusan">
             <x-slot:actions>
                 <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
                     <a href="{{ route('admin.laporan.nilai', ['format' => 'xlsx']) }}"

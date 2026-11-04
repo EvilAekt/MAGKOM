@@ -33,8 +33,7 @@
             <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); color: var(--green-600); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
-            <h4 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Semua Berkas Sudah Selesai Diverifikasi</h4>
-            <p style="font-size: 0.85rem; margin: 0;">Tidak ada berkas yang menunggu tindak lanjut saat ini.</p>
+            <h4 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Semua Berkas Sudah Selesai Diverifikasi</h4>
         </div>
     @else
         <div style="overflow-x: auto; width: 100%;">

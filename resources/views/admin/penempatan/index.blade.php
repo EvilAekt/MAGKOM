@@ -2,7 +2,7 @@
 
 @section('title', 'Penempatan Peserta - Admin MagKom Sleman')
 @section('page_title', 'Penempatan Peserta')
-@section('page_description', 'Kelola penugasan pembimbing lapangan, pantau peserta aktif, dan kelola administrasi penempatan magang.')
+@section('page_description', '')
 
 @section('breadcrumbs')
     <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: var(--neutral-600, #64748B);">
@@ -855,13 +855,7 @@
     </div>
 
     {{-- 3. DATA TABLE CARD --}}
-    <x-gentelella.x-panel title="Data Penempatan Peserta" subtitle="Daftar peserta magang aktif dan riwayat penugasan pembimbing">
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-            <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
-                Menampilkan {{ $penempatanList->firstItem() ?? 0 }}–{{ $penempatanList->lastItem() ?? 0 }} dari {{ $penempatanList->total() }}
-            </span>
-        </div>
-
+    <x-gentelella.x-panel title="Data Penempatan Peserta">
         @if($penempatanList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600, #64748B);">
                 <div style="width: 64px; height: 64px; background: #EFF6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: #1D4ED8;">

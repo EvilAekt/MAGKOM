@@ -314,13 +314,7 @@
                 <h1 class="cert-page-title">
                     Hub Sertifikat Kelulusan Resmi
                 </h1>
-                <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #DBEAFE; color: #1E40AF; text-transform: uppercase; letter-spacing: 0.04em;">
-                    AC-12 & BR-10
-                </span>
             </div>
-            <p class="cert-page-subtitle">
-                Penerbitan dan pengarsipan Sertifikat Kelulusan Magang bagi alumni dengan evaluasi nilai yang telah berstatus final.
-            </p>
         </div>
 
         <div>
