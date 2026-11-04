@@ -146,6 +146,30 @@
             border-top: none !important;
         }
 
+        /* Eliminasi Double Border & Nested Rounded Corners di dalam Container Kartu Tabel Admin */
+        .adm-table-container .table-responsive-gentelella {
+            border: none !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+        }
+
+        .adm-table-container .table.jambo_table,
+        .adm-table-container .admin-table,
+        .adm-table-container .adm-table {
+            border: none !important;
+            border-radius: 0 !important;
+            border-collapse: collapse !important;
+            margin-bottom: 0 !important;
+        }
+
+        .adm-table-container table thead th {
+            border-top: none !important;
+        }
+
+        .adm-table-container tbody tr:last-child td {
+            border-bottom: none !important;
+        }
+
         /* Standarisasi Tabel Admin (.adm-table) - Kesejajaran Presisi */
         .adm-table {
             width: 100%;

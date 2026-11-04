@@ -878,8 +878,8 @@
             </div>
         @else
             <div class="adm-table-container">
-                <div class="table-responsive-gentelella" style="overflow-x: auto;">
-                    <table class="admin-table table jambo_table table-striped bulk_action">
+                <div style="overflow-x: auto; width: 100%;">
+                    <table class="adm-table admin-table bulk_action">
                     <thead>
                         <tr>
                             <th style="width: 40px; text-align: center;">
