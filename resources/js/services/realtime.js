@@ -27,16 +27,35 @@ class MagKomRealtimeEngine {
     }
 
     /**
-     * Memastikan kontainer toast ada di DOM.
+     * Memastikan kontainer toast ada di DOM dan selalu berposisi fixed mengambang.
      */
     ensureToastContainer() {
-        let container = document.getElementById('app-toast-container') || document.getElementById('magkom-toast-container');
+        let container = document.getElementById('toastFloatingContainer') ||
+            document.querySelector('.toast-floating-container') ||
+            document.getElementById('magkom-toast-container') ||
+            document.querySelector('.alerts-container') ||
+            document.getElementById('app-toast-container');
+
         if (!container) {
             container = document.createElement('div');
-            container.id = 'app-toast-container';
-            container.className = 'fixed top-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none max-w-md w-full px-4';
+            container.id = 'magkom-toast-container';
+            container.className = 'magkom-toast-container toast-floating-container alerts-container';
             document.body.appendChild(container);
         }
+
+        // Garansi posisi fixed agar tidak pernah ikut dalam flow flex body / merusak layout grid
+        if (container) {
+            container.style.setProperty('position', 'fixed', 'important');
+            container.style.setProperty('top', '24px', 'important');
+            container.style.setProperty('right', '24px', 'important');
+            container.style.setProperty('z-index', '99999', 'important');
+            container.style.setProperty('pointer-events', 'none', 'important');
+            container.style.setProperty('display', 'flex', 'important');
+            container.style.setProperty('flex-direction', 'column', 'important');
+            container.style.setProperty('max-width', '420px', 'important');
+            container.style.setProperty('width', 'calc(100vw - 48px)', 'important');
+        }
+
         this.toastContainer = container;
     }
 
@@ -139,10 +158,11 @@ class MagKomRealtimeEngine {
      */
     showToast(title, message, eventType, actionUrl, data = {}) {
         if (!this.toastContainer) this.ensureToastContainer();
+        if (!this.toastContainer) return;
 
         const config = this.getEventVisualConfig(eventType, data);
         const toast = document.createElement('div');
-        toast.className = `app-toast ${config.variantClass} flex items-start gap-3.5 p-4 rounded-2xl shadow-xl transition-all duration-300 pointer-events-auto`;
+        toast.className = `app-toast app-alert ${config.alertClass || 'alert-info'}`;
         toast.setAttribute('role', 'alert');
 
         const safeActionUrl = actionUrl && (actionUrl.startsWith('/') || actionUrl.startsWith('http://') || actionUrl.startsWith('https://'))
@@ -150,44 +170,52 @@ class MagKomRealtimeEngine {
             : null;
 
         toast.innerHTML = `
-            <div class="toast-icon-badge flex-shrink-0">
+            <div class="toast-icon-badge alert-icon-badge ${config.badgeType || 'info'}">
                 ${config.icon}
             </div>
-            <div class="toast-body flex-1 min-w-0 pt-0.5">
-                <div class="flex items-center justify-between gap-2">
-                    <h4 class="toast-title text-sm font-bold tracking-tight">${this.escapeHtml(title)}</h4>
-                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">Baru saja</span>
+            <div class="toast-content alert-body">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                    <div class="toast-title alert-title">${this.escapeHtml(title)}</div>
+                    <span style="font-size: 0.6875rem; color: #94A3B8; font-weight: 500; white-space: nowrap;">Baru saja</span>
                 </div>
-                <div class="toast-desc text-xs mt-1 leading-relaxed">${this.escapeHtml(message)}</div>
+                <div class="toast-desc alert-desc">${this.escapeHtml(message)}</div>
                 ${safeActionUrl ? `
-                    <div class="mt-2.5">
-                        <a href="${safeActionUrl}" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 text-[11px] font-semibold rounded-lg shadow-sm transition">
+                    <div style="margin-top: 8px;">
+                        <a href="${safeActionUrl}" rel="noopener noreferrer" class="btn-toast-action">
                             Lihat Rincian &rarr;
                         </a>
                     </div>
                 ` : ''}
             </div>
-            <button type="button" class="toast-close flex-shrink-0 p-1 -mr-1 -mt-1 rounded-lg text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition" aria-label="Tutup notifikasi">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <button type="button" class="toast-close-btn alert-close-btn" aria-label="Tutup notifikasi">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
             </button>
         `;
 
         this.toastContainer.appendChild(toast);
 
+        let isDismissed = false;
         const dismiss = () => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateY(-10px) scale(0.98)';
-            setTimeout(() => toast.remove(), 250);
+            if (isDismissed) return;
+            isDismissed = true;
+            toast.classList.add('toast-hiding');
+            setTimeout(() => toast.remove(), 300);
         };
 
-        const closeBtn = toast.querySelector('.toast-close');
+        const closeBtn = toast.querySelector('.alert-close-btn');
         if (closeBtn) {
             closeBtn.addEventListener('click', dismiss);
         }
 
-        setTimeout(dismiss, 7000);
+        let timer = setTimeout(dismiss, 7000);
+        toast.addEventListener('mouseenter', () => clearTimeout(timer));
+        toast.addEventListener('mouseleave', () => {
+            clearTimeout(timer);
+            timer = setTimeout(dismiss, 4000);
+        });
     }
 
     /**
@@ -198,41 +226,41 @@ class MagKomRealtimeEngine {
 
         if (isRevisi) {
             return {
-                variantClass: 'toast-warning border-amber-300 dark:border-amber-700 bg-amber-50/95 dark:bg-amber-950/90 text-amber-900 dark:text-amber-100',
-                icon: '<svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>'
+                alertClass: 'alert-warning',
+                badgeType: 'warning',
+                icon: '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>'
             };
         }
 
         switch (eventType) {
             case 'pendaftaran_baru':
             case 'kuota_berubah':
+            case 'tugas_baru':
+            case 'tugas_dikumpulkan':
                 return {
-                    variantClass: 'toast-info',
-                    icon: '<svg class="w-5 h-5 text-sky-600 dark:text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+                    alertClass: 'alert-info',
+                    badgeType: 'info',
+                    icon: '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>'
                 };
             case 'status_pendaftaran':
             case 'logbook_direviu':
             case 'progres_direviu':
                 return {
-                    variantClass: 'toast-success',
-                    icon: '<svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>'
-                };
-            case 'logbook_baru':
-            case 'tugas_dikumpulkan':
-                return {
-                    variantClass: 'toast-info',
-                    icon: '<svg class="w-5 h-5 text-sky-600 dark:text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>'
-                };
-            case 'tugas_baru':
-                return {
-                    variantClass: 'toast-warning',
-                    icon: '<svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>'
+                    alertClass: 'alert-success',
+                    badgeType: 'success',
+                    icon: '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>'
                 };
             case 'ancaman_keamanan':
+                return {
+                    alertClass: 'alert-error alert-danger',
+                    badgeType: 'error',
+                    icon: '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>'
+                };
             default:
                 return {
-                    variantClass: 'toast-error',
-                    icon: '<svg class="w-5 h-5 text-rose-600 dark:text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>'
+                    alertClass: 'alert-info',
+                    badgeType: 'info',
+                    icon: '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>'
                 };
         }
     }

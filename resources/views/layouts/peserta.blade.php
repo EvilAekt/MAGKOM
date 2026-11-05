@@ -1488,28 +1488,68 @@
         }
 
         /* Floating Top-Right Toast Container & Animations */
-        .toast-floating-container {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-width: 420px;
-            width: calc(100vw - 48px);
-            pointer-events: none;
+        .toast-floating-container,
+        .magkom-toast-container,
+        #magkom-toast-container,
+        .alerts-container {
+            position: fixed !important;
+            top: 24px !important;
+            right: 24px !important;
+            z-index: 99999 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            max-width: 420px !important;
+            width: calc(100vw - 48px) !important;
+            pointer-events: none !important;
         }
 
-        .toast-floating-container .app-toast {
+        .toast-floating-container .app-toast,
+        .magkom-toast-container .app-toast,
+        #magkom-toast-container .app-toast,
+        .alerts-container .app-toast {
             pointer-events: auto;
             margin-bottom: 0;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
             animation: toastSlideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .toast-floating-container .app-toast.toast-hiding {
+        .toast-floating-container .app-toast.toast-hiding,
+        .magkom-toast-container .app-toast.toast-hiding,
+        #magkom-toast-container .app-toast.toast-hiding,
+        .alerts-container .app-toast.toast-hiding {
             animation: toastSlideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .btn-toast-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: #003566;
+            color: #FFFFFF !important;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 2px 4px rgba(0, 53, 102, 0.2);
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .btn-toast-action:hover {
+            background: #0641CC;
+            transform: translateY(-1px);
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .btn-toast-action {
+            background: #2563EB;
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .btn-toast-action:hover {
+            background: #3B82F6;
         }
 
         @keyframes toastSlideInRight {
