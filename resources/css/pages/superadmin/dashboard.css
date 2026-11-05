@@ -1687,7 +1687,7 @@ html:not([data-theme="dark"]) .sa-metric-card-col .stat-subtext {
 
 /* 5. Hazard Attention Card */
 .sa-attn-hazard {
-  display: grid;
+  display: none !important;
   grid-template-columns: auto 1fr auto;
   gap: 1.25rem;
   align-items: center;

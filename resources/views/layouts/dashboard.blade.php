@@ -3132,18 +3132,6 @@
                             <span>{{ __('Review Logbook') }}</span>
                         </a>
 
-                        <a href="{{ route('pembimbing.agenda.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.agenda.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                </svg>
-                            </span>
-                            <span>{{ __('Agenda Mentoring') }}</span>
-                        </a>
-
                         <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.penilaian.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3358,7 +3346,6 @@
                                 <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.penilaian.*') ? 'active' : '' }}">{{ __('Penilaian Peserta') }}</a>
                                 <a href="{{ route('pembimbing.logbook.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">{{ __('Review Logbook') }}</a>
                                 <a href="{{ route('pembimbing.tugas.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.tugas.*') ? 'active' : '' }}">{{ __('Tugas Magang') }}</a>
-                                <a href="{{ route('pembimbing.agenda.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.agenda.*') ? 'active' : '' }}">{{ __('Agenda Bimbingan') }}</a>
                                 <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">{{ __('Laporan Kinerja') }}</a>
                             </div>
                         </div>

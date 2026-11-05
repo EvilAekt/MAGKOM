@@ -134,6 +134,19 @@ class PembimbingDashboardMetricsService
         // 13. Aktivitas Mentoring Minggu Ini
         $aktivitasMingguIni = $this->resolveAktivitasMingguIni($allPendingLogbooks, $allPendingProgresLogs, $upcomingAgendaBimbingan);
 
+        // 14. Aktivitas Logbook Mingguan (7 Hari: Sen - Min) untuk Zenius Bar Chart
+        $startOfWeek = Carbon::today()->startOfWeek();
+        $days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+        $weeklyLogbookActivity = [];
+        for ($i = 0; $i < 7; $i++) {
+            $date = $startOfWeek->copy()->addDays($i);
+            $dayLabel = $days[$i];
+            $count = Logbook::whereIn('penempatan_id', $penempatanIds)
+                ->whereDate('tanggal', $date)
+                ->count();
+            $weeklyLogbookActivity[$dayLabel] = $count;
+        }
+
         return [
             'totalMenteeAktif' => $totalMenteeAktif,
             'maxBebanKapasitas' => $maxBebanKapasitas,
@@ -149,6 +162,9 @@ class PembimbingDashboardMetricsService
             'totalTugasKumulatif' => $tugasMetrics['totalTugasKumulatif'],
             'tugasSelesaiKumulatif' => $tugasMetrics['tugasSelesaiKumulatif'],
             'persenTugasKumulatif' => $tugasMetrics['persenTugasKumulatif'],
+            'persentaseTugasSelesai' => $tugasMetrics['persenTugasKumulatif'],
+            'tugasMetrics' => $tugasMetrics,
+            'weeklyLogbookActivity' => $weeklyLogbookActivity,
             'tugasPrioritasPembimbing' => $tugasMetrics['tugasPrioritasPembimbing'],
             'inactiveLogbookMentees' => $inactiveLogbookMentees,
             'jenjangCounts' => $jenjangCounts,
@@ -179,6 +195,8 @@ class PembimbingDashboardMetricsService
      *     totalTugasKumulatif: int,
      *     tugasSelesaiKumulatif: int,
      *     persenTugasKumulatif: int,
+     *     selesai: int,
+     *     proses: int,
      *     tugasPrioritasPembimbing: Collection
      * }
      */
@@ -194,6 +212,7 @@ class PembimbingDashboardMetricsService
 
         $totalTugasKumulatif = $allTugasMentee->count();
         $tugasSelesaiKumulatif = $allTugasMentee->where('status', StatusTugasEnum::Selesai)->count();
+        $tugasProsesCount = $allTugasMentee->where('status', StatusTugasEnum::Proses)->count();
         $persenTugasKumulatif = $totalTugasKumulatif > 0
             ? (int) min(100, round(($tugasSelesaiKumulatif / $totalTugasKumulatif) * 100))
             : 0;
@@ -264,6 +283,8 @@ class PembimbingDashboardMetricsService
             'totalTugasKumulatif' => $totalTugasKumulatif,
             'tugasSelesaiKumulatif' => $tugasSelesaiKumulatif,
             'persenTugasKumulatif' => $persenTugasKumulatif,
+            'selesai' => $tugasSelesaiKumulatif,
+            'proses' => $tugasProsesCount,
             'tugasPrioritasPembimbing' => $tugasPrioritasPembimbing,
         ];
     }

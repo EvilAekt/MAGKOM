@@ -19,7 +19,6 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\Pembimbing\AgendaBimbinganController as PembimbingAgendaBimbinganController;
 use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboardController;
 use App\Http\Controllers\Pembimbing\LaporanKinerjaController as PembimbingLaporanKinerjaController;
 use App\Http\Controllers\Pembimbing\LogbookReviewController as PembimbingLogbookReviewController;
@@ -246,12 +245,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::post('/penilaian/{penempatan}', [PembimbingPenilaianController::class, 'store'])->name('penilaian.store');
     Route::post('/penempatan/{penempatan}/selesai', [PembimbingPenilaianController::class, 'selesai'])->name('penempatan.selesai');
     Route::get('/penilaian/{penempatan}/unduh', [PembimbingPenilaianController::class, 'unduhPdf'])->name('penilaian.unduh');
-
-    // Agenda Penjadwalan Mentoring & Notulensi Bimbingan Lapangan
-    Route::get('/agenda', [PembimbingAgendaBimbinganController::class, 'index'])->name('agenda.index');
-    Route::post('/agenda', [PembimbingAgendaBimbinganController::class, 'store'])->name('agenda.store');
-    Route::put('/agenda/{agenda}', [PembimbingAgendaBimbinganController::class, 'update'])->name('agenda.update');
-    Route::delete('/agenda/{agenda}', [PembimbingAgendaBimbinganController::class, 'destroy'])->name('agenda.destroy');
 
     // Laporan Kinerja Mentoring ASN Sleman
     Route::get('/laporan-kinerja', [PembimbingLaporanKinerjaController::class, 'index'])->name('laporan-kinerja.index');

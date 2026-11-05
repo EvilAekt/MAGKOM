@@ -67,6 +67,7 @@ class MagKomRealtimeEngine {
                 'logbook_direviu',
                 'tugas_baru',
                 'tugas_dikumpulkan',
+                'progres_direviu',
                 'ancaman_keamanan',
                 'telemetri_route'
             ];
@@ -122,7 +123,7 @@ class MagKomRealtimeEngine {
             }
 
             this.playNotificationChime();
-            this.showToast(data.title || 'Pemberitahuan Baru', data.message || '', eventType, data.action_url);
+            this.showToast(data.title || 'Pemberitahuan Baru', data.message || '', eventType, data.action_url, data);
 
             // Perbarui badge counter jika disediakan di payload
             if (data.badge_target) {
@@ -136,10 +137,10 @@ class MagKomRealtimeEngine {
     /**
      * Menampilkan notifikasi kartu melayang (Toast) sesuai MagKom Design System.
      */
-    showToast(title, message, eventType, actionUrl) {
+    showToast(title, message, eventType, actionUrl, data = {}) {
         if (!this.toastContainer) this.ensureToastContainer();
 
-        const config = this.getEventVisualConfig(eventType);
+        const config = this.getEventVisualConfig(eventType, data);
         const toast = document.createElement('div');
         toast.className = `app-toast ${config.variantClass} flex items-start gap-3.5 p-4 rounded-2xl shadow-xl transition-all duration-300 pointer-events-auto`;
         toast.setAttribute('role', 'alert');
@@ -160,7 +161,7 @@ class MagKomRealtimeEngine {
                 <div class="toast-desc text-xs mt-1 leading-relaxed">${this.escapeHtml(message)}</div>
                 ${safeActionUrl ? `
                     <div class="mt-2.5">
-                        <a href="${safeActionUrl}" class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 text-[11px] font-semibold rounded-lg shadow-sm transition">
+                        <a href="${safeActionUrl}" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 text-[11px] font-semibold rounded-lg shadow-sm transition">
                             Lihat Rincian &rarr;
                         </a>
                     </div>
@@ -192,7 +193,16 @@ class MagKomRealtimeEngine {
     /**
      * Konfigurasi visual ikon dan varian untuk event.
      */
-    getEventVisualConfig(eventType) {
+    getEventVisualConfig(eventType, data = {}) {
+        const isRevisi = data.status === 'perlu_revisi' || data.status_review === 'perlu_revisi';
+
+        if (isRevisi) {
+            return {
+                variantClass: 'toast-warning border-amber-300 dark:border-amber-700 bg-amber-50/95 dark:bg-amber-950/90 text-amber-900 dark:text-amber-100',
+                icon: '<svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>'
+            };
+        }
+
         switch (eventType) {
             case 'pendaftaran_baru':
             case 'kuota_berubah':
@@ -202,6 +212,7 @@ class MagKomRealtimeEngine {
                 };
             case 'status_pendaftaran':
             case 'logbook_direviu':
+            case 'progres_direviu':
                 return {
                     variantClass: 'toast-success',
                     icon: '<svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>'

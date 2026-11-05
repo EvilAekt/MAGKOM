@@ -228,6 +228,23 @@ class LogbookController extends Controller
             detail: ['aksi' => 'update_logbook_mingguan']
         );
 
+        // Notifikasi Real-time SSE ke Pembimbing bahwa logbook telah diperbarui
+        $pembimbingId = $logbook->penempatan?->pembimbing_id;
+        if ($pembimbingId) {
+            $user = $request->user();
+            $pesertaNama = $user?->nama ?? 'Peserta';
+            app(RealtimeEventService::class)->publish(
+                RealtimeEventTypeEnum::LogbookBaru,
+                [
+                    'title' => 'Revisi Logbook Masuk',
+                    'message' => "{$pesertaNama} telah memperbarui logbook tanggal {$logbook->tanggal->translatedFormat('d F Y')}.",
+                    'action_url' => route('pembimbing.dashboard'),
+                    'badge_target' => 'antrean-logbook-badge',
+                ],
+                $pembimbingId
+            );
+        }
+
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,

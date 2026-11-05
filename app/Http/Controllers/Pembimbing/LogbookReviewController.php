@@ -137,12 +137,22 @@ class LogbookReviewController extends Controller
         // Notifikasi Real-time SSE ke Peserta (TASK-SSE-06)
         $pesertaId = $logbook->penempatan?->peserta_id;
         if ($pesertaId) {
+            $isRevisi = $logbook->status === StatusLogbookEnum::PerluRevisi;
+            $title = $isRevisi ? 'Logbook Memerlukan Revisi' : 'Logbook Harian Disetujui';
+            $message = $isRevisi && filled($logbook->catatan_pembimbing)
+                ? "Pembimbing memberikan catatan revisi logbook: {$logbook->catatan_pembimbing}"
+                : "Catatan logbook tanggal {$logbook->tanggal->translatedFormat('d F Y')} telah dinilai ({$logbook->status->label()}).";
+
             app(RealtimeEventService::class)->publish(
                 RealtimeEventTypeEnum::LogbookDireviu,
                 [
-                    'title' => 'Catatan Logbook Telah Direview',
-                    'message' => 'Pembimbing telah meninjau catatan logbook harian Anda.',
+                    'title' => $title,
+                    'message' => $message,
+                    'status' => $logbook->status->value,
+                    'catatan_pembimbing' => $logbook->catatan_pembimbing,
+                    'logbook_id' => $logbook->id,
                     'action_url' => route('peserta.logbook.index'),
+                    'badge_target' => $isRevisi ? 'logbook-revisi-badge' : null,
                 ],
                 $pesertaId
             );
@@ -219,6 +229,22 @@ class LogbookReviewController extends Controller
                 detail: ['aksi' => 'bulk_review_logbook', 'pembimbing_id' => $user->id]
             );
             $count++;
+        }
+
+        // Notifikasi Real-time SSE ke setiap peserta yang disetujui logbook-nya
+        $pesertaIds = $logbooks->pluck('penempatan.peserta_id')->filter()->unique();
+        foreach ($pesertaIds as $pId) {
+            app(RealtimeEventService::class)->publish(
+                RealtimeEventTypeEnum::LogbookDireviu,
+                [
+                    'title' => 'Logbook Harian Disetujui',
+                    'message' => 'Catatan logbook Anda telah disetujui secara massal oleh pembimbing lapangan.',
+                    'status' => StatusLogbookEnum::Disetujui->value,
+                    'catatan_pembimbing' => $catatan,
+                    'action_url' => route('peserta.logbook.index'),
+                ],
+                (int) $pId
+            );
         }
 
         $message = "Berhasil menyetujui {$count} entri logbook harian sekaligus.";

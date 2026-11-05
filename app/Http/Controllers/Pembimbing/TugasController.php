@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Pembimbing;
 
 use App\Enums\RealtimeEventTypeEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\StatusReviewProgresEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
@@ -511,6 +512,30 @@ class TugasController extends Controller
             nilaiBaru: $request->validated(),
             detail: ['aksi' => 'review_progres_tugas']
         );
+
+        // Notifikasi Real-time SSE ke Peserta (Progres Direview / Catatan Revisi)
+        $pesertaId = $tugas->penempatan?->peserta_id;
+        if ($pesertaId) {
+            $isRevisi = $progres->status_review === StatusReviewProgresEnum::PerluRevisi;
+            $statusLabel = $isRevisi ? 'Perlu Revisi' : 'Diterima';
+            $pesan = $isRevisi && filled($progres->feedback)
+                ? "Pembimbing meminta revisi untuk tugas \"{$tugas->judul}\": {$progres->feedback}"
+                : "Laporan progres untuk tugas \"{$tugas->judul}\" telah diperiksa oleh pembimbing ({$statusLabel}).";
+
+            app(RealtimeEventService::class)->publish(
+                RealtimeEventTypeEnum::ProgresDireviu,
+                [
+                    'title' => "Evaluasi Progres Tugas: {$statusLabel}",
+                    'message' => $pesan,
+                    'status_review' => $progres->status_review->value,
+                    'feedback' => $progres->feedback,
+                    'tugas_id' => $tugas->id,
+                    'action_url' => route('peserta.tugas.show', $tugas->id),
+                    'badge_target' => $isRevisi ? 'tugas-revisi-badge' : null,
+                ],
+                $pesertaId
+            );
+        }
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
             return back()->with('success', 'Evaluasi umpan balik progres tugas berhasil disimpan.');

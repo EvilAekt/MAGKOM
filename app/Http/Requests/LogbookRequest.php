@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Models\Pengaturan;
+use App\Rules\SafeExternalUrlRule;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,6 +14,15 @@ class LogbookRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('link_laporan') && is_string($this->input('link_laporan'))) {
+            $this->merge([
+                'link_laporan' => trim($this->input('link_laporan')),
+            ]);
+        }
     }
 
     public function rules(): array
@@ -32,12 +42,7 @@ class LogbookRequest extends FormRequest
             ],
             'kegiatan' => ['required', 'string', 'min:10', 'max:5000'],
             'file_laporan' => ['nullable', 'file', 'mimes:pdf', "max:{$maksBerkasKb}"],
-            'link_laporan' => [
-                'nullable',
-                'url',
-                'max:500',
-                'regex:/^https:\/\//i',
-            ],
+            'link_laporan' => ['nullable', 'string', 'max:2048', new SafeExternalUrlRule],
         ];
     }
 

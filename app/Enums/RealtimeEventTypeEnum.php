@@ -13,6 +13,7 @@ enum RealtimeEventTypeEnum: string
     case LogbookDireviu = 'logbook_direviu';
     case TugasBaru = 'tugas_baru';
     case TugasDikumpulkan = 'tugas_dikumpulkan';
+    case ProgresDireviu = 'progres_direviu';
     case AncamanKeamanan = 'ancaman_keamanan';
     case TelemetriRoute = 'telemetri_route';
 
@@ -26,6 +27,7 @@ enum RealtimeEventTypeEnum: string
             self::LogbookDireviu => 'Review Logbook Harian Selesai',
             self::TugasBaru => 'Tugas Magang Baru Diterbitkan',
             self::TugasDikumpulkan => 'Pengumpulan Progres Tugas Mentee',
+            self::ProgresDireviu => 'Umpan Balik Progres Tugas Mentee',
             self::AncamanKeamanan => 'Peringatan Keamanan Sistem',
             self::TelemetriRoute => 'Telemetri Waktu Eksekusi Route',
         };

@@ -9,7 +9,6 @@ use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\SumberPenempatanEnum;
-use App\Models\AgendaBimbingan;
 use App\Models\Bidang;
 use App\Models\Jurusan;
 use App\Models\Logbook;
@@ -141,32 +140,6 @@ class PembimbingPortalStandardizationTest extends TestCase
         $response->assertSee('Draf Tersimpan');
         $response->assertSee('Final Resmi');
         $response->assertSee('Petunjuk Evaluasi Rubrik Resmi Diskominfo Sleman');
-    }
-
-    public function test_agenda_mentoring_merender_hero_banner_dan_empat_kartu_tile_stat(): void
-    {
-        AgendaBimbingan::create([
-            'penempatan_id' => $this->penempatan->id,
-            'pembimbing_id' => $this->pembimbing->id,
-            'judul_kegiatan' => 'Evaluasi Pekanan Modul Portal',
-            'tipe' => 'tatap_muka',
-            'tgl_bimbingan' => now()->addDays(2),
-            'jam_mulai' => '10:00',
-            'lokasi_ruang' => 'Ruang Rapat Bidang',
-            'status' => 'terjadwal',
-        ]);
-
-        $response = $this->actingAs($this->pembimbing)
-            ->get(route('pembimbing.agenda.index'));
-
-        $response->assertOk();
-        $response->assertSee('Agenda Mentoring &amp; Notulensi', false);
-        $response->assertSee('+ Jadwalkan Mentoring Baru');
-        $response->assertSee('Total Agenda');
-        $response->assertSee('Agenda Terjadwal');
-        $response->assertSee('Selesai Terlaksana');
-        $response->assertSee('Metode Sesi');
-        $response->assertSee('Evaluasi Pekanan Modul Portal');
     }
 
     public function test_anti_idor_pembimbing_hanya_melihat_mentee_miliknya(): void

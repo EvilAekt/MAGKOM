@@ -7,6 +7,7 @@ namespace App\Http\Requests;
 use App\Enums\KompleksitasEnum;
 use App\Enums\StatusTugasEnum;
 use App\Models\Penempatan;
+use App\Rules\SafeExternalUrlRule;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -46,6 +47,12 @@ class TugasRequest extends FormRequest
                 'kompleksitas' => 'sedang',
             ]);
         }
+
+        if ($this->has('link_referensi') && is_string($this->input('link_referensi'))) {
+            $this->merge([
+                'link_referensi' => trim($this->input('link_referensi')),
+            ]);
+        }
     }
 
     public function rules(): array
@@ -58,7 +65,7 @@ class TugasRequest extends FormRequest
             'penempatan_id' => [$isUpdate ? 'sometimes' : 'nullable', 'exists:penempatan,id'],
             'judul' => ['required', 'string', 'max:150'],
             'deskripsi' => ['nullable', 'string'],
-            'link_referensi' => ['nullable', 'url', 'max:255'],
+            'link_referensi' => ['nullable', 'string', 'max:2048', new SafeExternalUrlRule],
             'file_lampiran' => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,csv,ppt,pptx,zip,png,jpg,jpeg', 'max:10240'],
             'kategori' => ['required', 'string', 'max:50'],
             'kompleksitas' => ['required', new Enum(KompleksitasEnum::class)],
