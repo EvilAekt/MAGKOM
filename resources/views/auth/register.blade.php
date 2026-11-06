@@ -19,42 +19,49 @@
     <p class="auth-subtitle">Daftarkan akun Anda untuk memulai proses seleksi magang di Dinas Kominfo.</p>
 
     @if(isset($selectedJurusan) && $selectedJurusan)
-        <!-- Kartu Ringkasan Kuota Pilihan (Terpadu & Bersih) -->
-        <div style="background: linear-gradient(135deg, rgba(1, 52, 124, 0.05) 0%, rgba(63, 81, 181, 0.08) 100%); border: 1.5px solid rgba(1, 52, 124, 0.2); border-radius: 0.875rem; padding: 1.1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.85rem;">
-            <div style="width: 2.75rem; height: 2.75rem; border-radius: 0.625rem; background: var(--blue-600); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(1, 52, 124, 0.25);">
+        <!-- Kartu Ringkasan Kuota Pilihan (Ringkas & Bersih) -->
+        <div style="background: linear-gradient(135deg, rgba(1, 52, 124, 0.05) 0%, rgba(63, 81, 181, 0.08) 100%); border: 1.5px solid rgba(1, 52, 124, 0.2); border-radius: 0.875rem; padding: 0.9rem 1.15rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.85rem;">
+            <div style="width: 2.5rem; height: 2.5rem; border-radius: 0.625rem; background: var(--blue-600); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(1, 52, 124, 0.25);">
                 @if(($selectedTipe ?? request('tipe')) === 'kelompok')
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 @else
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 @endif
             </div>
             <div style="flex: 1; min-width: 0;">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.25rem;">
-                    <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--blue-700);">
-                        Pilihan Magang Terpilih
-                    </span>
+                {{-- Baris 1: Nama Jurusan & Badge Tipe --}}
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
+                    <div style="font-size: 0.975rem; font-weight: 700; color: var(--neutral-900);">
+                        {{ $selectedJurusan->nama_jurusan }} ({{ strtoupper($selectedJurusan->kategori) }})
+                    </div>
                     <span style="font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 9999px; background: {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? '#dbeafe' : '#e0e7ff' }}; color: {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? '#1e40af' : '#3730a3' }};">
                         {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? 'Kelompok (' . ($selectedJumlah ?? request('jumlah', 2)) . ' Orang)' : 'Mandiri (1 Orang)' }}
                     </span>
                 </div>
-                <div style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">
-                    {{ $selectedJurusan->nama_jurusan }} ({{ strtoupper($selectedJurusan->kategori) }})
-                </div>
+
+                {{-- Baris 2: Periode Mulai & Badge Status Sisa Kuota --}}
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: 0.35rem; flex-wrap: wrap;">
                     @if($selectedBulan)
                         <div style="font-size: 0.8125rem; color: var(--neutral-600);">
                             Periode Mulai: <strong>{{ \Carbon\CarbonImmutable::parse($selectedBulan->bulan_mulai)->translatedFormat('F Y') }}</strong>
                         </div>
                     @endif
-                    <a href="{{ route('landing') }}#kuota" style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600); text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;">
-                        <span>&larr; Ganti Pilihan Kuota</span>
-                    </a>
-                </div>
-                @if(($selectedTipe ?? request('tipe')) === 'kelompok')
-                    <div style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed rgba(1, 52, 124, 0.2); font-size: 0.8rem; color: #1e40af; line-height: 1.45;">
-                        <strong style="color: #1e3a8a;">Pendaftaran Ketua Tim:</strong> Anda mendaftar sebagai perwakilan tim untuk <strong>{{ $selectedJumlah ?? request('jumlah', 2) }} orang</strong>. Rekan tim tidak perlu membuat akun terpisah, data rekan tim diisi lengkap pada formulir ini.
+                    <div>
+                        @if(($selectedSisaKuota ?? 0) >= (($selectedTipe ?? request('tipe')) === 'kelompok' ? ($selectedJumlah ?? request('jumlah', 2)) : 1))
+                            <span style="display: inline-flex; align-items: center; gap: 0.3rem; background: #DCFCE7; color: #166534; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem;">
+                                🟢 Sisa {{ $selectedSisaKuota }} Kursi Tersedia
+                            </span>
+                        @elseif(($selectedSisaKuota ?? 0) > 0)
+                            <span style="display: inline-flex; align-items: center; gap: 0.3rem; background: #FEF3C7; color: #92400E; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem;">
+                                🟡 Sisa {{ $selectedSisaKuota }} Kursi (Tim Masuk Waiting List)
+                            </span>
+                        @else
+                            <span style="display: inline-flex; align-items: center; gap: 0.3rem; background: #FEE2E2; color: #991B1B; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem;">
+                                🔴 Kuota Penuh (Waiting List)
+                            </span>
+                        @endif
                     </div>
-                @endif
+                </div>
             </div>
         </div>
     @endif
@@ -354,6 +361,143 @@
             </div>
         </div>
 
+        <!-- Seksi Informasi Akademik & Pilihan Jurusan -->
+        <div id="sectionPendidikan" style="margin-bottom: 1.25rem;">
+            <div style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-700); margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                <span>Informasi Pendidikan & Pilihan Jurusan</span>
+                @if(!$isKuotaLocked)
+                    <a href="{{ route('landing') }}#kuota" style="font-size: 0.75rem; font-weight: 600; color: var(--blue-600); text-decoration: none;">
+                        Cek Kuota Terbuka &rarr;
+                    </a>
+                @endif
+            </div>
+
+            @if($isKuotaLocked && isset($selectedJurusan) && $selectedJurusan)
+                {{-- Jika kuota sudah dipilih dari landing page, kunci jenjang & jurusan --}}
+                <input type="hidden" name="jenjang" value="{{ $selectedJurusan->kategori === 'smk' ? 'smk' : 's1' }}">
+                <input type="hidden" name="jurusan_id" value="{{ $selectedJurusan->id }}">
+            @else
+                <!-- Field Jenjang Pendidikan -->
+                <div class="form-group">
+                    <label for="selectJenjang" class="form-label sr-only">Jenjang Pendidikan</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon-left" aria-hidden="true">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </span>
+                        <select 
+                            id="selectJenjang" 
+                            name="jenjang" 
+                            class="form-input" 
+                            style="padding-left: 2.75rem;"
+                            aria-label="Jenjang Pendidikan"
+                        >
+                            <option value="">-- Pilih Jenjang Pendidikan --</option>
+                            <option value="smk" {{ old('jenjang') === 'smk' ? 'selected' : '' }}>SMK (Siswa)</option>
+                            <option value="d3" {{ old('jenjang') === 'd3' ? 'selected' : '' }}>Diploma 3 (D3)</option>
+                            <option value="s1" {{ old('jenjang') === 's1' ? 'selected' : '' }}>Sarjana / D4 (S1)</option>
+                        </select>
+                    </div>
+                    <span class="form-hint">Pilih jenjang pendidikan formal yang sedang Anda tempuh saat ini.</span>
+                </div>
+
+                <!-- Field Jurusan & Bidang Penempatan -->
+                <div class="form-group">
+                    <label for="selectJurusan" class="form-label sr-only">Jurusan / Program Studi</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon-left" aria-hidden="true">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                        </span>
+                        <select 
+                            id="selectJurusan" 
+                            name="jurusan_id" 
+                            class="form-input" 
+                            style="padding-left: 2.75rem;"
+                            aria-label="Jurusan atau Program Studi"
+                        >
+                            <option value="">-- Pilih Jurusan / Program Studi --</option>
+                            @if(isset($jurusanList))
+                                @foreach($jurusanList as $jur)
+                                    @php
+                                        $bidangNames = $jur->bidang->pluck('nama_bidang')->implode(', ');
+                                        $sisa = (int) ($jur->total_sisa_kuota ?? 0);
+                                        $sisaLabel = $sisa > 0 ? "Sisa {$sisa} Kursi" : 'Waiting List';
+                                    @endphp
+                                    <option 
+                                        value="{{ $jur->id }}" 
+                                        data-kategori="{{ $jur->kategori }}"
+                                        data-sisa="{{ $sisa }}"
+                                        data-kapasitas="{{ (int) ($jur->total_kapasitas ?? 0) }}"
+                                        {{ old('jurusan_id') == $jur->id ? 'selected' : '' }}
+                                    >
+                                        {{ $jur->nama_jurusan }} ({{ strtoupper($jur->kategori) }} • {{ $sisaLabel }}{{ $bidangNames ? ' • ' . $bidangNames : '' }})
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                    <span class="form-hint">Jurusan akan disaring sesuai jenjang yang dipilih di atas.</span>
+                    <div id="badgeStatusKuotaJurusan" style="display: none; margin-top: 0.5rem; padding: 0.55rem 0.75rem; border-radius: 0.5rem; font-size: 0.775rem; line-height: 1.4;"></div>
+                </div>
+            @endif
+
+            <!-- Field Nama Sekolah / Perguruan Tinggi (Institusi) -->
+            <div class="form-group">
+                <label for="institusi" class="form-label sr-only">Nama Sekolah / Perguruan Tinggi</label>
+                <div class="input-wrapper">
+                    <span class="input-icon-left" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </span>
+                    <input 
+                        type="text" 
+                        id="institusi" 
+                        name="institusi" 
+                        value="{{ old('institusi') }}" 
+                        class="form-input" 
+                        placeholder="nama sekolah / perguruan tinggi (contoh: SMKN 2 Depok Sleman / UGM)"
+                        aria-label="Nama Sekolah atau Perguruan Tinggi"
+                    >
+                </div>
+            </div>
+
+            <!-- Field NIM / NISN -->
+            <div class="form-group">
+                <label for="nim_nisn" class="form-label sr-only">NIM / NISN</label>
+                <div class="input-wrapper">
+                    <span class="input-icon-left" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+                        </svg>
+                    </span>
+                    <input 
+                        type="text" 
+                        id="nim_nisn" 
+                        name="nim_nisn" 
+                        value="{{ old('nim_nisn') }}" 
+                        class="form-input" 
+                        placeholder="NIM / NISN"
+                        aria-label="Nomor Induk Mahasiswa atau Siswa"
+                    >
+                </div>
+            </div>
+
+            <!-- Checkbox Kepatuhan UU PDP (Persetujuan Orang Tua/Wali Khusus SMK) -->
+            <div id="sectionPersetujuanWali" style="display: {{ old('jenjang') === 'smk' ? 'block' : 'none' }}; margin-top: 0.75rem; padding: 0.75rem 0.875rem; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 0.625rem;">
+                <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; font-size: 0.8rem; color: var(--neutral-800); line-height: 1.4;">
+                    <input type="checkbox" name="persetujuan_wali" id="persetujuan_wali" value="1" {{ old('persetujuan_wali') ? 'checked' : '' }} style="margin-top: 0.15rem; accent-color: var(--blue-600);">
+                    <span>
+                        <strong>Persetujuan Orang Tua / Wali (Khusus Jenjang SMK):</strong><br>
+                        Saya menyatakan telah mendapatkan izin sah dari orang tua/wali untuk mendaftar magang dan memproses data administrasi sesuai ketentuan UU PDP No. 27/2022.
+                    </span>
+                </label>
+            </div>
+        </div>
+
         <!-- Checkbox Persetujuan Kebijakan Privasi -->
         <div style="margin-bottom: 1.5rem; font-size: 0.8125rem;">
             <label style="display: flex; align-items: flex-start; gap: 0.625rem; cursor: pointer; color: var(--neutral-600); line-height: 1.4;">
@@ -494,6 +638,8 @@
                         }
                     });
                 }
+
+                updateKuotaInfo();
             }
 
             function applyTipe(tipe) {
@@ -581,6 +727,117 @@
                 });
                 if (inputUsername.value.trim()) {
                     previewKetuaNama.textContent = inputUsername.value.trim();
+                }
+            }
+
+            // Filter Jurusan & Persetujuan Wali berdasarkan Jenjang
+            const selectJenjang = document.getElementById('selectJenjang');
+            const selectJurusan = document.getElementById('selectJurusan');
+            const sectionPersetujuanWali = document.getElementById('sectionPersetujuanWali');
+            const badgeStatusKuotaJurusan = document.getElementById('badgeStatusKuotaJurusan');
+
+            function updateKuotaInfo() {
+                if (!badgeStatusKuotaJurusan || !selectJurusan) return;
+
+                const selectedVal = selectJurusan.value;
+                if (!selectedVal) {
+                    badgeStatusKuotaJurusan.style.display = 'none';
+                    return;
+                }
+
+                const selectedOpt = selectJurusan.querySelector(`option[value="${selectedVal}"]`);
+                if (!selectedOpt || selectedOpt.disabled) {
+                    badgeStatusKuotaJurusan.style.display = 'none';
+                    return;
+                }
+
+                const sisa = parseInt(selectedOpt.getAttribute('data-sisa') || '0', 10);
+                const kapasitas = parseInt(selectedOpt.getAttribute('data-kapasitas') || '0', 10);
+                const isKelompok = (currentTipe === 'kelompok');
+                const targetJumlah = isKelompok ? currentJumlah : 1;
+
+                badgeStatusKuotaJurusan.style.display = 'block';
+
+                if (isKelompok) {
+                    if (sisa >= targetJumlah) {
+                        badgeStatusKuotaJurusan.style.background = '#DCFCE7';
+                        badgeStatusKuotaJurusan.style.border = '1px solid #86EFAC';
+                        badgeStatusKuotaJurusan.style.color = '#166534';
+                        badgeStatusKuotaJurusan.innerHTML = `<strong>🟢 Kuota Tim Cukup:</strong> Tersedia <strong>${sisa}</strong> dari ${kapasitas} kursi (mencukupi untuk tim ${targetJumlah} orang).`;
+                    } else if (sisa > 0) {
+                        badgeStatusKuotaJurusan.style.background = '#FEF3C7';
+                        badgeStatusKuotaJurusan.style.border = '1px solid #FCD34D';
+                        badgeStatusKuotaJurusan.style.color = '#92400E';
+                        badgeStatusKuotaJurusan.innerHTML = `<strong>🟡 Masuk Waiting List:</strong> Sisa kuota hanya <strong>${sisa}</strong> kursi, tidak mencukupi untuk tim ${targetJumlah} orang. Pendaftaran tim dialihkan ke antrean Waiting List.`;
+                    } else {
+                        badgeStatusKuotaJurusan.style.background = '#FEE2E2';
+                        badgeStatusKuotaJurusan.style.border = '1px solid #FCA5A5';
+                        badgeStatusKuotaJurusan.style.color = '#991B1B';
+                        badgeStatusKuotaJurusan.innerHTML = `<strong>🔴 Kuota Penuh:</strong> Kuota umum jurusan ini telah terisi penuh. Pendaftaran tim otomatis masuk antrean Waiting List.`;
+                    }
+                } else {
+                    if (sisa > 0) {
+                        badgeStatusKuotaJurusan.style.background = '#DCFCE7';
+                        badgeStatusKuotaJurusan.style.border = '1px solid #86EFAC';
+                        badgeStatusKuotaJurusan.style.color = '#166534';
+                        badgeStatusKuotaJurusan.innerHTML = `<strong>🟢 Kuota Tersedia:</strong> Sisa <strong>${sisa}</strong> dari ${kapasitas} kursi untuk periode magang aktif.`;
+                    } else {
+                        badgeStatusKuotaJurusan.style.background = '#FEF3C7';
+                        badgeStatusKuotaJurusan.style.border = '1px solid #FCD34D';
+                        badgeStatusKuotaJurusan.style.color = '#92400E';
+                        badgeStatusKuotaJurusan.innerHTML = `<strong>🟡 Kuota Penuh:</strong> Sisa 0 kursi. Pendaftaran Anda tetap dapat diproses melalui antrean <strong>Waiting List</strong>.`;
+                    }
+                }
+            }
+
+            function filterJurusanByJenjang(jenjang) {
+                if (!selectJurusan) return;
+
+                const options = selectJurusan.querySelectorAll('option');
+                const targetKategori = (jenjang === 'smk') ? 'smk' : (jenjang ? 'mahasiswa' : '');
+
+                options.forEach(opt => {
+                    if (!opt.value) {
+                        opt.style.display = 'block';
+                        return;
+                    }
+                    const optKategori = opt.getAttribute('data-kategori');
+                    if (!targetKategori || optKategori === targetKategori) {
+                        opt.style.display = 'block';
+                        opt.disabled = false;
+                    } else {
+                        opt.style.display = 'none';
+                        opt.disabled = true;
+                    }
+                });
+
+                const currentSelectedOpt = selectJurusan.querySelector(`option[value="${selectJurusan.value}"]`);
+                if (currentSelectedOpt && currentSelectedOpt.disabled) {
+                    selectJurusan.value = '';
+                }
+
+                if (sectionPersetujuanWali) {
+                    sectionPersetujuanWali.style.display = (jenjang === 'smk') ? 'block' : 'none';
+                }
+
+                updateKuotaInfo();
+            }
+
+            if (selectJenjang) {
+                selectJenjang.addEventListener('change', function() {
+                    filterJurusanByJenjang(this.value);
+                });
+                if (selectJenjang.value) {
+                    filterJurusanByJenjang(selectJenjang.value);
+                }
+            }
+
+            if (selectJurusan) {
+                selectJurusan.addEventListener('change', function() {
+                    updateKuotaInfo();
+                });
+                if (selectJurusan.value) {
+                    updateKuotaInfo();
                 }
             }
 

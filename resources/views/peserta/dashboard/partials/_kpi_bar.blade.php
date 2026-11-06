@@ -1,7 +1,7 @@
 {{-- ==========================================================================
    Four-Metric KPI Bar - Dashboard Peserta Magang
    Desain Modern Clean SaaS & DS-MagKom (Gentelella Parity)
-   Surface Putih Bersih #ffffff / Dark Mode #003566, Soft Diffuse Shadow
+   Informational Static Widget (Read-Only)
    ========================================================================== --}}
 @php
     /** @var \App\Models\Penempatan|null $penempatan */
@@ -15,18 +15,11 @@
     /** @var \App\Models\Penilaian|null $penilaian */
 
     $tglSelesaiCarbon = $penempatan ? \Carbon\Carbon::parse($penempatan->tgl_selesai ?? $penempatan->tanggal_selesai) : null;
-    $rawHp = $penempatan?->pembimbing?->no_hp;
-    $cleanHp = $rawHp ? preg_replace('/[^0-9]/', '', (string)$rawHp) : null;
-    if (is_string($cleanHp) && str_starts_with($cleanHp, '0')) {
-        $cleanHp = '62' . substr($cleanHp, 1);
-    }
-    $hasWaPembimbing = !empty($cleanHp);
-    $card4Url = $isFinalNilai ? route('peserta.nilai.show') : ($hasWaPembimbing ? ('https://wa.me/' . $cleanHp) : route('peserta.nilai.show'));
 @endphp
 
 <div class="saas-kpi-grid tile_count">
-    <!-- Metrik 1: Logbook Aktivitas / Logbook Mingguan -->
-    <a href="{{ route('peserta.logbook.index') }}" class="tile_stats_count saas-kpi-link" title="Buka Logbook Mingguan" style="text-decoration: none; padding: 0;">
+    <!-- Metrik 1: Logbook Aktivitas / Logbook Mingguan (Statis) -->
+    <div class="tile_stats_count" style="padding: 0;">
         <div class="tile_stats_inner">
             <span class="count_top">
                 <span class="count_icon" aria-hidden="true">
@@ -45,13 +38,12 @@
                 @else
                     <span style="color: #4ADE80; font-weight: 600;">&check; Logbook Mingguan tercatat rapi</span>
                 @endif
-                <span style="opacity: 0.75; margin-left: auto;">Buka &rarr;</span>
             </span>
         </div>
-    </a>
+    </div>
 
-    <!-- Metrik 2: Tugas Magang / Tugas Bimbingan -->
-    <a href="{{ route('peserta.tugas.index') }}" class="tile_stats_count saas-kpi-link" title="Buka Tugas Magang" style="text-decoration: none; padding: 0;">
+    <!-- Metrik 2: Tugas Magang / Tugas Bimbingan (Statis) -->
+    <div class="tile_stats_count" style="padding: 0;">
         <div class="tile_stats_inner">
             <span class="count_top">
                 <span class="count_icon" aria-hidden="true">
@@ -66,13 +58,12 @@
             </div>
             <span class="count_bottom">
                 <span style="color: #93C5FD; font-weight: 600;">&bull; {{ $tugasSelesai }} Tugas Selesai</span>
-                <span style="opacity: 0.75; margin-left: auto;">Detail &rarr;</span>
             </span>
         </div>
-    </a>
+    </div>
 
-    <!-- Metrik 3: Sisa Hari Magang -->
-    <a href="{{ route('peserta.pendaftaran.index') }}" class="tile_stats_count saas-kpi-link" title="Lihat Sisa Hari Magang" style="text-decoration: none; padding: 0;">
+    <!-- Metrik 3: Sisa Hari Magang (Statis) -->
+    <div class="tile_stats_count" style="padding: 0;">
         <div class="tile_stats_inner">
             <span class="count_top">
                 <span class="count_icon" aria-hidden="true">
@@ -89,10 +80,10 @@
                 <span style="color: var(--magkom-sun-yellow, #FFCB05); font-weight: 600;">Selesai {{ $tglSelesaiCarbon ? $tglSelesaiCarbon->isoFormat('D MMM Y') : '-' }}</span>
             </span>
         </div>
-    </a>
+    </div>
 
-    <!-- Metrik 4: Status Evaluasi / Sertifikat & Pembimbing -->
-    <a href="{{ $card4Url }}" @if(!$isFinalNilai && $hasWaPembimbing) target="_blank" rel="noopener noreferrer" @endif class="tile_stats_count saas-kpi-link" title="Buka Informasi Status Evaluasi" style="text-decoration: none; padding: 0;">
+    <!-- Metrik 4: Pembimbing Lapangan (Statis) -->
+    <div class="tile_stats_count" style="padding: 0;">
         <div class="tile_stats_inner">
             <span class="count_top">
                 <span class="count_icon" aria-hidden="true">
@@ -110,8 +101,7 @@
                 <span style="color: {{ $isFinalNilai ? '#4ADE80' : '#93C5FD' }}; font-weight: 600;">
                     {{ $isFinalNilai ? 'Nilai resmi diterbitkan' : 'Pendampingan aktif' }}
                 </span>
-                <span style="opacity: 0.75; margin-left: auto;">{{ $hasWaPembimbing && !$isFinalNilai ? 'WhatsApp &rarr;' : 'Nilai &rarr;' }}</span>
             </span>
         </div>
-    </a>
+    </div>
 </div>

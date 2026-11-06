@@ -194,4 +194,68 @@ class PendaftaranPesertaTest extends TestCase
         $resDownloadPesertaLain = $this->actingAs($pesertaLain)->get($signedUrl);
         $resDownloadPesertaLain->assertStatus(403);
     }
+
+    public function test_show_register_menyediakan_data_jurusan_dan_bidang(): void
+    {
+        $response = $this->get(route('register'));
+
+        $response->assertStatus(200);
+        $response->assertViewHas('jurusanList');
+        $response->assertViewHas('bidangList');
+    }
+
+    public function test_registrasi_dengan_jenjang_dan_jurusan_otomatis_membuat_peserta_profil(): void
+    {
+        $jurusan = Jurusan::where('kategori', 'mahasiswa')->firstOrFail();
+
+        $response = $this->post(route('register'), [
+            'username' => 'Mahasiswa Pendaftar Baru',
+            'email' => 'mahasiswa.baru@magkom.test',
+            'no_telp' => '081234567899',
+            'password' => 'Password123!',
+            'jenjang' => 's1',
+            'jurusan_id' => $jurusan->id,
+            'institusi' => 'Universitas Gadjah Mada',
+            'nim_nisn' => '21/475890/TK/52000',
+        ]);
+
+        $response->assertRedirect(route('peserta.profil.show'));
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'mahasiswa.baru@magkom.test',
+            'nama' => 'Mahasiswa Pendaftar Baru',
+        ]);
+
+        $user = User::where('email', 'mahasiswa.baru@magkom.test')->firstOrFail();
+        $this->assertNotNull($user->profil);
+        $this->assertEquals(JenjangEnum::S1, $user->profil->jenjang);
+        $this->assertEquals($jurusan->id, $user->profil->jurusan_id);
+        $this->assertEquals('Universitas Gadjah Mada', $user->profil->institusi);
+        $this->assertEquals('21/475890/TK/52000', $user->profil->nim_nisn);
+    }
+
+    public function test_registrasi_smk_dengan_persetujuan_wali_mencatat_timestamp_uu_pdp(): void
+    {
+        $jurusan = Jurusan::where('kategori', 'smk')->firstOrFail();
+
+        $response = $this->post(route('register'), [
+            'username' => 'Siswa SMK Mandiri',
+            'email' => 'siswa.smk@magkom.test',
+            'no_telp' => '081234567888',
+            'password' => 'Password123!',
+            'jenjang' => 'smk',
+            'jurusan_id' => $jurusan->id,
+            'institusi' => 'SMKN 2 Depok Sleman',
+            'nim_nisn' => '1234567890',
+            'persetujuan_wali' => '1',
+        ]);
+
+        $response->assertRedirect(route('peserta.profil.show'));
+
+        $user = User::where('email', 'siswa.smk@magkom.test')->firstOrFail();
+        $this->assertNotNull($user->profil);
+        $this->assertEquals(JenjangEnum::Smk, $user->profil->jenjang);
+        $this->assertEquals($jurusan->id, $user->profil->jurusan_id);
+        $this->assertNotNull($user->profil->persetujuan_wali_at);
+    }
 }

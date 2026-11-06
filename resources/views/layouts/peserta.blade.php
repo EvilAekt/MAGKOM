@@ -184,11 +184,11 @@
         [data-theme="dark"] .sidebar,
         [data-theme="dark"] .dashboard-sidebar {
             background-color: #011C44 !important;
-            border-right: 1px solid rgba(63, 81, 181, 0.35) !important;
+            border-right: 1px solid rgba(63, 81, 181, 0.2) !important;
         }
 
         [data-theme="dark"] .sidebar-header {
-            border-bottom-color: #1F2937;
+            border-bottom-color: rgba(255, 255, 255, 0.1);
         }
 
         [data-theme="dark"] .topbar {
@@ -238,23 +238,41 @@
             background-color: #26354D;
         }
 
-        [data-theme="dark"] .nav-item {
-            color: #94A3B8;
+        [data-theme="dark"] .nav-item,
+        [data-theme="dark"] .nav-item-link {
+            color: var(--magkom-gray-light, #BBBBBB);
         }
 
-        [data-theme="dark"] .nav-item:hover {
-            background-color: #1F2937;
-            color: #F8FAFC;
-        }
-
-        [data-theme="dark"] .nav-item.active {
-            background-color: rgba(63, 81, 181, 0.25) !important;
-            border-color: rgba(63, 81, 181, 0.4) !important;
+        [data-theme="dark"] .nav-item:hover,
+        [data-theme="dark"] .nav-item-link:hover {
+            background-color: rgba(255, 255, 255, 0.08) !important;
             color: #FFFFFF !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            border-radius: 8px !important;
+            transform: translateX(4px);
         }
 
-        [data-theme="dark"] .nav-item.active svg {
+        [data-theme="dark"] .nav-item:hover svg,
+        [data-theme="dark"] .nav-item-link:hover svg {
             color: #FFCB05 !important;
+            transform: scale(1.1) translateY(-1px);
+        }
+
+        [data-theme="dark"] .nav-item.active,
+        [data-theme="dark"] .nav-item-link.active {
+            background: #0E438A !important;
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+            border-radius: 8px !important;
+            border: 1px solid rgba(147, 197, 253, 0.35) !important;
+            border-left: none !important;
+            box-shadow: 0 4px 14px rgba(1, 30, 75, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+            animation: activePillBreathe 3.5s ease-in-out infinite;
+        }
+
+        [data-theme="dark"] .nav-item.active svg,
+        [data-theme="dark"] .nav-item-link.active svg {
+            color: var(--magkom-sun-yellow, #FFCB05) !important;
         }
 
         [data-theme="dark"] .nav-item.locked {
@@ -620,7 +638,7 @@
         .sidebar,
         .dashboard-sidebar {
             width: var(--sidebar-width);
-            background-color: #1B262C;
+            background-color: var(--magkom-abyssal-navy, #02275D);
             color: #FFFFFF;
             display: flex;
             flex-direction: column;
@@ -662,11 +680,13 @@
             width: 36px;
             height: 36px;
             border-radius: 8px;
-            background: linear-gradient(135deg, #0F4C75 0%, #1B262C 100%);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(15, 76, 117, 0.4);
+            padding: 3px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
             flex-shrink: 0;
         }
 
@@ -685,13 +705,13 @@
             height: 36px;
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.08) !important;
-            border: 1px solid rgba(187, 225, 250, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #FFFFFF;
             flex-shrink: 0;
-            padding: 4px;
+            padding: 3px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
             transition: all 0.2s ease;
         }
@@ -2151,11 +2171,6 @@
         </header>
 
         <main class="content-area">
-            {{-- Floating Flash Messages (Top-Right Pop Up) --}}
-            <div class="toast-floating-container" id="toastFloatingContainer" aria-live="polite" aria-atomic="true">
-                <x-flash-alert />
-            </div>
-
             @yield('content')
         </main>
 
@@ -2168,6 +2183,11 @@
         </footer>
     </div>
 
+    {{-- Floating Flash Messages (Top-Right Pop Up Terisolasi dari Flow Dokumen) --}}
+    <div class="toast-floating-container" id="toastFloatingContainer" aria-live="polite" aria-atomic="true">
+        <x-flash-alert />
+    </div>
+
     <script>
         function dismissToast(btn) {
             const toast = btn.closest('.app-toast');
@@ -2178,7 +2198,7 @@
 
         // Global MagKomToast helper API for JS triggers
         window.MagKomToast = {
-            show({ type = 'success', title = '', message = '', duration = 5000 }) {
+            show({ type = 'success', title = '', message = '', duration = 5000, actionUrl = null }) {
                 let container = document.getElementById('toastFloatingContainer');
                 if (!container) {
                     container = document.createElement('div');
@@ -2201,11 +2221,21 @@
                     iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
                 }
 
+                const safeActionUrl = actionUrl && (actionUrl.startsWith('/') || actionUrl.startsWith('http://') || actionUrl.startsWith('https://')) ? actionUrl : null;
+
                 toast.innerHTML = `
                     <div class="toast-icon-badge ${type}">${iconSvg}</div>
-                    <div class="toast-content">
+                    <div class="toast-content" style="flex: 1; min-width: 0;">
                         ${title ? `<div class="toast-title">${title}</div>` : ''}
                         <div class="toast-desc">${message}</div>
+                        ${safeActionUrl ? `
+                            <div style="margin-top: 8px;">
+                                <a href="${safeActionUrl}" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: #01347C; color: #FFFFFF; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none;">
+                                    <span>Lihat Rincian</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                                </a>
+                            </div>
+                        ` : ''}
                     </div>
                     <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

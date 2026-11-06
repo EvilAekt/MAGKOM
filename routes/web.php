@@ -200,6 +200,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::post('/logbook', [PesertaLogbookController::class, 'store'])->name('logbook.store');
         Route::put('/logbook/{logbook}', [PesertaLogbookController::class, 'update'])->name('logbook.update');
         Route::get('/logbook/{logbook}/lampiran', [PesertaLogbookController::class, 'unduhLampiran'])->name('logbook.lampiran');
+        Route::get('/logbook/{logbook}/unduh', [PesertaLogbookController::class, 'unduhLampiran'])->name('logbook.unduh');
 
         // Penilaian & Unduh Lembar Nilai PDF (F-10, F-12)
         Route::get('/nilai', [PesertaNilaiController::class, 'show'])->name('nilai.show');

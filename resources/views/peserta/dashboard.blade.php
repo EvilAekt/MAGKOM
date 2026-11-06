@@ -240,14 +240,18 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 4px 8px;
-        border-radius: 6px;
-        transition: all 0.15s ease;
+        padding: 5px 12px;
+        background: rgba(251, 191, 36, 0.1);
+        border: 1px solid rgba(251, 191, 36, 0.35);
+        border-radius: 8px;
+        transition: all 0.2s ease;
     }
 
     .saas-hero-link-sk:hover {
         color: #fef08a !important;
-        background: rgba(251, 191, 36, 0.12);
+        background: rgba(251, 191, 36, 0.2);
+        border-color: rgba(251, 191, 36, 0.6);
+        transform: translateY(-1px);
     }
 
     /* --------------------------------------------------------------------------
@@ -258,6 +262,11 @@
         grid-template-columns: repeat(4, 1fr);
         gap: 20px;
         width: 100%;
+    }
+
+    .saas-kpi-grid .tile_stats_inner {
+        cursor: default !important;
+        user-select: text;
     }
 
     .saas-kpi-card {
@@ -392,7 +401,7 @@
        -------------------------------------------------------------------------- */
     .saas-cockpit-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 340px;
+        grid-template-columns: minmax(0, 1fr) 310px;
         gap: 24px;
         align-items: start;
         width: 100%;
@@ -429,20 +438,20 @@
     }
 
     .saas-card-header {
-        padding: 20px 24px;
+        padding: 14px 18px;
         border-bottom: 1px solid var(--neutral-150, #f1f5f9);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 16px;
+        gap: 12px;
     }
 
     .saas-card-body {
-        padding: 24px;
+        padding: 20px 24px;
     }
 
     .saas-card-body-compact {
-        padding: 16px 20px;
+        padding: 8px 18px 12px 18px;
     }
 
     .saas-item-title {
@@ -466,8 +475,8 @@
         color: var(--magkom-primary-blue, #01347C) !important;
         background: rgba(1, 52, 124, 0.08);
         border: 1px solid rgba(1, 52, 124, 0.2);
-        padding: 6px 14px;
-        border-radius: 6px;
+        padding: 5px 12px;
+        border-radius: 8px;
         text-decoration: none !important;
         display: inline-flex;
         align-items: center;
@@ -554,17 +563,17 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 6px 14px;
-        font-size: 0.8125rem;
+        padding: 5px 12px;
+        font-size: 0.775rem;
         font-weight: 600;
         color: var(--magkom-primary-blue, #01347C);
-        background: #ffffff;
-        border: 1.5px solid rgba(1, 52, 124, 0.3);
-        border-radius: 6px;
+        background: rgba(1, 52, 124, 0.06);
+        border: 1px solid rgba(1, 52, 124, 0.2);
+        border-radius: 8px;
         text-decoration: none;
         white-space: nowrap !important;
         flex-shrink: 0;
-        box-shadow: 0 1px 2px rgba(1, 52, 124, 0.08);
+        box-shadow: 0 1px 2px rgba(1, 52, 124, 0.06);
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -573,7 +582,7 @@
         border-color: var(--magkom-primary-blue, #01347C);
         color: #ffffff !important;
         transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(1, 52, 124, 0.25);
+        box-shadow: 0 4px 10px rgba(1, 52, 124, 0.25);
     }
 
     .saas-btn-revisi {
@@ -660,19 +669,17 @@
         font-size: 0.875rem;
         font-weight: 700;
         color: var(--neutral-900, #0f172a);
-        margin: 0 0 2px 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        margin: 0 0 3px 0;
+        line-height: 1.35;
+        word-break: break-word;
     }
 
     .saas-aside-subtitle {
         font-size: 0.75rem;
         color: var(--neutral-500, #64748b);
         margin: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        line-height: 1.35;
+        word-break: break-word;
     }
 
     .saas-aside-meta-list {
@@ -1085,9 +1092,9 @@
     }
 
     .saas-phase-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
         width: 100%;
     }
 
@@ -2034,35 +2041,62 @@
     @php
         $timKelompokData = $kelompokMagang ?? $user->kelompokMagang;
     @endphp
-    <div class="saas-statusline" role="region" aria-label="Statusline MagKom Peserta" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 16px; background: var(--neutral-0, #ffffff); border: 1px solid var(--neutral-200, #e2e8f0); border-top: 3.5px solid var(--magkom-primary-blue, #01347C); border-radius: 12px; padding: 14px 20px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);">
-        <div style="display: flex; flex-direction: column; gap: 3px;">
-            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Status Magang</span>
-            <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-                <span class="saas-dot-pulse"></span>
-                <span>{{ $fase === 'aktif' ? 'Magang Aktif' : ($fase === 'selesai' ? 'Magang Tuntas' : 'Seleksi / Onboarding') }}</span>
-            </span>
+    <div class="saas-statusline" role="region" aria-label="Statusline MagKom Peserta" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); gap: 14px; background: var(--neutral-0, #ffffff); border: 1px solid var(--neutral-200, #e2e8f0); border-radius: 12px; padding: 14px 18px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);">
+        <div style="display: flex; align-items: center; gap: 12px; padding: 4px 6px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(1, 52, 124, 0.08); color: var(--magkom-primary-blue, #01347C); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div style="display: flex; flex-direction: column; min-width: 0;">
+                <span style="font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Status Magang</span>
+                <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                    <span class="saas-dot-pulse"></span>
+                    <span>{{ $fase === 'aktif' ? 'Magang Aktif' : ($fase === 'selesai' ? 'Magang Tuntas' : 'Seleksi / Onboarding') }}</span>
+                </span>
+            </div>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 3px;">
-            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Tipe Pendaftaran</span>
-            <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+
+        <div style="display: flex; align-items: center; gap: 12px; padding: 4px 6px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(1, 52, 124, 0.08); color: var(--magkom-primary-blue, #01347C); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                 @if($timKelompokData)
-                    <span style="color: var(--magkom-amber-gold, #FFC300); font-weight: 700;">Kelompok (Ketua Tim)</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 @else
-                    <span>Mandiri (Individu)</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 @endif
-            </span>
+            </div>
+            <div style="display: flex; flex-direction: column; min-width: 0;">
+                <span style="font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Tipe Pendaftaran</span>
+                <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600;">
+                    @if($timKelompokData)
+                        <span style="color: #B45309; font-weight: 700;">Kelompok (Ketua Tim)</span>
+                    @else
+                        <span>Mandiri (Individu)</span>
+                    @endif
+                </span>
+            </div>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 3px;">
-            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Bidang Penempatan</span>
-            <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600;">
-                {{ $penempatan->bidang->nama_bidang ?? 'Dinas Kominfo Sleman' }}
-            </span>
+
+        <div style="display: flex; align-items: center; gap: 12px; padding: 4px 6px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(1, 52, 124, 0.08); color: var(--magkom-primary-blue, #01347C); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+            <div style="display: flex; flex-direction: column; min-width: 0;">
+                <span style="font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Bidang Penempatan</span>
+                <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $penempatan->bidang->nama_bidang ?? 'Dinas Kominfo Sleman' }}">
+                    {{ $penempatan->bidang->nama_bidang ?? 'Dinas Kominfo Sleman' }}
+                </span>
+            </div>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 3px;">
-            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Pembimbing Lapangan</span>
-            <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600;">
-                {{ $penempatan->pembimbing->nama ?? 'Tim Diskominfo Sleman' }}
-            </span>
+
+        <div style="display: flex; align-items: center; gap: 12px; padding: 4px 6px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(1, 52, 124, 0.08); color: var(--magkom-primary-blue, #01347C); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <div style="display: flex; flex-direction: column; min-width: 0;">
+                <span style="font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--neutral-500, #64748b);">Pembimbing Lapangan</span>
+                <span style="font-size: 0.875rem; color: var(--neutral-900, #0f172a); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $penempatan->pembimbing->nama ?? 'Tim Diskominfo Sleman' }}">
+                    {{ $penempatan->pembimbing->nama ?? 'Tim Diskominfo Sleman' }}
+                </span>
+            </div>
         </div>
     </div>
 

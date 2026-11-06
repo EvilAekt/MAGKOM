@@ -146,4 +146,27 @@ class RealtimeEventSseStreamTest extends TestCase
         $response->assertRedirect(route('peserta.dashboard'));
         $this->assertAuthenticatedAs($peserta);
     }
+
+    public function test_sse_stream_does_not_deliver_events_already_marked_as_read(): void
+    {
+        $user = User::factory()->create(['role' => RoleEnum::Peserta]);
+        $service = app(RealtimeEventService::class);
+
+        $event = $service->publish(
+            RealtimeEventTypeEnum::StatusPendaftaran,
+            ['title' => 'Sudah Dibaca'],
+            $user->id
+        );
+
+        // Tandai sebagai telah dibaca
+        $service->markAsRead($event->id, $user);
+
+        // Buka stream dari awal (last_event_id = 0)
+        $response = $this->actingAs($user)->get('/realtime/stream');
+        $content = $response->streamedContent();
+
+        // Event yang sudah dibaca tidak boleh dikirim lagi
+        $this->assertStringNotContainsString('Sudah Dibaca', $content);
+        $this->assertStringNotContainsString('id: '.$event->id, $content);
+    }
 }

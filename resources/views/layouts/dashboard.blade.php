@@ -830,7 +830,7 @@
            ===================================================================== */
         .dashboard-sidebar {
             width: var(--sidebar-width);
-            background-color: #1B262C;
+            background-color: var(--magkom-abyssal-navy, #02275D);
             color: #FFFFFF;
             display: flex;
             flex-direction: column;
@@ -874,11 +874,13 @@
             width: 36px;
             height: 36px;
             border-radius: 8px;
-            background: linear-gradient(135deg, #0F4C75 0%, #1B262C 100%);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(15, 76, 117, 0.4);
+            padding: 3px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
             flex-shrink: 0;
         }
 
@@ -3957,7 +3959,7 @@
 
         // Global MagKomToast helper API for JS triggers
         window.MagKomToast = {
-            show({ type = 'success', title = '', message = '', duration = 5000 }) {
+            show({ type = 'success', title = '', message = '', duration = 5000, actionUrl = null }) {
                 let container = document.querySelector('.alerts-container');
                 if (!container) {
                     container = document.createElement('div');
@@ -3980,11 +3982,21 @@
                     iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
                 }
 
+                const safeActionUrl = actionUrl && (actionUrl.startsWith('/') || actionUrl.startsWith('http://') || actionUrl.startsWith('https://')) ? actionUrl : null;
+
                 toast.innerHTML = `
                     <div class="toast-icon-badge alert-icon-badge ${type}">${iconSvg}</div>
-                    <div class="toast-content alert-body">
+                    <div class="toast-content alert-body" style="flex: 1; min-width: 0;">
                         ${title ? `<div class="toast-title alert-title">${title}</div>` : ''}
                         <div class="toast-desc alert-desc">${message}</div>
+                        ${safeActionUrl ? `
+                            <div style="margin-top: 8px;">
+                                <a href="${safeActionUrl}" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: #01347C; color: #FFFFFF; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none;">
+                                    <span>Lihat Rincian</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                                </a>
+                            </div>
+                        ` : ''}
                     </div>
                     <button type="button" class="toast-close-btn alert-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

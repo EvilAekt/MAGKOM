@@ -11,7 +11,7 @@
            ===================================================================== */
         .dashboard-sidebar {
             width: var(--sidebar-width);
-            background-color: #1B262C;
+            background-color: var(--magkom-abyssal-navy, #02275D);
             color: #FFFFFF;
             display: flex;
             flex-direction: column;
@@ -55,11 +55,13 @@
             width: 36px;
             height: 36px;
             border-radius: 8px;
-            background: linear-gradient(135deg, #0F4C75 0%, #1B262C 100%);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(15, 76, 117, 0.4);
+            padding: 3px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
             flex-shrink: 0;
         }
 
@@ -68,7 +70,7 @@
             height: 36px;
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.08) !important;
-            border: 1px solid rgba(187, 225, 250, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
             display: flex;
             align-items: center;
             justify-content: center;

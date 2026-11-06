@@ -39,6 +39,7 @@ class RealtimeEventService
     {
         return RealtimeEvent::forUser($user)
             ->where('id', '>', $lastEventId)
+            ->whereNull('read_at')
             ->orderBy('id', 'asc')
             ->limit($limit)
             ->get();

@@ -5,15 +5,21 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Enums\RoleEnum;
+use App\Enums\StatusKetersediaanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
+use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\KelompokMagang;
+use App\Models\Kuota;
+use App\Models\PesertaProfil;
 use App\Models\User;
 use App\Rules\CaptchaRule;
 use App\Rules\TurnstileRule;
 use App\Services\AuditService;
+use App\Services\BulanStatusService;
+use Carbon\CarbonImmutable;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,7 +32,8 @@ use Illuminate\View\View;
 class AuthController extends Controller
 {
     public function __construct(
-        protected AuditService $auditService
+        protected AuditService $auditService,
+        protected BulanStatusService $bulanStatusService
     ) {}
 
     public function showLogin(): View
@@ -40,7 +47,7 @@ class AuthController extends Controller
         $captchaEnabled = (bool) config('captcha.enabled', true);
 
         $rules = [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
 
@@ -55,17 +62,31 @@ class AuthController extends Controller
 
         $credentials = $request->validate($rules);
 
-        $loginSuccess = Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']], $request->boolean('remember'));
+        $inputEmail = $credentials['email'];
+        if ($inputEmail === 'admin') {
+            $inputEmail = 'admin@tim.magkom.go.id';
+        }
+
+        $loginSuccess = Auth::attempt(['email' => $inputEmail, 'password' => $credentials['password']], $request->boolean('remember'));
 
         // Fallback khusus lingkungan lokal (development): Berikan fleksibilitas login jika mencoba variasi password umum
-        if (! $loginSuccess && app()->isLocal() && $credentials['email'] === 'superadmin@magkom.go.id') {
-            $allowedDevPasswords = ['Password123!', 'SuperAdminMagKom123!', 'password'];
-            if (in_array($credentials['password'], $allowedDevPasswords, true)) {
-                $superadminUser = User::where('email', 'superadmin@magkom.go.id')->first();
-                if ($superadminUser) {
-                    $superadminUser->password = Hash::make($credentials['password']);
-                    $superadminUser->save();
-                    $loginSuccess = Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']], $request->boolean('remember'));
+        if (! $loginSuccess && app()->isLocal()) {
+            if ($credentials['email'] === 'admin' || $credentials['email'] === 'admin@tim.magkom.go.id') {
+                $timUser = User::where('email', 'admin@tim.magkom.go.id')->first();
+                if ($timUser && in_array($credentials['password'], ['admin', 'password', 'Password123!'], true)) {
+                    $timUser->password = Hash::make($credentials['password']);
+                    $timUser->save();
+                    $loginSuccess = Auth::attempt(['email' => 'admin@tim.magkom.go.id', 'password' => $credentials['password']], $request->boolean('remember'));
+                }
+            } elseif ($credentials['email'] === 'superadmin@magkom.go.id') {
+                $allowedDevPasswords = ['Password123!', 'SuperAdminMagKom123!', 'password'];
+                if (in_array($credentials['password'], $allowedDevPasswords, true)) {
+                    $superadminUser = User::where('email', 'superadmin@magkom.go.id')->first();
+                    if ($superadminUser) {
+                        $superadminUser->password = Hash::make($credentials['password']);
+                        $superadminUser->save();
+                        $loginSuccess = Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']], $request->boolean('remember'));
+                    }
                 }
             }
         }
@@ -116,12 +137,61 @@ class AuthController extends Controller
 
     public function showRegister(Request $request): View
     {
+        $sekarang = CarbonImmutable::now('Asia/Jakarta');
         $selectedBulan = $request->filled('bulan') ? BulanMagang::find($request->query('bulan')) : null;
         $selectedJurusan = $request->filled('jurusan') ? Jurusan::with('bidang')->find($request->query('jurusan')) : null;
         $selectedTipe = $request->query('tipe', 'mandiri');
         $selectedJumlah = (int) $request->query('jumlah', 1);
 
-        return view('auth.register', compact('selectedBulan', 'selectedJurusan', 'selectedTipe', 'selectedJumlah'));
+        $selectedKuota = ($selectedBulan && $selectedJurusan)
+            ? Kuota::where('bulan_magang_id', $selectedBulan->id)
+                ->where('jurusan_id', $selectedJurusan->id)
+                ->where('aktif', true)
+                ->first()
+            : null;
+        $selectedSisaKuota = $selectedKuota ? $selectedKuota->sisa : 0;
+        $selectedTotalKuota = $selectedKuota ? (int) $selectedKuota->jumlah : 0;
+
+        $semuaBulanTersedia = BulanMagang::with(['kuota' => fn ($q) => $q->where('aktif', true)])
+            ->where('aktif', true)
+            ->get()
+            ->filter(fn ($b) => $this->bulanStatusService->status($b, null, $sekarang) === StatusKetersediaanEnum::Tersedia);
+
+        $jurusanList = Jurusan::with('bidang')
+            ->where('aktif', true)
+            ->orderBy('kategori', 'asc')
+            ->orderBy('nama_jurusan', 'asc')
+            ->get();
+
+        $jurusanList->each(function (Jurusan $jurusan) use ($semuaBulanTersedia) {
+            $totalSisa = 0;
+            $totalKapasitas = 0;
+            foreach ($semuaBulanTersedia as $b) {
+                $k = $b->kuota->firstWhere('jurusan_id', $jurusan->id);
+                if ($k) {
+                    $totalSisa += $k->sisa;
+                    $totalKapasitas += (int) $k->jumlah;
+                }
+            }
+            $jurusan->total_sisa_kuota = $totalSisa;
+            $jurusan->total_kapasitas = $totalKapasitas;
+            $jurusan->status_kuota = $totalSisa > 0 ? 'tersedia' : 'penuh';
+        });
+
+        $bidangList = Bidang::with(['jurusan' => function ($q) {
+            $q->where('aktif', true)->orderBy('nama_jurusan');
+        }])->where('aktif', true)->orderBy('nama_bidang')->get();
+
+        return view('auth.register', compact(
+            'selectedBulan',
+            'selectedJurusan',
+            'selectedTipe',
+            'selectedJumlah',
+            'selectedSisaKuota',
+            'selectedTotalKuota',
+            'jurusanList',
+            'bidangList'
+        ));
     }
 
     public function register(Request $request): RedirectResponse
@@ -141,7 +211,16 @@ class AuthController extends Controller
             'no_telp' => ['sometimes', 'required', 'string', 'max:20', 'regex:/^[0-9\+\-\s]+$/'],
             'password' => ['required', 'string', Password::min(8)],
             'tipe_pendaftaran' => ['nullable', 'string', 'in:mandiri,kelompok'],
+            'jenjang' => ['nullable', 'string', 'in:smk,d3,s1'],
+            'jurusan_id' => ['nullable', 'integer', 'exists:jurusan,id'],
+            'institusi' => ['nullable', 'string', 'max:150'],
+            'nim_nisn' => ['nullable', 'string', 'max:50'],
+            'persetujuan_wali' => ['nullable', 'boolean'],
         ];
+
+        if ($request->input('jenjang') === 'smk' && $request->has('persetujuan_wali')) {
+            $rules['persetujuan_wali'] = ['accepted'];
+        }
 
         if ($isKelompok) {
             $rules['nama_kelompok'] = ['required', 'string', 'max:150'];
@@ -181,6 +260,23 @@ class AuthController extends Controller
             $user->email_verified_at = now();
             $user->save();
 
+            if (! empty($validated['jurusan_id']) && ! empty($validated['jenjang'])) {
+                $profilData = [
+                    'user_id' => $user->id,
+                    'jenjang' => $validated['jenjang'],
+                    'jurusan_id' => (int) $validated['jurusan_id'],
+                    'institusi' => $validated['institusi'] ?? 'Institusi Belum Diatur',
+                    'nim_nisn' => $validated['nim_nisn'] ?? '-',
+                    'no_hp' => $user->no_telp ?? '-',
+                ];
+
+                if ($validated['jenjang'] === 'smk' && $request->boolean('persetujuan_wali')) {
+                    $profilData['persetujuan_wali_at'] = now();
+                }
+
+                PesertaProfil::create($profilData);
+            }
+
             if ($isKelompok && ! empty($validated['nama_kelompok'])) {
                 $kelompok = KelompokMagang::create([
                     'ketua_user_id' => $user->id,
@@ -215,11 +311,14 @@ class AuthController extends Controller
             detail: ['aksi' => 'registrasi_peserta_baru', 'tipe' => $isKelompok ? 'kelompok' : 'mandiri']
         );
 
-        if ($request->filled('redirect_bulan') || $request->filled('redirect_jurusan')) {
+        $preferensiJurusanId = $request->input('redirect_jurusan') ?: ($validated['jurusan_id'] ?? null);
+        $preferensiBulanId = $request->input('redirect_bulan');
+
+        if ($preferensiBulanId || $preferensiJurusanId) {
             session([
                 'pendaftaran_preferensi' => [
-                    'bulan_id' => $request->input('redirect_bulan'),
-                    'jurusan_id' => $request->input('redirect_jurusan'),
+                    'bulan_id' => $preferensiBulanId,
+                    'jurusan_id' => $preferensiJurusanId,
                     'tipe' => $isKelompok ? 'kelompok' : $request->input('redirect_tipe', 'mandiri'),
                     'jumlah' => $isKelompok ? (count($validated['anggota'] ?? []) + 1) : (int) $request->input('redirect_jumlah', 1),
                 ],

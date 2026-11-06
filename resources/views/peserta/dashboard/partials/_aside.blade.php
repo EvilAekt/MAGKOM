@@ -104,7 +104,7 @@
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3 21h18M3 7v14M21 7v14M6 7V3h12v4M9 11h2M13 11h2M9 15h2M13 15h2"></path>
                 </svg>
-                <span>{{ $penempatan->bidang ? 'Bidang ' . $penempatan->bidang->nama_bidang : 'Dinas Kominfo Sleman' }}</span>
+                <span>{{ $penempatan->bidang ? (\Illuminate\Support\Str::startsWith($penempatan->bidang->nama_bidang, 'Bidang') ? $penempatan->bidang->nama_bidang : 'Bidang ' . $penempatan->bidang->nama_bidang) : 'Dinas Kominfo Sleman' }}</span>
             </div>
         </div>
 
