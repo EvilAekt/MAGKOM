@@ -646,7 +646,13 @@
          4. KATALOG KUOTA BULAN MAGANG (X-PANEL GENTELELLA)
          ======================================================== --}}
     @if(!$pendaftaranAktif && $profilLengkap)
-        <x-gentelella.x-panel title="Pilihan Periode & Kuota Magang Tersedia" subtitle="Ketersediaan kuota resmi yang dialokasikan khusus untuk jurusan {{ $profil->jurusan?->nama_jurusan }}">
+        @php
+            $bidangList = $profil->jurusan?->bidang;
+            $namaBidang = ($bidangList && $bidangList->isNotEmpty())
+                ? $bidangList->pluck('nama_bidang')->implode(', ')
+                : 'Dinas Komunikasi dan Informatika';
+        @endphp
+        <x-gentelella.x-panel title="Pilihan Periode & Kuota Magang Tersedia" subtitle="Ketersediaan kuota resmi untuk Bidang {{ $namaBidang }} &bull; Jurusan {{ $profil->jurusan?->nama_jurusan }}">
             @if($kuotaList->isEmpty())
                 <div style="text-align: center; padding: 36px 20px; background: #F8FAFC; border: 1px dashed var(--neutral-300, #CBD5E1); border-radius: 8px;">
                     <div style="font-size: 2rem; margin-bottom: 8px;">📅</div>
@@ -662,6 +668,9 @@
                             $sisaKursi = max(0, $kuotaItem->jumlah - $kuotaItem->terisi);
                             $persenTerisi = $kuotaItem->jumlah > 0 ? min(100, round(($kuotaItem->terisi / $kuotaItem->jumlah) * 100)) : 100;
                             $bulanMulaiFormatted = $kuotaItem->bulanMagang?->bulan_mulai?->translatedFormat('F Y');
+                            $itemBidangNama = ($kuotaItem->jurusan?->bidang && $kuotaItem->jurusan->bidang->isNotEmpty())
+                                ? $kuotaItem->jurusan->bidang->pluck('nama_bidang')->implode(', ')
+                                : $namaBidang;
                         @endphp
                         <div class="kuota-card">
                             <div>
@@ -672,6 +681,11 @@
                                     <span style="font-size: 0.6875rem; font-weight: 700; color: var(--neutral-500, #64748B);">
                                         Total Kuota: {{ $kuotaItem->jumlah }}
                                     </span>
+                                </div>
+
+                                <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: #02275D; background: #EFF6FF; border: 1px solid #DBEAFE; padding: 4px 10px; border-radius: 6px; margin-bottom: 8px;">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                                    <span>{{ $itemBidangNama }}</span>
                                 </div>
 
                                 <h3 class="kuota-month-name">{{ $bulanMulaiFormatted }}</h3>
@@ -695,11 +709,11 @@
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-secondary" onclick="openModalWithKuota('{{ $kuotaItem->id }}')" style="width: 100%;">
+                            <button type="button" class="btn btn-primary" onclick="openModalWithKuota('{{ $kuotaItem->id }}')" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700;">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                Pilih Periode Ini
+                                <span>Daftar Sekarang</span>
                             </button>
                         </div>
                     @endforeach
@@ -862,11 +876,20 @@
                 {{-- 1. Info Jurusan Profil Peserta --}}
                 <div style="padding: 14px 16px; background: #EFF6FF; border-radius: 10px; border: 1px solid #BFDBFE;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                        <span style="font-size: 0.6875rem; color: #1D4ED8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Jurusan Terdaftar Anda</span>
+                        <span style="font-size: 0.6875rem; color: #1D4ED8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Jurusan & Bidang Terdaftar</span>
                         <x-gentelella.badge variant="info" style="font-size: 0.6875rem; padding: 2px 8px;">{{ strtoupper($profil->jenjang?->value ?? $profil->jenjang) }}</x-gentelella.badge>
                     </div>
                     <div style="font-size: 0.9375rem; font-weight: 800; color: var(--neutral-900, #0F172A);">
                         {{ $profil->jurusan?->nama_jurusan }}
+                    </div>
+                    @php
+                        $modalBidangNama = ($profil->jurusan?->bidang && $profil->jurusan->bidang->isNotEmpty())
+                            ? $profil->jurusan->bidang->pluck('nama_bidang')->implode(', ')
+                            : 'Dinas Komunikasi dan Informatika';
+                    @endphp
+                    <div style="font-size: 0.8125rem; color: #1E40AF; font-weight: 700; margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        <span>Bidang Penempatan: {{ $modalBidangNama }}</span>
                     </div>
                     <div style="font-size: 0.75rem; color: var(--neutral-600, #475569); margin-top: 2px;">
                         Institusi: {{ $profil->institusi }}
@@ -943,11 +966,11 @@
 
             <div style="margin-top: 24px; display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 16px; border-top: 1px solid var(--neutral-200, #E2E8F0);">
                 <button type="button" class="btn btn-secondary" onclick="closeModalPendaftaran()">Batal</button>
-                <button type="submit" class="btn btn-primary" id="btnSubmitPendaftaran">
+                <button type="submit" class="btn btn-primary" id="btnSubmitPendaftaran" style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700;">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    Lanjut ke Pengunggahan Berkas
+                    <span>Daftar Sekarang</span>
                 </button>
             </div>
         </form>

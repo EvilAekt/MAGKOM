@@ -36,6 +36,7 @@ class PendaftaranController extends Controller
     {
         $user = $request->user();
         $profil = $user->profil;
+        $profil?->loadMissing(['jurusan.bidang']);
 
         $pendaftaranList = Pendaftaran::with(['bulanMagang', 'kuota.jurusan', 'penempatan'])
             ->where('user_id', $user->id)
@@ -75,7 +76,7 @@ class PendaftaranController extends Controller
 
         $kuotaList = collect();
         if ($profil && $profil->jurusan_id) {
-            $kuotaList = Kuota::with(['bulanMagang', 'jurusan'])
+            $kuotaList = Kuota::with(['bulanMagang', 'jurusan.bidang'])
                 ->where('jurusan_id', $profil->jurusan_id)
                 ->where('aktif', true)
                 ->whereHas('bulanMagang', function ($q) {
@@ -168,6 +169,7 @@ class PendaftaranController extends Controller
 
         $user = $request->user();
         $profil = $user->profil;
+        $profil?->loadMissing(['jurusan.bidang']);
         $jenjang = $profil?->jenjang ?? JenjangEnum::Smk;
 
         // Validasi kelengkapan seluruh dokumen wajib

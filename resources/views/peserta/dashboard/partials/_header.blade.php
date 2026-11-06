@@ -1,29 +1,40 @@
 {{-- ==========================================================================
    Atmospheric Hero Banner - Dashboard Peserta Magang
-   Desain DS-MagKom (Sleman Navy #1b3860 ke #152d4e, Soft-Simple-Elegan)
-   Zero Alien SVG Waves, Subtle Border, Gold Sleman Accent
+   Desain DS-MagKom (Sleman Navy #02275D, Circular Progress Gauge, Gold Sleman)
+   Tombol Utama: [+ Kerjakan Tugas] & [📄 Unduh SK]
    ========================================================================== --}}
 @php
     /** @var string $fase */
     /** @var \App\Models\Penempatan|null $penempatan */
     /** @var \App\Models\User $user */
-@endphp
-@php
     $timKelompok = $kelompokMagang ?? $user->kelompokMagang;
+    $namaBidang = $penempatan?->bidang?->nama_bidang ?? 'Aplikasi Informatika (Aptika)';
+    $bidangTampil = str_contains(strtolower($namaBidang), 'aplikasi informatika') ? 'Bidang Aptika' : ('Bidang ' . $namaBidang);
+    $bidangLabel = strtoupper($bidangTampil);
+    $mingguKe = $mingguAktif ?? 1;
+    $totMinggu = $totalMinggu ?? 13;
+    $progressPct = min(100, (int) round(($mingguKe / max(1, $totMinggu)) * 100));
+    $circumference = 213.6;
+    $strokeDashoffset = $circumference - ($progressPct / 100 * $circumference);
 @endphp
+
 @if($fase === 'aktif' && $penempatan)
     <div class="saas-card saas-hero-banner">
         <div class="saas-hero-inner">
             <div class="saas-hero-left">
+                <div class="saas-hero-pretitle">
+                    BIDANG {{ $bidangLabel }} - DISKOMINFO SLEMAN
+                </div>
+
                 <div class="saas-hero-badges">
-                    <span class="saas-badge-status-active">
+                    <span class="saas-badge-status-active" title="Status Penempatan: Magang Aktif">
                         <span class="saas-dot-pulse"></span>
-                        Status Penempatan: Magang Aktif
+                        Diterima &bull; Magang Aktif<span class="sr-only">Status Penempatan: Magang Aktif</span>
                     </span>
                     @if($timKelompok)
-                        <span class="saas-badge-kelompok-hero" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 203, 5, 0.18); border: 1px solid rgba(255, 203, 5, 0.5); color: #FFFFFF; font-size: 0.775rem; font-weight: 700; padding: 4px 12px; border-radius: 9999px;">
+                        <span class="saas-badge-kelompok-hero">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFCB05" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            <span>Kelompok: <strong>{{ $timKelompok->nama_kelompok }}</strong> ({{ $timKelompok->anggota->count() + 1 }} Orang)</span>
+                            <span>Kelompok: <strong>{{ $timKelompok->nama_kelompok }}</strong></span>
                         </span>
                     @endif
                     <span class="saas-badge-gold">
@@ -42,43 +53,48 @@
                 </h1>
                 
                 <p class="saas-header-desc">
-                    Peserta Magang di <strong>{{ $penempatan->bidang->nama_bidang ?? 'Dinas Komunikasi dan Informatika Kabupaten Sleman' }}</strong>
+                    Peserta Magang &bull; <strong>{{ $bidangTampil }}</strong>
                 </p>
 
-                <div class="saas-header-periode">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <span>Periode: <strong>{{ \Carbon\Carbon::parse($penempatan->tgl_mulai ?? $penempatan->tanggal_mulai)->isoFormat('D MMMM Y') }} &ndash; {{ \Carbon\Carbon::parse($penempatan->tgl_selesai ?? $penempatan->tanggal_selesai)->isoFormat('D MMMM Y') }}</strong></span>
+                <div class="saas-hero-actions-row">
+                    <a href="{{ route('peserta.tugas.index') }}" class="saas-btn-action-gold">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Kerjakan Tugas</span>
+                    </a>
+                    <a href="{{ route('peserta.penempatan.surat-diterima', $penempatan) }}" class="saas-btn-action-sk" title="Unduh Dokumen Resmi SK Magang (PDF)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <polyline points="9 15 12 18 15 15"></polyline>
+                        </svg>
+                        <span>Unduh SK</span>
+                    </a>
                 </div>
             </div>
 
             <div class="saas-hero-right">
-                <div class="saas-hero-action-buttons">
-                    <a href="{{ route('peserta.tugas.index') }}" class="saas-hero-btn-secondary">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                {{-- Circular Gauge Progress Magang --}}
+                <div class="saas-gauge-card">
+                    <div class="saas-gauge-visual">
+                        <svg class="saas-gauge-svg" width="86" height="86" viewBox="0 0 86 86">
+                            <circle class="saas-gauge-bg" cx="43" cy="43" r="34" />
+                            <circle class="saas-gauge-bar" cx="43" cy="43" r="34"
+                                style="stroke-dasharray: {{ $circumference }}; stroke-dashoffset: {{ $strokeDashoffset }};" />
                         </svg>
-                        <span>Lihat Tugas</span>
-                    </a>
-
-                    <a href="{{ route('peserta.logbook.index') }}" class="saas-hero-btn-primary" title="Isi Logbook Mingguan">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                        </svg>
-                        <span>+ Isi Logbook Mingguan</span>
-                    </a>
+                        <div class="saas-gauge-number">
+                            {{ $mingguKe }}/{{ $totMinggu }}
+                        </div>
+                    </div>
+                    <div class="saas-gauge-info">
+                        <div class="saas-gauge-badge">PROGRES MAGANG</div>
+                        <div class="saas-gauge-title">Minggu ke-{{ $mingguKe }}</div>
+                        <div class="saas-gauge-sub">dari {{ $totMinggu }} minggu</div>
+                    </div>
                 </div>
-
-                <a href="{{ route('peserta.penempatan.surat-diterima', $penempatan) }}" class="saas-hero-link-sk" title="Unduh Dokumen Resmi SK Magang (PDF)">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span>Unduh SK Magang (PDF) &rarr;</span>
-                </a>
             </div>
         </div>
     </div>
@@ -94,9 +110,9 @@
                         Pemkab Sleman
                     </span>
                     @if($timKelompok)
-                        <span class="saas-badge-kelompok-hero" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 203, 5, 0.18); border: 1px solid rgba(255, 203, 5, 0.5); color: #FFFFFF; font-size: 0.775rem; font-weight: 700; padding: 4px 12px; border-radius: 9999px;">
+                        <span class="saas-badge-kelompok-hero">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFCB05" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            <span>Kelompok: <strong>{{ $timKelompok->nama_kelompok }}</strong> ({{ $timKelompok->anggota->count() + 1 }} Orang)</span>
+                            <span>Kelompok: <strong>{{ $timKelompok->nama_kelompok }}</strong></span>
                         </span>
                     @else
                         <span class="saas-badge-portal-hero">
@@ -118,7 +134,7 @@
             </div>
 
             <div class="saas-hero-right">
-                <a href="{{ route('panduan.pdf') }}" target="_blank" rel="noopener noreferrer" class="saas-hero-btn-secondary">
+                <a href="{{ route('panduan.pdf') }}" target="_blank" rel="noopener noreferrer" class="saas-btn-action-gold">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>

@@ -1015,6 +1015,29 @@
                     </div>
                 </div>
 
+                <div class="field-row full">
+                    <div class="form-field-group">
+                        <label for="nama_pembimbing_sekolah" class="field-label">
+                            <span>Nama Pembimbing dari Sekolah / Kampus</span>
+                        </label>
+                        <div class="field-input-wrapper">
+                            <span class="field-leading-icon">
+                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </span>
+                            <input type="text" id="nama_pembimbing_sekolah" name="nama_pembimbing_sekolah"
+                                   class="field-input @error('nama_pembimbing_sekolah') is-invalid @enderror"
+                                   value="{{ old('nama_pembimbing_sekolah', $profil?->nama_pembimbing_sekolah) }}"
+                                   placeholder="Contoh: Bpk. Budi Santoso, M.Pd / Dosen Pembimbing">
+                        </div>
+                        @error('nama_pembimbing_sekolah')
+                            <span class="field-error-text">{{ $message }}</span>
+                        @enderror
+                        <span class="field-helper-text">Guru pembimbing SMK atau dosen pembimbing akademik dari kampus asal.</span>
+                    </div>
+                </div>
+
                 {{-- Kepatuhan UU PDP (SEC-41): Persetujuan Orang Tua/Wali Khusus Siswa SMK --}}
                 <div id="wrapper-persetujuan-wali" class="field-row full" style="{{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'smk' || !empty($profil?->persetujuan_wali_at) ? '' : 'display: none;' }}">
                     <div class="form-field-group" style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 14px 16px;">
@@ -1054,7 +1077,7 @@
                     </div>
                 </div>
 
-                <div class="field-row full">
+                <div class="field-row">
                     <div class="form-field-group">
                         <label for="no_hp" class="field-label">
                             <span>Nomor WhatsApp / Telepon Aktif <span class="required-dot">*</span></span>
@@ -1073,7 +1096,50 @@
                         @error('no_hp')
                             <span class="field-error-text">{{ $message }}</span>
                         @enderror
-                        <span class="field-helper-text">Digunakan oleh pembimbing lapangan untuk koordinasi penugasan harian.</span>
+                    </div>
+
+                    <div class="form-field-group">
+                        <label for="email" class="field-label">
+                            <span>Email / Gmail Aktif <span class="required-dot">*</span></span>
+                        </label>
+                        <div class="field-input-wrapper">
+                            <span class="field-leading-icon">
+                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </span>
+                            <input type="email" id="email" name="email"
+                                   class="field-input @error('email') is-invalid @enderror"
+                                   value="{{ old('email', $user->email) }}"
+                                   placeholder="nama@gmail.com" required>
+                        </div>
+                        @error('email')
+                            <span class="field-error-text">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="field-row full">
+                    <div class="form-field-group">
+                        <label for="alamat" class="field-label">
+                            <span>Alamat Lengkap / Domisili</span>
+                        </label>
+                        <div class="field-input-wrapper">
+                            <span class="field-leading-icon" style="top: 14px; transform: none;">
+                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </span>
+                            <textarea id="alamat" name="alamat" rows="2"
+                                      class="field-input @error('alamat') is-invalid @enderror"
+                                      style="padding-left: 42px; min-height: 72px; resize: vertical;"
+                                      placeholder="Contoh: Jl. Magelang KM 5, Mlati, Kabupaten Sleman">{{ old('alamat', $profil?->alamat) }}</textarea>
+                        </div>
+                        @error('alamat')
+                            <span class="field-error-text">{{ $message }}</span>
+                        @enderror
+                        <span class="field-helper-text">Alamat domisili peserta magang selama mengikuti program magang di Sleman.</span>
                     </div>
                 </div>
 

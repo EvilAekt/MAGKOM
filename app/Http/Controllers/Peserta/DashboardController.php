@@ -66,6 +66,7 @@ class DashboardController extends Controller
         $totalTugas = $publishedTugas->count();
         $tugasSelesai = $publishedTugas->where('status', StatusTugasEnum::Selesai)->count();
         $tugasBelum = $publishedTugas->whereIn('status', [StatusTugasEnum::Belum, StatusTugasEnum::Proses])->count();
+        $tugasLewatTenggat = $publishedTugas->filter(fn ($t) => $t->deadline && now()->gt(Carbon::parse($t->deadline)->endOfDay()) && $t->status !== StatusTugasEnum::Selesai)->count();
         $tugasMendesak = $penempatan
             ? $penempatan->tugas()
                 ->dipublikasikan()
@@ -81,6 +82,41 @@ class DashboardController extends Controller
         $logbookTerbaru = $penempatan
             ? $penempatan->logbooks()->latest('tanggal')->take(4)->get()
             : collect();
+
+        // Data Mingguan & Perjalanan Magang
+        $daftarMinggu = $penempatan?->getDaftarMingguMagang() ?? [];
+        $mingguAktif = $penempatan?->minggu_aktif ?? 3;
+        $totalMinggu = $penempatan?->total_minggu ?? 13;
+        $logbookSudahDiisi = collect($daftarMinggu)->whereIn('status', ['disetujui', 'terkirim'])->count();
+        // Logbook belum diisi dihitung dari minggu yang sudah/sedang berjalan (<= minggu aktif) yang belum diisi
+        $logbookBelumDiisi = collect($daftarMinggu)
+            ->where('minggu_ke', '<=', $mingguAktif)
+            ->whereNotIn('status', ['disetujui', 'terkirim'])
+            ->count();
+
+        // Info Perlu Perhatian (Logbook Minggu Berjalan)
+        $mingguAktifItem = collect($daftarMinggu)->firstWhere('minggu_ke', $mingguAktif);
+        // Batas pengiriman logbook hari Senin berikutnya (+1 hari dari akhir minggu berjalan)
+        $batasLogbookMingguAktif = $mingguAktifItem ? Carbon::parse($mingguAktifItem['tgl_akhir'])->addDay()->isoFormat('D MMM') : '9 Nov';
+        $isMingguAktifBelumDiisi = $mingguAktifItem ? ($mingguAktifItem['status'] === 'belum_diisi') : true;
+
+        // Nama Pembimbing Bersih (Tanpa embel-embel jabatan di dalam kurung)
+        $namaPembimbingClean = preg_replace('/\s*\(.*?\)/', '', (string) ($penempatan?->pembimbing?->nama ?? 'Budi Santoso, S.Kom'));
+
+        // Tanggal-tanggal kegiatan untuk Kalender (Logbook & Deadline Tugas)
+        $calendarEventDates = [];
+        if ($penempatan) {
+            foreach ($penempatan->logbooks as $lb) {
+                if ($lb->tanggal) {
+                    $calendarEventDates[Carbon::parse($lb->tanggal)->format('Y-m-d')] = true;
+                }
+            }
+            foreach ($publishedTugas as $tg) {
+                if ($tg->deadline) {
+                    $calendarEventDates[Carbon::parse($tg->deadline)->format('Y-m-d')] = true;
+                }
+            }
+        }
 
         // Sisa Hari Magang
         $sisaHari = null;
@@ -103,10 +139,20 @@ class DashboardController extends Controller
             'totalTugas' => $totalTugas,
             'tugasSelesai' => $tugasSelesai,
             'tugasBelum' => $tugasBelum,
+            'tugasLewatTenggat' => $tugasLewatTenggat,
             'tugasMendesak' => $tugasMendesak,
             'totalLogbook' => $totalLogbook,
             'logbookPerluRevisi' => $logbookPerluRevisi,
             'logbookTerbaru' => $logbookTerbaru,
+            'daftarMinggu' => $daftarMinggu,
+            'mingguAktif' => $mingguAktif,
+            'totalMinggu' => $totalMinggu,
+            'logbookSudahDiisi' => $logbookSudahDiisi,
+            'logbookBelumDiisi' => $logbookBelumDiisi,
+            'batasLogbookMingguAktif' => $batasLogbookMingguAktif,
+            'isMingguAktifBelumDiisi' => $isMingguAktifBelumDiisi,
+            'calendarEventDates' => $calendarEventDates,
+            'namaPembimbingClean' => $namaPembimbingClean,
             'sisaHari' => $sisaHari,
             'penilaian' => $penilaian,
             'isFinalNilai' => $isFinalNilai,

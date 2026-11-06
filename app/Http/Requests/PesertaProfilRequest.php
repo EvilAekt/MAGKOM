@@ -20,12 +20,21 @@ class PesertaProfilRequest extends FormRequest
         $rules = [
             'nim_nisn' => ['required', 'string', 'max:20'],
             'institusi' => ['required', 'string', 'max:150'],
+            'nama_pembimbing_sekolah' => ['nullable', 'string', 'max:150'],
             'jurusan_id' => ['required', 'exists:jurusan,id'],
             'jenjang' => [
                 'required',
                 Rule::in(array_map(fn ($case) => $case->value, JenjangEnum::cases())),
             ],
             'no_hp' => ['required', 'string', 'max:20', 'regex:/^[0-9\+\-\s]+$/'],
+            'alamat' => ['nullable', 'string', 'max:500'],
+            'email' => [
+                'nullable',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($this->user()?->id),
+            ],
             'foto' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'hapus_foto' => ['nullable', 'boolean'],
             'nama_kontak_darurat' => ['nullable', 'string', 'max:100'],

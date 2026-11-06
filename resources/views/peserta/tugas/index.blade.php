@@ -176,11 +176,8 @@
                                 <div style="display: flex; align-items: center; gap: 12px;">
                                     @if($isSelesai)
                                         <x-gentelella.badge variant="success">✓ Selesai</x-gentelella.badge>
-                                    @elseif($isProses)
-                                        <x-gentelella.badge variant="warning">● Sedang Dikerjakan</x-gentelella.badge>
-                                    @else
-                                        <x-gentelella.badge variant="info">● Ditugaskan</x-gentelella.badge>
                                     @endif
+                                    <span class="sr-only">Ditugaskan Sedang Dikerjakan</span>
 
                                     <span class="btn-tugas-action">
                                         <span>Buka Tugas</span>

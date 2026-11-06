@@ -143,7 +143,13 @@ class PendaftaranController extends Controller
 
     public function show(Pendaftaran $pendaftaran): View
     {
-        $pendaftaran->load(['user.profil.jurusan', 'bulanMagang', 'kuota.jurusan', 'dokumen.jenisDokumen']);
+        $pendaftaran->load([
+            'user.profil.jurusan',
+            'bulanMagang',
+            'kuota.jurusan',
+            'dokumen.jenisDokumen',
+            'kelompokMagang.anggota',
+        ]);
 
         $pembimbingList = User::where('role', RoleEnum::Pembimbing)
             ->where('status_aktif', true)

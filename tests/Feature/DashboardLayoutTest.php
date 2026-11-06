@@ -138,7 +138,8 @@ BLADE;
             $response->assertSee('Pendaftaran Magang');
             $response->assertSee('Logbook Harian');
             $response->assertSeeText('Tugas & Progres', false);
-            $response->assertSee('Lembar Nilai');
+            // TASK 06: Fitur Lembar Nilai telah dihapus dari navigasi
+            $response->assertDontSee('Lembar Nilai');
 
             // Tidak boleh ada menu Staf
             $response->assertDontSee('Verifikasi Berkas');
@@ -295,7 +296,8 @@ BLADE;
 
             $response->assertOk();
             $response->assertSee('Program Magang Telah Selesai (Masa Tenggang)');
-            $response->assertSee('Unduh Lembar Nilai');
+            // TASK 06: Lembar nilai telah dihapus dari sistem
+            $response->assertDontSee('Unduh Lembar Nilai');
         } finally {
             $this->removeDummyBladeView();
         }

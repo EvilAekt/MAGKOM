@@ -452,6 +452,56 @@
         {{-- KOLOM KIRI --}}
         <div style="display: flex; flex-direction: column; gap: 1.25rem;">
 
+            {{-- Info Kelompok Magang (TASK 03) --}}
+            @if($pendaftaran->kelompokMagang)
+                <div style="background: #EFF6FF; border: 1.5px solid #93C5FD; border-radius: 12px; padding: 16px 20px; box-shadow: 0 1px 3px rgba(30, 58, 138, 0.05);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="background: #0641CC; color: #FFFFFF; font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 9999px;">
+                                Tim / Kelompok
+                            </span>
+                            <strong style="color: #1E3A8A; font-size: 1rem;">
+                                {{ $pendaftaran->kelompokMagang->nama_kelompok }}
+                            </strong>
+                        </div>
+                        <span style="font-size: 0.8rem; color: #1E40AF; font-weight: 600;">
+                            {{ $pendaftaran->kelompokMagang->anggota->count() + 1 }} Peserta (1 Ketua + {{ $pendaftaran->kelompokMagang->anggota->count() }} Anggota)
+                        </span>
+                    </div>
+                    <p style="font-size: 0.8125rem; color: #1E40AF; margin: 0 0 10px 0; line-height: 1.45;">
+                        Pemberkasan ini diunggah secara kolektif untuk seluruh anggota tim di bawah ini. Dokumen tidak tercampur dengan kelompok lain.
+                    </p>
+                    <div style="background: #FFFFFF; border: 1px solid #BFDBFE; border-radius: 8px; overflow: hidden;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+                            <thead>
+                                <tr style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0; text-align: left; color: #475569;">
+                                    <th style="padding: 6px 12px;">Peran</th>
+                                    <th style="padding: 6px 12px;">Nama Peserta</th>
+                                    <th style="padding: 6px 12px;">NIM / NISN</th>
+                                    <th style="padding: 6px 12px;">Kontak WhatsApp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #F1F5F9;">
+                                    <td style="padding: 6px 12px;"><span style="font-weight: 700; color: #0641CC;">Ketua Tim</span></td>
+                                    <td style="padding: 6px 12px; font-weight: 600; color: #0F172A;">{{ $pendaftaran->user?->nama }}</td>
+                                    <td style="padding: 6px 12px; color: #64748B;">{{ $pendaftaran->user?->profil?->nim_nisn ?? '-' }}</td>
+                                    <td style="padding: 6px 12px; color: #64748B;">{{ $pendaftaran->user?->profil?->no_hp ?? '-' }}</td>
+                                </tr>
+                                @foreach($pendaftaran->kelompokMagang->anggota as $anggota)
+                                    <tr style="border-bottom: 1px solid #F1F5F9;">
+                                        <td style="padding: 6px 12px;"><span style="color: #64748B;">Anggota</span></td>
+                                        <td style="padding: 6px 12px; font-weight: 500; color: #0F172A;">{{ $anggota->nama }}</td>
+                                        <td style="padding: 6px 12px; color: #64748B;">{{ $anggota->nim_nisn ?? '-' }}</td>
+                                        <td style="padding: 6px 12px; color: #64748B;">{{ $anggota->no_hp ?? '-' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+
             {{-- PANEL DOKUMEN PERSYARATAN --}}
             <x-gentelella.x-panel title="Verifikasi Berkas Calon Peserta" subtitle="{{ $pendaftaran->dokumen->count() }} Berkas Persyaratan Terlampir" :toolbox="false">
                 @if($pendaftaran->dokumen->isEmpty())

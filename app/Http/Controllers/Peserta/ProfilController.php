@@ -94,6 +94,15 @@ class ProfilController extends Controller
         }
         unset($validated['persetujuan_wali']);
 
+        if (isset($validated['email'])) {
+            $newEmail = trim($validated['email']);
+            if ($newEmail !== '' && $newEmail !== $user->email) {
+                $user->email = $newEmail;
+                $user->save();
+            }
+            unset($validated['email']);
+        }
+
         $profil = PesertaProfil::updateOrCreate(
             ['user_id' => $user->id],
             $validated

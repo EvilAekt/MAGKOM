@@ -8,6 +8,7 @@ use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Dokumen;
 use App\Models\JenisDokumen;
@@ -98,6 +99,13 @@ class PesertaPendaftaranFlowTest extends TestCase
 
     public function test_peserta_can_view_pendaftaran_index_and_available_periods(): void
     {
+        $bidang = Bidang::create([
+            'nama_bidang' => 'Bidang Aptika',
+            'kode' => 'APTIKA',
+            'aktif' => true,
+        ]);
+        $this->jurusan->bidang()->attach($bidang->id);
+
         $response = $this->actingAs($this->peserta)->get(route('peserta.pendaftaran.index'));
 
         $response->assertOk();
@@ -105,6 +113,8 @@ class PesertaPendaftaranFlowTest extends TestCase
         $response->assertSee('Buat Pengajuan Baru');
         $response->assertSee('November 2026');
         $response->assertSee('Teknik Komputer dan Jaringan');
+        $response->assertSee('Bidang Aptika');
+        $response->assertSee('Daftar Sekarang');
     }
 
     public function test_peserta_can_create_new_draft_pendaftaran(): void

@@ -52,7 +52,8 @@
                     <h1 class="classroom-assignment-title">{{ $tugas->judul }}</h1>
                     <div class="classroom-assignment-meta-author">{{ $mentorNama }} &bull; {{ \Carbon\Carbon::parse($tugas->created_at)->translatedFormat('j M Y') }}</div>
                     <div class="classroom-assignment-meta-due">
-                        Kompleksitas: {{ $kompleksitasNama }} | Tenggat {{ $deadline->translatedFormat('j M Y, H.i') }} WIB
+                        Tenggat {{ $deadline->translatedFormat('j M Y, H.i') }} WIB
+                        <span class="sr-only">Kompleksitas: {{ $kompleksitasNama }}</span>
                     </div>
                 </div>
             </div>

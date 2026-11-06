@@ -1917,6 +1917,10 @@
         <nav class="sidebar-nav">
             <span class="nav-section-label">{{ __('Menu Utama') }}</span>
 
+            @php
+                $isDiterima = auth()->user()?->hasPenempatanMagang();
+            @endphp
+
             <a href="{{ route('peserta.dashboard') }}" class="nav-item-link {{ request()->routeIs('peserta.dashboard') ? 'active' : '' }}" title="{{ __('Dashboard') }}">
                 <span class="nav-item-icon">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1929,15 +1933,19 @@
                 <span>{{ __('Dashboard') }}</span>
             </a>
 
-            <a href="{{ route('peserta.profil.show') }}" class="nav-item-link {{ request()->routeIs('peserta.profil.*') ? 'active' : '' }}" title="{{ __('Profil & Biodata') }}">
-                <span class="nav-item-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                </span>
-                <span>{{ __('Profil & Biodata') }}</span>
-            </a>
+            {{-- Akses Profil & Biodata di sidebar hanya untuk peserta yang belum diterima magang (TASK 04). --}}
+            {{-- Setelah berstatus Diterima Magang, akses dipindahkan ke profil kanan atas. --}}
+            @if(!$isDiterima)
+                <a href="{{ route('peserta.profil.show') }}" class="nav-item-link {{ request()->routeIs('peserta.profil.*') ? 'active' : '' }}" title="{{ __('Profil & Biodata') }}">
+                    <span class="nav-item-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </span>
+                    <span>{{ __('Profil & Biodata') }}</span>
+                </a>
+            @endif
 
             <a href="{{ route('peserta.pendaftaran.index') }}" class="nav-item-link {{ request()->routeIs('peserta.pendaftaran.*') ? 'active' : '' }}" title="{{ __('Pendaftaran Magang') }}">
                 <span class="nav-item-icon">
@@ -1948,10 +1956,6 @@
                 </span>
                 <span>{{ __('Pendaftaran Magang') }}</span>
             </a>
-
-            @php
-                $isDiterima = auth()->user()?->hasPenempatanMagang();
-            @endphp
 
             <span class="nav-section-label">{{ __('Pelaksanaan Magang') }}</span>
 
@@ -1974,16 +1978,6 @@
                         </svg>
                     </span>
                     <span>{{ __('Tugas & Progres') }}</span>
-                </a>
-
-                <a href="{{ route('peserta.nilai.show') }}" class="nav-item-link {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}" title="{{ __('Lembar Nilai') }}">
-                    <span class="nav-item-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="8" r="7"></circle>
-                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                        </svg>
-                    </span>
-                    <span>{{ __('Lembar Nilai') }}</span>
                 </a>
             @else
                 <div class="nav-item-link locked" 
@@ -2015,23 +2009,6 @@
                         </svg>
                     </span>
                     <span>{{ __('Tugas & Progres') }}</span>
-                    <span class="badge-locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}" aria-label="{{ __('Terkunci') }}">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                    </span>
-                </div>
-
-                <div class="nav-item-link locked" 
-                     role="button" 
-                     tabindex="0" 
-                     onclick="notifyLockedFeature('{{ __('Lembar Nilai') }}')" 
-                     title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
-                    <span class="nav-item-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="8" r="7"></circle>
-                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                        </svg>
-                    </span>
-                    <span>{{ __('Lembar Nilai') }}</span>
                     <span class="badge-locked" title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}" aria-label="{{ __('Terkunci') }}">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </span>

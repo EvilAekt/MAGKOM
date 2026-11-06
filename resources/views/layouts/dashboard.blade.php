@@ -3081,16 +3081,6 @@
                                 </span>
                                 <span>Tugas & Progres</span>
                             </a>
-
-                            <a href="{{ route('peserta.nilai.show') }}" class="nav-item-link {{ request()->routeIs('peserta.nilai.*') ? 'active' : '' }}">
-                                <span class="nav-item-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="8" r="7"></circle>
-                                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                                    </svg>
-                                </span>
-                                <span>Lembar Nilai</span>
-                            </a>
                         @else
                             <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
                                 <span class="nav-item-icon">
@@ -3110,16 +3100,6 @@
                                     </svg>
                                 </span>
                                 <span>Tugas & Progres</span>
-                            </div>
-
-                            <div class="nav-item-link locked" style="opacity: 0.6; cursor: not-allowed;" title="Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan">
-                                <span class="nav-item-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="8" r="7"></circle>
-                                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                                    </svg>
-                                </span>
-                                <span>Lembar Nilai</span>
                             </div>
                         @endif
 
@@ -3754,14 +3734,6 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="{{ route('peserta.nilai.unduh') }}" class="grace-banner-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                            <span>Unduh Lembar Nilai</span>
-                        </a>
                     </div>
                 @endif
 

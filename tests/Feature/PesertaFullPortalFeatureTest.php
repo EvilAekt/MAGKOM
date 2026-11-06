@@ -178,6 +178,11 @@ class PesertaFullPortalFeatureTest extends TestCase
         $response->assertSee('Ahmad Peserta');
         $response->assertSee('Panduan Alur Pendaftaran Magang');
         $response->assertSee('Lengkapi Biodata & Profil', false);
+
+        // POV Onboarding (belum mengajukan pendaftaran): Widget Aside ditiadakan
+        $response->assertDontSee('id="saasCalendarWidget"', false);
+        $response->assertDontSee('hari tersisa');
+        $response->assertDontSee('Perlu Perhatian');
     }
 
     /** @test */

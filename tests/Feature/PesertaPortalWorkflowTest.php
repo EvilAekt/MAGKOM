@@ -87,10 +87,12 @@ class PesertaPortalWorkflowTest extends TestCase
         // 2. Simpan profil lengkap
         $postData = [
             'institusi' => 'SMK Negeri 2 Depok Sleman',
+            'nama_pembimbing_sekolah' => 'Bpk. Hendro, S.Pd',
             'nim_nisn' => '1234567890',
             'jenjang' => 'smk',
             'jurusan_id' => $this->jurusan->id,
             'no_hp' => '081234567890',
+            'alamat' => 'Jl. Kaliurang KM 9, Sleman',
             'nama_kontak_darurat' => 'Siti Wali',
             'no_kontak_darurat' => '089876543210',
             'hubungan_kontak_darurat' => 'Ibu Kandung',
@@ -104,6 +106,8 @@ class PesertaPortalWorkflowTest extends TestCase
             'user_id' => $this->peserta->id,
             'nim_nisn' => '1234567890',
             'institusi' => 'SMK Negeri 2 Depok Sleman',
+            'nama_pembimbing_sekolah' => 'Bpk. Hendro, S.Pd',
+            'alamat' => 'Jl. Kaliurang KM 9, Sleman',
             'nama_kontak_darurat' => 'Siti Wali',
             'no_kontak_darurat' => '089876543210',
         ]);
