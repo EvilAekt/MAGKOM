@@ -362,7 +362,7 @@ class PlacementService extends AuditedService
                     'dibuat_oleh' => $admin->id,
                     'tgl_mulai' => $mulai->toDateString(),
                     'tgl_selesai' => $selesai->toDateString(),
-                    'file_surat_diterima' => $p->file_surat_diterima,
+                    'file_surat_diterima' => null,
                     'status' => StatusPenempatanEnum::Aktif,
                 ]);
 
@@ -462,7 +462,7 @@ class PlacementService extends AuditedService
                     'dibuat_oleh' => $admin->id,
                     'tgl_mulai' => $mulai->toDateString(),
                     'tgl_selesai' => $selesai->toDateString(),
-                    'file_surat_diterima' => $p->file_surat_diterima,
+                    'file_surat_diterima' => null,
                     'status' => StatusPenempatanEnum::Aktif,
                 ]);
 
