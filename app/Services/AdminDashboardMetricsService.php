@@ -28,6 +28,8 @@ class AdminDashboardMetricsService
         $pengajuanMenunggu = Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)->count();
         $perluPerbaikan = Pendaftaran::where('status', StatusPendaftaranEnum::PerluPerbaikan)->count();
         $waitingListCount = Pendaftaran::where('status', StatusPendaftaranEnum::WaitingList)->count();
+        $pendaftaranDiterimaCount = Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)->count();
+        $pendaftaranDitolakCount = Pendaftaran::where('status', StatusPendaftaranEnum::Ditolak)->count();
         $pesertaAktifCount = Penempatan::where('status', StatusPenempatanEnum::Aktif)->count();
 
         // Indikator SLA Kritis (> 3 hari kalender belum diverifikasi)
@@ -51,7 +53,7 @@ class AdminDashboardMetricsService
 
         // 4. Action Hub: Pendaftaran Terkini yang Membutuhkan Tindakan (FIFO)
         $pendaftaranTerbaru = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan'])
-            ->whereIn('status', [StatusPendaftaranEnum::Diajukan, StatusPendaftaranEnum::PerluPerbaikan])
+            ->where('status', StatusPendaftaranEnum::Diajukan)
             ->orderBy('created_at', 'asc')
             ->take(8)
             ->get();
@@ -85,6 +87,8 @@ class AdminDashboardMetricsService
             'pengajuanMenunggu' => $pengajuanMenunggu,
             'perluPerbaikan' => $perluPerbaikan,
             'waitingListCount' => $waitingListCount,
+            'pendaftaranDiterimaCount' => $pendaftaranDiterimaCount,
+            'pendaftaranDitolakCount' => $pendaftaranDitolakCount,
             'pesertaAktifCount' => $pesertaAktifCount,
             'pengajuanSlaKritisCount' => $pengajuanSlaKritisCount,
             'daftarBulan' => $daftarBulan,

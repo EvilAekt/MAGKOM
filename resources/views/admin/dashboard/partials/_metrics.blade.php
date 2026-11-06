@@ -30,16 +30,16 @@
         col="col-md-3 col-sm-6 col-xs-12 adm-metric-card-col"
     />
 
-    {{-- Tile 3: Antrean Waiting List --}}
+    {{-- Tile 3: Pendaftaran Diterima --}}
     <x-gentelella.tile-stat
-        title="Antrean Waiting List"
-        :value="number_format($waitingListCount)"
-        icon="clock"
+        title="Pendaftaran Diterima"
+        :value="number_format($pendaftaranDiterimaCount ?? 0)"
+        icon="check-circle"
         color="teal"
         trendType="success"
         trendDirection="up"
-        trendText="Antrean"
-        subText="{{ $perluPerbaikan }} Revisi Dokumen · Daftar tunggu antrean"
+        trendText="Diterima"
+        subText="Telah lolos seleksi berkas"
         :sparkBars="[30, 45, 40, 55, 50, 65, 70]"
         col="col-md-3 col-sm-6 col-xs-12 adm-metric-card-col"
     />

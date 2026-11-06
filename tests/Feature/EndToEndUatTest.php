@@ -285,20 +285,16 @@ class EndToEndUatTest extends TestCase
             'diajukan_at' => now(),
         ]);
 
-        // 1. Admin memutuskan: Perlu Perbaikan
-        $putuskan1 = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
+        // 1. Opsi revisi/perlu perbaikan sudah dihapus dari verifikasi dan ditolak validasi
+        $putuskanInvalid = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
             'keputusan' => 'perlu_perbaikan',
             'catatan' => 'Surat pengantar belum ada tanda tangan kepala sekolah.',
         ]);
-        $putuskan1->assertRedirect();
+        $putuskanInvalid->assertSessionHasErrors(['keputusan']);
         $pendaftaran->refresh();
-        $this->assertEquals(StatusPendaftaranEnum::PerluPerbaikan, $pendaftaran->status);
+        $this->assertEquals(StatusPendaftaranEnum::Diajukan, $pendaftaran->status);
 
-        // 2. Peserta memperbaiki dan mengajukan kembali
-        $pendaftaran->status = StatusPendaftaranEnum::Diajukan;
-        $pendaftaran->save();
-
-        // 3. Admin memutuskan: Diterima & tempatkan ke pembimbing
+        // 2. Admin memutuskan: Diterima & tempatkan ke pembimbing
         $putuskan2 = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
             'keputusan' => 'terima',
             'pembimbing_id' => $this->pembimbing->id,
@@ -384,15 +380,22 @@ class EndToEndUatTest extends TestCase
         $ajukanRes = $this->actingAs($peserta)->post(route('peserta.pendaftaran.ajukan', $pendaftaran->id));
         $ajukanRes->assertRedirect();
 
-        // Admin memutuskan waiting_list karena kuota penuh
-        $adminRes = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
+        // Admin mencoba opsi waiting_list yang sudah dihapus: ditolak validasi
+        $adminResInvalid = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
             'keputusan' => 'waiting_list',
             'catatan' => 'Kuota untuk periode ini telah terpenuhi, masuk antrean cadangan.',
+        ]);
+        $adminResInvalid->assertSessionHasErrors(['keputusan']);
+
+        // Admin memutuskan tolak karena kuota penuh
+        $adminRes = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
+            'keputusan' => 'tolak',
+            'catatan' => 'Kuota untuk periode ini telah terpenuhi secara penuh.',
         ]);
         $adminRes->assertRedirect();
 
         $pendaftaran->refresh();
-        $this->assertEquals(StatusPendaftaranEnum::WaitingList, $pendaftaran->status, 'Pendaftaran pada kuota penuh otomatis masuk ke waiting list');
+        $this->assertEquals(StatusPendaftaranEnum::Ditolak, $pendaftaran->status, 'Pendaftaran pada kuota penuh ditolak oleh admin');
     }
 
     /**

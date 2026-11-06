@@ -122,7 +122,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
     }
 
     /**
-     * AC-04-4: Admin tidak dapat memindahkan pendaftaran ke Waiting List jika kuota umum masih ada.
+     * AC-04-4 & BR-03: Keputusan verifikasi berkas hanya 'terima' dan 'tolak'; opsi waiting_list ditolak oleh validasi.
      */
     public function test_admin_cannot_assign_waiting_list_if_quota_available(): void
     {
@@ -142,13 +142,12 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
                 'catatan' => 'Pendaftaran dimasukkan ke antrean cadangan.',
             ]);
 
-        $response->assertSessionHas('error');
-        $this->assertStringContainsString('AC-04-4', session('error'));
+        $response->assertSessionHasErrors(['keputusan']);
         $this->assertEquals(StatusPendaftaranEnum::Diajukan, $pendaftaran->fresh()->status);
     }
 
     /**
-     * AC-04-4 & AC-04-6: Admin dapat memindahkan pendaftaran ke Waiting List saat kuota umum penuh.
+     * AC-04-4 & BR-03: Pada kuota penuh, verifikasi berkas admin hanya mendukung 'tolak' atau 'terima'; opsi waiting_list ditolak validasi.
      */
     public function test_admin_can_assign_waiting_list_when_quota_full(): void
     {
@@ -168,16 +167,24 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             'waktu_submit' => now(),
         ]);
 
-        $response = $this->actingAs($this->admin)
+        // Input opsi waiting_list ditolak validasi
+        $responseInvalid = $this->actingAs($this->admin)
             ->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
                 'keputusan' => 'waiting_list',
                 'catatan' => 'Pendaftaran dialihkan ke antrean tunggu karena kuota penuh.',
             ]);
+        $responseInvalid->assertSessionHasErrors(['keputusan']);
 
-        $response->assertRedirect(route('admin.pendaftaran.show', $pendaftaran));
-        $response->assertSessionHas('success', 'Pendaftaran berhasil dialihkan ke antrean Waiting List.');
-        $this->assertEquals(StatusPendaftaranEnum::WaitingList, $pendaftaran->fresh()->status);
-        $this->assertEquals('Pendaftaran dialihkan ke antrean tunggu karena kuota penuh.', $pendaftaran->fresh()->catatan);
+        // Admin menolak pendaftaran saat kuota penuh
+        $responseTolak = $this->actingAs($this->admin)
+            ->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
+                'keputusan' => 'tolak',
+                'catatan' => 'Pendaftaran ditolak karena kuota jurusan untuk periode ini sudah penuh.',
+            ]);
+
+        $responseTolak->assertRedirect(route('admin.pendaftaran.show', $pendaftaran));
+        $responseTolak->assertSessionHas('success', 'Pengajuan pendaftaran berhasil ditolak.');
+        $this->assertEquals(StatusPendaftaranEnum::Ditolak, $pendaftaran->fresh()->status);
     }
 
     /**
@@ -206,7 +213,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
     }
 
     /**
-     * AC-04-3: Catatan penolakan dan perbaikan wajib minimal 10 karakter.
+     * AC-04-3: Catatan penolakan wajib minimal 10 karakter; opsi perlu_perbaikan / revisi ditolak validasi.
      */
     public function test_notes_min_10_chars_enforced_for_rejection_and_revision(): void
     {
@@ -228,13 +235,13 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             ]);
         $responseTolakKurang->assertSessionHasErrors(['catatan']);
 
-        // 2. Perlu perbaikan dengan catatan < 10 karakter
+        // 2. Perlu perbaikan / revisi sudah dihapus dari verifikasi berkas admin
         $responseRevisiKurang = $this->actingAs($this->admin)
             ->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
                 'keputusan' => 'perlu_perbaikan',
-                'catatan' => 'revisi',
+                'catatan' => 'revisi dokumen berkas',
             ]);
-        $responseRevisiKurang->assertSessionHasErrors(['catatan']);
+        $responseRevisiKurang->assertSessionHasErrors(['keputusan']);
 
         // 3. Tolak dengan catatan >= 10 karakter lolos validasi
         $responseTolakLolos = $this->actingAs($this->admin)

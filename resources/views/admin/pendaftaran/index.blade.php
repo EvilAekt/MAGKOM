@@ -526,15 +526,15 @@
             :sparkBars="[70, 75, 65, 80, 85, 60, 55]"
         />
         <x-gentelella.tile-stat 
-            title="Perlu Revisi Dokumen" 
-            :value="number_format($queueStats['perlu_perbaikan'] ?? 0)" 
-            icon="alert-circle"
-            color="yellow"
-            trendType="warning"
-            trendText="Revisi"
-            trendDirection="down"
-            subText="Menunggu respon peserta" 
-            :sparkBars="[25, 35, 45, 30, 40, 50, 35]"
+            title="Pendaftaran Diterima" 
+            :value="number_format($queueStats['diterima'] ?? 0)" 
+            icon="check-circle"
+            color="green"
+            trendType="success"
+            trendText="Diterima"
+            trendDirection="up"
+            subText="Telah lolos verifikasi berkas" 
+            :sparkBars="[25, 35, 45, 50, 65, 80, 95]"
         />
         <x-gentelella.tile-stat 
             title="Tertahan > 3 Hari" 
@@ -576,14 +576,6 @@
                     <a href="{{ $makeFilterUrl('diajukan') }}" class="adm-status-tab {{ $currentStatus === 'diajukan' ? 'active' : '' }}">
                         <span>Diajukan</span>
                         <span class="adm-status-counter">{{ $queueStats['diajukan'] ?? 0 }}</span>
-                    </a>
-                    <a href="{{ $makeFilterUrl('perlu_perbaikan') }}" class="adm-status-tab {{ $currentStatus === 'perlu_perbaikan' ? 'active' : '' }}">
-                        <span>Perlu Perbaikan</span>
-                        <span class="adm-status-counter">{{ $queueStats['perlu_perbaikan'] ?? 0 }}</span>
-                    </a>
-                    <a href="{{ $makeFilterUrl('waiting_list') }}" class="adm-status-tab {{ $currentStatus === 'waiting_list' ? 'active' : '' }}">
-                        <span>Waiting List</span>
-                        <span class="adm-status-counter">{{ $queueStats['waiting_list'] ?? 0 }}</span>
                     </a>
                     <a href="{{ $makeFilterUrl('diterima') }}" class="adm-status-tab {{ $currentStatus === 'diterima' ? 'active' : '' }}">
                         <span>Diterima</span>

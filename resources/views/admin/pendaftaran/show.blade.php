@@ -241,19 +241,23 @@
         }
         .adm-decision-tabs {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
             background: var(--neutral-200, #F1F5F9);
             padding: 4px;
             border-radius: 8px;
             margin-bottom: 1.25rem;
         }
         .adm-tab-pill {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             border: none;
             background: transparent;
-            padding: 8px 4px;
+            padding: 9px 8px;
             border-radius: 6px;
-            font-size: 0.775rem;
+            font-size: 0.8125rem;
             font-weight: 700;
             color: var(--neutral-600, #475569);
             cursor: pointer;
@@ -264,16 +268,6 @@
             background: #10B981;
             color: #FFFFFF;
             box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
-        }
-        .adm-tab-pill.active-waiting_list {
-            background: #0641CC;
-            color: #FFFFFF;
-            box-shadow: 0 1px 3px rgba(6, 65, 204, 0.3);
-        }
-        .adm-tab-pill.active-perlu_perbaikan {
-            background: #D97706;
-            color: #FFFFFF;
-            box-shadow: 0 1px 3px rgba(217, 119, 6, 0.3);
         }
         .adm-tab-pill.active-tolak {
             background: #DC2626;
@@ -608,28 +602,18 @@
                         {{-- Indikator Status Kuota --}}
                         <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0.9rem; border-radius: 8px; font-size: 0.8125rem; font-weight: 700; margin-bottom: 1rem; background: {{ $sisaKuota > 0 ? '#ECFDF5' : '#FEF2F2' }}; border: 1px solid {{ $sisaKuota > 0 ? '#A7F3D0' : '#FECACA' }}; color: {{ $sisaKuota > 0 ? '#065F46' : '#991B1B' }};">
                             <span>Status Kuota:</span>
-                            <span>{{ $sisaKuota > 0 ? "Tersedia ({$sisaKuota} Kursi)" : 'Penuh (Masuk Waiting List)' }}</span>
+                            <span>{{ $sisaKuota > 0 ? "Tersedia ({$sisaKuota} Kursi)" : 'Kuota Penuh (0 Kursi)' }}</span>
                         </div>
 
-                        {{-- Tab Switcher Aksi --}}
+                        {{-- Tab Switcher Aksi (Hanya Terima & Tolak) --}}
                         <div class="adm-decision-tabs">
                             <button type="button" id="tab-btn-terima" onclick="switchActionTab('terima')" class="adm-tab-pill active-terima">
-                                Terima
-                            </button>
-                            @if($sisaKuota <= 0)
-                                <button type="button" id="tab-btn-waiting_list" onclick="switchActionTab('waiting_list')" class="adm-tab-pill">
-                                    Waitlist
-                                </button>
-                            @else
-                                <button type="button" disabled title="Waiting List hanya tersedia jika kuota telah penuh" class="adm-tab-pill">
-                                    Waitlist
-                                </button>
-                            @endif
-                            <button type="button" id="tab-btn-revisi" onclick="switchActionTab('perlu_perbaikan')" class="adm-tab-pill">
-                                Revisi
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Terima</span>
                             </button>
                             <button type="button" id="tab-btn-tolak" onclick="switchActionTab('tolak')" class="adm-tab-pill">
-                                Tolak
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                <span>Tolak</span>
                             </button>
                         </div>
 
@@ -663,33 +647,7 @@
                                 </button>
                             </div>
 
-                            {{-- PANEL 2: WAITING LIST --}}
-                            <div id="action-panel-waiting_list" style="display: none; flex-direction: column;">
-                                <div class="adm-form-field">
-                                    <label for="catatan_waiting_list">Catatan Antrean Waiting List (Opsional)</label>
-                                    <textarea id="catatan_waiting_list" name="catatan" rows="3" placeholder="Tambahkan catatan khusus untuk antrean waiting list jika diperlukan..."></textarea>
-                                </div>
-
-                                <button type="submit" onclick="return confirm('Alihkan pendaftaran ini ke antrean Waiting List?');" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #0641CC; color: #FFFFFF; font-weight: 700; font-size: 0.85rem; cursor: pointer;">
-                                    Masukkan ke Waiting List
-                                </button>
-                            </div>
-
-                            {{-- PANEL 3: PERLU PERBAIKAN --}}
-                            <div id="action-panel-perlu_perbaikan" style="display: none; flex-direction: column;">
-                                <div class="adm-form-field">
-                                    <label for="catatan_revisi">
-                                        Catatan / Instruksi Perbaikan <span style="color: #DC2626;">*</span>
-                                    </label>
-                                    <textarea id="catatan_revisi" name="catatan" rows="3" placeholder="Sebutkan berkas yang perlu diperbaiki secara spesifik (min. 10 karakter)..."></textarea>
-                                </div>
-
-                                <button type="submit" onclick="return confirm('Kirimkan permintaan perbaikan berkas kepada calon peserta?');" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #D97706; color: #FFFFFF; font-weight: 700; font-size: 0.85rem; cursor: pointer;">
-                                    Minta Perbaikan Berkas
-                                </button>
-                            </div>
-
-                            {{-- PANEL 4: TOLAK --}}
+                            {{-- PANEL 2: TOLAK --}}
                             <div id="action-panel-tolak" style="display: none; flex-direction: column;">
                                 <div class="adm-form-field">
                                     <label for="catatan_tolak">
@@ -708,10 +666,10 @@
                             function switchActionTab(action) {
                                 document.getElementById('keputusan-input').value = action;
                                 
-                                const panels = ['terima', 'waiting_list', 'perlu_perbaikan', 'tolak'];
+                                const panels = ['terima', 'tolak'];
                                 panels.forEach(p => {
                                     const panel = document.getElementById('action-panel-' + p);
-                                    const btn = document.getElementById('tab-btn-' + (p === 'perlu_perbaikan' ? 'revisi' : p));
+                                    const btn = document.getElementById('tab-btn-' + p);
                                     if (!panel || !btn) return;
 
                                     if (p === action) {
@@ -723,9 +681,7 @@
                                     }
                                 });
 
-                                const catatanRevisi = document.getElementById('catatan_revisi');
                                 const catatanTolak = document.getElementById('catatan_tolak');
-                                if (catatanRevisi) catatanRevisi.required = (action === 'perlu_perbaikan');
                                 if (catatanTolak) catatanTolak.required = (action === 'tolak');
                             }
                         </script>

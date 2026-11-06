@@ -16,13 +16,7 @@
     <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--cv-line, #E2E8F0);">
         <div class="adm-filter-pills">
             <button type="button" class="adm-pill-btn active" data-filter-target="#queueTable" data-filter-value="all">
-                Semua ({{ $pendaftaranTerbaru->count() }})
-            </button>
-            <button type="button" class="adm-pill-btn" data-filter-target="#queueTable" data-filter-value="diajukan">
-                Diajukan
-            </button>
-            <button type="button" class="adm-pill-btn" data-filter-target="#queueTable" data-filter-value="perlu_perbaikan">
-                Perlu Perbaikan
+                Semua Antrean ({{ $pendaftaranTerbaru->count() }})
             </button>
         </div>
         <input type="text" data-table-search="#queueTable" placeholder="Cari nama, institusi..." style="padding: 0.35rem 0.75rem; border: 1px solid var(--cv-line, #CBD5E1); border-radius: 6px; font-size: 0.8rem; outline: none; min-width: 200px;">
@@ -60,7 +54,7 @@
                             $initial = strtoupper(substr($words[0] ?? 'P', 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
                             $paletteIndex = (($loop->index) % 5) + 1;
                             
-                            $statusClass = $item->status->value === 'diajukan' ? 'status-diajukan' : 'status-perlu-perbaikan';
+                            $statusClass = 'status-diajukan';
                         @endphp
                         <tr class="queue-row {{ $statusClass }}" data-status="{{ $item->status->value }}">
                             <td>
@@ -89,20 +83,13 @@
                                 @endif
                             </td>
                             <td style="text-align: center;">
-                                @if($item->status->value === 'diajukan')
-                                    <span class="cv-status-dot-badge warning" title="Menunggu Verifikasi">
-                                        <span class="dot"></span>
-                                        <span>Diajukan</span>
-                                    </span>
-                                @else
-                                    <span class="cv-status-dot-badge info" title="Perlu Perbaikan">
-                                        <span class="dot"></span>
-                                        <span>Perlu Perbaikan</span>
-                                    </span>
-                                @endif
+                                <span class="cv-status-dot-badge warning" title="Menunggu Verifikasi">
+                                    <span class="dot"></span>
+                                    <span>Diajukan</span>
+                                </span>
                             </td>
                             <td style="text-align: right; white-space: nowrap;">
-                                <button type="button" class="btn btn-default btn-xs" style="margin-right: 4px; padding: 0.35rem 0.55rem; border-radius: 6px; border: 1px solid var(--cv-line, #E2E8F0); background: #ffffff;" data-action="open-drawer" data-drawer="#drawerVerifikasi" data-nama="{{ $item->user?->nama }}" data-nomor="{{ $item->nomor_pendaftaran }}" data-institusi="{{ $item->user?->profil?->institusi ?? '-' }}" data-jurusan="{{ $item->kuota?->jurusan?->nama_jurusan ?? '-' }}" data-status="{{ $item->status->value === 'diajukan' ? 'Diajukan' : 'Perlu Perbaikan' }}" data-url="{{ route('admin.pendaftaran.show', $item) }}" title="Pratinjau Cepat">
+                                <button type="button" class="btn btn-default btn-xs" style="margin-right: 4px; padding: 0.35rem 0.55rem; border-radius: 6px; border: 1px solid var(--cv-line, #E2E8F0); background: #ffffff;" data-action="open-drawer" data-drawer="#drawerVerifikasi" data-nama="{{ $item->user?->nama }}" data-nomor="{{ $item->nomor_pendaftaran }}" data-institusi="{{ $item->user?->profil?->institusi ?? '-' }}" data-jurusan="{{ $item->kuota?->jurusan?->nama_jurusan ?? '-' }}" data-status="Diajukan" data-url="{{ route('admin.pendaftaran.show', $item) }}" title="Pratinjau Cepat">
                                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </button>
                                 <a href="{{ route('admin.pendaftaran.show', $item) }}" class="adm-btn-action-primary">

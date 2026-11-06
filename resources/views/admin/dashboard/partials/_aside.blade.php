@@ -31,36 +31,6 @@
             </li>
         @endif
 
-        @if($waitingListCount > 0)
-            <li>
-                <a href="{{ route('admin.waiting-list.index') }}" class="cv-todo-item">
-                    <div style="display: flex; align-items: center; gap: 0.625rem;">
-                        <span class="cv-todo-dot warning"></span>
-                        <div>
-                            <strong style="font-size: 0.8125rem; color: var(--neutral-900); display: block;">{{ $waitingListCount }} Peserta di Waiting List</strong>
-                            <small style="color: var(--neutral-500); font-size: 0.7rem;">Daftar Tunggu Kuota</small>
-                        </div>
-                    </div>
-                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600);">Buka &rarr;</span>
-                </a>
-            </li>
-        @endif
-
-        @if($perluPerbaikan > 0)
-            <li>
-                <a href="{{ route('admin.pendaftaran.index') }}" class="cv-todo-item">
-                    <div style="display: flex; align-items: center; gap: 0.625rem;">
-                        <span class="cv-todo-dot info"></span>
-                        <div>
-                            <strong style="font-size: 0.8125rem; color: var(--neutral-900); display: block;">{{ $perluPerbaikan }} Berkas Revisi</strong>
-                            <small style="color: var(--neutral-500); font-size: 0.7rem;">Menunggu Perbaikan Berkas</small>
-                        </div>
-                    </div>
-                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600);">Tinjau &rarr;</span>
-                </a>
-            </li>
-        @endif
-
         @if($pengajuanMenunggu > 0 && $pengajuanSlaKritisCount === 0)
             <li>
                 <a href="{{ route('admin.pendaftaran.index') }}" class="cv-todo-item">
@@ -76,7 +46,7 @@
             </li>
         @endif
 
-        @if($pengajuanMenunggu === 0 && $waitingListCount === 0 && $perluPerbaikan === 0 && $pengajuanSlaKritisCount === 0)
+        @if($pengajuanMenunggu === 0 && $pengajuanSlaKritisCount === 0)
             <li class="adm-aside-empty-item">
                 <div class="adm-aside-empty-badge" aria-hidden="true">
                     <x-sa.icon name="check-circle" :size="20" />
@@ -107,10 +77,6 @@
         <a href="{{ route('admin.penempatan.index') }}" class="cv-quick-btn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             <span>Penempatan</span>
-        </a>
-        <a href="{{ route('admin.waiting-list.index') }}" class="cv-quick-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            <span>Waiting List</span>
         </a>
         <a href="{{ route('admin.laporan.index') }}" class="cv-quick-btn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>

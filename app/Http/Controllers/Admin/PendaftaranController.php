@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\RealtimeEventTypeEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
@@ -22,7 +21,6 @@ use App\Models\User;
 use App\Services\AuditService;
 use App\Services\DocumentArchiveService;
 use App\Services\PlacementService;
-use App\Services\RealtimeEventService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -205,73 +203,18 @@ class PendaftaranController extends Controller
                     ->with('success', 'Berkas pendaftaran berhasil diterima. Silakan tetapkan pembimbing lapangan di menu Penempatan Peserta.');
             }
 
-            if ($keputusan === 'waiting_list') {
-                // AC-04-4: Opsi Waiting List ditolak jika kuota umum belum penuh
-                $kuota = $pendaftaran->kuota;
-                if ($kuota && ($kuota->jumlah - $kuota->terisi) > 0) {
-                    return back()->with('error', 'Keputusan Waiting List ditolak (AC-04-4): Kuota umum jurusan ini belum penuh.');
-                }
-
-                if (! in_array($pendaftaran->status, [StatusPendaftaranEnum::Diajukan, StatusPendaftaranEnum::PerluPerbaikan], true)) {
-                    throw new StatusSudahBerubahException;
-                }
-
-                $pendaftaran->update([
-                    'status' => StatusPendaftaranEnum::WaitingList,
-                    'verifikator_id' => $admin->id,
-                    'diputuskan_at' => now(),
-                    'catatan' => $request->input('catatan'),
-                ]);
-
-                $this->auditService->catat(
-                    tipe: TipeAuditEnum::Aksi,
-                    tabel: 'pendaftaran',
-                    idData: $pendaftaran->id,
-                    nilaiLama: ['status' => StatusPendaftaranEnum::Diajukan->value],
-                    nilaiBaru: ['status' => StatusPendaftaranEnum::WaitingList->value],
-                    detail: [
-                        'aksi' => 'Memindahkan pendaftaran ke antrean Waiting List karena kuota penuh',
-                        'admin_id' => $admin->id,
-                        'catatan' => $request->input('catatan'),
-                    ]
-                );
-
-                // Notifikasi Real-time SSE ke peserta (TASK-SSE-05)
-                app(RealtimeEventService::class)->publish(
-                    RealtimeEventTypeEnum::StatusPendaftaran,
-                    [
-                        'title' => 'Dialihkan ke Waiting List',
-                        'message' => 'Kuota umum saat ini telah penuh. Pengajuan Anda masuk ke dalam antrean Waiting List.',
-                        'status' => 'waiting_list',
-                        'action_url' => route('peserta.dashboard'),
-                    ],
-                    $pendaftaran->user_id
-                );
-
-                return redirect()->route('admin.pendaftaran.show', $pendaftaran)
-                    ->with('success', 'Pendaftaran berhasil dialihkan ke antrean Waiting List.');
-
-            }
-
             if ($keputusan === 'tolak') {
                 $this->placementService->tolak($pendaftaran, $admin, $request->input('catatan'));
 
                 return redirect()->route('admin.pendaftaran.show', $pendaftaran)
                     ->with('success', 'Pengajuan pendaftaran berhasil ditolak.');
             }
-
-            if ($keputusan === 'perlu_perbaikan') {
-                $this->placementService->mintaPerbaikan($pendaftaran, $admin, $request->input('catatan'));
-
-                return redirect()->route('admin.pendaftaran.show', $pendaftaran)
-                    ->with('success', 'Permintaan perbaikan berkas telah dikirimkan ke peserta.');
-            }
         } catch (StatusSudahBerubahException $e) {
             // AC-04-5: Pesan ramah saat terjadi bentrok keputusan bersamaan
             return back()->with('error', 'Status pendaftaran sudah berubah, muat ulang halaman (AC-04-5).');
         } catch (KuotaPenuhException $e) {
-            // AC-04-6: Arahkan ke Waiting List bila kuota ternyata penuh saat diterima
-            return back()->with('error', 'Kuota umum telah terisi penuh. Silakan alihkan pendaftaran ke antrean Waiting List (AC-04-6).');
+            // AC-04-6: Pesan saat kuota ternyata penuh saat diterima
+            return back()->with('error', 'Kuota umum telah terisi penuh. Pengajuan tidak dapat diterima.');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal memproses keputusan: '.$e->getMessage());
         }

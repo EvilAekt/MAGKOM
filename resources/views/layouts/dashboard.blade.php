@@ -3208,16 +3208,6 @@
                             <span>{{ __('Manajemen Kuota') }}</span>
                         </a>
 
-                        <a href="{{ route('admin.waiting-list.index') }}" class="nav-item-link {{ request()->routeIs('admin.waiting-list.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polyline points="12 6 12 12 16 14"></polyline>
-                                </svg>
-                            </span>
-                            <span>{{ __('Waiting List') }}</span>
-                        </a>
-
                         <a href="{{ route('admin.penempatan.index') }}" class="nav-item-link {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3302,7 +3292,7 @@
                         <span class="nav-section-label">{{ __('MODUL OPERASIONAL') }}</span>
 
                         @php
-                            $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*') || request()->routeIs('admin.kuota.*') || request()->routeIs('admin.waiting-list.*') || request()->routeIs('admin.penempatan.*') || request()->routeIs('admin.laporan.*') || request()->routeIs('admin.sertifikat.*') || request()->routeIs('admin.survei.*');
+                            $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*') || request()->routeIs('admin.kuota.*') || request()->routeIs('admin.penempatan.*') || request()->routeIs('admin.laporan.*') || request()->routeIs('admin.sertifikat.*') || request()->routeIs('admin.survei.*');
                         @endphp
                         <div class="nav-group-container">
                             <button type="button" class="nav-group-btn {{ $isOperasionalAdminActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalAdminActive ? 'true' : 'false' }}">
@@ -3324,7 +3314,6 @@
                             <div class="nav-sub-menu {{ $isOperasionalAdminActive ? 'show' : '' }}">
                                 <a href="{{ route('admin.pendaftaran.index') }}" class="nav-sub-item {{ request()->routeIs('admin.pendaftaran.*') ? 'active' : '' }}">{{ __('Verifikasi Berkas') }}</a>
                                 <a href="{{ route('admin.kuota.index') }}" class="nav-sub-item {{ request()->routeIs('admin.kuota.*') ? 'active' : '' }}">{{ __('Kuota Magang') }}</a>
-                                <a href="{{ route('admin.waiting-list.index') }}" class="nav-sub-item {{ request()->routeIs('admin.waiting-list.*') ? 'active' : '' }}">{{ __('Waiting List') }}</a>
                                 <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">{{ __('Penempatan Peserta') }}</a>
                                 <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">{{ __('Laporan & Ekspor') }}</a>
                                 @if(\App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true))
