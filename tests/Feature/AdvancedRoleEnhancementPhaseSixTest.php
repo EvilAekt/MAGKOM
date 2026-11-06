@@ -232,7 +232,7 @@ class AdvancedRoleEnhancementPhaseSixTest extends TestCase
         // 1. Akses index laporan kinerja
         $response = $this->actingAs($this->pembimbing1)->get(route('pembimbing.laporan-kinerja.index'));
         $response->assertStatus(200);
-        $response->assertSee('Laporan Kinerja Mentoring ASN');
+        $response->assertSee('Laporan Peserta');
         $response->assertSee('Budi Pembimbing');
 
         // 2. Akses halaman cetak

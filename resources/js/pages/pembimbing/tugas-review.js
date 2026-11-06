@@ -1,39 +1,11 @@
 /**
  * MAGKOM - Portal Pembimbing: Tugas Review & Evaluation Workspace
- * Menangani Tab Switching, Dinamika Form Evaluasi (Outcome-Based Mentoring),
- * Template Snippet Arahan, dan Navigasi Mentee Cepat.
+ * Kontrol Aksi Terpadu (Tandai Selesai & Kembalikan), Validasi Umpan Balik,
+ * serta Navigasi Mentee Cepat.
  */
 
 export function initPembimbingTugasReview() {
-    // 1. Tab Switching: Kiriman Peserta vs Instruksi Tugas
-    const tabBtnSubmission = document.getElementById('tabBtnSubmission');
-    const tabBtnInstruction = document.getElementById('tabBtnInstruction');
-    const panelSubmission = document.getElementById('panelSubmission');
-    const panelInstruction = document.getElementById('panelInstruction');
-
-    if (tabBtnSubmission && tabBtnInstruction && panelSubmission && panelInstruction) {
-        tabBtnSubmission.addEventListener('click', () => {
-            tabBtnSubmission.classList.add('active');
-            tabBtnSubmission.setAttribute('aria-selected', 'true');
-            tabBtnInstruction.classList.remove('active');
-            tabBtnInstruction.setAttribute('aria-selected', 'false');
-
-            panelSubmission.classList.remove('d-none');
-            panelInstruction.classList.add('d-none');
-        });
-
-        tabBtnInstruction.addEventListener('click', () => {
-            tabBtnInstruction.classList.add('active');
-            tabBtnInstruction.setAttribute('aria-selected', 'true');
-            tabBtnSubmission.classList.remove('active');
-            tabBtnSubmission.setAttribute('aria-selected', 'false');
-
-            panelInstruction.classList.remove('d-none');
-            panelSubmission.classList.add('d-none');
-        });
-    }
-
-    // 2. Sidebar Collapse Toggle
+    // 1. Sidebar Collapse Toggle
     const btnToggleSidebar = document.getElementById('btnToggleSidebar');
     const bodyLayout = document.querySelector('.review-body-layout');
 
@@ -46,67 +18,31 @@ export function initPembimbingTugasReview() {
         });
     }
 
-    // 3. Dynamic Evaluation Form Rules (Wajib feedback jika perlu revisi)
-    const radioOptions = document.querySelectorAll('input[name="status_review"]');
+    // 2. Kontrol Aksi Terpadu: Validasi Pengembalian Tugas dengan Catatan Umpan Balik
+    const formActionKembalikan = document.getElementById('formActionKembalikan');
     const feedbackInput = document.getElementById('feedbackInput');
-    const feedbackReqBadge = document.getElementById('feedbackReqBadge');
-    const radioPillDiterima = document.getElementById('radioPillDiterima');
-    const radioPillRevisi = document.getElementById('radioPillRevisi');
+    const hiddenFeedbackKembalikan = document.getElementById('hiddenFeedbackKembalikan');
 
-    function syncEvaluationState() {
-        const selectedRadio = document.querySelector('input[name="status_review"]:checked');
-        if (!selectedRadio) return;
-
-        const val = selectedRadio.value;
-
-        if (radioPillDiterima && radioPillRevisi) {
-            if (val === 'diterima') {
-                radioPillDiterima.classList.add('selected-diterima');
-                radioPillRevisi.classList.remove('selected-revisi');
-            } else if (val === 'perlu_revisi') {
-                radioPillRevisi.classList.add('selected-revisi');
-                radioPillDiterima.classList.remove('selected-diterima');
+    if (formActionKembalikan && feedbackInput && hiddenFeedbackKembalikan) {
+        formActionKembalikan.addEventListener('submit', (e) => {
+            const feedbackVal = feedbackInput.value.trim();
+            if (feedbackVal.length < 5) {
+                e.preventDefault();
+                alert('Catatan umpan balik wajib diisi minimal 5 karakter ketika mengembalikan tugas kepada peserta untuk diperbaiki.');
+                feedbackInput.focus();
+                return false;
             }
-        }
 
-        if (val === 'perlu_revisi') {
-            if (feedbackReqBadge) feedbackReqBadge.style.display = 'inline';
-            if (feedbackInput) {
-                feedbackInput.setAttribute('required', 'required');
-                feedbackInput.placeholder = 'Wajib memberikan arahan bagian apa saja yang perlu diperbaiki...';
+            if (!confirm('Apakah Anda yakin ingin mengembalikan tugas ini kepada peserta untuk diperbaiki?')) {
+                e.preventDefault();
+                return false;
             }
-        } else {
-            if (feedbackReqBadge) feedbackReqBadge.style.display = 'none';
-            if (feedbackInput) {
-                feedbackInput.removeAttribute('required');
-                feedbackInput.placeholder = 'Tuliskan catatan apresiasi atau instruksi lanjutan (opsional)...';
-            }
-        }
-    }
 
-    radioOptions.forEach((radio) => {
-        radio.addEventListener('change', syncEvaluationState);
-    });
-    syncEvaluationState();
-
-    // 4. Quick Template Snippet Inserter
-    const snippetSelect = document.getElementById('snippetSelect');
-    if (snippetSelect && feedbackInput) {
-        snippetSelect.addEventListener('change', (e) => {
-            const val = e.target.value;
-            if (!val) return;
-
-            if (feedbackInput.value.trim() === '') {
-                feedbackInput.value = val;
-            } else {
-                feedbackInput.value = feedbackInput.value.trim() + '\n' + val;
-            }
-            feedbackInput.focus();
-            snippetSelect.value = '';
+            hiddenFeedbackKembalikan.value = feedbackVal;
         });
     }
 
-    // 5. Keyboard Shortcut Navigasi Mentee Cepat (< dan >)
+    // 3. Keyboard Shortcut Navigasi Mentee Cepat (< dan > atau [ dan ])
     const prevMenteeLink = document.getElementById('prevMenteeLink');
     const nextMenteeLink = document.getElementById('nextMenteeLink');
 
@@ -129,7 +65,7 @@ export function initPembimbingTugasReview() {
         }
     });
 
-    // 6. Mentee / Sibling Tugas Dropdown Selector
+    // 4. Mentee / Sibling Tugas Dropdown Selector
     const btnMenteeDropdown = document.getElementById('btnMenteeDropdown');
     const menteeDropdownMenu = document.getElementById('menteeDropdownMenu');
 
@@ -169,4 +105,3 @@ if (document.readyState === 'loading') {
 } else {
     initPembimbingTugasReview();
 }
-

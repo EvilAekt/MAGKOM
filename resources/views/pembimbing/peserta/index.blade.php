@@ -214,10 +214,6 @@
                                         <span>Profil</span>
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                     </a>
-                                    <a href="{{ route('pembimbing.penilaian.show', $p->id) }}" class="btn-peserta-action btn-nilai" title="Buka Lembar Nilai">
-                                        <span>Nilai</span>
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                    </a>
                                 </div>
                             </td>
                         </tr>

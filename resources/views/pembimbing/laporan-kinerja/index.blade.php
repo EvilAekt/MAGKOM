@@ -1,184 +1,330 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Laporan Kinerja Mentoring ASN - Portal Pembimbing')
+@section('title', 'Laporan Peserta - Portal Pembimbing')
+@section('topbar_title', 'Laporan Peserta')
+@section('content_area_class', 'gentelella-fluid-canvas')
+
+@push('styles')
+    @vite(['resources/css/pages/pembimbing/laporan-kinerja-index.css'])
+@endpush
+
+@push('scripts')
+    @vite(['resources/js/pages/pembimbing/laporan-kinerja-index.js'])
+@endpush
 
 @section('content')
-<div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="classroom-container laporan-kinerja-container">
 
-    <!-- Breadcrumb & Header Action -->
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-        <div>
-            <nav style="font-size: 0.8rem; color: var(--neutral-500); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-                <a href="{{ route('pembimbing.dashboard') }}" style="color: var(--neutral-600); text-decoration: none;">Dashboard</a>
-                <span>/</span>
-                <span style="color: var(--neutral-900); font-weight: 600;">Laporan Kinerja Mentoring</span>
-            </nav>
-            <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
-                Laporan Kinerja Pembimbing Lapangan ASN (F-09, F-10)
-            </h1>
-            <p style="font-size: 0.875rem; color: var(--neutral-600); margin: 0.25rem 0 0 0;">
-                Rekapitulasi portofolio bimbingan, jam mentoring kedinasan, dan capaian kompetensi seluruh mentee.
-            </p>
-        </div>
-        <div style="display: flex; gap: 0.75rem;">
-            <a href="{{ route('pembimbing.laporan-kinerja.cetak') }}" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.8125rem; border-radius: 8px; text-decoration: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                <span>Cetak Lembar Rekapitulasi (LPJ)</span>
-            </a>
-        </div>
-    </div>
+    {{-- 1. Classroom Hero Banner Khas Sleman MagKom (Gambar 2 Parity) --}}
+    @php
+        $authUser = auth()->user();
+        $bidangNama = $authUser->bidang?->nama_bidang ?? 'Dinas Komunikasi dan Informatika Sleman';
+    @endphp
 
-    <!-- 4 KPI Summary Cards -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-        
-        <!-- Total Mentee -->
-        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-600);">Total Mentee Dibimbing</span>
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #eff6ff; color: #0641CC; display: flex; align-items: center; justify-content: center;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                </div>
-            </div>
-            <div style="font-size: 1.75rem; font-weight: 800; color: var(--neutral-900);">
-                {{ $totalMentee }}
-            </div>
-            <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem;">
-                {{ $totalMenteeAktif }} aktif berjalan &bull; {{ $totalMenteeSelesai }} selesai
-            </div>
-        </x-gentelella.card>
-
-        <!-- Logbook Review -->
-        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-600);">Logbook Direview</span>
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #ecfdf5; color: #059669; display: flex; align-items: center; justify-content: center;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                </div>
-            </div>
-            <div style="font-size: 1.75rem; font-weight: 800; color: var(--neutral-900);">
-                {{ $totalLogbookReviewed }}
-            </div>
-            <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem;">
-                dari {{ $totalLogbookSubmitted }} catatan logbook terkirim
-            </div>
-        </x-gentelella.card>
-
-        <!-- Tugas Diselesaikan -->
-        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-600);">Tugas Diselesaikan</span>
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                </div>
-            </div>
-            <div style="font-size: 1.75rem; font-weight: 800; color: var(--neutral-900);">
-                {{ $rasioTugasSelesai }}%
-            </div>
-            <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem;">
-                {{ $totalTugasSelesai }} selesai dari {{ $totalTugasDiberikan }} total tugas
-            </div>
-        </x-gentelella.card>
-
-        <!-- Rata-rata Nilai -->
-        <x-gentelella.card hoverable="true" style="padding: 1.25rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-600);">Rata-rata Nilai Akhir</span>
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #f3e8ff; color: #7e22ce; display: flex; align-items: center; justify-content: center;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                </div>
-            </div>
-            <div style="font-size: 1.75rem; font-weight: 800; color: var(--neutral-900);">
-                {{ $rataRataNilai > 0 ? number_format($rataRataNilai, 2) : '-' }}
-            </div>
-            <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.25rem;">
-                Kompetensi rubrik resmi Diskominfo
-            </div>
-        </x-gentelella.card>
-    </div>
-
-    <!-- Tabel Rekapitulasi Portofolio Bimbingan -->
-    <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
-        <div style="padding: 1.25rem; border-bottom: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+    <div class="classroom-banner laporan-hero-banner">
+        <div class="banner-top-row">
             <div>
-                <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--neutral-900); margin: 0;">Rekapitulasi Portofolio Bimbingan</h3>
-                <p style="font-size: 0.8rem; color: var(--neutral-600); margin: 0.15rem 0 0 0;">Daftar lengkap capaian dan rekam jejak setiap peserta yang dibimbing.</p>
+                <h1 class="banner-title">Laporan Peserta</h1>
+                <div class="banner-subtitle">
+                    <span>Bidang: <strong>{{ $bidangNama }}</strong></span>
+                    <span>&bull;</span>
+                    <span>Pembimbing: <strong>{{ $authUser->nama }}</strong></span>
+                    <span>&bull;</span>
+                    <span><strong>{{ $countAktif }} Mentee Aktif Bimbingan</strong></span>
+                </div>
+            </div>
+            <div>
+                {{-- Dropdown Wrap & Popover Ekspor di dalam Card Banner (Gambar 2 & 5) --}}
+                <div id="admExportDropdownWrap" class="adm-export-dropdown-wrap">
+                    <button type="button" 
+                            id="btnToggleExportPopover" 
+                            class="btn-export-rekap-banner"
+                            aria-expanded="false" 
+                            aria-haspopup="menu" 
+                            aria-controls="admExportPopover"
+                            title="Pilih dan unduh rekap data peserta (Excel, CSV, PDF)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Ekspor Rekap</span>
+                        <svg id="admExportCaretSvg" class="adm-export-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+
+                    {{-- Floating Popover Card dengan class anti-clipping .adm-export-popover-right --}}
+                    <div id="admExportPopover" 
+                         class="adm-export-popover adm-export-popover-right" 
+                         style="display: none;" 
+                         role="menu" 
+                         aria-label="Menu Pilihan Format Ekspor"
+                         data-export-url="{{ route('pembimbing.laporan-kinerja.export') }}"
+                         data-print-url="{{ route('pembimbing.laporan-kinerja.cetak') }}">
+                        <div class="adm-popover-pointer adm-pointer-right"></div>
+                        <div class="adm-popover-header">
+                            <div>
+                                <div class="adm-popover-title">Ekspor Rekap Cepat</div>
+                                <div class="adm-popover-desc">Data hasil filter aktif</div>
+                            </div>
+                            <span class="adm-popover-row-count tabular-nums">
+                                {{ number_format($totalMentee) }} Baris
+                            </span>
+                        </div>
+
+                <div class="adm-popover-formats" role="radiogroup" aria-label="Format Berkas">
+                    {{-- Format 1: Excel (.xlsx) - Rekomendasi --}}
+                    <label class="adm-format-card adm-format-selected" id="cardFormatXlsx">
+                        <div class="adm-format-content">
+                            <input type="radio" name="popover_export_format" id="radioFormatXlsx" value="xlsx" checked class="adm-format-radio">
+                            <div class="adm-format-details">
+                                <div class="adm-format-name-wrap">
+                                    <span class="adm-format-name">Microsoft Excel</span>
+                                    <span class="badge-format-ext badge-ext-xlsx">.xlsx</span>
+                                </div>
+                                <p class="adm-format-desc">Tabel resmi bergaris rapi &amp; filterable</p>
+                            </div>
+                        </div>
+                        <div class="adm-format-meta">
+                            <span class="adm-badge-recommend">Rekomendasi</span>
+                        </div>
+                    </label>
+
+                    {{-- Format 2: CSV Tabular (.csv) --}}
+                    <label class="adm-format-card" id="cardFormatCsv">
+                        <div class="adm-format-content">
+                            <input type="radio" name="popover_export_format" id="radioFormatCsv" value="csv" class="adm-format-radio">
+                            <div class="adm-format-details">
+                                <div class="adm-format-name-wrap">
+                                    <span class="adm-format-name">CSV Tabular</span>
+                                    <span class="badge-format-ext badge-ext-csv">.csv</span>
+                                </div>
+                                <p class="adm-format-desc">Data mentah teks pemisah koma terstandarisasi</p>
+                            </div>
+                        </div>
+                        <div class="adm-format-meta">
+                            <span class="adm-badge-quick">Cepat</span>
+                        </div>
+                    </label>
+
+                    {{-- Format 3: Dokumen Resmi PDF (.pdf) --}}
+                    <label class="adm-format-card" id="cardFormatPdf">
+                        <div class="adm-format-content">
+                            <input type="radio" name="popover_export_format" id="radioFormatPdf" value="pdf" class="adm-format-radio">
+                            <div class="adm-format-details">
+                                <div class="adm-format-name-wrap">
+                                    <span class="adm-format-name">Dokumen Resmi (.pdf)</span>
+                                    <span class="badge-format-ext badge-ext-pdf">.pdf</span>
+                                </div>
+                                <p class="adm-format-desc">Rekapitulasi cetak ber-kop resmi kedinasan</p>
+                            </div>
+                        </div>
+                        <div class="adm-format-meta">
+                            <span class="adm-badge-legal">Legal Sah</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="adm-popover-cta">
+                    <button type="button" id="btnCancelExportPopover" class="adm-btn-popover-cancel">
+                        Batal
+                    </button>
+                    <button type="button" id="btnDoExportDownload" class="adm-btn-popover-download">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: 0.35rem;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        <span>Unduh Excel (.xlsx)</span>
+                    </button>
+                </div>
             </div>
         </div>
-
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
-                <thead>
-                    <tr style="border-bottom: 1px solid var(--neutral-200); background: #f8fafc; color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        <th style="padding: 1rem 1.25rem;">Nama Mentee</th>
-                        <th style="padding: 1rem 1rem;">Institusi & Jurusan</th>
-                        <th style="padding: 1rem 1rem;">Bidang Magang</th>
-                        <th style="padding: 1rem 1rem; text-align: center;">Tugas Selesai</th>
-                        <th style="padding: 1rem 1rem; text-align: center;">Logbook</th>
-                        <th style="padding: 1rem 1rem; text-align: center;">Nilai Akhir</th>
-                        <th style="padding: 1rem 1.25rem; text-align: center;">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($rekapMentees as $item)
-                        @php $p = $item['penempatan']; @endphp
-                        <tr style="border-bottom: 1px solid var(--neutral-100); transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 1rem 1.25rem;">
-                                <div style="font-weight: 600; color: var(--neutral-900);">{{ $p->peserta?->nama }}</div>
-                                <div style="font-size: 0.75rem; color: var(--neutral-500);">NIM/NISN: {{ $p->peserta?->profil?->nim_nisn ?? '-' }}</div>
-                            </td>
-                            <td style="padding: 1rem 1rem;">
-                                <div style="font-weight: 500; color: var(--neutral-800);">{{ $p->peserta?->profil?->institusi ?? '-' }}</div>
-                                <div style="font-size: 0.75rem; color: var(--neutral-500);">{{ $p->peserta?->profil?->jurusan?->nama_jurusan ?? '-' }}</div>
-                            </td>
-                            <td style="padding: 1rem 1rem;">
-                                <span style="font-size: 0.8rem; font-weight: 600; color: #0641CC;">{{ $p->bidang?->nama_bidang ?? 'Umum' }}</span>
-                            </td>
-                            <td style="padding: 1rem 1rem; text-align: center;">
-                                <span style="font-weight: 700; color: var(--neutral-800);">{{ $item['tugas_selesai'] }}</span>
-                                <span style="font-size: 0.75rem; color: var(--neutral-500);">/ {{ $item['total_tugas'] }}</span>
-                            </td>
-                            <td style="padding: 1rem 1rem; text-align: center;">
-                                <span style="font-weight: 700; color: #059669;">{{ $item['logbook_reviewed'] }}</span>
-                                <span style="font-size: 0.75rem; color: var(--neutral-500);">/ {{ $item['total_logbook'] }}</span>
-                            </td>
-                            <td style="padding: 1rem 1rem; text-align: center;">
-                                @if($item['nilai_akhir'] !== null)
-                                    <div style="font-weight: 700; color: #0641CC; font-size: 0.95rem;">
-                                        {{ number_format((float) $item['nilai_akhir'], 2) }}
-                                    </div>
-                                    <span style="font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 4px; background: #e0e7ff; color: #0641CC;">
-                                        {{ $item['predikat'] }}
-                                    </span>
-                                @else
-                                    <span style="font-size: 0.8rem; color: var(--neutral-400);">-</span>
-                                @endif
-                            </td>
-                            <td style="padding: 1rem 1.25rem; text-align: center;">
-                                @if($p->status->value === 'aktif')
-                                    <span style="padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; background: #ecfdf5; color: #059669;">
-                                        Aktif
-                                    </span>
-                                @elseif($p->status->value === 'selesai')
-                                    <span style="padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; background: #eff6ff; color: #0641CC;">
-                                        Selesai
-                                    </span>
-                                @else
-                                    <span style="padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; background: var(--neutral-200); color: var(--neutral-700);">
-                                        {{ ucfirst($p->status->value) }}
-                                    </span>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" style="padding: 2.5rem; text-align: center; color: var(--neutral-500);">
-                                Belum ada catatan rekapitulasi peserta bimbingan.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
     </div>
+</div>
+</div>
+
+    {{-- 2. Tile Stats MagKom Gentelella (4 Metrik Selaras Gambar 2) --}}
+    <div class="tiles-grid">
+        <x-gentelella.tile-stat
+            title="TOTAL MENTEE"
+            value="{{ $totalMentee }}"
+            color="teal"
+            trendDirection="up"
+            trendText="{{ $totalMentee }} Total"
+            subText="Seluruh riwayat penempatan"
+            :sparkBars="[35, 45, 55, 65, 75, 82, 88, 92, 100]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <x-gentelella.tile-stat
+            title="PESERTA AKTIF"
+            value="{{ $countAktif }}"
+            color="blue"
+            trendType="info"
+            trendDirection="up"
+            trendText="{{ $persenAktif }}%"
+            subText="Sedang menjalankan magang"
+            :sparkBars="[40, 50, 65, 55, 70, 60, 80, 75, 70]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <x-gentelella.tile-stat
+            title="PERLU PERHATIAN"
+            value="{{ $countPerhatian }}"
+            color="yellow"
+            trendType="warning"
+            trendDirection="down"
+            trendText="{{ $countPerhatian }} Alert"
+            subText="Tugas overdue / logbook bolong"
+            :sparkBars="[70, 85, 90, 65, 50, 60, 45, 30, 20]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <x-gentelella.tile-stat
+            title="ALUMNI SELESAI"
+            value="{{ $countSelesai }}"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="{{ $persenSelesai }}%"
+            subText="Magang tuntas & lulus"
+            :sparkBars="[15, 25, 40, 50, 65, 75, 85, 95, 100]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+    </div>
+
+    {{-- 3. Redesign Tabel Portofolio Bimbingan (Data Penempatan Peserta) --}}
+    <x-gentelella.x-panel title="Data Penempatan Peserta">
+        @if($rekapMentees->isEmpty())
+            <div class="adm-table-empty" style="padding: 3.5rem 1.5rem; text-align: center; color: var(--neutral-600, #64748B);">
+                <div style="width: 56px; height: 56px; background: #EFF6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; color: #1D4ED8;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin-bottom: 0.25rem;">
+                    Belum Ada Data Penempatan
+                </h4>
+                <p style="font-size: 0.85rem; max-width: 440px; margin: 0 auto;">Belum ada catatan rekapitulasi peserta bimbingan yang terdaftar.</p>
+            </div>
+        @else
+            <div class="adm-table-container">
+                <div style="overflow-x: auto; width: 100%;">
+                    <table class="adm-table admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nama Mentee</th>
+                                <th>Institusi &amp; Jurusan</th>
+                                <th>Bidang Magang</th>
+                                <th style="text-align: center;">Tugas Selesai</th>
+                                <th style="text-align: center;">Logbook</th>
+                                <th style="text-align: center;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($rekapMentees as $item)
+                                @php
+                                    $p = $item['penempatan'];
+                                    $cleanNama = str_replace([' (Peserta Magang)', ' (Pembimbing Lapangan)'], '', (string) ($p->peserta?->nama ?? '-'));
+                                    $initials = collect(explode(' ', $cleanNama))->filter()->map(fn($w) => mb_substr($w, 0, 1))->take(1)->implode('');
+                                    if (empty($initials)) {
+                                        $initials = 'P';
+                                    }
+                                    $statusVal = is_object($p->status) ? $p->status->value : $p->status;
+                                    $statusClass = match($statusVal) {
+                                        'aktif' => 'status-pill-aktif',
+                                        'selesai' => 'status-pill-selesai',
+                                        'nonaktif' => 'status-pill-nonaktif',
+                                        default => 'status-pill-default',
+                                    };
+                                    $statusLabel = match($statusVal) {
+                                        'aktif' => 'Aktif',
+                                        'selesai' => 'Selesai',
+                                        'nonaktif' => 'Nonaktif',
+                                        'mengundurkan_diri' => 'Mengundurkan Diri',
+                                        default => ucfirst((string) $statusVal),
+                                    };
+                                @endphp
+                                <tr>
+                                    {{-- 1. Nama Mentee dengan Avatar Box Inisial sesuai Gambar 2 --}}
+                                    <td>
+                                        <div class="mentee-table-cell">
+                                            <div class="mentee-avatar-square" aria-hidden="true">
+                                                {{ strtoupper($initials) }}
+                                            </div>
+                                            <div class="mentee-info-col">
+                                                <div class="mentee-info-name">
+                                                    {{ $cleanNama }}
+                                                </div>
+                                                <div class="mentee-info-nim">
+                                                    NIM/NISN: {{ $p->peserta?->profil?->nim_nisn ?? '-' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    {{-- 2. Institusi & Jurusan --}}
+                                    <td>
+                                        <div class="institusi-col-text">
+                                            {{ $p->peserta?->profil?->institusi ?? '-' }}
+                                        </div>
+                                        <div class="jurusan-subtext">
+                                            {{ $p->peserta?->profil?->jurusan?->nama_jurusan ?? '-' }}
+                                        </div>
+                                    </td>
+
+                                    {{-- 3. Bidang Magang --}}
+                                    <td>
+                                        <div class="bidang-text">
+                                            {{ $p->bidang?->nama_bidang ?? 'Umum' }}
+                                        </div>
+                                    </td>
+
+                                    {{-- 4. Tugas Selesai --}}
+                                    <td style="text-align: center;">
+                                        <span class="ratio-highlight-tugas">{{ $item['tugas_selesai'] }}</span>
+                                        <span class="ratio-subtext">/ {{ $item['total_tugas'] }}</span>
+                                    </td>
+
+                                    {{-- 5. Logbook --}}
+                                    <td style="text-align: center;">
+                                        <span class="ratio-highlight-logbook">{{ $item['logbook_reviewed'] }}</span>
+                                        <span class="ratio-subtext">/ {{ $item['total_logbook'] }}</span>
+                                    </td>
+
+                                    {{-- 6. Status --}}
+                                    <td style="text-align: center;">
+                                        <span class="status-pill-badge {{ $statusClass }}">
+                                            {{ $statusLabel }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                {{-- Footer Paginasi Terstandarisasi Selaras Gambar 2 --}}
+                <div class="adm-table-footer">
+                    <x-gentelella.pagination-bar 
+                        :paginator="$rekapMentees" 
+                        :perPageOptions="[5, 10, 25]" 
+                        entity="peserta magang"
+                        badgeText="Penempatan Aktif"
+                    />
+                </div>
+            </div>
+        @endif
+    </x-gentelella.x-panel>
 </div>
 @endsection

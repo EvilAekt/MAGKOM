@@ -65,7 +65,9 @@ class LogbookReviewController extends Controller
 
         $logbooks = $query->latest('tanggal')->paginate(20)->withQueryString();
 
-        $penempatanList = Penempatan::with(['peserta.profil.jurusan', 'bidang'])
+        $penempatanList = Penempatan::with(['peserta.profil.jurusan', 'bidang', 'logbooks' => function ($q) {
+            $q->latest('tanggal');
+        }])
             ->where(function ($q) use ($user) {
                 if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
                     $q->where('pembimbing_id', $user->id);
@@ -81,6 +83,12 @@ class LogbookReviewController extends Controller
         });
 
         $totalLogbook = (clone $baseCounter)->count();
+        $totalMenteeMelapor = (clone $baseCounter)->distinct('penempatan_id')->count('penempatan_id');
+        $countDenganCatatan = (clone $baseCounter)->whereNotNull('catatan_pembimbing')->where('catatan_pembimbing', '!=', '')->count();
+        $countTanpaCatatan = (clone $baseCounter)->where(function ($q) {
+            $q->whereNull('catatan_pembimbing')->orWhere('catatan_pembimbing', '');
+        })->count();
+
         $countMenunggu = (clone $baseCounter)->where('status', StatusLogbookEnum::Terkirim)->count();
         $countDisetujui = (clone $baseCounter)->where('status', StatusLogbookEnum::Disetujui)->count();
         $countRevisi = (clone $baseCounter)->where('status', StatusLogbookEnum::PerluRevisi)->count();
@@ -89,16 +97,38 @@ class LogbookReviewController extends Controller
         $persenMenunggu = $totalLogbook > 0 ? (int) round(($countMenunggu / $totalLogbook) * 100) : 0;
         $persenRevisi = $totalLogbook > 0 ? (int) round(($countRevisi / $totalLogbook) * 100) : 0;
 
+        $selectedPenempatanId = $request->integer('penempatan_id') ?: null;
+        $selectedPenempatan = null;
+        if ($selectedPenempatanId) {
+            $selectedPenempatan = $penempatanList->firstWhere('id', $selectedPenempatanId);
+            if (! $selectedPenempatan) {
+                $selectedPenempatan = Penempatan::with(['peserta.profil.jurusan', 'bidang', 'logbooks' => function ($q) {
+                    $q->latest('tanggal');
+                }])
+                    ->where(function ($q) use ($user) {
+                        if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                            $q->where('pembimbing_id', $user->id);
+                        }
+                    })
+                    ->firstWhere('id', $selectedPenempatanId);
+            }
+        }
+
         $data = [
             'logbooks' => $logbooks,
             'penempatanList' => $penempatanList,
             'totalLogbook' => $totalLogbook,
+            'totalMenteeMelapor' => $totalMenteeMelapor,
+            'countDenganCatatan' => $countDenganCatatan,
+            'countTanpaCatatan' => $countTanpaCatatan,
             'countMenunggu' => $countMenunggu,
             'countDisetujui' => $countDisetujui,
             'countRevisi' => $countRevisi,
             'persenDisetujui' => $persenDisetujui,
             'persenMenunggu' => $persenMenunggu,
             'persenRevisi' => $persenRevisi,
+            'selectedPenempatanId' => $selectedPenempatanId,
+            'selectedPenempatan' => $selectedPenempatan,
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {
@@ -112,26 +142,32 @@ class LogbookReviewController extends Controller
     }
 
     /**
-     * Review catatan logbook peserta oleh pembimbing (AC-09-3, AC-09-4).
+     * Berikan catatan logbook peserta oleh pembimbing (Task 02).
      */
     public function review(ReviewLogbookRequest $request, Logbook $logbook): JsonResponse|RedirectResponse
     {
         Gate::authorize('review', $logbook);
 
+        $catatan = $request->validated('catatan_pembimbing');
         $nilaiLama = $logbook->only(['status', 'catatan_pembimbing']);
 
-        $logbook->update([
-            'status' => $request->validated('status'),
-            'catatan_pembimbing' => $request->validated('catatan_pembimbing'),
-        ]);
+        $updatePayload = [
+            'catatan_pembimbing' => $catatan,
+        ];
+
+        if ($request->filled('status')) {
+            $updatePayload['status'] = $request->validated('status');
+        }
+
+        $logbook->update($updatePayload);
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
             tabel: 'logbook',
             idData: $logbook->id,
             nilaiLama: $nilaiLama,
-            nilaiBaru: $request->validated(),
-            detail: ['aksi' => 'review_logbook']
+            nilaiBaru: $updatePayload,
+            detail: ['aksi' => 'beri_catatan_logbook']
         );
 
         // Notifikasi Real-time SSE ke Peserta (TASK-SSE-06)
@@ -141,7 +177,9 @@ class LogbookReviewController extends Controller
             $title = $isRevisi ? 'Logbook Memerlukan Revisi' : 'Logbook Harian Disetujui';
             $message = $isRevisi && filled($logbook->catatan_pembimbing)
                 ? "Pembimbing memberikan catatan revisi logbook: {$logbook->catatan_pembimbing}"
-                : "Catatan logbook tanggal {$logbook->tanggal->translatedFormat('d F Y')} telah dinilai ({$logbook->status->label()}).";
+                : (filled($catatan)
+                    ? "Pembimbing memberikan catatan: {$catatan}"
+                    : "Catatan logbook tanggal {$logbook->tanggal->translatedFormat('d F Y')} telah dinilai ({$logbook->status->label()}).");
 
             app(RealtimeEventService::class)->publish(
                 RealtimeEventTypeEnum::LogbookDireviu,
@@ -159,13 +197,12 @@ class LogbookReviewController extends Controller
         }
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
-
-            return back()->with('success', 'Review catatan logbook harian berhasil disimpan.');
+            return back()->with('success', 'Catatan pembimbing pada logbook berhasil disimpan.');
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Review catatan logbook harian berhasil disimpan.',
+            'message' => 'Catatan pembimbing pada logbook berhasil disimpan.',
             'data' => $logbook,
         ]);
     }

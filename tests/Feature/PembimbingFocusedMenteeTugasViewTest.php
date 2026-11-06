@@ -226,6 +226,17 @@ class PembimbingFocusedMenteeTugasViewTest extends TestCase
         $response->assertSee('Dimas Pratama');
         // Header fokus terpadu default disembunyikan
         $response->assertSee('class="mentee-unified-header d-none"', false);
+
+        // Komponen Filter Nama Peserta ter-render dan terlihat di direktori awal
+        $response->assertSee('Filter Nama Peserta');
+        $response->assertSee('id="selectPenempatan"', false);
+        $response->assertSee('Semua Peserta Bimbingan');
+        $response->assertSee('class="btn-filter-apply"', false);
+        $response->assertDontSee('class="btn-filter-reset"', false);
+        $response->assertDontSee('id="tugasFilterCard" class="tugas-filter-card d-none"', false);
+
+        // Mentee pembimbing lain tidak boleh ada di dropdown (Anti-IDOR)
+        $response->assertDontSee('Peserta Pembimbing Lain');
     }
 
     public function test_akses_dengan_penempatan_id_menampilkan_mode_fokus_dan_tombol_kembali(): void
@@ -245,6 +256,11 @@ class PembimbingFocusedMenteeTugasViewTest extends TestCase
         // Teks kaku 'Tugas & Progres:' telah dihilangkan
         $response->assertDontSee('Tugas &amp; Progres: Naufal Pratama');
         $response->assertDontSee('Tugas & Progres: Naufal Pratama');
+
+        // Komponen Filter Nama Peserta disembunyikan saat dalam mode fokus
+        $response->assertSee('id="tugasFilterCard" class="tugas-filter-card d-none"', false);
+        $response->assertSee('value="'.$this->penempatan1->id.'" selected', false);
+        $response->assertSee('class="btn-filter-reset"', false);
 
         // Tombol kembali sisi kiri muncul
         $response->assertSee('btnBackToMentees');

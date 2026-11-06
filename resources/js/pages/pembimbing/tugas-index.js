@@ -184,6 +184,18 @@ export function initPembimbingTugasIndex() {
         if (focusedMenteeName) focusedMenteeName.textContent = menteeName;
         if (focusedMenteeInst) focusedMenteeInst.textContent = menteeInst || '';
 
+        // Sinkronisasi nilai dropdown filter jika tersedia
+        const selectPen = document.getElementById('selectPenempatan');
+        if (selectPen) {
+            selectPen.value = String(menteeId);
+        }
+
+        // Sembunyikan kartu filter saat masuk ke detail mentee
+        const filterCard = document.getElementById('tugasFilterCard');
+        if (filterCard) {
+            filterCard.classList.add('d-none');
+        }
+
         // D. Perbarui URL browser dengan parameter penempatan_id
         if (updateHistory) {
             try {
@@ -239,6 +251,18 @@ export function initPembimbingTugasIndex() {
         // C. Kembalikan ke Header Default Panel
         if (menteeUnifiedHeader) menteeUnifiedHeader.classList.add('d-none');
         if (defaultTitleText) defaultTitleText.classList.remove('d-none');
+
+        // Kembalikan nilai dropdown filter ke default
+        const selectPen = document.getElementById('selectPenempatan');
+        if (selectPen) {
+            selectPen.value = '';
+        }
+
+        // Munculkan kembali kartu filter saat melihat semua mentee
+        const filterCard = document.getElementById('tugasFilterCard');
+        if (filterCard) {
+            filterCard.classList.remove('d-none');
+        }
 
         // D. Perbarui URL browser tanpa penempatan_id
         if (updateHistory) {

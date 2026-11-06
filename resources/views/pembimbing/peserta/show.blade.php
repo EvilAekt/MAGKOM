@@ -23,13 +23,6 @@
             <a href="{{ route('pembimbing.peserta.index') }}" class="btn" style="background: var(--neutral-100); color: var(--neutral-700); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
                 &larr; Kembali ke Direktori
             </a>
-            <a href="{{ route('pembimbing.penilaian.show', $penempatan->id) }}" class="btn" style="background: #0641CC; color: #ffffff; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="8" r="7"></circle>
-                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                </svg>
-                Lembar Nilai Magang
-            </a>
         </div>
     </div>
 
@@ -145,9 +138,6 @@
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; font-size: 0.75rem;">
                 <span style="color: var(--neutral-500);">Berdasarkan 5 kriteria rubrik</span>
-                <a href="{{ route('pembimbing.penilaian.show', $penempatan->id) }}" style="color: #0641CC; font-weight: 600; text-decoration: none;">
-                    Kelola Nilai &rarr;
-                </a>
             </div>
         </x-gentelella.card>
 

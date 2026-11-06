@@ -249,6 +249,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 
     // Laporan Kinerja Mentoring ASN Sleman
     Route::get('/laporan-kinerja', [PembimbingLaporanKinerjaController::class, 'index'])->name('laporan-kinerja.index');
+    Route::get('/laporan-kinerja/export', [PembimbingLaporanKinerjaController::class, 'export'])->name('laporan-kinerja.export');
     Route::get('/laporan-kinerja/cetak', [PembimbingLaporanKinerjaController::class, 'cetak'])->name('laporan-kinerja.cetak');
 
     // Profil & Pengaturan Akun Pembimbing

@@ -108,14 +108,48 @@
         </x-gentelella.tile-stat>
     </div>
 
-    {{-- 3. X-Panel Daftar Penugasan & Stream Ala Classroom --}}
+    {{-- 2.5 Filter Bar: Sederhana (HANYA Filter Nama Peserta) --}}
     @php
+        $filterPenempatanList = $allPenempatan ?? $penempatanList;
         $isFocusActive = !empty($selectedPenempatan);
         $focusedNama = $selectedPenempatan?->peserta?->nama ?? '';
         $focusedInst = $selectedPenempatan?->peserta?->profil?->institusi ?? '';
         $focusedInitials = collect(explode(' ', $focusedNama))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
     @endphp
+    <div id="tugasFilterCard" class="tugas-filter-card {{ $isFocusActive ? 'd-none' : '' }}">
+        <form method="GET" action="{{ route('pembimbing.tugas.index') }}" class="tugas-filter-form">
+            @if(request()->filled('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+            @endif
+            @if(request()->filled('kategori'))
+                <input type="hidden" name="kategori" value="{{ request('kategori') }}">
+            @endif
 
+            <div class="filter-group">
+                <label for="selectPenempatan">Filter Nama Peserta</label>
+                <select name="penempatan_id" id="selectPenempatan" class="filter-control" onchange="this.form.submit()">
+                    <option value="">Semua Peserta Bimbingan</option>
+                    @foreach($filterPenempatanList as $pen)
+                        <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
+                            {{ $pen->peserta?->nama }} ({{ $pen->peserta?->profil?->institusi ?? 'Institusi' }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="btn-filter-apply">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                    <span>Filter</span>
+                </button>
+                @if(request()->filled('penempatan_id'))
+                    <a href="{{ route('pembimbing.tugas.index', request()->except('penempatan_id')) }}" class="btn-filter-reset">Reset</a>
+                @endif
+            </div>
+        </form>
+    </div>
+
+    {{-- 3. X-Panel Daftar Penugasan & Stream Ala Classroom --}}
     <x-gentelella.x-panel id="tugasMainPanel">
         <x-slot:title>
             {{-- Mode 1: Default Title saat Semua Mentee Tampil --}}
@@ -148,8 +182,8 @@
             </div>
         </x-slot:title>
 
-        {{-- Switcher Mode Tampilan (Card vs Table) --}}
-        <div class="classroom-tabs-wrapper view-switcher-only">
+        {{-- Switcher Mode Tampilan (Dihilangkan: Tampilan 100% Berbasis Kartu) --}}
+        <div class="classroom-tabs-wrapper view-switcher-only" style="display: none;">
             <div class="view-switcher-group" role="group" aria-label="Pilih Mode Tampilan">
                 <button type="button" id="btnViewCard" class="btn-toggle-view active" title="Tampilan Kartu Classroom" aria-pressed="true">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>

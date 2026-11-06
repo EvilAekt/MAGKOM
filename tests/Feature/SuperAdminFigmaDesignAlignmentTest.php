@@ -271,7 +271,6 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         $response->assertSee('Penilaian Peserta');
         $response->assertSee('Review Logbook');
         $response->assertSee('Tugas Magang');
-        $response->assertSee('Agenda Bimbingan');
         $response->assertSee('Laporan Kinerja');
 
         // 3. Verifikasi keberadaan definisi fungsi JavaScript toggleNavGroup & toggleSidebar

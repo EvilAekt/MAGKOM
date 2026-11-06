@@ -1083,6 +1083,43 @@
     color: #F8FAFC !important;
 }
 
+/* Integrated Section & Unified Actions (Task 01) */
+.review-integrated-section {
+    background: #FFFFFF;
+    border: 1px solid var(--review-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.section-top-badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.section-label-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #01347C;
+}
+
+.btn-unified-selesai:hover {
+    background: #047857 !important;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+}
+
+.btn-unified-kembalikan:hover {
+    background: #B91C1C !important;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
 /* Responsive Adjustments */
 @media (max-width: 1024px) {
     .review-body-layout {

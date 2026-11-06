@@ -95,6 +95,7 @@ class TugasController extends Controller
             ->where('status', StatusPenempatanEnum::Aktif);
 
         $penempatanList = (clone $penempatanBaseQuery)->latest('id')->paginate(10)->withQueryString();
+        $allPenempatan = (clone $penempatanBaseQuery)->latest('id')->get();
 
         // Hitung metrik agregat status tugas untuk banner dan tab classroom
         $baseMetricsQuery = Tugas::whereHas('penempatan', function ($q) use ($user) {
@@ -129,6 +130,7 @@ class TugasController extends Controller
         $data = [
             'tugasList' => $tugasList,
             'penempatanList' => $penempatanList,
+            'allPenempatan' => $allPenempatan,
             'counts' => $counts,
             'selectedPenempatanId' => $selectedPenempatanId,
             'selectedPenempatan' => $selectedPenempatan,

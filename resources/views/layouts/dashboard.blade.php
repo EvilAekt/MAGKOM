@@ -3150,17 +3150,8 @@
                                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                 </svg>
                             </span>
-                            <span>{{ __('Review Logbook') }}</span>
-                        </a>
-
-                        <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.penilaian.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="8" r="7"></circle>
-                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                                </svg>
-                            </span>
-                            <span>{{ __('Penilaian Magang') }}</span>
+                            <span>{{ __('Logbook') }}</span>
+                            <span class="sr-only">{{ __('Review Logbook') }}</span>
                         </a>
 
                         <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-item-link {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">
@@ -3173,7 +3164,7 @@
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
                             </span>
-                            <span>{{ __('Laporan Kinerja ASN') }}</span>
+                            <span>{{ __('Laporan Peserta') }}</span>
                         </a>
 
 
@@ -3367,7 +3358,7 @@
                                 <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.penilaian.*') ? 'active' : '' }}">{{ __('Penilaian Peserta') }}</a>
                                 <a href="{{ route('pembimbing.logbook.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">{{ __('Review Logbook') }}</a>
                                 <a href="{{ route('pembimbing.tugas.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.tugas.*') ? 'active' : '' }}">{{ __('Tugas Magang') }}</a>
-                                <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">{{ __('Laporan Kinerja') }}</a>
+                                <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">{{ __('Laporan Peserta') }}</a>
                             </div>
                         </div>
 
