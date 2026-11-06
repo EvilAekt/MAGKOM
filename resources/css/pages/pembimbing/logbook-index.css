@@ -178,6 +178,37 @@
     background: #ffffff;
 }
 
+.peserta-search-input-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.peserta-search-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px 0 36px;
+    border-radius: 8px;
+    border: 1px solid #CBD5E1;
+    font-size: 0.875rem;
+    background: #F8FAFC;
+    color: #0F172A;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.peserta-search-input:focus {
+    border-color: #01347C;
+    background: #ffffff;
+}
+
+.peserta-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 11px;
+    color: #94A3B8;
+    pointer-events: none;
+}
+
 .filter-actions {
     display: flex;
     gap: 8px;
@@ -582,6 +613,81 @@
     background: #F8FAFC;
 }
 
+.mentee-panel-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.mentee-panel-title-wrap .mentee-avatar-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #BFDBFE;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.mentee-panel-title-wrap .mentee-primary-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 2px 0;
+    line-height: 1.3;
+}
+
+.mentee-panel-title-wrap .mentee-sub-inst {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: #64748B;
+    margin: 0;
+}
+
+.mentee-card-link {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.mentee-card-link:hover {
+    text-decoration: none !important;
+    background: #F8FAFC;
+}
+
+.mentee-card-header-focused {
+    cursor: default;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.mentee-chevron-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    color: #475569;
+    background: transparent;
+    border: none;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+.mentee-chevron-back-btn:hover {
+    background: #F1F5F9;
+    color: #01347C;
+    transform: translateX(-2px);
+    text-decoration: none;
+}
+
 .mentee-classroom-card.is-expanded .mentee-card-header {
     background: #F8FAFC;
     border-bottom: 1px solid #E2E8F0;
@@ -877,12 +983,31 @@
     display: none !important;
 }
 
-.logbook-panel-header-wrap,
-.mentee-unified-header {
+/* Container Flex Header Panel Title */
+.panel-header-title-flex {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.logbook-panel-header-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px;
+    vertical-align: middle;
+}
+
+.mentee-unified-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    width: auto;
     gap: 16px;
     vertical-align: middle;
 }
@@ -976,25 +1101,9 @@
     transform: translateX(-3px);
 }
 
-/* Saat container dalam mode fokus, sembunyikan semua kartu mentee lain */
-.mentee-stream-container.is-focused .mentee-classroom-card:not(.is-active-focus) {
-    display: none !important;
-}
-
-/* Tampilan kartu mentee yang sedang aktif fokus */
-.mentee-classroom-card.is-active-focus {
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-}
-
-.mentee-classroom-card.is-active-focus .mentee-card-header {
-    display: none !important;
-}
-
-.mentee-classroom-card.is-active-focus .mentee-tasks-drawer {
-    padding: 0 !important;
-    background: transparent !important;
+/* Mode Tampilan Kartu Mentee */
+.mentee-classroom-card.is-expanded .mentee-chevron-icon {
+    transform: rotate(180deg);
 }
 
 /* Animasi */
@@ -1052,3 +1161,258 @@
     border: none !important;
     color: #FFFFFF !important;
 }
+
+/* ========================================================
+   INLINE NOTE EDITOR ACCORDION FOR LOGBOOK ENTRIES
+   ======================================================== */
+
+.inline-note-editor {
+    margin-top: 12px;
+    padding: 14px 16px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    animation: inlineNoteSlideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes inlineNoteSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================================
+   MATERIAL FLOATING CARD FIELD FOR LOGBOOK NOTES
+   Mengadopsi Desain Google Classroom & Buat Tugas
+   ======================================================== */
+
+.logbook-note-field-filled {
+    position: relative;
+    background: #E8EDF5;
+    border-bottom: 1px solid #5F6368;
+    border-radius: 6px 6px 0 0;
+    padding: 22px 16px 8px 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logbook-note-field-filled:hover {
+    background: #DDE3ED;
+    border-bottom-color: #202124;
+}
+
+.logbook-note-field-filled:focus-within,
+.logbook-note-field-filled.is-focused {
+    background: #E8EDF5;
+    border-bottom-color: transparent;
+}
+
+/* Garis Animasi Biru di Tepi Bawah (Mekar dari Tengah) */
+.logbook-note-field-filled::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #01347C;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.logbook-note-field-filled:focus-within::after,
+.logbook-note-field-filled.is-focused::after {
+    transform: scaleX(1);
+}
+
+/* Floating Label Transition */
+.logbook-note-floating-label {
+    position: absolute;
+    left: 16px;
+    top: 18px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #5F6368;
+    line-height: 1;
+    pointer-events: none;
+    transform-origin: left top;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                font-weight 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.logbook-note-floating-label .required-star {
+    color: #EF4444;
+    font-weight: 700;
+}
+
+/* Floating State: Saat Fokus ATAU Saat Memiliki Nilai/Isi */
+.logbook-note-field-filled:focus-within .logbook-note-floating-label,
+.logbook-note-field-filled.is-focused .logbook-note-floating-label,
+.logbook-note-field-filled.has-value .logbook-note-floating-label {
+    transform: translateY(-10px) scale(0.78);
+}
+
+/* Label Color saat Aktif Fokus */
+.logbook-note-field-filled:focus-within .logbook-note-floating-label,
+.logbook-note-field-filled.is-focused .logbook-note-floating-label {
+    color: #01347C;
+    font-weight: 600;
+}
+
+/* Label Color saat Terisi tapi sedang tidak fokus */
+.logbook-note-field-filled.has-value:not(:focus-within):not(.is-focused) .logbook-note-floating-label {
+    color: #5F6368;
+    font-weight: 500;
+}
+
+/* Clean Textarea Tanpa Border Bawaan */
+.logbook-note-clean-textarea {
+    width: 100%;
+    min-height: 72px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: #1E293B;
+    line-height: 1.5;
+    resize: vertical;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.logbook-note-clean-textarea:focus {
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+
+.inline-note-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-note-cancel {
+    padding: 6px 14px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #64748B;
+    background: transparent;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-note-cancel:hover {
+    background: #F1F5F9;
+    color: #334155;
+}
+
+.btn-note-save {
+    padding: 6px 16px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    background: #01347C;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(1, 52, 124, 0.25);
+    transition: all 0.15s ease;
+}
+
+.btn-note-save:hover {
+    background: #002244;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(1, 52, 124, 0.35);
+}
+
+/* Supervisor Notes Box */
+.supervisor-notes-box {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #F8FAFC;
+    border-left: 3px solid #01347C;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    color: #334155;
+    line-height: 1.5;
+}
+
+.supervisor-notes-box .notes-label {
+    color: #01347C;
+    font-weight: 700;
+}
+
+/* Dark Theme Compatibility */
+[data-theme="dark"] .inline-note-editor {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .logbook-note-field-filled {
+    background: #1E293B;
+    border-bottom-color: #475569;
+}
+
+[data-theme="dark"] .logbook-note-field-filled:hover {
+    background: #27354A;
+}
+
+[data-theme="dark"] .logbook-note-field-filled:focus-within,
+[data-theme="dark"] .logbook-note-field-filled.is-focused {
+    background: #1E293B;
+}
+
+[data-theme="dark"] .logbook-note-field-filled::after {
+    background: #38BDF8;
+}
+
+[data-theme="dark"] .logbook-note-floating-label {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .logbook-note-field-filled:focus-within .logbook-note-floating-label,
+[data-theme="dark"] .logbook-note-field-filled.is-focused .logbook-note-floating-label {
+    color: #38BDF8;
+}
+
+[data-theme="dark"] .logbook-note-clean-textarea {
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .supervisor-notes-box {
+    background: #1E293B;
+    border-left-color: #38BDF8;
+    color: #E2E8F0;
+}
+
+[data-theme="dark"] .supervisor-notes-box .notes-label {
+    color: #38BDF8;
+}
+

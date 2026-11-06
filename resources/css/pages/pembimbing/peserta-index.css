@@ -78,9 +78,15 @@
 /* 2. Tile Stats Grid MagKom Gentelella */
 .tiles-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+    .tiles-grid {
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
 }
 
 .tiles-grid .tile_stats_count {

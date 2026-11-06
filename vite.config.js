@@ -23,6 +23,7 @@ export default defineConfig({
                 'resources/css/pages/pembimbing/tugas-index.css',
                 'resources/css/pages/pembimbing/tugas-review.css',
                 'resources/css/pages/pembimbing/peserta-index.css',
+                'resources/css/pages/pembimbing/peserta-show.css',
                 'resources/css/pages/pembimbing/logbook-index.css',
                 'resources/css/pages/pembimbing/penilaian-index.css',
                 'resources/css/pages/pembimbing/laporan-kinerja-index.css',

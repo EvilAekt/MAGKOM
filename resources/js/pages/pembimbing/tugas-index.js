@@ -122,88 +122,28 @@ export function initPembimbingTugasIndex() {
         btnTable.addEventListener('click', () => switchTaskView('table'));
     }
 
-    // 2. Focused Mentee View Actions (Master-Detail Scope)
-    function focusOnMentee(menteeId, menteeName, menteeInst, updateHistory = true) {
-        currentFocusedMenteeId = String(menteeId);
+    // 2. Accordion Expand/Collapse Drawer Tugas Mentee
+    function toggleMenteeDrawer(card) {
+        const headerBtn = card.querySelector('[data-action="focus-mentee"]');
+        const drawerId = headerBtn ? headerBtn.getAttribute('aria-controls') : null;
+        const drawer = drawerId ? document.getElementById(drawerId) : null;
+        const isExpanded = card.classList.contains('is-expanded');
 
-        // A. Perbarui tampilan Kartu Stream Mentee
-        if (streamContainer) {
-            streamContainer.classList.add('is-focused');
-            const allCards = streamContainer.querySelectorAll('.mentee-classroom-card');
-            allCards.forEach((card) => {
-                const headerBtn = card.querySelector('[data-action="focus-mentee"]');
-                const drawerId = headerBtn ? headerBtn.getAttribute('aria-controls') : null;
-                const drawer = drawerId ? document.getElementById(drawerId) : null;
-
-                if (card.dataset.menteeId === String(menteeId)) {
-                    card.classList.add('is-active-focus', 'is-expanded');
-                    if (headerBtn) headerBtn.setAttribute('aria-expanded', 'true');
-                    if (drawer) {
-                        drawer.hidden = false;
-                        const rows = drawer.querySelectorAll('.classroom-task-row');
-                        rows.forEach((row, idx) => {
-                            row.style.animation = 'none';
-                            void row.offsetWidth; // Reflow
-                            row.style.animation = `fadeInCascade 0.3s cubic-bezier(0.16, 1, 0.3, 1) ${idx * 0.04}s both`;
-                        });
-                    }
-                } else {
-                    card.classList.remove('is-active-focus', 'is-expanded');
-                    if (headerBtn) headerBtn.setAttribute('aria-expanded', 'false');
-                    if (drawer) drawer.hidden = true;
-                }
-            });
-        }
-
-        // B. Perbarui tampilan Tabel Administratif Asli
-        if (menteesSummaryView) {
-            menteesSummaryView.classList.add('d-none');
-            menteesSummaryView.style.display = 'none';
-        }
-        if (menteeTasksView) {
-            menteeTasksView.classList.remove('d-none');
-            menteeTasksView.style.display = 'block';
-        }
-        if (tableContainer) {
-            tableContainer.classList.add('is-focused');
-            if (mainTugasTable) mainTugasTable.classList.add('table-focused-mentee');
-            const tableRows = tableContainer.querySelectorAll('tbody tr.classroom-table-row');
-            tableRows.forEach((row) => {
-                if (row.dataset.menteeId === String(menteeId)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        // C. Beralih ke Header Terpadu Khas Sleman MagKom
-        if (defaultTitleText) defaultTitleText.classList.add('d-none');
-        if (menteeUnifiedHeader) menteeUnifiedHeader.classList.remove('d-none');
-        if (focusedMenteeAvatar) focusedMenteeAvatar.textContent = getInitials(menteeName);
-        if (focusedMenteeName) focusedMenteeName.textContent = menteeName;
-        if (focusedMenteeInst) focusedMenteeInst.textContent = menteeInst || '';
-
-        // Sinkronisasi nilai dropdown filter jika tersedia
-        const selectPen = document.getElementById('selectPenempatan');
-        if (selectPen) {
-            selectPen.value = String(menteeId);
-        }
-
-        // Sembunyikan kartu filter saat masuk ke detail mentee
-        const filterCard = document.getElementById('tugasFilterCard');
-        if (filterCard) {
-            filterCard.classList.add('d-none');
-        }
-
-        // D. Perbarui URL browser dengan parameter penempatan_id
-        if (updateHistory) {
-            try {
-                const currentUrl = new URL(window.location.href);
-                currentUrl.searchParams.set('penempatan_id', menteeId);
-                window.history.pushState({ penempatan_id: menteeId, menteeName, menteeInst }, '', currentUrl.toString());
-            } catch {
-                // Ignore history errors
+        if (isExpanded) {
+            card.classList.remove('is-expanded');
+            if (headerBtn) headerBtn.setAttribute('aria-expanded', 'false');
+            if (drawer) drawer.hidden = true;
+        } else {
+            card.classList.add('is-expanded');
+            if (headerBtn) headerBtn.setAttribute('aria-expanded', 'true');
+            if (drawer) {
+                drawer.hidden = false;
+                const rows = drawer.querySelectorAll('.classroom-task-row');
+                rows.forEach((row, idx) => {
+                    row.style.animation = 'none';
+                    void row.offsetWidth; // Reflow
+                    row.style.animation = `fadeInCascade 0.3s cubic-bezier(0.16, 1, 0.3, 1) ${idx * 0.04}s both`;
+                });
             }
         }
     }
@@ -276,7 +216,7 @@ export function initPembimbingTugasIndex() {
         }
     }
 
-    // 3. Event Delegation untuk klik fokus mentee (berfungsi di Kartu maupun di Tabel)
+    // 3. Event Delegation untuk klik toggle drawer mentee
     if (!window._pembimbingTugasDelegationInitialized) {
         window._pembimbingTugasDelegationInitialized = true;
         document.addEventListener('click', function (e) {
@@ -284,12 +224,9 @@ export function initPembimbingTugasIndex() {
             if (!focusBtn) return;
 
             e.preventDefault();
-            const menteeId = focusBtn.dataset.menteeId;
-            const menteeName = focusBtn.dataset.menteeName || 'Mentee';
-            const menteeInst = focusBtn.dataset.menteeInst || '';
-
-            if (menteeId) {
-                focusOnMentee(menteeId, menteeName, menteeInst, true);
+            const card = focusBtn.closest('.mentee-classroom-card');
+            if (card) {
+                toggleMenteeDrawer(card);
             }
         });
     }
@@ -353,6 +290,40 @@ export function initPembimbingTugasIndex() {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
+            }
+        });
+    }
+
+    // 7. Event Delegation: Double Click & Keyboard Access pada Card Baris Tugas
+    if (!window._pembimbingTaskRowDblClickInitialized) {
+        window._pembimbingTaskRowDblClickInitialized = true;
+
+        // A. Double Click untuk membuka detail tugas
+        document.addEventListener('dblclick', function (e) {
+            const taskRow = e.target.closest('.classroom-task-row[data-task-url]');
+            if (!taskRow) return;
+
+            // Jika double-click dilakukan pada elemen interactive native (misal link judul atau tombol), biarkan native handler
+            if (e.target.closest('a, button')) return;
+
+            const taskUrl = taskRow.getAttribute('data-task-url');
+            if (taskUrl) {
+                window.location.href = taskUrl;
+            }
+        });
+
+        // B. Aksesibilitas Keyboard: Tekan tombol Enter pada card yang difokuskan
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                const taskRow = e.target.closest('.classroom-task-row[data-task-url]');
+                // Pastikan target fokus langsung adalah baris card (bukan anchor link judul di dalamnya)
+                if (taskRow && e.target === taskRow) {
+                    e.preventDefault();
+                    const taskUrl = taskRow.getAttribute('data-task-url');
+                    if (taskUrl) {
+                        window.location.href = taskUrl;
+                    }
+                }
             }
         });
     }

@@ -150,6 +150,12 @@ function initKategoriDropdown() {
     });
 }
 
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text ?? '';
+    return div.innerHTML;
+}
+
 /**
  * 3. File Upload Modal & Attached List
  */
@@ -253,17 +259,17 @@ function initFileUpload() {
     function renderAttachedFile(name, sizeText) {
         if (!attachedContainer) return;
         attachedContainer.innerHTML = `
-            <div class="tugas-attached-item">
+            <div class="tugas-attached-card" id="cardFileAttachment">
                 <div class="tugas-attached-left">
-                    <div class="tugas-attached-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    <div class="tugas-file-badge" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                     </div>
-                    <div class="tugas-attached-text">
-                        <span class="tugas-attached-name">${name}</span>
-                        <span class="tugas-attached-sub">${sizeText} (Berkas Baru)</span>
+                    <div class="tugas-attached-info">
+                        <p class="tugas-attached-name" title="${escapeHtml(name)}">${escapeHtml(name)}</p>
+                        <p class="tugas-attached-meta">${escapeHtml(sizeText)} &bull; Berkas Baru</p>
                     </div>
                 </div>
-                <button type="button" class="tugas-attached-remove" id="btnRemoveAttachedFile" title="Hapus berkas ini">
+                <button type="button" class="tugas-btn-remove-attachment" id="btnRemoveAttachedFile" title="Hapus berkas ini" aria-label="Hapus berkas ini">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
@@ -333,19 +339,40 @@ function initLinkAttachment() {
 
     function renderAttachedLink(url) {
         if (!attachedContainer) return;
+
+        let displayDomain = 'Tautan Referensi Eksternal';
+        try {
+            const parsed = new URL(url);
+            displayDomain = parsed.hostname + ' &bull; Tautan Referensi';
+        } catch (e) {
+            // Fallback jika bukan URL standar
+        }
+
         attachedContainer.innerHTML = `
-            <div class="tugas-attached-item">
+            <div class="tugas-attached-card" id="cardLinkAttachment">
                 <div class="tugas-attached-left">
-                    <div class="tugas-attached-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"></path></svg>
+                    <div class="tugas-file-badge badge-link" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                        </svg>
                     </div>
-                    <div class="tugas-attached-text">
-                        <a href="${url}" target="_blank" rel="noopener noreferrer" class="tugas-attached-name" style="text-decoration: none; color: #1d4ed8;">${url}</a>
-                        <span class="tugas-attached-sub">Tautan Referensi</span>
+                    <div class="tugas-attached-info">
+                        <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="tugas-attached-link-name" title="${escapeHtml(url)}">
+                            <span>${escapeHtml(url)}</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="tugas-external-icon" aria-hidden="true">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                        <p class="tugas-attached-meta">${displayDomain}</p>
                     </div>
                 </div>
-                <button type="button" class="tugas-attached-remove" id="btnRemoveAttachedLink" title="Hapus tautan ini">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                <button type="button" class="tugas-btn-remove-attachment" id="btnRemoveAttachedLink" title="Hapus tautan ini" aria-label="Hapus tautan ini">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                 </button>
             </div>
         `;

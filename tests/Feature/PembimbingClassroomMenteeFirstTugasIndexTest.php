@@ -187,11 +187,16 @@ class PembimbingClassroomMenteeFirstTugasIndexTest extends TestCase
         $response->assertSee('Dimas Pratama');
         $response->assertSee('Universitas Gadjah Mada');
 
-        // Memastikan drawer tugas mentee ada di dalam DOM
+        // Memastikan drawer tugas mentee ada di dalam DOM pada mode daftar
         $response->assertSee('tasks-mentee-'.$this->penempatan1->id);
-        $response->assertSee('Pembuatan Wireframe UI Portal Magang');
         $response->assertSee('tasks-mentee-'.$this->penempatan2->id);
-        $response->assertSee('Implementasi API Autentikasi');
+
+        // Memastikan rincian tugas tampil saat masuk ke mentee terkait
+        $detailResponse = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk' => $this->penempatan1->id,
+        ]));
+        $detailResponse->assertOk();
+        $detailResponse->assertSee('Pembuatan Wireframe UI Portal Magang');
 
         // Memastikan filter toolbar lama telah dihapus
         $response->assertDontSee('task-filter-toolbar');
@@ -200,13 +205,21 @@ class PembimbingClassroomMenteeFirstTugasIndexTest extends TestCase
 
     public function test_filter_tab_status_menampilkan_tugas_yang_sesuai_di_drawer_mentee(): void
     {
-        $response = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', ['status' => 'selesai']));
+        $response = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk' => $this->penempatan2->id,
+            'status' => 'selesai',
+        ]));
 
         $response->assertOk();
         // Tugas selesai pada peserta 2 harus muncul
         $response->assertSee('Implementasi API Autentikasi');
 
+        $responseEmpty = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk' => $this->penempatan1->id,
+            'status' => 'selesai',
+        ]));
+        $responseEmpty->assertOk();
         // Peserta 1 tidak punya tugas selesai pada filter ini, harus menampilkan empty state per mentee
-        $response->assertSee('Belum ada tugas untuk peserta ini pada filter ini');
+        $responseEmpty->assertSee('Belum ada tugas untuk peserta ini pada filter ini');
     }
 }

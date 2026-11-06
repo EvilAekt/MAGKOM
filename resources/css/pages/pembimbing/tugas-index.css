@@ -317,6 +317,38 @@
     background: #ffffff;
 }
 
+.tugas-filter-form .peserta-search-input-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.tugas-filter-form .peserta-search-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px 0 36px;
+    border-radius: 8px;
+    border: 1px solid #CBD5E1;
+    font-size: 0.875rem;
+    background: #F8FAFC;
+    color: #0F172A;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.tugas-filter-form .peserta-search-input:focus {
+    border-color: #01347C;
+    background: #ffffff;
+}
+
+.tugas-filter-form .peserta-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 11px;
+    color: #94A3B8;
+    pointer-events: none;
+}
+
 .tugas-filter-form .filter-actions {
     display: flex;
     gap: 8px;
@@ -1168,6 +1200,81 @@
     background: #F8FAFC;
 }
 
+.mentee-panel-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.mentee-panel-title-wrap .mentee-avatar-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #BFDBFE;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.mentee-panel-title-wrap .mentee-primary-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 2px 0;
+    line-height: 1.3;
+}
+
+.mentee-panel-title-wrap .mentee-sub-inst {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: #64748B;
+    margin: 0;
+}
+
+.mentee-card-link {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.mentee-card-link:hover {
+    text-decoration: none !important;
+    background: #F8FAFC;
+}
+
+.mentee-card-header-focused {
+    cursor: default;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.mentee-chevron-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    color: #475569;
+    background: transparent;
+    border: none;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+.mentee-chevron-back-btn:hover {
+    background: #F1F5F9;
+    color: #01347C;
+    transform: translateX(-2px);
+    text-decoration: none;
+}
+
 .mentee-classroom-card.is-expanded .mentee-card-header {
     background: #F8FAFC;
     border-bottom: 1px solid #E2E8F0;
@@ -1288,12 +1395,30 @@
     justify-content: space-between;
 }
 
-/* Header Terpadu (Identitas Mentee di Kiri, Tombol Kembali di Ujung Kanan Sesuai Foto) */
-.mentee-unified-header {
+/* Container Flex Header Panel Title */
+.panel-header-title-flex {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.panel-header-title-flex .default-panel-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--neutral-900, #0F172A);
+    white-space: nowrap;
+}
+
+/* Header Terpadu (Identitas Mentee di Kiri, Tombol Kembali di Ujung Kanan Sesuai Foto) */
+.mentee-unified-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    width: auto;
     gap: 16px;
     vertical-align: middle;
     animation: slideInDownFade 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -1377,25 +1502,9 @@
     line-height: 1.2;
 }
 
-/* Saat container dalam mode fokus, sembunyikan semua kartu mentee lain */
-.mentee-stream-container.is-focused .mentee-classroom-card:not(.is-active-focus) {
-    display: none !important;
-}
-
-/* Tampilan kartu mentee yang sedang aktif fokus (Border & Header Kartu dihilangkan agar menyatu dengan panel) */
-.mentee-classroom-card.is-active-focus {
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-}
-
-.mentee-classroom-card.is-active-focus .mentee-card-header {
-    display: none !important;
-}
-
-.mentee-classroom-card.is-active-focus .mentee-tasks-drawer {
-    padding: 0 !important;
-    background: transparent !important;
+/* Mode Tampilan Kartu Mentee */
+.mentee-classroom-card.is-expanded .mentee-chevron-icon {
+    transform: rotate(180deg);
 }
 
 /* ========================================================
@@ -1478,16 +1587,30 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 10px 14px;
-    border-radius: 8px;
+    padding: 12px 18px;
+    border-radius: 10px;
     border: 1px solid #E2E8F0;
     background: #FFFFFF;
-    transition: all 0.15s ease;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .classroom-task-row:hover {
     background: #F8FAFC;
     border-color: #01347C;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(1, 52, 124, 0.08);
+}
+
+.classroom-task-row:focus-visible {
+    outline: none;
+    border-color: #01347C;
+    box-shadow: 0 0 0 3px rgba(1, 52, 124, 0.2);
+}
+
+.classroom-task-row:active {
+    transform: translateY(0);
 }
 
 .task-row-left {
@@ -1695,6 +1818,12 @@
 [data-theme="dark"] .classroom-task-row:hover {
     background: #1E293B !important;
     border-color: #38BDF8 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .classroom-task-row:focus-visible {
+    border-color: #38BDF8 !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3) !important;
 }
 
 [data-theme="dark"] .task-row-title {

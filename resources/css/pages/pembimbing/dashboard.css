@@ -73,8 +73,72 @@
 }
 
 /* ==============================================================================
-   2. Greeting Card (Zenius Header ala Sleman Civic Tech)
+   2. Greeting Card & Classroom Banner (Header Banner ala Sleman Civic Tech)
    ============================================================================== */
+.classroom-banner {
+  background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+              linear-gradient(135deg, #01347C 0%, #003566 100%);
+  border-radius: 16px;
+  padding: 24px 28px;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.banner-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+
+.banner-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.banner-subtitle {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.92);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  line-height: 1.5;
+}
+
+.btn-create-task {
+  background: #ffffff;
+  color: #01347C;
+  text-decoration: none;
+  padding: 0.65rem 1.35rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.btn-create-task:hover {
+  background: #f8fafc;
+  color: #002244;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+}
+
 .zenius-greeting-card {
   background: linear-gradient(135deg, #002855 0%, #003566 60%, #0641CC 100%);
   border-radius: 16px;

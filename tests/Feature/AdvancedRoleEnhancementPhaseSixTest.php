@@ -198,11 +198,11 @@ class AdvancedRoleEnhancementPhaseSixTest extends TestCase
             'kompleksitas' => KompleksitasEnum::Sedang,
         ]);
 
-        // Akses tab 'perhatian'
+        // Akses tab 'perhatian' (fallback otomatis ke aktif tanpa badge alert)
         $response = $this->actingAs($this->pembimbing1)->get(route('pembimbing.peserta.index', ['tab' => 'perhatian']));
         $response->assertStatus(200);
         $response->assertSee('Ahmad Peserta');
-        $response->assertSee('Perlu Perhatian');
+        $response->assertDontSee('Perlu Perhatian');
     }
 
     public function test_pembimbing_laporan_kinerja_mentoring_renders_and_prints(): void

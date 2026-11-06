@@ -7,6 +7,7 @@ namespace App\Http\Requests;
 use App\Enums\StatusLogbookEnum;
 use App\Models\Logbook;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class ReviewLogbookRequest extends FormRequest
@@ -32,12 +33,16 @@ class ReviewLogbookRequest extends FormRequest
 
     public function rules(): array
     {
+        $statusInput = $this->input('status');
+        $isPerluRevisi = $statusInput === StatusLogbookEnum::PerluRevisi->value
+            || $statusInput === 'perlu_revisi';
+
         return [
             'catatan_pembimbing' => [
-                'required',
+                Rule::requiredIf($isPerluRevisi),
+                'nullable',
                 'string',
-                'min:3',
-                'max:2000',
+                Rule::when(filled($this->input('catatan_pembimbing')), ['min:3', 'max:2000']),
             ],
             'status' => ['sometimes', 'nullable', new Enum(StatusLogbookEnum::class)],
         ];
@@ -46,7 +51,7 @@ class ReviewLogbookRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'catatan_pembimbing.required' => 'Catatan pembimbing wajib diisi saat memberikan catatan pada logbook peserta.',
+            'catatan_pembimbing.required' => 'Catatan pembimbing wajib diisi jika status logbook memerlukan revisi.',
             'catatan_pembimbing.min' => 'Catatan pembimbing minimal berisi 3 karakter.',
             'catatan_pembimbing.max' => 'Catatan pembimbing maksimal berisi 2000 karakter.',
         ];

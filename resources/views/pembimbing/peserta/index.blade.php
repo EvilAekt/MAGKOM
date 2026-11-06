@@ -32,13 +32,13 @@
             <div>
                 <a href="{{ route('pembimbing.tugas.create') }}" class="btn-create-task">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    + Beri Tugas Baru
+                    <span>Beri Tugas Baru</span>
                 </a>
             </div>
         </div>
     </div>
 
-    {{-- 2. Tile Stats MagKom Gentelella (4 Metrik Selaras Tab) --}}
+    {{-- 2. Tile Stats MagKom Gentelella (3 Metrik Utama) --}}
     <div class="tiles-grid">
         <x-gentelella.tile-stat
             title="Total Mentee"
@@ -68,20 +68,6 @@
         </x-gentelella.tile-stat>
 
         <x-gentelella.tile-stat
-            title="Perlu Perhatian"
-            value="{{ $countPerhatian }}"
-            color="yellow"
-            trendType="warning"
-            trendDirection="down"
-            trendText="{{ $countPerhatian }} Alert"
-            subText="Tugas overdue / logbook bolong"
-            :sparkBars="[70, 85, 90, 65, 50, 60, 45, 30, 20]">
-            <x-slot:icon>
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-            </x-slot:icon>
-        </x-gentelella.tile-stat>
-
-        <x-gentelella.tile-stat
             title="Alumni Selesai"
             value="{{ $countSelesai }}"
             color="teal"
@@ -99,13 +85,9 @@
     {{-- 3. Filter Bar & Segmented Tabs --}}
     <div class="peserta-filter-card">
         <div class="peserta-tabs">
-            <a href="{{ route('pembimbing.peserta.index', ['tab' => 'aktif']) }}" class="peserta-tab-btn {{ $currentTab === 'aktif' ? 'active' : '' }}">
+            <a href="{{ route('pembimbing.peserta.index', ['tab' => 'aktif']) }}" class="peserta-tab-btn {{ $currentTab !== 'selesai' ? 'active' : '' }}">
                 <span>Peserta Aktif</span>
                 <span class="peserta-tab-badge">{{ $countAktif }}</span>
-            </a>
-            <a href="{{ route('pembimbing.peserta.index', ['tab' => 'perhatian']) }}" class="peserta-tab-btn {{ $currentTab === 'perhatian' ? 'active' : '' }}">
-                <span>Perlu Perhatian (Alert)</span>
-                <span class="peserta-tab-badge {{ ($countPerhatian ?? 0) > 0 ? 'badge-alert' : '' }}">{{ $countPerhatian ?? 0 }}</span>
             </a>
             <a href="{{ route('pembimbing.peserta.index', ['tab' => 'selesai']) }}" class="peserta-tab-btn {{ $currentTab === 'selesai' ? 'active' : '' }}">
                 <span>Alumni Selesai</span>
@@ -130,7 +112,7 @@
     </div>
 
     {{-- 4. Tabel Daftar Mentee Khas Classroom --}}
-    <x-gentelella.x-panel title="Daftar Mentee Bimbingan" subtitle="Monitoring progres durasi dan status evaluasi peserta magang">
+    <x-gentelella.x-panel title="Daftar Mentee Bimbingan">
         <div class="table-peserta-wrapper">
             <table class="table-peserta">
                 <thead>
@@ -140,7 +122,6 @@
                         <th>Jalur &amp; Bidang</th>
                         <th>Periode Magang</th>
                         <th>Progres Durasi</th>
-                        <th>Status Nilai</th>
                         <th style="text-align: right;">Aksi</th>
                     </tr>
                 </thead>
@@ -152,7 +133,6 @@
                             $totalHari = $tglMulai && $tglSelesai ? max(1, $tglMulai->diffInDays($tglSelesai)) : 1;
                             $hariBerjalan = $tglMulai ? max(0, \Carbon\Carbon::today()->diffInDays($tglMulai, false)) : 0;
                             $persenHari = $p->status->value === 'selesai' ? 100 : min(100, (int) round(($hariBerjalan / $totalHari) * 100));
-                            $statusNilai = $p->penilaian?->status->value ?? 'belum';
                             $initials = collect(explode(' ', $p->peserta?->nama ?? 'P'))->map(fn($w) => mb_substr($w, 0, 1))->take(2)->implode('');
                         @endphp
                         <tr>
@@ -166,9 +146,6 @@
                                             <a href="{{ route('pembimbing.peserta.show', $p->id) }}" class="mentee-name-text">
                                                 {{ $p->peserta?->nama }}
                                             </a>
-                                            @if(in_array($p->id, $perhatianIds ?? []))
-                                                <x-gentelella.badge variant="warning">Perlu Perhatian</x-gentelella.badge>
-                                            @endif
                                         </div>
                                         <span class="mentee-sub-text">{{ $p->peserta?->email }}</span>
                                     </div>
@@ -200,15 +177,6 @@
                                 </div>
                             </td>
                             <td>
-                                @if($statusNilai === 'final')
-                                    <x-gentelella.badge variant="success">Final: {{ $p->penilaian?->predikat ?? '-' }} ({{ number_format((float) ($p->penilaian?->nilai_akhir ?? 0), 2) }})</x-gentelella.badge>
-                                @elseif($statusNilai === 'draft')
-                                    <x-gentelella.badge variant="warning">Draf</x-gentelella.badge>
-                                @else
-                                    <x-gentelella.badge variant="secondary">Belum Dinilai</x-gentelella.badge>
-                                @endif
-                            </td>
-                            <td>
                                 <div class="peserta-action-group">
                                     <a href="{{ route('pembimbing.peserta.show', $p->id) }}" class="btn-peserta-action" title="Buka Profil 360°">
                                         <span>Profil</span>
@@ -219,7 +187,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="table-empty-td">
+                            <td colspan="6" class="table-empty-td">
                                 Tidak ada peserta bimbingan yang sesuai dengan filter saat ini.
                             </td>
                         </tr>

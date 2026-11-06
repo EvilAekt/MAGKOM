@@ -12,6 +12,7 @@ use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReviewProgresRequest;
 use App\Http\Requests\TugasRequest;
+use App\Models\BulanMagang;
 use App\Models\Penempatan;
 use App\Models\ProgresLog;
 use App\Models\Tugas;
@@ -48,8 +49,26 @@ class TugasController extends Controller
                 }
             });
 
-        if ($request->filled('penempatan_id')) {
+        if ($request->filled('masuk')) {
+            $query->where('penempatan_id', $request->input('masuk'));
+        } elseif ($request->filled('penempatan_id')) {
             $query->where('penempatan_id', $request->input('penempatan_id'));
+        }
+
+        if ($request->filled('bulan')) {
+            $parts = explode('-', (string) $request->input('bulan'));
+            if (count($parts) === 2) {
+                [$tahun, $bln] = $parts;
+                $query->where(function ($q) use ($tahun, $bln) {
+                    $q->whereYear('deadline', (int) $tahun)
+                        ->whereMonth('deadline', (int) $bln)
+                        ->orWhere(function ($sub) use ($tahun, $bln) {
+                            $sub->whereNull('deadline')
+                                ->whereYear('created_at', (int) $tahun)
+                                ->whereMonth('created_at', (int) $bln);
+                        });
+                });
+            }
         }
 
         if ($request->filled('status')) {
@@ -94,8 +113,24 @@ class TugasController extends Controller
             })
             ->where('status', StatusPenempatanEnum::Aktif);
 
-        $penempatanList = (clone $penempatanBaseQuery)->latest('id')->paginate(10)->withQueryString();
         $allPenempatan = (clone $penempatanBaseQuery)->latest('id')->get();
+
+        if ($request->filled('penempatan_id')) {
+            $penempatanBaseQuery->where('id', $request->input('penempatan_id'));
+        }
+
+        if ($request->filled('q')) {
+            $search = '%'.$request->input('q').'%';
+            $penempatanBaseQuery->whereHas('peserta', function ($qp) use ($search) {
+                $qp->where('nama', 'like', $search)
+                    ->orWhereHas('profil', function ($qprof) use ($search) {
+                        $qprof->where('institusi', 'like', $search)
+                            ->orWhere('nim_nisn', 'like', $search);
+                    });
+            });
+        }
+
+        $penempatanList = (clone $penempatanBaseQuery)->latest('id')->paginate(10)->withQueryString();
 
         // Hitung metrik agregat status tugas untuk banner dan tab classroom
         $baseMetricsQuery = Tugas::whereHas('penempatan', function ($q) use ($user) {
@@ -127,6 +162,27 @@ class TugasController extends Controller
             }
         }
 
+        $masukPenempatanId = $request->integer('masuk') ?: null;
+        $masukPenempatan = null;
+        if ($masukPenempatanId) {
+            $masukPenempatan = $penempatanList->firstWhere('id', $masukPenempatanId);
+            if (! $masukPenempatan) {
+                $masukPenempatan = Penempatan::with([
+                    'peserta.profil.jurusan',
+                    'bidang',
+                    'tugas' => function ($q) {
+                        $q->with('progresLogs')->latest();
+                    },
+                ])
+                    ->where(function ($q) use ($user) {
+                        if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                            $q->where('pembimbing_id', $user->id);
+                        }
+                    })
+                    ->firstWhere('id', $masukPenempatanId);
+            }
+        }
+
         $data = [
             'tugasList' => $tugasList,
             'penempatanList' => $penempatanList,
@@ -134,6 +190,9 @@ class TugasController extends Controller
             'counts' => $counts,
             'selectedPenempatanId' => $selectedPenempatanId,
             'selectedPenempatan' => $selectedPenempatan,
+            'masukPenempatanId' => $masukPenempatanId,
+            'masukPenempatan' => $masukPenempatan,
+            'daftarBulan' => $this->getDaftarBulan(),
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {
@@ -548,5 +607,32 @@ class TugasController extends Controller
             'message' => 'Evaluasi progres tugas berhasil disimpan.',
             'data' => $progres,
         ]);
+    }
+
+    /**
+     * Dapatkan daftar bulan magang untuk filter pencarian.
+     *
+     * @return array<string, string>
+     */
+    private function getDaftarBulan(): array
+    {
+        $daftar = [];
+        $bulanMagangs = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
+        foreach ($bulanMagangs as $bm) {
+            if ($bm->bulan_mulai) {
+                $key = Carbon::parse($bm->bulan_mulai)->setTimezone(config('app.timezone', 'Asia/Jakarta'))->format('Y-m');
+                $daftar[$key] = $bm->nama_bulan;
+            }
+        }
+        for ($i = 0; $i < 12; $i++) {
+            $dt = Carbon::now()->subMonths($i);
+            $key = $dt->format('Y-m');
+            if (! isset($daftar[$key])) {
+                $daftar[$key] = $dt->locale('id')->translatedFormat('F Y');
+            }
+        }
+        krsort($daftar);
+
+        return $daftar;
     }
 }

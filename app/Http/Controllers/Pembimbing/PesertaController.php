@@ -71,9 +71,8 @@ class PesertaController extends Controller
 
         if ($tab === 'selesai') {
             $query->where('status', StatusPenempatanEnum::Selesai);
-        } elseif ($tab === 'perhatian') {
-            $query->whereIn('id', $perhatianIds);
         } else {
+            $tab = 'aktif';
             $query->where('status', StatusPenempatanEnum::Aktif);
         }
 

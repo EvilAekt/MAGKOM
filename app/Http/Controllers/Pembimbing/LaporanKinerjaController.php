@@ -9,6 +9,7 @@ use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
+use App\Models\BulanMagang;
 use App\Models\Logbook;
 use App\Models\Penempatan;
 use App\Models\Tugas;
@@ -45,15 +46,41 @@ class LaporanKinerjaController extends Controller
                 }
             });
 
+        if ($request->filled('q')) {
+            $keyword = trim((string) $request->input('q'));
+            $query->whereHas('peserta', function ($sub) use ($keyword) {
+                $sub->where('nama', 'like', "%{$keyword}%")
+                    ->orWhereHas('profil', function ($p) use ($keyword) {
+                        $p->where('institusi', 'like', "%{$keyword}%")
+                            ->orWhere('nim_nisn', 'like', "%{$keyword}%");
+                    });
+            });
+        }
+
+        if ($request->filled('penempatan_id')) {
+            $query->where('id', $request->input('penempatan_id'));
+        }
+
         if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
+            if ($request->input('status') === 'tidak_aktif') {
+                $query->whereIn('status', [StatusPenempatanEnum::Selesai, StatusPenempatanEnum::Nonaktif]);
+            } else {
+                $query->where('status', $request->input('status'));
+            }
         }
 
         if ($request->filled('bidang_id')) {
             $query->where('bidang_id', $request->integer('bidang_id'));
         }
 
-        if ($request->filled('tahun')) {
+        if ($request->filled('bulan')) {
+            $parts = explode('-', (string) $request->input('bulan'));
+            if (count($parts) === 2) {
+                [$tahun, $bln] = $parts;
+                $query->whereYear('tgl_mulai', (int) $tahun)
+                    ->whereMonth('tgl_mulai', (int) $bln);
+            }
+        } elseif ($request->filled('tahun')) {
             $tahun = (int) $request->input('tahun');
             $query->whereYear('tgl_mulai', $tahun);
         }
@@ -176,6 +203,15 @@ class LaporanKinerjaController extends Controller
             detail: ['aksi' => 'lihat_laporan_kinerja_pembimbing', 'total_mentee' => $totalMentee]
         );
 
+        $penempatanOptions = Penempatan::with(['peserta.profil'])
+            ->where(function ($q) use ($user) {
+                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                    $q->where('pembimbing_id', $user->id);
+                }
+            })
+            ->latest('id')
+            ->get();
+
         return view('pembimbing.laporan-kinerja.index', [
             'totalMentee' => $totalMentee,
             'countAktif' => $countAktif,
@@ -194,6 +230,8 @@ class LaporanKinerjaController extends Controller
             'rataRataNilai' => $rataRataNilai,
             'rekapMentees' => $rekapMentees,
             'pembimbingUser' => $user,
+            'penempatanOptions' => $penempatanOptions,
+            'daftarBulan' => $this->getDaftarBulan(),
         ]);
     }
 
@@ -216,15 +254,41 @@ class LaporanKinerjaController extends Controller
                 }
             });
 
+        if ($request->filled('q')) {
+            $keyword = trim((string) $request->input('q'));
+            $query->whereHas('peserta', function ($sub) use ($keyword) {
+                $sub->where('nama', 'like', "%{$keyword}%")
+                    ->orWhereHas('profil', function ($p) use ($keyword) {
+                        $p->where('institusi', 'like', "%{$keyword}%")
+                            ->orWhere('nim_nisn', 'like', "%{$keyword}%");
+                    });
+            });
+        }
+
+        if ($request->filled('penempatan_id')) {
+            $query->where('id', $request->input('penempatan_id'));
+        }
+
         if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
+            if ($request->input('status') === 'tidak_aktif') {
+                $query->whereIn('status', [StatusPenempatanEnum::Selesai, StatusPenempatanEnum::Nonaktif]);
+            } else {
+                $query->where('status', $request->input('status'));
+            }
         }
 
         if ($request->filled('bidang_id')) {
             $query->where('bidang_id', $request->integer('bidang_id'));
         }
 
-        if ($request->filled('tahun')) {
+        if ($request->filled('bulan')) {
+            $parts = explode('-', (string) $request->input('bulan'));
+            if (count($parts) === 2) {
+                [$tahun, $bln] = $parts;
+                $query->whereYear('tgl_mulai', (int) $tahun)
+                    ->whereMonth('tgl_mulai', (int) $bln);
+            }
+        } elseif ($request->filled('tahun')) {
             $tahun = (int) $request->input('tahun');
             $query->whereYear('tgl_mulai', $tahun);
         }
@@ -415,7 +479,37 @@ class LaporanKinerjaController extends Controller
                 }
             });
 
-        if ($request->filled('tahun')) {
+        if ($request->filled('q')) {
+            $keyword = trim((string) $request->input('q'));
+            $query->whereHas('peserta', function ($sub) use ($keyword) {
+                $sub->where('nama', 'like', "%{$keyword}%")
+                    ->orWhereHas('profil', function ($p) use ($keyword) {
+                        $p->where('institusi', 'like', "%{$keyword}%")
+                            ->orWhere('nim_nisn', 'like', "%{$keyword}%");
+                    });
+            });
+        }
+
+        if ($request->filled('penempatan_id')) {
+            $query->where('id', $request->input('penempatan_id'));
+        }
+
+        if ($request->filled('status')) {
+            if ($request->input('status') === 'tidak_aktif') {
+                $query->whereIn('status', [StatusPenempatanEnum::Selesai, StatusPenempatanEnum::Nonaktif]);
+            } else {
+                $query->where('status', $request->input('status'));
+            }
+        }
+
+        if ($request->filled('bulan')) {
+            $parts = explode('-', (string) $request->input('bulan'));
+            if (count($parts) === 2) {
+                [$tahun, $bln] = $parts;
+                $query->whereYear('tgl_mulai', (int) $tahun)
+                    ->whereMonth('tgl_mulai', (int) $bln);
+            }
+        } elseif ($request->filled('tahun')) {
             $query->whereYear('tgl_mulai', (int) $request->input('tahun'));
         }
 
@@ -426,5 +520,32 @@ class LaporanKinerjaController extends Controller
             'pembimbingUser' => $user,
             'tanggalCetak' => Carbon::now()->translatedFormat('d F Y'),
         ]);
+    }
+
+    /**
+     * Dapatkan daftar bulan magang untuk filter pencarian.
+     *
+     * @return array<string, string>
+     */
+    private function getDaftarBulan(): array
+    {
+        $daftar = [];
+        $bulanMagangs = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
+        foreach ($bulanMagangs as $bm) {
+            if ($bm->bulan_mulai) {
+                $key = Carbon::parse($bm->bulan_mulai)->setTimezone(config('app.timezone', 'Asia/Jakarta'))->format('Y-m');
+                $daftar[$key] = $bm->nama_bulan;
+            }
+        }
+        for ($i = 0; $i < 12; $i++) {
+            $dt = Carbon::now()->subMonths($i);
+            $key = $dt->format('Y-m');
+            if (! isset($daftar[$key])) {
+                $daftar[$key] = $dt->locale('id')->translatedFormat('F Y');
+            }
+        }
+        krsort($daftar);
+
+        return $daftar;
     }
 }

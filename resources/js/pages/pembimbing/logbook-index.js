@@ -34,65 +34,28 @@ document.addEventListener('DOMContentLoaded', () => {
         currentFocusedMenteeId = String(initialMenteeId);
     }
 
-    // 1. Focused Mentee View Actions (Master-Detail Scope)
-    function focusOnMentee(menteeId, menteeName, menteeInst, updateHistory = true) {
-        currentFocusedMenteeId = String(menteeId);
+    // 1. Accordion Expand/Collapse Drawer Logbook Mentee
+    function toggleMenteeDrawer(card) {
+        const headerBtn = card.querySelector('[data-action="focus-mentee"]');
+        const drawerId = headerBtn ? headerBtn.getAttribute('aria-controls') : null;
+        const drawer = drawerId ? document.getElementById(drawerId) : null;
+        const isExpanded = card.classList.contains('is-expanded');
 
-        // A. Perbarui Tampilan Kartu Stream Mentee
-        if (streamContainer) {
-            streamContainer.classList.add('is-focused');
-            const allCards = streamContainer.querySelectorAll('.mentee-classroom-card');
-            allCards.forEach((card) => {
-                const headerBtn = card.querySelector('[data-action="focus-mentee"]');
-                const drawerId = headerBtn ? headerBtn.getAttribute('aria-controls') : null;
-                const drawer = drawerId ? document.getElementById(drawerId) : null;
-
-                if (card.dataset.menteeId === String(menteeId)) {
-                    card.classList.add('is-active-focus', 'is-expanded');
-                    if (headerBtn) headerBtn.setAttribute('aria-expanded', 'true');
-                    if (drawer) {
-                        drawer.hidden = false;
-                        const rows = drawer.querySelectorAll('.classroom-task-row');
-                        rows.forEach((row, idx) => {
-                            row.style.animation = 'none';
-                            void row.offsetWidth; // Reflow
-                            row.style.animation = `fadeInCascade 0.3s cubic-bezier(0.16, 1, 0.3, 1) ${idx * 0.04}s both`;
-                        });
-                    }
-                } else {
-                    card.classList.remove('is-active-focus', 'is-expanded');
-                    if (headerBtn) headerBtn.setAttribute('aria-expanded', 'false');
-                    if (drawer) drawer.hidden = true;
-                }
-            });
-        }
-
-        // B. Sembunyikan Kartu Filter Saat Masuk ke Detail Mentee
-        if (filterCard) {
-            filterCard.classList.add('d-none');
-        }
-
-        // C. Beralih ke Header Terpadu Identitas Mentee (Selaras Modul Tugas)
-        if (defaultTitleText) defaultTitleText.classList.add('d-none');
-        if (menteeUnifiedHeader) menteeUnifiedHeader.classList.remove('d-none');
-        if (focusedMenteeAvatar) focusedMenteeAvatar.textContent = getInitials(menteeName);
-        if (focusedMenteeName) focusedMenteeName.textContent = menteeName;
-        if (focusedMenteeInst) focusedMenteeInst.textContent = menteeInst || '';
-
-        // D. Sinkronisasi Dropdown Filter Jika Tersedia
-        const selectPen = document.getElementById('selectPenempatan');
-        if (selectPen) {
-            selectPen.value = String(menteeId);
-        }
-
-        // E. Perbarui URL browser dengan parameter penempatan_id
-        if (updateHistory) {
-            try {
-                const currentUrl = new URL(window.location.href);
-                currentUrl.searchParams.set('penempatan_id', menteeId);
-                window.history.pushState({ penempatan_id: menteeId, menteeName, menteeInst }, '', currentUrl.toString());
-            } catch {
-                // Ignore history errors
+        if (isExpanded) {
+            card.classList.remove('is-expanded');
+            if (headerBtn) headerBtn.setAttribute('aria-expanded', 'false');
+            if (drawer) drawer.hidden = true;
+        } else {
+            card.classList.add('is-expanded');
+            if (headerBtn) headerBtn.setAttribute('aria-expanded', 'true');
+            if (drawer) {
+                drawer.hidden = false;
+                const rows = drawer.querySelectorAll('.classroom-task-row');
+                rows.forEach((row, idx) => {
+                    row.style.animation = 'none';
+                    void row.offsetWidth; // Reflow
+                    row.style.animation = `fadeInCascade 0.3s cubic-bezier(0.16, 1, 0.3, 1) ${idx * 0.04}s both`;
+                });
             }
         }
     }
@@ -141,17 +104,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event Listener Klik Kartu Mentee untuk Masuk ke Logbook Mentee
+    // Event Listener Klik Kartu Mentee untuk Expand/Collapse Logbook Mentee
     const focusButtons = document.querySelectorAll('[data-action="focus-mentee"]');
     focusButtons.forEach((btn) => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            const menteeId = btn.getAttribute('data-mentee-id');
-            const menteeName = btn.getAttribute('data-mentee-name');
-            const menteeInst = btn.getAttribute('data-mentee-inst');
-
-            if (menteeId) {
-                focusOnMentee(menteeId, menteeName, menteeInst, true);
+            const card = btn.closest('.mentee-classroom-card');
+            if (card) {
+                toggleMenteeDrawer(card);
             }
         });
     });
@@ -174,72 +134,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 2. Modal Pemberian Catatan Pembimbing
-    const catatanModal = document.getElementById('modal-catatan-logbook');
-    const formCatatan = document.getElementById('form-catatan-logbook');
-    const modalSubtitle = document.getElementById('catatan-modal-subtitle');
-    const modalKegiatan = document.getElementById('catatan-modal-kegiatan');
-    const catatanTextarea = document.getElementById('modal-catatan-textarea');
+    // 2. Inline Note Editor Toggle & Cancel Handlers
+    document.addEventListener('click', (e) => {
+        // Toggle Buka / Tutup Form Inline Catatan
+        const toggleBtn = e.target.closest('[data-action="toggle-inline-note"]');
+        if (toggleBtn) {
+            e.preventDefault();
+            const logId = toggleBtn.getAttribute('data-log-id');
+            const editor = document.getElementById(`inline-note-form-${logId}`);
+            const notesView = document.getElementById(`notes-view-${logId}`);
 
-    const openButtons = document.querySelectorAll('.btn-open-catatan-modal');
-    openButtons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const logId = btn.getAttribute('data-log-id');
-            const pesertaNama = btn.getAttribute('data-peserta-nama');
-            const tanggal = btn.getAttribute('data-tanggal');
-            const kegiatan = btn.getAttribute('data-kegiatan');
-            const catatan = btn.getAttribute('data-catatan');
+            if (!editor) return;
 
-            if (formCatatan) {
-                formCatatan.action = `/pembimbing/logbook/${logId}/review`;
-            }
+            const isHidden = editor.hidden;
+            if (isHidden) {
+                // Tampilkan form editor inline
+                editor.hidden = false;
+                if (notesView) {
+                    notesView.style.display = 'none';
+                }
+                const textarea = editor.querySelector('.logbook-note-clean-textarea') || editor.querySelector('textarea');
+                const fieldContainer = editor.querySelector('.logbook-note-field-filled');
 
-            if (modalSubtitle) {
-                modalSubtitle.textContent = `Peserta: ${pesertaNama} • Tanggal: ${tanggal}`;
-            }
-
-            if (modalKegiatan) {
-                modalKegiatan.textContent = kegiatan || 'Tidak ada uraian kegiatan';
-            }
-
-            if (catatanTextarea) {
-                catatanTextarea.value = catatan || '';
-            }
-
-            if (catatanModal) {
-                catatanModal.classList.add('show');
-                catatanModal.style.display = 'flex';
-                if (catatanTextarea) {
-                    catatanTextarea.focus();
+                if (textarea && fieldContainer) {
+                    if (textarea.value.trim().length > 0) {
+                        fieldContainer.classList.add('has-value');
+                    } else {
+                        fieldContainer.classList.remove('has-value');
+                    }
+                    textarea.focus();
+                }
+            } else {
+                // Sembunyikan form editor inline
+                editor.hidden = true;
+                if (notesView) {
+                    notesView.style.display = '';
                 }
             }
-        });
-    });
+            return;
+        }
 
-    // 3. Modal Close Handlers
-    const closeButtons = document.querySelectorAll('[data-modal-close]');
-    closeButtons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const targetSelector = btn.getAttribute('data-modal-close');
-            const targetModal = document.querySelector(targetSelector);
-            if (targetModal) {
-                targetModal.classList.remove('show');
-                targetModal.style.display = 'none';
+        // Batal / Tutup Form Inline Catatan
+        const cancelBtn = e.target.closest('[data-action="cancel-inline-note"]');
+        if (cancelBtn) {
+            e.preventDefault();
+            const logId = cancelBtn.getAttribute('data-log-id');
+            const editor = document.getElementById(`inline-note-form-${logId}`);
+            const notesView = document.getElementById(`notes-view-${logId}`);
+
+            if (editor) {
+                editor.hidden = true;
             }
-        });
-    });
-
-    window.addEventListener('click', (e) => {
-        if (e.target && e.target.classList.contains('modal-overlay')) {
-            e.target.classList.remove('show');
-            e.target.style.display = 'none';
+            if (notesView) {
+                notesView.style.display = '';
+            }
+            return;
         }
     });
 
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && catatanModal && catatanModal.classList.contains('show')) {
-            catatanModal.classList.remove('show');
-            catatanModal.style.display = 'none';
+    // 3. Listener Real-time Input Textarea Catatan untuk State Floating Label (.has-value)
+    document.addEventListener('input', (e) => {
+        if (e.target && e.target.matches('.logbook-note-clean-textarea')) {
+            const fieldContainer = e.target.closest('.logbook-note-field-filled');
+            if (fieldContainer) {
+                if (e.target.value.trim().length > 0) {
+                    fieldContainer.classList.add('has-value');
+                } else {
+                    fieldContainer.classList.remove('has-value');
+                }
+            }
         }
     });
 });

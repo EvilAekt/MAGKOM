@@ -10,10 +10,12 @@ use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReviewLogbookRequest;
+use App\Models\BulanMagang;
 use App\Models\Logbook;
 use App\Models\Penempatan;
 use App\Services\AuditService;
 use App\Services\RealtimeEventService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,8 +42,19 @@ class LogbookReviewController extends Controller
                 }
             });
 
-        if ($request->filled('penempatan_id')) {
+        if ($request->filled('masuk')) {
+            $query->where('penempatan_id', $request->input('masuk'));
+        } elseif ($request->filled('penempatan_id')) {
             $query->where('penempatan_id', $request->input('penempatan_id'));
+        }
+
+        if ($request->filled('bulan')) {
+            $parts = explode('-', (string) $request->input('bulan'));
+            if (count($parts) === 2) {
+                [$tahun, $bln] = $parts;
+                $query->whereYear('tanggal', (int) $tahun)
+                    ->whereMonth('tanggal', (int) $bln);
+            }
         }
 
         if ($request->filled('status')) {
@@ -63,9 +76,9 @@ class LogbookReviewController extends Controller
             });
         }
 
-        $logbooks = $query->latest('tanggal')->paginate(20)->withQueryString();
+        $logbooks = $query->latest('tanggal')->paginate(10)->withQueryString();
 
-        $penempatanList = Penempatan::with(['peserta.profil.jurusan', 'bidang', 'logbooks' => function ($q) {
+        $penempatanBaseQuery = Penempatan::with(['peserta.profil.jurusan', 'bidang', 'logbooks' => function ($q) {
             $q->latest('tanggal');
         }])
             ->where(function ($q) use ($user) {
@@ -73,8 +86,26 @@ class LogbookReviewController extends Controller
                     $q->where('pembimbing_id', $user->id);
                 }
             })
-            ->where('status', StatusPenempatanEnum::Aktif)
-            ->get();
+            ->where('status', StatusPenempatanEnum::Aktif);
+
+        $allPenempatan = (clone $penempatanBaseQuery)->get();
+
+        if ($request->filled('penempatan_id')) {
+            $penempatanBaseQuery->where('id', $request->input('penempatan_id'));
+        }
+
+        if ($request->filled('q')) {
+            $search = '%'.$request->input('q').'%';
+            $penempatanBaseQuery->whereHas('peserta', function ($qp) use ($search) {
+                $qp->where('nama', 'like', $search)
+                    ->orWhereHas('profil', function ($qprof) use ($search) {
+                        $qprof->where('institusi', 'like', $search)
+                            ->orWhere('nim_nisn', 'like', $search);
+                    });
+            });
+        }
+
+        $penempatanList = (clone $penempatanBaseQuery)->latest('id')->paginate(10)->withQueryString();
 
         $baseCounter = Logbook::whereHas('penempatan', function ($q) use ($user) {
             if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
@@ -114,9 +145,27 @@ class LogbookReviewController extends Controller
             }
         }
 
+        $masukPenempatanId = $request->integer('masuk') ?: null;
+        $masukPenempatan = null;
+        if ($masukPenempatanId) {
+            $masukPenempatan = $penempatanList->firstWhere('id', $masukPenempatanId);
+            if (! $masukPenempatan) {
+                $masukPenempatan = Penempatan::with(['peserta.profil.jurusan', 'bidang', 'logbooks' => function ($q) {
+                    $q->latest('tanggal');
+                }])
+                    ->where(function ($q) use ($user) {
+                        if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                            $q->where('pembimbing_id', $user->id);
+                        }
+                    })
+                    ->firstWhere('id', $masukPenempatanId);
+            }
+        }
+
         $data = [
             'logbooks' => $logbooks,
             'penempatanList' => $penempatanList,
+            'allPenempatan' => $allPenempatan,
             'totalLogbook' => $totalLogbook,
             'totalMenteeMelapor' => $totalMenteeMelapor,
             'countDenganCatatan' => $countDenganCatatan,
@@ -129,6 +178,9 @@ class LogbookReviewController extends Controller
             'persenRevisi' => $persenRevisi,
             'selectedPenempatanId' => $selectedPenempatanId,
             'selectedPenempatan' => $selectedPenempatan,
+            'masukPenempatanId' => $masukPenempatanId,
+            'masukPenempatan' => $masukPenempatan,
+            'daftarBulan' => $this->getDaftarBulan(),
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {
@@ -148,7 +200,8 @@ class LogbookReviewController extends Controller
     {
         Gate::authorize('review', $logbook);
 
-        $catatan = $request->validated('catatan_pembimbing');
+        $rawCatatan = $request->validated('catatan_pembimbing');
+        $catatan = filled($rawCatatan) ? trim((string) $rawCatatan) : null;
         $nilaiLama = $logbook->only(['status', 'catatan_pembimbing']);
 
         $updatePayload = [
@@ -295,5 +348,32 @@ class LogbookReviewController extends Controller
         }
 
         return redirect()->route('pembimbing.logbook.index')->with('success', $message);
+    }
+
+    /**
+     * Dapatkan daftar bulan magang untuk filter pencarian.
+     *
+     * @return array<string, string>
+     */
+    private function getDaftarBulan(): array
+    {
+        $daftar = [];
+        $bulanMagangs = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
+        foreach ($bulanMagangs as $bm) {
+            if ($bm->bulan_mulai) {
+                $key = Carbon::parse($bm->bulan_mulai)->setTimezone(config('app.timezone', 'Asia/Jakarta'))->format('Y-m');
+                $daftar[$key] = $bm->nama_bulan;
+            }
+        }
+        for ($i = 0; $i < 12; $i++) {
+            $dt = Carbon::now()->subMonths($i);
+            $key = $dt->format('Y-m');
+            if (! isset($daftar[$key])) {
+                $daftar[$key] = $dt->locale('id')->translatedFormat('F Y');
+            }
+        }
+        krsort($daftar);
+
+        return $daftar;
     }
 }

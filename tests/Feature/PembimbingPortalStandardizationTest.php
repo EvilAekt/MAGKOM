@@ -89,7 +89,7 @@ class PembimbingPortalStandardizationTest extends TestCase
         ]);
     }
 
-    public function test_direktori_peserta_merender_hero_banner_dan_empat_kartu_tile_stat(): void
+    public function test_direktori_peserta_merender_hero_banner_dan_tiga_kartu_tile_stat(): void
     {
         $response = $this->actingAs($this->pembimbing)
             ->get(route('pembimbing.peserta.index'));
@@ -97,11 +97,14 @@ class PembimbingPortalStandardizationTest extends TestCase
         $response->assertOk();
         $response->assertSee('Direktori Peserta Bimbingan');
         $response->assertSee('Budi Santoso, S.Kom');
-        $response->assertSee('+ Beri Tugas Baru');
+        $response->assertSee('Beri Tugas Baru');
+        $response->assertDontSee('+ + Beri Tugas Baru');
         $response->assertSee('Total Mentee');
         $response->assertSee('Peserta Aktif');
-        $response->assertSee('Perlu Perhatian');
         $response->assertSee('Alumni Selesai');
+        $response->assertDontSee('Perlu Perhatian');
+        $response->assertDontSee('Monitoring progres durasi dan status evaluasi peserta magang');
+        $response->assertDontSee('Status Nilai');
         $response->assertSee('SMK Negeri 2 Depok Sleman');
         $response->assertSee('Naufal Pratama');
     }
@@ -124,7 +127,13 @@ class PembimbingPortalStandardizationTest extends TestCase
         $response->assertSee('Perlu Review');
         $response->assertSee('Disetujui');
         $response->assertSee('Perlu Revisi');
-        $response->assertSee('Mengerjakan implementasi antarmuka portal MagKom.');
+        $response->assertSee($this->penempatan->peserta->nama);
+
+        // Pada mode masuk ke rincian mentee, entri kegiatan logbook tampil
+        $detailResponse = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.logbook.index', ['masuk' => $this->penempatan->id]));
+        $detailResponse->assertOk();
+        $detailResponse->assertSee('Mengerjakan implementasi antarmuka portal MagKom.');
     }
 
     public function test_evaluasi_rubrik_merender_hero_banner_dan_empat_kartu_tile_stat(): void
@@ -175,5 +184,46 @@ class PembimbingPortalStandardizationTest extends TestCase
 
         $response->assertOk();
         $response->assertDontSee('Peserta Rahasia Lain');
+    }
+
+    public function test_pembimbing_peserta_show_menggunakan_desain_classroom_banner_tanpa_status_penilaian(): void
+    {
+        $response = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.peserta.show', $this->penempatan->id));
+
+        $response->assertOk();
+
+        // 1. Topbar Title & Classroom Navy Banner & Tombol Kembali
+        $response->assertSee('class="topbar-title"', false);
+        $response->assertDontSee('class="breadcrumb-trail"', false);
+        $response->assertSee('class="classroom-banner"', false);
+        $response->assertSee('Profil 360° Mentee Bimbingan');
+        $response->assertSee('class="btn-banner-back"', false);
+        $response->assertSee('Kembali ke Direktori');
+
+        // 2. Mentee Hero Card
+        $response->assertSee('class="mentee-hero-card"', false);
+        $response->assertSee('Logbook Mentee');
+        $response->assertSee('Tugas Mentee');
+
+        // 3. Status Penilaian telah dihapus sepenuhnya
+        $response->assertDontSee('STATUS PENILAIAN');
+        $response->assertDontSee('Status Penilaian');
+        $response->assertDontSee('Berdasarkan 5 kriteria rubrik');
+
+        // 4. Dua Widget KPI Utama
+        $response->assertSee('class="mentee-kpi-grid"', false);
+        $response->assertSee('Penyelesaian Tugas');
+        $response->assertSee('Kedisiplinan Logbook');
+
+        // 5. Analitik & Data Diri
+        $response->assertSee('Komposisi &amp; Rasio Tugas Peserta', false);
+        $response->assertSee('Pelacakan Mingguan Logbook Magang');
+        $response->assertSee('Data Pribadi &amp; Kontak Akademik', false);
+        $response->assertSee('Timeline Periode &amp; Ketentuan Akun', false);
+        $response->assertSee('Riwayat Penugasan');
+
+        // 6. Stylesheet peserta-show dimuat via Vite
+        $response->assertSee('peserta-show', false);
     }
 }

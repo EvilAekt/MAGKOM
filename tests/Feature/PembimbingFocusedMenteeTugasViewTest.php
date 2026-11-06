@@ -224,8 +224,8 @@ class PembimbingFocusedMenteeTugasViewTest extends TestCase
         $response->assertSee('Daftar Penugasan & Progres Mentee');
         $response->assertSee('Naufal Pratama');
         $response->assertSee('Dimas Pratama');
-        // Header fokus terpadu default disembunyikan
-        $response->assertSee('class="mentee-unified-header d-none"', false);
+        // Header fokus terpadu dobel tidak ditampilkan pada panel
+        $response->assertDontSee('class="mentee-unified-header"', false);
 
         // Komponen Filter Nama Peserta ter-render dan terlihat di direktori awal
         $response->assertSee('Filter Nama Peserta');
@@ -237,46 +237,121 @@ class PembimbingFocusedMenteeTugasViewTest extends TestCase
 
         // Mentee pembimbing lain tidak boleh ada di dropdown (Anti-IDOR)
         $response->assertDontSee('Peserta Pembimbing Lain');
+
+        // Header kartu mentee berfungsi sebagai tautan masuk ke detail peserta
+        $response->assertSee('class="mentee-card-header mentee-card-link"', false);
+        $response->assertSee('masuk='.$this->penempatan1->id, false);
+        $response->assertSee('<div id="tasks-mentee-'.$this->penempatan1->id.'" class="mentee-tasks-drawer" hidden>', false);
+
+        // Tombol Buat Tugas Baru memiliki satu ikon (tidak ada plus ganda + +)
+        $response->assertDontSee('+ + Buat Tugas Baru', false);
+        $response->assertSee('<span>Buat Tugas Baru</span>', false);
+
+        // Input pencarian teks q tersedia di form filter
+        $response->assertSee('name="q"', false);
+        $response->assertSee('placeholder="Cari nama, kampus, NIM..."', false);
     }
 
-    public function test_akses_dengan_penempatan_id_menampilkan_mode_fokus_dan_tombol_kembali(): void
+    public function test_pencarian_q_pada_tugas_menyaring_peserta_berdasarkan_nama_atau_kampus(): void
+    {
+        // 1. Cari berdasarkan nama "Naufal"
+        $responseNama = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'q' => 'Naufal',
+        ]));
+        $responseNama->assertOk();
+        $responseNama->assertSee('Naufal Pratama');
+        $responseNama->assertSee('data-mentee-id="'.$this->penempatan1->id.'"', false);
+        $responseNama->assertDontSee('data-mentee-id="'.$this->penempatan2->id.'"', false);
+        $responseNama->assertSee('class="btn-filter-reset"', false);
+
+        // 2. Cari berdasarkan kampus "Gadjah Mada"
+        $responseKampus = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'q' => 'Gadjah Mada',
+        ]));
+        $responseKampus->assertOk();
+        $responseKampus->assertSee('Dimas Pratama');
+        $responseKampus->assertSee('data-mentee-id="'.$this->penempatan2->id.'"', false);
+        $responseKampus->assertDontSee('data-mentee-id="'.$this->penempatan1->id.'"', false);
+        $responseKampus->assertSee('class="btn-filter-reset"', false);
+    }
+
+    public function test_filter_penempatan_id_hanya_menampilkan_peserta_terfilter_seperti_search(): void
     {
         $response = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
             'penempatan_id' => $this->penempatan1->id,
         ]));
 
         $response->assertOk();
-        // Container berada dalam mode fokus
-        $response->assertSee('mentee-stream-container is-focused');
-        // Identitas mentee muncul di header terpadu sisi kiri
-        $response->assertSee('focusedMenteeName');
+        // Identitas mentee terpilih terlihat pada kartu
         $response->assertSee('Naufal Pratama');
         $response->assertSee('SMK Negeri 2 Depok Sleman');
-        $response->assertSee('focusedMenteeAvatar');
-        // Teks kaku 'Tugas & Progres:' telah dihilangkan
-        $response->assertDontSee('Tugas &amp; Progres: Naufal Pratama');
-        $response->assertDontSee('Tugas & Progres: Naufal Pratama');
 
-        // Komponen Filter Nama Peserta disembunyikan saat dalam mode fokus
-        $response->assertSee('id="tugasFilterCard" class="tugas-filter-card d-none"', false);
+        // Seperti search filter: kartu tetap berupa kartu daftar, tugas belum langsung terbuka
+        $response->assertSee('<div id="tasks-mentee-'.$this->penempatan1->id.'" class="mentee-tasks-drawer" hidden>', false);
+        $response->assertSee('class="mentee-card-header mentee-card-link"', false);
+        $response->assertDontSee('class="mentee-chevron-back-btn"', false);
+
+        // Komponen Filter Nama Peserta tetap terlihat saat dalam mode filter aktif
+        $response->assertSee('id="tugasFilterCard" class="tugas-filter-card"', false);
+        $response->assertDontSee('id="tugasFilterCard" class="tugas-filter-card d-none"', false);
+        $response->assertSee('Daftar Penugasan &amp; Progres Mentee', false);
         $response->assertSee('value="'.$this->penempatan1->id.'" selected', false);
         $response->assertSee('class="btn-filter-reset"', false);
 
-        // Tombol kembali sisi kiri muncul
-        $response->assertSee('btnBackToMentees');
-        $response->assertSee('Semua Mentee');
+        // Mentee lain tidak muncul dalam daftar kartu yang terfilter
+        $response->assertDontSee('data-mentee-id="'.$this->penempatan2->id.'"', false);
+    }
 
-        // Tugas milik mentee terpilih terlihat
-        $response->assertSee('Pembuatan Wireframe UI Portal Magang');
+    public function test_klik_masuk_penempatan_menampilkan_mode_detail_dan_tugas_langsung_terbuka(): void
+    {
+        $response = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk' => $this->penempatan1->id,
+        ]));
 
-        // Chip statistik duplikat dihilangkan dari kartu
-        $response->assertDontSee('mentee-stats-badges');
+        $response->assertOk();
+        // Identitas mentee terpilih terlihat pada kartu
+        $response->assertSee('Naufal Pratama');
+        $response->assertSee('SMK Negeri 2 Depok Sleman');
 
-        // Badge kategori di baris tugas dihapus agar tampilan bersih
-        $response->assertDontSee('task-row-category');
+        // Drawer tugas langsung terbuka penuh tanpa accordion/hidden
+        $response->assertSee('<div id="tasks-mentee-'.$this->penempatan1->id.'" class="mentee-tasks-drawer">', false);
+        $response->assertDontSee('<div id="tasks-mentee-'.$this->penempatan1->id.'" class="mentee-tasks-drawer" hidden>', false);
+        // Tombol panah kembali (<) terlihat di kanan header kartu
+        $response->assertSee('class="mentee-chevron-back-btn"', false);
+        $response->assertDontSee('data-mentee-id="'.$this->penempatan2->id.'"', false);
 
-        // Kolom kompleksitas dihapus dari tabel penugasan
-        $response->assertDontSee('<th>Kompleksitas</th>', false);
+        // Filter Card harus disembunyikan dengan d-none saat masuk mode fokus mentee
+        $response->assertSee('id="tugasFilterCard" class="tugas-filter-card d-none"', false);
+
+        // Cek peserta tanpa tugas: pastikan paginasi mentee TIDAK bocor ke tampilan mentee kosong
+        $pesertaTanpaTugas = $this->createUser('Zulfikar Ali', 'zulfikar@student.ac.id', RoleEnum::Peserta);
+        PesertaProfil::create([
+            'user_id' => $pesertaTanpaTugas->id,
+            'jurusan_id' => $this->jurusan->id,
+            'jenjang' => JenjangEnum::S1,
+            'institusi' => 'Universitas Gadjah Mada',
+            'nim_nisn' => '22/499111/TK/55000',
+            'no_hp' => '081234567895',
+        ]);
+        $penempatanKosong = Penempatan::create([
+            'peserta_id' => $pesertaTanpaTugas->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'bidang_id' => $this->bidang->id,
+            'bulan_magang_id' => $this->penempatan1->bulan_magang_id,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'tgl_mulai' => Carbon::today()->subDays(10),
+            'tgl_selesai' => Carbon::today()->addDays(30),
+            'status' => StatusPenempatanEnum::Aktif,
+        ]);
+
+        $responseKosong = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk' => $penempatanKosong->id,
+        ]));
+        $responseKosong->assertOk();
+        $responseKosong->assertSee('Belum ada tugas untuk peserta ini.');
+        $responseKosong->assertDontSee('id="menteePaginationWrapper"', false);
+        $responseKosong->assertDontSee('id="tugasPaginationWrapper"', false);
     }
 
     public function test_halaman_edit_tugas_menggunakan_tampilan_workspace_modern(): void
@@ -346,12 +421,100 @@ class PembimbingFocusedMenteeTugasViewTest extends TestCase
         $responseFocus->assertOk();
         // Tugas mentee 1 tampil aktif di dalam drawer kartu/tabel
         $responseFocus->assertSee($this->tugas1->judul);
-        // Kartu mentee 1 berstatus aktif fokus
+        // Kartu mentee 1 muncul
         $responseFocus->assertSee('data-mentee-id="'.$this->penempatan1->id.'"', false);
-        // Drawer mentee 2 tertutup dengan hidden
-        $responseFocus->assertSee('id="tasks-mentee-'.$this->penempatan2->id.'" class="mentee-tasks-drawer" hidden', false);
-        // Tabel tersinkronisasi dengan mode fokus
-        $responseFocus->assertSee('classroom-table-container is-focused', false);
-        $responseFocus->assertSee('task-table table-focused-mentee', false);
+        // Kartu mentee 2 tidak ada dalam daftar stream yang terfilter
+        $responseFocus->assertDontSee('data-mentee-id="'.$this->penempatan2->id.'"', false);
+    }
+
+    public function test_paginasi_tugas_menampilkan_10_entri_per_halaman_dan_navigasi_halaman(): void
+    {
+        // Buat total 15 tugas untuk penempatan 1 (tugas1 sudah ada 1, tambah 14)
+        for ($i = 2; $i <= 15; $i++) {
+            Tugas::create([
+                'penempatan_id' => $this->penempatan1->id,
+                'pembimbing_id' => $this->pembimbing->id,
+                'judul' => "Tugas Tambahan ke-{$i} untuk Mentee",
+                'deskripsi' => "Deskripsi penugasan nomor {$i}.",
+                'kategori' => 'Pengembangan Web',
+                'kompleksitas' => KompleksitasEnum::Sedang,
+                'status' => StatusTugasEnum::Belum,
+                'deadline' => Carbon::now()->addDays($i),
+            ]);
+        }
+
+        // 1. Halaman 1 harus menampilkan ringkasan 1 sampai 10 dari 15 entri
+        $responseHalaman1 = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk' => $this->penempatan1->id,
+        ]));
+
+        $responseHalaman1->assertOk();
+        $responseHalaman1->assertSee('id="tugasPaginationWrapper"', false);
+        $responseHalaman1->assertSee('Menampilkan');
+        $responseHalaman1->assertSee('<strong>1</strong>', false);
+        $responseHalaman1->assertSee('<strong>10</strong>', false);
+        $responseHalaman1->assertSee('<strong>15</strong>', false);
+        $responseHalaman1->assertSee('Berikutnya &raquo;', false);
+
+        // Filter Card harus tetap tersembunyi
+        $responseHalaman1->assertSee('id="tugasFilterCard" class="tugas-filter-card d-none"', false);
+
+        // 2. Akses Halaman 2: menampilkan 11 sampai 15 dari 15 entri
+        $responseHalaman2 = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk' => $this->penempatan1->id,
+            'page' => 2,
+        ]));
+
+        $responseHalaman2->assertOk();
+        $responseHalaman2->assertSee('id="tugasPaginationWrapper"', false);
+        $responseHalaman2->assertSee('<strong>11</strong>', false);
+        $responseHalaman2->assertSee('<strong>15</strong>', false);
+        $responseHalaman2->assertSee('&laquo; Sebelumnya', false);
+        $responseHalaman2->assertSee('id="tugasFilterCard" class="tugas-filter-card d-none"', false);
+    }
+
+    public function test_baris_tugas_tidak_lagi_menampilkan_tombol_detail_dan_memiliki_atribut_double_click(): void
+    {
+        // Akses halaman tugas dengan parameter masuk mentee penempatan1
+        $response = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.index', [
+            'masuk' => $this->penempatan1->id,
+        ]));
+
+        $response->assertOk();
+
+        // 1. Tombol Detail tidak ada lagi di baris kartu tugas (.classroom-task-row)
+        $dom = new \DOMDocument;
+        @$dom->loadHTML($response->getContent());
+        $xpath = new \DOMXPath($dom);
+        $nodes = $xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " classroom-task-row ")]//*[contains(concat(" ", normalize-space(@class), " "), " btn-tugas-action ")]');
+        $this->assertEquals(0, $nodes->length);
+
+        // 2. Baris kartu tugas memiliki atribut data-task-url untuk interaksi double-click
+        $response->assertSee('data-task-url="'.route('pembimbing.tugas.show', $this->tugas1->id).'"', false);
+        $response->assertSee('title="Klik dua kali (double click) untuk membuka detail tugas"', false);
+        $response->assertSee('role="button"', false);
+        $response->assertSee('tabindex="0"', false);
+    }
+
+    public function test_halaman_review_tugas_menampilkan_floating_card_catatan_umpan_balik_tanpa_placeholder_panjang(): void
+    {
+        $response = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.show', $this->tugas1->id));
+
+        $response->assertOk();
+
+        // 1. Memiliki kontainer floating card box
+        $response->assertSee('id="feedbackFieldBox"', false);
+        $response->assertSee('class="review-feedback-field', false);
+
+        // 2. Memiliki floating label di dalam card
+        $response->assertSee('class="review-feedback-label"', false);
+        $response->assertSee('Catatan Umpan Balik');
+        $response->assertSee('id="feedbackReqBadge"', false);
+        $response->assertSee('*(Wajib jika dikembalikan)');
+
+        // 3. Textarea tidak memiliki placeholder panjang lama
+        $response->assertDontSee('Tuliskan catatan apresiasi atau instruksi perbaikan untuk peserta...');
+        $response->assertSee('class="review-feedback-textarea-clean"', false);
+        $response->assertSee('id="feedbackInput"', false);
     }
 }

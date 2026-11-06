@@ -190,7 +190,8 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
         $response->assertSee('Tugas & Progres Magang', false);
         $response->assertSee('Pengembangan Antarmuka Dashboard Portal MagKom');
         $response->assertSee('Mentee Satu');
-        $response->assertSee('+ Buat Tugas Baru');
+        $response->assertSee('Buat Tugas Baru');
+        $response->assertDontSee('+ + Buat Tugas Baru');
     }
 
     public function test_filter_tab_status_dan_perlu_evaluasi_pada_halaman_index_pembimbing(): void

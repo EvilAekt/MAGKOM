@@ -179,7 +179,7 @@
             trendType="warning"
             trendDirection="down"
             trendText="{{ $countPerhatian }} Alert"
-            subText="Tugas overdue / logbook bolong"
+            subText="Tugas lewat tenggat / belum tuntas"
             :sparkBars="[70, 85, 90, 65, 50, 60, 45, 30, 20]">
             <x-slot:icon>
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
@@ -199,6 +199,71 @@
                 <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
             </x-slot:icon>
         </x-gentelella.tile-stat>
+    </div>
+
+    {{-- 2.5 Filter Bar: Pencarian Teks, Nama Peserta, Status, dan Bulan --}}
+    <div class="laporan-filter-card">
+        <form method="GET" action="{{ route('pembimbing.laporan-kinerja.index') }}" class="laporan-filter-form" id="formFilterLaporan">
+            <div class="filter-group filter-group-search" style="flex: 1.3;">
+                <label for="inputSearchLaporan">Pencarian Peserta</label>
+                <div class="peserta-search-input-wrap">
+                    <input type="text" 
+                           name="q" 
+                           id="inputSearchLaporan" 
+                           value="{{ request('q') }}" 
+                           placeholder="Cari nama, kampus, NIM..." 
+                           class="peserta-search-input">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="peserta-search-icon" aria-hidden="true">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label for="filterPeserta">Filter Nama Peserta</label>
+                <select name="penempatan_id" id="filterPeserta" class="filter-control" onchange="this.form.submit()">
+                    <option value="">Semua Peserta Bimbingan</option>
+                    @foreach($penempatanOptions ?? [] as $pen)
+                        <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
+                            {{ $pen->peserta?->nama }} ({{ $pen->peserta?->profil?->institusi ?? 'Institusi' }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="filterStatus">Filter Status</label>
+                <select name="status" id="filterStatus" class="filter-control" onchange="this.form.submit()">
+                    <option value="">Semua Status</option>
+                    <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
+                    <option value="tidak_aktif" {{ request('status') === 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif / Selesai</option>
+                    <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="filterBulan">Filter Bulan</label>
+                <select name="bulan" id="filterBulan" class="filter-control" onchange="this.form.submit()">
+                    <option value="">Semua Bulan</option>
+                    @foreach($daftarBulan ?? [] as $val => $label)
+                        <option value="{{ $val }}" {{ request('bulan') == $val ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="btn-filter-apply">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                    <span>Filter</span>
+                </button>
+                @if(request()->anyFilled(['q', 'penempatan_id', 'status', 'bulan']))
+                    <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="btn-filter-reset">Reset</a>
+                @endif
+            </div>
+        </form>
     </div>
 
     {{-- 3. Redesign Tabel Portofolio Bimbingan (Data Penempatan Peserta) --}}

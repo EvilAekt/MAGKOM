@@ -215,7 +215,7 @@ class PembimbingLaporanKinerjaViewTest extends TestCase
         $response->assertSee('ALUMNI SELESAI');
         $response->assertSee('Seluruh riwayat penempatan');
         $response->assertSee('Sedang menjalankan magang');
-        $response->assertSee('Tugas overdue / logbook bolong');
+        $response->assertSee('Tugas lewat tenggat / belum tuntas');
         $response->assertSee('Magang tuntas &amp; lulus', false);
     }
 
@@ -281,5 +281,45 @@ class PembimbingLaporanKinerjaViewTest extends TestCase
         $pdfResponse = $this->actingAs($this->pembimbing)
             ->get(route('pembimbing.laporan-kinerja.export', ['format' => 'pdf']));
         $pdfResponse->assertRedirect(route('pembimbing.laporan-kinerja.cetak', ['format' => 'pdf']));
+    }
+
+    public function test_laporan_peserta_filter_pencarian_q_menyaring_berdasarkan_nama_kampus_dan_nim(): void
+    {
+        // 1. Verifikasi markup input pencarian dan label filter nama peserta
+        $response = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.laporan-kinerja.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Pencarian Peserta');
+        $response->assertSee('id="inputSearchLaporan"', false);
+        $response->assertSee('placeholder="Cari nama, kampus, NIM..."', false);
+        $response->assertSee('Filter Nama Peserta');
+
+        // 2. Pencarian berdasarkan Nama Peserta (Indra)
+        $searchNama = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.laporan-kinerja.index', ['q' => 'Indra']));
+        $searchNama->assertStatus(200);
+        $searchNama->assertViewHas('rekapMentees', fn ($m) => $m->count() === 1 && $m->first()['penempatan']->id === $this->penempatan1->id);
+        $searchNama->assertSee('value="Indra"', false);
+
+        // 3. Pencarian berdasarkan Kampus (Gadjah Mada)
+        $searchKampus = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.laporan-kinerja.index', ['q' => 'Gadjah Mada']));
+        $searchKampus->assertStatus(200);
+        $searchKampus->assertViewHas('rekapMentees', fn ($m) => $m->count() === 1 && $m->first()['penempatan']->id === $this->penempatan2->id);
+
+        // 4. Pencarian berdasarkan NIM (123220088)
+        $searchNim = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.laporan-kinerja.index', ['q' => '123220088']));
+        $searchNim->assertStatus(200);
+        $searchNim->assertViewHas('rekapMentees', fn ($m) => $m->count() === 1 && $m->first()['penempatan']->id === $this->penempatan1->id);
+
+        // 5. Tombol Reset muncul saat parameter q terisi
+        $searchNama->assertSee('btn-filter-reset');
+        $searchNama->assertSee('Reset');
+
+        // 5. Tombol Reset muncul saat parameter q terisi
+        $searchNama->assertSee('btn-filter-reset');
+        $searchNama->assertSee('Reset');
     }
 }

@@ -580,3 +580,165 @@
     background: #334155;
     color: #7DD3FC;
 }
+
+/* Filter Bar 3-Dimensi: Nama Peserta, Status, dan Bulan */
+.laporan-filter-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid var(--neutral-400, #D0D3D9);
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    margin-bottom: 0.5rem;
+}
+
+.laporan-filter-form {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.laporan-filter-form .filter-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.laporan-filter-form .filter-group label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--neutral-600, #666666);
+    display: block;
+    margin-bottom: 6px;
+}
+
+.laporan-filter-form .filter-control {
+    width: 100%;
+    height: 38px;
+    border: 1px solid var(--neutral-400, #D0D3D9);
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 0.875rem;
+    background: var(--neutral-100, #F8FAFC);
+    color: var(--neutral-800, #1D2530);
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.laporan-filter-form .filter-control:focus {
+    border-color: var(--primary-700, #0641CC);
+    background: #ffffff;
+}
+
+/* Search Input Wrapper for Laporan Filter (Selaras Tugas & Progres Magang) */
+.laporan-filter-form .peserta-search-input-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.laporan-filter-form .peserta-search-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px 0 36px;
+    border-radius: 8px;
+    border: 1px solid var(--neutral-400, #D0D3D9);
+    font-size: 0.875rem;
+    background: var(--neutral-100, #F8FAFC);
+    color: var(--neutral-800, #1D2530);
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.laporan-filter-form .peserta-search-input:focus {
+    border-color: var(--primary-700, #0641CC);
+    background: #ffffff;
+}
+
+.laporan-filter-form .peserta-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 11px;
+    color: #94A3B8;
+    pointer-events: none;
+}
+
+.laporan-filter-form .filter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.laporan-filter-form .btn-filter-apply {
+    height: 38px;
+    padding: 0 18px;
+    background: #0641CC;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+    text-decoration: none;
+}
+
+.laporan-filter-form .btn-filter-apply:hover {
+    background: #0534A8;
+}
+
+.laporan-filter-form .btn-filter-reset {
+    height: 38px;
+    padding: 0 14px;
+    background: var(--neutral-200, #EEF0F5);
+    color: var(--neutral-800, #1D2530);
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.laporan-filter-form .btn-filter-reset:hover {
+    background: var(--neutral-400, #D0D3D9);
+}
+
+[data-theme="dark"] .laporan-filter-card {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .laporan-filter-form .filter-group label {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .laporan-filter-form .filter-control {
+    background: #0F172A;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .laporan-filter-form .peserta-search-input {
+    background: #0F172A;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .laporan-filter-form .peserta-search-input:focus {
+    border-color: #3B82F6;
+    background: #1E293B;
+}
+
+[data-theme="dark"] .laporan-filter-form .peserta-search-icon {
+    color: #64748B;
+}
+
+[data-theme="dark"] .laporan-filter-form .btn-filter-reset {
+    background: #334155;
+    color: #E2E8F0;
+}

@@ -1,0 +1,1019 @@
+/**
+ * MAGKOM - Portal Pembimbing: Profil 360° Mentee Bimbingan
+ * Styling modern selaras Google Classroom Workspace & Sleman Blue Design System
+ */
+
+:root {
+    --mentee-primary: #0641CC;
+    --mentee-primary-hover: #0534A8;
+    --mentee-primary-tint: #EEF4FF;
+    --mentee-primary-border: #BFDBFE;
+    --mentee-navy-1: #0A2558;
+    --mentee-navy-2: #0D3B82;
+    --mentee-navy-3: #104595;
+    --mentee-success: #166534;
+    --mentee-success-bg: #DCFCE7;
+    --mentee-success-border: #86EFAC;
+    --mentee-warning: #92400E;
+    --mentee-warning-bg: #FEF3C7;
+    --mentee-warning-border: #FDE68A;
+    --mentee-danger: #991B1B;
+    --mentee-danger-bg: #FEE2E2;
+    --mentee-danger-border: #FECACA;
+    --mentee-border: #E2E8F0;
+    --mentee-surface: #FFFFFF;
+    --mentee-canvas: #F8FAFC;
+    --mentee-text-main: #0F172A;
+    --mentee-text-muted: #64748B;
+}
+
+/* ==========================================================================
+   1. Classroom Navy Banner
+   ========================================================================== */
+.classroom-banner {
+    position: relative;
+    background: linear-gradient(135deg, var(--mentee-navy-1) 0%, var(--mentee-navy-2) 50%, var(--mentee-navy-3) 100%);
+    border-radius: 14px;
+    padding: 24px 28px;
+    box-shadow: 0 8px 24px -4px rgba(10, 37, 88, 0.22);
+    color: #FFFFFF;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.classroom-banner::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.classroom-banner-content {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    z-index: 2;
+}
+
+.classroom-banner-text {
+    flex: 1;
+    min-width: 280px;
+}
+
+.classroom-banner-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 8px;
+}
+
+.classroom-banner-breadcrumb a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.classroom-banner-breadcrumb a:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+
+.classroom-banner-breadcrumb .sep {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.75rem;
+}
+
+.classroom-banner-breadcrumb .current {
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.classroom-banner-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px 0;
+    color: #FFFFFF;
+    line-height: 1.25;
+}
+
+.classroom-banner-subtitle {
+    margin: 0;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.45;
+}
+
+.classroom-banner-subtitle strong {
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.classroom-banner-action {
+    display: flex;
+    align-items: center;
+}
+
+.btn-banner-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+    transition: all 0.2s ease;
+}
+
+.btn-banner-back:hover {
+    background: rgba(255, 255, 255, 0.24);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #FFFFFF;
+    transform: translateX(-2px);
+}
+
+/* ==========================================================================
+   2. Mentee Hero Card
+   ========================================================================== */
+.mentee-hero-card {
+    background: var(--mentee-surface);
+    border: 1px solid var(--mentee-border);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.mentee-hero-left {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    min-width: 280px;
+    flex: 1;
+}
+
+.mentee-avatar-squircle {
+    width: 68px;
+    height: 68px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--mentee-primary) 0%, #2563EB 100%);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    box-shadow: 0 4px 14px rgba(6, 65, 204, 0.25);
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.mentee-hero-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mentee-title-badges {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.mentee-name {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--mentee-text-main);
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+.badge-status-pill {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    line-height: 1.4;
+}
+
+.badge-status-aktif {
+    background: var(--mentee-success-bg);
+    color: var(--mentee-success);
+    border: 1px solid var(--mentee-success-border);
+}
+
+.badge-status-selesai {
+    background: #E0E7FF;
+    color: #3730A3;
+    border: 1px solid #C7D2FE;
+}
+
+.badge-jalur-pill {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    background: rgba(6, 65, 204, 0.08);
+    color: var(--mentee-primary);
+    border: 1px solid var(--mentee-primary-border);
+    line-height: 1.4;
+}
+
+.mentee-sub-meta {
+    font-size: 0.875rem;
+    color: var(--mentee-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.meta-dot {
+    color: #CBD5E1;
+}
+
+.mentee-chips-row {
+    font-size: 0.8125rem;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+
+.mentee-chips-row strong {
+    color: var(--mentee-text-main);
+    font-weight: 600;
+}
+
+.mentee-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-hero-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-hero-secondary {
+    background: #F1F5F9;
+    color: #334155;
+    border: 1px solid var(--mentee-border);
+}
+
+.btn-hero-secondary:hover {
+    background: #E2E8F0;
+    color: var(--mentee-text-main);
+}
+
+.btn-hero-primary {
+    background: var(--mentee-primary);
+    color: #FFFFFF;
+    border: 1px solid var(--mentee-primary);
+    box-shadow: 0 2px 6px rgba(6, 65, 204, 0.18);
+}
+
+.btn-hero-primary:hover {
+    background: var(--mentee-primary-hover);
+    border-color: var(--mentee-primary-hover);
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(6, 65, 204, 0.25);
+}
+
+/* ==========================================================================
+   3. Dua Widget KPI Kinerja Mentee (Status Penilaian Ditiadakan)
+   ========================================================================== */
+.mentee-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+    .mentee-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.kpi-card {
+    background: var(--mentee-surface);
+    border: 1px solid var(--mentee-border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.performance-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.panel-inner-divider {
+    height: 1px;
+    background: #F1F5F9;
+    margin: 18px 0 16px 0;
+}
+
+.chart-card-header.sub-header {
+    margin-bottom: 12px;
+}
+
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.kpi-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--mentee-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.kpi-value-badge {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 9999px;
+}
+
+.badge-blue {
+    background: #EFF6FF;
+    color: var(--mentee-primary);
+    border: 1px solid var(--mentee-primary-border);
+}
+
+.badge-amber {
+    background: #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+}
+
+.kpi-progress-track {
+    height: 10px;
+    width: 100%;
+    background: #F1F5F9;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.kpi-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+    border-radius: 9999px;
+    transition: width 0.4s ease;
+}
+
+.kpi-footer-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8125rem;
+    color: var(--mentee-text-muted);
+}
+
+.kpi-footer-meta.text-right {
+    justify-content: flex-end;
+}
+
+.kpi-footer-meta strong {
+    color: var(--mentee-text-main);
+}
+
+.kpi-logbook-chips {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.chip-logbook-stat {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.chip-logbook-stat.chip-success {
+    background: var(--mentee-success-bg);
+    border: 1px solid var(--mentee-success-border);
+}
+
+.chip-logbook-stat.chip-success .stat-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--mentee-success);
+}
+
+.chip-logbook-stat.chip-success .stat-count {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #15803D;
+    line-height: 1.2;
+}
+
+.chip-logbook-stat.chip-danger {
+    background: var(--mentee-danger-bg);
+    border: 1px solid var(--mentee-danger-border);
+}
+
+.chip-logbook-stat.chip-danger .stat-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--mentee-danger);
+}
+
+.chip-logbook-stat.chip-danger .stat-count {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #B91C1C;
+    line-height: 1.2;
+}
+
+/* ==========================================================================
+   4. Analitik Charts Grid (Donut Chart & Weekly Timeline Bar)
+   ========================================================================== */
+.mentee-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+    .mentee-charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chart-card {
+    background: var(--mentee-surface);
+    border: 1px solid var(--mentee-border);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chart-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--mentee-text-main);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chart-header-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    background: #EFF6FF;
+    color: #1E40AF;
+    border: 1px solid #BFDBFE;
+}
+
+.chart-target-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--mentee-text-muted);
+}
+
+.donut-chart-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    padding: 6px 0;
+}
+
+.donut-chart-graphic {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.donut-chart-center {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.donut-center-count {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--mentee-text-main);
+    line-height: 1.1;
+}
+
+.donut-center-label {
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: var(--mentee-text-muted);
+    text-transform: uppercase;
+}
+
+.donut-chart-legends {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 170px;
+    font-size: 0.8125rem;
+}
+
+.legend-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.legend-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #334155;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.legend-val {
+    font-weight: 700;
+    color: var(--mentee-text-main);
+}
+
+.legend-val.danger {
+    color: #DC2626;
+}
+
+/* Weekly Bars Chart */
+.weekly-bars-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 6px;
+    height: 100px;
+    padding: 0.5rem 0.25rem 0.25rem 0.25rem;
+    border-bottom: 2px solid var(--mentee-border);
+    margin-bottom: 6px;
+}
+
+.weekly-bar-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 18px;
+}
+
+.weekly-bar-pill {
+    width: 100%;
+    max-width: 22px;
+    border-radius: 4px 4px 0 0;
+    transition: all 0.2s ease;
+}
+
+.weekly-labels-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--mentee-text-muted);
+    padding: 0 0.25rem;
+    margin-bottom: 14px;
+}
+
+.weekly-label-item {
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+}
+
+.weekly-label-item.active {
+    font-weight: 800;
+    color: var(--mentee-primary);
+}
+
+.weekly-legends-row {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: #475569;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: auto;
+}
+
+.weekly-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.weekly-legend-color {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+/* ==========================================================================
+   5. Rincian Data Diri & Timeline Magang
+   ========================================================================== */
+.mentee-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+@media (max-width: 850px) {
+    .mentee-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.info-panel-card {
+    background: var(--mentee-surface);
+    border: 1px solid var(--mentee-border);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+.info-panel-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--mentee-text-main);
+    margin: 0 0 16px 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.info-rows-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 0.875rem;
+}
+
+.info-row-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 0;
+}
+
+.info-row-item.dashed-top {
+    border-top: 1px dashed var(--mentee-border);
+    padding-top: 10px;
+    margin-top: 2px;
+}
+
+.info-row-label {
+    color: var(--mentee-text-muted);
+    font-weight: 500;
+}
+
+.info-row-val {
+    font-weight: 600;
+    color: var(--mentee-text-main);
+    text-align: right;
+}
+
+.info-row-val.danger {
+    color: #DC2626;
+}
+
+.info-row-val.success {
+    color: #059669;
+}
+
+/* ==========================================================================
+   6. Riwayat Penugasan Mentee (Task History List)
+   ========================================================================== */
+.mentee-task-card {
+    background: var(--mentee-surface);
+    border: 1px solid var(--mentee-border);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    overflow: hidden;
+}
+
+.task-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--mentee-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #F8FAFC;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.task-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--mentee-text-main);
+    margin: 0 0 2px 0;
+}
+
+.task-card-subtitle {
+    font-size: 0.8125rem;
+    color: var(--mentee-text-muted);
+}
+
+.btn-manage-tasks {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--mentee-primary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s ease;
+}
+
+.btn-manage-tasks:hover {
+    color: var(--mentee-primary-hover);
+    text-decoration: underline;
+}
+
+.task-table-wrapper {
+    overflow-x: auto;
+}
+
+.task-table-modern {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.task-table-modern thead tr {
+    border-bottom: 1px solid var(--mentee-border);
+    background: #F8FAFC;
+    color: var(--mentee-text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.task-table-modern th {
+    padding: 14px 20px;
+    font-weight: 700;
+}
+
+.task-table-modern th.text-right {
+    text-align: right;
+}
+
+.task-table-modern tbody tr {
+    border-bottom: 1px solid #F1F5F9;
+    transition: background-color 0.15s ease;
+}
+
+.task-table-modern tbody tr:hover {
+    background: #F8FAFC;
+}
+
+.task-table-modern td {
+    padding: 14px 20px;
+    vertical-align: middle;
+}
+
+.task-table-modern td.text-right {
+    text-align: right;
+}
+
+.task-title-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.task-title-name {
+    font-weight: 600;
+    color: var(--mentee-text-main);
+}
+
+.task-title-sub {
+    font-size: 0.75rem;
+    color: var(--mentee-text-muted);
+}
+
+.task-category-pill {
+    font-size: 0.75rem;
+    background: #F1F5F9;
+    color: #475569;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.task-kompleksitas-val {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.task-deadline-val {
+    font-size: 0.8125rem;
+    color: var(--mentee-text-main);
+}
+
+.task-status-pill {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    display: inline-block;
+}
+
+.task-status-selesai {
+    background: var(--mentee-success-bg);
+    color: var(--mentee-success);
+    border: 1px solid var(--mentee-success-border);
+}
+
+.task-status-proses {
+    background: var(--mentee-warning-bg);
+    color: var(--mentee-warning);
+    border: 1px solid var(--mentee-warning-border);
+}
+
+.task-status-belum {
+    background: #F1F5F9;
+    color: #475569;
+    border: 1px solid var(--mentee-border);
+}
+
+.task-link-detail {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--mentee-primary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s ease;
+}
+
+.task-link-detail:hover {
+    color: var(--mentee-primary-hover);
+    text-decoration: underline;
+}
+
+.task-empty-state {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--mentee-text-muted);
+    font-size: 0.875rem;
+}
+
+/* ==========================================================================
+   7. Dark Mode Support
+   ========================================================================== */
+[data-theme="dark"] .mentee-hero-card,
+[data-theme="dark"] .kpi-card,
+[data-theme="dark"] .chart-card,
+[data-theme="dark"] .info-panel-card,
+[data-theme="dark"] .mentee-task-card {
+    background: #1E293B !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .mentee-name,
+[data-theme="dark"] .kpi-label,
+[data-theme="dark"] .chart-card-title,
+[data-theme="dark"] .info-panel-title,
+[data-theme="dark"] .task-card-title,
+[data-theme="dark"] .task-title-name,
+[data-theme="dark"] .info-row-val {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .mentee-sub-meta,
+[data-theme="dark"] .mentee-chips-row,
+[data-theme="dark"] .kpi-footer-meta,
+[data-theme="dark"] .info-row-label,
+[data-theme="dark"] .task-card-subtitle,
+[data-theme="dark"] .task-title-sub,
+[data-theme="dark"] .task-deadline-val {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .donut-chart-center {
+    background: #1E293B !important;
+}
+
+[data-theme="dark"] .donut-center-count {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .legend-info {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .legend-val {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .task-card-header,
+[data-theme="dark"] .task-table-modern thead tr {
+    background: #182234 !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .task-table-modern tbody tr {
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .task-table-modern tbody tr:hover {
+    background: #25334D !important;
+}
+
+[data-theme="dark"] .task-category-pill {
+    background: #0F172A !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .task-kompleksitas-val {
+    color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .kpi-progress-track {
+    background: #0F172A !important;
+}
+
+[data-theme="dark"] .panel-inner-divider {
+    background: #26354D !important;
+}
+
