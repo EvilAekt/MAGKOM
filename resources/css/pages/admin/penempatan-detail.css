@@ -1,81 +1,241 @@
 /* ==========================================================================
    Detail Penempatan Peserta - Admin Stylesheet
-   Executive Identity Banner, Asymmetric Split-Grid, Metric Tiles & Dark Mode
+   Architecture: 12-Column Grid System (8-Col Main : 4-Col Sidebar)
+   Components: Compact Profile Banner, Minimal Metrics Summary, Flat Section Cards,
+               Unified Action Button Hierarchy, and Full Dark Mode Support.
    ========================================================================== */
 
 .penempatan-detail-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.35rem;
     width: 100%;
 }
 
 /* ==========================================================================
-   1. Executive Identity Hero Banner
+   1. Header Toolbar & Action Button Hierarchy
    ========================================================================== */
-.penempatan-hero-card {
+.penempatan-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-action-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    color: #334155;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn-action-back:hover {
+    background: #F8FAFC;
+    border-color: #94A3B8;
+    color: #0F172A;
+}
+
+.btn-action-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    color: #2563EB;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn-action-secondary:hover {
+    background: #EFF6FF;
+    border-color: #BFDBFE;
+    color: #1D4ED8;
+}
+
+.btn-action-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #0641CC;
+    border: 1px solid #0641CC;
+    color: #FFFFFF;
+    padding: 0.55rem 1.15rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 6px -1px rgba(6, 65, 204, 0.35);
+}
+
+.btn-action-primary:hover {
+    background: #0533A3;
+    border-color: #0533A3;
+    color: #FFFFFF;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px -1px rgba(6, 65, 204, 0.4);
+}
+
+/* Action Dropdown Menu */
+.penempatan-dropdown-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-action-dropdown-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    color: #334155;
+    padding: 0.55rem 0.85rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn-action-dropdown-trigger:hover,
+.btn-action-dropdown-trigger.is-active {
+    background: #F8FAFC;
+    border-color: #94A3B8;
+    color: #0F172A;
+}
+
+.penempatan-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    min-width: 220px;
     background: #FFFFFF;
     border: 1px solid #E2E8F0;
-    border-radius: 16px;
-    padding: 1.5rem 1.75rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
-    position: relative;
-    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.06);
+    padding: 0.35rem;
+    z-index: 100;
+    flex-direction: column;
+    gap: 0.2rem;
+    text-align: left;
 }
 
-.penempatan-hero-left {
+.penempatan-dropdown-menu.show {
+    display: flex;
+}
+
+.dropdown-action-item {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    gap: 0.55rem;
+    width: 100%;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #334155;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+.dropdown-action-item:hover {
+    background: #F1F5F9;
+    color: #0F172A;
+}
+
+.dropdown-action-item.is-danger {
+    color: #DC2626;
+}
+
+.dropdown-action-item.is-danger:hover {
+    background: #FEF2F2;
+    color: #B91C1C;
+}
+
+/* ==========================================================================
+   2. Compact 1-Line Profile Banner
+   ========================================================================== */
+.penempatan-profile-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 1.15rem 1.45rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.15rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.penempatan-profile-main {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
     flex-wrap: wrap;
     min-width: 0;
-    flex: 1;
 }
 
-.penempatan-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 14px;
+.penempatan-profile-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     background: linear-gradient(135deg, #06318C 0%, #2563EB 100%);
     color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.35rem;
+    font-size: 1.15rem;
     font-weight: 800;
-    border: 3px solid #EFF6FF;
+    border: 2px solid #EFF6FF;
     flex-shrink: 0;
     overflow: hidden;
-    box-shadow: 0 4px 12px -2px rgba(6, 49, 140, 0.25);
+    box-shadow: 0 3px 8px -1px rgba(6, 49, 140, 0.25);
 }
 
-.penempatan-avatar img {
+.penempatan-profile-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.penempatan-identity-content {
+.penempatan-profile-info {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
     min-width: 0;
 }
 
-.penempatan-title-row {
+.penempatan-profile-name-row {
     display: flex;
     align-items: center;
-    gap: 0.625rem;
+    gap: 0.6rem;
     flex-wrap: wrap;
 }
 
-.penempatan-name {
-    font-size: 1.25rem;
+.penempatan-profile-name {
+    font-size: 1.2rem;
     font-weight: 800;
     color: #0F172A;
     margin: 0;
@@ -88,7 +248,7 @@
     gap: 0.4rem;
     padding: 0.2rem 0.65rem;
     border-radius: 999px;
-    font-size: 0.75rem;
+    font-size: 0.725rem;
     font-weight: 700;
     line-height: 1.3;
 }
@@ -103,113 +263,54 @@
 .jalur-badge-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.2rem 0.65rem;
-    border-radius: 6px;
     font-size: 0.725rem;
     font-weight: 700;
-    letter-spacing: 0.02em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    line-height: 1.3;
 }
 
-.penempatan-meta-chips {
+.penempatan-profile-meta-row {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
-    font-size: 0.8125rem;
-    color: #64748B;
 }
 
 .meta-chip-item {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
+    padding: 0.2rem 0.6rem;
     background: #F8FAFC;
     border: 1px solid #E2E8F0;
     border-radius: 6px;
-    padding: 0.2rem 0.6rem;
     font-size: 0.775rem;
     color: #475569;
 }
 
 .meta-chip-item strong {
-    color: #0F172A;
+    color: #1E293B;
     font-weight: 700;
-}
-
-.penempatan-hero-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    flex-shrink: 0;
-}
-
-.btn-hero-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.55rem 1rem;
-    border-radius: 8px;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.btn-hero-preview {
-    background: #FFFFFF;
-    color: #0641CC;
-    border: 1px solid #BFDBFE;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-}
-
-.btn-hero-preview:hover {
-    background: #EFF6FF;
-    border-color: #93C5FD;
-    color: #0533A8;
-}
-
-.btn-hero-reassign {
-    background: #EFF6FF;
-    color: #1D4ED8;
-    border: 1px solid #DBEAFE;
-}
-
-.btn-hero-reassign:hover {
-    background: #DBEAFE;
-    color: #1E40AF;
-}
-
-.btn-hero-cancel {
-    background: #FEF2F2;
-    color: #DC2626;
-    border: 1px solid #FECACA;
-}
-
-.btn-hero-cancel:hover {
-    background: #FEE2E2;
-    color: #B91C1C;
 }
 
 /* ==========================================================================
-   2. Modern 4 Metric Tiles Grid
+   3. Minimal Metrics Summary (4 Clean Stat Cards)
    ========================================================================== */
 .penempatan-metrics-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
+    gap: 1.15rem;
     width: 100%;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1080px) {
     .penempatan-metrics-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 540px) {
+@media (max-width: 640px) {
     .penempatan-metrics-grid {
         grid-template-columns: 1fr;
     }
@@ -222,34 +323,35 @@
     padding: 1.15rem 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    justify-content: space-between;
+    min-height: 125px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .metric-tile-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px -4px rgba(15, 23, 42, 0.08);
     border-color: #CBD5E1;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px -3px rgba(15, 23, 42, 0.06);
 }
 
 .metric-tile-top {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
 }
 
 .metric-tile-title {
     font-size: 0.75rem;
     font-weight: 700;
-    color: #64748B;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
+    color: #64748B;
 }
 
 .metric-tile-icon-box {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -261,25 +363,17 @@
     font-size: 1.35rem;
     font-weight: 800;
     color: #0F172A;
-    line-height: 1.2;
-}
-
-.metric-tile-sub {
-    font-size: 0.775rem;
-    color: #64748B;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
+    margin: 0.35rem 0 0.25rem 0;
+    letter-spacing: -0.02em;
 }
 
 .metric-progress-track {
+    width: 100%;
     height: 5px;
     background: #F1F5F9;
     border-radius: 999px;
     overflow: hidden;
-    width: 100%;
-    margin-top: 0.25rem;
+    margin: 0.35rem 0;
 }
 
 .metric-progress-fill {
@@ -288,40 +382,91 @@
     transition: width 0.4s ease;
 }
 
+.metric-tile-sub {
+    font-size: 0.75rem;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
 /* ==========================================================================
-   3. Asymmetric Split-Grid (Kolom Utama 62% : Sidebar 38%)
+   4. 12-Column Grid System (8-Col Main : 4-Col Sidebar)
    ========================================================================== */
-.penempatan-split-grid {
+.penempatan-grid-12 {
     display: grid;
-    grid-template-columns: 1fr 390px;
-    gap: 1.5rem;
-    align-items: start;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.35rem;
     width: 100%;
 }
 
+.penempatan-col-8 {
+    grid-column: span 8 / span 12;
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+    min-width: 0;
+}
+
+.penempatan-col-4 {
+    grid-column: span 4 / span 12;
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+    min-width: 0;
+}
+
 @media (max-width: 1080px) {
-    .penempatan-split-grid {
-        grid-template-columns: 1fr;
+    .penempatan-col-8,
+    .penempatan-col-4 {
+        grid-column: span 12 / span 12;
     }
 }
 
-.penempatan-main-col {
+/* Generic Section Card (Flat Container, Eliminates Nested Boxes) */
+.penempatan-section-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 1.35rem 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    min-width: 0;
+    gap: 1.15rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
 }
 
-.penempatan-side-col {
+.section-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 0.85rem;
+}
+
+.section-card-title-group {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    min-width: 0;
+    gap: 0.15rem;
+}
+
+.section-card-title {
+    font-size: 0.975rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+}
+
+.section-card-subtitle {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin: 0;
 }
 
 /* ==========================================================================
-   4. Section Panel Components & Field Cards
+   5. Left Column (8-Col) Components
    ========================================================================== */
+
+/* Official SK Banner */
 .sk-official-banner {
     background: linear-gradient(135deg, #06318C 0%, #061E5B 100%);
     border-radius: 12px;
@@ -365,90 +510,105 @@
     color: #DBEAFE;
 }
 
-.penempatan-fields-grid {
+/* Non-Redundant Placement Details Grid (2x2 Flat) */
+.placement-details-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.875rem;
 }
 
 @media (max-width: 640px) {
-    .penempatan-fields-grid {
+    .placement-details-grid {
         grid-template-columns: 1fr;
     }
 }
 
-.field-tile-card {
+.detail-field-card {
     background: #F8FAFC;
     border: 1px solid #E2E8F0;
     border-radius: 10px;
-    padding: 1rem 1.15rem;
+    padding: 0.875rem 1.1rem;
     display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    transition: border-color 0.15s ease;
+    align-items: flex-start;
+    gap: 0.75rem;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
-.field-tile-card:hover {
+.detail-field-card:hover {
+    background: #F1F5F9;
     border-color: #CBD5E1;
 }
 
-.field-tile-label {
-    font-size: 0.725rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #64748B;
+.detail-field-icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    justify-content: center;
+    color: #0641CC;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
 }
 
-.field-tile-value {
-    font-size: 0.9375rem;
+.detail-field-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.detail-field-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748B;
+    margin-bottom: 0.2rem;
+}
+
+.detail-field-value {
+    font-size: 0.925rem;
     font-weight: 700;
     color: #0F172A;
-    line-height: 1.4;
+    line-height: 1.35;
+    word-break: break-word;
 }
 
-/* Timeline Magang Mini */
-.internship-timeline-box {
+/* Linear Milestone Timeline */
+.timeline-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
     background: #F8FAFC;
     border: 1px solid #E2E8F0;
     border-radius: 10px;
-    padding: 1.15rem 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.875rem;
+    padding: 1.15rem 1.35rem;
 }
 
-.timeline-title-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.8125rem;
-}
-
-.timeline-track-wrap {
-    display: flex;
-    align-items: center;
+.timeline-bar-wrap {
     position: relative;
-    padding: 0 0.5rem;
+    padding: 0.75rem 0;
 }
 
 .timeline-bar-line {
     position: absolute;
-    left: 1.5rem;
-    right: 1.5rem;
+    top: 50%;
+    left: 0;
+    right: 0;
     height: 4px;
     background: #E2E8F0;
-    border-radius: 999px;
+    transform: translateY(-50%);
     z-index: 1;
+    border-radius: 999px;
 }
 
 .timeline-bar-progress {
     height: 100%;
-    background: linear-gradient(90deg, #2563EB 0%, #1D4ED8 100%);
+    background: #2563EB;
     border-radius: 999px;
+    transition: width 0.4s ease;
 }
 
 .timeline-points-row {
@@ -497,8 +657,10 @@
 }
 
 /* ==========================================================================
-   5. Sidebar Components (Pembimbing & Berkas)
+   6. Right Column (4-Col) Components
    ========================================================================== */
+
+/* Field Supervisor Card */
 .mentor-profile-card {
     display: flex;
     align-items: center;
@@ -508,29 +670,29 @@
 }
 
 .mentor-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
     background: #EFF6FF;
-    color: #2563EB;
-    border: 1px solid #DBEAFE;
+    border: 1px solid #BFDBFE;
+    color: #1D4ED8;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.15rem;
+    font-size: 1rem;
     font-weight: 800;
     flex-shrink: 0;
 }
 
 .mentor-info-name {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 800;
     color: #0F172A;
     line-height: 1.3;
 }
 
 .mentor-info-email {
-    font-size: 0.8125rem;
+    font-size: 0.775rem;
     color: #64748B;
     margin-top: 0.15rem;
 }
@@ -538,8 +700,8 @@
 .mentor-stat-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    padding-top: 0.875rem;
+    gap: 0.875rem;
+    padding-top: 0.5rem;
 }
 
 .mentor-capacity-badge {
@@ -555,7 +717,7 @@
     font-weight: 700;
 }
 
-/* Document PDF Tile Card */
+/* Document List Card */
 .doc-pdf-card {
     display: flex;
     justify-content: space-between;
@@ -596,18 +758,18 @@
     font-size: 0.8125rem;
     font-weight: 700;
     color: #1E40AF;
-    line-height: 1.3;
+    line-height: 1.25;
 }
 
 .doc-pdf-sub {
-    font-size: 0.725rem;
+    font-size: 0.7rem;
     color: #3B82F6;
     margin-top: 0.15rem;
 }
 
 .doc-pdf-actions {
     display: flex;
-    gap: 0.4rem;
+    gap: 0.35rem;
     flex-shrink: 0;
 }
 
@@ -615,7 +777,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    padding: 0.35rem 0.7rem;
+    padding: 0.35rem 0.65rem;
     border-radius: 6px;
     font-size: 0.75rem;
     font-weight: 700;
@@ -667,15 +829,110 @@
 }
 
 /* ==========================================================================
-   6. Dark Mode Styles
+   7. Modals & Dialog Overlay System
    ========================================================================== */
-[data-theme="dark"] .penempatan-hero-card {
+.field-label {
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748B;
+    margin-bottom: 0.25rem;
+}
+
+.field-value {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #0F172A;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    padding: 1rem;
+}
+
+.modal-container {
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+}
+
+/* ==========================================================================
+   8. Full Dark Mode Styles
+   ========================================================================== */
+[data-theme="dark"] .btn-action-back,
+[data-theme="dark"] .btn-action-secondary,
+[data-theme="dark"] .btn-action-dropdown-trigger {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .btn-action-back:hover,
+[data-theme="dark"] .btn-action-dropdown-trigger:hover,
+[data-theme="dark"] .btn-action-dropdown-trigger.is-active {
+    background: #202D42 !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .btn-action-secondary {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .btn-action-secondary:hover {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .penempatan-dropdown-menu {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .dropdown-action-item {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .dropdown-action-item:hover {
+    background: #202D42 !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .dropdown-action-item.is-danger {
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .dropdown-action-item.is-danger:hover {
+    background: rgba(220, 38, 38, 0.15) !important;
+    color: #FCA5A5 !important;
+}
+
+[data-theme="dark"] .penempatan-profile-card,
+[data-theme="dark"] .metric-tile-card,
+[data-theme="dark"] .penempatan-section-card {
     background: #182234 !important;
     border-color: #26354D !important;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
 }
 
-[data-theme="dark"] .penempatan-name {
+[data-theme="dark"] .penempatan-profile-name,
+[data-theme="dark"] .metric-tile-value,
+[data-theme="dark"] .section-card-title,
+[data-theme="dark"] .detail-field-value,
+[data-theme="dark"] .mentor-info-name,
+[data-theme="dark"] .verified-doc-name,
+[data-theme="dark"] .field-value {
     color: #F8FAFC !important;
 }
 
@@ -689,44 +946,39 @@
     color: #F8FAFC !important;
 }
 
-[data-theme="dark"] .btn-hero-preview {
+[data-theme="dark"] .metric-progress-track {
+    background: #1E293B !important;
+}
+
+[data-theme="dark"] .section-card-header {
+    border-bottom-color: #26354D !important;
+}
+
+[data-theme="dark"] .detail-field-card,
+[data-theme="dark"] .timeline-card-body {
     background: #131C2C !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .detail-field-card:hover {
+    background: #162238 !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .detail-field-icon-box {
+    background: #182234 !important;
     border-color: #26354D !important;
     color: #60A5FA !important;
 }
 
-[data-theme="dark"] .btn-hero-reassign {
-    background: rgba(37, 99, 235, 0.15) !important;
-    border-color: rgba(59, 130, 246, 0.3) !important;
-    color: #93C5FD !important;
+[data-theme="dark"] .timeline-bar-line {
+    background: #26354D !important;
 }
 
-[data-theme="dark"] .btn-hero-cancel {
-    background: rgba(220, 38, 38, 0.15) !important;
-    border-color: rgba(239, 68, 68, 0.3) !important;
-    color: #FCA5A5 !important;
-}
-
-[data-theme="dark"] .metric-tile-card {
+[data-theme="dark"] .timeline-dot {
     background: #182234 !important;
-    border-color: #26354D !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
-}
-
-[data-theme="dark"] .metric-tile-value {
-    color: #F8FAFC !important;
-}
-
-[data-theme="dark"] .field-tile-card,
-[data-theme="dark"] .internship-timeline-box {
-    background: #131C2C !important;
-    border-color: #26354D !important;
-}
-
-[data-theme="dark"] .field-tile-value,
-[data-theme="dark"] .mentor-info-name,
-[data-theme="dark"] .verified-doc-name {
-    color: #F8FAFC !important;
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 2px #1E293B !important;
 }
 
 [data-theme="dark"] .mentor-avatar {
@@ -769,51 +1021,8 @@
     border-color: #26354D !important;
 }
 
-/* ==========================================================================
-   7. Legacy Field Labels & Modal Overlays
-   ========================================================================== */
-.field-label {
-    font-size: 0.725rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--neutral-500, #64748B);
-    margin-bottom: 0.25rem;
-}
-
-.field-value {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--neutral-900, #0F172A);
-}
-
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(4px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1050;
-    padding: 1rem;
-}
-
-.modal-container {
-    background: var(--neutral-0, #ffffff);
-    border-radius: 12px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    width: 100%;
-    overflow: hidden;
-    border: 1px solid var(--neutral-300, #E2E8F0);
-}
-
 [data-theme="dark"] .field-label {
     color: #94A3B8 !important;
-}
-
-[data-theme="dark"] .field-value {
-    color: #F8FAFC !important;
 }
 
 [data-theme="dark"] .modal-container {
@@ -828,4 +1037,3 @@
     border-color: #26354D !important;
     color: #F8FAFC !important;
 }
-
