@@ -66,7 +66,15 @@ class MagKomRealtimeEngine {
         if (this.isConnected || !this.streamUrl) return;
 
         try {
-            this.eventSource = new EventSource(this.streamUrl);
+            // Gunakan last_event_id dari sessionStorage agar perpindahan halaman tidak mengulang event lama
+            const storedLastId = sessionStorage.getItem('magkom_sse_last_event_id');
+            let fullUrl = this.streamUrl;
+            if (storedLastId && !fullUrl.includes('last_event_id=')) {
+                const separator = fullUrl.includes('?') ? '&' : '?';
+                fullUrl += `${separator}last_event_id=${encodeURIComponent(storedLastId)}`;
+            }
+
+            this.eventSource = new EventSource(fullUrl);
 
             this.eventSource.onopen = () => {
                 this.isConnected = true;
@@ -86,6 +94,7 @@ class MagKomRealtimeEngine {
                 'logbook_direviu',
                 'tugas_baru',
                 'tugas_dikumpulkan',
+                'progres_direviu',
                 'ancaman_keamanan',
                 'telemetri_route'
             ];
@@ -131,16 +140,46 @@ class MagKomRealtimeEngine {
     handleEvent(eventType, eventObj) {
         try {
             const data = JSON.parse(eventObj.data || '{}');
+            const eventId = eventObj.lastEventId || eventObj.id || data.id;
+
+            // Catat ID event terakhir ke sessionStorage agar navigasi antarhalaman tidak memicu ulang
+            if (eventId) {
+                const currentStored = parseInt(sessionStorage.getItem('magkom_sse_last_event_id') || '0', 10);
+                const numId = parseInt(eventId, 10);
+                if (!isNaN(numId) && numId > currentStored) {
+                    sessionStorage.setItem('magkom_sse_last_event_id', String(numId));
+                }
+
+                // Cegah duplikasi toast jika event ID ini sudah pernah ditampilkan di sesi saat ini
+                const displayedKey = 'magkom_displayed_events';
+                let displayed = [];
+                try {
+                    displayed = JSON.parse(sessionStorage.getItem(displayedKey) || '[]');
+                } catch {
+                    displayed = [];
+                }
+
+                if (displayed.includes(String(eventId))) {
+                    return; // Lewati jika sudah pernah ditampilkan
+                }
+
+                displayed.push(String(eventId));
+                if (displayed.length > 50) displayed.shift();
+                sessionStorage.setItem(displayedKey, JSON.stringify(displayed));
+
+                // Tandai sebagai telah dibaca di backend
+                this.markEventAsRead(eventId);
+            }
 
             // Dispatch global event untuk subscriber frontend (seperti Canvas Telemetri)
             window.dispatchEvent(new CustomEvent('magkom:realtime-event', { detail: { eventType, data } }));
 
             if (eventType === 'telemetri_route') {
                 window.dispatchEvent(new CustomEvent('magkom:telemetry-route', { detail: data }));
-                return; // Jangan tampilkan toast/chime untuk telemetri route reguler
+                return; // Jangan tampilkan toast untuk telemetri route reguler
             }
 
-            this.playNotificationChime();
+            // TIDAK membunyikan audio chime (dinonaktifkan sesuai preferensi pengguna)
             this.showToast(data.title || 'Pemberitahuan Baru', data.message || '', eventType, data.action_url);
 
             // Perbarui badge counter jika disediakan di payload
@@ -149,6 +188,26 @@ class MagKomRealtimeEngine {
             }
         } catch (err) {
             console.error('[MagKom SSE] Error parsing payload event:', err);
+        }
+    }
+
+    /**
+     * Menandai event notifikasi sebagai telah dibaca di database agar tidak berulang.
+     */
+    markEventAsRead(eventId) {
+        try {
+            const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+            const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
+            fetch(`/realtime/read/${encodeURIComponent(eventId)}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            }).catch(() => {});
+        } catch {
+            // Fail-safe
         }
     }
 
@@ -278,31 +337,10 @@ class MagKomRealtimeEngine {
     }
 
     /**
-     * Audio Chime lembut menggunakan Web Audio API murni (tanpa file audio eksternal).
+     * Audio Chime dinonaktifkan (suara dihilangkan sepenuhnya).
      */
     playNotificationChime() {
-        try {
-            const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            if (!AudioCtx) return;
-            const ctx = new AudioCtx();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-            osc.frequency.exponentialRampToValueAtTime(880.00, ctx.currentTime + 0.15); // A5
-
-            gain.gain.setValueAtTime(0.04, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            osc.start();
-            osc.stop(ctx.currentTime + 0.3);
-        } catch (e) {
-            // Abaikan jika browser memblokir autoplay audio sebelum interaksi pengguna
-        }
+        // Dinonaktifkan sesuai kebutuhan UI: perpindahan halaman & notifikasi tidak membunyikan audio
     }
 
     escapeHtml(str) {

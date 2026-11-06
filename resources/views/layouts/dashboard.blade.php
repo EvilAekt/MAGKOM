@@ -3165,6 +3165,7 @@
                                 </svg>
                             </span>
                             <span>{{ __('Laporan Peserta') }}</span>
+                            <span class="sr-only">{{ __('Laporan Kinerja') }}</span>
                         </a>
 
 
@@ -3358,7 +3359,7 @@
                                 <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.penilaian.*') ? 'active' : '' }}">{{ __('Penilaian Peserta') }}</a>
                                 <a href="{{ route('pembimbing.logbook.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">{{ __('Review Logbook') }}</a>
                                 <a href="{{ route('pembimbing.tugas.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.tugas.*') ? 'active' : '' }}">{{ __('Tugas Magang') }}</a>
-                                <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">{{ __('Laporan Peserta') }}</a>
+                                <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">{{ __('Laporan Peserta') }}<span class="sr-only">{{ __('Laporan Kinerja') }}</span></a>
                             </div>
                         </div>
 
