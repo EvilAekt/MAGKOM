@@ -21,8 +21,11 @@ use App\Models\User;
 use App\Services\AuditService;
 use App\Services\DocumentArchiveService;
 use App\Services\PlacementService;
+use App\Services\SuratDiterimaPdfService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class PendaftaranController extends Controller
@@ -34,7 +37,7 @@ class PendaftaranController extends Controller
 
     public function index(Request $request): View
     {
-        $query = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan', 'penempatan']);
+        $query = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan', 'penempatan', 'kelompokMagang.anggota']);
 
         $sort = $request->input('sort', 'terbaru');
         if ($sort === 'terlama') {
@@ -42,6 +45,19 @@ class PendaftaranController extends Controller
         } else {
             // Default: Paling baru dibuat (terbaru)
             $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+        }
+
+        if ($request->filled('tipe')) {
+            $tipe = strtolower(trim((string) $request->input('tipe')));
+            if ($tipe === 'individu' || $tipe === 'mandiri') {
+                $query->where(function ($q) {
+                    $q->where('tipe', 'mandiri')
+                        ->orWhere('tipe', 'individu')
+                        ->orWhereNull('tipe');
+                });
+            } elseif ($tipe === 'kelompok') {
+                $query->where('tipe', 'kelompok');
+            }
         }
 
         if ($request->filled('q')) {
@@ -111,6 +127,12 @@ class PendaftaranController extends Controller
 
         $queueStats = [
             'total' => Pendaftaran::count(),
+            'total_individu' => Pendaftaran::where(function ($q) {
+                $q->where('tipe', 'mandiri')
+                    ->orWhere('tipe', 'individu')
+                    ->orWhereNull('tipe');
+            })->count(),
+            'total_kelompok' => Pendaftaran::where('tipe', 'kelompok')->count(),
             'diajukan' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)->count(),
             'perlu_perbaikan' => Pendaftaran::where('status', StatusPendaftaranEnum::PerluPerbaikan)->count(),
             'waiting_list' => Pendaftaran::where('status', StatusPendaftaranEnum::WaitingList)->count(),
@@ -186,7 +208,12 @@ class PendaftaranController extends Controller
 
         try {
             if ($keputusan === 'terima') {
-                $this->placementService->terimaBerkas($pendaftaran, $admin, $request->input('catatan'));
+                $this->placementService->terimaBerkas(
+                    $pendaftaran,
+                    $admin,
+                    $request->input('catatan'),
+                    $request->file('file_surat_diterima')
+                );
 
                 if ($request->filled('pembimbing_id')) {
                     $pembimbing = User::findOrFail($request->input('pembimbing_id'));
@@ -264,5 +291,44 @@ class PendaftaranController extends Controller
             'Content-Type' => 'application/zip',
             'X-Content-Type-Options' => 'nosniff',
         ])->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Mengunduh surat keterangan diterima yang telah diunggah admin atau fallback ke PDF generator.
+     */
+    public function unduhSuratDiterima(Pendaftaran $pendaftaran, SuratDiterimaPdfService $pdfService)
+    {
+        $filePath = $pendaftaran->file_surat_diterima ?: $pendaftaran->penempatan?->file_surat_diterima;
+        if ($filePath && Storage::disk('local')->exists($filePath)) {
+            $pesertaNama = Str::slug($pendaftaran->user?->nama ?? 'peserta');
+
+            return Storage::disk('local')->download($filePath, "surat-keterangan-diterima-{$pesertaNama}.pdf");
+        }
+
+        if ($pendaftaran->penempatan) {
+            return $pdfService->generate($pendaftaran->penempatan);
+        }
+
+        abort(404, 'Berkas surat keterangan diterima belum tersedia.');
+    }
+
+    /**
+     * Menyajikan pratinjau surat keterangan diterima yang telah diunggah admin atau fallback ke PDF stream.
+     */
+    public function pratinjauSuratDiterima(Pendaftaran $pendaftaran, SuratDiterimaPdfService $pdfService)
+    {
+        $filePath = $pendaftaran->file_surat_diterima ?: $pendaftaran->penempatan?->file_surat_diterima;
+        if ($filePath && Storage::disk('local')->exists($filePath)) {
+            return response()->file(Storage::disk('local')->path($filePath), [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="surat-keterangan-diterima.pdf"',
+            ]);
+        }
+
+        if ($pendaftaran->penempatan) {
+            return $pdfService->stream($pendaftaran->penempatan);
+        }
+
+        abort(404, 'Berkas surat keterangan diterima belum tersedia.');
     }
 }

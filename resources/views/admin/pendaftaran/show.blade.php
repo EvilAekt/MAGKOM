@@ -407,6 +407,17 @@
                     <span class="adm-status-badge" style="background: {{ $badgeStyle['bg'] }}; color: {{ $badgeStyle['color'] }}; border: 1px solid {{ $badgeStyle['border'] }}; padding: 2px 9px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">
                         {{ $status->label() }}
                     </span>
+                    @if($pendaftaran->tipe === 'kelompok' || $pendaftaran->kelompokMagang)
+                        <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 700; background: #F5F3FF; color: #7C3AED; border: 1px solid #DDD6FE; padding: 2px 9px; border-radius: 9999px;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            Kelompok ({{ ($pendaftaran->kelompokMagang?->anggota?->count() ?? 0) + 1 }} Peserta)
+                        </span>
+                    @else
+                        <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 700; background: #F0F9FF; color: #0284C7; border: 1px solid #BAE6FD; padding: 2px 9px; border-radius: 9999px;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            Individu
+                        </span>
+                    @endif
                     @if($slaDays !== null && $slaDays >= 3)
                         <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.725rem; font-weight: 700; background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; padding: 2px 8px; border-radius: 9999px;" title="Target SLA Peninjauan ≤ 5 Hari Kerja (NFR-O1)">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -596,6 +607,18 @@
                                 </div>
                             @endif
                         </p>
+                        @if($statusValue === 'diterima' && $pendaftaran->file_surat_diterima)
+                            <div style="margin-top: 0.85rem; padding: 0.75rem 1rem; background: #FFFFFF; border: 1px solid #A7F3D0; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                    <span style="font-weight: 700; color: #065F46; font-size: 0.8125rem;">Surat Keterangan Diterima Terunggah</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <a href="{{ route('admin.pendaftaran.surat-diterima.pratinjau', $pendaftaran) }}" target="_blank" style="padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-decoration: none; background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0;">Pratinjau</a>
+                                    <a href="{{ route('admin.pendaftaran.surat-diterima', $pendaftaran) }}" style="padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-decoration: none; background: #059669; color: #FFFFFF;">Unduh PDF</a>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 @else
                     <div>
@@ -618,7 +641,7 @@
                         </div>
 
                         {{-- Form Keputusan --}}
-                        <form method="POST" action="{{ route('admin.pendaftaran.putuskan', $pendaftaran) }}" id="decision-form">
+                        <form method="POST" action="{{ route('admin.pendaftaran.putuskan', $pendaftaran) }}" id="decision-form" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="keputusan" id="keputusan-input" value="terima">
 
@@ -635,6 +658,17 @@
                                             <strong>Verifikasi Tahap 1:</strong> Menyetujui pendaftaran ini akan mengalokasikan kuota umum. Penugasan pembimbing lapangan dan bidang dinas dapat dilakukan di menu <strong>Penempatan Peserta</strong>. <span class="sr-only">Mentee Aktif</span>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="adm-form-field" style="margin-bottom: 0.85rem;">
+                                    <label for="file_surat_diterima" style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 0.8125rem; color: #1E293B;">
+                                        <span>Upload Surat Keterangan Diterima (PDF)</span>
+                                        <span style="font-size: 0.725rem; color: #64748B; font-weight: 500;">Maks. 2 MB</span>
+                                    </label>
+                                    <input type="file" id="file_surat_diterima" name="file_surat_diterima" accept="application/pdf" style="width: 100%; font-size: 0.8125rem; padding: 0.45rem 0.65rem; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF;">
+                                    <small style="color: #64748B; font-size: 0.725rem; display: block; margin-top: 0.25rem; line-height: 1.4;">
+                                        Unggah dokumen PDF resmi bertanda tangan dinas untuk peserta.
+                                    </small>
                                 </div>
 
                                 <div class="adm-form-field">

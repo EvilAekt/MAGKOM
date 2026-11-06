@@ -184,6 +184,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::post('/pendaftaran/{pendaftaran}/ajukan', [PesertaPendaftaranController::class, 'ajukan'])->name('pendaftaran.ajukan');
     Route::post('/pendaftaran/{pendaftaran}/batalkan', [PesertaPendaftaranController::class, 'batalkan'])->name('pendaftaran.batalkan');
     Route::post('/pendaftaran/{pendaftaran}/berkas', [BerkasController::class, 'unggah'])->name('berkas.unggah');
+    Route::get('/pendaftaran/{pendaftaran}/surat-diterima', [PesertaPendaftaranController::class, 'unduhSuratDiterimaPendaftaran'])->name('pendaftaran.surat-diterima');
+    Route::get('/pendaftaran/{pendaftaran}/surat-diterima/pratinjau', [PesertaPendaftaranController::class, 'pratinjauSuratDiterimaPendaftaran'])->name('pendaftaran.surat-diterima.pratinjau');
     Route::get('/penempatan/{penempatan}/surat-diterima', [PesertaPendaftaranController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
     Route::get('/penempatan/{penempatan}/surat-diterima/pratinjau', [PesertaPendaftaranController::class, 'pratinjauSuratDiterima'])->name('penempatan.surat-diterima.pratinjau');
 
@@ -275,6 +277,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/pendaftaran', [AdminPendaftaranController::class, 'index'])->name('pendaftaran.index');
     Route::get('/pendaftaran/download-zip', [AdminPendaftaranController::class, 'downloadBundelZip'])->name('pendaftaran.download-zip');
     Route::get('/pendaftaran/{pendaftaran}', [AdminPendaftaranController::class, 'show'])->name('pendaftaran.show');
+    Route::get('/pendaftaran/{pendaftaran}/surat-diterima', [AdminPendaftaranController::class, 'unduhSuratDiterima'])->name('pendaftaran.surat-diterima');
+    Route::get('/pendaftaran/{pendaftaran}/surat-diterima/pratinjau', [AdminPendaftaranController::class, 'pratinjauSuratDiterima'])->name('pendaftaran.surat-diterima.pratinjau');
     Route::post('/pendaftaran/{pendaftaran}/putuskan', [AdminPendaftaranController::class, 'putuskan'])->name('pendaftaran.putuskan');
 
     Route::get('/waiting-list', [AdminWaitingListController::class, 'index'])->name('waiting-list.index');

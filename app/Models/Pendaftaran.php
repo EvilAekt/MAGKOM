@@ -28,6 +28,8 @@ class Pendaftaran extends Model
         'status',
         'verifikator_id',
         'catatan',
+        'file_surat_diterima',
+        'surat_diterima_uploaded_at',
         'diajukan_at',
         'diputuskan_at',
     ];
@@ -37,6 +39,7 @@ class Pendaftaran extends Model
         'durasi_bulan' => 'integer',
         'diajukan_at' => 'datetime',
         'diputuskan_at' => 'datetime',
+        'surat_diterima_uploaded_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

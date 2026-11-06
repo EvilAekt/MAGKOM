@@ -23,6 +23,8 @@ use App\Services\SuratDiterimaPdfService;
 use App\Support\Pengaturan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class PendaftaranController extends Controller
@@ -253,6 +255,13 @@ class PendaftaranController extends Controller
     {
         $this->authorize('view', $penempatan);
 
+        $filePath = $penempatan->file_surat_diterima ?: $penempatan->pendaftaran?->file_surat_diterima;
+        if ($filePath && Storage::disk('local')->exists($filePath)) {
+            $pesertaNama = Str::slug($penempatan->peserta?->nama ?? 'peserta');
+
+            return Storage::disk('local')->download($filePath, "surat-keterangan-diterima-{$pesertaNama}.pdf");
+        }
+
         return $pdfService->generate($penempatan);
     }
 
@@ -263,6 +272,55 @@ class PendaftaranController extends Controller
     {
         $this->authorize('view', $penempatan);
 
+        $filePath = $penempatan->file_surat_diterima ?: $penempatan->pendaftaran?->file_surat_diterima;
+        if ($filePath && Storage::disk('local')->exists($filePath)) {
+            return response()->file(Storage::disk('local')->path($filePath), [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="surat-keterangan-diterima.pdf"',
+            ]);
+        }
+
         return $pdfService->stream($penempatan);
+    }
+
+    /**
+     * Mengunduh Surat Keterangan Diterima dari pendaftaran langsung.
+     */
+    public function unduhSuratDiterimaPendaftaran(Pendaftaran $pendaftaran, SuratDiterimaPdfService $pdfService)
+    {
+        $this->authorize('view', $pendaftaran);
+
+        if ($pendaftaran->file_surat_diterima && Storage::disk('local')->exists($pendaftaran->file_surat_diterima)) {
+            $pesertaNama = Str::slug($pendaftaran->user?->nama ?? 'peserta');
+
+            return Storage::disk('local')->download($pendaftaran->file_surat_diterima, "surat-keterangan-diterima-{$pesertaNama}.pdf");
+        }
+
+        if ($pendaftaran->penempatan) {
+            return $pdfService->generate($pendaftaran->penempatan);
+        }
+
+        abort(404, 'Berkas surat keterangan diterima belum tersedia.');
+    }
+
+    /**
+     * Menyajikan pratinjau inline stream Surat Keterangan Diterima dari pendaftaran langsung.
+     */
+    public function pratinjauSuratDiterimaPendaftaran(Pendaftaran $pendaftaran, SuratDiterimaPdfService $pdfService)
+    {
+        $this->authorize('view', $pendaftaran);
+
+        if ($pendaftaran->file_surat_diterima && Storage::disk('local')->exists($pendaftaran->file_surat_diterima)) {
+            return response()->file(Storage::disk('local')->path($pendaftaran->file_surat_diterima), [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="surat-keterangan-diterima.pdf"',
+            ]);
+        }
+
+        if ($pendaftaran->penempatan) {
+            return $pdfService->stream($pendaftaran->penempatan);
+        }
+
+        abort(404, 'Berkas surat keterangan diterima belum tersedia.');
     }
 }

@@ -37,6 +37,12 @@ class KeputusanPendaftaranRequest extends FormRequest
                 }),
             ],
             'bidang_id' => ['nullable', 'exists:bidang,id'],
+            'file_surat_diterima' => [
+                'nullable',
+                'file',
+                'mimes:pdf',
+                'max:2048',
+            ],
         ];
     }
 
@@ -48,6 +54,9 @@ class KeputusanPendaftaranRequest extends FormRequest
             'catatan.required' => 'Alasan penolakan wajib disertakan saat menolak pendaftaran.',
             'catatan.min' => 'Alasan penolakan minimal berisi 10 karakter sesuai standar verifikasi (AC-04-3).',
             'pembimbing_id.exists' => 'Pembimbing yang dipilih tidak valid atau sedang tidak aktif.',
+            'file_surat_diterima.file' => 'Berkas surat keterangan diterima harus berupa file dokumen.',
+            'file_surat_diterima.mimes' => 'Berkas surat keterangan diterima wajib berformat PDF (.pdf).',
+            'file_surat_diterima.max' => 'Ukuran berkas surat keterangan diterima maksimal 2 MB.',
         ];
     }
 }

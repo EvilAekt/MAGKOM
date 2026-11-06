@@ -158,7 +158,7 @@
         /* Filter Grid (42px Unified Height) */
         .adm-filter-grid {
             display: grid;
-            grid-template-columns: minmax(240px, 2.2fr) minmax(150px, 1.2fr) minmax(160px, 1.2fr) minmax(140px, 1fr) auto;
+            grid-template-columns: minmax(200px, 2fr) minmax(125px, 1fr) minmax(140px, 1.1fr) minmax(120px, 0.9fr) minmax(120px, 0.9fr) auto;
             gap: 1rem;
             align-items: flex-end;
         }
@@ -555,50 +555,84 @@
         {{-- 2A. FILTER & SEARCH TOOLBAR TERPADU --}}
         @php
             $currentStatus = request('status', '');
-            $makeFilterUrl = function($statusVal) {
-                $params = request()->except('status', 'page');
-                if ($statusVal !== '') {
-                    $params['status'] = $statusVal;
+            $currentTipe = request('tipe', '');
+            $makeFilterUrl = function($statusVal = null, $tipeVal = null) {
+                $params = request()->except('page');
+                if ($statusVal !== null) {
+                    if ($statusVal === '') {
+                        unset($params['status']);
+                    } else {
+                        $params['status'] = $statusVal;
+                    }
+                }
+                if ($tipeVal !== null) {
+                    if ($tipeVal === '') {
+                        unset($params['tipe']);
+                    } else {
+                        $params['tipe'] = $tipeVal;
+                    }
                 }
                 return route('admin.pendaftaran.index', $params);
             };
-            $hasActiveFilters = request()->hasAny(['q', 'bulan_magang_id', 'jurusan_id', 'status', 'sort']);
+            $hasActiveFilters = request()->hasAny(['q', 'bulan_magang_id', 'jurusan_id', 'status', 'tipe', 'sort']);
         @endphp
 
         <div class="adm-filter-toolbar">
-            {{-- Zona 1: Segmented Status Switcher --}}
-            <div class="adm-status-track-wrapper">
+            {{-- Zona 1: Segmented Switcher (Kategori & Status) --}}
+            <div class="adm-status-track-wrapper" style="flex-direction: column; align-items: stretch; gap: 0.75rem;">
+                {{-- Baris 1: Switcher Kategori Pendaftaran (Individu vs Kelompok) --}}
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                    <div class="adm-status-track">
+                        <a href="{{ $makeFilterUrl(null, '') }}" class="adm-status-tab {{ $currentTipe === '' ? 'active' : '' }}">
+                            <span>Semua Kategori</span>
+                            <span class="adm-status-counter">{{ $queueStats['total'] ?? $pendaftaranList->total() }}</span>
+                        </a>
+                        <a href="{{ $makeFilterUrl(null, 'individu') }}" class="adm-status-tab {{ ($currentTipe === 'individu' || $currentTipe === 'mandiri') ? 'active' : '' }}">
+                            <span>👤 Individu</span>
+                            <span class="adm-status-counter">{{ $queueStats['total_individu'] ?? 0 }}</span>
+                        </a>
+                        <a href="{{ $makeFilterUrl(null, 'kelompok') }}" class="adm-status-tab {{ $currentTipe === 'kelompok' ? 'active' : '' }}">
+                            <span>👥 Kelompok</span>
+                            <span class="adm-status-counter">{{ $queueStats['total_kelompok'] ?? 0 }}</span>
+                        </a>
+                    </div>
+
+                    @if($hasActiveFilters)
+                        <a href="{{ route('admin.pendaftaran.index') }}" class="adm-filter-reset-link" title="Bersihkan semua parameter pencarian dan filter">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            <span>Reset Filter</span>
+                        </a>
+                    @endif
+                </div>
+
+                {{-- Baris 2: Switcher Status Verifikasi --}}
                 <div class="adm-status-track">
-                    <a href="{{ $makeFilterUrl('') }}" class="adm-status-tab {{ $currentStatus === '' ? 'active' : '' }}">
+                    <a href="{{ $makeFilterUrl('', null) }}" class="adm-status-tab {{ $currentStatus === '' ? 'active' : '' }}">
                         <span>Semua Status</span>
                         <span class="adm-status-counter">{{ $queueStats['total'] ?? $pendaftaranList->total() }}</span>
                     </a>
-                    <a href="{{ $makeFilterUrl('diajukan') }}" class="adm-status-tab {{ $currentStatus === 'diajukan' ? 'active' : '' }}">
+                    <a href="{{ $makeFilterUrl('diajukan', null) }}" class="adm-status-tab {{ $currentStatus === 'diajukan' ? 'active' : '' }}">
                         <span>Diajukan</span>
                         <span class="adm-status-counter">{{ $queueStats['diajukan'] ?? 0 }}</span>
                     </a>
-                    <a href="{{ $makeFilterUrl('diterima') }}" class="adm-status-tab {{ $currentStatus === 'diterima' ? 'active' : '' }}">
+                    <a href="{{ $makeFilterUrl('diterima', null) }}" class="adm-status-tab {{ $currentStatus === 'diterima' ? 'active' : '' }}">
                         <span>Diterima</span>
                         <span class="adm-status-counter">{{ $queueStats['diterima'] ?? 0 }}</span>
                     </a>
-                    <a href="{{ $makeFilterUrl('ditolak') }}" class="adm-status-tab {{ $currentStatus === 'ditolak' ? 'active' : '' }}">
+                    <a href="{{ $makeFilterUrl('ditolak', null) }}" class="adm-status-tab {{ $currentStatus === 'ditolak' ? 'active' : '' }}">
                         <span>Ditolak</span>
                         <span class="adm-status-counter">{{ $queueStats['ditolak'] ?? 0 }}</span>
                     </a>
                 </div>
-
-                @if($hasActiveFilters)
-                    <a href="{{ route('admin.pendaftaran.index') }}" class="adm-filter-reset-link" title="Bersihkan semua parameter pencarian dan filter">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        <span>Reset Filter</span>
-                    </a>
-                @endif
             </div>
 
             {{-- Zona 2: Form Pencarian & Filter Grid Lapang (42px Unified Height) --}}
             <form method="GET" action="{{ route('admin.pendaftaran.index') }}" class="adm-filter-grid">
                 @if(request('status'))
                     <input type="hidden" name="status" value="{{ request('status') }}">
+                @endif
+                @if(request('tipe'))
+                    <input type="hidden" name="tipe" value="{{ request('tipe') }}">
                 @endif
 
                 <div class="adm-field-group adm-field-search">
@@ -610,6 +644,15 @@
                         </svg>
                         <input type="text" id="search-input" name="q" value="{{ request('q') }}" placeholder="Cari nama..." class="adm-input-search">
                     </div>
+                </div>
+
+                <div class="adm-field-group">
+                    <label for="select-tipe">Kategori</label>
+                    <select name="tipe" id="select-tipe" class="adm-select">
+                        <option value="">Semua Kategori</option>
+                        <option value="individu" {{ ($currentTipe === 'individu' || $currentTipe === 'mandiri') ? 'selected' : '' }}>Individu</option>
+                        <option value="kelompok" {{ $currentTipe === 'kelompok' ? 'selected' : '' }}>Kelompok</option>
+                    </select>
                 </div>
 
                 <div class="adm-field-group">
@@ -729,13 +772,26 @@
                                     $paletteIdx = (($item->id ?? 1) % 5) + 1;
                                 @endphp
                                 <tr>
-                                    {{-- No. Registrasi --}}
+                                    {{-- No. Registrasi & Kategori --}}
                                     <td>
                                         <span style="display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; font-weight: 700; color: #0641CC; background: #EFF6FF; padding: 0.25rem 0.6rem; border-radius: 6px; border: 1px solid #BFDBFE;">
                                             {{ $item->nomor_pendaftaran }}
                                         </span>
-                                        <div style="font-size: 0.725rem; color: #64748B; margin-top: 0.35rem;">
+                                        <div style="font-size: 0.725rem; color: #64748B; margin-top: 0.25rem;">
                                             {{ $item->diajukan_at ? $item->diajukan_at->translatedFormat('d M Y') : ($item->created_at?->translatedFormat('d M Y') ?? '-') }}
+                                        </div>
+                                        <div style="margin-top: 0.35rem;">
+                                            @if($item->tipe === 'kelompok' || $item->kelompokMagang)
+                                                <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 700; color: #7C3AED; background: #F5F3FF; padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid #DDD6FE;">
+                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                                    Kelompok ({{ ($item->kelompokMagang?->anggota?->count() ?? 0) + 1 }} Org)
+                                                </span>
+                                            @else
+                                                <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 700; color: #0284C7; background: #F0F9FF; padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid #BAE6FD;">
+                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                                    Individu
+                                                </span>
+                                            @endif
                                         </div>
                                     </td>
 
@@ -752,6 +808,11 @@
                                                 <div style="font-size: 0.775rem; color: #64748B;">
                                                     {{ $item->user?->email }}
                                                 </div>
+                                                @if($item->kelompokMagang)
+                                                    <div style="font-size: 0.725rem; font-weight: 700; color: #7C3AED; margin-top: 0.15rem;">
+                                                        Tim: {{ $item->kelompokMagang->nama_kelompok }}
+                                                    </div>
+                                                @endif
                                                 @if($item->user?->profil?->nim_nisn)
                                                     <div style="font-size: 0.725rem; color: #94A3B8;">
                                                         NIM/NISN: {{ $item->user->profil->nim_nisn }}

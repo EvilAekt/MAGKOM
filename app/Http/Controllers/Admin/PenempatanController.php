@@ -28,6 +28,8 @@ use App\Services\XlsxExportService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -290,6 +292,13 @@ class PenempatanController extends Controller
     {
         $this->authorize('view', $penempatan);
 
+        $filePath = $penempatan->file_surat_diterima ?: $penempatan->pendaftaran?->file_surat_diterima;
+        if ($filePath && Storage::disk('local')->exists($filePath)) {
+            $pesertaNama = Str::slug($penempatan->peserta?->nama ?? 'peserta');
+
+            return Storage::disk('local')->download($filePath, "surat-keterangan-diterima-{$pesertaNama}.pdf");
+        }
+
         return $pdfService->generate($penempatan);
     }
 
@@ -299,6 +308,14 @@ class PenempatanController extends Controller
     public function pratinjauSuratDiterima(Penempatan $penempatan, SuratDiterimaPdfService $pdfService)
     {
         $this->authorize('view', $penempatan);
+
+        $filePath = $penempatan->file_surat_diterima ?: $penempatan->pendaftaran?->file_surat_diterima;
+        if ($filePath && Storage::disk('local')->exists($filePath)) {
+            return response()->file(Storage::disk('local')->path($filePath), [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="surat-keterangan-diterima.pdf"',
+            ]);
+        }
 
         return $pdfService->stream($penempatan);
     }

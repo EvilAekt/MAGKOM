@@ -26,6 +26,7 @@ use App\Support\Pengaturan;
 use App\Support\PeriodeMagang;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -49,10 +50,11 @@ class PlacementService extends AuditedService
     public function terimaBerkas(
         Pendaftaran $pendaftaran,
         User $admin,
-        ?string $catatan = null
+        ?string $catatan = null,
+        ?UploadedFile $fileSurat = null
     ): Pendaftaran {
-        return $this->jalankan(__FUNCTION__, func_get_args(), function () use ($pendaftaran, $admin, $catatan) {
-            return DB::transaction(function () use ($pendaftaran, $admin, $catatan) {
+        return $this->jalankan(__FUNCTION__, func_get_args(), function () use ($pendaftaran, $admin, $catatan, $fileSurat) {
+            return DB::transaction(function () use ($pendaftaran, $admin, $catatan, $fileSurat) {
                 // 1. Kunci baris pendaftaran untuk mencegah konkurensi verifikasi
                 $p = Pendaftaran::whereKey($pendaftaran->id)->lockForUpdate()->firstOrFail();
 
@@ -63,16 +65,27 @@ class PlacementService extends AuditedService
                 // 2. Kunci dan ambil jatah kuota umum secara atomik (AC-05-4)
                 $this->quotaAllocationService->ambilKuotaUmum($p->kuota_id);
 
-                // 3. Update status pendaftaran menjadi Diterima
+                // 3. Simpan berkas surat keterangan diterima yang diunggah jika ada
+                $filePath = null;
+                if ($fileSurat) {
+                    $filePath = $fileSurat->store('surat_diterima', 'local');
+                }
+
+                // 4. Update status pendaftaran menjadi Diterima
                 $statusLama = $p->status->value;
-                $p->update([
+                $updateData = [
                     'status' => StatusPendaftaranEnum::Diterima,
                     'verifikator_id' => $admin->id,
                     'diputuskan_at' => now(),
                     'catatan' => $catatan,
-                ]);
+                ];
+                if ($filePath) {
+                    $updateData['file_surat_diterima'] = $filePath;
+                    $updateData['surat_diterima_uploaded_at'] = now();
+                }
+                $p->update($updateData);
 
-                // 4. Catat jejak audit
+                // 5. Catat jejak audit
                 $this->auditService->catat(
                     tipe: TipeAuditEnum::Aksi,
                     tabel: 'pendaftaran',
@@ -83,10 +96,11 @@ class PlacementService extends AuditedService
                         'admin_id' => $admin->id,
                         'aksi' => 'Menerima dan meloloskan berkas pendaftaran calon peserta (Tahap 1)',
                         'catatan' => $catatan,
+                        'file_surat_diterima' => $filePath,
                     ]
                 );
 
-                // 5. Notifikasi Real-time SSE (TASK-SSE-05)
+                // 6. Notifikasi Real-time SSE (TASK-SSE-05)
                 $this->realtimeService->publish(
                     RealtimeEventTypeEnum::StatusPendaftaran,
                     [
@@ -155,6 +169,7 @@ class PlacementService extends AuditedService
                     'dibuat_oleh' => $admin->id,
                     'tgl_mulai' => $mulai->toDateString(),
                     'tgl_selesai' => $selesai->toDateString(),
+                    'file_surat_diterima' => $p->file_surat_diterima,
                     'status' => StatusPenempatanEnum::Aktif,
                 ]);
 
@@ -347,6 +362,7 @@ class PlacementService extends AuditedService
                     'dibuat_oleh' => $admin->id,
                     'tgl_mulai' => $mulai->toDateString(),
                     'tgl_selesai' => $selesai->toDateString(),
+                    'file_surat_diterima' => $p->file_surat_diterima,
                     'status' => StatusPenempatanEnum::Aktif,
                 ]);
 
@@ -446,6 +462,7 @@ class PlacementService extends AuditedService
                     'dibuat_oleh' => $admin->id,
                     'tgl_mulai' => $mulai->toDateString(),
                     'tgl_selesai' => $selesai->toDateString(),
+                    'file_surat_diterima' => $p->file_surat_diterima,
                     'status' => StatusPenempatanEnum::Aktif,
                 ]);
 

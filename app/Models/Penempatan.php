@@ -34,6 +34,7 @@ class Penempatan extends Model
         'tgl_selesai',
         'tgl_ditetapkan_selesai',
         'tgl_nonaktif',
+        'file_surat_diterima',
         'status',
     ];
 

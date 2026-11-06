@@ -221,7 +221,7 @@
                 <div>
                     <p class="question-label">3. Magang sama siapa?</p>
                     <div class="pill-group" id="kuotaModeGroup">
-                        <button type="button" class="pill-btn active" data-mode-pill="mandiri">Sendiri (1 Org)</button>
+                        <button type="button" class="pill-btn active" data-mode-pill="mandiri">Individu (1 Orang)</button>
                         <button type="button" class="pill-btn" data-mode-pill="kelompok">Kelompok (Tim)</button>
                     </div>
                 </div>

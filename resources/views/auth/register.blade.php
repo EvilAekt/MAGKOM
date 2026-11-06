@@ -35,7 +35,7 @@
                         {{ $selectedJurusan->nama_jurusan }} ({{ strtoupper($selectedJurusan->kategori) }})
                     </div>
                     <span style="font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 9999px; background: {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? '#dbeafe' : '#e0e7ff' }}; color: {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? '#1e40af' : '#3730a3' }};">
-                        {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? 'Kelompok (' . ($selectedJumlah ?? request('jumlah', 2)) . ' Orang)' : 'Mandiri (1 Orang)' }}
+                        {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? 'Kelompok (' . ($selectedJumlah ?? request('jumlah', 2)) . ' Orang)' : 'Individu (1 Orang)' }}
                     </span>
                 </div>
 
@@ -97,7 +97,7 @@
                     <label class="tipe-pilihan-btn" id="labelTipeMandiri" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.6rem 0.75rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s;">
                         <input type="radio" name="tipe_pendaftaran" value="mandiri" id="radioMandiri" style="display: none;" {{ $initialTipe === 'mandiri' ? 'checked' : '' }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        <span>Mandiri (1 Orang)</span>
+                        <span>Individu (1 Orang)</span>
                     </label>
                     <label class="tipe-pilihan-btn" id="labelTipeKelompok" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.6rem 0.75rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s;">
                         <input type="radio" name="tipe_pendaftaran" value="kelompok" id="radioKelompok" style="display: none;" {{ $initialTipe === 'kelompok' ? 'checked' : '' }}>
