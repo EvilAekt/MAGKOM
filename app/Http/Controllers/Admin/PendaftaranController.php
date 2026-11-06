@@ -36,14 +36,12 @@ class PendaftaranController extends Controller
     {
         $query = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan', 'penempatan']);
 
-        $sort = $request->input('sort', 'fifo');
-        if ($sort === 'terbaru') {
-            $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
-        } elseif ($sort === 'terlama') {
+        $sort = $request->input('sort', 'terbaru');
+        if ($sort === 'terlama') {
             $query->orderBy('created_at', 'asc')->orderBy('id', 'asc');
         } else {
-            // AC-04-1 & BR-05: FIFO antrean verifikasi berdasarkan waktu pengajuan berkas
-            $query->orderByRaw('COALESCE(diajukan_at, created_at) ASC')->orderBy('id', 'asc');
+            // Default: Paling baru dibuat (terbaru)
+            $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
         }
 
         if ($request->filled('q')) {
