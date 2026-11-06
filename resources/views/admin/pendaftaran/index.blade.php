@@ -65,7 +65,84 @@
             }
         }
 
-        /* 2. UNIFIED FILTER TOOLBAR */
+        /* 2. TOP-LEVEL CATEGORY NAV TABS (UNDERLINE STYLE) */
+        .adm-category-nav-bar {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            border-bottom: 1.5px solid #E2E8F0;
+            margin-bottom: 1.25rem;
+            padding: 0 0.25rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .adm-category-nav-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 0.25rem 0.85rem 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #64748B;
+            text-decoration: none;
+            border-bottom: 2.5px solid transparent;
+            margin-bottom: -1.5px;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+        .adm-category-nav-item:hover {
+            color: #0F172A;
+            border-bottom-color: #CBD5E1;
+        }
+        .adm-category-nav-item.active {
+            color: #0641CC;
+            border-bottom-color: #0641CC;
+            font-weight: 700;
+        }
+        .adm-category-nav-item.active-individu {
+            color: #0284C7;
+            border-bottom-color: #0284C7;
+            font-weight: 700;
+        }
+        .adm-category-nav-item.active-kelompok {
+            color: #7C3AED;
+            border-bottom-color: #7C3AED;
+            font-weight: 700;
+        }
+
+        .adm-category-nav-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: #F1F5F9;
+            color: #475569;
+            transition: all 0.15s ease;
+        }
+        .adm-category-nav-item:hover .adm-category-nav-badge {
+            background: #E2E8F0;
+            color: #0F172A;
+        }
+        .adm-category-nav-item.active .adm-category-nav-badge {
+            background: rgba(6, 65, 204, 0.1);
+            color: #0641CC;
+        }
+        .adm-category-nav-item.active-individu .adm-category-nav-badge {
+            background: rgba(2, 132, 199, 0.12);
+            color: #0284C7;
+        }
+        .adm-category-nav-item.active-kelompok .adm-category-nav-badge {
+            background: rgba(124, 58, 237, 0.12);
+            color: #7C3AED;
+        }
+
+        /* 3. UNIFIED WORKFLOW FILTER TOOLBAR */
         .adm-filter-toolbar {
             background: #F8FAFC;
             border: 1px solid #E2E8F0;
@@ -155,10 +232,10 @@
             background: #FEE2E2;
         }
 
-        /* Filter Grid (42px Unified Height) */
+        /* Filter Grid (42px Unified Height - 4 Balanced Columns) */
         .adm-filter-grid {
             display: grid;
-            grid-template-columns: minmax(200px, 2fr) minmax(125px, 1fr) minmax(140px, 1.1fr) minmax(120px, 0.9fr) minmax(120px, 0.9fr) auto;
+            grid-template-columns: minmax(260px, 2.5fr) minmax(160px, 1.3fr) minmax(170px, 1.4fr) minmax(140px, 1fr) auto;
             gap: 1rem;
             align-items: flex-end;
         }
@@ -393,6 +470,55 @@
             border-color: #26354D;
         }
 
+        [data-theme="dark"] .adm-category-nav-bar {
+            border-bottom-color: #26354D;
+        }
+
+        [data-theme="dark"] .adm-category-nav-item {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-category-nav-item:hover {
+            color: #F8FAFC;
+            border-bottom-color: #475569;
+        }
+
+        [data-theme="dark"] .adm-category-nav-item.active {
+            color: #38BDF8;
+            border-bottom-color: #38BDF8;
+        }
+
+        [data-theme="dark"] .adm-category-nav-item.active-individu {
+            color: #38BDF8;
+            border-bottom-color: #38BDF8;
+        }
+
+        [data-theme="dark"] .adm-category-nav-item.active-kelompok {
+            color: #C084FC;
+            border-bottom-color: #C084FC;
+        }
+
+        [data-theme="dark"] .adm-category-nav-badge {
+            background-color: #26354D;
+            color: #CBD5E1;
+        }
+
+        [data-theme="dark"] .adm-category-nav-item:hover .adm-category-nav-badge {
+            background-color: #334155;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .adm-category-nav-item.active .adm-category-nav-badge,
+        [data-theme="dark"] .adm-category-nav-item.active-individu .adm-category-nav-badge {
+            background-color: rgba(56, 189, 248, 0.2);
+            color: #38BDF8;
+        }
+
+        [data-theme="dark"] .adm-category-nav-item.active-kelompok .adm-category-nav-badge {
+            background-color: rgba(192, 132, 252, 0.2);
+            color: #C084FC;
+        }
+
         [data-theme="dark"] .adm-status-tab {
             color: #94A3B8;
         }
@@ -577,35 +703,42 @@
             $hasActiveFilters = request()->hasAny(['q', 'bulan_magang_id', 'jurusan_id', 'status', 'tipe', 'sort']);
         @endphp
 
+        {{-- NAVIGASI TAB UTAMA: Kategori Pendaftaran (Modern Underline Tabs) --}}
+        <div class="adm-category-nav-bar" role="tablist" aria-label="Kategori Pendaftaran Peserta">
+            <a href="{{ $makeFilterUrl(null, '') }}" class="adm-category-nav-item {{ $currentTipe === '' ? 'active' : '' }}" role="tab" aria-selected="{{ $currentTipe === '' ? 'true' : 'false' }}" title="Tampilkan semua kategori pendaftaran">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Semua Kategori</span>
+                <span class="adm-category-nav-badge">{{ $queueStats['total'] ?? $pendaftaranList->total() }}</span>
+            </a>
+            <a href="{{ $makeFilterUrl(null, 'individu') }}" class="adm-category-nav-item {{ ($currentTipe === 'individu' || $currentTipe === 'mandiri') ? 'active-individu' : '' }}" role="tab" aria-selected="{{ ($currentTipe === 'individu' || $currentTipe === 'mandiri') ? 'true' : 'false' }}" title="Hanya pendaftaran individu">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Individu</span>
+                <span class="adm-category-nav-badge">{{ $queueStats['total_individu'] ?? 0 }}</span>
+            </a>
+            <a href="{{ $makeFilterUrl(null, 'kelompok') }}" class="adm-category-nav-item {{ $currentTipe === 'kelompok' ? 'active-kelompok' : '' }}" role="tab" aria-selected="{{ $currentTipe === 'kelompok' ? 'true' : 'false' }}" title="Hanya pendaftaran kelompok">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span>Kelompok</span>
+                <span class="adm-category-nav-badge">{{ $queueStats['total_kelompok'] ?? 0 }}</span>
+            </a>
+        </div>
+
         <div class="adm-filter-toolbar">
-            {{-- Zona 1: Segmented Switcher (Kategori & Status) --}}
-            <div class="adm-status-track-wrapper" style="flex-direction: column; align-items: stretch; gap: 0.75rem;">
-                {{-- Baris 1: Switcher Kategori Pendaftaran (Individu vs Kelompok) --}}
-                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                    <div class="adm-status-track">
-                        <a href="{{ $makeFilterUrl(null, '') }}" class="adm-status-tab {{ $currentTipe === '' ? 'active' : '' }}">
-                            <span>Semua Kategori</span>
-                            <span class="adm-status-counter">{{ $queueStats['total'] ?? $pendaftaranList->total() }}</span>
-                        </a>
-                        <a href="{{ $makeFilterUrl(null, 'individu') }}" class="adm-status-tab {{ ($currentTipe === 'individu' || $currentTipe === 'mandiri') ? 'active' : '' }}">
-                            <span>👤 Individu</span>
-                            <span class="adm-status-counter">{{ $queueStats['total_individu'] ?? 0 }}</span>
-                        </a>
-                        <a href="{{ $makeFilterUrl(null, 'kelompok') }}" class="adm-status-tab {{ $currentTipe === 'kelompok' ? 'active' : '' }}">
-                            <span>👥 Kelompok</span>
-                            <span class="adm-status-counter">{{ $queueStats['total_kelompok'] ?? 0 }}</span>
-                        </a>
-                    </div>
-
-                    @if($hasActiveFilters)
-                        <a href="{{ route('admin.pendaftaran.index') }}" class="adm-filter-reset-link" title="Bersihkan semua parameter pencarian dan filter">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            <span>Reset Filter</span>
-                        </a>
-                    @endif
-                </div>
-
-                {{-- Baris 2: Switcher Status Verifikasi --}}
+            {{-- Zona 1: Switcher Status Alur Kerja (Workflow State) & Reset Filter --}}
+            <div class="adm-status-track-wrapper">
+                {{-- Sisi Kiri: Switcher Status Alur Kerja (Workflow State) --}}
                 <div class="adm-status-track">
                     <a href="{{ $makeFilterUrl('', null) }}" class="adm-status-tab {{ $currentStatus === '' ? 'active' : '' }}">
                         <span>Semua Status</span>
@@ -624,9 +757,17 @@
                         <span class="adm-status-counter">{{ $queueStats['ditolak'] ?? 0 }}</span>
                     </a>
                 </div>
+
+                {{-- Sisi Kanan: Reset Filter Link --}}
+                @if($hasActiveFilters)
+                    <a href="{{ route('admin.pendaftaran.index') }}" class="adm-filter-reset-link" title="Bersihkan semua parameter pencarian dan filter">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <span>Reset Filter</span>
+                    </a>
+                @endif
             </div>
 
-            {{-- Zona 2: Form Pencarian & Filter Grid Lapang (42px Unified Height) --}}
+            {{-- Zona 2: Form Pencarian & Filter Grid Lapang (42px Unified Height - 4 Kolom) --}}
             <form method="GET" action="{{ route('admin.pendaftaran.index') }}" class="adm-filter-grid">
                 @if(request('status'))
                     <input type="hidden" name="status" value="{{ request('status') }}">
@@ -644,15 +785,6 @@
                         </svg>
                         <input type="text" id="search-input" name="q" value="{{ request('q') }}" placeholder="Cari nama..." class="adm-input-search">
                     </div>
-                </div>
-
-                <div class="adm-field-group">
-                    <label for="select-tipe">Kategori</label>
-                    <select name="tipe" id="select-tipe" class="adm-select">
-                        <option value="">Semua Kategori</option>
-                        <option value="individu" {{ ($currentTipe === 'individu' || $currentTipe === 'mandiri') ? 'selected' : '' }}>Individu</option>
-                        <option value="kelompok" {{ $currentTipe === 'kelompok' ? 'selected' : '' }}>Kelompok</option>
-                    </select>
                 </div>
 
                 <div class="adm-field-group">
