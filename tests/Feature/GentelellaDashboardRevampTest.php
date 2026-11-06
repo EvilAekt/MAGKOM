@@ -325,7 +325,8 @@ final class GentelellaDashboardRevampTest extends TestCase
         $response->assertSee('Verifikasi Tertunda');
         $response->assertSee('Perlu Verifikasi Segera');
         $response->assertSee('Kapasitas Kuota Terisi');
-        $response->assertSee('Antrean Waiting List');
+        $response->assertSee('Pendaftaran Diterima');
+        $response->assertDontSee('Antrean Waiting List');
         $response->assertSee('Peserta Magang Aktif');
 
         // 10.2 Kartu x_panel Gentelella

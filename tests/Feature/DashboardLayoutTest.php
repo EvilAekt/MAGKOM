@@ -195,7 +195,7 @@ BLADE;
             // Menu Admin
             $response->assertSee('Verifikasi Berkas');
             $response->assertSee('Manajemen Kuota');
-            $response->assertSee('Waiting List');
+            $response->assertDontSee('Waiting List');
             $response->assertSee('Penempatan');
             $response->assertSeeText('Laporan & Ekspor', false);
 
