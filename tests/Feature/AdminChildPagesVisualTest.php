@@ -138,4 +138,15 @@ class AdminChildPagesVisualTest extends TestCase
         $response->assertSee('modal-edit-kuota');
         $response->assertSee('Alokasikan Kuota Jurusan');
     }
+
+    public function test_admin_pendaftaran_index_renders_simplified_empty_state_when_no_records_match(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.pendaftaran.index', ['q' => 'NON_EXISTENT_KEYWORD_XYZ']));
+
+        $response->assertOk();
+        $response->assertSee('Tidak Ada Berkas');
+        $response->assertDontSee('Tidak Ada Berkas yang Cocok');
+        $response->assertDontSee('Tidak ditemukan berkas pendaftaran calon peserta magang yang sesuai dengan kriteria filter atau pencarian saat ini.');
+        $response->assertSee('Reset Semua Filter');
+    }
 }
