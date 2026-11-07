@@ -142,16 +142,13 @@
             color: #7C3AED;
         }
 
-        /* 3. UNIFIED WORKFLOW FILTER TOOLBAR */
+        /* 3. UNIFIED FILTER TOOLBAR */
         .adm-filter-toolbar {
             background: #F8FAFC;
             border: 1px solid #E2E8F0;
             border-radius: 12px;
             padding: 1.25rem 1.5rem;
             margin-bottom: 1.25rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.1rem;
         }
 
         .adm-status-track-wrapper {
@@ -165,7 +162,7 @@
         .adm-status-track {
             display: inline-flex;
             align-items: center;
-            background: #FFFFFF;
+            background: #F8FAFC;
             border: 1px solid #E2E8F0;
             border-radius: 9999px;
             padding: 3px;
@@ -378,14 +375,14 @@
         }
 
         .adm-table-meta-bar {
-            padding: 0.875rem 1.25rem;
+            padding: 0.75rem 1.25rem;
             background: #FFFFFF;
             border-bottom: 1px solid #E2E8F0;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
         .adm-table {
@@ -588,6 +585,10 @@
             border-bottom-color: #26354D;
         }
 
+        [data-theme="dark"] .adm-table-meta-bar strong {
+            color: #F8FAFC !important;
+        }
+
         [data-theme="dark"] .adm-table th {
             background-color: #0E1726;
             color: #94A3B8;
@@ -736,38 +737,7 @@
         </div>
 
         <div class="adm-filter-toolbar">
-            {{-- Zona 1: Switcher Status Alur Kerja (Workflow State) & Reset Filter --}}
-            <div class="adm-status-track-wrapper">
-                {{-- Sisi Kiri: Switcher Status Alur Kerja (Workflow State) --}}
-                <div class="adm-status-track">
-                    <a href="{{ $makeFilterUrl('', null) }}" class="adm-status-tab {{ $currentStatus === '' ? 'active' : '' }}">
-                        <span>Semua Status</span>
-                        <span class="adm-status-counter">{{ $queueStats['total'] ?? $pendaftaranList->total() }}</span>
-                    </a>
-                    <a href="{{ $makeFilterUrl('diajukan', null) }}" class="adm-status-tab {{ $currentStatus === 'diajukan' ? 'active' : '' }}">
-                        <span>Diajukan</span>
-                        <span class="adm-status-counter">{{ $queueStats['diajukan'] ?? 0 }}</span>
-                    </a>
-                    <a href="{{ $makeFilterUrl('diterima', null) }}" class="adm-status-tab {{ $currentStatus === 'diterima' ? 'active' : '' }}">
-                        <span>Diterima</span>
-                        <span class="adm-status-counter">{{ $queueStats['diterima'] ?? 0 }}</span>
-                    </a>
-                    <a href="{{ $makeFilterUrl('ditolak', null) }}" class="adm-status-tab {{ $currentStatus === 'ditolak' ? 'active' : '' }}">
-                        <span>Ditolak</span>
-                        <span class="adm-status-counter">{{ $queueStats['ditolak'] ?? 0 }}</span>
-                    </a>
-                </div>
-
-                {{-- Sisi Kanan: Reset Filter Link --}}
-                @if($hasActiveFilters)
-                    <a href="{{ route('admin.pendaftaran.index') }}" class="adm-filter-reset-link" title="Bersihkan semua parameter pencarian dan filter">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        <span>Reset Filter</span>
-                    </a>
-                @endif
-            </div>
-
-            {{-- Zona 2: Form Pencarian & Filter Grid Lapang (42px Unified Height - 4 Kolom) --}}
+            {{-- Form Pencarian & Filter Grid Lapang (42px Unified Height - 4 Kolom) --}}
             <form method="GET" action="{{ route('admin.pendaftaran.index') }}" class="adm-filter-grid">
                 @if(request('status'))
                     <input type="hidden" name="status" value="{{ request('status') }}">
@@ -835,6 +805,47 @@
 
         {{-- 2B. TABEL DATA CALON PESERTA TERPADU --}}
         <div class="adm-table-container">
+            {{-- Toolbar Status Alur Kerja (Tepat di Bawah Kolom Pencarian & Menempel di Atas Tabel) --}}
+            <div class="adm-table-meta-bar">
+                {{-- Sisi Kiri: Switcher Status Alur Kerja (Workflow State) --}}
+                <div class="adm-status-track">
+                    <a href="{{ $makeFilterUrl('', null) }}" class="adm-status-tab {{ $currentStatus === '' ? 'active' : '' }}">
+                        <span>Semua Status</span>
+                        <span class="adm-status-counter">{{ $queueStats['total'] ?? $pendaftaranList->total() }}</span>
+                    </a>
+                    <a href="{{ $makeFilterUrl('diajukan', null) }}" class="adm-status-tab {{ $currentStatus === 'diajukan' ? 'active' : '' }}">
+                        <span>Diajukan</span>
+                        <span class="adm-status-counter">{{ $queueStats['diajukan'] ?? 0 }}</span>
+                    </a>
+                    <a href="{{ $makeFilterUrl('diterima', null) }}" class="adm-status-tab {{ $currentStatus === 'diterima' ? 'active' : '' }}">
+                        <span>Diterima</span>
+                        <span class="adm-status-counter">{{ $queueStats['diterima'] ?? 0 }}</span>
+                    </a>
+                    <a href="{{ $makeFilterUrl('ditolak', null) }}" class="adm-status-tab {{ $currentStatus === 'ditolak' ? 'active' : '' }}">
+                        <span>Ditolak</span>
+                        <span class="adm-status-counter">{{ $queueStats['ditolak'] ?? 0 }}</span>
+                    </a>
+                </div>
+
+                {{-- Sisi Kanan: Meta Count & Reset Link --}}
+                <div style="display: inline-flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                    <div style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">
+                        @if($pendaftaranList->total() > 0)
+                            Menampilkan <strong style="color: #0F172A;">{{ $pendaftaranList->firstItem() }}–{{ $pendaftaranList->lastItem() }}</strong> dari <strong style="color: #0F172A;">{{ $pendaftaranList->total() }}</strong> berkas
+                        @else
+                            Menampilkan <strong style="color: #0F172A;">0</strong> berkas
+                        @endif
+                    </div>
+
+                    @if($hasActiveFilters)
+                        <a href="{{ route('admin.pendaftaran.index') }}" class="adm-filter-reset-link" title="Bersihkan semua parameter pencarian dan filter">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            <span>Reset Filter</span>
+                        </a>
+                    @endif
+                </div>
+            </div>
+
             @if($pendaftaranList->isEmpty())
                 <div style="padding: 4rem 1.5rem; text-align: center; color: #64748B;">
                     <div style="width: 56px; height: 56px; background: #EFF6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; color: #0641CC;">
@@ -851,17 +862,6 @@
                     </a>
                 </div>
             @else
-                <div class="adm-table-meta-bar">
-                    <div style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">
-                        Menampilkan <strong style="color: #0F172A;">{{ $pendaftaranList->firstItem() }}–{{ $pendaftaranList->lastItem() }}</strong> dari <strong style="color: #0F172A;">{{ $pendaftaranList->total() }}</strong> berkas pendaftaran
-                    </div>
-                    @if($hasActiveFilters)
-                        <span style="font-size: 0.75rem; color: #0284C7; background: #E0F2FE; padding: 0.2rem 0.65rem; border-radius: 9999px; font-weight: 700;">
-                            Filter Aktif Diterapkan
-                        </span>
-                    @endif
-                </div>
-
                 <div style="overflow-x: auto; width: 100%;">
                     <table class="adm-table">
                         <thead>
