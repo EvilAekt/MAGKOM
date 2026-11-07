@@ -4,7 +4,7 @@
 @section('page_title', 'Penempatan Peserta')
 @section('page_description', '')
 
-@section('topbar_title', 'Penempatan Peserta Magang')
+@section('topbar_title') Penempatan Peserta Magang <span class="sr-only">Manajemen Penempatan</span> @endsection
 
 @section('page_actions')
     <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">

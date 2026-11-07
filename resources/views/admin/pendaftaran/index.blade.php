@@ -180,14 +180,17 @@
             }
         }
 
-        /* 2. TOP-LEVEL CATEGORY NAV TABS (UNDERLINE STYLE) */
+        /* 2. TOP-LEVEL CATEGORY SWITCHER (SEGMENTED CONTROL PILL CONTAINER) */
         .adm-category-nav-bar {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 1.5rem;
-            border-bottom: 1.5px solid #E2E8F0;
+            background: #F1F5F9;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 4px;
+            gap: 4px;
             margin-bottom: 1.25rem;
-            padding: 0 0.25rem;
+            max-width: 100%;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
@@ -196,34 +199,40 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem 0.25rem 0.85rem 0.25rem;
-            font-size: 0.875rem;
+            padding: 0.55rem 1rem;
+            font-size: 0.84375rem;
             font-weight: 600;
             color: #64748B;
             text-decoration: none;
-            border-bottom: 2.5px solid transparent;
-            margin-bottom: -1.5px;
-            transition: all 0.15s ease;
+            border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
+            border: 1px solid transparent;
         }
         .adm-category-nav-item:hover {
-            color: #0F172A;
-            border-bottom-color: #CBD5E1;
+            color: #1E293B;
+            background: rgba(255, 255, 255, 0.6);
         }
         .adm-category-nav-item.active {
-            color: #0641CC;
-            border-bottom-color: #0641CC;
+            background: #FFFFFF;
+            color: #01347C;
             font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+            border-color: rgba(226, 232, 240, 0.8);
         }
         .adm-category-nav-item.active-individu {
+            background: #FFFFFF;
             color: #0284C7;
-            border-bottom-color: #0284C7;
             font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+            border-color: rgba(226, 232, 240, 0.8);
         }
         .adm-category-nav-item.active-kelompok {
+            background: #FFFFFF;
             color: #7C3AED;
-            border-bottom-color: #7C3AED;
             font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+            border-color: rgba(226, 232, 240, 0.8);
         }
 
         .adm-category-nav-badge {
@@ -236,24 +245,24 @@
             border-radius: 9999px;
             font-size: 0.75rem;
             font-weight: 700;
-            background: #F1F5F9;
+            background: #E2E8F0;
             color: #475569;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
         }
         .adm-category-nav-item:hover .adm-category-nav-badge {
-            background: #E2E8F0;
+            background: #CBD5E1;
             color: #0F172A;
         }
         .adm-category-nav-item.active .adm-category-nav-badge {
-            background: rgba(6, 65, 204, 0.1);
-            color: #0641CC;
+            background: #EFF6FF;
+            color: #01347C;
         }
         .adm-category-nav-item.active-individu .adm-category-nav-badge {
-            background: rgba(2, 132, 199, 0.12);
+            background: #F0F9FF;
             color: #0284C7;
         }
         .adm-category-nav-item.active-kelompok .adm-category-nav-badge {
-            background: rgba(124, 58, 237, 0.12);
+            background: #F5F3FF;
             color: #7C3AED;
         }
 
@@ -619,7 +628,8 @@
         }
 
         [data-theme="dark"] .adm-category-nav-bar {
-            border-bottom-color: #26354D;
+            background: #0B132B;
+            border-color: #1E293B;
         }
 
         [data-theme="dark"] .adm-category-nav-item {
@@ -628,42 +638,43 @@
 
         [data-theme="dark"] .adm-category-nav-item:hover {
             color: #F8FAFC;
-            border-bottom-color: #475569;
+            background: rgba(30, 41, 59, 0.6);
         }
 
         [data-theme="dark"] .adm-category-nav-item.active {
+            background: #1E293B;
             color: #38BDF8;
-            border-bottom-color: #38BDF8;
+            border-color: #334155;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
         }
 
         [data-theme="dark"] .adm-category-nav-item.active-individu {
+            background: #1E293B;
             color: #38BDF8;
-            border-bottom-color: #38BDF8;
+            border-color: #334155;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
         }
 
         [data-theme="dark"] .adm-category-nav-item.active-kelompok {
+            background: #1E293B;
             color: #C084FC;
-            border-bottom-color: #C084FC;
+            border-color: #334155;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
         }
 
         [data-theme="dark"] .adm-category-nav-badge {
-            background-color: #26354D;
-            color: #CBD5E1;
-        }
-
-        [data-theme="dark"] .adm-category-nav-item:hover .adm-category-nav-badge {
-            background-color: #334155;
-            color: #F8FAFC;
+            background: #1E293B;
+            color: #94A3B8;
         }
 
         [data-theme="dark"] .adm-category-nav-item.active .adm-category-nav-badge,
         [data-theme="dark"] .adm-category-nav-item.active-individu .adm-category-nav-badge {
-            background-color: rgba(56, 189, 248, 0.2);
+            background: rgba(56, 189, 248, 0.2);
             color: #38BDF8;
         }
 
         [data-theme="dark"] .adm-category-nav-item.active-kelompok .adm-category-nav-badge {
-            background-color: rgba(192, 132, 252, 0.2);
+            background: rgba(192, 132, 252, 0.2);
             color: #C084FC;
         }
 
@@ -790,22 +801,10 @@
             <div class="adm-hero-text">
                 <h1 class="adm-hero-title">Daftar Pendaftaran Peserta Magang</h1>
                 <div class="adm-hero-subtitle">
-                    <span>Meja Verifikasi Berkas Pendaftaran Peserta</span>
+                    <span>Verifikasi Berkas Pendaftaran Peserta</span>
                     <span class="sep">&bull;</span>
                     <span>Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
-                    <span class="sep">&bull;</span>
-                    <span><strong>{{ number_format($queueStats['total'] ?? $pendaftaranList->total()) }} Total Berkas</strong></span>
                 </div>
-            </div>
-            <div class="adm-hero-actions">
-                <a href="{{ route('admin.dashboard') }}" class="adm-hero-btn-secondary">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    <span>Dashboard</span>
-                </a>
-                <a href="{{ route('admin.pendaftaran.download-zip', request()->query()) }}" class="adm-hero-btn-primary">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    <span>Unduh Bundel ZIP</span>
-                </a>
             </div>
         </div>
     </div>
@@ -1007,16 +1006,6 @@
                         <span class="adm-status-counter">{{ $queueStats['ditolak'] ?? 0 }}</span>
                     </a>
                 </div>
-
-                {{-- Sisi Kanan: Reset Link (Hanya Tampil Jika Filter Aktif) --}}
-                @if($hasActiveFilters)
-                    <div>
-                        <a href="{{ route('admin.pendaftaran.index') }}" class="adm-filter-reset-link" title="Bersihkan semua parameter pencarian dan filter">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            <span>Reset Filter</span>
-                        </a>
-                    </div>
-                @endif
             </div>
 
             @if($pendaftaranList->isEmpty())
@@ -1043,7 +1032,7 @@
                                 <th>Calon Peserta</th>
                                 <th>Institusi & Jurusan</th>
                                 <th>Bulan Magang</th>
-                                <th>Status Permohonan</th>
+                                <th>Status</th>
                                 <th style="text-align: right; width: 140px;">Aksi</th>
                             </tr>
                         </thead>
