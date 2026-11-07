@@ -4,7 +4,10 @@
  * Animasi Fluida Masuk/Keluar, dan Modal Pemberian Catatan Pembimbing (Aksi Tunggal).
  */
 
+import { initScrollCraft } from '../../services/scroll-craft.js';
+
 document.addEventListener('DOMContentLoaded', () => {
+    initScrollCraft();
     const streamContainer = document.getElementById('menteeStreamContainer');
     const filterCard = document.getElementById('logbookFilterCard');
     const defaultTitleText = document.getElementById('defaultTitleText');

@@ -4,7 +4,10 @@
  * dan switcher mode tampilan (Kartu Classroom vs Tabel Administratif Asli).
  */
 
+import { initScrollCraft } from '../../services/scroll-craft.js';
+
 export function initPembimbingTugasIndex() {
+    initScrollCraft();
     const streamContainer = document.getElementById('menteeStreamContainer');
     const tableContainer = document.getElementById('classroomTableContainer');
     const menteesSummaryView = document.getElementById('tableMenteesSummaryView');

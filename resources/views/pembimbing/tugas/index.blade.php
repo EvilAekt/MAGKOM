@@ -18,7 +18,7 @@
         $totalMentee = method_exists($penempatanList, 'total') ? $penempatanList->total() : $penempatanList->count();
     @endphp
 
-    <div class="classroom-banner">
+    <div class="classroom-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Tugas & Progres Magang</h1>
@@ -51,7 +51,7 @@
         $persenReview = $totalTugas > 0 ? round(($reviewTugas / $totalTugas) * 100) : 0;
     @endphp
 
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up" data-scroll-reveal>
         <x-gentelella.tile-stat
             title="Total Tugas"
             value="{{ $totalTugas }}"

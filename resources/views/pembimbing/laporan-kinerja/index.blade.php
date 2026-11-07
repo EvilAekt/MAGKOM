@@ -21,7 +21,7 @@
         $bidangNama = $authUser->bidang?->nama_bidang ?? 'Dinas Komunikasi dan Informatika Sleman';
     @endphp
 
-    <div class="classroom-banner laporan-hero-banner">
+    <div class="classroom-banner laporan-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Laporan Peserta</h1>
@@ -144,7 +144,7 @@
 </div>
 
     {{-- 2. Tile Stats MagKom Gentelella (4 Metrik Selaras Gambar 2) --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up" data-scroll-reveal>
         <x-gentelella.tile-stat
             title="TOTAL MENTEE"
             value="{{ $totalMentee }}"
@@ -202,7 +202,7 @@
     </div>
 
     {{-- 2.5 Filter Bar: Pencarian Teks, Nama Peserta, Status, dan Bulan --}}
-    <div class="laporan-filter-card">
+    <div class="laporan-filter-card sc-reveal-up sc-delay-1" data-scroll-reveal>
         <form method="GET" action="{{ route('pembimbing.laporan-kinerja.index') }}" class="laporan-filter-form" id="formFilterLaporan">
             <div class="filter-group filter-group-search" style="flex: 1.3;">
                 <label for="inputSearchLaporan">Pencarian Peserta</label>
@@ -283,7 +283,7 @@
                 <p style="font-size: 0.85rem; max-width: 440px; margin: 0 auto;">Belum ada catatan rekapitulasi peserta bimbingan yang terdaftar.</p>
             </div>
         @else
-            <div class="adm-table-container">
+            <div class="adm-table-container sc-reveal-up sc-delay-2" data-scroll-reveal>
                 <div style="overflow-x: auto; width: 100%;">
                     <table class="adm-table admin-table">
                         <thead>

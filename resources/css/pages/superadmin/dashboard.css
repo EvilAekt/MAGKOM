@@ -307,6 +307,17 @@
   display: none;
 }
 /* Standard Executive Spacing untuk Tab Pane SuperAdmin */
+@keyframes saFadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .gentelella-tab-pane,
 .sa-tabpanel {
   display: flex;
@@ -314,6 +325,11 @@
   gap: 1.75rem; /* 28px standard breathing room */
   padding-top: 1.25rem;
   padding-bottom: 2rem;
+}
+
+.gentelella-tab-pane:not([hidden]),
+.sa-tabpanel:not([hidden]) {
+  animation: saFadeSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* ===== Empty State ===== */
@@ -1632,12 +1648,28 @@ html:not([data-theme="dark"]) .sa-metric-card-col .stat-subtext {
   color: var(--cv-ink, #0f172a);
   margin: 0;
 }
+@keyframes saPulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
+    transform: scale(1.15);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    transform: scale(1);
+  }
+}
+
 .sa-statusline-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--cv-ok, #10b981);
   box-shadow: 0 0 0 2px var(--cv-ok-tint, rgba(16, 185, 129, 0.2));
+  animation: saPulseGlow 2.2s infinite ease-in-out;
 }
 
 #select-bulan,
@@ -2747,6 +2779,416 @@ html:not([data-theme="dark"]) .sa-metric-card-col .stat-subtext {
   color: #6ee7b7 !important;
   border: 1px solid rgba(110, 231, 183, 0.35) !important;
 }
+
+/* ==============================================================================
+   Interactivity, Animations & Smooth Transitions
+   ============================================================================== */
+.sa-metric-card-col .tile_stats_count {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sa-metric-card-col .tile_stats_count:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 53, 102, 0.08);
+}
+
+.sa-meter__fill,
+.sa-meter > div {
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==============================================================================
+   Mini Calendar Widget (SuperAdmin Aside Action Center)
+   ============================================================================== */
+.sa-calendar-card {
+  position: relative;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, #E8EFFB 0%, #DCE6F7 100%);
+  border: 1px solid #cfdaf0;
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .sa-calendar-card {
+  background: linear-gradient(180deg, #12305A 0%, #0D2549 100%);
+  border-color: #2F5190;
+}
+
+.sa-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.sa-cal-title-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.sa-cal-month-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: inherit;
+}
+
+.sa-cal-month-dropdown-wrap,
+.sa-cal-year-dropdown-wrap {
+  position: relative;
+}
+
+.sa-cal-month-trigger-btn,
+.sa-cal-year-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #003566;
+  background: rgba(0, 53, 102, 0.07);
+  border: 1px solid #cfdaf0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sa-cal-month-trigger-btn:hover,
+.sa-cal-year-trigger-btn:hover {
+  background: #003566;
+  color: #ffffff;
+  border-color: #003566;
+}
+
+[data-theme="dark"] .sa-cal-month-trigger-btn,
+[data-theme="dark"] .sa-cal-year-trigger-btn {
+  color: #EAF0FA;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #2F5190;
+}
+
+[data-theme="dark"] .sa-cal-month-trigger-btn:hover,
+[data-theme="dark"] .sa-cal-year-trigger-btn:hover {
+  background: #4C84E8;
+  color: #ffffff;
+  border-color: #4C84E8;
+}
+
+.sa-cal-month-popover,
+.sa-cal-year-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  z-index: 60;
+  min-width: 175px;
+  padding: 10px;
+  background: #FFFFFF;
+  border: 1px solid #cfdaf0;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -3px rgba(0, 53, 102, 0.2);
+}
+
+.sa-cal-month-popover {
+  left: 0;
+}
+
+.sa-cal-year-popover {
+  right: 0;
+}
+
+[data-theme="dark"] .sa-cal-month-popover,
+[data-theme="dark"] .sa-cal-year-popover {
+  background: #0E2548;
+  border-color: #2F5190;
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5);
+}
+
+.sa-cal-month-popover-header,
+.sa-cal-year-popover-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #5b6573;
+}
+
+.sa-cal-year-popover-header {
+  justify-content: space-between;
+}
+
+[data-theme="dark"] .sa-cal-month-popover-header,
+[data-theme="dark"] .sa-cal-year-popover-header {
+  color: #9FB0CC;
+}
+
+.sa-cal-month-popover-title,
+.sa-cal-year-popover-title {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sa-cal-year-jump-btn {
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #003566;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.sa-cal-year-jump-btn:hover {
+  background: #E8EFFB;
+}
+
+[data-theme="dark"] .sa-cal-year-jump-btn {
+  color: #4C84E8;
+}
+
+[data-theme="dark"] .sa-cal-year-jump-btn:hover {
+  background: #16335F;
+}
+
+.sa-cal-month-grid,
+.sa-cal-year-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.sa-cal-month-option-btn,
+.sa-cal-year-option-btn {
+  padding: 6px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #212529;
+  background: #F1F4F9;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.sa-cal-month-option-btn:hover,
+.sa-cal-year-option-btn:hover {
+  background: #E8EFFB;
+  border-color: #003566;
+  color: #003566;
+}
+
+.sa-cal-month-option-btn.active,
+.sa-cal-year-option-btn.active {
+  background: #003566;
+  color: #FFFFFF;
+  font-weight: 800;
+}
+
+[data-theme="dark"] .sa-cal-month-option-btn,
+[data-theme="dark"] .sa-cal-year-option-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #EAF0FA;
+}
+
+[data-theme="dark"] .sa-cal-month-option-btn:hover,
+[data-theme="dark"] .sa-cal-year-option-btn:hover {
+  background: #16335F;
+  border-color: #4C84E8;
+  color: #4C84E8;
+}
+
+[data-theme="dark"] .sa-cal-month-option-btn.active,
+[data-theme="dark"] .sa-cal-year-option-btn.active {
+  background: #4C84E8;
+  color: #FFFFFF;
+}
+
+.sa-cal-nav-btn {
+  background: none;
+  border: none;
+  color: #5b6573;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sa-cal-nav-btn:hover {
+  background: rgba(100, 116, 139, 0.12);
+  color: #003566;
+}
+
+[data-theme="dark"] .sa-cal-nav-btn:hover {
+  color: #EAF0FA;
+}
+
+.sa-calendar-days-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #5b6573;
+  margin-bottom: 8px;
+}
+
+.sa-calendar-days-row .sa-day-weekend {
+  color: #3F51B5;
+}
+
+[data-theme="dark"] .sa-calendar-days-row .sa-day-weekend {
+  color: #8FA2FF;
+}
+
+.sa-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+  align-items: center;
+}
+
+/* Sel Tanggal Berbentuk Semi-Oval Kapsul Vertikal */
+.sa-cal-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: #212529;
+  width: 26px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border-radius: 11px; /* Bentuk Semi-Oval Kapsul */
+  cursor: pointer;
+  background: #FFFFFF;
+  border: 1px solid #cfdaf0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  padding: 0;
+  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+[data-theme="dark"] .sa-cal-date {
+  background: #16335F;
+  border: 1px solid #2F5190;
+  color: #EAF0FA;
+}
+
+/* Akhir pekan di kalender (Kolom Sabtu & Minggu) */
+.sa-cal-date.date-weekend,
+.sa-cal-date:nth-child(7n+6),
+.sa-cal-date:nth-child(7n) {
+  color: #3F51B5;
+}
+
+[data-theme="dark"] .sa-cal-date.date-weekend,
+[data-theme="dark"] .sa-cal-date:nth-child(7n+6),
+[data-theme="dark"] .sa-cal-date:nth-child(7n) {
+  color: #8FA2FF;
+}
+
+.sa-cal-date:hover:not(.date-muted):not(.date-selected):not(.date-today) {
+  background: #e2e8f0;
+  color: #003566;
+  transform: translateY(-1px);
+}
+
+.sa-cal-date.date-muted {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: #AAAAAA;
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+}
+
+[data-theme="dark"] .sa-cal-date.date-muted {
+  color: #5E7194;
+}
+
+/* Hari Ini (Today): Full Color Solid Navy Sleman */
+.sa-cal-date.date-today {
+  background: #003566 !important;
+  border-color: #003566 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  border-radius: 11px !important;
+  box-shadow: 0 3px 8px rgba(0, 53, 102, 0.35) !important;
+}
+
+[data-theme="dark"] .sa-cal-date.date-today {
+  background: #4C84E8 !important;
+  border-color: #4C84E8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 8px rgba(76, 132, 232, 0.35) !important;
+}
+
+/* Tanggal Terpilih yang Diklik (Selected): Hanya di Luar Angka (Outline Ring) */
+.sa-cal-date.date-selected:not(.date-today) {
+  background: #E8EFFB !important;
+  border: 2px solid #003566 !important;
+  color: #003566 !important;
+  font-weight: 800 !important;
+  border-radius: 11px !important;
+  box-shadow: 0 0 0 2px rgba(0, 53, 102, 0.15) !important;
+  transform: scale(1.05);
+}
+
+[data-theme="dark"] .sa-cal-date.date-selected:not(.date-today) {
+  background: #16335F !important;
+  border: 2px solid #4C84E8 !important;
+  color: #EAF0FA !important;
+  box-shadow: 0 0 0 2px rgba(76, 132, 232, 0.25) !important;
+}
+
+/* Hari Ini yang Sedang Dipilih: Full Color Solid + Gold Ring Border */
+.sa-cal-date.date-today.date-selected {
+  background: #003566 !important;
+  border: 2px solid #FFC300 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 3px 8px rgba(0, 53, 102, 0.35) !important;
+}
+
+[data-theme="dark"] .sa-cal-date.date-today.date-selected {
+  background: #4C84E8 !important;
+  border: 2px solid #FFC300 !important;
+  color: #ffffff !important;
+}
+
+@keyframes saDatePop {
+  0% { transform: scale(0.92); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1.04); }
+}
+
+.sa-cal-date.sa-date-pop {
+  animation: saDatePop 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Accessibility: WCAG 2.1 AA Motion Guardrail */
+@media (prefers-reduced-motion: reduce) {
+  .gentelella-tab-pane:not([hidden]),
+  .sa-tabpanel:not([hidden]),
+  .sa-statusline-dot,
+  .sa-cal-date,
+  .sa-metric-card-col .tile_stats_count,
+  .sa-cal-date.sa-date-pop {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 
 
 

@@ -17,7 +17,7 @@
         $bidangNama = $authUser->bidang?->nama_bidang ?? 'Dinas Komunikasi dan Informatika Sleman';
     @endphp
 
-    <div class="classroom-banner">
+    <div class="classroom-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Logbook Peserta</h1>
@@ -36,7 +36,7 @@
     </div>
 
     {{-- 2. Tile Stats MagKom Gentelella (Fokus Logbook & Catatan Pembimbing) --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up" data-scroll-reveal>
         <x-gentelella.tile-stat
             title="Total Logbook"
             value="{{ $totalLogbook }}"

@@ -137,6 +137,9 @@
 
     {{-- Kolom Kanan: Sticky Aside Action Center (Lovable Clearview Widget) --}}
     <aside class="sa-aside-sticky" aria-label="Pusat Tindakan Cepat">
+        {{-- Widget 0: Mini Calendar Widget Operasional --}}
+        @include('superadmin.dashboard.partials._aside_calendar')
+
         {{-- Widget 1: Perlu Tindakan Hari Ini --}}
         <x-gentelella.x-panel title="Perlu tindakan hari ini">
             @php

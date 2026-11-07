@@ -17,7 +17,7 @@
         $bidangNama = $authUser->bidang?->nama_bidang ?? 'Dinas Komunikasi dan Informatika Sleman';
     @endphp
 
-    <div class="classroom-banner">
+    <div class="classroom-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Direktori Peserta Bimbingan</h1>
@@ -39,7 +39,7 @@
     </div>
 
     {{-- 2. Tile Stats MagKom Gentelella (3 Metrik Utama) --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up" data-scroll-reveal>
         <x-gentelella.tile-stat
             title="Total Mentee"
             value="{{ $totalMentee }}"
@@ -83,7 +83,7 @@
     </div>
 
     {{-- 3. Filter Bar & Segmented Tabs --}}
-    <div class="peserta-filter-card">
+    <div class="peserta-filter-card sc-reveal-up sc-delay-1" data-scroll-reveal>
         <div class="peserta-tabs">
             <a href="{{ route('pembimbing.peserta.index', ['tab' => 'aktif']) }}" class="peserta-tab-btn {{ $currentTab !== 'selesai' ? 'active' : '' }}">
                 <span>Peserta Aktif</span>
@@ -113,7 +113,7 @@
 
     {{-- 4. Tabel Daftar Mentee Khas Classroom --}}
     <x-gentelella.x-panel title="Daftar Mentee Bimbingan">
-        <div class="table-peserta-wrapper">
+        <div class="table-peserta-wrapper sc-reveal-up sc-delay-2" data-scroll-reveal>
             <table class="table-peserta">
                 <thead>
                     <tr>

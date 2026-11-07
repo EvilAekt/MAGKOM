@@ -191,9 +191,306 @@
     }
   }
 
-  // 3. Document Ready Initialization
+  // 3. Dynamic SuperAdmin Calendar Widget (Universal Dynamic Calendar Engine)
+  function initSuperAdminCalendar() {
+    var grid = document.getElementById('saCalendarGrid');
+    var monthTitle = document.getElementById('saCalMonthTitle');
+    var monthTriggerBtn = document.getElementById('saCalMonthTriggerBtn');
+    var monthPopover = document.getElementById('saCalMonthPopover');
+    var monthGrid = document.getElementById('saCalMonthGrid');
+    var yearVal = document.getElementById('saCalYearVal');
+    var yearTriggerBtn = document.getElementById('saCalYearTriggerBtn');
+    var yearPopover = document.getElementById('saCalYearPopover');
+    var yearGrid = document.getElementById('saCalYearGrid');
+    var yearDecBtn = document.getElementById('saCalYearDecBtn');
+    var yearIncBtn = document.getElementById('saCalYearIncBtn');
+    var prevBtn = document.getElementById('saCalPrevBtn');
+    var nextBtn = document.getElementById('saCalNextBtn');
+    if (!grid || !monthTitle) return;
+
+    var MONTH_NAMES = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+
+    var MONTH_SHORT_NAMES = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
+      'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
+    ];
+
+    var realToday = new Date();
+    var realYear = realToday.getFullYear();
+    var realMonth = realToday.getMonth();
+    var realDate = realToday.getDate();
+
+    var viewYear = realYear;
+    var viewMonth = realMonth;
+    var popoverBaseYear = viewYear;
+    var selectedDate = null;
+
+    function renderGrid() {
+      grid.innerHTML = '';
+      var isCurrentMonthView = (viewYear === realYear && viewMonth === realMonth);
+
+      var firstDay = new Date(viewYear, viewMonth, 1).getDay();
+      var startOffset = (firstDay === 0) ? 6 : (firstDay - 1);
+
+      var daysInCurrentMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+      var daysInPrevMonth = new Date(viewYear, viewMonth, 0).getDate();
+
+      var frag = document.createDocumentFragment();
+
+      // 1. Previous month trailing days
+      for (var p = startOffset; p > 0; p--) {
+        var prevSpan = document.createElement('span');
+        prevSpan.className = 'sa-cal-date date-muted';
+        prevSpan.tabIndex = -1;
+        prevSpan.textContent = daysInPrevMonth - p + 1;
+        frag.appendChild(prevSpan);
+      }
+
+      // 2. Current month active days
+      for (var d = 1; d <= daysInCurrentMonth; d++) {
+        var dayCol = (startOffset + d - 1) % 7;
+        var isWeekend = (dayCol === 5 || dayCol === 6);
+        var isToday = (isCurrentMonthView && d === realDate);
+        var isSelected = selectedDate && (selectedDate.year === viewYear && selectedDate.month === viewMonth && selectedDate.date === d);
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+
+        var classes = ['sa-cal-date'];
+        if (isWeekend) classes.push('date-weekend');
+        if (isToday) classes.push('date-today');
+        if (isSelected) classes.push('date-selected');
+
+        btn.className = classes.join(' ');
+        btn.setAttribute('data-date', d);
+        btn.setAttribute('aria-label', 'Tanggal ' + d + ' ' + MONTH_NAMES[viewMonth] + ' ' + viewYear + (isToday ? ' (Hari ini)' : ''));
+        btn.textContent = d;
+
+        btn.addEventListener('click', (function (dayNum) {
+          return function () {
+            var isAlreadySelected = selectedDate &&
+              selectedDate.year === viewYear &&
+              selectedDate.month === viewMonth &&
+              selectedDate.date === dayNum;
+
+            if (isAlreadySelected) {
+              selectedDate = null;
+              this.classList.remove('date-selected', 'sa-date-pop');
+            } else {
+              selectedDate = { year: viewYear, month: viewMonth, date: dayNum };
+              grid.querySelectorAll('.sa-cal-date').forEach(function (el) {
+                el.classList.remove('date-selected', 'sa-date-pop');
+              });
+              this.classList.add('date-selected', 'sa-date-pop');
+            }
+          };
+        })(d));
+
+        btn.addEventListener('dblclick', function (e) {
+          e.preventDefault();
+          selectedDate = null;
+          grid.querySelectorAll('.sa-cal-date').forEach(function (el) {
+            el.classList.remove('date-selected', 'sa-date-pop');
+          });
+        });
+
+        frag.appendChild(btn);
+      }
+
+      // 3. Next month leading days
+      var totalCells = startOffset + daysInCurrentMonth;
+      var remaining = (7 - (totalCells % 7)) % 7;
+      for (var n = 1; n <= remaining; n++) {
+        var nextSpan = document.createElement('span');
+        nextSpan.className = 'sa-cal-date date-muted';
+        nextSpan.tabIndex = -1;
+        nextSpan.textContent = n;
+        frag.appendChild(nextSpan);
+      }
+
+      grid.appendChild(frag);
+    }
+
+    function renderYearPopover() {
+      if (!yearGrid) return;
+      yearGrid.innerHTML = '';
+      var startYear = popoverBaseYear - 2;
+      var endYear = popoverBaseYear + 3;
+
+      for (var y = startYear; y <= endYear; y++) {
+        var yBtn = document.createElement('button');
+        yBtn.type = 'button';
+        yBtn.className = 'sa-cal-year-option-btn' + (y === viewYear ? ' active' : '');
+        yBtn.textContent = y;
+        yBtn.addEventListener('click', (function (targetYear) {
+          return function (e) {
+            e.stopPropagation();
+            viewYear = targetYear;
+            closeYearPopover();
+            updateCalendar();
+          };
+        })(y));
+        yearGrid.appendChild(yBtn);
+      }
+    }
+
+    function closeYearPopover() {
+      if (yearPopover) {
+        yearPopover.hidden = true;
+      }
+      if (yearTriggerBtn) {
+        yearTriggerBtn.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    function renderMonthPopover() {
+      if (!monthGrid) return;
+      monthGrid.innerHTML = '';
+
+      for (var m = 0; m < 12; m++) {
+        var mBtn = document.createElement('button');
+        mBtn.type = 'button';
+        mBtn.className = 'sa-cal-month-option-btn' + (m === viewMonth ? ' active' : '');
+        mBtn.textContent = MONTH_SHORT_NAMES[m];
+        mBtn.setAttribute('data-month', m);
+        mBtn.setAttribute('title', MONTH_NAMES[m]);
+        mBtn.setAttribute('aria-label', 'Pilih Bulan ' + MONTH_NAMES[m]);
+        mBtn.addEventListener('click', (function (targetMonth) {
+          return function (e) {
+            e.stopPropagation();
+            viewMonth = targetMonth;
+            closeMonthPopover();
+            updateCalendar();
+          };
+        })(m));
+        monthGrid.appendChild(mBtn);
+      }
+    }
+
+    function closeMonthPopover() {
+      if (monthPopover) {
+        monthPopover.hidden = true;
+      }
+      if (monthTriggerBtn) {
+        monthTriggerBtn.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    function toggleMonthPopover() {
+      if (!monthPopover) return;
+      var isHidden = monthPopover.hidden;
+      if (isHidden) {
+        closeYearPopover();
+        renderMonthPopover();
+        monthPopover.hidden = false;
+        if (monthTriggerBtn) monthTriggerBtn.setAttribute('aria-expanded', 'true');
+      } else {
+        closeMonthPopover();
+      }
+    }
+
+    function toggleYearPopover() {
+      if (!yearPopover) return;
+      var isHidden = yearPopover.hidden;
+      if (isHidden) {
+        closeMonthPopover();
+        popoverBaseYear = viewYear;
+        renderYearPopover();
+        yearPopover.hidden = false;
+        if (yearTriggerBtn) yearTriggerBtn.setAttribute('aria-expanded', 'true');
+      } else {
+        closeYearPopover();
+      }
+    }
+
+    function updateCalendar() {
+      monthTitle.textContent = MONTH_NAMES[viewMonth];
+      if (yearVal) yearVal.textContent = viewYear;
+      renderGrid();
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function () {
+        viewMonth--;
+        if (viewMonth < 0) {
+          viewMonth = 11;
+          viewYear--;
+        }
+        updateCalendar();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function () {
+        viewMonth++;
+        if (viewMonth > 11) {
+          viewMonth = 0;
+          viewYear++;
+        }
+        updateCalendar();
+      });
+    }
+
+    if (monthTriggerBtn) {
+      monthTriggerBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggleMonthPopover();
+      });
+    }
+
+    if (yearTriggerBtn) {
+      yearTriggerBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggleYearPopover();
+      });
+    }
+
+    if (yearDecBtn) {
+      yearDecBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        popoverBaseYear -= 6;
+        renderYearPopover();
+      });
+    }
+
+    if (yearIncBtn) {
+      yearIncBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        popoverBaseYear += 6;
+        renderYearPopover();
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      if (monthPopover && !monthPopover.hidden) {
+        if (!monthPopover.contains(e.target) && (!monthTriggerBtn || !monthTriggerBtn.contains(e.target))) {
+          closeMonthPopover();
+        }
+      }
+      if (yearPopover && !yearPopover.hidden) {
+        if (!yearPopover.contains(e.target) && (!yearTriggerBtn || !yearTriggerBtn.contains(e.target))) {
+          closeYearPopover();
+        }
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        closeMonthPopover();
+        closeYearPopover();
+      }
+    });
+
+    updateCalendar();
+  }
+
+  // 4. Document Ready Initialization
   document.addEventListener('DOMContentLoaded', function () {
     applyDataV();
+    initSuperAdminCalendar();
 
     var list = document.querySelector('[role="tablist"]');
     if (list) {

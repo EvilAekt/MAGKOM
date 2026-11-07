@@ -3,7 +3,10 @@
  * Modul Popover Ekspor Rekap Cepat (Excel, CSV, PDF)
  */
 
+import { initScrollCraft } from '../../services/scroll-craft.js';
+
 document.addEventListener('DOMContentLoaded', () => {
+    initScrollCraft();
     initLaporanExportPopover();
 });
 

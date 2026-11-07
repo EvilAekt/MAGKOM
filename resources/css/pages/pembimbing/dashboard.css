@@ -1,2934 +1,378 @@
 /**
  * ==============================================================================
- * MagKom Sleman - Dashboard Pembimbing (Zenius-Style Layout x Sleman Palette)
+ * MagKom Sleman - Dashboard Pembimbing Bento Grid Modern (Executive Edition)
  * Resources: resources/css/pages/pembimbing/dashboard.css
+ * Precision Match with Sleman Reference Mock (Normal & Dark Mode)
  * ==============================================================================
  */
 
 :root {
-  /* Sleman Signature Navy */
-  --magkom-navy-dark: #002855;
-  --magkom-navy-base: #003566;
-  --magkom-navy-light: #0641CC;
-  --magkom-blue-accent: #2563EB;
-  --magkom-blue-subtle: #EFF6FF;
+  /* Canvas Background & Cards (Mode Terang) */
+  --bento-bg: #E9EEF5;
+  --bento-card-bg: #FFFFFF;
+  --bento-card-border: #e3e8f0;
+  --bento-card-shadow: 0 4px 18px rgba(0, 53, 102, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
 
-  /* Sleman Civic Gold & Status */
-  --magkom-amber-base: #D97706;
-  --magkom-amber-light: #F59E0B;
-  --magkom-amber-subtle: #FFFBEB;
+  /* Typography Colors */
+  --bento-text-title: #003566;
+  --bento-text-main: #212529;
+  --bento-text-muted: #5b6573;
+  --bento-text-subtle: #AAAAAA;
 
-  /* Feedback Colors */
-  --magkom-emerald: #10B981;
-  --magkom-emerald-subtle: #ECFDF5;
-  --magkom-rose: #EF4444;
-  --magkom-rose-subtle: #FEF2F2;
+  /* MagKom Sleman Brand Palette */
+  --magkom-navy-main: #003566;
+  --magkom-navy-mid: #01347C;
+  --magkom-navy-dark: #02275D;
+  --magkom-yellow-main: #FFC300;
+  --magkom-yellow-bright: #FFD84D;
+  --magkom-indigo: #3F51B5;
 
-  /* Neutral Surface & Borders */
-  --magkom-surface: #FFFFFF;
-  --magkom-bg: #F8FAFC;
-  --magkom-border: #E2E8F0;
-  --magkom-border-light: #F1F5F9;
-  --magkom-text-main: #0F172A;
-  --magkom-text-muted: #64748B;
-  --magkom-text-subtle: #94A3B8;
+  /* Hero & Banner Gradients */
+  --bento-navy-hero: linear-gradient(135deg, #003566 0%, #01347C 100%);
+  --bento-navy-dark: #02275D;
+  --bento-navy-card: #FFFFFF;
+
+  /* Sleman Golden Yellow Accents */
+  --bento-yellow: #FFC300;
+  --bento-yellow-hover: #FFCB05;
+  --bento-yellow-text: #02275D;
+
+  /* Primary Accents */
+  --bento-blue-accent: #003566;
+  --bento-blue-soft: #E3ECF8;
+  --bento-indigo-soft: #E6E9F8;
+  --bento-amber-soft: #FFF3C7;
+
+  /* Semantic Alerts */
+  --bento-red: #d64545;
+  --bento-amber: #FFC300;
+  --bento-green: #0b6b46;
+
+  /* Dot Matrix Empty (13% Navy) */
+  --bento-dot-empty: rgba(0, 53, 102, 0.13);
 }
 
 /* ==============================================================================
-   1. Zenius 2-Column Responsive Layout
+   Dark Mode Overrides (Reactive via [data-theme="dark"])
    ============================================================================== */
-.pembimbing-zenius-layout {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
+[data-theme="dark"] {
+  --bento-bg: #061630;
+  --bento-card-bg: #0E2548;
+  --bento-card-border: rgba(255, 255, 255, 0.07);
+  --bento-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.50);
+
+  --bento-text-title: #EAF0FA;
+  --bento-text-main: #EAF0FA;
+  --bento-text-muted: #9FB0CC;
+  --bento-text-subtle: #5E7194;
+
+  --bento-navy-hero: linear-gradient(135deg, #003566 0%, #01347C 100%);
+  --bento-navy-dark: #031B40;
+  --bento-navy-card: #0E2548;
+
+  /* Dark Alert Cards */
+  --bento-red: #d64545;
+  --bento-amber: #FFC300;
+
+  /* Dot Matrix Empty (12% White) */
+  --bento-dot-empty: rgba(255, 255, 255, 0.12);
+}
+
+/* ==============================================================================
+   Canvas Background Application (Role Pembimbing)
+   ============================================================================== */
+body.role-pembimbing,
+body.role-pembimbing .main_container,
+body.role-pembimbing .dashboard-content-area,
+.bento-dashboard-wrapper {
+  background-color: var(--bento-bg) !important;
+}
+
+
+/* ==============================================================================
+   0. Sidebar & Topbar Precision Alignment (Role Pembimbing)
+   Palette Reference: Sidebar #02275D (#031B40 Dark), Header #003566 -> #01347C
+   ============================================================================== */
+body.role-pembimbing .left_col,
+body.role-pembimbing .dashboard-sidebar,
+body.role-pembimbing #mainSidebar {
+  background-color: #02275D !important;
+}
+
+[data-theme="dark"] body.role-pembimbing .left_col,
+[data-theme="dark"] body.role-pembimbing .dashboard-sidebar,
+[data-theme="dark"] body.role-pembimbing #mainSidebar {
+  background-color: #031B40 !important;
+}
+
+body.role-pembimbing .top_nav,
+body.role-pembimbing .dashboard-topbar-wrapper {
+  background: linear-gradient(135deg, #003566 0%, #01347C 100%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+body.role-pembimbing .sidebar-brand-emblem {
+  background-color: #0b3a7a !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+body.role-pembimbing .nav-section-label,
+body.role-pembimbing .sidebar-nav h3,
+body.role-pembimbing .menu_section h3 {
+  color: #8fa3c4 !important;
+}
+
+body.role-pembimbing .nav-item-link,
+body.role-pembimbing .nav.side-menu > li > a {
+  color: #c2cde0 !important;
+  transition: all 0.15s ease !important;
+}
+
+body.role-pembimbing .nav-item-link:hover,
+body.role-pembimbing .nav.side-menu > li > a:hover {
+  background: rgba(11, 67, 150, 0.4) !important;
+  color: #ffffff !important;
+}
+
+body.role-pembimbing .nav-item-link.active,
+body.role-pembimbing .nav.side-menu > li.active > a,
+body.role-pembimbing .nav.side-menu > li.current-page > a {
+  background: #0b4396 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* ==============================================================================
+   1. Dashboard Outer Wrapper (Fluid Rata Kanan-Kiri)
+   ============================================================================== */
+.bento-dashboard-wrapper {
   width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0.5rem 0 1.5rem 0;
+  box-sizing: border-box;
 }
 
-.zenius-main-col {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.bento-layout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 1.25rem;
+  width: 100%;
+  align-items: stretch;
 }
 
-.zenius-side-col {
-  width: 330px;
-  flex-shrink: 0;
+.bento-col-main {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  position: sticky;
-  top: 1.5rem;
+  min-width: 0;
 }
 
-@media (max-width: 1100px) {
-  .pembimbing-zenius-layout {
-    flex-direction: column;
-  }
-  .zenius-side-col {
-    width: 100%;
-    position: static;
-  }
+.bento-col-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 320px;
+  flex-shrink: 0;
+  height: 100%;
+  justify-content: space-between;
+}
+
+/* Base Card */
+.bento-card {
+  background: var(--bento-card-bg);
+  border: 1px solid var(--bento-card-border);
+  border-radius: 16px;
+  box-shadow: var(--bento-card-shadow);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 
 /* ==============================================================================
-   2. Greeting Card & Classroom Banner (Header Banner ala Sleman Civic Tech)
+   2. Hero Navy Banner (Full-Width 100% di atas Grid)
    ============================================================================== */
-.classroom-banner {
-  background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
-              linear-gradient(135deg, #01347C 0%, #003566 100%);
-  border-radius: 16px;
+.bento-hero-banner {
+  width: 100%;
+  margin-bottom: 1.25rem;
+  background: var(--bento-navy-hero);
+  border-radius: 20px;
   padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   color: #ffffff;
+  box-shadow: 0 6px 24px rgba(8, 51, 119, 0.25);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-sizing: border-box;
 }
 
-.banner-top-row {
+.bento-hero-content {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.25rem;
-  flex-wrap: wrap;
-  position: relative;
-  z-index: 2;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 1;
 }
 
-.banner-title {
-  font-size: 1.5rem;
-  font-weight: 800;
+.bento-hero-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--bento-yellow);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.bento-hero-title {
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 700;
   color: #ffffff;
-  margin: 0 0 6px 0;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
+  margin: 0 0 16px 0;
 }
 
-.banner-subtitle {
-  font-size: 0.9375rem;
-  color: rgba(255, 255, 255, 0.92);
+.bento-hero-actions {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
-  line-height: 1.5;
 }
 
-.btn-create-task {
-  background: #ffffff;
-  color: #01347C;
-  text-decoration: none;
-  padding: 0.65rem 1.35rem;
-  border-radius: 10px;
-  font-size: 0.875rem;
+.btn-bento-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bento-yellow);
+  color: var(--bento-yellow-text);
   font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  white-space: nowrap;
-}
-
-.btn-create-task:hover {
-  background: #f8fafc;
-  color: #002244;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
-}
-
-.zenius-greeting-card {
-  background: linear-gradient(135deg, #002855 0%, #003566 60%, #0641CC 100%);
-  border-radius: 16px;
-  padding: 1.5rem 1.75rem;
-  color: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1.25rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 40, 85, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.zenius-greeting-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  z-index: 1;
-  max-width: 650px;
-}
-
-.zenius-bidang-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.725rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #E0E7FF;
-  width: fit-content;
-}
-
-.zenius-greeting-title {
-  font-size: 1.45rem;
-  font-weight: 800;
-  margin: 0;
-  line-height: 1.25;
-  color: #ffffff;
-  letter-spacing: -0.015em;
-}
-
-.zenius-greeting-subtitle {
-  font-size: 0.825rem;
-  opacity: 0.88;
-  margin: 0;
-  line-height: 1.45;
-  color: #F1F5F9;
-}
-
-.zenius-greeting-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  flex-wrap: wrap;
-  z-index: 1;
-}
-
-.btn-sleman-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  background: #ffffff;
-  color: #003566;
-  padding: 0.55rem 1.15rem;
-  border-radius: 10px;
-  font-size: 0.8125rem;
-  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 22px;
+  border-radius: 9999px;
   text-decoration: none;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid transparent;
+  transition: transform 0.15s ease, filter 0.15s ease;
 }
 
-.btn-sleman-primary:hover {
-  background: #F8FAFC;
-  color: #002855;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
-}
-
-.btn-sleman-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #ffffff;
-  padding: 0.55rem 1.1rem;
-  border-radius: 10px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn-sleman-secondary:hover {
-  background: rgba(255, 255, 255, 0.25);
-  color: #ffffff;
+.btn-bento-hero-cta:hover {
+  filter: brightness(1.08);
   transform: translateY(-1px);
 }
 
-/* ==============================================================================
-   3. Zenius Top Metric Grid (Activity Bar Chart + Progress Gauge)
-   ============================================================================== */
-.zenius-metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-}
-
-@media (max-width: 768px) {
-  .zenius-metrics-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.zenius-card {
-  background: #ffffff;
-  border: 1px solid var(--magkom-border, #E2E8F0);
-  border-radius: 16px;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+.bento-hero-graphic {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.zenius-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.75rem;
-}
-
-.zenius-card-header h3 {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #0F172A;
-  margin: 0;
-  line-height: 1.3;
-}
-
-.zenius-trend-tag {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.725rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-  margin-top: 0.25rem;
-}
-
-.zenius-trend-tag.positive {
-  background: #ECFDF5;
-  color: #059669;
-}
-
-.zenius-period-badge {
-  font-size: 0.725rem;
-  font-weight: 600;
-  color: #64748B;
-  background: #F1F5F9;
-  padding: 0.25rem 0.65rem;
-  border-radius: 8px;
-}
-
-/* Card 1: 7-Day Bar Chart */
-.zenius-activity-meta {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-bottom: 0.85rem;
-}
-
-.zenius-stat-big {
-  font-size: 1.85rem;
-  font-weight: 800;
-  color: #0F172A;
-  letter-spacing: -0.02em;
-}
-
-.zenius-stat-label {
-  font-size: 0.8rem;
-  color: #64748B;
-  font-weight: 500;
-}
-
-.zenius-bar-chart {
-  display: flex;
-  justify-content: space-between;
   align-items: flex-end;
-  height: 110px;
-  gap: 0.65rem;
-  padding-top: 0.5rem;
-}
-
-.zenius-bar-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.45rem;
-  flex: 1;
-  height: 100%;
-  justify-content: flex-end;
-}
-
-.zenius-bar-track {
-  width: 100%;
-  max-width: 30px;
+  gap: 10px;
   height: 80px;
-  background: #F1F5F9;
-  border-radius: 8px;
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-  position: relative;
-}
-
-.zenius-bar-fill {
-  width: 100%;
-  background: linear-gradient(180deg, #2563EB 0%, #003566 100%);
-  border-radius: 8px;
-  min-height: 8px;
-  transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.zenius-bar-col:hover .zenius-bar-fill {
-  background: linear-gradient(180deg, #3B82F6 0%, #002855 100%);
-}
-
-.zenius-bar-day {
-  font-size: 0.725rem;
-  font-weight: 600;
-  color: #64748B;
-}
-
-/* Card 2: Progress Circular Donut & Pills */
-.zenius-progress-body {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin-bottom: 0.85rem;
-}
-
-.zenius-donut-gauge {
-  position: relative;
-  width: 86px;
-  height: 86px;
+  padding-right: 12px;
   flex-shrink: 0;
 }
 
-.circular-chart {
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.circle-bg {
-  fill: none;
-  stroke: #E2E8F0;
-  stroke-width: 3.8;
-}
-
-.circle-fill {
-  fill: none;
-  stroke: #003566;
-  stroke-width: 3.8;
-  stroke-linecap: round;
-  transition: stroke-dasharray 0.5s ease;
-}
-
-.donut-percentage {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.percent-val {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #0F172A;
-  line-height: 1;
-}
-
-.percent-sub {
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: #64748B;
-  text-transform: uppercase;
-  margin-top: 2px;
-}
-
-.zenius-status-pills {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  flex: 1;
-}
-
-.status-pill {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.35rem 0.75rem;
+.bento-hero-bar {
+  width: 16px;
   border-radius: 8px;
-  font-size: 0.775rem;
 }
 
-.status-pill-success {
-  background: #ECFDF5;
-  color: #065F46;
+.bento-hero-bar.bar-1 {
+  height: 38px;
+  background: #3b4b75;
 }
 
-.status-pill-info {
-  background: #EFF6FF;
-  color: #1E40AF;
+.bento-hero-bar.bar-2 {
+  height: 64px;
+  background: #2563eb;
 }
 
-.status-pill-warning {
-  background: #FFFBEB;
-  color: #92400E;
+.bento-hero-bar.bar-3 {
+  height: 80px;
+  background: var(--bento-yellow);
 }
 
-.pill-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.status-pill-success .pill-dot {
-  background: #10B981;
-}
-
-.status-pill-info .pill-dot {
-  background: #2563EB;
-}
-
-.status-pill-warning .pill-dot {
-  background: #F59E0B;
-}
-
-.pill-count {
-  font-weight: 800;
-  font-size: 0.85rem;
-}
-
-.pill-label {
-  font-weight: 500;
-  font-size: 0.75rem;
-}
-
-.zenius-capacity-strip {
-  border-top: 1px solid #F1F5F9;
-  padding-top: 0.65rem;
-  margin-top: 0.25rem;
-}
-
-.capacity-text {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  color: #475569;
-  margin-bottom: 0.3rem;
-}
-
-.capacity-bar {
-  height: 6px;
-  background: #E2E8F0;
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.capacity-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: #003566;
-  transition: width 0.3s ease;
-}
-
-/* Komposisi Jenjang Pendidikan Strip */
-.zenius-jenjang-strip {
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid var(--magkom-border, #E2E8F0);
-  padding: 0.75rem 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+.bento-hero-bar.bar-4 {
+  height: 52px;
+  background: #cbd5e1;
 }
 
 /* ==============================================================================
-   4. Tab Navigation & Panes
+   3. Row 3 KPI Mini-Cards
    ============================================================================== */
-.pembimbing-tab-bar {
-  display: flex;
-  gap: 0.5rem;
-  background: #ffffff;
-  padding: 0.5rem;
-  border-radius: 12px;
-  border: 1px solid var(--magkom-border, #E2E8F0);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.pembimbing-tab-bar::-webkit-scrollbar {
-  display: none;
-}
-
-.pembimbing-tab-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.6rem 1.15rem;
-  border-radius: 8px;
-  border: none;
-  background: transparent;
-  color: var(--magkom-text-muted, #64748B);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
-}
-
-.pembimbing-tab-btn:hover {
-  background: rgba(6, 65, 204, 0.06);
-  color: #0641CC;
-}
-
-.pembimbing-tab-btn.active {
-  background: #003566;
-  color: #ffffff;
-  box-shadow: 0 3px 8px rgba(0, 53, 102, 0.25);
-}
-
-.pembimbing-tab-btn.active .tab-badge {
-  background: rgba(255, 255, 255, 0.25);
-  color: #ffffff;
-}
-
-.tab-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.15rem 0.45rem;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  background: #E2E8F0;
-  color: #334155;
-  transition: all 0.2s ease;
-}
-
-.tab-badge.badge-amber {
-  background: #FEF3C7;
-  color: #92400E;
-}
-
-.tab-badge.badge-blue {
-  background: #E0E7FF;
-  color: #3730A3;
-}
-
-.tab-pane {
-  display: none;
-  flex-direction: column;
-  gap: 1.5rem;
-  animation: fadeIn 0.2s ease-in-out;
-}
-
-.tab-pane.active {
-  display: flex;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ==============================================================================
-   5. Sticky Aside Right Column (Profile + Calendar + To-Do List)
-   ============================================================================== */
-.zenius-side-card {
-  background: #ffffff;
-  border: 1px solid var(--magkom-border, #E2E8F0);
-  border-radius: 16px;
-  padding: 1.25rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-}
-
-/* Profile Card */
-.zenius-profile-card {
-  text-align: center;
-  padding: 1.5rem 1.25rem 1.25rem;
-}
-
-.zenius-avatar-ring {
-  width: 74px;
-  height: 74px;
-  border-radius: 50%;
-  padding: 3px;
-  border: 2.5px solid #2563EB;
-  margin: 0 auto 0.75rem auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffffff;
-}
-
-.avatar-initials {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #002855 0%, #003566 100%);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-}
-
-.zenius-profile-name {
-  font-size: 1rem;
-  font-weight: 800;
-  color: #0F172A;
-  margin: 0 0 0.2rem 0;
-  line-height: 1.3;
-}
-
-.zenius-profile-role {
-  font-size: 0.775rem;
-  font-weight: 600;
-  color: #0641CC;
-  display: block;
-}
-
-.zenius-profile-dept {
-  font-size: 0.725rem;
-  color: #64748B;
-  display: block;
-  margin-top: 0.2rem;
-}
-
-/* Mini Calendar Strip */
-.zenius-calendar-card .zenius-calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
-.zenius-calendar-header h4 {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #0F172A;
-  margin: 0;
-}
-
-.zenius-week-strip {
-  display: flex;
-  justify-content: space-between;
-  gap: 4px;
-}
-
-.zenius-day-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 6px 3px;
-  border-radius: 8px;
-  font-size: 0.725rem;
-  flex: 1;
-  text-align: center;
-  transition: all 0.15s ease;
-}
-
-.zenius-day-name {
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: #64748B;
-  text-transform: uppercase;
-}
-
-.zenius-day-num {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #0F172A;
-  margin-top: 2px;
-}
-
-.zenius-day-item.today {
-  background: #003566;
-  color: #ffffff;
-}
-
-.zenius-day-item.today .zenius-day-name,
-.zenius-day-item.today .zenius-day-num {
-  color: #ffffff;
-}
-
-.zenius-day-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #2563EB;
-  margin-top: 3px;
-}
-
-.zenius-day-item.today .zenius-day-dot {
-  background: #F59E0B;
-}
-
-/* To-Do Checklist Card */
-.zenius-todo-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #F1F5F9;
-}
-
-.zenius-todo-header h4 {
-  font-size: 0.875rem;
-  font-weight: 800;
-  color: #0F172A;
-  margin: 0;
-}
-
-.zenius-todo-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.zenius-todo-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.65rem;
-  padding: 0.65rem 0.75rem;
-  border-radius: 10px;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
-  text-decoration: none;
-  color: inherit;
-  transition: all 0.15s ease;
-  cursor: pointer;
-}
-
-.zenius-todo-item:hover {
-  background: #EFF6FF;
-  border-color: #BFDBFE;
-  transform: translateX(2px);
-}
-
-.zenius-todo-check {
-  width: 18px;
-  height: 18px;
-  border-radius: 5px;
-  border: 1.5px solid #94A3B8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.zenius-todo-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.zenius-todo-info strong {
-  display: block;
-  font-size: 0.785rem;
-  font-weight: 700;
-  color: #0F172A;
-  line-height: 1.3;
-}
-
-.zenius-todo-info small {
-  display: block;
-  font-size: 0.7rem;
-  color: #64748B;
-  margin-top: 2px;
-}
-
-.zenius-quick-links {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.zenius-quick-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: #F8FAFC;
-  color: #334155;
-  border: 1px solid #E2E8F0;
-  text-decoration: none;
-  transition: all 0.15s ease;
-}
-
-.zenius-quick-btn:hover {
-  background: #003566;
-  color: #ffffff;
-  border-color: #003566;
-}
-
-/* ==============================================================================
-   6. Courses-in-Progress Mentee Card Grid (Tab Ringkasan)
-   ============================================================================== */
-.zenius-mentee-grid {
+.bento-kpi-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-@media (max-width: 1200px) {
-  .zenius-mentee-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .zenius-mentee-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.zenius-mentee-card {
-  background: #ffffff;
-  border: 1px solid var(--magkom-border, #E2E8F0);
-  border-radius: 14px;
-  padding: 1.15rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 0.85rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.zenius-mentee-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-  border-color: #CBD5E1;
-}
-
-.zenius-card-top {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.mentee-avatar-chip {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #002855 0%, #0641CC 100%);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  font-weight: 800;
-  flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);
-}
-
-.mentee-card-details {
-  flex: 1;
-  min-width: 0;
-}
-
-.mentee-card-name {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #0F172A;
-  margin: 0;
-  line-height: 1.3;
-}
-
-.mentee-card-inst {
-  font-size: 0.75rem;
-  color: #64748B;
-  margin: 2px 0 0 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.zenius-meta-chips {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-}
-
-.meta-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.675rem;
-  font-weight: 600;
-  padding: 0.2rem 0.5rem;
-  border-radius: 6px;
-  background: #F1F5F9;
-  color: #475569;
-}
-
-.micro-progress-bar {
-  height: 6px;
-  background: var(--magkom-border, #E2E8F0);
-  border-radius: 999px;
-  overflow: hidden;
-  margin: 4px 0 2px 0;
-  width: 100%;
-}
-
-.micro-progress-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: #10B981;
-  transition: width 0.3s ease;
-}
-
-.mentee-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid #F1F5F9;
-  padding-top: 0.65rem;
-}
-
-/* ==============================================================================
-   7. Retained Task & Filter Elements (Zero-Regression)
-   ============================================================================== */
-.task-quick-filters {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.task-filter-btn {
-  background: var(--magkom-bg, #F8FAFC);
-  border: 1px solid var(--magkom-border, #E2E8F0);
-  padding: 5px 12px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--magkom-text-muted, #64748B);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: inherit;
-}
-
-.task-filter-btn:hover {
-  background: rgba(6, 65, 204, 0.08);
-  color: #0641CC;
-  border-color: #0641CC;
-}
-
-.task-filter-btn.active {
-  background: #003566;
-  color: #ffffff;
-  border-color: #003566;
-  box-shadow: 0 2px 6px rgba(0, 53, 102, 0.2);
-}
-
-.task-filter-btn .filter-badge {
-  padding: 1px 6px;
-  border-radius: 999px;
-  font-size: 0.65rem;
-  font-weight: 700;
-  background: rgba(0, 0, 0, 0.08);
-}
-
-.task-filter-btn.active .filter-badge {
-  background: rgba(255, 255, 255, 0.25);
-  color: #ffffff;
-}
-
-.task-item-row {
-  padding: 14px 0;
-  border-bottom: 1px solid #F1F5F9;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  transition: background-color 0.15s ease;
-}
-
-.task-item-row:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.task-item-left {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  flex: 1;
-  min-width: 0;
-}
-
-.task-item-meta {
-  flex: 1;
-  min-width: 0;
-}
-
-.task-item-meta h4 {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: #0F172A;
-  margin: 0 0 4px 0;
-  line-height: 1.35;
-}
-
-.task-item-meta h4 a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-.task-item-meta h4 a:hover {
-  color: #0641CC;
-}
-
-.task-mentee-info {
-  font-size: 0.775rem;
-  color: #475569;
-  margin: 0 0 6px 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.task-badges-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.deadline-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 9px;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  background: #F1F5F9;
-  color: #475569;
-  border: 1px solid #CBD5E1;
-  white-space: nowrap;
-}
-
-.deadline-pill.is-urgent {
-  background: #FEF2F2;
-  color: #DC2626;
-  border-color: #FECACA;
-}
-
-.deadline-pill.is-warning {
-  background: #FFFBEB;
-  color: #D97706;
-  border-color: #FDE68A;
-}
-
-.task-category-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  background: #EFF6FF;
-  color: #1D4ED8;
-  padding: 3px 8px;
-  border-radius: 6px;
-  border: 1px solid #BFDBFE;
-}
-
-.btn-task-action {
-  padding: 6px 14px;
-  font-size: 0.775rem;
-  font-weight: 600;
-  border-radius: 8px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  white-space: nowrap;
-  transition: all 0.15s ease;
-  border: 1px solid transparent;
-  cursor: pointer;
-}
-
-.btn-task-action-primary {
-  background: #003566;
-  color: #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 53, 102, 0.2);
-}
-
-.btn-task-action-primary:hover {
-  background: #002855;
-  color: #ffffff;
-  transform: translateY(-1px);
-}
-
-.btn-task-action-secondary {
-  background: #F8FAFC;
-  color: #334155;
-  border-color: #CBD5E1;
-}
-
-.btn-task-action-secondary:hover {
-  background: #E2E8F0;
-  color: #003566;
-  border-color: #003566;
-}
-
-/* Dark Mode Harmonization */
-[data-theme="dark"] .pembimbing-tab-bar,
-[data-theme="dark"] .zenius-card,
-[data-theme="dark"] .zenius-side-card,
-[data-theme="dark"] .zenius-jenjang-strip,
-[data-theme="dark"] .zenius-mentee-card,
-[data-theme="dark"] .zenius-antrean-chart-box,
-[data-theme="dark"] .zenius-mentee-matrix-box {
-  background-color: #0F172A;
-  border-color: #1E293B;
-  color: #F8FAFC;
-}
-
-[data-theme="dark"] .zenius-stat-big,
-[data-theme="dark"] .zenius-card-header h3,
-[data-theme="dark"] .percent-val,
-[data-theme="dark"] .zenius-profile-name,
-[data-theme="dark"] .zenius-calendar-header h4,
-[data-theme="dark"] .zenius-todo-info strong,
-[data-theme="dark"] .mentee-card-name,
-[data-theme="dark"] .task-item-meta h4,
-[data-theme="dark"] .kpi-num {
-  color: #F8FAFC;
-}
-
-[data-theme="dark"] .zenius-todo-item,
-[data-theme="dark"] .zenius-quick-btn,
-[data-theme="dark"] .zenius-activity-kpi-item {
-  background-color: #1E293B;
-  border-color: #334155;
-  color: #E2E8F0;
-}
-
-[data-theme="dark"] .zenius-bar-track,
-[data-theme="dark"] .micro-progress-bar,
-[data-theme="dark"] .capacity-bar,
-[data-theme="dark"] .zenius-stacked-bar {
-  background-color: #1E293B;
-}
-
-[data-theme="dark"] .task-item-row {
-  border-bottom-color: #1E293B;
-}
-
-/* ==============================================================================
-   8. Executive Visual Chart Widgets (Tab Ringkasan)
-   ============================================================================== */
-.zenius-chart-card-body {
-  display: flex;
-  flex-direction: column;
-}
-
-.zenius-activity-kpi-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.85rem;
-}
-
-@media (max-width: 992px) {
-  .zenius-activity-kpi-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 576px) {
-  .zenius-activity-kpi-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-.zenius-activity-kpi-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
-  background: #F8FAFC;
-  border: 1px solid var(--magkom-border, #E2E8F0);
-}
-
-.kpi-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.kpi-num {
-  font-size: 1.25rem;
-  font-weight: 800;
-  line-height: 1.1;
-  display: block;
-}
-
-.kpi-label {
-  font-size: 0.725rem;
-  color: var(--magkom-text-muted, #64748B);
-  font-weight: 500;
-  display: block;
-  margin-top: 2px;
-}
-
-.zenius-stacked-bar {
-  height: 10px;
-  width: 100%;
-  border-radius: 999px;
-  background: #E2E8F0;
-  display: flex;
-  overflow: hidden;
-}
-
-.zenius-chart-legend {
-  display: flex;
-  align-items: center;
   gap: 1.25rem;
-  flex-wrap: wrap;
-  font-size: 0.725rem;
-  color: #64748B;
-  margin-top: 0.5rem;
 }
 
-.legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-weight: 600;
-}
-
-.legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.zenius-antrean-chart-box {
-  padding: 0.25rem 0;
-}
-
-.zenius-mentee-matrix-box {
-  padding: 0.25rem 0;
-}
-
-/* ==============================================================================
-   12. Zenius Modern Visual Chart Components (Logbook Compliance, Horizon, Offboarding)
-   ============================================================================== */
-
-/* --- 12.1 Logbook Compliance Gauge & Risk Radar --- */
-.zenius-compliance-card {
-  background: #FFFFFF;
-  border: 1px solid #FED7AA;
-  border-left: 4px solid #EA580C;
-  border-radius: 14px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.05);
-}
-
-.zenius-compliance-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.zenius-compliance-title-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.zenius-compliance-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #9A3412;
-  margin: 0;
-}
-
-.zenius-compliance-subtitle {
-  font-size: 0.75rem;
-  color: #C2410C;
-}
-
-.zenius-compliance-grid {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 1.25rem;
-  align-items: center;
-}
-
-@media (max-width: 900px) {
-  .zenius-compliance-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.zenius-compliance-gauge-box {
-  background: #FFF7ED;
-  border: 1px solid #FFEDD5;
-  border-radius: 12px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.zenius-compliance-rate {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #EA580C;
-  line-height: 1;
-}
-
-.zenius-compliance-rate-label {
-  font-size: 0.75rem;
-  color: #9A3412;
-  font-weight: 600;
-  margin-top: 4px;
-}
-
-.zenius-compliance-stats-row {
-  display: flex;
-  gap: 0.4rem;
-  margin-top: 0.75rem;
-  width: 100%;
-}
-
-.zenius-compliance-stat-pill {
-  flex: 1;
-  padding: 0.35rem 0.25rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-align: center;
-  line-height: 1.2;
-}
-
-.zenius-compliance-roster {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 0.75rem;
-  max-height: 240px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.zenius-compliance-item {
-  background: #FFFFFF;
-  border-radius: 10px;
-  border: 1px solid #FFEDD5;
-  padding: 0.65rem 0.85rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.65rem;
-  transition: all 0.2s ease;
-}
-
-.zenius-compliance-item:hover {
-  border-color: #FED7AA;
-  box-shadow: 0 2px 6px rgba(234, 88, 12, 0.08);
-}
-
-.zenius-compliance-mentee-name {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #0F172A;
-}
-
-.zenius-compliance-mentee-campus {
-  font-size: 0.725rem;
-  color: #64748B;
-  margin-top: 1px;
-}
-
-.zenius-compliance-mentee-days {
-  font-size: 0.7rem;
-  color: #EA580C;
-  font-weight: 600;
-  margin-top: 3px;
-}
-
-.btn-compliance-action {
-  padding: 0.35rem 0.65rem;
-  background: #EA580C;
-  color: #FFFFFF;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 6px;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background 0.15s ease;
-}
-
-.btn-compliance-action:hover {
-  background: #C2410C;
-  color: #FFFFFF;
-}
-
-/* --- 12.2 Task Velocity & Deadline Horizon Summary --- */
-.task-horizon-summary {
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.25rem;
-}
-
-.task-horizon-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.task-horizon-title {
-  font-size: 0.825rem;
-  font-weight: 700;
-  color: #003566;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-.task-velocity-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.775rem;
-  font-weight: 700;
-  color: #003566;
-  background: #EFF6FF;
-  border: 1px solid #BFDBFE;
-  padding: 0.2rem 0.65rem;
-  border-radius: 999px;
-}
-
-.task-horizon-bar {
-  display: flex;
-  height: 8px;
-  width: 100%;
-  border-radius: 999px;
-  background: #E2E8F0;
-  overflow: hidden;
-  margin: 0.5rem 0;
-}
-
-.task-horizon-seg {
-  height: 100%;
-  transition: width 0.3s ease;
-}
-
-.task-horizon-legend {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  flex-wrap: wrap;
-  font-size: 0.725rem;
-  color: #64748B;
-  margin-top: 0.4rem;
-}
-
-.task-pending-eval-badge {
-  font-size: 0.7rem;
-  font-weight: 700;
-  background: #EEF2FF;
-  color: #4338CA;
-  border: 1px solid #C7D2FE;
-  padding: 2px 8px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* --- 12.3 Off-boarding Countdown & Rubric Readiness --- */
-.zenius-offboarding-card {
-  background: #FFFFFF;
-  border: 1px solid #FEF3C7;
-  border-left: 4px solid #D97706;
-  border-radius: 14px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.05);
-}
-
-.zenius-offboarding-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.zenius-offboarding-title-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.zenius-offboarding-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #92400E;
-  margin: 0;
-}
-
-.zenius-offboarding-subtitle {
-  font-size: 0.75rem;
-  color: #B45309;
-}
-
-.zenius-offboarding-grid {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 1.25rem;
-  align-items: center;
-}
-
-@media (max-width: 900px) {
-  .zenius-offboarding-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.zenius-offboarding-chart-box {
-  background: #FFFBEB;
-  border: 1px solid #FDE68A;
-  border-radius: 12px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.zenius-offboarding-num {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #D97706;
-  line-height: 1;
-}
-
-.zenius-offboarding-num-label {
-  font-size: 0.75rem;
-  color: #92400E;
-  font-weight: 600;
-  margin-top: 4px;
-}
-
-.zenius-offboarding-bar {
-  display: flex;
-  height: 8px;
-  width: 100%;
-  border-radius: 999px;
-  background: #E2E8F0;
-  overflow: hidden;
-  margin-top: 0.65rem;
-}
-
-.zenius-offboarding-roster {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 0.75rem;
-  max-height: 240px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.zenius-offboarding-item {
-  background: #FFFFFF;
-  border-radius: 10px;
-  border: 1px solid #FDE68A;
-  padding: 0.65rem 0.85rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.65rem;
-  transition: all 0.2s ease;
-}
-
-.zenius-offboarding-item:hover {
-  border-color: #F59E0B;
-  box-shadow: 0 2px 6px rgba(217, 119, 6, 0.08);
-}
-
-.btn-offboarding-action {
-  padding: 0.4rem 0.75rem;
-  background: #003566;
-  color: #FFFFFF;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 6px;
-  text-decoration: none;
-  text-align: center;
-  white-space: nowrap;
-  transition: background 0.15s ease;
-}
-
-.zenius-compliance-full-box {
-  background: #FFF7ED;
-  border: 1px solid #FFEDD5;
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.zenius-offboarding-full-box {
-  background: #FFFBEB;
-  border: 1px solid #FDE68A;
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.btn-offboarding-action:hover {
-  background: #002855;
-  color: #FFFFFF;
-}
-
-/* ==============================================================================
-   13. ZENIUS, EDUCARE & EMEDLEY NEXT-LEVEL VISUAL ANALYTICS ENGINE (REFINED V2)
-   ============================================================================== */
-
-/* --- 13.1 Semi-Circular Speedometer Arch Gauge & Kepatuhan Logbook --- */
-.zenius-compliance-card {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+.bento-kpi-card {
+  padding: 18px 20px;
+  min-height: 160px;
   border-radius: 18px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 20px -2px rgba(0, 40, 85, 0.06);
+  background: #ffffff;
   position: relative;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.zenius-compliance-card:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 8px 25px -4px rgba(0, 40, 85, 0.09);
-}
-
-.zenius-compliance-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.25rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.zenius-compliance-title-group {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.zenius-compliance-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #002855;
-  margin: 0;
-}
-
-.zenius-compliance-subtitle {
-  font-size: 0.775rem;
-  color: #64748B;
-  font-weight: 500;
-}
-
-.zenius-speedometer-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.75rem;
-  width: 100%;
-  flex-wrap: wrap;
-  padding: 0.5rem 0;
-}
-
-.zenius-arch-gauge {
-  position: relative;
-  width: 170px;
-  height: 95px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  flex-shrink: 0;
-}
-
-.zenius-arch-svg {
-  width: 170px;
-  height: 95px;
-  overflow: visible;
-}
-
-.zenius-arch-track {
-  fill: none;
-  stroke: #F1F5F9;
-  stroke-width: 12;
-  stroke-linecap: round;
-}
-
-.zenius-arch-fill {
-  fill: none;
-  stroke: #002855;
-  stroke-width: 12;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.zenius-arch-value {
-  position: absolute;
-  bottom: 0;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.zenius-arch-number {
-  font-size: 2.25rem;
-  font-weight: 800;
-  line-height: 1;
-  color: #002855;
-  font-variant-numeric: tabular-nums;
-}
-
-.zenius-arch-caption {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #64748B;
-  margin-top: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.zenius-stat-tiles-row {
-  flex: 1;
-  min-width: 280px;
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.zenius-compliance-stat-card {
-  flex: 1;
-  min-width: 110px;
-  padding: 0.875rem 1rem;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.zenius-compliance-stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.zenius-stat-disiplin {
-  background: #F0FDF4;
-  border: 1px solid #BBF7D0;
-}
-.zenius-stat-disiplin .zenius-compliance-stat-num { color: #166534; }
-.zenius-stat-disiplin .zenius-compliance-stat-label { color: #15803D; }
-.zenius-stat-disiplin .zenius-compliance-stat-desc { color: #166534; font-size: 0.675rem; }
-
-.zenius-stat-warning {
-  background: #FFFBEB;
-  border: 1px solid #FDE68A;
-}
-.zenius-stat-warning .zenius-compliance-stat-num { color: #B45309; }
-.zenius-stat-warning .zenius-compliance-stat-label { color: #92400E; }
-.zenius-stat-warning .zenius-compliance-stat-desc { color: #B45309; font-size: 0.675rem; }
-
-.zenius-stat-kritis {
-  background: #FEF2F2;
-  border: 1px solid #FECACA;
-}
-.zenius-stat-kritis .zenius-compliance-stat-num { color: #B91C1C; }
-.zenius-stat-kritis .zenius-compliance-stat-label { color: #991B1B; }
-.zenius-stat-kritis .zenius-compliance-stat-desc { color: #DC2626; font-size: 0.675rem; }
-
-.zenius-compliance-stat-num {
-  font-size: 1.5rem;
-  font-weight: 800;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.zenius-compliance-stat-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  margin-top: 2px;
-}
-
-.zenius-compliance-footer {
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid #F1F5F9;
-  width: 100%;
-  display: flex;
   justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.zenius-compliance-footer-text {
-  font-size: 0.775rem;
-  color: #64748B;
-  font-weight: 500;
+
+
+[data-theme="dark"] .bento-kpi-card {
+  background: #0E2548;
 }
 
-.btn-compliance-action {
-  padding: 0.5rem 1.15rem;
-  background: #002855;
-  color: #FFFFFF;
-  font-size: 0.775rem;
-  font-weight: 700;
-  border-radius: 8px;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
-}
-
-.btn-compliance-action:hover {
-  background: #003566;
-  color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(0, 40, 85, 0.25);
-  transform: translateY(-1px);
-}
-
-/* --- 13.2 Horizon Target Pin Bar (Emedley Style) --- */
-.task-horizon-summary {
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
-  border-radius: 14px;
-  padding: 1.25rem;
-  margin-bottom: 1.25rem;
-}
-
-.task-horizon-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.task-horizon-title {
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #002855;
-}
-
-.task-kpi-chips-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.task-kpi-chip {
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.task-kpi-chip.is-overdue {
-  background: #FEF2F2;
-  color: #DC2626;
-  border: 1px solid #FECACA;
-}
-
-.task-kpi-chip.is-due-soon {
-  background: #FFFBEB;
-  color: #D97706;
-  border: 1px solid #FDE68A;
-}
-
-.task-kpi-chip.is-normal {
-  background: #EFF6FF;
-  color: #2563EB;
-  border: 1px solid #BFDBFE;
-}
-
-.zenius-horizon-pin-wrapper {
-  position: relative;
-  margin: 2rem 0 1rem 0;
-}
-
-.zenius-target-pin {
-  position: absolute;
-  top: -26px;
-  transform: translateX(-50%);
-  background: #002855;
-  color: #FFFFFF;
-  font-size: 0.725rem;
-  font-weight: 700;
-  padding: 3px 9px;
-  border-radius: 6px;
-  white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(0, 40, 85, 0.25);
-  z-index: 3;
-}
-
-.zenius-target-pin::after {
+/* Lingkaran Aksen Sudut Kanan-Bawah (Tint Presisi 140px) */
+.bento-kpi-card::after {
   content: "";
   position: absolute;
-  bottom: -5px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 5px 5px 0 5px;
-  border-style: solid;
-  border-color: #002855 transparent transparent transparent;
-}
-
-.task-horizon-bar {
-  height: 14px;
-  background: #E2E8F0;
-  border-radius: 999px;
-  display: flex;
-  overflow: hidden;
-  position: relative;
-}
-
-.task-horizon-seg {
-  height: 100%;
-  transition: width 0.4s ease;
-}
-
-.task-horizon-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.775rem;
-  color: #64748B;
-  margin-top: 0.5rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.task-horizon-status-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.task-horizon-ketuntasan-text {
-  color: #0F172A;
-  font-weight: 700;
-}
-
-/* --- 13.3 7-Day Vertical Capsule Pillar Chart (Zenius Style) --- */
-.zenius-chart-card-body {
-  padding: 0.5rem 0;
-}
-
-.zenius-activity-kpi-row {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.25rem;
-}
-
-.zenius-activity-kpi-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.kpi-dot {
-  width: 10px;
-  height: 10px;
+  right: -25px;
+  bottom: -30px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.kpi-dot.dot-amber { background: #D97706; }
-.kpi-dot.dot-blue { background: #2563EB; }
-.kpi-dot.dot-green { background: #059669; }
-.kpi-dot.dot-purple { background: #7C3AED; }
-
-.kpi-num {
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: #0F172A;
-  display: block;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.kpi-label {
-  font-size: 0.725rem;
-  color: #64748B;
-  font-weight: 600;
-}
-
-.zenius-activity-pillars-grid {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
-  height: 145px;
-  padding: 1rem 1.25rem 0.65rem 1.25rem;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
-  border-radius: 14px;
-  margin: 1.25rem 0;
-}
-
-.zenius-pillar-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.zenius-pillar-track {
-  width: 34px;
-  height: 95px;
-  background: #E2E8F0;
-  border-radius: 999px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  overflow: hidden;
-}
-
-.zenius-pillar-fill {
-  width: 100%;
-  border-radius: 999px;
-  transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.zenius-pillar-col.is-today .zenius-pillar-fill {
-  background: #002855;
-  box-shadow: 0 2px 6px rgba(0, 40, 85, 0.25);
-}
-
-.zenius-pillar-col:not(.is-today) .zenius-pillar-fill {
-  background: #2563EB;
-}
-
-.zenius-pillar-day {
-  font-size: 0.725rem;
-  font-weight: 700;
-  color: #64748B;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-.zenius-pillar-col.is-today .zenius-pillar-day {
-  color: #002855;
-  font-weight: 800;
-  background: #E0E7FF;
-  padding: 1px 6px;
-  border-radius: 4px;
-}
-
-.zenius-volume-distribution-box {
-  margin-top: 1rem;
-}
-
-.zenius-volume-distribution-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.775rem;
-  color: #475569;
-  margin-bottom: 0.35rem;
-}
-
-.zenius-volume-label {
-  font-weight: 600;
-}
-
-.zenius-volume-total {
-  color: #002855;
-}
-
-.zenius-stacked-bar {
-  height: 8px;
-  border-radius: 999px;
-  overflow: hidden;
-  display: flex;
-  background: #E2E8F0;
-}
-
-.stacked-seg.seg-lb { background: #D97706; }
-.stacked-seg.seg-pr { background: #2563EB; }
-.stacked-seg.seg-ag { background: #059669; }
-
-.zenius-chart-legend {
-  display: flex;
-  gap: 1rem;
-  font-size: 0.75rem;
-  color: #64748B;
-  margin-top: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.legend-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-right: 4px;
-}
-
-.legend-dot.dot-amber { background: #D97706; }
-.legend-dot.dot-blue { background: #2563EB; }
-.legend-dot.dot-green { background: #059669; }
-
-/* --- 13.4 Dual Radial Progress Rings (Antrean Progres & Logbook) --- */
-.zenius-panel-action-link {
-  background: transparent;
-  border: none;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #0641CC;
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.15s ease;
-}
-
-.zenius-panel-action-link:hover {
-  color: #002855;
-}
-
-.zenius-antrean-chart-box {
-  padding: 0.25rem 0;
-}
-
-.zenius-radial-widget-box {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.zenius-radial-ring-wrap {
-  position: relative;
-  width: 88px;
-  height: 88px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.zenius-radial-svg {
-  width: 88px;
-  height: 88px;
-  transform: rotate(-90deg);
-}
-
-.zenius-radial-track {
-  fill: none;
-  stroke: #E2E8F0;
-  stroke-width: 8;
-}
-
-.zenius-radial-fill-blue {
-  fill: none;
-  stroke: #2563EB;
-  stroke-width: 8;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.5s ease;
-}
-
-.zenius-radial-fill-amber {
-  fill: none;
-  stroke: #D97706;
-  stroke-width: 8;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.5s ease;
-}
-
-.zenius-radial-center-val {
-  position: absolute;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.zenius-radial-val-num {
-  font-size: 1.75rem;
-  font-weight: 800;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.zenius-radial-val-num.val-blue { color: #002855; }
-.zenius-radial-val-num.val-amber { color: #D97706; }
-
-.zenius-radial-val-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: #64748B;
-  margin-top: 2px;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-}
-
-.zenius-radial-meta {
-  flex: 1;
-}
-
-.zenius-radial-meta-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.35rem;
-}
-
-.zenius-radial-meta-title {
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #0F172A;
-}
-
-.zenius-radial-status-badge {
-  font-size: 0.725rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-.zenius-radial-status-badge.badge-pending-blue {
-  background: #EFF6FF;
-  color: #1D4ED8;
-}
-
-.zenius-radial-status-badge.badge-pending-amber {
-  background: #FFFBEB;
-  color: #B45309;
-}
-
-.zenius-radial-status-badge.badge-done {
-  background: #ECFDF5;
-  color: #047857;
-}
-
-.zenius-radial-meta-desc {
-  font-size: 0.75rem;
-  color: #64748B;
-  margin: 0 0 0.5rem 0;
-}
-
-/* --- 13.5 Graduation Runway Track (EduCare Style) --- */
-.zenius-offboarding-card {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 18px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 20px -2px rgba(0, 40, 85, 0.06);
-  position: relative;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.zenius-offboarding-card:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 8px 25px -4px rgba(0, 40, 85, 0.09);
-}
-
-.zenius-offboarding-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.25rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.zenius-offboarding-title-group {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.zenius-offboarding-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #002855;
-  margin: 0;
-}
-
-.zenius-offboarding-subtitle {
-  font-size: 0.775rem;
-  color: #64748B;
-  font-weight: 500;
-}
-
-.zenius-offboarding-content {
-  margin-top: 0.5rem;
-}
-
-.zenius-runway-track {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  width: 100%;
-  margin: 1.25rem 0;
-  padding: 0 0.5rem;
-}
-
-.zenius-runway-line {
-  position: absolute;
-  left: 0.5rem;
-  right: 0.5rem;
-  top: 50%;
-  height: 4px;
-  background: linear-gradient(90deg, #FECACA, #FDE68A, #BFDBFE);
-  transform: translateY(-50%);
+  pointer-events: none;
   z-index: 0;
-  border-radius: 999px;
+  transition: opacity 0.2s ease;
 }
 
-.zenius-runway-node {
+.kpi-card-mentee::after {
+  background: #E3ECF8;
+}
+
+.kpi-card-tugas::after {
+  background: #E6E9F8;
+}
+
+.kpi-card-evaluasi::after {
+  background: #FFF3C7;
+}
+
+[data-theme="dark"] .kpi-card-mentee::after {
+  background: #17386E;
+  opacity: 0.70;
+}
+
+[data-theme="dark"] .kpi-card-tugas::after {
+  background: #1D2B72;
+  opacity: 0.70;
+}
+
+[data-theme="dark"] .kpi-card-evaluasi::after {
+  background: #3B3112;
+  opacity: 0.70;
+}
+
+.bento-kpi-top,
+.bento-kpi-body {
   position: relative;
   z-index: 1;
-  background: #FFFFFF;
-  border-radius: 999px;
-  padding: 0.45rem 1rem;
-  border: 2px solid #E2E8F0;
-  font-size: 0.75rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.zenius-runway-node.node-kritis {
-  border-color: #FECACA;
-  background: #FEF2F2;
-  color: #B91C1C;
-}
-
-.zenius-runway-node.node-mendesak {
-  border-color: #FDE68A;
-  background: #FFFBEB;
-  color: #B45309;
-}
-
-.zenius-runway-node.node-persiapan {
-  border-color: #BFDBFE;
-  background: #EFF6FF;
-  color: #1D4ED8;
-}
-
-.runway-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.runway-dot.dot-kritis {
-  background: #DC2626;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
-}
-
-.runway-dot.dot-mendesak {
-  background: #D97706;
-  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
-}
-
-.runway-dot.dot-persiapan {
-  background: #2563EB;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-}
-
-.zenius-offboarding-breakdown-bar {
-  height: 8px;
-  width: 100%;
-  background: #E2E8F0;
-  border-radius: 999px;
-  overflow: hidden;
-  display: flex;
-  margin: 1rem 0 0.5rem 0;
-}
-
-.breakdown-seg {
-  height: 100%;
-  transition: width 0.4s ease;
-}
-
-.breakdown-seg.seg-kritis { background: #DC2626; }
-.breakdown-seg.seg-mendesak { background: #D97706; }
-.breakdown-seg.seg-persiapan { background: #2563EB; }
-
-.zenius-offboarding-footer {
+.bento-kpi-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.775rem;
-  color: #64748B;
-  margin-top: 0.75rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  margin-bottom: 12px;
 }
 
-.zenius-offboarding-footer-text {
-  font-size: 0.775rem;
-  color: #64748B;
-  font-weight: 500;
-}
-
-.btn-offboarding-action {
-  padding: 0.5rem 1.15rem;
-  background: #002855;
-  color: #FFFFFF;
-  font-size: 0.775rem;
-  font-weight: 700;
-  border-radius: 8px;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
-}
-
-.btn-offboarding-action:hover {
-  background: #003566;
-  color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(0, 40, 85, 0.25);
-  transform: translateY(-1px);
-}
-
-/* --- 13.6 Cohort Matrix (Daftar Mentee Bimbingan Aktif) --- */
-.zenius-mentee-matrix-box {
-  padding: 0.5rem 0;
-}
-
-.zenius-matrix-col-divider {
-  border-right: 1px solid #F1F5F9;
-}
-
-.zenius-matrix-subheading {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #0F172A;
-  margin: 0 0 0.85rem 0;
-}
-
-.zenius-matrix-stages-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.zenius-matrix-stage-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.stage-info-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  margin-bottom: 3px;
-}
-
-.stage-label {
-  color: #475569;
-}
-
-.stage-count {
-  color: #0F172A;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.micro-progress-fill.fill-blue { background: #2563EB; }
-.micro-progress-fill.fill-navy { background: #003566; }
-.micro-progress-fill.fill-amber { background: #D97706; }
-.micro-progress-fill.fill-emerald { background: #059669; }
-
-.zenius-rubrik-tiles-row {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.zenius-rubrik-tile {
-  flex: 1;
-  min-width: 90px;
-  padding: 0.85rem 0.75rem;
-  border-radius: 10px;
-  text-align: center;
-  transition: transform 0.15s ease;
-}
-
-.zenius-rubrik-tile:hover {
-  transform: translateY(-1px);
-}
-
-.zenius-rubrik-tile.rubrik-final {
-  background: #ECFDF5;
-  border: 1px solid #A7F3D0;
-}
-.zenius-rubrik-tile.rubrik-final .rubrik-tile-num { color: #047857; }
-.zenius-rubrik-tile.rubrik-final .rubrik-tile-label { color: #065F46; }
-
-.zenius-rubrik-tile.rubrik-draft {
-  background: #FFFBEB;
-  border: 1px solid #FDE68A;
-}
-.zenius-rubrik-tile.rubrik-draft .rubrik-tile-num { color: #B45309; }
-.zenius-rubrik-tile.rubrik-draft .rubrik-tile-label { color: #92400E; }
-
-.zenius-rubrik-tile.rubrik-belum {
-  background: #F1F5F9;
-  border: 1px solid #E2E8F0;
-}
-.zenius-rubrik-tile.rubrik-belum .rubrik-tile-num { color: #475569; }
-.zenius-rubrik-tile.rubrik-belum .rubrik-tile-label { color: #334155; }
-
-.rubrik-tile-num {
-  font-size: 1.5rem;
-  font-weight: 800;
-  line-height: 1;
-  display: block;
-  font-variant-numeric: tabular-nums;
-}
-
-.rubrik-tile-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  margin-top: 4px;
-  display: block;
-}
-
-.zenius-rubrik-readiness-box {
-  margin-top: 1rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid #F1F5F9;
-}
-
-.rubrik-readiness-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  color: #64748B;
-  margin-bottom: 6px;
-}
-
-.rubrik-readiness-pct {
-  color: #0F172A;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.zenius-mentee-matrix-footer {
-  margin-top: 1.25rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid #F1F5F9;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.zenius-mentee-matrix-footer-text {
-  font-size: 0.75rem;
-  color: #64748B;
-}
-
-@media (max-width: 768px) {
-  .zenius-matrix-col-divider {
-    border-right: none;
-    border-bottom: 1px solid #F1F5F9;
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .zenius-activity-pillars-grid {
-    gap: 0.5rem;
-    padding: 0.75rem 0.5rem;
-  }
-
-  .zenius-pillar-track {
-    width: 26px;
-  }
-}
-
-/* ==============================================================================
-   13.7 Balanced 2-Column Bento Dashboard Grid & Equal-Height Alignment
-   ============================================================================== */
-.zenius-bento-row {
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: -10px;
-  margin-left: -10px;
-}
-
-.zenius-bento-col {
-  display: flex;
-  flex-direction: column;
-  padding-right: 10px;
-  padding-left: 10px;
-  margin-bottom: 20px;
-}
-
-.zenius-bento-col > .x_panel,
-.zenius-bento-col > .zenius-compliance-card,
-.zenius-bento-col > .zenius-offboarding-card {
-  height: 100%;
-  display: flex !important;
-  flex-direction: column !important;
-  margin-bottom: 0;
-}
-
-.zenius-bento-col > .x_panel > .x_content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.zenius-bento-col > .zenius-compliance-card {
-  justify-content: space-between;
-}
-
-.zenius-bento-col > .zenius-offboarding-card {
-  justify-content: space-between;
-}
-
-.zenius-bento-col .zenius-chart-card-body,
-.zenius-bento-col .zenius-offboarding-content,
-.zenius-bento-col .task-horizon-summary {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* Komponen 1 (Logbook Speedometer) Compact 50% Styling */
-.zenius-bento-col .zenius-speedometer-container {
-  gap: 1.25rem;
-  justify-content: center;
-}
-
-.zenius-bento-col .zenius-arch-gauge {
-  width: 150px;
-  height: 85px;
-}
-
-.zenius-bento-col .zenius-arch-svg {
-  width: 150px;
-  height: 85px;
-}
-
-.zenius-bento-col .zenius-arch-number {
-  font-size: 1.95rem;
-}
-
-.zenius-bento-col .zenius-stat-tiles-row {
-  min-width: 200px;
-  gap: 0.5rem;
-}
-
-.zenius-bento-col .zenius-compliance-stat-card {
-  min-width: 85px;
-  padding: 0.65rem 0.5rem;
-}
-
-.zenius-bento-col .zenius-compliance-stat-num {
-  font-size: 1.35rem;
-}
-
-.zenius-bento-col .zenius-compliance-stat-label {
-  font-size: 0.7rem;
-}
-
-.zenius-bento-col .zenius-compliance-stat-desc {
-  font-size: 0.625rem;
-}
-
-/* Komponen 4 (Offboarding Runway) Compact 50% Styling */
-.zenius-bento-col .zenius-runway-track {
-  padding: 0;
-  margin: 1.25rem 0;
-}
-
-.zenius-bento-col .zenius-runway-node {
-  padding: 0.35rem 0.65rem;
-  font-size: 0.7rem;
-  gap: 0.35rem;
-}
-
-/* Komponen 3 (Aktivitas 7 Hari) Centered Pillars in 50% Col */
-.zenius-bento-col .zenius-activity-kpi-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.zenius-bento-col .zenius-activity-pillars-grid {
-  max-width: 440px;
-  margin: 0.75rem auto;
-  gap: 0.65rem;
-  padding: 0.75rem 1rem 0.5rem 1rem;
-}
-
-.zenius-bento-col .zenius-pillar-track {
-  width: 30px;
-}
-
-/* Komponen 2 (Tenggat Waktu Tugas) Compact 50% Styling */
-.zenius-bento-col .task-horizon-summary {
-  margin-bottom: 0.75rem;
-}
-
-.zenius-bento-col .zenius-horizon-pin-wrapper {
-  margin: 2rem 0 1rem 0;
-}
-
-/* Responsive Breakpoints */
-@media (max-width: 991px) {
-  .zenius-bento-col {
-    margin-bottom: 1.25rem;
-  }
-
-  .zenius-bento-col .zenius-runway-track {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .zenius-bento-col .zenius-runway-line {
-    display: none;
-  }
-}
-
-/* ==============================================================================
-   13.8 Executive Bento Grid & Precision Charts (Zenius & EduCare Standard)
-   ============================================================================== */
-.zenius-pure-chart-dashboard {
-  width: 100%;
-}
-
-/* 1. Top Unified KPI Grid (CSS Grid 4-Column Desktop) */
-.zenius-kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
-  margin-bottom: 1.25rem;
-  width: 100%;
-}
-
-.zenius-kpi-card-v2 {
-  background: #FFFFFF;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 20px;
-  padding: 1.25rem 1.4rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 40, 85, 0.04), 0 4px 6px -2px rgba(0, 40, 85, 0.02);
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.zenius-kpi-card-v2:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 30px -5px rgba(0, 40, 85, 0.08);
-  border-color: rgba(6, 65, 204, 0.3);
-}
-
-.zenius-kpi-card-v2.kpi-border-navy {
-  border-left: 5px solid #002855;
-}
-
-.zenius-kpi-card-v2.kpi-border-blue {
-  border-left: 5px solid #0641CC;
-}
-
-.zenius-kpi-card-v2.kpi-border-amber {
-  border-left: 5px solid #D97706;
-}
-
-.zenius-kpi-card-v2.kpi-border-emerald {
-  border-left: 5px solid #059669;
-}
-
-.kpi-v2-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-
-.kpi-v2-icon {
+.bento-icon-box {
   width: 44px;
   height: 44px;
   border-radius: 12px;
@@ -2938,690 +382,1290 @@
   flex-shrink: 0;
 }
 
-.icon-bg-navy { background: #EFF6FF; }
-.icon-bg-blue { background: #EEF2FF; }
-.icon-bg-amber { background: #FFFBEB; }
-.icon-bg-emerald { background: #ECFDF5; }
-
-.kpi-v2-badge {
-  font-size: 0.725rem;
-  font-weight: 700;
-  padding: 0.25rem 0.65rem;
-  border-radius: 9999px;
-  white-space: nowrap;
+.bento-icon-blue {
+  background: #003566;
+  color: #ffffff;
 }
 
-.badge-navy { background: #EFF6FF; color: #002855; }
-.badge-blue { background: #EFF6FF; color: #0641CC; }
-.badge-amber { background: #FFFBEB; color: #B45309; }
-.badge-emerald { background: #ECFDF5; color: #047857; }
+.bento-icon-indigo {
+  background: #3F51B5;
+  color: #ffffff;
+}
 
-.kpi-v2-body {
+.bento-icon-amber {
+  background: #FFC300;
+  color: #02275D;
+}
+
+[data-theme="dark"] .bento-icon-blue {
+  background: #4C84E8;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .bento-icon-indigo {
+  background: #3F51B5;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .bento-icon-amber {
+  background: #FFC300;
+  color: #02275D;
+}
+
+.bento-pill-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge-green {
+  background: #e4f6ee;
+  color: #0b6b46;
+}
+
+[data-theme="dark"] .badge-green {
+  background: rgba(11, 107, 70, 0.20);
+  color: #6FE3B0;
+}
+
+.badge-indigo {
+  background: #e8eaf8;
+  color: #2f3d96;
+}
+
+[data-theme="dark"] .badge-indigo {
+  background: rgba(63, 81, 181, 0.22);
+  color: #C5CEFF;
+}
+
+.badge-amber {
+  background: #fff4cc;
+  color: #7a5a00;
+}
+
+[data-theme="dark"] .badge-amber {
+  background: rgba(255, 195, 0, 0.18);
+  color: #FFD54D;
+}
+
+.badge-neutral {
+  background: #F1F4F9;
+  color: #003566;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .badge-neutral {
+  background: rgba(255, 255, 255, 0.08);
+  color: #EAF0FA;
+}
+
+.bento-kpi-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #475569;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 6px;
+}
+
+[data-theme="dark"] .bento-kpi-label {
+  color: #94a3b8;
+}
+
+.bento-kpi-val-row {
   display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+  align-items: baseline;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.bento-kpi-number {
+  font-size: 36px;
+  font-weight: 800;
+  color: #003566;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+[data-theme="dark"] .bento-kpi-number {
+  color: #FFFFFF;
+}
+
+.bento-kpi-sub {
+  font-size: 18px;
+  font-weight: 600;
+  color: #5b6573;
+}
+
+[data-theme="dark"] .bento-kpi-sub {
+  color: #9FB0CC;
+}
+
+/* Progress Bars & Segmented Dash (Stretch 100% Fluid) */
+.bento-dot-matrix {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* 1. Bar Progress untuk 3 KPI Cards (20 Segmen) */
+.matrix-kpi-bars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.matrix-kpi-bars .matrix-dot {
+  flex: 1 1 0;
+  height: 7px;
+  border-radius: 3.5px;
+  min-width: 0;
+  transition: background-color 0.15s ease;
+}
+
+.matrix-dot {
+  flex: 1 1 0;
+  height: 7px;
+  border-radius: 3.5px;
   min-width: 0;
 }
 
-.kpi-v2-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #64748B;
-  text-transform: uppercase;
-  letter-spacing: 0.035em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.matrix-dot.dot-empty {
+  background: var(--bento-dot-empty);
 }
 
-.kpi-v2-number-row {
-  display: flex;
-  align-items: baseline;
-  gap: 0.45rem;
-  flex-wrap: wrap;
+.matrix-blue .dot-filled {
+  background: #003566;
 }
 
-.kpi-v2-number {
-  font-size: 1.85rem;
-  font-weight: 800;
-  color: #002855;
-  line-height: 1.1;
-  font-variant-numeric: tabular-nums;
+[data-theme="dark"] .matrix-blue .dot-filled {
+  background: #4C84E8;
 }
 
-.kpi-v2-sub {
-  font-size: 0.8rem;
-  color: #94A3B8;
-  font-weight: 500;
+.matrix-indigo .dot-filled {
+  background: #3F51B5;
 }
 
-/* 1.5 Jenjang Strip (Clean EduCare Style) */
-.zenius-jenjang-strip {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  background: #FFFFFF;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 16px;
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 12px -2px rgba(0, 40, 85, 0.03);
+[data-theme="dark"] .matrix-indigo .dot-filled {
+  background: #3F51B5;
 }
 
-.jenjang-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
+.matrix-amber .dot-filled {
+  background: #FFC300;
 }
 
-.jenjang-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #002855;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+[data-theme="dark"] .matrix-amber .dot-filled {
+  background: #FFC300;
 }
 
-.jenjang-total {
-  font-size: 0.75rem;
-  color: #64748B;
-  font-weight: 500;
-}
-
-.jenjang-pills-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.jenjang-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.pill-smk { background: #EFF6FF; color: #1E40AF; border: 1px solid #DBEAFE; }
-.pill-d3 { background: #F5F3FF; color: #5B21B6; border: 1px solid #EDE9FE; }
-.pill-s1 { background: #ECFDF5; color: #065F46; border: 1px solid #D1FAE5; }
-
-.pill-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 9999px;
-  display: inline-block;
-}
-
-.dot-blue { background: #2563EB; }
-.dot-purple { background: #8B5CF6; }
-.dot-emerald { background: #059669; }
-
-/* 2. Bento Grid Layout (CSS Grid 2-Column Desktop) */
-.zenius-bento-grid {
+/* ==============================================================================
+   4. Row 2 Mid-Analytics Cards (Distribusi & Kuota)
+   ============================================================================== */
+.bento-mid-row {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  width: 100%;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1.25rem;
 }
 
-.zenius-bento-card {
-  background: #FFFFFF;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 20px;
-  padding: 1.5rem 1.65rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 40, 85, 0.04), 0 4px 6px -2px rgba(0, 40, 85, 0.02);
+.bento-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.bento-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bento-title-indicator {
+  display: inline-block;
+  width: 3px;
+  height: 16px;
+  background: var(--bento-yellow);
+  border-radius: 2px;
+}
+
+.bento-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--bento-text-main);
+  margin: 0;
+}
+
+/* Distribusi Tugas */
+.bento-distribusi-card {
+  padding: 20px 24px;
+  min-height: 290px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 310px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  background: #FFFFFF;
+  border: 1px solid #e3e8f0;
 }
 
-.zenius-bento-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(6, 65, 204, 0.25);
-  box-shadow: 0 16px 30px -5px rgba(0, 40, 85, 0.07);
+[data-theme="dark"] .bento-distribusi-card {
+  background: #0E2548;
+  border-color: rgba(255, 255, 255, 0.07);
 }
 
-.zenius-bento-card-header {
+.bento-distribusi-chart-box {
+  background: #FFFFFF;
+  border: 1px solid #e3e8f0;
+  border-radius: 14px;
+  padding: 16px 20px 10px 20px;
+  min-height: 235px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+[data-theme="dark"] .bento-distribusi-chart-box {
+  background: #0E2548;
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+.bento-bars-track {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  height: 195px;
+  align-items: end;
+}
+
+.bento-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bento-bar-container {
+  width: 100%;
+  max-width: 105px;
+  height: 165px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background-color: #e5edf8;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #e5edf8,
+    #e5edf8 6px,
+    #d3e0f2 6px,
+    #d3e0f2 12px
+  );
+  border: 1px solid #cad6e8;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .bento-bar-container {
+  background-color: #132644;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #132644,
+    #132644 6px,
+    #1c365d 6px,
+    #1c365d 12px
+  );
+  border: 1px solid rgba(76, 132, 232, 0.28);
+}
+
+.bento-bar {
+  width: 100%;
+  border-radius: 12px 12px 0 0;
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.15rem;
-  padding-bottom: 0.85rem;
-  border-bottom: 1px solid #F1F5F9;
+  justify-content: center;
+  transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 32px;
+  padding-top: 8px;
+  box-sizing: border-box;
 }
 
-.zenius-bento-title {
-  font-size: 0.95rem;
+.bento-bar-val {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.bar-selesai {
+  background: #B9C6E2;
+}
+
+[data-theme="dark"] .bar-selesai {
+  background: #4A6199;
+}
+
+.bar-dikerjakan {
+  background: #003566;
+}
+
+[data-theme="dark"] .bar-dikerjakan {
+  background: #4C84E8;
+}
+
+.bar-review {
+  background: #FFC300;
+}
+
+.bar-review .bento-bar-val {
+  color: #02275D;
+}
+
+[data-theme="dark"] .bar-review {
+  background: #FFC300;
+}
+
+[data-theme="dark"] .bar-review .bento-bar-val {
+  color: #02275D;
+}
+
+.bar-terlambat {
+  background: #d64545;
+}
+
+[data-theme="dark"] .bar-terlambat {
+  background: #d64545;
+}
+
+.bento-bar-label {
+  font-size: 12px;
   font-weight: 700;
-  color: #002855;
-  margin: 0 0 0.25rem 0;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
+  color: var(--bento-text-muted);
+  margin-top: 10px;
 }
 
-.zenius-bento-subtitle {
-  font-size: 0.75rem;
-  color: #64748B;
-  margin: 0;
-  line-height: 1.45;
-}
-
-.zenius-header-pill {
-  font-size: 0.725rem;
-  font-weight: 700;
-  padding: 0.25rem 0.65rem;
-  border-radius: 9999px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.pill-navy { background: #EFF6FF; color: #002855; }
-.pill-blue { background: #EFF6FF; color: #0641CC; }
-.pill-amber { background: #FFFBEB; color: #B45309; }
-.pill-red { background: #FEF2F2; color: #DC2626; }
-.pill-emerald { background: #ECFDF5; color: #059669; }
-
-/* 3. Bento Chart Containers (Anti-Gepeng Proportional Dimensions) */
-.zenius-bento-chart-container {
+/* Kuota Bimbingan Radial Gauge */
+.bento-kuota-card {
+  padding: 20px 24px;
+  min-height: 290px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: space-between;
-  gap: 1.5rem;
+  background: #ffffff;
+  background-image: radial-gradient(circle at 50% 65%, rgba(11, 50, 123, 0.05) 0%, transparent 65%);
+}
+
+[data-theme="dark"] .bento-kuota-card {
+  background: #0E2548;
+  border-color: rgba(255, 255, 255, 0.07);
+  background-image: radial-gradient(circle at 50% 65%, rgba(56, 189, 248, 0.12) 0%, transparent 65%);
+}
+
+.bento-kuota-gauge-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 235px;
   flex: 1;
 }
 
-.zenius-svg-fixed-wrap {
+.bento-gauge-wrapper {
   position: relative;
-  width: 145px;
+  width: 260px;
   height: 145px;
-  min-width: 145px;
-  max-width: 145px;
-  flex-shrink: 0;
   display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.bento-gauge-svg {
+  display: block;
+  width: 260px;
+  height: 145px;
+}
+
+.gauge-track {
+  stroke: #E6EAF2;
+  stroke-width: 20px;
+}
+
+[data-theme="dark"] .gauge-track {
+  stroke: #1F3A66;
+}
+
+.gauge-fill {
+  stroke: #003566;
+  stroke-width: 20px;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+[data-theme="dark"] .gauge-fill {
+  stroke: #4C84E8;
+}
+
+.bento-gauge-center {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.gauge-center-percent {
+  font-size: 48px;
+  font-weight: 900;
+  color: #003566;
+  line-height: 1;
+}
+
+[data-theme="dark"] .gauge-center-percent {
+  color: #4C84E8;
+}
+
+.bento-gauge-caption {
+  font-size: 13px;
+  color: var(--bento-text-muted);
+  font-weight: 600;
+  margin-top: 14px;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+/* ==============================================================================
+   5. Highlight Roster Banner (Kuning Emas Sleman #FFC72C)
+   ============================================================================== */
+.bento-highlight-card {
+  background: linear-gradient(135deg, #FFC300 0%, #FFD84D 100%);
+  border-radius: 16px;
+  padding: 18px 24px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #02275D;
+  box-shadow: 0 4px 16px rgba(255, 195, 0, 0.2);
+  box-sizing: border-box;
+}
+
+.bento-roster-header {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.roster-big-val {
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--bento-yellow-text);
+}
+
+.roster-sub-slash {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--bento-yellow-text);
+  opacity: 0.85;
+  margin-right: 8px;
+}
+
+.roster-caps-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--bento-yellow-text);
+  text-transform: uppercase;
+}
+
+.bento-roster-bars-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.roster-track-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.roster-track-name {
+  width: 52px;
+  flex-shrink: 0;
+  color: var(--bento-yellow-text);
+}
+
+.roster-segments-bar {
+  flex: 1;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.roster-dash {
+  flex: 1;
+  height: 10px;
+  border-radius: 4px;
+}
+
+.dash-filled-navy {
+  background: #02275d;
+}
+
+.dash-filled-white {
+  background: #ffffff;
+}
+
+.dash-faded {
+  background: rgba(2, 39, 93, 0.15);
+}
+
+.roster-track-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--bento-yellow-text);
+  width: 44px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ==============================================================================
+   6. Kolom Samping (Calendar Widget)
+   ============================================================================== */
+.bento-calendar-card {
+  position: relative;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, #E8EFFB 0%, #DCE6F7 100%);
+  border: 1px solid #cfdaf0;
+}
+
+[data-theme="dark"] .bento-calendar-card {
+  background: linear-gradient(180deg, #12305A 0%, #0D2549 100%);
+  border-color: #2F5190;
+}
+
+.bento-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cal-title-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.cal-month-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: inherit;
+}
+
+.cal-month-dropdown-wrap,
+.cal-year-dropdown-wrap {
+  position: relative;
+}
+
+.cal-month-trigger-btn,
+.cal-year-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #003566;
+  background: rgba(0, 53, 102, 0.07);
+  border: 1px solid #cfdaf0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cal-month-trigger-btn:hover,
+.cal-year-trigger-btn:hover {
+  background: #003566;
+  color: #ffffff;
+  border-color: #003566;
+}
+
+[data-theme="dark"] .cal-month-trigger-btn,
+[data-theme="dark"] .cal-year-trigger-btn {
+  color: #EAF0FA;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #2F5190;
+}
+
+[data-theme="dark"] .cal-month-trigger-btn:hover,
+[data-theme="dark"] .cal-year-trigger-btn:hover {
+  background: #4C84E8;
+  color: #ffffff;
+  border-color: #4C84E8;
+}
+
+.cal-month-popover,
+.cal-year-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  z-index: 60;
+  min-width: 175px;
+  padding: 10px;
+  background: #FFFFFF;
+  border: 1px solid #cfdaf0;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -3px rgba(0, 53, 102, 0.2);
+}
+
+.cal-month-popover {
+  left: 0;
+}
+
+.cal-year-popover {
+  right: 0;
+}
+
+[data-theme="dark"] .cal-month-popover,
+[data-theme="dark"] .cal-year-popover {
+  background: #0E2548;
+  border-color: #2F5190;
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5);
+}
+
+.cal-month-popover-header,
+.cal-year-popover-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #5b6573;
+}
+
+.cal-year-popover-header {
+  justify-content: space-between;
+}
+
+[data-theme="dark"] .cal-month-popover-header,
+[data-theme="dark"] .cal-year-popover-header {
+  color: #9FB0CC;
+}
+
+.cal-month-popover-title,
+.cal-year-popover-title {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cal-year-jump-btn {
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #003566;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.cal-year-jump-btn:hover {
+  background: #E8EFFB;
+}
+
+[data-theme="dark"] .cal-year-jump-btn {
+  color: #4C84E8;
+}
+
+[data-theme="dark"] .cal-year-jump-btn:hover {
+  background: #16335F;
+}
+
+.cal-month-grid,
+.cal-year-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.cal-month-option-btn,
+.cal-year-option-btn {
+  padding: 6px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #212529;
+  background: #F1F4F9;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.cal-month-option-btn:hover,
+.cal-year-option-btn:hover {
+  background: #E8EFFB;
+  border-color: #003566;
+  color: #003566;
+}
+
+.cal-month-option-btn.active,
+.cal-year-option-btn.active {
+  background: #003566;
+  color: #FFFFFF;
+  font-weight: 800;
+}
+
+[data-theme="dark"] .cal-month-option-btn,
+[data-theme="dark"] .cal-year-option-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #EAF0FA;
+}
+
+[data-theme="dark"] .cal-month-option-btn:hover,
+[data-theme="dark"] .cal-year-option-btn:hover {
+  background: #16335F;
+  border-color: #4C84E8;
+  color: #4C84E8;
+}
+
+[data-theme="dark"] .cal-month-option-btn.active,
+[data-theme="dark"] .cal-year-option-btn.active {
+  background: #4C84E8;
+  color: #FFFFFF;
+}
+
+.cal-nav-btn {
+  background: none;
+  border: none;
+  color: var(--bento-text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.cal-nav-btn:hover {
+  background: rgba(100, 116, 139, 0.12);
+  color: var(--bento-text-main);
+}
+
+.bento-calendar-days-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--bento-text-muted);
+  margin-bottom: 8px;
+}
+
+.bento-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+  align-items: center;
+}
+
+/* Sel Tanggal Berbentuk Semi-Oval Kapsul Vertikal */
+.cal-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: #212529;
+  width: 26px;
+  height: 34px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+  border-radius: 11px; /* Bentuk Semi-Oval Kapsul */
+  cursor: pointer;
+  background: #FFFFFF;
+  border: 1px solid #cfdaf0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease;
 }
 
-.zenius-svg-pie,
-.zenius-svg-donut {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
+[data-theme="dark"] .cal-date {
+  background: #16335F;
+  border: 1px solid #2F5190;
+  color: #EAF0FA;
 }
 
-.zenius-svg-radar {
-  width: 100%;
-  height: 100%;
+/* Akhir pekan di kalender (Kolom Sabtu & Minggu) */
+.cal-date:nth-child(7n+6),
+.cal-date:nth-child(7n) {
+  color: #3F51B5;
 }
 
-.zenius-pie-center-text {
-  position: absolute;
-  text-align: center;
+[data-theme="dark"] .cal-date:nth-child(7n+6),
+[data-theme="dark"] .cal-date:nth-child(7n) {
+  color: #8FA2FF;
+}
+
+.cal-date:hover:not(.date-muted):not(.date-selected):not(.date-today) {
+  background: #e2e8f0;
+  color: #003566;
+  transform: translateY(-1px);
+}
+
+.cal-date.date-muted {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: #AAAAAA;
+  opacity: 0.45;
+  cursor: default;
+}
+
+[data-theme="dark"] .cal-date.date-muted {
+  color: #5E7194;
+}
+
+/* Hari Ini (Today): Full Color Solid Navy Sleman */
+.cal-date.date-today {
+  background: #003566 !important;
+  border-color: #003566 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  border-radius: 11px !important;
+  box-shadow: 0 3px 8px rgba(0, 53, 102, 0.35) !important;
+}
+
+[data-theme="dark"] .cal-date.date-today {
+  background: #4C84E8 !important;
+  border-color: #4C84E8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 8px rgba(76, 132, 232, 0.35) !important;
+}
+
+/* Tanggal Terpilih yang Diklik (Selected): Hanya di Luar Angka (Outline Ring) */
+.cal-date.date-selected:not(.date-today) {
+  background: #E8EFFB !important;
+  border: 2px solid #003566 !important;
+  color: #003566 !important;
+  font-weight: 800 !important;
+  border-radius: 11px !important;
+  box-shadow: 0 0 0 2px rgba(0, 53, 102, 0.15) !important;
+  transform: scale(1.05);
+}
+
+[data-theme="dark"] .cal-date.date-selected:not(.date-today) {
+  background: #16335F !important;
+  border: 2px solid #4C84E8 !important;
+  color: #EAF0FA !important;
+  box-shadow: 0 0 0 2px rgba(76, 132, 232, 0.25) !important;
+}
+
+/* Hari Ini yang Sedang Dipilih: Full Color Solid + Gold Ring Border */
+.cal-date.date-today.date-selected {
+  background: #003566 !important;
+  border: 2px solid #FFC300 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 3px 8px rgba(0, 53, 102, 0.35) !important;
+}
+
+[data-theme="dark"] .cal-date.date-today.date-selected {
+  background: #4C84E8 !important;
+  border: 2px solid #FFC300 !important;
+  color: #ffffff !important;
+}
+
+/* ==============================================================================
+   7. Kolom Samping (Side Alert Cards)
+   ============================================================================== */
+.bento-side-alerts {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.pie-center-num {
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: #002855;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.pie-center-label {
-  font-size: 0.675rem;
-  font-weight: 700;
-  color: #64748B;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-top: 2px;
-}
-
-/* 4. Precision Segment Strokes & Colors */
-.pie-track-base {
-  fill: none;
-  stroke: #F1F5F9;
-  stroke-width: 22;
-}
-
-.donut-track-base {
-  fill: none;
-  stroke: #F1F5F9;
-  stroke-width: 12;
-}
-
-.donut-fill-navy {
-  fill: none;
-  stroke: #002855;
-  stroke-width: 12;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.pie-seg-stroke {
-  fill: none;
-  stroke-width: 22;
-  stroke-linecap: butt;
-  transition: stroke-dasharray 0.5s ease;
-}
-
-.stroke-emerald { stroke: #059669; }
-.stroke-blue { stroke: #2563EB; }
-.stroke-amber { stroke: #D97706; }
-.stroke-red { stroke: #DC2626; }
-.stroke-navy { stroke: #002855; }
-
-.pie-center-hub {
-  fill: #FFFFFF;
-}
-
-/* 5. Exploded Pop-out Slice */
-.zenius-exploded-slice-group {
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.zenius-exploded-slice-group:hover {
-  transform: translate(12px, -12px);
-}
-
-.exploded-slice {
-  filter: drop-shadow(0 4px 6px rgba(220, 38, 38, 0.35));
-}
-
-/* 6. Clean Typographic Legend (Zero Heavy Nested Boxes) */
-.zenius-clean-legend-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
+  gap: 1.25rem;
   flex: 1;
-  min-width: 180px;
-  justify-content: center;
-}
-
-.zenius-clean-legend-row {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  font-size: 0.8125rem;
-  padding: 0.35rem 0;
-  border-bottom: 1px dashed rgba(226, 232, 240, 0.7);
-  transition: padding-left 0.15s ease;
 }
 
-.zenius-clean-legend-row:last-child {
-  border-bottom: none;
+.bento-alert-card {
+  flex: 1 1 0;
+  border-radius: 18px;
+  padding: 22px 24px;
+  min-height: 165px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
 }
 
-.zenius-clean-legend-row:hover {
-  padding-left: 0.25rem;
+.card-alert-red {
+  background: linear-gradient(135deg, #d64545 0%, #b42323 100%);
+  color: #ffffff;
 }
 
-.clean-legend-label {
+.card-alert-amber {
+  background: linear-gradient(135deg, #FFF6D1 0%, #FFE58A 100%);
+  color: #003566;
+  border: 1px solid #FFE58A;
+}
+
+.card-alert-amber .alert-card-title,
+.card-alert-amber .alert-big-number {
+  color: #003566;
+}
+
+.card-alert-amber .alert-sub-slash {
+  color: #02275D;
+}
+
+[data-theme="dark"] .card-alert-amber {
+  background: linear-gradient(135deg, #3F3200 0%, #241C00 100%);
+  border: 1px solid rgba(255, 195, 0, 0.30);
+}
+
+[data-theme="dark"] .card-alert-amber .alert-card-title,
+[data-theme="dark"] .card-alert-amber .alert-sub-slash {
+  color: #FFE9A8;
+}
+
+[data-theme="dark"] .card-alert-amber .alert-big-number {
+  color: #FFC300;
+}
+
+.alert-card-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #334155;
-  font-weight: 600;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-.clean-legend-value {
-  font-weight: 800;
-  color: #0F172A;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.clean-legend-pct {
-  font-weight: 500;
-  color: #94A3B8;
-  font-size: 0.75rem;
-}
-
-.legend-swatch {
-  width: 9px;
-  height: 9px;
-  border-radius: 9999px;
-  display: inline-block;
+.alert-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
-.swatch-emerald { background: #059669; }
-.swatch-blue { background: #2563EB; }
-.swatch-amber { background: #D97706; }
-.swatch-red { background: #DC2626; }
-.swatch-navy { background: #002855; }
-.swatch-slate { background: #94A3B8; }
-
-.text-red { color: #DC2626 !important; }
-.text-blue { color: #0641CC !important; }
-
-/* 7. Clean Stat List (Exploded Pie / Logbook BR-09) */
-.zenius-clean-stat-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  flex: 1;
-  min-width: 180px;
-  justify-content: center;
-}
-
-.zenius-clean-stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  padding: 0.45rem 0.65rem;
+/* Badge Box Translucent Putih untuk Card Perlu Perhatian */
+.icon-wrap-white {
+  width: 34px;
+  height: 34px;
   border-radius: 10px;
-  background: #F8FAFC;
-  border: 1px solid transparent;
-  transition: background 0.15s ease;
-}
-
-.zenius-clean-stat-item:hover {
-  background: #F1F5F9;
-}
-
-.zenius-clean-stat-item.item-highlight-kritis {
-  background: #FEF2F2;
-  border: 1px solid #FECACA;
-}
-
-.clean-stat-header {
-  display: flex;
+  background: rgba(255, 255, 255, 0.22);
+  display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  justify-content: center;
+  color: #ffffff;
 }
 
-.clean-stat-title {
-  font-size: 0.75rem;
+/* Badge Box Kuning Emas Sleman untuk Card Mendekati Selesai */
+.icon-wrap-amber-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #FFC300;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #003566;
+  box-shadow: 0 2px 6px rgba(255, 195, 0, 0.35);
+}
+
+.alert-icon-wrap svg {
+  width: 18px;
+  height: 18px;
+}
+
+[data-theme="dark"] .icon-wrap-amber-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #FFC300;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #003566;
+  box-shadow: 0 2px 6px rgba(255, 195, 0, 0.35);
+}
+
+.alert-card-title {
+  font-size: 15px;
   font-weight: 700;
-  color: #475569;
+  letter-spacing: 0.2px;
 }
 
-.clean-stat-body {
+.alert-val-row {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding-left: 1.1rem;
+  gap: 2px;
+  margin-bottom: 8px;
 }
 
-.clean-stat-num {
-  font-size: 0.95rem;
+.alert-big-number {
+  font-size: 42px;
   font-weight: 800;
-  color: #0F172A;
-  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
-.clean-stat-desc {
-  font-size: 0.7rem;
-  color: #64748B;
-  font-weight: 500;
+.alert-sub-slash {
+  font-size: 20px;
+  font-weight: 700;
+  opacity: 0.85;
 }
 
-.zenius-card-footer-strip {
+/* 2. Bar Progress untuk Alert Cards (13 Segmen Stretch 100%) */
+.matrix-alert-bars {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 1.15rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid #F1F5F9;
-  font-size: 0.725rem;
-  color: #64748B;
-}
-
-.badge-subtle-navy {
-  font-weight: 700;
-  color: #002855;
-  background: #EFF6FF;
-  padding: 0.2rem 0.55rem;
-  border-radius: 6px;
-}
-
-/* 8. Sleman Target Pin Runway Strip */
-.zenius-target-pin-wrap {
-  position: relative;
-  margin-top: 1.25rem;
-  padding-top: 1.25rem;
-}
-
-.target-pin-indicator {
-  position: absolute;
-  top: 0;
-  transform: translateX(-50%);
-  background: #002855;
-  color: #FFFFFF;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 0.15rem 0.45rem;
-  border-radius: 4px;
-  white-space: nowrap;
-}
-
-.target-pin-indicator::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 4px 4px 0 4px;
-  border-style: solid;
-  border-color: #002855 transparent transparent transparent;
-}
-
-.target-runway-track {
-  display: flex;
-  height: 8px;
-  border-radius: 9999px;
-  overflow: hidden;
-  background: #F1F5F9;
-}
-
-.runway-seg {
-  height: 100%;
-}
-
-.seg-red { background: #DC2626; }
-.seg-amber { background: #D97706; }
-.seg-blue { background: #2563EB; }
-.seg-emerald { background: #059669; }
-
-/* 9. Mountain Area Wave Chart */
-.zenius-wave-chart-container {
+  gap: 5px;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 8px;
 }
 
-.zenius-area-wave-svg {
-  width: 100%;
-  height: 135px;
-  overflow: visible;
+.matrix-alert-bars .matrix-dot {
+  flex: 1 1 0;
+  height: 10px;
+  border-radius: 5px;
+  min-width: 0;
+  transition: opacity 0.15s ease;
 }
 
-.chart-grid-line {
-  stroke: #F1F5F9;
-  stroke-width: 1;
-  stroke-dasharray: 4, 2;
+.matrix-alert-white .dot-filled-white {
+  background: #ffffff;
 }
 
-.chart-grid-line-baseline {
-  stroke: #E2E8F0;
-  stroke-width: 1.5;
+.matrix-alert-white .dot-faded-white {
+  background: rgba(255, 255, 255, 0.35);
 }
 
-.chart-vertex-dot {
-  fill: #0641CC;
-  stroke: #FFFFFF;
-  stroke-width: 2.5;
-  cursor: pointer;
-  transition: r 0.2s ease, fill 0.2s ease;
+.matrix-alert-dark .dot-filled-dark {
+  background: #02275D;
 }
 
-.chart-vertex-dot:hover {
-  r: 6;
-  fill: #002855;
+.matrix-alert-dark .dot-faded-dark {
+  background: rgba(2, 39, 93, 0.20);
 }
 
-.chart-day-text {
-  font-size: 9px;
-  fill: #64748B;
-  font-weight: 600;
+[data-theme="dark"] .matrix-alert-dark .dot-filled-dark {
+  background: #FFC300;
 }
 
-.zenius-activity-meta-strip {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 0.65rem;
-  border-top: 1px solid #F1F5F9;
-  font-size: 0.75rem;
-  color: #475569;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+[data-theme="dark"] .matrix-alert-dark .dot-faded-dark {
+  background: rgba(255, 195, 0, 0.25);
 }
 
-.meta-strip-item {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
+/* ==============================================================================
+   9. Footer Sleman Khas Executive Bento (Dark Navy Bar Rata Penuh)
+   ============================================================================== */
+body.role-pembimbing .gentelella-footer {
+  margin-left: var(--sidebar-width) !important;
+  width: calc(100% - var(--sidebar-width)) !important;
+  max-width: calc(100% - var(--sidebar-width)) !important;
+  box-sizing: border-box !important;
+  background: #003566 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #c9d6ea !important;
+  padding: 12px 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 10 !important;
 }
 
-.meta-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 9999px;
+[data-theme="dark"] body.role-pembimbing .gentelella-footer {
+  background: #031B40 !important;
 }
 
-.dot-amber { background: #D97706; }
-.dot-blue { background: #2563EB; }
-.dot-emerald { background: #059669; }
-.dot-purple { background: #8B5CF6; }
-.dot-red { background: #DC2626; }
-
-/* 10. Concentric Polar Multi-Rings */
-.concentric-base-track {
-  fill: none;
-  stroke: #F1F5F9;
-  stroke-width: 8;
+body.role-pembimbing .gentelella-footer span {
+  color: #c9d6ea !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  display: inline-block !important;
 }
 
-.concentric-stroke {
-  fill: none;
-  stroke-width: 8;
-  stroke-linecap: round;
-  transition: all 0.5s ease;
-}
+/* ==============================================================================
+   8. Responsive Breakpoints
+   ============================================================================== */
+@media (max-width: 991.98px) {
+  body.role-pembimbing .gentelella-footer {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 
-.concentric-status-tag {
-  font-size: 0.675rem;
-  font-weight: 700;
-  padding: 0.15rem 0.55rem;
-  border-radius: 9999px;
-  white-space: nowrap;
-}
+  .bento-layout-grid {
+    grid-template-columns: 1fr;
+  }
 
-.tag-amber { background: #FFFBEB; color: #B45309; }
-.tag-blue { background: #EFF6FF; color: #0641CC; }
-.tag-emerald { background: #ECFDF5; color: #059669; }
+  .bento-col-side {
+    width: 100%;
+  }
 
-/* 11. Grouped Bars & Coordinate Line Chart */
-.zenius-grouped-bar-svg {
-  width: 100%;
-  height: 135px;
-  overflow: visible;
-}
-
-.bar-fill-navy { fill: #002855; }
-.bar-fill-amber { fill: #D97706; }
-.bar-fill-blue { fill: #2563EB; }
-.bar-fill-emerald { fill: #059669; }
-
-.node-dot {
-  stroke: #FFFFFF;
-  stroke-width: 2.5;
-}
-
-.chart-node-label {
-  font-size: 10px;
-  font-weight: 800;
-  fill: #002855;
-}
-
-/* 12. Radar Polygon */
-.radar-grid-pentagon {
-  fill: none;
-  stroke: #E2E8F0;
-  stroke-width: 1;
-}
-
-.radar-axis-line {
-  stroke: #CBD5E1;
-  stroke-width: 1;
-  stroke-dasharray: 2, 2;
-}
-
-.radar-data-polygon {
-  fill: rgba(6, 65, 204, 0.20);
-  stroke: #0641CC;
-  stroke-width: 2.5;
-  stroke-linejoin: round;
-}
-
-.radar-vertex-dot {
-  fill: #0641CC;
-  stroke: #FFFFFF;
-  stroke-width: 2;
-}
-
-/* 13. Responsive Breakpoints */
-@media (max-width: 1200px) {
-  .zenius-kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .bento-side-alerts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
   }
 }
 
-@media (max-width: 1024px) {
-  .zenius-bento-grid {
+@media (max-width: 768px) {
+  .bento-hero-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 22px 24px;
+  }
+
+  .bento-hero-graphic {
+    align-self: flex-end;
+  }
+
+  .bento-kpi-row {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-mid-row {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-side-alerts {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 640px) {
-  .zenius-kpi-grid {
-    grid-template-columns: 1fr;
+  .bento-distribusi-card,
+  .bento-kuota-card {
+    min-height: 360px;
+    padding: 18px 20px;
   }
 
-  .zenius-bento-chart-container {
-    flex-direction: column;
-    text-align: center;
+  .bento-bars-track {
+    gap: 0.75rem;
+    height: 220px;
   }
 
-  .zenius-clean-legend-list,
-  .zenius-clean-stat-list {
-    width: 100%;
+  .bento-bar-container {
+    height: 180px;
+    max-width: 70px;
+  }
+
+  .bento-bar-val {
+    font-size: 15px;
+  }
+
+  .bento-gauge-wrapper,
+  .bento-gauge-svg {
+    width: 200px;
+    height: 120px;
+  }
+
+  .gauge-center-percent {
+    font-size: 38px;
   }
 }
 
+/* ==============================================================================
+   Scroll-Craft Motion System (GPU-Accelerated Viewport Scroll Reveals)
+   ============================================================================== */
+[data-scroll-reveal] {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition-property: transform, opacity;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-scroll-reveal].is-revealed {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Varian 1: Float Up (KPI Cards & Roster Banner) */
+.sc-reveal-up {
+  transform: translateY(24px);
+  transition-duration: 0.55s;
+}
+
+/* Varian 2: Hero Drop (Top-Down Horizon Reveal) */
+.sc-reveal-hero {
+  transform: translateY(-16px);
+  transition-duration: 0.65s;
+}
+
+/* Varian 3: Scale In (Analytics Distribution & Gauge Cards) */
+.sc-reveal-scale {
+  transform: scale(0.96) translateY(16px);
+  transition-duration: 0.60s;
+}
+
+/* Varian 4: Slide From Right (Aside Rail: Calendar & Alerts) */
+.sc-reveal-side {
+  transform: translateX(24px);
+  transition-duration: 0.60s;
+}
+
+/* Stagger Delay Classes */
+.sc-delay-1 { transition-delay: 0.08s; }
+.sc-delay-2 { transition-delay: 0.16s; }
+.sc-delay-3 { transition-delay: 0.24s; }
+.sc-delay-4 { transition-delay: 0.32s; }
+.sc-delay-5 { transition-delay: 0.40s; }
+
+/* Fallback Keyframe saFadeSlideUp if not defined */
+@keyframes saFadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Micro-interaction Bar Fill Progression on Reveal */
+.is-revealed .bento-bar-fill-dikerjakan,
+.is-revealed .bento-bar-fill-selesai,
+.is-revealed .bento-bar-fill-review,
+.is-revealed .bento-bar-fill-terlambat {
+  animation: saFadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 
+/* Scroll-Craft Lifecycle Lock & Instant Reveal Utilities */
+[data-scroll-reveal].is-revealed.sc-settled {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
 
+[data-scroll-reveal].sc-instant-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
 
-
-
-
+/* WCAG 2.1 AA Motion Guardrail */
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
