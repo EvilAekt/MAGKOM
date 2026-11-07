@@ -4,9 +4,7 @@
 @section('page_title', 'Hub Laporan & Ekspor Data')
 @section('page_description', '')
 
-@section('breadcrumbs')
-    <span class="breadcrumb-current">Laporan & Ekspor</span>
-@endsection
+@section('topbar_title', 'Hub Laporan & Ekspor Data')
 
 @section('content')
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">

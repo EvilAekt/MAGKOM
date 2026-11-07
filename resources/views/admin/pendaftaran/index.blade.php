@@ -2,13 +2,7 @@
 
 @section('title', 'Verifikasi Berkas Pendaftaran Peserta - Admin MagKom Sleman')
 
-@section('breadcrumbs')
-    <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: #64748B;">
-        <a href="{{ route('admin.dashboard') }}" style="color: #64748B; text-decoration: none;">Dashboard</a>
-        <span>/</span>
-        <span style="color: #0F172A; font-weight: 700;">Verifikasi Berkas Pendaftaran Peserta</span>
-    </nav>
-@endsection
+@section('topbar_title', 'Verifikasi Berkas Pendaftaran Peserta')
 
 @section('content')
 <div class="adm-verifikasi-wrapper">
@@ -25,6 +19,127 @@
             width: 100%;
             color: #1E293B;
             font-family: inherit;
+        }
+
+        /* 0. SLEMAN NAVY HERO BANNER (Khas MagKom) */
+        .adm-hero-banner {
+            background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                        linear-gradient(135deg, #01347C 0%, #003566 100%);
+            border-radius: 16px;
+            padding: 24px 30px;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            margin-bottom: 1.5rem;
+        }
+
+        .adm-hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .adm-hero-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 6px 0;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        .adm-hero-subtitle {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            line-height: 1.5;
+        }
+
+        .adm-hero-subtitle .sep {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .adm-hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .adm-hero-btn-primary {
+            background: #ffffff;
+            color: #01347C;
+            text-decoration: none;
+            padding: 0.65rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .adm-hero-btn-primary:hover {
+            background: #F8FAFC;
+            color: #0641CC;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+        }
+
+        .adm-hero-btn-secondary {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.65rem 1.15rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            transition: all 0.2s ease;
+        }
+
+        .adm-hero-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .adm-hero-banner {
+                padding: 20px 22px;
+            }
+            .adm-hero-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .adm-hero-actions {
+                width: 100%;
+            }
+            .adm-hero-btn-primary, .adm-hero-btn-secondary {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        [data-theme="dark"] .adm-hero-banner {
+            background: radial-gradient(80% 120% at 100% 0%, rgba(99, 102, 241, 0.2), transparent 60%),
+                        linear-gradient(135deg, #0A192F 0%, #0F172A 100%);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
         }
 
         /* 1. TOP 4 KPI CARDS GRID */
@@ -669,17 +784,31 @@
         }
     </style>
 
-    {{-- PAGE HEADER WITH ACTIONS --}}
-    <x-gentelella.page-title title="Verifikasi Berkas Pendaftaran Peserta">
-        <a href="{{ route('admin.dashboard') }}" class="btn-action-gentelella btn-action-primary" style="padding: 0.5rem 1rem; font-size: 0.8125rem;">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            <span>Kembali ke Dashboard</span>
-        </a>
-        <a href="{{ route('admin.pendaftaran.download-zip', request()->query()) }}" class="btn-action-gentelella btn-action-success" style="padding: 0.5rem 1rem; font-size: 0.8125rem;">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            <span>Unduh Bundel ZIP</span>
-        </a>
-    </x-gentelella.page-title>
+    {{-- 0. SLEMAN NAVY HERO BANNER (Khas MagKom) --}}
+    <div class="adm-hero-banner">
+        <div class="adm-hero-content">
+            <div class="adm-hero-text">
+                <h1 class="adm-hero-title">Daftar Pendaftaran Peserta Magang</h1>
+                <div class="adm-hero-subtitle">
+                    <span>Meja Verifikasi Berkas Pendaftaran Peserta</span>
+                    <span class="sep">&bull;</span>
+                    <span>Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
+                    <span class="sep">&bull;</span>
+                    <span><strong>{{ number_format($queueStats['total'] ?? $pendaftaranList->total()) }} Total Berkas</strong></span>
+                </div>
+            </div>
+            <div class="adm-hero-actions">
+                <a href="{{ route('admin.dashboard') }}" class="adm-hero-btn-secondary">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ route('admin.pendaftaran.download-zip', request()->query()) }}" class="adm-hero-btn-primary">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span>Unduh Bundel ZIP</span>
+                </a>
+            </div>
+        </div>
+    </div>
 
     {{-- 1. TOP 4 KPI CARDS ROW (COCKPIT PARITY) --}}
     <div class="row tile_count adm-tile-count-grid">
@@ -729,7 +858,7 @@
     </div>
 
     {{-- 2. MAIN X-PANEL CARD --}}
-    <x-gentelella.x-panel title="Daftar Permohonan Magang Masuk">
+    <x-gentelella.x-panel :toolbox="false">
 
         {{-- 2A. FILTER & SEARCH TOOLBAR TERPADU --}}
         @php

@@ -2,9 +2,7 @@
 
 @section('title', 'Dashboard Operasional Administrasi - MagKom Sleman')
 
-@section('breadcrumbs')
-    <span class="breadcrumb-current">Dashboard</span>
-@endsection
+@section('topbar_title', 'Dashboard Operasional Administrasi')
 @push('styles')
     <style>
         .adm-table-spacious {

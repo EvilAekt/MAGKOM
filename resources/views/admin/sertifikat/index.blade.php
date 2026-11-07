@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Hub Penerbitan Sertifikat Kelulusan - MagKom Sleman')
+@section('topbar_title', 'Hub Penerbitan Sertifikat Kelulusan')
 
 @section('content')
 <div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">

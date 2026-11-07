@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Profil Saya - Administrasi MagKom')
+@section('topbar_title', 'Profil Saya')
 
 @section('content')
 <div class="staff-profile-wrapper">

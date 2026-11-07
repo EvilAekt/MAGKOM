@@ -2,13 +2,7 @@
 
 @section('title', 'Antrean Waiting List - Admin MagKom Sleman')
 
-@section('breadcrumbs')
-    <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: #64748B;">
-        <a href="{{ route('admin.dashboard') }}" style="color: #64748B; text-decoration: none;">Dashboard</a>
-        <span>/</span>
-        <span style="color: #0F172A; font-weight: 700;">Antrean Waiting List</span>
-    </nav>
-@endsection
+@section('topbar_title', 'Antrean Waiting List')
 
 @section('content')
 @php

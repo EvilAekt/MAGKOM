@@ -2,15 +2,7 @@
 
 @section('title', 'Verifikasi ' . $pendaftaran->nomor_pendaftaran . ' - Admin MagKom Sleman')
 
-@section('breadcrumbs')
-    <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
-        <a href="{{ route('admin.dashboard') }}" style="color: var(--neutral-500, #64748B); text-decoration: none;">Dashboard</a>
-        <span>/</span>
-        <a href="{{ route('admin.pendaftaran.index') }}" style="color: var(--neutral-500, #64748B); text-decoration: none;">Verifikasi Berkas Pendaftaran Peserta</a>
-        <span>/</span>
-        <span style="color: var(--neutral-900, #0F172A); font-weight: 700;">{{ $pendaftaran->nomor_pendaftaran }}</span>
-    </nav>
-@endsection
+@section('topbar_title', 'Verifikasi Berkas Pendaftaran Peserta')
 
 @section('content')
 @php
@@ -446,7 +438,7 @@
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
-                <span>Kembali ke Antrean</span>
+                <span>Kembali ke Verifikasi Berkas</span>
             </a>
         </div>
     </div>

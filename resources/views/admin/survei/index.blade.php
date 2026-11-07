@@ -4,11 +4,7 @@
 @section('page_title', 'Indeks Kepuasan Magang (IKM) & Net Promoter Score')
 @section('page_description', 'Rekapitulasi evaluasi pengalaman bimbingan, relevansi penugasan, dan saran perbaikan dari alumni peserta (PRD 4.3 Poin 4).')
 
-@section('breadcrumbs')
-    <a href="{{ route('admin.laporan.index') }}" class="breadcrumb-item">Laporan & Ekspor</a>
-    <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Survei Kepuasan Magang</span>
-@endsection
+@section('topbar_title', 'Evaluasi Mutu & Survei Kepuasan')
 
 @push('styles')
 <style>

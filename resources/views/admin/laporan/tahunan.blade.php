@@ -4,11 +4,7 @@
 @section('page_title', "Dashboard Analitik Rekapitulasi Tahunan {$tahun}")
 @section('page_description', "Evaluasi tren pendaftaran, rasio seleksi, profil institusi mitra, dan mutu kelulusan tahun {$tahun} (PRD 4.3 Poin 5).")
 
-@section('breadcrumbs')
-    <a href="{{ route('admin.laporan.index') }}" class="breadcrumb-item">Laporan & Ekspor</a>
-    <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Analitik Tahunan {{ $tahun }}</span>
-@endsection
+@section('topbar_title', "Dashboard Analitik Rekapitulasi Tahunan {$tahun}")
 
 @section('content')
 <div class="tahunan-container">
