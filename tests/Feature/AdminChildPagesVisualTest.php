@@ -116,6 +116,8 @@ class AdminChildPagesVisualTest extends TestCase
         // Memastikan quick filter dan filter form ada
         $response->assertSee('Diajukan');
         $response->assertSee('Semua Status');
+        // Memastikan kolom status hanya menampilkan badge tanpa teks tanggal sekunder
+        $response->assertDontSee('Masuk:');
 
         // Memastikan halaman show menggunakan breadcrumb Verifikasi Berkas Pendaftaran Peserta yang konsisten
         $showResponse = $this->actingAs($this->admin)->get(route('admin.pendaftaran.show', $this->pendaftaran));

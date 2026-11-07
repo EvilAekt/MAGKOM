@@ -1046,11 +1046,6 @@
                                         default => 'neutral',
                                     };
 
-                                    $slaDays = null;
-                                    if ($val === 'diajukan' && $item->diajukan_at) {
-                                        $slaDays = (int) $item->diajukan_at->diffInDays(now());
-                                    }
-
                                     // Dynamic 2-letter uppercase initials with rotating palette
                                     $userName = trim($item->user?->nama ?? 'Peserta');
                                     $nameWords = preg_split('/\s+/', $userName);
@@ -1124,48 +1119,12 @@
                                         <small style="color: #64748B;">Durasi: {{ $item->durasi_bulan }} Bulan</small>
                                     </td>
 
-                                    {{-- Status Permohonan & Tanggal Masuk --}}
+                                    {{-- Status Permohonan --}}
                                     <td>
                                         <span class="cv-status-dot-badge {{ $statusDotType }}">
                                             <span class="dot"></span>
                                             <span>{{ $item->status->label() }}</span>
                                         </span>
-                                        @php
-                                            $tglMasuk = $item->diajukan_at ? $item->diajukan_at->translatedFormat('d M Y') : ($item->created_at?->translatedFormat('d M Y') ?? '-');
-                                        @endphp
-                                        <div style="margin-top: 0.35rem;">
-                                            @if($val === 'diajukan')
-                                                <div style="font-size: 0.725rem; color: #64748B; display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
-                                                    <span>{{ $tglMasuk }}</span>
-                                                    <span style="color: #CBD5E1;">•</span>
-                                                    @if($slaDays !== null && $slaDays >= 5)
-                                                        <span style="font-weight: 700; color: #DC2626;">⚠️ SLA ({{ $slaDays }} hari)</span>
-                                                    @elseif($slaDays !== null && $slaDays >= 3)
-                                                        <span style="font-weight: 700; color: #D97706;">⏳ {{ $slaDays }} hari lalu</span>
-                                                    @else
-                                                        <span>{{ $slaDays === 0 ? 'Hari ini' : ($slaDays ? $slaDays . ' hari lalu' : 'Hari ini') }}</span>
-                                                    @endif
-                                                </div>
-                                            @elseif($val === 'diterima' && $item->verifikasi_at)
-                                                <div style="font-size: 0.725rem; color: #64748B;">
-                                                    <div>Masuk: {{ $tglMasuk }}</div>
-                                                    <div style="color: #16A34A; font-weight: 600; margin-top: 0.1rem;">
-                                                        Diterima {{ $item->verifikasi_at->translatedFormat('d M Y') }}
-                                                    </div>
-                                                </div>
-                                            @elseif($val === 'ditolak' && $item->verifikasi_at)
-                                                <div style="font-size: 0.725rem; color: #64748B;">
-                                                    <div>Masuk: {{ $tglMasuk }}</div>
-                                                    <div style="color: #DC2626; font-weight: 600; margin-top: 0.1rem;">
-                                                        Ditolak {{ $item->verifikasi_at->translatedFormat('d M Y') }}
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <div style="font-size: 0.725rem; color: #64748B;">
-                                                    Masuk: {{ $tglMasuk }}
-                                                </div>
-                                            @endif
-                                        </div>
                                     </td>
 
                                     {{-- Aksi --}}
