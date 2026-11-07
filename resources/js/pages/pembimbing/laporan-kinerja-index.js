@@ -4,9 +4,11 @@
  */
 
 import { initScrollCraft } from '../../services/scroll-craft.js';
+import { animateTileStats } from '../../services/pembimbing-motion.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initScrollCraft();
+    animateTileStats();
     initLaporanExportPopover();
 });
 

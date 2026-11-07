@@ -4,9 +4,12 @@
  */
 
 import { initScrollCraft } from '../../services/scroll-craft.js';
+import { animateTileStats, animateProfil360Charts } from '../../services/pembimbing-motion.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initScrollCraft();
+    animateTileStats();
+    animateProfil360Charts();
     // Optional instant search debounce or URL tab handling if needed
     const searchInput = document.querySelector('.peserta-search-input');
     if (searchInput) {

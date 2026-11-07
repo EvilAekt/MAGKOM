@@ -5,9 +5,11 @@
  */
 
 import { initScrollCraft } from '../../services/scroll-craft.js';
+import { animateTileStats } from '../../services/pembimbing-motion.js';
 
 export function initPembimbingTugasIndex() {
     initScrollCraft();
+    animateTileStats();
     const streamContainer = document.getElementById('menteeStreamContainer');
     const tableContainer = document.getElementById('classroomTableContainer');
     const menteesSummaryView = document.getElementById('tableMenteesSummaryView');

@@ -1623,24 +1623,43 @@ body.role-pembimbing .gentelella-footer span {
 .sc-delay-4 { transition-delay: 0.32s; }
 .sc-delay-5 { transition-delay: 0.40s; }
 
-/* Fallback Keyframe saFadeSlideUp if not defined */
-@keyframes saFadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ==============================================================================
+   Chart Animation Base Styling (Orchestrated by GSAP Timeline in dashboard.js)
+   ============================================================================== */
+
+/* Pastikan titik tumpu bar berada di dasar untuk scaleY */
+.bento-bar {
+  transform-origin: bottom center;
+  will-change: transform, opacity;
 }
 
-/* Micro-interaction Bar Fill Progression on Reveal */
-.is-revealed .bento-bar-fill-dikerjakan,
-.is-revealed .bento-bar-fill-selesai,
-.is-revealed .bento-bar-fill-review,
-.is-revealed .bento-bar-fill-terlambat {
-  animation: saFadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+.bento-bar-val {
+  will-change: transform, opacity;
+}
+
+.gauge-fill {
+  will-change: stroke-dashoffset;
+}
+
+.roster-dash {
+  will-change: transform, opacity;
+}
+
+.matrix-dot {
+  will-change: transform, opacity;
+}
+
+/* WCAG 2.1 AA Guardrail: Langsung tampil statis jika reduce-motion aktif */
+@media (prefers-reduced-motion: reduce) {
+  .bento-bar,
+  .bento-bar-val,
+  .gauge-fill,
+  .roster-dash,
+  .matrix-dot {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }
 
 

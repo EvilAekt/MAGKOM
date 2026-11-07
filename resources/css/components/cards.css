@@ -230,6 +230,8 @@
         .tile_stats_inner.stat .sa-spark i {
             width: 3.5px !important;
             border-radius: 1.5px !important;
+            transform-origin: bottom center !important;
+            will-change: transform !important;
             transition: height 0.3s ease !important;
         }
 

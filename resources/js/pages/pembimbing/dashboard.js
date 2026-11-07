@@ -5,6 +5,7 @@
  * ==============================================================================
  */
 
+import gsap from 'gsap';
 import { initScrollCraft } from '../../services/scroll-craft.js';
 
 export function switchPembimbingTab(tabId) {
@@ -398,16 +399,166 @@ function initBentoCalendar() {
     updateCalendar();
 }
 
+/**
+ * Inisialisasi Orkestrasi Animasi Chart Menggunakan GSAP Timeline
+ * Hanya berjalan 1 kali saat initial load (Fresh Page Entrance).
+ */
+function initGsapChartTimeline() {
+    // 1. Cek prefers-reduced-motion (Aksesibilitas WCAG 2.1 AA)
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    // 2. Proteksi Initial Load Only (Cegah re-trigger saat interaksi in-page)
+    const kuotaCard = document.querySelector('.bento-kuota-card');
+    if (!kuotaCard || kuotaCard.classList.contains('sc-instant-reveal')) return;
+
+    // 3. Persiapan Elemen Target
+    const bars = document.querySelectorAll('.bento-distribusi-chart-box .bento-bar');
+    const barValues = document.querySelectorAll('.bento-distribusi-chart-box .bento-bar-val');
+    const gaugeFill = document.querySelector('.bento-kuota-gauge-box .gauge-fill');
+    const percentEl = document.querySelector('.gauge-center-percent');
+    const rosterDashes = document.querySelectorAll('.roster-segments-bar .dash-filled-navy, .roster-segments-bar .dash-filled-white');
+    const matrixDots = document.querySelectorAll('.bento-dot-matrix .dot-filled');
+
+    // Jika komponen utama tidak ditemukan di DOM, batalkan
+    if (!bars.length && !gaugeFill) return;
+
+    // 4. Inisialisasi GSAP Master Timeline
+    const masterTl = gsap.timeline({
+        defaults: {
+            ease: "power2.out"
+        }
+    });
+
+    // --------------------------------------------------------------------------
+    // A. Bar Chart Distribusi Tugas: Tumbuh Vertikal dari Dasar
+    // --------------------------------------------------------------------------
+    if (bars.length) {
+        masterTl.fromTo(bars,
+            {
+                scaleY: 0,
+                opacity: 0.25
+            },
+            {
+                scaleY: 1,
+                opacity: 1,
+                duration: 0.75,
+                stagger: 0.09,
+                transformOrigin: "bottom center"
+            },
+            0
+        );
+
+        // Nilai badge teks angka di dalam bar: Muncul halus saat bar hampir puncak
+        if (barValues.length) {
+            masterTl.fromTo(barValues,
+                {
+                    opacity: 0,
+                    y: 6
+                },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.35,
+                    stagger: 0.09
+                },
+                0.35
+            );
+        }
+    }
+
+    // --------------------------------------------------------------------------
+    // B. Semi-Circle Radial Gauge & Rolling Percentage Counter
+    // --------------------------------------------------------------------------
+    if (gaugeFill) {
+        const targetOffsetAttr = gaugeFill.getAttribute('stroke-dashoffset');
+        const targetOffset = targetOffsetAttr !== null ? parseFloat(targetOffsetAttr) : 0;
+        const gaugePerimeter = 188.5; // Keliling setengah lingkaran (PI * 60)
+
+        // Sapuan busur SVG
+        masterTl.fromTo(gaugeFill,
+            {
+                strokeDashoffset: gaugePerimeter
+            },
+            {
+                strokeDashoffset: targetOffset,
+                duration: 1.05,
+                ease: "power2.out"
+            },
+            0.1
+        );
+
+        // Rolling Counter Angka Persentase (misal dari 0% ke 65%)
+        if (percentEl) {
+            const rawText = percentEl.textContent.replace('%', '').trim();
+            const targetVal = parseInt(rawText, 10);
+            if (!isNaN(targetVal)) {
+                const counterObj = { val: 0 };
+                percentEl.textContent = '0%';
+
+                masterTl.to(counterObj, {
+                    val: targetVal,
+                    duration: 1.05,
+                    ease: "power2.out",
+                    onUpdate: () => {
+                        percentEl.textContent = `${Math.round(counterObj.val)}%`;
+                    }
+                }, 0.1);
+            }
+        }
+    }
+
+    // --------------------------------------------------------------------------
+    // C. Highlight Roster Segmented Dashes (Wave Entrance)
+    // --------------------------------------------------------------------------
+    if (rosterDashes.length) {
+        masterTl.fromTo(rosterDashes,
+            {
+                scale: 0.7,
+                opacity: 0.2
+            },
+            {
+                scale: 1,
+                opacity: 1,
+                duration: 0.3,
+                stagger: 0.025
+            },
+            0.25
+        );
+    }
+
+    // --------------------------------------------------------------------------
+    // D. KPI Dot Matrix (Subtle Entrance)
+    // --------------------------------------------------------------------------
+    if (matrixDots.length) {
+        masterTl.fromTo(matrixDots,
+            {
+                scale: 0.6,
+                opacity: 0.2
+            },
+            {
+                scale: 1,
+                opacity: 1,
+                duration: 0.25,
+                stagger: 0.012
+            },
+            0.35
+        );
+    }
+}
+
 // Global window exposure for backward-compatibility with partials
 if (typeof window !== 'undefined') {
     window.switchPembimbingTab = switchPembimbingTab;
     window.filterDashboardTasks = filterDashboardTasks;
     window.filterTableByInput = filterTableByInput;
+    window.initGsapChartTimeline = initGsapChartTimeline;
 }
 
 // Inisialisasi saat DOM siap
 document.addEventListener('DOMContentLoaded', () => {
     initScrollCraft();
+    initGsapChartTimeline();
     initBentoCalendar();
 
     // Delegasi Event untuk Tab Switching & Filter

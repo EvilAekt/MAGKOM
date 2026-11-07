@@ -400,6 +400,8 @@
     height: 100%;
     background: linear-gradient(90deg, #10B981 0%, #059669 100%);
     border-radius: 9999px;
+    transform-origin: left center;
+    will-change: transform;
     transition: width 0.4s ease;
 }
 
@@ -548,6 +550,7 @@
     justify-content: center;
     flex-shrink: 0;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+    will-change: transform, opacity;
 }
 
 .donut-chart-center {
@@ -638,6 +641,8 @@
     width: 100%;
     max-width: 22px;
     border-radius: 4px 4px 0 0;
+    transform-origin: bottom center;
+    will-change: transform;
     transition: all 0.2s ease;
 }
 
