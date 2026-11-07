@@ -385,6 +385,42 @@
             gap: 0.75rem;
         }
 
+        .adm-reg-badge {
+            display: inline-block;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #0641CC;
+            background: #EFF6FF;
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
+            border: 1px solid #BFDBFE;
+            letter-spacing: -0.01em;
+        }
+
+        .adm-reg-date {
+            font-size: 0.75rem;
+            color: #64748B;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .adm-badge-kelompok {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #7C3AED;
+            background: #F5F3FF;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            border: 1px solid #DDD6FE;
+            margin-top: 0.35rem;
+        }
+
         .adm-table {
             width: 100%;
             border-collapse: collapse;
@@ -587,6 +623,22 @@
 
         [data-theme="dark"] .adm-table-meta-bar strong {
             color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .adm-reg-badge {
+            color: #93C5FD;
+            background: rgba(30, 58, 138, 0.35);
+            border-color: rgba(59, 130, 246, 0.35);
+        }
+
+        [data-theme="dark"] .adm-reg-date {
+            color: #94A3B8;
+        }
+
+        [data-theme="dark"] .adm-badge-kelompok {
+            color: #C4B5FD;
+            background: rgba(124, 58, 237, 0.25);
+            border-color: rgba(139, 92, 246, 0.35);
         }
 
         [data-theme="dark"] .adm-table th {
@@ -827,23 +879,15 @@
                     </a>
                 </div>
 
-                {{-- Sisi Kanan: Meta Count & Reset Link --}}
-                <div style="display: inline-flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-                    <div style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">
-                        @if($pendaftaranList->total() > 0)
-                            Menampilkan <strong style="color: #0F172A;">{{ $pendaftaranList->firstItem() }}–{{ $pendaftaranList->lastItem() }}</strong> dari <strong style="color: #0F172A;">{{ $pendaftaranList->total() }}</strong> berkas
-                        @else
-                            Menampilkan <strong style="color: #0F172A;">0</strong> berkas
-                        @endif
-                    </div>
-
-                    @if($hasActiveFilters)
+                {{-- Sisi Kanan: Reset Link (Hanya Tampil Jika Filter Aktif) --}}
+                @if($hasActiveFilters)
+                    <div>
                         <a href="{{ route('admin.pendaftaran.index') }}" class="adm-filter-reset-link" title="Bersihkan semua parameter pencarian dan filter">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                             <span>Reset Filter</span>
                         </a>
-                    @endif
-                </div>
+                    </div>
+                @endif
             </div>
 
             @if($pendaftaranList->isEmpty())
@@ -866,11 +910,11 @@
                     <table class="adm-table">
                         <thead>
                             <tr>
-                                <th style="width: 150px;">No. Registrasi</th>
+                                <th style="width: 140px;">No. Registrasi</th>
                                 <th>Calon Peserta</th>
                                 <th>Institusi & Jurusan</th>
                                 <th>Bulan Magang</th>
-                                <th>Status & Usia Berkas</th>
+                                <th>Status Permohonan</th>
                                 <th style="text-align: right; width: 140px;">Aksi</th>
                             </tr>
                         </thead>
@@ -904,31 +948,28 @@
                                     $paletteIdx = (($item->id ?? 1) % 5) + 1;
                                 @endphp
                                 <tr>
-                                    {{-- No. Registrasi & Kategori --}}
+                                    {{-- No. Registrasi --}}
                                     <td>
-                                        <span style="display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; font-weight: 700; color: #0641CC; background: #EFF6FF; padding: 0.25rem 0.6rem; border-radius: 6px; border: 1px solid #BFDBFE;">
+                                        <span class="adm-reg-badge">
                                             {{ $item->nomor_pendaftaran }}
                                         </span>
-                                        <div style="font-size: 0.725rem; color: #64748B; margin-top: 0.25rem;">
-                                            {{ $item->diajukan_at ? $item->diajukan_at->translatedFormat('d M Y') : ($item->created_at?->translatedFormat('d M Y') ?? '-') }}
-                                        </div>
-                                        <div style="margin-top: 0.35rem;">
-                                            @if($item->tipe === 'kelompok' || $item->kelompokMagang)
-                                                <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 700; color: #7C3AED; background: #F5F3FF; padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid #DDD6FE;">
+                                        @if($item->tipe === 'kelompok' || $item->kelompokMagang)
+                                            <div style="margin-top: 0.35rem;">
+                                                <span class="adm-badge-kelompok">
                                                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                                                     Kelompok ({{ ($item->kelompokMagang?->anggota?->count() ?? 0) + 1 }} Org)
                                                 </span>
-                                            @else
-                                                <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 700; color: #0284C7; background: #F0F9FF; padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid #BAE6FD;">
-                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                                    Individu
-                                                </span>
-                                            @endif
-                                        </div>
+                                            </div>
+                                        @endif
                                     </td>
 
                                     {{-- Calon Peserta --}}
                                     <td>
+                                        @php
+                                            $isSmk = ($item->user?->profil?->jenjang?->value ?? (string)($item->user?->profil?->jenjang ?? '')) === 'smk'
+                                                || ($item->kuota?->jurusan?->kategori ?? '') === 'smk';
+                                            $idLabel = $isSmk ? 'NISN' : 'NIM';
+                                        @endphp
                                         <div class="adm-user-cell">
                                             <div class="cv-avatar-sm cv-avatar-palette-{{ $paletteIdx }}" style="width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.825rem; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.06);">
                                                 {{ $initials }}
@@ -947,7 +988,7 @@
                                                 @endif
                                                 @if($item->user?->profil?->nim_nisn)
                                                     <div style="font-size: 0.725rem; color: #94A3B8;">
-                                                        NIM/NISN: {{ $item->user->profil->nim_nisn }}
+                                                        {{ $idLabel }}: {{ $item->user->profil->nim_nisn }}
                                                     </div>
                                                 @endif
                                             </div>
@@ -968,31 +1009,48 @@
                                         <small style="color: #64748B;">Durasi: {{ $item->durasi_bulan }} Bulan</small>
                                     </td>
 
-                                    {{-- Status & SLA --}}
+                                    {{-- Status Permohonan & Tanggal Masuk --}}
                                     <td>
                                         <span class="cv-status-dot-badge {{ $statusDotType }}">
                                             <span class="dot"></span>
                                             <span>{{ $item->status->label() }}</span>
                                         </span>
-                                        @if($slaDays !== null)
-                                            <div style="margin-top: 0.35rem;">
-                                                @if($slaDays >= 5)
-                                                    <span style="font-size: 0.725rem; font-weight: 700; color: #DC2626; background: #FEF2F2; padding: 0.15rem 0.5rem; border-radius: 6px; border: 1px solid #FECACA; display: inline-flex; align-items: center; gap: 4px;">
-                                                        <span>⚠️</span>
-                                                        <span>Melebihi SLA ({{ $slaDays }} hari)</span>
-                                                    </span>
-                                                @elseif($slaDays >= 3)
-                                                    <span style="font-size: 0.725rem; font-weight: 700; color: #D97706; background: #FFFBEB; padding: 0.15rem 0.5rem; border-radius: 6px; border: 1px solid #FDE68A; display: inline-flex; align-items: center; gap: 4px;">
-                                                        <span>⏳</span>
-                                                        <span>Tertahan {{ $slaDays }} hari</span>
-                                                    </span>
-                                                @else
-                                                    <span style="font-size: 0.725rem; color: #64748B;">
-                                                        {{ $slaDays === 0 ? 'Hari ini' : $slaDays . ' hari lalu' }}
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        @endif
+                                        @php
+                                            $tglMasuk = $item->diajukan_at ? $item->diajukan_at->translatedFormat('d M Y') : ($item->created_at?->translatedFormat('d M Y') ?? '-');
+                                        @endphp
+                                        <div style="margin-top: 0.35rem;">
+                                            @if($val === 'diajukan')
+                                                <div style="font-size: 0.725rem; color: #64748B; display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+                                                    <span>{{ $tglMasuk }}</span>
+                                                    <span style="color: #CBD5E1;">•</span>
+                                                    @if($slaDays !== null && $slaDays >= 5)
+                                                        <span style="font-weight: 700; color: #DC2626;">⚠️ SLA ({{ $slaDays }} hari)</span>
+                                                    @elseif($slaDays !== null && $slaDays >= 3)
+                                                        <span style="font-weight: 700; color: #D97706;">⏳ {{ $slaDays }} hari lalu</span>
+                                                    @else
+                                                        <span>{{ $slaDays === 0 ? 'Hari ini' : ($slaDays ? $slaDays . ' hari lalu' : 'Hari ini') }}</span>
+                                                    @endif
+                                                </div>
+                                            @elseif($val === 'diterima' && $item->verifikasi_at)
+                                                <div style="font-size: 0.725rem; color: #64748B;">
+                                                    <div>Masuk: {{ $tglMasuk }}</div>
+                                                    <div style="color: #16A34A; font-weight: 600; margin-top: 0.1rem;">
+                                                        Diterima {{ $item->verifikasi_at->translatedFormat('d M Y') }}
+                                                    </div>
+                                                </div>
+                                            @elseif($val === 'ditolak' && $item->verifikasi_at)
+                                                <div style="font-size: 0.725rem; color: #64748B;">
+                                                    <div>Masuk: {{ $tglMasuk }}</div>
+                                                    <div style="color: #DC2626; font-weight: 600; margin-top: 0.1rem;">
+                                                        Ditolak {{ $item->verifikasi_at->translatedFormat('d M Y') }}
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div style="font-size: 0.725rem; color: #64748B;">
+                                                    Masuk: {{ $tglMasuk }}
+                                                </div>
+                                            @endif
+                                        </div>
                                     </td>
 
                                     {{-- Aksi --}}
