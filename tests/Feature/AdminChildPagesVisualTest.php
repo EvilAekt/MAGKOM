@@ -157,6 +157,9 @@ class AdminChildPagesVisualTest extends TestCase
         $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
 
         $response->assertOk();
+        $response->assertSee('adm-hero-banner');
+        $response->assertSee('Distribusi &amp; Alokasi Peserta Magang', false);
+        $response->assertSee('Penetapan Pembimbing Lapangan &amp; Penempatan Bidang Dinas', false);
         $response->assertSee('tab-btn-sudah');
         $response->assertSee('tab-btn-belum');
         $response->assertSee('Sudah Ditempatkan');
@@ -165,14 +168,28 @@ class AdminChildPagesVisualTest extends TestCase
         $response->assertSee('panel-penempatan-belum');
     }
 
+    public function test_admin_penempatan_belum_tab_renders_balanced_filters(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum']));
+
+        $response->assertOk();
+        $response->assertSee('Pencarian Antrean');
+        $response->assertSee('name="jurusan_id"', false);
+        $response->assertSee('Semua Jurusan');
+        $response->assertSee('name="bidang_id"', false);
+        $response->assertSee('Bidang Rekomendasi');
+        $response->assertSee('Semua Bidang');
+    }
+
     public function test_admin_penempatan_belum_tab_renders_empty_state_when_all_placed(): void
     {
         $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum']));
 
         $response->assertOk();
-        $response->assertSee('Semua Peserta Sudah Ditempatkan');
-        $response->assertSee('Tidak ada calon peserta lolos berkas yang menunggu penetapan pembimbing lapangan saat ini.');
-        $response->assertSee('Lihat Data Penempatan Selesai/Aktif');
+        $response->assertSee('Tidak ada antrean peserta belum ditempatkan');
+        $response->assertSee('Seluruh calon peserta lolos berkas telah ditetapkan pembimbing dan bidang dinas.');
+        $response->assertDontSee('Semua Peserta Sudah Ditempatkan');
+        $response->assertDontSee('Lihat Data Penempatan Selesai/Aktif');
     }
 
     public function test_admin_penempatan_belum_tab_renders_unassigned_queue_when_accepted_applicant_exists(): void

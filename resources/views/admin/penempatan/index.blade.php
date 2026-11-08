@@ -1,134 +1,140 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Penempatan Peserta - Admin MagKom Sleman')
-@section('page_title', 'Penempatan Peserta')
-@section('page_description', '')
 
 @section('topbar_title') Penempatan Peserta Magang <span class="sr-only">Manajemen Penempatan</span> @endsection
-
-@section('page_actions')
-    <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
-        {{-- Unified Export Popover Trigger & Container --}}
-        <div class="adm-export-dropdown-wrap">
-            <button type="button" 
-                    id="btnToggleExportPopover" 
-                    class="adm-btn-export-main" 
-                    aria-expanded="false" 
-                    aria-haspopup="menu" 
-                    aria-controls="admExportPopover"
-                    title="Pilih dan unduh rekap data penempatan (Excel, CSV, PDF)">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                <span>Ekspor Rekap</span>
-                <svg id="admExportCaretSvg" class="adm-export-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
-
-            {{-- Floating Dropdown Popover Container --}}
-            <div id="admExportPopover" class="adm-export-popover" style="display: none;" role="menu" aria-label="Menu Pilihan Format Ekspor">
-                <div class="adm-popover-pointer"></div>
-                <div class="adm-popover-header">
-                    <div>
-                        <div class="adm-popover-title">Ekspor Rekap Cepat</div>
-                        <div class="adm-popover-desc">Data hasil filter aktif</div>
-                    </div>
-                    <span class="adm-popover-row-count tabular-nums">
-                        {{ number_format($penempatanList->total()) }} Baris
-                    </span>
-                </div>
-
-                <div class="adm-popover-formats" role="radiogroup" aria-label="Format Berkas">
-                    {{-- Format 1: Excel (.xlsx) - Rekomendasi --}}
-                    <label class="adm-format-card adm-format-selected" id="cardFormatXlsx" onclick="handleAdmExportFormatChange('xlsx')">
-                        <div class="adm-format-content">
-                            <input type="radio" name="popover_export_format" id="radioFormatXlsx" value="xlsx" checked class="adm-format-radio" onchange="handleAdmExportFormatChange('xlsx')">
-                            <div class="adm-format-details">
-                                <div class="adm-format-name-wrap">
-                                    <span class="adm-format-name">Microsoft Excel</span>
-                                    <span class="badge-format-ext badge-ext-xlsx">.xlsx</span>
-                                </div>
-                                <p class="adm-format-desc">Tabel resmi bergaris rapi &amp; filterable</p>
-                            </div>
-                        </div>
-                        <div class="adm-format-meta">
-                            <span class="adm-badge-recommend">Rekomendasi</span>
-                        </div>
-                    </label>
-
-                    {{-- Format 2: CSV Tabular (.csv) --}}
-                    <label class="adm-format-card" id="cardFormatCsv" onclick="handleAdmExportFormatChange('csv')">
-                        <div class="adm-format-content">
-                            <input type="radio" name="popover_export_format" id="radioFormatCsv" value="csv" class="adm-format-radio" onchange="handleAdmExportFormatChange('csv')">
-                            <div class="adm-format-details">
-                                <div class="adm-format-name-wrap">
-                                    <span class="adm-format-name">CSV Tabular</span>
-                                    <span class="badge-format-ext badge-ext-csv">.csv</span>
-                                </div>
-                                <p class="adm-format-desc">Data mentah teks pemisah koma terstandarisasi</p>
-                            </div>
-                        </div>
-                        <div class="adm-format-meta">
-                            <span class="adm-badge-quick">Cepat</span>
-                        </div>
-                    </label>
-
-                    {{-- Format 3: Dokumen Resmi PDF (.pdf) --}}
-                    <label class="adm-format-card" id="cardFormatPdf" onclick="handleAdmExportFormatChange('pdf')">
-                        <div class="adm-format-content">
-                            <input type="radio" name="popover_export_format" id="radioFormatPdf" value="pdf" class="adm-format-radio" onchange="handleAdmExportFormatChange('pdf')">
-                            <div class="adm-format-details">
-                                <div class="adm-format-name-wrap">
-                                    <span class="adm-format-name">Dokumen Resmi (.pdf)</span>
-                                    <span class="badge-format-ext badge-ext-pdf">.pdf</span>
-                                </div>
-                                <p class="adm-format-desc">Rekapitulasi cetak ber-kop resmi kedinasan</p>
-                            </div>
-                        </div>
-                        <div class="adm-format-meta">
-                            <span class="adm-badge-legal">Legal Sah</span>
-                        </div>
-                    </label>
-                </div>
-
-                <div class="adm-popover-cta">
-                    <button type="button" class="adm-btn-popover-cancel" onclick="toggleAdmExportPopover(false)">
-                        Batal
-                    </button>
-                    <button type="button" id="btnDoExportDownload" class="adm-btn-popover-download" onclick="triggerPenempatanExport()">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg>
-                        <span id="btnExportDownloadText">Unduh Excel (.xlsx)</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        @if(auth()->user()?->isSuperAdmin())
-            <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.5rem 0.95rem; border-radius: 8px; border: 1px solid #BFDBFE;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                <span>Mode Lihat Saja</span>
-            </span>
-        @elseif(isset($slotKhususList) && $slotKhususList->isNotEmpty())
-            <button type="button" onclick="openManualModal()" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #0641CC; color: #FFFFFF; border: none; padding: 0.6rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: all 0.15s ease;" onmouseover="this.style.background='#0533A3'" onmouseout="this.style.background='#0641CC'">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>Penempatan Jalur Khusus</span>
-            </button>
-        @endif
-    </div>
-@endsection
 
 @section('content')
 <div class="gentelella-penempatan-admin" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     <style>
+        /* ==========================================================================
+           MAGKOM SLEMAN NAVY HERO BANNER (Signature Theme)
+           Dinas Komunikasi dan Informatika Kabupaten Sleman
+           ========================================================================== */
+        .adm-hero-banner {
+            background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                        linear-gradient(135deg, #01347C 0%, #003566 100%);
+            border-radius: 16px;
+            padding: 24px 30px;
+            color: #ffffff;
+            position: relative;
+            overflow: visible;
+            box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            margin-bottom: 0.5rem;
+        }
+
+        .adm-hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .adm-hero-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 6px 0;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        .adm-hero-subtitle {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            line-height: 1.5;
+        }
+
+        .adm-hero-subtitle .sep {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .adm-hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .adm-hero-btn-primary {
+            background: #ffffff;
+            color: #01347C;
+            text-decoration: none;
+            padding: 0.65rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .adm-hero-btn-primary:hover {
+            background: #F8FAFC;
+            color: #0641CC;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+        }
+
+        .adm-hero-btn-secondary {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.65rem 1.15rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .adm-hero-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .adm-hero-banner {
+                padding: 20px 22px;
+            }
+            .adm-hero-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .adm-hero-actions {
+                width: 100%;
+            }
+            .adm-hero-btn-primary, .adm-hero-btn-secondary {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        [data-theme="dark"] .adm-hero-banner {
+            background: radial-gradient(80% 120% at 100% 0%, rgba(99, 102, 241, 0.2), transparent 60%),
+                        linear-gradient(135deg, #0A192F 0%, #0F172A 100%);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+        }
+
         .admin-card {
             background: #ffffff;
             border-radius: 14px;
@@ -607,12 +613,143 @@
             color: #CBD5E1 !important;
         }
 
-        [data-theme="dark"] .admin-card input#q-input-belum {
+        [data-theme="dark"] .admin-card input#q-input-belum,
+        [data-theme="dark"] #panel-penempatan-belum select {
             background-color: #0F172A !important;
             border-color: #26354D !important;
             color: #F8FAFC !important;
         }
     </style>
+
+    {{-- 0. SLEMAN NAVY HERO BANNER (Khas MagKom) --}}
+    <div class="adm-hero-banner">
+        <div class="adm-hero-content">
+            <div class="adm-hero-text">
+                <h1 class="adm-hero-title">Distribusi &amp; Alokasi Peserta Magang</h1>
+                <div class="adm-hero-subtitle">
+                    <span>Penetapan Pembimbing Lapangan &amp; Penempatan Bidang Dinas</span>
+                    <span class="sep">&bull;</span>
+                    <span>Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
+                </div>
+            </div>
+            <div class="adm-hero-actions">
+                {{-- Unified Export Popover Trigger & Container --}}
+                <div class="adm-export-dropdown-wrap">
+                    <button type="button" 
+                            id="btnToggleExportPopover" 
+                            class="adm-btn-export-main adm-hero-btn-secondary" 
+                            aria-expanded="false" 
+                            aria-haspopup="menu" 
+                            aria-controls="admExportPopover"
+                            title="Pilih dan unduh rekap data penempatan (Excel, CSV, PDF)">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Ekspor Rekap</span>
+                        <svg id="admExportCaretSvg" class="adm-export-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+
+                    {{-- Floating Dropdown Popover Container --}}
+                    <div id="admExportPopover" class="adm-export-popover" style="display: none;" role="menu" aria-label="Menu Pilihan Format Ekspor">
+                        <div class="adm-popover-pointer"></div>
+                        <div class="adm-popover-header">
+                            <div>
+                                <div class="adm-popover-title">Ekspor Rekap Cepat</div>
+                                <div class="adm-popover-desc">Data hasil filter aktif</div>
+                            </div>
+                            <span class="adm-popover-row-count tabular-nums">
+                                {{ number_format($penempatanList->total()) }} Baris
+                            </span>
+                        </div>
+
+                        <div class="adm-popover-formats" role="radiogroup" aria-label="Format Berkas">
+                            {{-- Format 1: Excel (.xlsx) - Rekomendasi --}}
+                            <label class="adm-format-card adm-format-selected" id="cardFormatXlsx" onclick="handleAdmExportFormatChange('xlsx')">
+                                <div class="adm-format-content">
+                                    <input type="radio" name="popover_export_format" id="radioFormatXlsx" value="xlsx" checked class="adm-format-radio" onchange="handleAdmExportFormatChange('xlsx')">
+                                    <div class="adm-format-details">
+                                        <div class="adm-format-name-wrap">
+                                            <span class="adm-format-name">Microsoft Excel</span>
+                                            <span class="badge-format-ext badge-ext-xlsx">.xlsx</span>
+                                        </div>
+                                        <p class="adm-format-desc">Tabel resmi bergaris rapi &amp; filterable</p>
+                                    </div>
+                                </div>
+                                <div class="adm-format-meta">
+                                    <span class="adm-badge-recommend">Rekomendasi</span>
+                                </div>
+                            </label>
+
+                            {{-- Format 2: CSV Tabular (.csv) --}}
+                            <label class="adm-format-card" id="cardFormatCsv" onclick="handleAdmExportFormatChange('csv')">
+                                <div class="adm-format-content">
+                                    <input type="radio" name="popover_export_format" id="radioFormatCsv" value="csv" class="adm-format-radio" onchange="handleAdmExportFormatChange('csv')">
+                                    <div class="adm-format-details">
+                                        <div class="adm-format-name-wrap">
+                                            <span class="adm-format-name">CSV Tabular</span>
+                                            <span class="badge-format-ext badge-ext-csv">.csv</span>
+                                        </div>
+                                        <p class="adm-format-desc">Data mentah teks pemisah koma terstandarisasi</p>
+                                    </div>
+                                </div>
+                                <div class="adm-format-meta">
+                                    <span class="adm-badge-quick">Cepat</span>
+                                </div>
+                            </label>
+
+                            {{-- Format 3: Dokumen Resmi PDF (.pdf) --}}
+                            <label class="adm-format-card" id="cardFormatPdf" onclick="handleAdmExportFormatChange('pdf')">
+                                <div class="adm-format-content">
+                                    <input type="radio" name="popover_export_format" id="radioFormatPdf" value="pdf" class="adm-format-radio" onchange="handleAdmExportFormatChange('pdf')">
+                                    <div class="adm-format-details">
+                                        <div class="adm-format-name-wrap">
+                                            <span class="adm-format-name">Dokumen Resmi (.pdf)</span>
+                                            <span class="badge-format-ext badge-ext-pdf">.pdf</span>
+                                        </div>
+                                        <p class="adm-format-desc">Rekapitulasi cetak ber-kop resmi kedinasan</p>
+                                    </div>
+                                </div>
+                                <div class="adm-format-meta">
+                                    <span class="adm-badge-legal">Legal Sah</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="adm-popover-cta">
+                            <button type="button" class="adm-btn-popover-cancel" onclick="toggleAdmExportPopover(false)">
+                                Batal
+                            </button>
+                            <button type="button" id="btnDoExportDownload" class="adm-btn-popover-download" onclick="triggerPenempatanExport()">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                <span id="btnExportDownloadText">Unduh Excel (.xlsx)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                @if(auth()->user()?->isSuperAdmin())
+                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255, 255, 255, 0.15); color: #FFFFFF; font-weight: 700; font-size: 0.8125rem; padding: 0.6rem 1rem; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.25); backdrop-filter: blur(4px);">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>Mode Lihat Saja</span>
+                    </span>
+                @elseif(isset($slotKhususList) && $slotKhususList->isNotEmpty())
+                    <button type="button" onclick="openManualModal()" class="adm-hero-btn-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Penempatan Jalur Khusus</span>
+                    </button>
+                @endif
+            </div>
+        </div>
+    </div>
 
     {{-- ALERT KREDENSIAL AKUN BARU JALUR KHUSUS --}}
     @if(session('akun_baru_dibuat'))
@@ -1045,7 +1182,8 @@
         <div class="admin-card" style="padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;">
             <form method="GET" action="{{ route('admin.penempatan.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
                 <input type="hidden" name="tab" value="belum">
-                {{-- Search Bar --}}
+                
+                {{-- 1. Search Bar --}}
                 <div style="display: flex; flex-direction: column; gap: 0.375rem; flex: 2; min-width: 240px;">
                     <label for="q-input-belum" style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Pencarian Antrean</label>
                     <div style="position: relative;">
@@ -1057,10 +1195,10 @@
                     </div>
                 </div>
 
-                {{-- Filter Bulan Magang --}}
-                <div style="display: flex; flex-direction: column; gap: 0.375rem; flex: 1; min-width: 180px;">
+                {{-- 2. Filter Bulan Magang --}}
+                <div style="display: flex; flex-direction: column; gap: 0.375rem; flex: 1.2; min-width: 180px;">
                     <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Bulan Magang</label>
-                    <select name="bulan_magang_id" style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff; color: var(--neutral-800, #1E293B);">
+                    <select name="bulan_magang_id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff; color: var(--neutral-800, #1E293B);">
                         <option value="">Semua Bulan Magang</option>
                         @foreach($bulanList as $bln)
                             <option value="{{ $bln->id }}" {{ (request('tab') === 'belum' && request('bulan_magang_id') == $bln->id) ? 'selected' : '' }}>
@@ -1070,7 +1208,34 @@
                     </select>
                 </div>
 
-                <div style="display: flex; gap: 0.5rem;">
+                {{-- 3. Filter Jurusan / Program Studi --}}
+                <div style="display: flex; flex-direction: column; gap: 0.375rem; flex: 1.2; min-width: 180px;">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Jurusan / Program Studi</label>
+                    <select name="jurusan_id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff; color: var(--neutral-800, #1E293B);">
+                        <option value="">Semua Jurusan</option>
+                        @foreach($jurusanList as $jrs)
+                            <option value="{{ $jrs->id }}" {{ (request('tab') === 'belum' && request('jurusan_id') == $jrs->id) ? 'selected' : '' }}>
+                                {{ $jrs->nama_jurusan }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- 4. Filter Rekomendasi Bidang Dinas --}}
+                <div style="display: flex; flex-direction: column; gap: 0.375rem; flex: 1.2; min-width: 180px;">
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Bidang Rekomendasi</label>
+                    <select name="bidang_id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff; color: var(--neutral-800, #1E293B);">
+                        <option value="">Semua Bidang</option>
+                        @foreach($bidangList as $bdg)
+                            <option value="{{ $bdg->id }}" {{ (request('tab') === 'belum' && request('bidang_id') == $bdg->id) ? 'selected' : '' }}>
+                                {{ $bdg->nama_bidang }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- 5. Tombol Aksi --}}
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
                     <button type="submit" style="height: 42px; padding: 0 1.25rem; background: #D97706; color: #FFFFFF; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s ease; box-shadow: 0 1px 3px rgba(217, 119, 6, 0.2);">
                         Terapkan Filter
                     </button>
@@ -1081,132 +1246,118 @@
             </form>
         </div>
 
-        @if(isset($antreanBelumDitempatkan) && $antreanBelumDitempatkan->isNotEmpty())
-            <div class="admin-card" style="border-top: 3.5px solid #F59E0B; border-left: none; background: #FFFBEB;">
-                <div style="padding: 1.15rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #FDE68A; flex-wrap: wrap; gap: 0.75rem;">
-                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <div style="width: 36px; height: 36px; border-radius: 8px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                        </div>
-                        <div>
-                            <h3 style="font-size: 1rem; font-weight: 800; color: #92400E; margin: 0;">
-                                Antrean Peserta Lolos Berkas (Menunggu Penempatan)
-                            </h3>
-                            <p style="font-size: 0.8125rem; color: #B45309; margin: 0.2rem 0 0 0;">
-                                Peserta di bawah ini telah disetujui berkasnya pada Tahap 1 dan siap ditetapkan Pembimbing Lapangan serta Bidang Dinas.
-                            </p>
-                        </div>
+        <div class="admin-card" style="border-top: 3.5px solid #F59E0B; border-left: none; background: #FFFFFF;">
+            <div style="padding: 1.15rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #FDE68A; background: #FFFBEB; flex-wrap: wrap; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                     </div>
-                    <span style="padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 700; background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">
-                        {{ $antreanBelumDitempatkan->count() }} Menunggu Penempatan
-                    </span>
+                    <div>
+                        <h3 style="font-size: 1rem; font-weight: 800; color: #92400E; margin: 0;">
+                            Antrean Peserta Lolos Berkas (Menunggu Penempatan)
+                        </h3>
+                        <p style="font-size: 0.8125rem; color: #B45309; margin: 0.2rem 0 0 0;">
+                            Peserta di bawah ini telah disetujui berkasnya pada Tahap 1 dan siap ditetapkan Pembimbing Lapangan serta Bidang Dinas.
+                        </p>
+                    </div>
                 </div>
+                <span style="padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 700; background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">
+                    {{ $antreanBelumDitempatkan->count() }} Menunggu Penempatan
+                </span>
+            </div>
 
-                <div style="overflow-x: auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr style="background: #FEF9C3;">
-                                <th style="color: #854D0E;">Peserta Magang</th>
-                                <th style="color: #854D0E;">Jurusan &amp; Kampus / Sekolah</th>
-                                <th style="color: #854D0E;">Bulan Magang</th>
-                                <th style="color: #854D0E;">Diterima Pada</th>
-                                <th style="text-align: right; width: 150px; color: #854D0E;">Aksi</th>
+            <div style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr style="background: #FEF9C3;">
+                            <th style="color: #854D0E;">Peserta Magang</th>
+                            <th style="color: #854D0E;">Jurusan &amp; Kampus / Sekolah</th>
+                            <th style="color: #854D0E;">Bulan Magang</th>
+                            <th style="color: #854D0E;">Diterima Pada</th>
+                            <th style="text-align: right; width: 150px; color: #854D0E;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($antreanBelumDitempatkan as $antrean)
+                            @php
+                                $firstBidang = $antrean->kuota?->jurusan?->bidang?->first();
+                                $defBidangId = $firstBidang?->id;
+                                $defBidangNama = $firstBidang?->nama_bidang ?? 'Dinas Kominfo';
+                            @endphp
+                            <tr style="background: #FFFFFF;">
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.65rem;">
+                                        <div style="width: 34px; height: 34px; border-radius: 8px; background: #FDE68A; color: #92400E; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;">
+                                            {{ strtoupper(substr($antrean->user?->nama ?? 'P', 0, 1)) }}
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 700; color: #1E293B; font-size: 0.875rem;">
+                                                {{ $antrean->user?->nama }}
+                                            </div>
+                                            <div style="font-size: 0.75rem; color: #64748B;">
+                                                NIM: {{ $antrean->user?->profil?->nim_nisn ?? '-' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; color: #1E293B;">
+                                        {{ $antrean->kuota?->jurusan?->nama_jurusan ?? '-' }}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: #64748B;">
+                                        {{ $antrean->user?->profil?->institusi ?? '-' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-weight: 700; color: #0641CC; font-size: 0.8125rem;">
+                                        {{ $antrean->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
+                                    </span>
+                                    <div style="font-size: 0.75rem; color: #64748B;">
+                                        Durasi: {{ $antrean->durasi_bulan }} Bulan
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-size: 0.8125rem; color: #475569;">
+                                        {{ $antrean->diputuskan_at?->translatedFormat('d M Y H:i') ?? '-' }}
+                                    </span>
+                                </td>
+                                <td style="text-align: right;">
+                                    @if(auth()->user()?->isSuperAdmin())
+                                        <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Menunggu Penempatan</span>
+                                    @else
+                                        <button type="button" 
+                                                onclick="openTetapkanModal({{ $antrean->id }}, '{{ addslashes($antrean->user?->nama) }}', '{{ addslashes($antrean->kuota?->jurusan?->nama_jurusan ?? '') }}', {{ $defBidangId ?? 'null' }}, '{{ addslashes($defBidangNama) }}')" 
+                                                style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.95rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                                            <span>Tempatkan</span>
+                                        </button>
+                                    @endif
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($antreanBelumDitempatkan as $antrean)
-                                @php
-                                    $firstBidang = $antrean->kuota?->jurusan?->bidang?->first();
-                                    $defBidangId = $firstBidang?->id;
-                                    $defBidangNama = $firstBidang?->nama_bidang ?? 'Dinas Kominfo';
-                                @endphp
-                                <tr style="background: #FFFFFF;">
-                                    <td>
-                                        <div style="display: flex; align-items: center; gap: 0.65rem;">
-                                            <div style="width: 34px; height: 34px; border-radius: 8px; background: #FDE68A; color: #92400E; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;">
-                                                {{ strtoupper(substr($antrean->user?->nama ?? 'P', 0, 1)) }}
-                                            </div>
-                                            <div>
-                                                <div style="font-weight: 700; color: #1E293B; font-size: 0.875rem;">
-                                                    {{ $antrean->user?->nama }}
-                                                </div>
-                                                <div style="font-size: 0.75rem; color: #64748B;">
-                                                    NIM: {{ $antrean->user?->profil?->nim_nisn ?? '-' }}
-                                                </div>
-                                            </div>
+                        @empty
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 3.5rem 1.5rem; background: #FFFFFF;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;">
+                                        <div style="width: 48px; height: 48px; border-radius: 50%; background: #F8FAFC; display: flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.25rem; border: 1px solid #E2E8F0;">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polyline points="12 6 12 12 16 14"></polyline>
+                                            </svg>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600; color: #1E293B;">
-                                            {{ $antrean->kuota?->jurusan?->nama_jurusan ?? '-' }}
-                                        </div>
-                                        <div style="font-size: 0.75rem; color: #64748B;">
-                                            {{ $antrean->user?->profil?->institusi ?? '-' }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span style="font-weight: 700; color: #0641CC; font-size: 0.8125rem;">
-                                            {{ $antrean->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
+                                        <span style="font-weight: 700; font-size: 0.9375rem; color: #334155;">
+                                            Tidak ada antrean peserta belum ditempatkan
                                         </span>
-                                        <div style="font-size: 0.75rem; color: #64748B;">
-                                            Durasi: {{ $antrean->durasi_bulan }} Bulan
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span style="font-size: 0.8125rem; color: #475569;">
-                                            {{ $antrean->diputuskan_at?->translatedFormat('d M Y H:i') ?? '-' }}
+                                        <span style="font-size: 0.8125rem; color: #64748B; max-width: 480px; line-height: 1.5;">
+                                            Seluruh calon peserta lolos berkas telah ditetapkan pembimbing dan bidang dinas.
                                         </span>
-                                    </td>
-                                    <td style="text-align: right;">
-                                        @if(auth()->user()?->isSuperAdmin())
-                                            <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Menunggu Penempatan</span>
-                                        @else
-                                            <button type="button" 
-                                                    onclick="openTetapkanModal({{ $antrean->id }}, '{{ addslashes($antrean->user?->nama) }}', '{{ addslashes($antrean->kuota?->jurusan?->nama_jurusan ?? '') }}', {{ $defBidangId ?? 'null' }}, '{{ addslashes($defBidangNama) }}')" 
-                                                    style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.95rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                                                <span>Tempatkan</span>
-                                            </button>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-        @else
-            <div class="admin-card" style="padding: 3.5rem 1.5rem; text-align: center; border-radius: 12px; background: #FFFFFF; border: 1px solid var(--neutral-200, #E2E8F0);">
-                <div style="width: 64px; height: 64px; background: #ECFDF5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: #059669; border: 1px solid #A7F3D0;">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                </div>
-                <h4 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0 0 0.5rem 0;">
-                    Semua Peserta Sudah Ditempatkan
-                </h4>
-                <p style="font-size: 0.875rem; color: var(--neutral-500, #64748B); max-width: 480px; margin: 0 auto 1.25rem auto; line-height: 1.5;">
-                    Tidak ada calon peserta lolos berkas yang menunggu penetapan pembimbing lapangan saat ini. Seluruh peserta telah dialokasikan ke bidang dinas masing-masing.
-                </p>
-                <button type="button" onclick="switchPenempatanTab('sudah')" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: #0641CC; color: #FFFFFF; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                    <span>Lihat Data Penempatan Selesai/Aktif</span>
-                </button>
-            </div>
-                </div>
-                <h4 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0 0 0.5rem 0;">
-                    Semua Peserta Sudah Ditempatkan
-                </h4>
-                <p style="font-size: 0.875rem; color: var(--neutral-500, #64748B); max-width: 480px; margin: 0 auto 1.25rem auto; line-height: 1.5;">
-                    Tidak ada calon peserta lolos berkas yang menunggu penetapan pembimbing lapangan saat ini. Seluruh peserta telah dialokasikan ke bidang dinas masing-masing.
-                </p>
-                <button type="button" onclick="switchPenempatanTab('sudah')" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: #0641CC; color: #FFFFFF; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                    <span>Lihat Data Penempatan Selesai/Aktif</span>
-                </button>
-            </div>
-        @endif
+        </div>
     </div>
 
 </div>

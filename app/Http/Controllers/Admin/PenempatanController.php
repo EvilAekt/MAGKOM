@@ -123,6 +123,20 @@ class PenempatanController extends Controller
             });
         }
 
+        if ($request->filled('jurusan_id')) {
+            $jurusanId = $request->integer('jurusan_id');
+            $antreanQuery->whereHas('kuota', function ($qk) use ($jurusanId) {
+                $qk->where('jurusan_id', $jurusanId);
+            });
+        }
+
+        if ($request->filled('bidang_id')) {
+            $bidangId = $request->integer('bidang_id');
+            $antreanQuery->whereHas('kuota.jurusan.bidang', function ($qb) use ($bidangId) {
+                $qb->where('bidang.id', $bidangId);
+            });
+        }
+
         $antreanBelumDitempatkan = $antreanQuery->get();
 
         $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
