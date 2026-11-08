@@ -3404,16 +3404,6 @@
                             <span class="sr-only">Role</span>
                         </a>
 
-                        <a href="{{ route('superadmin.rubrik.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.rubrik.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
-                            </span>
-                            <span>{{ __('Rubrik Nilai') }}</span>
-                            <span class="sr-only">Rubrik</span>
-                        </a>
-
                         <a href="{{ route('superadmin.audit-log.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.audit-log.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3451,7 +3441,7 @@
                         </a>
 
                         @php
-                            $isConfigActive = request()->routeIs('superadmin.pengaturan.*') || request()->routeIs('superadmin.bulan.*') || request()->routeIs('superadmin.slot-khusus.*') || request()->routeIs('superadmin.jurusan.*') || request()->routeIs('superadmin.bidang.*');
+                            $isConfigActive = request()->routeIs('superadmin.pengaturan.*') || request()->routeIs('superadmin.landing.*') || request()->routeIs('superadmin.bulan.*') || request()->routeIs('superadmin.slot-khusus.*') || request()->routeIs('superadmin.jurusan.*') || request()->routeIs('superadmin.bidang.*');
                         @endphp
                         <div class="nav-group-container">
                             <button type="button" class="nav-group-btn {{ $isConfigActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isConfigActive ? 'true' : 'false' }}">
@@ -3472,6 +3462,10 @@
                                 <a href="{{ route('superadmin.pengaturan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.pengaturan.*') ? 'active' : '' }}">
                                     <span>{{ __('Pengaturan') }}</span>
                                     <span class="sr-only">Pengaturan Sistem</span>
+                                </a>
+                                <a href="{{ route('superadmin.site-editor.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.site-editor.*') || request()->routeIs('superadmin.landing.*') ? 'active' : '' }}" title="Canvas Editor Landing Page">
+                                    <span>{{ __('Canvas Editor') }}</span>
+                                    <span class="sr-only">Landing Page & Konten Publik Canvas Editor</span>
                                 </a>
                                 <a href="{{ route('superadmin.bulan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bulan.*') ? 'active' : '' }}">
                                     <span>{{ __('Periode Magang') }}</span>

@@ -440,9 +440,12 @@ class PlacementService extends AuditedService
                     $kuota = $this->quotaAllocationService->ambilKuotaUmum((int) $kuotaId);
                     $assignedKuotaId = $kuota->id;
                     $jalurEnum = JalurEnum::Umum;
-                } else {
+                } elseif ($slotKhususId) {
                     $slot = $this->quotaAllocationService->ambilKuotaKhusus((int) $slotKhususId);
                     $assignedSlotId = $slot->id;
+                    $jalurEnum = JalurEnum::Khusus;
+                } else {
+                    $assignedSlotId = null;
                     $jalurEnum = JalurEnum::Khusus;
                 }
 

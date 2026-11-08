@@ -126,7 +126,7 @@
                                        min="0" 
                                        max="100" 
                                        step="0.01" 
-                                       required 
+                                       {{ auth()->user()?->isSuperAdmin() ? 'disabled' : 'required' }} 
                                        value="{{ $val }}"
                                        placeholder="0 - 100" 
                                        style="width: 120px; height: 38px; text-align: right; display: inline-block; font-weight: 700; font-size: 0.9375rem;">
@@ -161,10 +161,10 @@
                 <label style="display: block; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-800); margin-bottom: 0.375rem;">
                     Catatan & Ulasan Evaluasi Pembimbing
                 </label>
-                <textarea name="catatan" rows="3" placeholder="Tuliskan catatan apresiasi, evaluasi sikap kerja, atau rekomendasi perbaikan untuk peserta magang..." class="form-control" style="width: 100%; border-radius: 8px; padding: 0.75rem; font-size: 0.875rem;">{{ old('catatan', $penilaian->catatan ?? '') }}</textarea>
+                <textarea name="catatan" rows="3" {{ auth()->user()?->isSuperAdmin() ? 'disabled' : '' }} placeholder="Tuliskan catatan apresiasi, evaluasi sikap kerja, atau rekomendasi perbaikan untuk peserta magang..." class="form-control" style="width: 100%; border-radius: 8px; padding: 0.75rem; font-size: 0.875rem;">{{ old('catatan', $penilaian->catatan ?? '') }}</textarea>
             </div>
 
-            @if($isFinal)
+            @if($isFinal && !auth()->user()?->isSuperAdmin())
                 <!-- Revision Reason Section if already final -->
                 <div style="background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px; padding: 1.25rem;">
                     <div style="font-size: 0.875rem; font-weight: 700; color: #92400e; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
@@ -183,7 +183,11 @@
 
             <!-- Action Buttons -->
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; flex-wrap: wrap; border-top: 1px solid var(--neutral-300); padding-top: 1.25rem;">
-                @if(!$isFinal)
+                @if(auth()->user()?->isSuperAdmin())
+                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #BFDBFE;">
+                        Mode Lihat Saja (Read-Only)
+                    </span>
+                @elseif(!$isFinal)
                     <button type="submit" name="is_final" value="0" class="btn btn-default" style="height: 42px; padding: 0 1.25rem; font-weight: 600; font-size: 0.875rem; border-radius: 8px; cursor: pointer;">
                         <i class="fa fa-save" style="margin-right: 0.35rem;"></i> Simpan Sebagai Draf
                     </button>
@@ -200,7 +204,7 @@
     </x-gentelella.x-panel>
 
     <!-- Complete Internship Action (BR-10) -->
-    @if($isFinal && $penempatan->status->value !== 'selesai')
+    @if($isFinal && $penempatan->status->value !== 'selesai' && !auth()->user()?->isSuperAdmin())
         <x-gentelella.card title="Penyelesaian Periode Magang (BR-10)" icon="fa fa-graduation-cap">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <div>

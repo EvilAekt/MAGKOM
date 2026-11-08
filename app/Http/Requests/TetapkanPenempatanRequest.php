@@ -12,7 +12,7 @@ class TetapkanPenempatanRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->isAdmin() || $this->user()?->isSuperAdmin();
+        return (bool) $this->user()?->isAdmin();
     }
 
     public function rules(): array

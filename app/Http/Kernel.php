@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\EnsureAccountActive;
+use App\Http\Middleware\EnsureLandingPreviewContext;
 use App\Http\Middleware\EnsureParticipantWritable;
 use App\Http\Middleware\EnsurePasswordChanged;
 use App\Http\Middleware\EnsurePesertaDiterima;
@@ -72,6 +73,7 @@ class Kernel extends HttpKernel
             SecurityHeaders::class,
             LogAuditTrail::class,
             RecordRoutePerformance::class,
+            EnsureLandingPreviewContext::class,
         ],
 
         'api' => [

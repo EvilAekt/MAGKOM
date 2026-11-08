@@ -315,22 +315,22 @@
                 <input type="email" name="email" required placeholder="budi@slemankab.go.id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;" id="gridRoleBidangTambah">
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
                         Peran Akses <span style="color: var(--red-600);">*</span>
                     </label>
-                    <select name="role" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
-                        <option value="admin">Admin Verifikator</option>
+                    <select name="role" id="tambahRole" onchange="toggleBidangField('tambah')" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
+                        <option value="admin" selected>Admin Verifikator</option>
                         <option value="pembimbing">Pembimbing Lapangan</option>
                     </select>
                 </div>
-                <div>
+                <div id="wrapBidangTambah" style="display: none;">
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                        Bidang Unit Kerja
+                        Bidang Unit Kerja <span style="color: var(--red-600);">*</span>
                     </label>
-                    <select name="bidang_id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
-                        <option value="">-- Tanpa Bidang Spesifik --</option>
+                    <select name="bidang_id" id="tambahBidang" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
+                        <option value="">-- Pilih Bidang Unit Kerja --</option>
                         @foreach($bidangList as $b)
                             <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
                         @endforeach
@@ -438,18 +438,18 @@
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
                     Peran Akses Sistem <span style="color: var(--red-600);">*</span>
                 </label>
-                <select id="editRole" name="role" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
+                <select id="editRole" name="role" onchange="toggleBidangField('edit')" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
                     <option value="admin">Administrasi Kominfo (Verifikator)</option>
                     <option value="pembimbing">Pembimbing Lapangan</option>
                 </select>
             </div>
 
-            <div>
+            <div id="wrapBidangEdit">
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Bidang Penugasan Dinas (Opsional)
+                    Bidang Penugasan Dinas <span style="color: var(--red-600);">*</span>
                 </label>
                 <select id="editBidang" name="bidang_id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
-                    <option value="">-- Tanpa Bidang Spesifik --</option>
+                    <option value="">-- Pilih Bidang Unit Kerja --</option>
                     @foreach($bidangList as $b)
                         <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
                     @endforeach
@@ -469,6 +469,41 @@
 </div>
 
 <script>
+    function toggleBidangField(mode) {
+        if (mode === 'tambah') {
+            const roleEl = document.getElementById('tambahRole');
+            const wrapEl = document.getElementById('wrapBidangTambah');
+            const selectEl = document.getElementById('tambahBidang');
+            const gridEl = document.getElementById('gridRoleBidangTambah');
+            if (roleEl && wrapEl && selectEl) {
+                if (roleEl.value === 'admin') {
+                    wrapEl.style.display = 'none';
+                    selectEl.required = false;
+                    selectEl.value = '';
+                    if (gridEl) gridEl.style.gridTemplateColumns = '1fr';
+                } else {
+                    wrapEl.style.display = 'block';
+                    selectEl.required = true;
+                    if (gridEl) gridEl.style.gridTemplateColumns = '1fr 1fr';
+                }
+            }
+        } else if (mode === 'edit') {
+            const roleEl = document.getElementById('editRole');
+            const wrapEl = document.getElementById('wrapBidangEdit');
+            const selectEl = document.getElementById('editBidang');
+            if (roleEl && wrapEl && selectEl) {
+                if (roleEl.value === 'admin') {
+                    wrapEl.style.display = 'none';
+                    selectEl.required = false;
+                    selectEl.value = '';
+                } else {
+                    wrapEl.style.display = 'block';
+                    selectEl.required = true;
+                }
+            }
+        }
+    }
+
     function openModalReset(stafId, stafNama) {
         document.getElementById('resetNamaStaf').textContent = stafNama;
         document.getElementById('formResetSandi').action = '/superadmin/staf/' + stafId + '/reset-password';
@@ -480,8 +515,13 @@
         document.getElementById('editEmail').value = email;
         document.getElementById('editRole').value = role;
         document.getElementById('editBidang').value = bidangId || '';
+        toggleBidangField('edit');
         document.getElementById('formEditStaf').action = '/superadmin/staf/' + stafId;
         document.getElementById('modalEditStaf').style.display = 'flex';
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleBidangField('tambah');
+    });
 </script>
 @endsection

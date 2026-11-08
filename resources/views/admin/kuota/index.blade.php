@@ -1023,23 +1023,30 @@
             </div>
 
             <div class="kuota-page-actions">
-                @if($selectedBulan)
-                    <button type="button" onclick="openUbahBulanModal()" class="btn-outline-action">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 20h9"></path>
-                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                @if(auth()->user()?->isSuperAdmin())
+                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.45rem 0.85rem; border-radius: 999px; border: 1px solid #BFDBFE;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>Mode Lihat Saja</span>
+                    </span>
+                @else
+                    @if($selectedBulan)
+                        <button type="button" onclick="openUbahBulanModal()" class="btn-outline-action">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                            </svg>
+                            <span>Ubah bulan</span>
+                        </button>
+                    @endif
+
+                    <button type="button" onclick="openBuatBulanModal()" class="btn-primary-action">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
-                        <span>Ubah bulan</span>
+                        <span>Buat bulan baru</span>
                     </button>
                 @endif
-
-                <button type="button" onclick="openBuatBulanModal()" class="btn-primary-action">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    <span>Buat bulan baru</span>
-                </button>
             </div>
         </div>
     @endif
@@ -1050,7 +1057,7 @@
     <x-gentelella.x-panel 
         title="Kuota per bidang"
     >
-        @if($selectedBulan)
+        @if($selectedBulan && !auth()->user()?->isSuperAdmin())
             <x-slot:actions>
                 <button type="button" onclick="openTambahKuotaModal()" class="btn-primary-action btn-tambah-kuota-header">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1138,11 +1145,15 @@
 
                                 {{-- 7. Aksi --}}
                                 <td style="text-align: right;">
-                                    <button type="button" 
-                                            onclick="openEditBidangModal({{ $item['id'] }}, '{{ addslashes($item['nama']) }}', {{ json_encode($item['jurusan_list']->map(fn($j) => ['id' => $j->id, 'nama' => $j->nama_jurusan, 'jumlah' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->jumlah ?? 0, 'terisi' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->terisi ?? 0])) }})" 
-                                            class="btn-edit-action">
-                                        Ubah
-                                    </button>
+                                    @if(auth()->user()?->isSuperAdmin())
+                                        <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Read-Only</span>
+                                    @else
+                                        <button type="button" 
+                                                onclick="openEditBidangModal({{ $item['id'] }}, '{{ addslashes($item['nama']) }}', {{ json_encode($item['jurusan_list']->map(fn($j) => ['id' => $j->id, 'nama' => $j->nama_jurusan, 'jumlah' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->jumlah ?? 0, 'terisi' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->terisi ?? 0])) }})" 
+                                                class="btn-edit-action">
+                                            Ubah
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
