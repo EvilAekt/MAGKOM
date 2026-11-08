@@ -81,6 +81,17 @@ class Pengaturan extends Model
     }
 
     /**
+     * Menghapus konfigurasi berdasarkan kunci.
+     */
+    public static function deleteKunci(string $kunci): void
+    {
+        $setting = self::where('kunci', $kunci)->first();
+        if ($setting) {
+            $setting->delete();
+        }
+    }
+
+    /**
      * Mengambil nilai JSON sebagai array.
      *
      * @return array<string, mixed>
