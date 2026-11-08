@@ -31,6 +31,17 @@
 
     --font-display: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --border-radius-card: 12px;
+    --radius-button: 8px;
+}
+
+/* Dynamic Theming Mappings */
+.hero-card, .tahapan-step-card, .kuota-gauge-card, .faq-category-btn, .faq-accordion-item {
+    border-radius: var(--border-radius-card);
+}
+
+.landing-btn, .hero-cta-btn, .kuota-cta-btn, .tahapan-btn-pdf, .tahapan-btn-peta, .btn-primary {
+    border-radius: var(--radius-button);
 }
 
 html {
@@ -1636,5 +1647,219 @@ html {
     white-space: nowrap;
     border-width: 0;
 }
+
+/* ==========================================================================
+   CMS PREVIEW FLOATING CONTROL BAR (STAGING SANDBOX)
+   ========================================================================== */
+.magkom-preview-bar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 99999;
+    background: #0f172a;
+    border-bottom: 2px solid #f59e0b;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    color: #f8fafc;
+    font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+}
+
+.magkom-preview-bar__container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0.625rem 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.magkom-preview-bar__info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 280px;
+}
+
+.magkom-preview-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: #f59e0b;
+    color: #0f172a;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    letter-spacing: 0.025em;
+    white-space: nowrap;
+}
+
+.magkom-preview-badge--historical {
+    background: #d97706;
+    color: #ffffff;
+}
+
+.magkom-preview-badge--historical .magkom-preview-badge__dot {
+    background: #fef08a;
+}
+
+.magkom-preview-badge__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: #b45309;
+    animation: preview-pulse 2s infinite;
+}
+
+@keyframes preview-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.magkom-preview-desc {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #cbd5e1;
+    line-height: 1.4;
+}
+
+.magkom-preview-desc strong {
+    color: #fbbf24;
+}
+
+.magkom-preview-bar__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.preview-action-form {
+    margin: 0;
+    display: inline;
+}
+
+.btn-preview-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.375rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-preview-back:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+}
+
+.btn-preview-discard {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-preview-discard:hover {
+    background: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+}
+
+.btn-preview-publish {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: #2563eb;
+    border: 1px solid #3b82f6;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+}
+
+.btn-preview-publish:hover {
+    background: #1d4ed8;
+    border-color: #2563eb;
+}
+
+@media (max-width: 768px) {
+    .magkom-preview-bar__container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .magkom-preview-bar__actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+/* ==========================================================================
+   TASK 3: RESPONSIVE VISIBILITY & SCOPED BLOCK STYLING ENGINE
+   ========================================================================== */
+@media (min-width: 1024px) {
+    .hide-on-desktop {
+        display: none !important;
+    }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+    .hide-on-tablet {
+        display: none !important;
+    }
+}
+@media (max-width: 767px) {
+    .hide-on-mobile {
+        display: none !important;
+    }
+}
+
+/* Scoped Block Styling Custom Properties Application */
+[data-wp-block-id] {
+    padding-top: var(--block-padding-y, inherit);
+    padding-bottom: var(--block-padding-y, inherit);
+    margin-top: var(--block-margin-y, inherit);
+    margin-bottom: var(--block-margin-y, inherit);
+    background-color: var(--block-bg-color, inherit);
+    color: var(--block-text-color, inherit);
+    text-align: var(--block-text-align, inherit);
+}
+
+[data-wp-block-id] .hero-card,
+[data-wp-block-id] .tahapan-step-card,
+[data-wp-block-id] .kuota-gauge-card,
+[data-wp-block-id] .faq-accordion-item {
+    border-radius: var(--block-card-radius, var(--border-radius-card, 12px));
+}
+
+[data-wp-block-id] h1,
+[data-wp-block-id] h2,
+[data-wp-block-id] .hero-main-title,
+[data-wp-block-id] .section-title {
+    font-size: var(--block-font-size, inherit);
+}
+
+
 
 

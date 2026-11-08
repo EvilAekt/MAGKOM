@@ -45,8 +45,14 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
+    @if(isset($isPreview) && $isPreview)
+        @vite(['resources/css/pages/public/landing.css'])
+    @endif
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+
+    {{-- Floating Control Bar saat Mode Pratinjau Staging Aktif --}}
+    @include('public.partials._preview_control_bar')
 
     <!-- Header Instansi Resmi -->
     <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
@@ -90,106 +96,122 @@
         </nav>
 
         <article class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden">
+            @php
+                $kebijakanBadge = \App\Support\Pengaturan::get('kebijakan_privasi_badge', 'Undang-Undang PDP No. 27 Tahun 2022');
+                $kebijakanTitle = \App\Support\Pengaturan::get('kebijakan_privasi_title', 'Kebijakan Privasi & Perlindungan Data');
+                $kebijakanUpdatedAt = \App\Support\Pengaturan::get('kebijakan_privasi_updated_at', 'Terakhir diperbarui: 27 Oktober 2026 • Dinas Komunikasi dan Informatika Kabupaten Sleman');
+
+                $defaultKebijakanSections = [
+                    [
+                        'nomor' => 1,
+                        'judul' => 'Komitmen Perlindungan Data Pribadi',
+                        'konten' => 'Dinas Komunikasi dan Informatika (Diskominfo) Kabupaten Sleman berkomitmen penuh untuk melindungi privasi dan keamanan data pribadi calon peserta, peserta aktif, dan alumni program magang (MAGKOM). Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pribadi Anda.',
+                    ],
+                    [
+                        'nomor' => 2,
+                        'judul' => 'Data yang Kami Kumpulkan',
+                        'konten' => 'Untuk keperluan seleksi administrasi, penempatan bidang, dan penerbitan sertifikat resmi bertanda tangan elektronik (TTE), kami mengumpulkan data yang mencakup:',
+                        'items' => [
+                            'Identitas Diri: Nama lengkap, NISN/NIM, NIK, tempat & tanggal lahir, serta foto profil resmi.',
+                            'Kontak: Alamat surat elektronik (email) aktif dan nomor telepon/WhatsApp.',
+                            'Afiliasi Akademik: Asal sekolah SMK/perguruan tinggi, program studi/jurusan, dan semester/tingkat kelas.',
+                            'Dokumen Persyaratan: Surat pengantar resmi institusi pendidikan, proposal/curriculum vitae, transkrip nilai, dan portofolio keahlian.',
+                        ],
+                    ],
+                    [
+                        'nomor' => 3,
+                        'judul' => 'Keamanan Penyimpanan & Tautan Bertanda Tangan (Signed URLs)',
+                        'konten' => 'Seluruh berkas dokumen yang diunggah ke dalam sistem MAGKOM disimpan pada media penyimpanan privat yang terenkripsi. Berkas dokumen tidak dapat diakses secara publik tanpa otorisasi.',
+                        'highlight' => 'Verifikator dinas dan pembimbing lapangan hanya dapat mengakses berkas Anda melalui tautan sementara bertanda tangan digital (signed URL) dengan masa kedaluwarsa ketat untuk mencegah kebocoran informasi.',
+                    ],
+                    [
+                        'nomor' => 4,
+                        'judul' => 'Larangan Komersialisasi & Pembagian Pihak Ketiga',
+                        'konten' => 'Pemerintah Kabupaten Sleman menjamin bahwa data pribadi peserta tidak akan pernah diperjualbelikan, disewakan, atau dibagikan kepada pihak ketiga komersial. Data hanya digunakan secara internal untuk keperluan pembinaan kompetensi magang dan pelaporan kinerja instansi pemerintah.',
+                    ],
+                    [
+                        'nomor' => 5,
+                        'judul' => 'Hak Subjek Data & Kontak Bantuan',
+                        'konten' => 'Anda memiliki hak untuk meminta pembaruan data, memperbaiki kekeliruan biodata, atau berkonsultasi mengenai status dokumen Anda melalui saluran resmi:',
+                    ],
+                ];
+
+                $kebijakanSections = \App\Support\Pengaturan::json('kebijakan_privasi_sections', $defaultKebijakanSections);
+                if (empty($kebijakanSections)) {
+                    $kebijakanSections = $defaultKebijakanSections;
+                }
+
+                $layananEmail = \App\Support\Pengaturan::get('landing_footer_email', 'kominfo@slemankab.go.id');
+                $layananTelepon = \App\Support\Pengaturan::get('landing_footer_telepon', '(0274) 868405');
+            @endphp
+
             <!-- Header Kartu -->
             <div class="bg-gradient-to-r from-navy-900 via-navy-800 to-blue-900 px-6 sm:px-10 py-8 text-white">
                 <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-xs font-semibold uppercase tracking-wider mb-3">
                     <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                     </svg>
-                    <span>Undang-Undang PDP No. 27 Tahun 2022</span>
+                    <span>{{ $kebijakanBadge }}</span>
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Kebijakan Privasi &amp; Perlindungan Data</h1>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">{{ $kebijakanTitle }}</h1>
                 <p class="text-xs sm:text-sm text-slate-300 mt-2">
-                    Terakhir diperbarui: 27 Oktober 2026 &bull; Dinas Komunikasi dan Informatika Kabupaten Sleman
+                    {{ $kebijakanUpdatedAt }}
                 </p>
             </div>
 
             <!-- Isi Dokumen Kebijakan -->
             <div class="p-6 sm:p-10 space-y-8 text-slate-700 leading-relaxed text-sm sm:text-base">
-                
-                <section>
-                    <div class="flex items-center space-x-2.5 text-navy-800 font-bold text-lg mb-2">
-                        <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-extrabold border border-blue-100">1</span>
-                        <h2>Komitmen Perlindungan Data Pribadi</h2>
-                    </div>
-                    <p class="text-slate-600 pl-9">
-                        Dinas Komunikasi dan Informatika (Diskominfo) Kabupaten Sleman berkomitmen penuh untuk melindungi privasi dan keamanan data pribadi calon peserta, peserta aktif, dan alumni program magang (MAGKOM). Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pribadi Anda.
-                    </p>
-                </section>
-
-                <hr class="border-slate-100">
-
-                <section>
-                    <div class="flex items-center space-x-2.5 text-navy-800 font-bold text-lg mb-2">
-                        <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-extrabold border border-blue-100">2</span>
-                        <h2>Data yang Kami Kumpulkan</h2>
-                    </div>
-                    <p class="text-slate-600 pl-9 mb-3">
-                        Untuk keperluan seleksi administrasi, penempatan bidang, dan penerbitan sertifikat resmi bertanda tangan elektronik (TTE), kami mengumpulkan data yang mencakup:
-                    </p>
-                    <ul class="list-disc list-inside space-y-1.5 pl-9 text-slate-600 text-sm">
-                        <li><strong>Identitas Diri:</strong> Nama lengkap, NISN/NIM, NIK, tempat & tanggal lahir, serta foto profil resmi.</li>
-                        <li><strong>Kontak:</strong> Alamat surat elektronik (email) aktif dan nomor telepon/WhatsApp.</li>
-                        <li><strong>Afiliasi Akademik:</strong> Asal sekolah SMK/perguruan tinggi, program studi/jurusan, dan semester/tingkat kelas.</li>
-                        <li><strong>Dokumen Persyaratan:</strong> Surat pengantar resmi institusi pendidikan, proposal/curriculum vitae, transkrip nilai, dan portofolio keahlian.</li>
-                    </ul>
-                </section>
-
-                <hr class="border-slate-100">
-
-                <section>
-                    <div class="flex items-center space-x-2.5 text-navy-800 font-bold text-lg mb-2">
-                        <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-extrabold border border-blue-100">3</span>
-                        <h2>Keamanan Penyimpanan &amp; Tautan Bertanda Tangan (Signed URLs)</h2>
-                    </div>
-                    <p class="text-slate-600 pl-9 mb-3">
-                        Seluruh berkas dokumen yang diunggah ke dalam sistem MAGKOM disimpan pada media penyimpanan privat yang terenkripsi. Berkas dokumen tidak dapat diakses secara publik tanpa otorisasi.
-                    </p>
-                    <div class="pl-9">
-                        <div class="p-4 bg-blue-50 border border-blue-200/80 rounded-xl text-xs sm:text-sm text-blue-900 flex items-start space-x-3">
-                            <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                            </svg>
-                            <p class="leading-relaxed">
-                                Verifikator dinas dan pembimbing lapangan hanya dapat mengakses berkas Anda melalui tautan sementara bertanda tangan digital (signed URL) dengan masa kedaluwarsa ketat untuk mencegah kebocoran informasi.
-                            </p>
+                @foreach($kebijakanSections as $idx => $sec)
+                    <section>
+                        <div class="flex items-center space-x-2.5 text-navy-800 font-bold text-lg mb-2">
+                            <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-extrabold border border-blue-100">
+                                {{ $sec['nomor'] ?? ($idx + 1) }}
+                            </span>
+                            <h2>{{ $sec['judul'] ?? '' }}</h2>
                         </div>
-                    </div>
-                </section>
+                        <p class="text-slate-600 pl-9 mb-3">
+                            {{ $sec['konten'] ?? '' }}
+                        </p>
 
-                <hr class="border-slate-100">
+                        @if(!empty($sec['items']) && is_array($sec['items']))
+                            <ul class="list-disc list-inside space-y-1.5 pl-9 text-slate-600 text-sm mb-3">
+                                @foreach($sec['items'] as $itemText)
+                                    <li>{{ $itemText }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
 
-                <section>
-                    <div class="flex items-center space-x-2.5 text-navy-800 font-bold text-lg mb-2">
-                        <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-extrabold border border-blue-100">4</span>
-                        <h2>Larangan Komersialisasi &amp; Pembagian Pihak Ketiga</h2>
-                    </div>
-                    <p class="text-slate-600 pl-9">
-                        Pemerintah Kabupaten Sleman menjamin bahwa data pribadi peserta <strong>tidak akan pernah diperjualbelikan, disewakan, atau dibagikan kepada pihak ketiga komersial</strong>. Data hanya digunakan secara internal untuk keperluan pembinaan kompetensi magang dan pelaporan kinerja instansi pemerintah.
-                    </p>
-                </section>
+                        @if(!empty($sec['highlight']))
+                            <div class="pl-9 mb-3">
+                                <div class="p-4 bg-blue-50 border border-blue-200/80 rounded-xl text-xs sm:text-sm text-blue-900 flex items-start space-x-3">
+                                    <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                    </svg>
+                                    <p class="leading-relaxed">
+                                        {{ $sec['highlight'] }}
+                                    </p>
+                                </div>
+                            </div>
+                        @endif
 
-                <hr class="border-slate-100">
+                        @if(($sec['nomor'] ?? ($idx + 1)) == 5)
+                            <div class="pl-9 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm mt-3">
+                                <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+                                    <span class="text-slate-400 font-semibold block text-xs">Email Layanan:</span>
+                                    <span class="font-bold text-slate-800">{{ $layananEmail }}</span>
+                                </div>
+                                <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+                                    <span class="text-slate-400 font-semibold block text-xs">Telepon Kantor:</span>
+                                    <span class="font-bold text-slate-800">{{ $layananTelepon }}</span>
+                                </div>
+                            </div>
+                        @endif
+                    </section>
 
-                <section>
-                    <div class="flex items-center space-x-2.5 text-navy-800 font-bold text-lg mb-2">
-                        <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-extrabold border border-blue-100">5</span>
-                        <h2>Hak Subjek Data &amp; Kontak Bantuan</h2>
-                    </div>
-                    <p class="text-slate-600 pl-9 mb-4">
-                        Anda memiliki hak untuk meminta pembaruan data, memperbaiki kekeliruan biodata, atau berkonsultasi mengenai status dokumen Anda melalui saluran resmi:
-                    </p>
-                    <div class="pl-9 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
-                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
-                            <span class="text-slate-400 font-semibold block text-xs">Email Layanan:</span>
-                            <span class="font-bold text-slate-800">kominfo@slemankab.go.id</span>
-                        </div>
-                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
-                            <span class="text-slate-400 font-semibold block text-xs">Telepon Kantor:</span>
-                            <span class="font-bold text-slate-800">(0274) 868405</span>
-                        </div>
-                    </div>
-                </section>
+                    @if(!$loop->last)
+                        <hr class="border-slate-100">
+                    @endif
+                @endforeach
 
                 <!-- Box Navigasi Cepat Terintegrasi -->
                 <div class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
