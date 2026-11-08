@@ -54,13 +54,15 @@ use App\Http\Controllers\SuperAdmin\BulanController;
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
 use App\Http\Controllers\SuperAdmin\HealthMonitorController;
 use App\Http\Controllers\SuperAdmin\JurusanController;
+use App\Http\Controllers\SuperAdmin\LandingCmsController;
+use App\Http\Controllers\SuperAdmin\LandingCmsSiteEditorController;
 use App\Http\Controllers\SuperAdmin\ModulBuilderController;
 use App\Http\Controllers\SuperAdmin\ModulDataController;
 use App\Http\Controllers\SuperAdmin\MonitoringPesertaController;
 use App\Http\Controllers\SuperAdmin\PengaturanController;
+use App\Http\Controllers\SuperAdmin\PesertaJalurKhususController;
 use App\Http\Controllers\SuperAdmin\ProfilController as SuperAdminProfilController;
 use App\Http\Controllers\SuperAdmin\RoleController;
-use App\Http\Controllers\SuperAdmin\RubrikController;
 use App\Http\Controllers\SuperAdmin\SlotKhususController;
 use App\Http\Controllers\SuperAdmin\StafController;
 use Illuminate\Support\Facades\Route;
@@ -262,8 +264,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::post('/pengaturan/preferensi', [PembimbingPengaturanController::class, 'updatePreferensi'])->name('pengaturan.preferensi.update');
 });
 
-// Rute Admin & SuperAdmin (F-04, F-05, F-07, F-17, SEC-03)
-Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
+// Rute Admin & SuperAdmin (F-04, F-05, F-07, F-17, SEC-03, Task A SuperAdmin Read-Only)
+Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:admin,superadmin', 'superadmin.readonly'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/kuota', [KuotaController::class, 'index'])->name('kuota.index');
@@ -339,6 +341,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::put('/slot-khusus/{slot_khusus}', [SlotKhususController::class, 'update'])->name('slot-khusus.update');
     Route::patch('/slot-khusus/{slot_khusus}/toggle', [SlotKhususController::class, 'toggleAktif'])->name('slot-khusus.toggle');
 
+    // Pendaftaran Peserta Jalur Khusus (Task D)
+    Route::get('/peserta-khusus/create', [PesertaJalurKhususController::class, 'create'])->name('peserta-khusus.create');
+    Route::post('/peserta-khusus', [PesertaJalurKhususController::class, 'store'])->name('peserta-khusus.store');
+
     // Manajemen Staf Internal (F-11)
     Route::get('/staf', [StafController::class, 'index'])->name('staf.index');
     Route::post('/staf', [StafController::class, 'store'])->name('staf.store');
@@ -361,16 +367,71 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::put('/bidang/{bidang}', [BidangController::class, 'update'])->name('bidang.update');
     Route::patch('/bidang/{bidang}/toggle', [BidangController::class, 'toggleAktif'])->name('bidang.toggle');
 
-    Route::get('/rubrik', [RubrikController::class, 'index'])->name('rubrik.index');
-    Route::post('/rubrik', [RubrikController::class, 'store'])->name('rubrik.store');
-    Route::put('/rubrik/{rubrik}', [RubrikController::class, 'update'])->name('rubrik.update');
-    Route::patch('/rubrik/{rubrik}/toggle', [RubrikController::class, 'toggleAktif'])->name('rubrik.toggle');
-
     // Parameter Pengaturan Sistem (F-11, PRD 10.3 NFR-A5)
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
     Route::get('/pengaturan/export-json', [PengaturanController::class, 'exportMasterSnapshotJson'])->name('pengaturan.export-json');
     Route::put('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
     Route::post('/pengaturan/purge-audit', [PengaturanController::class, 'triggerPurgeAudit'])->name('pengaturan.purge-audit');
+
+    // CMS Pengelolaan Landing Page Publik (Task E & Staging Sandbox)
+    Route::get('/cms-landing', [LandingCmsController::class, 'index'])->name('landing.index');
+    Route::put('/cms-landing', [LandingCmsController::class, 'update'])->name('landing.update');
+    Route::post('/cms-landing/publish', [LandingCmsController::class, 'publishDraft'])->name('landing.publish');
+    Route::delete('/cms-landing/discard', [LandingCmsController::class, 'discardDraft'])->name('landing.discard');
+    Route::get('/cms-landing/preview', [LandingCmsController::class, 'preview'])->name('landing.preview');
+    Route::delete('/cms-landing/foto', [LandingCmsController::class, 'destroyFoto'])->name('landing.destroy-foto');
+    Route::delete('/cms-landing/panduan', [LandingCmsController::class, 'destroyPanduan'])->name('landing.destroy-panduan');
+
+    // WordPress.org Style Site Editor (Gutenberg Block Canvas & Right Inspector)
+    Route::prefix('site-editor')->name('site-editor.')->group(function () {
+        Route::get('/', [LandingCmsSiteEditorController::class, 'index'])->name('index');
+        Route::post('/save-draft', [LandingCmsSiteEditorController::class, 'saveDraft'])->name('save-draft');
+        Route::post('/publish', [LandingCmsSiteEditorController::class, 'publish'])->name('publish');
+        Route::delete('/discard', [LandingCmsSiteEditorController::class, 'discard'])->name('discard');
+        Route::post('/rollback', [LandingCmsSiteEditorController::class, 'rollback'])->name('rollback');
+
+        // Revision History
+        Route::get('/revisions', [LandingCmsSiteEditorController::class, 'revisions'])->name('revisions');
+        Route::get('/revisions/{id}/preview', [LandingCmsSiteEditorController::class, 'previewRevision'])->name('revisions.preview');
+        Route::post('/revisions/{id}/restore', [LandingCmsSiteEditorController::class, 'restoreRevision'])->name('revisions.restore');
+
+        // Media Library & Picker
+        Route::get('/media', [LandingCmsSiteEditorController::class, 'mediaIndex'])->name('media.index');
+        Route::post('/media/upload', [LandingCmsSiteEditorController::class, 'uploadMedia'])->name('media.upload');
+        Route::post('/media/{id}/replace', [LandingCmsSiteEditorController::class, 'replaceMedia'])->name('media.replace');
+        Route::put('/media/{id}', [LandingCmsSiteEditorController::class, 'updateMedia'])->name('media.update');
+        Route::delete('/media/{id}', [LandingCmsSiteEditorController::class, 'deleteMedia'])->name('media.delete');
+        Route::post('/reset-panduan', [LandingCmsSiteEditorController::class, 'resetPanduanPdf'])->name('reset-panduan');
+
+        // Block Management Engine (Task 2)
+        Route::prefix('blocks')->name('blocks.')->group(function () {
+            Route::post('/add', [LandingCmsSiteEditorController::class, 'addBlock'])->name('add');
+            Route::post('/duplicate', [LandingCmsSiteEditorController::class, 'duplicateBlock'])->name('duplicate');
+            Route::post('/delete', [LandingCmsSiteEditorController::class, 'deleteBlock'])->name('delete');
+            Route::post('/reorder', [LandingCmsSiteEditorController::class, 'reorderBlocks'])->name('reorder');
+            Route::post('/toggle-visibility', [LandingCmsSiteEditorController::class, 'toggleVisibility'])->name('toggle-visibility');
+            Route::post('/toggle-lock', [LandingCmsSiteEditorController::class, 'toggleLock'])->name('toggle-lock');
+        });
+
+        // Pattern Library (Task 7)
+        Route::prefix('patterns')->name('patterns.')->group(function () {
+            Route::get('/', [LandingCmsSiteEditorController::class, 'patternsIndex'])->name('index');
+            Route::get('/{key}/preview', [LandingCmsSiteEditorController::class, 'patternPreview'])->name('preview');
+            Route::post('/insert', [LandingCmsSiteEditorController::class, 'insertPattern'])->name('insert');
+            Route::post('/custom', [LandingCmsSiteEditorController::class, 'saveCustomPattern'])->name('save-custom');
+            Route::delete('/custom/{id}', [LandingCmsSiteEditorController::class, 'deleteCustomPattern'])->name('delete-custom');
+        });
+
+        // Reusable Blocks Engine (Task 7)
+        Route::prefix('reusable-blocks')->name('reusable.')->group(function () {
+            Route::get('/', [LandingCmsSiteEditorController::class, 'reusableBlocksIndex'])->name('index');
+            Route::post('/', [LandingCmsSiteEditorController::class, 'createReusableBlock'])->name('create');
+            Route::post('/insert', [LandingCmsSiteEditorController::class, 'insertReusableBlock'])->name('insert');
+            Route::put('/{id}', [LandingCmsSiteEditorController::class, 'updateReusableBlock'])->name('update');
+            Route::delete('/{id}', [LandingCmsSiteEditorController::class, 'deleteReusableBlock'])->name('delete');
+            Route::post('/{blockId}/detach', [LandingCmsSiteEditorController::class, 'detachReusableBlock'])->name('detach');
+        });
+    });
 
     // Arsip Peserta Magang (F-12 AC-12-4, PRD 9.2)
     Route::get('/arsip-peserta', [ArsipPesertaController::class, 'index'])->name('arsip.index');
