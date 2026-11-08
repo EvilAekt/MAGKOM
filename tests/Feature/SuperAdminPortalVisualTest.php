@@ -8,7 +8,6 @@ use App\Enums\RoleEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
-use App\Models\Rubrik;
 use App\Models\SlotKhusus;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
@@ -145,12 +144,6 @@ class SuperAdminPortalVisualTest extends TestCase
         $resBidang->assertSee('Master Bidang Dinas');
         $resBidang->assertSee('Bidang Aplikasi Informatika');
         $resBidang->assertSee('modalTambahBidang');
-
-        // 3. Master Rubrik
-        $resRubrik = $this->actingAs($this->superAdmin)->get(route('superadmin.rubrik.index'));
-        $resRubrik->assertStatus(200);
-        $resRubrik->assertSee('Rubrik Penilaian');
-        $resRubrik->assertSee('modalEditRubrik');
     }
 
     public function test_superadmin_can_access_staf_management_page(): void

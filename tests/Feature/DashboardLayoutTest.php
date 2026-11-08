@@ -227,7 +227,8 @@ BLADE;
             $response->assertSee('Manajemen Staf');
             $response->assertSee('Master Jurusan');
             $response->assertSee('Bidang Dinas');
-            $response->assertSee('Rubrik Nilai');
+            $response->assertSee('Landing Page');
+            $response->assertDontSee('Rubrik Nilai');
             $response->assertSee('Pengaturan Sistem');
             $response->assertSee('Jejak Audit Log');
         } finally {
