@@ -98,11 +98,32 @@ class PenempatanController extends Controller
             ->orderBy('nama')
             ->get();
 
-        $antreanBelumDitempatkan = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan.bidang'])
+        $activeTab = $request->input('tab', 'sudah');
+        if (! in_array($activeTab, ['sudah', 'belum'], true)) {
+            $activeTab = 'sudah';
+        }
+
+        $antreanQuery = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan.bidang'])
             ->where('status', StatusPendaftaranEnum::Diterima)
             ->doesntHave('penempatan')
-            ->orderBy('diputuskan_at', 'desc')
-            ->get();
+            ->orderBy('diputuskan_at', 'desc');
+
+        $totalBelumDitempatkan = (clone $antreanQuery)->count();
+
+        if ($request->filled('bulan_magang_id')) {
+            $antreanQuery->where('bulan_magang_id', $request->integer('bulan_magang_id'));
+        }
+
+        if ($request->filled('q')) {
+            $search = '%'.trim((string) $request->input('q')).'%';
+            $antreanQuery->whereHas('user', function ($qu) use ($search) {
+                $qu->where('nama', 'like', $search)
+                    ->orWhere('email', 'like', $search)
+                    ->orWhereHas('profil', fn ($qp) => $qp->where('institusi', 'like', $search));
+            });
+        }
+
+        $antreanBelumDitempatkan = $antreanQuery->get();
 
         $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
         $slotKhususList = SlotKhusus::where('aktif', true)->orderBy('bulan_mulai')->get();
@@ -122,7 +143,7 @@ class PenempatanController extends Controller
             'aktif' => Penempatan::where('status', StatusPenempatanEnum::Aktif)->count(),
             'selesai' => Penempatan::where('status', StatusPenempatanEnum::Selesai)->count(),
             'khusus' => Penempatan::whereNotNull('slot_khusus_id')->count(),
-            'belum_ditempatkan' => $antreanBelumDitempatkan->count(),
+            'belum_ditempatkan' => $totalBelumDitempatkan,
         ];
 
         return view('admin.penempatan.index', [
@@ -137,6 +158,7 @@ class PenempatanController extends Controller
             'penempatanStats' => $penempatanStats,
             'antreanBelumDitempatkan' => $antreanBelumDitempatkan,
             'bulanList' => $bulanList,
+            'activeTab' => $activeTab,
         ]);
     }
 

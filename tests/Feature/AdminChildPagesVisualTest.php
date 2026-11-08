@@ -151,4 +151,57 @@ class AdminChildPagesVisualTest extends TestCase
         $response->assertDontSee('Tidak ditemukan berkas pendaftaran calon peserta magang yang sesuai dengan kriteria filter atau pencarian saat ini.');
         $response->assertSee('Reset Semua Filter');
     }
+
+    public function test_admin_penempatan_index_renders_two_navigation_tabs_with_counters(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
+
+        $response->assertOk();
+        $response->assertSee('tab-btn-sudah');
+        $response->assertSee('tab-btn-belum');
+        $response->assertSee('Sudah Ditempatkan');
+        $response->assertSee('Belum Ditempatkan');
+        $response->assertSee('panel-penempatan-sudah');
+        $response->assertSee('panel-penempatan-belum');
+    }
+
+    public function test_admin_penempatan_belum_tab_renders_empty_state_when_all_placed(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum']));
+
+        $response->assertOk();
+        $response->assertSee('Semua Peserta Sudah Ditempatkan');
+        $response->assertSee('Tidak ada calon peserta lolos berkas yang menunggu penetapan pembimbing lapangan saat ini.');
+        $response->assertSee('Lihat Data Penempatan Selesai/Aktif');
+    }
+
+    public function test_admin_penempatan_belum_tab_renders_unassigned_queue_when_accepted_applicant_exists(): void
+    {
+        $pesertaAntrean = new User;
+        $pesertaAntrean->nama = 'Budi Antrean Penempatan';
+        $pesertaAntrean->email = 'budi.antrean@example.com';
+        $pesertaAntrean->password = 'Password123!';
+        $pesertaAntrean->role = RoleEnum::Peserta;
+        $pesertaAntrean->status_aktif = true;
+        $pesertaAntrean->email_verified_at = now();
+        $pesertaAntrean->save();
+
+        Pendaftaran::create([
+            'user_id' => $pesertaAntrean->id,
+            'bulan_magang_id' => $this->bulan->id,
+            'kuota_id' => $this->kuota->id,
+            'nomor_pendaftaran' => 'REG-202611-0099',
+            'asal_instansi' => 'Universitas Negeri Yogyakarta',
+            'durasi_bulan' => 3,
+            'status' => StatusPendaftaranEnum::Diterima,
+            'diputuskan_at' => now(),
+        ]);
+
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum']));
+
+        $response->assertOk();
+        $response->assertSee('Budi Antrean Penempatan');
+        $response->assertSee('Antrean Peserta Lolos Berkas (Menunggu Penempatan)');
+        $response->assertSee('Tempatkan');
+    }
 }
