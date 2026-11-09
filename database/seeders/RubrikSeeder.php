@@ -4,29 +4,16 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Rubrik;
 use Illuminate\Database\Seeder;
 
+/**
+ * @deprecated Fitur Rubrik dan Penilaian telah dihapus permanen dari MagKom.
+ * Stub seeder ini dipertahankan sebagai no-op agar kompatibel dengan legacy test suite.
+ */
 class RubrikSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $rubrikList = [
-            ['kriteria' => 'Kualitas hasil kerja', 'bobot' => 30, 'aktif' => true],
-            ['kriteria' => 'Ketepatan waktu dan penyelesaian tugas', 'bobot' => 20, 'aktif' => true],
-            ['kriteria' => 'Inisiatif dan kemampuan belajar', 'bobot' => 20, 'aktif' => true],
-            ['kriteria' => 'Komunikasi dan kerja sama', 'bobot' => 15, 'aktif' => true],
-            ['kriteria' => 'Etika, disiplin, dan tanggung jawab', 'bobot' => 15, 'aktif' => true],
-        ];
-
-        foreach ($rubrikList as $rubrik) {
-            Rubrik::updateOrCreate(
-                ['kriteria' => $rubrik['kriteria']],
-                $rubrik
-            );
-        }
+        // No-op: Tabel rubrik telah dihapus dari sistem.
     }
 }
