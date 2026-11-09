@@ -4,35 +4,35 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Pembimbing;
 
-use App\Enums\RealtimeEventTypeEnum;
+use App\Actions\Pembimbing\Tugas\CreateBatchTugasAction;
+use App\Actions\Pembimbing\Tugas\MarkTugasCompletedAction;
+use App\Actions\Pembimbing\Tugas\ReviewTugasProgresAction;
+use App\Actions\Pembimbing\Tugas\UpdateTugasAction;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusReviewProgresEnum;
 use App\Enums\StatusTugasEnum;
-use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReviewProgresRequest;
 use App\Http\Requests\TugasRequest;
-use App\Models\BulanMagang;
 use App\Models\Penempatan;
 use App\Models\ProgresLog;
 use App\Models\Tugas;
 use App\Models\TugasTemplate;
-use App\Services\AuditService;
-use App\Services\RealtimeEventService;
-use Carbon\Carbon;
+use App\Services\Pembimbing\TugasDashboardService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class TugasController extends Controller
 {
     public function __construct(
-        protected AuditService $auditService
+        protected TugasDashboardService $dashboardService,
+        protected CreateBatchTugasAction $createBatchAction,
+        protected UpdateTugasAction $updateAction,
+        protected MarkTugasCompletedAction $markCompletedAction,
+        protected ReviewTugasProgresAction $reviewProgresAction
     ) {}
 
     /**
@@ -40,160 +40,7 @@ class TugasController extends Controller
      */
     public function index(Request $request): View|JsonResponse
     {
-        $user = $request->user();
-
-        $query = Tugas::with(['penempatan.peserta.profil.jurusan', 'penempatan.bidang', 'progresLogs'])
-            ->whereHas('penempatan', function ($q) use ($user) {
-                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
-                    $q->where('pembimbing_id', $user->id);
-                }
-            });
-
-        if ($request->filled('masuk')) {
-            $query->where('penempatan_id', $request->input('masuk'));
-        } elseif ($request->filled('penempatan_id')) {
-            $query->where('penempatan_id', $request->input('penempatan_id'));
-        }
-
-        if ($request->filled('bulan')) {
-            $parts = explode('-', (string) $request->input('bulan'));
-            if (count($parts) === 2) {
-                [$tahun, $bln] = $parts;
-                $query->where(function ($q) use ($tahun, $bln) {
-                    $q->whereYear('deadline', (int) $tahun)
-                        ->whereMonth('deadline', (int) $bln)
-                        ->orWhere(function ($sub) use ($tahun, $bln) {
-                            $sub->whereNull('deadline')
-                                ->whereYear('created_at', (int) $tahun)
-                                ->whereMonth('created_at', (int) $bln);
-                        });
-                });
-            }
-        }
-
-        if ($request->filled('status')) {
-            if ($request->input('status') === 'perlu_review') {
-                $query->whereHas('progresLogs', function ($qp) {
-                    $qp->where('status_review', 'menunggu');
-                });
-            } else {
-                $query->where('status', $request->input('status'));
-            }
-        }
-
-        if ($request->filled('kategori')) {
-            $query->where('kategori', $request->input('kategori'));
-        }
-
-        if ($request->filled('q')) {
-            $search = '%'.$request->input('q').'%';
-            $query->where(function ($q) use ($search) {
-                $q->where('judul', 'like', $search)
-                    ->orWhere('deskripsi', 'like', $search)
-                    ->orWhereHas('penempatan.peserta', function ($qp) use ($search) {
-                        $qp->where('nama', 'like', $search);
-                    });
-            });
-        }
-
-        $tugasList = $query->latest()->paginate(10)->withQueryString();
-
-        // Ambil daftar penempatan mentee aktif lengkap dengan tugas dan progres untuk stream mentee (10 per halaman)
-        $penempatanBaseQuery = Penempatan::with([
-            'peserta.profil.jurusan',
-            'bidang',
-            'tugas' => function ($q) {
-                $q->with('progresLogs')->latest();
-            },
-        ])
-            ->where(function ($q) use ($user) {
-                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
-                    $q->where('pembimbing_id', $user->id);
-                }
-            })
-            ->where('status', StatusPenempatanEnum::Aktif);
-
-        $allPenempatan = (clone $penempatanBaseQuery)->latest('id')->get();
-
-        if ($request->filled('penempatan_id')) {
-            $penempatanBaseQuery->where('id', $request->input('penempatan_id'));
-        }
-
-        if ($request->filled('q')) {
-            $search = '%'.$request->input('q').'%';
-            $penempatanBaseQuery->whereHas('peserta', function ($qp) use ($search) {
-                $qp->where('nama', 'like', $search)
-                    ->orWhereHas('profil', function ($qprof) use ($search) {
-                        $qprof->where('institusi', 'like', $search)
-                            ->orWhere('nim_nisn', 'like', $search);
-                    });
-            });
-        }
-
-        $penempatanList = (clone $penempatanBaseQuery)->latest('id')->paginate(10)->withQueryString();
-
-        // Hitung metrik agregat status tugas untuk banner dan tab classroom
-        $baseMetricsQuery = Tugas::whereHas('penempatan', function ($q) use ($user) {
-            if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
-                $q->where('pembimbing_id', $user->id);
-            }
-        });
-
-        if ($request->filled('penempatan_id')) {
-            $baseMetricsQuery->where('penempatan_id', $request->input('penempatan_id'));
-        }
-
-        $counts = [
-            'total' => (clone $baseMetricsQuery)->count(),
-            'belum' => (clone $baseMetricsQuery)->where('status', StatusTugasEnum::Belum)->count(),
-            'proses' => (clone $baseMetricsQuery)->where('status', StatusTugasEnum::Proses)->count(),
-            'selesai' => (clone $baseMetricsQuery)->where('status', StatusTugasEnum::Selesai)->count(),
-            'perlu_review' => (clone $baseMetricsQuery)->whereHas('progresLogs', function ($qp) {
-                $qp->where('status_review', 'menunggu');
-            })->count(),
-        ];
-
-        $selectedPenempatanId = $request->integer('penempatan_id') ?: null;
-        $selectedPenempatan = null;
-        if ($selectedPenempatanId) {
-            $selectedPenempatan = $penempatanList->firstWhere('id', $selectedPenempatanId);
-            if (! $selectedPenempatan) {
-                $selectedPenempatan = (clone $penempatanBaseQuery)->firstWhere('id', $selectedPenempatanId);
-            }
-        }
-
-        $masukPenempatanId = $request->integer('masuk') ?: null;
-        $masukPenempatan = null;
-        if ($masukPenempatanId) {
-            $masukPenempatan = $penempatanList->firstWhere('id', $masukPenempatanId);
-            if (! $masukPenempatan) {
-                $masukPenempatan = Penempatan::with([
-                    'peserta.profil.jurusan',
-                    'bidang',
-                    'tugas' => function ($q) {
-                        $q->with('progresLogs')->latest();
-                    },
-                ])
-                    ->where(function ($q) use ($user) {
-                        if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
-                            $q->where('pembimbing_id', $user->id);
-                        }
-                    })
-                    ->firstWhere('id', $masukPenempatanId);
-            }
-        }
-
-        $data = [
-            'tugasList' => $tugasList,
-            'penempatanList' => $penempatanList,
-            'allPenempatan' => $allPenempatan,
-            'counts' => $counts,
-            'selectedPenempatanId' => $selectedPenempatanId,
-            'selectedPenempatan' => $selectedPenempatan,
-            'masukPenempatanId' => $masukPenempatanId,
-            'masukPenempatan' => $masukPenempatan,
-            'daftarBulan' => $this->getDaftarBulan(),
-        ];
+        $data = $this->dashboardService->getDashboardData($request, $request->user());
 
         if ($request->expectsJson() || $request->wantsJson()) {
             return response()->json([
@@ -263,127 +110,26 @@ class TugasController extends Controller
             return back()->withErrors(['penempatan_ids' => 'Minimal satu peserta magang harus dipilih.'])->withInput();
         }
 
-        // Penegakan batasan hak akses & isolasi SuperAdmin (AC-08-5) untuk setiap mentee
-        foreach ($penempatans as $penempatan) {
-            Gate::authorize('create', [Tugas::class, $penempatan]);
-        }
-
-        // Tentukan aksi dan status publikasi
-        $aksiPublikasi = $request->input('aksi_publikasi', 'sekarang');
-        $statusPublikasi = match ($aksiPublikasi) {
-            'terjadwal' => 'terjadwal',
-            'draft' => 'draft',
-            default => 'dipublikasikan',
-        };
-
-        $jadwalPublikasi = null;
-        if ($statusPublikasi === 'terjadwal') {
-            $tglPub = $request->input('tgl_publikasi');
-            $wktPub = $request->input('waktu_publikasi') ?: '08:00';
-            $jadwalPublikasi = Carbon::parse("{$tglPub} {$wktPub}", 'Asia/Jakarta');
-        }
-
-        // Penanganan lampiran fisik (disimpan 1 kali untuk seluruh batch penugasan)
-        $batchId = (string) Str::uuid();
-        $filePath = null;
-        $fileName = null;
-        $fileSize = null;
-
-        if ($request->hasFile('file_lampiran')) {
-            $file = $request->file('file_lampiran');
-            $filePath = $file->store("tugas/{$batchId}", 'private');
-            $fileName = $file->getClientOriginalName();
-            $fileSize = $file->getSize();
-        }
-
-        $createdTugasList = [];
-
-        DB::transaction(function () use (
-            $penempatans,
-            $batchId,
-            $request,
-            $filePath,
-            $fileName,
-            $fileSize,
-            $statusPublikasi,
-            $jadwalPublikasi,
-            $aksiPublikasi,
-            &$createdTugasList
-        ) {
-            foreach ($penempatans as $penempatan) {
-                $tugas = Tugas::create([
-                    'batch_id' => $batchId,
-                    'penempatan_id' => $penempatan->id,
-                    'judul' => $request->validated('judul'),
-                    'deskripsi' => $request->validated('deskripsi'),
-                    'link_referensi' => $request->validated('link_referensi'),
-                    'file_lampiran' => $filePath,
-                    'nama_file_lampiran' => $fileName,
-                    'ukuran_file_lampiran' => $fileSize,
-                    'kategori' => $request->validated('kategori'),
-                    'kompleksitas' => $request->validated('kompleksitas'),
-                    'deadline' => $request->validated('deadline'),
-                    'status' => StatusTugasEnum::Belum,
-                    'status_publikasi' => $statusPublikasi,
-                    'jadwal_publikasi' => $jadwalPublikasi,
-                ]);
-
-                $this->auditService->catat(
-                    tipe: TipeAuditEnum::Aksi,
-                    tabel: 'tugas',
-                    idData: $tugas->id,
-                    nilaiLama: null,
-                    nilaiBaru: $tugas->only([
-                        'batch_id',
-                        'judul',
-                        'kategori',
-                        'kompleksitas',
-                        'deadline',
-                        'link_referensi',
-                        'nama_file_lampiran',
-                        'status_publikasi',
-                        'jadwal_publikasi',
-                    ]),
-                    detail: ['aksi' => 'buat_tugas', 'aksi_publikasi' => $aksiPublikasi]
-                );
-
-                // Notifikasi Real-time SSE ke Peserta Mentee (jika langsung dipublikasikan)
-                if ($statusPublikasi === 'dipublikasikan' && $penempatan->peserta_id) {
-                    app(RealtimeEventService::class)->publish(
-                        RealtimeEventTypeEnum::TugasBaru,
-                        [
-                            'title' => 'Tugas Magang Baru',
-                            'message' => "Pembimbing memberikan tugas: {$tugas->judul}.",
-                            'deadline' => $tugas->deadline?->format('d/m/Y H:i'),
-                            'action_url' => route('peserta.tugas.index'),
-                        ],
-                        $penempatan->peserta_id
-                    );
-                }
-
-                $createdTugasList[] = $tugas;
-            }
-        });
-
-        $count = count($createdTugasList);
-        $message = match ($statusPublikasi) {
-            'terjadwal' => "Tugas berhasil dijadwalkan untuk {$count} mentee pada ".$jadwalPublikasi?->format('d/m/Y H:i').' WIB.',
-            'draft' => "Draf tugas untuk {$count} mentee berhasil disimpan.",
-            default => "Tugas baru berhasil diberikan kepada {$count} mentee.",
-        };
+        $result = $this->createBatchAction->execute(
+            penempatans: $penempatans,
+            validated: $request->validated(),
+            fileLampiran: $request->file('file_lampiran'),
+            user: $request->user()
+        );
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
             return redirect()->route('pembimbing.tugas.index')
-                ->with('success', $message);
+                ->with('success', $result['message']);
         }
 
-        $primaryTugas = ! empty($createdTugasList) ? $createdTugasList[0]->load('penempatan.peserta') : null;
+        $createdTugasList = $result['tugasList'];
+        $primaryTugas = $createdTugasList->isNotEmpty() ? $createdTugasList->first() : null;
 
         return response()->json([
             'success' => true,
-            'message' => $message,
+            'message' => $result['message'],
             'data' => $primaryTugas,
-            'items' => collect($createdTugasList)->map(fn ($t) => $t->load('penempatan.peserta')),
+            'items' => $createdTugasList,
         ], 201);
     }
 
@@ -470,53 +216,31 @@ class TugasController extends Controller
      */
     public function update(TugasRequest $request, Tugas $tugas): JsonResponse|RedirectResponse
     {
-        Gate::authorize('update', $tugas);
+        $result = $this->updateAction->execute(
+            tugas: $tugas,
+            validated: $request->validated(),
+            fileLampiran: $request->file('file_lampiran')
+        );
 
-        if ($tugas->status === StatusTugasEnum::Selesai) {
+        if (! $result['success']) {
             if ($request->expectsJson() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Tugas yang telah berstatus selesai tidak dapat diedit kembali.',
-                ], 422);
+                    'message' => $result['message'],
+                ], $result['status']);
             }
 
-            return back()->withErrors(['error' => 'Tugas yang telah berstatus selesai tidak dapat diedit kembali.']);
+            return back()->withErrors(['error' => $result['message']]);
         }
-
-        $nilaiLama = $tugas->only(['judul', 'deskripsi', 'link_referensi', 'nama_file_lampiran', 'kategori', 'kompleksitas', 'deadline', 'status']);
-        $payload = $request->validated();
-        unset($payload['file_lampiran']);
-
-        if ($request->hasFile('file_lampiran')) {
-            if ($tugas->file_lampiran && Storage::disk('private')->exists($tugas->file_lampiran)) {
-                Storage::disk('private')->delete($tugas->file_lampiran);
-            }
-            $file = $request->file('file_lampiran');
-            $path = $file->store("tugas/{$tugas->id}", 'private');
-            $payload['file_lampiran'] = $path;
-            $payload['nama_file_lampiran'] = $file->getClientOriginalName();
-            $payload['ukuran_file_lampiran'] = $file->getSize();
-        }
-
-        $tugas->update($payload);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'tugas',
-            idData: $tugas->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: $tugas->only(['judul', 'link_referensi', 'nama_file_lampiran', 'kategori', 'kompleksitas', 'deadline', 'status']),
-            detail: ['aksi' => 'update_tugas']
-        );
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
-            return back()->with('success', 'Data tugas berhasil diperbarui.');
+            return back()->with('success', $result['message']);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Data tugas berhasil diperbarui.',
-            'data' => $tugas,
+            'message' => $result['message'],
+            'data' => $result['tugas'],
         ]);
     }
 
@@ -525,28 +249,18 @@ class TugasController extends Controller
      */
     public function selesai(Request $request, Tugas $tugas): JsonResponse|RedirectResponse
     {
-        Gate::authorize('update', $tugas);
+        $updatedTugas = $this->markCompletedAction->execute($tugas);
 
-        $nilaiLama = ['status' => $tugas->status->value];
-        $tugas->update(['status' => StatusTugasEnum::Selesai]);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'tugas',
-            idData: $tugas->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: ['status' => StatusTugasEnum::Selesai->value],
-            detail: ['aksi' => 'selesaikan_tugas_oleh_pembimbing']
-        );
+        $message = 'Status tugas berhasil ditandai sebagai Selesai.';
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
-            return back()->with('success', 'Status tugas berhasil ditandai sebagai Selesai.');
+            return back()->with('success', $message);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Status tugas berhasil ditandai sebagai Selesai.',
-            'data' => $tugas,
+            'message' => $message,
+            'data' => $updatedTugas,
         ]);
     }
 
@@ -555,48 +269,7 @@ class TugasController extends Controller
      */
     public function reviewProgres(ReviewProgresRequest $request, ProgresLog $progres): JsonResponse|RedirectResponse
     {
-        $tugas = $progres->tugas;
-        Gate::authorize('reviewProgres', $tugas);
-
-        $nilaiLama = $progres->only(['status_review', 'feedback']);
-
-        $progres->update([
-            'status_review' => $request->validated('status_review'),
-            'feedback' => $request->validated('feedback'),
-        ]);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'progres_log',
-            idData: $progres->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: $request->validated(),
-            detail: ['aksi' => 'review_progres_tugas']
-        );
-
-        // Notifikasi Real-time SSE ke Peserta (Progres Direview / Catatan Revisi)
-        $pesertaId = $tugas->penempatan?->peserta_id;
-        if ($pesertaId) {
-            $isRevisi = $progres->status_review === StatusReviewProgresEnum::PerluRevisi;
-            $statusLabel = $isRevisi ? 'Perlu Revisi' : 'Diterima';
-            $pesan = $isRevisi && filled($progres->feedback)
-                ? "Pembimbing meminta revisi untuk tugas \"{$tugas->judul}\": {$progres->feedback}"
-                : "Laporan progres untuk tugas \"{$tugas->judul}\" telah diperiksa oleh pembimbing ({$statusLabel}).";
-
-            app(RealtimeEventService::class)->publish(
-                RealtimeEventTypeEnum::ProgresDireviu,
-                [
-                    'title' => "Evaluasi Progres Tugas: {$statusLabel}",
-                    'message' => $pesan,
-                    'status_review' => $progres->status_review->value,
-                    'feedback' => $progres->feedback,
-                    'tugas_id' => $tugas->id,
-                    'action_url' => route('peserta.tugas.show', $tugas->id),
-                    'badge_target' => $isRevisi ? 'tugas-revisi-badge' : null,
-                ],
-                $pesertaId
-            );
-        }
+        $updatedProgres = $this->reviewProgresAction->execute($progres, $request->validated());
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
             return back()->with('success', 'Evaluasi umpan balik progres tugas berhasil disimpan.');
@@ -605,34 +278,7 @@ class TugasController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Evaluasi progres tugas berhasil disimpan.',
-            'data' => $progres,
+            'data' => $updatedProgres,
         ]);
-    }
-
-    /**
-     * Dapatkan daftar bulan magang untuk filter pencarian.
-     *
-     * @return array<string, string>
-     */
-    private function getDaftarBulan(): array
-    {
-        $daftar = [];
-        $bulanMagangs = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
-        foreach ($bulanMagangs as $bm) {
-            if ($bm->bulan_mulai) {
-                $key = Carbon::parse($bm->bulan_mulai)->setTimezone(config('app.timezone', 'Asia/Jakarta'))->format('Y-m');
-                $daftar[$key] = $bm->nama_bulan;
-            }
-        }
-        for ($i = 0; $i < 12; $i++) {
-            $dt = Carbon::now()->subMonths($i);
-            $key = $dt->format('Y-m');
-            if (! isset($daftar[$key])) {
-                $daftar[$key] = $dt->locale('id')->translatedFormat('F Y');
-            }
-        }
-        krsort($daftar);
-
-        return $daftar;
     }
 }

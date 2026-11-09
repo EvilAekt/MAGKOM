@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\KompleksitasEnum;
+use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
 use App\Models\Penempatan;
 use App\Rules\SafeExternalUrlRule;
@@ -61,7 +62,7 @@ class TugasRequest extends FormRequest
 
         return [
             'penempatan_ids' => [$isUpdate ? 'nullable' : 'required', 'array', 'min:1'],
-            'penempatan_ids.*' => ['integer', 'exists:penempatan,id'],
+            'penempatan_ids.*' => ['integer', 'distinct', 'exists:penempatan,id'],
             'penempatan_id' => [$isUpdate ? 'sometimes' : 'nullable', 'exists:penempatan,id'],
             'judul' => ['required', 'string', 'max:150'],
             'deskripsi' => ['nullable', 'string'],
@@ -82,6 +83,8 @@ class TugasRequest extends FormRequest
         return [
             'penempatan_ids.required' => 'Minimal satu peserta magang harus dipilih.',
             'penempatan_ids.min' => 'Minimal satu peserta magang harus dipilih.',
+            'penempatan_ids.*.distinct' => 'Terdapat duplikasi peserta magang yang dipilih.',
+            'penempatan_ids.*.exists' => 'Satu atau lebih peserta bimbingan tidak ditemukan.',
             'judul.required' => 'Judul penugasan wajib diisi.',
             'deskripsi.required' => 'Petunjuk & instruksi pengerjaan wajib diisi.',
             'deadline.required' => 'Batas waktu (deadline) tugas wajib ditentukan.',
@@ -110,35 +113,53 @@ class TugasRequest extends FormRequest
 
             $deadlineInput = $this->input('deadline');
 
-            // 1. Validasi Kepemilikan & Kewenangan Pembimbing (Anti-IDOR)
-            if (! empty($penempatanIds) && $user && ! $user->isAdmin() && ! $user->isSuperAdmin()) {
-                $penempatanList = Penempatan::whereIn('id', $penempatanIds)->get();
-                foreach ($penempatanList as $p) {
-                    if ($p->pembimbing_id !== $user->id) {
+            if (! empty($penempatanIds)) {
+                $uniqueIds = array_values(array_unique(array_filter(array_map('intval', $penempatanIds))));
+                $penempatans = Penempatan::with('peserta')->whereIn('id', $uniqueIds)->get();
+
+                // Pastikan seluruh penempatan yang diminta benar-benar ditemukan di database
+                if ($penempatans->count() !== count($uniqueIds)) {
+                    $validator->errors()->add(
+                        'penempatan_ids',
+                        'Satu atau lebih peserta bimbingan yang dipilih tidak ditemukan dalam sistem.'
+                    );
+                }
+
+                // 1. Validasi Kepemilikan & Kewenangan Pembimbing (Anti-IDOR) serta status aktif
+                foreach ($penempatans as $p) {
+                    if ($user && ! $user->isAdmin() && ! $user->isSuperAdmin() && $p->pembimbing_id !== $user->id) {
                         $validator->errors()->add(
                             'penempatan_ids',
                             'Anda tidak memiliki kewenangan untuk menugaskan peserta di luar bimbingan Anda.'
                         );
                         break;
                     }
+
+                    if (! $this->isMethod('PUT') && ! $this->isMethod('PATCH') && $p->status !== StatusPenempatanEnum::Aktif) {
+                        $menteeNama = $p->peserta?->nama ?? 'Peserta';
+                        $validator->errors()->add(
+                            'penempatan_ids',
+                            "Peserta {$menteeNama} saat ini tidak berstatus aktif dalam bimbingan magang."
+                        );
+                        break;
+                    }
                 }
-            }
 
-            // 2. Validasi Deadline tidak melewati batas selesai magang mentee
-            if (! empty($penempatanIds) && $deadlineInput) {
-                $penempatans = Penempatan::with('peserta')->whereIn('id', $penempatanIds)->get();
-                $deadline = Carbon::parse($deadlineInput)->startOfDay();
+                // 2. Validasi Deadline tidak melewati batas selesai magang mentee
+                if ($deadlineInput) {
+                    $deadline = Carbon::parse($deadlineInput)->startOfDay();
 
-                foreach ($penempatans as $penempatan) {
-                    if ($penempatan->tgl_selesai) {
-                        $tglSelesai = Carbon::parse($penempatan->tgl_selesai)->endOfDay();
-                        if ($deadline->gt($tglSelesai)) {
-                            $menteeNama = $penempatan->peserta?->nama ?? 'Peserta';
-                            $validator->errors()->add(
-                                'deadline',
-                                "Deadline tugas tidak boleh melebihi batas akhir magang {$menteeNama} ({$penempatan->tgl_selesai->format('d/m/Y')})."
-                            );
-                            break;
+                    foreach ($penempatans as $penempatan) {
+                        if ($penempatan->tgl_selesai) {
+                            $tglSelesai = Carbon::parse($penempatan->tgl_selesai)->endOfDay();
+                            if ($deadline->gt($tglSelesai)) {
+                                $menteeNama = $penempatan->peserta?->nama ?? 'Peserta';
+                                $validator->errors()->add(
+                                    'deadline',
+                                    "Deadline tugas tidak boleh melebihi batas akhir magang {$menteeNama} ({$penempatan->tgl_selesai->format('d/m/Y')})."
+                                );
+                                break;
+                            }
                         }
                     }
                 }

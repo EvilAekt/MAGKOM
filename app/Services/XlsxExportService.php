@@ -33,13 +33,18 @@ class XlsxExportService
     }
 
     /**
-     * Menghasilkan berkas .xlsx resmi dengan styling All Borders, Header #1E3A8A, dan Auto-Width kolom.
+     * Menghasilkan berkas .xlsx resmi dengan styling All Borders, Header Color yang dapat disesuaikan, dan Auto-Width kolom.
      *
      * @param  array<int, string>  $headers
      * @param  array<int, array<int, mixed>>  $rows
      */
-    public function downloadXlsx(string $filename, string $sheetTitle, array $headers, array $rows): BinaryFileResponse
-    {
+    public function downloadXlsx(
+        string $filename,
+        string $sheetTitle,
+        array $headers,
+        array $rows,
+        string $headerColor = 'FF1E3A8A'
+    ): BinaryFileResponse {
         $tempPath = tempnam(sys_get_temp_dir(), 'magkom_xlsx_');
         if ($tempPath === false) {
             throw new RuntimeException('Gagal membuat berkas sementara untuk ekspor XLSX.');
@@ -87,6 +92,7 @@ class XlsxExportService
         $zip->addFromString('xl/workbook.xml', $workbook);
 
         // 5. xl/styles.xml
+        $safeColor = htmlspecialchars(strtoupper($headerColor), ENT_XML1, 'UTF-8');
         $styles = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             .'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
             .'<fonts count="2">'
@@ -96,7 +102,7 @@ class XlsxExportService
             .'<fills count="3">'
             .'<fill><patternFill patternType="none"/></fill>'
             .'<fill><patternFill patternType="gray125"/></fill>'
-            .'<fill><patternFill patternType="solid"><fgColor rgb="FF1E3A8A"/></patternFill></fill>'
+            .'<fill><patternFill patternType="solid"><fgColor rgb="'.$safeColor.'"/></patternFill></fill>'
             .'</fills>'
             .'<borders count="2">'
             .'<border><left/><right/><top/><bottom/><diagonal/></border>'
