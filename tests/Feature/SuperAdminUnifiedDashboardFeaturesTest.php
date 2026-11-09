@@ -520,7 +520,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
 
         // 2. Tombol di tab seleksi harus menggunakan sa-link (bukan btn-secondary)
         $response->assertSee('class="sa-link">', false);
-        $response->assertSee('Kelola Antrean Waiting List &rarr;', false);
+        $response->assertSee('Lihat Antrean Pendaftaran &rarr;', false);
         $response->assertSee('Atur Slot Khusus Kemitraan &rarr;', false);
 
         // 3. Pastikan CSS mendefinisikan aturan hover & focus solid Sleman Blue untuk kedua tombol
