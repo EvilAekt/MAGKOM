@@ -173,12 +173,16 @@ class AdminChildPagesVisualTest extends TestCase
         $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum']));
 
         $response->assertOk();
-        $response->assertSee('Pencarian Antrean');
+        $response->assertSee('Cari Nama');
         $response->assertSee('name="jurusan_id"', false);
+        $response->assertSee('Jurusan');
         $response->assertSee('Semua Jurusan');
         $response->assertSee('name="bidang_id"', false);
         $response->assertSee('Bidang Rekomendasi');
         $response->assertSee('Semua Bidang');
+        $response->assertDontSee('#FEF9C3', false);
+        $response->assertDontSee('background: #D97706', false);
+        $response->assertDontSee('Menunggu Penempatan</span>', false);
     }
 
     public function test_admin_penempatan_belum_tab_renders_empty_state_when_all_placed(): void

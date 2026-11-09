@@ -900,9 +900,9 @@
                 <input type="hidden" name="tab" value="sudah">
                 {{-- Search Bar --}}
                 <div style="display: flex; flex-direction: column; gap: 0.375rem; flex: 2; min-width: 240px;">
-                    <label for="q-input" style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Pencarian Peserta</label>
+                    <label for="q-input" style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Cari Nama</label>
                     <div style="position: relative;">
-                        <input type="text" id="q-input" name="q" value="{{ request('tab') !== 'belum' ? request('q') : '' }}" placeholder="Cari nama peserta, email, kampus..." style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem 0 2.4rem; font-size: 0.875rem; background: #ffffff; color: var(--neutral-900, #0F172A);">
+                        <input type="text" id="q-input" name="q" value="{{ request('tab') !== 'belum' ? request('q') : '' }}" placeholder="Cari nama..." style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem 0 2.4rem; font-size: 0.875rem; background: #ffffff; color: var(--neutral-900, #0F172A);">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 0.85rem; top: 13px; color: var(--neutral-400, #94A3B8);">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -1185,9 +1185,9 @@
                 
                 {{-- 1. Search Bar --}}
                 <div style="display: flex; flex-direction: column; gap: 0.375rem; flex: 2; min-width: 240px;">
-                    <label for="q-input-belum" style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Pencarian Antrean</label>
+                    <label for="q-input-belum" style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Cari Nama</label>
                     <div style="position: relative;">
-                        <input type="text" id="q-input-belum" name="q" value="{{ request('tab') === 'belum' ? request('q') : '' }}" placeholder="Cari nama peserta antrean, email, kampus..." style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem 0 2.4rem; font-size: 0.875rem; background: #ffffff; color: var(--neutral-900, #0F172A);">
+                        <input type="text" id="q-input-belum" name="q" value="{{ request('tab') === 'belum' ? request('q') : '' }}" placeholder="Cari nama..." style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem 0 2.4rem; font-size: 0.875rem; background: #ffffff; color: var(--neutral-900, #0F172A);">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 0.85rem; top: 13px; color: var(--neutral-400, #94A3B8);">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -1208,9 +1208,9 @@
                     </select>
                 </div>
 
-                {{-- 3. Filter Jurusan / Program Studi --}}
+                {{-- 3. Filter Jurusan --}}
                 <div style="display: flex; flex-direction: column; gap: 0.375rem; flex: 1.2; min-width: 180px;">
-                    <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Jurusan / Program Studi</label>
+                    <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Jurusan</label>
                     <select name="jurusan_id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff; color: var(--neutral-800, #1E293B);">
                         <option value="">Semua Jurusan</option>
                         @foreach($jurusanList as $jrs)
@@ -1236,7 +1236,7 @@
 
                 {{-- 5. Tombol Aksi --}}
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
-                    <button type="submit" style="height: 42px; padding: 0 1.25rem; background: #D97706; color: #FFFFFF; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s ease; box-shadow: 0 1px 3px rgba(217, 119, 6, 0.2);">
+                    <button type="submit" style="height: 42px; padding: 0 1.25rem; background: #0641CC; color: #FFFFFF; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s ease; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
                         Terapkan Filter
                     </button>
                     <a href="{{ route('admin.penempatan.index', ['tab' => 'belum']) }}" style="height: 42px; padding: 0 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; border: 1px solid var(--neutral-200, #E2E8F0);">
@@ -1246,35 +1246,38 @@
             </form>
         </div>
 
-        <div class="admin-card" style="border-top: 3.5px solid #F59E0B; border-left: none; background: #FFFFFF;">
-            <div style="padding: 1.15rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #FDE68A; background: #FFFBEB; flex-wrap: wrap; gap: 0.75rem;">
+        <div class="admin-card" style="border-top: 3px solid #01347C; border-left: none; background: #FFFFFF;">
+            <div style="padding: 1.15rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--neutral-200, #E2E8F0); background: #FFFFFF; flex-wrap: wrap; gap: 0.75rem;">
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
-                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="ID Card Tanda Pengenal Peserta Magang Dinas">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="14" x="3" y="7" rx="2"></rect>
+                            <path d="M9 5h6"></path>
+                            <path d="M12 2v3"></path>
+                            <circle cx="12" cy="13" r="2.5"></circle>
+                            <path d="M8 18h8"></path>
+                        </svg>
                     </div>
                     <div>
-                        <h3 style="font-size: 1rem; font-weight: 800; color: #92400E; margin: 0;">
+                        <h3 style="font-size: 1rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">
                             Antrean Peserta Lolos Berkas (Menunggu Penempatan)
                         </h3>
-                        <p style="font-size: 0.8125rem; color: #B45309; margin: 0.2rem 0 0 0;">
+                        <p style="font-size: 0.8125rem; color: var(--neutral-500, #64748B); margin: 0.2rem 0 0 0;">
                             Peserta di bawah ini telah disetujui berkasnya pada Tahap 1 dan siap ditetapkan Pembimbing Lapangan serta Bidang Dinas.
                         </p>
                     </div>
                 </div>
-                <span style="padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 700; background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">
-                    {{ $antreanBelumDitempatkan->count() }} Menunggu Penempatan
-                </span>
             </div>
 
             <div style="overflow-x: auto;">
                 <table class="admin-table">
                     <thead>
-                        <tr style="background: #FEF9C3;">
-                            <th style="color: #854D0E;">Peserta Magang</th>
-                            <th style="color: #854D0E;">Jurusan &amp; Kampus / Sekolah</th>
-                            <th style="color: #854D0E;">Bulan Magang</th>
-                            <th style="color: #854D0E;">Diterima Pada</th>
-                            <th style="text-align: right; width: 150px; color: #854D0E;">Aksi</th>
+                        <tr style="background: var(--neutral-50, #F8FAFC); border-bottom: 1px solid var(--neutral-200, #E2E8F0);">
+                            <th style="color: var(--neutral-600, #475569); font-weight: 700;">Peserta Magang</th>
+                            <th style="color: var(--neutral-600, #475569); font-weight: 700;">Jurusan</th>
+                            <th style="color: var(--neutral-600, #475569); font-weight: 700;">Bulan Magang</th>
+                            <th style="color: var(--neutral-600, #475569); font-weight: 700;">Diterima Pada</th>
+                            <th style="text-align: right; width: 150px; color: var(--neutral-600, #475569); font-weight: 700;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1287,7 +1290,7 @@
                             <tr style="background: #FFFFFF;">
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 0.65rem;">
-                                        <div style="width: 34px; height: 34px; border-radius: 8px; background: #FDE68A; color: #92400E; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;">
+                                        <div style="width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #01347C 0%, #0641CC 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
                                             {{ strtoupper(substr($antrean->user?->nama ?? 'P', 0, 1)) }}
                                         </div>
                                         <div>
