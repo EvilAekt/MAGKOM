@@ -378,8 +378,8 @@ final class GentelellaDashboardRevampTest extends TestCase
         $response->assertSee('x_title', false);
         $response->assertSee('Panduan Alur Pendaftaran Magang');
         $response->assertSee('Lengkapi Biodata & Profil', false);
-        $response->assertSee('Pilih Periode & Kuota', false);
-        $response->assertSee('Unggah Berkas & Ajukan', false);
+        $response->assertSee('Pilih Bulan & Kuota Magang', false);
+        $response->assertSee('Unggah Berkas & Ajukan Pendaftaran', false);
     }
 
     /**

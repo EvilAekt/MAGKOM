@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\LandingPage;
 
+use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
+use App\Models\Jurusan;
+use App\Models\PesertaProfil;
 use App\Models\User;
 use App\Services\LandingCmsStagingService;
 use App\Services\LandingPage\BlockSchemaValidator;
@@ -439,6 +442,25 @@ SVG;
      */
     public function test_regression_peserta_registration_route_works(): void
     {
+        $jurusan = Jurusan::create([
+            'nama_jurusan' => 'Informatika',
+            'kategori' => 'mahasiswa',
+            'aktif' => true,
+        ]);
+        PesertaProfil::create([
+            'user_id' => $this->peserta->id,
+            'nim_nisn' => '1234567890',
+            'institusi' => 'Universitas Gadjah Mada',
+            'jurusan_id' => $jurusan->id,
+            'jenjang' => JenjangEnum::S1,
+            'no_hp' => '081234567890',
+            'alamat' => 'Yogyakarta',
+            'foto' => 'peserta-foto/dummy.jpg',
+            'nama_kontak_darurat' => 'Orang Tua',
+            'no_kontak_darurat' => '089876543210',
+            'hubungan_kontak_darurat' => 'Orang Tua',
+        ]);
+
         $response = $this->actingAs($this->peserta)
             ->get(route('peserta.pendaftaran.index'));
 

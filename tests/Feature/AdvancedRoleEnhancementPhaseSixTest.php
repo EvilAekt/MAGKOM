@@ -246,42 +246,6 @@ class AdvancedRoleEnhancementPhaseSixTest extends TestCase
     // 2. PENGUJIAN PILAR ADMINISTRASI
     // ==========================================
 
-    public function test_admin_one_click_fifo_promote_waiting_list(): void
-    {
-        // Buat pendaftaran berstatus WaitingList
-        $pendaftaran = Pendaftaran::create([
-            'user_id' => $this->pesertaUser->id,
-            'bulan_magang_id' => $this->bulan->id,
-            'kuota_id' => $this->kuota->id,
-            'durasi_bulan' => 1,
-            'status' => StatusPendaftaranEnum::WaitingList,
-            'diajukan_at' => Carbon::now()->subDays(1),
-        ]);
-
-        // Kuota masih tersedia (10 tersisa)
-        $this->assertEquals(0, $this->kuota->fresh()->terisi);
-
-        // Eksekusi promote FIFO
-        $response = $this->actingAs($this->admin)->post(route('admin.waiting-list.promote'), [
-            'pendaftaran_id' => $pendaftaran->id,
-            'bidang_id' => $this->bidang->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'catatan' => 'Dipromosikan dari waiting list via automated FIFO',
-        ]);
-
-        $response->assertRedirect(route('admin.waiting-list.index'));
-        $response->assertSessionHas('success');
-
-        // Verifikasi pendaftaran menjadi Diterima dan penempatan terbentuk
-        $this->assertEquals(StatusPendaftaranEnum::Diterima, $pendaftaran->fresh()->status);
-        $this->assertDatabaseHas('penempatan', [
-            'peserta_id' => $this->pesertaUser->id,
-            'status' => StatusPenempatanEnum::Aktif->value,
-            'pembimbing_id' => $this->pembimbing1->id,
-        ]);
-        $this->assertEquals(1, $this->kuota->fresh()->terisi);
-    }
-
     public function test_admin_download_bundel_zip_registration_documents(): void
     {
         Storage::fake('private');

@@ -800,19 +800,76 @@
     }
 
     .saas-step-item.completed {
-        border-color: #CBD5E1;
-        background: #F8FAFC;
+        border: 1.5px solid #FFCB05;
+        background: rgba(255, 203, 5, 0.10);
+        box-shadow: 0 2px 8px rgba(255, 203, 5, 0.12);
     }
 
     .saas-step-item.completed:hover {
-        border-color: #10B981;
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.12);
+        border-color: #E5B604;
+        background: rgba(255, 203, 5, 0.18);
+        box-shadow: 0 6px 18px rgba(255, 203, 5, 0.22);
     }
 
     .saas-step-item.active {
         border-color: #02275D;
         background: #FFFFFF;
         box-shadow: 0 4px 14px rgba(2, 39, 93, 0.06);
+    }
+
+    .saas-step-item.is-locked {
+        background: #F8FAFC;
+        border-color: #E2E8F0;
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .saas-step-item.is-locked .saas-step-badge {
+        background: #CBD5E1;
+        color: #64748B;
+    }
+
+    .saas-step-item.is-locked:hover {
+        transform: none;
+        border-color: #E2E8F0;
+        box-shadow: none;
+    }
+
+    .saas-step-item.is-locked:hover .saas-step-badge {
+        transform: none;
+    }
+
+    .saas-step-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 999px;
+        line-height: 1.2;
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    .saas-step-state.state-done {
+        background: #FEF3C7;
+        color: #02275D;
+        border: 1px solid #FFCB05;
+        font-weight: 800;
+        box-shadow: 0 1px 3px rgba(255, 203, 5, 0.2);
+    }
+
+    .saas-step-state.state-action {
+        background: #EFF6FF;
+        color: #1D4ED8;
+        border: 1px solid #BFDBFE;
+    }
+
+    .saas-step-state.state-locked {
+        background: #F1F5F9;
+        color: #64748B;
+        border: 1px solid #CBD5E1;
     }
 
     .saas-step-badge {
@@ -835,8 +892,10 @@
     }
 
     .saas-step-item.completed .saas-step-badge {
-        background: #10B981;
-        color: #FFFFFF;
+        background: #FFCB05;
+        color: #02275D;
+        border: 2px solid #E5B604;
+        box-shadow: 0 2px 8px rgba(255, 203, 5, 0.45);
     }
 
     .saas-step-body {
@@ -848,10 +907,17 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
         gap: 8px;
         font-weight: 700;
         font-size: 0.9375rem;
         color: #0F172A;
+        line-height: 1.35;
+    }
+
+    .saas-step-title > span:first-child {
+        white-space: normal;
+        word-break: break-word;
     }
 
     .saas-step-action {
@@ -1232,6 +1298,78 @@
         background: #0f172a;
         border-color: #334155;
     }
+
+    /* Statusline Ribbon (POV Belum Diterima / Seleksi / Onboarding) */
+    .saas-statusline {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+        gap: 16px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px 18px;
+        box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+        align-items: center;
+    }
+
+    @media (min-width: 992px) {
+        .saas-statusline {
+            grid-template-columns: minmax(12rem, 1fr) minmax(18rem, 2fr) minmax(12rem, 1fr);
+        }
+    }
+
+    .saas-statusline-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 4px 6px;
+        min-width: 0;
+    }
+
+    .saas-statusline-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba(2, 39, 93, 0.08);
+        color: #02275D;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .saas-statusline-content {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        flex: 1;
+    }
+
+    .saas-statusline-label {
+        font-size: 0.6875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        margin-bottom: 2px;
+    }
+
+    .saas-statusline-value {
+        font-size: 0.875rem;
+        color: #0f172a;
+        font-weight: 600;
+        white-space: normal;
+        word-break: break-word;
+        line-height: 1.4;
+    }
+
+    .saas-statusline-value.is-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        white-space: normal;
+    }
 </style>
 @endpush
 
@@ -1251,27 +1389,39 @@
         @php
             $timKelompokData = $kelompokMagang ?? $user->kelompokMagang;
         @endphp
-        <div class="saas-statusline" role="region" aria-label="Statusline MagKom Peserta" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); gap: 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);">
-            <div style="display: flex; align-items: center; gap: 12px; padding: 4px 6px;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(2, 39, 93, 0.08); color: #02275D; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <div class="saas-statusline" role="region" aria-label="Statusline MagKom Peserta">
+            <div class="saas-statusline-item">
+                <div class="saas-statusline-icon">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 </div>
-                <div style="display: flex; flex-direction: column; min-width: 0;">
-                    <span style="font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b;">Status Magang</span>
-                    <span style="font-size: 0.875rem; color: #0f172a; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                <div class="saas-statusline-content">
+                    <span class="saas-statusline-label">Status Magang</span>
+                    <span class="saas-statusline-value is-status">
                         <span class="saas-dot-pulse"></span>
                         <span>{{ $fase === 'selesai' ? 'Magang Tuntas' : 'Seleksi / Onboarding' }}</span>
                     </span>
                 </div>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 12px; padding: 4px 6px;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(2, 39, 93, 0.08); color: #02275D; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <div class="saas-statusline-item">
+                <div class="saas-statusline-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                </div>
+                <div class="saas-statusline-content">
+                    <span class="saas-statusline-label">Pilihan Bidang</span>
+                    <span class="saas-statusline-value" title="{{ $bidangTerpilih ?? 'Menyesuaikan Jurusan' }}">
+                        {{ $bidangTerpilih ?? 'Menyesuaikan Jurusan' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="saas-statusline-item">
+                <div class="saas-statusline-icon">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
-                <div style="display: flex; flex-direction: column; min-width: 0;">
-                    <span style="font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b;">Tipe Pendaftaran</span>
-                    <span style="font-size: 0.875rem; color: #0f172a; font-weight: 600;">
+                <div class="saas-statusline-content">
+                    <span class="saas-statusline-label">Tipe Pendaftaran</span>
+                    <span class="saas-statusline-value">
                         {{ $timKelompokData ? 'Kelompok' : 'Mandiri (Individu)' }}
                     </span>
                 </div>
@@ -1280,13 +1430,14 @@
     @endif
 
     {{-- 3. Cockpit 2-Column Grid (Main Content + Aside Context) --}}
-    <div class="saas-cockpit-grid {{ $fase === 'onboarding' ? 'is-onboarding' : '' }}">
+    <div class="saas-cockpit-grid {{ $fase !== 'aktif' ? 'is-onboarding' : '' }}">
 
         {{-- Kolom Utama Berdasarkan Fase --}}
         <div class="saas-cockpit-main">
             @if($fase === 'onboarding')
                 @include('peserta.dashboard.partials._phase_onboarding')
             @elseif($fase === 'seleksi')
+                @include('peserta.dashboard.partials._phase_onboarding')
                 @include('peserta.dashboard.partials._phase_seleksi')
             @elseif($fase === 'aktif')
                 @include('peserta.dashboard.partials._phase_aktif')
@@ -1295,8 +1446,8 @@
             @endif
         </div>
 
-        {{-- Kolom Samping (Konteks & Berkas) - Disembunyikan pada POV Onboarding (Belum Mengajukan Pendaftaran) --}}
-        @if($fase !== 'onboarding')
+        {{-- Kolom Samping (Konteks & Berkas) - Hanya Ditampilkan pada POV Aktif Magang --}}
+        @if($fase === 'aktif' && $penempatan)
             <aside class="saas-cockpit-aside" id="dashboardAsideContext">
                 @include('peserta.dashboard.partials._aside')
             </aside>

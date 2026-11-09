@@ -45,7 +45,6 @@ class SuperAdminFeatureToggleTest extends TestCase
     public function test_pengaturan_seeder_sets_expected_defaults(): void
     {
         $this->assertSame(20, PengaturanHelper::int('maks_peserta_aktif_per_pembimbing'));
-        $this->assertTrue(PengaturanHelper::bool('fitur_analitik_aktif'));
         $this->assertTrue(PengaturanHelper::bool('fitur_pendaftaran_kelompok_aktif'));
     }
 
@@ -64,7 +63,6 @@ class SuperAdminFeatureToggleTest extends TestCase
                 'deadline_mendekati_hari' => 4,
                 'sla_verifikasi_hari' => 5,
                 'retensi_audit_akses_data_hari' => 180,
-                'fitur_analitik_aktif' => 0,
                 'fitur_pendaftaran_kelompok_aktif' => 0,
             ]);
 
@@ -72,31 +70,13 @@ class SuperAdminFeatureToggleTest extends TestCase
         $response->assertSessionHas('success');
 
         $this->assertSame(25, PengaturanHelper::int('maks_peserta_aktif_per_pembimbing'));
-        $this->assertFalse(PengaturanHelper::bool('fitur_analitik_aktif'));
         $this->assertFalse(PengaturanHelper::bool('fitur_pendaftaran_kelompok_aktif'));
     }
 
-    public function test_disabled_feature_toggles_abort_with_404(): void
+    public function test_decommissioned_analitik_tahunan_returns_404(): void
     {
-        // Matikan toggle analitik
-        PengaturanHelper::set('fitur_analitik_aktif', '0');
-        PengaturanHelper::clearCache();
-
-        // Analitik Tahunan Admin
         $this->actingAs($this->admin)
-            ->get(route('admin.laporan.tahunan'))
+            ->get('/admin/laporan/tahunan')
             ->assertNotFound();
-    }
-
-    public function test_enabled_feature_toggles_allow_access(): void
-    {
-        // Pastikan aktif
-        PengaturanHelper::set('fitur_analitik_aktif', '1');
-        PengaturanHelper::clearCache();
-
-        // Analitik Tahunan Admin
-        $this->actingAs($this->admin)
-            ->get(route('admin.laporan.tahunan'))
-            ->assertOk();
     }
 }

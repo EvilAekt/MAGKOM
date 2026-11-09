@@ -185,13 +185,20 @@ class EndToEndUatTest extends TestCase
         $peserta->status_aktif = true;
         $peserta->save();
 
-        // 1. Lengkapi Profil
+        // 1. Lengkapi Profil (100% lengkap: pasfoto, alamat, kontak darurat wali, data akademik)
+        $fileDummy = UploadedFile::fake()->create('pasfoto.jpg', 200, 'image/jpeg');
         $profilRes = $this->actingAs($peserta)->post(route('peserta.profil.simpan'), [
             'nim_nisn' => '00987654321',
             'institusi' => 'SMK Negeri 2 Kominfo',
             'jenjang' => 'smk',
             'jurusan_id' => $this->jurusanSmk->id,
             'no_hp' => '08129876543',
+            'alamat' => 'Jl. Magelang KM 5, Sleman',
+            'nama_kontak_darurat' => 'Bapak Santoso',
+            'no_kontak_darurat' => '081299887766',
+            'hubungan_kontak_darurat' => 'Orang Tua / Wali',
+            'persetujuan_wali' => '1',
+            'foto' => $fileDummy,
         ]);
         $profilRes->assertRedirect(route('peserta.profil.show'));
 

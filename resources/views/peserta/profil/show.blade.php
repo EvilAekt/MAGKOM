@@ -4,1312 +4,564 @@
 @section('page_title', 'Biodata & Profil Peserta')
 
 @push('styles')
-<style>
-    .profile-page-wrapper {
-        max-width: 1160px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    /* Page Header */
-    .profile-header-clean {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
-        padding-bottom: 4px;
-    }
-
-    .profile-header-title {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: var(--neutral-900);
-        margin: 0;
-        line-height: 1.25;
-    }
-
-    .profile-header-subtitle {
-        font-size: 0.875rem;
-        color: var(--neutral-600);
-        margin: 4px 0 0 0;
-    }
-
-    /* 2-Column Responsive Layout */
-    .profile-two-columns {
-        display: grid;
-        grid-template-columns: 340px 1fr;
-        gap: 24px;
-        align-items: start;
-    }
-
-    /* Column Left: Identity Card */
-    .identity-card {
-        background: #ffffff;
-        border: 1px solid var(--neutral-300);
-        border-radius: var(--radius-lg, 16px);
-        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
-        overflow: hidden;
-        position: sticky;
-        top: 24px;
-    }
-
-    .identity-card-cover {
-        height: 96px;
-        background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
-                    linear-gradient(135deg, #01347C 0%, #003566 100%);
-        position: relative;
-    }
-
-    .identity-card-body {
-        padding: 0 24px 24px 24px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .avatar-interactive-wrapper {
-        position: relative;
-        margin-top: -50px;
-        margin-bottom: 14px;
-    }
-
-    .avatar-preview-box {
-        width: 96px;
-        height: 96px;
-        border-radius: 50%;
-        border: 4px solid #ffffff;
-        box-shadow: 0 4px 14px rgba(1, 52, 124, 0.22);
-        overflow: hidden;
-        background: var(--blue-tint);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-    }
-
-    .avatar-preview-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .avatar-initial-icon {
-        font-size: 2.25rem;
-        font-weight: 800;
-        color: var(--blue-700);
-        user-select: none;
-    }
-
-    .avatar-btn-overlay {
-        position: absolute;
-        bottom: 2px;
-        right: 2px;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--blue-600);
-        color: #ffffff;
-        border: 2px solid #ffffff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: transform 0.15s ease, background-color 0.15s ease;
-    }
-
-    .avatar-btn-overlay:hover {
-        background: var(--blue-700);
-        transform: scale(1.08);
-    }
-
-    .identity-user-name {
-        font-size: 1.125rem;
-        font-weight: 800;
-        color: var(--neutral-900);
-        margin: 0;
-        line-height: 1.3;
-    }
-
-    .identity-role-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 4px 12px;
-        background: #EFF6FF;
-        color: var(--blue-700);
-        border: 1px solid #BFDBFE;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        margin-top: 8px;
-    }
-
-    .identity-user-email {
-        font-size: 0.8125rem;
-        color: var(--neutral-600);
-        margin-top: 6px;
-    }
-
-    .photo-actions-row {
-        display: flex;
-        gap: 8px;
-        margin-top: 12px;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .btn-photo-action {
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 4px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        border: none;
-        transition: all 0.15s ease;
-    }
-
-    .btn-photo-change {
-        background: var(--neutral-100);
-        color: var(--neutral-700);
-        border: 1px solid var(--neutral-300);
-    }
-    .btn-photo-change:hover {
-        background: var(--neutral-200);
-    }
-
-    .btn-photo-remove {
-        background: #FEE2E2;
-        color: #DC2626;
-        border: 1px solid #FECACA;
-    }
-    .btn-photo-remove:hover {
-        background: #FCA5A5;
-    }
-
-    /* Identity Divider */
-    .identity-divider {
-        width: 100%;
-        height: 1px;
-        background: var(--neutral-200);
-        margin: 18px 0;
-    }
-
-    /* Completeness Mini Card */
-    .completeness-widget {
-        width: 100%;
-        text-align: left;
-    }
-
-    .completeness-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-    }
-
-    .completeness-title {
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--neutral-600);
-    }
-
-    .completeness-pct {
-        font-size: 0.875rem;
-        font-weight: 800;
-        color: var(--blue-700);
-    }
-
-    .completeness-progress-track {
-        width: 100%;
-        height: 6px;
-        background: var(--neutral-200);
-        border-radius: 999px;
-        overflow: hidden;
-        margin-bottom: 12px;
-    }
-
-    .completeness-progress-bar {
-        height: 100%;
-        background: linear-gradient(90deg, #3B82F6, #10B981);
-        border-radius: 999px;
-        transition: width 0.3s ease;
-    }
-
-    .checklist-mini-list {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .checklist-mini-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        font-size: 0.75rem;
-        color: var(--neutral-700);
-        padding: 2px 0;
-    }
-
-    .checklist-mini-item.done {
-        color: var(--neutral-900);
-        font-weight: 600;
-    }
-
-    .checklist-mini-icon {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.625rem;
-        flex-shrink: 0;
-    }
-
-    .checklist-mini-icon.done {
-        background: #DCFCE7;
-        color: #166534;
-        border: 1px solid #86EFAC;
-    }
-
-    .checklist-mini-icon.pending {
-        background: var(--neutral-200);
-        color: var(--neutral-500);
-    }
-
-    /* Privacy Banner in Left Card */
-    .privacy-notice-box {
-        margin-top: 16px;
-        padding: 10px 12px;
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        font-size: 0.72rem;
-        color: var(--neutral-600);
-        line-height: 1.4;
-        display: flex;
-        align-items: flex-start;
-        gap: 8px;
-        text-align: left;
-    }
-
-    /* Column Right: Unified Form Card */
-    .form-unified-card {
-        background: #ffffff;
-        border: 1px solid var(--neutral-300);
-        border-radius: var(--radius-lg, 16px);
-        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
-        padding: 28px 32px;
-    }
-
-    .form-section-title-wrap {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 20px;
-    }
-
-    .form-section-icon-badge {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .form-section-icon-badge.blue {
-        background: rgba(1, 52, 124, 0.08);
-        color: var(--magkom-primary-blue, #01347C);
-    }
-
-    .form-section-icon-badge.emerald {
-        background: #ECFDF5;
-        color: #059669;
-    }
-
-    .form-section-heading {
-        font-size: 1.0625rem;
-        font-weight: 700;
-        color: var(--neutral-900);
-        margin: 0;
-        line-height: 1.25;
-    }
-
-    .form-section-desc {
-        font-size: 0.8125rem;
-        color: var(--neutral-600);
-        margin: 2px 0 0 0;
-    }
-
-    .form-section-divider {
-        height: 1px;
-        background: var(--neutral-200);
-        margin: 28px 0 24px 0;
-    }
-
-    /* Input Field Styling */
-    .field-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
-        margin-bottom: 18px;
-    }
-
-    .field-row.full {
-        grid-template-columns: 1fr;
-    }
-
-    .form-field-group {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .field-label {
-        font-size: 0.8125rem;
-        font-weight: 600;
-        color: var(--neutral-800);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .field-label .required-dot {
-        color: var(--red-600);
-        margin-left: 2px;
-    }
-
-    .field-input-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .field-leading-icon {
-        position: absolute;
-        left: 14px;
-        color: var(--neutral-500);
-        pointer-events: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .field-input {
-        width: 100%;
-        height: 42px;
-        padding: 0 14px 0 42px;
-        border: 1.5px solid #CBD5E1;
-        border-radius: 8px;
-        font-size: 0.875rem;
-        color: var(--neutral-900);
-        background: #ffffff;
-        font-family: inherit;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        box-sizing: border-box;
-    }
-
-    .field-input:focus {
-        outline: none;
-        border-color: var(--magkom-primary-blue, #01347C);
-        box-shadow: 0 0 0 3px rgba(1, 52, 124, 0.18);
-    }
-
-    .field-input:disabled,
-    .field-input[readonly] {
-        background: #F8FAFC;
-        color: var(--neutral-600);
-        border-color: #E2E8F0;
-        cursor: not-allowed;
-    }
-
-    .field-input.is-invalid {
-        border-color: var(--red-600);
-        background: #FFF8F8;
-    }
-
-    .field-error-text {
-        font-size: 0.75rem;
-        color: var(--red-600);
-        margin-top: 2px;
-    }
-
-    .field-helper-text {
-        font-size: 0.75rem;
-        color: var(--neutral-500);
-        margin-top: 2px;
-    }
-
-    /* Submit Action Bar */
-    .form-action-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 16px;
-        padding-top: 24px;
-        border-top: 1px solid var(--neutral-200);
-        margin-top: 28px;
-    }
-
-    .form-action-meta {
-        font-size: 0.8125rem;
-        color: var(--neutral-500);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .form-action-buttons {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-    }
-
-    .btn-submit-profil {
-        height: 46px;
-        padding: 0 28px;
-        background: var(--magkom-primary-blue, #01347C);
-        color: #ffffff;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 8px;
-        font-size: 0.9375rem;
-        font-weight: 700;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 14px rgba(1, 52, 124, 0.25);
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .btn-submit-profil:hover {
-        background: #002244;
-        transform: translateY(-1.5px);
-        box-shadow: 0 6px 18px rgba(1, 52, 124, 0.35);
-    }
-
-    .btn-submit-profil:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 6px rgba(1, 52, 124, 0.2);
-    }
-
-    .btn-submit-profil svg {
-        transition: transform 0.2s ease;
-    }
-
-    .btn-submit-profil:hover svg {
-        transform: translateX(2px);
-    }
-
-    .btn-submit-profil:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-        transform: none;
-    }
-
-    /* Responsive */
-    @media (max-width: 1024px) {
-        .profile-two-columns {
-            grid-template-columns: 1fr;
-        }
-
-        .identity-card {
-            position: static;
-        }
-    }
-
-    @media (max-width: 640px) {
-        .form-unified-card {
-            padding: 20px 18px;
-        }
-
-        .field-row {
-            grid-template-columns: 1fr;
-            gap: 14px;
-        }
-
-        .form-action-bar {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 14px;
-        }
-
-        .form-action-buttons {
-            margin-left: 0;
-            width: 100%;
-        }
-
-        .btn-submit-profil {
-            width: 100%;
-            justify-content: center;
-        }
-    }
-
-    /* Dark Mode Harmonization ala Menu Tugas */
-    [data-theme="dark"] .identity-card,
-    [data-theme="dark"] .form-unified-card {
-        background: #182234 !important;
-        border-color: #26354D !important;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25) !important;
-    }
-
-    [data-theme="dark"] .avatar-preview-box {
-        border-color: #182234 !important;
-        background: rgba(6, 65, 204, 0.35) !important;
-        color: #60A5FA !important;
-    }
-
-    [data-theme="dark"] .privacy-notice-box {
-        background: #0F172A !important;
-        border-color: #26354D !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .field-input {
-        background: #0F172A !important;
-        border-color: #3E516E !important;
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .field-input:focus {
-        border-color: #2563EB !important;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
-    }
-
-    [data-theme="dark"] .field-input:disabled,
-    [data-theme="dark"] .field-input[readonly] {
-        background: #111C2E !important;
-        border-color: #26354D !important;
-        color: #8FA2BF !important;
-    }
-
-    [data-theme="dark"] .checklist-mini-item {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .checklist-mini-item.done {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .checklist-mini-icon.done {
-        background: rgba(6, 78, 59, 0.45) !important;
-        border-color: rgba(52, 211, 153, 0.4) !important;
-        color: #6EE7B7 !important;
-    }
-
-    [data-theme="dark"] .checklist-mini-icon.pending {
-        background: #26354D !important;
-        color: #8FA2BF !important;
-    }
-
-    [data-theme="dark"] .form-section-title-wrap {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .form-action-bar {
-        border-top-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .profile-header-title {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .profile-header-subtitle {
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .field-label {
-        color: #E2E8F0 !important;
-    }
-
-    [data-theme="dark"] .profile-right-column table {
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .profile-right-column table tr {
-        border-color: #26354D !important;
-    }
-
-    [data-theme="dark"] .profile-right-column table thead tr {
-        background: #111C2E !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] .profile-right-column table tbody tr {
-        background: #182234 !important;
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] .btn-submit-profil {
-        background: var(--magkom-primary-blue, #01347C) !important;
-        color: #ffffff !important;
-    }
-
-    [data-theme="dark"] .btn-submit-profil:hover {
-        background: #002244 !important;
-    }
-</style>
+    @vite(['resources/css/pages/peserta/profil-show.css'])
+@endpush
+
+@push('scripts')
+    @vite(['resources/js/pages/peserta/profil-show.js'])
 @endpush
 
 @section('content')
-<div class="profile-page-wrapper">
+<div class="profil-page-wrapper">
+    <div class="profil-main-card">
 
+        {{-- Notifikasi Sukses / Gagal --}}
+        @if(session('success'))
+            <div class="profil-alert profil-alert-success" role="alert">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
 
+        @if(isset($errors) && $errors->any())
+            <div class="profil-alert profil-alert-danger" role="alert">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Terdapat kesalahan pada data yang Anda masukkan. Silakan periksa kolom yang ditandai merah.</span>
+            </div>
+        @endif
 
-    {{-- Clean Page Header --}}
-    <x-gentelella.page-title title="Biodata & Profil Peserta" description="Kelola pasfoto, data akademik, serta kontak utama dan kontak darurat Anda secara terpadu." />
+        {{-- Form Biodata Profil Peserta --}}
+        <form action="{{ route('peserta.profil.simpan') }}" method="POST" id="formBiodataPeserta" enctype="multipart/form-data">
+            @csrf
 
-    {{-- Formulir Biodata Utama Peserta (Membungkus Kedua Kolom) --}}
-    <form action="{{ route('peserta.profil.simpan') }}" method="POST" id="formBiodataPeserta" enctype="multipart/form-data">
-        @csrf
-
-        {{-- Hidden Input untuk Penanganan Foto --}}
-        <input type="file" id="inputFotoProfil" name="foto" accept="image/jpeg,image/png,image/jpg,image/webp" style="display: none;">
-        <input type="hidden" id="inputHapusFoto" name="hapus_foto" value="0">
-
-        <div class="profile-two-columns">
+            {{-- Hidden Inputs --}}
+            <input type="file" id="inputFotoProfil" name="foto" accept="image/jpeg,image/png,image/jpg,image/webp" style="display: none;">
+            <input type="hidden" id="inputHapusFoto" name="hapus_foto" value="0">
+            <input type="hidden" id="nama" value="{{ $user->nama ?? $user->name }}">
 
             {{-- ========================================================
-                 KOLOM KIRI: KARTU IDENTITAS PESERTA (PROFILE CARD GENTELELLA)
+                 B. HEADER IDENTITAS PESERTA (NAVY BANNER)
                  ======================================================== --}}
-            <x-gentelella.card class="identity-card" :hoverable="false">
-                <div class="identity-card-cover"></div>
-
-                <div class="identity-card-body">
-                    {{-- Avatar Profil dengan Overlay Tombol Kamera --}}
-                    <div class="avatar-interactive-wrapper">
-                        <div class="avatar-preview-box">
-                            <img id="avatarPreviewImg"
+            <div class="profil-identity-banner">
+                <div class="profil-identity-left">
+                    {{-- Avatar Lingkaran dengan Badge Kamera --}}
+                    <div class="profil-avatar-box">
+                        <div class="profil-avatar-img-wrap">
+                            <img id="avatarImg"
                                  src="{{ $profil?->foto_url ?? '' }}"
                                  alt="Foto Profil"
-                                 class="avatar-preview-img"
+                                 class="profil-avatar-img"
                                  style="display: {{ $profil?->foto_url ? 'block' : 'none' }};">
-                            <div id="avatarFallbackIcon"
-                                 class="avatar-initial-icon"
-                                 style="display: {{ $profil?->foto_url ? 'none' : 'flex' }};">
+                            <span id="avatarInitial"
+                                  class="profil-avatar-initial"
+                                  style="display: {{ $profil?->foto_url ? 'none' : 'block' }};">
                                 {{ strtoupper(substr($user->nama ?? $user->name ?? 'P', 0, 1)) }}
-                            </div>
+                            </span>
                         </div>
 
-                        {{-- Tombol Ikon Kamera untuk Ganti Foto --}}
-                        <label for="inputFotoProfil" class="avatar-btn-overlay" title="Klik untuk unggah atau ganti foto profil">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        {{-- Tombol Ikon Kamera --}}
+                        <button type="button" class="profil-camera-badge" id="cameraOverlayBtn" title="Ganti pasfoto profil" aria-label="Ganti pasfoto profil">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
-                        </label>
-                    </div>
-
-                    {{-- Nama & Status Penempatan --}}
-                    <h2 class="identity-user-name">{{ $user->nama ?? $user->name }}</h2>
-                    <span class="identity-role-badge">
-                        @if($penempatan)
-                            {{ $penempatan->bidang?->nama_bidang ?? 'Peserta Magang Aktif' }}
-                        @else
-                            Calon Peserta Magang
-                        @endif
-                    </span>
-                    <span class="identity-user-email">{{ $user->email }}</span>
-
-                    {{-- Tombol Aksi Pasfoto (Pilih / Hapus) --}}
-                    <div class="photo-actions-row">
-                        <button type="button" class="btn-photo-action btn-photo-change" id="btnPilihFoto">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                            </svg>
-                            <span>Pilih Pasfoto</span>
                         </button>
-
-                        @if($profil?->foto)
-                            <button type="button" class="btn-photo-action btn-photo-remove" id="btnHapusFoto">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                </svg>
-                                <span>Hapus</span>
-                            </button>
-                        @endif
-                    </div>
-                    <span id="selectedFileName" style="font-size: 0.75rem; color: var(--blue-700); font-weight: 600; margin-top: 6px;"></span>
-
-                    @error('foto')
-                        <span class="field-error-text" style="margin-top: 6px;">{{ $message }}</span>
-                    @enderror
-
-                    <div class="identity-divider"></div>
-
-                    {{-- Widget Ringkas Kelengkapan Profil --}}
-                    <div class="completeness-widget">
-                        <div class="completeness-header">
-                            <span class="completeness-title">Kelengkapan Biodata</span>
-                            <span class="completeness-pct">{{ $persentaseLengkap }}%</span>
-                        </div>
-                        <div class="completeness-progress-track">
-                            <div class="completeness-progress-bar" style="width: {{ max(6, $persentaseLengkap) }}%;"></div>
-                        </div>
-
-                        <div class="checklist-mini-list">
-                            <div class="checklist-mini-item {{ $checklist['data_diri'] ? 'done' : '' }}">
-                                <span>Akun & Nama Lengkap</span>
-                                <span class="checklist-mini-icon {{ $checklist['data_diri'] ? 'done' : 'pending' }}">
-                                    {{ $checklist['data_diri'] ? '✓' : '•' }}
-                                </span>
-                            </div>
-
-                            <div class="checklist-mini-item {{ $checklist['foto'] ? 'done' : '' }}">
-                                <span>Pasfoto Resmi</span>
-                                <span class="checklist-mini-icon {{ $checklist['foto'] ? 'done' : 'pending' }}">
-                                    {{ $checklist['foto'] ? '✓' : '•' }}
-                                </span>
-                            </div>
-
-                            <div class="checklist-mini-item {{ $checklist['akademik'] ? 'done' : '' }}">
-                                <span>Data Akademik & Kampus</span>
-                                <span class="checklist-mini-icon {{ $checklist['akademik'] ? 'done' : 'pending' }}">
-                                    {{ $checklist['akademik'] ? '✓' : '•' }}
-                                </span>
-                            </div>
-
-                            <div class="checklist-mini-item {{ $checklist['kontak'] ? 'done' : '' }}">
-                                <span>Nomor WhatsApp Aktif</span>
-                                <span class="checklist-mini-icon {{ $checklist['kontak'] ? 'done' : 'pending' }}">
-                                    {{ $checklist['kontak'] ? '✓' : '•' }}
-                                </span>
-                            </div>
-
-                            <div class="checklist-mini-item {{ $checklist['darurat'] ? 'done' : '' }}">
-                                <span>Kontak Darurat / Wali</span>
-                                <span class="checklist-mini-icon {{ $checklist['darurat'] ? 'done' : 'pending' }}">
-                                    {{ $checklist['darurat'] ? '✓' : '•' }}
-                                </span>
-                            </div>
-                        </div>
                     </div>
 
-                    {{-- Catatan Privasi & Keamanan Data --}}
-                    <div class="privacy-notice-box">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--blue-600); flex-shrink: 0; margin-top: 1px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                        </svg>
-                        <span>Data tersimpan aman dan terenkripsi untuk kebutuhan administrasi magang Dinas Kominfo.</span>
-                    </div>
-
-                </div>
-            </x-gentelella.card>
-
-            {{-- ========================================================
-                 KOLOM KANAN: FORMULIR BIODATA BERSATU & DATA KELOMPOK
-                 ======================================================== --}}
-            <div class="profile-right-column" style="display: flex; flex-direction: column; gap: 24px;">
-
-                @if($kelompokMagang)
-                    <x-gentelella.card class="form-unified-card" :hoverable="false" style="border-top: 3.5px solid var(--magkom-primary-blue, #01347C);">
-                        <div class="form-section-title-wrap" style="margin-bottom: 16px;">
-                            <div class="form-section-icon-badge blue" style="background: rgba(1, 52, 124, 0.08); color: var(--magkom-primary-blue, #01347C);">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                </svg>
-                            </div>
-                            <div style="flex: 1;">
-                                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                                    <h3 class="form-section-heading" style="color: var(--magkom-midnight-navy, #003566);">
-                                        Tim Kelompok: {{ $kelompokMagang->nama_kelompok }}
-                                    </h3>
-                                    <span style="font-size: 0.75rem; font-weight: 700; background: rgba(1, 52, 124, 0.08); color: var(--magkom-primary-blue, #01347C); padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(1, 52, 124, 0.2);">
-                                        {{ $kelompokMagang->anggota->count() + 1 }} Peserta Terdaftar
-                                    </span>
-                                </div>
-                                <p class="form-section-desc">
-                                    Informasi tim dan rekan anggota yang terdaftar bersama Anda dalam pengajuan magang kelompok. Anda terdaftar sebagai <strong>Ketua Tim / Penanggung Jawab</strong>.
-                                </p>
-                            </div>
-                        </div>
-
-                        {{-- Roster Table --}}
-                        <div style="overflow-x: auto; margin-top: 14px; border: 1px solid var(--neutral-200); border-radius: 10px;">
-                            <table style="width: 100%; border-collapse: collapse; font-size: 0.825rem; text-align: left;">
-                                <thead>
-                                    <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-200); color: var(--neutral-700);">
-                                        <th style="padding: 10px 14px; font-weight: 700; width: 44px;">No</th>
-                                        <th style="padding: 10px 14px; font-weight: 700;">Nama Peserta</th>
-                                        <th style="padding: 10px 14px; font-weight: 700;">Peran</th>
-                                        <th style="padding: 10px 14px; font-weight: 700;">NIM / NISN</th>
-                                        <th style="padding: 10px 14px; font-weight: 700;">Kontak (No. HP & Email)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{-- Baris Ketua Tim --}}
-                                    <tr style="border-bottom: 1px solid var(--neutral-200); background: rgba(1, 52, 124, 0.02);">
-                                        <td style="padding: 10px 14px; font-weight: 700; color: var(--neutral-500);">1</td>
-                                        <td style="padding: 10px 14px;">
-                                            <div style="font-weight: 700; color: var(--neutral-900);">{{ $user->nama ?? $user->name }}</div>
-                                            <div style="font-size: 0.725rem; color: var(--neutral-500);">{{ $profil?->institusi ?? 'Institusi Terdaftar' }}</div>
-                                        </td>
-                                        <td style="padding: 10px 14px;">
-                                            <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; font-weight: 800; background: #FEF3C7; color: #92400E; padding: 2px 8px; border-radius: 6px; border: 1px solid #FCD34D;">
-                                                ★ Ketua Tim
-                                            </span>
-                                        </td>
-                                        <td style="padding: 10px 14px; font-family: monospace; font-size: 0.8rem; color: var(--neutral-700);">
-                                            {{ $profil?->nim_nisn ?? '-' }}
-                                        </td>
-                                        <td style="padding: 10px 14px;">
-                                            <div style="color: var(--neutral-800); font-weight: 500;">{{ $profil?->no_hp ?? $user->no_telp ?? '-' }}</div>
-                                            <div style="font-size: 0.725rem; color: var(--neutral-500);">{{ $user->email }}</div>
-                                        </td>
-                                    </tr>
-
-                                    {{-- Baris Anggota Tim --}}
-                                    @forelse($kelompokMagang->anggota as $idx => $anggota)
-                                        <tr style="border-bottom: 1px solid var(--neutral-200);">
-                                            <td style="padding: 10px 14px; font-weight: 600; color: var(--neutral-500);">{{ $idx + 2 }}</td>
-                                            <td style="padding: 10px 14px;">
-                                                <div style="font-weight: 600; color: var(--neutral-900);">{{ $anggota->nama }}</div>
-                                            </td>
-                                            <td style="padding: 10px 14px;">
-                                                <span style="display: inline-block; font-size: 0.7rem; font-weight: 700; background: var(--neutral-100); color: var(--neutral-700); padding: 2px 8px; border-radius: 6px; border: 1px solid var(--neutral-300);">
-                                                    Anggota
-                                                </span>
-                                            </td>
-                                            <td style="padding: 10px 14px; font-family: monospace; font-size: 0.8rem; color: var(--neutral-700);">
-                                                {{ $anggota->nim_nisn ?? '-' }}
-                                            </td>
-                                            <td style="padding: 10px 14px;">
-                                                <div style="color: var(--neutral-800);">{{ $anggota->no_hp ?? '-' }}</div>
-                                                <div style="font-size: 0.725rem; color: var(--neutral-500);">{{ $anggota->email ?? '-' }}</div>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="5" style="padding: 14px; text-align: center; color: var(--neutral-500); font-size: 0.8rem;">
-                                                Belum ada rekan anggota kelompok yang ditambahkan.
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </x-gentelella.card>
-                @endif
-
-                <x-gentelella.card class="form-unified-card" :hoverable="false" style="border-top: 3.5px solid var(--magkom-primary-blue, #01347C);">
-
-                {{-- SEKSI 1: INFORMASI AKADEMIK --}}
-                <div class="form-section-title-wrap">
-                    <div class="form-section-icon-badge blue">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="form-section-heading">Informasi Akademik & Pendidikan</h3>
-                        <p class="form-section-desc">Data institusi pendidikan, nomor identitas, dan program studi Anda</p>
-                    </div>
-                </div>
-
-                <div class="field-row full">
-                    <div class="form-field-group">
-                        <label for="institusi" class="field-label">
-                            <span>Nama Sekolah / Perguruan Tinggi <span class="required-dot">*</span></span>
-                        </label>
-                        <div class="field-input-wrapper">
-                            <span class="field-leading-icon">
-                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                </svg>
-                            </span>
-                            <input type="text" id="institusi" name="institusi"
-                                   class="field-input @error('institusi') is-invalid @enderror"
-                                   value="{{ old('institusi', $profil?->institusi) }}"
-                                   placeholder="Contoh: Universitas Gadjah Mada / SMKN 2 Depok Sleman" required>
-                        </div>
-                        @error('institusi')
-                            <span class="field-error-text">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="field-row">
-                    <div class="form-field-group">
-                        <label for="nim_nisn" class="field-label">
-                            <span>NIM / NISN <span class="required-dot">*</span></span>
-                        </label>
-                        <div class="field-input-wrapper">
-                            <span class="field-leading-icon">
-                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
-                                </svg>
-                            </span>
-                            <input type="text" id="nim_nisn" name="nim_nisn"
-                                   class="field-input @error('nim_nisn') is-invalid @enderror"
-                                   value="{{ old('nim_nisn', $profil?->nim_nisn) }}"
-                                   placeholder="Nomor induk mahasiswa / siswa" required>
-                        </div>
-                        @error('nim_nisn')
-                            <span class="field-error-text">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="form-field-group">
-                        <label for="jenjang" class="field-label">
-                            <span>Jenjang Pendidikan <span class="required-dot">*</span></span>
-                        </label>
-                        <div class="field-input-wrapper">
-                            <span class="field-leading-icon">
-                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                                </svg>
-                            </span>
-                            <select id="jenjang" name="jenjang" class="field-input @error('jenjang') is-invalid @enderror" required>
-                                <option value="">-- Pilih Jenjang --</option>
-                                <option value="smk" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'smk' ? 'selected' : '' }}>SMK (Siswa)</option>
-                                <option value="d3" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'd3' ? 'selected' : '' }}>D3 (Diploma Tiga)</option>
-                                <option value="s1" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 's1' ? 'selected' : '' }}>S1 / D4 (Sarjana)</option>
-                            </select>
-                        </div>
-                        @error('jenjang')
-                            <span class="field-error-text">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="field-row full">
-                    <div class="form-field-group">
-                        <label for="jurusan_id" class="field-label">
-                            <span>Jurusan / Program Studi <span class="required-dot">*</span></span>
-                        </label>
-                        <div class="field-input-wrapper">
-                            <span class="field-leading-icon">
-                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                                </svg>
-                            </span>
-                            <select id="jurusan_id" name="jurusan_id" class="field-input @error('jurusan_id') is-invalid @enderror" required>
-                                <option value="">-- Pilih Jurusan / Program Studi --</option>
-                                @foreach($jurusanList as $jurusan)
-                                    <option value="{{ $jurusan->id }}" {{ old('jurusan_id', $profil?->jurusan_id) == $jurusan->id ? 'selected' : '' }}>
-                                        {{ $jurusan->nama_jurusan }} ({{ strtoupper($jurusan->kategori) }})
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @error('jurusan_id')
-                            <span class="field-error-text">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="field-row full">
-                    <div class="form-field-group">
-                        <label for="nama_pembimbing_sekolah" class="field-label">
-                            <span>Nama Pembimbing dari Sekolah / Kampus</span>
-                        </label>
-                        <div class="field-input-wrapper">
-                            <span class="field-leading-icon">
-                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                </svg>
-                            </span>
-                            <input type="text" id="nama_pembimbing_sekolah" name="nama_pembimbing_sekolah"
-                                   class="field-input @error('nama_pembimbing_sekolah') is-invalid @enderror"
-                                   value="{{ old('nama_pembimbing_sekolah', $profil?->nama_pembimbing_sekolah) }}"
-                                   placeholder="Contoh: Bpk. Budi Santoso, M.Pd / Dosen Pembimbing">
-                        </div>
-                        @error('nama_pembimbing_sekolah')
-                            <span class="field-error-text">{{ $message }}</span>
-                        @enderror
-                        <span class="field-helper-text">Guru pembimbing SMK atau dosen pembimbing akademik dari kampus asal.</span>
-                    </div>
-                </div>
-
-                {{-- Kepatuhan UU PDP (SEC-41): Persetujuan Orang Tua/Wali Khusus Siswa SMK --}}
-                <div id="wrapper-persetujuan-wali" class="field-row full" style="{{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'smk' || !empty($profil?->persetujuan_wali_at) ? '' : 'display: none;' }}">
-                    <div class="form-field-group" style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 14px 16px;">
-                        <label class="field-label" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-weight: normal;">
-                            <input type="hidden" name="persetujuan_wali" value="0">
-                            <input type="checkbox" id="persetujuan_wali" name="persetujuan_wali" value="1"
-                                   {{ old('persetujuan_wali') || !empty($profil?->persetujuan_wali_at) ? 'checked' : '' }}
-                                   style="width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--blue-600);">
-                            <span style="font-size: 0.8125rem; color: var(--neutral-800); line-height: 1.4;">
-                                <strong>Pernyataan Kepatuhan UU PDP No. 27/2022 (Khusus Jenjang SMK):</strong><br>
-                                Saya berusia minimal 18 tahun atau telah mendapatkan izin dan persetujuan dari orang tua / wali sah untuk mengikuti kegiatan magang serta pemrosesan data identitas untuk administrasi instansi Dinas Kominfo.
-                                @if(!empty($profil?->persetujuan_wali_at))
-                                    <span style="display: block; font-size: 0.75rem; color: var(--green-600); margin-top: 4px; font-weight: 600;">
-                                        ✓ Persetujuan telah tercatat pada: {{ $profil->persetujuan_wali_at->format('d/m/Y H:i') }} WIB
-                                    </span>
+                    {{-- Informasi Nama & Email --}}
+                    <div class="profil-user-info">
+                        <div class="profil-name-row">
+                            <h2 class="profil-user-name">{{ $user->nama ?? $user->name }}</h2>
+                            <span class="profil-badge-role">
+                                @if($penempatan)
+                                    {{ $penempatan->bidang?->nama_bidang ?? 'Peserta Magang Aktif' }}
+                                @else
+                                    CALON PESERTA MAGANG
                                 @endif
                             </span>
-                        </label>
-                        @error('persetujuan_wali')
-                            <span class="field-error-text" style="margin-top: 6px;">{{ $message }}</span>
-                        @enderror
+                        </div>
+                        <p class="profil-user-email">{{ $user->email }}</p>
                     </div>
                 </div>
 
-                <div class="form-section-divider"></div>
-
-                {{-- SEKSI 2: KONTAK & JALUR DARURAT --}}
-                <div class="form-section-title-wrap">
-                    <div class="form-section-icon-badge emerald">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                {{-- Tombol Pilih Pasfoto --}}
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                    <button type="button" class="profil-btn-upload-photo" id="btnUploadPhoto">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                         </svg>
-                    </div>
-                    <div>
-                        <h3 class="form-section-heading">Kontak Utama & Jalur Darurat</h3>
-                        <p class="form-section-desc">Nomor komunikasi aktif dan kontak wali untuk perlindungan selama magang</p>
-                    </div>
+                        <span>Pilih Pasfoto</span>
+                    </button>
+
+                    @if($profil?->foto)
+                        <button type="button" id="btnRemovePhoto" style="background: none; border: none; color: #FCA5A5; font-size: 0.72rem; cursor: pointer; text-decoration: underline; padding: 2px 4px;">
+                            Hapus Pasfoto
+                        </button>
+                    @endif
+                    <span id="photoInfoText" class="profil-photo-subtext"></span>
+                </div>
+            </div>
+
+            @error('foto')
+                <span class="profil-field-error" style="margin-top: 6px; display: block;">{{ $message }}</span>
+            @enderror
+
+            {{-- ========================================================
+                 C. INDIKATOR KELENGKAPAN BIODATA
+                 ======================================================== --}}
+            <div class="profil-completeness-card">
+                <div class="profil-completeness-header">
+                    <span class="profil-completeness-title">KELENGKAPAN BIODATA</span>
+                    <span class="profil-completeness-percent" id="completenessPercentText">{{ $persentaseLengkap }}%</span>
                 </div>
 
-                <div class="field-row">
-                    <div class="form-field-group">
-                        <label for="no_hp" class="field-label">
-                            <span>Nomor WhatsApp / Telepon Aktif <span class="required-dot">*</span></span>
-                        </label>
-                        <div class="field-input-wrapper">
-                            <span class="field-leading-icon">
-                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                </svg>
-                            </span>
-                            <input type="tel" id="no_hp" name="no_hp"
-                                   class="field-input @error('no_hp') is-invalid @enderror"
-                                   value="{{ old('no_hp', $profil?->no_hp ?? $user->no_telp) }}"
-                                   placeholder="Contoh: 081234567890" required>
-                        </div>
-                        @error('no_hp')
-                            <span class="field-error-text">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="form-field-group">
-                        <label for="email" class="field-label">
-                            <span>Email / Gmail Aktif <span class="required-dot">*</span></span>
-                        </label>
-                        <div class="field-input-wrapper">
-                            <span class="field-leading-icon">
-                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                </svg>
-                            </span>
-                            <input type="email" id="email" name="email"
-                                   class="field-input @error('email') is-invalid @enderror"
-                                   value="{{ old('email', $user->email) }}"
-                                   placeholder="nama.peserta@gmail.com" required>
-                        </div>
-                        @error('email')
-                            <span class="field-error-text">{{ $message }}</span>
-                        @enderror
-                    </div>
+                <div class="profil-progress-track">
+                    <div class="profil-progress-fill" id="completenessProgressBar" style="width: {{ max(6, $persentaseLengkap) }}%;"></div>
                 </div>
 
-                <div class="field-row full">
-                    <div class="form-field-group">
-                        <label for="alamat" class="field-label">
-                            <span>Alamat Lengkap / Domisili</span>
-                        </label>
-                        <div class="field-input-wrapper">
-                            <span class="field-leading-icon" style="top: 14px; transform: none;">
-                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <div class="profil-checklist-grid">
+                    {{-- 1. Akun & Nama Lengkap --}}
+                    <div class="profil-checklist-item" id="checkItemAkun">
+                        <span class="profil-checklist-icon-wrap">
+                            @if($checklist['data_diri'])
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="profil-checklist-icon done" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="8" cy="8" r="8" fill="#02275D"/>
+                                    <path d="M4.5 8L7 10.5L11.5 5.5" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
-                            </span>
-                            <textarea id="alamat" name="alamat" rows="2"
-                                      class="field-input @error('alamat') is-invalid @enderror"
-                                      style="padding-left: 42px; min-height: 72px; resize: vertical;"
-                                      placeholder="Contoh: Jl. Magelang KM 5, Mlati, Kabupaten Sleman">{{ old('alamat', $profil?->alamat) }}</textarea>
-                        </div>
-                        @error('alamat')
-                            <span class="field-error-text">{{ $message }}</span>
-                        @enderror
-                        <span class="field-helper-text">Alamat domisili peserta magang selama mengikuti program magang di Sleman.</span>
+                            @else
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="profil-checklist-icon pending" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="8" cy="8" r="7" stroke="#94A3B8" stroke-width="1.75" fill="none"/>
+                                </svg>
+                            @endif
+                        </span>
+                        <span>Akun & Nama Lengkap</span>
+                    </div>
+
+                    {{-- 2. Pasfoto Resmi --}}
+                    <div class="profil-checklist-item" id="checkItemFoto">
+                        <span class="profil-checklist-icon-wrap">
+                            @if($checklist['foto'])
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="profil-checklist-icon done" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="8" cy="8" r="8" fill="#02275D"/>
+                                    <path d="M4.5 8L7 10.5L11.5 5.5" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            @else
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="profil-checklist-icon pending" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="8" cy="8" r="7" stroke="#94A3B8" stroke-width="1.75" fill="none"/>
+                                </svg>
+                            @endif
+                        </span>
+                        <span>Pasfoto Resmi</span>
+                    </div>
+
+                    {{-- 3. Data Akademik & Kampus --}}
+                    <div class="profil-checklist-item" id="checkItemAkademik">
+                        <span class="profil-checklist-icon-wrap">
+                            @if($checklist['akademik'])
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="profil-checklist-icon done" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="8" cy="8" r="8" fill="#02275D"/>
+                                    <path d="M4.5 8L7 10.5L11.5 5.5" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            @else
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="profil-checklist-icon pending" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="8" cy="8" r="7" stroke="#94A3B8" stroke-width="1.75" fill="none"/>
+                                </svg>
+                            @endif
+                        </span>
+                        <span>Data Akademik & Kampus</span>
+                    </div>
+
+                    {{-- 4. Nomor WhatsApp / HRF --}}
+                    <div class="profil-checklist-item" id="checkItemKontak">
+                        <span class="profil-checklist-icon-wrap">
+                            @if($checklist['kontak'])
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="profil-checklist-icon done" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="8" cy="8" r="8" fill="#02275D"/>
+                                    <path d="M4.5 8L7 10.5L11.5 5.5" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            @else
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="profil-checklist-icon pending" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="8" cy="8" r="7" stroke="#94A3B8" stroke-width="1.75" fill="none"/>
+                                </svg>
+                            @endif
+                        </span>
+                        <span>Nomor WhatsApp / HRF</span>
+                    </div>
+
+                    {{-- 5. Kontak Darurat / Wali --}}
+                    <div class="profil-checklist-item" id="checkItemDarurat">
+                        <span class="profil-checklist-icon-wrap">
+                            @if($checklist['darurat'])
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="profil-checklist-icon done" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="8" cy="8" r="8" fill="#02275D"/>
+                                    <path d="M4.5 8L7 10.5L11.5 5.5" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            @else
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="profil-checklist-icon pending" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="8" cy="8" r="7" stroke="#94A3B8" stroke-width="1.75" fill="none"/>
+                                </svg>
+                            @endif
+                        </span>
+                        <span>Kontak Darurat / Wali</span>
                     </div>
                 </div>
+            </div>
 
-                <div class="field-row">
-                    <div class="form-field-group">
-                        <label for="nama_kontak_darurat" class="field-label">
-                            <span>Nama Kontak Darurat / Wali</span>
-                        </label>
-                        <div class="field-input-wrapper">
-                            <span class="field-leading-icon">
-                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                </svg>
-                            </span>
-                            <input type="text" id="nama_kontak_darurat" name="nama_kontak_darurat"
-                                   class="field-input @error('nama_kontak_darurat') is-invalid @enderror"
-                                   value="{{ old('nama_kontak_darurat', $profil?->nama_kontak_darurat) }}"
-                                   placeholder="Contoh: Nama Orang Tua / Wali">
-                        </div>
-                        @error('nama_kontak_darurat')
-                            <span class="field-error-text">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="form-field-group">
-                        <label for="no_kontak_darurat" class="field-label">
-                            <span>Nomor Telepon Darurat</span>
-                        </label>
-                        <div class="field-input-wrapper">
-                            <span class="field-leading-icon">
-                                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                                </svg>
-                            </span>
-                            <input type="tel" id="no_kontak_darurat" name="no_kontak_darurat"
-                                   class="field-input @error('no_kontak_darurat') is-invalid @enderror"
-                                   value="{{ old('no_kontak_darurat', $profil?->no_kontak_darurat) }}"
-                                   placeholder="Contoh: 089876543210">
-                        </div>
-                        @error('no_kontak_darurat')
-                            <span class="field-error-text">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-
-                {{-- Action Bar Submit --}}
-                <div class="form-action-bar">
-                    <div class="form-action-meta">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--neutral-400); flex-shrink: 0;">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                        </svg>
-                        <span>Periksa kembali data Anda sebelum menekan tombol simpan.</span>
-                    </div>
-
-                    <div class="form-action-buttons">
-                        <button type="submit" class="btn-submit-profil" id="btnSimpanProfil">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+            {{-- ========================================================
+                 D. INFORMASI AKADEMIK & PENDIDIKAN
+                 ======================================================== --}}
+            <div class="profil-section-card" id="sectionAkademik">
+                <div class="profil-section-header">
+                    <div class="profil-section-title-wrap">
+                        <div class="profil-section-icon-badge">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path>
                             </svg>
-                            <span>Simpan Biodata Profil</span>
+                        </div>
+                        <div>
+                            <h3 class="profil-section-heading">Informasi Akademik & Pendidikan</h3>
+                            <p class="profil-section-subheading">Data pendidikan terkait identitas dan program studi Anda.</p>
+                        </div>
+                    </div>
+                    <div class="profil-section-actions">
+                        <button type="button" class="profil-btn-edit" id="btnEditAkademik" data-section="akademik" title="Klik untuk mengedit data">
+                            <span>Edit</span>
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                            </svg>
                         </button>
                     </div>
                 </div>
 
-            </x-gentelella.card>
+                <div class="profil-fields-grid">
+                    {{-- 1. Nama Sekolah / Perguruan Tinggi (Full Width - Terkunci Registrasi) --}}
+                    <div class="profil-form-group profil-field-col-full">
+                        <label for="institusi" class="profil-label">
+                            Nama Sekolah / Perguruan Tinggi <span class="profil-required">*</span>
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="Data registrasi terkunci" aria-label="Terkunci"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </label>
+                        <input type="text"
+                               id="institusi"
+                               name="institusi"
+                               class="profil-input is-permanent-locked @error('institusi') is-invalid @enderror"
+                               value="{{ old('institusi', $profil?->institusi) }}"
+                               placeholder="SMK Negeri 2 Depok Sleman"
+                               readonly
+                               data-permanent-locked="true"
+                               required>
+                        @error('institusi')
+                            <span class="profil-field-error">{{ $message }}</span>
+                        @enderror
+                    </div>
 
+                    {{-- 2. NIM / NISN (Terkunci Registrasi) --}}
+                    <div class="profil-form-group">
+                        <label for="nim_nisn" class="profil-label">
+                            NIM / NISN <span class="profil-required">*</span>
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="Data registrasi terkunci" aria-label="Terkunci"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </label>
+                        <input type="text"
+                               id="nim_nisn"
+                               name="nim_nisn"
+                               class="profil-input is-permanent-locked @error('nim_nisn') is-invalid @enderror"
+                               value="{{ old('nim_nisn', $profil?->nim_nisn) }}"
+                               placeholder="2029290736"
+                               readonly
+                               data-permanent-locked="true"
+                               required>
+                        @error('nim_nisn')
+                            <span class="profil-field-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    {{-- 3. Jenjang Pendidikan (Terkunci Registrasi) --}}
+                    <div class="profil-form-group">
+                        <label for="jenjang" class="profil-label">
+                            Jenjang Pendidikan <span class="profil-required">*</span>
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="Data registrasi terkunci" aria-label="Terkunci"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </label>
+                        <select id="jenjang"
+                                class="profil-select is-permanent-locked @error('jenjang') is-invalid @enderror"
+                                disabled
+                                data-permanent-locked="true">
+                            <option value="">-- Pilih Jenjang --</option>
+                            <option value="smk" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'smk' ? 'selected' : '' }}>SMK (Sekolah)</option>
+                            <option value="d3" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 'd3' ? 'selected' : '' }}>D3 (Diploma Tiga)</option>
+                            <option value="s1" {{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) === 's1' ? 'selected' : '' }}>S1 / D4 (Sarjana)</option>
+                        </select>
+                        {{-- Hidden Input Mirror untuk submit form --}}
+                        <input type="hidden" name="jenjang" value="{{ old('jenjang', $profil?->jenjang?->value ?? $profil?->jenjang) }}">
+                        @error('jenjang')
+                            <span class="profil-field-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    {{-- 4. Jurusan / Program Studi (Full Width - Terkunci Registrasi) --}}
+                    <div class="profil-form-group profil-field-col-full">
+                        <label for="jurusan_id" class="profil-label">
+                            Jurusan / Program Studi <span class="profil-required">*</span>
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="profil-lock-icon" title="Data registrasi terkunci" aria-label="Terkunci"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </label>
+                        <select id="jurusan_id"
+                                class="profil-select is-permanent-locked @error('jurusan_id') is-invalid @enderror"
+                                disabled
+                                data-permanent-locked="true">
+                            <option value="">-- Pilih Jurusan / Program Studi --</option>
+                            @foreach($jurusanList as $jurusan)
+                                <option value="{{ $jurusan->id }}"
+                                        data-kategori="{{ strtolower($jurusan->kategori) }}"
+                                        {{ old('jurusan_id', $profil?->jurusan_id) == $jurusan->id ? 'selected' : '' }}>
+                                    {{ $jurusan->nama_jurusan }} ({{ strtoupper($jurusan->kategori) }})
+                                </option>
+                            @endforeach
+                        </select>
+                        {{-- Hidden Input Mirror untuk submit form --}}
+                        <input type="hidden" name="jurusan_id" value="{{ old('jurusan_id', $profil?->jurusan_id) }}">
+                        @error('jurusan_id')
+                            <span class="profil-field-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    {{-- 5. Nama Pembimbing dari Sekolah / Kampus (Full Width) --}}
+                    <div class="profil-form-group profil-field-col-full">
+                        <label for="nama_pembimbing_sekolah" class="profil-label">
+                            Nama Pembimbing dari Sekolah / Kampus
+                        </label>
+                        <input type="text"
+                               id="nama_pembimbing_sekolah"
+                               name="nama_pembimbing_sekolah"
+                               class="profil-input @error('nama_pembimbing_sekolah') is-invalid @enderror"
+                               value="{{ old('nama_pembimbing_sekolah', $profil?->nama_pembimbing_sekolah) }}"
+                               placeholder="Contoh: Bpk. Budi Santoso, M.Pd / Dosen Pembimbing"
+                               readonly
+                               data-locked="true">
+                        <span class="profil-helper-text">Nama pembimbing berasal dari dosen pembimbing akademik atau guru pembimbing.</span>
+                        @error('nama_pembimbing_sekolah')
+                            <span class="profil-field-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    {{-- Hidden PDP Compliance Input --}}
+                    <input type="hidden" id="persetujuan_wali" name="persetujuan_wali" value="1">
+                </div>
             </div>
 
-        </div>
+            {{-- ========================================================
+                 E. KONTAK UTAMA & JALUR DARURAT
+                 ======================================================== --}}
+            <div class="profil-section-card" id="sectionKontak">
+                <div class="profil-section-header">
+                    <div class="profil-section-title-wrap">
+                        <div class="profil-section-icon-badge">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="profil-section-heading">Kontak Utama & Jalur Darurat</h3>
+                            <p class="profil-section-subheading">Nomor kontak aktif untuk koordinasi selama proses magang.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="profil-btn-edit" id="btnEditKontak" data-section="kontak">
+                        <span>Edit</span>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                    </button>
+                </div>
 
-    </form>
+                <div class="profil-fields-grid">
+                    {{-- 1. Nomor WhatsApp / Telepon Aktif --}}
+                    <div class="profil-form-group">
+                        <label for="no_hp" class="profil-label">
+                            Nomor WhatsApp / Telepon Aktif <span class="profil-required">*</span>
+                        </label>
+                        <input type="tel"
+                               id="no_hp"
+                               name="no_hp"
+                               class="profil-input @error('no_hp') is-invalid @enderror"
+                               value="{{ old('no_hp', $profil?->no_hp ?? $user->no_telp) }}"
+                               placeholder="082231567890"
+                               readonly
+                               data-locked="true"
+                               required>
+                        @error('no_hp')
+                            <span class="profil-field-error">{{ $message }}</span>
+                        @enderror
+                    </div>
 
+                    {{-- 2. Email / Email Aktif --}}
+                    <div class="profil-form-group">
+                        <label for="email" class="profil-label">
+                            Email / Email Aktif <span class="profil-required">*</span>
+                        </label>
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               class="profil-input @error('email') is-invalid @enderror"
+                               value="{{ old('email', $user->email) }}"
+                               placeholder="febrian@gmail.com"
+                               readonly
+                               data-locked="true"
+                               required>
+                        @error('email')
+                            <span class="profil-field-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    {{-- 3. Alamat Lengkap / Domisili (Full Width) --}}
+                    <div class="profil-form-group profil-field-col-full">
+                        <label for="alamat" class="profil-label">
+                            Alamat Lengkap / Domisili
+                        </label>
+                        <textarea id="alamat"
+                                  name="alamat"
+                                  rows="2"
+                                  class="profil-textarea @error('alamat') is-invalid @enderror"
+                                  placeholder="Contoh: Jl. Magelang KM 8, RT/RW, Kabupaten Sleman"
+                                  readonly
+                                  data-locked="true">{{ old('alamat', $profil?->alamat) }}</textarea>
+                        <span class="profil-helper-text">Alamat tempat tinggal peserta selama mengikuti program magang di instansi.</span>
+                        @error('alamat')
+                            <span class="profil-field-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    {{-- 4. Nama Kontak Darurat --}}
+                    <div class="profil-form-group">
+                        <label for="nama_kontak_darurat" class="profil-label">
+                            Nama Kontak Darurat
+                        </label>
+                        <input type="text"
+                               id="nama_kontak_darurat"
+                               name="nama_kontak_darurat"
+                               class="profil-input @error('nama_kontak_darurat') is-invalid @enderror"
+                               value="{{ old('nama_kontak_darurat', $profil?->nama_kontak_darurat) }}"
+                               placeholder="Contoh: Nama Orang Tua / Wali"
+                               readonly
+                               data-locked="true">
+                        @error('nama_kontak_darurat')
+                            <span class="profil-field-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    {{-- 5. Nomor Telepon Darurat --}}
+                    <div class="profil-form-group">
+                        <label for="no_kontak_darurat" class="profil-label">
+                            Nomor Telepon Darurat
+                        </label>
+                        <input type="tel"
+                               id="no_kontak_darurat"
+                               name="no_kontak_darurat"
+                               class="profil-input @error('no_kontak_darurat') is-invalid @enderror"
+                               value="{{ old('no_kontak_darurat', $profil?->no_kontak_darurat) }}"
+                               placeholder="Contoh: 08xxxxxxxxxx"
+                               readonly
+                               data-locked="true">
+                        @error('no_kontak_darurat')
+                            <span class="profil-field-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            {{-- ========================================================
+                 DATA TIM KELOMPOK MAGANG (JIKA TERDAFTAR KELOMPOK)
+                 ======================================================== --}}
+            @if($kelompokMagang)
+                <div class="profil-team-card">
+                    <div class="profil-team-header">
+                        <div>
+                            <h3 class="profil-team-title">Tim Kelompok: {{ $kelompokMagang->nama_kelompok }}</h3>
+                            <p style="font-size: 0.75rem; color: #64748B; margin: 2px 0 0;">
+                                Anda terdaftar sebagai <strong>Ketua Tim / Penanggung Jawab</strong>.
+                            </p>
+                        </div>
+                        <span class="profil-team-badge">
+                            {{ $kelompokMagang->anggota->count() + 1 }} Peserta Terdaftar
+                        </span>
+                    </div>
+
+                    <div class="profil-team-table-wrap">
+                        <table class="profil-team-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;">No</th>
+                                    <th>Nama Peserta</th>
+                                    <th>Peran</th>
+                                    <th>NIM / NISN</th>
+                                    <th>Kontak</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background: #F8FAFC;">
+                                    <td><strong>1</strong></td>
+                                    <td>
+                                        <div style="font-weight: 700;">{{ $user->nama ?? $user->name }}</div>
+                                        <div style="font-size: 0.72rem; color: #64748B;">{{ $profil?->institusi ?? 'Institusi Terdaftar' }}</div>
+                                    </td>
+                                    <td>
+                                        <span style="display: inline-block; font-size: 0.7rem; font-weight: 800; background: #FEF3C7; color: #92400E; padding: 2px 6px; border-radius: 4px;">
+                                            ★ Ketua Tim
+                                        </span>
+                                    </td>
+                                    <td style="font-family: monospace;">{{ $profil?->nim_nisn ?? '-' }}</td>
+                                    <td>
+                                        <div>{{ $profil?->no_hp ?? $user->no_telp ?? '-' }}</div>
+                                        <div style="font-size: 0.72rem; color: #64748B;">{{ $user->email }}</div>
+                                    </td>
+                                </tr>
+                                @forelse($kelompokMagang->anggota as $idx => $anggota)
+                                    <tr>
+                                        <td>{{ $idx + 2 }}</td>
+                                        <td><div style="font-weight: 600;">{{ $anggota->nama }}</div></td>
+                                        <td>
+                                            <span style="font-size: 0.7rem; font-weight: 600; background: #F1F5F9; color: #475569; padding: 2px 6px; border-radius: 4px;">
+                                                Anggota
+                                            </span>
+                                        </td>
+                                        <td style="font-family: monospace;">{{ $anggota->nim_nisn ?? '-' }}</td>
+                                        <td>
+                                            <div>{{ $anggota->no_hp ?? '-' }}</div>
+                                            <div style="font-size: 0.72rem; color: #64748B;">{{ $anggota->email ?? '-' }}</div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; color: #64748B; font-size: 0.75rem; padding: 12px;">
+                                            Belum ada rekan anggota kelompok yang ditambahkan.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+
+            {{-- ========================================================
+                 F. PERSETUJUAN & SIMPAN BIODATA
+                 ======================================================== --}}
+            <div class="profil-bottom-actions">
+                <label class="profil-agreement-label" for="checkboxAgreement">
+                    <input type="checkbox" id="checkboxAgreement" class="profil-checkbox">
+                    <span>Data yang saya isikan sudah benar dan siap digunakan untuk administrasi magang.</span>
+                </label>
+
+                <button type="submit" class="profil-btn-submit" id="btnSubmitProfil" disabled>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Simpan Biodata Profil</span>
+                </button>
+            </div>
+
+        </form>
+
+    </div>
 </div>
-
-@push('scripts')
-<script>
-    // Live preview dan handling pasfoto profil
-    const inputFoto = document.getElementById('inputFotoProfil');
-    const btnPilihFoto = document.getElementById('btnPilihFoto');
-    const btnHapusFoto = document.getElementById('btnHapusFoto');
-    const inputHapusFoto = document.getElementById('inputHapusFoto');
-    const previewImg = document.getElementById('avatarPreviewImg');
-    const fallbackIcon = document.getElementById('avatarFallbackIcon');
-    const selectedFileName = document.getElementById('selectedFileName');
-
-    btnPilihFoto?.addEventListener('click', () => {
-        inputFoto?.click();
-    });
-
-    inputFoto?.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            const file = this.files[0];
-            if (file.size > 2 * 1024 * 1024) {
-                if (window.MagKomToast) {
-                    window.MagKomToast.warning('Ukuran berkas melebihi batas maksimal 2 MB.');
-                } else {
-                    alert('Ukuran berkas melebihi batas maksimal 2 MB.');
-                }
-                this.value = '';
-                return;
-            }
-            if (inputHapusFoto) inputHapusFoto.value = '0';
-            if (selectedFileName) selectedFileName.textContent = '✓ ' + file.name;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                if (previewImg) {
-                    previewImg.src = e.target.result;
-                    previewImg.style.display = 'block';
-                }
-                if (fallbackIcon) {
-                    fallbackIcon.style.display = 'none';
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    btnHapusFoto?.addEventListener('click', function() {
-        if (confirm('Apakah Anda yakin ingin menghapus foto profil dan kembali menggunakan inisial bawaan?')) {
-            if (inputHapusFoto) inputHapusFoto.value = '1';
-            if (inputFoto) inputFoto.value = '';
-            if (previewImg) {
-                previewImg.src = '';
-                previewImg.style.display = 'none';
-            }
-            if (fallbackIcon) {
-                fallbackIcon.style.display = 'flex';
-            }
-            if (selectedFileName) selectedFileName.textContent = '(Foto akan dihapus saat Anda menekan tombol Simpan)';
-        }
-    });
-
-    // Dynamic toggle persetujuan wali untuk jenjang SMK (SEC-41)
-    const jenjangSelect = document.getElementById('jenjang');
-    const waliWrapper = document.getElementById('wrapper-persetujuan-wali');
-    if (jenjangSelect && waliWrapper) {
-        jenjangSelect.addEventListener('change', function() {
-            if (this.value === 'smk') {
-                waliWrapper.style.display = '';
-            } else {
-                const checkbox = document.getElementById('persetujuan_wali');
-                if (checkbox && !checkbox.checked) {
-                    waliWrapper.style.display = 'none';
-                }
-            }
-        });
-    }
-
-    // Anti double-submit proteksi
-    document.getElementById('formBiodataPeserta')?.addEventListener('submit', function() {
-        const btn = document.getElementById('btnSimpanProfil');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = `
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
-                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" style="opacity: 0.75;"></path>
-                </svg>
-                Menyimpan Data...
-            `;
-        }
-    });
-</script>
-<style>
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-</style>
-@endpush
 @endsection

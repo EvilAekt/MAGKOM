@@ -156,7 +156,8 @@ class AdminLaporanDanArsipTest extends TestCase
         $responseAdmin->assertSee('Hub Laporan &amp; Ekspor Data', false);
         $responseAdmin->assertSee('Rekap Pendaftaran');
         $responseAdmin->assertSee('Data Penempatan');
-        $responseAdmin->assertSee('Realisasi Kuota');
+        $responseAdmin->assertDontSee('Realisasi Kuota & Slot');
+        $responseAdmin->assertDontSee('Analitik Tahunan');
         // Tab rekap nilai telah dihapus untuk seluruh role
         $responseAdmin->assertDontSee('tab=nilai');
         $responseAdmin->assertDontSee('Rekap Nilai (SuperAdmin)');
@@ -166,6 +167,21 @@ class AdminLaporanDanArsipTest extends TestCase
         $responseSuper->assertStatus(200);
         $responseSuper->assertDontSee('tab=nilai');
         $responseSuper->assertDontSee('Rekap Nilai (SuperAdmin)');
+    }
+
+    public function test_laporan_kuota_dan_tahunan_telah_didecommission_dan_fallback_ke_pendaftaran(): void
+    {
+        // 1. Mengakses tab kuota otomatis fallback ke tab pendaftaran
+        $responseTabKuota = $this->actingAs($this->admin)->get(route('admin.laporan.index', ['tab' => 'kuota']));
+        $responseTabKuota->assertOk();
+        $responseTabKuota->assertViewHas('tab', 'pendaftaran');
+        $responseTabKuota->assertSee('Laporan Rekapitulasi Pendaftaran');
+        $responseTabKuota->assertDontSee('Laporan Realisasi Kuota Umum vs Slot Khusus');
+
+        // 2. Rute lama laporan.kuota dan laporan.tahunan menghasilkan 404
+        $this->actingAs($this->admin)->get('/admin/laporan/kuota')->assertNotFound();
+        $this->actingAs($this->admin)->get('/admin/laporan/tahunan')->assertNotFound();
+        $this->actingAs($this->admin)->get('/admin/laporan/tahunan/export')->assertNotFound();
     }
 
     public function test_superadmin_can_export_all_reports_with_sanitized_csv(): void
@@ -180,10 +196,24 @@ class AdminLaporanDanArsipTest extends TestCase
         $resPenempatan->assertStatus(200);
         $resPenempatan->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
 
-        // 3. Export Kuota
-        $resKuota = $this->actingAs($this->superAdmin)->get(route('admin.laporan.kuota'));
-        $resKuota->assertStatus(200);
-        $resKuota->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+        // 3. Export Penempatan PDF Resmi
+        $resPdfPenempatan = $this->actingAs($this->superAdmin)->get(route('admin.laporan.penempatan', ['format' => 'pdf']));
+        $resPdfPenempatan->assertStatus(200);
+        $resPdfPenempatan->assertHeader('Content-Type', 'application/pdf');
+    }
+
+    public function test_penempatan_tab_supports_dynamic_per_page_and_unified_export_popover(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.laporan.index', [
+            'tab' => 'penempatan',
+            'per_page' => 5,
+        ]));
+
+        $response->assertOk();
+        $response->assertSee('adm-hero-banner');
+        $response->assertSee('btnToggleExportPopoverPenempatan');
+        $response->assertSee('admExportPopoverPenempatan');
+        $response->assertViewHas('penempatanData');
     }
 
     public function test_superadmin_can_access_arsip_peserta_index_and_detail(): void

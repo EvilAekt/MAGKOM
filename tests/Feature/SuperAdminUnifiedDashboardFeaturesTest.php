@@ -300,13 +300,12 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Hub Ekspor Instan Laporan Resmi Dinas');
 
-        // Memastikan 3 Laporan Dinas tersedia dengan link ekspor CSV instan
+        // Memastikan 2 Laporan Dinas tersedia dengan link ekspor CSV instan
         $response->assertSee('Laporan Pendaftaran');
         $response->assertSee('Laporan Penempatan');
-        $response->assertSee('Realisasi Kuota');
+        $response->assertDontSee('Realisasi Kuota');
         $response->assertSee(route('admin.laporan.pendaftaran'));
         $response->assertSee(route('admin.laporan.penempatan'));
-        $response->assertSee(route('admin.laporan.kuota'));
 
         // Memastikan kontrol sistem penting terhubung
         $response->assertSee('Matriks Peran & Hak Akses', false);
@@ -520,7 +519,7 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
 
         // 2. Tombol di tab seleksi harus menggunakan sa-link (bukan btn-secondary)
         $response->assertSee('class="sa-link">', false);
-        $response->assertSee('Kelola Antrean Waiting List &rarr;', false);
+        $response->assertSee('Lihat Antrean Pendaftaran &rarr;', false);
         $response->assertSee('Atur Slot Khusus Kemitraan &rarr;', false);
 
         // 3. Pastikan CSS mendefinisikan aturan hover & focus solid Sleman Blue untuk kedua tombol

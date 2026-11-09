@@ -258,7 +258,7 @@
         .action-dropdown-btn:hover svg,
         .action-dropdown-btn.active svg {
             stroke: #FFFFFF !important;
-            fill: #FFFFFF !important;
+            fill: none !important;
         }
         .action-dropdown-btn:hover circle,
         .action-dropdown-btn.active circle {
@@ -625,9 +625,9 @@
     <div class="adm-hero-banner">
         <div class="adm-hero-content">
             <div class="adm-hero-text">
-                <h1 class="adm-hero-title">Distribusi &amp; Alokasi Peserta Magang</h1>
+                <h1 class="adm-hero-title">Alokasi Penempatan &amp; Pembimbing Magang</h1>
                 <div class="adm-hero-subtitle">
-                    <span>Penetapan Pembimbing Lapangan &amp; Penempatan Bidang Dinas</span>
+                    <span>Penetapan Bidang Dinas &amp; Pembimbing Lapangan</span>
                     <span class="sep">&bull;</span>
                     <span>Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
                 </div>
@@ -962,13 +962,15 @@
                     </select>
                 </div>
 
-                <div style="display: flex; gap: 0.5rem;">
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
                     <button type="submit" style="height: 42px; padding: 0 1.25rem; background: #0641CC; color: #FFFFFF; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s ease; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
-                        Terapkan Filter
+                        Terapkan
                     </button>
-                    <a href="{{ route('admin.penempatan.index', ['tab' => 'sudah']) }}" style="height: 42px; padding: 0 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; border: 1px solid var(--neutral-200, #E2E8F0);">
-                        Reset
-                    </a>
+                    @if((request('tab') === 'sudah' || !request('tab')) && (request()->filled('q') || request()->filled('status') || request()->filled('pembimbing_id') || request()->filled('bidang_id') || request()->filled('bulan_magang_id')))
+                        <a href="{{ route('admin.penempatan.index', ['tab' => 'sudah']) }}" style="height: 42px; padding: 0 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; border: 1px solid var(--neutral-200, #E2E8F0);" title="Kembalikan pencarian ke kondisi awal">
+                            Reset
+                        </a>
+                    @endif
                 </div>
             </form>
         </div>
@@ -1003,7 +1005,7 @@
                                 <th>Jalur / Bidang Dinas</th>
                                 <th>Bulan Magang</th>
                                 <th>Status</th>
-                                <th style="text-align: right; width: 180px;">Aksi</th>
+                                <th style="text-align: right; width: 100px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1071,12 +1073,12 @@
                                         </div>
                                         <div style="margin-top: 0.25rem;">
                                             @if($p->slotKhusus)
-                                                <span style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">
-                                                    Jalur Khusus: {{ $p->slotKhusus->nama_mitra }}
+                                                <span style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-500, #64748B);" title="{{ $p->slotKhusus->nama_mitra ? 'Mitra: '.$p->slotKhusus->nama_mitra : 'Jalur Khusus' }}">
+                                                    Khusus
                                                 </span>
                                             @else
-                                                <span style="font-size: 0.7rem; font-weight: 600; color: var(--neutral-500, #64748B);">
-                                                    Jalur Reguler (Kuota Umum)
+                                                <span style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-500, #64748B);">
+                                                    Umum
                                                 </span>
                                             @endif
                                         </div>
@@ -1102,59 +1104,21 @@
                                     {{-- Aksi --}}
                                     <td style="text-align: right;">
                                         <div style="display: inline-flex; gap: 0.35rem; align-items: center; justify-content: flex-end;">
-                                            <a href="{{ route('admin.penempatan.show', $p) }}" class="btn-table-action-detail" title="Lihat Detail Penempatan">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                                <span>Detail</span>
-                                            </a>
-
-                                            <button type="button" onclick="openSuratPreview('{{ route('admin.penempatan.surat-diterima.pratinjau', $p) }}', '{{ route('admin.penempatan.surat-diterima', $p) }}', 'Surat Diterima - {{ addslashes($p->peserta?->nama) }}')" class="btn-table-action-surat" title="Pratinjau Surat Keterangan Diterima Langsung">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                                <span>Surat</span>
-                                            </button>
-
-                                            {{-- Dropdown Menu Aksi Lanjutan (Opsi 1) --}}
-                                            <div class="action-dropdown-wrap">
-                                                <button type="button" class="action-dropdown-btn" onclick="toggleRowDropdown(this, event)" title="Opsi & Aksi Lainnya">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                                        <circle cx="12" cy="12" r="1.5"></circle>
-                                                        <circle cx="19" cy="12" r="1.5"></circle>
-                                                        <circle cx="5" cy="12" r="1.5"></circle>
+                                            @if($p->pembimbing && !auth()->user()?->isSuperAdmin())
+                                                <button type="button" 
+                                                        class="action-dropdown-btn" 
+                                                        onclick="openPindahModal({{ $p->id }}, '{{ addslashes($cleanPesertaNama) }}', {{ $p->pembimbing_id ?? 'null' }})" 
+                                                        title="Ganti Pembimbing Lapangan"
+                                                        aria-label="Ganti Pembimbing Lapangan">
+                                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                                        <circle cx="9" cy="7" r="4"></circle>
+                                                        <polyline points="16 11 18 13 22 9"></polyline>
                                                     </svg>
                                                 </button>
-                                                <div class="action-dropdown-menu">
-                                                    @if($p->pembimbing)
-                                                        <button type="button" class="action-dropdown-item" onclick="openPindahModal({{ $p->id }}, '{{ addslashes($cleanPesertaNama) }}', {{ $p->pembimbing_id ?? 'null' }})">
-                                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                                                <circle cx="9" cy="7" r="4"></circle>
-                                                                <polyline points="16 11 18 13 22 9"></polyline>
-                                                            </svg>
-                                                            <span>Ganti Pembimbing</span>
-                                                        </button>
-                                                    @endif
-
-                                                    <a href="{{ route('admin.penempatan.surat-diterima', $p) }}" class="action-dropdown-item" title="Unduh File Surat Keterangan Diterima PDF">
-                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                                            <polyline points="7 10 12 15 17 10"></polyline>
-                                                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                                                        </svg>
-                                                        <span>Unduh Surat (PDF)</span>
-                                                    </a>
-
-                                                    @if($statusVal === 'aktif')
-                                                        <div class="action-dropdown-divider"></div>
-                                                        <button type="button" class="action-dropdown-item danger" onclick="openBatalModal({{ $p->id }}, '{{ addslashes($p->peserta?->nama) }}')">
-                                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                                <circle cx="12" cy="12" r="10"></circle>
-                                                                <line x1="15" y1="9" x2="9" y2="15"></line>
-                                                                <line x1="9" y1="9" x2="15" y2="15"></line>
-                                                            </svg>
-                                                            <span>Batalkan Penempatan</span>
-                                                        </button>
-                                                    @endif
-                                                </div>
-                                            </div>
+                                            @elseif(auth()->user()?->isSuperAdmin())
+                                                <span style="font-size: 0.75rem; color: #94A3B8; font-style: italic;">Read-Only</span>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -1237,11 +1201,13 @@
                 {{-- 5. Tombol Aksi --}}
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
                     <button type="submit" style="height: 42px; padding: 0 1.25rem; background: #0641CC; color: #FFFFFF; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s ease; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
-                        Terapkan Filter
+                        Terapkan
                     </button>
-                    <a href="{{ route('admin.penempatan.index', ['tab' => 'belum']) }}" style="height: 42px; padding: 0 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; border: 1px solid var(--neutral-200, #E2E8F0);">
-                        Reset
-                    </a>
+                    @if(request('tab') === 'belum' && (request()->filled('q') || request()->filled('bulan_magang_id') || request()->filled('jurusan_id') || request()->filled('bidang_id')))
+                        <a href="{{ route('admin.penempatan.index', ['tab' => 'belum']) }}" style="height: 42px; padding: 0 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; border: 1px solid var(--neutral-200, #E2E8F0);" title="Kembalikan pencarian ke kondisi awal">
+                            Reset
+                        </a>
+                    @endif
                 </div>
             </form>
         </div>
@@ -1648,57 +1614,43 @@
 
 {{-- MODAL PENETAPAN PEMBIMBING & BIDANG (TAHAP 2) --}}
 <div id="modal-tetapkan-penempatan" class="modal-overlay">
-    <div class="modal-container" style="max-width: 580px;">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: center; background: #F8FAFC;">
+    <div class="modal-container" style="max-width: 480px; border-radius: 14px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);">
+        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: flex-start; background: #FFFFFF;">
             <div>
-                <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">Penetapan Penempatan Peserta</h3>
-                <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 0.15rem 0 0 0;" id="tetapkan-peserta-info">
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: #0F172A; margin: 0; letter-spacing: -0.01em;">Penetapan Penempatan</h3>
+                <p style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0; font-weight: 500;" id="tetapkan-peserta-info">
                     Peserta: -
                 </p>
             </div>
-            <button type="button" onclick="closeTetapkanModal()" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
+            <button type="button" onclick="closeTetapkanModal()" style="background: transparent; border: none; font-size: 1.25rem; color: #94A3B8; cursor: pointer; padding: 0.25rem; line-height: 1;" title="Tutup">✕</button>
         </div>
 
         <form method="POST" id="form-tetapkan-penempatan" action="{{ route('admin.penempatan.tetapkan') }}" style="padding: 1.5rem;">
             @csrf
             <input type="hidden" name="pendaftaran_id" id="tetapkan-pendaftaran-id" value="">
-
-            <div style="background: #EFF6FF; border: 1px solid #DBEAFE; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.8125rem; color: #1E40AF; line-height: 1.45;">
-                <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    <div>
-                        <strong>Penetapan Pembimbing Magang:</strong> Bidang dinas telah otomatis terhubung dari pilihan jurusan peserta saat registrasi. Silakan tentukan Pembimbing Lapangan yang akan membimbing peserta ini.
-                    </div>
-                </div>
-            </div>
-
-            {{-- Hidden input bidang_id otomatis dari pendaftaran --}}
             <input type="hidden" name="bidang_id" id="tetapkan-bidang-id" value="">
 
-            {{-- Unit Bidang Dinas Terhubung (Read-only Informational Card) --}}
-            <div style="display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.25rem;">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Unit Bidang Dinas (Otomatis dari Registrasi)</label>
-                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: var(--neutral-50, #F8FAFC); border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 8px;">
-                    <div style="width: 32px; height: 32px; border-radius: 6px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect width="18" height="14" x="3" y="7" rx="2"></rect>
-                            <path d="M9 5h6"></path>
-                            <path d="M12 2v3"></path>
+            {{-- Bidang Dinas --}}
+            <div style="display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.25rem;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.04em;">Bidang Dinas</label>
+                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px;">
+                    <div style="width: 32px; height: 32px; border-radius: 8px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                            <path d="M3 9h18"></path>
+                            <path d="M9 21V9"></path>
                         </svg>
                     </div>
-                    <div>
-                        <div id="tetapkan-bidang-display" style="font-weight: 700; font-size: 0.875rem; color: var(--neutral-900, #0F172A);">
-                            Dinas Komunikasi dan Informatika
-                        </div>
-                        <small style="font-size: 0.725rem; color: var(--neutral-500, #64748B);">Terhubung langsung dengan kuota jurusan pilihan pendaftar.</small>
+                    <div id="tetapkan-bidang-display" style="font-weight: 700; font-size: 0.875rem; color: #0F172A; line-height: 1.35;">
+                        Dinas Komunikasi dan Informatika
                     </div>
                 </div>
             </div>
 
             {{-- Pembimbing Lapangan --}}
-            <div style="display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.5rem;">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Pembimbing Lapangan <span style="color: #DC2626;">*</span></label>
-                <select name="pembimbing_id" id="select-tetapkan-pembimbing" required style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+            <div style="display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.5rem;">
+                <label for="select-tetapkan-pembimbing" style="font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.04em;">Pembimbing Lapangan <span style="color: #DC2626;">*</span></label>
+                <select name="pembimbing_id" id="select-tetapkan-pembimbing" required style="height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #FFFFFF; color: #0F172A; width: 100%;">
                     <option value="">-- Pilih Pembimbing Dinas --</option>
                     @foreach($pembimbingList as $p)
                         <option value="{{ $p->id }}" data-bidang-id="{{ $p->bidang_id ?? '' }}">
@@ -1706,15 +1658,14 @@
                         </option>
                     @endforeach
                 </select>
-                <small style="font-size: 0.725rem; color: var(--neutral-500, #64748B);">Daftar pembimbing lapangan dilengkapi dengan asal bidang dan beban mentee aktif saat ini.</small>
             </div>
 
-            <div style="display: flex; justify-content: flex-end; gap: 0.6rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1.25rem;">
-                <button type="button" onclick="closeTetapkanModal()" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+            <div style="display: flex; justify-content: flex-end; gap: 0.65rem; border-top: 1px solid #E2E8F0; padding-top: 1.25rem;">
+                <button type="button" onclick="closeTetapkanModal()" style="padding: 0.55rem 1.15rem; background: #FFFFFF; border: 1px solid #CBD5E1; color: #475569; border-radius: 8px; font-weight: 600; font-size: 0.8125rem; cursor: pointer; transition: all 0.15s ease;">
                     Batal
                 </button>
-                <button type="submit" style="padding: 0.55rem 1.4rem; background: #0641CC; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);">
-                    Tetapkan Pembimbing &amp; Aktifkan
+                <button type="submit" style="padding: 0.55rem 1.35rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
+                    Tetapkan Pembimbing
                 </button>
             </div>
         </form>

@@ -208,45 +208,13 @@ class AdvancedAdminAndSuperAdminPhaseFiveTest extends TestCase
     }
 
     /**
-     * TEST 2: Dashboard Analitik Tahunan & Penegakan A-20
+     * TEST 2: Endpoint Analitik Tahunan Didecommission (Return 404)
      */
-    public function test_admin_dapat_melihat_analitik_tahunan_tetapi_tidak_bisa_melihat_rekap_nilai(): void
+    public function test_analitik_tahunan_dan_ekspor_telah_didecommission(): void
     {
-        $this->createPendaftaran($this->peserta, StatusPendaftaranEnum::Diterima);
-
-        $response = $this->actingAs($this->admin)->get('/admin/laporan/tahunan?tahun=2026');
-
-        $response->assertStatus(200);
-        $response->assertSee('Tren Penyerapan Bulanan');
-        $response->assertSee('Universitas Gadjah Mada');
-
-        // Asumsi A-20: Admin tidak boleh melihat sebaran nilai
-        $response->assertDontSee('Sebaran Predikat');
-        $response->assertSee('Rekapitulasi Mutu Nilai Dilindungi');
-    }
-
-    public function test_superadmin_dapat_melihat_distribusi_predikat_nilai_di_analitik_tahunan(): void
-    {
-        $pendaftaran = $this->createPendaftaran($this->peserta, StatusPendaftaranEnum::Diterima);
-        $this->createPenempatan($pendaftaran, StatusPenempatanEnum::Selesai);
-
-        $response = $this->actingAs($this->superAdmin)->get('/admin/laporan/tahunan?tahun=2026');
-
-        $response->assertStatus(200);
-        $response->assertSee('Sebaran Predikat');
-        $response->assertSee('SuperAdmin Only (A-20)');
-    }
-
-    public function test_export_analitik_tahunan_menghasilkan_csv_valid(): void
-    {
-        $this->createPendaftaran($this->peserta, StatusPendaftaranEnum::Diterima);
-
-        $response = $this->actingAs($this->admin)->get('/admin/laporan/tahunan/export?tahun=2026');
-
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
-        $this->assertStringContainsString('Indikator / Bulan', $response->streamedContent());
-        $this->assertStringContainsString('TOTAL TAHUN 2026', $response->streamedContent());
+        $this->actingAs($this->admin)->get('/admin/laporan/tahunan')->assertNotFound();
+        $this->actingAs($this->admin)->get('/admin/laporan/tahunan/export')->assertNotFound();
+        $this->actingAs($this->superAdmin)->get('/admin/laporan/tahunan')->assertNotFound();
     }
 
     /**

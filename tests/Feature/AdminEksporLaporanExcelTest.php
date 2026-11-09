@@ -163,14 +163,6 @@ class AdminEksporLaporanExcelTest extends TestCase
         $this->assertStringContainsString('Aktif', $content);
     }
 
-    public function test_ekspor_realisasi_kuota_memuat_sep_directive(): void
-    {
-        // Ekspor Kuota
-        $resKuota = $this->actingAs($this->admin)->get(route('admin.laporan.kuota'));
-        $resKuota->assertOk();
-        $this->assertStringStartsWith("\xEF\xBB\xBFsep=,\r\n", $resKuota->streamedContent());
-    }
-
     public function test_ekspor_rekap_surat_diterima_memuat_sep_directive(): void
     {
         $response = $this->actingAs($this->admin)->get(route('admin.penempatan.ekspor-surat-diterima'));

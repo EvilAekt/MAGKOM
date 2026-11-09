@@ -405,19 +405,50 @@ class KuotaController extends Controller
     }
 
     /**
-     * Memperbarui alokasi kuota per bidang (mengalokasikan ke jurusan-jurusan di bawahnya).
+     * Memperbarui alokasi kuota per bidang (mengalokasikan ke jurusan-jurusan di bawahnya) serta membuka/menutup kuota bidang.
      */
     public function updateBidangKuota(Request $request, Bidang $bidang): RedirectResponse
     {
         $bulanMagangId = $request->integer('bulan_magang_id');
         $alokasi = $request->input('alokasi', []); // array of [jurusan_id => jumlah]
+        $statusBidang = $request->input('status_bidang', 'buka');
 
         if (! $bulanMagangId) {
             return back()->with('error', 'Bulan magang tidak valid.');
         }
 
+        // Jika admin memilih status tutup bidang, seluruh kuota jurusan dinolkan (kecuali yang sudah terisi peserta)
+        if ($statusBidang === 'tutup') {
+            foreach ($bidang->jurusan as $j) {
+                $kuota = Kuota::firstOrNew([
+                    'bulan_magang_id' => $bulanMagangId,
+                    'jurusan_id' => $j->id,
+                ]);
+
+                // Pertahankan sejumlah terisi jika ada peserta aktif agar tidak merusak relasi (BR-12)
+                $kuota->jumlah = $kuota->exists ? $kuota->terisi : 0;
+                $kuota->aktif = ($kuota->jumlah > 0);
+                $kuota->save();
+            }
+
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Aksi,
+                tabel: 'kuota',
+                idData: $bidang->id,
+                nilaiBaru: ['status_bidang' => 'tutup', 'alokasi' => []],
+                detail: ['aksi' => "Menutup kuota penempatan bidang {$bidang->nama_bidang}"]
+            );
+
+            return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $bulanMagangId])
+                ->with('success', "Kuota penempatan bidang {$bidang->nama_bidang} berhasil ditutup.");
+        }
+
+        // Jika status buka, proses alokasi dan hitung total kapasitas
+        $totalAlokasi = 0;
         foreach ($alokasi as $jurusanId => $jumlah) {
             $jumlah = max(0, (int) $jumlah);
+            $totalAlokasi += $jumlah;
+
             $kuota = Kuota::firstOrNew([
                 'bulan_magang_id' => $bulanMagangId,
                 'jurusan_id' => (int) $jurusanId,
@@ -429,7 +460,7 @@ class KuotaController extends Controller
             }
 
             $kuota->jumlah = $jumlah;
-            $kuota->aktif = true;
+            $kuota->aktif = ($jumlah > 0);
             $kuota->save();
         }
 
@@ -437,11 +468,11 @@ class KuotaController extends Controller
             tipe: TipeAuditEnum::Aksi,
             tabel: 'kuota',
             idData: $bidang->id,
-            nilaiBaru: ['alokasi' => $alokasi],
+            nilaiBaru: ['status_bidang' => 'buka', 'alokasi' => $alokasi, 'total_kapasitas' => $totalAlokasi],
             detail: ['aksi' => "Memperbarui kuota bidang {$bidang->nama_bidang}"]
         );
 
         return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $bulanMagangId])
-            ->with('success', "Alokasi kuota bidang {$bidang->nama_bidang} berhasil diperbarui.");
+            ->with('success', "Alokasi kuota bidang {$bidang->nama_bidang} berhasil diperbarui (Total Kapasitas: {$totalAlokasi} peserta).");
     }
 }

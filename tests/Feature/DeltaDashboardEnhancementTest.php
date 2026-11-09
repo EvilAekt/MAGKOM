@@ -172,10 +172,11 @@ class DeltaDashboardEnhancementTest extends TestCase
      */
     public function test_sidebar_dan_index_merender_link_menu_delta(): void
     {
-        // Index penempatan memiliki link detail
+        // Index penempatan tidak lagi merender link detail langsung (digantikan aksi ganti pembimbing)
         $responseIndex = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
         $responseIndex->assertOk();
-        $responseIndex->assertSee(route('admin.penempatan.show', $this->penempatan));
+        $responseIndex->assertDontSee(route('admin.penempatan.show', $this->penempatan));
+        $responseIndex->assertSee('openPindahModal');
 
         // Sidebar Admin memiliki link Penempatan dan Kuota
         $responseAdminDash = $this->actingAs($this->admin)->get(route('admin.dashboard'));

@@ -71,6 +71,9 @@ class PesertaPendaftaranFlowTest extends TestCase
             'jurusan_id' => $this->jurusan->id,
             'jenjang' => JenjangEnum::Smk,
             'no_hp' => '081234567890',
+            'foto' => 'peserta-foto/fake_avatar.jpg',
+            'nama_kontak_darurat' => 'Bapak Fajar',
+            'no_kontak_darurat' => '081298765432',
         ]);
 
         $this->bulan = BulanMagang::create([

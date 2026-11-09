@@ -22,7 +22,7 @@ class PesertaUuPdpPersetujuanWaliTest extends TestCase
         ]);
         $jurusan = Jurusan::create([
             'nama_jurusan' => 'Teknik Komputer',
-            'kategori' => 'siswa',
+            'kategori' => 'smk',
             'aktif' => true,
         ]);
 
@@ -50,7 +50,7 @@ class PesertaUuPdpPersetujuanWaliTest extends TestCase
         ]);
         $jurusan = Jurusan::create([
             'nama_jurusan' => 'Teknik Komputer',
-            'kategori' => 'siswa',
+            'kategori' => 'smk',
             'aktif' => true,
         ]);
 

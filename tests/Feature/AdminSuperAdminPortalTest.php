@@ -297,39 +297,6 @@ class AdminSuperAdminPortalTest extends TestCase
         $response->assertSee('modal-edit-kuota');
     }
 
-    public function test_admin_waiting_list_promotion_and_bulk_closure(): void
-    {
-        // Buat calon peserta waiting list
-        $wlUser = new User;
-        $wlUser->nama = 'Doni Kusuma';
-        $wlUser->email = 'doni@example.com';
-        $wlUser->password = 'Password123!';
-        $wlUser->role = RoleEnum::Peserta;
-        $wlUser->status_aktif = true;
-        $wlUser->save();
-
-        $wlPendaftaran = Pendaftaran::create([
-            'user_id' => $wlUser->id,
-            'bulan_magang_id' => $this->bulan->id,
-            'kuota_id' => $this->kuota->id,
-            'asal_instansi' => 'UPN Veteran',
-            'durasi_bulan' => 3,
-            'status' => StatusPendaftaranEnum::WaitingList,
-            'diajukan_at' => now()->subHours(2),
-        ]);
-
-        $response = $this->actingAs($this->admin)->get(route('admin.waiting-list.index'));
-        $response->assertStatus(200);
-        $response->assertSee($wlPendaftaran->nomor_pendaftaran);
-        $response->assertSee('Promosikan');
-
-        // Test bulk closure saat periode sudah mulai
-        $responseTutup = $this->actingAs($this->admin)->post(route('admin.waiting-list.tutup', $this->bulan));
-        $responseTutup->assertRedirect(route('admin.waiting-list.index'));
-        $this->assertEquals(StatusPendaftaranEnum::Ditolak, $wlPendaftaran->fresh()->status);
-        $this->assertStringContainsString('Antrean waiting list ditutup secara otomatis', $wlPendaftaran->fresh()->catatan);
-    }
-
     public function test_admin_can_manage_penempatan_and_preview_surat_diterima(): void
     {
         $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));

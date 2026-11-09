@@ -170,11 +170,6 @@ class DashboardModulesRenderingTest extends TestCase
         $responseShow->assertViewIs('admin.pendaftaran.show');
         $responseShow->assertSee('Verifikasi Berkas Calon Peserta');
 
-        $responseWaiting = $this->actingAs($this->admin)->get(route('admin.waiting-list.index'));
-        $responseWaiting->assertStatus(200);
-        $responseWaiting->assertViewIs('admin.waiting-list.index');
-        $responseWaiting->assertSee('Antrean Waiting List');
-
         $responsePenempatan = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
         $responsePenempatan->assertStatus(200);
         $responsePenempatan->assertViewIs('admin.penempatan.index');

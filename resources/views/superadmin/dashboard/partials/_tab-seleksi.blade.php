@@ -160,8 +160,8 @@
                 <span class="sa-table-sub" style="font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">Peserta Antre</span>
             </div>
             <div class="sa-panel__actions">
-                <a href="{{ route('admin.waiting-list.index') }}" class="sa-link">
-                    <span>Kelola Antrean Waiting List &rarr;</span>
+                <a href="{{ route('admin.pendaftaran.index') }}" class="sa-link">
+                    <span>Lihat Antrean Pendaftaran &rarr;</span>
                 </a>
             </div>
         </x-sa.panel>

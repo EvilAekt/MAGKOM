@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Enums\RoleEnum;
-use App\Http\Controllers\Admin\AnalitikTahunanController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\KuotaController;
 use App\Http\Controllers\Admin\LaporanController;
@@ -11,7 +10,6 @@ use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranControll
 use App\Http\Controllers\Admin\PenempatanController as AdminPenempatanController;
 use App\Http\Controllers\Admin\PengaturanController as AdminPengaturanController;
 use App\Http\Controllers\Admin\ProfilController as AdminProfilController;
-use App\Http\Controllers\Admin\WaitingListController as AdminWaitingListController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -255,10 +253,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/pendaftaran/{pendaftaran}/surat-diterima/pratinjau', [AdminPendaftaranController::class, 'pratinjauSuratDiterima'])->name('pendaftaran.surat-diterima.pratinjau');
     Route::post('/pendaftaran/{pendaftaran}/putuskan', [AdminPendaftaranController::class, 'putuskan'])->name('pendaftaran.putuskan');
 
-    Route::get('/waiting-list', [AdminWaitingListController::class, 'index'])->name('waiting-list.index');
-    Route::post('/waiting-list/promote', [AdminWaitingListController::class, 'promoteFifo'])->name('waiting-list.promote');
-    Route::post('/waiting-list/{bulanMagang}/tutup', [AdminWaitingListController::class, 'tutupAntrean'])->name('waiting-list.tutup');
-
     Route::get('/penempatan', [AdminPenempatanController::class, 'index'])->name('penempatan.index');
     Route::post('/penempatan/tetapkan', [AdminPenempatanController::class, 'tetapkan'])->name('penempatan.tetapkan');
     Route::get('/penempatan/ekspor-surat-diterima', [AdminPenempatanController::class, 'exportRekapSuratDiterima'])->name('penempatan.ekspor-surat-diterima');
@@ -273,9 +267,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/pendaftaran', [LaporanController::class, 'pendaftaran'])->name('laporan.pendaftaran');
     Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
-    Route::get('/laporan/kuota', [LaporanController::class, 'kuota'])->name('laporan.kuota');
-    Route::get('/laporan/tahunan', [AnalitikTahunanController::class, 'index'])->name('laporan.tahunan');
-    Route::get('/laporan/tahunan/export', [AnalitikTahunanController::class, 'export'])->name('laporan.tahunan.export');
 
     // Profil & Pengaturan Akun Administrator
     Route::get('/profil', [AdminProfilController::class, 'show'])->name('profil.show');

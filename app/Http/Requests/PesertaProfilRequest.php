@@ -15,6 +15,23 @@ class PesertaProfilRequest extends FormRequest
         return $this->user()?->isPeserta() ?? false;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $profil = $this->user()?->profil;
+        if (! $profil || empty($profil->institusi)) {
+            return;
+        }
+
+        // Data registrasi awal peserta bersifat immutable (tidak dapat dimanipulasi).
+        // Selalu paksakan menggunakan nilai resmi yang tersimpan di database.
+        $this->merge([
+            'institusi' => $profil->institusi,
+            'nim_nisn' => $profil->nim_nisn,
+            'jenjang' => $profil->jenjang instanceof JenjangEnum ? $profil->jenjang->value : (string) $profil->jenjang,
+            'jurusan_id' => $profil->jurusan_id,
+        ]);
+    }
+
     public function rules(): array
     {
         $rules = [
@@ -45,6 +62,14 @@ class PesertaProfilRequest extends FormRequest
 
         if ($this->input('jenjang') === JenjangEnum::Smk->value && $this->has('persetujuan_wali')) {
             $rules['persetujuan_wali'] = ['accepted'];
+        }
+
+        if ($this->filled('jenjang') && $this->filled('jurusan_id')) {
+            $expectedKategori = ($this->input('jenjang') === JenjangEnum::Smk->value) ? 'smk' : 'mahasiswa';
+            $rules['jurusan_id'] = [
+                'required',
+                Rule::exists('jurusan', 'id')->where('kategori', $expectedKategori),
+            ];
         }
 
         return $rules;

@@ -30,7 +30,7 @@ class DocumentStorageService
      *
      * @throws ValidationException
      */
-    public function simpan(Pendaftaran $pendaftaran, JenisDokumen $jenisDokumen, UploadedFile $file): Dokumen
+    public function simpan(Pendaftaran $pendaftaran, JenisDokumen $jenisDokumen, UploadedFile $file, ?int $kelompokAnggotaId = null): Dokumen
     {
         // 1. Validasi MIME type berbasis magic bytes
         $realMime = $file->getMimeType();
@@ -52,10 +52,17 @@ class DocumentStorageService
         // 3. Hitung SHA-256 hash integritas berkas
         $hashSha256 = hash_file('sha256', $file->getRealPath());
 
-        // 4. Cari apakah sudah ada dokumen untuk jenis ini pada pendaftaran terkait
-        $dokumenLama = Dokumen::where('pendaftaran_id', $pendaftaran->id)
-            ->where('jenis_dokumen_id', $jenisDokumen->id)
-            ->first();
+        // 4. Cari apakah sudah ada dokumen untuk jenis dan pemilik ini pada pendaftaran terkait
+        $dokumenQuery = Dokumen::where('pendaftaran_id', $pendaftaran->id)
+            ->where('jenis_dokumen_id', $jenisDokumen->id);
+
+        if ($kelompokAnggotaId !== null) {
+            $dokumenQuery->where('kelompok_anggota_id', $kelompokAnggotaId);
+        } else {
+            $dokumenQuery->whereNull('kelompok_anggota_id');
+        }
+
+        $dokumenLama = $dokumenQuery->first();
 
         // 5. Simpan file baru ke disk privat
         $folder = "documents/{$pendaftaran->id}";
@@ -71,6 +78,7 @@ class DocumentStorageService
             [
                 'pendaftaran_id' => $pendaftaran->id,
                 'jenis_dokumen_id' => $jenisDokumen->id,
+                'kelompok_anggota_id' => $kelompokAnggotaId,
             ],
             [
                 'path' => $path,

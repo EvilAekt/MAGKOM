@@ -237,13 +237,6 @@ class AdminEksporLaporanXlsxTest extends TestCase
         @unlink($tempZip);
     }
 
-    public function test_ekspor_xlsx_kuota(): void
-    {
-        $resKuota = $this->actingAs($this->admin)->get(route('admin.laporan.kuota', ['format' => 'xlsx']));
-        $resKuota->assertOk();
-        $this->assertStringContainsString('.xlsx', (string) $resKuota->headers->get('content-disposition'));
-    }
-
     public function test_admin_dapat_mengekspor_rekap_surat_penempatan_format_xlsx(): void
     {
         $peserta = User::factory()->create([

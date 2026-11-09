@@ -154,22 +154,6 @@ class AdminTerminologyDesignSystemTest extends TestCase
     }
 
     /**
-     * Memastikan modul waiting list admin menggunakan istilah Bulan Magang.
-     */
-    public function test_admin_waiting_list_displays_bulan_terminology(): void
-    {
-        $admin = $this->createAdminUser();
-
-        $response = $this->actingAs($admin)->get(route('admin.waiting-list.index'));
-        $response->assertStatus(200);
-
-        $response->assertSee('Bulan Magang Terdampak', false);
-        $response->assertSee('Semua Bulan Magang', false);
-        $response->assertDontSee('Periode Magang Terdampak', false);
-        $response->assertDontSee('Semua Periode Bulan', false);
-    }
-
-    /**
      * Memastikan portal superadmin menampilkan terminologi Bulan Magang secara konsisten.
      */
     public function test_superadmin_portal_displays_bulan_terminology(): void

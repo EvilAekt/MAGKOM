@@ -158,8 +158,8 @@ class AdminChildPagesVisualTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('adm-hero-banner');
-        $response->assertSee('Distribusi &amp; Alokasi Peserta Magang', false);
-        $response->assertSee('Penetapan Pembimbing Lapangan &amp; Penempatan Bidang Dinas', false);
+        $response->assertSee('Alokasi Penempatan &amp; Pembimbing Magang', false);
+        $response->assertSee('Penetapan Bidang Dinas &amp; Pembimbing Lapangan', false);
         $response->assertSee('tab-btn-sudah');
         $response->assertSee('tab-btn-belum');
         $response->assertSee('Sudah Ditempatkan');

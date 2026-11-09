@@ -1227,3 +1227,1462 @@
     border-radius: 12px;
 }
 
+/* ==========================================================================
+   Statusline Ribbon Dashboard Peserta (POV Belum Diterima / Seleksi / Onboarding)
+   ========================================================================== */
+.saas-statusline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 16px;
+    background: var(--cv-surface, #ffffff);
+    border: 1px solid var(--neutral-300, #e2e8f0);
+    border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+    align-items: center;
+}
+
+@media (min-width: 992px) {
+    .saas-statusline {
+        grid-template-columns: minmax(12rem, 1fr) minmax(18rem, 2fr) minmax(12rem, 1fr);
+    }
+}
+
+.saas-statusline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 4px 6px;
+    min-width: 0;
+}
+
+.saas-statusline-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(2, 39, 93, 0.08);
+    color: var(--magkom-abyssal-navy, #02275D);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.saas-statusline-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
+.saas-statusline-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin-bottom: 2px;
+}
+
+.saas-statusline-value {
+    font-size: 0.875rem;
+    color: #0f172a;
+    font-weight: 600;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+.saas-statusline-value.is-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: normal;
+}
+
+/* ==========================================================================
+   Fase Seleksi: Status Pendaftaran Magang Aktif Card
+   Desain DS-MagKom (Sleman Abyssal Navy #02275D, Sleman Gold #FFCB05)
+   ========================================================================== */
+.saas-card {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.saas-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.saas-card-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.saas-heading-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.saas-reg-chip {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    color: #02275D;
+    background: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    padding: 2px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+}
+
+.saas-card-subtitle {
+    font-size: 0.875rem;
+    color: #64748B;
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* Status Pill Badge */
+.saas-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.saas-status-pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Status Variations */
+.saas-status-pill.saas-status-default {
+    background: #F1F5F9;
+    border-color: #CBD5E1;
+    color: #475569;
+}
+.saas-status-pill.saas-status-default .saas-status-pill-dot {
+    background: #64748B;
+}
+
+.saas-status-pill.saas-status-info {
+    background: #EFF6FF;
+    border-color: #BFDBFE;
+    color: #1D4ED8;
+}
+.saas-status-pill.saas-status-info .saas-status-pill-dot {
+    background: #2563EB;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.saas-status-pill.saas-status-warning {
+    background: #F0FDF4;
+    border-color: #BAE6FD;
+    color: #0369A1;
+}
+.saas-status-pill.saas-status-warning .saas-status-pill-dot {
+    background: #0284C7;
+}
+
+.saas-status-pill.saas-status-amber {
+    background: #FFFBEB;
+    border-color: #FDE68A;
+    color: #B45309;
+}
+.saas-status-pill.saas-status-amber .saas-status-pill-dot {
+    background: #D97706;
+}
+
+.saas-status-pill.saas-status-success {
+    background: #DCFCE7;
+    border-color: #86EFAC;
+    color: #15803D;
+}
+.saas-status-pill.saas-status-success .saas-status-pill-dot {
+    background: #16A34A;
+}
+
+.saas-status-pill.saas-status-danger {
+    background: #FEE2E2;
+    border-color: #FECACA;
+    color: #DC2626;
+}
+.saas-status-pill.saas-status-danger .saas-status-pill-dot {
+    background: #EF4444;
+}
+
+/* Info Strip Grid */
+.saas-info-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+@media (max-width: 991px) {
+    .saas-info-strip {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 575px) {
+    .saas-info-strip {
+        grid-template-columns: 1fr;
+    }
+}
+
+.saas-info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    min-width: 0;
+}
+
+.saas-info-item:hover {
+    background: #FFFFFF;
+    border-color: #CBD5E1;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+}
+
+.saas-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #EFF6FF;
+    color: #02275D;
+    flex-shrink: 0;
+}
+
+.saas-info-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.saas-info-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748B;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.saas-info-val {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.35;
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* ==========================================================================
+   Streamlined Pendaftaran Active Row (Riwayat Parity - Compact & Clean)
+   ========================================================================== */
+.saas-pendaftaran-stream-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.saas-pendaftaran-stream-row:hover {
+    background: #F8FAFC;
+    border-color: #01347C;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(1, 52, 124, 0.08);
+}
+
+.saas-pendaftaran-stream-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    flex: 1;
+}
+
+.saas-pendaftaran-stream-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.saas-pendaftaran-stream-row:hover .saas-pendaftaran-stream-icon {
+    transform: scale(1.05);
+}
+
+.saas-pendaftaran-stream-icon.icon-diterima {
+    background: #DCFCE7;
+    color: #15803D;
+    border: 1px solid #BBF7D0;
+}
+
+.saas-pendaftaran-stream-icon.icon-pending {
+    background: #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+}
+
+.saas-pendaftaran-stream-icon.icon-verifikasi {
+    background: rgba(2, 39, 93, 0.06);
+    color: #02275D;
+    border: 1px solid rgba(2, 39, 93, 0.18);
+}
+
+.saas-pendaftaran-stream-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.saas-pendaftaran-stream-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.saas-pendaftaran-stream-title-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #02275D;
+    text-decoration: none;
+    line-height: 1.35;
+    transition: color 0.15s ease;
+}
+
+.saas-pendaftaran-stream-row:hover .saas-pendaftaran-stream-title-text {
+    color: #01347C;
+}
+
+.saas-pendaftaran-stream-meta {
+    font-size: 0.775rem;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    line-height: 1.4;
+}
+
+.saas-pendaftaran-stream-meta strong {
+    color: #334155;
+    font-weight: 600;
+}
+
+.saas-meta-bullet {
+    color: #CBD5E1;
+}
+
+.saas-pendaftaran-stream-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 860px) {
+    .saas-pendaftaran-stream-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 14px;
+    }
+
+    .saas-pendaftaran-stream-right {
+        width: 100%;
+        justify-content: space-between;
+        padding-top: 10px;
+        border-top: 1px dashed #E2E8F0;
+    }
+}
+
+[data-theme="dark"] .saas-pendaftaran-stream-row {
+    background: #182234 !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .saas-pendaftaran-stream-row:hover {
+    border-color: #01347C !important;
+}
+
+[data-theme="dark"] .saas-pendaftaran-stream-title-text {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .saas-pendaftaran-stream-meta {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .saas-pendaftaran-stream-meta strong {
+    color: #E2E8F0 !important;
+}
+
+/* Alert Catatan Revisi */
+.saas-alert-catatan {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-left: 4px solid #F59E0B;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+}
+
+.saas-alert-catatan-icon {
+    color: #D97706;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.saas-alert-catatan-content {
+    min-width: 0;
+}
+
+.saas-alert-catatan-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #92400E;
+    margin: 0 0 4px 0;
+}
+
+.saas-alert-catatan-desc {
+    font-size: 0.84375rem;
+    color: #78350F;
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* Divider & Actions */
+.saas-divider-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #F1F5F9;
+}
+
+.saas-action-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: #64748B;
+    min-width: 0;
+}
+
+.saas-action-hint svg {
+    color: #02275D;
+    flex-shrink: 0;
+}
+
+.saas-action-buttons {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.saas-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #02275D;
+    color: #ffffff !important;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    box-shadow: 0 2px 6px rgba(2, 39, 93, 0.25);
+    border: 1px solid #02275D;
+    transition: all 0.15s ease;
+}
+
+.saas-btn-primary:hover {
+    background: #01347C;
+    border-color: #01347C;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(2, 39, 93, 0.35);
+    color: #ffffff !important;
+}
+
+.saas-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    color: #02275D !important;
+    border: 1px solid #CBD5E1;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: all 0.15s ease;
+}
+
+.saas-btn-secondary:hover {
+    background: #F8FAFC;
+    border-color: #02275D;
+    color: #02275D !important;
+}
+
+/* ==========================================================================
+   Modal Formulir Pengajuan Pendaftaran Magang Peserta
+   Desain DS-MagKom (Sleman Abyssal Navy #02275D, Gold Sleman #FFCB05, Clean SaaS)
+   ========================================================================== */
+.pendaftaran-modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.pendaftaran-modal-backdrop.open {
+    display: flex;
+    opacity: 1;
+}
+
+.pendaftaran-modal-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 580px;
+    padding: 20px 24px;
+    box-shadow: 0 25px 50px -12px rgba(2, 39, 93, 0.25);
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.pendaftaran-modal-card::-webkit-scrollbar {
+    display: none;
+}
+
+.pendaftaran-modal-backdrop.open .pendaftaran-modal-card {
+    transform: translateY(0) scale(1);
+}
+
+.pendaftaran-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+    gap: 12px;
+}
+
+.pendaftaran-modal-header-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pendaftaran-modal-icon-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
+    color: #FFCB05;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(2, 39, 93, 0.2);
+}
+
+.pendaftaran-modal-title {
+    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 2px 0;
+    line-height: 1.2;
+}
+
+.pendaftaran-modal-subtitle {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.pendaftaran-modal-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.15rem;
+    line-height: 1;
+    transition: all 0.2s ease;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.pendaftaran-modal-close:hover {
+    background: #fee2e2;
+    color: #ef4444;
+    border-color: #fca5a5;
+    transform: rotate(90deg);
+}
+
+/* Summary Card Peserta (Compact Banner) */
+.pendaftaran-summary-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pendaftaran-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.pendaftaran-summary-jurusan {
+    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.25;
+}
+
+.pendaftaran-summary-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(2, 39, 93, 0.08);
+    color: #02275D;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(2, 39, 93, 0.15);
+    flex-shrink: 0;
+}
+
+.pendaftaran-summary-sub {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: #475569;
+    line-height: 1.3;
+    flex-wrap: wrap;
+}
+
+.pendaftaran-summary-sub strong {
+    color: #0f172a;
+}
+
+.pendaftaran-summary-bullet {
+    color: #94a3b8;
+}
+
+/* Form Body & Group */
+.pendaftaran-form-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pendaftaran-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pendaftaran-label {
+    font-size: 0.775rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pendaftaran-label .req {
+    color: #ef4444;
+}
+
+.pendaftaran-select {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0f172a;
+    background-color: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.pendaftaran-select:focus {
+    border-color: #02275D;
+    box-shadow: 0 0 0 3px rgba(2, 39, 93, 0.12);
+}
+
+.pendaftaran-hint {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.25;
+}
+
+/* Chips Durasi Magang */
+.duration-chips-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.duration-chip-btn {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 6px 8px;
+    min-height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    text-align: center;
+}
+
+.duration-chip-btn:hover {
+    border-color: #02275D;
+    background: #f0f5ff;
+    transform: translateY(-1px);
+}
+
+.duration-chip-btn.is-active {
+    border-color: #02275D !important;
+    background: #02275D !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(2, 39, 93, 0.25);
+    transform: translateY(-1px);
+}
+
+.duration-chip-val {
+    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.duration-chip-btn.is-active .duration-chip-val {
+    color: #ffffff;
+}
+
+.duration-chip-sub {
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #64748b;
+}
+
+.duration-chip-btn.is-active .duration-chip-sub {
+    color: #FFCB05 !important;
+}
+
+/* Preview Box Periode */
+.pendaftaran-preview-box {
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+    border-radius: 8px;
+    border: 1.5px dashed #93c5fd;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pendaftaran-preview-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(2, 39, 93, 0.08);
+    color: #02275D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pendaftaran-preview-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.pendaftaran-preview-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+}
+
+.pendaftaran-preview-date {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #02275D;
+    line-height: 1.25;
+}
+
+/* Modal Footer */
+.pendaftaran-modal-footer {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+.pendaftaran-btn-cancel {
+    padding: 8px 16px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #64748b;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.pendaftaran-btn-cancel:hover {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.pendaftaran-btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
+    border: 1px solid #01347C;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(2, 39, 93, 0.2);
+    transition: all 0.2s ease;
+}
+
+.pendaftaran-btn-submit:hover:not(:disabled) {
+    background: linear-gradient(135deg, #01347C 0%, #002244 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(2, 39, 93, 0.3);
+}
+
+.pendaftaran-btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Dark Mode Harmonization */
+[data-theme="dark"] .pendaftaran-modal-card {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pendaftaran-modal-header,
+[data-theme="dark"] .pendaftaran-modal-footer {
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .pendaftaran-modal-title {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pendaftaran-summary-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .pendaftaran-summary-jurusan {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pendaftaran-select {
+    background-color: #1e293b !important;
+    border-color: #475569 !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .duration-chip-btn {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pendaftaran-preview-box {
+    background: #1e293b !important;
+    border-color: #0284c7 !important;
+}
+
+[data-theme="dark"] .pendaftaran-preview-date {
+    color: #38bdf8 !important;
+}
+
+/* ==========================================================================
+   Pemberkasan Peserta: Compact Document Cards & Member Switcher
+   DS-MagKom Parity (Sleman Abyssal Navy #02275D, Sleman Gold #FFCB05)
+   ========================================================================== */
+
+.pemberkasan-section-title {
+    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 18px 0 10px 0;
+}
+
+.pemberkasan-section-badge {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #02275D;
+    border: 1px solid #bfdbfe;
+}
+
+/* Compact Document Row & Anti-Stretched Upload */
+.doc-card-compact {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+.doc-card-compact:hover {
+    border-color: #93c5fd;
+    box-shadow: 0 2px 8px rgba(2, 39, 93, 0.04);
+}
+
+.doc-card-compact.is-complete {
+    border-color: #bbf7d0;
+    background: #fcfdfd;
+}
+
+.doc-row-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.doc-info-compact {
+    min-width: 220px;
+    flex: 1;
+}
+
+.doc-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 2px;
+}
+
+.doc-name-compact {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.doc-badge-pill {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.doc-badge-pill.wajib {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.doc-badge-pill.opsional {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.doc-hint-compact {
+    font-size: 0.72rem;
+    color: #64748b;
+    line-height: 1.35;
+}
+
+.doc-action-compact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.status-dot-pending {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #b45309;
+    background: #fef3c7;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+/* Compact Upload Trigger Button (Anti-Kepanjangan) */
+.btn-pick-file {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: #eff6ff;
+    border: 1.5px solid #93c5fd;
+    border-radius: 8px;
+    color: #1d4ed8;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.btn-pick-file:hover {
+    background: #02275D;
+    border-color: #02275D;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(2, 39, 93, 0.2);
+}
+
+.btn-pick-file.dragover {
+    background: #dbeafe;
+    border-color: #1d4ed8;
+}
+
+/* Compact Uploaded File Bar */
+.uploaded-pill-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    color: #166534;
+}
+
+.status-dot-uploaded {
+    font-weight: 800;
+    color: #16a34a;
+    font-size: 0.8125rem;
+}
+
+.uploaded-file-name {
+    font-weight: 600;
+    color: #0f172a;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.uploaded-file-size {
+    color: #64748b;
+    font-size: 0.7rem;
+}
+
+.uploaded-actions-btns {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-doc-act {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 28px;
+    padding: 0 9px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-doc-act:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #94a3b8;
+}
+
+.btn-doc-act.view {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.btn-doc-act.view:hover {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    color: #1e40af;
+}
+
+.replace-bar-compact {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.replace-prompt {
+    font-size: 0.775rem;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Compact Selected File Confirmation Bar */
+.selected-bar-compact {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #eff6ff;
+    border: 1.5px solid #3b82f6;
+    border-radius: 8px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.selected-file-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.selected-file-name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-file-size {
+    font-size: 0.72rem;
+    color: #64748b;
+    flex-shrink: 0;
+}
+
+.selected-file-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Member Person Card (Kelompok Simpel Tanpa Tab) */
+.member-person-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.member-person-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.member-person-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.member-avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.8125rem;
+    flex-shrink: 0;
+}
+
+.member-avatar-circle.ketua {
+    background: #02275D;
+    color: #ffffff;
+}
+
+.member-avatar-circle.anggota {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.member-person-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.member-role-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+}
+
+.member-role-badge.ketua {
+    background: rgba(2, 39, 93, 0.1);
+    color: #02275D;
+}
+
+.member-role-badge.anggota {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.member-person-sub {
+    font-size: 0.72rem;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.member-status-pill {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 999px;
+}
+
+.member-status-pill.complete {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.member-status-pill.pending {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.member-person-body {
+    padding: 10px 12px;
+    background: #ffffff;
+}
+
+/* Dark Mode Harmonization */
+[data-theme="dark"] .pemberkasan-section-title {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .doc-card-compact {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .doc-name-compact {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .btn-pick-file {
+    background: #0f172a !important;
+    border-color: #0284c7 !important;
+    color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .btn-pick-file:hover {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .uploaded-pill-box {
+    background: #064e3b !important;
+    border-color: #059669 !important;
+    color: #a7f3d0 !important;
+}
+
+[data-theme="dark"] .uploaded-file-name {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .btn-doc-act {
+    background: #334155 !important;
+    border-color: #475569 !important;
+    color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .member-person-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .member-person-header {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .member-person-body {
+    background: #1e293b !important;
+}
+
+[data-theme="dark"] .member-person-name {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .replace-bar-compact {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .selected-bar-compact {
+    background: #0f172a !important;
+    border-color: #0284c7 !important;
+}
+
+
+

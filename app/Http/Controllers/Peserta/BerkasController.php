@@ -33,10 +33,18 @@ class BerkasController extends Controller
 
         $jenisDokumen = JenisDokumen::findOrFail($request->integer('jenis_dokumen_id'));
         $file = $request->file('file');
+        $kelompokAnggotaId = $request->filled('kelompok_anggota_id') ? $request->integer('kelompok_anggota_id') : null;
 
-        $dokumenLama = Dokumen::where('pendaftaran_id', $pendaftaran->id)
-            ->where('jenis_dokumen_id', $jenisDokumen->id)
-            ->first();
+        $dokumenQuery = Dokumen::where('pendaftaran_id', $pendaftaran->id)
+            ->where('jenis_dokumen_id', $jenisDokumen->id);
+
+        if ($kelompokAnggotaId !== null) {
+            $dokumenQuery->where('kelompok_anggota_id', $kelompokAnggotaId);
+        } else {
+            $dokumenQuery->whereNull('kelompok_anggota_id');
+        }
+
+        $dokumenLama = $dokumenQuery->first();
 
         $nilaiLama = $dokumenLama ? [
             'nama_asli' => $dokumenLama->nama_asli,
@@ -45,7 +53,7 @@ class BerkasController extends Controller
             'mime' => $dokumenLama->mime,
         ] : null;
 
-        $dokumen = $this->documentService->simpan($pendaftaran, $jenisDokumen, $file);
+        $dokumen = $this->documentService->simpan($pendaftaran, $jenisDokumen, $file, $kelompokAnggotaId);
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
@@ -55,6 +63,7 @@ class BerkasController extends Controller
             nilaiBaru: [
                 'pendaftaran_id' => $pendaftaran->id,
                 'jenis_dokumen_id' => $jenisDokumen->id,
+                'kelompok_anggota_id' => $kelompokAnggotaId,
                 'nama_asli' => $dokumen->nama_asli,
                 'ukuran' => $dokumen->ukuran,
                 'mime' => $dokumen->mime,
