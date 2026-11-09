@@ -226,7 +226,7 @@ class LandingCmsService
             'kuota_gauge_desc' => Pengaturan::get('landing_kuota_gauge_desc', 'Memuat informasi ketersediaan kuota...'),
             'kuota_legend_tersedia' => Pengaturan::get('landing_kuota_legend_tersedia', 'Masih banyak'),
             'kuota_legend_hampir' => Pengaturan::get('landing_kuota_legend_hampir', 'Tinggal sedikit'),
-            'kuota_legend_penuh' => Pengaturan::get('landing_kuota_legend_penuh', 'Penuh / Waiting List'),
+            'kuota_legend_penuh' => Pengaturan::get('landing_kuota_legend_penuh', 'Penuh'),
             'kuota_btn_tersedia' => Pengaturan::get('landing_kuota_btn_tersedia', 'Daftar Sekarang ➔'),
             'kuota_btn_waiting' => Pengaturan::get('landing_kuota_btn_waiting', 'Daftar Waiting List ➔'),
             'kuota_btn_tutup' => Pengaturan::get('landing_kuota_btn_tutup', 'Pendaftaran Ditutup'),

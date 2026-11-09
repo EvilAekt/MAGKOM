@@ -120,7 +120,7 @@ class LegacyCmsAdapter
             'gauge_desc' => $getter('landing_kuota_gauge_desc', 'Memuat informasi ketersediaan kuota...'),
             'legend_tersedia' => $getter('landing_kuota_legend_tersedia', 'Masih banyak'),
             'legend_hampir' => $getter('landing_kuota_legend_hampir', 'Tinggal sedikit'),
-            'legend_penuh' => $getter('landing_kuota_legend_penuh', 'Penuh / Waiting List'),
+            'legend_penuh' => $getter('landing_kuota_legend_penuh', 'Penuh'),
             'btn_tersedia' => $getter('landing_kuota_btn_tersedia', 'Daftar Sekarang ➔'),
             'btn_waiting' => $getter('landing_kuota_btn_waiting', 'Daftar Waiting List ➔'),
             'btn_tutup' => $getter('landing_kuota_btn_tutup', 'Pendaftaran Ditutup'),

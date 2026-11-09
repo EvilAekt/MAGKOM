@@ -139,7 +139,7 @@ class BlockRegistry
                     'gauge_desc' => 'Memuat informasi ketersediaan kuota...',
                     'legend_tersedia' => 'Masih banyak',
                     'legend_hampir' => 'Tinggal sedikit',
-                    'legend_penuh' => 'Penuh / Waiting List',
+                    'legend_penuh' => 'Penuh',
                     'btn_tersedia' => 'Daftar Sekarang ➔',
                     'btn_waiting' => 'Daftar Waiting List ➔',
                     'btn_tutup' => 'Pendaftaran Ditutup',

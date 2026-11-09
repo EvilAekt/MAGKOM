@@ -14,7 +14,7 @@
     $kuotaGaugeDesc = $content['gauge_desc'] ?? \App\Support\Pengaturan::get('landing_kuota_gauge_desc', 'Memuat informasi ketersediaan kuota...');
     $kuotaLegendTersedia = $content['legend_tersedia'] ?? \App\Support\Pengaturan::get('landing_kuota_legend_tersedia', 'Masih banyak');
     $kuotaLegendHampir = $content['legend_hampir'] ?? \App\Support\Pengaturan::get('landing_kuota_legend_hampir', 'Tinggal sedikit');
-    $kuotaLegendPenuh = $content['legend_penuh'] ?? \App\Support\Pengaturan::get('landing_kuota_legend_penuh', 'Penuh / Waiting List');
+    $kuotaLegendPenuh = $content['legend_penuh'] ?? \App\Support\Pengaturan::get('landing_kuota_legend_penuh', 'Penuh');
     $kuotaBtnTersedia = $content['btn_tersedia'] ?? \App\Support\Pengaturan::get('landing_kuota_btn_tersedia', 'Daftar Sekarang ➔');
     $kuotaBtnTutup = $content['btn_tutup'] ?? \App\Support\Pengaturan::get('landing_kuota_btn_tutup', 'Pendaftaran Ditutup');
 
