@@ -144,6 +144,7 @@ class DashboardController extends Controller
         ];
         $isProfilLengkap = $kelengkapanProfil['is_lengkap'];
         $persentaseProfil = $kelengkapanProfil['persentase'];
+
         return view('peserta.dashboard', [
             'user' => $user,
             'profil' => $profil,
