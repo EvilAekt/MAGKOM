@@ -892,8 +892,6 @@
             <div class="hero-left-content">
                 <div class="hero-header-eyebrow" style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.625rem; flex-wrap: wrap;">
                     <h1 class="kuota-page-title" style="font-size: 1.125rem; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; line-height: 1.2;">Bulan &amp; kuota</h1>
-                    <span style="color: rgba(255, 255, 255, 0.4); font-size: 0.875rem;">•</span>
-                    <span class="hero-badge-caps" style="margin-bottom: 0;">Bulan Aktif</span>
                 </div>
                 <p class="kuota-page-subtitle sr-only">Atur bulan pendaftaran dan kuota magang per bidang.</p>
                 

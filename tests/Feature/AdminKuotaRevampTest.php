@@ -68,7 +68,7 @@ class AdminKuotaRevampTest extends TestCase
         $response->assertSee('Buat bulan baru', false);
 
         // Hero Banner
-        $response->assertSee('Bulan Aktif', false);
+        $response->assertDontSee('Bulan Aktif', false);
         $response->assertSee('Tanggal buka', false);
         $response->assertSee('Tanggal tutup', false);
         $response->assertSee('Mulai magang', false);

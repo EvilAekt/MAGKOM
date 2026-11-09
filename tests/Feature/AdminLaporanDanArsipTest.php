@@ -195,6 +195,25 @@ class AdminLaporanDanArsipTest extends TestCase
         $resPenempatan = $this->actingAs($this->superAdmin)->get(route('admin.laporan.penempatan'));
         $resPenempatan->assertStatus(200);
         $resPenempatan->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+
+        // 3. Export Penempatan PDF Resmi
+        $resPdfPenempatan = $this->actingAs($this->superAdmin)->get(route('admin.laporan.penempatan', ['format' => 'pdf']));
+        $resPdfPenempatan->assertStatus(200);
+        $resPdfPenempatan->assertHeader('Content-Type', 'application/pdf');
+    }
+
+    public function test_penempatan_tab_supports_dynamic_per_page_and_unified_export_popover(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.laporan.index', [
+            'tab' => 'penempatan',
+            'per_page' => 5,
+        ]));
+
+        $response->assertOk();
+        $response->assertSee('adm-hero-banner');
+        $response->assertSee('btnToggleExportPopoverPenempatan');
+        $response->assertSee('admExportPopoverPenempatan');
+        $response->assertViewHas('penempatanData');
     }
 
     public function test_superadmin_can_access_arsip_peserta_index_and_detail(): void

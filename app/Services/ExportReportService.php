@@ -204,7 +204,7 @@ class ExportReportService
             nilaiLama: null,
             nilaiBaru: ['filter' => $filters, 'total_baris' => $records->count(), 'format' => $format],
             detail: [
-                'aksi' => $format === 'xlsx' ? 'ekspor_penempatan_xlsx' : 'ekspor_penempatan_csv',
+                'aksi' => $format === 'xlsx' ? 'ekspor_penempatan_xlsx' : ($format === 'pdf' ? 'ekspor_penempatan_pdf' : 'ekspor_penempatan_csv'),
                 'entitas' => 'penempatan',
                 'jumlah_baris' => $records->count(),
                 'filter' => $filters,
@@ -216,6 +216,16 @@ class ExportReportService
             'Jurusan', 'Jalur', 'Pembimbing', 'Bidang Unit',
             'Tanggal Mulai', 'Tanggal Selesai', 'Status Penempatan',
         ];
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('pdf.rekap-penempatan', [
+                'records' => $records,
+                'generatedAt' => now(),
+                'filters' => $filters,
+            ])->setPaper('a4', 'landscape');
+
+            return $pdf->download('rekap-penempatan-'.date('YmdHis').'.pdf');
+        }
 
         if ($format === 'xlsx') {
             $rows = [];

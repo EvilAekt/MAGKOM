@@ -1,13 +1,24 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Hub Laporan & Ekspor - Admin MagKom')
-@section('page_title', 'Hub Laporan & Ekspor Data')
-@section('page_description', '')
-
 @section('topbar_title', 'Hub Laporan & Ekspor Data')
 
 @section('content')
 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+    {{-- 0. SLEMAN NAVY HERO BANNER (Signature MagKom) --}}
+    <div class="adm-hero-banner">
+        <div class="adm-hero-content">
+            <div class="adm-hero-text">
+                <h1 class="adm-hero-title">Pusat Rekapitulasi Data Magang</h1>
+                <div class="adm-hero-subtitle">
+                    <span>Rekapitulasi Pendaftaran, Penempatan &amp; Arsip Magang</span>
+                    <span class="sep">&bull;</span>
+                    <span>Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @push('styles')
     <style>
@@ -468,17 +479,6 @@
 
             <!-- Table Preview (Contained & Clean) -->
             <div class="adm-table-container">
-                <div class="adm-table-meta-bar">
-                    <div style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">
-                        Menampilkan <strong style="color: #0F172A;">{{ $pendaftaranData->firstItem() ?? 0 }}–{{ $pendaftaranData->lastItem() ?? 0 }}</strong> dari <strong style="color: #0F172A;">{{ $pendaftaranData->total() }}</strong> data rekapitulasi
-                    </div>
-                    @if(request()->hasAny(['bulan_magang_id', 'status', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal']))
-                        <span style="font-size: 0.75rem; color: #0284C7; background: #E0F2FE; padding: 0.2rem 0.65rem; border-radius: 9999px; font-weight: 700;">
-                            Filter Aktif Diterapkan
-                        </span>
-                    @endif
-                </div>
-
                 <div style="overflow-x: auto; width: 100%;">
                     <table class="adm-table">
                         <thead>
@@ -510,9 +510,6 @@
                                         <span class="adm-reg-pill">
                                             {{ $p->nomor_pendaftaran }}
                                         </span>
-                                        <div style="font-size: 0.725rem; color: #64748B; margin-top: 0.35rem;">
-                                            {{ $p->created_at?->translatedFormat('d M Y') ?? '-' }}
-                                        </div>
                                     </td>
 
                                     {{-- Nama & Institusi --}}
@@ -585,25 +582,104 @@
     @if($tab === 'penempatan')
         <x-gentelella.x-panel class="has-table" title="Laporan Data Penempatan Magang">
             <x-slot:actions>
-                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                    <a href="{{ route('admin.laporan.penempatan', array_merge(request()->all(), ['format' => 'xlsx'])) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 1rem; background: #166534; color: #FFFFFF; font-weight: 700; font-size: 0.8rem; text-decoration: none; border-radius: 6px; box-shadow: 0 1px 3px rgba(22, 101, 52, 0.25); transition: background 0.15s ease;"
-                       title="Unduh data penempatan berformat Microsoft Excel (.xlsx)">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <path d="M8 13h8"></path>
-                            <path d="M8 17h8"></path>
-                            <path d="M10 9h4"></path>
+                {{-- Unified Export Popover Trigger & Container (Penempatan) --}}
+                <div class="adm-export-dropdown-wrap" style="position: relative;">
+                    <button type="button" 
+                            id="btnToggleExportPopoverPenempatan" 
+                            class="adm-btn-export-main" 
+                            aria-expanded="false" 
+                            aria-haspopup="menu" 
+                            aria-controls="admExportPopoverPenempatan"
+                            title="Pilih dan unduh rekap data penempatan (Excel, CSV, PDF)">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
-                        <span>Ekspor Excel (.xlsx)</span>
-                    </a>
-                    <a href="{{ route('admin.laporan.penempatan', array_merge(request()->all(), ['format' => 'csv'])) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 0.85rem; background: #FFFFFF; color: #475569; font-weight: 600; font-size: 0.8rem; text-decoration: none; border-radius: 6px; border: 1.5px solid #CBD5E1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;"
-                       title="Unduh format data mentah CSV">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                        <span>Ekspor CSV</span>
-                    </a>
+                        <span>Ekspor Rekap</span>
+                        <svg class="adm-export-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+
+                    {{-- Floating Dropdown Popover Container (Right-Aligned) --}}
+                    <div id="admExportPopoverPenempatan" class="adm-export-popover adm-export-popover-right" style="display: none;" role="menu" aria-label="Menu Pilihan Format Ekspor Penempatan">
+                        <div class="adm-popover-pointer adm-pointer-right"></div>
+                        <div class="adm-popover-header">
+                            <div>
+                                <div class="adm-popover-title">Ekspor Rekap Cepat</div>
+                                <div class="adm-popover-desc">Data penempatan hasil filter aktif</div>
+                            </div>
+                            <span class="adm-popover-row-count tabular-nums">
+                                {{ number_format($penempatanData->total()) }} Baris
+                            </span>
+                        </div>
+
+                        <div class="adm-popover-formats" role="radiogroup" aria-label="Format Berkas">
+                            {{-- Format 1: Excel (.xlsx) - Rekomendasi --}}
+                            <label class="adm-format-card adm-format-selected" id="cardFormatPenempatanXlsx" onclick="handleAdmExportPenempatanFormatChange('xlsx')">
+                                <div class="adm-format-content">
+                                    <input type="radio" name="popover_export_penempatan_format" id="radioFormatPenempatanXlsx" value="xlsx" checked class="adm-format-radio" onchange="handleAdmExportPenempatanFormatChange('xlsx')">
+                                    <div class="adm-format-details">
+                                        <div class="adm-format-name-wrap">
+                                            <span class="adm-format-name">Microsoft Excel</span>
+                                            <span class="badge-format-ext badge-ext-xlsx">.xlsx</span>
+                                        </div>
+                                        <p class="adm-format-desc">Tabel resmi bergaris rapi &amp; filterable</p>
+                                    </div>
+                                </div>
+                                <div class="adm-format-meta">
+                                    <span class="adm-badge-recommend">Rekomendasi</span>
+                                </div>
+                            </label>
+
+                            {{-- Format 2: CSV Tabular (.csv) --}}
+                            <label class="adm-format-card" id="cardFormatPenempatanCsv" onclick="handleAdmExportPenempatanFormatChange('csv')">
+                                <div class="adm-format-content">
+                                    <input type="radio" name="popover_export_penempatan_format" id="radioFormatPenempatanCsv" value="csv" class="adm-format-radio" onchange="handleAdmExportPenempatanFormatChange('csv')">
+                                    <div class="adm-format-details">
+                                        <div class="adm-format-name-wrap">
+                                            <span class="adm-format-name">CSV Tabular</span>
+                                            <span class="badge-format-ext badge-ext-csv">.csv</span>
+                                        </div>
+                                        <p class="adm-format-desc">Data mentah teks pemisah koma terstandarisasi</p>
+                                    </div>
+                                </div>
+                                <div class="adm-format-meta">
+                                    <span class="adm-badge-quick">Cepat</span>
+                                </div>
+                            </label>
+
+                            {{-- Format 3: Dokumen Resmi PDF (.pdf) --}}
+                            <label class="adm-format-card" id="cardFormatPenempatanPdf" onclick="handleAdmExportPenempatanFormatChange('pdf')">
+                                <div class="adm-format-content">
+                                    <input type="radio" name="popover_export_penempatan_format" id="radioFormatPenempatanPdf" value="pdf" class="adm-format-radio" onchange="handleAdmExportPenempatanFormatChange('pdf')">
+                                    <div class="adm-format-details">
+                                        <div class="adm-format-name-wrap">
+                                            <span class="adm-format-name">Dokumen Resmi (.pdf)</span>
+                                            <span class="badge-format-ext badge-ext-pdf">.pdf</span>
+                                        </div>
+                                        <p class="adm-format-desc">Rekapitulasi cetak ber-kop resmi kedinasan</p>
+                                    </div>
+                                </div>
+                                <div class="adm-format-meta">
+                                    <span class="adm-badge-legal">Legal Sah</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="adm-popover-cta">
+                            <button type="button" class="adm-btn-popover-cancel" onclick="toggleAdmExportPopoverPenempatan(false)">
+                                Batal
+                            </button>
+                            <button type="button" id="btnDoExportDownloadPenempatan" class="adm-btn-popover-download" onclick="triggerPenempatanExport()">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                <span id="btnExportDownloadTextPenempatan">Unduh Excel (.xlsx)</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </x-slot:actions>
 
@@ -665,17 +741,6 @@
             </form>
 
             <div class="adm-table-container">
-                <div class="adm-table-meta-bar">
-                    <div style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">
-                        Menampilkan <strong style="color: #0F172A;">{{ $penempatanData->firstItem() ?? 0 }}–{{ $penempatanData->lastItem() ?? 0 }}</strong> dari <strong style="color: #0F172A;">{{ $penempatanData->total() }}</strong> data penempatan
-                    </div>
-                    @if(request()->hasAny(['status', 'jalur', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal']))
-                        <span style="font-size: 0.75rem; color: #0284C7; background: #E0F2FE; padding: 0.2rem 0.65rem; border-radius: 9999px; font-weight: 700;">
-                            Filter Aktif Diterapkan
-                        </span>
-                    @endif
-                </div>
-
                 <div style="overflow-x: auto; width: 100%;">
                     <table class="adm-table">
                         <thead>
@@ -755,9 +820,14 @@
                     </table>
                 </div>
 
-                @if($penempatanData->hasPages())
+                @if($penempatanData->isNotEmpty())
                     <div class="adm-table-footer">
-                        {{ $penempatanData->links() }}
+                        <x-gentelella.pagination-bar 
+                            :paginator="$penempatanData" 
+                            :perPageOptions="[5, 10, 25]" 
+                            entity="data penempatan" 
+                            badgeText="Penempatan Magang" 
+                        />
                     </div>
                 @endif
             </div>
@@ -839,35 +909,132 @@
         window.location.href = exportUrl.toString();
     }
 
+    // =========================================================================
+    // EXPORT REKAP PENEMPATAN POPOVER MANAGEMENT
+    // =========================================================================
+    function toggleAdmExportPopoverPenempatan(forceOpen = null) {
+        const popover = document.getElementById('admExportPopoverPenempatan');
+        const trigger = document.getElementById('btnToggleExportPopoverPenempatan');
+        const wrap = trigger ? trigger.closest('.adm-export-dropdown-wrap') : null;
+        if (!popover) return;
+
+        const shouldOpen = forceOpen !== null ? forceOpen : popover.style.display === 'none';
+        if (shouldOpen) {
+            popover.style.display = 'flex';
+            if (trigger) trigger.setAttribute('aria-expanded', 'true');
+            if (wrap) wrap.classList.add('is-open');
+        } else {
+            popover.style.display = 'none';
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+            if (wrap) wrap.classList.remove('is-open');
+        }
+    }
+
+    function handleAdmExportPenempatanFormatChange(format) {
+        const cards = document.querySelectorAll('#admExportPopoverPenempatan .adm-format-card');
+        cards.forEach(c => c.classList.remove('adm-format-selected'));
+
+        const radio = document.getElementById('radioFormatPenempatan' + format.charAt(0).toUpperCase() + format.slice(1));
+        if (radio) radio.checked = true;
+
+        const card = document.getElementById('cardFormatPenempatan' + format.charAt(0).toUpperCase() + format.slice(1));
+        if (card) card.classList.add('adm-format-selected');
+
+        const btnText = document.getElementById('btnExportDownloadTextPenempatan');
+        if (btnText) {
+            if (format === 'xlsx') {
+                btnText.textContent = 'Unduh Excel (.xlsx)';
+            } else if (format === 'csv') {
+                btnText.textContent = 'Unduh CSV (.csv)';
+            } else if (format === 'pdf') {
+                btnText.textContent = 'Unduh PDF (.pdf)';
+            }
+        }
+    }
+
+    function triggerPenempatanExport(forcedFormat = null) {
+        let format = forcedFormat;
+        if (!format) {
+            const selectedRadio = document.querySelector('input[name="popover_export_penempatan_format"]:checked');
+            format = selectedRadio ? selectedRadio.value : 'xlsx';
+        }
+
+        const currentUrl = new URL(window.location.href);
+        const exportUrl = new URL("{{ route('admin.laporan.penempatan') }}", window.location.origin);
+
+        // Salin seluruh filter query string aktif
+        currentUrl.searchParams.forEach((val, key) => {
+            if (key !== 'page' && key !== 'tab') {
+                exportUrl.searchParams.set(key, val);
+            }
+        });
+
+        exportUrl.searchParams.set('format', format);
+
+        // Tutup popover
+        toggleAdmExportPopoverPenempatan(false);
+
+        // Jalankan download file
+        window.location.href = exportUrl.toString();
+    }
+
     // Event listener click outside & Escape key
     document.addEventListener('DOMContentLoaded', function() {
-        const trigger = document.getElementById('btnToggleExportPopoverPendaftaran');
-        const popover = document.getElementById('admExportPopoverPendaftaran');
+        // Pendaftaran Popover
+        const triggerPdt = document.getElementById('btnToggleExportPopoverPendaftaran');
+        const popoverPdt = document.getElementById('admExportPopoverPendaftaran');
 
-        if (trigger) {
-            trigger.addEventListener('click', function(e) {
+        if (triggerPdt) {
+            triggerPdt.addEventListener('click', function(e) {
                 e.stopPropagation();
                 toggleAdmExportPopoverPendaftaran();
             });
         }
 
-        if (popover) {
-            popover.addEventListener('click', function(e) {
+        if (popoverPdt) {
+            popoverPdt.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+
+        // Penempatan Popover
+        const triggerPen = document.getElementById('btnToggleExportPopoverPenempatan');
+        const popoverPen = document.getElementById('admExportPopoverPenempatan');
+
+        if (triggerPen) {
+            triggerPen.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleAdmExportPopoverPenempatan();
+            });
+        }
+
+        if (popoverPen) {
+            popoverPen.addEventListener('click', function(e) {
                 e.stopPropagation();
             });
         }
 
         document.addEventListener('click', function(e) {
-            if (popover && popover.style.display !== 'none') {
-                if (!popover.contains(e.target) && trigger && !trigger.contains(e.target)) {
+            if (popoverPdt && popoverPdt.style.display !== 'none') {
+                if (!popoverPdt.contains(e.target) && triggerPdt && !triggerPdt.contains(e.target)) {
                     toggleAdmExportPopoverPendaftaran(false);
+                }
+            }
+            if (popoverPen && popoverPen.style.display !== 'none') {
+                if (!popoverPen.contains(e.target) && triggerPen && !triggerPen.contains(e.target)) {
+                    toggleAdmExportPopoverPenempatan(false);
                 }
             }
         });
 
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && popover && popover.style.display !== 'none') {
-                toggleAdmExportPopoverPendaftaran(false);
+            if (e.key === 'Escape') {
+                if (popoverPdt && popoverPdt.style.display !== 'none') {
+                    toggleAdmExportPopoverPendaftaran(false);
+                }
+                if (popoverPen && popoverPen.style.display !== 'none') {
+                    toggleAdmExportPopoverPenempatan(false);
+                }
             }
         });
     });

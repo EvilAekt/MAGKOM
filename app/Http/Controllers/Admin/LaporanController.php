@@ -152,7 +152,11 @@ class LaporanController extends Controller
                 $penQuery->where('tgl_mulai', '<=', $request->input('sampai_tanggal'));
             }
 
-            $penempatanData = $penQuery->paginate(10)->withQueryString();
+            $perPage = (int) $request->input('per_page', 5);
+            if (! in_array($perPage, [5, 10, 25, 50], true)) {
+                $perPage = 5;
+            }
+            $penempatanData = $penQuery->paginate($perPage)->withQueryString();
         }
 
         return view('admin.laporan.index', [

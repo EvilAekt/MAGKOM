@@ -625,9 +625,9 @@
     <div class="adm-hero-banner">
         <div class="adm-hero-content">
             <div class="adm-hero-text">
-                <h1 class="adm-hero-title">Distribusi &amp; Alokasi Peserta Magang</h1>
+                <h1 class="adm-hero-title">Alokasi Penempatan &amp; Pembimbing Magang</h1>
                 <div class="adm-hero-subtitle">
-                    <span>Penetapan Pembimbing Lapangan &amp; Penempatan Bidang Dinas</span>
+                    <span>Penetapan Bidang Dinas &amp; Pembimbing Lapangan</span>
                     <span class="sep">&bull;</span>
                     <span>Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
                 </div>
