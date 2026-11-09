@@ -6,6 +6,7 @@ namespace App\Exports\Pembimbing;
 
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusTugasEnum;
+use App\Models\Penempatan;
 use App\Services\XlsxExportService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -42,7 +43,7 @@ class LaporanKinerjaExcelExport
     /**
      * Menghasilkan berkas .xlsx resmi valid OpenXML dengan format dan styling Sleman MagKom.
      *
-     * @param  Collection<int, mixed>  $records
+     * @param  Collection<int, Penempatan>  $records
      */
     public function download(Collection $records, ?string $filename = null): BinaryFileResponse
     {

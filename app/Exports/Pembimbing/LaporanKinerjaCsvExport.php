@@ -6,6 +6,7 @@ namespace App\Exports\Pembimbing;
 
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusTugasEnum;
+use App\Models\Penempatan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -32,7 +33,7 @@ class LaporanKinerjaCsvExport
     /**
      * Menghasilkan StreamedResponse unduhan CSV ber-BOM UTF-8.
      *
-     * @param  Collection<int, mixed>  $records
+     * @param  Collection<int, Penempatan>  $records
      */
     public function download(Collection $records, ?string $filename = null): StreamedResponse
     {
