@@ -50,7 +50,6 @@ use App\Http\Controllers\SuperAdmin\HealthMonitorController;
 use App\Http\Controllers\SuperAdmin\JurusanController;
 use App\Http\Controllers\SuperAdmin\LandingCmsController;
 use App\Http\Controllers\SuperAdmin\LandingCmsSiteEditorController;
-use App\Http\Controllers\SuperAdmin\MonitoringPesertaController;
 use App\Http\Controllers\SuperAdmin\PengaturanController;
 use App\Http\Controllers\SuperAdmin\PesertaJalurKhususController;
 use App\Http\Controllers\SuperAdmin\ProfilController as SuperAdminProfilController;
@@ -289,10 +288,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 // Rute Khusus SuperAdmin (F-06, F-11, F-13, SEC-03)
 Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
-
-    // Monitoring Pelaksanaan Magang Aktif (PRD 3.3, AC-07-7, AC-08-5)
-    Route::get('/monitoring-peserta', [MonitoringPesertaController::class, 'index'])->name('monitoring.index');
-    Route::get('/monitoring-peserta/{penempatan}', [MonitoringPesertaController::class, 'show'])->name('monitoring.show');
 
     // Bulan Magang & Slot Khusus
     Route::get('/bulan', [BulanController::class, 'index'])->name('bulan.index');

@@ -6,11 +6,9 @@ namespace Tests\Feature;
 
 use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
-use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
@@ -163,32 +161,14 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
     }
 
     /** @test */
-    public function superadmin_can_view_monitoring_peserta_aktif_index_and_detail_read_only(): void
+    public function superadmin_monitoring_peserta_routes_are_decommissioned(): void
     {
-        // 1. Tambahkan tugas untuk peserta
-        Tugas::create([
-            'penempatan_id' => $this->penempatan->id,
-            'judul' => 'Instalasi Jaringan Server Diskominfo',
-            'deskripsi' => 'Konfigurasi switch VLAN dan gateway',
-            'kategori' => 'Infrastruktur',
-            'kompleksitas' => KompleksitasEnum::Sedang,
-            'deadline' => now()->addDays(5)->toDateString(),
-            'status' => StatusTugasEnum::Proses,
-        ]);
+        // Memastikan rute legacy /superadmin/monitoring-peserta merespons 404 Not Found
+        $resIndex = $this->actingAs($this->superAdmin)->get('/superadmin/monitoring-peserta');
+        $resIndex->assertStatus(404);
 
-        // 2. Akses index monitoring
-        $resIndex = $this->actingAs($this->superAdmin)->get(route('superadmin.monitoring.index'));
-        $resIndex->assertStatus(200);
-        $resIndex->assertViewIs('superadmin.monitoring.index');
-        $resIndex->assertSee('Budi Santoso');
-        $resIndex->assertSee('SMK Negeri 2 Depok Sleman');
-
-        // 3. Akses detail monitoring baca-saja
-        $resShow = $this->actingAs($this->superAdmin)->get(route('superadmin.monitoring.show', $this->penempatan));
-        $resShow->assertStatus(200);
-        $resShow->assertViewIs('superadmin.monitoring.show');
-        $resShow->assertSee('Mode Pemantauan Baca-Saja (SuperAdmin)');
-        $resShow->assertSee('Instalasi Jaringan Server Diskominfo');
+        $resShow = $this->actingAs($this->superAdmin)->get('/superadmin/monitoring-peserta/'.$this->penempatan->id);
+        $resShow->assertStatus(404);
     }
 
     /** @test */
