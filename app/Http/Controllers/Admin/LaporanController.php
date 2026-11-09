@@ -164,7 +164,12 @@ class LaporanController extends Controller
             'metricCards' => $metricCards,
             'bulanMagangList' => $bulanMagangList,
             'jurusanList' => $jurusanList,
-            'statusPendaftaran' => StatusPendaftaranEnum::cases(),
+            'statusPendaftaran' => [
+                StatusPendaftaranEnum::Diajukan,
+                StatusPendaftaranEnum::Diterima,
+                StatusPendaftaranEnum::Ditolak,
+                StatusPendaftaranEnum::Dibatalkan,
+            ],
             'statusPenempatan' => StatusPenempatanEnum::cases(),
             'pendaftaranData' => $pendaftaranData,
             'penempatanData' => $penempatanData,

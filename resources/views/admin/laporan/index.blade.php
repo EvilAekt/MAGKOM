@@ -485,7 +485,7 @@
                             <tr>
                                 <th style="width: 16%; text-align: left;">No. Registrasi</th>
                                 <th style="width: 26%; text-align: left;">Nama & Institusi</th>
-                                <th style="width: 22%; text-align: left;">Jurusan Pilihan</th>
+                                <th style="width: 22%; text-align: left;">Jurusan</th>
                                 <th style="width: 16%; text-align: left;">Bulan Mulai</th>
                                 <th style="width: 10%; text-align: left;">Durasi</th>
                                 <th style="width: 10%; text-align: left;">Status</th>
@@ -524,7 +524,7 @@
                                         </div>
                                     </td>
 
-                                    {{-- Jurusan Pilihan --}}
+                                    {{-- Jurusan --}}
                                     <td>
                                         <div style="font-weight: 600; color: #1E293B; font-size: 0.85rem;">
                                             {{ $p->kuota?->jurusan?->nama_jurusan ?? '-' }}
@@ -700,7 +700,7 @@
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-                    <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700);">Jalur Penerimaan</label>
+                    <label style="font-size: 0.75rem; font-weight: 700; color: var(--neutral-700);">Jalur</label>
                     <select name="jalur" style="height: 38px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.8125rem; background: #FFFFFF;">
                         <option value="">Semua Jalur</option>
                         <option value="umum" {{ request('jalur') == 'umum' ? 'selected' : '' }}>Jalur Umum (Online)</option>
@@ -747,7 +747,7 @@
                             <tr>
                                 <th style="width: 26%; text-align: left;">Peserta Magang</th>
                                 <th style="width: 22%; text-align: left;">Pembimbing Lapangan</th>
-                                <th style="width: 18%; text-align: left;">Jalur / Sumber</th>
+                                <th style="width: 18%; text-align: left;">Jalur</th>
                                 <th style="width: 20%; text-align: left;">Rentang Waktu Magang</th>
                                 <th style="width: 14%; text-align: left;">Status</th>
                             </tr>
@@ -786,7 +786,7 @@
                                         @endif
                                     </td>
 
-                                    {{-- Jalur / Sumber --}}
+                                    {{-- Jalur --}}
                                     <td>
                                         <span style="font-weight: 700; font-size: 0.8125rem; color: {{ $pen->jalur?->value === 'khusus' ? '#7E22CE' : '#0641CC' }};">
                                             {{ $pen->jalur?->label() }}
