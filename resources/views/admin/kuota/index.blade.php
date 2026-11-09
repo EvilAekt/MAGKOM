@@ -37,6 +37,11 @@
             letter-spacing: -0.02em;
         }
 
+        .hero-banner-blue .kuota-page-title {
+            color: #FFFFFF !important;
+            letter-spacing: 0.05em;
+        }
+
         .kuota-page-subtitle {
             font-size: 0.875rem;
             color: #64748B;
@@ -880,22 +885,17 @@
     </style>
 
     {{-- =========================================================================
-         1. HEADER HALAMAN: BULAN & KUOTA
-         ========================================================================= --}}
-    <div class="kuota-page-header">
-        <div>
-            <h1 class="kuota-page-title">Bulan &amp; kuota</h1>
-            <p class="kuota-page-subtitle sr-only">Atur bulan pendaftaran dan kuota magang per bidang.</p>
-        </div>
-    </div>
-
-    {{-- =========================================================================
-         2. HERO BANNER: INFORMASI BULAN AKTIF (PERSIS DASHBOARD GAMBAR 2)
+         HERO BANNER: INFORMASI BULAN & KUOTA (TERINTEGRASI RINGKAS)
          ========================================================================= --}}
     @if($selectedBulan)
         <div class="hero-banner-blue">
             <div class="hero-left-content">
-                <span class="hero-badge-caps">Bulan Aktif</span>
+                <div class="hero-header-eyebrow" style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.625rem; flex-wrap: wrap;">
+                    <h1 class="kuota-page-title" style="font-size: 1.125rem; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; line-height: 1.2;">Bulan &amp; kuota</h1>
+                    <span style="color: rgba(255, 255, 255, 0.4); font-size: 0.875rem;">•</span>
+                    <span class="hero-badge-caps" style="margin-bottom: 0;">Bulan Aktif</span>
+                </div>
+                <p class="kuota-page-subtitle sr-only">Atur bulan pendaftaran dan kuota magang per bidang.</p>
                 
                 <div class="hero-main-title">
                     <span>{{ $selectedBulan->nama_bulan ?? ($selectedBulan->bulan_mulai?->translatedFormat('F Y') ?? 'Gelombang 1') }}</span>
@@ -991,6 +991,18 @@
                             Pendaftaran ditutup
                         @endif
                     </span>
+                </div>
+            </div>
+        </div>
+    @else
+        <div class="hero-banner-blue">
+            <div class="hero-left-content">
+                <div class="hero-header-eyebrow" style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.625rem; flex-wrap: wrap;">
+                    <h1 class="kuota-page-title" style="font-size: 1.125rem; font-weight: 800; color: #FFFFFF; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; line-height: 1.2;">Bulan &amp; kuota</h1>
+                </div>
+                <p class="kuota-page-subtitle sr-only">Atur bulan pendaftaran dan kuota magang per bidang.</p>
+                <div class="hero-main-title">
+                    <span>Belum Ada Periode Bulan Magang</span>
                 </div>
             </div>
         </div>

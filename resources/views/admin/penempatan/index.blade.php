@@ -964,7 +964,7 @@
 
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
                     <button type="submit" style="height: 42px; padding: 0 1.25rem; background: #0641CC; color: #FFFFFF; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s ease; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
-                        Terapkan Filter
+                        Terapkan
                     </button>
                     @if((request('tab') === 'sudah' || !request('tab')) && (request()->filled('q') || request()->filled('status') || request()->filled('pembimbing_id') || request()->filled('bidang_id') || request()->filled('bulan_magang_id')))
                         <a href="{{ route('admin.penempatan.index', ['tab' => 'sudah']) }}" style="height: 42px; padding: 0 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; border: 1px solid var(--neutral-200, #E2E8F0);" title="Kembalikan pencarian ke kondisi awal">
@@ -1239,7 +1239,7 @@
                 {{-- 5. Tombol Aksi --}}
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
                     <button type="submit" style="height: 42px; padding: 0 1.25rem; background: #0641CC; color: #FFFFFF; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s ease; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
-                        Terapkan Filter
+                        Terapkan
                     </button>
                     @if(request('tab') === 'belum' && (request()->filled('q') || request()->filled('bulan_magang_id') || request()->filled('jurusan_id') || request()->filled('bidang_id')))
                         <a href="{{ route('admin.penempatan.index', ['tab' => 'belum']) }}" style="height: 42px; padding: 0 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); font-weight: 600; font-size: 0.875rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; border: 1px solid var(--neutral-200, #E2E8F0);" title="Kembalikan pencarian ke kondisi awal">
