@@ -258,7 +258,7 @@
         .action-dropdown-btn:hover svg,
         .action-dropdown-btn.active svg {
             stroke: #FFFFFF !important;
-            fill: #FFFFFF !important;
+            fill: none !important;
         }
         .action-dropdown-btn:hover circle,
         .action-dropdown-btn.active circle {
@@ -1005,7 +1005,7 @@
                                 <th>Jalur / Bidang Dinas</th>
                                 <th>Bulan Magang</th>
                                 <th>Status</th>
-                                <th style="text-align: right; width: 180px;">Aksi</th>
+                                <th style="text-align: right; width: 100px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1104,59 +1104,21 @@
                                     {{-- Aksi --}}
                                     <td style="text-align: right;">
                                         <div style="display: inline-flex; gap: 0.35rem; align-items: center; justify-content: flex-end;">
-                                            <a href="{{ route('admin.penempatan.show', $p) }}" class="btn-table-action-detail" title="Lihat Detail Penempatan">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                                <span>Detail</span>
-                                            </a>
-
-                                            <button type="button" onclick="openSuratPreview('{{ route('admin.penempatan.surat-diterima.pratinjau', $p) }}', '{{ route('admin.penempatan.surat-diterima', $p) }}', 'Surat Diterima - {{ addslashes($p->peserta?->nama) }}')" class="btn-table-action-surat" title="Pratinjau Surat Keterangan Diterima Langsung">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                                <span>Surat</span>
-                                            </button>
-
-                                            {{-- Dropdown Menu Aksi Lanjutan (Opsi 1) --}}
-                                            <div class="action-dropdown-wrap">
-                                                <button type="button" class="action-dropdown-btn" onclick="toggleRowDropdown(this, event)" title="Opsi & Aksi Lainnya">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                                        <circle cx="12" cy="12" r="1.5"></circle>
-                                                        <circle cx="19" cy="12" r="1.5"></circle>
-                                                        <circle cx="5" cy="12" r="1.5"></circle>
+                                            @if($p->pembimbing && !auth()->user()?->isSuperAdmin())
+                                                <button type="button" 
+                                                        class="action-dropdown-btn" 
+                                                        onclick="openPindahModal({{ $p->id }}, '{{ addslashes($cleanPesertaNama) }}', {{ $p->pembimbing_id ?? 'null' }})" 
+                                                        title="Ganti Pembimbing Lapangan"
+                                                        aria-label="Ganti Pembimbing Lapangan">
+                                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                                        <circle cx="9" cy="7" r="4"></circle>
+                                                        <polyline points="16 11 18 13 22 9"></polyline>
                                                     </svg>
                                                 </button>
-                                                <div class="action-dropdown-menu">
-                                                    @if($p->pembimbing)
-                                                        <button type="button" class="action-dropdown-item" onclick="openPindahModal({{ $p->id }}, '{{ addslashes($cleanPesertaNama) }}', {{ $p->pembimbing_id ?? 'null' }})">
-                                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                                                <circle cx="9" cy="7" r="4"></circle>
-                                                                <polyline points="16 11 18 13 22 9"></polyline>
-                                                            </svg>
-                                                            <span>Ganti Pembimbing</span>
-                                                        </button>
-                                                    @endif
-
-                                                    <a href="{{ route('admin.penempatan.surat-diterima', $p) }}" class="action-dropdown-item" title="Unduh File Surat Keterangan Diterima PDF">
-                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                                            <polyline points="7 10 12 15 17 10"></polyline>
-                                                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                                                        </svg>
-                                                        <span>Unduh Surat (PDF)</span>
-                                                    </a>
-
-                                                    @if($statusVal === 'aktif')
-                                                        <div class="action-dropdown-divider"></div>
-                                                        <button type="button" class="action-dropdown-item danger" onclick="openBatalModal({{ $p->id }}, '{{ addslashes($p->peserta?->nama) }}')">
-                                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                                <circle cx="12" cy="12" r="10"></circle>
-                                                                <line x1="15" y1="9" x2="9" y2="15"></line>
-                                                                <line x1="9" y1="9" x2="15" y2="15"></line>
-                                                            </svg>
-                                                            <span>Batalkan Penempatan</span>
-                                                        </button>
-                                                    @endif
-                                                </div>
-                                            </div>
+                                            @elseif(auth()->user()?->isSuperAdmin())
+                                                <span style="font-size: 0.75rem; color: #94A3B8; font-style: italic;">Read-Only</span>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
