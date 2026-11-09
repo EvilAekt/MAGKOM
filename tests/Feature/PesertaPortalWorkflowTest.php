@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\JalurEnum;
+use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
@@ -121,11 +122,13 @@ class PesertaPortalWorkflowTest extends TestCase
         $pngContent = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
         $file = UploadedFile::fake()->createWithContent('pasfoto_formal.png', $pngContent);
 
+        $jurusanMhs = Jurusan::where('kategori', 'mahasiswa')->first() ?? $this->jurusan;
+
         $postData = [
             'institusi' => 'Universitas Gadjah Mada',
             'nim_nisn' => '22/123456/TK/54321',
             'jenjang' => 's1',
-            'jurusan_id' => $this->jurusan->id,
+            'jurusan_id' => $jurusanMhs->id,
             'no_hp' => '081298765432',
             'foto' => $file,
         ];
@@ -150,7 +153,7 @@ class PesertaPortalWorkflowTest extends TestCase
             'institusi' => 'Universitas Gadjah Mada',
             'nim_nisn' => '22/123456/TK/54321',
             'jenjang' => 's1',
-            'jurusan_id' => $this->jurusan->id,
+            'jurusan_id' => $jurusanMhs->id,
             'no_hp' => '081298765432',
             'hapus_foto' => '1',
         ];
@@ -163,8 +166,70 @@ class PesertaPortalWorkflowTest extends TestCase
         $this->assertNull($profilFresh->foto_url);
     }
 
+    public function test_data_registrasi_akademik_dan_nama_terkunci_permanen_setelah_registrasi(): void
+    {
+        // 1. Buat profil awal peserta
+        $profil = PesertaProfil::create([
+            'user_id' => $this->peserta->id,
+            'nim_nisn' => '1029384756',
+            'institusi' => 'SMK Negeri 2 Depok Sleman',
+            'jurusan_id' => $this->jurusan->id,
+            'jenjang' => JenjangEnum::Smk,
+            'no_hp' => '081234567890',
+            'alamat' => 'Sleman',
+            'nama_kontak_darurat' => 'Wali Asli',
+            'no_kontak_darurat' => '089876543210',
+        ]);
+
+        $jurusanLain = Jurusan::where('id', '!=', $this->jurusan->id)->first() ?? $this->jurusan;
+
+        // 2. Peserta mencoba mengubah data registrasi (institusi, nim, jenjang, jurusan, nama)
+        $tamperedData = [
+            'nama' => 'Nama Baru Diubah Ilegal',
+            'institusi' => 'Institut Teknologi Palsu',
+            'nim_nisn' => '9999999999',
+            'jenjang' => 's1',
+            'jurusan_id' => $jurusanLain->id,
+            'no_hp' => '089988776655', // data yang sah untuk diubah
+            'nama_pembimbing_sekolah' => 'Drs. Pembimbing Baru, M.Pd', // sah untuk diubah
+        ];
+
+        $response = $this->actingAs($this->peserta)->post(URL::route('peserta.profil.simpan'), $tamperedData);
+        $response->assertRedirect(URL::route('peserta.profil.show'));
+        $response->assertSessionHas('success');
+
+        // 3. Verifikasi: data registrasi TIDAK BERUBAH di database (immutable)
+        $profilFresh = $profil->fresh();
+        $this->assertSame('SMK Negeri 2 Depok Sleman', $profilFresh->institusi);
+        $this->assertSame('1029384756', $profilFresh->nim_nisn);
+        $this->assertSame(JenjangEnum::Smk, $profilFresh->jenjang);
+        $this->assertSame($this->jurusan->id, $profilFresh->jurusan_id);
+
+        // Data yang diizinkan untuk diperbarui berhasil ter-update
+        $this->assertSame('089988776655', $profilFresh->no_hp);
+        $this->assertSame('Drs. Pembimbing Baru, M.Pd', $profilFresh->nama_pembimbing_sekolah);
+
+        // Nama user tetap sesuai identitas resmi awal
+        $this->assertSame('Budi Peserta Test', $this->peserta->fresh()->nama);
+    }
+
     public function test_halaman_pendaftaran_dapat_dibuka_dan_menampilkan_view(): void
     {
+        PesertaProfil::firstOrCreate(
+            ['user_id' => $this->peserta->id],
+            [
+                'nim_nisn' => '1234567890',
+                'institusi' => 'SMK Negeri 2 Depok Sleman',
+                'jurusan_id' => $this->jurusan->id,
+                'jenjang' => JenjangEnum::Smk,
+                'no_hp' => '081234567890',
+                'foto' => 'peserta-foto/fake.jpg',
+                'alamat' => 'Sleman',
+                'nama_kontak_darurat' => 'Wali',
+                'no_kontak_darurat' => '089876543210',
+            ]
+        );
+
         $response = $this->actingAs($this->peserta)->get(URL::route('peserta.pendaftaran.index'));
         $response->assertStatus(200);
         $response->assertSee('Riwayat Pendaftaran Magang');

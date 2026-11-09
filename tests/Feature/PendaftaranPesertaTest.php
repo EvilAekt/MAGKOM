@@ -11,9 +11,11 @@ use App\Enums\StatusPenempatanEnum;
 use App\Models\BulanMagang;
 use App\Models\JenisDokumen;
 use App\Models\Jurusan;
+use App\Models\KelompokMagang;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
+use App\Models\PesertaProfil;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
@@ -76,13 +78,21 @@ class PendaftaranPesertaTest extends TestCase
         $pembimbing->status_aktif = true;
         $pembimbing->save();
 
-        // 2. Lengkapi Profil Biodata Peserta
+        // 2. Lengkapi Profil Biodata Peserta (100% Lengkap)
+        Storage::fake('public');
+        $fakeFoto = UploadedFile::fake()->image('pasfoto.jpg', 300, 400);
+
         $responseProfil = $this->actingAs($peserta)->post(route('peserta.profil.simpan'), [
             'nim_nisn' => '1234567890',
             'institusi' => 'SMK Negeri 1 Kominfo',
             'jurusan_id' => $jurusan->id,
             'jenjang' => 'smk',
             'no_hp' => '081234567890',
+            'nama_kontak_darurat' => 'Budi Santoso',
+            'no_kontak_darurat' => '089876543210',
+            'hubungan_kontak_darurat' => 'Orang Tua',
+            'alamat' => 'Sleman, Yogyakarta',
+            'foto' => $fakeFoto,
         ]);
         $responseProfil->assertRedirect(route('peserta.profil.show'));
         $this->assertDatabaseHas('peserta_profil', ['user_id' => $peserta->id, 'nim_nisn' => '1234567890']);
@@ -219,7 +229,7 @@ class PendaftaranPesertaTest extends TestCase
             'nim_nisn' => '21/475890/TK/52000',
         ]);
 
-        $response->assertRedirect(route('peserta.profil.show'));
+        $response->assertRedirect(route('peserta.dashboard'));
 
         $this->assertDatabaseHas('users', [
             'email' => 'mahasiswa.baru@magkom.test',
@@ -250,12 +260,170 @@ class PendaftaranPesertaTest extends TestCase
             'persetujuan_wali' => '1',
         ]);
 
-        $response->assertRedirect(route('peserta.profil.show'));
+        $response->assertRedirect(route('peserta.dashboard'));
 
         $user = User::where('email', 'siswa.smk@magkom.test')->firstOrFail();
         $this->assertNotNull($user->profil);
         $this->assertEquals(JenjangEnum::Smk, $user->profil->jenjang);
         $this->assertEquals($jurusan->id, $user->profil->jurusan_id);
         $this->assertNotNull($user->profil->persetujuan_wali_at);
+    }
+
+    public function test_peserta_dengan_profil_belum_100_persen_tidak_bisa_memilih_kuota_atau_mendaftar(): void
+    {
+        $peserta = new User([
+            'nama' => 'Peserta Incomplete',
+            'email' => 'peserta.incomplete@magkom.test',
+            'password' => bcrypt('Password123!'),
+            'status_aktif' => true,
+        ]);
+        $peserta->role = RoleEnum::Peserta;
+        $peserta->email_verified_at = now();
+        $peserta->save();
+
+        $jurusan = Jurusan::firstOrFail();
+        $profil = PesertaProfil::create([
+            'user_id' => $peserta->id,
+            'jenjang' => JenjangEnum::S1,
+            'jurusan_id' => $jurusan->id,
+            'institusi' => 'Universitas Sleman',
+            'nim_nisn' => '12345678',
+            'no_hp' => '081234567890',
+            // sengaja foto dan kontak darurat belum diisi (belum 100%)
+            'foto' => null,
+            'nama_kontak_darurat' => null,
+            'no_kontak_darurat' => null,
+        ]);
+
+        $this->assertFalse($profil->isLengkap());
+        $this->assertLessThan(100, $profil->hitungKelengkapan()['persentase']);
+
+        // 1. Coba akses halaman pemilihan kuota langsung -> harus di-redirect ke profil
+        $responseIndex = $this->actingAs($peserta)->get(route('peserta.pendaftaran.index'));
+        $responseIndex->assertRedirect(route('peserta.profil.show'));
+        $responseIndex->assertSessionHas('warning');
+
+        // 2. Coba kirim form pendaftaran -> harus gagal validasi profil
+        $bulan = BulanMagang::firstOrFail();
+        $kuota = Kuota::where('bulan_magang_id', $bulan->id)->where('jurusan_id', $jurusan->id)->firstOrFail();
+
+        $responsePost = $this->actingAs($peserta)->post(route('peserta.pendaftaran.store'), [
+            'bulan_magang_id' => $bulan->id,
+            'kuota_id' => $kuota->id,
+            'durasi_bulan' => 3,
+        ]);
+
+        $responsePost->assertSessionHasErrors(['profil']);
+        $this->assertDatabaseMissing('pendaftaran', ['user_id' => $peserta->id]);
+    }
+
+    public function test_pengunggahan_berkas_kelompok_dan_verifikasi_kelengkapan_anggota(): void
+    {
+        Storage::fake('private');
+
+        $jurusan = Jurusan::where('kategori', 'mahasiswa')->firstOrFail();
+        $bulan = BulanMagang::firstOrFail();
+        $kuota = Kuota::where('bulan_magang_id', $bulan->id)->where('jurusan_id', $jurusan->id)->firstOrFail();
+
+        // 1. Buat user ketua tim
+        $ketua = new User([
+            'nama' => 'Ketua Kelompok Alpha',
+            'email' => 'ketua.alpha@magkom.test',
+            'password' => bcrypt('Password123!'),
+            'status_aktif' => true,
+        ]);
+        $ketua->role = RoleEnum::Peserta;
+        $ketua->email_verified_at = now();
+        $ketua->save();
+
+        PesertaProfil::create([
+            'user_id' => $ketua->id,
+            'jenjang' => JenjangEnum::S1,
+            'jurusan_id' => $jurusan->id,
+            'institusi' => 'Universitas Gadjah Mada',
+            'nim_nisn' => '21/111111/TK/00001',
+            'no_hp' => '081211111111',
+            'foto' => 'photos/ketua.jpg',
+            'nama_kontak_darurat' => 'Bapak Ketua',
+            'no_kontak_darurat' => '081299999999',
+            'alamat_domisili' => 'Sleman',
+            'alamat_ktp' => 'Sleman',
+        ]);
+
+        // Buat kelompok magang & anggota
+        $kelompok = KelompokMagang::create([
+            'ketua_user_id' => $ketua->id,
+            'nama_kelompok' => 'Tim Riset Alpha',
+        ]);
+
+        $anggota = $kelompok->anggota()->create([
+            'nama' => 'Budi Anggota Alpha',
+            'nim_nisn' => '21/111112/TK/00002',
+            'no_hp' => '081211111112',
+            'email' => 'budi.alpha@magkom.test',
+        ]);
+
+        // Buat pendaftaran kelompok
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $ketua->id,
+            'bulan_magang_id' => $bulan->id,
+            'kuota_id' => $kuota->id,
+            'durasi_bulan' => 3,
+            'tipe' => 'kelompok',
+            'kelompok_magang_id' => $kelompok->id,
+            'status' => StatusPendaftaranEnum::BerkasBelumLengkap,
+        ]);
+
+        $dokS1List = JenisDokumen::where('jenjang', 's1')->where('aktif', true)->get();
+        $dokSurat = $dokS1List->where('kode', 'surat_pengantar')->firstOrFail();
+        $dokProposal = $dokS1List->where('kode', 'proposal')->firstOrFail();
+        $dokCv = $dokS1List->where('kode', 'cv')->firstOrFail();
+        $dokTranskrip = $dokS1List->where('kode', 'transkrip')->firstOrFail();
+
+        // Unggah berkas umum
+        $fileDummy = UploadedFile::fake()->create('surat.pdf', 200, 'application/pdf');
+        $this->actingAs($ketua)->post(route('peserta.berkas.unggah', $pendaftaran), [
+            'jenis_dokumen_id' => $dokSurat->id,
+            'file' => $fileDummy,
+        ])->assertSessionHas('success');
+
+        $this->actingAs($ketua)->post(route('peserta.berkas.unggah', $pendaftaran), [
+            'jenis_dokumen_id' => $dokProposal->id,
+            'file' => $fileDummy,
+        ])->assertSessionHas('success');
+
+        // Unggah berkas ketua
+        $this->actingAs($ketua)->post(route('peserta.berkas.unggah', $pendaftaran), [
+            'jenis_dokumen_id' => $dokCv->id,
+            'file' => $fileDummy,
+        ])->assertSessionHas('success');
+
+        $this->actingAs($ketua)->post(route('peserta.berkas.unggah', $pendaftaran), [
+            'jenis_dokumen_id' => $dokTranskrip->id,
+            'file' => $fileDummy,
+        ])->assertSessionHas('success');
+
+        // Sebelum berkas anggota diunggah, ajukan harus gagal
+        $resGagal = $this->actingAs($ketua)->post(route('peserta.pendaftaran.ajukan', $pendaftaran));
+        $resGagal->assertSessionHas('error');
+
+        // Unggah berkas anggota
+        $this->actingAs($ketua)->post(route('peserta.berkas.unggah', $pendaftaran), [
+            'jenis_dokumen_id' => $dokCv->id,
+            'kelompok_anggota_id' => $anggota->id,
+            'file' => $fileDummy,
+        ])->assertSessionHas('success');
+
+        $this->actingAs($ketua)->post(route('peserta.berkas.unggah', $pendaftaran), [
+            'jenis_dokumen_id' => $dokTranskrip->id,
+            'kelompok_anggota_id' => $anggota->id,
+            'file' => $fileDummy,
+        ])->assertSessionHas('success');
+
+        // Sekarang ajukan harus sukses
+        $resSukses = $this->actingAs($ketua)->post(route('peserta.pendaftaran.ajukan', $pendaftaran));
+        $resSukses->assertRedirect();
+        $pendaftaran->refresh();
+        $this->assertEquals(StatusPendaftaranEnum::Diajukan, $pendaftaran->status);
     }
 }

@@ -78,6 +78,16 @@ class PendaftaranRequest extends FormRequest
             if ($bulan && $kuota && $kuota->bulan_magang_id !== $bulan->id) {
                 $validator->errors()->add('kuota_id', 'Alokasi kuota tidak sesuai dengan periode bulan magang yang dipilih.');
             }
+
+            // 4. Validasi prasyarat kelengkapan profil peserta (Strict 100%)
+            $profil = $user->profil ?? $user->fresh()?->profil;
+            if (! $profil || ! $profil->isLengkap()) {
+                $persentase = $profil ? $profil->hitungKelengkapan()['persentase'] : 0;
+                $validator->errors()->add(
+                    'profil',
+                    "Biodata profil Anda belum 100% lengkap (saat ini {$persentase}%). Silakan lengkapi seluruh data wajib (pasfoto resmi, kontak darurat wali, dan data akademik) sebelum mengajukan pendaftaran magang."
+                );
+            }
         });
     }
 

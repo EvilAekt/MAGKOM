@@ -24,11 +24,12 @@ class DashboardController extends Controller
         $user = $request->user();
         $user->loadMissing(['kelompokMagang.anggota']);
         $profil = $user->profil;
+        $profil?->loadMissing(['jurusan.bidang']);
 
         // Ambil pendaftaran terbaru peserta
         $pendaftaran = Pendaftaran::with([
             'bulanMagang',
-            'kuota.jurusan',
+            'kuota.jurusan.bidang',
             'dokumen.jenisDokumen',
             'penempatan.pembimbing',
             'penempatan.bidang',
@@ -124,11 +125,34 @@ class DashboardController extends Controller
             $sisaHari = max(0, (int) $diff);
         }
 
+        // Ekstraksi Informasi Bidang Terpilih
+        $bidangTerpilih = $penempatan?->bidang?->nama_bidang
+            ?? $pendaftaran?->penempatan?->bidang?->nama_bidang
+            ?? $pendaftaran?->kuota?->jurusan?->bidang?->pluck('nama_bidang')->filter()->implode(', ')
+            ?? $profil?->jurusan?->bidang?->pluck('nama_bidang')->filter()->implode(', ')
+            ?? 'Menyesuaikan Jurusan';
+
+        if (empty($bidangTerpilih)) {
+            $bidangTerpilih = 'Menyesuaikan Jurusan';
+        }
+
+        // Kelengkapan Biodata Profil Peserta (Strict 100%)
+        $kelengkapanProfil = $profil?->hitungKelengkapan() ?? [
+            'checklist' => [],
+            'persentase' => 0,
+            'is_lengkap' => false,
+        ];
+        $isProfilLengkap = $kelengkapanProfil['is_lengkap'];
+        $persentaseProfil = $kelengkapanProfil['persentase'];
+
         return view('peserta.dashboard', [
             'user' => $user,
             'profil' => $profil,
+            'isProfilLengkap' => $isProfilLengkap,
+            'persentaseProfil' => $persentaseProfil,
             'pendaftaran' => $pendaftaran,
             'penempatan' => $penempatan,
+            'bidangTerpilih' => $bidangTerpilih,
             'fase' => $fase,
             'totalTugas' => $totalTugas,
             'tugasSelesai' => $tugasSelesai,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Peserta;
 
+use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PesertaProfilRequest;
@@ -38,17 +39,32 @@ class ProfilController extends Controller
             ->where('status', StatusPenempatanEnum::Aktif)
             ->first();
 
-        $checklist = [
-            'data_diri' => ! empty($user->nama || $user->name) && ! empty($user->email),
-            'foto' => ! empty($profil?->foto),
-            'akademik' => ! empty($profil?->institusi) && ! empty($profil?->nim_nisn) && ! empty($profil?->jenjang) && ! empty($profil?->jurusan_id),
-            'kontak' => ! empty($profil?->no_hp ?? $user->no_telp),
-            'darurat' => ! empty($profil?->nama_kontak_darurat) && ! empty($profil?->no_kontak_darurat),
+        $pendaftaranAktif = $user->pendaftaran()
+            ->whereIn('status', [
+                StatusPendaftaranEnum::Diajukan,
+                StatusPendaftaranEnum::WaitingList,
+                StatusPendaftaranEnum::Diterima,
+            ])
+            ->latest()
+            ->first();
+
+        // Data registrasi akademik (Institusi, NIM/NISN, Jenjang, Jurusan) terkunci permanen jika profil sudah ada
+        $isAkademikLocked = (bool) ($profil && $profil->exists && ! empty($profil->institusi));
+
+        $kelengkapan = $profil?->hitungKelengkapan() ?? [
+            'checklist' => [
+                'data_diri' => ! empty($user->nama || $user->name) && ! empty($user->email),
+                'foto' => false,
+                'akademik' => false,
+                'kontak' => false,
+                'darurat' => false,
+            ],
+            'persentase' => 0,
+            'is_lengkap' => false,
         ];
 
-        $totalWajib = count($checklist);
-        $terisi = count(array_filter($checklist));
-        $persentaseLengkap = (int) round(($terisi / $totalWajib) * 100);
+        $checklist = $kelengkapan['checklist'];
+        $persentaseLengkap = $kelengkapan['persentase'];
 
         return view('peserta.profil.show', [
             'user' => $user,
@@ -58,6 +74,7 @@ class ProfilController extends Controller
             'persentaseLengkap' => $persentaseLengkap,
             'checklist' => $checklist,
             'kelompokMagang' => $kelompokMagang,
+            'isAkademikLocked' => $isAkademikLocked,
         ]);
     }
 
@@ -66,6 +83,11 @@ class ProfilController extends Controller
         $user = $request->user();
         $validated = $request->validated();
         $profil = $user->profil;
+
+        // Data registrasi awal peserta (Institusi, NIM/NISN, Jurusan, Jenjang) bersifat permanen / immutable
+        if ($profil && $profil->exists && ! empty($profil->institusi)) {
+            unset($validated['institusi'], $validated['nim_nisn'], $validated['jurusan_id'], $validated['jenjang']);
+        }
 
         // Tangani unggah atau penghapusan berkas foto profil
         if ($request->boolean('hapus_foto')) {

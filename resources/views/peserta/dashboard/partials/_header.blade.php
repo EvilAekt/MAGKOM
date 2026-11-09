@@ -43,9 +43,6 @@
                         </svg>
                         Pemkab Sleman
                     </span>
-                    <span class="saas-hero-date">
-                        {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}
-                    </span>
                 </div>
 
                 <h1 class="saas-header-title">
@@ -119,9 +116,6 @@
                             Portal Pendaftaran & Seleksi Magang
                         </span>
                     @endif
-                    <span class="saas-hero-date">
-                        {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}
-                    </span>
                 </div>
 
                 <h1 class="saas-header-title">
