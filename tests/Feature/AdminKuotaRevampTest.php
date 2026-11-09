@@ -403,4 +403,103 @@ class AdminKuotaRevampTest extends TestCase
             ]);
         }
     }
+
+    /**
+     * Memastikan badge status Dibuka / Ditutup tampil pada kolom kapasitas tabel kuota per bidang.
+     */
+    public function test_kuota_page_displays_bidang_status_badges(): void
+    {
+        $admin = $this->createAdminUser();
+        $bulan = BulanMagang::first();
+        $bidangTutup = Bidang::with('jurusan')->orderBy('id', 'desc')->first();
+
+        // Kosongkan kuota bidang terakhir agar berstatus Ditutup (0 peserta)
+        if ($bidangTutup) {
+            foreach ($bidangTutup->jurusan as $j) {
+                Kuota::updateOrCreate(
+                    ['bulan_magang_id' => $bulan->id, 'jurusan_id' => $j->id],
+                    ['jumlah' => 0, 'terisi' => 0, 'aktif' => false]
+                );
+            }
+        }
+
+        $response = $this->actingAs($admin)->get(route('admin.kuota.index', ['bulan_magang_id' => $bulan->id]));
+        $response->assertStatus(200);
+
+        // Memastikan elemen badge status bidang ada di HTML
+        $response->assertSee('badge-status-bidang-buka', false);
+        $response->assertSee('badge-status-bidang-tutup', false);
+        $response->assertSee('Dibuka', false);
+        $response->assertSee('Ditutup', false);
+        $response->assertSee('id="modalEditBidang"', false);
+        $response->assertSee('Status Penempatan Bidang', false);
+        $response->assertSee('Total Kapasitas Masuk', false);
+    }
+
+    /**
+     * Memastikan admin dapat menutup kuota bidang melalui updateBidangKuota dengan status_bidang tutup.
+     */
+    public function test_admin_can_close_bidang_kuota(): void
+    {
+        $admin = $this->createAdminUser();
+        $bulan = BulanMagang::first();
+        $bidang = Bidang::with('jurusan')->first();
+
+        // Pastikan ada kuota awal
+        foreach ($bidang->jurusan as $j) {
+            Kuota::updateOrCreate(
+                ['bulan_magang_id' => $bulan->id, 'jurusan_id' => $j->id],
+                ['jumlah' => 5, 'terisi' => 0, 'aktif' => true]
+            );
+        }
+
+        // Eksekusi penutupan bidang
+        $response = $this->actingAs($admin)->put(route('admin.kuota.bidang.update', $bidang->id), [
+            'bulan_magang_id' => $bulan->id,
+            'status_bidang' => 'tutup',
+        ]);
+
+        $response->assertSessionHas('success');
+
+        foreach ($bidang->jurusan as $j) {
+            $this->assertDatabaseHas('kuota', [
+                'bulan_magang_id' => $bulan->id,
+                'jurusan_id' => $j->id,
+                'jumlah' => 0,
+                'aktif' => false,
+            ]);
+        }
+    }
+
+    /**
+     * Memastikan admin dapat memperbarui alokasi kuota dan total kapasitas bidang melalui updateBidangKuota.
+     */
+    public function test_admin_can_update_bidang_total_capacity(): void
+    {
+        $admin = $this->createAdminUser();
+        $bulan = BulanMagang::first();
+        $bidang = Bidang::with('jurusan')->first();
+
+        $alokasiData = [];
+        foreach ($bidang->jurusan as $idx => $j) {
+            $alokasiData[$j->id] = 3 + $idx;
+        }
+
+        $response = $this->actingAs($admin)->put(route('admin.kuota.bidang.update', $bidang->id), [
+            'bulan_magang_id' => $bulan->id,
+            'status_bidang' => 'buka',
+            'alokasi' => $alokasiData,
+        ]);
+
+        $response->assertSessionHas('success');
+
+        foreach ($alokasiData as $jurusanId => $expectedJumlah) {
+            $this->assertDatabaseHas('kuota', [
+                'bulan_magang_id' => $bulan->id,
+                'jurusan_id' => $jurusanId,
+                'jumlah' => $expectedJumlah,
+                'aktif' => true,
+            ]);
+        }
+    }
 }

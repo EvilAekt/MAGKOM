@@ -1148,9 +1148,24 @@
                                     </div>
                                 </td>
 
-                                {{-- 6. Kapasitas --}}
+                                {{-- 6. Kapasitas & Status Ketersediaan Bidang --}}
                                 <td>
-                                    <span class="kapasitas-text">{{ $item['kapasitas'] }} peserta</span>
+                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                                        <div>
+                                            @if($item['kapasitas'] > 0)
+                                                <span class="badge-status-bidang-buka" style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.6875rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 9999px; background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0;">
+                                                    <span style="width: 5px; height: 5px; border-radius: 50%; background: #10B981;"></span>
+                                                    Dibuka
+                                                </span>
+                                            @else
+                                                <span class="badge-status-bidang-tutup" style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.6875rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 9999px; background: #F1F5F9; color: #64748B; border: 1px solid #CBD5E1;">
+                                                    <span style="width: 5px; height: 5px; border-radius: 50%; background: #94A3B8;"></span>
+                                                    Ditutup
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <span class="kapasitas-text">{{ $item['kapasitas'] }} peserta</span>
+                                    </div>
                                 </td>
 
                                 {{-- 7. Aksi --}}
@@ -1159,7 +1174,7 @@
                                         <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Read-Only</span>
                                     @else
                                         <button type="button" 
-                                                onclick="openEditBidangModal({{ $item['id'] }}, '{{ addslashes($item['nama']) }}', {{ json_encode($item['jurusan_list']->map(fn($j) => ['id' => $j->id, 'nama' => $j->nama_jurusan, 'jumlah' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->jumlah ?? 0, 'terisi' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->terisi ?? 0])) }})" 
+                                                onclick="openEditBidangModal({{ $item['id'] }}, '{{ addslashes($item['nama']) }}', {{ json_encode($item['jurusan_list']->map(fn($j) => ['id' => $j->id, 'nama' => $j->nama_jurusan, 'jumlah' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->jumlah ?? 0, 'terisi' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->terisi ?? 0])) }}, {{ $item['kapasitas_bimbingan'] }}, {{ $item['pembimbing_count'] }})" 
                                                 class="btn-edit-action">
                                             Ubah
                                         </button>
@@ -1648,7 +1663,7 @@
         <div class="modal-header-row">
             <div>
                 <h3 class="modal-title" id="editBidangTitle">Ubah Kuota Bidang</h3>
-                <small style="color: #64748B; font-size: 0.75rem;">Sesuaikan alokasi kursi peserta untuk kejuruan di bidang ini.</small>
+                <small style="color: #64748B; font-size: 0.75rem;">Atur status buka/tutup dan kapasitas peserta untuk bidang ini.</small>
             </div>
             <button type="button" onclick="closeEditBidangModal()" class="modal-btn-close">&times;</button>
         </div>
@@ -1656,14 +1671,85 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="bulan_magang_id" value="{{ $selectedBulan?->id }}">
+            <input type="hidden" name="status_bidang" id="inputStatusBidang" value="buka">
 
-            <div id="jurusanAllocList" style="display: flex; flex-direction: column; gap: 0.85rem; max-height: 340px; overflow-y: auto; padding-right: 0.25rem;">
-                {{-- Dinamis diisi via JavaScript --}}
+            {{-- 1. Status Kuota Penempatan Bidang (Buka / Tutup) --}}
+            <div class="form-row-group" style="margin-bottom: 1.15rem;">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.4rem;">Status Penempatan Bidang</label>
+                <div class="status-pills-group" style="display: flex; gap: 0.5rem;">
+                    <button type="button" 
+                            id="btnBidangBuka" 
+                            onclick="setStatusBidang('buka')" 
+                            class="btn-status-pill active" 
+                            style="flex: 1; height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer;">
+                        <span id="checkIconBidangBuka" style="display: inline-flex; align-items: center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </span>
+                        <span>Dibuka (Ada Kuota)</span>
+                    </button>
+                    <button type="button" 
+                            id="btnBidangTutup" 
+                            onclick="setStatusBidang('tutup')" 
+                            class="btn-status-pill" 
+                            style="flex: 1; height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer;">
+                        <span id="checkIconBidangTutup" style="display: none; align-items: center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </span>
+                        <span>Ditutup (Tanpa Kuota)</span>
+                    </button>
+                </div>
             </div>
 
-            <div class="modal-footer-btns">
+            {{-- 2. Ringkasan Total Kapasitas Masuk Bidang --}}
+            <div id="boxSummaryKapasitasBidang" style="display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
+                <div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.04em;">Total Kapasitas Masuk</div>
+                    <div style="font-size: 1.2rem; font-weight: 800; color: #0F172A; margin-top: 0.15rem;">
+                        <span id="totalKapasitasBidangDisplay">0</span> <span style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">peserta</span>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 0.725rem; color: #64748B; font-weight: 600;">Batas Kapasitas Pembimbing</div>
+                    <div style="font-size: 0.875rem; font-weight: 700; color: #334155; margin-top: 0.15rem;">
+                        Maks. <span id="maxKapasitasBimbinganDisplay">18</span> peserta
+                    </div>
+                    <div style="font-size: 0.7rem; color: #94A3B8;">(<span id="pembimbingCountDisplay">3</span> Pembimbing aktif)</div>
+                </div>
+            </div>
+
+            {{-- 3. Daftar Kejuruan yang Dibutuhkan --}}
+            <div id="wrapJurusanAllocSection">
+                <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.5rem; display: block;">Alokasi Kuota per Kejuruan</label>
+                <div id="jurusanAllocList" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 280px; overflow-y: auto; padding-right: 0.25rem;">
+                    {{-- Dinamis diisi via JavaScript --}}
+                </div>
+            </div>
+
+            {{-- 4. Keterangan saat bidang ditutup --}}
+            <div id="boxBidangTutupNotice" style="display: none; background: #FFFBEB; border: 1px solid #FCD34D; border-radius: 8px; padding: 0.85rem 1rem; color: #92400E; font-size: 0.8125rem; line-height: 1.45;">
+                <div style="font-weight: 700; margin-bottom: 0.2rem;">Penempatan Bidang Ditutup:</div>
+                Jika disimpan dalam status ditutup, kuota penempatan untuk bidang ini akan dinonaktifkan (kapasitas 0 peserta) pada bulan magang ini.
+            </div>
+
+            {{-- 5. Warning Box jika kuota melebihi kapasitas bimbingan --}}
+            <div id="boxWarningKapasitasBidang" class="box-capacity-warning" style="display: none; margin-top: 0.75rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <div>
+                    <strong>Melebihi kapasitas bimbingan!</strong> Total kuota (<span id="warnTotalKapasitas"></span> peserta) melebihi batas bimbingan pembimbing (<span id="warnMaxKapasitas"></span> peserta). Kurangi alokasi atau tambah pembimbing aktif.
+                </div>
+            </div>
+
+            <div class="modal-footer-btns" style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
                 <button type="button" onclick="closeEditBidangModal()" class="btn-outline-action">Batal</button>
-                <button type="submit" class="btn-primary-action">Simpan Perubahan</button>
+                <button type="submit" id="btnSubmitEditBidang" class="btn-primary-action">Simpan Perubahan</button>
             </div>
         </form>
     </div>
@@ -1672,7 +1758,40 @@
 <script>
     function openUbahBulanModal() {
         const modal = document.getElementById('modalUbahBulan');
-        if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+        if (modal) { 
+            modal.style.display = 'flex'; 
+            document.body.style.overflow = 'hidden'; 
+
+            // Pasang event listener untuk validasi tanggal dinamis
+            const tglBuka = document.getElementById('ubahBulanTglBuka');
+            const tglTutup = document.getElementById('ubahBulanTglTutup');
+            const tglMulai = document.getElementById('ubahBulanMulai');
+
+            if (tglBuka && tglTutup) {
+                tglBuka.addEventListener('change', function() {
+                    if (this.value) {
+                        tglTutup.min = this.value;
+                        if (tglTutup.value && tglTutup.value < this.value) {
+                            tglTutup.value = this.value;
+                        }
+                    }
+                });
+            }
+
+            if (tglTutup && tglMulai) {
+                tglTutup.addEventListener('change', function() {
+                    if (this.value) {
+                        const nextDay = new Date(this.value);
+                        nextDay.setDate(nextDay.getDate() + 1);
+                        const isoStr = nextDay.toISOString().split('T')[0];
+                        tglMulai.min = isoStr;
+                        if (tglMulai.value && tglMulai.value <= this.value) {
+                            tglMulai.value = isoStr;
+                        }
+                    }
+                });
+            }
+        }
     }
     function closeUbahBulanModal() {
         const modal = document.getElementById('modalUbahBulan');
@@ -1929,21 +2048,91 @@
         if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
     }
 
-    function openEditBidangModal(bidangId, namaBidang, jurusans) {
+    let currentBidangKapasitasMax = 18;
+    let currentBidangJurusans = [];
+
+    function setStatusBidang(status) {
+        const inputStatus = document.getElementById('inputStatusBidang');
+        const btnBuka = document.getElementById('btnBidangBuka');
+        const btnTutup = document.getElementById('btnBidangTutup');
+        const iconBuka = document.getElementById('checkIconBidangBuka');
+        const iconTutup = document.getElementById('checkIconBidangTutup');
+        const wrapAlloc = document.getElementById('wrapJurusanAllocSection');
+        const noticeTutup = document.getElementById('boxBidangTutupNotice');
+        const submitBtn = document.getElementById('btnSubmitEditBidang');
+
+        if (inputStatus) inputStatus.value = status;
+
+        if (status === 'tutup') {
+            if (btnBuka) btnBuka.classList.remove('active');
+            if (btnTutup) btnTutup.classList.add('active');
+            if (iconBuka) iconBuka.style.display = 'none';
+            if (iconTutup) iconTutup.style.display = 'inline-flex';
+            if (wrapAlloc) wrapAlloc.style.display = 'none';
+            if (noticeTutup) noticeTutup.style.display = 'block';
+            if (submitBtn) submitBtn.disabled = false;
+            const warnBox = document.getElementById('boxWarningKapasitasBidang');
+            if (warnBox) warnBox.style.display = 'none';
+            const displayTotal = document.getElementById('totalKapasitasBidangDisplay');
+            if (displayTotal) displayTotal.innerText = '0';
+        } else {
+            if (btnBuka) btnBuka.classList.add('active');
+            if (btnTutup) btnTutup.classList.remove('active');
+            if (iconBuka) iconBuka.style.display = 'inline-flex';
+            if (iconTutup) iconTutup.style.display = 'none';
+            if (wrapAlloc) wrapAlloc.style.display = 'block';
+            if (noticeTutup) noticeTutup.style.display = 'none';
+            recalcTotalKapasitasBidang();
+        }
+    }
+
+    function recalcTotalKapasitasBidang() {
+        const inputs = document.querySelectorAll('.input-kuota-jurusan');
+        let total = 0;
+        inputs.forEach(inp => {
+            total += parseInt(inp.value) || 0;
+        });
+
+        const displayTotal = document.getElementById('totalKapasitasBidangDisplay');
+        if (displayTotal) displayTotal.innerText = total;
+
+        const warnBox = document.getElementById('boxWarningKapasitasBidang');
+        const warnTotal = document.getElementById('warnTotalKapasitas');
+        const warnMax = document.getElementById('warnMaxKapasitas');
+
+        if (total > currentBidangKapasitasMax) {
+            if (warnBox) warnBox.style.display = 'flex';
+            if (warnTotal) warnTotal.innerText = total;
+            if (warnMax) warnMax.innerText = currentBidangKapasitasMax;
+        } else {
+            if (warnBox) warnBox.style.display = 'none';
+        }
+    }
+
+    function openEditBidangModal(bidangId, namaBidang, jurusans, kapasitasBimbingan, pembimbingCount) {
         const modal = document.getElementById('modalEditBidang');
         const form = document.getElementById('formEditBidang');
         const title = document.getElementById('editBidangTitle');
         const listWrap = document.getElementById('jurusanAllocList');
+        const maxDisplay = document.getElementById('maxKapasitasBimbinganDisplay');
+        const countDisplay = document.getElementById('pembimbingCountDisplay');
 
+        currentBidangKapasitasMax = kapasitasBimbingan || 18;
+        currentBidangJurusans = jurusans || [];
+
+        if (maxDisplay) maxDisplay.innerText = currentBidangKapasitasMax;
+        if (countDisplay) countDisplay.innerText = pembimbingCount || 2;
         if (title) title.innerText = 'Ubah Kuota: ' + namaBidang;
         if (form) form.action = '/admin/kuota/bidang/' + bidangId;
 
+        let totalAwal = 0;
         if (listWrap) {
             listWrap.innerHTML = '';
             if (!jurusans || jurusans.length === 0) {
                 listWrap.innerHTML = '<p style="color: #64748B; font-size: 0.85rem; text-align: center; padding: 1.5rem 0;">Belum ada kejuruan terikat di bidang ini.</p>';
             } else {
                 jurusans.forEach(j => {
+                    totalAwal += (parseInt(j.jumlah) || 0);
                     const row = document.createElement('div');
                     row.style = 'display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.65rem 0.85rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px;';
                     row.innerHTML = `
@@ -1955,9 +2144,11 @@
                             <label style="font-size: 0.75rem; color: #475569; font-weight: 600;">Kuota:</label>
                             <input type="number" 
                                    name="alokasi[${j.id}]" 
+                                   class="input-kuota-jurusan"
                                    value="${j.jumlah}" 
                                    min="${j.terisi}" 
                                    max="100" 
+                                   oninput="recalcTotalKapasitasBidang()"
                                    required 
                                    style="width: 75px; height: 36px; padding: 0 0.5rem; text-align: center; font-weight: 700; border: 1px solid #CBD5E1; border-radius: 6px;">
                         </div>
@@ -1965,6 +2156,13 @@
                     listWrap.appendChild(row);
                 });
             }
+        }
+
+        // Tentukan status awal: jika totalAwal > 0 maka 'buka', jika 0 maka 'tutup'
+        if (totalAwal > 0) {
+            setStatusBidang('buka');
+        } else {
+            setStatusBidang('tutup');
         }
 
         if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }

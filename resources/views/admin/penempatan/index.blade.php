@@ -1073,12 +1073,12 @@
                                         </div>
                                         <div style="margin-top: 0.25rem;">
                                             @if($p->slotKhusus)
-                                                <span style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">
-                                                    Jalur Khusus: {{ $p->slotKhusus->nama_mitra }}
+                                                <span style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-500, #64748B);" title="{{ $p->slotKhusus->nama_mitra ? 'Mitra: '.$p->slotKhusus->nama_mitra : 'Jalur Khusus' }}">
+                                                    Khusus
                                                 </span>
                                             @else
-                                                <span style="font-size: 0.7rem; font-weight: 600; color: var(--neutral-500, #64748B);">
-                                                    Jalur Reguler (Kuota Umum)
+                                                <span style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-500, #64748B);">
+                                                    Umum
                                                 </span>
                                             @endif
                                         </div>
@@ -1614,57 +1614,43 @@
 
 {{-- MODAL PENETAPAN PEMBIMBING & BIDANG (TAHAP 2) --}}
 <div id="modal-tetapkan-penempatan" class="modal-overlay">
-    <div class="modal-container" style="max-width: 580px;">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: center; background: #F8FAFC;">
+    <div class="modal-container" style="max-width: 480px; border-radius: 14px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);">
+        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); display: flex; justify-content: space-between; align-items: flex-start; background: #FFFFFF;">
             <div>
-                <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">Penetapan Penempatan Peserta</h3>
-                <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 0.15rem 0 0 0;" id="tetapkan-peserta-info">
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: #0F172A; margin: 0; letter-spacing: -0.01em;">Penetapan Penempatan</h3>
+                <p style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0; font-weight: 500;" id="tetapkan-peserta-info">
                     Peserta: -
                 </p>
             </div>
-            <button type="button" onclick="closeTetapkanModal()" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
+            <button type="button" onclick="closeTetapkanModal()" style="background: transparent; border: none; font-size: 1.25rem; color: #94A3B8; cursor: pointer; padding: 0.25rem; line-height: 1;" title="Tutup">✕</button>
         </div>
 
         <form method="POST" id="form-tetapkan-penempatan" action="{{ route('admin.penempatan.tetapkan') }}" style="padding: 1.5rem;">
             @csrf
             <input type="hidden" name="pendaftaran_id" id="tetapkan-pendaftaran-id" value="">
-
-            <div style="background: #EFF6FF; border: 1px solid #DBEAFE; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.8125rem; color: #1E40AF; line-height: 1.45;">
-                <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    <div>
-                        <strong>Penetapan Pembimbing Magang:</strong> Bidang dinas telah otomatis terhubung dari pilihan jurusan peserta saat registrasi. Silakan tentukan Pembimbing Lapangan yang akan membimbing peserta ini.
-                    </div>
-                </div>
-            </div>
-
-            {{-- Hidden input bidang_id otomatis dari pendaftaran --}}
             <input type="hidden" name="bidang_id" id="tetapkan-bidang-id" value="">
 
-            {{-- Unit Bidang Dinas Terhubung (Read-only Informational Card) --}}
-            <div style="display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.25rem;">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Unit Bidang Dinas (Otomatis dari Registrasi)</label>
-                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: var(--neutral-50, #F8FAFC); border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 8px;">
-                    <div style="width: 32px; height: 32px; border-radius: 6px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect width="18" height="14" x="3" y="7" rx="2"></rect>
-                            <path d="M9 5h6"></path>
-                            <path d="M12 2v3"></path>
+            {{-- Bidang Dinas --}}
+            <div style="display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.25rem;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.04em;">Bidang Dinas</label>
+                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px;">
+                    <div style="width: 32px; height: 32px; border-radius: 8px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                            <path d="M3 9h18"></path>
+                            <path d="M9 21V9"></path>
                         </svg>
                     </div>
-                    <div>
-                        <div id="tetapkan-bidang-display" style="font-weight: 700; font-size: 0.875rem; color: var(--neutral-900, #0F172A);">
-                            Dinas Komunikasi dan Informatika
-                        </div>
-                        <small style="font-size: 0.725rem; color: var(--neutral-500, #64748B);">Terhubung langsung dengan kuota jurusan pilihan pendaftar.</small>
+                    <div id="tetapkan-bidang-display" style="font-weight: 700; font-size: 0.875rem; color: #0F172A; line-height: 1.35;">
+                        Dinas Komunikasi dan Informatika
                     </div>
                 </div>
             </div>
 
             {{-- Pembimbing Lapangan --}}
-            <div style="display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.5rem;">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Pembimbing Lapangan <span style="color: #DC2626;">*</span></label>
-                <select name="pembimbing_id" id="select-tetapkan-pembimbing" required style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+            <div style="display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.5rem;">
+                <label for="select-tetapkan-pembimbing" style="font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.04em;">Pembimbing Lapangan <span style="color: #DC2626;">*</span></label>
+                <select name="pembimbing_id" id="select-tetapkan-pembimbing" required style="height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #FFFFFF; color: #0F172A; width: 100%;">
                     <option value="">-- Pilih Pembimbing Dinas --</option>
                     @foreach($pembimbingList as $p)
                         <option value="{{ $p->id }}" data-bidang-id="{{ $p->bidang_id ?? '' }}">
@@ -1672,15 +1658,14 @@
                         </option>
                     @endforeach
                 </select>
-                <small style="font-size: 0.725rem; color: var(--neutral-500, #64748B);">Daftar pembimbing lapangan dilengkapi dengan asal bidang dan beban mentee aktif saat ini.</small>
             </div>
 
-            <div style="display: flex; justify-content: flex-end; gap: 0.6rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1.25rem;">
-                <button type="button" onclick="closeTetapkanModal()" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+            <div style="display: flex; justify-content: flex-end; gap: 0.65rem; border-top: 1px solid #E2E8F0; padding-top: 1.25rem;">
+                <button type="button" onclick="closeTetapkanModal()" style="padding: 0.55rem 1.15rem; background: #FFFFFF; border: 1px solid #CBD5E1; color: #475569; border-radius: 8px; font-weight: 600; font-size: 0.8125rem; cursor: pointer; transition: all 0.15s ease;">
                     Batal
                 </button>
-                <button type="submit" style="padding: 0.55rem 1.4rem; background: #0641CC; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);">
-                    Tetapkan Pembimbing &amp; Aktifkan
+                <button type="submit" style="padding: 0.55rem 1.35rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
+                    Tetapkan Pembimbing
                 </button>
             </div>
         </form>
