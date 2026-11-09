@@ -44,7 +44,7 @@ class ArsipPesertaController extends Controller
             $query->where('status', $request->input('status'));
         }
 
-        $arsipList = $query->paginate(15)->withQueryString();
+        $arsipList = $query->paginate(10)->withQueryString();
 
         $driver = DB::connection()->getDriverName();
         $yearExpr = $driver === 'sqlite' ? 'strftime("%Y", tgl_selesai)' : 'YEAR(tgl_selesai)';
@@ -56,9 +56,25 @@ class ArsipPesertaController extends Controller
             ->pluck('tahun')
             ->filter();
 
+        // Agregasi 4 Metrik Kartu Statistik Tile-Stat (DS-MagKom Parity)
+        $arsipBaseQuery = Penempatan::whereIn('status', [
+            StatusPenempatanEnum::Selesai,
+            StatusPenempatanEnum::Nonaktif,
+            StatusPenempatanEnum::MengundurkanDiri,
+        ]);
+
+        $totalArsip = (clone $arsipBaseQuery)->count();
+        $totalSelesai = (clone $arsipBaseQuery)->where('status', StatusPenempatanEnum::Selesai)->count();
+        $totalNonaktif = (clone $arsipBaseQuery)->where('status', StatusPenempatanEnum::Nonaktif)->count();
+        $totalMengundurkanDiri = (clone $arsipBaseQuery)->where('status', StatusPenempatanEnum::MengundurkanDiri)->count();
+
         return view('superadmin.arsip.index', [
             'arsipList' => $arsipList,
             'tahunList' => $tahunList,
+            'totalArsip' => $totalArsip,
+            'totalSelesai' => $totalSelesai,
+            'totalNonaktif' => $totalNonaktif,
+            'totalMengundurkanDiri' => $totalMengundurkanDiri,
         ]);
     }
 
@@ -75,7 +91,7 @@ class ArsipPesertaController extends Controller
             'slotKhusus',
             'tugas.progresLogs',
             'logbooks',
-            'pendaftaran.dokumen',
+            'pendaftaran.dokumen.jenisDokumen',
         ]);
 
         app(AuditService::class)->catat(
