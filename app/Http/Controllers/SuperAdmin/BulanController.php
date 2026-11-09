@@ -26,7 +26,7 @@ class BulanController extends Controller
 
     public function index(): View
     {
-        $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->paginate(12);
+        $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->paginate(10)->withQueryString();
 
         $totalBulan = BulanMagang::count();
         $totalAktif = BulanMagang::where('aktif', true)->count();

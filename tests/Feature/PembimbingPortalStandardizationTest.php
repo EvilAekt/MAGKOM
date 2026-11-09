@@ -175,44 +175,102 @@ class PembimbingPortalStandardizationTest extends TestCase
         $response->assertDontSee('Peserta Rahasia Lain');
     }
 
-    public function test_pembimbing_peserta_show_menggunakan_desain_classroom_banner_tanpa_status_penilaian(): void
+    public function test_pembimbing_peserta_show_menggunakan_desain_mockup_modern_tanpa_status_penilaian(): void
     {
         $response = $this->actingAs($this->pembimbing)
             ->get(route('pembimbing.peserta.show', $this->penempatan->id));
 
         $response->assertOk();
 
-        // 1. Topbar Title & Classroom Navy Banner & Tombol Kembali
+        // 1. Topbar Title & Strip Bar Tanggal & Tombol Kembali
         $response->assertSee('class="topbar-title"', false);
+        $response->assertSee('Profil Peserta Bimbingan');
         $response->assertDontSee('class="breadcrumb-trail"', false);
-        $response->assertSee('class="classroom-banner"', false);
-        $response->assertSee('Profil 360° Mentee Bimbingan');
-        $response->assertSee('class="btn-banner-back"', false);
-        $response->assertSee('Kembali ke Direktori');
+        $response->assertSee('class="mentee-date-action-bar"', false);
+        $response->assertSee('date-pill-amber');
+        $response->assertSee('btn-back-navy');
+        $response->assertSee('Kembali');
 
-        // 2. Mentee Hero Card
+        // 2. Mentee Hero Card (Adaptasi Kontekstual Peserta SMK)
         $response->assertSee('class="mentee-hero-card"', false);
-        $response->assertSee('Logbook Mentee');
-        $response->assertSee('Tugas Mentee');
+        $response->assertSee('mentee-avatar-gold-ring');
+        $response->assertSee('btn-pill-logbook');
+        $response->assertSee('btn-pill-tugas');
+        $response->assertSee('DATA PESERTA');
+        $response->assertSee('SMK Negeri 2 Depok Sleman');
+        $response->assertSee('Naufal Pratama');
+        $response->assertSee('KOMPETENSI KEAHLIAN');
+        $response->assertSee('NISN');
+        $response->assertDontSee('Data guru pembimbing sekolah belum diisi.');
+        $response->assertDontSee('Data dosen dan kampus belum diisi.');
+        $response->assertSee('peserta-show');
 
         // 3. Status Penilaian telah dihapus sepenuhnya
         $response->assertDontSee('STATUS PENILAIAN');
         $response->assertDontSee('Status Penilaian');
         $response->assertDontSee('Berdasarkan 5 kriteria rubrik');
 
-        // 4. Dua Widget KPI Utama
-        $response->assertSee('class="mentee-kpi-grid"', false);
-        $response->assertSee('Penyelesaian Tugas');
-        $response->assertSee('Kedisiplinan Logbook');
+        // 4. Tiga Kartu KPI Ringkasan & Legenda Donut Kapsul Progres Tugas
+        $response->assertSee('class="mentee-kpi-summary-grid"', false);
+        $response->assertSee('PROGRES TUGAS');
+        $response->assertSee('donut-legend-pill', false);
+        $response->assertSee('dot-selesai');
+        $response->assertSee('dot-dikerjakan');
+        $response->assertSee('dot-belum');
+        $response->assertSee('PERIODE MAGANG');
+        $response->assertSee('class="periode-progress-fill"', false);
+        $response->assertSee('style="width: 11%;"', false);
+        $response->assertDontSee('style="width: 0%;"');
+        $response->assertSee('LOGBOOK');
 
-        // 5. Analitik & Data Diri
-        $response->assertSee('Komposisi &amp; Rasio Tugas Peserta', false);
-        $response->assertSee('Pelacakan Mingguan Logbook Magang');
-        $response->assertSee('Data Pribadi &amp; Kontak Akademik', false);
-        $response->assertSee('Timeline Periode &amp; Ketentuan Akun', false);
+        // 5. Riwayat Penugasan Kanban Board
         $response->assertSee('Riwayat Penugasan');
+        $response->assertSee('Kelola Tugas');
+        $response->assertSee('kanban-columns-grid');
 
         // 6. Stylesheet peserta-show dimuat via Vite
         $response->assertSee('peserta-show', false);
+    }
+
+    public function test_pembimbing_peserta_show_menyesuaikan_label_dan_catatan_untuk_mahasiswa_perguruan_tinggi(): void
+    {
+        $mahasiswaUser = User::factory()->create([
+            'nama' => 'Aditya Pratama',
+            'email' => 'aditya@kampus.ac.id',
+            'role' => RoleEnum::Peserta,
+        ]);
+
+        PesertaProfil::create([
+            'user_id' => $mahasiswaUser->id,
+            'jurusan_id' => $this->jurusan->id,
+            'jenjang' => JenjangEnum::S1,
+            'institusi' => 'Universitas Gadjah Mada',
+            'nim_nisn' => '21/473829/TK/52100',
+            'no_hp' => '081234567888',
+            'nama_pembimbing_sekolah' => 'Dr. Eng. Ir. Supriyanto, M.T.',
+        ]);
+
+        $penempatanMhs = Penempatan::create([
+            'peserta_id' => $mahasiswaUser->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'bidang_id' => $this->bidang->id,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'status' => StatusPenempatanEnum::Aktif,
+            'tgl_mulai' => now()->subDays(5),
+            'tgl_selesai' => now()->addDays(85),
+        ]);
+
+        $response = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.peserta.show', $penempatanMhs->id));
+
+        $response->assertOk();
+        $response->assertSee('Aditya Pratama');
+        $response->assertSee('Universitas Gadjah Mada');
+        $response->assertSee('PROGRAM STUDI');
+        $response->assertSee('NIM');
+        $response->assertSee('Dosen Pembimbing: Dr. Eng. Ir. Supriyanto, M.T.');
+        $response->assertDontSee('KOMPETENSI KEAHLIAN');
+        $response->assertDontSee('Data guru pembimbing sekolah belum diisi.');
     }
 }

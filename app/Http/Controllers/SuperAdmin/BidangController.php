@@ -28,7 +28,7 @@ class BidangController extends Controller
      */
     public function index(): View
     {
-        $bidangList = Bidang::withCount('users')->orderBy('nama_bidang', 'asc')->paginate(20);
+        $bidangList = Bidang::withCount('users')->orderBy('nama_bidang', 'asc')->paginate(10)->withQueryString();
 
         $totalBidang = Bidang::count();
         $bidangAktif = Bidang::where('aktif', true)->count();

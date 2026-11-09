@@ -30,6 +30,12 @@ class Kernel extends ConsoleKernel
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
 
+        // Cadangan basis data harian otomatis (Disaster Recovery & SEC-03)
+        $schedule->command('magkom:backup-database --clean-old')
+            ->dailyAt('02:00')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
+
         // Pembersihan keamanan berkala & higienitas sistem (PRD 8.4, 10.3)
         $schedule->command('magkom:security-sweep')
             ->dailyAt('03:00')

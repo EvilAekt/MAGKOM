@@ -114,10 +114,6 @@
                     <x-sa.icon name="user-plus" :size="14" />
                     <span>Kelola Penempatan Peserta &rarr;</span>
                 </a>
-                <a href="{{ route('superadmin.monitoring.index') }}" class="sa-link">
-                    <x-sa.icon name="activity" :size="14" />
-                    <span>Monitoring Peserta &rarr;</span>
-                </a>
             </div>
         </div>
     </div>
@@ -216,7 +212,7 @@
 </x-sa.panel>
 
 {{-- PELACAK PESERTA MENDEKATI BATAS SELESAI (OFF-BOARDING TRACKER <= 14 HARI) --}}
-<x-sa.panel title="Pelacak Penyelesaian Magang Terdekat<span class='sr-only'> Pelacak Penyelesaian Magang Terdekat (Off-boarding Tracker)</span>" :href="route('superadmin.monitoring.index')" linkText="Lihat Semua Peserta Aktif &rarr;">
+<x-sa.panel title="Pelacak Penyelesaian Magang Terdekat<span class='sr-only'> Pelacak Penyelesaian Magang Terdekat (Off-boarding Tracker)</span>" :href="route('admin.penempatan.index')" linkText="Kelola Penempatan &rarr;">
     @if($pesertaMendekatiSelesai->isEmpty())
         <x-sa.empty text="Tidak ada peserta yang mendekati akhir masa magang dalam 14 hari ke depan." icon="calendar" />
     @else

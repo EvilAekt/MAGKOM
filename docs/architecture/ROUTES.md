@@ -188,7 +188,6 @@ graph LR
 | Method | URI | Controller / Action | Layout View | Data Source / Model |
 | :--- | :--- | :--- | :--- | :--- |
 | `GET` | `/superadmin/dashboard` | `SuperAdmin\DashboardController@index`| `layouts.dashboard` | `SuperAdminExecutiveMetricsService`|
-| `GET` | `/superadmin/monitoring-peserta`| `SuperAdmin\MonitoringPesertaController@index`| `layouts.dashboard`| Realtime placement tracking |
 | `GET` | `/superadmin/bulan` | `SuperAdmin\BulanController@index` | `layouts.dashboard` | `BulanMagang` |
 | `GET` | `/superadmin/slot-khusus` | `SuperAdmin\SlotKhususController@index`| `layouts.dashboard` | `SlotKhusus` |
 | `GET` | `/superadmin/staf` | `SuperAdmin\StafController@index` | `layouts.dashboard` | `User` (role != peserta) |

@@ -31,7 +31,8 @@ class JurusanController extends Controller
     {
         $jurusanList = Jurusan::orderBy('kategori', 'asc')
             ->orderBy('nama_jurusan', 'asc')
-            ->paginate(20);
+            ->paginate(10)
+            ->withQueryString();
 
         $totalJurusan = Jurusan::count();
         $jurusanMahasiswa = Jurusan::where('kategori', 'mahasiswa')->count();

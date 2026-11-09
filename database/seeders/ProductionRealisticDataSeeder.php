@@ -385,9 +385,14 @@ class ProductionRealisticDataSeeder extends Seeder
             return $user;
         };
 
-        // Helper untuk melampirkan berkas pendaftaran
-        $jenisDokumenList = JenisDokumen::all();
-        $lampirkanBerkas = function (Pendaftaran $pendaftaran) use ($jenisDokumenList) {
+        // Helper untuk melampirkan berkas pendaftaran sesuai jenjang peserta
+        $lampirkanBerkas = function (Pendaftaran $pendaftaran, ?JenjangEnum $jenjang = null) {
+            $query = JenisDokumen::where('aktif', true);
+            if ($jenjang) {
+                $query->where('jenjang', $jenjang->value);
+            }
+            $jenisDokumenList = $query->get();
+
             foreach ($jenisDokumenList as $jd) {
                 Dokumen::updateOrCreate(
                     ['pendaftaran_id' => $pendaftaran->id, 'jenis_dokumen_id' => $jd->id],
@@ -440,7 +445,7 @@ class ProductionRealisticDataSeeder extends Seeder
                     'catatan' => 'Berkas pendaftaran terverifikasi lengkap. Diterima pada '.$bidang->nama_bidang.'.',
                 ]
             );
-            $lampirkanBerkas($reg);
+            $lampirkanBerkas($reg, $jenjang);
 
             $penempatan = Penempatan::updateOrCreate(
                 ['peserta_id' => $user->id],
@@ -552,7 +557,7 @@ class ProductionRealisticDataSeeder extends Seeder
                     'catatan' => 'Lolos verifikasi berkas magang periode '.$bulanNovember->nama_bulan.'. Ditempatkan pada '.$bidang->nama_bidang.'.',
                 ]
             );
-            $lampirkanBerkas($reg);
+            $lampirkanBerkas($reg, $jenjang);
 
             $penempatan = Penempatan::updateOrCreate(
                 ['peserta_id' => $user->id],
@@ -764,7 +769,7 @@ class ProductionRealisticDataSeeder extends Seeder
                 ]
             );
 
-            $lampirkanBerkas($reg);
+            $lampirkanBerkas($reg, $jenjang);
         }
 
         // =========================================================================

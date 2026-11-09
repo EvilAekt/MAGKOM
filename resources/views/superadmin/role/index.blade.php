@@ -169,10 +169,13 @@
                                     'keamanan.audit-trail',
                                     'staf.manajemen',
                                     'konfigurasi.parameter',
+                                    'sistem.cadangan-database',
+                                    'sistem.telemetri-kesehatan',
                                 ], true);
                             @endphp
                             <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-300);">
                                 <td>
+                                    <input type="hidden" name="page_permission_ids[]" value="{{ $permission->id }}">
                                     <div class="sa-permission-title">
                                         <span>{{ $permission->nama_modul }}</span>
                                         <span class="badge-module-category">{{ $permission->kategori }}</span>
@@ -244,6 +247,12 @@
                     </tbody>
                 </table>
             </div>
+
+            @if($permissions->total() > 0)
+                <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200); background: var(--neutral-100);">
+                    {{ $permissions->links() }}
+                </div>
+            @endif
 
             <div class="sa-matrix-footer">
                 <div style="font-size: 0.8125rem; color: var(--neutral-600);">

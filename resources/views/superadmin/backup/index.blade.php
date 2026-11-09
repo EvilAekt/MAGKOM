@@ -1,247 +1,226 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Hub Cadangan Basis Data (Disaster Recovery) - SuperAdmin MagKom')
+@section('title', 'Pusat Cadangan Basis Data - SuperAdmin MagKom')
+@section('topbar_title', 'Pusat Cadangan & Pemulihan Basis Data')
+
+@section('breadcrumbs')
+    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">Cadangan Basis Data</span>
+@endsection
+
+@push('styles')
+    @vite(['resources/css/pages/superadmin/superadmin-common.css'])
+@endpush
 
 @section('content')
-<div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%; margin: 0;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <style>
-        .backup-stat-card {
-            background: var(--neutral-0, #ffffff);
-            border-radius: 14px;
-            border: 1px solid var(--neutral-200, #E2E8F0);
-            padding: 1.25rem 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .backup-container {
-            background: var(--neutral-0, #ffffff);
-            border: 1px solid var(--neutral-200, #E2E8F0);
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .backup-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.875rem;
-        }
-        .backup-table th {
-            background: var(--table-header-bg, #F1F5F9);
-            padding: 0.85rem 1.25rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--table-header-color, #1E293B);
-            border-bottom: 2px solid var(--table-header-border, #CBD5E1);
-        }
-        .backup-table td {
-            padding: 0.95rem 1.25rem;
-            border-bottom: 1px solid var(--table-row-border, #EEF0F5);
-            vertical-align: middle;
-            color: var(--table-text-primary, #05070B);
-        }
-        .backup-table tr:hover {
-            background: var(--table-row-hover, rgba(1, 52, 124, 0.04));
-        }
-        [data-theme="dark"] .backup-stat-card {
-            background: var(--neutral-0, #182234) !important;
-            border-color: var(--neutral-200, #26354D) !important;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
-        }
-        [data-theme="dark"] .backup-stat-card span {
-            color: var(--neutral-400, #94A3B8);
-        }
-        [data-theme="dark"] .backup-container {
-            background: var(--neutral-0, #182234) !important;
-            border-color: var(--neutral-200, #26354D) !important;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
-        }
-        [data-theme="dark"] .backup-table th {
-            background: var(--table-header-bg, #012758) !important;
-            color: var(--table-header-color, #FFFFFF) !important;
-            border-bottom-color: var(--table-header-border, #3F51B5) !important;
-        }
-        [data-theme="dark"] .backup-table td {
-            color: var(--table-text-primary, #FFFFFF) !important;
-            border-bottom-color: var(--table-row-border, rgba(63, 81, 181, 0.28)) !important;
-        }
-        [data-theme="dark"] .backup-table tr:hover {
-            background: var(--table-row-hover, rgba(63, 81, 181, 0.18)) !important;
-        }
-        [data-theme="dark"] .backup-checksum-badge {
-            background: var(--neutral-100, #0F172A) !important;
-            color: var(--neutral-400, #94A3B8) !important;
-            border-color: var(--neutral-200, #26354D) !important;
-        }
-        [data-theme="dark"] .backup-btn-delete {
-            background: var(--neutral-100, #0F172A) !important;
-            color: #F87171 !important;
-            border-color: rgba(220, 38, 38, 0.35) !important;
-        }
-        [data-theme="dark"] a[href*="health"] {
-            background-color: #111C2E !important;
-            border-color: #26354D !important;
-            color: #94A3B8 !important;
-        }
-        [data-theme="dark"] h1,
-        [data-theme="dark"] .backup-stat-card strong {
-            color: #F8FAFC !important;
-        }
-        [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200"] {
-            border-bottom-color: #26354D !important;
-        }
-    </style>
-
-    {{-- 1. HEADER & BREADCRUMB --}}
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0); padding-bottom: 1rem;">
-        <div>
-            <nav style="font-size: 0.8rem; color: var(--neutral-500, #64748B); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-                <a href="{{ route('superadmin.dashboard') }}" style="color: var(--neutral-600, #475569); text-decoration: none;">Dashboard SuperAdmin</a>
-                <span>/</span>
-                <span style="color: var(--neutral-900, #0F172A); font-weight: 600;">Disaster Recovery Hub</span>
-            </nav>
-            <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-                <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; letter-spacing: -0.02em;">
-                    Pusat Cadangan & Pemulihan Basis Data
-                </h1>
-                <span style="display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 700; background: #FEF3C7; color: #92400E; text-transform: uppercase; letter-spacing: 0.04em;">
-                    SEC-03 SuperAdmin Only
-                </span>
-            </div>
-            <p style="font-size: 0.85rem; color: var(--neutral-600, #475569); margin: 0.3rem 0 0 0;">
-                Pembuatan snapshot cadangan basis data terisolasi dan verifikasi integritas checksum forensik SHA-256.
-            </p>
-        </div>
-
-        <div style="display: flex; gap: 0.75rem; align-items: center;">
-            <a href="{{ route('superadmin.health.index') }}" style="height: 38px; padding: 0 1rem; background: #ffffff; color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                <span>Telemetri Sistem</span>
-            </a>
-
-            <form method="POST" action="{{ route('superadmin.backup.snapshot') }}" onsubmit="return confirm('Picu pembuatan snapshot database baru sekarang?')">
-                @csrf
-                <button type="submit" style="height: 38px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 2px 6px rgba(6, 65, 204, 0.25);">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
-                    <span>Buat Snapshot Baru</span>
-                </button>
-            </form>
-        </div>
-    </div>
-
-
-
-    {{-- 2. METRIK KPI --}}
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
-        <x-gentelella.card style="border-left: 4px solid #0641CC;">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <div>
-                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--neutral-600, #475569); display: block; margin-bottom: 0.25rem;">Total Snapshot Tersedia</span>
-                    <span style="font-size: 1.85rem; font-weight: 800; color: #0641CC;">{{ number_format($totalBackups) }}</span>
-                    <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); display: block; margin-top: 0.25rem;">Berkas cadangan valid</span>
-                </div>
-                <div style="width: 46px; height: 46px; border-radius: 10px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center;">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+    {{-- 1. Hero Banner Khas Sleman MagKom (Identik dengan Master Bidang) --}}
+    <div class="sa-hero-banner">
+        <div class="banner-top-row">
+            <div>
+                <h1 class="banner-title">Pusat Cadangan Basis Data (Disaster Recovery)</h1>
+                <div class="banner-subtitle">
+                    <span>Cakupan: <strong>Enkapsulasi & Pemulihan Sistem</strong></span>
+                    <span class="bullet-separator">&bull;</span>
+                    <span>Total Snapshot: <strong>{{ $totalBackups }} Arsip Tersedia</strong></span>
+                    <span class="bullet-separator">&bull;</span>
+                    <span>Status: <strong>SEC-03 SuperAdmin Only</strong></span>
                 </div>
             </div>
-        </x-gentelella.card>
-
-        <x-gentelella.card style="border-left: 4px solid #10B981;">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <div>
-                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--neutral-600, #475569); display: block; margin-bottom: 0.25rem;">Total Ukuran Berkas</span>
-                    <span style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900, #0F172A);">{{ $totalSizeMb }} MB</span>
-                    <span style="font-size: 0.75rem; color: #166534; display: block; margin-top: 0.25rem;">Tersimpan di storage lokal</span>
-                </div>
-                <div style="width: 46px; height: 46px; border-radius: 10px; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center;">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                </div>
-            </div>
-        </x-gentelella.card>
-    </div>
-
-    {{-- 3. TABEL DAFTAR BACKUP --}}
-    <x-gentelella.card
-        title="Daftar Snapshot Cadangan Basis Data"
-        subtitle="Arsip cadangan data magang Kominfo dengan validasi integritas checksum SHA-256."
-    >
-        <x-slot:icon>
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-primary">
-                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
-            </svg>
-        </x-slot:icon>
-
-        @if($backupFiles->isEmpty())
-            <div style="padding: 3.5rem 1.5rem; text-align: center; color: var(--neutral-600, #475569);">
-                <div style="width: 48px; height: 48px; border-radius: 50%; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-                </div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin: 0 0 0.25rem 0;">Belum Ada Snapshot Cadangan</h3>
-                <p style="font-size: 0.825rem; margin: 0 0 1rem 0;">Buat snapshot pertama basis data untuk menjamin keamanan pemulihan bencana.</p>
-                <form method="POST" action="{{ route('superadmin.backup.snapshot') }}" style="display: inline-block;">
+            <div class="banner-actions-group">
+                <a href="{{ route('superadmin.health.index') }}" class="btn-banner-action" style="background: rgba(255, 255, 255, 0.15); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.25);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    <span>Telemetri Sistem</span>
+                </a>
+                <form method="POST" action="{{ route('superadmin.backup.snapshot') }}" style="display: inline-block;" onsubmit="return confirm('Picu pembuatan snapshot basis data baru sekarang? Proses akan berjalan dengan kompresi Gzip.')">
                     @csrf
-                    <button type="submit" style="height: 36px; padding: 0 1rem; background: #0641CC; color: #ffffff; border: none; border-radius: 6px; font-size: 0.825rem; font-weight: 700; cursor: pointer;">
-                        + Buat Snapshot Sekarang
+                    <button type="submit" class="btn-banner-action">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Buat Snapshot Baru</span>
                     </button>
                 </form>
             </div>
+        </div>
+    </div>
+
+    {{-- ALERT NOTIFIKASI STATUS OPERASIONAL --}}
+    @if(session('success'))
+        <div style="padding: 1rem 1.25rem; border-radius: 10px; background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+    @if(session('error'))
+        <div style="padding: 1rem 1.25rem; border-radius: 10px; background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+
+    {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat (Identik dengan Master Bidang) --}}
+    <div class="tiles-grid">
+        <!-- 1. Total Snapshot -->
+        <x-gentelella.tile-stat
+            title="TOTAL SNAPSHOT"
+            value="{{ $totalBackups }}"
+            color="blue"
+            trendType="info"
+            trendDirection="up"
+            trendText="Arsip"
+            subText="Maksimal retensi 10 arsip cadangan"
+            :sparkBars="[30, 45, 60, 75, 85, 95]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 2. Ukuran Arsip Terkompresi -->
+        <x-gentelella.tile-stat
+            title="UKURAN ARSIP"
+            value="{{ $totalSizeMb }} MB"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="Gzip"
+            subText="Tersimpan di storage lokal privat"
+            :sparkBars="[25, 40, 55, 70, 80, 90]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 3. Ruang Bebas Partisi Disk -->
+        <x-gentelella.tile-stat
+            title="RUANG BEBAS DISK"
+            value="{{ number_format($diskTelemetry['free_disk_mb']) }} MB"
+            color="{{ $diskTelemetry['is_disk_low'] ? 'red' : 'amber' }}"
+            trendType="{{ $diskTelemetry['is_disk_low'] ? 'danger' : 'warning' }}"
+            trendDirection="up"
+            trendText="{{ $diskTelemetry['is_disk_low'] ? 'Kritis' : 'Aman' }}"
+            subText="{{ $diskTelemetry['is_disk_low'] ? 'Kapasitas sisa < 500 MB' : 'Kapasitas aman pencadangan' }}"
+            :sparkBars="[20, 35, 50, 65, 80, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                    <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                    <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                    <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 4. Format Enkapsulasi -->
+        <x-gentelella.tile-stat
+            title="FORMAT ENKAPSULASI"
+            value="Gzip .gz"
+            color="purple"
+            trendType="info"
+            trendDirection="up"
+            trendText="85% Hemat"
+            subText="Kompresi stream level 9 on-the-fly"
+            :sparkBars="[15, 25, 40, 55, 70, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+    </div>
+
+    {{-- 3. Data Table Panel Mengadopsi Gentelella X-Panel (Identik dengan Master Bidang) --}}
+    <x-gentelella.x-panel class="has-table" title="Daftar Snapshot Cadangan Basis Data">
+        @if($backupFiles->isEmpty())
+            <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
+                <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                </div>
+                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada arsip cadangan basis data.</p>
+                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Buat Snapshot Baru</strong> untuk mencadangkan database sekarang.</p>
+            </div>
         @else
-            <div style="overflow-x: auto; margin: -10px -20px -20px -20px;">
-                <table class="backup-table">
+            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
-                        <tr>
+                        <tr class="headings">
                             <th>Nama Berkas Snapshot</th>
+                            <th style="width: 130px; text-align: center;">Format</th>
                             <th>Waktu Pembuatan</th>
                             <th>Ukuran Berkas</th>
                             <th>Integritas Checksum (SHA-256)</th>
-                            <th style="text-align: right;">Aksi</th>
+                            <th style="text-align: right; width: 180px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($backupFiles as $item)
-                            <tr>
-                                <td>
-                                    <div style="font-weight: 700; color: #0641CC; font-family: monospace;">{{ $item['filename'] }}</div>
+                            <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
+                                <td style="padding: 1rem 1.25rem; font-weight: 700; color: var(--neutral-900); white-space: nowrap;">
+                                    <div style="font-size: 0.875rem; font-family: monospace; color: #01347C;">
+                                        {{ $item['filename'] }}
+                                    </div>
+                                    <div style="font-size: 0.72rem; color: var(--neutral-500); font-weight: 500; margin-top: 0.2rem;">
+                                        Lokasi: storage/app/backups
+                                    </div>
                                 </td>
-                                <td>
-                                    <div style="font-size: 0.825rem; color: #334155;">{{ $item['created_at'] }}</div>
+                                <td style="padding: 1rem 1rem; text-align: center; white-space: nowrap;">
+                                    <span class="badge-status-blue">
+                                        {{ $item['format'] }}
+                                    </span>
                                 </td>
-                                <td>
-                                    <span style="font-weight: 700; color: var(--neutral-900, #0F172A);">{{ $item['size_mb'] }} MB</span>
+                                <td style="padding: 1rem 1rem; color: var(--neutral-700); font-size: 0.8125rem; white-space: nowrap;">
+                                    {{ $item['created_at'] }}
                                 </td>
-                                <td>
-                                    <span class="backup-checksum-badge" style="font-family: monospace; font-size: 0.72rem; color: #64748B; background: #F1F5F9; padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid #E2E8F0;" title="{{ $item['checksum'] }}">
+                                <td style="padding: 1rem 1rem; font-weight: 700; color: var(--neutral-900); white-space: nowrap;">
+                                    {{ $item['size_mb'] }} MB
+                                </td>
+                                <td style="padding: 1rem 1rem; white-space: nowrap;">
+                                    <span class="backup-checksum-badge" title="{{ $item['checksum'] }}">
                                         {{ substr($item['checksum'], 0, 16) }}...{{ substr($item['checksum'], -8) }}
                                     </span>
                                 </td>
-                                <td style="text-align: right; white-space: nowrap;">
-                                    <a href="{{ route('superadmin.backup.download', $item['filename']) }}" 
-                                       style="padding: 0.35rem 0.75rem; background: #0641CC; color: #ffffff; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-decoration: none; margin-right: 0.25rem; display: inline-flex; align-items: center; gap: 0.3rem;">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                        <span>Unduh</span>
-                                    </a>
-                                    <form method="POST" action="{{ route('superadmin.backup.destroy', $item['filename']) }}" style="display: inline-block;" onsubmit="return confirm('Hapus berkas snapshot ini secara permanen?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="backup-btn-delete" style="padding: 0.35rem 0.65rem; background: #ffffff; border: 1px solid #FECACA; color: #DC2626; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
+                                    <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
+                                        <a href="{{ route('superadmin.backup.download', $item['filename']) }}"
+                                           class="sa-btn-action-outline"
+                                           onclick="return confirm('Peringatan Privasi (UU PDP): Berkas cadangan basis data ini memuat data pribadi peserta dan seluruh informasi internal. Pastikan Anda menyimpannya di lokasi aman. Lanjutkan unduh?')">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                            <span>Unduh</span>
+                                        </a>
+
+                                        <form method="POST" action="{{ route('superadmin.backup.destroy', $item['filename']) }}" style="display: inline-block;" onsubmit="return confirm('Hapus berkas snapshot ini secara permanen?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="sa-btn-action-danger">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                                <span>Hapus</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+
+            {{-- BILAH PAGINASI SESUAI STANDAR DESAIN (Menampilkan 1 sampai 10 dari X entri) --}}
+            @if($backupFiles->total() > 0)
+                <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200); background: var(--neutral-100);">
+                    {{ $backupFiles->links() }}
+                </div>
+            @endif
         @endif
-    </x-gentelella.card>
+    </x-gentelella.x-panel>
 
 </div>
 @endsection

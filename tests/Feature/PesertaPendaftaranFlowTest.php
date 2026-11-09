@@ -152,8 +152,8 @@ class PesertaPendaftaranFlowTest extends TestCase
         $response->assertSee('1. Berkas Persyaratan');
         $response->assertSee('2. Verifikasi Berkas');
         $response->assertSee('3. Keputusan');
-        $response->assertSee('Surat Permohonan PKL/Magang dari Kepala Sekolah');
-        $response->assertSee('Curriculum Vitae (CV) & Portofolio Keahlian');
+        $response->assertSee('Surat Permohonan PKL dari Sekolah');
+        $response->assertSee('Curriculum Vitae (CV) & Tautan Portofolio Proyek');
         $response->assertSee('Salinan Kartu Pelajar');
     }
 

@@ -29,6 +29,8 @@ class UpdateRoleMatrixRequest extends FormRequest
             'matrix' => ['nullable', 'array'],
             'matrix.*' => ['nullable', 'array'],
             'matrix.*.*' => ['nullable', 'string', 'in:superadmin,admin,pembimbing,peserta,1,on'],
+            'page_permission_ids' => ['nullable', 'array'],
+            'page_permission_ids.*' => ['integer', 'exists:permissions,id'],
         ];
     }
 }

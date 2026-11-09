@@ -237,8 +237,8 @@ class DeltaDashboardEnhancementTest extends TestCase
         $response = $this->actingAs($this->pembimbing)->get(route('pembimbing.peserta.show', $this->penempatan));
         $response->assertOk();
         $response->assertViewHas(['tugasStats', 'completionRate', 'logbookPerMinggu']);
-        $response->assertSee('Komposisi & Rasio Tugas Peserta');
-        $response->assertSee('Pelacakan Mingguan Logbook Magang');
+        $response->assertSee('PROGRES TUGAS');
+        $response->assertSee('LOGBOOK');
     }
 
     /**
