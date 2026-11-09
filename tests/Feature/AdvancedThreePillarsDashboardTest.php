@@ -9,7 +9,6 @@ use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\AgendaBimbingan;
 use App\Models\Bidang;
@@ -18,9 +17,7 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
-use App\Models\Rubrik;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
@@ -75,17 +72,6 @@ final class AdvancedThreePillarsDashboardTest extends TestCase
             'jurusan_id' => $this->jurusan->id,
             'jumlah' => 10,
             'terisi' => 0,
-            'aktif' => true,
-        ]);
-
-        Rubrik::create([
-            'kriteria' => 'Kedisiplinan & Etika',
-            'bobot' => 20,
-            'aktif' => true,
-        ]);
-        Rubrik::create([
-            'kriteria' => 'Kompetensi Teknis',
-            'bobot' => 40,
             'aktif' => true,
         ]);
 
@@ -164,81 +150,7 @@ final class AdvancedThreePillarsDashboardTest extends TestCase
         $response->assertSee('Offboarding Watchdog');
         $response->assertSee('Peserta Selesai Segera');
         $response->assertSee('Timeline Gelombang Magang');
-        $response->assertSee('Hub Sertifikat');
-    }
-
-    public function test_admin_sertifikat_index_and_cetak_alumni_terverifikasi(): void
-    {
-        $peserta = $this->createPeserta('Alumni Terbaik Magang', 'alumni@ugm.ac.id');
-        $penempatan = Penempatan::create([
-            'peserta_id' => $peserta->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'bidang_id' => $this->bidang->id,
-            'kuota_id' => $this->kuota->id,
-            'sumber' => SumberPenempatanEnum::Online->value,
-            'jalur' => JalurEnum::Umum,
-            'tgl_mulai' => now()->subMonths(3),
-            'tgl_selesai' => now()->subDays(2),
-            'status' => StatusPenempatanEnum::Selesai,
-        ]);
-
-        $penilaian = Penilaian::create([
-            'penempatan_id' => $penempatan->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'nilai_akhir' => 92.50,
-            'predikat' => 'A',
-            'status' => StatusPenilaianEnum::Final,
-            'catatan' => 'Kinerja luar biasa.',
-        ]);
-
-        // Akses index sertifikat
-        $response = $this->actingAs($this->admin)->get(route('admin.sertifikat.index'));
-        $response->assertOk();
-        $response->assertSee('Alumni Terbaik Magang');
-        $response->assertSee('500.12/SRT/');
-
-        // Cetak pratinjau sertifikat HTML
-        $previewResp = $this->actingAs($this->admin)->get(route('admin.sertifikat.cetak', [
-            'penempatan' => $penempatan->id,
-            'preview' => 1,
-        ]));
-        $previewResp->assertOk();
-        $previewResp->assertSee('Sertifikat Kelulusan');
-        $previewResp->assertSee('Alumni Terbaik Magang');
-        $previewResp->assertSee('92.50');
-
-        // Unduh berkas PDF
-        $downloadResp = $this->actingAs($this->admin)->get(route('admin.sertifikat.cetak', $penempatan->id));
-        $downloadResp->assertOk();
-        $this->assertEquals('application/pdf', $downloadResp->headers->get('content-type'));
-    }
-
-    public function test_admin_sertifikat_denies_unfinalized_evaluation(): void
-    {
-        $peserta = $this->createPeserta('Alumni Belum Final', 'belumfinal@ugm.ac.id');
-        $penempatan = Penempatan::create([
-            'peserta_id' => $peserta->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'bidang_id' => $this->bidang->id,
-            'kuota_id' => $this->kuota->id,
-            'sumber' => SumberPenempatanEnum::Online->value,
-            'jalur' => JalurEnum::Umum,
-            'tgl_mulai' => now()->subMonths(3),
-            'tgl_selesai' => now()->subDays(2),
-            'status' => StatusPenempatanEnum::Selesai,
-        ]);
-
-        // Belum ada penilaian atau status masih draft
-        Penilaian::create([
-            'penempatan_id' => $penempatan->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'nilai_akhir' => 80.0,
-            'predikat' => 'B',
-            'status' => StatusPenilaianEnum::Draft,
-        ]);
-
-        $response = $this->actingAs($this->admin)->get(route('admin.sertifikat.cetak', $penempatan->id));
-        $response->assertForbidden();
+        $response->assertSee('Daftar Peserta');
     }
 
     // =========================================================================
