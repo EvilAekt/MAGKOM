@@ -90,7 +90,7 @@ flowchart TD
 - **Transparansi Kuota Jurusan**: Publik dapat memantau kuota magang yang tersedia per jurusan dan per periode bulan secara real-time pada halaman utama.
 - **Proteksi Konkurensi Atomik**: Alokasi kuota menggunakan mekanisme database locking (`lockForUpdate`) untuk memastikan tidak terjadi kondisi *race condition* atau kelebihan kuota ketika pendaftaran masuk bersamaan.
 - **Dukungan Pendaftaran Tim**: Sistem mendukung pendaftaran individu maupun kelompok (ketua dan anggota) dengan pembatasan jumlah anggota yang dapat disesuaikan.
-- **Antrean Cadangan (Waiting List)**: Pendaftar yang mengajukan permohonan saat kuota jurusan telah penuh secara otomatis dialihkan ke status antrean cadangan.
+- **Seleksi Administratif Tegas**: Pendaftar yang mengajukan permohonan diverifikasi langsung dengan keputusan Diterima atau Ditolak tanpa perpanjangan antrean cadangan.
 
 ### 2. Penempatan Dua Tahap (Two-Stage Placement)
 - **Pemisahan Verifikasi dan Alokasi**: Admin memverifikasi kelengkapan berkas terlebih dahulu. Pendaftar yang dinyatakan lolos masuk ke antrean *Belum Ditempatkan*.
@@ -155,8 +155,8 @@ Aturan operasional sistem dikendalikan terpusat melalui panel SuperAdmin tanpa m
 | **Penyimpanan Berkas** | Storage Disk Privat terproteksi Temporary Signed URLs |
 | **Standar Keamanan** | Proteksi CSRF, Anti-IDOR Authorization, Input Sanitization, Anti-Formula Injection, Header HTTP Terenkapsulasi (CSP, X-Frame-Options, X-Content-Type-Options) |
 | **Linter dan Formatter** | Laravel Pint (Standar PSR-12) |
-| **Analisis Statis** | Larastan / PHPStan Level 2 |
-| **Framework Pengujian** | PHPUnit 10.x / Pest (740 automated tests) |
+| **Analisis Statis** | Larastan / PHPStan Level 2 (Memory Limit 1G) |
+| **Framework Pengujian** | PHPUnit 10.x (Feature & Unit Tests dengan basis data SQLite in-memory) |
 
 ---
 
@@ -262,11 +262,14 @@ MAGKOM/
 │   ├── migrations/            # Berkas migrasi skema basis data
 │   └── seeders/               # Seeder data master dan pengguna awal
 ├── docs/
+│   ├── README.md              # Peta navigasi pusat dokumentasi
 │   ├── 01-PRD-MagKom.md       # Product Requirements Document
 │   ├── 02-TDD-MagKom.md       # Technical Design Document
 │   ├── 04-SKEMA-DATABASE...   # Skema basis data dan kamus data
 │   ├── 05-KEAMANAN-RBAC...    # Matriks keamanan dan otorisasi
-│   └── plans/                 # Dokumentasi PRD pengembangan fitur
+│   ├── DEVELOPMENT-GUIDE.md   # Panduan instalasi dan quality gates
+│   ├── FRONTEND-ARCHITECTURE.md # Arsitektur aset Vite dan panduan Blade
+│   └── plans/                 # Dokumentasi brief task dan perencanaan fitur
 ├── resources/
 │   ├── css/                   # Stylesheet Vanilla CSS scoped per modul
 │   ├── js/                    # Modul Vanilla JavaScript (ES Modules)

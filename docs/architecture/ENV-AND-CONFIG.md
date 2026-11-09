@@ -69,6 +69,6 @@ Data diambil dari template `.env.example` dan deklarasi konfigurasi di direktori
 
 ## 3. Konfigurasi CI/CD & Deployment
 
-- **Strategi Build**: Single-node server atau containerized environment dengan Nginx + PHP-FPM 8.2+.
+- **Strategi Build**: Single-node server atau containerized environment dengan Nginx + PHP-FPM 8.3.x.
 - **File System Storage Link**: Wajib mengeksekusi `php artisan storage:link` untuk akses publik aset statis. Berkas privat peserta (`storage/app/berkas/`) tetap terisolasi di luar public link.
 - **Kesiapan Audit Keamanan**: Dilengkapi file kepatuhan RFC 9116 di `public/.well-known/security.txt` dan rute `/health` untuk health-check probe load balancer.

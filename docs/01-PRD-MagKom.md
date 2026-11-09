@@ -9,7 +9,7 @@ Portal manajemen magang Dinas Komunikasi dan Informatika (Kominfo)
 | **Tanggal** | 2 November 2026 |
 | **Status** | Approved Engineering Baseline |
 | **Penyusun / Reviewer** | Tim Pengembang MagKom |
-| **Dokumen pendamping** | [`02-TDD-MagKom.md`](file:///g:/MAGKOM/docs/02-TDD-MagKom.md) (Dokumen Desain Teknis v1.2), [`03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md`](file:///g:/MAGKOM/docs/03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md), [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](file:///g:/MAGKOM/docs/04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) v1.2 |
+| **Dokumen pendamping** | [`02-TDD-MagKom.md`](./02-TDD-MagKom.md) (Dokumen Desain Teknis v1.3), [`03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md`](./03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md), [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) |
 | **Sumber** | Rancangan Sistem MagKom Revisi 4 dan keputusan lanjutan. Dokumen ini **berdiri sendiri**: Revisi 4 tidak perlu dibuka untuk memahaminya (ringkasan perubahan ada di [Lampiran A](#lampiran-a-riwayat-revisi)) |
 | **Tech stack wajib** | **Laravel 10** dengan **PHP 8.3** (alasan dan batasan ada di TDD) |
 
@@ -17,7 +17,7 @@ Portal manajemen magang Dinas Komunikasi dan Informatika (Kominfo)
 
 ## Cara Membaca Dokumen Ini
 
-**Untuk developer baru** (sekitar 45 menit): baca bab 1, 2, 3.3, 5, dan 6 lebih dulu. Lalu baca bab 7 dan 8 hanya untuk fitur yang sedang dikerjakan. Setelah itu buka [`02-TDD-MagKom.md`](file:///g:/MAGKOM/docs/02-TDD-MagKom.md).
+**Untuk developer baru** (sekitar 45 menit): baca bab 1, 2, 3.3, 5, dan 6 lebih dulu. Lalu baca bab 7 dan 8 hanya untuk fitur yang sedang dikerjakan. Setelah itu buka [`02-TDD-MagKom.md`](./02-TDD-MagKom.md).
 
 ### Konvensi Penulisan
 
@@ -252,22 +252,24 @@ Aturan di bab ini adalah rujukan utama. Contoh tanggal memakai zona waktu WIB (`
 | **BR-01** | **Kuota umum** ditetapkan per bulan dan jurusan. Total kuota umum per bulan tidak melebihi batas di pengaturan (default 12). Jumlah kuota tidak boleh diturunkan di bawah jumlah terisi |
 | **BR-02** | **Slot khusus** terpisah dari kuota umum. Default 3 per bulan, tetapi SuperAdmin bebas menentukan bulan dan jumlahnya (tanpa batas keras). Tidak pernah muncul di landing page, endpoint publik, atau sisa kuota yang dihitung untuk publik. Slot khusus dan kuota umum tidak saling mengurangi. Bila slot penuh atau belum ada slot untuk bulan itu, input peserta jalur khusus ditolak sampai SuperAdmin menambah jumlah `[Klarifikasi]` |
 | **BR-03** | Satu peserta hanya boleh punya satu pendaftaran untuk satu bulan mulai. Bulan berstatus Tutup, Segera, atau nonaktif tidak dapat dipilih. Pendaftaran yang ditolak atau dibatalkan tidak dapat dibuat ulang untuk bulan yang sama; peserta dapat memilih bulan lain `[Klarifikasi]` |
-| **BR-04** | **Status bulan di landing page** ditentukan berurutan: (1) bulan atau kuota nonaktif berarti Tutup; (2) override SuperAdmin; (3) otomatis: Segera satu bulan sebelum tanggal buka, Tersedia di antara tanggal buka dan tanggal tutup (inklusif), Tutup setelahnya. Bulan yang lebih dari satu bulan sebelum tanggal buka, atau yang tanggal mulainya sudah lewat, **tidak ditampilkan** (A-06, A-24). Sisa kuota 0 **tidak** menutup pendaftaran: status tetap Tersedia dan pendaftar masuk jalur Waiting List (BR-06) |
-| **BR-05** | **Penerimaan bersifat atomik.** Dalam satu transaksi database: cek status pendaftaran masih Diajukan atau Waiting List, kunci baris kuota (`lockForUpdate`), cek `terisi < jumlah`, tambah `terisi`, buat penempatan dengan Pembimbing, ubah status, tulis audit. Bila salah satu langkah gagal, semuanya dibatalkan dan status pendaftaran tidak berubah |
-| **BR-06** | **Waiting List:** masuk lewat keputusan Admin saat kuota umum habis (berkas tetap diverifikasi dulu), diurutkan berdasar waktu diajukan. Kenaikan ke Diterima dilakukan manual oleh Admin. Sisa antrean ditutup massal oleh Admin saat bulan dimulai (status Ditolak dengan catatan otomatis). Slot khusus tidak memiliki Waiting List |
+| **BR-04** | **Status bulan di landing page** ditentukan berurutan: (1) bulan atau kuota nonaktif berarti Tutup; (2) override SuperAdmin; (3) otomatis: Segera satu bulan sebelum tanggal buka, Tersedia di antara tanggal buka dan tanggal tutup (inklusif), Tutup setelahnya. Bulan yang lebih dari satu bulan sebelum tanggal buka, atau yang tanggal mulainya sudah lewat, **tidak ditampilkan** (A-06, A-24). Bila kuota habis, status otomatis menjadi Penuh/Tutup |
+| **BR-05** | **Penerimaan bersifat atomik.** Dalam satu transaksi database: cek status pendaftaran masih Diajukan, kunci baris kuota (`lockForUpdate`), cek `terisi < jumlah`, tambah `terisi`, buat penempatan dengan Pembimbing, ubah status, tulis audit. Bila salah satu langkah gagal, semuanya dibatalkan dan status pendaftaran tidak berubah |
+| **BR-06** | **Seleksi Administratif Tegas (Tanpa Waiting List):** Verifikasi berkas pendaftar dilakukan oleh Admin dalam batas SLA (default 5 hari kerja). Keputusan verifikasi bersifat tegas: **Diterima** (langsung dibuatkan alokasi penempatan atau masuk antrean belum ditempatkan) atau **Ditolak** (dengan catatan alasan verifikator). Antrean cadangan (Waiting List) telah dihapus permanen untuk mencegah ketidakpastian status pendaftar |
 | **BR-07** | **Pembatalan dan pengunduran diri.** Aksi dilakukan Admin atau SuperAdmin pada peserta yang sudah Diterima. *Sebelum tanggal mulai* (pembatalan): pendaftaran menjadi `dibatalkan`, penempatan menjadi `mengundurkan_diri`, kuota dikembalikan, akun peserta tetap aktif sehingga peserta dapat mendaftar bulan lain. *Sejak tanggal mulai* (pengunduran diri): penempatan menjadi `mengundurkan_diri`, pendaftaran tetap `diterima`, kuota **tidak** dikembalikan, dan akun peserta dinonaktifkan (A-17) `[Klarifikasi]` |
 | **BR-08** | Durasi magang 1 sampai 6 bulan dipilih peserta. **Tanggal mulai** = tanggal 1 pada bulan mulai. **Tanggal selesai** = hari terakhir pada bulan ke-N (inklusif). Contoh: bulan mulai Januari 2027, durasi 3 bulan, maka 1 Januari 2027 sampai 31 Maret 2027 (A-14, OQ-10) `[Klarifikasi]` |
-| **BR-09** | **Logbook:** hanya dapat diisi bila peserta punya penempatan aktif; berformat mingguan (`minggu_ke`) sesuai konsensus operasional lapangan; tanggal dalam rentang magang dan tidak di masa depan; isi mundur dibatasi (default 3 hari mundur; dapat diubah di pengaturan); satu entri ringkasan per minggu per penempatan. Peserta dapat mengedit entri miliknya selama penempatan aktif bila entri masih dalam batas mundur atau berstatus `perlu_revisi`. Baca-saja setelah penempatan Selesai. Tidak ada approval wajib per entri: Pembimbing dapat menandai "perlu revisi" dengan catatan `[Klarifikasi PO]` |
-| **BR-10** | **Penilaian** sepenuhnya oleh Pembimbing; SuperAdmin hanya melihat. Nilai **dapat diubah**; setiap perubahan wajib disertai alasan dan dicatat (nilai lama dan baru). Status `draft`/`final` hanya penanda bahwa nilai sudah tampil ke peserta. Bobot rubrik disimpan sebagai snapshot di setiap penilaian. **Penetapan Selesai mensyaratkan penilaian berstatus final** `[Klarifikasi]`. Lembar Nilai dibuat saat diunduh dari data terbaru |
-| **BR-11** | **Masa tenggang:** setelah Pembimbing menetapkan Selesai, akun peserta baca-saja selama masa tenggang (default 1 bulan, dapat diubah SuperAdmin), lalu dinonaktifkan otomatis. `tgl_nonaktif` = tanggal ditetapkan selesai + masa tenggang, dihitung saat penetapan; mengubah pengaturan tidak memengaruhi yang sudah dihitung. Data tidak dihapus; SuperAdmin mengakses arsip baca-saja |
+| **BR-09** | **Logbook:** hanya dapat diisi bila peserta punya penempatan aktif; berformat mingguan (`minggu_ke`) sesuai konsensus operasional lapangan; tanggal dalam rentang magang dan tidak di masa depan; isi mundur dibatasi (default 3 hari mundur; dapat diubah di pengaturan); satu entri ringkasan per minggu per penempatan. Peserta dapat mengedit entri miliknya selama penempatan aktif bila entri masih dalam batas mundur atau berstatus `revisi`. Baca-saja setelah penempatan Selesai. Pembimbing dapat menyetujui atau menandai "revisi" dengan catatan |
+| **BR-10** | **Penyelesaian Bimbingan 1-Klik:** Menggantikan sistem penilaian rubrik lama yang telah didecommission. Pembimbing lapangan menyelesaikan masa bimbingan mentee secara langsung melalui tombol konfirmasi 1-klik setelah seluruh target tugas proyek bimbingan tercapai dan periode magang berakhir. Pembimbing dapat mencetak portofolio capaian kinerja mentoring ASN dalam format PDF |
+| **BR-11** | **Masa tenggang:** setelah Pembimbing menetapkan Selesai, akun peserta baca-saja selama masa tenggang (default 2 bulan, dapat diubah SuperAdmin), lalu dinonaktifkan otomatis. `tgl_nonaktif` = tanggal ditetapkan selesai + masa tenggang, dihitung saat penetapan; mengubah pengaturan tidak memengaruhi yang sudah dihitung. Data tidak dihapus; SuperAdmin mengakses arsip baca-saja |
 | **BR-12** | **Penonaktifan master data:** jurusan, bulan, atau kuota yang masih memiliki pendaftaran atau penempatan aktif tidak dapat dinonaktifkan. Pembimbing tidak dapat dinonaktifkan sebelum penempatan aktifnya dipindahkan; sistem menolak bila ia satu-satunya Pembimbing aktif |
 | **BR-13** | **Beban Pembimbing:** saat menerima peserta atau memindahkan penempatan, sistem memeriksa jumlah penempatan aktif terhadap `maks_peserta_aktif_per_pembimbing` di pengaturan (default: 20 peserta aktif, fleksibel dapat disesuaikan SuperAdmin). Bila nilainya dikosongkan (null), tidak ada batas `[Klarifikasi PO, OQ-01]` |
-| **BR-14** | **Notifikasi dan Saluran Informasi.** Peserta memantau status secara mandiri lewat dashboard (status berkas, catatan verifikator, timeline tahapan). Notifikasi realtime Server-Sent Events (SSE) `/realtime/stream` disediakan sebagai inovasi UI/UX interaktif portal. Pengiriman email transaksi dibatasi untuk verifikasi registrasi dan pemulihan password (di bypass saat SMTP belum terpasang) `[Klarifikasi PO]` |
-| **BR-15** | Akun staf dibuat SuperAdmin dengan `must_change_password`: staf wajib mengganti password saat login pertama. Hal yang sama berlaku untuk akun peserta jalur khusus yang dibuat manual `[Usulan]`. Password tidak pernah disimpan atau dicatat dalam bentuk asli |
+| **BR-14** | **Notifikasi dan Saluran Informasi.** Peserta memantau status secara mandiri lewat dashboard (status berkas, catatan verifikator, timeline tahapan). Notifikasi realtime Server-Sent Events (SSE) `/realtime/stream` disediakan sebagai inovasi UI/UX interaktif portal. Pengiriman email transaksi dibatasi untuk verifikasi registrasi dan pemulihan password |
+| **BR-15** | Akun staf dibuat SuperAdmin dengan `must_change_password`: staf wajib mengganti password saat login pertama. Hal yang sama berlaku untuk akun peserta jalur khusus yang dibuat manual dengan `password_awal`. Password tidak pernah disimpan atau dicatat dalam bentuk teks asli di audit log |
 | **BR-16** | Status Terlambat pada tugas **dihitung saat dibaca** (deadline sudah lewat dan status belum Selesai), bukan disimpan atau dijadwalkan. Penanda "mendekati deadline" muncul bila sisa waktu ≤ 3 hari (`deadline_mendekati_hari`) |
-| **BR-17** | Peserta hanya boleh memiliki **satu pendaftaran aktif** pada satu waktu (status `berkas_belum_lengkap`, `diajukan`, `perlu_perbaikan`, `waiting_list`, atau `diterima` dengan penempatan belum selesai). Mencegah peserta menempati dua kuota sekaligus `[Usulan]` (A-15) |
-| **BR-18** | **Pendaftaran Kelompok:** Pendaftaran magang kelompok dibatasi maksimal 4 orang (1 ketua bertindak sebagai pemilik akun pendaftaran + maksimal 3 rekan anggota). Anggota kelompok wajib melampirkan identitas lengkap (nama, NIM/NISN, nomor HP, email). Saat diterima, alokasi kuota umum dipotong sejumlah total mentee dalam kelompok tersebut secara atomik (`terisi += count(anggota) + 1`). Jika sisa kuota tidak mencukupi seluruh anggota kelompok, pendaftaran dialihkan ke Waiting List atau ditolak `[Addendum v1.2]` |
-| **BR-19** | **Modul Dinamis (Low-Code):** SuperAdmin memiliki wewenang penuh mendesain skema modul kustom (tipe sumber `dynamic` dengan penyimpanan payload JSON pada `modul_dinamis_data` atau `physical_table` dengan reverse-engineering tabel basis data). Matriks izin sub-aksi (`list`, `create`, `read`, `update`, `delete`) wajib didefinisikan per peran (RBAC granular). Pilihan audit logging (`log_aksi`) dan eksposur katalog baca publik (`is_public_read`) diatur per modul. Penghapusan data record modul bersifat soft delete `[Addendum v1.2]` |
+| **BR-17** | Peserta hanya boleh memiliki **satu pendaftaran aktif** pada satu waktu (status `berkas_belum_lengkap`, `diajukan`, `perlu_perbaikan`, atau `diterima` dengan penempatan belum selesai). Mencegah peserta menempati dua kuota sekaligus |
+| **BR-18** | **Pendaftaran Kelompok:** Pendaftaran magang kelompok dibatasi maksimal 4 orang (1 ketua bertindak sebagai pemilik akun pendaftaran + maksimal 3 rekan anggota). Anggota kelompok wajib melampirkan identitas lengkap (nama, NIM/NISN, nomor HP, email). Saat diterima, alokasi kuota umum dipotong sejumlah total mentee dalam kelompok tersebut secara atomik (`terisi += count(anggota) + 1`). Jika sisa kuota tidak mencukupi seluruh anggota kelompok, pendaftaran ditolak |
+| **BR-19** | **Pusat Cadangan Basis Data (Disaster Recovery):** SuperAdmin memiliki hak operasional membuat snapshot cadangan basis data terisolasi (kompresi `.sql.gz`), memvalidasi checksum SHA-256 integritas forensik, mengunduh file cadangan berizin khusus, dan melakukan pemulihan data langsung dari antarmuka web |
+| **BR-20** | **WordPress-Style Visual Site Editor & CMS Landing Page:** Pengelolaan konten landing page publik dikendalikan secara visual berbasis blok kanvas (Gutenberg style) oleh SuperAdmin. Mendukung pustaka komponen blok, Pattern Library, Reusable Blocks, Media Library picker, Sandbox Staging, serta riwayat revisi dan rollback |
+| **BR-21** | **Dynamic Role-Permission Matrix:** Matriks hak akses perizinan dikelola secara dinamis berbasis data untuk 13 modul sistem utama. SuperAdmin berwenang mengaktifkan atau mencabut izin modul per peran secara visual tanpa menyentuh kode program |
 
 ---
 
@@ -277,10 +279,10 @@ Aturan di bab ini adalah rujukan utama. Contoh tanggal memakai zona waktu WIB (`
 
 | Fase | Inti alur |
 |---|---|
-| **1. Konfigurasi** | SuperAdmin menyiapkan jurusan, bidang (opsional), rubrik, akun staf, bulan magang, dan slot khusus. Admin mengisi kuota umum per jurusan pada bulan yang sudah dibuat. SuperAdmin dapat menonaktifkan bulan atau kuota dan mengatur status landing page |
-| **2. Pendaftaran dan seleksi** | Calon peserta melihat jurusan, bulan, status, dan sisa kuota; registrasi; verifikasi email; melengkapi profil; mengisi formulir dan mengunggah berkas; Admin memutuskan |
-| **3. Pelaksanaan** | Peserta ditempatkan ke Pembimbing; menerima tugas, mengunggah progres, dan mengisi logbook |
-| **4. Penilaian dan kelulusan** | Pembimbing menilai berdasarkan rubrik, menetapkan nilai akhir dan status Selesai; Lembar Nilai PDF tersedia; masa tenggang; akun nonaktif otomatis; data diarsipkan |
+| **1. Konfigurasi** | SuperAdmin menyiapkan jurusan, bidang, akun staf, bulan magang, slot khusus, dan parameter sistem. Admin mengisi kuota umum per jurusan pada bulan yang sudah dibuka. SuperAdmin mengelola tata letak landing page via Visual Site Editor |
+| **2. Pendaftaran dan seleksi** | Calon peserta melihat formasi kuota; registrasi (lokal atau Google OAuth); verifikasi email; melengkapi biodata; mengisi form dan unggah berkas; Admin memutuskan Diterima atau Ditolak dalam batas SLA |
+| **3. Pelaksanaan** | Peserta ditempatkan ke unit bidang dan Pembimbing ASN; menerima penugasan proyek ber-deadline, mengunggah laporan progres, dan mengisi logbook mingguan |
+| **4. Penyelesaian dan Pengarsipan** | Pembimbing meninjau pemenuhan tugas mentee via Profil 360 Mentee dan menetapkan status Selesai 1-klik; cetak portofolio kinerja ASN (PDF); masa tenggang 2 bulan; akun nonaktif otomatis; data tersimpan di arsip alumni |
 
 ### 6.2 Diagram Alur
 
@@ -289,15 +291,19 @@ Aturan di bab ini adalah rujukan utama. Contoh tanggal memakai zona waktu WIB (`
 ```mermaid
 flowchart TD
     A[Peserta membuka landing page] --> B[Pilih jurusan, lihat bulan dan sisa kuota umum]
-    B --> C["Registrasi (R1 email dan password, R2 captcha, R3 Google)"]
+    B --> C["Registrasi (Formulir lokal atau Google OAuth)"]
     C --> D[Verifikasi email]
-    D --> E[Lengkapi profil]
+    D --> E[Lengkapi profil biodata & persetujuan wali]
     E --> F[Isi formulir pendaftaran dan unggah berkas]
     F --> G{Berkas wajib lengkap?}
     G -->|Belum| F
     G -->|Ya| H[Status Diajukan]
-    H --> I{Keputusan Admin}
-    I -->|Perlu perbaikan| F
+    H --> I{Keputusan Admin dalam SLA}
+    I -->|Ditolak| J[Arsip Ditolak]
+    I -->|Diterima| K[Alokasi Kuota Atomik]
+    K --> L[Antrean Belum Ditempatkan / Langsung Plotting Pembimbing]
+    L --> M[Peserta Aktif Ditempatkan]
+```
     I -->|Ditolak| Z[Selesai: Ditolak]
     I -->|Kuota umum habis| W[Waiting List]
     W -->|Ada kuota kosong dan dinaikkan Admin| J
@@ -314,13 +320,13 @@ flowchart TD
     B --> C[Peserta mengunggah progres]
     C --> D[Pembimbing memberi umpan balik]
     A --> E[Peserta mengisi logbook mingguan]
-    D --> F[Pembimbing mengisi rubrik penilaian]
+    D --> F[Pembimbing memvalidasi ketuntasan target penugasan]
     E --> F
-    F --> G[Penilaian final, Pembimbing menetapkan Selesai]
-    G --> H[Lembar Nilai PDF tersedia]
-    H --> I[Masa tenggang baca-saja, default 1 bulan]
+    F --> G[Pembimbing menetapkan status Selesai 1-Klik]
+    G --> H[Portofolio Kinerja Mentoring ASN tersedia]
+    H --> I[Masa tenggang baca-saja, default 2 bulan]
     I --> J[Akun peserta dinonaktifkan otomatis]
-    J --> K[Data diarsipkan, SuperAdmin akses baca-saja]
+    J --> K[Data diarsipkan, SuperAdmin akses arsip alumni]
 ```
 
 #### Status Pendaftaran
@@ -329,17 +335,10 @@ flowchart TD
 stateDiagram-v2
     [*] --> berkas_belum_lengkap
     berkas_belum_lengkap --> diajukan: semua berkas wajib terunggah
-    diajukan --> perlu_perbaikan: Admin meminta perbaikan
-    perlu_perbaikan --> diajukan: Peserta unggah ulang
-    diajukan --> diterima: Admin menerima
-    diajukan --> waiting_list: kuota umum habis
-    diajukan --> ditolak: Admin menolak
-    waiting_list --> diterima: Admin menaikkan
-    waiting_list --> ditolak: Admin menutup antrean
+    diajukan --> diterima: Admin menerima (kuota dialokasikan)
+    diajukan --> ditolak: Admin menolak (catatan alasan verifikator)
     berkas_belum_lengkap --> dibatalkan: Peserta
     diajukan --> dibatalkan: Peserta
-    perlu_perbaikan --> dibatalkan: Peserta
-    waiting_list --> dibatalkan: Peserta
     diterima --> dibatalkan: Admin atau SuperAdmin sebelum tanggal mulai
     ditolak --> [*]
     dibatalkan --> [*]

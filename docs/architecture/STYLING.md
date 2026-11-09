@@ -4,13 +4,13 @@
 
 Portal MagKom mengadopsi sistem desain resmi **DS-MagKom** (merujuk pada berkas spesifikasi `docs/07-DESIGN-SYSTEM-MAGKOM.md` dan Figma node `562-54980`). Sistem ini menggunakan **CSS Custom Properties (Design Tokens)** native yang dikelola secara sentral di `resources/css/base/variables.css` dan dibundle menggunakan **Vite 6** bersama stylesheet modular per komponen dan per halaman.
 
-Sesuai aturan arsitektur permanen [`AGENTS.md`](file:///g:/MAGKOM/.agents/rules/AGENTS.md), seluruh styling berada di `resources/css/` dan dilarang keras menaruh tag `<style>` atau inline style di file Blade.
+Sesuai aturan arsitektur permanen [`AGENTS.md`](../../.agents/rules/AGENTS.md), seluruh styling berada di `resources/css/` dan dilarang keras menaruh tag `<style>` atau inline style di file Blade.
 
 ---
 
 ## 1. Design Tokens & Palet Warna (CSS Variables)
 
-Semua token warna didefinisikan secara sentral di `:root` pada berkas [`resources/css/base/variables.css`](file:///g:/MAGKOM/resources/css/base/variables.css):
+Semua token warna didefinisikan secara sentral di `:root` pada berkas [`resources/css/base/variables.css`](../../resources/css/base/variables.css):
 
 ### A. Palet Brand Utama (Kominfo Sleman Blue)
 | CSS Variable | Nilai Hex | Fungsi / Implementasi |

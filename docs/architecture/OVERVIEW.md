@@ -1,8 +1,8 @@
-> Diperbarui: 2026-10-13 | commit: 1553e56 | mode: A
+> Diperbarui: 2026-11-09 | mode: Verified Living Documentation
 
 # Arsitektur Proyek: Portal MagKom (Magang Kominfo)
 
-Portal MagKom adalah aplikasi web terintegrasi untuk manajemen dan transparansi program magang pada Dinas Komunikasi dan Informatika (Kominfo). Sistem melayani 4 peran pengguna utama: **Peserta**, **Pembimbing Lapangan**, **Administrator**, dan **Super Administrator**, dengan fokus pada transparansi kuota penerimaan, tata kelola berkas, monitoring logbook harian, serta evaluasi sertifikasi berbasis bukti.
+Portal MagKom adalah aplikasi web terintegrasi untuk manajemen dan transparansi program magang pada Dinas Komunikasi dan Informatika (Kominfo). Sistem melayani 4 peran pengguna utama: **Peserta**, **Pembimbing Lapangan**, **Administrator**, dan **Super Administrator**, dengan fokus pada transparansi kuota penerimaan, tata kelola berkas, monitoring logbook harian, serta tata kelola landing page publik berbasis Gutenberg Visual Site Editor.
 
 ---
 
@@ -10,15 +10,16 @@ Portal MagKom adalah aplikasi web terintegrasi untuk manajemen dan transparansi 
 
 | Komponen | Teknologi | Keterangan Versi & Konfigurasi |
 | :--- | :--- | :--- |
-| **Bahasa & Runtime** | PHP 8.2+ / Node.js 24.x | Strict typing `declare(strict_types=1)` diaktifkan pada controller dan service |
+| **Bahasa & Runtime** | PHP 8.3.x / Node.js 20.x+ | Strict typing `declare(strict_types=1)` diaktifkan pada controller dan service |
 | **Framework Backend** | Laravel 10.x | Arsitektur MVC + Dedicated Domain Service Layer (`app/Services`) |
 | **Frontend Rendering** | Blade Templates | Komponen Blade modular, native CSS variables, Vite bundler |
-| **Styling & Design System**| Custom Design System (DS-MagKom) + Tailwind CSS | Palet warna korporat Kominfo (Blue 600 `#0751FF`), tipografi Open Sans |
-| **Database & ORM** | MySQL / MariaDB (Eloquent ORM) | Skema relasional 25+ model dengan audit log trail dan strict foreign keys |
-| **Keamanan & Auth** | Laravel Session + Sanctum + Socialite | Multi-guard RBAC, rate-limiting kustom, CSRF protection, signed URLs |
+| **Styling & Design System**| Custom Design System (DS-MagKom) + Vanilla CSS | Palet warna korporat Kominfo (Blue 600 `#0751FF`), tipografi Open Sans & Plus Jakarta Sans |
+| **Database & ORM** | MySQL 8.0+ / MariaDB (Eloquent ORM) | 24 Tabel Domain MAGKOM + 5 Tabel Framework Laravel dengan audit log trail dan foreign keys ketat |
+| **Keamanan & Auth** | Laravel Session + Sanctum + Socialite (Google OAuth) | Multi-guard RBAC, rate-limiting kustom, CSRF protection, signed URLs |
 | **Realtime Engine** | Server-Sent Events (SSE) | HTTP streaming mandiri (`/realtime/stream`) via `RealtimeStreamController` |
-| **Reporting & Export** | Barryvdh DomPDF & ZipArchive | Penerbitan PDF Surat Diterima, Lembar Nilai, Sertifikat, dan bundel berkas ZIP |
-| **Testing Suite** | PHPUnit 10.x | 54 Feature Test suites + Automated Security Sweep |
+| **Reporting & Export** | Barryvdh DomPDF & ZipArchive | Penerbitan PDF Surat Balasan Penerimaan/Penolakan dan bundel berkas ZIP |
+| **Disaster Recovery** | Spatie Backup & Native Service | Backup terenkripsi/terkompresi `.sql.gz` dengan verifikasi hash SHA-256 |
+| **Testing Suite** | PHPUnit 10.x | 54 Feature Test suites + Automated Security Deep Defense Sweep (SQLite in-memory) |
 
 ---
 
@@ -44,13 +45,14 @@ graph TB
         Controllers["HTTP Controllers (app/Http/Controllers)"]
         ServiceLayer["Domain Services (app/Services)"]
         SseEngine["SSE Realtime Stream Engine"]
-        PdfGenerator["DomPDF Certificate & Report Engine"]
+        PdfGenerator["DomPDF Letter & Report Engine"]
+        BackupEngine["Backup & Disaster Recovery Service"]
     end
 
     subgraph DataStorageLayer ["Data & Storage Layer"]
-        MysqlDB[(MySQL / MariaDB Database)]
-        PrivateStorage[("Private Storage (app/storage/app/berkas)")]
-        AuditTrail[(Audit Log Records)]
+        MysqlDB[(MySQL Database: 24 Domain + 5 Framework)]
+        PrivateStorage[("Private Storage (storage/app/berkas)")]
+        AuditTrail[(Audit Log Records: audit_log)]
     end
 
     PublicUser --> RateLimiter
@@ -66,6 +68,7 @@ graph TB
     Controllers --> ServiceLayer
     ServiceLayer --> SseEngine
     ServiceLayer --> PdfGenerator
+    ServiceLayer --> BackupEngine
     ServiceLayer --> MysqlDB
     ServiceLayer --> AuditTrail
     Controllers --> PrivateStorage
@@ -78,30 +81,30 @@ graph TB
 ```text
 MAGKOM/
 ├── app/
-│   ├── Console/Commands/       # Perintah Artisan kustom (AnonimkanPeserta, TutupWaitingList)
+│   ├── Console/Commands/       # Perintah Artisan kustom (AnonimkanPeserta, dll.)
 │   ├── Enums/                  # PHP 8.1+ Enums (RealtimeEventTypeEnum, StatusPendaftaran, dll.)
 │   ├── Http/
 │   │   ├── Controllers/        # Controller terbagi per domain: Admin, Auth, Pembimbing, Peserta, Public, SuperAdmin
 │   │   ├── Middleware/         # Guard RBAC, verifikasi email, proteksi password staf, throttle
 │   │   └── Requests/           # Validasi form terpusat (Form Request validation)
-│   ├── Models/                 # 25 Eloquent Models dengan audit hooks dan relasi
+│   ├── Models/                 # 25 Eloquent Models aktif dengan audit hooks dan relasi
 │   ├── Providers/              # Service providers (RouteServiceProvider, AppServiceProvider)
-│   └── Services/               # 18 Domain Services (PlacementService, ScoringService, AuditService, dll.)
+│   └── Services/               # Domain Services (PlacementService, AuditService, GutenbergBlockService, BackupService, dll.)
 ├── database/
 │   ├── factories/              # Factory data uji untuk automated testing
-│   ├── migrations/             # 32 file migrasi database (skema terstruktur 2026)
-│   └── seeders/                # Database seeder (akun default, master jurusan, data dummy 20 peserta)
+│   ├── migrations/             # 35 file migrasi database (skema terstruktur 2026 pasca-decommissioning)
+│   └── seeders/                # Database seeder (akun default, master jurusan, izin sistem, pengaturan)
 ├── docs/
 │   ├── architecture/           # [READ-ONLY INSPECTOR] Dokumentasi struktural sistem ini
 │   ├── plans/                  # Dokumen rencana teknis (web-planning)
-│   └── *.md                    # Spesifikasi PRD, TDD, Keamanan, dan Design System resmi
+│   └── *.md                    # Spesifikasi PRD, TDD, Keamanan, Skema DB, dan Design System resmi
 ├── public/                     # Web root: index.php, assets build, security.txt RFC 9116
 ├── resources/
-│   ├── css/                    # Entry CSS Vite
-│   ├── js/                     # Client JavaScript untuk interaksi form dan SSE listener
+│   ├── css/                    # Entry CSS Vite (app.css, pages/, layouts/)
+│   ├── js/                     # Client JavaScript untuk interaksi form, visual editor, dan SSE listener
 │   └── views/                  # Blade template hierarkis (layouts, components, admin, pembimbing, peserta, superadmin)
 ├── routes/
-│   ├── web.php                 # Rute utama aplikasi berorientasi session (129+ endpoints)
+│   ├── web.php                 # Rute utama aplikasi berorientasi session (130+ endpoints)
 │   └── api.php                 # Rute RESTful API / Sanctum
 ├── storage/                    # Tempat penyimpanan berkas privat peserta, PDF, dan cache
 └── tests/
@@ -116,4 +119,17 @@ MAGKOM/
 Sistem dirancang dengan pemisahan tanggung jawab yang ketat (*Separation of Concerns*):
 1. **Controller Ramping, Service Gemuk**: Controller hanya menerima input HTTP, memanggil Form Request untuk validasi, mendelegasikan ke `app/Services`, dan mengembalikan view atau JSON.
 2. **Keamanan Berkas Privat**: Berkas lamaran dan identitas (KTP, KTM, Surat Pengantar) tidak diletakkan di `public/`, melainkan di private storage yang hanya bisa diunduh melalui `temporarySignedRoute` dengan batasan waktu aktif.
-3. **Audit Trail Otomatis**: Setiap aksi sensitif (perubahan kuota, keputusan penolakan/penerimaan, pengubahan nilai, promosi waiting list) dicatat ke tabel `audit_log` via `AuditService`.
+3. **Audit Trail Otomatis**: Setiap aksi sensitif (perubahan kuota, keputusan penolakan/penerimaan, persetujuan tugas, pembuatan user, pemulihan backup) dicatat ke tabel `audit_log` via `AuditService`.
+4. **Alokasi Kuota Atomik & Seleksi Tegas**: Menggunakan pesimistic database locking (`lockForUpdate()`) untuk mencegah overbooking kuota bulanan tanpa fasilitas *Waiting List* (pendaftaran ditolak tegas jika kuota habis).
+5. **Penyelesaian Bimbingan 1-Klik**: Pembimbing lapangan dapat menyelesaikan bimbingan peserta secara langsung melalui tombol 1-klik yang mengotomatisasi update status peserta dan arsip data.
+
+---
+
+## 5. Indeks Referensi Terkait
+
+- [Dokumentasi Rute Lengkap](./ROUTES.md)
+- [Panduan Standar Pengembangan](./DEV-GUIDE.md)
+- [Arsitektur Styling & Aset](./STYLING.md)
+- [Spesifikasi PRD Terpadu](../01-PRD-MagKom.md)
+- [Dokumen Arsitektur Teknis TDD](../02-TDD-MagKom.md)
+- [Skema Basis Data & Data Dictionary](../04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md)

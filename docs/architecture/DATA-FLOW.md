@@ -1,14 +1,17 @@
-> Diperbarui: 2026-10-13 | commit: 1553e56 | mode: A
+> Diperbarui: 2026-11-09 | mode: Verified Living Documentation
 
 # Alur Data & Skema Database (DATA-FLOW.md)
 
-Dokumen ini menjelaskan aliran data untuk proses bisnis inti, relasi antar entitas, serta Entity-Relationship Diagram (ERD) dari 25 model Eloquent dalam Portal MagKom.
+Dokumen ini menjelaskan aliran data untuk proses bisnis inti, relasi antar entitas, serta Entity-Relationship Diagram (ERD) dari 24 tabel domain model Eloquent aktif dalam Portal MagKom.
+
+> **Catatan Singkronisasi**:  
+> Untuk rincian kamus data (*data dictionary*) lengkap 24 tabel domain dan 5 tabel framework, rujuk dokumen utama [docs/04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md](../04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md).
 
 ---
 
 ## 1. Alur Data Fitur Utama
 
-### A. Alur Pendaftaran & Seleksi Magang
+### A. Alur Pendaftaran & Seleksi Magang (Tanpa Waiting List)
 ```mermaid
 sequenceDiagram
     autonumber
@@ -19,49 +22,51 @@ sequenceDiagram
     participant SEC as DocumentStorageService
 
     P->>C: Mengisi Form & Mengunggah Berkas (KTP, KTM, Surat Pengantar)
-    C->>SEC: Enkripsi nama & simpan berkas ke storage/app/berkas/
+    C->>SEC: Enkripsi nama acak & simpan berkas ke storage/app/berkas/
     C->>DB: Buat record Pendaftaran (status: DRAFT)
     P->>C: Klik "Ajukan Pendaftaran"
-    C->>S: Evaluasi kuota jurusan di bulan terpilih
+    C->>S: Evaluasi kuota jurusan di bulan terpilih via lockForUpdate()
     alt Kuota Tersedia
-        S->>DB: Ubah status menjadi SUBMITTED / MENUNGGU_VERIFIKASI
+        S->>DB: Ubah status menjadi MENUNGGU_VERIFIKASI
+        C-->>P: Redirect sukses dengan Flash Message
     else Kuota Penuh
-        S->>DB: Masukkan ke status WAITING_LIST (FIFO antrean)
+        S->>DB: Pendaftaran ditolak tegas (Kuota Habis / DITOLAK)
+        C-->>P: Notifikasi kuota penuh (Seleksi transparan tanpa antrean tersembunyi)
     end
-    C-->>P: Redirect dengan Flash Message Sukses
 ```
 
-### B. Alur Eksekusi Magang, Logbook & Penilaian
+### B. Alur Eksekusi Magang, Logbook & Penyelesaian Bimbingan 1-Klik
 ```mermaid
 sequenceDiagram
     autonumber
     actor M as Peserta Magang
     actor B as Pembimbing Lapangan
     participant T as Tugas & Logbook Controller
-    participant SC as ScoringService
+    participant P as Penempatan Model
     participant PDF as DomPDF Generator
 
     B->>T: Buat Tugas Mandiri / Ambil dari TugasTemplate
-    M->>T: Mengunggah Progres Pengerjaan Tugas
-    B->>T: Review & Tandai Tugas Selesai
+    M->>T: Mengunggah Progres Pengerjaan Tugas & Berkas
+    B->>T: Review & Setujui Tugas (Status: SELESAI)
     M->>T: Mengisi Logbook Harian (Kegiatan, Capaian, Lampiran)
-    B->>T: Bulk Review / Verifikasi Logbook Mingguan
-    Note over B,M: Magang Berakhir (Masa Selesai)
-    B->>SC: Masukkan Nilai per Komponen Rubrik (Disiplin, Teknis, Inisiatif)
-    SC->>SC: Hitung Rata-rata Terbobot & Tentukan Predikat (A/B/C)
-    SC->>PDF: Generate Lembar Nilai & Terbitkan Sertifikat Digital
+    B->>T: Review & Verifikasi Logbook Mingguan
+    Note over B,M: Periode Magang Berakhir
+    B->>P: Klik Tombol "Selesaikan Bimbingan" (1-Klik Completion)
+    P->>P: Update status Penempatan menjadi SELESAI
+    P->>PDF: Opsional cetak Surat Keterangan / Laporan Rekapitulasi
 ```
 
 ---
 
-## 2. Entity-Relationship Diagram (ERD)
+## 2. Entity-Relationship Diagram (ERD) Domain Inti
 
 ```mermaid
 erDiagram
     USERS ||--o{ PENDAFTARAN : "memiliki"
-    USERS ||--o| PESERTA_PROFIL : "memiliki"
-    USERS ||--o{ PENEMPATAN : "dibimbing oleh / ditempatkan"
+    USERS ||--o| PESERTA_PROFIL : "memiliki profil"
+    USERS ||--o{ PENEMPATAN : "peserta / pembimbing"
     USERS ||--o{ AUDIT_LOG : "mencatat aktivitas"
+    USERS ||--o{ PESERTA_KELOMPOK : "anggota kelompok"
     
     JURUSAN ||--o{ KUOTA : "alokasi kuota"
     JURUSAN ||--o{ PENDAFTARAN : "jurusan peserta"
@@ -69,19 +74,15 @@ erDiagram
     BULAN_MAGANG ||--o{ PENDAFTARAN : "periode dipilih"
     
     BIDANG ||--o{ PENEMPATAN : "unit kerja magang"
+    BIDANG ||--o{ TUGAS_TEMPLATE : "template tugas bidang"
     
     PENDAFTARAN ||--o{ DOKUMEN : "melampirkan berkas"
     PENDAFTARAN ||--o| PENEMPATAN : "diterima menjadi"
     
     PENEMPATAN ||--o{ TUGAS : "menerima tugas"
     PENEMPATAN ||--o{ LOGBOOK : "mengisi logbook"
-    PENEMPATAN ||--o| PENILAIAN : "dievaluasi"
-    PENEMPATAN ||--o| SURVEI_KEPUASAN : "mengisi umpan balik"
-    PENEMPATAN ||--o{ AGENDA_BIMBINGAN : "menghadiri mentoring"
     
     TUGAS ||--o{ PROGRES_LOG : "riwayat progres"
-    PENILAIAN ||--o{ PENILAIAN_DETAIL : "rincian komponen rubrik"
-    RUBRIK ||--o{ PENILAIAN_DETAIL : "standar acuan"
     
     USERS {
         bigint id PK
@@ -99,7 +100,6 @@ erDiagram
         string institusi
         string no_hp
         string kontak_darurat
-        boolean persetujuan_wali
     }
 
     BULAN_MAGANG {
@@ -123,7 +123,7 @@ erDiagram
         bigint user_id FK
         bigint bulan_magang_id FK
         bigint jurusan_id FK
-        string status "draft|submitted|diterima|ditolak|waiting_list"
+        string status "draft|menunggu_verifikasi|diterima|ditolak"
         datetime tanggal_pengajuan
     }
 
@@ -156,14 +156,6 @@ erDiagram
         string status_verifikasi "draft|disetujui|catatan"
     }
 
-    PENILAIAN {
-        bigint id PK
-        bigint penempatan_id FK
-        decimal nilai_akhir
-        string predikat "Sangat Baik|Baik|Cukup"
-        text catatan_evaluasi
-    }
-
     AUDIT_LOG {
         bigint id PK
         bigint user_id FK
@@ -179,8 +171,8 @@ erDiagram
 ## 3. Strategi Penyimpanan Data & Session State
 
 1. **Session Driver (`database`)**:
-   - Seluruh sesi pengguna disimpan dalam tabel `sessions` MySQL untuk ketahanan serverless/multi-worker dan memungkinkan fitur pembatalan sesi simultan (*single session concurrency* bila diperlukan).
+   - Seluruh sesi pengguna disimpan dalam tabel framework `sessions` MySQL untuk ketahanan serverless/multi-worker dan memungkinkan fitur pembatalan sesi simultan bila diperlukan.
 2. **Cache Store (`database`)**:
-   - Menggunakan tabel `cache` untuk agregasi data kuota berkala dan metrik dashboard harian guna meminimalkan query repetitif ke tabel transaksi utama.
-3. **Penyimpanan Berkas Privat (`local storage/app/berkas`)**:
-   - Berkas fisik dipisahkan sepenuhnya dari direktori public web. Unduhan divalidasi melalui rute URL bertanda tangan relatif (`signed:relative`) dengan pengecekan kepemilikan data (IDOR mitigation).
+   - Menggunakan tabel framework `cache` untuk agregasi data kuota berkala dan metrik dashboard harian guna meminimalkan query repetitif ke tabel transaksi utama.
+3. **Penyimpanan Berkas Privat (`storage/app/berkas`)**:
+   - Berkas fisik dipisahkan sepenuhnya dari direktori public web. Unduhan divalidasi melalui rute URL bertanda tangan relatif (`signed:relative`) dengan verifikasi otorisasi Form Request / Policy (IDOR mitigation).

@@ -9,7 +9,7 @@ Aturan tampilan, token, komponen, dan pemetaan status untuk portal magang Dinas 
 | Tanggal | 9 Oktober 2026 |
 | Status | Draft; belum disetujui Product Owner dan desainer |
 | Penyusun / Reviewer | *[diisi]* |
-| Berlaku untuk | `PRD-MagKom.md` v1.1 (bab 9 dan 10.7) dan `TDD-MagKom.md` |
+| Berlaku untuk | [`01-PRD-MagKom.md`](./01-PRD-MagKom.md) v1.3 dan [`02-TDD-MagKom.md`](./02-TDD-MagKom.md) |
 | Sumber | Ekspor file Figma **MAGKOM Kominfo Sleman** (`.fig`, diekspor 8 Oktober 2026). Nilai diekstrak langsung dari isi file (variabel, frame, dan properti node), bukan dari tangkapan layar. Halaman Figma yang dipakai: **`testing`**, bagian "Design system dan overlay" (Design System v1.0, 30 September 2026) dan layar-layar terbarunya |
 | Tautan Figma | Kedua key di PRD 9.1 tidak dapat dibuka tanpa akses; dokumen ini disusun dari berkas ekspor. Tautan final tetap menunggu OQ-13 |
 

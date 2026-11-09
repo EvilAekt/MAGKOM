@@ -5,7 +5,7 @@
 > [!IMPORTANT]
 > **Dokumen Induk Panduan Pengembangan:**  
 > Untuk panduan langkah-demi-langkah setup lingkungan, git workflow, dan quality gates (Pint & PHPStan), silakan mengacu langsung pada dokumen induk:  
-> 📖 [**`docs/DEVELOPMENT-GUIDE.md`**](file:///g:/MAGKOM/docs/DEVELOPMENT-GUIDE.md)
+> 📖 [**`docs/DEVELOPMENT-GUIDE.md`**](../DEVELOPMENT-GUIDE.md)
 
 ---
 
@@ -35,7 +35,7 @@ Akses antarmuka web di: `http://localhost:8000` (atau port yang ditentukan pada 
 
 ## 2. Konvensi Menambah Fitur Baru
 
-Sesuai aturan arsitektur permanen [`AGENTS.md`](file:///g:/MAGKOM/.agents/rules/AGENTS.md), patuhi pemisahan tanggung jawab berikut:
+Sesuai aturan arsitektur permanen [`AGENTS.md`](../../.agents/rules/AGENTS.md), patuhi pemisahan tanggung jawab berikut:
 
 ### A. Backend Layered Architecture
 1. **Route (`routes/web.php`)**: Daftarkan rute dalam grup middleware yang tepat (`role:peserta`, `role:pembimbing`, `role:admin`, atau `role:superadmin`). Selalu beri nama rute eksplisit (`->name(...)`).

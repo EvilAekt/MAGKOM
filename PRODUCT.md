@@ -1,83 +1,67 @@
-# Product
+# Product Context & System Boundaries
 
 <!-- impeccable:product-schema 1 -->
 
 ## Platform
 
-web
+Web Application (Desktop & Responsive Mobile)
 
 ## Users
 
-Empat peran, semuanya dinyatakan sama pentingnya (bukan satu peran prioritas):
+Empat peran aktor resmi dalam sistem (*Role-Based Access Control*), dengan batasan wewenang terisolasi:
 
-- **Peserta magang** — 15 pendaftar baru per bulan (12 jalur umum + 3 slot khusus), durasi 1–6 bulan, sekitar 90 peserta aktif bersamaan. Situasi: sering di ponsel, waktu terbatas di sela jam kerja; pekerjaan utamanya mengerjakan tugas, mengunggah progres, mengisi logbook mingguan, dan memantau status.
-- **Pembimbing** — saat ini **satu orang** pegawai Kominfo. Memberi tugas, meninjau progres dan logbook, menilai dengan rubrik, menetapkan nilai akhir dan status selesai. Volume: menangani puluhan peserta aktif sekaligus, kerja di desktop.
-- **Admin (Administrasi Kominfo)** — memverifikasi pendaftaran, mengelola kuota bulan, menetapkan dan memindahkan Pembimbing, mengelola Waiting List.
-- **SuperAdmin** — mengelola master data dan akun staf, slot khusus, pengaturan sistem, arsip, dan audit log. Pada fungsi Pembimbing (tugas, review, penilaian) hanya **melihat**.
+- **Peserta Magang**: Siswa SMK dan mahasiswa perguruan tinggi (D3/S1). Volume: ~15 pendaftar per periode formasi bulanan (12 kuota reguler + 3 slot khusus instansi), dengan durasi aktif 1–6 bulan (~90 peserta aktif simultan). Karakteristik: dominan mengakses via perangkat mobile/smartphone; aktivitas harian mencakup pengunggahan berkas persyaratan, pemantauan status pendaftaran, pengerjaan tugas ber-deadline, unggah progres kerja, dan pengisian presensi logbook mingguan.
+- **Pembimbing Lapangan**: Pegawai Aparatur Sipil Negara (ASN) di lingkungan dinas teknis terkait. Aktivitas utama: mengawasi peserta bimbingan, menerbitkan instruksi tugas proyek (didukung library template tugas), mereview laporan progres, memvalidasi logbook mingguan (mendukung *bulk review*), meninjau Profil 360 Mentee, dan menetapkan status selesai magang. Akses dominan via desktop.
+- **Admin Verifikator (Administrasi Kominfo)**: Staf sekretariat/tata usaha kedinasan. Aktivitas utama: memverifikasi validitas berkas pendaftar dalam batas SLA (5 hari kerja), memutuskan persetujuan/penolakan permohonan, mengalokasikan kuota formasi bulanan dan bidang dinas, melakukan plotting penempatan dua tahap, menunjuk pembimbing lapangan, dan mengunduh berkas bundel ZIP pendaftar.
+- **SuperAdmin (Administrator Utama)**: Pengelola sistem tingkat tinggi. Aktivitas utama: konfigurasi 12 parameter operasional aplikasi, pengelolaan akun pegawai/staf, pemantauan jejak audit (*audit trail multi-channel*), pengawasan telemetri kesehatan sistem & diagnostik server, pengelolaan jalur khusus kemitraan dinas, manajemen pencadangan basis data (*disaster recovery*), pengelolaan matriks izin akses dinamis (*dynamic RBAC*), serta pengelolaan landing page publik melalui *Visual Site Editor* berbasis blok. Pada ranah pembimbingan (tugas, progres, logbook mentee), SuperAdmin berstatus **Read-Only mutlak** (tidak memiliki hak mutasi data).
 
 ## Product Purpose
 
-Portal magang Dinas Kominfo Sleman yang menangani siklus penuh: pendaftaran → verifikasi dan kuota → penempatan dan penetapan Pembimbing → pelaksanaan (tugas, progres, logbook) → penilaian rubrik → kelulusan, masa tenggang, dan pengarsipan.
+Portal web terpadu untuk mengelola seluruh mata rantai siklus Praktik Kerja Lapangan (PKL) dan magang di Dinas Komunikasi dan Informatika secara transparan, akuntabel, dan efisien:  
+`Informasi Kuota Real-Time` → `Pendaftaran Online (Mandiri / Kelompok)` → `Verifikasi Berkas & Kuota Atomik` → `Penempatan Dua Tahap & Plotting Pembimbing` → `Pelaksanaan Magang (Tugas Terstruktur & Logbook Mingguan)` → `Penyelesaian Bimbingan 1-Klik` → `Masa Tenggang Akun (2 Bulan)` → `Penonaktifan Akun & Pengarsipan Permanen`.
 
-Keberhasilan berarti: satu Pembimbing tetap bisa membimbing puluhan peserta tanpa kehilangan jejak, tiap peserta selalu tahu posisinya tanpa perlu bertanya, dan nilai keluar dari rubrik yang konsisten serta dapat diaudit.
+Keberhasilan sistem diukur dari:
+1. Ketiadaan kondisi kuota minus pada akses pendaftaran konkuren (*zero quota race condition*).
+2. Transparansi posisi dan status bagi pendaftar tanpa ketergantungan konfirmasi manual.
+3. Efisiensi pembimbing lapangan dalam memantau puluhan mentee secara terpusat melalui Profil 360 Mentee dan Laporan Kinerja ASN.
+4. Kepatuhan audit trail forensik terhadap seluruh aksi mutasi dan akses data kedinasan.
 
-## Positioning
+## Positioning & Interface Principles
 
-Satu-satunya alur magang instansi yang **menjadikan status sebagai antarmuka**. Karena sistem sengaja tidak mengirim notifikasi dan tidak mengirim email undangan, dashboard, badge status, catatan Admin, dan timeline **adalah** kanal informasi utama — bukan pelengkap. Aturan operasional lapangan (kuota atomik, batas beban Pembimbing, masa tenggang, penilaian yang dapat diubah dengan alasan) dikodekan langsung ke dalam tampilan, bukan diserahkan ke kebiasaan pengguna.
+- **Status Sebagai Antarmuka Utama**: Sistem sengaja tidak menggunakan notifikasi email blast, SMS gateway, atau WhatsApp API (satu-satunya email yang dikirim adalah verifikasi akun saat registrasi dan tautan reset password). Status pendaftaran, badge tahapan, catatan verifikator, dan linimasa dashboard adalah instrumen informasi utama bagi pengguna.
+- **Visual Parity & Zero UI Redesign**: Antarmuka mempertahankan kesetaraan visual 100% dari design tokens yang telah disepakati (`DS-MagKom`), menggunakan palet warna korporat Kominfo Sleman, dan tipografi resmi Open Sans.
+- **Strict Separation of Concerns**: Pemisahan tegas antara markup presentasi Blade, stylesheet scoped di `resources/css/pages/`, dan modul interaksi ES Modules di `resources/js/pages/`.
 
 ## Operating Context
 
-- Instansi pemerintahan daerah (Dinas Komunikasi dan Informatika Kabupaten Sleman); bahasa antarmuka Indonesia formal tetapi tidak birokratis.
-- Admin menyerahkan akun dan password awal **secara manual di luar sistem**; staf wajib ganti password saat login pertama.
-- Tidak ada notifikasi push/email dan tidak ada login sosial; peserta memakai email terverifikasi.
-- Penilaian memakai rubrik berbobot; nilai dapat diubah dengan alasan minimal 10 karakter dan riwayat tersimpan.
-- Logbook bersifat mingguan (`minggu_ke`), hanya dalam rentang magang, tidak boleh tanggal masa depan, isi mundur dibatasi pengaturan (default 3 hari).
-- Tenggat tugas harus ≥ hari ini dan ≤ tanggal selesai penempatan; label "Terlambat" dan "mendekati deadline" (≤ 3 hari) dihitung saat dibaca.
-- Staf bekerja di desktop; peserta kemungkinan besar di ponsel.
-- Dokumen sumber: `docs/01-PRD-MagKom.md`, `docs/02-TDD-MagKom.md`, `docs/04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`, `docs/05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`, `docs/07-DESIGN-SYSTEM-MAGKOM.md`.
+- **Instansi**: Dinas Komunikasi dan Informatika Kabupaten Sleman. Bahasa antarmuka: Bahasa Indonesia formal, lugas, dan profesional.
+- **Autentikasi**: Formulir registrasi lokal dengan email terverifikasi serta integrasi Google OAuth via Laravel Socialite.
+- **Manajemen Akun Staf & Jalur Khusus**: SuperAdmin membuat akun staf pegawai dan pendaftar jalur khusus dengan kredensial awal (`password_awal`). Pemilik akun diwajibkan mengganti kata sandi saat sesi login perdana (`must_change_password`).
+- **Alur Penyelesaian Bimbingan**: Menggantikan mekanisme lembar nilai rubrik dan skala predikat lama yang telah dihapus permanen. Pembimbing menyelesaikan masa bimbingan mentee secara langsung melalui tombol penyelesaian 1-klik setelah seluruh target tugas terpenuhi.
+- **Presensi Logbook Mingguan**: Pengisian logbook dibatasi maksimal mundur 3 hari kerja (`logbook_maks_mundur_hari = 3`) untuk mencegah pelaporan rapel di akhir masa magang.
+- **Tenggat Tugas Terstruktur**: Wajib berjarak antara hari penugasan hingga sebelum tanggal berakhirnya penempatan mentee. Ambang batas peringatan mendekati deadline dihitung dinamis (default ≤ 3 hari).
+- **Dokumen Sumber**:
+  - [`01-PRD-MagKom.md`](./docs/01-PRD-MagKom.md) (Product Requirements Document)
+  - [`02-TDD-MagKom.md`](./docs/02-TDD-MagKom.md) (Technical Design Document)
+  - [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./docs/04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) (Kamus Data & Skema Basis Data)
+  - [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](./docs/05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md) (Spesifikasi Keamanan & Matriks Perizinan)
+  - [`07-DESIGN-SYSTEM-MAGKOM.md`](./docs/07-DESIGN-SYSTEM-MAGKOM.md) (Design System MagKom)
+  - [`DEVELOPMENT-GUIDE.md`](./docs/DEVELOPMENT-GUIDE.md) (Panduan Pengembangan & Setup)
+  - [`FRONTEND-ARCHITECTURE.md`](./docs/FRONTEND-ARCHITECTURE.md) (Arsitektur Aset Frontend Vite)
 
 ## Capabilities and Constraints
 
-- Laravel + Blade + Tailwind 3 + Vite (server-rendered, CSP produksi hanya `'self'`: font di-host sendiri, tanpa `style=` inline, tanpa CDN).
-- View tersusun per peran: `resources/views/{admin,pembimbing,peserta,superadmin,public,auth}`.
-- RBAC berjenjang lewat Policy; SuperAdmin hanya-baca pada seluruh fungsi Pembimbing; Pembimbing hanya mengakses peserta bimbingannya (cegah IDOR).
-- Penerimaan bersifat atomik dalam satu transaksi (kunci baris kuota, tambah terisi, buat penempatan, ubah status, tulis audit).
-- Batas beban Pembimbing dari pengaturan (default 20 peserta aktif; `null` = tanpa batas).
-- Penghapusan tugas tidak tersedia pada versi ini; tugas hanya dapat diedit selama belum selesai.
-- Tidak ada fitur presensi/kehadiran (di luar scope), tidak ada chat internal.
-- Halaman error kustom 403/404/419/429/500 wajib ada.
-- Master data yang masih dipakai penempatan aktif tidak boleh dinonaktifkan.
+- **Stack Terkunci**: **PHP 8.3.x**, **Laravel 10.x**, **Vite 6.x**, **MySQL 8.0+** (InnoDB). Pengujian otomatis menggunakan **PHPUnit 10.x** dengan SQLite `:memory:`.
+- **Kepatuhan CSP & Asset Management**: Seluruh aset dikelola melalui Vite. Dilarang menyisipkan blok `<style>` atau `<script>` inline di Blade, serta dilarang menambahkan atribut inline event handler (`onclick`, dll.) dan styling statis (`style="..."`).
+- **Penerimaan Atomik**: Alokasi kuota umum dan slot khusus wajib diapit transaksi database dengan `lockForUpdate()`.
+- **Penyimpanan Berkas Privat**: Berkas persyaratan pendaftar disimpan pada disk `private` dan diakses hanya lewat temporary signed URL berumur 5 menit yang dilindungi otorisasi Policy.
+- **Modul Visual Site Editor**: SuperAdmin dapat mengelola tata letak dan konten landing page publik melalui antarmuka editor blok visual (WordPress Gutenberg style) yang dilengkapi *Pattern Library*, *Reusable Blocks*, *Media Library*, serta *Revisions History & Rollback*.
+- **Pusat Cadangan & Pemulihan Basis Data**: Fasilitas backup instan basis data format `.sql.gz` terkompresi dengan verifikasi checksum SHA-256 dan perlindungan unduhan privat.
+- **Telemetri Diagnostik Server**: Command center pemantauan latensi HTTP, konektivitas database, integritas storage privat, serta 4 tombol aksi operasional (Security Sweep, Optimize DB, Clear Cache, Storage Write Test).
 
 ## Brand Commitments
 
-- Nama produk: **MagKom** (Magang Kominfo). Institusi: Dinas Kominfo Kabupaten Sleman.
-- Palet terkunci 11 token CSS Peeper, sudah hidup di `resources/css/base/variables.css`: `#02275D` `#01347C` `#003566` `#3F51B5` `#FFC300` `#FFCB05` `#212529` `#000000` `#AAAAAA` `#BBBBBB` `#FFFFFF`. Tidak ada warna merek lain, tidak ada merah/hijau semantik di luar pemetaan status turunan.
-- Tipografi terkunci: **Open Sans** (400/600/700) untuk seluruh antarmuka. Font generasi sebelumnya (Plus Jakarta Sans) tidak dipakai.
-- Aset yang disetujui: hanya logo resmi di `G:\MAGKOM\Logo`. Foto di `G:\MAGKOM\Aset Foto` **belum** disetujui untuk desain — gunakan placeholder abu-abu berlabel, jangan stok foto palsu.
-
-## Evidence on Hand
-
-- PRD v1.1 lengkap dengan 30+ acceptance criteria, matriks hak akses, state machine status, dan aturan bisnis BR-01…BR-16.
-- TDD, skema database + data dictionary, dokumen keamanan RBAC/audit, dan addendum QA.
-- Design system tertulis (`docs/07-DESIGN-SYSTEM-MAGKOM.md`) hasil ekstraksi file Figma "MAGKOM Kominfo Sleman".
-- Implementasi Blade + token CSS yang sudah berjalan di repo ini.
-- File desain kerja: `Designnnn/MagKom-Design.figcraft` (halaman 01 Design System, 02 Dashboard Pembimbing — Buat Tugas Baru).
-- Tidak ada testimoni, studi kasus, angka pencapaian, atau logo mitra yang boleh dikarang.
-
-## Product Principles
-
-1. **Status selalu terlihat.** Setiap status memakai warna **dan** ikon **dan** teks; tidak pernah warna saja.
-2. **Netral dulu, biru untuk aksi, kuning untuk perhatian.** Warna hanya bermakna, bukan dekorasi.
-3. **Satu layar harus cukup untuk mengambil keputusan.** Ringkasan, aturan yang berlaku, dan aksi utama tampil bersama; pengguna tidak perlu berpindah halaman untuk tahu konsekuensinya.
-4. **Aturan bisnis tampil sebagai bantuan kontekstual**, bukan pesan error setelah gagal (contoh: rentang tenggat yang sah ditampilkan di depan field).
-5. **Beban satu Pembimbing adalah batas desain.** Layar staf dioptimalkan untuk memproses banyak peserta dengan cepat, tanpa mengorbankan keterbacaan.
-
-## Accessibility & Inclusion
-
-WCAG 2.1 AA untuk halaman publik, auth, dan area Peserta (target PRD 9.5). Cincin fokus 3px terlihat di semua permukaan; target sentuh 44×44 px untuk publik/auth/peserta; area staf boleh memakai tombol tabel 36 px karena dioptimalkan untuk desktop. Teks bantu dan placeholder memakai `#003566` (bukan `#AAAAAA`) agar kontras ≥ 4,5:1; batas kontrol memakai `#BBBBBB`/`#AAAAAA` dan tidak boleh jadi satu-satunya penanda status. Makna tidak boleh bergantung pada warna saja, dan `prefers-reduced-motion` dihormati.
-
-## Open Decisions
-
-- Ilustrasi/imagery untuk halaman publik belum diputuskan (aset foto belum disetujui).
-- Breakpoint resmi mengikuti saran Tailwind (640/768/1024/1280); sidebar menjadi drawer di bawah 1024 — belum diuji dengan pengguna.
-- Aturan edit tugas setelah peserta mengunggah progres masih menunggu klarifikasi PO (AC-08-7).
+- **Identitas**: MagKom (Magang Kominfo) — Dinas Komunikasi dan Informatika Kabupaten Sleman.
+- **Design Tokens**: 11 Master CSS Peeper Tokens (`resources/css/base/variables.css`): `#02275D`, `#01347C`, `#003566`, `#3F51B5`, `#FFC300`, `#FFCB05`, `#212529`, `#000000`, `#AAAAAA`, `#BBBBBB`, `#FFFFFF`.
+- **Tipografi**: **Open Sans** (400, 600, 700) untuk seluruh antarmuka teks dan **JetBrains Mono** untuk representasi data kode/telemetri.
+- **Aset Logo**: Logo resmi Kominfo dan MagKom tersimpan pada direktori `public/images/`.
