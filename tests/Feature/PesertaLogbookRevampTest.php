@@ -102,13 +102,17 @@ class PesertaLogbookRevampTest extends TestCase
         // 3. Verifikasi tombol duplikat di header page title tidak ada
         $response->assertDontSee('<span>+ Isi Logbook</span>', false);
 
-        // 4. Verifikasi modal logbook dan sub-modal upload ala classroom
+        // 4. Verifikasi modal logbook dan input langsung lampiran (tanpa sub-modal bertumpuk / dropdown)
         $response->assertSee('modalTambahLogbook', false);
         $response->assertSee('modalEditLogbook', false);
-        $response->assertSee('modalLogbookLink', false);
-        $response->assertSee('modalLogbookFile', false);
-        $response->assertSee('btnTambahToggleDropdown', false);
-        $response->assertSee('btnEditToggleDropdown', false);
+        $response->assertSee('tambah_file_laporan', false);
+        $response->assertSee('tambah_link_laporan', false);
+        $response->assertSee('edit_file_laporan', false);
+        $response->assertSee('edit_link_laporan', false);
+        $response->assertDontSee('modalLogbookLink', false);
+        $response->assertDontSee('modalLogbookFile', false);
+        $response->assertDontSee('btnTambahToggleDropdown', false);
+        $response->assertDontSee('btnEditToggleDropdown', false);
 
         // 5. Verifikasi box panduan tips panjang di modal telah dihapus
         $response->assertDontSee('Panduan Penulisan Logbook Mingguan:', false);

@@ -705,4 +705,3 @@ class LandingCmsService
         );
     }
 }
-

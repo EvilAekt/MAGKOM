@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuDropdown = document.getElementById('menuTambahBerkas');
     const btnSerahkan = document.getElementById('btnSerahkanTugas');
     const attachmentsList = document.getElementById('attachmentsList');
-    const privateCommentInput = document.getElementById('privateCommentInput');
 
     // Hidden form inputs
     const formFileInput = document.getElementById('formFileInput');
@@ -24,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalLink = document.getElementById('modalTambahLink');
     const inputUrlLink = document.getElementById('inputUrlLink');
     const btnSubmitLink = document.getElementById('btnSubmitLink');
+    const linkErrorHint = document.getElementById('linkErrorHint');
 
     // Modal File Elements
     const modalFile = document.getElementById('modalSisipkanBerkas');
@@ -35,6 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalFileInput = document.getElementById('modalFileInput');
     const btnBrowse = document.getElementById('btnBrowseFile');
     const btnInsertRecent = document.getElementById('btnInsertRecent');
+    const btnSubmitUploadFile = document.getElementById('btnSubmitUploadFile');
+    const modalSelectedFileInfo = document.getElementById('modalSelectedFileInfo');
+    const modalFileNameTxt = document.getElementById('modalFileNameTxt');
+    const modalFileSizeTxt = document.getElementById('modalFileSizeTxt');
+    const btnRemoveModalFile = document.getElementById('btnRemoveModalFile');
 
     // State Internal
     let activeItem = {
@@ -43,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         meta: null,
         value: null,
     };
+    let tempPendingFile = null;
     let tempSelectedRecent = null;
 
     // Helper: Perbarui Tombol Serahkan & UI List
@@ -129,6 +135,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (inputUrlLink) {
                 inputUrlLink.focus();
                 inputUrlLink.select();
+                const val = inputUrlLink.value.trim();
+                if (val && isValidHttpUrl(val)) {
+                    btnSubmitLink?.removeAttribute('disabled');
+                    if (linkErrorHint) linkErrorHint.style.display = 'none';
+                } else {
+                    btnSubmitLink?.setAttribute('disabled', 'disabled');
+                }
             }
         });
     });
@@ -136,6 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-action="open-modal-file"]').forEach((el) => {
         el.addEventListener('click', () => {
             menuDropdown?.classList.remove('show');
+            // Reset upload file modal preview state
+            tempPendingFile = null;
+            if (modalSelectedFileInfo) modalSelectedFileInfo.style.display = 'none';
+            if (btnSubmitUploadFile) btnSubmitUploadFile.setAttribute('disabled', 'disabled');
+            if (modalFileInput) modalFileInput.value = '';
             openModal(modalFile);
             switchTab('upload');
         });
@@ -146,18 +164,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // =====================================================================
     function openModal(modalEl) {
         if (!modalEl) return;
-        modalEl.classList.add('show');
+        modalEl.classList.add('show', 'is-active');
         document.body.style.overflow = 'hidden';
     }
 
     function closeModal(modalEl) {
         if (!modalEl) return;
-        modalEl.classList.remove('show');
+        modalEl.classList.remove('show', 'is-active');
         document.body.style.overflow = '';
     }
 
     // Pasang tombol close & backdrop click untuk semua modal
-    document.querySelectorAll('.classroom-modal-backdrop').forEach((backdrop) => {
+    document.querySelectorAll('.classroom-modal-backdrop, .tugas-modal-backdrop').forEach((backdrop) => {
         backdrop.addEventListener('click', (e) => {
             if (e.target === backdrop) {
                 closeModal(backdrop);
@@ -178,8 +196,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const val = inputUrlLink.value.trim();
         if (val && isValidHttpUrl(val)) {
             btnSubmitLink?.removeAttribute('disabled');
+            if (linkErrorHint) linkErrorHint.style.display = 'none';
         } else {
             btnSubmitLink?.setAttribute('disabled', 'disabled');
+            if (linkErrorHint && val.length > 0) {
+                linkErrorHint.style.display = 'block';
+            } else if (linkErrorHint) {
+                linkErrorHint.style.display = 'none';
+            }
         }
     });
 
@@ -237,7 +261,10 @@ document.addEventListener('DOMContentLoaded', () => {
     tabBtnRecent?.addEventListener('click', () => switchTab('recent'));
 
     // Trigger browse
-    btnBrowse?.addEventListener('click', () => modalFileInput?.click());
+    btnBrowse?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        modalFileInput?.click();
+    });
     dropzoneBox?.addEventListener('click', (e) => {
         if (e.target !== btnBrowse) {
             modalFileInput?.click();
@@ -265,24 +292,47 @@ document.addEventListener('DOMContentLoaded', () => {
         const dt = e.dataTransfer;
         const files = dt?.files;
         if (files && files.length > 0) {
-            handleSelectedFile(files[0]);
+            stagePendingFile(files[0]);
         }
     });
 
     modalFileInput?.addEventListener('change', (e) => {
         const input = e.target;
         if (input.files && input.files[0]) {
-            handleSelectedFile(input.files[0]);
+            stagePendingFile(input.files[0]);
         }
     });
 
-    function handleSelectedFile(file) {
+    function stagePendingFile(file) {
         // Validasi ukuran maks 5MB
         if (file.size > 5 * 1024 * 1024) {
             alert('Ukuran berkas melebihi batas maksimal 5MB.');
             return;
         }
 
+        tempPendingFile = file;
+        const sizeFormatted = file.size > 1048576
+            ? (file.size / 1048576).toFixed(2) + ' MB'
+            : (file.size / 1024).toFixed(1) + ' KB';
+
+        if (modalFileNameTxt) modalFileNameTxt.textContent = file.name;
+        if (modalFileSizeTxt) modalFileSizeTxt.textContent = sizeFormatted;
+        if (modalSelectedFileInfo) modalSelectedFileInfo.style.display = 'flex';
+        btnSubmitUploadFile?.removeAttribute('disabled');
+    }
+
+    btnRemoveModalFile?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        tempPendingFile = null;
+        if (modalSelectedFileInfo) modalSelectedFileInfo.style.display = 'none';
+        btnSubmitUploadFile?.setAttribute('disabled', 'disabled');
+        if (modalFileInput) modalFileInput.value = '';
+    });
+
+    btnSubmitUploadFile?.addEventListener('click', () => {
+        if (!tempPendingFile) return;
+
+        const file = tempPendingFile;
         const sizeFormatted = file.size > 1048576
             ? (file.size / 1048576).toFixed(2) + ' MB'
             : (file.size / 1024).toFixed(1) + ' KB';
@@ -305,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         closeModal(modalFile);
         updateStateUI();
-    }
+    });
 
     // Seleksi Berkas Recent
     const recentCards = document.querySelectorAll('.recent-file-card');
@@ -340,32 +390,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStateUI();
     });
 
-    // Toggle Private Comment Area
-    const btnTogglePrivateComment = document.getElementById('btnTogglePrivateComment');
-    const wrapPrivateComment = document.getElementById('wrapPrivateComment');
-
-    if (privateCommentInput && privateCommentInput.value.trim().length > 0) {
-        if (wrapPrivateComment) wrapPrivateComment.style.display = 'block';
-        if (btnTogglePrivateComment) btnTogglePrivateComment.style.display = 'none';
-    }
-
-    btnTogglePrivateComment?.addEventListener('click', () => {
-        if (wrapPrivateComment) wrapPrivateComment.style.display = 'block';
-        if (btnTogglePrivateComment) btnTogglePrivateComment.style.display = 'none';
-        privateCommentInput?.focus();
-    });
-
     // =====================================================================
     // 6. SUBMISSION FORM PROGRESS
     // =====================================================================
     btnSerahkan?.addEventListener('click', () => {
         if (!activeItem.type) return;
-
-        // Sinkronisasi komentar pribadi ke formCatatanInput
-        if (privateCommentInput && formCatatanInput) {
-            const comment = privateCommentInput.value.trim();
-            formCatatanInput.value = comment || 'Mengumpulkan progres pekerjaan tugas.';
-        }
 
         btnSerahkan.classList.add('disabled');
         btnSerahkan.setAttribute('disabled', 'disabled');
@@ -375,6 +404,52 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         formProgres?.submit();
+    });
+
+    // =====================================================================
+    // 7. RESTORASI DRAFT LAMPIRAN SETELAH BATAL KIRIM
+    // =====================================================================
+    const unsubmittedFile = formProgres?.dataset.unsubmittedFile;
+    const unsubmittedFileName = formProgres?.dataset.unsubmittedFileName;
+    const unsubmittedLink = formProgres?.dataset.unsubmittedLink;
+
+    if (unsubmittedFile) {
+        activeItem = {
+            type: 'recent',
+            name: unsubmittedFileName || unsubmittedFile.split('/').pop(),
+            meta: 'Berkas Tersimpan Sebelumnya',
+            value: unsubmittedFile,
+        };
+        if (formRecentPathInput) formRecentPathInput.value = unsubmittedFile;
+        updateStateUI();
+    } else if (unsubmittedLink) {
+        activeItem = {
+            type: 'link',
+            name: unsubmittedLink,
+            meta: 'Tautan Tugas',
+            value: unsubmittedLink,
+        };
+        if (formLinkInput) formLinkInput.value = unsubmittedLink;
+        updateStateUI();
+    }
+
+    // =====================================================================
+    // 8. MODAL BATALKAN PENGIRIMAN (UNSUBMIT)
+    // =====================================================================
+    const btnBukaBatalKirim = document.getElementById('btnBukaModalBatalKirim');
+    const modalBatalKirim = document.getElementById('modalKonfirmasiBatalKirim');
+    const formBatalKirim = document.getElementById('formBatalKirimTugas');
+    const btnConfirmBatalKirim = document.getElementById('btnConfirmBatalKirim');
+
+    btnBukaBatalKirim?.addEventListener('click', () => {
+        openModal(modalBatalKirim);
+    });
+
+    formBatalKirim?.addEventListener('submit', () => {
+        if (btnConfirmBatalKirim) {
+            btnConfirmBatalKirim.setAttribute('disabled', 'disabled');
+            btnConfirmBatalKirim.textContent = 'Membatalkan...';
+        }
     });
 });
 

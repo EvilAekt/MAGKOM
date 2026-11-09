@@ -1,6 +1,6 @@
 @php
-    $kuotaHeading = $content['heading'] ?? \App\Support\Pengaturan::get('landing_kuota_heading', 'Ketersediaan Kuota Magang');
-    $kuotaSubheading = $content['subheading'] ?? \App\Support\Pengaturan::get('landing_kuota_subheading', 'Pilih jenjang pendidikan dan bulan mulai magang untuk melihat kuota jurusan yang tersedia.');
+    $kuotaHeading = $content['heading'] ?? \App\Support\Pengaturan::get('landing_kuota_heading', 'Pilih Penempatan & Ketersediaan Kuota Magang');
+    $kuotaSubheading = $content['subheading'] ?? \App\Support\Pengaturan::get('landing_kuota_subheading', 'Pilih jenjang pendidikan, tentukan bulan mulai, lalu pilih bidang penempatan dan jurusanmu untuk langsung mengamankan kuota pendaftaran.');
     $kuotaQ1 = $content['q1_label'] ?? \App\Support\Pengaturan::get('landing_kuota_q1_label', '1. Kamu siapa?');
     $kuotaPillSmk = $content['pill_smk'] ?? \App\Support\Pengaturan::get('landing_kuota_pill_smk', 'Siswa SMK');
     $kuotaPillMhs = $content['pill_mhs'] ?? \App\Support\Pengaturan::get('landing_kuota_pill_mhs', 'Mahasiswa (D3/S1)');
@@ -16,16 +16,19 @@
     $kuotaLegendHampir = $content['legend_hampir'] ?? \App\Support\Pengaturan::get('landing_kuota_legend_hampir', 'Tinggal sedikit');
     $kuotaLegendPenuh = $content['legend_penuh'] ?? \App\Support\Pengaturan::get('landing_kuota_legend_penuh', 'Penuh / Waiting List');
     $kuotaBtnTersedia = $content['btn_tersedia'] ?? \App\Support\Pengaturan::get('landing_kuota_btn_tersedia', 'Daftar Sekarang ➔');
-    $kuotaBtnWaiting = $content['btn_waiting'] ?? \App\Support\Pengaturan::get('landing_kuota_btn_waiting', 'Daftar Waiting List ➔');
     $kuotaBtnTutup = $content['btn_tutup'] ?? \App\Support\Pengaturan::get('landing_kuota_btn_tutup', 'Pendaftaran Ditutup');
 
     $bulanTampil = $bulanTampil ?? collect();
+    $bidangSmk = $bidangSmk ?? collect();
+    $bidangMahasiswa = $bidangMahasiswa ?? collect();
+    $matriksBidang = $matriksBidang ?? [];
     $jurusanSmk = $jurusanSmk ?? collect();
     $jurusanMahasiswa = $jurusanMahasiswa ?? collect();
     $matriksKetersediaan = $matriksKetersediaan ?? [];
 @endphp
 
-<section id="kuota" class="landing-section" data-wp-block="kuota" data-wp-block-name="Kuota & Formasi" data-wp-block-id="{{ $blockId ?? 'block-kuota-1' }}" style="order: {{ $order ?? 2 }}; padding-top: 3.5rem; padding-bottom: 3.5rem; {{ !($visible ?? true) && !($isEditorMode ?? false) ? 'display: none !important;' : '' }}">
+<section id="penempatan" class="landing-section" data-wp-block="kuota" data-wp-block-name="Kuota & Penempatan" data-wp-block-id="{{ $blockId ?? 'block-kuota-1' }}" style="order: {{ $order ?? 2 }}; padding-top: 1.5rem; padding-bottom: 2.5rem; {{ !($visible ?? true) && !($isEditorMode ?? false) ? 'display: none !important;' : '' }}">
+    <span id="kuota" class="sr-only" aria-hidden="true"></span>
     <h2 class="section-heading-lg">{{ $kuotaHeading }}</h2>
     <p class="section-desc-sub">{{ $kuotaSubheading }}</p>
 
@@ -117,42 +120,35 @@
             $pertamaBulanId = $bulanTampil->first()->id ?? null;
         @endphp
 
-        <!-- KARTU JURUSAN SMK -->
+        <!-- KARTU PENEMPATAN / BIDANG (SMK) -->
         @foreach($bulanTampil as $bulan)
-            @foreach($jurusanSmk as $jurusan)
+            @foreach($bidangSmk as $bidang)
                 @php
-                    $data = $matriksKetersediaan[$jurusan->id][$bulan->id] ?? null;
-                    $status = $data['status'] ?? \App\Enums\StatusKetersediaanEnum::Tutup;
-                    $sisa = $data['sisa_kuota'] ?? 0;
-                    $total = $data['total_kuota'] ?? 0;
-                    $persen = $data['persen_terisi'] ?? 0;
-                    $isWaiting = $data['is_waiting_list'] ?? false;
-                    $isAvailable = ($status === \App\Enums\StatusKetersediaanEnum::Tersedia);
-                    $namaBulanStr = \Carbon\CarbonImmutable::parse($bulan->bulan_mulai)->translatedFormat('F Y');
+                    $bData = $matriksBidang[$bidang->id]['smk'][$bulan->id] ?? null;
+                    if (!$bData) continue;
 
-                    // Badge status
-                    if ($isAvailable && !$isWaiting && $sisa > 0) {
-                        $badgeClass = ($total > 0 && ($sisa / $total) <= 0.34) ? 'status-hampir' : 'status-tersedia';
-                        $badgeLabel = ($total > 0 && ($sisa / $total) <= 0.34) ? 'Tinggal sedikit' : 'Tersedia';
-                        $barClass = ($total > 0 && ($sisa / $total) <= 0.34) ? 'bar-hampir' : 'bar-tersedia';
-                    } elseif ($isWaiting || ($isAvailable && $sisa === 0)) {
-                        $badgeClass = 'status-penuh';
-                        $badgeLabel = 'Waiting List';
-                        $barClass = 'bar-penuh';
-                    } else {
-                        $badgeClass = 'status-penuh';
-                        $badgeLabel = 'Tutup';
-                        $barClass = 'bar-penuh';
-                    }
+                    $jurusanList = $bData['jurusan_list'] ?? collect();
+                    $jDetail = $bData['jurusan_detail'] ?? [];
+                    $firstJurusanId = $jurusanList->first()?->id ?? '';
+                    $initJurusanData = $firstJurusanId ? ($jDetail[$firstJurusanId] ?? null) : null;
+
+                    $sisa = $initJurusanData ? $initJurusanData['sisa'] : ($bData['sisa_kuota'] ?? 0);
+                    $total = $initJurusanData ? $initJurusanData['total'] : ($bData['total_kuota'] ?? 0);
+                    $persen = $initJurusanData ? $initJurusanData['persen'] : ($bData['persen_terisi'] ?? 0);
+                    $isAvailable = $bData['is_available'] ?? false;
+                    $badgeLabel = $initJurusanData ? $initJurusanData['badge_label'] : ($sisa > 0 ? 'Tersedia' : 'Penuh');
+                    $badgeClass = $initJurusanData ? $initJurusanData['badge_class'] : ($sisa > 0 ? 'status-tersedia' : 'status-penuh');
+                    $barClass = $initJurusanData ? $initJurusanData['bar_class'] : ($sisa > 0 ? 'bar-tersedia' : 'bar-penuh');
+
                     $isAktifAwal = ($bulan->id === $pertamaBulanId);
                 @endphp
                 <div class="kuota-card {{ $sisa === 0 ? 'is-penuh' : '' }}"
                      data-jenjang="smk"
                      data-bulan-id="{{ $bulan->id }}"
-                     data-jurusan-id="{{ $jurusan->id }}"
+                     data-bidang-id="{{ $bidang->id }}"
+                     data-jurusan-id="{{ $firstJurusanId }}"
                      data-sisa="{{ $sisa }}"
                      data-total="{{ $total }}"
-                     data-is-waiting="{{ $isWaiting ? '1' : '0' }}"
                      data-is-available="{{ $isAvailable ? '1' : '0' }}"
                      style="{{ $isAktifAwal ? '' : 'display: none;' }}">
                     <div class="kuota-card-header">
@@ -162,7 +158,7 @@
                                 <path d="M6 8h.01M10 8h.01M14 8h.01"></path>
                             </svg>
                         </div>
-                        <h3 class="kuota-bidang-name">{{ $jurusan->nama_jurusan }}</h3>
+                        <h3 class="kuota-bidang-name">{{ $bidang->nama_bidang }}</h3>
                         <span class="kuota-status-pill {{ $badgeClass }}">{{ $badgeLabel }}</span>
                     </div>
 
@@ -176,44 +172,67 @@
                         <div class="kuota-progress-bar-fill {{ $barClass }}" style="width: {{ $persen }}%"></div>
                     </div>
 
-                    <p class="kuota-card-desc">{{ $jurusan->deskripsi ?? 'Kompetensi kejuruan tingkat menengah dengan bimbingan teknis intensif.' }}</p>
+                    <p class="kuota-card-desc">{{ $bidang->deskripsi ?? 'Penempatan tugas teknis dan operasional kejuruan pada Dinas Kominfo.' }}</p>
 
-                    @if($jurusan->bidang->isNotEmpty())
-                        <div class="kuota-jurusan-wrap">
-                            <span class="jurusan-lead">Penempatan:</span>
-                            @foreach($jurusan->bidang as $bdg)
-                                <span class="jurusan-tag">{{ $bdg->nama_bidang }}</span>
-                            @endforeach
+                    @if($jurusanList->isNotEmpty())
+                        <div class="kuota-jurusan-wrap" role="group" aria-label="Pilih Jurusan yang Sesuai">
+                            <span class="jurusan-lead">
+                                Penempatan: Jurusan yang Sesuai
+                                <small class="jurusan-lead-hint">(Klik jurusan Anda)</small>
+                            </span>
+                            <div class="jurusan-pills-list">
+                                @foreach($jurusanList as $jur)
+                                    @php
+                                        $jd = $jDetail[$jur->id] ?? null;
+                                        $jSisa = $jd ? $jd['sisa'] : 0;
+                                        $jTotal = $jd ? $jd['total'] : 0;
+                                        $jPersen = $jd ? $jd['persen'] : 0;
+                                        $jBadgeLabel = $jd ? $jd['badge_label'] : ($jSisa > 0 ? 'Tersedia' : 'Penuh');
+                                        $jBadgeClass = $jd ? $jd['badge_class'] : ($jSisa > 0 ? 'status-tersedia' : 'status-penuh');
+                                        $jBarClass = $jd ? $jd['bar_class'] : ($jSisa > 0 ? 'bar-tersedia' : 'bar-penuh');
+                                        $isFirst = ($jur->id === $firstJurusanId);
+                                    @endphp
+                                    <button type="button" 
+                                            class="jurusan-pill-btn {{ $isFirst ? 'active' : '' }}"
+                                            data-jurusan-id="{{ $jur->id }}"
+                                            data-jurusan-name="{{ $jur->nama_jurusan }}"
+                                            data-sisa="{{ $jSisa }}"
+                                            data-total="{{ $jTotal }}"
+                                            data-persen="{{ $jPersen }}"
+                                            data-badge-label="{{ $jBadgeLabel }}"
+                                            data-badge-class="{{ $jBadgeClass }}"
+                                            data-bar-class="{{ $jBarClass }}"
+                                            role="radio"
+                                            aria-checked="{{ $isFirst ? 'true' : 'false' }}"
+                                            title="Pilih {{ $jur->nama_jurusan }} ({{ $jSisa }} kursi tersisa)">
+                                        <span class="pill-check-icon" aria-hidden="true">✓</span>
+                                        <span class="jurusan-tag">{{ $jur->nama_jurusan }}</span>
+                                    </button>
+                                @endforeach
+                            </div>
                         </div>
                     @endif
 
                     <div class="kuota-card-footer">
-                        @if($isAvailable && !$isWaiting && $sisa > 0)
-                            <a href="{{ url('/register?bulan=' . $bulan->id . '&jurusan=' . $jurusan->id . '&tipe=mandiri&jumlah=1') }}" 
+                        @if($isAvailable && $sisa > 0)
+                            <a href="{{ url('/register?bulan=' . $bulan->id . '&bidang=' . $bidang->id . '&jenjang=smk' . ($firstJurusanId ? '&jurusan=' . $firstJurusanId : '') . '&tipe=mandiri&jumlah=1') }}" 
                                class="btn-card-action btn-primary-action btn-card-cta"
                                data-base-url="{{ url('/register') }}"
                                data-bulan-id="{{ $bulan->id }}"
-                               data-jurusan-id="{{ $jurusan->id }}"
+                               data-bidang-id="{{ $bidang->id }}"
+                               data-jurusan-id="{{ $firstJurusanId }}"
+                               data-jenjang="smk"
                                data-sisa="{{ $sisa }}"
                                data-total="{{ $total }}"
-                               data-is-waiting="0"
                                data-is-available="1">
                                 {{ $kuotaBtnTersedia }}
                             </a>
-                        @elseif($isWaiting || ($isAvailable && $sisa === 0))
-                            <a href="{{ url('/register?bulan=' . $bulan->id . '&jurusan=' . $jurusan->id . '&tipe=mandiri&jumlah=1') }}" 
-                               class="btn-card-action btn-waitlist-action btn-card-cta"
-                               data-base-url="{{ url('/register') }}"
-                               data-bulan-id="{{ $bulan->id }}"
-                               data-jurusan-id="{{ $jurusan->id }}"
-                               data-sisa="{{ $sisa }}"
-                               data-total="{{ $total }}"
-                               data-is-waiting="1"
-                               data-is-available="{{ $isAvailable ? '1' : '0' }}">
-                                {{ $kuotaBtnWaiting }}
-                            </a>
+                        @elseif($isAvailable && $sisa === 0)
+                            <button type="button" class="btn-card-action btn-disabled btn-card-cta" disabled>
+                                Kuota Penuh
+                            </button>
                         @else
-                            <button type="button" class="btn-card-action btn-disabled" disabled>
+                            <button type="button" class="btn-card-action btn-disabled btn-card-cta" disabled>
                                 {{ $kuotaBtnTutup }}
                             </button>
                         @endif
@@ -222,41 +241,33 @@
             @endforeach
         @endforeach
 
-        <!-- KARTU JURUSAN MAHASISWA -->
+        <!-- KARTU PENEMPATAN / BIDANG (MAHASISWA) -->
         @foreach($bulanTampil as $bulan)
-            @foreach($jurusanMahasiswa as $jurusan)
+            @foreach($bidangMahasiswa as $bidang)
                 @php
-                    $data = $matriksKetersediaan[$jurusan->id][$bulan->id] ?? null;
-                    $status = $data['status'] ?? \App\Enums\StatusKetersediaanEnum::Tutup;
-                    $sisa = $data['sisa_kuota'] ?? 0;
-                    $total = $data['total_kuota'] ?? 0;
-                    $persen = $data['persen_terisi'] ?? 0;
-                    $isWaiting = $data['is_waiting_list'] ?? false;
-                    $isAvailable = ($status === \App\Enums\StatusKetersediaanEnum::Tersedia);
-                    $namaBulanStr = \Carbon\CarbonImmutable::parse($bulan->bulan_mulai)->translatedFormat('F Y');
+                    $bData = $matriksBidang[$bidang->id]['mahasiswa'][$bulan->id] ?? null;
+                    if (!$bData) continue;
 
-                    // Badge status
-                    if ($isAvailable && !$isWaiting && $sisa > 0) {
-                        $badgeClass = ($total > 0 && ($sisa / $total) <= 0.34) ? 'status-hampir' : 'status-tersedia';
-                        $badgeLabel = ($total > 0 && ($sisa / $total) <= 0.34) ? 'Tinggal sedikit' : 'Tersedia';
-                        $barClass = ($total > 0 && ($sisa / $total) <= 0.34) ? 'bar-hampir' : 'bar-tersedia';
-                    } elseif ($isWaiting || ($isAvailable && $sisa === 0)) {
-                        $badgeClass = 'status-penuh';
-                        $badgeLabel = 'Waiting List';
-                        $barClass = 'bar-penuh';
-                    } else {
-                        $badgeClass = 'status-penuh';
-                        $badgeLabel = 'Tutup';
-                        $barClass = 'bar-penuh';
-                    }
+                    $jurusanList = $bData['jurusan_list'] ?? collect();
+                    $jDetail = $bData['jurusan_detail'] ?? [];
+                    $firstJurusanId = $jurusanList->first()?->id ?? '';
+                    $initJurusanData = $firstJurusanId ? ($jDetail[$firstJurusanId] ?? null) : null;
+
+                    $sisa = $initJurusanData ? $initJurusanData['sisa'] : ($bData['sisa_kuota'] ?? 0);
+                    $total = $initJurusanData ? $initJurusanData['total'] : ($bData['total_kuota'] ?? 0);
+                    $persen = $initJurusanData ? $initJurusanData['persen'] : ($bData['persen_terisi'] ?? 0);
+                    $isAvailable = $bData['is_available'] ?? false;
+                    $badgeLabel = $initJurusanData ? $initJurusanData['badge_label'] : ($sisa > 0 ? 'Tersedia' : 'Penuh');
+                    $badgeClass = $initJurusanData ? $initJurusanData['badge_class'] : ($sisa > 0 ? 'status-tersedia' : 'status-penuh');
+                    $barClass = $initJurusanData ? $initJurusanData['bar_class'] : ($sisa > 0 ? 'bar-tersedia' : 'bar-penuh');
                 @endphp
                 <div class="kuota-card {{ $sisa === 0 ? 'is-penuh' : '' }}"
                      data-jenjang="mahasiswa"
                      data-bulan-id="{{ $bulan->id }}"
-                     data-jurusan-id="{{ $jurusan->id }}"
+                     data-bidang-id="{{ $bidang->id }}"
+                     data-jurusan-id="{{ $firstJurusanId }}"
                      data-sisa="{{ $sisa }}"
                      data-total="{{ $total }}"
-                     data-is-waiting="{{ $isWaiting ? '1' : '0' }}"
                      data-is-available="{{ $isAvailable ? '1' : '0' }}"
                      style="display: none;">
                     <div class="kuota-card-header">
@@ -266,7 +277,7 @@
                                 <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
                             </svg>
                         </div>
-                        <h3 class="kuota-bidang-name">{{ $jurusan->nama_jurusan }}</h3>
+                        <h3 class="kuota-bidang-name">{{ $bidang->nama_bidang }}</h3>
                         <span class="kuota-status-pill {{ $badgeClass }}">{{ $badgeLabel }}</span>
                     </div>
 
@@ -280,44 +291,67 @@
                         <div class="kuota-progress-bar-fill {{ $barClass }}" style="width: {{ $persen }}%"></div>
                     </div>
 
-                    <p class="kuota-card-desc">{{ $jurusan->deskripsi ?? 'Program magang keahlian tingkat perguruan tinggi dengan proyek riil dinas.' }}</p>
+                    <p class="kuota-card-desc">{{ $bidang->deskripsi ?? 'Penempatan proyek nyata keahlian bidang teknologi informasi dan komunikasi.' }}</p>
 
-                    @if($jurusan->bidang->isNotEmpty())
-                        <div class="kuota-jurusan-wrap">
-                            <span class="jurusan-lead">Penempatan:</span>
-                            @foreach($jurusan->bidang as $bdg)
-                                <span class="jurusan-tag">{{ $bdg->nama_bidang }}</span>
-                            @endforeach
+                    @if($jurusanList->isNotEmpty())
+                        <div class="kuota-jurusan-wrap" role="group" aria-label="Pilih Jurusan yang Sesuai">
+                            <span class="jurusan-lead">
+                                Penempatan: Jurusan yang Sesuai
+                                <small class="jurusan-lead-hint">(Klik jurusan Anda)</small>
+                            </span>
+                            <div class="jurusan-pills-list">
+                                @foreach($jurusanList as $jur)
+                                    @php
+                                        $jd = $jDetail[$jur->id] ?? null;
+                                        $jSisa = $jd ? $jd['sisa'] : 0;
+                                        $jTotal = $jd ? $jd['total'] : 0;
+                                        $jPersen = $jd ? $jd['persen'] : 0;
+                                        $jBadgeLabel = $jd ? $jd['badge_label'] : ($jSisa > 0 ? 'Tersedia' : 'Penuh');
+                                        $jBadgeClass = $jd ? $jd['badge_class'] : ($jSisa > 0 ? 'status-tersedia' : 'status-penuh');
+                                        $jBarClass = $jd ? $jd['bar_class'] : ($jSisa > 0 ? 'bar-tersedia' : 'bar-penuh');
+                                        $isFirst = ($jur->id === $firstJurusanId);
+                                    @endphp
+                                    <button type="button" 
+                                            class="jurusan-pill-btn {{ $isFirst ? 'active' : '' }}"
+                                            data-jurusan-id="{{ $jur->id }}"
+                                            data-jurusan-name="{{ $jur->nama_jurusan }}"
+                                            data-sisa="{{ $jSisa }}"
+                                            data-total="{{ $jTotal }}"
+                                            data-persen="{{ $jPersen }}"
+                                            data-badge-label="{{ $jBadgeLabel }}"
+                                            data-badge-class="{{ $jBadgeClass }}"
+                                            data-bar-class="{{ $jBarClass }}"
+                                            role="radio"
+                                            aria-checked="{{ $isFirst ? 'true' : 'false' }}"
+                                            title="Pilih {{ $jur->nama_jurusan }} ({{ $jSisa }} kursi tersisa)">
+                                        <span class="pill-check-icon" aria-hidden="true">✓</span>
+                                        <span class="jurusan-tag">{{ $jur->nama_jurusan }}</span>
+                                    </button>
+                                @endforeach
+                            </div>
                         </div>
                     @endif
 
                     <div class="kuota-card-footer">
-                        @if($isAvailable && !$isWaiting && $sisa > 0)
-                            <a href="{{ url('/register?bulan=' . $bulan->id . '&jurusan=' . $jurusan->id . '&tipe=mandiri&jumlah=1') }}" 
+                        @if($isAvailable && $sisa > 0)
+                            <a href="{{ url('/register?bulan=' . $bulan->id . '&bidang=' . $bidang->id . '&jenjang=s1' . ($firstJurusanId ? '&jurusan=' . $firstJurusanId : '') . '&tipe=mandiri&jumlah=1') }}" 
                                class="btn-card-action btn-primary-action btn-card-cta"
                                data-base-url="{{ url('/register') }}"
                                data-bulan-id="{{ $bulan->id }}"
-                               data-jurusan-id="{{ $jurusan->id }}"
+                               data-bidang-id="{{ $bidang->id }}"
+                               data-jurusan-id="{{ $firstJurusanId }}"
+                               data-jenjang="mahasiswa"
                                data-sisa="{{ $sisa }}"
                                data-total="{{ $total }}"
-                               data-is-waiting="0"
                                data-is-available="1">
                                 {{ $kuotaBtnTersedia }}
                             </a>
-                        @elseif($isWaiting || ($isAvailable && $sisa === 0))
-                            <a href="{{ url('/register?bulan=' . $bulan->id . '&jurusan=' . $jurusan->id . '&tipe=mandiri&jumlah=1') }}" 
-                               class="btn-card-action btn-waitlist-action btn-card-cta"
-                               data-base-url="{{ url('/register') }}"
-                               data-bulan-id="{{ $bulan->id }}"
-                               data-jurusan-id="{{ $jurusan->id }}"
-                               data-sisa="{{ $sisa }}"
-                               data-total="{{ $total }}"
-                               data-is-waiting="1"
-                               data-is-available="{{ $isAvailable ? '1' : '0' }}">
-                                {{ $kuotaBtnWaiting }}
-                            </a>
+                        @elseif($isAvailable && $sisa === 0)
+                            <button type="button" class="btn-card-action btn-disabled btn-card-cta" disabled>
+                                Kuota Penuh
+                            </button>
                         @else
-                            <button type="button" class="btn-card-action btn-disabled" disabled>
+                            <button type="button" class="btn-card-action btn-disabled btn-card-cta" disabled>
                                 {{ $kuotaBtnTutup }}
                             </button>
                         @endif
