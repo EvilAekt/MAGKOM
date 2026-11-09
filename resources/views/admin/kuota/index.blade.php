@@ -657,13 +657,34 @@
             font-size: 0.875rem;
             font-family: inherit;
             color: #1E293B;
+            background: #FFFFFF;
+            cursor: pointer;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .input-calendar-wrap input:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .input-calendar-wrap input[type="date"]::-webkit-calendar-picker-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
         }
 
         .input-calendar-icon {
             position: absolute;
-            right: 0.75rem;
+            right: 0.85rem;
             pointer-events: none;
-            color: #94A3B8;
+            color: #64748B;
             display: flex;
             align-items: center;
         }
@@ -671,35 +692,43 @@
         .form-helper-text {
             font-size: 0.75rem;
             color: #64748B;
-            margin-top: 0.3rem;
+            margin-top: 0.35rem;
+            font-weight: 500;
         }
 
         .status-pills-group {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.35rem;
+            background: #F1F5F9;
+            padding: 0.3rem;
+            border-radius: 10px;
+            border: 1px solid #E2E8F0;
         }
 
         .btn-status-pill {
+            flex: 1;
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
-            padding: 0.45rem 1rem;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.5rem 0.85rem;
             border-radius: 8px;
             font-size: 0.8125rem;
             font-weight: 600;
             cursor: pointer;
-            border: 1px solid #E2E8F0;
-            background: #FFFFFF;
-            color: #475569;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #64748B;
             transition: all 0.15s ease;
         }
 
         .btn-status-pill.active {
-            border: 1.5px solid #2563EB;
-            background: #EFF6FF;
-            color: #2563EB;
+            border: 1px solid #CBD5E1;
+            background: #FFFFFF;
+            color: #0641CC;
             font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
         .modal-callout-info {
@@ -1213,8 +1242,8 @@
      ========================================================================= --}}
 @if($selectedBulan)
 <div id="modalUbahBulan" class="modal-overlay">
-    <div class="modal-card" style="max-width: 480px; padding: 1.75rem;">
-        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem;">
+    <div class="modal-card" style="max-width: 480px; padding: 1.75rem; border-radius: 14px;">
+        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0;">
             <div>
                 <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Ubah bulan</h3>
                 <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Tentukan jadwal pendaftaran dan mulai magang.</p>
@@ -1347,7 +1376,7 @@
             </div>
 
             {{-- 6. Footer Buttons --}}
-            <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: none;">
+            <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
                 <button type="button" onclick="closeUbahBulanModal()" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
                     Batal
                 </button>
@@ -1364,8 +1393,8 @@
      MODAL 2: BUAT BULAN BARU
      ========================================================================= --}}
 <div id="modalBuatBulan" class="modal-overlay">
-    <div class="modal-card" style="max-width: 480px; padding: 1.75rem;">
-        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem;">
+    <div class="modal-card" style="max-width: 480px; padding: 1.75rem; border-radius: 14px;">
+        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0;">
             <div>
                 <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Buat bulan baru</h3>
                 <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Tentukan jadwal pendaftaran dan mulai magang.</p>
@@ -1492,7 +1521,7 @@
             </div>
 
             {{-- 6. Footer Buttons --}}
-            <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: none;">
+            <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
                 <button type="button" onclick="closeBuatBulanModal()" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
                     Batal
                 </button>
@@ -1509,8 +1538,8 @@
      ========================================================================= --}}
 @if($selectedBulan)
 <div id="modalTambahKuota" class="modal-overlay modal-tambah-kuota">
-    <div class="modal-card" style="max-width: 520px; padding: 1.75rem;">
-        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem;">
+    <div class="modal-card" style="max-width: 540px; padding: 1.75rem; border-radius: 14px;">
+        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0;">
             <div>
                 <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Tambah kuota <span class="sr-only">Alokasikan Kuota Jurusan</span></h3>
                 <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Atur kuota, jurusan, jenjang, dan durasi untuk satu bidang.</p>
@@ -1528,17 +1557,20 @@
             <input type="hidden" name="bulan_magang_id" value="{{ $selectedBulan->id }}">
 
             {{-- 1. Baris 1: Bulan (Read-Only) & Bidang (Dropdown) --}}
-            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.875rem; width: 100%;">
+            <div style="display: grid; grid-template-columns: 130px 1fr; gap: 0.875rem; width: 100%;">
                 <div class="form-row-group">
                     <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Bulan</label>
                     <input type="text" 
                            value="{{ $selectedBulan->nama_bulan ?? ($selectedBulan->bulan_mulai?->translatedFormat('F Y') ?? 'Gelombang 1') }}" 
                            disabled 
-                           style="background: #F8FAFC; color: #475569; font-weight: 600; cursor: not-allowed;">
+                           style="background: #F8FAFC; color: #475569; font-weight: 600; cursor: not-allowed; text-align: center;">
                 </div>
                 <div class="form-row-group">
-                    <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Bidang <span style="color: #DC2626;">*</span></label>
-                    <select name="bidang_id" id="tambahKuotaBidangSelect" onchange="onBidangSelected(this.value)" required>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Bidang <span style="color: #DC2626;">*</span></label>
+                        <span id="infoBidangKapasitasMini" style="font-size: 0.725rem; color: #0641CC; font-weight: 600;"></span>
+                    </div>
+                    <select name="bidang_id" id="tambahKuotaBidangSelect" onchange="onBidangSelected(this.value)" required style="width: 100%; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: #FFFFFF; font-weight: 600; color: #0F172A;">
                         @foreach($bidangList as $b)
                             <option value="{{ $b['id'] }}" {{ $loop->first ? 'selected' : '' }}>
                                 {{ $b['nama'] }}
@@ -1549,16 +1581,16 @@
             </div>
 
             {{-- 2. Baris 2: Jurusan yang Dibutuhkan (Chips) --}}
-            <div class="form-row-group">
+            <div class="form-row-group" style="margin-top: 0.25rem;">
                 <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">Jurusan yang dibutuhkan</label>
-                <div class="jurusan-chips-wrap" id="jurusanChipsContainer">
+                <div class="jurusan-chips-wrap" id="jurusanChipsContainer" style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
                     {{-- Dinamis diisi via JavaScript --}}
                 </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
                     <button type="button" class="btn-add-jurusan-chip" onclick="toggleExtraJurusanSelect()">
                         <span>+ Jurusan</span>
                     </button>
-                    <select id="extraJurusanSelect" onchange="addExtraJurusan(this)" style="display: none; height: 34px; font-size: 0.8125rem; padding: 0 0.5rem; border-radius: 6px; border: 1px solid #CBD5E1;">
+                    <select id="extraJurusanSelect" onchange="addExtraJurusan(this)" style="display: none; height: 36px; font-size: 0.8125rem; padding: 0 0.75rem; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #1E293B;">
                         <option value="">-- Pilih Jurusan Lain --</option>
                         @foreach($jurusanList as $jur)
                             <option value="{{ $jur->id }}" data-nama="{{ $jur->nama_jurusan }}">
@@ -1629,20 +1661,20 @@
             {{-- 5. Baris 5: Warning Box Peringatan Kapasitas Pembimbing --}}
             <div id="boxWarningKapasitas" class="box-capacity-warning" style="display: none;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                    <line x1="12" y1="9" x2="12" y2="13"></line>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
                 <div>
                     <strong>Melebihi kapasitas pembimbing</strong>
-                    <span id="textWarningKapasitasDetail">
+                    <span id="textWarningKapasitasDetail" style="display: block; font-size: 0.785rem; color: #B91C1C; margin-top: 0.2rem; line-height: 1.4;">
                         Kapasitas Persandian 12 peserta (2 Pembimbing x 6) dan kuota terpasang sudah 6, sisa kapasitas 6. Kurangi jumlah kuota yang ditambahkan atau tambah Pembimbing aktif di bidang ini.
                     </span>
                 </div>
             </div>
 
             {{-- 6. Footer Buttons --}}
-            <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: none;">
+            <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
                 <button type="button" onclick="closeTambahKuotaModal()" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
                     Batal
                 </button>
@@ -1659,13 +1691,18 @@
      MODAL 4: UBAH KUOTA PER BIDANG
      ========================================================================= --}}
 <div id="modalEditBidang" class="modal-overlay modal-edit-kuota">
-    <div class="modal-card" style="max-width: 580px;">
-        <div class="modal-header-row">
+    <div class="modal-card" style="max-width: 580px; padding: 1.75rem; border-radius: 14px;">
+        <div class="modal-header-row" style="align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0;">
             <div>
-                <h3 class="modal-title" id="editBidangTitle">Ubah Kuota Bidang</h3>
-                <small style="color: #64748B; font-size: 0.75rem;">Atur status buka/tutup dan kapasitas peserta untuk bidang ini.</small>
+                <h3 class="modal-title" id="editBidangTitle" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Ubah Kuota Bidang</h3>
+                <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Atur status buka/tutup dan kapasitas peserta untuk bidang ini.</p>
             </div>
-            <button type="button" onclick="closeEditBidangModal()" class="modal-btn-close">&times;</button>
+            <button type="button" onclick="closeEditBidangModal()" class="modal-btn-close-box" aria-label="Tutup">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
         <form id="formEditBidang" method="POST" action="">
             @csrf
@@ -1891,7 +1928,12 @@
     function onBidangSelected(bidangId) {
         const bidang = masterBidangData.find(b => b.id == bidangId);
         const container = document.getElementById('jurusanChipsContainer');
+        const miniInfo = document.getElementById('infoBidangKapasitasMini');
         if (!bidang || !container) return;
+
+        if (miniInfo) {
+            miniInfo.innerText = `${bidang.pembimbing_count} Pembimbing • Sisa: ${bidang.sisa_kapasitas} kursi`;
+        }
 
         container.innerHTML = '';
         activeJurusanIds = [];
