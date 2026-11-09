@@ -2,7 +2,11 @@
 
 <div align="center">
 
-![MagKom Banner](https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg)
+  <a href="https://github.com/EvilAekt/MAGKOM">
+    <img src="public/images/logo-kominfo.svg" alt="Logo Kementerian Komunikasi dan Informatika" width="125" height="125" style="display: inline-block; margin-bottom: 0.5rem;" />
+  </a>
+  <br/>
+  <img src="public/images/logo-magkom.png" alt="Logo MagKom" width="190" style="display: inline-block; margin-bottom: 1rem;" />
 
 ### **Portal Manajemen & Tata Kelola Magang Terpadu**
 #### **Dinas Komunikasi dan Informatika**
