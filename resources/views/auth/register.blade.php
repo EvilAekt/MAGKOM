@@ -33,6 +33,11 @@
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
                     <div style="font-size: 0.975rem; font-weight: 700; color: var(--neutral-900);">
                         {{ $selectedJurusan->nama_jurusan }} ({{ strtoupper($selectedJurusan->kategori) }})
+                        @if(isset($selectedBidang) && $selectedBidang)
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--blue-600); margin-left: 0.35rem;">• Penempatan: {{ $selectedBidang->nama_bidang }}</span>
+                        @elseif($selectedJurusan->bidang->isNotEmpty())
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--blue-600); margin-left: 0.35rem;">• Penempatan: {{ $selectedJurusan->bidang->pluck('nama_bidang')->implode(', ') }}</span>
+                        @endif
                     </div>
                     <span style="font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 9999px; background: {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? '#dbeafe' : '#e0e7ff' }}; color: {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? '#1e40af' : '#3730a3' }};">
                         {{ ($selectedTipe ?? request('tipe')) === 'kelompok' ? 'Kelompok (' . ($selectedJumlah ?? request('jumlah', 2)) . ' Orang)' : 'Individu (1 Orang)' }}
@@ -72,6 +77,9 @@
 
         @if(request('bulan'))
             <input type="hidden" name="redirect_bulan" value="{{ request('bulan') }}">
+        @endif
+        @if(request('bidang'))
+            <input type="hidden" name="redirect_bidang" value="{{ request('bidang') }}">
         @endif
         @if(request('jurusan'))
             <input type="hidden" name="redirect_jurusan" value="{{ request('jurusan') }}">

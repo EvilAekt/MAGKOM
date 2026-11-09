@@ -8,6 +8,7 @@ use App\Enums\JalurEnum;
 use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\StatusReviewProgresEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
@@ -121,7 +122,7 @@ class PesertaTugasClassroomUploadTest extends TestCase
         $response->assertSee('modalSisipkanBerkas');
         $response->assertSee('tabBtnUpload');
         $response->assertSee('tabBtnRecent');
-        $response->assertSee('Komentar pribadi');
+        $response->assertDontSee('Komentar pribadi');
         $response->assertSee('Pekerjaan tidak dapat diserahkan setelah tenggat');
     }
 
@@ -254,5 +255,57 @@ class PesertaTugasClassroomUploadTest extends TestCase
         $response = $this->actingAs($this->peserta)->post(route('peserta.tugas.progres', $this->tugas), []);
 
         $response->assertSessionHasErrors(['catatan']);
+    }
+
+    public function test_peserta_tidak_dapat_mengumpulkan_tugas_dua_kali_jika_sedang_menunggu_review(): void
+    {
+        // Pengumpulan pertama
+        $this->actingAs($this->peserta)->post(route('peserta.tugas.progres', $this->tugas), [
+            'link' => 'https://github.com/magkom/submission-1',
+            'catatan' => 'Pengumpulan draf pertama.',
+        ]);
+
+        // Coba pengumpulan kedua sebelum direview pembimbing
+        $response = $this->actingAs($this->peserta)->post(route('peserta.tugas.progres', $this->tugas), [
+            'link' => 'https://github.com/magkom/submission-2',
+            'catatan' => 'Mencoba submit kedua kali.',
+        ]);
+
+        $response->assertSessionHas('error');
+
+        // Pastikan di halaman detail tombol kumpul terkunci dan muncul banner diserahkan
+        $showResponse = $this->actingAs($this->peserta)->get(route('peserta.tugas.show', $this->tugas));
+        $showResponse->assertOk();
+        $showResponse->assertSee('Tugas Telah Diserahkan');
+        $showResponse->assertDontSee('+ Tambah berkas');
+    }
+
+    public function test_peserta_dapat_mengumpulkan_ulang_jika_berstatus_perlu_revisi(): void
+    {
+        // Buat progres pertama dengan status perlu revisi
+        ProgresLog::create([
+            'tugas_id' => $this->tugas->id,
+            'catatan' => 'Draf pertama perlu revisi',
+            'link' => 'https://github.com/magkom/submission-1',
+            'status_review' => StatusReviewProgresEnum::PerluRevisi,
+            'feedback' => 'Perbaiki link repository ke branch main.',
+            'tgl_lapor' => now(),
+        ]);
+
+        // Peserta membuka halaman detail
+        $showResponse = $this->actingAs($this->peserta)->get(route('peserta.tugas.show', $this->tugas));
+        $showResponse->assertOk();
+        $showResponse->assertSee('Perlu Revisi');
+        $showResponse->assertSee('Perbaiki link repository ke branch main.');
+        $showResponse->assertSee('+ Tambah berkas');
+        $showResponse->assertSee('Serahkan Ulang Revisi');
+
+        // Peserta berhasil menyerahkan ulang
+        $response = $this->actingAs($this->peserta)->post(route('peserta.tugas.progres', $this->tugas), [
+            'link' => 'https://github.com/magkom/submission-revised',
+            'catatan' => 'Sudah diperbaiki ke branch main.',
+        ]);
+
+        $response->assertRedirect(route('peserta.tugas.show', $this->tugas));
     }
 }

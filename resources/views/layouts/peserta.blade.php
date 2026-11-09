@@ -1067,10 +1067,14 @@
         .main-wrapper {
             flex: 1;
             margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            max-width: calc(100% - var(--sidebar-width));
+            min-width: 0;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: clip;
         }
 
         .topbar {
@@ -1355,11 +1359,24 @@
         }
 
         .content-area {
-            padding: 32px;
+            padding: 28px 32px;
             flex: 1;
-            max-width: 1200px;
             width: 100%;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 1024px) {
+            .content-area {
+                padding: 20px 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 16px;
+            }
         }
 
         /* ========================================================
@@ -1743,6 +1760,8 @@
 
             html.sidebar-collapsed .main-wrapper {
                 margin-left: var(--sidebar-collapsed-width);
+                width: calc(100% - var(--sidebar-collapsed-width));
+                max-width: calc(100% - var(--sidebar-collapsed-width));
             }
 
             html.sidebar-collapsed .sidebar-header {
@@ -1829,6 +1848,8 @@
 
             .main-wrapper {
                 margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
             }
 
             .content-area {

@@ -490,7 +490,7 @@
                 "Untuk jalur Kelompok: Ketua kelompok menambahkan anggota dan mengunggah surat gabungan"
             ],
             docs: ["Surat Pengantar Institusi (PDF)", "Proposal Kegiatan Magang", "Curriculum Vitae (CV)", "Transkrip / Rapor"],
-            outcome: "Pengumuman status: Diterima (Penempatan terbit), Perbaikan Berkas (revisi 3 hari), atau Waiting List."
+            outcome: "Pengumuman status: Diterima (Penempatan terbit), Perbaikan Berkas (revisi 3 hari), atau Ditolak."
         },
         3: {
             title: "Tahap 3: Pelaksanaan Magang & Logbook Mingguan",

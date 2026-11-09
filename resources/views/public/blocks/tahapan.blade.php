@@ -58,6 +58,7 @@
         </div>
 
         <!-- Sisi Kanan (TahapanRoad Interactive SVG Engine) -->
+        <span id="peta-alur" class="sr-only" aria-hidden="true"></span>
         <div id="tahapanRoadWrapper" class="tahapan-road-wrapper">
             <!-- SVG Road Canvas (H = 210, total = 840, T = 80, B = 80) -->
             <svg width="170" height="1000" viewBox="0 -80 170 1000" class="tahapan-svg-canvas">

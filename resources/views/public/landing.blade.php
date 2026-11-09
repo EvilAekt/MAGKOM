@@ -45,12 +45,12 @@
     <!-- WordPress Site Editor Dynamic Dimension Tokens -->
     <style id="wp-site-editor-dynamic-styles">
         :root {
-            --wp-container-max-w: {{ \App\Support\Pengaturan::get('landing_container_max_width_px', '1280') }}px;
-            --wp-hero-title-font-size: {{ \App\Support\Pengaturan::get('landing_hero_title_size_px', '48') }}px;
-            --wp-hero-desc-font-size: {{ \App\Support\Pengaturan::get('landing_hero_desc_size_px', '16') }}px;
-            --wp-hero-padding-y: {{ \App\Support\Pengaturan::get('landing_hero_padding_y_px', '80') }}px;
-            --wp-hero-image-height: {{ \App\Support\Pengaturan::get('landing_hero_image_height_px', '420') }}px;
-            --wp-section-gap-y: {{ \App\Support\Pengaturan::get('landing_section_gap_px', '64') }}px;
+            --wp-container-max-w: {{ \App\Support\Pengaturan::get('landing_container_max_width_px', '1152') }}px;
+            --wp-hero-title-font-size: {{ \App\Support\Pengaturan::get('landing_hero_title_size_px', '34') }}px;
+            --wp-hero-desc-font-size: {{ \App\Support\Pengaturan::get('landing_hero_desc_size_px', '15') }}px;
+            --wp-hero-padding-y: {{ \App\Support\Pengaturan::get('landing_hero_padding_y_px', '0') }}px;
+            --wp-hero-image-height: {{ \App\Support\Pengaturan::get('landing_hero_image_height_px', '340') }}px;
+            --wp-section-gap-y: {{ \App\Support\Pengaturan::get('landing_section_gap_px', '0') }}px;
             --wp-card-border-radius: {{ \App\Support\Pengaturan::get('landing_card_radius_px', '12') }}px;
             --wp-card-padding: {{ \App\Support\Pengaturan::get('landing_card_padding_px', '24') }}px;
             --wp-faq-title-font-size: {{ \App\Support\Pengaturan::get('landing_faq_title_size_px', '18') }}px;
@@ -60,15 +60,16 @@
             --wp-color-gold: {{ \App\Support\Pengaturan::get('landing_theme_gold_color', '#F59E0B') }};
         }
 
-        /* Terapkan token dinamis ke elemen landing page */
-        .landing-hero, #beranda .hero-slider-wrapper { padding-top: var(--wp-hero-padding-y) !important; padding-bottom: var(--wp-hero-padding-y) !important; }
-        .hero-title, .landing-hero-title { font-size: var(--wp-hero-title-font-size) !important; }
+        /* Terapkan token dinamis ke elemen landing page dengan proporsi harmonis */
+        .landing-hero { padding-top: var(--wp-hero-padding-y) !important; padding-bottom: var(--wp-hero-padding-y) !important; }
+        #beranda .hero-slider-wrapper { padding: 0 !important; width: 100% !important; max-width: 100% !important; }
+        .hero-title, .landing-hero-title { font-size: min(var(--wp-hero-title-font-size), 36px) !important; }
         .hero-period-info, .section-desc-sub { font-size: var(--wp-hero-desc-font-size) !important; }
-        .landing-header-container, .hero-slider-wrapper, .kuota-questions-grid, .kuota-carousel-wrapper, .tahapan-split-container, .faq-redesign-container, .footer-clean-container { max-width: var(--wp-container-max-w) !important; }
-        .landing-section { margin-bottom: var(--wp-section-gap-y) !important; }
+        .landing-header-container, .kuota-questions-grid, .kuota-carousel-wrapper, .tahapan-split-container, .faq-redesign-container, .footer-clean-container { max-width: min(var(--wp-container-max-w), 72rem) !important; }
+        .landing-section { margin-bottom: 0 !important; }
         .bidang-kuota-card, .tahapan-card, .faq-card-modern, .hero-box { border-radius: var(--wp-card-border-radius) !important; }
         .faq-sub-question-btn { font-size: var(--wp-faq-title-font-size) !important; }
-        .landing-footer { padding-top: var(--wp-footer-padding-y) !important; padding-bottom: var(--wp-footer-padding-y) !important; }
+        .landing-footer { background-color: var(--navy-dark, #122846) !important; color: #f8fafc !important; }
 
         @php
             $respStyles = \App\Support\Pengaturan::json('landing_responsive_styles', []);
@@ -114,6 +115,25 @@
 </head>
 <body class="magkom-landing-body">
 
+    <!-- =======================================================================
+         0. SITE PRELOADER (SPLASH SCREEN LOGO SLEMAN & MAGKOM)
+         ======================================================================= -->
+    <div id="sitePreloader" class="site-preloader" aria-hidden="true">
+        <div class="preloader-content">
+            <div class="preloader-logo-wrap">
+                @include('partials.logo-sleman', ['class' => 'preloader-logo', 'width' => '76', 'height' => '76', 'style' => 'width: 76px; height: 76px; object-fit: contain;'])
+                <div class="preloader-pulse-ring"></div>
+            </div>
+            <div class="preloader-text-group">
+                <span class="preloader-brand-title">MAGKOM</span>
+                <span class="preloader-brand-sub">Dinas Komunikasi dan Informatika Sleman</span>
+            </div>
+            <div class="preloader-progress-bar">
+                <div class="preloader-progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
     {{-- Floating Control Bar saat Mode Pratinjau Staging Aktif --}}
     @include('public.partials._preview_control_bar')
 
@@ -125,14 +145,21 @@
         $headerBrandSub = \App\Support\Pengaturan::get('landing_header_brand_sub', 'Portal Magang · Diskominfo Sleman');
         $defaultHeaderNav = [
             ['label' => 'Beranda', 'url' => '#beranda'],
-            ['label' => 'Kuota', 'url' => '#kuota'],
+            ['label' => 'Penempatan', 'url' => '#penempatan'],
             ['label' => 'Tahapan', 'url' => '#tahapan'],
-            ['label' => 'Peta Alur', 'url' => '#tahapan'],
+            ['label' => 'Peta Alur', 'url' => '#peta-alur'],
             ['label' => 'FAQ', 'url' => '#faq'],
         ];
         $headerNavLinks = \App\Support\Pengaturan::json('landing_header_nav', $defaultHeaderNav);
         if (empty($headerNavLinks)) {
             $headerNavLinks = $defaultHeaderNav;
+        } else {
+            foreach ($headerNavLinks as &$navItem) {
+                if (($navItem['label'] ?? '') === 'Peta Alur' && ($navItem['url'] ?? '') === '#tahapan') {
+                    $navItem['url'] = '#peta-alur';
+                }
+            }
+            unset($navItem);
         }
     @endphp
     <header class="landing-header">
@@ -200,6 +227,9 @@
 
         $contextPayload = [
             'bulanTampil' => $bulanTampil ?? collect(),
+            'bidangSmk' => $bidangSmk ?? collect(),
+            'bidangMahasiswa' => $bidangMahasiswa ?? collect(),
+            'matriksBidang' => $matriksBidang ?? [],
             'jurusanSmk' => $jurusanSmk ?? collect(),
             'jurusanMahasiswa' => $jurusanMahasiswa ?? collect(),
             'matriksKetersediaan' => $matriksKetersediaan ?? [],
@@ -227,9 +257,6 @@
             @endif
         };
     </script>
-
-    <!-- Interactive Script -->
-    <script src="{{ asset('js/landing-interactive.js') }}?v={{ filemtime(public_path('js/landing-interactive.js')) }}"></script>
 
     {{-- WordPress Site Editor Interactive Canvas Runtime --}}
     @if(request()->boolean('editor_mode'))

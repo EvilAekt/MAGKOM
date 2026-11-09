@@ -2,7 +2,7 @@
  * =========================================================================
  * MAGKOM PESERTA: MODUL LOGBOOK & JURNAL MINGGUAN
  * Mengelola accordion, pencarian, dan sistem upload berkas/link
- * yang selaras dengan antarmuka pengumpulan tugas Google Classroom.
+ * ala Pembimbing (Single Header, Selector Bulat & Attached Cards).
  * =========================================================================
  */
 
@@ -90,11 +90,136 @@ export function initLogbookIndex() {
     const inputEditFile = document.getElementById('edit_file_laporan');
     const subtitleEdit = document.getElementById('modalEditSubtitle');
 
-    // State lampiran existing untuk Edit
+    // Context penunjuk target submodal ('tambah' atau 'edit')
+    let currentAttachmentContext = 'tambah';
     let editExistingFileName = null;
+
+    const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+
+    function updateLampiranMeta(context) {
+        const metaEl = document.getElementById(`${context}LampiranMeta`);
+        if (!metaEl) return;
+
+        const fileInput = document.getElementById(`${context}_file_laporan`);
+        const linkInput = document.getElementById(`${context}_link_laporan`);
+        let count = 0;
+
+        if (fileInput && fileInput.files && fileInput.files.length > 0) {
+            count++;
+        } else if (context === 'edit' && editExistingFileName) {
+            count++;
+        }
+
+        if (linkInput && (linkInput.value || '').trim().length > 0) {
+            count++;
+        }
+
+        if (count > 0) {
+            metaEl.textContent = `(opsional) · ${count} lampiran terpasang`;
+        } else {
+            metaEl.textContent = '(opsional) · PDF (maks. 2MB) atau Link HTTPS';
+        }
+    }
+
+    function renderFileCard(context, fileName, fileSizeText, onRemove) {
+        const container = document.getElementById(`${context}AttachedFilesContainer`);
+        if (!container) return;
+        container.innerHTML = '';
+
+        const card = document.createElement('div');
+        card.className = 'logbook-attached-card';
+
+        const info = document.createElement('div');
+        info.className = 'logbook-attached-info';
+
+        const icon = document.createElement('div');
+        icon.className = 'logbook-attached-icon';
+        icon.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>`;
+
+        const texts = document.createElement('div');
+        texts.className = 'logbook-attached-texts';
+
+        const title = document.createElement('div');
+        title.className = 'logbook-attached-title';
+        title.textContent = fileName;
+
+        const sub = document.createElement('div');
+        sub.className = 'logbook-attached-sub';
+        sub.textContent = fileSizeText;
+
+        texts.appendChild(title);
+        texts.appendChild(sub);
+        info.appendChild(icon);
+        info.appendChild(texts);
+
+        const btnRemove = document.createElement('button');
+        btnRemove.type = 'button';
+        btnRemove.className = 'btn-remove-logbook-attachment';
+        btnRemove.title = 'Hapus berkas lampiran';
+        btnRemove.innerHTML = '&times;';
+        btnRemove.addEventListener('click', () => {
+            container.innerHTML = '';
+            if (typeof onRemove === 'function') onRemove();
+            updateLampiranMeta(context);
+        });
+
+        card.appendChild(info);
+        card.appendChild(btnRemove);
+        container.appendChild(card);
+        updateLampiranMeta(context);
+    }
+
+    function renderLinkCard(context, linkUrl, onRemove) {
+        const container = document.getElementById(`${context}AttachedLinksContainer`);
+        if (!container) return;
+        container.innerHTML = '';
+
+        const card = document.createElement('div');
+        card.className = 'logbook-attached-card';
+
+        const info = document.createElement('div');
+        info.className = 'logbook-attached-info';
+
+        const icon = document.createElement('div');
+        icon.className = 'logbook-attached-icon';
+        icon.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>`;
+
+        const texts = document.createElement('div');
+        texts.className = 'logbook-attached-texts';
+
+        const title = document.createElement('div');
+        title.className = 'logbook-attached-title';
+        title.textContent = linkUrl;
+
+        const sub = document.createElement('div');
+        sub.className = 'logbook-attached-sub';
+        sub.textContent = 'Tautan Laporan (HTTPS)';
+
+        texts.appendChild(title);
+        texts.appendChild(sub);
+        info.appendChild(icon);
+        info.appendChild(texts);
+
+        const btnRemove = document.createElement('button');
+        btnRemove.type = 'button';
+        btnRemove.className = 'btn-remove-logbook-attachment';
+        btnRemove.title = 'Hapus tautan lampiran';
+        btnRemove.innerHTML = '&times;';
+        btnRemove.addEventListener('click', () => {
+            container.innerHTML = '';
+            if (typeof onRemove === 'function') onRemove();
+            updateLampiranMeta(context);
+        });
+
+        card.appendChild(info);
+        card.appendChild(btnRemove);
+        container.appendChild(card);
+        updateLampiranMeta(context);
+    }
 
     window.openTambahModal = function (preSelectMinggu = null) {
         if (!modalTambah) return;
+        currentAttachmentContext = 'tambah';
         modalTambah.classList.add('is-open');
         document.body.style.overflow = 'hidden';
 
@@ -105,18 +230,33 @@ export function initLogbookIndex() {
             window.onMingguChange(selectMinggu.value);
         }
 
-        renderAttachments('tambah');
+        const tambahFile = document.getElementById('tambah_file_laporan');
+        if (tambahFile) tambahFile.value = '';
+        const filesContainer = document.getElementById('tambahAttachedFilesContainer');
+        if (filesContainer) filesContainer.innerHTML = '';
+
+        const tambahLink = document.getElementById('tambah_link_laporan');
+        const linksContainer = document.getElementById('tambahAttachedLinksContainer');
+        if (linksContainer) {
+            linksContainer.innerHTML = '';
+            if (tambahLink && tambahLink.value) {
+                renderLinkCard('tambah', tambahLink.value, () => {
+                    tambahLink.value = '';
+                });
+            }
+        }
+        updateLampiranMeta('tambah');
     };
 
     window.closeTambahModal = function () {
         if (!modalTambah) return;
         modalTambah.classList.remove('is-open');
         document.body.style.overflow = '';
-        closeAllDropdowns();
     };
 
     window.openEditModal = function (id, mingguKe, tanggal, kegiatan, link = '', fileName = '') {
         if (!modalEdit || !formEdit) return;
+        currentAttachmentContext = 'edit';
 
         formEdit.action = `/peserta/logbook/${id}`;
         if (subtitleEdit) {
@@ -131,22 +271,37 @@ export function initLogbookIndex() {
         if (inputEditLink) inputEditLink.value = link || '';
         if (inputEditFile) inputEditFile.value = '';
 
-        editExistingFileName = fileName || null;
+        const editFilesContainer = document.getElementById('editAttachedFilesContainer');
+        if (editFilesContainer) editFilesContainer.innerHTML = '';
+        const editLinksContainer = document.getElementById('editAttachedLinksContainer');
+        if (editLinksContainer) editLinksContainer.innerHTML = '';
 
+        editExistingFileName = fileName || null;
+        if (editExistingFileName) {
+            renderFileCard('edit', editExistingFileName, 'Berkas tersimpan saat ini (PDF)', () => {
+                editExistingFileName = null;
+                if (inputEditFile) inputEditFile.value = '';
+            });
+        }
+
+        if (link) {
+            renderLinkCard('edit', link, () => {
+                if (inputEditLink) inputEditLink.value = '';
+            });
+        }
+
+        updateLampiranMeta('edit');
         modalEdit.classList.add('is-open');
         document.body.style.overflow = 'hidden';
-
-        renderAttachments('edit');
     };
 
     window.closeEditModal = function () {
         if (!modalEdit) return;
         modalEdit.classList.remove('is-open');
         document.body.style.overflow = '';
-        closeAllDropdowns();
     };
 
-    // Close modalls on backdrop click & ESC
+    // Close modals on backdrop click & ESC
     window.addEventListener('click', (e) => {
         if (e.target === modalTambah) window.closeTambahModal();
         if (e.target === modalEdit) window.closeEditModal();
@@ -154,304 +309,252 @@ export function initLogbookIndex() {
 
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            const subModalOpen = document.querySelector('.classroom-modal-backdrop.show');
-            if (subModalOpen) {
-                closeLogbookSubmodal(subModalOpen);
+            window.closeTambahModal();
+            window.closeEditModal();
+            closeSubmodalUpload();
+            closeSubmodalLink();
+        }
+    });
+
+    // -------------------------------------------------------------------------
+    // 5. SUB-MODAL POPUP DIALOGS (UPLOAD BERKAS & TAMBAH LINK)
+    // -------------------------------------------------------------------------
+    const modalUploadDialog = document.getElementById('modalLogbookUploadFileDialog');
+    const modalLinkDialog = document.getElementById('modalLogbookAddLinkDialog');
+
+    const dropzoneArea = document.getElementById('logbookDropzoneArea');
+    const btnBrowse = document.getElementById('btnLogbookBrowseFile');
+    const stagedFileInput = document.getElementById('modalStagedFileInput');
+    const submodalFileInfo = document.getElementById('submodalFileInfo');
+    const submodalFileName = document.getElementById('submodalFileName');
+    const submodalFileSize = document.getElementById('submodalFileSize');
+    const btnSubmodalRemoveFile = document.getElementById('btnSubmodalRemoveFile');
+    const submodalFileError = document.getElementById('submodalFileError');
+    const btnSubmodalConfirmFile = document.getElementById('btnSubmodalConfirmFile');
+
+    const inputSubmodalLinkUrl = document.getElementById('inputSubmodalLinkUrl');
+    const submodalLinkFieldFilled = document.getElementById('submodalLinkFieldFilled');
+    const submodalLinkError = document.getElementById('submodalLinkError') || document.getElementById('linkErrorHint');
+    const btnSubmodalConfirmLink = document.getElementById('btnSubmodalConfirmLink');
+
+    let stagedFileObj = null;
+
+    function openSubmodalUpload(context) {
+        currentAttachmentContext = context;
+        stagedFileObj = null;
+        if (stagedFileInput) stagedFileInput.value = '';
+        if (submodalFileInfo) submodalFileInfo.style.display = 'none';
+        if (submodalFileError) {
+            submodalFileError.style.display = 'none';
+            submodalFileError.textContent = '';
+        }
+        if (btnSubmodalConfirmFile) btnSubmodalConfirmFile.disabled = true;
+        modalUploadDialog?.classList.add('is-active');
+    }
+
+    function closeSubmodalUpload() {
+        modalUploadDialog?.classList.remove('is-active');
+    }
+
+    function openSubmodalLink(context) {
+        currentAttachmentContext = context;
+        const currentVal = document.getElementById(`${context}_link_laporan`)?.value || '';
+        if (inputSubmodalLinkUrl) {
+            inputSubmodalLinkUrl.value = currentVal;
+            if (currentVal.trim().length > 0) {
+                submodalLinkFieldFilled?.classList.add('has-value');
             } else {
-                window.closeTambahModal();
-                window.closeEditModal();
+                submodalLinkFieldFilled?.classList.remove('has-value');
             }
         }
-    });
-
-    // -------------------------------------------------------------------------
-    // 5. DROPDOWN "+ Tambah Berkas" (Link & File)
-    // -------------------------------------------------------------------------
-    const btnTambahToggle = document.getElementById('btnTambahToggleDropdown');
-    const menuTambahDropdown = document.getElementById('menuTambahDropdown');
-    const btnEditToggle = document.getElementById('btnEditToggleDropdown');
-    const menuEditDropdown = document.getElementById('menuEditDropdown');
-
-    btnTambahToggle?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        menuTambahDropdown?.classList.toggle('show');
-        menuEditDropdown?.classList.remove('show');
-    });
-
-    btnEditToggle?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        menuEditDropdown?.classList.toggle('show');
-        menuTambahDropdown?.classList.remove('show');
-    });
-
-    function closeAllDropdowns() {
-        menuTambahDropdown?.classList.remove('show');
-        menuEditDropdown?.classList.remove('show');
+        validateLinkInput();
+        modalLinkDialog?.classList.add('is-active');
+        setTimeout(() => inputSubmodalLinkUrl?.focus(), 50);
     }
 
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.btn-dropdown-wrapper')) {
-            closeAllDropdowns();
-        }
-    });
-
-    // -------------------------------------------------------------------------
-    // 6. SUB-MODAL LOGBOOK (Link & File - Classroom Style)
-    // -------------------------------------------------------------------------
-    let currentUploadContext = 'tambah'; // 'tambah' | 'edit'
-
-    const modalLink = document.getElementById('modalLogbookLink');
-    const inputUrl = document.getElementById('inputLogbookUrl');
-    const btnSubmitLink = document.getElementById('btnSubmitLogbookLink');
-
-    const modalFile = document.getElementById('modalLogbookFile');
-    const submodalFileInput = document.getElementById('submodalLogbookFileInput');
-    const btnBrowse = document.getElementById('btnBrowseLogbookFile');
-    const dropzoneBox = document.getElementById('logbookDropzoneBox');
-
-    function openLogbookSubmodal(modalEl) {
-        if (!modalEl) return;
-        modalEl.classList.add('show');
+    function closeSubmodalLink() {
+        modalLinkDialog?.classList.remove('is-active');
     }
 
-    function closeLogbookSubmodal(modalEl) {
-        if (!modalEl) return;
-        modalEl.classList.remove('show');
-    }
+    // Bind triggers to open submodals
+    document.getElementById('btnTambahTriggerUploadFile')?.addEventListener('click', () => openSubmodalUpload('tambah'));
+    document.getElementById('btnTambahTriggerAddLink')?.addEventListener('click', () => openSubmodalLink('tambah'));
+    document.getElementById('btnEditTriggerUploadFile')?.addEventListener('click', () => openSubmodalUpload('edit'));
+    document.getElementById('btnEditTriggerAddLink')?.addEventListener('click', () => openSubmodalLink('edit'));
 
-    // Pasang tombol close untuk submodals
-    document.querySelectorAll('[data-action="close-logbook-submodal"]').forEach((btn) => {
+    // Bind close buttons on submodals
+    document.querySelectorAll('[data-action="close-submodal"]').forEach((btn) => {
         btn.addEventListener('click', () => {
-            const backdrop = btn.closest('.classroom-modal-backdrop');
-            closeLogbookSubmodal(backdrop);
+            closeSubmodalUpload();
+            closeSubmodalLink();
         });
     });
 
-    document.querySelectorAll('.classroom-modal-backdrop').forEach((backdrop) => {
-        backdrop.addEventListener('click', (e) => {
-            if (e.target === backdrop) {
-                closeLogbookSubmodal(backdrop);
-            }
-        });
+    modalUploadDialog?.addEventListener('click', (e) => {
+        if (e.target === modalUploadDialog) closeSubmodalUpload();
     });
 
-    // Action Trigger: Buka Modal Link
-    document.querySelectorAll('[data-action="open-logbook-link"]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            currentUploadContext = btn.getAttribute('data-context') || 'tambah';
-            closeAllDropdowns();
-
-            const targetLinkInput = document.getElementById(`${currentUploadContext}_link_laporan`);
-            if (inputUrl) {
-                inputUrl.value = targetLinkInput?.value || '';
-                validateUrlInput();
-            }
-
-            openLogbookSubmodal(modalLink);
-            setTimeout(() => inputUrl?.focus(), 100);
-        });
-    });
-
-    // Action Trigger: Buka Modal File
-    document.querySelectorAll('[data-action="open-logbook-file"]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            currentUploadContext = btn.getAttribute('data-context') || 'tambah';
-            closeAllDropdowns();
-            if (submodalFileInput) submodalFileInput.value = '';
-            openLogbookSubmodal(modalFile);
-        });
-    });
-
-    // Validasi URL
-    function validateUrlInput() {
-        const val = (inputUrl?.value || '').trim();
-        const isValid = /^https?:\/\/.+/i.test(val);
-        if (isValid) {
-            btnSubmitLink?.removeAttribute('disabled');
-        } else {
-            btnSubmitLink?.setAttribute('disabled', 'disabled');
-        }
-    }
-
-    inputUrl?.addEventListener('input', validateUrlInput);
-
-    btnSubmitLink?.addEventListener('click', () => {
-        const val = (inputUrl?.value || '').trim();
-        if (!/^https?:\/\/.+/i.test(val)) {
-            alert('Silakan masukkan URL yang valid diawali dengan https://');
-            return;
-        }
-
-        const targetLinkInput = document.getElementById(`${currentUploadContext}_link_laporan`);
-        if (targetLinkInput) {
-            targetLinkInput.value = val;
-        }
-
-        closeLogbookSubmodal(modalLink);
-        renderAttachments(currentUploadContext);
+    modalLinkDialog?.addEventListener('click', (e) => {
+        if (e.target === modalLinkDialog) closeSubmodalLink();
     });
 
     // File Dropzone & Browse Handlers
-    btnBrowse?.addEventListener('click', () => submodalFileInput?.click());
-    dropzoneBox?.addEventListener('click', (e) => {
-        if (e.target !== btnBrowse) {
-            submodalFileInput?.click();
-        }
-    });
+    function handleSelectedFile(file) {
+        if (!file) return;
 
-    ['dragenter', 'dragover'].forEach((eventName) => {
-        dropzoneBox?.addEventListener(eventName, (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            dropzoneBox.classList.add('drag-over');
-        });
-    });
-
-    ['dragleave', 'drop'].forEach((eventName) => {
-        dropzoneBox?.addEventListener(eventName, (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            dropzoneBox.classList.remove('drag-over');
-        });
-    });
-
-    dropzoneBox?.addEventListener('drop', (e) => {
-        const dt = e.dataTransfer;
-        const files = dt?.files;
-        if (files && files.length > 0) {
-            handleSelectedLogbookFile(files[0]);
-        }
-    });
-
-    submodalFileInput?.addEventListener('change', (e) => {
-        const input = e.target;
-        if (input.files && input.files[0]) {
-            handleSelectedLogbookFile(input.files[0]);
-        }
-    });
-
-    function handleSelectedLogbookFile(file) {
         const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
         if (!isPdf) {
-            alert('Format berkas tidak valid. Harap mengunggah berkas PDF.');
+            if (submodalFileError) {
+                submodalFileError.textContent = 'Format berkas tidak valid. Hanya berkas PDF yang diperbolehkan.';
+                submodalFileError.style.display = 'block';
+            }
+            if (btnSubmodalConfirmFile) btnSubmodalConfirmFile.disabled = true;
             return;
         }
 
-        const maxBytes = 2 * 1024 * 1024; // 2MB
-        if (file.size > maxBytes) {
-            alert('Ukuran berkas melebihi 2MB. Silakan kompresi berkas terlebih dahulu.');
+        if (file.size > MAX_FILE_SIZE) {
+            if (submodalFileError) {
+                submodalFileError.textContent = 'Ukuran berkas melebihi 2MB. Silakan pilih berkas yang lebih kecil.';
+                submodalFileError.style.display = 'block';
+            }
+            if (btnSubmodalConfirmFile) btnSubmodalConfirmFile.disabled = true;
             return;
         }
 
-        const targetFileInput = document.getElementById(`${currentUploadContext}_file_laporan`);
-        if (targetFileInput) {
+        if (submodalFileError) {
+            submodalFileError.style.display = 'none';
+            submodalFileError.textContent = '';
+        }
+
+        stagedFileObj = file;
+        if (submodalFileName) submodalFileName.textContent = file.name;
+        if (submodalFileSize) submodalFileSize.textContent = `${(file.size / 1024).toFixed(0)} KB · Berkas PDF siap diterapkan`;
+        if (submodalFileInfo) submodalFileInfo.style.display = 'flex';
+        if (btnSubmodalConfirmFile) btnSubmodalConfirmFile.disabled = false;
+    }
+
+    dropzoneArea?.addEventListener('click', () => stagedFileInput?.click());
+    btnBrowse?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        stagedFileInput?.click();
+    });
+
+    dropzoneArea?.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzoneArea.classList.add('drag-over');
+    });
+
+    dropzoneArea?.addEventListener('dragleave', () => {
+        dropzoneArea.classList.remove('drag-over');
+    });
+
+    dropzoneArea?.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzoneArea.classList.remove('drag-over');
+        if (e.dataTransfer?.files?.length > 0) {
+            handleSelectedFile(e.dataTransfer.files[0]);
+        }
+    });
+
+    stagedFileInput?.addEventListener('change', () => {
+        if (stagedFileInput.files?.length > 0) {
+            handleSelectedFile(stagedFileInput.files[0]);
+        }
+    });
+
+    btnSubmodalRemoveFile?.addEventListener('click', () => {
+        stagedFileObj = null;
+        if (stagedFileInput) stagedFileInput.value = '';
+        if (submodalFileInfo) submodalFileInfo.style.display = 'none';
+        if (btnSubmodalConfirmFile) btnSubmodalConfirmFile.disabled = true;
+    });
+
+    btnSubmodalConfirmFile?.addEventListener('click', () => {
+        if (!stagedFileObj) return;
+
+        const targetInput = document.getElementById(`${currentAttachmentContext}_file_laporan`);
+        if (targetInput) {
             try {
                 const dt = new DataTransfer();
-                dt.items.add(file);
-                targetFileInput.files = dt.files;
-            } catch (_) {
+                dt.items.add(stagedFileObj);
+                targetInput.files = dt.files;
+            } catch {
                 // Fallback jika DataTransfer tidak didukung
             }
         }
 
-        if (currentUploadContext === 'edit') {
-            editExistingFileName = null; // Menimpa file lama
+        if (currentAttachmentContext === 'edit') {
+            editExistingFileName = null;
         }
 
-        closeLogbookSubmodal(modalFile);
-        renderAttachments(currentUploadContext);
-    }
+        renderFileCard(
+            currentAttachmentContext,
+            stagedFileObj.name,
+            `${(stagedFileObj.size / 1024).toFixed(0)} KB · PDF`,
+            () => {
+                if (targetInput) targetInput.value = '';
+                if (currentAttachmentContext === 'edit') editExistingFileName = null;
+            }
+        );
 
-    // -------------------------------------------------------------------------
-    // 7. Render Kartu Lampiran Terpilih (.attached-item-card)
-    // -------------------------------------------------------------------------
-    function renderAttachments(context) {
-        const container = document.getElementById(`${context}AttachmentsList`);
-        const fileInput = document.getElementById(`${context}_file_laporan`);
-        const linkInput = document.getElementById(`${context}_link_laporan`);
+        closeSubmodalUpload();
+    });
 
-        if (!container) return;
-        container.innerHTML = '';
+    // Link Submodal Validation & Handlers
+    function validateLinkInput() {
+        const val = (inputSubmodalLinkUrl?.value || '').trim();
+        const isValidHttps = val.startsWith('https://') && val.length > 8;
 
-        // 1. Cek Berkas File
-        const hasNewFile = fileInput?.files && fileInput.files.length > 0;
-        const hasExistingFile = context === 'edit' && editExistingFileName;
-
-        if (hasNewFile || hasExistingFile) {
-            const fileName = hasNewFile ? fileInput.files[0].name : editExistingFileName;
-            const fileSize = hasNewFile ? `${(fileInput.files[0].size / 1024).toFixed(0)} KB` : 'Berkas Laporan PDF';
-
-            const fileCard = document.createElement('div');
-            fileCard.className = 'attached-item-card';
-            fileCard.innerHTML = `
-                <div class="attached-item-left">
-                    <div class="attached-item-icon" style="background: #FEE2E2; color: #DC2626;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                        </svg>
-                    </div>
-                    <div class="attached-item-info">
-                        <div class="attached-item-name" title="${escapeHtml(fileName)}">${escapeHtml(fileName)}</div>
-                        <div class="attached-item-meta">${escapeHtml(fileSize)}</div>
-                    </div>
-                </div>
-                <button type="button" class="attached-item-remove" title="Hapus berkas" data-action="remove-file">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            `;
-
-            fileCard.querySelector('[data-action="remove-file"]')?.addEventListener('click', () => {
-                if (fileInput) fileInput.value = '';
-                if (context === 'edit') editExistingFileName = null;
-                renderAttachments(context);
-            });
-
-            container.appendChild(fileCard);
+        if (submodalLinkFieldFilled) {
+            submodalLinkFieldFilled.classList.toggle('has-value', val.length > 0);
         }
 
-        // 2. Cek Tautan Link
-        const linkVal = (linkInput?.value || '').trim();
-        if (linkVal) {
-            const linkCard = document.createElement('div');
-            linkCard.className = 'attached-item-card';
-            linkCard.innerHTML = `
-                <div class="attached-item-left">
-                    <div class="attached-item-icon" style="background: #EFF6FF; color: #2563EB;">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-                        </svg>
-                    </div>
-                    <div class="attached-item-info">
-                        <div class="attached-item-name" title="${escapeHtml(linkVal)}">${escapeHtml(linkVal)}</div>
-                        <div class="attached-item-meta">Tautan Dokumen / Repositori</div>
-                    </div>
-                </div>
-                <button type="button" class="attached-item-remove" title="Hapus tautan" data-action="remove-link">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            `;
-
-            linkCard.querySelector('[data-action="remove-link"]')?.addEventListener('click', () => {
-                if (linkInput) linkInput.value = '';
-                renderAttachments(context);
-            });
-
-            container.appendChild(linkCard);
+        if (val.length === 0) {
+            if (submodalLinkError) {
+                submodalLinkError.textContent = '*Wajib diisi';
+                submodalLinkError.style.display = 'block';
+            }
+            if (btnSubmodalConfirmLink) btnSubmodalConfirmLink.disabled = true;
+            return false;
         }
+
+        if (!isValidHttps) {
+            if (submodalLinkError) {
+                submodalLinkError.textContent = '*Wajib menggunakan https:// (contoh: https://drive.google.com/...)';
+                submodalLinkError.style.display = 'block';
+            }
+            if (btnSubmodalConfirmLink) btnSubmodalConfirmLink.disabled = true;
+            return false;
+        }
+
+        if (submodalLinkError) {
+            submodalLinkError.style.display = 'none';
+            submodalLinkError.textContent = '';
+        }
+        if (btnSubmodalConfirmLink) btnSubmodalConfirmLink.disabled = false;
+        return true;
     }
 
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
+    inputSubmodalLinkUrl?.addEventListener('input', validateLinkInput);
+
+    btnSubmodalConfirmLink?.addEventListener('click', () => {
+        if (!validateLinkInput()) return;
+
+        const linkVal = inputSubmodalLinkUrl.value.trim();
+        const targetInput = document.getElementById(`${currentAttachmentContext}_link_laporan`);
+        if (targetInput) {
+            targetInput.value = linkVal;
+        }
+
+        renderLinkCard(currentAttachmentContext, linkVal, () => {
+            if (targetInput) targetInput.value = '';
+        });
+
+        closeSubmodalLink();
+    });
 
     // -------------------------------------------------------------------------
-    // 8. Pencarian Realtime
+    // 6. Pencarian Realtime
     // -------------------------------------------------------------------------
     const searchInput = document.getElementById('inputSearchLogbook');
     const btnClearSearch = document.getElementById('btnClearSearch');

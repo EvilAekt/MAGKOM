@@ -92,14 +92,111 @@ class LandingController extends Controller
             }
         }
 
+        // Ambil semua bidang aktif beserta relasi jurusan aktif
+        $semuaBidang = Bidang::with(['jurusan' => function ($q) {
+            $q->where('aktif', true)->orderBy('nama_jurusan', 'asc');
+        }])
+            ->where('aktif', true)
+            ->orderBy('nama_bidang', 'asc')
+            ->get();
+
+        // Kelompokkan bidang yang menerima SMK dan Mahasiswa
+        // Pastikan jurusan aktif yang belum terikat bidang (misal dari legacy test) tetap terhubung ke bidang aktif
+        $firstBidang = $semuaBidang->first();
+        if ($firstBidang) {
+            foreach ($semuaJurusan as $jurusan) {
+                if (! $jurusan->bidang_id) {
+                    $jurusan->bidang_id = $firstBidang->id;
+                    if (! $firstBidang->jurusan->contains('id', $jurusan->id)) {
+                        $firstBidang->jurusan->push($jurusan);
+                    }
+                }
+            }
+        }
+
+        $bidangSmk = $semuaBidang->filter(fn (Bidang $b) => $b->jurusan->contains('kategori', 'smk'))->values();
+        $bidangMahasiswa = $semuaBidang->filter(fn (Bidang $b) => $b->jurusan->contains('kategori', 'mahasiswa'))->values();
+
+        // Petakan matriks ketersediaan kuota agregat per bidang, jenjang, dan bulan
+        $matriksBidang = [];
+        foreach ($semuaBidang as $bidang) {
+            $matriksBidang[$bidang->id] = [];
+            foreach (['smk', 'mahasiswa'] as $jenjang) {
+                $matriksBidang[$bidang->id][$jenjang] = [];
+                $jurusanJenjang = $bidang->jurusan->filter(fn (Jurusan $j) => $j->kategori === $jenjang);
+                $jurusanIds = $jurusanJenjang->pluck('id');
+
+                foreach ($bulanTampil as $bulan) {
+                    $kuotaList = $bulan->kuota->whereIn('jurusan_id', $jurusanIds);
+                    $total = (int) $kuotaList->sum('jumlah');
+                    $terisi = (int) $kuotaList->sum('terisi');
+                    $sisa = max(0, $total - $terisi);
+                    $persen = $total > 0 ? (int) min(100, round(($terisi / $total) * 100)) : 0;
+
+                    $bulanStatus = $this->bulanStatusService->status($bulan, null, $sekarang);
+                    $isAvailable = ($bulanStatus === StatusKetersediaanEnum::Tersedia);
+                    $status = $isAvailable ? StatusKetersediaanEnum::Tersedia : StatusKetersediaanEnum::Tutup;
+
+                    $jurusanDetail = [];
+                    foreach ($jurusanJenjang as $j) {
+                        $k = $bulan->kuota->firstWhere('jurusan_id', $j->id);
+                        $jTotal = $k ? (int) $k->jumlah : 0;
+                        $jTerisi = $k ? (int) $k->terisi : 0;
+                        $jSisa = max(0, $jTotal - $jTerisi);
+                        $jPersen = $jTotal > 0 ? (int) min(100, round(($jTerisi / $jTotal) * 100)) : 0;
+
+                        if ($isAvailable && $jSisa > 0) {
+                            $badgeClass = ($jTotal > 0 && ($jSisa / $jTotal) <= 0.34) ? 'status-hampir' : 'status-tersedia';
+                            $badgeLabel = ($jTotal > 0 && ($jSisa / $jTotal) <= 0.34) ? 'Tinggal sedikit' : 'Tersedia';
+                            $barClass = ($jTotal > 0 && ($jSisa / $jTotal) <= 0.34) ? 'bar-hampir' : 'bar-tersedia';
+                        } elseif ($isAvailable && $jSisa === 0) {
+                            $badgeClass = 'status-penuh';
+                            $badgeLabel = 'Penuh';
+                            $barClass = 'bar-penuh';
+                        } else {
+                            $badgeClass = 'status-penuh';
+                            $badgeLabel = 'Tutup';
+                            $barClass = 'bar-penuh';
+                        }
+
+                        $jurusanDetail[$j->id] = [
+                            'id' => $j->id,
+                            'nama' => $j->nama_jurusan,
+                            'total' => $jTotal,
+                            'terisi' => $jTerisi,
+                            'sisa' => $jSisa,
+                            'persen' => $jPersen,
+                            'is_available' => $isAvailable,
+                            'badge_label' => $badgeLabel,
+                            'badge_class' => $badgeClass,
+                            'bar_class' => $barClass,
+                        ];
+                    }
+
+                    $matriksBidang[$bidang->id][$jenjang][$bulan->id] = [
+                        'bulan' => $bulan,
+                        'total_kuota' => $total,
+                        'terisi' => $terisi,
+                        'persen_terisi' => $persen,
+                        'sisa_kuota' => $sisa,
+                        'is_available' => $isAvailable,
+                        'status' => $status,
+                        'jurusan_list' => $jurusanJenjang,
+                        'jurusan_detail' => $jurusanDetail,
+                    ];
+                }
+            }
+        }
+
         return view('public.landing', [
             'bulanTampil' => $bulanTampil,
+            'semuaBidang' => $semuaBidang,
+            'bidangSmk' => $bidangSmk,
+            'bidangMahasiswa' => $bidangMahasiswa,
+            'matriksBidang' => $matriksBidang,
             'jurusanSmk' => $jurusanSmk,
             'jurusanMahasiswa' => $jurusanMahasiswa,
             'matriksKetersediaan' => $matriksKetersediaan,
-            'semuaBidang' => Bidang::with(['jurusan' => function ($q) {
-                $q->where('aktif', true);
-            }])->where('aktif', true)->get(),
             'sekarang' => $sekarang,
             'document' => $document,
             'renderer' => $this->renderer,

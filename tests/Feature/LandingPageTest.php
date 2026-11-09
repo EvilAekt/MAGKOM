@@ -69,16 +69,17 @@ class LandingPageTest extends TestCase
         $response->assertSee('Tersedia');
     }
 
-    public function test_landing_page_menampilkan_label_waiting_list_jika_kuota_habis_dan_tombol_tetap_aktif(): void
+    public function test_landing_page_menampilkan_label_kuota_penuh_jika_kuota_habis_dan_tombol_nonaktif(): void
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
         // Jurusan TKJ diisi penuh 5 dari 5 (AC-01-3)
-        $response->assertSee('Waiting List');
-        $response->assertSee('Penuh / Waiting List');
-        $response->assertSee('Daftar Waiting List');
-        $response->assertSee('data-is-waiting="1"', false);
+        $response->assertSee('Penuh');
+        $response->assertSee('Kuota Penuh');
+        $response->assertDontSee('Waiting List');
+        $response->assertDontSee('Daftar Waiting List');
+        $response->assertDontSee('data-is-waiting="1"', false);
     }
 
     public function test_slot_khusus_tidak_pernah_bocor_di_response_publik_ac_01_5(): void
