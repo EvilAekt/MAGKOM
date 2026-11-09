@@ -508,19 +508,18 @@
             outcome: "Aktivitas tercatat rapi dan seluruh capaian kompetensi tervalidasi oleh mentor."
         },
         4: {
-            title: "Tahap 4: Evaluasi Akhir & Penerbitan E-Sertifikat",
-            badge: "Kelulusan & Sertifikasi",
+            title: "Tahap 4: Evaluasi Akhir & Lembar Nilai Resmi",
+            badge: "Kelulusan & Penilaian",
             duration: "1–3 Hari Setelah Selesai",
             timelineKey: "tahap4",
-            desc: "Di penghujung masa magang, Pembimbing memberikan evaluasi penilaian menyeluruh (aspek disiplin, ketrampilan teknis, kerjasama tim, dan inisiatif). Peserta mengisi kuesioner survei kepuasan dan dapat langsung mengunduh Sertifikat Resmi bertanda tangan digital.",
+            desc: "Di penghujung masa magang, Pembimbing memberikan evaluasi penilaian menyeluruh (aspek disiplin, ketrampilan teknis, kerjasama tim, dan inisiatif). Peserta dapat langsung mengakses dan mengunduh Lembar Nilai Akhir resmi berformat digital.",
             requirements: [
                 "Menyelesaikan seluruh kewajiban penugasan dan laporan akhir magang",
-                "Mengisi survei kepuasan layanan magang Diskominfo Sleman",
-                "Pembimbing menginput lembar nilai akhir (Nilai Angka & Predikat Memuaskan/Sangat Baik)",
-                "Mengunduh E-Sertifikat Resmi ber-QR Code validasi dari portal peserta"
+                "Pembimbing menginput lembar nilai akhir (Nilai Angka & Predikat)",
+                "Mengunduh Lembar Nilai Resmi dari portal peserta"
             ],
-            docs: ["Laporan Akhir Magang (PDF)", "Lembar Penilaian Pembimbing", "E-Sertifikat Resmi Diskominfo"],
-            outcome: "Penerbitan Lembar Nilai Resmi dan Sertifikat Digital yang dapat diverifikasi keasliannya."
+            docs: ["Laporan Akhir Magang (PDF)", "Lembar Penilaian Pembimbing"],
+            outcome: "Penerbitan Lembar Nilai Resmi yang mencerminkan pencapaian kompetensi magang."
         }
     };
 

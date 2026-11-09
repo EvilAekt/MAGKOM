@@ -31,7 +31,6 @@ use App\Models\PesertaProfil;
 use App\Models\ProgresLog;
 use App\Models\RouteMetric;
 use App\Models\SlotKhusus;
-use App\Models\SurveiKepuasan;
 use App\Models\Tugas;
 use App\Models\TugasTemplate;
 use App\Models\User;
@@ -498,18 +497,6 @@ class ProductionRealisticDataSeeder extends Seeder
                 );
             }
 
-            // Survei Kepuasan Alumni
-            SurveiKepuasan::updateOrCreate(
-                ['penempatan_id' => $penempatan->id],
-                [
-                    'skor_mentoring' => 5,
-                    'skor_tugas' => rand(4, 5),
-                    'skor_fasilitas' => rand(4, 5),
-                    'skor_nps' => rand(9, 10),
-                    'umpan_balik' => 'Pengalaman magang di Diskominfo Sleman sangat mendidik dan relevan dengan kebutuhan industri teknologi.',
-                    'saran' => 'Fasilitas jaringan wifi dan ruang kolaborasi sudah sangat prima, pertahankan program magang ini.',
-                ]
-            );
         }
 
         // =========================================================================
@@ -893,7 +880,7 @@ class ProductionRealisticDataSeeder extends Seeder
             [TipeAuditEnum::Aksi, 'logbook-presensi', 'info', 'setujui_logbook', 'Logbook', 1, 'Pembimbing menyetujui logbook mingguan peserta.', 'POST', '/pembimbing/logbook/1/setujui', 302],
             [TipeAuditEnum::Aksi, 'penempatan-mentor', 'info', 'selesai_magang', 'Penempatan', 1, 'Pembimbing menyelesaikan masa magang peserta.', 'POST', '/penempatan/1/selesai', 302],
             [TipeAuditEnum::Aksi, 'kuota-periode', 'info', 'update_kuota', 'Kuota', 1, 'Admin memperbarui alokasi kuota jurusan Teknik Informatika periode Desember 2026.', 'PUT', '/admin/kuota/1', 200],
-            [TipeAuditEnum::Aksi, 'survei-evaluasi', 'info', 'kirim_survei', 'SurveiKepuasan', 1, 'Peserta magang selesai mengisi instrumen evaluasi kepuasan IKM.', 'POST', '/peserta/survei', 302],
+            [TipeAuditEnum::Aksi, 'penilaian-kinerja', 'info', 'simpan_nilai', 'Penilaian', 1, 'Pembimbing menyimpan lembar nilai akhir magang peserta.', 'POST', '/pembimbing/penilaian', 302],
         ];
 
         for ($i = 0; $i < 40; $i++) {

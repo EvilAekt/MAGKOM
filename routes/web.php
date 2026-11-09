@@ -11,7 +11,6 @@ use App\Http\Controllers\Admin\PendaftaranController as AdminPendaftaranControll
 use App\Http\Controllers\Admin\PenempatanController as AdminPenempatanController;
 use App\Http\Controllers\Admin\PengaturanController as AdminPengaturanController;
 use App\Http\Controllers\Admin\ProfilController as AdminProfilController;
-use App\Http\Controllers\Admin\WaitingListController as AdminWaitingListController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -255,10 +254,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/pendaftaran/{pendaftaran}/surat-diterima', [AdminPendaftaranController::class, 'unduhSuratDiterima'])->name('pendaftaran.surat-diterima');
     Route::get('/pendaftaran/{pendaftaran}/surat-diterima/pratinjau', [AdminPendaftaranController::class, 'pratinjauSuratDiterima'])->name('pendaftaran.surat-diterima.pratinjau');
     Route::post('/pendaftaran/{pendaftaran}/putuskan', [AdminPendaftaranController::class, 'putuskan'])->name('pendaftaran.putuskan');
-
-    Route::get('/waiting-list', [AdminWaitingListController::class, 'index'])->name('waiting-list.index');
-    Route::post('/waiting-list/promote', [AdminWaitingListController::class, 'promoteFifo'])->name('waiting-list.promote');
-    Route::post('/waiting-list/{bulanMagang}/tutup', [AdminWaitingListController::class, 'tutupAntrean'])->name('waiting-list.tutup');
 
     Route::get('/penempatan', [AdminPenempatanController::class, 'index'])->name('penempatan.index');
     Route::post('/penempatan/tetapkan', [AdminPenempatanController::class, 'tetapkan'])->name('penempatan.tetapkan');

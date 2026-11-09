@@ -271,32 +271,6 @@ class BackendSupplementalFeaturesTest extends TestCase
         $this->assertEquals(StatusPenempatanEnum::MengundurkanDiri, $penempatan->status);
         $this->assertEquals(0, $kuota->terisi); // Kuota dikembalikan
         $this->assertTrue($peserta->status_aktif); // Akun tetap aktif
-
-        // 3. Tutup Antrean Waiting List massal (AC-04-7)
-        // Set bulan magang telah dimulai (misal bulan_mulai = bulan lalu)
-        $bulanLalu = BulanMagang::create([
-            'bulan_mulai' => now()->subMonth()->format('Y-m'),
-            'tgl_buka' => now()->subMonths(2)->toDateString(),
-            'tgl_tutup' => now()->subMonth()->startOfMonth()->toDateString(),
-            'aktif' => true,
-        ]);
-
-        $pesertaWaiting = $this->createUser('Peserta Waiting', 'waiting@magang.test', RoleEnum::Peserta);
-        $pendaftarWaiting = Pendaftaran::create([
-            'user_id' => $pesertaWaiting->id,
-            'bulan_magang_id' => $bulanLalu->id,
-            'kuota_id' => $kuota->id,
-            'durasi_bulan' => 3,
-            'status' => StatusPendaftaranEnum::WaitingList,
-            'diajukan_at' => now()->subMonth(),
-        ]);
-
-        $this->actingAs($admin)
-            ->post(route('admin.waiting-list.tutup', $bulanLalu))
-            ->assertRedirect(route('admin.waiting-list.index'));
-
-        $pendaftarWaiting->refresh();
-        $this->assertEquals(StatusPendaftaranEnum::Ditolak, $pendaftarWaiting->status);
     }
 
     /**

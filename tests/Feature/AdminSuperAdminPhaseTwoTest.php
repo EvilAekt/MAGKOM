@@ -280,26 +280,4 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
         ]);
         $resSuperAdmin->assertRedirect(route('superadmin.dashboard'));
     }
-
-    /** @test */
-    public function waiting_list_index_supports_filtering_by_jurusan_and_bulan(): void
-    {
-        Pendaftaran::create([
-            'user_id' => $this->peserta->id,
-            'bulan_magang_id' => $this->bulan->id,
-            'kuota_id' => $this->kuota->id,
-            'durasi_bulan' => 1,
-            'status' => StatusPendaftaranEnum::WaitingList,
-            'diajukan_at' => now(),
-        ]);
-
-        $response = $this->actingAs($this->admin)->get(route('admin.waiting-list.index', [
-            'bulan_magang_id' => $this->bulan->id,
-            'jurusan_id' => $this->jurusan->id,
-        ]));
-
-        $response->assertStatus(200);
-        $response->assertViewIs('admin.waiting-list.index');
-        $response->assertSee('Budi Santoso');
-    }
 }
