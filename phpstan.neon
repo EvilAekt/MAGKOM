@@ -6,8 +6,8 @@ parameters:
         - app/
     level: 2
     treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
-        - '#Call to an undefined method Illuminate\\Contracts\\Pagination\\LengthAwarePaginator::withQueryString\(\)#'
         - '#Access to an undefined property App\\Models\\[a-zA-Z0-9_]+::\$[a-zA-Z0-9_]+#'
         - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model::\$[a-zA-Z0-9_]+#'
         - '#Called .pluck. on Laravel collection, but could have been retrieved as a query#'
