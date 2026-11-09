@@ -856,36 +856,36 @@
         />
     </div>
 
-    {{-- 2. MAIN X-PANEL CARD --}}
-    <x-gentelella.x-panel :toolbox="false">
-
-        {{-- 2A. FILTER & SEARCH TOOLBAR TERPADU --}}
-        @php
-            $currentStatus = request('status', '');
-            $currentTipe = request('tipe', '');
-            $makeFilterUrl = function($statusVal = null, $tipeVal = null) {
-                $params = request()->except('page');
-                if ($statusVal !== null) {
-                    if ($statusVal === '') {
-                        unset($params['status']);
-                    } else {
-                        $params['status'] = $statusVal;
-                    }
+    {{-- NAVIGASI TAB UTAMA: Kategori Pendaftaran (Berdiri Sendiri di Luar Frame Kartu) --}}
+    @php
+        $currentStatus = request('status', '');
+        $currentTipe = request('tipe', '');
+        $makeFilterUrl = function($statusVal = null, $tipeVal = null) {
+            $params = request()->except('page');
+            if ($statusVal !== null) {
+                if ($statusVal === '') {
+                    unset($params['status']);
+                } else {
+                    $params['status'] = $statusVal;
                 }
-                if ($tipeVal !== null) {
-                    if ($tipeVal === '') {
-                        unset($params['tipe']);
-                    } else {
-                        $params['tipe'] = $tipeVal;
-                    }
+            }
+            if ($tipeVal !== null) {
+                if ($tipeVal === '') {
+                    unset($params['tipe']);
+                } else {
+                    $params['tipe'] = $tipeVal;
                 }
-                return route('admin.pendaftaran.index', $params);
-            };
-            $hasActiveFilters = request()->hasAny(['q', 'bulan_magang_id', 'jurusan_id', 'status', 'tipe', 'sort']);
-        @endphp
+            }
+            return route('admin.pendaftaran.index', $params);
+        };
+        $hasActiveSearch = request()->filled('q') 
+            || request()->filled('bulan_magang_id') 
+            || request()->filled('jurusan_id') 
+            || (request()->filled('sort') && request('sort') !== 'terbaru');
+    @endphp
 
-        {{-- NAVIGASI TAB UTAMA: Kategori Pendaftaran (Modern Underline Tabs) --}}
-        <div class="adm-category-nav-bar" role="tablist" aria-label="Kategori Pendaftaran Peserta">
+    <div style="margin-bottom: 1.15rem;">
+        <div class="adm-category-nav-bar" role="tablist" aria-label="Kategori Pendaftaran Peserta" style="margin-bottom: 0;">
             <a href="{{ $makeFilterUrl(null, '') }}" class="adm-category-nav-item {{ $currentTipe === '' ? 'active' : '' }}" role="tab" aria-selected="{{ $currentTipe === '' ? 'true' : 'false' }}" title="Tampilkan semua kategori pendaftaran">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="7"></rect>
@@ -915,7 +915,12 @@
                 <span class="adm-category-nav-badge">{{ $queueStats['total_kelompok'] ?? 0 }}</span>
             </a>
         </div>
+    </div>
 
+    {{-- 2. MAIN X-PANEL CARD --}}
+    <x-gentelella.x-panel :toolbox="false">
+
+        {{-- 2A. FILTER & SEARCH TOOLBAR TERPADU --}}
         <div class="adm-filter-toolbar">
             {{-- Form Pencarian & Filter Grid Lapang (42px Unified Height - 4 Kolom) --}}
             <form method="GET" action="{{ route('admin.pendaftaran.index') }}" class="adm-filter-grid">
@@ -976,9 +981,11 @@
                         </svg>
                         <span>Terapkan</span>
                     </button>
-                    <a href="{{ route('admin.pendaftaran.index') }}" class="adm-btn-filter-reset" title="Kembalikan pencarian ke kondisi awal">
-                        Reset
-                    </a>
+                    @if($hasActiveSearch)
+                        <a href="{{ route('admin.pendaftaran.index', array_filter(['status' => request('status'), 'tipe' => request('tipe')])) }}" class="adm-btn-filter-reset" title="Kembalikan pencarian ke kondisi awal">
+                            Reset
+                        </a>
+                    @endif
                 </div>
             </form>
         </div>
