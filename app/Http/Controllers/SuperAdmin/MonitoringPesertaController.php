@@ -86,8 +86,6 @@ class MonitoringPesertaController extends Controller
             'pendaftaran.bulanMagang',
             'tugas.progresLogs',
             'logbooks',
-            'penilaian.details.rubrik',
-            'penilaian.riwayats',
         ]);
 
         return view('superadmin.monitoring.show', [

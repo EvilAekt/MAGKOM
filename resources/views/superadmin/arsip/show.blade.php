@@ -22,14 +22,6 @@
             <span>Surat Diterima PDF</span>
         </a>
 
-        @if($penempatan->penilaian && $penempatan->penilaian->status?->value === 'final')
-            <a href="{{ route('pembimbing.penilaian.unduh', $penempatan) }}" target="_blank"
-               style="display: inline-flex; align-items: center; gap: 0.375rem; height: 38px; padding: 0 1rem; background: #0641CC; color: #FFFFFF; font-weight: 700; font-size: 0.8125rem; text-decoration: none; border-radius: 8px; box-shadow: 0 1px 3px rgba(6,65,204,0.2);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>Unduh Lembar Nilai Resmi</span>
-            </a>
-        @endif
-
         <a href="{{ route('superadmin.arsip.index') }}"
            style="display: inline-flex; align-items: center; gap: 0.375rem; height: 38px; padding: 0 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-800, #1E293B); font-weight: 700; font-size: 0.8125rem; text-decoration: none; border-radius: 8px; border: 1px solid var(--neutral-300, #CBD5E1);">
             <span>&larr; Kembali</span>
@@ -179,16 +171,6 @@
                     </div>
                 </div>
             </div>
-
-            @if($penilaian)
-                <div style="background: #ffffff; border: 1px solid #BFDBFE; border-radius: 10px; padding: 0.65rem 1rem; text-align: right;">
-                    <div style="font-size: 0.7rem; font-weight: 700; color: var(--neutral-500, #64748B); text-transform: uppercase;">Nilai Akhir Magang</div>
-                    <div style="font-size: 1.35rem; font-weight: 900; color: #0641CC; line-height: 1.1; margin-top: 0.15rem;">
-                        {{ number_format((float) $penilaian->nilai_akhir, 2) }}
-                        <span style="font-size: 0.8125rem; font-weight: 800; color: #16A34A;">(Predikat {{ $penilaian->predikat ?? 'Lulus' }})</span>
-                    </div>
-                </div>
-            @endif
         </div>
     </x-gentelella.card>
 
@@ -206,13 +188,9 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
             <span>3. Logbook Harian ({{ (string) $penempatan->logbooks->count() }})</span>
         </button>
-        <button type="button" class="arsip-tab-btn" onclick="switchArsipTab('tab-nilai', this)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-            <span>4. Rubrik Penilaian Resmi</span>
-        </button>
         <button type="button" class="arsip-tab-btn" onclick="switchArsipTab('tab-administrasi', this)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-            <span>5. Dokumen Pendaftaran</span>
+            <span>4. Dokumen Pendaftaran</span>
         </button>
     </div>
 
@@ -363,59 +341,7 @@
         </div>
     </div>
 
-    {{-- TAB 4: RUBRIK PENILAIAN RESMI --}}
-    <div class="arsip-tab-pane" id="tab-nilai">
-        <div class="arsip-card" style="padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--neutral-200, #E2E8F0); padding-bottom: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-                <div>
-                    <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--neutral-900, #0F172A);">
-                        Rincian Evaluasi Nilai Resmi Berdasarkan Rubrik
-                    </h3>
-                </div>
-                @if($penilaian)
-                    <div style="font-size: 1.25rem; font-weight: 800; color: #0641CC;">
-                        Nilai Akhir: {{ number_format((float) $penilaian->nilai_akhir, 2) }}
-                    </div>
-                @endif
-            </div>
-
-            @if($penilaian && $penilaian->details->isNotEmpty())
-                <div class="table-responsive-gentelella" style="overflow-x: auto;">
-                    <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
-                        <thead>
-                            <tr class="headings">
-                                <th style="text-align: left;">Kriteria Rubrik</th>
-                                <th style="text-align: center;">Bobot (%)</th>
-                                <th style="text-align: center;">Skor (0-100)</th>
-                                <th style="text-align: center;">Kontribusi Nilai</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($penilaian->details as $detail)
-                                @php
-                                    $kontribusi = ($detail->skor * $detail->bobot) / 100;
-                                @endphp
-                                <tr style="border-bottom: 1px solid var(--neutral-200, #E2E8F0);">
-                                    <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--neutral-900, #0F172A);">
-                                        {{ $detail->rubrik?->kriteria ?? '-' }}
-                                    </td>
-                                    <td style="padding: 0.75rem 1rem; text-align: center;">{{ $detail->bobot }}%</td>
-                                    <td style="padding: 0.75rem 1rem; text-align: center; font-weight: 800; color: #0641CC;">{{ $detail->skor }}</td>
-                                    <td style="padding: 0.75rem 1rem; text-align: center; font-weight: 800; color: #16A34A;">{{ number_format($kontribusi, 2) }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <div style="text-align: center; padding: 2rem; color: var(--neutral-500, #64748B); font-size: 0.875rem;">
-                    Belum ada nilai yang terdata.
-                </div>
-            @endif
-        </div>
-    </div>
-
-    {{-- TAB 5: DOKUMEN PENDAFTARAN --}}
+    {{-- TAB 4: DOKUMEN PENDAFTARAN --}}
     <div class="arsip-tab-pane" id="tab-administrasi">
         <div class="arsip-card" style="padding: 1.5rem;">
             <h3 style="margin: 0 0 1rem 0; font-size: 1rem; font-weight: 800; color: var(--neutral-900, #0F172A);">

@@ -198,12 +198,9 @@ class PembimbingIdorProtectionTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_pembimbing_dilarang_mengisi_penilaian_mentee_pembimbing_lain(): void
+    public function test_pembimbing_dilarang_menyelesaikan_magang_mentee_pembimbing_lain(): void
     {
-        $response = $this->actingAs($this->pembimbing1)->post(route('pembimbing.penilaian.store', $this->penempatan2), [
-            'nilai' => [1 => 85, 2 => 90],
-            'status' => 'draf',
-        ]);
+        $response = $this->actingAs($this->pembimbing1)->post(route('pembimbing.penempatan.selesai', $this->penempatan2));
         $response->assertStatus(403);
     }
 

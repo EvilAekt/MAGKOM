@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Master Jurusan - SuperAdmin MagKom')
-@section('page_title', 'Master Data Jurusan')
+@section('topbar_title', 'Master Data Jurusan')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -9,85 +9,109 @@
     <span class="breadcrumb-current">Master Jurusan</span>
 @endsection
 
-@section('page_actions')
-    <button type="button" onclick="document.getElementById('modalTambahJurusan').style.display='flex'" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 42px; padding: 0 1.25rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s ease; box-shadow: var(--shadow-subtle);">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        <span>Tambah Jurusan Baru</span>
-    </button>
-@endsection
-
 @push('styles')
-<style>
-    /* Dark Mode Overrides for SuperAdmin Jurusan (DS-MagKom Industrial Standard) */
-    [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #003566 !important;
-        border-color: #3F51B5 !important;
-    }
-
-    [data-theme="dark"] div[style*="background: var(--blue-tint)"] {
-        background-color: rgba(59, 130, 246, 0.18) !important;
-        border-color: rgba(147, 197, 253, 0.35) !important;
-    }
-
-    [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
-    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
-    [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"],
-    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
-        border-color: rgba(63, 81, 181, 0.45) !important;
-    }
-
-    [data-theme="dark"] span[style*="color: var(--neutral-900)"],
-    [data-theme="dark"] div[style*="color: var(--neutral-900)"],
-    [data-theme="dark"] span[style*="color: var(--neutral-800)"],
-    [data-theme="dark"] h3[style*="color: var(--neutral-800)"] {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] span[style*="color: var(--neutral-600)"],
-    [data-theme="dark"] div[style*="color: var(--neutral-600)"],
-    [data-theme="dark"] p[style*="color: var(--neutral-700)"],
-    [data-theme="dark"] p[style*="color: var(--neutral-600)"] {
-        color: #94A3B8 !important;
-    }
-
-    /* Modals Dark Mode */
-    [data-theme="dark"] #modalTambahJurusan > div,
-    [data-theme="dark"] #modalEditJurusan > div {
-        background-color: #003566 !important;
-        border-color: #3F51B5 !important;
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] #modalTambahJurusan h3,
-    [data-theme="dark"] #modalEditJurusan h3 {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] input[type="text"],
-    [data-theme="dark"] select {
-        background-color: #011C44 !important;
-        color: #F8FAFC !important;
-        border-color: rgba(63, 81, 181, 0.45) !important;
-    }
-
-    [data-theme="dark"] button[style*="background: var(--neutral-100)"] {
-        background-color: rgba(255, 255, 255, 0.06) !important;
-        border-color: rgba(63, 81, 181, 0.45) !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] button[style*="background: var(--neutral-100)"]:hover {
-        background-color: rgba(63, 81, 181, 0.2) !important;
-        color: #F8FAFC !important;
-    }
-</style>
+    @vite(['resources/css/pages/superadmin/superadmin-common.css'])
 @endpush
 
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+    {{-- 1. Hero Banner Khas Sleman MagKom --}}
+    <div class="sa-hero-banner">
+        <div class="banner-top-row">
+            <div>
+                <h1 class="banner-title">Master Data Jurusan</h1>
+                <div class="banner-subtitle">
+                    <span>Cakupan: <strong>Klasifikasi SMK &amp; Mahasiswa</strong></span>
+                    <span class="bullet-separator">&bull;</span>
+                    <span>Total Jurusan: <strong>{{ $totalJurusan }} Program Studi</strong></span>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn-banner-action" onclick="document.getElementById('modalTambahJurusan').style.display='flex'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Tambah Jurusan Baru</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
+    <div class="tiles-grid">
+        <!-- 1. Total Jurusan -->
+        <x-gentelella.tile-stat
+            title="TOTAL JURUSAN"
+            value="{{ $totalJurusan }}"
+            color="blue"
+            trendType="info"
+            trendDirection="up"
+            trendText="Prodi"
+            subText="Total Jurusan Terdaftar di Sistem"
+            :sparkBars="[30, 45, 60, 75, 85, 95]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 2. Mahasiswa / Perguruan Tinggi -->
+        <x-gentelella.tile-stat
+            title="MAHASISWA / PT"
+            value="{{ $jurusanMahasiswa }}"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="PT"
+            subText="Program Studi Jenjang D3/D4/S1"
+            :sparkBars="[25, 40, 55, 70, 80, 90]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 3. SMK / Vokasi -->
+        <x-gentelella.tile-stat
+            title="SMK / VOKASI"
+            value="{{ $jurusanSmk }}"
+            color="amber"
+            trendType="warning"
+            trendDirection="up"
+            trendText="Vokasi"
+            subText="Kompetensi Keahlian SMK/MAK"
+            :sparkBars="[20, 35, 50, 65, 80, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 4. Status Aktif -->
+        <x-gentelella.tile-stat
+            title="STATUS AKTIF"
+            value="{{ $jurusanAktif }}"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="Aktif"
+            subText="Dapat Dipilih Calon Peserta"
+            :sparkBars="[15, 25, 40, 55, 70, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+    </div>
 
     <!-- DATA TABLE CARD -->
     <x-gentelella.x-panel class="has-table" title="Master Program Studi & Jurusan">

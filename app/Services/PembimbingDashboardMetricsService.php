@@ -12,10 +12,7 @@ use App\Models\AgendaBimbingan;
 use App\Models\Logbook;
 use App\Models\Penempatan;
 use App\Models\Pengaturan;
-use App\Models\PenilaianDetail;
-use App\Models\PenilaianRiwayat;
 use App\Models\ProgresLog;
-use App\Models\Rubrik;
 use App\Models\Tugas;
 use App\Models\User;
 use Carbon\Carbon;
@@ -34,7 +31,6 @@ class PembimbingDashboardMetricsService
         $menteeAktifQuery = Penempatan::with([
             'peserta.profil.jurusan',
             'bidang',
-            'penilaian',
             'tugas',
             'logbooks',
         ])->where('status', StatusPenempatanEnum::Aktif);
@@ -56,7 +52,6 @@ class PembimbingDashboardMetricsService
         $allPenempatanQuery = Penempatan::with([
             'peserta.profil.jurusan',
             'bidang',
-            'penilaian.riwayat.pengubah',
         ]);
 
         if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
@@ -105,13 +100,8 @@ class PembimbingDashboardMetricsService
             return $diffDays <= 14 && $diffDays >= -7;
         })->sortBy('tgl_selesai')->values();
 
-        // 9. Riwayat Revisi Nilai Final Terbaru untuk Tab 4 (AC-10-3)
-        $penilaianIds = $allPenempatanList->pluck('penilaian.id')->filter()->toArray();
-        $recentNilaiRevisions = PenilaianRiwayat::with(['penilaian.penempatan.peserta', 'pengubah'])
-            ->whereIn('penilaian_id', $penilaianIds)
-            ->latest('waktu')
-            ->take(10)
-            ->get();
+        // 9. Riwayat Revisi Nilai Final Terbaru untuk Tab 4 (Deprecate)
+        $recentNilaiRevisions = collect();
 
         // 10. Radar Capaian Kompetensi Mentee Bidang
         $competencyRadar = $this->resolveCompetencyRadar($penempatanIds);
@@ -347,19 +337,7 @@ class PembimbingDashboardMetricsService
      */
     protected function resolveCompetencyRadar(array $penempatanIds): Collection
     {
-        $rubrikList = Rubrik::where('aktif', true)->get();
-
-        return $rubrikList->map(function ($r) use ($penempatanIds) {
-            $avgScore = PenilaianDetail::where('rubrik_id', $r->id)
-                ->whereHas('penilaian', fn ($q) => $q->whereIn('penempatan_id', $penempatanIds))
-                ->avg('skor');
-
-            return [
-                'kriteria' => $r->kriteria,
-                'bobot' => $r->bobot,
-                'skor_rata' => $avgScore ? round((float) $avgScore, 1) : 85.0,
-            ];
-        });
+        return collect();
     }
 
     protected function resolveMenteeAtRiskList(Collection $menteeAktifList): Collection

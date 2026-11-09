@@ -584,11 +584,12 @@
 /* Filter Bar 3-Dimensi: Nama Peserta, Status, dan Bulan */
 .laporan-filter-card {
     background: #ffffff;
-    border-radius: 14px;
-    border: 1px solid var(--neutral-400, #D0D3D9);
-    padding: 1.25rem;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-    margin-bottom: 0.5rem;
+    border-radius: 12px;
+    border: 1px solid #CBD5E1;
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+    padding: 1.15rem 1.35rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    margin-bottom: 1.25rem;
 }
 
 .laporan-filter-form {
@@ -613,7 +614,7 @@
 
 .laporan-filter-form .filter-control {
     width: 100%;
-    height: 38px;
+    height: 42px;
     border: 1px solid var(--neutral-400, #D0D3D9);
     border-radius: 8px;
     padding: 0 12px;
@@ -626,8 +627,9 @@
 }
 
 .laporan-filter-form .filter-control:focus {
-    border-color: var(--primary-700, #0641CC);
+    border-color: #0641CC;
     background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
 }
 
 /* Search Input Wrapper for Laporan Filter (Selaras Tugas & Progres Magang) */
@@ -638,7 +640,7 @@
 
 .laporan-filter-form .peserta-search-input {
     width: 100%;
-    height: 38px;
+    height: 42px;
     padding: 0 12px 0 36px;
     border-radius: 8px;
     border: 1px solid var(--neutral-400, #D0D3D9);
@@ -651,14 +653,15 @@
 }
 
 .laporan-filter-form .peserta-search-input:focus {
-    border-color: var(--primary-700, #0641CC);
+    border-color: #0641CC;
     background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
 }
 
 .laporan-filter-form .peserta-search-icon {
     position: absolute;
     left: 10px;
-    top: 11px;
+    top: 13px;
     color: #94A3B8;
     pointer-events: none;
 }
@@ -669,48 +672,54 @@
 }
 
 .laporan-filter-form .btn-filter-apply {
-    height: 38px;
-    padding: 0 18px;
-    background: #0641CC;
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 0.875rem;
+    height: 42px;
+    padding: 0 1.25rem;
+    background: #0641CC !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 0.8125rem;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    transition: background 0.2s;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);
     text-decoration: none;
 }
 
 .laporan-filter-form .btn-filter-apply:hover {
-    background: #0534A8;
+    background: #003566 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(6, 65, 204, 0.3);
 }
 
 .laporan-filter-form .btn-filter-reset {
-    height: 38px;
+    height: 42px;
     padding: 0 14px;
     background: var(--neutral-200, #EEF0F5);
     color: var(--neutral-800, #1D2530);
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     border-radius: 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    transition: background 0.2s;
+    transition: background 0.15s ease;
 }
 
 .laporan-filter-form .btn-filter-reset:hover {
     background: var(--neutral-400, #D0D3D9);
+    color: #1E293B;
 }
 
 [data-theme="dark"] .laporan-filter-card {
-    background: #1E293B;
-    border-color: #334155;
+    background-color: #003566 !important;
+    border-color: #3F51B5 !important;
+    border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
 }
 
 [data-theme="dark"] .laporan-filter-form .filter-group label {
@@ -718,15 +727,28 @@
 }
 
 [data-theme="dark"] .laporan-filter-form .filter-control {
-    background: #0F172A;
-    border-color: #334155;
-    color: #F8FAFC;
+    background: #011C44 !important;
+    border-color: rgba(63, 81, 181, 0.45) !important;
+    color: #F8FAFC !important;
 }
 
 [data-theme="dark"] .laporan-filter-form .peserta-search-input {
-    background: #0F172A;
-    border-color: #334155;
-    color: #F8FAFC;
+    background: #011C44 !important;
+    border-color: rgba(63, 81, 181, 0.45) !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .laporan-filter-form .btn-filter-apply {
+    background: #2563EB !important;
+}
+
+[data-theme="dark"] .laporan-filter-form .btn-filter-apply:hover {
+    background: #1D4ED8 !important;
+}
+
+[data-theme="dark"] .laporan-filter-form .btn-filter-reset {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #94A3B8 !important;
 }
 
 [data-theme="dark"] .laporan-filter-form .peserta-search-input:focus {

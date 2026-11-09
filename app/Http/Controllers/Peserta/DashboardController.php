@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Peserta;
 
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusTugasEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Pendaftaran;
@@ -45,7 +44,6 @@ class DashboardController extends Controller
             'bidang',
             'tugas.progresLogs',
             'logbooks',
-            'penilaian.details.rubrik',
         ])
             ->where('peserta_id', $user->id)
             ->latest()
@@ -126,10 +124,6 @@ class DashboardController extends Controller
             $sisaHari = max(0, (int) $diff);
         }
 
-        // Data Penilaian
-        $penilaian = $penempatan?->penilaian;
-        $isFinalNilai = $penilaian && $penilaian->status === StatusPenilaianEnum::Final;
-
         return view('peserta.dashboard', [
             'user' => $user,
             'profil' => $profil,
@@ -154,8 +148,6 @@ class DashboardController extends Controller
             'calendarEventDates' => $calendarEventDates,
             'namaPembimbingClean' => $namaPembimbingClean,
             'sisaHari' => $sisaHari,
-            'penilaian' => $penilaian,
-            'isFinalNilai' => $isFinalNilai,
             'kelompokMagang' => $user->kelompokMagang ?? $pendaftaran?->kelompokMagang,
         ]);
     }

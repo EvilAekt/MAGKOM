@@ -247,13 +247,14 @@ class ReleaseThreeSocialLoginTest extends TestCase
         $response->assertSee('Masuk dengan Google');
     }
 
-    public function test_register_page_renders_google_register_button(): void
+    public function test_register_page_does_not_render_google_register_button(): void
     {
         $response = $this->get(route('register'));
 
         $response->assertStatus(200);
-        $response->assertSee(route('oauth.redirect', 'google'));
-        $response->assertSee('Daftar dengan Google');
+        $response->assertDontSee('btn-register-google');
+        $response->assertDontSee('Register dengan Google');
+        $response->assertDontSee('Daftar dengan Google');
     }
 
     public function test_simplified_registration_renders_exact_fields(): void

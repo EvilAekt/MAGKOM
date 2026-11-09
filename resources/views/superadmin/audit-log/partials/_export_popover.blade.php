@@ -1,20 +1,19 @@
-{{-- EXPORT SYSTEM REDESIGN: PATTERN A (QUICK-ACTION CONTEXTUAL TOOLBAR POPOVER) --}}
-{{-- Canvas Node 68749aa8-f0a9-4d99-82f8-ac0ef6a3ba33 --}}
+{{-- EXPORT SYSTEM REDESIGN: ADOPTING PEMBIMBING LAPORAN PESERTA PATTERN --}}
 @php
     /** @var \Illuminate\Contracts\Pagination\LengthAwarePaginator $logs */
 @endphp
 
 <div 
     id="exportPopover" 
-    class="audit-export-popover" 
+    class="audit-export-popover audit-export-popover-right" 
     style="display: none;" 
     role="menu" 
-    aria-label="Menu Ekspor Cepat"
+    aria-label="Menu Pilihan Format Ekspor"
 >
     {{-- Popover Pointer Accent (Top Right) --}}
-    <div class="audit-popover-pointer"></div>
+    <div class="audit-popover-pointer audit-pointer-right"></div>
 
-    {{-- Popover Top Meta --}}
+    {{-- Popover Top Meta Header --}}
     <div class="audit-popover-header">
         <div>
             <div class="audit-popover-title">Ekspor Log Cepat</div>
@@ -33,75 +32,75 @@
                 <input 
                     type="radio" 
                     name="popover_format" 
+                    id="radioFormatCsv" 
                     value="csv" 
                     checked 
                     class="audit-format-radio"
-                    onchange="handleExportFormatChange('csv')"
+                    onchange="handleAuditFormatSelection('csv')"
                 />
                 <div class="audit-format-details">
                     <div class="audit-format-name-wrap">
                         <span class="audit-format-name">CSV Tabular</span>
                         <span class="badge-format-ext badge-ext-csv">.csv</span>
                     </div>
-                    <p class="audit-format-desc">Analisis cepat Excel &amp; Google Sheets</p>
+                    <p class="audit-format-desc">Data mentah teks pemisah koma terstandarisasi</p>
                 </div>
             </div>
             <div class="audit-format-meta">
                 <span class="audit-badge-recommend">Rekomendasi</span>
-                <span class="audit-format-size">~1.4 MB</span>
             </div>
         </label>
 
-        {{-- Format 2: NDJSON --}}
+        {{-- Format 2: NDJSON SIEM Stream --}}
         <label class="audit-format-card" id="cardFormatNdjson">
             <div class="audit-format-content">
                 <input 
                     type="radio" 
                     name="popover_format" 
+                    id="radioFormatNdjson" 
                     value="ndjson" 
                     class="audit-format-radio"
-                    onchange="handleExportFormatChange('ndjson')"
+                    onchange="handleAuditFormatSelection('ndjson')"
                 />
                 <div class="audit-format-details">
                     <div class="audit-format-name-wrap">
                         <span class="audit-format-name">NDJSON SIEM Stream</span>
                         <span class="badge-format-ext badge-ext-ndjson">.jsonl</span>
                     </div>
-                    <p class="audit-format-desc">Payload terstruktur untuk Wazuh / ELK</p>
+                    <p class="audit-format-desc">Payload baris JSON terstruktur untuk Wazuh / SIEM</p>
                 </div>
             </div>
             <div class="audit-format-meta">
                 <span class="audit-badge-forensic">Forensik</span>
-                <span class="audit-format-size">~3.8 MB</span>
             </div>
         </label>
 
-        {{-- Format 3: PDF --}}
+        {{-- Format 3: Dokumen Resmi PDF --}}
         <label class="audit-format-card" id="cardFormatPdf">
             <div class="audit-format-content">
                 <input 
                     type="radio" 
                     name="popover_format" 
+                    id="radioFormatPdf" 
                     value="pdf" 
                     class="audit-format-radio"
-                    onchange="handleExportFormatChange('pdf')"
+                    onchange="handleAuditFormatSelection('pdf')"
                 />
                 <div class="audit-format-details">
                     <div class="audit-format-name-wrap">
-                        <span class="audit-format-name">Berita Acara Resmi</span>
+                        <span class="audit-format-name">Dokumen Resmi (.pdf)</span>
                         <span class="badge-format-ext badge-ext-pdf">.pdf</span>
                     </div>
-                    <p class="audit-format-desc">Dokumen ber-QR code verifikasi BPKP</p>
+                    <p class="audit-format-desc">Rekapitulasi cetak Berita Acara Resmi verifikasi BPKP</p>
                 </div>
             </div>
             <div class="audit-format-meta">
                 <span class="audit-badge-legal">Legal Sah</span>
-                <span class="audit-format-size">~2.1 MB</span>
             </div>
         </label>
     </div>
 
-    {{-- Quick Security Toggles --}}
+    {{-- Security Toggles Khusus Audit Log --}}
     <div class="audit-popover-security">
         <label class="audit-security-toggle">
             <span>Sertakan Hash HMAC-SHA256</span>
@@ -113,19 +112,20 @@
         </label>
     </div>
 
-    {{-- Action CTA --}}
+    {{-- Action CTA: Batal (Kiri) dan Unduh (Kanan) --}}
     <div class="audit-popover-cta">
         <button 
             type="button" 
-            class="audit-btn-more-options"
-            onclick="showAdvancedExportOptions()"
+            id="btnCancelExportPopover" 
+            class="audit-btn-popover-cancel"
+            onclick="toggleExportPopover(false)"
         >
-            Opsi Lengkap...
+            Batal
         </button>
         <button 
             type="button" 
-            id="btnDoPopoverExport"
-            class="audit-btn-download-export"
+            id="btnDoPopoverExport" 
+            class="audit-btn-popover-download"
             onclick="triggerAuditExport()"
         >
             <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">

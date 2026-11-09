@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\SuperAdmin;
 
+use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
@@ -29,8 +30,17 @@ class BidangController extends Controller
     {
         $bidangList = Bidang::withCount('users')->orderBy('nama_bidang', 'asc')->paginate(20);
 
+        $totalBidang = Bidang::count();
+        $bidangAktif = Bidang::where('aktif', true)->count();
+        $bidangNonaktif = Bidang::where('aktif', false)->count();
+        $totalPembimbing = User::where('role', RoleEnum::Pembimbing->value)->whereNotNull('bidang_id')->count();
+
         return view('superadmin.bidang.index', [
             'bidangList' => $bidangList,
+            'totalBidang' => $totalBidang,
+            'bidangAktif' => $bidangAktif,
+            'bidangNonaktif' => $bidangNonaktif,
+            'totalPembimbing' => $totalPembimbing,
         ]);
     }
 

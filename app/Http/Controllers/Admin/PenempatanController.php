@@ -210,7 +210,6 @@ class PenempatanController extends Controller
             'kuota.jurusan',
             'tugas.progresLogs',
             'logbooks',
-            'penilaian.details.rubrik',
             'pendaftaran.dokumen',
         ]);
 
@@ -241,7 +240,7 @@ class PenempatanController extends Controller
         })->count();
 
         $logbookCount = $penempatan->logbooks->count();
-        $nilaiAkhir = $penempatan->penilaian?->nilai_akhir;
+        $nilaiAkhir = null;
 
         return view('admin.penempatan.show', [
             'penempatan' => $penempatan,

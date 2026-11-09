@@ -8,11 +8,9 @@ use App\Enums\TipeAuditEnum;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\SlotKhusus;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -368,86 +366,6 @@ class ExportReportService
 
             fclose($handle);
         }, 'realisasi-kuota-'.date('YmdHis').'.csv', [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-        ]);
-    }
-
-    /**
-     * Ekspor rekapitulasi penilaian peserta - HANYA KHUSUS SuperAdmin (AC-17-1, A-20).
-     */
-    public function exportNilai(User $user, string $format = 'csv'): Response
-    {
-        if (! $user->isSuperAdmin()) {
-            throw new AuthorizationException('Rekapitulasi nilai hanya dapat diekspor oleh SuperAdmin (AC-17-1).');
-        }
-
-        $records = Penilaian::with(['penempatan.peserta.profil', 'pembimbing', 'details.rubrik'])
-            ->latest()
-            ->get();
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::AksesData,
-            tabel: 'penilaian',
-            idData: null,
-            nilaiLama: null,
-            nilaiBaru: ['total_baris' => $records->count(), 'format' => $format],
-            detail: [
-                'aksi' => $format === 'xlsx' ? 'ekspor_nilai_superadmin_xlsx' : 'ekspor_nilai_superadmin_csv',
-                'entitas' => 'penilaian',
-                'jumlah_baris' => $records->count(),
-            ]
-        );
-
-        $headers = [
-            'ID Penilaian', 'Nama Peserta', 'NIM/NISN', 'Institusi',
-            'Pembimbing Lapangan', 'Nilai Akhir', 'Predikat', 'Status', 'Catatan Evaluasi',
-        ];
-
-        if ($format === 'xlsx') {
-            $rows = [];
-            foreach ($records as $nilai) {
-                $rows[] = [
-                    $nilai->id,
-                    $nilai->penempatan?->peserta?->nama ?? '-',
-                    $nilai->penempatan?->peserta?->profil?->nim_nisn ?? '-',
-                    $nilai->penempatan?->peserta?->profil?->institusi ?? '-',
-                    $nilai->pembimbing?->nama ?? '-',
-                    $nilai->nilai_akhir,
-                    $nilai->predikat ?? '-',
-                    $nilai->status?->value ?? '-',
-                    $nilai->catatan ?? '-',
-                ];
-            }
-
-            return $this->xlsxExportService->downloadXlsx(
-                'rekap-nilai-magkom-'.date('YmdHis').'.xlsx',
-                'Rekap Nilai',
-                $headers,
-                $rows
-            );
-        }
-
-        return response()->streamDownload(function () use ($headers, $records) {
-            $handle = fopen('php://output', 'w');
-            fwrite($handle, "\xEF\xBB\xBFsep=,\r\n"); // UTF-8 BOM + sep=, directive
-            fputcsv($handle, $headers);
-
-            foreach ($records as $nilai) {
-                fputcsv($handle, [
-                    $this->sanitizeCell($nilai->id),
-                    $this->sanitizeCell($nilai->penempatan?->peserta?->nama),
-                    $this->sanitizeCell($nilai->penempatan?->peserta?->profil?->nim_nisn),
-                    $this->sanitizeCell($nilai->penempatan?->peserta?->profil?->institusi),
-                    $this->sanitizeCell($nilai->pembimbing?->nama),
-                    $this->sanitizeCell($nilai->nilai_akhir),
-                    $this->sanitizeCell($nilai->predikat),
-                    $this->sanitizeCell($nilai->status?->value),
-                    $this->sanitizeCell($nilai->catatan),
-                ]);
-            }
-
-            fclose($handle);
-        }, 'rekap-nilai-magkom-'.date('YmdHis').'.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }

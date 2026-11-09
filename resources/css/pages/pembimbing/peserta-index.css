@@ -136,7 +136,8 @@
 .peserta-filter-card {
     background: #ffffff;
     border-radius: 14px;
-    border: 1px solid #E2E8F0;
+    border: 1px solid #CBD5E1;
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
     padding: 1rem 1.25rem;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
     display: flex;
@@ -216,7 +217,7 @@
 
 .peserta-search-input {
     width: 100%;
-    height: 38px;
+    height: 42px;
     padding: 0 12px 0 36px;
     border-radius: 8px;
     border: 1px solid #CBD5E1;
@@ -228,47 +229,57 @@
 }
 
 .peserta-search-input:focus {
-    border-color: #01347C;
+    border-color: #0641CC;
     background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
 }
 
 .peserta-search-icon {
     position: absolute;
     left: 10px;
-    top: 10px;
+    top: 13px;
     color: #94A3B8;
     pointer-events: none;
 }
 
 .btn-search {
-    height: 38px;
-    padding: 0 16px;
-    background: #01347C;
-    color: #ffffff;
+    height: 42px;
+    padding: 0 1.25rem;
+    background: #0641CC !important;
+    color: #ffffff !important;
     border: none;
     border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 0.8125rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);
+    text-decoration: none;
 }
 
 .btn-search:hover {
-    background: #002244;
+    background: #003566 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(6, 65, 204, 0.3);
 }
 
 .btn-reset {
-    height: 38px;
-    padding: 0 12px;
+    height: 42px;
+    padding: 0 14px;
     background: #E2E8F0;
     color: #475569;
     border-radius: 8px;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     text-decoration: none;
-    transition: background 0.2s;
+    transition: background 0.15s ease;
 }
 
 .btn-reset:hover {
@@ -505,3 +516,46 @@
     transition: none !important;
   }
 }
+
+/* =========================================================================
+   DARK MODE OVERRIDES (Filter Card & Buttons)
+   ========================================================================= */
+[data-theme="dark"] .peserta-filter-card {
+    background-color: #003566 !important;
+    border-color: #3F51B5 !important;
+    border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
+}
+
+[data-theme="dark"] .peserta-tabs {
+    background: #011C44 !important;
+    border-color: #3F51B5 !important;
+}
+
+[data-theme="dark"] .peserta-tab-btn {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .peserta-tab-btn.active {
+    background: #002244 !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .peserta-search-input {
+    background-color: #011C44 !important;
+    color: #F8FAFC !important;
+    border-color: rgba(63, 81, 181, 0.45) !important;
+}
+
+[data-theme="dark"] .btn-search {
+    background: #2563EB !important;
+}
+
+[data-theme="dark"] .btn-search:hover {
+    background: #1D4ED8 !important;
+}
+
+[data-theme="dark"] .btn-reset {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #94A3B8 !important;
+}
+

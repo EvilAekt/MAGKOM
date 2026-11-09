@@ -67,11 +67,18 @@ class StafController extends Controller
             ->where('must_change_password', true)
             ->count();
 
+        $totalStaf = User::whereIn('role', [RoleEnum::Admin->value, RoleEnum::Pembimbing->value])->count();
+        $totalAdmin = User::where('role', RoleEnum::Admin->value)->count();
+        $totalPembimbing = User::where('role', RoleEnum::Pembimbing->value)->count();
+
         return view('superadmin.staf.index', [
             'stafList' => $stafList,
             'bidangList' => Bidang::aktif()->get(),
             'maksPeserta' => $maksPeserta,
             'stafPendingPasswordCount' => $stafPendingPasswordCount,
+            'totalStaf' => $totalStaf,
+            'totalAdmin' => $totalAdmin,
+            'totalPembimbing' => $totalPembimbing,
         ]);
     }
 

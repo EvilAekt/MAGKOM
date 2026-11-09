@@ -9,7 +9,6 @@ use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
@@ -18,7 +17,6 @@ use App\Models\Kuota;
 use App\Models\Logbook;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
 use App\Models\SlotKhusus;
 use App\Models\Tugas;
@@ -136,7 +134,7 @@ class SuperAdminExecutiveMetricsService
         // Metrik Bimbingan (Tugas & Logbook)
         $totalLogbookPending = Logbook::where('status', StatusLogbookEnum::Terkirim)->count();
         $totalTugasAktif = Tugas::whereIn('status', [StatusTugasEnum::Belum, StatusTugasEnum::Proses])->count();
-        $totalPenilaianSelesai = Penilaian::where('status', StatusPenilaianEnum::Final)->count();
+        $totalPenilaianSelesai = 0;
 
         // Tugas Terlambat & Mendekati Tenggat
         $totalTugasTerlambat = Tugas::whereIn('status', [StatusTugasEnum::Belum, StatusTugasEnum::Proses])
@@ -319,17 +317,14 @@ class SuperAdminExecutiveMetricsService
             ? round($pendaftaranDiputuskan->avg(fn ($p) => max(0, (float) $p->diajukan_at->diffInDays($p->diputuskan_at))), 1)
             : null;
 
+        $slaHari = Pengaturan::int('sla_verifikasi_hari', 5);
         $antreanMelebihiSla = Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
-            ->where('diajukan_at', '<', now()->subDays(5))
+            ->where('diajukan_at', '<', now()->subDays($slaHari))
             ->count();
 
         $penempatanSelesaiTotal = Penempatan::where('status', StatusPenempatanEnum::Selesai)->count();
-        $penempatanSelesaiDenganNilai = Penempatan::where('status', StatusPenempatanEnum::Selesai)
-            ->whereHas('penilaian', fn ($q) => $q->where('status', StatusPenilaianEnum::Final))
-            ->count();
-        $kepatuhanNilaiSelesaiPersen = $penempatanSelesaiTotal > 0
-            ? round(($penempatanSelesaiDenganNilai / $penempatanSelesaiTotal) * 100)
-            : 100;
+        $penempatanSelesaiDenganNilai = $penempatanSelesaiTotal;
+        $kepatuhanNilaiSelesaiPersen = 100;
 
         $loginGagal24Jam = AuditLog::where('tipe', TipeAuditEnum::Auth->value)
             ->where(function ($q) {

@@ -10,7 +10,6 @@ use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Pengaturan;
-use App\Models\Rubrik;
 use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,22 +28,35 @@ class PengaturanController extends Controller
      */
     public function index(): View
     {
+        $kunciOperasional = [
+            'kuota_umum_maks_per_bulan',
+            'slot_khusus_default',
+            'maks_peserta_aktif_per_pembimbing',
+            'maks_anggota_kelompok',
+            'durasi_magang_maks_bulan',
+            'logbook_maks_mundur_hari',
+            'berkas_maks_mb',
+            'deadline_mendekati_hari',
+            'sla_verifikasi_hari',
+            'masa_tenggang_bulan',
+            'retensi_audit_akses_data_hari',
+            'fitur_analitik_aktif',
+            'fitur_pendaftaran_kelompok_aktif',
+        ];
+
         $pengaturan = Pengaturan::all()->pluck('nilai', 'kunci');
 
-        $predikatBatasRaw = $pengaturan['predikat_batas'] ?? null;
-        $predikatBatas = $predikatBatasRaw ? json_decode($predikatBatasRaw, true) : null;
-        if (! is_array($predikatBatas)) {
-            $predikatBatas = [
-                'A' => 85,
-                'B' => 70,
-                'C' => 55,
-                'D' => 40,
-            ];
-        }
+        $totalParameter = count($kunciOperasional);
+        $kuotaBulanan = (int) ($pengaturan['kuota_umum_maks_per_bulan'] ?? 12);
+        $rasioMentee = (int) ($pengaturan['maks_peserta_aktif_per_pembimbing'] ?? 20);
+        $masaTenggang = (int) ($pengaturan['masa_tenggang_bulan'] ?? 2);
 
         return view('superadmin.pengaturan.index', [
             'pengaturan' => $pengaturan,
-            'predikatBatas' => $predikatBatas,
+            'totalParameter' => $totalParameter,
+            'kuotaBulanan' => $kuotaBulanan,
+            'rasioMentee' => $rasioMentee,
+            'masaTenggang' => $masaTenggang,
         ]);
     }
 
@@ -54,34 +66,29 @@ class PengaturanController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'masa_tenggang_bulan' => ['required', 'integer', 'min:1', 'max:12'],
             'kuota_umum_maks_per_bulan' => ['required', 'integer', 'min:1', 'max:100'],
             'slot_khusus_default' => ['nullable', 'integer', 'min:0', 'max:50'],
             'maks_peserta_aktif_per_pembimbing' => ['nullable', 'integer', 'min:1', 'max:50'],
+            'maks_anggota_kelompok' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'durasi_magang_maks_bulan' => ['nullable', 'integer', 'min:1', 'max:12'],
             'logbook_maks_mundur_hari' => ['required', 'integer', 'min:1', 'max:30'],
-            'berkas_maks_mb' => ['required', 'integer', 'min:1', 'max:10'],
+            'berkas_maks_mb' => ['required', 'integer', 'min:1', 'max:20'],
             'deadline_mendekati_hari' => ['required', 'integer', 'min:1', 'max:14'],
+            'sla_verifikasi_hari' => ['nullable', 'integer', 'min:1', 'max:30'],
+            'masa_tenggang_bulan' => ['required', 'integer', 'min:1', 'max:12'],
             'retensi_audit_akses_data_hari' => ['nullable', 'integer', 'min:30', 'max:1825'],
-            'batas_predikat_a' => ['nullable', 'integer', 'min:1', 'max:100'],
-            'batas_predikat_b' => ['nullable', 'integer', 'min:1', 'max:100'],
-            'batas_predikat_c' => ['nullable', 'integer', 'min:1', 'max:100'],
-            'batas_predikat_d' => ['nullable', 'integer', 'min:1', 'max:100'],
-            'predikat_batas' => ['nullable'],
-            'fitur_sertifikat_aktif' => ['nullable', 'boolean'],
-            'fitur_survei_aktif' => ['nullable', 'boolean'],
             'fitur_analitik_aktif' => ['nullable', 'boolean'],
+            'fitur_pendaftaran_kelompok_aktif' => ['nullable', 'boolean'],
         ]);
 
         $settingsToSave = [
-            'masa_tenggang_bulan' => (string) $validated['masa_tenggang_bulan'],
             'kuota_umum_maks_per_bulan' => (string) $validated['kuota_umum_maks_per_bulan'],
-            'maks_peserta_aktif_per_pembimbing' => ! empty($validated['maks_peserta_aktif_per_pembimbing']) ? (string) $validated['maks_peserta_aktif_per_pembimbing'] : null,
+            'maks_peserta_aktif_per_pembimbing' => ! empty($validated['maks_peserta_aktif_per_pembimbing']) ? (string) $validated['maks_peserta_aktif_per_pembimbing'] : '20',
             'logbook_maks_mundur_hari' => (string) $validated['logbook_maks_mundur_hari'],
             'berkas_maks_mb' => (string) $validated['berkas_maks_mb'],
             'deadline_mendekati_hari' => (string) $validated['deadline_mendekati_hari'],
+            'masa_tenggang_bulan' => (string) $validated['masa_tenggang_bulan'],
             'retensi_audit_akses_data_hari' => (string) ($validated['retensi_audit_akses_data_hari'] ?? '365'),
-            'fitur_sertifikat_aktif' => $request->boolean('fitur_sertifikat_aktif') ? '1' : '0',
-            'fitur_survei_aktif' => $request->boolean('fitur_survei_aktif') ? '1' : '0',
             'fitur_analitik_aktif' => $request->boolean('fitur_analitik_aktif') ? '1' : '0',
         ];
 
@@ -89,58 +96,20 @@ class PengaturanController extends Controller
             $settingsToSave['slot_khusus_default'] = (string) $validated['slot_khusus_default'];
         }
 
-        $anyPredikat = isset($validated['batas_predikat_a']) || isset($validated['batas_predikat_b']) || isset($validated['batas_predikat_c']) || isset($validated['batas_predikat_d']);
-        if ($anyPredikat) {
-            if (! isset($validated['batas_predikat_a'], $validated['batas_predikat_b'], $validated['batas_predikat_c'], $validated['batas_predikat_d'])) {
-                return back()->withInput()->withErrors([
-                    'batas_predikat_a' => 'Seluruh batas ambang predikat (A, B, C, D) wajib diisi lengkap.',
-                ]);
-            }
+        if (isset($validated['maks_anggota_kelompok'])) {
+            $settingsToSave['maks_anggota_kelompok'] = (string) $validated['maks_anggota_kelompok'];
+        }
 
-            $limA = (int) $validated['batas_predikat_a'];
-            $limB = (int) $validated['batas_predikat_b'];
-            $limC = (int) $validated['batas_predikat_c'];
-            $limD = (int) $validated['batas_predikat_d'];
+        if (isset($validated['durasi_magang_maks_bulan'])) {
+            $settingsToSave['durasi_magang_maks_bulan'] = (string) $validated['durasi_magang_maks_bulan'];
+        }
 
-            if (! ($limA > $limB && $limB > $limC && $limC > $limD)) {
-                return back()->withInput()->withErrors([
-                    'batas_predikat_a' => 'Skala batas ambang predikat harus berurutan secara logis: A > B > C > D.',
-                ]);
-            }
+        if (isset($validated['sla_verifikasi_hari'])) {
+            $settingsToSave['sla_verifikasi_hari'] = (string) $validated['sla_verifikasi_hari'];
+        }
 
-            $settingsToSave['predikat_batas'] = json_encode([
-                'A' => $limA,
-                'B' => $limB,
-                'C' => $limC,
-                'D' => $limD,
-            ]);
-        } elseif ($request->filled('predikat_batas')) {
-            $raw = $request->input('predikat_batas');
-            $decoded = is_array($raw) ? $raw : json_decode((string) $raw, true);
-
-            if (! is_array($decoded) || ! isset($decoded['A'], $decoded['B'], $decoded['C'], $decoded['D'])) {
-                return back()->withInput()->withErrors([
-                    'predikat_batas' => 'Format predikat batas harus berupa JSON valid dengan kunci A, B, C, dan D.',
-                ]);
-            }
-
-            $pA = (int) $decoded['A'];
-            $pB = (int) $decoded['B'];
-            $pC = (int) $decoded['C'];
-            $pD = (int) $decoded['D'];
-
-            if (! ($pA > $pB && $pB > $pC && $pC > $pD)) {
-                return back()->withInput()->withErrors([
-                    'predikat_batas' => 'Skala batas ambang predikat harus berurutan secara logis: A > B > C > D.',
-                ]);
-            }
-
-            $settingsToSave['predikat_batas'] = json_encode([
-                'A' => $pA,
-                'B' => $pB,
-                'C' => $pC,
-                'D' => $pD,
-            ]);
+        if ($request->has('fitur_pendaftaran_kelompok_aktif')) {
+            $settingsToSave['fitur_pendaftaran_kelompok_aktif'] = $request->boolean('fitur_pendaftaran_kelompok_aktif') ? '1' : '0';
         }
 
         DB::transaction(function () use ($settingsToSave, $request) {
@@ -198,7 +167,6 @@ class PengaturanController extends Controller
         $pengaturan = Pengaturan::all()->pluck('nilai', 'kunci')->toArray();
         $jurusan = Jurusan::all(['id', 'nama_jurusan', 'kategori', 'aktif'])->toArray();
         $bidang = Bidang::all(['id', 'nama_bidang', 'deskripsi', 'aktif'])->toArray();
-        $rubrik = Rubrik::all(['id', 'kriteria', 'bobot', 'urutan', 'aktif'])->toArray();
         $bulanMagang = BulanMagang::all(['id', 'bulan_mulai', 'tgl_buka', 'tgl_tutup', 'override_status', 'aktif'])->toArray();
 
         $payloadData = [
@@ -214,7 +182,6 @@ class PengaturanController extends Controller
                 'pengaturan' => $pengaturan,
                 'jurusan' => $jurusan,
                 'bidang' => $bidang,
-                'rubrik' => $rubrik,
                 'bulan_magang' => $bulanMagang,
             ],
         ];

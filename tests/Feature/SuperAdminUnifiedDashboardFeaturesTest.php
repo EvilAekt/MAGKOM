@@ -300,15 +300,13 @@ class SuperAdminUnifiedDashboardFeaturesTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Hub Ekspor Instan Laporan Resmi Dinas');
 
-        // Memastikan 4 Laporan Dinas tersedia dengan link ekspor CSV instan
+        // Memastikan 3 Laporan Dinas tersedia dengan link ekspor CSV instan
         $response->assertSee('Laporan Pendaftaran');
         $response->assertSee('Laporan Penempatan');
         $response->assertSee('Realisasi Kuota');
-        $response->assertSee('Rekapitulasi Nilai');
         $response->assertSee(route('admin.laporan.pendaftaran'));
         $response->assertSee(route('admin.laporan.penempatan'));
         $response->assertSee(route('admin.laporan.kuota'));
-        $response->assertSee(route('admin.laporan.nilai'));
 
         // Memastikan kontrol sistem penting terhubung
         $response->assertSee('Matriks Peran & Hak Akses', false);

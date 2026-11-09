@@ -159,7 +159,7 @@
             color="teal"
             trendText="Selesai"
             trendDirection="up"
-            subText="Telah tuntas dinas & dinilai" 
+            subText="Telah tuntas dinas" 
             :sparkBars="[30, 45, 55, 65, 75, 85, 100]"
         />
 
@@ -330,16 +330,6 @@
            color: {{ $tab === 'kuota' ? '#FFFFFF' : 'var(--neutral-700)' }};">
             Realisasi Kuota & Slot
         </a>
-
-        @if($isSuperAdmin)
-            <a href="{{ route('admin.laporan.index', ['tab' => 'nilai']) }}"
-               style="flex: 1; min-width: 180px; padding: 0.625rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 700; text-align: center; transition: all 0.15s;
-               background: {{ $tab === 'nilai' ? 'var(--blue-700)' : 'transparent' }};
-               color: {{ $tab === 'nilai' ? '#FFFFFF' : 'var(--neutral-700)' }}; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-                <span>Rekap Nilai (SuperAdmin)</span>
-            </a>
-        @endif
 
         @if(\App\Support\Pengaturan::bool('fitur_analitik_aktif', true))
         <a href="{{ route('admin.laporan.tahunan') }}"
@@ -913,125 +903,7 @@
         </x-gentelella.x-panel>
     @endif
 
-    <!-- 6. TAB 4: REKAP NILAI (SUPERADMIN EXCLUSIVE) -->
-    @if($tab === 'nilai' && $isSuperAdmin)
-        <x-gentelella.x-panel class="has-table" title="Laporan Rekapitulasi Nilai & Kelulusan">
-            <x-slot:actions>
-                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                    <a href="{{ route('admin.laporan.nilai', ['format' => 'xlsx']) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 1rem; background: #166534; color: #FFFFFF; font-weight: 700; font-size: 0.8rem; text-decoration: none; border-radius: 6px; box-shadow: 0 1px 3px rgba(22, 101, 52, 0.25); transition: background 0.15s ease;"
-                       title="Unduh rekapitulasi nilai berformat Microsoft Excel (.xlsx)">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <path d="M8 13h8"></path>
-                            <path d="M8 17h8"></path>
-                            <path d="M10 9h4"></path>
-                        </svg>
-                        <span>Ekspor Excel (.xlsx)</span>
-                    </a>
-                    <a href="{{ route('admin.laporan.nilai', ['format' => 'csv']) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 0.85rem; background: #FFFFFF; color: #475569; font-weight: 600; font-size: 0.8rem; text-decoration: none; border-radius: 6px; border: 1.5px solid #CBD5E1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;"
-                       title="Unduh format CSV">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                        <span>Ekspor CSV</span>
-                    </a>
-                </div>
-            </x-slot:actions>
-
-            <div class="adm-table-container">
-                <div class="adm-table-meta-bar">
-                    <div style="font-size: 0.8125rem; font-weight: 600; color: #64748B;">
-                        Menampilkan <strong style="color: #0F172A;">{{ $nilaiData->firstItem() ?? 0 }}–{{ $nilaiData->lastItem() ?? 0 }}</strong> dari <strong style="color: #0F172A;">{{ $nilaiData->total() }}</strong> data penilaian
-                    </div>
-                </div>
-
-                <div style="overflow-x: auto; width: 100%;">
-                    <table class="adm-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 24%; text-align: left;">Peserta Magang</th>
-                                <th style="width: 20%; text-align: left;">NIM / Institusi</th>
-                                <th style="width: 20%; text-align: left;">Pembimbing</th>
-                                <th class="th-center" style="width: 12%; text-align: center;">Nilai Akhir</th>
-                                <th class="th-center" style="width: 12%; text-align: center;">Predikat</th>
-                                <th class="th-center" style="width: 12%; text-align: center;">Status Evaluasi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($nilaiData as $nl)
-                                @php
-                                    $nlStatus = $nl->status?->value ?? (string)$nl->status;
-                                    $nlDotType = $nlStatus === 'final' ? 'success' : 'warning';
-                                @endphp
-                                <tr>
-                                    {{-- Peserta Magang --}}
-                                    <td>
-                                        <div class="adm-cell-stack">
-                                            <div class="adm-cell-title">
-                                                {{ $nl->penempatan?->peserta?->nama ?? 'Peserta Magang' }}
-                                            </div>
-                                            <div class="adm-cell-sub">
-                                                {{ $nl->penempatan?->peserta?->profil?->institusi ?? '-' }}
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    {{-- NIM / Institusi --}}
-                                    <td>
-                                        <div style="font-weight: 600; color: #1E293B;">{{ $nl->penempatan?->peserta?->profil?->nim_nisn ?? '-' }}</div>
-                                        <div class="adm-cell-sub">{{ $nl->penempatan?->peserta?->profil?->institusi ?? '-' }}</div>
-                                    </td>
-
-                                    {{-- Pembimbing --}}
-                                    <td>
-                                        <div style="font-weight: 600; color: #1E293B;">
-                                            {{ $nl->pembimbing?->nama ?? '-' }}
-                                        </div>
-                                    </td>
-
-                                    {{-- Nilai Akhir --}}
-                                    <td class="td-center">
-                                        <span style="font-weight: 900; font-size: 1.05rem; color: #0641CC;">
-                                            {{ $nl->nilai_akhir }}
-                                        </span>
-                                    </td>
-
-                                    {{-- Predikat --}}
-                                    <td class="td-center">
-                                        <span style="display: inline-block; background: #DCFCE7; color: #166534; border: 1.5px solid #86EFAC; font-weight: 800; font-size: 0.775rem; padding: 0.2rem 0.65rem; border-radius: 9999px;">
-                                            {{ $nl->predikat }}
-                                        </span>
-                                    </td>
-
-                                    {{-- Status Evaluasi --}}
-                                    <td class="td-center">
-                                        <span class="cv-status-dot-badge {{ $nlDotType }}">
-                                            <span class="dot"></span>
-                                            <span>{{ strtoupper($nlStatus) }}</span>
-                                        </span>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="adm-table-empty">
-                                        Belum ada data penilaian tersimpan di sistem.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-                @if($nilaiData->hasPages())
-                    <div class="adm-table-footer">
-                        {{ $nilaiData->links() }}
-                    </div>
-                @endif
-            </div>
-        </x-gentelella.x-panel>
-    @endif
-
+    <!-- END OF TABS -->
 </div>
 @endsection
 

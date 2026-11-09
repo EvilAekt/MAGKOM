@@ -57,6 +57,14 @@ class Pengaturan extends Model
     }
 
     /**
+     * Alias helper integer.
+     */
+    public static function int(string $kunci, int $default = 0): int
+    {
+        return self::getInt($kunci, $default);
+    }
+
+    /**
      * Mengambil nilai sebagai boolean.
      */
     public static function getBool(string $kunci, bool $default = false): bool
@@ -67,6 +75,14 @@ class Pengaturan extends Model
         }
 
         return in_array(strtolower((string) $val), ['1', 'true', 'on', 'yes'], true);
+    }
+
+    /**
+     * Alias helper boolean.
+     */
+    public static function bool(string $kunci, bool $default = false): bool
+    {
+        return self::getBool($kunci, $default);
     }
 
     /**

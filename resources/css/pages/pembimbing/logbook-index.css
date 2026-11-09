@@ -129,10 +129,11 @@
 /* 3. Filter Bar Card */
 .logbook-filter-card {
     background: #ffffff;
-    border-radius: 14px;
-    border: 1px solid #E2E8F0;
-    padding: 1.25rem;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    border-radius: 12px;
+    border: 1px solid #CBD5E1;
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+    padding: 1.15rem 1.35rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
     margin-bottom: 24px;
 }
 
@@ -162,7 +163,7 @@
 
 .filter-control {
     width: 100%;
-    height: 38px;
+    height: 42px;
     border: 1px solid #CBD5E1;
     border-radius: 8px;
     padding: 0 12px;
@@ -171,11 +172,13 @@
     color: #0F172A;
     outline: none;
     transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
 }
 
 .filter-control:focus {
-    border-color: #01347C;
+    border-color: #0641CC;
     background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
 }
 
 .peserta-search-input-wrap {
@@ -185,7 +188,7 @@
 
 .peserta-search-input {
     width: 100%;
-    height: 38px;
+    height: 42px;
     padding: 0 12px 0 36px;
     border-radius: 8px;
     border: 1px solid #CBD5E1;
@@ -194,17 +197,19 @@
     color: #0F172A;
     outline: none;
     transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
 }
 
 .peserta-search-input:focus {
-    border-color: #01347C;
+    border-color: #0641CC;
     background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
 }
 
 .peserta-search-icon {
     position: absolute;
     left: 10px;
-    top: 11px;
+    top: 13px;
     color: #94A3B8;
     pointer-events: none;
 }
@@ -215,42 +220,80 @@
 }
 
 .btn-filter-apply {
-    height: 38px;
-    padding: 0 18px;
-    background: #01347C;
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 0.875rem;
+    height: 42px;
+    padding: 0 1.25rem;
+    background: #0641CC !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 0.8125rem;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    transition: background 0.2s;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);
+    text-decoration: none;
 }
 
 .btn-filter-apply:hover {
-    background: #002244;
+    background: #003566 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(6, 65, 204, 0.3);
 }
 
 .btn-filter-reset {
-    height: 38px;
+    height: 42px;
     padding: 0 14px;
     background: #E2E8F0;
     color: #475569;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     text-decoration: none;
     border-radius: 8px;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    transition: background 0.2s;
+    transition: background 0.15s ease;
 }
 
 .btn-filter-reset:hover {
     background: #CBD5E1;
+    color: #1E293B;
+}
+
+/* Dark Mode Overrides for Filter Card */
+[data-theme="dark"] .logbook-filter-card {
+    background-color: #003566 !important;
+    border-color: #3F51B5 !important;
+    border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
+}
+
+[data-theme="dark"] .logbook-filter-card label {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .filter-control,
+[data-theme="dark"] .peserta-search-input {
+    background-color: #011C44 !important;
+    color: #F8FAFC !important;
+    border-color: rgba(63, 81, 181, 0.45) !important;
+}
+
+[data-theme="dark"] .btn-filter-apply {
+    background: #2563EB !important;
+}
+
+[data-theme="dark"] .btn-filter-apply:hover {
+    background: #1D4ED8 !important;
+}
+
+[data-theme="dark"] .btn-filter-reset {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #94A3B8 !important;
 }
 
 /* 4. Table Modern Khas Classroom */

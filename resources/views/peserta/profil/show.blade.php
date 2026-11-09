@@ -1111,7 +1111,7 @@
                             <input type="email" id="email" name="email"
                                    class="field-input @error('email') is-invalid @enderror"
                                    value="{{ old('email', $user->email) }}"
-                                   placeholder="nama@gmail.com" required>
+                                   placeholder="nama.peserta@gmail.com" required>
                         </div>
                         @error('email')
                             <span class="field-error-text">{{ $message }}</span>

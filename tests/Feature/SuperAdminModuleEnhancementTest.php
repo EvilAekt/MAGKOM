@@ -251,7 +251,7 @@ class SuperAdminModuleEnhancementTest extends TestCase
                 'catatan' => 'Peserta Rekomendasi Khusus Kampus',
             ]);
 
-        $responseStore->assertRedirect(route('superadmin.monitoring.index'));
+        $responseStore->assertRedirect(route('superadmin.slot-khusus.index'));
         $responseStore->assertSessionHas('success');
 
         // Pastikan akun user dibuat dengan role Peserta
@@ -381,7 +381,7 @@ class SuperAdminModuleEnhancementTest extends TestCase
                 'catatan' => 'Tanpa slot khusus spesifik',
             ]);
 
-        $response->assertRedirect(route('superadmin.monitoring.index'));
+        $response->assertRedirect(route('superadmin.slot-khusus.index'));
         $response->assertSessionHas('success');
 
         $createdUser = User::where('email', 'budi.bebas@ugm.ac.id')->firstOrFail();

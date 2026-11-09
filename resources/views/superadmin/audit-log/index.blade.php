@@ -1,16 +1,20 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Jejak Audit & Kepatuhan - SuperAdmin MagKom')
+@section('title', 'Audit Log - SuperAdmin MagKom')
+@section('topbar_title', 'Audit Log')
 
-{{-- 
-  Catatan Arsitektur (Zero Duplicate Header Parity):
-  @section('page_title') sengaja tidak dideklarasikan agar Gentelella layout 
-  tidak merender header duplikat bawaan Bootstrap 3. 
-  Header Card Minimalist di Canvas 5a4d7a8b menjadi satu-satunya header resmi.
---}}
+@section('breadcrumbs')
+    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">Audit Log</span>
+    @if(isset($activeChannel) && $activeChannel !== 'all-actions-stream')
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">{{ $activeChannelMeta['label'] ?? $activeChannel }}</span>
+    @endif
+@endsection
 
 @push('styles')
-    @vite(['resources/css/pages/superadmin/audit-log.css'])
+    @vite(['resources/css/pages/superadmin/superadmin-common.css', 'resources/css/pages/superadmin/audit-log.css'])
     @include('superadmin.audit-log.partials._styles')
 @endpush
 
@@ -29,7 +33,7 @@
         @include('superadmin.audit-log.partials._channels_sidebar')
 
         {{-- Kolom Kanan (9 Kolom): Stream Header, Filter Toolbar, Enterprise Table, Pagination & Diff Inspector --}}
-        <main class="audit-stream-col" aria-label="Aliran Jejak Audit">
+        <main class="audit-stream-col" aria-label="Aliran Audit Log">
             @include('superadmin.audit-log.partials._stream_table')
             @include('superadmin.audit-log.partials._diff_inspector')
         </main>

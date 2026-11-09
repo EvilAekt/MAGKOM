@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\Enums\TipeAuditEnum;
-use App\Models\ModulDinamisData;
 use App\Services\AuditService;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +14,7 @@ class AuditableObserver
 
     public function created(Model $model): void
     {
-        if ($model->getTable() === 'audit_log' || $model instanceof ModulDinamisData) {
+        if ($model->getTable() === 'audit_log') {
             return;
         }
 
@@ -31,7 +30,7 @@ class AuditableObserver
 
     public function updated(Model $model): void
     {
-        if ($model->getTable() === 'audit_log' || $model instanceof ModulDinamisData) {
+        if ($model->getTable() === 'audit_log') {
             return;
         }
 
@@ -50,7 +49,7 @@ class AuditableObserver
 
     public function deleted(Model $model): void
     {
-        if ($model->getTable() === 'audit_log' || $model instanceof ModulDinamisData) {
+        if ($model->getTable() === 'audit_log') {
             return;
         }
 

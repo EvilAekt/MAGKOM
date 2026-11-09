@@ -807,7 +807,7 @@
         <div>
             <span>{{ $mentee->peserta?->nama }}</span>
             <span>{{ $mentee->peserta?->profil?->institusi ?? 'Institusi Belum Diisi' }}</span>
-            <a href="{{ route('pembimbing.penilaian.show', $mentee->id) }}">Lembar Nilai</a>
+            <a href="{{ route('pembimbing.peserta.show', $mentee->id) }}">Lembar Nilai</a>
         </div>
     @endforeach
 

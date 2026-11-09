@@ -569,7 +569,7 @@
         "Laporan Logbook Mingguan": {
             format: "Input Form Digital di Portal MagKom",
             note: "Diisi setiap hari kerja dan dikirim untuk persetujuan mentor setiap hari Jumat sore.",
-            rule: "Syarat mutlak untuk kelulusan dan pembukaan akses lembar penilaian."
+            rule: "Syarat mutlak untuk kelulusan dan penyelesaian program magang."
         },
         "Dokumentasi Foto Kegiatan": {
             format: "JPG atau PNG pendukung pada logbook mingguan",

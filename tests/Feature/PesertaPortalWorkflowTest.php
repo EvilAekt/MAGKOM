@@ -244,14 +244,6 @@ class PesertaPortalWorkflowTest extends TestCase
         $response->assertSee('Tugas & Progres Magang');
     }
 
-    public function test_halaman_nilai_dapat_dibuka_dengan_graceful_handling_saat_belum_final(): void
-    {
-        $this->ensurePenempatanAktif();
-        $response = $this->actingAs($this->peserta)->get(URL::route('peserta.nilai.show'));
-        $response->assertStatus(200);
-        $response->assertSee('Lembar Nilai Belum Tersedia');
-    }
-
     public function test_topbar_menampilkan_nama_peserta_dan_dropdown_profil(): void
     {
         $response = $this->actingAs($this->peserta)->get(URL::route('peserta.profil.show'));

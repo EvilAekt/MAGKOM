@@ -183,31 +183,6 @@ final class NextLevelEnhancementsTest extends TestCase
         $this->assertSame(StatusLogbookEnum::Terkirim, $unownedLogbook->fresh()->status);
     }
 
-    public function test_pembimbing_can_export_rekap_bimbingan_bidang_csv_safely(): void
-    {
-        $peserta = $this->createPeserta('=FormulaInjection', 'formula@magkom.test');
-
-        Penempatan::create([
-            'peserta_id' => $peserta->id,
-            'pembimbing_id' => $this->pembimbing->id,
-            'bidang_id' => $this->bidang->id,
-            'tgl_mulai' => now()->subDays(10),
-            'tgl_selesai' => now()->addDays(20),
-            'status' => StatusPenempatanEnum::Aktif,
-            'jalur' => JalurEnum::Umum->value,
-            'sumber' => SumberPenempatanEnum::Online->value,
-        ]);
-
-        $response = $this->actingAs($this->pembimbing)
-            ->get(route('pembimbing.penilaian.ekspor-bidang'));
-
-        $response->assertOk();
-        $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
-
-        $content = $response->streamedContent();
-        $this->assertStringContainsString("'=FormulaInjection", $content);
-    }
-
     public function test_last_superadmin_protection_prevents_deactivation(): void
     {
         // 1. Trying to toggle own account is rejected

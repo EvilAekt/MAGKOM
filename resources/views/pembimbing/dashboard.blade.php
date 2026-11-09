@@ -77,7 +77,7 @@
         <a href="{{ route('pembimbing.tugas.create') }}">+ Beri Tugas Baru</a>
         <a href="{{ route('pembimbing.tugas.create') }}">Beri Tugas Baru</a>
         <a href="{{ route('pembimbing.logbook.index') }}">Review Antrean Hari Ini</a>
-        <a href="{{ route('pembimbing.penilaian.index') }}">Kelola Nilai Magang</a>
+        <a href="{{ route('pembimbing.peserta.index') }}">Kelola Nilai Magang</a>
 
         <!-- Legacy Tab Section Headers for Test Assertions -->
         <h2>1. Ringkasan Utama</h2>

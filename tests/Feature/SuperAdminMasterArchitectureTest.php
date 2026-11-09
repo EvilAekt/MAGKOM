@@ -7,9 +7,6 @@ namespace Tests\Feature;
 use App\Enums\RoleEnum;
 use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
-use App\Models\ModulDinamis;
-use App\Models\ModulDinamisData;
-use App\Models\ModulDinamisField;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
 use Database\Seeders\RubrikSeeder;
@@ -124,13 +121,14 @@ class SuperAdminMasterArchitectureTest extends TestCase
         $response->assertSee('Kuota & Periode');
         $response->assertSee('Tugas & Progres');
         $response->assertSee('Logbook & Presensi');
-        $response->assertSee('Penilaian & Sertifikat');
-        $response->assertSee('Survei & Mutu Alumni');
         $response->assertSee('Manajemen Pengguna');
         $response->assertSee('Konfigurasi & Master');
-        $response->assertSee('Cadangan Basis Data');
         $response->assertSee('Peringatan Keamanan');
-        $response->assertSee('Modul Kustom Dinamis');
+
+        // Pastikan kanal fitur yang telah ditiadakan tidak tampil di antarmuka
+        $response->assertDontSee('Modul Kustom Dinamis');
+        $response->assertDontSee('Penilaian & Sertifikat');
+        $response->assertDontSee('Cadangan Basis Data');
     }
 
     /**
@@ -236,199 +234,19 @@ class SuperAdminMasterArchitectureTest extends TestCase
     }
 
     /**
-     * TEST 6: SuperAdmin dapat merancang dan menyimpan modul dinamis baru (Modul Builder).
+     * TEST 6: Verifikasi bahwa rute modul builder dan modul dinamis sudah ditiadakan (404 Not Found).
      */
-    public function test_superadmin_can_create_custom_dynamic_module_with_various_field_types(): void
+    public function test_modul_builder_and_dynamic_module_routes_are_decommissioned(): void
     {
         $this->actingAs($this->superAdmin);
 
-        $payload = [
-            'nama_modul' => 'Inventaris Laptop Magang',
-            'slug' => 'inventaris-laptop',
-            'deskripsi' => 'Pencatatan aset peminjaman laptop dinas untuk peserta magang.',
-            'ikon' => 'laptop',
-            'target_roles' => ['superadmin', 'admin', 'pembimbing'],
-            'fields' => [
-                [
-                    'nama_kolom' => 'nomor_seri',
-                    'label' => 'Nomor Seri / SN',
-                    'tipe_data' => 'text',
-                    'wajib' => '1',
-                    'tampil_di_tabel' => '1',
-                    'dapat_dicari' => '1',
-                ],
-                [
-                    'nama_kolom' => 'jumlah_unit',
-                    'label' => 'Jumlah Unit',
-                    'tipe_data' => 'number',
-                    'wajib' => '1',
-                    'tampil_di_tabel' => '1',
-                    'dapat_dicari' => '0',
-                ],
-                [
-                    'nama_kolom' => 'kondisi_fisik',
-                    'label' => 'Kondisi Fisik',
-                    'tipe_data' => 'select',
-                    'opsi_pilihan' => 'Baik, Rusak Ringan, Rusak Berat',
-                    'wajib' => '1',
-                    'tampil_di_tabel' => '1',
-                    'dapat_dicari' => '1',
-                ],
-                [
-                    'nama_kolom' => 'catatan_khusus',
-                    'label' => 'Catatan Khusus',
-                    'tipe_data' => 'textarea',
-                    'wajib' => '0',
-                    'tampil_di_tabel' => '0',
-                    'dapat_dicari' => '0',
-                ],
-            ],
-        ];
+        $response1 = $this->get('/superadmin/modul-builder');
+        $response1->assertStatus(404);
 
-        $response = $this->post(route('superadmin.modul-builder.store'), $payload);
+        $response2 = $this->get('/superadmin/modul/inventaris-laptop');
+        $response2->assertStatus(404);
 
-        $response->assertRedirect(route('superadmin.modul-builder.index'));
-        $this->assertDatabaseHas('modul_dinamis', [
-            'slug' => 'inventaris-laptop',
-            'nama_modul' => 'Inventaris Laptop Magang',
-        ]);
-
-        $this->assertDatabaseHas('modul_dinamis_field', [
-            'nama_kolom' => 'nomor_seri',
-            'tipe_data' => 'text',
-        ]);
-        $this->assertDatabaseHas('modul_dinamis_field', [
-            'nama_kolom' => 'kondisi_fisik',
-            'tipe_data' => 'select',
-        ]);
-    }
-
-    /**
-     * TEST 7: CRUD Universal Data Baris pada Modul Kustom Dinamis.
-     */
-    public function test_superadmin_can_perform_full_crud_on_dynamic_custom_module_data(): void
-    {
-        $this->actingAs($this->superAdmin);
-
-        // 1. Buat Modul Dinamis
-        $modul = ModulDinamis::create([
-            'nama_modul' => 'Aset Tablet',
-            'slug' => 'aset-tablet',
-            'deskripsi' => 'Pengelolaan tablet operasional dinas',
-            'ikon' => 'box',
-            'target_roles' => ['superadmin', 'admin'],
-            'status_aktif' => true,
-            'dibuat_oleh' => $this->superAdmin->id,
-        ]);
-
-        ModulDinamisField::create([
-            'modul_id' => $modul->id,
-            'nama_kolom' => 'kode_aset',
-            'label' => 'Kode Aset',
-            'tipe_data' => 'text',
-            'wajib' => true,
-            'tampil_di_tabel' => true,
-            'dapat_dicari' => true,
-            'urutan' => 1,
-        ]);
-
-        ModulDinamisField::create([
-            'modul_id' => $modul->id,
-            'nama_kolom' => 'jumlah',
-            'label' => 'Jumlah Unit',
-            'tipe_data' => 'number',
-            'wajib' => true,
-            'tampil_di_tabel' => true,
-            'dapat_dicari' => false,
-            'urutan' => 2,
-        ]);
-
-        // 2. Akses index modul data
-        $indexResponse = $this->get(route('superadmin.modul.index', ['slug' => 'aset-tablet']));
-        $indexResponse->assertStatus(200);
-        $indexResponse->assertSee('Aset Tablet');
-
-        // 3. Tambah baris data baru
-        $storeResponse = $this->post(route('superadmin.modul.store', ['slug' => 'aset-tablet']), [
-            'kode_aset' => 'TAB-SLM-001',
-            'jumlah' => 5,
-        ]);
-        $storeResponse->assertRedirect();
-
-        $this->assertDatabaseHas('modul_dinamis_data', [
-            'modul_id' => $modul->id,
-        ]);
-
-        $record = ModulDinamisData::where('modul_id', $modul->id)->firstOrFail();
-        $this->assertEquals('TAB-SLM-001', $record->data['kode_aset']);
-        $this->assertEquals(5, $record->data['jumlah']);
-
-        // 4. Update baris data
-        $updateResponse = $this->put(route('superadmin.modul.update', [
-            'slug' => 'aset-tablet',
-            'id' => $record->id,
-        ]), [
-            'kode_aset' => 'TAB-SLM-001-REV',
-            'jumlah' => 7,
-        ]);
-        $updateResponse->assertRedirect();
-
-        $record->refresh();
-        $this->assertEquals('TAB-SLM-001-REV', $record->data['kode_aset']);
-        $this->assertEquals(7, $record->data['jumlah']);
-
-        // 5. Ekspor data ke CSV
-        $exportResponse = $this->get(route('superadmin.modul.export', ['slug' => 'aset-tablet']));
-        $exportResponse->assertStatus(200);
-        $this->assertStringContainsString('text/csv', (string) $exportResponse->headers->get('Content-Type'));
-
-        // 6. Hapus baris data (Soft Delete)
-        $deleteResponse = $this->delete(route('superadmin.modul.destroy', [
-            'slug' => 'aset-tablet',
-            'id' => $record->id,
-        ]));
-        $deleteResponse->assertRedirect();
-
-        $this->assertSoftDeleted('modul_dinamis_data', ['id' => $record->id]);
-    }
-
-    /**
-     * TEST 8: Toggle status keaktifan modul dinamis.
-     */
-    public function test_superadmin_can_toggle_module_active_status_and_delete_module(): void
-    {
-        $this->actingAs($this->superAdmin);
-
-        $modul = ModulDinamis::create([
-            'nama_modul' => 'Kunjungan Tamu',
-            'slug' => 'kunjungan-tamu',
-            'ikon' => 'users',
-            'target_roles' => ['superadmin'],
-            'status_aktif' => true,
-            'dibuat_oleh' => $this->superAdmin->id,
-        ]);
-
-        // Toggle nonaktif
-        $toggleResponse = $this->patch(route('superadmin.modul-builder.toggle', $modul));
-        $toggleResponse->assertRedirect();
-        $modul->refresh();
-        $this->assertFalse((bool) $modul->status_aktif);
-
-        // Hapus modul
-        $deleteResponse = $this->delete(route('superadmin.modul-builder.destroy', $modul));
-        $deleteResponse->assertRedirect(route('superadmin.modul-builder.index'));
-        $this->assertDatabaseMissing('modul_dinamis', ['id' => $modul->id]);
-    }
-
-    /**
-     * TEST 9: RBAC menolak role non-SuperAdmin saat mengakses Modul Builder.
-     */
-    public function test_rbac_restricts_non_superadmin_from_accessing_modul_builder(): void
-    {
-        $this->actingAs($this->admin);
-
-        $response = $this->get(route('superadmin.modul-builder.index'));
-        // Non-superadmin should be rejected (403 or redirect)
-        $this->assertTrue(in_array($response->status(), [403, 302], true));
+        $response3 = $this->get('/publik/modul/kunjungan-tamu');
+        $response3->assertStatus(404);
     }
 }

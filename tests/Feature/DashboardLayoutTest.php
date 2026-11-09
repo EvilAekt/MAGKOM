@@ -230,7 +230,7 @@ BLADE;
             $response->assertSee('Landing Page');
             $response->assertDontSee('Rubrik Nilai');
             $response->assertSee('Pengaturan Sistem');
-            $response->assertSee('Jejak Audit Log');
+            $response->assertSee('Audit Log');
         } finally {
             $this->removeDummyBladeView();
         }

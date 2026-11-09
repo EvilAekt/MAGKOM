@@ -7,14 +7,12 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\BulanMagang;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Services\AuditService;
 use App\Services\ExportReportService;
 use App\Support\Pengaturan;
@@ -163,13 +161,7 @@ class AnalitikTahunanController extends Controller
                 ->count();
 
             $rasioBulan = $pendaftarBulan > 0 ? round(($diterimaBulan / $pendaftarBulan) * 100, 1) : 0.0;
-
             $rataNilaiBulan = null;
-            if ($canViewNilai) {
-                $rataNilaiBulan = Penilaian::whereHas('penempatan', function ($q) use ($tahun, $m) {
-                    $q->whereYear('tgl_selesai', $tahun)->whereMonth('tgl_selesai', $m);
-                })->where('status', StatusPenilaianEnum::Final)->avg('nilai_akhir');
-            }
 
             $trenBulanan[] = [
                 'bulan' => $m,
@@ -178,7 +170,7 @@ class AnalitikTahunanController extends Controller
                 'diterima' => $diterimaBulan,
                 'selesai' => $selesaiBulan,
                 'rasio' => $rasioBulan,
-                'rata_nilai' => $rataNilaiBulan ? round((float) $rataNilaiBulan, 1) : null,
+                'rata_nilai' => null,
             ];
         }
 
@@ -205,30 +197,9 @@ class AnalitikTahunanController extends Controller
             ->pluck('total', 'jenjang')
             ->toArray();
 
-        // 6. Nilai & Predikat (Hanya jika SuperAdmin - Penegakan A-20)
+        // 6. Nilai & Predikat (Deprecate)
         $rataRataNilai = null;
         $sebaranPredikat = ['A' => 0, 'B' => 0, 'C' => 0, 'D' => 0, 'E' => 0];
-
-        if ($canViewNilai) {
-            $penilaianQuery = Penilaian::whereHas('penempatan', function ($q) use ($tahun) {
-                $q->whereYear('tgl_selesai', $tahun);
-            })->where('status', StatusPenilaianEnum::Final);
-
-            $avgScore = (clone $penilaianQuery)->avg('nilai_akhir');
-            $rataRataNilai = $avgScore ? round((float) $avgScore, 2) : null;
-
-            $predikatCounts = (clone $penilaianQuery)
-                ->select('predikat', DB::raw('count(*) as count'))
-                ->groupBy('predikat')
-                ->pluck('count', 'predikat')
-                ->toArray();
-
-            foreach ($predikatCounts as $p => $c) {
-                if (isset($sebaranPredikat[$p])) {
-                    $sebaranPredikat[$p] = $c;
-                }
-            }
-        }
 
         $bulanAktifCount = 0;
         foreach ($trenBulanan as $b) {

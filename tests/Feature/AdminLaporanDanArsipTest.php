@@ -8,7 +8,6 @@ use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
@@ -18,7 +17,6 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Penempatan;
 use App\Models\Pengaturan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
@@ -159,22 +157,15 @@ class AdminLaporanDanArsipTest extends TestCase
         $responseAdmin->assertSee('Rekap Pendaftaran');
         $responseAdmin->assertSee('Data Penempatan');
         $responseAdmin->assertSee('Realisasi Kuota');
-        // Admin tidak melihat tab rekap nilai
+        // Tab rekap nilai telah dihapus untuk seluruh role
         $responseAdmin->assertDontSee('tab=nilai');
         $responseAdmin->assertDontSee('Rekap Nilai (SuperAdmin)');
 
-        // 2. SuperAdmin melihat tab rekap nilai
+        // 2. SuperAdmin dapat mengakses hub laporan
         $responseSuper = $this->actingAs($this->superAdmin)->get(route('admin.laporan.index'));
         $responseSuper->assertStatus(200);
-        $responseSuper->assertSee('tab=nilai');
-        $responseSuper->assertSee('Rekap Nilai (SuperAdmin)');
-    }
-
-    public function test_admin_forbidden_from_exporting_rekap_nilai(): void
-    {
-        // Admin verifikator dilarang mengakses export rekap nilai (PRD 3.3, A-20)
-        $response = $this->actingAs($this->admin)->get(route('admin.laporan.nilai'));
-        $response->assertStatus(403);
+        $responseSuper->assertDontSee('tab=nilai');
+        $responseSuper->assertDontSee('Rekap Nilai (SuperAdmin)');
     }
 
     public function test_superadmin_can_export_all_reports_with_sanitized_csv(): void
@@ -193,11 +184,6 @@ class AdminLaporanDanArsipTest extends TestCase
         $resKuota = $this->actingAs($this->superAdmin)->get(route('admin.laporan.kuota'));
         $resKuota->assertStatus(200);
         $resKuota->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
-
-        // 4. Export Nilai
-        $resNilai = $this->actingAs($this->superAdmin)->get(route('admin.laporan.nilai'));
-        $resNilai->assertStatus(200);
-        $resNilai->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
     }
 
     public function test_superadmin_can_access_arsip_peserta_index_and_detail(): void
@@ -214,23 +200,12 @@ class AdminLaporanDanArsipTest extends TestCase
         $resIndex->assertSee('Universitas Negeri Yogyakarta');
 
         // 3. SuperAdmin dapat membuka detail arsip
-        Penilaian::create([
-            'penempatan_id' => $this->penempatanSelesai->id,
-            'pembimbing_id' => $this->pembimbing->id,
-            'nilai_akhir' => 88.5,
-            'predikat' => 'A',
-            'catatan' => 'Sangat memuaskan dan berdedikasi tinggi.',
-            'status' => StatusPenilaianEnum::Final,
-        ]);
-
         $resDetail = $this->actingAs($this->superAdmin)->get(route('superadmin.arsip.show', $this->penempatanSelesai));
         $resDetail->assertStatus(200);
         $resDetail->assertSee('Detail Arsip Alumni Magang');
         $resDetail->assertSee('Alumni Magang Sleman');
         $resDetail->assertSee('12345678');
         $resDetail->assertSee('Pembimbing Lapangan Aptika');
-        $resDetail->assertSee('Unduh Lembar Nilai Resmi');
-        $resDetail->assertSee('Predikat A');
     }
 
     public function test_admin_can_place_new_participant_manually(): void
@@ -284,7 +259,7 @@ class AdminLaporanDanArsipTest extends TestCase
         ]);
     }
 
-    public function test_superadmin_can_update_predikat_thresholds(): void
+    public function test_superadmin_can_update_operational_settings(): void
     {
         $payload = [
             'masa_tenggang_bulan' => 3,
@@ -294,34 +269,14 @@ class AdminLaporanDanArsipTest extends TestCase
             'logbook_maks_mundur_hari' => 3,
             'berkas_maks_mb' => 5,
             'deadline_mendekati_hari' => 7,
-            'batas_predikat_a' => 88,
-            'batas_predikat_b' => 74,
-            'batas_predikat_c' => 58,
-            'batas_predikat_d' => 42,
         ];
 
         $response = $this->actingAs($this->superAdmin)->put(route('superadmin.pengaturan.update'), $payload);
         $response->assertRedirect(route('superadmin.pengaturan.index'));
 
-        // Cek pengaturan di database
-        $pengaturan = Pengaturan::where('kunci', 'predikat_batas')->first();
-        $this->assertNotNull($pengaturan);
-        $decoded = json_decode($pengaturan->nilai, true);
-        $this->assertEquals(88, $decoded['A']);
-        $this->assertEquals(74, $decoded['B']);
-        $this->assertEquals(58, $decoded['C']);
-        $this->assertEquals(42, $decoded['D']);
-
-        // Uji validasi urutan salah: batas_predikat_a < batas_predikat_b
-        $invalidPayload = array_merge($payload, [
-            'batas_predikat_a' => 60,
-            'batas_predikat_b' => 75,
-            'batas_predikat_c' => 50,
-            'batas_predikat_d' => 30,
-        ]);
-
-        $invalidResponse = $this->actingAs($this->superAdmin)->put(route('superadmin.pengaturan.update'), $invalidPayload);
-        $invalidResponse->assertSessionHasErrors(['batas_predikat_a']);
+        // Cek pengaturan operasional di database
+        $this->assertEquals('3', Pengaturan::where('kunci', 'masa_tenggang_bulan')->value('nilai'));
+        $this->assertEquals('20', Pengaturan::where('kunci', 'kuota_umum_maks_per_bulan')->value('nilai'));
     }
 
     public function test_superadmin_can_filter_audit_logs(): void

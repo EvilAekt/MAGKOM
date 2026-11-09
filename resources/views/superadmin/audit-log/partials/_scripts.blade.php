@@ -8,31 +8,18 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-    // 1. POPOVER EXPORT CONTROLS (Pola A Node 68749aa8)
+    // 1. POPOVER EXPORT CONTROLS (Gaya Laporan Peserta Pembimbing)
+    const exportDropdownWrap = document.getElementById('exportDropdownWrap');
+    const toggleExportBtn = document.getElementById('btnToggleExportPopover');
+    const exportPopover = document.getElementById('exportPopover');
     const exportCaret = document.getElementById('exportSplitCaret');
     const quickExportBtn = document.getElementById('btnQuickExport');
-    const exportPopover = document.getElementById('exportPopover');
-    const caretSvg = document.getElementById('caretSvg');
 
-    function toggleExportPopover(forceOpen = null) {
-        if (!exportPopover) return;
-        const isOpen = forceOpen !== null ? forceOpen : exportPopover.style.display !== 'none';
-        
-        if (isOpen) {
-            exportPopover.style.display = 'none';
-            if (exportCaret) {
-                exportCaret.setAttribute('aria-expanded', 'false');
-                exportCaret.classList.remove('active');
-            }
-            if (caretSvg) caretSvg.style.transform = 'rotate(0deg)';
-        } else {
-            exportPopover.style.display = 'flex';
-            if (exportCaret) {
-                exportCaret.setAttribute('aria-expanded', 'true');
-                exportCaret.classList.add('active');
-            }
-            if (caretSvg) caretSvg.style.transform = 'rotate(180deg)';
-        }
+    if (toggleExportBtn) {
+        toggleExportBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            toggleExportPopover();
+        });
     }
 
     if (exportCaret) {
@@ -51,8 +38,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Dismiss Popover on click outside
     document.addEventListener('click', function (e) {
         if (exportPopover && exportPopover.style.display !== 'none') {
-            if (!exportPopover.contains(e.target) && !exportCaret.contains(e.target)) {
-                toggleExportPopover(true);
+            const clickedInside = exportPopover.contains(e.target);
+            const clickedToggle = (toggleExportBtn && toggleExportBtn.contains(e.target)) || (exportCaret && exportCaret.contains(e.target));
+            if (!clickedInside && !clickedToggle) {
+                toggleExportPopover(false);
             }
         }
     });
@@ -61,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             if (exportPopover && exportPopover.style.display !== 'none') {
-                toggleExportPopover(true);
+                toggleExportPopover(false);
             }
             closeModalLogDetail();
         }
@@ -138,27 +127,79 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /**
+ * Kontrol Buka/Tutup Popover Ekspor
+ */
+function toggleExportPopover(forceOpen = null) {
+    const exportPopover = document.getElementById('exportPopover');
+    const toggleBtn = document.getElementById('btnToggleExportPopover');
+    const dropdownWrap = document.getElementById('exportDropdownWrap');
+    const exportCaret = document.getElementById('exportSplitCaret');
+    const caretSvg = document.getElementById('caretSvg');
+    if (!exportPopover) return;
+
+    let shouldOpen;
+    if (forceOpen === true) {
+        shouldOpen = true;
+    } else if (forceOpen === false) {
+        shouldOpen = false;
+    } else {
+        shouldOpen = exportPopover.style.display === 'none' || exportPopover.style.display === '';
+    }
+
+    if (shouldOpen) {
+        exportPopover.style.display = 'flex';
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+        if (dropdownWrap) dropdownWrap.classList.add('is-open');
+        if (exportCaret) {
+            exportCaret.setAttribute('aria-expanded', 'true');
+            exportCaret.classList.add('active');
+        }
+        if (caretSvg) caretSvg.style.transform = 'rotate(180deg)';
+    } else {
+        exportPopover.style.display = 'none';
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+        if (dropdownWrap) dropdownWrap.classList.remove('is-open');
+        if (exportCaret) {
+            exportCaret.setAttribute('aria-expanded', 'false');
+            exportCaret.classList.remove('active');
+        }
+        if (caretSvg) caretSvg.style.transform = 'rotate(0deg)';
+    }
+}
+window.toggleExportPopover = toggleExportPopover;
+
+/**
  * Handle perubahan format ekspor radio card di popover
  */
-function handleExportFormatChange(format) {
+function handleAuditFormatSelection(format) {
     const cards = document.querySelectorAll('.audit-format-card');
     cards.forEach(card => card.classList.remove('audit-format-selected'));
 
+    const activeCard = document.getElementById('cardFormat' + format.charAt(0).toUpperCase() + format.slice(1));
+    if (activeCard) {
+        activeCard.classList.add('audit-format-selected');
+    }
+
+    const radio = document.getElementById('radioFormat' + format.charAt(0).toUpperCase() + format.slice(1));
+    if (radio && !radio.checked) {
+        radio.checked = true;
+    }
+
     const btnText = document.getElementById('btnExportText');
-    if (format === 'csv') {
-        const c = document.getElementById('cardFormatCsv');
-        if (c) c.classList.add('audit-format-selected');
-        if (btnText) btnText.textContent = 'Unduh CSV';
-    } else if (format === 'ndjson') {
-        const c = document.getElementById('cardFormatNdjson');
-        if (c) c.classList.add('audit-format-selected');
-        if (btnText) btnText.textContent = 'Unduh NDJSON';
-    } else if (format === 'pdf') {
-        const c = document.getElementById('cardFormatPdf');
-        if (c) c.classList.add('audit-format-selected');
-        if (btnText) btnText.textContent = 'Unduh PDF';
+    if (btnText) {
+        if (format === 'csv') {
+            btnText.textContent = 'Unduh CSV';
+        } else if (format === 'ndjson') {
+            btnText.textContent = 'Unduh NDJSON';
+        } else if (format === 'pdf') {
+            btnText.textContent = 'Unduh Dokumen (.pdf)';
+        } else {
+            btnText.textContent = 'Unduh Berkas';
+        }
     }
 }
+window.handleAuditFormatSelection = handleAuditFormatSelection;
+window.handleExportFormatChange = handleAuditFormatSelection;
 
 /**
  * Memicu ekspor file audit sesuai format dan filter aktif

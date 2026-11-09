@@ -77,9 +77,6 @@
                                 <a href="{{ route('pembimbing.tugas.index') }}" style="padding: 0.35rem 0.65rem; background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none;">
                                     Beri Tugas
                                 </a>
-                                <a href="{{ route('pembimbing.penilaian.show', $mentee->id) }}" style="padding: 0.35rem 0.65rem; background: #0641CC; color: #ffffff; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none;">
-                                    Nilai
-                                </a>
                             </div>
                         </td>
                     </tr>

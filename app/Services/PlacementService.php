@@ -414,6 +414,7 @@ class PlacementService extends AuditedService
                 $peserta->email_verified_at = now();
                 $peserta->must_change_password = true;
                 $peserta->status_aktif = true;
+                $peserta->password_awal = $plainPassword;
                 $peserta->save();
 
                 // 2. Buat profil peserta

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SlotKhusus extends Model
 {
@@ -40,11 +41,35 @@ class SlotKhusus extends Model
     }
 
     /**
+     * Relasi ke penempatan peserta magang di slot khusus ini.
+     */
+    public function penempatan(): HasMany
+    {
+        return $this->hasMany(Penempatan::class, 'slot_khusus_id');
+    }
+
+    /**
      * Aksesor sisa slot khusus (minimal 0).
      */
     public function getSisaAttribute(): int
     {
         return max(0, $this->jumlah - $this->terisi);
+    }
+
+    /**
+     * Aksesor alias jumlah_slot untuk kompatibilitas atribut.
+     */
+    public function getJumlahSlotAttribute(): int
+    {
+        return (int) $this->jumlah;
+    }
+
+    /**
+     * Aksesor alias terpakai untuk kompatibilitas atribut.
+     */
+    public function getTerpakaiAttribute(): int
+    {
+        return (int) $this->terisi;
     }
 
     /**

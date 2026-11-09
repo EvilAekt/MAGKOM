@@ -7,7 +7,6 @@ use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusReviewProgresEnum;
 use App\Models\Logbook;
-use App\Models\ModulDinamis;
 use App\Models\Penempatan;
 use App\Models\ProgresLog;
 use Illuminate\Pagination\Paginator;
@@ -58,31 +57,6 @@ class AppServiceProvider extends ServiceProvider
                 });
 
                 $view->with($badgeData);
-            }
-
-            // Injeksi Modul Dinamis Aktif ke Sidebar Dashboard
-            if ($user) {
-                $userRole = $user->role instanceof \BackedEnum ? (string) $user->role->value : (string) ($user->role?->value ?? $user->role ?? '');
-                $userRoleLower = strtolower($userRole);
-
-                $allModules = Cache::remember('dynamic_modules_sidebar', 3600, function () {
-                    try {
-                        return ModulDinamis::where('status_aktif', true)->orderBy('urutan')->get();
-                    } catch (\Throwable $e) {
-                        return collect();
-                    }
-                });
-
-                $accessibleModules = $allModules->filter(function ($module) use ($userRoleLower) {
-                    if ($userRoleLower === 'superadmin') {
-                        return true;
-                    }
-                    $roles = array_map('strtolower', (array) ($module->target_roles ?? []));
-
-                    return in_array($userRoleLower, $roles, true);
-                });
-
-                $view->with('sidebarDynamicModules', $accessibleModules);
             }
         });
     }
