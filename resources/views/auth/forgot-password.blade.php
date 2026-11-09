@@ -40,7 +40,7 @@
                     required 
                     autofocus 
                     class="form-input" 
-                    placeholder="nama@email.com"
+                    placeholder="nama.peserta@gmail.com"
                     autocomplete="email"
                 >
             </div>

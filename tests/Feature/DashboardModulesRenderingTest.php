@@ -10,7 +10,6 @@ use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
@@ -19,10 +18,7 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
-use App\Models\PenilaianDetail;
 use App\Models\PesertaProfil;
-use App\Models\Rubrik;
 use App\Models\Tugas;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
@@ -231,39 +227,6 @@ class DashboardModulesRenderingTest extends TestCase
         $resTugasPembimbingShow = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.show', $tugas));
         $resTugasPembimbingShow->assertStatus(200);
         $resTugasPembimbingShow->assertViewIs('pembimbing.tugas.show');
-
-        // 4. Pembimbing Penilaian
-        $resPenilaianIndex = $this->actingAs($this->pembimbing)->get(route('pembimbing.penilaian.index'));
-        $resPenilaianIndex->assertStatus(200);
-        $resPenilaianIndex->assertViewIs('pembimbing.penilaian.index');
-
-        $resPenilaianShow = $this->actingAs($this->pembimbing)->get(route('pembimbing.penilaian.show', $this->penempatan));
-        $resPenilaianShow->assertStatus(200);
-        $resPenilaianShow->assertViewIs('pembimbing.penilaian.show');
-
-        // 5. Peserta Nilai Final
-        $penilaian = Penilaian::create([
-            'penempatan_id' => $this->penempatan->id,
-            'pembimbing_id' => $this->pembimbing->id,
-            'nilai_akhir' => 90.0,
-            'predikat' => 'A',
-            'status' => StatusPenilaianEnum::Final,
-            'catatan' => 'Sangat memuaskan dalam pengerjaan proyek.',
-        ]);
-
-        foreach (Rubrik::where('aktif', true)->get() as $rubrik) {
-            PenilaianDetail::create([
-                'penilaian_id' => $penilaian->id,
-                'rubrik_id' => $rubrik->id,
-                'skor' => 90.0,
-                'bobot_snapshot' => $rubrik->bobot,
-            ]);
-        }
-
-        $resNilaiPeserta = $this->actingAs($this->peserta)->get(route('peserta.nilai.show'));
-        $resNilaiPeserta->assertStatus(200);
-        $resNilaiPeserta->assertViewIs('peserta.nilai.show');
-        $resNilaiPeserta->assertSee('90.00');
     }
 
     /** @test */
@@ -275,7 +238,6 @@ class DashboardModulesRenderingTest extends TestCase
         $this->actingAs($this->superAdmin)->get(route('superadmin.slot-khusus.index'))->assertOk();
         $this->actingAs($this->superAdmin)->get(route('superadmin.jurusan.index'))->assertOk();
         $this->actingAs($this->superAdmin)->get(route('superadmin.bidang.index'))->assertOk();
-        $this->actingAs($this->superAdmin)->get(route('superadmin.rubrik.index'))->assertOk();
         $this->actingAs($this->superAdmin)->get(route('superadmin.pengaturan.index'))->assertOk();
         $this->actingAs($this->superAdmin)->get(route('superadmin.audit-log.index'))->assertOk();
     }

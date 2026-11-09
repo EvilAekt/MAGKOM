@@ -55,11 +55,6 @@ class PesertaAksesFiturMagangTest extends TestCase
         $responseTugas = $this->actingAs($calonPeserta)->get(route('peserta.tugas.index'));
         $responseTugas->assertRedirect(route('peserta.dashboard'));
         $responseTugas->assertSessionHas('warning');
-
-        // Cek akses lembar nilai
-        $responseNilai = $this->actingAs($calonPeserta)->get(route('peserta.nilai.show'));
-        $responseNilai->assertRedirect(route('peserta.dashboard'));
-        $responseNilai->assertSessionHas('warning');
     }
 
     /**
@@ -145,10 +140,6 @@ class PesertaAksesFiturMagangTest extends TestCase
 
         $this->actingAs($pesertaDiterima)
             ->get(route('peserta.tugas.index'))
-            ->assertStatus(200);
-
-        $this->actingAs($pesertaDiterima)
-            ->get(route('peserta.nilai.show'))
             ->assertStatus(200);
     }
 

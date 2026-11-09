@@ -3233,46 +3233,6 @@
                             <span>{!! __('Laporan & Ekspor') !!}</span>
                         </a>
 
-                        @if(\App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true))
-                        <a href="{{ route('admin.sertifikat.index') }}" class="nav-item-link {{ request()->routeIs('admin.sertifikat.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="8" r="7"></circle>
-                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                                </svg>
-                            </span>
-                            <span>{{ __('Sertifikat') }}</span>
-                        </a>
-                        @endif
-
-                        @if(\App\Support\Pengaturan::bool('fitur_survei_aktif', true))
-                        <a href="{{ route('admin.survei.index') }}" class="nav-item-link {{ request()->routeIs('admin.survei.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                </svg>
-                            </span>
-                            <span>{{ __('Survei Kepuasan') }}</span>
-                        </a>
-                        @endif
-
-
-                        <!-- GRUP: MODUL KUSTOM DINAMIS (ADMIN) -->
-                        @if(isset($sidebarDynamicModules) && $sidebarDynamicModules->isNotEmpty())
-                            <span class="nav-section-label">{{ __('MODUL KUSTOM') }}</span>
-                            @foreach($sidebarDynamicModules as $customModul)
-                                <a href="{{ route('kustom-modul.index', ['slug' => $customModul->slug]) }}" class="nav-item-link {{ request()->is('kustom-modul/'.$customModul->slug.'*') ? 'active' : '' }}">
-                                    <span class="nav-item-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                                        </svg>
-                                    </span>
-                                    <span>{{ $customModul->nama_modul }}</span>
-                                </a>
-                            @endforeach
-                        @endif
-
                     @elseif($userRole === 'superadmin')
                         <!-- NAVIGASI SUPERADMIN (Figma Node 560-24892 & PRD 9.2) -->
                         <span class="sr-only">Sistem internal Kominfo</span>
@@ -3292,7 +3252,7 @@
                         <span class="nav-section-label">{{ __('MODUL OPERASIONAL') }}</span>
 
                         @php
-                            $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*') || request()->routeIs('admin.kuota.*') || request()->routeIs('admin.penempatan.*') || request()->routeIs('admin.laporan.*') || request()->routeIs('admin.sertifikat.*') || request()->routeIs('admin.survei.*');
+                            $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*') || request()->routeIs('admin.kuota.*') || request()->routeIs('admin.penempatan.*') || request()->routeIs('admin.laporan.*');
                         @endphp
                         <div class="nav-group-container">
                             <button type="button" class="nav-group-btn {{ $isOperasionalAdminActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalAdminActive ? 'true' : 'false' }}">
@@ -3316,12 +3276,6 @@
                                 <a href="{{ route('admin.kuota.index') }}" class="nav-sub-item {{ request()->routeIs('admin.kuota.*') ? 'active' : '' }}">{{ __('Kuota Magang') }}</a>
                                 <a href="{{ route('admin.penempatan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.penempatan.*') ? 'active' : '' }}">{{ __('Penempatan Peserta') }}</a>
                                 <a href="{{ route('admin.laporan.index') }}" class="nav-sub-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">{{ __('Laporan & Ekspor') }}</a>
-                                @if(\App\Support\Pengaturan::bool('fitur_sertifikat_aktif', true))
-                                <a href="{{ route('admin.sertifikat.index') }}" class="nav-sub-item {{ request()->routeIs('admin.sertifikat.*') ? 'active' : '' }}">{{ __('Sertifikat') }}</a>
-                                @endif
-                                @if(\App\Support\Pengaturan::bool('fitur_survei_aktif', true))
-                                <a href="{{ route('admin.survei.index') }}" class="nav-sub-item {{ request()->routeIs('admin.survei.*') ? 'active' : '' }}">{{ __('Survei Kepuasan') }}</a>
-                                @endif
                             </div>
                         </div>
 
@@ -3345,7 +3299,6 @@
                                 </svg>
                             </button>
                             <div class="nav-sub-menu {{ $isOperasionalPembimbingActive ? 'show' : '' }}">
-                                <a href="{{ route('pembimbing.penilaian.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.penilaian.*') ? 'active' : '' }}">{{ __('Penilaian Peserta') }}</a>
                                 <a href="{{ route('pembimbing.logbook.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.logbook.*') ? 'active' : '' }}">{{ __('Review Logbook') }}</a>
                                 <a href="{{ route('pembimbing.tugas.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.tugas.*') ? 'active' : '' }}">{{ __('Tugas Magang') }}</a>
                                 <a href="{{ route('pembimbing.laporan-kinerja.index') }}" class="nav-sub-item {{ request()->routeIs('pembimbing.laporan-kinerja.*') ? 'active' : '' }}">{{ __('Laporan Peserta') }}<span class="sr-only">{{ __('Laporan Kinerja') }}</span></a>
@@ -3404,16 +3357,6 @@
                             <span class="sr-only">Role</span>
                         </a>
 
-                        <a href="{{ route('superadmin.rubrik.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.rubrik.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
-                            </span>
-                            <span>{{ __('Rubrik Nilai') }}</span>
-                            <span class="sr-only">Rubrik</span>
-                        </a>
-
                         <a href="{{ route('superadmin.audit-log.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.audit-log.*') ? 'active' : '' }}">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3424,8 +3367,8 @@
                                     <polyline points="10 9 9 9 8 9"></polyline>
                                 </svg>
                             </span>
-                            <span>{{ __('Jejak Audit') }}</span>
-                            <span class="sr-only">Audit Log (15 Kanal) Jejak Audit Log Multi Kanal Log Audit</span>
+                            <span>{{ __('Audit Log') }}</span>
+                            <span class="sr-only">Audit Log (15 Kanal) Multi Kanal Log Audit</span>
                         </a>
 
                         <a href="{{ route('superadmin.health.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.health.*') ? 'active' : '' }}">
@@ -3438,20 +3381,8 @@
                             <span class="sr-only">Telemetri Kesehatan Kesehatan Infrastruktur</span>
                         </a>
 
-                        <a href="{{ route('superadmin.modul-builder.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.modul-builder.*') ? 'active' : '' }}">
-                            <span class="nav-item-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                                    <polyline points="2 17 12 22 22 17"></polyline>
-                                    <polyline points="2 12 12 17 22 12"></polyline>
-                                </svg>
-                            </span>
-                            <span>{{ __('Studio Modul') }}</span>
-                            <span class="sr-only">Pembuat Modul Low-Code Module Builder</span>
-                        </a>
-
                         @php
-                            $isConfigActive = request()->routeIs('superadmin.pengaturan.*') || request()->routeIs('superadmin.bulan.*') || request()->routeIs('superadmin.slot-khusus.*') || request()->routeIs('superadmin.jurusan.*') || request()->routeIs('superadmin.bidang.*');
+                            $isConfigActive = request()->routeIs('superadmin.pengaturan.*') || request()->routeIs('superadmin.landing.*') || request()->routeIs('superadmin.bulan.*') || request()->routeIs('superadmin.slot-khusus.*') || request()->routeIs('superadmin.jurusan.*') || request()->routeIs('superadmin.bidang.*');
                         @endphp
                         <div class="nav-group-container">
                             <button type="button" class="nav-group-btn {{ $isConfigActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isConfigActive ? 'true' : 'false' }}">
@@ -3473,6 +3404,10 @@
                                     <span>{{ __('Pengaturan') }}</span>
                                     <span class="sr-only">Pengaturan Sistem</span>
                                 </a>
+                                <a href="{{ route('superadmin.site-editor.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.site-editor.*') || request()->routeIs('superadmin.landing.*') ? 'active' : '' }}" title="Canvas Editor Landing Page">
+                                    <span>{{ __('Canvas Editor') }}</span>
+                                    <span class="sr-only">Landing Page & Konten Publik Canvas Editor</span>
+                                </a>
                                 <a href="{{ route('superadmin.bulan.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.bulan.*') ? 'active' : '' }}">
                                     <span>{{ __('Periode Magang') }}</span>
                                     <span class="sr-only">Bulan Magang</span>
@@ -3491,24 +3426,6 @@
                                 </a>
                             </div>
                         </div>
-
-                        <!-- GRUP: MODUL KUSTOM DINAMIS -->
-                        @if(isset($sidebarDynamicModules) && $sidebarDynamicModules->isNotEmpty())
-                            <span class="nav-section-label">{{ __('MODUL KUSTOM') }}</span>
-                            @foreach($sidebarDynamicModules as $customModul)
-                                <a href="{{ route('superadmin.modul.index', ['slug' => $customModul->slug]) }}" class="nav-item-link {{ request()->is('superadmin/modul/'.$customModul->slug.'*') || request()->is('kustom-modul/'.$customModul->slug.'*') ? 'active' : '' }}">
-                                    <span class="nav-item-icon">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                                        </svg>
-                                    </span>
-                                    <span>{{ $customModul->nama_modul }}</span>
-                                </a>
-                            @endforeach
-                        @endif
-
-
 
                     @endif
                         </div>

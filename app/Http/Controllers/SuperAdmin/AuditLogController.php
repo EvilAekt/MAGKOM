@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class AuditLogController extends Controller
 {
     /**
-     * Definisi 15 Kanal Audit Log ala Discord Stream (Master Plan Spec 2.1).
+     * Definisi Kanal Audit Log Terstandarisasi ala Stream Navigator.
      */
     public const CHANNELS = [
         'all-actions-stream' => [
@@ -81,20 +81,6 @@ class AuditLogController extends Controller
             'color' => '#14B8A6',
             'desc' => 'Pencatatan aktivitas harian, penguncian mingguan, & verifikasi mentor',
         ],
-        'penilaian-sk' => [
-            'key' => 'penilaian-sk',
-            'label' => 'Penilaian & Sertifikat',
-            'icon' => 'award',
-            'color' => '#EC4899',
-            'desc' => 'Input nilai rubrik, konversi predikat, penerbitan sertifikat digital',
-        ],
-        'survei-evaluasi' => [
-            'key' => 'survei-evaluasi',
-            'label' => 'Survei & Mutu Alumni',
-            'icon' => 'smile',
-            'color' => '#84CC16',
-            'desc' => 'Kuesioner kepuasan, evaluasi fasilitas, dan kritik saran alumni',
-        ],
         'user-management' => [
             'key' => 'user-management',
             'label' => 'Manajemen Pengguna',
@@ -107,14 +93,7 @@ class AuditLogController extends Controller
             'label' => 'Konfigurasi & Master',
             'icon' => 'settings',
             'color' => '#64748B',
-            'desc' => 'Parameter sistem, master jurusan, bidang dinas, dan rubrik penilaian',
-        ],
-        'backup-database' => [
-            'key' => 'backup-database',
-            'label' => 'Cadangan Basis Data',
-            'icon' => 'database',
-            'color' => '#F97316',
-            'desc' => 'Pemicuan snapshot backup SQL, download arsip, & disaster recovery',
+            'desc' => 'Parameter sistem, master jurusan, bidang dinas, dan pengaturan portal',
         ],
         'security-alert' => [
             'key' => 'security-alert',
@@ -122,13 +101,6 @@ class AuditLogController extends Controller
             'icon' => 'shield-alert',
             'color' => '#EF4444',
             'desc' => 'Akses 403 terlarang, CSRF token invalid, rate-limit, security sweep',
-        ],
-        'dynamic-module' => [
-            'key' => 'dynamic-module',
-            'label' => 'Modul Kustom Dinamis',
-            'icon' => 'layers',
-            'color' => '#A855F7',
-            'desc' => 'Pembuatan modul baru dan mutasi data baris pada modul kustom',
         ],
     ];
 

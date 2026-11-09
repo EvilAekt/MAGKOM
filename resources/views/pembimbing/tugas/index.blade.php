@@ -31,10 +31,16 @@
                 </div>
             </div>
             <div>
-                <a href="{{ route('pembimbing.tugas.create') }}" class="btn-create-task">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <span>Buat Tugas Baru</span>
-                </a>
+                @if(auth()->user()?->isSuperAdmin())
+                    <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.5rem 0.95rem; border-radius: 8px; border: 1px solid #BFDBFE;">
+                        Mode Lihat Saja
+                    </span>
+                @else
+                    <a href="{{ route('pembimbing.tugas.create') }}" class="btn-create-task">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span>Buat Tugas Baru</span>
+                    </a>
+                @endif
             </div>
         </div>
     </div>
@@ -161,8 +167,8 @@
 
             <div class="filter-actions">
                 <button type="submit" class="btn-filter-apply">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                    <span>Cari</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                    <span>Filter</span>
                 </button>
                 @if(request()->anyFilled(['penempatan_id', 'bulan', 'q']))
                     <a href="{{ route('pembimbing.tugas.index', request()->except(['penempatan_id', 'bulan', 'q'])) }}" class="btn-filter-reset">Reset</a>
@@ -288,9 +294,11 @@
                     @else
                         <div class="empty-mentee-tasks">
                             <p>Belum ada tugas untuk peserta ini{{ request('status') ? ' pada filter ini' : '' }}.</p>
-                            <a href="{{ route('pembimbing.tugas.create', ['penempatan_id' => $masukPenempatan->id]) }}" class="btn-create-task-inline">
-                                <span>Buat Tugas Baru</span>
-                            </a>
+                            @if(!auth()->user()?->isSuperAdmin())
+                                <a href="{{ route('pembimbing.tugas.create', ['penempatan_id' => $masukPenempatan->id]) }}" class="btn-create-task-inline">
+                                    <span>Buat Tugas Baru</span>
+                                </a>
+                            @endif
                         </div>
                     @endif
                 </div>

@@ -628,6 +628,14 @@
                         @endif
                     </div>
                 @else
+                    @if(auth()->user()?->isSuperAdmin())
+                        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 1.25rem; text-align: center; color: #475569;">
+                            <span style="display: inline-block; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 999px; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">Mode Lihat Saja (Read-Only)</span>
+                            <p style="margin: 0; font-size: 0.8125rem; line-height: 1.4; color: #64748B;">
+                                Super Admin memiliki hak akses lihat saja pada modul verifikasi pendaftaran. Tindakan penerimaan atau penolakan berkas merupakan kewenangan staf Administrasi / Verifikator.
+                            </p>
+                        </div>
+                    @else
                     <div>
                         {{-- Indikator Status Kuota --}}
                         <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0.9rem; border-radius: 8px; font-size: 0.8125rem; font-weight: 700; margin-bottom: 1rem; background: {{ $sisaKuota > 0 ? '#ECFDF5' : '#FEF2F2' }}; border: 1px solid {{ $sisaKuota > 0 ? '#A7F3D0' : '#FECACA' }}; color: {{ $sisaKuota > 0 ? '#065F46' : '#991B1B' }};">
@@ -727,6 +735,7 @@
                             }
                         </script>
                     </div>
+                    @endif
                 @endif
             </x-gentelella.x-panel>
 

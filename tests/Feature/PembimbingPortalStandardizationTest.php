@@ -107,6 +107,8 @@ class PembimbingPortalStandardizationTest extends TestCase
         $response->assertDontSee('Status Nilai');
         $response->assertSee('SMK Negeri 2 Depok Sleman');
         $response->assertSee('Naufal Pratama');
+        $response->assertSee('peserta-filter-card');
+        $response->assertSee('btn-search');
     }
 
     public function test_review_logbook_merender_hero_banner_dan_empat_kartu_tile_stat(): void
@@ -127,6 +129,8 @@ class PembimbingPortalStandardizationTest extends TestCase
         $response->assertSee('Perlu Review');
         $response->assertSee('Disetujui');
         $response->assertSee('Perlu Revisi');
+        $response->assertSee('logbook-filter-card');
+        $response->assertSee('btn-filter-apply');
         $response->assertSee($this->penempatan->peserta->nama);
 
         // Pada mode masuk ke rincian mentee, entri kegiatan logbook tampil
@@ -134,21 +138,6 @@ class PembimbingPortalStandardizationTest extends TestCase
             ->get(route('pembimbing.logbook.index', ['masuk' => $this->penempatan->id]));
         $detailResponse->assertOk();
         $detailResponse->assertSee('Mengerjakan implementasi antarmuka portal MagKom.');
-    }
-
-    public function test_evaluasi_rubrik_merender_hero_banner_dan_empat_kartu_tile_stat(): void
-    {
-        $response = $this->actingAs($this->pembimbing)
-            ->get(route('pembimbing.penilaian.index'));
-
-        $response->assertOk();
-        $response->assertSee('Evaluasi Rubrik &amp; Penilaian Magang', false);
-        $response->assertSee('Ekspor Rekap Bimbingan (CSV)');
-        $response->assertSee('Total Peserta');
-        $response->assertSee('Belum Dinilai');
-        $response->assertSee('Draf Tersimpan');
-        $response->assertSee('Final Resmi');
-        $response->assertSee('Petunjuk Evaluasi Rubrik Resmi Diskominfo Sleman');
     }
 
     public function test_anti_idor_pembimbing_hanya_melihat_mentee_miliknya(): void

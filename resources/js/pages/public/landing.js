@@ -718,7 +718,30 @@
     // =========================================================================
     // BOOTSTRAP ON DOM READY
     // =========================================================================
+    function applyDynamicTheme() {
+        const el = document.documentElement;
+        if (!el) return;
+
+        const ds = el.dataset;
+        if (ds.themePrimary) el.style.setProperty('--navy', ds.themePrimary);
+        if (ds.themeNavyDark) el.style.setProperty('--navy-dark', ds.themeNavyDark);
+        if (ds.themeAccent) el.style.setProperty('--accent', ds.themeAccent);
+        if (ds.themeGold) el.style.setProperty('--gold', ds.themeGold);
+        if (ds.themeBg) el.style.setProperty('--background', ds.themeBg);
+        if (ds.themeFontDisplay) el.style.setProperty('--font-display', `'${ds.themeFontDisplay}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`);
+        if (ds.themeFontBody) el.style.setProperty('--font-sans', `'${ds.themeFontBody}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`);
+        if (ds.themeRadius) el.style.setProperty('--border-radius-card', ds.themeRadius);
+        if (ds.themeBtnStyle) {
+            const btnRadius = ds.themeBtnStyle === 'pill' ? '9999px' : (ds.themeBtnStyle === 'sharp' ? '0px' : '8px');
+            el.style.setProperty('--radius-button', btnRadius);
+        }
+    }
+
+    // Apply immediate execution to prevent flash
+    applyDynamicTheme();
+
     document.addEventListener('DOMContentLoaded', function () {
+        applyDynamicTheme();
         initHeroSlider();
         initKuotaExplorer();
         initTahapanRoad();

@@ -60,20 +60,6 @@
                 <span>Unduh CSV Kuota</span>
             </a>
         </div>
-
-        {{-- Ekspor 4: Rekapitulasi Nilai --}}
-        <div class="sa-panel sa-panel--sub sa-export-card" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-            <div>
-                <div class="sa-export-card__header" style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
-                    <span class="sa-export-card__num" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.8125rem;">04</span>
-                    <h4 class="sa-panel__title" style="font-size: 0.9375rem; font-weight: 700; color: var(--cv-ink); margin: 0;">Rekapitulasi Nilai</h4>
-                </div>
-            </div>
-            <a href="{{ route('admin.laporan.nilai') }}" class="btn btn-primary sa-btn-sm sa-btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 6px; font-weight: 600; padding: 0.5rem 0.85rem; text-decoration: none;">
-                <x-sa.icon name="download" :size="14" />
-                <span>Unduh CSV Nilai</span>
-            </a>
-        </div>
     </div>
 </x-sa.panel>
 
@@ -281,12 +267,12 @@
                 <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Kelola &rarr;</span>
             </a>
 
-            <a href="{{ route('superadmin.rubrik.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
+            <a href="{{ route('superadmin.site-editor.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
-                    <x-sa.icon name="award" :size="16" />
-                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Bobot Rubrik Penilaian Akhir</span>
+                    <x-sa.icon name="layout" :size="16" />
+                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Canvas Editor Konten Publik</span>
                 </div>
-                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Atur &rarr;</span>
+                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Kelola &rarr;</span>
             </a>
         </div>
     </x-sa.panel>

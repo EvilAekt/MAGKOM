@@ -67,11 +67,18 @@ class StafController extends Controller
             ->where('must_change_password', true)
             ->count();
 
+        $totalStaf = User::whereIn('role', [RoleEnum::Admin->value, RoleEnum::Pembimbing->value])->count();
+        $totalAdmin = User::where('role', RoleEnum::Admin->value)->count();
+        $totalPembimbing = User::where('role', RoleEnum::Pembimbing->value)->count();
+
         return view('superadmin.staf.index', [
             'stafList' => $stafList,
             'bidangList' => Bidang::aktif()->get(),
             'maksPeserta' => $maksPeserta,
             'stafPendingPasswordCount' => $stafPendingPasswordCount,
+            'totalStaf' => $totalStaf,
+            'totalAdmin' => $totalAdmin,
+            'totalPembimbing' => $totalPembimbing,
         ]);
     }
 
@@ -84,42 +91,53 @@ class StafController extends Controller
             'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'role' => ['required', Rule::in([RoleEnum::Admin->value, RoleEnum::Pembimbing->value])],
-            'bidang_id' => ['nullable', 'exists:bidang,id'],
+            'bidang_id' => [
+                Rule::requiredIf(fn () => $request->input('role') === RoleEnum::Pembimbing->value),
+                'nullable',
+                'exists:bidang,id',
+            ],
             'password' => ['nullable', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'],
         ], [
+            'bidang_id.required' => 'Bidang Unit Kerja wajib dipilih untuk peran Pembimbing Lapangan.',
             'password.regex' => 'Kata sandi harus mengandung kombinasi huruf dan angka.',
         ]);
 
         $plainPassword = ! empty($validated['password']) ? (string) $validated['password'] : ('Mk'.Str::random(10).'!1');
+        $roleEnum = RoleEnum::from($validated['role']);
+        $bidangId = ($roleEnum === RoleEnum::Admin) ? null : (! empty($validated['bidang_id']) ? (int) $validated['bidang_id'] : null);
 
-        $staf = new User;
-        $staf->nama = $validated['nama'];
-        $staf->email = $validated['email'];
-        $staf->password = Hash::make($plainPassword);
-        $staf->role = RoleEnum::from($validated['role']);
-        $staf->bidang_id = ! empty($validated['bidang_id']) ? (int) $validated['bidang_id'] : null;
-        $staf->email_verified_at = now();
-        $staf->must_change_password = true;
-        $staf->status_aktif = true;
-        $staf->dibuat_oleh = $request->user()->id;
-        $staf->save();
+        $staf = DB::transaction(function () use ($validated, $plainPassword, $roleEnum, $bidangId, $request) {
+            $staf = new User;
+            $staf->nama = $validated['nama'];
+            $staf->email = $validated['email'];
+            $staf->password = Hash::make($plainPassword);
+            $staf->role = $roleEnum;
+            $staf->bidang_id = $bidangId;
+            $staf->email_verified_at = now();
+            $staf->must_change_password = true;
+            $staf->status_aktif = true;
+            $staf->dibuat_oleh = $request->user()->id;
+            $staf->save();
 
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'users',
-            idData: $staf->id,
-            nilaiBaru: [
-                'nama' => $staf->nama,
-                'email' => $staf->email,
-                'role' => $staf->role->value,
-                'status_aktif' => true,
-                'must_change_password' => true,
-            ],
-            detail: [
-                'aksi' => 'Membuat akun staf baru ('.$staf->role->label().') (SEC-02)',
-                'superadmin_id' => $request->user()->id,
-            ]
-        );
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Aksi,
+                tabel: 'users',
+                idData: $staf->id,
+                nilaiBaru: [
+                    'nama' => $staf->nama,
+                    'email' => $staf->email,
+                    'role' => $staf->role->value,
+                    'status_aktif' => true,
+                    'must_change_password' => true,
+                ],
+                detail: [
+                    'aksi' => 'Membuat akun staf baru ('.$staf->role->label().') (SEC-02)',
+                    'superadmin_id' => $request->user()->id,
+                ]
+            );
+
+            return $staf;
+        });
 
         return redirect()->route('superadmin.staf.index')
             ->with('success', "Akun staf {$staf->nama} ({$staf->role->label()}) berhasil dibuat. Kata sandi awal: [ {$plainPassword} ]")
@@ -140,7 +158,13 @@ class StafController extends Controller
             'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($staf->id)],
             'role' => ['required', Rule::in([RoleEnum::Admin->value, RoleEnum::Pembimbing->value])],
-            'bidang_id' => ['nullable', 'exists:bidang,id'],
+            'bidang_id' => [
+                Rule::requiredIf(fn () => $request->input('role') === RoleEnum::Pembimbing->value),
+                'nullable',
+                'exists:bidang,id',
+            ],
+        ], [
+            'bidang_id.required' => 'Bidang Unit Kerja wajib dipilih untuk peran Pembimbing Lapangan.',
         ]);
 
         $nilaiLama = [
@@ -150,28 +174,33 @@ class StafController extends Controller
             'bidang_id' => $staf->bidang_id,
         ];
 
-        $staf->nama = $validated['nama'];
-        $staf->email = $validated['email'];
-        $staf->role = RoleEnum::from($validated['role']);
-        $staf->bidang_id = ! empty($validated['bidang_id']) ? (int) $validated['bidang_id'] : null;
-        $staf->save();
+        $roleEnum = RoleEnum::from($validated['role']);
+        $bidangId = ($roleEnum === RoleEnum::Admin) ? null : (! empty($validated['bidang_id']) ? (int) $validated['bidang_id'] : null);
 
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'users',
-            idData: $staf->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: [
-                'nama' => $staf->nama,
-                'email' => $staf->email,
-                'role' => $staf->role->value,
-                'bidang_id' => $staf->bidang_id,
-            ],
-            detail: [
-                'aksi' => 'Memperbarui data profil staf ('.$staf->role->label().')',
-                'superadmin_id' => $request->user()->id,
-            ]
-        );
+        DB::transaction(function () use ($staf, $validated, $roleEnum, $bidangId, $nilaiLama, $request) {
+            $staf->nama = $validated['nama'];
+            $staf->email = $validated['email'];
+            $staf->role = $roleEnum;
+            $staf->bidang_id = $bidangId;
+            $staf->save();
+
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Aksi,
+                tabel: 'users',
+                idData: $staf->id,
+                nilaiLama: $nilaiLama,
+                nilaiBaru: [
+                    'nama' => $staf->nama,
+                    'email' => $staf->email,
+                    'role' => $staf->role->value,
+                    'bidang_id' => $staf->bidang_id,
+                ],
+                detail: [
+                    'aksi' => 'Memperbarui data profil staf ('.$staf->role->label().')',
+                    'superadmin_id' => $request->user()->id,
+                ]
+            );
+        });
 
         return redirect()->route('superadmin.staf.index')
             ->with('success', "Data profil staf {$staf->nama} berhasil diperbarui.");

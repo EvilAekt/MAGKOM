@@ -169,7 +169,7 @@
         </div>
     @else
         <div class="audit-table-wrapper">
-            <table class="audit-table" aria-label="Tabel Jejak Audit">
+            <table class="audit-table" aria-label="Tabel Audit Log">
                 <thead>
                     <tr class="audit-thead-row">
                         <th class="audit-th-time">Waktu &amp; ID</th>

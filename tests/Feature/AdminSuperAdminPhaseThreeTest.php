@@ -266,7 +266,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
 
         // Kuota 1 sudah ada senilai 5
         // Coba buat kuota 2 senilai 8 (5 + 8 = 13 > batas 12)
-        $response = $this->actingAs($this->superAdmin)
+        $response = $this->actingAs($this->admin)
             ->post(route('admin.kuota.store'), [
                 'bulan_magang_id' => $this->bulan->id,
                 'jurusan_id' => $jurusanDua->id,
@@ -276,7 +276,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         $response->assertSessionHasErrors(['jumlah']);
 
         // Coba buat kuota 2 senilai 7 (5 + 7 = 12 <= batas 12)
-        $responseLolos = $this->actingAs($this->superAdmin)
+        $responseLolos = $this->actingAs($this->admin)
             ->post(route('admin.kuota.store'), [
                 'bulan_magang_id' => $this->bulan->id,
                 'jurusan_id' => $jurusanDua->id,

@@ -28,9 +28,22 @@ class BulanController extends Controller
     {
         $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->paginate(12);
 
+        $totalBulan = BulanMagang::count();
+        $totalAktif = BulanMagang::where('aktif', true)->count();
+        $today = now()->toDateString();
+        $pendaftaranBuka = BulanMagang::where('aktif', true)
+            ->where('tgl_buka', '<=', $today)
+            ->where('tgl_tutup', '>=', $today)
+            ->count();
+        $totalOverride = BulanMagang::whereNotNull('override_status')->count();
+
         return view('superadmin.bulan.index', [
             'bulanList' => $bulanList,
             'statusEnum' => StatusKetersediaanEnum::cases(),
+            'totalBulan' => $totalBulan,
+            'totalAktif' => $totalAktif,
+            'pendaftaranBuka' => $pendaftaranBuka,
+            'totalOverride' => $totalOverride,
         ]);
     }
 

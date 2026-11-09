@@ -98,11 +98,46 @@ class PenempatanController extends Controller
             ->orderBy('nama')
             ->get();
 
-        $antreanBelumDitempatkan = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan.bidang'])
+        $activeTab = $request->input('tab', 'sudah');
+        if (! in_array($activeTab, ['sudah', 'belum'], true)) {
+            $activeTab = 'sudah';
+        }
+
+        $antreanQuery = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan.bidang'])
             ->where('status', StatusPendaftaranEnum::Diterima)
             ->doesntHave('penempatan')
-            ->orderBy('diputuskan_at', 'desc')
-            ->get();
+            ->orderBy('diputuskan_at', 'desc');
+
+        $totalBelumDitempatkan = (clone $antreanQuery)->count();
+
+        if ($request->filled('bulan_magang_id')) {
+            $antreanQuery->where('bulan_magang_id', $request->integer('bulan_magang_id'));
+        }
+
+        if ($request->filled('q')) {
+            $search = '%'.trim((string) $request->input('q')).'%';
+            $antreanQuery->whereHas('user', function ($qu) use ($search) {
+                $qu->where('nama', 'like', $search)
+                    ->orWhere('email', 'like', $search)
+                    ->orWhereHas('profil', fn ($qp) => $qp->where('institusi', 'like', $search));
+            });
+        }
+
+        if ($request->filled('jurusan_id')) {
+            $jurusanId = $request->integer('jurusan_id');
+            $antreanQuery->whereHas('kuota', function ($qk) use ($jurusanId) {
+                $qk->where('jurusan_id', $jurusanId);
+            });
+        }
+
+        if ($request->filled('bidang_id')) {
+            $bidangId = $request->integer('bidang_id');
+            $antreanQuery->whereHas('kuota.jurusan.bidang', function ($qb) use ($bidangId) {
+                $qb->where('bidang.id', $bidangId);
+            });
+        }
+
+        $antreanBelumDitempatkan = $antreanQuery->get();
 
         $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
         $slotKhususList = SlotKhusus::where('aktif', true)->orderBy('bulan_mulai')->get();
@@ -122,7 +157,7 @@ class PenempatanController extends Controller
             'aktif' => Penempatan::where('status', StatusPenempatanEnum::Aktif)->count(),
             'selesai' => Penempatan::where('status', StatusPenempatanEnum::Selesai)->count(),
             'khusus' => Penempatan::whereNotNull('slot_khusus_id')->count(),
-            'belum_ditempatkan' => $antreanBelumDitempatkan->count(),
+            'belum_ditempatkan' => $totalBelumDitempatkan,
         ];
 
         return view('admin.penempatan.index', [
@@ -137,6 +172,7 @@ class PenempatanController extends Controller
             'penempatanStats' => $penempatanStats,
             'antreanBelumDitempatkan' => $antreanBelumDitempatkan,
             'bulanList' => $bulanList,
+            'activeTab' => $activeTab,
         ]);
     }
 
@@ -148,7 +184,9 @@ class PenempatanController extends Controller
         $admin = $request->user();
         $pendaftaran = Pendaftaran::findOrFail($request->integer('pendaftaran_id'));
         $pembimbing = User::findOrFail($request->integer('pembimbing_id'));
-        $bidang = $request->filled('bidang_id') ? Bidang::find($request->integer('bidang_id')) : null;
+        $bidang = $request->filled('bidang_id')
+            ? Bidang::find($request->integer('bidang_id'))
+            : ($pendaftaran->kuota?->jurusan?->bidang?->first() ?? $pembimbing->bidang);
 
         try {
             $this->placementService->tetapkanPenempatan($pendaftaran, $admin, $pembimbing, $bidang);
@@ -174,7 +212,6 @@ class PenempatanController extends Controller
             'kuota.jurusan',
             'tugas.progresLogs',
             'logbooks',
-            'penilaian.details.rubrik',
             'pendaftaran.dokumen',
         ]);
 
@@ -205,7 +242,7 @@ class PenempatanController extends Controller
         })->count();
 
         $logbookCount = $penempatan->logbooks->count();
-        $nilaiAkhir = $penempatan->penilaian?->nilai_akhir;
+        $nilaiAkhir = null;
 
         return view('admin.penempatan.show', [
             'penempatan' => $penempatan,

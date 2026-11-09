@@ -33,8 +33,17 @@ class JurusanController extends Controller
             ->orderBy('nama_jurusan', 'asc')
             ->paginate(20);
 
+        $totalJurusan = Jurusan::count();
+        $jurusanMahasiswa = Jurusan::where('kategori', 'mahasiswa')->count();
+        $jurusanSmk = Jurusan::where('kategori', 'smk')->count();
+        $jurusanAktif = Jurusan::where('aktif', true)->count();
+
         return view('superadmin.jurusan.index', [
             'jurusanList' => $jurusanList,
+            'totalJurusan' => $totalJurusan,
+            'jurusanMahasiswa' => $jurusanMahasiswa,
+            'jurusanSmk' => $jurusanSmk,
+            'jurusanAktif' => $jurusanAktif,
         ]);
     }
 

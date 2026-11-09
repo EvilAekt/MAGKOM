@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -38,6 +39,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'bidang_id',
         'status_aktif',
         'must_change_password',
+        'password_awal',
         'dibuat_oleh',
     ];
 
@@ -49,6 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'password_awal',
     ];
 
     /**
@@ -72,6 +75,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'role' => RoleEnum::class,
         'status_aktif' => 'boolean',
         'must_change_password' => 'boolean',
+        'password_awal' => 'encrypted',
     ];
 
     /**
@@ -198,6 +202,34 @@ class User extends Authenticatable implements MustVerifyEmail
         $currentRoleValue = $this->role instanceof RoleEnum ? $this->role->value : (string) $this->role;
 
         return strtolower($currentRoleValue) === strtolower($role);
+    }
+
+    /**
+     * Memeriksa apakah role pengguna memiliki hak akses tertentu (berlaku general untuk seluruh pengguna dengan role terkait).
+     */
+    public function hasPermission(string $slug): bool
+    {
+        $roleValue = $this->role instanceof RoleEnum ? $this->role->value : (string) $this->role;
+
+        // SuperAdmin memiliki wewenang menyeluruh pada sistem
+        if ($roleValue === RoleEnum::SuperAdmin->value) {
+            return true;
+        }
+
+        /** @var array<int, string> $cachedPermissions */
+        $cachedPermissions = Cache::remember(
+            "role_perms_{$roleValue}",
+            now()->addMinutes(30),
+            static function () use ($roleValue): array {
+                return RolePermission::query()
+                    ->where('role', $roleValue)
+                    ->join('permissions', 'role_permissions.permission_id', '=', 'permissions.id')
+                    ->pluck('permissions.slug')
+                    ->toArray();
+            }
+        );
+
+        return in_array($slug, $cachedPermissions, true);
     }
 
     public function isStaf(): bool

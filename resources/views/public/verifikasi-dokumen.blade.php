@@ -98,10 +98,6 @@
                                 <dd class="sm:col-span-2 font-semibold text-slate-900">
                                     @if($dokumen->tipe_dokumen === 'surat_diterima')
                                         Surat Keterangan Diterima Magang
-                                    @elseif($dokumen->tipe_dokumen === 'lembar_nilai')
-                                        Lembar Nilai Resmi Magang
-                                    @elseif($dokumen->tipe_dokumen === 'sertifikat')
-                                        Sertifikat Kelulusan Praktik Kerja Lapangan
                                     @else
                                         {{ ucwords(str_replace('_', ' ', $dokumen->tipe_dokumen)) }}
                                     @endif

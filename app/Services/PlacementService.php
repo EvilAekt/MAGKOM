@@ -154,8 +154,11 @@ class PlacementService extends AuditedService
                 // Hitung rentang periode magang (BR-08)
                 [$mulai, $selesai] = PeriodeMagang::hitung($p->bulanMagang->bulan_mulai, $p->durasi_bulan);
 
-                // Tentukan bidang: input form atau default dari jurusan
-                $bidangId = $bidang?->id ?? $p->kuota?->jurusan?->bidang_id;
+                // Tentukan bidang: input form, default dari relasi jurusan, atau dari bidang pembimbing
+                $bidangId = $bidang?->id
+                    ?? $p->kuota?->jurusan?->bidang?->first()?->id
+                    ?? $pembimbing->bidang_id
+                    ?? $p->kuota?->jurusan?->bidang_id;
 
                 $penempatan = Penempatan::create([
                     'pendaftaran_id' => $p->id,
@@ -414,6 +417,7 @@ class PlacementService extends AuditedService
                 $peserta->email_verified_at = now();
                 $peserta->must_change_password = true;
                 $peserta->status_aktif = true;
+                $peserta->password_awal = $plainPassword;
                 $peserta->save();
 
                 // 2. Buat profil peserta
@@ -440,9 +444,12 @@ class PlacementService extends AuditedService
                     $kuota = $this->quotaAllocationService->ambilKuotaUmum((int) $kuotaId);
                     $assignedKuotaId = $kuota->id;
                     $jalurEnum = JalurEnum::Umum;
-                } else {
+                } elseif ($slotKhususId) {
                     $slot = $this->quotaAllocationService->ambilKuotaKhusus((int) $slotKhususId);
                     $assignedSlotId = $slot->id;
+                    $jalurEnum = JalurEnum::Khusus;
+                } else {
+                    $assignedSlotId = null;
                     $jalurEnum = JalurEnum::Khusus;
                 }
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\TipeAuditEnum;
 use App\Models\Penempatan;
 use App\Models\Pengaturan;
@@ -38,7 +37,6 @@ class MasaTenggangService
 
     /**
      * Tandai penempatan sebagai selesai oleh pembimbing (BR-10).
-     * Wajib memvalidasi bahwa penilaian telah berstatus 'final'.
      */
     public function tandaiSelesai(Penempatan $penempatan, User $pembimbing): Penempatan
     {
@@ -52,12 +50,6 @@ class MasaTenggangService
 
         if ($penempatan->status !== StatusPenempatanEnum::Aktif) {
             throw new InvalidArgumentException("Penempatan dengan status '{$penempatan->status->label()}' tidak dapat diselesaikan.");
-        }
-
-        // BR-10: Wajib memiliki penilaian berstatus FINAL
-        $penilaian = $penempatan->penilaian;
-        if (! $penilaian || $penilaian->status !== StatusPenilaianEnum::Final) {
-            throw new InvalidArgumentException('Penempatan tidak dapat diselesaikan karena penilaian akhir belum berstatus final.');
         }
 
         return DB::transaction(function () use ($penempatan) {

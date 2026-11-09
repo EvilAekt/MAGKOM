@@ -13,7 +13,7 @@ class PenempatanManualRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->isAdmin() || $this->user()?->isSuperAdmin();
+        return (bool) $this->user()?->isAdmin();
     }
 
     protected function prepareForValidation(): void

@@ -13,11 +13,9 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
 use App\Models\SlotKhusus;
 use App\Services\ExportReportService;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
@@ -104,7 +102,6 @@ class LaporanController extends Controller
         $penempatanData = null;
         $kuotaData = null;
         $slotKhususData = null;
-        $nilaiData = null;
 
         if ($tab === 'pendaftaran') {
             $pQuery = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan'])
@@ -171,11 +168,6 @@ class LaporanController extends Controller
             $slotKhususData = SlotKhusus::orderBy('bulan_mulai', 'desc')
                 ->paginate(10, ['*'], 'slot_page')
                 ->withQueryString();
-        } elseif ($tab === 'nilai' && $user->isSuperAdmin()) {
-            $nilaiData = Penilaian::with(['penempatan.peserta.profil', 'pembimbing'])
-                ->latest()
-                ->paginate(10)
-                ->withQueryString();
         }
 
         return view('admin.laporan.index', [
@@ -189,7 +181,6 @@ class LaporanController extends Controller
             'penempatanData' => $penempatanData,
             'kuotaData' => $kuotaData,
             'slotKhususData' => $slotKhususData,
-            'nilaiData' => $nilaiData,
             'analyticsKuotaJurusan' => $analyticsKuotaJurusan,
             'analyticsJenjang' => $analyticsJenjang,
             'isSuperAdmin' => $user->isSuperAdmin(),
@@ -227,21 +218,6 @@ class LaporanController extends Controller
     public function kuota(Request $request): Response
     {
         return $this->exportService->exportRealisasiKuota(
-            $request->user(),
-            $request->input('format', 'csv')
-        );
-    }
-
-    /**
-     * Ekspor rekapitulasi nilai peserta (Hanya SuperAdmin, AC-17-1, A-20).
-     */
-    public function nilai(Request $request): Response
-    {
-        if (! $request->user()->isSuperAdmin()) {
-            throw new AuthorizationException('Rekapitulasi nilai hanya dapat diakses oleh SuperAdmin (PRD 3.3, A-20).');
-        }
-
-        return $this->exportService->exportNilai(
             $request->user(),
             $request->input('format', 'csv')
         );

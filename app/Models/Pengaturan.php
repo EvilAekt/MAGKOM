@@ -57,6 +57,14 @@ class Pengaturan extends Model
     }
 
     /**
+     * Alias helper integer.
+     */
+    public static function int(string $kunci, int $default = 0): int
+    {
+        return self::getInt($kunci, $default);
+    }
+
+    /**
      * Mengambil nilai sebagai boolean.
      */
     public static function getBool(string $kunci, bool $default = false): bool
@@ -70,6 +78,14 @@ class Pengaturan extends Model
     }
 
     /**
+     * Alias helper boolean.
+     */
+    public static function bool(string $kunci, bool $default = false): bool
+    {
+        return self::getBool($kunci, $default);
+    }
+
+    /**
      * Menyimpan atau memperbarui nilai pengaturan.
      */
     public static function setNilai(string $kunci, string $nilai): void
@@ -78,6 +94,17 @@ class Pengaturan extends Model
             ['kunci' => $kunci],
             ['nilai' => $nilai]
         );
+    }
+
+    /**
+     * Menghapus konfigurasi berdasarkan kunci.
+     */
+    public static function deleteKunci(string $kunci): void
+    {
+        $setting = self::where('kunci', $kunci)->first();
+        if ($setting) {
+            $setting->delete();
+        }
     }
 
     /**

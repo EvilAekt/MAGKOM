@@ -15,17 +15,19 @@ class PengaturanSeeder extends Seeder
     public function run(): void
     {
         $pengaturanList = [
-            ['kunci' => 'masa_tenggang_bulan', 'nilai' => '1'],
             ['kunci' => 'kuota_umum_maks_per_bulan', 'nilai' => '12'],
             ['kunci' => 'slot_khusus_default', 'nilai' => '3'],
             ['kunci' => 'maks_peserta_aktif_per_pembimbing', 'nilai' => '20'],
+            ['kunci' => 'maks_anggota_kelompok', 'nilai' => '4'],
+            ['kunci' => 'durasi_magang_maks_bulan', 'nilai' => '6'],
             ['kunci' => 'logbook_maks_mundur_hari', 'nilai' => '3'],
-            ['kunci' => 'berkas_maks_mb', 'nilai' => '2'],
+            ['kunci' => 'berkas_maks_mb', 'nilai' => '10'],
             ['kunci' => 'deadline_mendekati_hari', 'nilai' => '3'],
-            ['kunci' => 'predikat_batas', 'nilai' => json_encode(['A' => 85, 'B' => 70, 'C' => 55, 'D' => 40])],
-            ['kunci' => 'fitur_sertifikat_aktif', 'nilai' => '1'],
-            ['kunci' => 'fitur_survei_aktif', 'nilai' => '1'],
+            ['kunci' => 'sla_verifikasi_hari', 'nilai' => '5'],
+            ['kunci' => 'masa_tenggang_bulan', 'nilai' => '2'],
+            ['kunci' => 'retensi_audit_akses_data_hari', 'nilai' => '365'],
             ['kunci' => 'fitur_analitik_aktif', 'nilai' => '1'],
+            ['kunci' => 'fitur_pendaftaran_kelompok_aktif', 'nilai' => '1'],
         ];
 
         foreach ($pengaturanList as $pengaturan) {
@@ -34,5 +36,11 @@ class PengaturanSeeder extends Seeder
                 $pengaturan
             );
         }
+
+        // Bersihkan dead keys jika masih ada
+        Pengaturan::deleteKunci('predikat_batas');
+        Pengaturan::deleteKunci('format_nomor_sertifikat');
+        Pengaturan::deleteKunci('fitur_sertifikat_aktif');
+        Pengaturan::deleteKunci('fitur_survei_aktif');
     }
 }

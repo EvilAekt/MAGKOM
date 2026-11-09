@@ -11,7 +11,6 @@ use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
@@ -21,7 +20,6 @@ use App\Models\Kuota;
 use App\Models\Logbook;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
 use App\Models\Tugas;
 use App\Models\User;
@@ -327,9 +325,6 @@ class PesertaFullPortalFeatureTest extends TestCase
 
         // 7. Tugas Show
         $this->actingAs($this->peserta)->get(URL::route('peserta.tugas.show', $tugas))->assertOk();
-
-        // 8. Nilai Show
-        $this->actingAs($this->peserta)->get(URL::route('peserta.nilai.show'))->assertOk();
     }
 
     /** @test */
@@ -511,25 +506,11 @@ class PesertaFullPortalFeatureTest extends TestCase
             'status' => StatusPenempatanEnum::Selesai,
         ]);
 
-        Penilaian::create([
-            'penempatan_id' => $penempatan->id,
-            'pembimbing_id' => $this->pembimbing->id,
-            'nilai_akhir' => 92.50,
-            'predikat' => 'A',
-            'catatan' => 'Sangat berdedikasi dan performa istimewa selama magang.',
-            'status' => StatusPenilaianEnum::Final,
-        ]);
-
         $response = $this->actingAs($this->peserta)->get(URL::route('peserta.dashboard'));
         $response->assertOk();
 
         // Assert konten fase selesai
         $response->assertSee('Penyelesaian Program Magang Diskominfo Sleman');
         $response->assertSee('Lulus &amp; Selesai', false);
-        $response->assertSeeInOrder(['Predikat Akhir', 'A']);
-        $response->assertSee('92.50');
-        $response->assertSee('Sangat berdedikasi dan performa istimewa selama magang.');
-        $response->assertSee(URL::route('peserta.nilai.show'));
-        $response->assertSee(URL::route('peserta.nilai.unduh'));
     }
 }

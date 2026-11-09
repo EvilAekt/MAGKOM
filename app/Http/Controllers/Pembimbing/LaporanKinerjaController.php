@@ -38,7 +38,6 @@ class LaporanKinerjaController extends Controller
             'bidang',
             'tugas',
             'logbooks',
-            'penilaian.details.rubrik',
         ])
             ->where(function ($q) use ($user) {
                 if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
@@ -152,15 +151,7 @@ class LaporanKinerjaController extends Controller
             ? round(($totalTugasSelesai / $totalTugasDiberikan) * 100, 1)
             : 0.0;
 
-        // Rata-rata nilai kompetensi mentee yang sudah dinilai
-        $penilaianScores = $allPenempatans
-            ->pluck('penilaian.nilai_akhir')
-            ->filter()
-            ->map(fn ($score) => (float) $score);
-
-        $rataRataNilai = $penilaianScores->isNotEmpty()
-            ? round($penilaianScores->avg(), 2)
-            : 0.0;
+        $rataRataNilai = 0.0;
 
         // 2. Format rekapitulasi per mentee dengan paginasi server-side
         $perPage = $request->integer('per_page', 5);
@@ -188,8 +179,8 @@ class LaporanKinerjaController extends Controller
                     'total_logbook' => $totalLogbook,
                     'logbook_reviewed' => $logbookReviewed,
                     'durasi_hari' => $durasiHari,
-                    'nilai_akhir' => $p->penilaian?->nilai_akhir,
-                    'predikat' => $p->penilaian?->predikat,
+                    'nilai_akhir' => null,
+                    'predikat' => null,
                     'status' => $p->status,
                 ];
             });
@@ -471,7 +462,6 @@ class LaporanKinerjaController extends Controller
             'bidang',
             'tugas',
             'logbooks',
-            'penilaian',
         ])
             ->where(function ($q) use ($user) {
                 if (! $user->isAdmin() && ! $user->isSuperAdmin()) {

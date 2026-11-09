@@ -45,9 +45,8 @@ class SuperAdminFeatureToggleTest extends TestCase
     public function test_pengaturan_seeder_sets_expected_defaults(): void
     {
         $this->assertSame(20, PengaturanHelper::int('maks_peserta_aktif_per_pembimbing'));
-        $this->assertTrue(PengaturanHelper::bool('fitur_sertifikat_aktif'));
-        $this->assertTrue(PengaturanHelper::bool('fitur_survei_aktif'));
         $this->assertTrue(PengaturanHelper::bool('fitur_analitik_aktif'));
+        $this->assertTrue(PengaturanHelper::bool('fitur_pendaftaran_kelompok_aktif'));
     }
 
     public function test_superadmin_can_update_mentee_limit_and_toggle_features_off(): void
@@ -58,43 +57,32 @@ class SuperAdminFeatureToggleTest extends TestCase
                 'kuota_umum_maks_per_bulan' => 15,
                 'slot_khusus_default' => 5,
                 'maks_peserta_aktif_per_pembimbing' => 25,
+                'maks_anggota_kelompok' => 4,
+                'durasi_magang_maks_bulan' => 6,
                 'logbook_maks_mundur_hari' => 5,
                 'berkas_maks_mb' => 4,
                 'deadline_mendekati_hari' => 4,
+                'sla_verifikasi_hari' => 5,
                 'retensi_audit_akses_data_hari' => 180,
-                'fitur_sertifikat_aktif' => 0,
-                'fitur_survei_aktif' => 0,
                 'fitur_analitik_aktif' => 0,
+                'fitur_pendaftaran_kelompok_aktif' => 0,
             ]);
 
         $response->assertRedirect(route('superadmin.pengaturan.index'));
         $response->assertSessionHas('success');
 
         $this->assertSame(25, PengaturanHelper::int('maks_peserta_aktif_per_pembimbing'));
-        $this->assertFalse(PengaturanHelper::bool('fitur_sertifikat_aktif'));
-        $this->assertFalse(PengaturanHelper::bool('fitur_survei_aktif'));
         $this->assertFalse(PengaturanHelper::bool('fitur_analitik_aktif'));
+        $this->assertFalse(PengaturanHelper::bool('fitur_pendaftaran_kelompok_aktif'));
     }
 
     public function test_disabled_feature_toggles_abort_with_404(): void
     {
-        // Matikan semua toggle
-        PengaturanHelper::set('fitur_sertifikat_aktif', '0');
-        PengaturanHelper::set('fitur_survei_aktif', '0');
+        // Matikan toggle analitik
         PengaturanHelper::set('fitur_analitik_aktif', '0');
         PengaturanHelper::clearCache();
 
-        // 1. Sertifikat Admin
-        $this->actingAs($this->admin)
-            ->get(route('admin.sertifikat.index'))
-            ->assertNotFound();
-
-        // 2. Survei Admin
-        $this->actingAs($this->admin)
-            ->get(route('admin.survei.index'))
-            ->assertNotFound();
-
-        // 3. Analitik Tahunan Admin
+        // Analitik Tahunan Admin
         $this->actingAs($this->admin)
             ->get(route('admin.laporan.tahunan'))
             ->assertNotFound();
@@ -103,22 +91,10 @@ class SuperAdminFeatureToggleTest extends TestCase
     public function test_enabled_feature_toggles_allow_access(): void
     {
         // Pastikan aktif
-        PengaturanHelper::set('fitur_sertifikat_aktif', '1');
-        PengaturanHelper::set('fitur_survei_aktif', '1');
         PengaturanHelper::set('fitur_analitik_aktif', '1');
         PengaturanHelper::clearCache();
 
-        // 1. Sertifikat Admin
-        $this->actingAs($this->admin)
-            ->get(route('admin.sertifikat.index'))
-            ->assertOk();
-
-        // 2. Survei Admin
-        $this->actingAs($this->admin)
-            ->get(route('admin.survei.index'))
-            ->assertOk();
-
-        // 3. Analitik Tahunan Admin
+        // Analitik Tahunan Admin
         $this->actingAs($this->admin)
             ->get(route('admin.laporan.tahunan'))
             ->assertOk();

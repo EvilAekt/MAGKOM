@@ -266,13 +266,15 @@
             color: #7C3AED;
         }
 
-        /* 3. UNIFIED FILTER TOOLBAR */
+        /* 3. STANDALONE FILTER CARD (PERSIS PENEMPATAN PESERTA) */
+        .adm-filter-card,
         .adm-filter-toolbar {
-            background: #F8FAFC;
-            border: 1px solid #E2E8F0;
-            border-radius: 12px;
+            background: #ffffff;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 14px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
             padding: 1.25rem 1.5rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
         .adm-status-track-wrapper {
@@ -617,9 +619,10 @@
             border-color: #26354D;
         }
 
+        [data-theme="dark"] .adm-filter-card,
         [data-theme="dark"] .adm-filter-toolbar {
-            background-color: #162238;
-            border-color: #26354D;
+            background-color: #182234 !important;
+            border-color: #26354D !important;
         }
 
         [data-theme="dark"] .adm-status-track {
@@ -856,36 +859,36 @@
         />
     </div>
 
-    {{-- 2. MAIN X-PANEL CARD --}}
-    <x-gentelella.x-panel :toolbox="false">
-
-        {{-- 2A. FILTER & SEARCH TOOLBAR TERPADU --}}
-        @php
-            $currentStatus = request('status', '');
-            $currentTipe = request('tipe', '');
-            $makeFilterUrl = function($statusVal = null, $tipeVal = null) {
-                $params = request()->except('page');
-                if ($statusVal !== null) {
-                    if ($statusVal === '') {
-                        unset($params['status']);
-                    } else {
-                        $params['status'] = $statusVal;
-                    }
+    {{-- NAVIGASI TAB UTAMA: Kategori Pendaftaran (Berdiri Sendiri di Luar Frame Kartu) --}}
+    @php
+        $currentStatus = request('status', '');
+        $currentTipe = request('tipe', '');
+        $makeFilterUrl = function($statusVal = null, $tipeVal = null) {
+            $params = request()->except('page');
+            if ($statusVal !== null) {
+                if ($statusVal === '') {
+                    unset($params['status']);
+                } else {
+                    $params['status'] = $statusVal;
                 }
-                if ($tipeVal !== null) {
-                    if ($tipeVal === '') {
-                        unset($params['tipe']);
-                    } else {
-                        $params['tipe'] = $tipeVal;
-                    }
+            }
+            if ($tipeVal !== null) {
+                if ($tipeVal === '') {
+                    unset($params['tipe']);
+                } else {
+                    $params['tipe'] = $tipeVal;
                 }
-                return route('admin.pendaftaran.index', $params);
-            };
-            $hasActiveFilters = request()->hasAny(['q', 'bulan_magang_id', 'jurusan_id', 'status', 'tipe', 'sort']);
-        @endphp
+            }
+            return route('admin.pendaftaran.index', $params);
+        };
+        $hasActiveSearch = request()->filled('q') 
+            || request()->filled('bulan_magang_id') 
+            || request()->filled('jurusan_id') 
+            || (request()->filled('sort') && request('sort') !== 'terbaru');
+    @endphp
 
-        {{-- NAVIGASI TAB UTAMA: Kategori Pendaftaran (Modern Underline Tabs) --}}
-        <div class="adm-category-nav-bar" role="tablist" aria-label="Kategori Pendaftaran Peserta">
+    <div style="margin-bottom: 1.15rem;">
+        <div class="adm-category-nav-bar" role="tablist" aria-label="Kategori Pendaftaran Peserta" style="margin-bottom: 0;">
             <a href="{{ $makeFilterUrl(null, '') }}" class="adm-category-nav-item {{ $currentTipe === '' ? 'active' : '' }}" role="tab" aria-selected="{{ $currentTipe === '' ? 'true' : 'false' }}" title="Tampilkan semua kategori pendaftaran">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="7"></rect>
@@ -915,77 +918,84 @@
                 <span class="adm-category-nav-badge">{{ $queueStats['total_kelompok'] ?? 0 }}</span>
             </a>
         </div>
+    </div>
 
-        <div class="adm-filter-toolbar">
-            {{-- Form Pencarian & Filter Grid Lapang (42px Unified Height - 4 Kolom) --}}
-            <form method="GET" action="{{ route('admin.pendaftaran.index') }}" class="adm-filter-grid">
-                @if(request('status'))
-                    <input type="hidden" name="status" value="{{ request('status') }}">
-                @endif
-                @if(request('tipe'))
-                    <input type="hidden" name="tipe" value="{{ request('tipe') }}">
-                @endif
+    {{-- 2. STANDALONE FILTER CARD (TERPISAH SEPERTI DI PENEMPATAN PESERTA) --}}
+    <div class="adm-filter-card">
+        {{-- Form Pencarian & Filter Grid Lapang (42px Unified Height - 4 Kolom) --}}
+        <form method="GET" action="{{ route('admin.pendaftaran.index') }}" class="adm-filter-grid">
+            @if(request('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+            @endif
+            @if(request('tipe'))
+                <input type="hidden" name="tipe" value="{{ request('tipe') }}">
+            @endif
 
-                <div class="adm-field-group adm-field-search">
-                    <label for="search-input">Pencarian Calon Peserta</label>
-                    <div class="adm-search-input-wrap">
-                        <svg class="adm-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <input type="text" id="search-input" name="q" value="{{ request('q') }}" placeholder="Cari nama..." class="adm-input-search">
-                    </div>
+            <div class="adm-field-group adm-field-search">
+                <label for="search-input">Pencarian Calon Peserta</label>
+                <div class="adm-search-input-wrap">
+                    <svg class="adm-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="search-input" name="q" value="{{ request('q') }}" placeholder="Cari nama..." class="adm-input-search">
                 </div>
+            </div>
 
-                <div class="adm-field-group">
-                    <label for="select-bulan">Bulan Magang</label>
-                    <select name="bulan_magang_id" id="select-bulan" class="adm-select">
-                        <option value="">Semua Bulan</option>
-                        @foreach($bulanList as $bulan)
-                            <option value="{{ $bulan->id }}" {{ request('bulan_magang_id') == $bulan->id ? 'selected' : '' }}>
-                                {{ $bulan->bulan_mulai?->translatedFormat('F Y') }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+            <div class="adm-field-group">
+                <label for="select-bulan">Bulan Magang</label>
+                <select name="bulan_magang_id" id="select-bulan" class="adm-select">
+                    <option value="">Semua Bulan</option>
+                    @foreach($bulanList as $bulan)
+                        <option value="{{ $bulan->id }}" {{ request('bulan_magang_id') == $bulan->id ? 'selected' : '' }}>
+                            {{ $bulan->bulan_mulai?->translatedFormat('F Y') }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-                <div class="adm-field-group">
-                    <label for="select-jurusan">Jurusan</label>
-                    <select name="jurusan_id" id="select-jurusan" class="adm-select">
-                        <option value="">Semua Jurusan</option>
-                        @foreach($jurusanList as $jur)
-                            <option value="{{ $jur->id }}" {{ request('jurusan_id') == $jur->id ? 'selected' : '' }}>
-                                {{ $jur->nama_jurusan }} ({{ strtoupper($jur->kategori) }})
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+            <div class="adm-field-group">
+                <label for="select-jurusan">Jurusan</label>
+                <select name="jurusan_id" id="select-jurusan" class="adm-select">
+                    <option value="">Semua Jurusan</option>
+                    @foreach($jurusanList as $jur)
+                        <option value="{{ $jur->id }}" {{ request('jurusan_id') == $jur->id ? 'selected' : '' }}>
+                            {{ $jur->nama_jurusan }} ({{ strtoupper($jur->kategori) }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-                <div class="adm-field-group">
-                    <label for="select-sort">Urutan Data</label>
-                    <select name="sort" id="select-sort" class="adm-select">
-                        <option value="terbaru" {{ request('sort', 'terbaru') === 'terbaru' ? 'selected' : '' }}>Terbaru</option>
-                        <option value="terlama" {{ request('sort') === 'terlama' ? 'selected' : '' }}>Terlama</option>
-                    </select>
-                </div>
+            <div class="adm-field-group">
+                <label for="select-sort">Urutan Data</label>
+                <select name="sort" id="select-sort" class="adm-select">
+                    <option value="terbaru" {{ request('sort', 'terbaru') === 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                    <option value="terlama" {{ request('sort') === 'terlama' ? 'selected' : '' }}>Terlama</option>
+                </select>
+            </div>
 
-                <div class="adm-filter-actions">
-                    <button type="submit" class="adm-btn-filter-submit">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                        </svg>
-                        <span>Terapkan</span>
-                    </button>
-                    <a href="{{ route('admin.pendaftaran.index') }}" class="adm-btn-filter-reset" title="Kembalikan pencarian ke kondisi awal">
+            <div class="adm-filter-actions">
+                <button type="submit" class="adm-btn-filter-submit">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    <span>Terapkan</span>
+                </button>
+                @if($hasActiveSearch)
+                    <a href="{{ route('admin.pendaftaran.index', array_filter(['status' => request('status'), 'tipe' => request('tipe')])) }}" class="adm-btn-filter-reset" title="Kembalikan pencarian ke kondisi awal">
                         Reset
                     </a>
-                </div>
-            </form>
-        </div>
+                @endif
+            </div>
+        </form>
+    </div>
 
-        {{-- 2B. TABEL DATA CALON PESERTA TERPADU --}}
+    {{-- 3. MAIN X-PANEL CARD (TABEL CALON PESERTA) --}}
+    <x-gentelella.x-panel :toolbox="false">
+
+        {{-- 3A. TABEL DATA CALON PESERTA TERPADU --}}
         <div class="adm-table-container">
-            {{-- Toolbar Status Alur Kerja (Tepat di Bawah Kolom Pencarian & Menempel di Atas Tabel) --}}
+            {{-- Toolbar Status Alur Kerja (Tepat Menempel di Atas Tabel) --}}
             <div class="adm-table-meta-bar">
                 {{-- Sisi Kiri: Switcher Status Alur Kerja (Workflow State) --}}
                 <div class="adm-status-track">
@@ -1045,11 +1055,6 @@
                                         'perlu_perbaikan' => 'warning',
                                         default => 'neutral',
                                     };
-
-                                    $slaDays = null;
-                                    if ($val === 'diajukan' && $item->diajukan_at) {
-                                        $slaDays = (int) $item->diajukan_at->diffInDays(now());
-                                    }
 
                                     // Dynamic 2-letter uppercase initials with rotating palette
                                     $userName = trim($item->user?->nama ?? 'Peserta');
@@ -1124,48 +1129,12 @@
                                         <small style="color: #64748B;">Durasi: {{ $item->durasi_bulan }} Bulan</small>
                                     </td>
 
-                                    {{-- Status Permohonan & Tanggal Masuk --}}
+                                    {{-- Status Permohonan --}}
                                     <td>
                                         <span class="cv-status-dot-badge {{ $statusDotType }}">
                                             <span class="dot"></span>
                                             <span>{{ $item->status->label() }}</span>
                                         </span>
-                                        @php
-                                            $tglMasuk = $item->diajukan_at ? $item->diajukan_at->translatedFormat('d M Y') : ($item->created_at?->translatedFormat('d M Y') ?? '-');
-                                        @endphp
-                                        <div style="margin-top: 0.35rem;">
-                                            @if($val === 'diajukan')
-                                                <div style="font-size: 0.725rem; color: #64748B; display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
-                                                    <span>{{ $tglMasuk }}</span>
-                                                    <span style="color: #CBD5E1;">•</span>
-                                                    @if($slaDays !== null && $slaDays >= 5)
-                                                        <span style="font-weight: 700; color: #DC2626;">⚠️ SLA ({{ $slaDays }} hari)</span>
-                                                    @elseif($slaDays !== null && $slaDays >= 3)
-                                                        <span style="font-weight: 700; color: #D97706;">⏳ {{ $slaDays }} hari lalu</span>
-                                                    @else
-                                                        <span>{{ $slaDays === 0 ? 'Hari ini' : ($slaDays ? $slaDays . ' hari lalu' : 'Hari ini') }}</span>
-                                                    @endif
-                                                </div>
-                                            @elseif($val === 'diterima' && $item->verifikasi_at)
-                                                <div style="font-size: 0.725rem; color: #64748B;">
-                                                    <div>Masuk: {{ $tglMasuk }}</div>
-                                                    <div style="color: #16A34A; font-weight: 600; margin-top: 0.1rem;">
-                                                        Diterima {{ $item->verifikasi_at->translatedFormat('d M Y') }}
-                                                    </div>
-                                                </div>
-                                            @elseif($val === 'ditolak' && $item->verifikasi_at)
-                                                <div style="font-size: 0.725rem; color: #64748B;">
-                                                    <div>Masuk: {{ $tglMasuk }}</div>
-                                                    <div style="color: #DC2626; font-weight: 600; margin-top: 0.1rem;">
-                                                        Ditolak {{ $item->verifikasi_at->translatedFormat('d M Y') }}
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <div style="font-size: 0.725rem; color: #64748B;">
-                                                    Masuk: {{ $tglMasuk }}
-                                                </div>
-                                            @endif
-                                        </div>
                                     </td>
 
                                     {{-- Aksi --}}

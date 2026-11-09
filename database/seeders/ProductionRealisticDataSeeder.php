@@ -11,7 +11,6 @@ use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusReviewProgresEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
@@ -28,12 +27,9 @@ use App\Models\Kuota;
 use App\Models\Logbook;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
-use App\Models\PenilaianDetail;
 use App\Models\PesertaProfil;
 use App\Models\ProgresLog;
 use App\Models\RouteMetric;
-use App\Models\Rubrik;
 use App\Models\SlotKhusus;
 use App\Models\SurveiKepuasan;
 use App\Models\Tugas;
@@ -363,6 +359,7 @@ class ProductionRealisticDataSeeder extends Seeder
                 [
                     'nama' => $nama,
                     'password' => $defaultPassword,
+                    'password_awal' => 'Password123!',
                     'role' => RoleEnum::Peserta,
                     'status_aktif' => $aktif,
                     'email_verified_at' => $now,
@@ -406,23 +403,21 @@ class ProductionRealisticDataSeeder extends Seeder
             }
         };
 
-        $rubrikList = Rubrik::where('aktif', true)->get();
-
         // =========================================================================
         // 5. COHORT A: ALUMNI MAGANG LULUS (BATCH AGUSTUS - OKTOBER 2026)
         // 10 Peserta Lulus Sempurna dengan Nilai Final, Logbook Penuh, dan Sertifikat
         // =========================================================================
         $alumniData = [
-            ['Anisa Rahmawati', 'anisa.rahma@mail.ugm.ac.id', 'Universitas Gadjah Mada', $jTI, JenjangEnum::S1, '21/478201/TK/52100', $bidangEgov, $pembimbingEgov1, 92.5, 'A'],
-            ['Bayu Setiawan', 'bayu.setiawan@student.uny.ac.id', 'Universitas Negeri Yogyakarta', $jIK, JenjangEnum::S1, '21208144012', $bidangIkp, $pembimbingIkp1, 88.0, 'A'],
-            ['Citra Dewi Permata', 'citra.dewi@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123210044', $bidangEgov, $pembimbingEgov2, 90.0, 'A'],
-            ['Dicki Wahyudi', 'dicki.wahyudi@smkn2depoksleman.sch.id', 'SMK Negeri 2 Depok Sleman', $jTKJ, JenjangEnum::Smk, '0065432190', $bidangIti, $pembimbingIti, 87.5, 'A'],
-            ['Erna Fatmawati', 'erna.fatmawati@students.amikom.ac.id', 'Universitas Amikom Yogyakarta', $jDKV, JenjangEnum::S1, '21.11.4120', $bidangIkp, $pembimbingIkp2, 85.0, 'A'],
-            ['Fajar Ramadhan', 'fajar.ramadhan@uii.ac.id', 'Universitas Islam Indonesia', $jTI, JenjangEnum::S1, '21523044', $bidangEgov, $pembimbingEgov1, 94.0, 'A'],
-            ['Gita Novitasari', 'gita.novita@smkn1sleman.sch.id', 'SMK Negeri 1 Sleman', $jAP, JenjangEnum::Smk, '0078901234', $bidangSekretariat, $pembimbingSekretariat, 86.0, 'A'],
-            ['Hasan Basri', 'hasan.basri@uin-suka.ac.id', 'UIN Sunan Kalijaga', $jIK, JenjangEnum::S1, '21102040055', $bidangIkp, $pembimbingIkp1, 79.5, 'B'],
-            ['Intan Permatasari', 'intan.permata@usd.ac.id', 'Universitas Sanata Dharma', $jTI, JenjangEnum::S1, '215314012', $bidangIti, $pembimbingIti, 83.0, 'B'],
-            ['Joko Prasetyo', 'joko.prasetyo@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123210089', $bidangEgov, $pembimbingEgov2, 89.0, 'A'],
+            ['Anisa Rahmawati', 'anisa.rahma@gmail.com', 'Universitas Gadjah Mada', $jTI, JenjangEnum::S1, '21/478201/TK/52100', $bidangEgov, $pembimbingEgov1, 92.5, 'A'],
+            ['Bayu Setiawan', 'bayu.setiawan@gmail.com', 'Universitas Negeri Yogyakarta', $jIK, JenjangEnum::S1, '21208144012', $bidangIkp, $pembimbingIkp1, 88.0, 'A'],
+            ['Citra Dewi Permata', 'citra.dewi@gmail.com', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123210044', $bidangEgov, $pembimbingEgov2, 90.0, 'A'],
+            ['Dicki Wahyudi', 'dicki.wahyudi@gmail.com', 'SMK Negeri 2 Depok Sleman', $jTKJ, JenjangEnum::Smk, '0065432190', $bidangIti, $pembimbingIti, 87.5, 'A'],
+            ['Erna Fatmawati', 'erna.fatmawati@gmail.com', 'Universitas Amikom Yogyakarta', $jDKV, JenjangEnum::S1, '21.11.4120', $bidangIkp, $pembimbingIkp2, 85.0, 'A'],
+            ['Fajar Ramadhan', 'fajar.ramadhan@gmail.com', 'Universitas Islam Indonesia', $jTI, JenjangEnum::S1, '21523044', $bidangEgov, $pembimbingEgov1, 94.0, 'A'],
+            ['Gita Novitasari', 'gita.novita@gmail.com', 'SMK Negeri 1 Sleman', $jAP, JenjangEnum::Smk, '0078901234', $bidangSekretariat, $pembimbingSekretariat, 86.0, 'A'],
+            ['Hasan Basri', 'hasan.basri@gmail.com', 'UIN Sunan Kalijaga', $jIK, JenjangEnum::S1, '21102040055', $bidangIkp, $pembimbingIkp1, 79.5, 'B'],
+            ['Intan Permatasari', 'intan.permata@gmail.com', 'Universitas Sanata Dharma', $jTI, JenjangEnum::S1, '215314012', $bidangIti, $pembimbingIti, 83.0, 'B'],
+            ['Joko Prasetyo', 'joko.prasetyo@gmail.com', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123210089', $bidangEgov, $pembimbingEgov2, 89.0, 'A'],
         ];
 
         foreach ($alumniData as $idx => [$nama, $email, $kampus, $jur, $jenjang, $nim, $bidang, $pembimbing, $nilaiAkhir, $predikat]) {
@@ -503,28 +498,6 @@ class ProductionRealisticDataSeeder extends Seeder
                 );
             }
 
-            // Penilaian Final & Rubrik Detail
-            $penilaian = Penilaian::updateOrCreate(
-                ['penempatan_id' => $penempatan->id],
-                [
-                    'pembimbing_id' => $pembimbing->id,
-                    'nilai_akhir' => $nilaiAkhir,
-                    'predikat' => $predikat,
-                    'catatan' => 'Peserta menunjukkan dedikasi, kedisiplinan, dan integritas tinggi selama 3 bulan magang di Diskominfo Sleman.',
-                    'status' => StatusPenilaianEnum::Final,
-                ]
-            );
-
-            foreach ($rubrikList as $rubrik) {
-                PenilaianDetail::updateOrCreate(
-                    ['penilaian_id' => $penilaian->id, 'rubrik_id' => $rubrik->id],
-                    [
-                        'skor' => (int) round($nilaiAkhir + rand(-3, 3)),
-                        'bobot_snapshot' => $rubrik->bobot,
-                    ]
-                );
-            }
-
             // Survei Kepuasan Alumni
             SurveiKepuasan::updateOrCreate(
                 ['penempatan_id' => $penempatan->id],
@@ -553,27 +526,27 @@ class ProductionRealisticDataSeeder extends Seeder
         $pesertaAktifData = [
             // EGOV (Aptika) - 5 Peserta
             ['Naufal Pratama', 'peserta@magkom.go.id', 'SMK Negeri 2 Depok Sleman', $jTKJ, JenjangEnum::Smk, '0054321987', $bidangEgov, $pembimbingEgov1, $kuotaNovTKJ, '2026-11-01', '2027-01-31', 'aktif', false],
-            ['Aditya Pratama', 'aditya.pratama@mail.ugm.ac.id', 'Universitas Gadjah Mada', $jTI, JenjangEnum::S1, '22/491001/TK/54001', $bidangEgov, $pembimbingEgov1, $kuotaNovTI, '2026-11-01', '2027-01-31', 'aktif', false],
-            ['Chandra Wijaya', 'chandra.wijaya@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123220045', $bidangEgov, $pembimbingEgov2, $kuotaNovSI, '2026-11-01', '2027-01-31', 'aktif', false],
-            ['Kevin Sanjaya', 'kevin.sanjaya@amikom.ac.id', 'Universitas Amikom Yogyakarta', $jTI, JenjangEnum::S1, '22.11.5540', $bidangEgov, $pembimbingEgov2, $kuotaNovTI, '2026-11-01', '2027-01-31', 'aktif', false],
-            ['Larasati Putri', 'larasati.putri@uii.ac.id', 'Universitas Islam Indonesia', $jSI, JenjangEnum::S1, '22523112', $bidangEgov, $pembimbingEgov1, $kuotaNovSI, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Aditya Pratama', 'aditya.pratama@gmail.com', 'Universitas Gadjah Mada', $jTI, JenjangEnum::S1, '22/491001/TK/54001', $bidangEgov, $pembimbingEgov1, $kuotaNovTI, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Chandra Wijaya', 'chandra.wijaya@gmail.com', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123220045', $bidangEgov, $pembimbingEgov2, $kuotaNovSI, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Kevin Sanjaya', 'kevin.sanjaya@gmail.com', 'Universitas Amikom Yogyakarta', $jTI, JenjangEnum::S1, '22.11.5540', $bidangEgov, $pembimbingEgov2, $kuotaNovTI, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Larasati Putri', 'larasati.putri@gmail.com', 'Universitas Islam Indonesia', $jSI, JenjangEnum::S1, '22523112', $bidangEgov, $pembimbingEgov1, $kuotaNovSI, '2026-11-01', '2027-01-31', 'aktif', false],
 
             // IKP (Informasi & Komunikasi Publik) - 4 Peserta
-            ['Bunga Citra Lestari', 'bunga.citra@student.uny.ac.id', 'Universitas Negeri Yogyakarta', $jIK, JenjangEnum::S1, '22537144002', $bidangIkp, $pembimbingIkp1, $kuotaNovIK, '2026-11-01', '2027-01-31', 'aktif', false],
-            ['Mahendra Putra', 'mahendra.putra@uin-suka.ac.id', 'UIN Sunan Kalijaga', $jIK, JenjangEnum::S1, '22102050011', $bidangIkp, $pembimbingIkp1, $kuotaNovIK, '2026-11-01', '2027-01-31', 'aktif', false],
-            ['Nadia Salsabila', 'nadia.salsabila@amikom.ac.id', 'Universitas Amikom Yogyakarta', $jDKV, JenjangEnum::S1, '22.11.5900', $bidangIkp, $pembimbingIkp2, $kuotaNovDKV, '2026-11-01', '2027-01-31', 'aktif', false],
-            ['Oki Setiawan', 'oki.setiawan@smkn1sleman.sch.id', 'SMK Negeri 1 Sleman', $jDKV, JenjangEnum::Smk, '0076543211', $bidangIkp, $pembimbingIkp2, $kuotaNovDKV, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Bunga Citra Lestari', 'bunga.citra@gmail.com', 'Universitas Negeri Yogyakarta', $jIK, JenjangEnum::S1, '22537144002', $bidangIkp, $pembimbingIkp1, $kuotaNovIK, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Mahendra Putra', 'mahendra.putra@gmail.com', 'UIN Sunan Kalijaga', $jIK, JenjangEnum::S1, '22102050011', $bidangIkp, $pembimbingIkp1, $kuotaNovIK, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Nadia Salsabila', 'nadia.salsabila@gmail.com', 'Universitas Amikom Yogyakarta', $jDKV, JenjangEnum::S1, '22.11.5900', $bidangIkp, $pembimbingIkp2, $kuotaNovDKV, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Oki Setiawan', 'oki.setiawan@gmail.com', 'SMK Negeri 1 Sleman', $jDKV, JenjangEnum::Smk, '0076543211', $bidangIkp, $pembimbingIkp2, $kuotaNovDKV, '2026-11-01', '2027-01-31', 'aktif', false],
 
             // ITI (Infrastruktur Teknologi Informasi / Jaringan) - 4 Peserta
-            ['Panji Nugroho', 'panji.nugroho@ugm.ac.id', 'Universitas Gadjah Mada', $jTI, JenjangEnum::S1, '21/481900/TK/53900', $bidangIti, $pembimbingIti, $kuotaNovTI, '2026-08-15', '2026-11-08', 'aktif', true], // Ending in 6 days!
-            ['Rizky Firmansyah', 'rizky.firmansyah@smkn2depoksleman.sch.id', 'SMK Negeri 2 Depok Sleman', $jTKJ, JenjangEnum::Smk, '0069876543', $bidangIti, $pembimbingIti, $kuotaNovTKJ, '2026-11-01', '2027-01-31', 'aktif', false],
-            ['Satria Bagaskara', 'satria.bagas@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jTI, JenjangEnum::S1, '123220101', $bidangIti, $pembimbingIti, $kuotaNovTI, '2026-11-01', '2027-01-31', 'aktif', false],
-            ['Tia Maharani', 'tia.maharani@student.uny.ac.id', 'Universitas Negeri Yogyakarta', $jTI, JenjangEnum::S1, '22537144089', $bidangIti, $pembimbingIti, $kuotaNovTI, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Panji Nugroho', 'panji.nugroho@gmail.com', 'Universitas Gadjah Mada', $jTI, JenjangEnum::S1, '21/481900/TK/53900', $bidangIti, $pembimbingIti, $kuotaNovTI, '2026-08-15', '2026-11-08', 'aktif', true], // Ending in 6 days!
+            ['Rizky Firmansyah', 'rizky.firmansyah@gmail.com', 'SMK Negeri 2 Depok Sleman', $jTKJ, JenjangEnum::Smk, '0069876543', $bidangIti, $pembimbingIti, $kuotaNovTKJ, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Satria Bagaskara', 'satria.bagas@gmail.com', 'UPN Veteran Yogyakarta', $jTI, JenjangEnum::S1, '123220101', $bidangIti, $pembimbingIti, $kuotaNovTI, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Tia Maharani', 'tia.maharani@gmail.com', 'Universitas Negeri Yogyakarta', $jTI, JenjangEnum::S1, '22537144089', $bidangIti, $pembimbingIti, $kuotaNovTI, '2026-11-01', '2027-01-31', 'aktif', false],
 
             // Sekretariat Dinas - 3 Peserta
-            ['Utari Handayani', 'utari.handayani@smkn1sleman.sch.id', 'SMK Negeri 1 Sleman', $jAP, JenjangEnum::Smk, '0071234567', $bidangSekretariat, $pembimbingSekretariat, $kuotaNovAP, '2026-11-01', '2027-01-31', 'aktif', false],
-            ['Vino Bastian', 'vino.bastian@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jAP, JenjangEnum::S1, '141220022', $bidangSekretariat, $pembimbingSekretariat, $kuotaNovAP, '2026-11-01', '2027-01-31', 'aktif', false],
-            ['Winda Kusuma', 'winda.kusuma@student.uny.ac.id', 'Universitas Negeri Yogyakarta', $jAP, JenjangEnum::S1, '22802244015', $bidangSekretariat, $pembimbingSekretariat, $kuotaNovAP, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Utari Handayani', 'utari.handayani@gmail.com', 'SMK Negeri 1 Sleman', $jAP, JenjangEnum::Smk, '0071234567', $bidangSekretariat, $pembimbingSekretariat, $kuotaNovAP, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Vino Bastian', 'vino.bastian@gmail.com', 'UPN Veteran Yogyakarta', $jAP, JenjangEnum::S1, '141220022', $bidangSekretariat, $pembimbingSekretariat, $kuotaNovAP, '2026-11-01', '2027-01-31', 'aktif', false],
+            ['Winda Kusuma', 'winda.kusuma@gmail.com', 'Universitas Negeri Yogyakarta', $jAP, JenjangEnum::S1, '22802244015', $bidangSekretariat, $pembimbingSekretariat, $kuotaNovAP, '2026-11-01', '2027-01-31', 'aktif', false],
         ];
 
         foreach ($pesertaAktifData as [$nama, $email, $kampus, $jur, $jenjang, $nim, $bidang, $pembimbing, $kuotaTarget, $tglMulai, $tglSelesai, $statusP, $isEndingSoon]) {
@@ -701,30 +674,6 @@ class ProductionRealisticDataSeeder extends Seeder
                     'catatan_pembimbing' => $catatanLogbook3,
                 ]
             );
-
-            // Kasus Khusus Peserta Menjelang Selesai (Panji Nugroho): Penilaian Draft
-            if ($isEndingSoon) {
-                $penilaianDraft = Penilaian::updateOrCreate(
-                    ['penempatan_id' => $penempatan->id],
-                    [
-                        'pembimbing_id' => $pembimbing->id,
-                        'nilai_akhir' => 84.50,
-                        'predikat' => 'B',
-                        'catatan' => 'Draft penilaian awal bimbingan. Menunggu kelengkapan draf laporan akhir magang.',
-                        'status' => StatusPenilaianEnum::Draft,
-                    ]
-                );
-
-                foreach ($rubrikList as $rubrik) {
-                    PenilaianDetail::updateOrCreate(
-                        ['penilaian_id' => $penilaianDraft->id, 'rubrik_id' => $rubrik->id],
-                        [
-                            'skor' => 85,
-                            'bobot_snapshot' => $rubrik->bobot,
-                        ]
-                    );
-                }
-            }
         }
 
         // =========================================================================
@@ -739,11 +688,11 @@ class ProductionRealisticDataSeeder extends Seeder
         );
         $timSmartSleman->anggota()->delete();
         $timSmartSleman->anggota()->createMany([
-            ['nama' => 'Citra Lestari', 'nim_nisn' => '22/498766/SV/21002', 'no_hp' => '081298765433', 'email' => 'citra@mail.ugm.ac.id'],
-            ['nama' => 'Dian Wahyudi', 'nim_nisn' => '22/498767/SV/21003', 'no_hp' => '081298765434', 'email' => 'dian@mail.ugm.ac.id'],
+            ['nama' => 'Citra Lestari', 'nim_nisn' => '22/498766/SV/21002', 'no_hp' => '081298765433', 'email' => 'citra.lestari@gmail.com'],
+            ['nama' => 'Dian Wahyudi', 'nim_nisn' => '22/498767/SV/21003', 'no_hp' => '081298765434', 'email' => 'dian.wahyudi@gmail.com'],
         ]);
 
-        $ketua2 = User::where('email', 'aditya.pratama@mail.ugm.ac.id')->first();
+        $ketua2 = User::where('email', 'aditya.pratama@gmail.com')->first();
         if ($ketua2) {
             $timEgov = KelompokMagang::updateOrCreate(
                 ['ketua_user_id' => $ketua2->id],
@@ -751,12 +700,12 @@ class ProductionRealisticDataSeeder extends Seeder
             );
             $timEgov->anggota()->delete();
             $timEgov->anggota()->createMany([
-                ['nama' => 'Bagus Wicaksono', 'nim_nisn' => '22/491002/TK/54002', 'no_hp' => '081298765440', 'email' => 'bagus@mail.ugm.ac.id'],
-                ['nama' => 'Farah Nabila', 'nim_nisn' => '22/491003/TK/54003', 'no_hp' => '081298765441', 'email' => 'farah@mail.ugm.ac.id'],
+                ['nama' => 'Bagus Wicaksono', 'nim_nisn' => '22/491002/TK/54002', 'no_hp' => '081298765440', 'email' => 'bagus.wicaksono@gmail.com'],
+                ['nama' => 'Farah Nabila', 'nim_nisn' => '22/491003/TK/54003', 'no_hp' => '081298765441', 'email' => 'farah.nabila@gmail.com'],
             ]);
         }
 
-        $ketua3 = User::where('email', 'dicki.wahyudi@smkn2depoksleman.sch.id')->first();
+        $ketua3 = User::where('email', 'dicki.wahyudi@gmail.com')->first();
         if ($ketua3) {
             $timNoc = KelompokMagang::updateOrCreate(
                 ['ketua_user_id' => $ketua3->id],
@@ -764,8 +713,8 @@ class ProductionRealisticDataSeeder extends Seeder
             );
             $timNoc->anggota()->delete();
             $timNoc->anggota()->createMany([
-                ['nama' => 'Gilang Perkasa', 'nim_nisn' => '0065432191', 'no_hp' => '081298765450', 'email' => 'gilang@smkn2depok.sch.id'],
-                ['nama' => 'Hanif Alamsyah', 'nim_nisn' => '0065432192', 'no_hp' => '081298765451', 'email' => 'hanif@smkn2depok.sch.id'],
+                ['nama' => 'Gilang Perkasa', 'nim_nisn' => '0065432191', 'no_hp' => '081298765450', 'email' => 'gilang.perkasa@gmail.com'],
+                ['nama' => 'Hanif Alamsyah', 'nim_nisn' => '0065432192', 'no_hp' => '081298765451', 'email' => 'hanif.alamsyah@gmail.com'],
             ]);
         }
 
@@ -783,32 +732,32 @@ class ProductionRealisticDataSeeder extends Seeder
 
         $pendaftarBaru = [
             // 1-4. Diajukan (Dalam SLA < 3 Hari)
-            ['Ahmad Fauzi', 'ahmad.fauzi@uii.ac.id', 'Universitas Islam Indonesia', $jTI, JenjangEnum::S1, '23523001', StatusPendaftaranEnum::Diajukan, $now->copy()->subHours(18), null, null, $kuotaDesTI],
-            ['Bella Safira', 'bella.safira@student.uny.ac.id', 'Universitas Negeri Yogyakarta', $jIK, JenjangEnum::S1, '23537144001', StatusPendaftaranEnum::Diajukan, $now->copy()->subHours(26), null, null, $kuotaDesIK],
-            ['Cipto Mangunkusumo', 'cipto.mangun@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123230010', StatusPendaftaranEnum::Diajukan, $now->copy()->subDays(1), null, null, $kuotaDesSI],
-            ['Dina Mariana', 'dina.mariana@smkn1sleman.sch.id', 'SMK Negeri 1 Sleman', $jAP, JenjangEnum::Smk, '0081234560', StatusPendaftaranEnum::Diajukan, $now->copy()->subDays(2), null, null, $kuotaDesAP],
+            ['Ahmad Fauzi', 'ahmad.fauzi@gmail.com', 'Universitas Islam Indonesia', $jTI, JenjangEnum::S1, '23523001', StatusPendaftaranEnum::Diajukan, $now->copy()->subHours(18), null, null, $kuotaDesTI],
+            ['Bella Safira', 'bella.safira@gmail.com', 'Universitas Negeri Yogyakarta', $jIK, JenjangEnum::S1, '23537144001', StatusPendaftaranEnum::Diajukan, $now->copy()->subHours(26), null, null, $kuotaDesIK],
+            ['Cipto Mangunkusumo', 'cipto.mangun@gmail.com', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123230010', StatusPendaftaranEnum::Diajukan, $now->copy()->subDays(1), null, null, $kuotaDesSI],
+            ['Dina Mariana', 'dina.mariana@gmail.com', 'SMK Negeri 1 Sleman', $jAP, JenjangEnum::Smk, '0081234560', StatusPendaftaranEnum::Diajukan, $now->copy()->subDays(2), null, null, $kuotaDesAP],
 
             // 5-6. Diajukan (SLA BREACHED > 3 Hari Belum Diverifikasi -> Hazard Red Chip di Admin Dashboard!)
-            ['Erlangga Putra', 'erlangga.putra@amikom.ac.id', 'Universitas Amikom Yogyakarta', $jTI, JenjangEnum::S1, '23.11.7701', StatusPendaftaranEnum::Diajukan, $now->copy()->subDays(5), null, null, $kuotaDesTI],
-            ['Fitri Handayani', 'fitri.handayani@mail.ugm.ac.id', 'Universitas Gadjah Mada', $jDKV, JenjangEnum::S1, '23/501234/SV/23001', StatusPendaftaranEnum::Diajukan, $now->copy()->subDays(6), null, null, $kuotaDesDKV],
+            ['Erlangga Putra', 'erlangga.putra@gmail.com', 'Universitas Amikom Yogyakarta', $jTI, JenjangEnum::S1, '23.11.7701', StatusPendaftaranEnum::Diajukan, $now->copy()->subDays(5), null, null, $kuotaDesTI],
+            ['Fitri Handayani', 'fitri.handayani@gmail.com', 'Universitas Gadjah Mada', $jDKV, JenjangEnum::S1, '23/501234/SV/23001', StatusPendaftaranEnum::Diajukan, $now->copy()->subDays(6), null, null, $kuotaDesDKV],
 
             // 7-9. Perlu Perbaikan (Dengan Catatan Resmi Admin Verifikator)
-            ['Galih Wicaksono', 'galih.wicaksono@smkn2depoksleman.sch.id', 'SMK Negeri 2 Depok Sleman', $jTKJ, JenjangEnum::Smk, '0075432101', StatusPendaftaranEnum::PerluPerbaikan, $now->copy()->subDays(3), $now->copy()->subDay(), 'Surat permohonan magang belum mencantumkan stempel basah kepala sekolah. Mohon unggah ulang surat resmi bertanda tangan dan berstempel.', $kuotaDesTKJ],
-            ['Hesti Purwanti', 'hesti.purwanti@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123230055', StatusPendaftaranEnum::PerluPerbaikan, $now->copy()->subDays(4), $now->copy()->subDays(2), 'Scan transkrip nilai akademik terpotong pada bagian IPK kumulatif. Harap unggah scan dokumen utuh beresolusi tinggi.', $kuotaDesSI],
-            ['Irfan Hakim', 'irfan.hakim@uin-suka.ac.id', 'UIN Sunan Kalijaga', $jIK, JenjangEnum::S1, '23102040019', StatusPendaftaranEnum::PerluPerbaikan, $now->copy()->subDays(3), $now->copy()->subDay(), 'Proposal magang belum menyertakan rencana topik atau pembagian tugas yang diharapkan. Mohon lengkapi sesuai template dinas.', $kuotaDesIK],
+            ['Galih Wicaksono', 'galih.wicaksono@gmail.com', 'SMK Negeri 2 Depok Sleman', $jTKJ, JenjangEnum::Smk, '0075432101', StatusPendaftaranEnum::PerluPerbaikan, $now->copy()->subDays(3), $now->copy()->subDay(), 'Surat permohonan magang belum mencantumkan stempel basah kepala sekolah. Mohon unggah ulang surat resmi bertanda tangan dan berstempel.', $kuotaDesTKJ],
+            ['Hesti Purwanti', 'hesti.purwanti@gmail.com', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123230055', StatusPendaftaranEnum::PerluPerbaikan, $now->copy()->subDays(4), $now->copy()->subDays(2), 'Scan transkrip nilai akademik terpotong pada bagian IPK kumulatif. Harap unggah scan dokumen utuh beresolusi tinggi.', $kuotaDesSI],
+            ['Irfan Hakim', 'irfan.hakim@gmail.com', 'UIN Sunan Kalijaga', $jIK, JenjangEnum::S1, '23102040019', StatusPendaftaranEnum::PerluPerbaikan, $now->copy()->subDays(3), $now->copy()->subDay(), 'Proposal magang belum menyertakan rencana topik atau pembagian tugas yang diharapkan. Mohon lengkapi sesuai template dinas.', $kuotaDesIK],
 
             // 10-12. Waiting List (Antrean Cadangan karena Kuota Jurusan Terisi Penuh)
-            ['Jasmine Azzahra', 'jasmine.azzahra@mail.ugm.ac.id', 'Universitas Gadjah Mada', $jTI, JenjangEnum::S1, '23/502345/TK/56001', StatusPendaftaranEnum::WaitingList, $now->copy()->subDays(8), $now->copy()->subDays(5), 'Kuota umum jurusan Teknik Informatika telah terpenuhi. Anda ditempatkan pada antrean cadangan (Waiting List) prioritas #1.', $kuotaDesTI],
-            ['Kurnia Sandi', 'kurnia.sandi@student.uny.ac.id', 'Universitas Negeri Yogyakarta', $jTI, JenjangEnum::S1, '23537144050', StatusPendaftaranEnum::WaitingList, $now->copy()->subDays(7), $now->copy()->subDays(4), 'Antrean cadangan (Waiting List) prioritas #2.', $kuotaDesTI],
-            ['Lutfi Ardiansyah', 'lutfi.ardiansyah@smkn2depoksleman.sch.id', 'SMK Negeri 2 Depok Sleman', $jTKJ, JenjangEnum::Smk, '0075432199', StatusPendaftaranEnum::WaitingList, $now->copy()->subDays(9), $now->copy()->subDays(6), 'Antrean cadangan (Waiting List) jurusan TKJ prioritas #1.', $kuotaDesTKJ],
+            ['Jasmine Azzahra', 'jasmine.azzahra@gmail.com', 'Universitas Gadjah Mada', $jTI, JenjangEnum::S1, '23/502345/TK/56001', StatusPendaftaranEnum::WaitingList, $now->copy()->subDays(8), $now->copy()->subDays(5), 'Kuota umum jurusan Teknik Informatika telah terpenuhi. Anda ditempatkan pada antrean cadangan (Waiting List) prioritas #1.', $kuotaDesTI],
+            ['Kurnia Sandi', 'kurnia.sandi@gmail.com', 'Universitas Negeri Yogyakarta', $jTI, JenjangEnum::S1, '23537144050', StatusPendaftaranEnum::WaitingList, $now->copy()->subDays(7), $now->copy()->subDays(4), 'Antrean cadangan (Waiting List) prioritas #2.', $kuotaDesTI],
+            ['Lutfi Ardiansyah', 'lutfi.ardiansyah@gmail.com', 'SMK Negeri 2 Depok Sleman', $jTKJ, JenjangEnum::Smk, '0075432199', StatusPendaftaranEnum::WaitingList, $now->copy()->subDays(9), $now->copy()->subDays(6), 'Antrean cadangan (Waiting List) jurusan TKJ prioritas #1.', $kuotaDesTKJ],
 
             // 13-14. Diterima (Lolos Seleksi Berkas, Menunggu Alokasi Penempatan Bidang oleh Admin)
-            ['Mira Kartika', 'mira.kartika@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123230088', StatusPendaftaranEnum::Diterima, $now->copy()->subDays(10), $now->copy()->subDays(2), 'Selamat! Berkas terverifikasi memenuhi kriteria. Menunggu penetapan bidang dan pembimbing lapangan.', $kuotaDesSI],
-            ['Nugroho Adi', 'nugroho.adi@uii.ac.id', 'Universitas Islam Indonesia', $jTI, JenjangEnum::S1, '23523099', StatusPendaftaranEnum::Diterima, $now->copy()->subDays(12), $now->copy()->subDays(3), 'Selamat! Berkas lolos verifikasi. Menunggu SK penetapan penempatan.', $kuotaDesTI],
+            ['Mira Kartika', 'mira.kartika@gmail.com', 'UPN Veteran Yogyakarta', $jSI, JenjangEnum::S1, '123230088', StatusPendaftaranEnum::Diterima, $now->copy()->subDays(10), $now->copy()->subDays(2), 'Selamat! Berkas terverifikasi memenuhi kriteria. Menunggu penetapan bidang dan pembimbing lapangan.', $kuotaDesSI],
+            ['Nugroho Adi', 'nugroho.adi@gmail.com', 'Universitas Islam Indonesia', $jTI, JenjangEnum::S1, '23523099', StatusPendaftaranEnum::Diterima, $now->copy()->subDays(12), $now->copy()->subDays(3), 'Selamat! Berkas lolos verifikasi. Menunggu SK penetapan penempatan.', $kuotaDesTI],
 
             // 15-16. Ditolak (Alasan Resmi Verifikator)
-            ['Pratama Wijaya', 'pratama.wijaya@mail.uajy.ac.id', 'Universitas Atma Jaya Yogyakarta', $jIK, JenjangEnum::S1, '230712001', StatusPendaftaranEnum::Ditolak, $now->copy()->subDays(14), $now->copy()->subDays(10), 'Kualifikasi proposal magang tidak linier dengan agenda kegiatan publikasi dinas pada periode yang diajukan.', $kuotaDesIK],
-            ['Rina Marlina', 'rina.marlina@smkn1sleman.sch.id', 'SMK Negeri 1 Sleman', $jAP, JenjangEnum::Smk, '0089876540', StatusPendaftaranEnum::Ditolak, $now->copy()->subDays(15), $now->copy()->subDays(11), 'Surat izin magang dari pihak sekolah tidak menyertakan legalitas resmi dan kuota formasi administrasi telah penuh.', $kuotaDesAP],
+            ['Pratama Wijaya', 'pratama.wijaya@gmail.com', 'Universitas Atma Jaya Yogyakarta', $jIK, JenjangEnum::S1, '230712001', StatusPendaftaranEnum::Ditolak, $now->copy()->subDays(14), $now->copy()->subDays(10), 'Kualifikasi proposal magang tidak linier dengan agenda kegiatan publikasi dinas pada periode yang diajukan.', $kuotaDesIK],
+            ['Rina Marlina', 'rina.marlina@gmail.com', 'SMK Negeri 1 Sleman', $jAP, JenjangEnum::Smk, '0089876540', StatusPendaftaranEnum::Ditolak, $now->copy()->subDays(15), $now->copy()->subDays(11), 'Surat izin magang dari pihak sekolah tidak menyertakan legalitas resmi dan kuota formasi administrasi telah penuh.', $kuotaDesAP],
         ];
 
         foreach ($pendaftarBaru as [$nama, $email, $kampus, $jur, $jenjang, $nim, $status, $diajukanAt, $diputuskanAt, $catatan, $kuota]) {
@@ -835,7 +784,7 @@ class ProductionRealisticDataSeeder extends Seeder
         // 9. COHORT D: EDGE CASES (MENGUNDURKAN DIRI & JALUR KHUSUS MBKM)
         // =========================================================================
         // Kasus Mengundurkan Diri
-        $userMundur = $buatPeserta('Taufik Hidayat', 'taufik.hidayat@uii.ac.id', 'Universitas Islam Indonesia', $jTI, JenjangEnum::S1, '22523299', false);
+        $userMundur = $buatPeserta('Taufik Hidayat', 'taufik.hidayat@gmail.com', 'Universitas Islam Indonesia', $jTI, JenjangEnum::S1, '22523299', false);
         $regMundur = Pendaftaran::updateOrCreate(
             ['user_id' => $userMundur->id],
             [
@@ -865,7 +814,7 @@ class ProductionRealisticDataSeeder extends Seeder
         );
 
         // Kasus Jalur Khusus (Slot Khusus MBKM)
-        $userKhusus1 = $buatPeserta('Zulfikar Ali', 'zulfikar.ali@mail.ugm.ac.id', 'Universitas Gadjah Mada', $jTI, JenjangEnum::S1, '22/499111/TK/55000', true);
+        $userKhusus1 = $buatPeserta('Zulfikar Ali', 'zulfikar.ali@gmail.com', 'Universitas Gadjah Mada', $jTI, JenjangEnum::S1, '22/499111/TK/55000', true);
         $regKhusus1 = Pendaftaran::updateOrCreate(
             ['user_id' => $userKhusus1->id],
             [
@@ -942,7 +891,7 @@ class ProductionRealisticDataSeeder extends Seeder
             [TipeAuditEnum::Aksi, 'penempatan-mentor', 'info', 'tetapkan_penempatan', 'Penempatan', 1, 'Admin menempatkan peserta ke Bidang EGOV dan menugaskan Budi Santoso.', 'POST', '/admin/penempatan', 302],
             [TipeAuditEnum::Aksi, 'tugas-classroom', 'info', 'buat_tugas', 'Tugas', 1, 'Pembimbing memberikan tugas teknis integrasi API.', 'POST', '/pembimbing/tugas', 302],
             [TipeAuditEnum::Aksi, 'logbook-presensi', 'info', 'setujui_logbook', 'Logbook', 1, 'Pembimbing menyetujui logbook mingguan peserta.', 'POST', '/pembimbing/logbook/1/setujui', 302],
-            [TipeAuditEnum::Aksi, 'penilaian-sk', 'info', 'simpan_nilai_final', 'Penilaian', 1, 'Pembimbing menginput nilai rubrik akhir dengan predikat A.', 'POST', '/pembimbing/penilaian', 302],
+            [TipeAuditEnum::Aksi, 'penempatan-mentor', 'info', 'selesai_magang', 'Penempatan', 1, 'Pembimbing menyelesaikan masa magang peserta.', 'POST', '/penempatan/1/selesai', 302],
             [TipeAuditEnum::Aksi, 'kuota-periode', 'info', 'update_kuota', 'Kuota', 1, 'Admin memperbarui alokasi kuota jurusan Teknik Informatika periode Desember 2026.', 'PUT', '/admin/kuota/1', 200],
             [TipeAuditEnum::Aksi, 'survei-evaluasi', 'info', 'kirim_survei', 'SurveiKepuasan', 1, 'Peserta magang selesai mengisi instrumen evaluasi kepuasan IKM.', 'POST', '/peserta/survei', 302],
         ];

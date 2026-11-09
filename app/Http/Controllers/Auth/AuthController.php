@@ -19,6 +19,7 @@ use App\Rules\CaptchaRule;
 use App\Rules\TurnstileRule;
 use App\Services\AuditService;
 use App\Services\BulanStatusService;
+use App\Support\Pengaturan;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -205,6 +206,12 @@ class AuthController extends Controller
 
         $isKelompok = $request->input('tipe_pendaftaran') === 'kelompok' || $request->input('redirect_tipe') === 'kelompok';
 
+        if ($isKelompok && ! Pengaturan::bool('fitur_pendaftaran_kelompok_aktif', true)) {
+            return back()->withErrors([
+                'tipe_pendaftaran' => 'Pendaftaran melalui jalur kelompok saat ini sedang dinonaktifkan oleh administrator.',
+            ])->withInput();
+        }
+
         $rules = [
             'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
@@ -225,11 +232,14 @@ class AuthController extends Controller
         if ($isKelompok) {
             $rules['nama_kelompok'] = ['required', 'string', 'max:150'];
 
+            $maxAnggotaTotal = Pengaturan::int('maks_anggota_kelompok', 4);
+            $maxAnggotaTambahan = max(1, $maxAnggotaTotal - 1);
+
             $targetJumlah = (int) ($request->input('redirect_jumlah') ?: $request->input('jumlah_kelompok', 0));
-            if ($targetJumlah >= 2 && $targetJumlah <= 4) {
+            if ($targetJumlah >= 2 && $targetJumlah <= $maxAnggotaTotal) {
                 $rules['anggota'] = ['required', 'array', 'size:'.($targetJumlah - 1)];
             } else {
-                $rules['anggota'] = ['required', 'array', 'min:1', 'max:3'];
+                $rules['anggota'] = ['required', 'array', 'min:1', 'max:'.$maxAnggotaTambahan];
             }
 
             $rules['anggota.*.nama'] = ['required', 'string', 'max:255'];

@@ -20,7 +20,7 @@ class ArsipPesertaController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan', 'penilaian'])
+        $query = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan'])
             ->whereIn('status', [StatusPenempatanEnum::Selesai, StatusPenempatanEnum::Nonaktif, StatusPenempatanEnum::MengundurkanDiri])
             ->orderBy('tgl_selesai', 'desc');
 
@@ -75,7 +75,6 @@ class ArsipPesertaController extends Controller
             'slotKhusus',
             'tugas.progresLogs',
             'logbooks',
-            'penilaian.details.rubrik',
             'pendaftaran.dokumen',
         ]);
 

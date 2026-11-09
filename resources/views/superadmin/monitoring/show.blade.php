@@ -153,16 +153,13 @@
     </x-gentelella.card>
 
     <!-- 3. TAB SECTION CONTAINER -->
-    <x-gentelella.x-panel title="Rekam Jejak Pemantauan Bimbingan" subtitle="Supervisi komprehensif terhadap penugasan, logbook harian, dan snapshot nilai peserta">
+    <x-gentelella.x-panel title="Rekam Jejak Pemantauan Bimbingan" subtitle="Supervisi komprehensif terhadap penugasan dan logbook harian peserta">
         <div style="padding: 0.75rem 0 1.25rem 0; border-bottom: 1px solid var(--neutral-200); display: flex; gap: 0.75rem; flex-wrap: wrap;">
             <button type="button" onclick="switchMonitorTab('tugas')" id="tabBtnTugas" style="padding: 0.55rem 1.25rem; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; cursor: pointer; background: var(--blue-600); color: #FFFFFF; transition: all 0.15s;">
                 Tugas & Progres ({{ (string) $penempatan->tugas->count() }})
             </button>
             <button type="button" onclick="switchMonitorTab('logbook')" id="tabBtnLogbook" style="padding: 0.55rem 1.25rem; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: 1px solid var(--neutral-400); cursor: pointer; background: var(--neutral-0); color: var(--neutral-700); transition: all 0.15s;">
                 Logbook Harian ({{ (string) $penempatan->logbooks->count() }})
-            </button>
-            <button type="button" onclick="switchMonitorTab('nilai')" id="tabBtnNilai" style="padding: 0.55rem 1.25rem; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: 1px solid var(--neutral-400); cursor: pointer; background: var(--neutral-0); color: var(--neutral-700); transition: all 0.15s;">
-                Penilaian & Lembar Nilai
             </button>
         </div>
 
@@ -257,87 +254,12 @@
                 </div>
             @endif
         </div>
-
-        <!-- TAB CONTENT 3: PENILAIAN & LEMBAR NILAI -->
-        <div id="tabContentNilai" style="display: none; padding: 1.5rem;">
-            @php
-                $penilaian = $penempatan->penilaian;
-            @endphp
-
-            @if(!$penilaian)
-                <div style="padding: 3rem 1.5rem; text-align: center; color: var(--neutral-600);">
-                    <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--neutral-100); color: var(--neutral-500); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem auto;">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                    </div>
-                    <h4 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.25rem;">Penilaian Belum Dimulai</h4>
-                    <p style="font-size: 0.8125rem; margin: 0;">Pembimbing lapangan belum menginputkan nilai rubrik kompetensi untuk peserta ini.</p>
-                </div>
-            @else
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-200); flex-wrap: wrap; gap: 1rem;">
-                    <div>
-                        <span style="font-size: 0.75rem; color: var(--neutral-500); display: block; text-transform: uppercase; font-weight: 700;">Status Penilaian</span>
-                        <span style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900);">
-                            {{ strtoupper($penilaian->status?->value ?? 'DRAFT') }}
-                        </span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 1.5rem;">
-                        <div style="text-align: right;">
-                            <span style="font-size: 0.75rem; color: var(--neutral-500); display: block; text-transform: uppercase; font-weight: 700;">Nilai Akhir Terbobot</span>
-                            <span style="font-size: 1.75rem; font-weight: 900; color: var(--blue-700); line-height: 1.2;">
-                                {{ number_format((float) $penilaian->nilai_akhir, 2) }}
-                            </span>
-                        </div>
-                        <div style="text-align: right;">
-                            <span style="font-size: 0.75rem; color: var(--neutral-500); display: block; text-transform: uppercase; font-weight: 700;">Predikat Mutu</span>
-                            <span style="font-size: 1.75rem; font-weight: 900; color: var(--green-700); line-height: 1.2;">
-                                {{ $penilaian->predikat ?: 'A' }}
-                            </span>
-                        </div>
-                        @if($penilaian->status?->value === 'final')
-                            <a href="{{ route('pembimbing.penilaian.unduh', $penempatan) }}" target="_blank" style="padding: 0.55rem 1.25rem; background: var(--green-700); color: #fff; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.375rem; box-shadow: var(--shadow-subtle);">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                <span>Unduh Lembar Nilai PDF</span>
-                            </a>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Detail Rubrik Table -->
-                <h4 style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.75rem;">Rincian Kriteria Rubrik Penilaian:</h4>
-                <div class="table-responsive-gentelella" style="overflow-x: auto;">
-                    <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
-                        <thead>
-                            <tr class="headings">
-                                <th>Kriteria Kompetensi</th>
-                                <th style="text-align: center; width: 140px;">Bobot Snapshot</th>
-                                <th style="text-align: right; width: 140px;">Skor Pembimbing</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($penilaian->details as $d)
-                                <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
-                                    <td style="padding: 0.75rem 1rem; color: var(--neutral-900); font-weight: 600;">
-                                        {{ $d->rubrik?->kriteria ?? 'Kriteria' }}
-                                    </td>
-                                    <td style="padding: 0.75rem 1rem; text-align: center; color: var(--neutral-700); font-weight: 600;">
-                                        {{ $d->bobot_snapshot }}%
-                                    </td>
-                                    <td style="padding: 0.75rem 1rem; text-align: right; font-weight: 800; color: var(--blue-700); font-size: 1rem;">
-                                        {{ number_format((float) $d->skor, 2) }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
-        </div>
     </x-gentelella.x-panel>
 </div>
 
 <script>
 function switchMonitorTab(tab) {
-    const tabs = ['tugas', 'logbook', 'nilai'];
+    const tabs = ['tugas', 'logbook'];
     tabs.forEach(t => {
         const content = document.getElementById('tabContent' + t.charAt(0).toUpperCase() + t.slice(1));
         const btn = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));

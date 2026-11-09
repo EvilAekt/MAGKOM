@@ -9,7 +9,6 @@ use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
@@ -19,9 +18,7 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
-use App\Models\SurveiKepuasan;
 use App\Models\User;
 use App\Services\DocumentVerificationService;
 use Carbon\Carbon;
@@ -199,8 +196,8 @@ class AdvancedAdminAndSuperAdminPhaseFiveTest extends TestCase
 
         $doc = $this->verificationService->getOrCreateVerification(
             $penempatan,
-            'sertifikat_magang',
-            'SERT/2026/999'
+            'surat_penerimaan',
+            'SRT-TERIMA/2026/999'
         );
         $doc->update(['status_keabsahan' => 'dicabut']);
 
@@ -231,16 +228,7 @@ class AdvancedAdminAndSuperAdminPhaseFiveTest extends TestCase
     public function test_superadmin_dapat_melihat_distribusi_predikat_nilai_di_analitik_tahunan(): void
     {
         $pendaftaran = $this->createPendaftaran($this->peserta, StatusPendaftaranEnum::Diterima);
-        $penempatan = $this->createPenempatan($pendaftaran, StatusPenempatanEnum::Selesai);
-
-        Penilaian::create([
-            'penempatan_id' => $penempatan->id,
-            'pembimbing_id' => $this->pembimbing->id,
-            'nilai_akhir' => 95.0,
-            'predikat' => 'A',
-            'catatan' => 'Sangat kompeten',
-            'status' => StatusPenilaianEnum::Final,
-        ]);
+        $this->createPenempatan($pendaftaran, StatusPenempatanEnum::Selesai);
 
         $response = $this->actingAs($this->superAdmin)->get('/admin/laporan/tahunan?tahun=2026');
 
@@ -262,86 +250,7 @@ class AdvancedAdminAndSuperAdminPhaseFiveTest extends TestCase
     }
 
     /**
-     * TEST 3: Survei Kepuasan Magang Peserta & Dashboard Admin
-     */
-    public function test_peserta_selesai_dapat_mengisi_survei_kepuasan(): void
-    {
-        $pendaftaran = $this->createPendaftaran($this->peserta, StatusPendaftaranEnum::Diterima);
-        $penempatan = $this->createPenempatan($pendaftaran, StatusPenempatanEnum::Selesai);
-
-        $showResponse = $this->actingAs($this->peserta)->get('/peserta/survei');
-        $showResponse->assertStatus(200);
-        $showResponse->assertSee('Kuesioner Evaluasi');
-
-        $storeResponse = $this->actingAs($this->peserta)->post('/peserta/survei', [
-            'skor_mentoring' => 5,
-            'skor_tugas' => 5,
-            'skor_fasilitas' => 4,
-            'skor_nps' => 10,
-            'umpan_balik' => 'Pembimbing sangat ramah dan supportif.',
-            'saran' => 'Fasilitas internet meja sudut mohon diperkuat.',
-        ]);
-
-        $storeResponse->assertRedirect(route('peserta.survei.show'));
-        $storeResponse->assertSessionHas('success');
-
-        $this->assertDatabaseHas('survei_kepuasan', [
-            'penempatan_id' => $penempatan->id,
-            'skor_mentoring' => 5,
-            'skor_nps' => 10,
-            'umpan_balik' => 'Pembimbing sangat ramah dan supportif.',
-        ]);
-    }
-
-    public function test_peserta_yang_sudah_mengisi_survei_menampilkan_data_tersimpan(): void
-    {
-        $pendaftaran = $this->createPendaftaran($this->peserta, StatusPendaftaranEnum::Diterima);
-        $penempatan = $this->createPenempatan($pendaftaran, StatusPenempatanEnum::Selesai);
-
-        SurveiKepuasan::create([
-            'penempatan_id' => $penempatan->id,
-            'skor_mentoring' => 5,
-            'skor_tugas' => 4,
-            'skor_fasilitas' => 4,
-            'skor_nps' => 9,
-            'umpan_balik' => 'Sangat mendidik',
-            'saran' => 'Pertahankan',
-        ]);
-
-        $response = $this->actingAs($this->peserta)->get('/peserta/survei');
-        $response->assertStatus(200);
-        $response->assertSee('Sangat mendidik');
-    }
-
-    public function test_admin_dapat_melihat_dashboard_survei_dan_export(): void
-    {
-        $pendaftaran = $this->createPendaftaran($this->peserta, StatusPendaftaranEnum::Diterima);
-        $penempatan = $this->createPenempatan($pendaftaran, StatusPenempatanEnum::Selesai);
-
-        SurveiKepuasan::create([
-            'penempatan_id' => $penempatan->id,
-            'skor_mentoring' => 5,
-            'skor_tugas' => 4,
-            'skor_fasilitas' => 5,
-            'skor_nps' => 9,
-            'umpan_balik' => 'Pengalaman luar biasa di Dinas Kominfo',
-            'saran' => 'Sudah sangat optimal',
-        ]);
-
-        $indexResponse = $this->actingAs($this->admin)->get('/admin/survei');
-        $indexResponse->assertStatus(200);
-        $indexResponse->assertSee('Indeks Kepuasan Magang');
-        $indexResponse->assertSee('Net Promoter Score (NPS)');
-        $indexResponse->assertSee('Pengalaman luar biasa di Dinas Kominfo');
-
-        $exportResponse = $this->actingAs($this->admin)->get('/admin/survei/export');
-        $exportResponse->assertStatus(200);
-        $exportResponse->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
-        $this->assertStringContainsString('Pengalaman luar biasa di Dinas Kominfo', $exportResponse->streamedContent());
-    }
-
-    /**
-     * TEST 4: SLA Watchdog Antrean Verifikasi Admin
+     * TEST 3: SLA Watchdog Antrean Verifikasi Admin
      */
     public function test_sla_watchdog_memfilter_antrean_berdasarkan_keterlambatan(): void
     {

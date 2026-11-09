@@ -8,13 +8,9 @@ use App\Models\Dokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Logbook;
-use App\Models\ModulDinamis;
-use App\Models\ModulDinamisData;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\Pengaturan;
-use App\Models\Penilaian;
-use App\Models\Rubrik;
 use App\Models\SlotKhusus;
 use App\Models\Tugas;
 use App\Models\User;
@@ -52,13 +48,9 @@ class EventServiceProvider extends ServiceProvider
             SlotKhusus::class,
             Tugas::class,
             Logbook::class,
-            Penilaian::class,
             Pengaturan::class,
             Jurusan::class,
             Bidang::class,
-            Rubrik::class,
-            ModulDinamis::class,
-            ModulDinamisData::class,
         ];
 
         foreach ($observedModels as $modelClass) {

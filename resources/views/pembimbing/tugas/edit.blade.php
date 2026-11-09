@@ -357,7 +357,7 @@
             <div style="margin-top: 18px;">
                 <div class="tugas-field-filled" style="padding: 8px 14px;">
                     <label for="inputModalLinkUrl" class="tugas-field-filled-label">Link*</label>
-                    <input type="url" id="inputModalLinkUrl" placeholder="https://example.com/..." class="tugas-input-clean" style="font-size: 15px;" value="{{ old('link_referensi', $tugas->link_referensi) }}">
+                    <input type="url" id="inputModalLinkUrl" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 15px;" value="{{ old('link_referensi', $tugas->link_referensi) }}">
                 </div>
                 <div id="linkErrorHint" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e; display: none;">*Wajib diisi url valid</div>
             </div>

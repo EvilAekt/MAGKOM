@@ -17,11 +17,8 @@ use App\Models\Bidang;
 use App\Models\Jurusan;
 use App\Models\Logbook;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
-use App\Models\PenilaianRiwayat;
 use App\Models\PesertaProfil;
 use App\Models\ProgresLog;
-use App\Models\Rubrik;
 use App\Models\Tugas;
 use App\Models\User;
 use Carbon\Carbon;
@@ -39,10 +36,6 @@ final class PembimbingFullJobDeskTest extends TestCase
 
     private Jurusan $jurusan;
 
-    private Rubrik $rubrik1;
-
-    private Rubrik $rubrik2;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -56,18 +49,6 @@ final class PembimbingFullJobDeskTest extends TestCase
         $this->jurusan = Jurusan::create([
             'nama_jurusan' => 'Teknik Informatika',
             'kategori' => 'mahasiswa',
-            'aktif' => true,
-        ]);
-
-        $this->rubrik1 = Rubrik::create([
-            'kriteria' => 'Kualitas Hasil Kerja',
-            'bobot' => 50,
-            'aktif' => true,
-        ]);
-
-        $this->rubrik2 = Rubrik::create([
-            'kriteria' => 'Kedisiplinan & Sikap Kerja',
-            'bobot' => 50,
             'aktif' => true,
         ]);
 
@@ -269,111 +250,11 @@ final class PembimbingFullJobDeskTest extends TestCase
         $this->assertEquals(StatusLogbookEnum::PerluRevisi, $logbook->fresh()->status);
     }
 
-    public function test_pembimbing_bisa_simpan_draf_dan_finalisasi_nilai_rubrik(): void
-    {
-        $penempatan = $this->createPenempatan('Gita Savitri', 'gita@uns.ac.id');
-
-        // 1. Simpan Draf
-        $responseDraft = $this->actingAs($this->pembimbing)
-            ->post(route('pembimbing.penilaian.store', $penempatan->id), [
-                'is_final' => 0,
-                'skor' => [
-                    $this->rubrik1->id => 80,
-                    $this->rubrik2->id => 90,
-                ],
-                'catatan' => 'Draf nilai tengah magang.',
-            ]);
-        $responseDraft->assertSessionHasNoErrors();
-
-        $penilaian = Penilaian::where('penempatan_id', $penempatan->id)->first();
-        $this->assertNotNull($penilaian);
-        $this->assertEquals(85.0, (float) $penilaian->nilai_akhir);
-
-        // 2. Finalisasi Nilai
-        $responseFinal = $this->actingAs($this->pembimbing)
-            ->post(route('pembimbing.penilaian.store', $penempatan->id), [
-                'is_final' => 1,
-                'skor' => [
-                    $this->rubrik1->id => 88,
-                    $this->rubrik2->id => 92,
-                ],
-                'catatan' => 'Penilaian akhir magang resmi.',
-            ]);
-        $responseFinal->assertSessionHasNoErrors();
-        $this->assertEquals('final', $penilaian->fresh()->status->value);
-        $this->assertEquals(90.0, (float) $penilaian->fresh()->nilai_akhir);
-    }
-
-    public function test_pembimbing_bisa_revisi_nilai_final_dengan_alasan_min_10_karakter_dan_tercatat_riwayat(): void
-    {
-        $penempatan = $this->createPenempatan('Hendra Kurnia', 'hendra@uns.ac.id');
-
-        // Finalisasi awal
-        $this->actingAs($this->pembimbing)
-            ->post(route('pembimbing.penilaian.store', $penempatan->id), [
-                'is_final' => 1,
-                'skor' => [
-                    $this->rubrik1->id => 80,
-                    $this->rubrik2->id => 80,
-                ],
-            ]);
-
-        // Revisi nilai final tanpa alasan (harus error)
-        $responseGagal = $this->actingAs($this->pembimbing)
-            ->post(route('pembimbing.penilaian.store', $penempatan->id), [
-                'is_final' => 1,
-                'skor' => [
-                    $this->rubrik1->id => 90,
-                    $this->rubrik2->id => 90,
-                ],
-                'alasan' => 'pendek',
-            ]);
-        $responseGagal->assertSessionHasErrors('alasan');
-
-        // Revisi nilai final dengan alasan valid (min 10 karakter)
-        $responseSukses = $this->actingAs($this->pembimbing)
-            ->post(route('pembimbing.penilaian.store', $penempatan->id), [
-                'is_final' => 1,
-                'skor' => [
-                    $this->rubrik1->id => 90,
-                    $this->rubrik2->id => 90,
-                ],
-                'alasan' => 'Penambahan nilai atas kontribusi proyek dinas tambahan.',
-            ]);
-        $responseSukses->assertSessionHasNoErrors();
-
-        $riwayat = PenilaianRiwayat::where('penilaian_id', $penempatan->penilaian->id)->first();
-        $this->assertNotNull($riwayat);
-        $this->assertStringContainsString('Penambahan nilai', $riwayat->alasan);
-
-        // Verifikasi tampilan halaman detail penilaian tidak crash saat menampilkan audit trail
-        $responseShow = $this->actingAs($this->pembimbing)
-            ->get(route('pembimbing.penilaian.show', $penempatan->id));
-        $responseShow->assertOk();
-        $responseShow->assertSee('Riwayat Jejak Perubahan Nilai Final');
-        $responseShow->assertSee('Penambahan nilai atas kontribusi proyek dinas tambahan.');
-    }
-
-    public function test_pembimbing_bisa_menetapkan_selesai_magang_jika_nilai_final(): void
+    public function test_pembimbing_bisa_menetapkan_selesai_magang(): void
     {
         $penempatan = $this->createPenempatan('Indah Lestari', 'indah@uns.ac.id');
 
-        // 1. Coba selesaikan sebelum dinilai (harus gagal)
-        $responseGagal = $this->actingAs($this->pembimbing)
-            ->post(route('pembimbing.penempatan.selesai', $penempatan->id));
-        $responseGagal->assertSessionHasErrors();
-
-        // 2. Beri nilai final
-        $this->actingAs($this->pembimbing)
-            ->post(route('pembimbing.penilaian.store', $penempatan->id), [
-                'is_final' => 1,
-                'skor' => [
-                    $this->rubrik1->id => 85,
-                    $this->rubrik2->id => 85,
-                ],
-            ]);
-
-        // 3. Selesaikan magang (harus sukses)
+        // Selesaikan magang (sukses langsung tanpa perlu prasyarat penilaian)
         $responseSukses = $this->actingAs($this->pembimbing)
             ->post(route('pembimbing.penempatan.selesai', $penempatan->id));
         $responseSukses->assertSessionHasNoErrors();
@@ -407,14 +288,6 @@ final class PembimbingFullJobDeskTest extends TestCase
             ->post(route('pembimbing.logbook.review', $logbook->id), [
                 'status' => 'perlu_revisi',
                 'catatan_pembimbing' => 'Catatan',
-            ])
-            ->assertForbidden();
-
-        // POST simpan nilai ditolak 403
-        $this->actingAs($superadmin)
-            ->post(route('pembimbing.penilaian.store', $penempatan->id), [
-                'is_final' => 1,
-                'skor' => [$this->rubrik1->id => 90],
             ])
             ->assertForbidden();
     }

@@ -467,7 +467,7 @@
             <div style="margin-top: 18px;">
                 <div class="tugas-field-filled" style="padding: 8px 14px;">
                     <label for="inputModalLinkUrl" class="tugas-field-filled-label">Link*</label>
-                    <input type="url" id="inputModalLinkUrl" placeholder="https://example.com/..." class="tugas-input-clean" style="font-size: 15px;">
+                    <input type="url" id="inputModalLinkUrl" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 15px;">
                 </div>
                 <div id="linkErrorHint" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e;">*Wajib diisi</div>
             </div>

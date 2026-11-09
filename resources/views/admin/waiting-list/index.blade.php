@@ -912,19 +912,25 @@
                     <span><strong>Penutupan Massal Awal Bulan (AC-04-7):</strong> Sisa antrean ditolak otomatis jika bulan magang telah berjalan.</span>
                 </div>
                 <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                    @foreach($bulanAntreanList as $bAntrean)
-                        @php
-                            $hariIni = today('Asia/Jakarta');
-                            $tglMulai = \Carbon\Carbon::parse($bAntrean->bulan_mulai . '-01', 'Asia/Jakarta');
-                            $bisaTutup = $hariIni->gte($tglMulai);
-                        @endphp
-                        <form method="POST" action="{{ route('admin.waiting-list.tutup', $bAntrean) }}" onsubmit="return confirm('Apakah Anda yakin menutup sisa antrean waiting list bulan {{ $bAntrean->bulan_mulai?->translatedFormat('F Y') }}? Pendaftaran yang tersisa akan ditolak secara otomatis.');" style="display: inline;">
-                            @csrf
-                            <button type="submit" {{ !$bisaTutup ? 'disabled' : '' }} class="adm-btn-closure {{ $bisaTutup ? 'can-close' : 'disabled' }}" title="{{ $bisaTutup ? 'Tutup sisa antrean bulan ini' : 'Hanya bisa ditutup setelah tanggal 1 bulan mulai magang' }}">
-                                Tutup Antrean {{ $bAntrean->bulan_mulai?->translatedFormat('M Y') }}
-                            </button>
-                        </form>
-                    @endforeach
+                    @if(auth()->user()?->isSuperAdmin())
+                        <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.4rem 0.8rem; border-radius: 999px; border: 1px solid #BFDBFE;">
+                            Mode Lihat Saja
+                        </span>
+                    @else
+                        @foreach($bulanAntreanList as $bAntrean)
+                            @php
+                                $hariIni = today('Asia/Jakarta');
+                                $tglMulai = \Carbon\Carbon::parse($bAntrean->bulan_mulai . '-01', 'Asia/Jakarta');
+                                $bisaTutup = $hariIni->gte($tglMulai);
+                            @endphp
+                            <form method="POST" action="{{ route('admin.waiting-list.tutup', $bAntrean) }}" onsubmit="return confirm('Apakah Anda yakin menutup sisa antrean waiting list bulan {{ $bAntrean->bulan_mulai?->translatedFormat('F Y') }}? Pendaftaran yang tersisa akan ditolak secara otomatis.');" style="display: inline;">
+                                @csrf
+                                <button type="submit" {{ !$bisaTutup ? 'disabled' : '' }} class="adm-btn-closure {{ $bisaTutup ? 'can-close' : 'disabled' }}" title="{{ $bisaTutup ? 'Tutup sisa antrean bulan ini' : 'Hanya bisa ditutup setelah tanggal 1 bulan mulai magang' }}">
+                                    Tutup Antrean {{ $bAntrean->bulan_mulai?->translatedFormat('M Y') }}
+                                </button>
+                            </form>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         @endif
@@ -1092,7 +1098,7 @@
 
                                 {{-- Aksi --}}
                                 <td style="text-align: right;">
-                                    @if($sisaKuota > 0)
+                                    @if($sisaKuota > 0 && !auth()->user()?->isSuperAdmin())
                                         <form method="POST" action="{{ route('admin.waiting-list.promote') }}" style="display: inline-block; margin: 0;" onsubmit="return confirm('Promosikan {{ addslashes($item->user?->nama ?? 'peserta') }} menjadi Diterima secara instan sesuai kuota yang tersedia?');">
                                             @csrf
                                             <input type="hidden" name="pendaftaran_id" value="{{ $item->id }}">

@@ -27,8 +27,15 @@
             <span>Pratinjau Surat</span>
         </a>
 
-        {{-- Dropdown Aksi Penempatan (Hanya saat status Aktif) --}}
-        @if($statusVal === 'aktif')
+        @if(auth()->user()?->isSuperAdmin())
+            <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #EFF6FF; color: #1D4ED8; font-weight: 700; font-size: 0.8125rem; padding: 0.45rem 0.85rem; border-radius: 8px; border: 1px solid #BFDBFE;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <span>Mode Lihat Saja</span>
+            </span>
+        @endif
+
+        {{-- Dropdown Aksi Penempatan (Hanya saat status Aktif dan bukan SuperAdmin) --}}
+        @if($statusVal === 'aktif' && !auth()->user()?->isSuperAdmin())
             <div class="penempatan-dropdown-wrap">
                 <button type="button" class="btn-action-dropdown-trigger" id="btnPenempatanDropdown" onclick="togglePenempatanDropdown(event)" title="Opsi aksi penempatan lanjutan">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>

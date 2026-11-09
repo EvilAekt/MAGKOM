@@ -8,8 +8,11 @@ use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Penempatan;
+use App\Services\MasaTenggangService;
 use Carbon\Carbon;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -23,7 +26,7 @@ class PesertaController extends Controller
         $user = $request->user();
         $tab = $request->input('tab', 'aktif');
 
-        $query = Penempatan::with(['peserta.profil.jurusan', 'bidang', 'tugas', 'logbooks', 'penilaian'])
+        $query = Penempatan::with(['peserta.profil.jurusan', 'bidang', 'tugas', 'logbooks'])
             ->where(function ($q) use ($user) {
                 if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
                     $q->where('pembimbing_id', $user->id);
@@ -151,8 +154,6 @@ class PesertaController extends Controller
             'pendaftaran',
             'tugas.progresLogs',
             'logbooks',
-            'penilaian.details.rubrik',
-            'penilaian.riwayats.pengubah',
         ]);
 
         // Hitung metrik tugas
@@ -222,5 +223,36 @@ class PesertaController extends Controller
         }
 
         return view('pembimbing.peserta.show', $data);
+    }
+
+    /**
+     * Menandai penempatan selesai magang oleh Pembimbing Lapangan.
+     */
+    public function selesai(Request $request, Penempatan $penempatan, MasaTenggangService $masaTenggangService): JsonResponse|RedirectResponse
+    {
+        try {
+            $penempatanUpdated = $masaTenggangService->tandaiSelesai($penempatan, $request->user());
+        } catch (AuthorizationException $e) {
+            abort(403, $e->getMessage());
+        } catch (\InvalidArgumentException $e) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ], 422);
+            }
+
+            return back()->withErrors(['peserta' => $e->getMessage()])->with('error', $e->getMessage());
+        }
+
+        if (! $request->expectsJson() && ! $request->wantsJson()) {
+            return back()->with('success', 'Status magang peserta berhasil diselesaikan dan masa tenggang akun telah diaktifkan.');
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status magang peserta berhasil diselesaikan dan masa tenggang akun telah diaktifkan.',
+            'data' => $penempatanUpdated,
+        ]);
     }
 }

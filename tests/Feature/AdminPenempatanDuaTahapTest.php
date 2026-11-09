@@ -201,6 +201,45 @@ class AdminPenempatanDuaTahapTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_assign_pembimbing_without_bidang_and_bidang_is_automatically_resolved_from_registration(): void
+    {
+        $peserta = User::factory()->create([
+            'nama' => 'Peserta Otomatis Bidang',
+            'role' => RoleEnum::Peserta,
+            'status_aktif' => true,
+        ]);
+
+        $this->jurusan->bidang()->syncWithoutDetaching([$this->bidangEgov->id]);
+
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $peserta->id,
+            'kuota_id' => $this->kuota->id,
+            'bulan_magang_id' => $this->bulanAktif->id,
+            'status' => StatusPendaftaranEnum::Diterima,
+            'durasi_bulan' => 3,
+            'diputuskan_at' => now(),
+        ]);
+
+        // Admin hanya memilih pembimbing_id tanpa bidang_id
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.penempatan.tetapkan'), [
+                'pendaftaran_id' => $pendaftaran->id,
+                'pembimbing_id' => $this->pembimbing->id,
+            ]);
+
+        $response->assertRedirect(route('admin.penempatan.index'));
+        $response->assertSessionHas('success');
+
+        // Bidang dinas otomatis terisi dari kuota jurusan registrasi
+        $this->assertDatabaseHas('penempatan', [
+            'pendaftaran_id' => $pendaftaran->id,
+            'peserta_id' => $peserta->id,
+            'bidang_id' => $this->bidangEgov->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'status' => StatusPenempatanEnum::Aktif->value,
+        ]);
+    }
+
     public function test_penempatan_page_filters_by_bulan_magang_correctly(): void
     {
         $peserta1 = User::factory()->create(['nama' => 'Peserta November']);
@@ -272,5 +311,65 @@ class AdminPenempatanDuaTahapTest extends TestCase
         $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
         $response->assertOk();
         $response->assertSee('Budi Mentor Egov [Layanan E-Government]');
+    }
+
+    public function test_antrean_belum_ditempatkan_filters_by_jurusan_and_bidang(): void
+    {
+        $this->jurusan->bidang()->syncWithoutDetaching([$this->bidangEgov->id]);
+
+        $jurusanDesain = Jurusan::create([
+            'nama_jurusan' => 'Teknologi Informasi',
+            'kategori' => 'mahasiswa',
+            'aktif' => true,
+        ]);
+        $jurusanDesain->bidang()->attach($this->bidangIti->id);
+
+        $kuotaDesain = Kuota::create([
+            'bulan_magang_id' => $this->bulanAktif->id,
+            'jurusan_id' => $jurusanDesain->id,
+            'jumlah' => 5,
+            'terisi' => 1,
+            'aktif' => true,
+        ]);
+
+        $pesertaInformatika = User::factory()->create(['nama' => 'Calon Informatika']);
+        Pendaftaran::create([
+            'user_id' => $pesertaInformatika->id,
+            'kuota_id' => $this->kuota->id,
+            'bulan_magang_id' => $this->bulanAktif->id,
+            'status' => StatusPendaftaranEnum::Diterima,
+            'durasi_bulan' => 3,
+            'diputuskan_at' => now(),
+        ]);
+
+        $pesertaTi = User::factory()->create(['nama' => 'Calon TI']);
+        Pendaftaran::create([
+            'user_id' => $pesertaTi->id,
+            'kuota_id' => $kuotaDesain->id,
+            'bulan_magang_id' => $this->bulanAktif->id,
+            'status' => StatusPendaftaranEnum::Diterima,
+            'durasi_bulan' => 3,
+            'diputuskan_at' => now(),
+        ]);
+
+        // Filter Jurusan Informatika di tab belum
+        $responseJurusan = $this->actingAs($this->admin)
+            ->get(route('admin.penempatan.index', [
+                'tab' => 'belum',
+                'jurusan_id' => $this->jurusan->id,
+            ]));
+        $responseJurusan->assertOk();
+        $this->assertCount(1, $responseJurusan->viewData('antreanBelumDitempatkan'));
+        $this->assertEquals('Calon Informatika', $responseJurusan->viewData('antreanBelumDitempatkan')->first()->user->nama);
+
+        // Filter Bidang ITI di tab belum
+        $responseBidang = $this->actingAs($this->admin)
+            ->get(route('admin.penempatan.index', [
+                'tab' => 'belum',
+                'bidang_id' => $this->bidangIti->id,
+            ]));
+        $responseBidang->assertOk();
+        $this->assertCount(1, $responseBidang->viewData('antreanBelumDitempatkan'));
+        $this->assertEquals('Calon TI', $responseBidang->viewData('antreanBelumDitempatkan')->first()->user->nama);
     }
 }

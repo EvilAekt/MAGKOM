@@ -82,9 +82,9 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
             <span>Rekap Laporan</span>
         </a>
-        <a href="{{ route('admin.sertifikat.index') }}" class="cv-quick-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-            <span>Hub Sertifikat</span>
+        <a href="{{ route('admin.pendaftaran.index') }}" class="cv-quick-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span>Daftar Peserta</span>
         </a>
     </div>
 </x-gentelella.card>
@@ -201,8 +201,8 @@
                 </span>
                 <h3 style="font-size: 0.95rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Offboarding Watchdog</h3>
             </div>
-            <a href="{{ route('admin.sertifikat.index') }}" class="adm-btn-micro">
-                <span>Sertifikat</span> &rarr;
+            <a href="{{ route('admin.penempatan.index') }}" class="adm-btn-micro">
+                <span>Penempatan</span> &rarr;
             </a>
         </div>
 

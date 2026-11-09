@@ -10,6 +10,9 @@ use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Services\BulanStatusService;
+use App\Services\LandingPage\LandingPageDocumentService;
+use App\Services\LandingPage\LandingPageRenderer;
+use App\Support\Pengaturan;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -17,7 +20,9 @@ use Illuminate\Http\Request;
 class LandingController extends Controller
 {
     public function __construct(
-        protected BulanStatusService $bulanStatusService
+        protected BulanStatusService $bulanStatusService,
+        protected LandingPageDocumentService $documentService,
+        protected LandingPageRenderer $renderer
     ) {}
 
     /**
@@ -25,6 +30,13 @@ class LandingController extends Controller
      */
     public function __invoke(Request $request): View
     {
+        $isEditorMode = $request->boolean('editor_mode');
+        if ($isEditorMode) {
+            Pengaturan::setPreviewMode(true);
+        }
+
+        $document = $this->documentService->getDocument($isEditorMode);
+
         $sekarang = CarbonImmutable::now('Asia/Jakarta');
 
         // Ambil bulan magang aktif yang memenuhi syarat tayang di landing page (BR-04)
@@ -89,6 +101,9 @@ class LandingController extends Controller
                 $q->where('aktif', true);
             }])->where('aktif', true)->get(),
             'sekarang' => $sekarang,
+            'document' => $document,
+            'renderer' => $this->renderer,
+            'isEditorMode' => $isEditorMode,
         ]);
     }
 }

@@ -162,14 +162,6 @@ class BackendSupplementalFeaturesTest extends TestCase
         $jurusan->refresh();
         $this->assertTrue($jurusan->aktif);
 
-        // 3. Rubrik Penilaian: Tolak ubah bobot jika total bobot tidak 100 (AC-10-4)
-        $rubrik = Rubrik::first();
-        $this->actingAs($superadmin)
-            ->put(route('superadmin.rubrik.update', $rubrik), [
-                'kriteria' => $rubrik->kriteria,
-                'bobot' => 50, // Akan merusak total bobot menjadi 130
-            ])->assertSessionHas('error');
-
         // 4. Pengaturan Sistem: Update konfigurasi (AC-11-7)
         $this->actingAs($superadmin)
             ->put(route('superadmin.pengaturan.update'), [

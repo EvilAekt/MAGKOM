@@ -268,7 +268,6 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
 
         // 2. Verifikasi markup accordion pada grup Pembimbing (Figma Node 560-24892)
         $response->assertSee('Pembimbing');
-        $response->assertSee('Penilaian Peserta');
         $response->assertSee('Review Logbook');
         $response->assertSee('Tugas Magang');
         $response->assertSee('Laporan Peserta');
@@ -284,7 +283,7 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
      */
     public function test_sidebar_highlights_and_expands_pembimbing_group_when_active(): void
     {
-        $response = $this->actingAs($this->superAdmin)->get(route('pembimbing.penilaian.index'));
+        $response = $this->actingAs($this->superAdmin)->get(route('pembimbing.logbook.index'));
 
         $response->assertStatus(200);
         // Tombol grup memiliki class has-active dan aria-expanded="true"
@@ -292,7 +291,7 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         $response->assertSee('aria-expanded="true"', false);
         // Submenu memiliki class show
         $response->assertSee('nav-sub-menu show', false);
-        // Tautan penilaian peserta aktif
+        // Tautan review logbook aktif
         $response->assertSee('nav-sub-item active', false);
     }
 

@@ -18,8 +18,14 @@
 
     <!-- Vite Asset Pipeline -->
     @vite(['resources/css/pages/public/peta-alur.css', 'resources/js/pages/public/peta-alur.js'])
+    @if(isset($isPreview) && $isPreview)
+        @vite(['resources/css/pages/public/landing.css'])
+    @endif
 </head>
 <body>
+
+{{-- Floating Control Bar saat Mode Pratinjau Staging Aktif --}}
+@include('public.partials._preview_control_bar')
 
 <div class="peta-alur-fullscreen-app">
     
@@ -547,8 +553,30 @@
                 </g>
 
                 <!-- LAYER 6: 4 HALTE CHECKPOINT BERDIRI DI PINGGIR JALAN (TROTOAR: y = 310) DENGAN BALON KOMIK WEBTOON MELAYANG BERSIH -->
+                @php
+                    $defaultTahapanSteps = [
+                        ['step' => '01', 'title' => 'Registrasi', 'badge' => 'REGISTRASI', 'desc' => 'Calon peserta membuat akun resmi, mengisi data pribadi lengkap, dan menunggu verifikasi admin.'],
+                        ['step' => '02', 'title' => 'Administrasi & Seleksi', 'badge' => 'ADMINISTRASI & SELEKSI', 'desc' => 'Pilih bidang, unggah berkas, lalu admin menyeleksi dan memverifikasi dalam rentang 1–3 hari kerja.'],
+                        ['step' => '03', 'title' => 'Pelaksanaan Magang', 'badge' => 'PELAKSANAAN MAGANG', 'desc' => 'Kerjakan proyek riil, isi logbook harian, serta dapatkan bimbingan langsung dari mentor ASN Sleman.'],
+                        ['step' => '04', 'title' => 'Kelulusan', 'badge' => 'KELULUSAN & SERTIFIKAT', 'desc' => 'Unduh lembar nilai evaluasi dan E-Sertifikat resmi bertanda tangan elektronik Diskominfo Sleman.'],
+                    ];
+                    $stepsData = \App\Support\Pengaturan::json('landing_tahapan_steps', $defaultTahapanSteps);
+                    if (empty($stepsData) || count($stepsData) < 4) {
+                        $stepsData = $defaultTahapanSteps;
+                    }
+
+                    $formatLines = function(string $text) {
+                        $lines = explode("\n", wordwrap(trim($text), 48, "\n"));
+                        return [
+                            $lines[0] ?? '',
+                            isset($lines[1]) ? ($lines[1] . (isset($lines[2]) ? '...' : '')) : ''
+                        ];
+                    };
+                @endphp
+
                 <!-- Pos 1: Halte Registrasi (x: 280, y: 310 di pinggir jalan) -->
-                <g class="road-checkpoint-group cursor-pointer" id="roadCp1" transform="translate(280, 310)" onclick="selectModalStep(1)" role="button" aria-label="Pilih Pos 1 Registrasi" style="cursor: pointer;">
+                @php [$p1Line1, $p1Line2] = $formatLines($stepsData[0]['desc'] ?? ''); @endphp
+                <g class="road-checkpoint-group cursor-pointer" id="roadCp1" transform="translate(280, 310)" onclick="selectModalStep(1)" role="button" aria-label="Pilih Pos 1 {{ $stepsData[0]['title'] ?? 'Registrasi' }}" style="cursor: pointer;">
                     <!-- Tiang Halte Pinggir Jalan yang Rapi & Kokoh Berdiri di Trotoar -->
                     <line x1="0" y1="8" x2="0" y2="36" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
                     <ellipse cx="0" cy="36" rx="9" ry="3" fill="#64748b"/>
@@ -561,17 +589,17 @@
                     <line x1="-3" y1="-9" x2="1" y2="-9" stroke="#e11d48" stroke-width="1.2"/>
                     <!-- Papan Teks Halte Pinggir Jalan -->
                     <rect x="-44" y="10" width="88" height="15" rx="4" fill="#1b3860" stroke="#ffffff" stroke-width="1.2" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"/>
-                    <text x="0" y="21" text-anchor="middle" font-size="7.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">01 REGISTRASI</text>
+                    <text x="0" y="21" text-anchor="middle" font-size="7.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">01 {{ \Illuminate\Support\Str::limit(strtoupper($stepsData[0]['title'] ?? 'REGISTRASI'), 12, '') }}</text>
 
                     <!-- BALON KOMIK / WEBTOON SPEECH BUBBLE POS 1 (Ekor Segitiga Pendek & Rapi, Tidak Menutupi Plang) -->
                     <g class="webtoon-speech-bubble is-active" id="webtoonBubble1">
                         <path d="M -5,-140 L 275,-140 Q 290,-140 290,-125 L 290,-30 Q 290,-15 275,-15 L 35,-15 L 20,0 L 5,-15 L -5,-15 Q -20,-15 -20,-30 L -20,-125 Q -20,-140 -5,-140 Z" fill="#ffffff" stroke="#e11d48" stroke-width="2.5" style="filter: drop-shadow(0 10px 24px rgba(15,23,42,0.22));"/>
                         <rect x="-3" y="-132" width="56" height="18" rx="9" fill="#e11d48"/>
                         <text x="25" y="-120" text-anchor="middle" font-size="8.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">POS 01</text>
-                        <text x="65" y="-119" text-anchor="start" font-size="11" font-weight="900" fill="#0f172a" font-family="'Lexend', sans-serif">REGISTRASI AKUN</text>
+                        <text x="65" y="-119" text-anchor="start" font-size="11" font-weight="900" fill="#0f172a" font-family="'Lexend', sans-serif">{!! !str_contains(strtoupper($stepsData[0]['title'] ?? ''), 'AKUN') && strtoupper($stepsData[0]['title'] ?? '') === 'REGISTRASI' ? 'REGISTRASI AKUN' : strtoupper($stepsData[0]['title'] ?? 'REGISTRASI AKUN') !!}</text>
                         <line x1="-3" y1="-106" x2="273" y2="-106" stroke="#f1f5f9" stroke-width="1.5"/>
-                        <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">Calon peserta membuat akun resmi, mengisi data</text>
-                        <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">pribadi lengkap, dan menunggu verifikasi admin.</text>
+                        <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p1Line1 }}</text>
+                        <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p1Line2 }}</text>
                         <g class="cursor-pointer btn-webtoon-action" onclick="event.stopPropagation(); selectModalStep(2);" role="button" aria-label="Lanjut ke Pos 2">
                             <rect x="150" y="-52" width="122" height="26" rx="13" fill="#e11d48" style="filter: drop-shadow(0 2px 6px rgba(225,29,72,0.3));"/>
                             <text x="211" y="-36" text-anchor="middle" font-size="9" font-weight="800" fill="#ffffff" font-family="'Lexend', sans-serif">Lanjut Pos 2 ➔</text>
@@ -580,7 +608,8 @@
                 </g>
 
                 <!-- Pos 2: Halte Administrasi & Seleksi (x: 880, y: 310 di pinggir jalan) -->
-                <g class="road-checkpoint-group cursor-pointer" id="roadCp2" transform="translate(880, 310)" onclick="selectModalStep(2)" role="button" aria-label="Pilih Pos 2 Administrasi & Seleksi" style="cursor: pointer;">
+                @php [$p2Line1, $p2Line2] = $formatLines($stepsData[1]['desc'] ?? ''); @endphp
+                <g class="road-checkpoint-group cursor-pointer" id="roadCp2" transform="translate(880, 310)" onclick="selectModalStep(2)" role="button" aria-label="Pilih Pos 2 {{ $stepsData[1]['title'] ?? 'Administrasi & Seleksi' }}" style="cursor: pointer;">
                     <!-- Tiang Halte Pinggir Jalan yang Rapi & Kokoh Berdiri di Trotoar -->
                     <line x1="0" y1="8" x2="0" y2="36" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
                     <ellipse cx="0" cy="36" rx="9" ry="3" fill="#64748b"/>
@@ -590,17 +619,17 @@
                     <path d="M -5,-12 L -2,-9 L 5,-16" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                     <!-- Papan Teks Halte Pinggir Jalan -->
                     <rect x="-48" y="10" width="96" height="15" rx="4" fill="#1b3860" stroke="#ffffff" stroke-width="1.2" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"/>
-                    <text x="0" y="21" text-anchor="middle" font-size="7.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">02 ADMINISTRASI</text>
+                    <text x="0" y="21" text-anchor="middle" font-size="7.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">02 {{ \Illuminate\Support\Str::limit(strtoupper($stepsData[1]['title'] ?? 'ADMINISTRASI'), 12, '') }}</text>
 
                     <!-- BALON KOMIK / WEBTOON SPEECH BUBBLE POS 2 (Ekor Segitiga Pendek & Rapi, Tidak Menutupi Plang) -->
                     <g class="webtoon-speech-bubble" id="webtoonBubble2">
                         <path d="M -5,-140 L 275,-140 Q 290,-140 290,-125 L 290,-30 Q 290,-15 275,-15 L 35,-15 L 20,0 L 5,-15 L -5,-15 Q -20,-15 -20,-30 L -20,-125 Q -20,-140 -5,-140 Z" fill="#ffffff" stroke="#0284c7" stroke-width="2.5" style="filter: drop-shadow(0 10px 24px rgba(15,23,42,0.22));"/>
                         <rect x="-3" y="-132" width="56" height="18" rx="9" fill="#0284c7"/>
                         <text x="25" y="-120" text-anchor="middle" font-size="8.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">POS 02</text>
-                        <text x="65" y="-119" text-anchor="start" font-size="11" font-weight="900" fill="#0f172a" font-family="'Lexend', sans-serif">ADMINISTRASI & SELEKSI</text>
+                        <text x="65" y="-119" text-anchor="start" font-size="11" font-weight="900" fill="#0f172a" font-family="'Lexend', sans-serif">{!! strtoupper($stepsData[1]['title'] ?? 'ADMINISTRASI & SELEKSI') !!}</text>
                         <line x1="-3" y1="-106" x2="273" y2="-106" stroke="#f1f5f9" stroke-width="1.5"/>
-                        <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">Pilih bidang, unggah berkas, lalu admin menyeleksi</text>
-                        <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">dan memverifikasi dalam rentang 1–3 hari kerja.</text>
+                        <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p2Line1 }}</text>
+                        <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p2Line2 }}</text>
                         <g class="cursor-pointer btn-webtoon-action" onclick="event.stopPropagation(); selectModalStep(3);" role="button" aria-label="Lanjut ke Pos 3">
                             <rect x="150" y="-52" width="122" height="26" rx="13" fill="#0284c7" style="filter: drop-shadow(0 2px 6px rgba(2,132,199,0.3));"/>
                             <text x="211" y="-36" text-anchor="middle" font-size="9" font-weight="800" fill="#ffffff" font-family="'Lexend', sans-serif">Lanjut Pos 3 ➔</text>
@@ -609,7 +638,8 @@
                 </g>
 
                 <!-- Pos 3: Halte Pelaksanaan Magang (x: 1480, y: 310 di pinggir jalan) -->
-                <g class="road-checkpoint-group cursor-pointer" id="roadCp3" transform="translate(1480, 310)" onclick="selectModalStep(3)" role="button" aria-label="Pilih Pos 3 Pelaksanaan Magang" style="cursor: pointer;">
+                @php [$p3Line1, $p3Line2] = $formatLines($stepsData[2]['desc'] ?? ''); @endphp
+                <g class="road-checkpoint-group cursor-pointer" id="roadCp3" transform="translate(1480, 310)" onclick="selectModalStep(3)" role="button" aria-label="Pilih Pos 3 {{ $stepsData[2]['title'] ?? 'Pelaksanaan Magang' }}" style="cursor: pointer;">
                     <!-- Tiang Halte Pinggir Jalan yang Rapi & Kokoh Berdiri di Trotoar -->
                     <line x1="0" y1="8" x2="0" y2="36" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
                     <ellipse cx="0" cy="36" rx="9" ry="3" fill="#64748b"/>
@@ -620,17 +650,17 @@
                     <line x1="-8" y1="-8" x2="8" y2="-8" stroke="#ffffff" stroke-width="1.8"/>
                     <!-- Papan Teks Halte Pinggir Jalan -->
                     <rect x="-48" y="10" width="96" height="15" rx="4" fill="#1b3860" stroke="#ffffff" stroke-width="1.2" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"/>
-                    <text x="0" y="21" text-anchor="middle" font-size="7.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">03 PELAKSANAAN</text>
+                    <text x="0" y="21" text-anchor="middle" font-size="7.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">03 {{ \Illuminate\Support\Str::limit(strtoupper($stepsData[2]['title'] ?? 'PELAKSANAAN'), 12, '') }}</text>
 
                     <!-- BALON KOMIK / WEBTOON SPEECH BUBBLE POS 3 (Ekor Segitiga Pendek & Rapi, Tidak Menutupi Plang) -->
                     <g class="webtoon-speech-bubble" id="webtoonBubble3">
                         <path d="M -5,-140 L 275,-140 Q 290,-140 290,-125 L 290,-30 Q 290,-15 275,-15 L 35,-15 L 20,0 L 5,-15 L -5,-15 Q -20,-15 -20,-30 L -20,-125 Q -20,-140 -5,-140 Z" fill="#ffffff" stroke="#0f766e" stroke-width="2.5" style="filter: drop-shadow(0 10px 24px rgba(15,23,42,0.22));"/>
                         <rect x="-3" y="-132" width="56" height="18" rx="9" fill="#0f766e"/>
                         <text x="25" y="-120" text-anchor="middle" font-size="8.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">POS 03</text>
-                        <text x="65" y="-119" text-anchor="start" font-size="11" font-weight="900" fill="#0f172a" font-family="'Lexend', sans-serif">PELAKSANAAN MAGANG</text>
+                        <text x="65" y="-119" text-anchor="start" font-size="11" font-weight="900" fill="#0f172a" font-family="'Lexend', sans-serif">{!! strtoupper($stepsData[2]['title'] ?? 'PELAKSANAAN MAGANG') !!}</text>
                         <line x1="-3" y1="-106" x2="273" y2="-106" stroke="#f1f5f9" stroke-width="1.5"/>
-                        <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">Kerjakan proyek riil, isi logbook harian, serta</text>
-                        <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">dapatkan bimbingan langsung dari mentor ASN Sleman.</text>
+                        <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p3Line1 }}</text>
+                        <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p3Line2 }}</text>
                         <g class="cursor-pointer btn-webtoon-action" onclick="event.stopPropagation(); selectModalStep(4);" role="button" aria-label="Lanjut ke Pos 4">
                             <rect x="150" y="-52" width="122" height="26" rx="13" fill="#0f766e" style="filter: drop-shadow(0 2px 6px rgba(15,118,110,0.3));"/>
                             <text x="211" y="-36" text-anchor="middle" font-size="9" font-weight="800" fill="#ffffff" font-family="'Lexend', sans-serif">Lanjut Pos 4 ➔</text>
@@ -639,7 +669,8 @@
                 </g>
 
                 <!-- Pos 4: Halte Kelulusan (x: 2080, y: 310 di pinggir jalan) -->
-                <g class="road-checkpoint-group cursor-pointer" id="roadCp4" transform="translate(2080, 310)" onclick="selectModalStep(4)" role="button" aria-label="Pilih Pos 4 Kelulusan" style="cursor: pointer;">
+                @php [$p4Line1, $p4Line2] = $formatLines($stepsData[3]['desc'] ?? ''); @endphp
+                <g class="road-checkpoint-group cursor-pointer" id="roadCp4" transform="translate(2080, 310)" onclick="selectModalStep(4)" role="button" aria-label="Pilih Pos 4 {{ $stepsData[3]['title'] ?? 'Kelulusan' }}" style="cursor: pointer;">
                     <!-- Tiang Halte Pinggir Jalan yang Rapi & Kokoh Berdiri di Trotoar -->
                     <line x1="0" y1="8" x2="0" y2="36" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
                     <ellipse cx="0" cy="36" rx="9" ry="3" fill="#64748b"/>
@@ -650,17 +681,17 @@
                     <line x1="4" y1="-12" x2="6" y2="-8" stroke="#ffffff" stroke-width="1.2"/>
                     <!-- Papan Teks Halte Pinggir Jalan -->
                     <rect x="-44" y="10" width="88" height="15" rx="4" fill="#1b3860" stroke="#ffffff" stroke-width="1.2" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"/>
-                    <text x="0" y="21" text-anchor="middle" font-size="7.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">04 KELULUSAN</text>
+                    <text x="0" y="21" text-anchor="middle" font-size="7.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">04 {{ \Illuminate\Support\Str::limit(strtoupper($stepsData[3]['title'] ?? 'KELULUSAN'), 12, '') }}</text>
 
                     <!-- BALON KOMIK / WEBTOON SPEECH BUBBLE POS 4 (Ekor Segitiga Pendek & Rapi, Tidak Menutupi Plang) -->
                     <g class="webtoon-speech-bubble" id="webtoonBubble4">
                         <path d="M -5,-140 L 275,-140 Q 290,-140 290,-125 L 290,-30 Q 290,-15 275,-15 L 50,-15 L 35,0 L 20,-15 L -5,-15 Q -20,-15 -20,-30 L -20,-125 Q -20,-140 -5,-140 Z" fill="#ffffff" stroke="#f59e0b" stroke-width="2.5" style="filter: drop-shadow(0 10px 24px rgba(15,23,42,0.22));"/>
                         <rect x="-3" y="-132" width="56" height="18" rx="9" fill="#f59e0b"/>
                         <text x="25" y="-120" text-anchor="middle" font-size="8.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">POS 04</text>
-                        <text x="65" y="-119" text-anchor="start" font-size="11" font-weight="900" fill="#0f172a" font-family="'Lexend', sans-serif">KELULUSAN & SERTIFIKAT</text>
+                        <text x="65" y="-119" text-anchor="start" font-size="11" font-weight="900" fill="#0f172a" font-family="'Lexend', sans-serif">{!! !str_contains(strtoupper($stepsData[3]['title'] ?? ''), 'SERTIFIKAT') && strtoupper($stepsData[3]['title'] ?? '') === 'KELULUSAN' ? 'KELULUSAN & SERTIFIKAT' : strtoupper($stepsData[3]['title'] ?? 'KELULUSAN & SERTIFIKAT') !!}</text>
                         <line x1="-3" y1="-106" x2="273" y2="-106" stroke="#f1f5f9" stroke-width="1.5"/>
-                        <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">Unduh lembar nilai evaluasi dan E-Sertifikat resmi</text>
-                        <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">bertanda tangan elektronik Diskominfo Sleman.</text>
+                        <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p4Line1 }}</text>
+                        <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p4Line2 }}</text>
                         <a href="{{ route('landing') }}#kuota" class="cursor-pointer" aria-label="Daftar Sekarang">
                             <rect x="150" y="-52" width="122" height="26" rx="13" fill="#16a34a" style="filter: drop-shadow(0 2px 6px rgba(22,163,74,0.35));"/>
                             <text x="211" y="-36" text-anchor="middle" font-size="9" font-weight="800" fill="#ffffff" font-family="'Lexend', sans-serif">Daftar Sekarang 🚀</text>

@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Master Bidang - SuperAdmin MagKom')
-@section('page_title', 'Master Bidang Dinas Kominfo')
+@section('topbar_title', 'Master Bidang Dinas Kominfo')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -9,85 +9,114 @@
     <span class="breadcrumb-current">Master Bidang</span>
 @endsection
 
-@section('page_actions')
-    <button type="button" onclick="document.getElementById('modalTambahBidang').style.display='flex'" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 42px; padding: 0 1.25rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s ease; box-shadow: var(--shadow-subtle);">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        <span>Tambah Bidang Baru</span>
-    </button>
-@endsection
-
 @push('styles')
-<style>
-    /* Dark Mode Overrides for SuperAdmin Bidang (DS-MagKom Industrial Standard) */
-    [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #003566 !important;
-        border-color: #3F51B5 !important;
-    }
-
-    [data-theme="dark"] div[style*="background: var(--blue-tint)"] {
-        background-color: rgba(59, 130, 246, 0.18) !important;
-        border-color: rgba(147, 197, 253, 0.35) !important;
-    }
-
-    [data-theme="dark"] div[style*="border: 1px solid var(--neutral-400)"],
-    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
-    [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"],
-    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
-        border-color: rgba(63, 81, 181, 0.45) !important;
-    }
-
-    [data-theme="dark"] span[style*="color: var(--neutral-900)"],
-    [data-theme="dark"] div[style*="color: var(--neutral-900)"],
-    [data-theme="dark"] span[style*="color: var(--neutral-800)"],
-    [data-theme="dark"] h3[style*="color: var(--neutral-800)"] {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] span[style*="color: var(--neutral-600)"],
-    [data-theme="dark"] div[style*="color: var(--neutral-600)"],
-    [data-theme="dark"] p[style*="color: var(--neutral-700)"],
-    [data-theme="dark"] p[style*="color: var(--neutral-600)"] {
-        color: #94A3B8 !important;
-    }
-
-    /* Modals Dark Mode */
-    [data-theme="dark"] #modalTambahBidang > div,
-    [data-theme="dark"] #modalEditBidang > div {
-        background-color: #003566 !important;
-        border-color: #3F51B5 !important;
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] #modalTambahBidang h3,
-    [data-theme="dark"] #modalEditBidang h3 {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] input[type="text"],
-    [data-theme="dark"] textarea {
-        background-color: #011C44 !important;
-        color: #F8FAFC !important;
-        border-color: rgba(63, 81, 181, 0.45) !important;
-    }
-
-    [data-theme="dark"] button[style*="background: var(--neutral-100)"] {
-        background-color: rgba(255, 255, 255, 0.06) !important;
-        border-color: rgba(63, 81, 181, 0.45) !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] button[style*="background: var(--neutral-100)"]:hover {
-        background-color: rgba(63, 81, 181, 0.2) !important;
-        color: #F8FAFC !important;
-    }
-</style>
+    @vite(['resources/css/pages/superadmin/superadmin-common.css'])
 @endpush
 
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+    {{-- 1. Hero Banner Khas Sleman MagKom --}}
+    <div class="sa-hero-banner">
+        <div class="banner-top-row">
+            <div>
+                <h1 class="banner-title">Master Bidang Dinas Kominfo</h1>
+                <div class="banner-subtitle">
+                    <span>Cakupan: <strong>Struktur Organisasi Unit Kerja</strong></span>
+                    <span class="bullet-separator">&bull;</span>
+                    <span>Total Bidang: <strong>{{ $totalBidang }} Bidang Dinas</strong></span>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn-banner-action" onclick="document.getElementById('modalTambahBidang').style.display='flex'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Tambah Bidang Baru</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
+    <div class="tiles-grid">
+        <!-- 1. Total Bidang -->
+        <x-gentelella.tile-stat
+            title="TOTAL BIDANG"
+            value="{{ $totalBidang }}"
+            color="blue"
+            trendType="info"
+            trendDirection="up"
+            trendText="Dinas"
+            subText="Unit Kerja Bidang Dinas Kominfo"
+            :sparkBars="[30, 45, 60, 75, 85, 95]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                    <line x1="9" y1="22" x2="9" y2="2"></line>
+                    <line x1="15" y1="12" x2="15" y2="12.01"></line>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 2. Bidang Aktif -->
+        <x-gentelella.tile-stat
+            title="BIDANG AKTIF"
+            value="{{ $bidangAktif }}"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="Aktif"
+            subText="Menerima Penempatan Magang"
+            :sparkBars="[25, 40, 55, 70, 80, 90]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 3. Total Pembimbing Terdaftar -->
+        <x-gentelella.tile-stat
+            title="TOTAL PEMBIMBING"
+            value="{{ $totalPembimbing }}"
+            color="amber"
+            trendType="warning"
+            trendDirection="up"
+            trendText="Mentor"
+            subText="Pembimbing Ditugaskan di Bidang"
+            :sparkBars="[20, 35, 50, 65, 80, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 010 7.75"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 4. Bidang Arsip / Nonaktif -->
+        <x-gentelella.tile-stat
+            title="BIDANG ARSIP"
+            value="{{ $bidangNonaktif }}"
+            color="purple"
+            trendType="info"
+            trendDirection="up"
+            trendText="Nonaktif"
+            subText="Bidang Tidak Menerima Peserta"
+            :sparkBars="[15, 25, 40, 55, 70, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 8v13H3V8"></path>
+                    <path d="M1 3h22v5H1z"></path>
+                    <path d="M10 12h4"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+    </div>
 
     <!-- DATA TABLE CARD -->
     <x-gentelella.x-panel class="has-table" title="Daftar Bidang & Unit Kerja Diskominfo">

@@ -11,7 +11,6 @@ use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusReviewProgresEnum;
 use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
@@ -24,11 +23,8 @@ use App\Models\Kuota;
 use App\Models\Logbook;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
-use App\Models\PenilaianDetail;
 use App\Models\PesertaProfil;
 use App\Models\ProgresLog;
-use App\Models\Rubrik;
 use App\Models\SlotKhusus;
 use App\Models\Tugas;
 use App\Models\User;
@@ -64,7 +60,6 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         $jurusanTI = Jurusan::firstOrCreate(['nama_jurusan' => 'Teknik Informatika'], ['kategori' => 'mahasiswa', 'aktif' => true]);
         $jurusanSI = Jurusan::firstOrCreate(['nama_jurusan' => 'Sistem Informasi'], ['kategori' => 'mahasiswa', 'aktif' => true]);
         $jenisDokumenList = JenisDokumen::all();
-        $rubrikList = Rubrik::where('aktif', true)->get();
 
         // Bulan magang aktif dan masa lalu
         $bulanSekarang = BulanMagang::firstOrCreate(
@@ -102,6 +97,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
                 [
                     'nama' => $nama,
                     'password' => $defaultPassword,
+                    'password_awal' => 'Password123!',
                     'role' => RoleEnum::Peserta,
                     'status_aktif' => $aktif,
                     'email_verified_at' => now(),
@@ -147,7 +143,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         // =========================================================================
 
         // Kasus 1: Pendaftaran Baru Lengkap (< 3 Hari / Dalam SLA)
-        $p1 = $createPeserta('Aditya Pratama', 'aditya.pratama@mail.ugm.ac.id', 'Universitas Gadjah Mada', $jurusanTI, '22/491001/TK/54001');
+        $p1 = $createPeserta('Aditya Pratama', 'aditya.pratama@gmail.com', 'Universitas Gadjah Mada', $jurusanTI, '22/491001/TK/54001');
         $reg1 = Pendaftaran::updateOrCreate(
             ['user_id' => $p1->id],
             [
@@ -161,7 +157,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         $lampirkanDokumen($reg1);
 
         // Kasus 2: Pendaftaran Baru SLA Breached (> 3 Hari Belum Ditinjau)
-        $p2 = $createPeserta('Bunga Citra Lestari', 'bunga.citra@student.uny.ac.id', 'Universitas Negeri Yogyakarta', $jurusanTI, '22537144002');
+        $p2 = $createPeserta('Bunga Citra Lestari', 'bunga.citra@gmail.com', 'Universitas Negeri Yogyakarta', $jurusanTI, '22537144002');
         $reg2 = Pendaftaran::updateOrCreate(
             ['user_id' => $p2->id],
             [
@@ -175,7 +171,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         $lampirkanDokumen($reg2);
 
         // Kasus 3: Pendaftaran Perlu Perbaikan (Proposal Salah Format)
-        $p3 = $createPeserta('Chandra Wijaya', 'chandra.wijaya@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jurusanSI, '123220045');
+        $p3 = $createPeserta('Chandra Wijaya', 'chandra.wijaya@gmail.com', 'UPN Veteran Yogyakarta', $jurusanSI, '123220045');
         Pendaftaran::updateOrCreate(
             ['user_id' => $p3->id],
             [
@@ -191,7 +187,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         );
 
         // Kasus 4: Pendaftaran Baru Draft (Berkas Belum Lengkap)
-        $p4 = $createPeserta('Dinda Kirana', 'dinda.kirana@uin-suka.ac.id', 'UIN Sunan Kalijaga', $jurusanTI, '22106050012');
+        $p4 = $createPeserta('Dinda Kirana', 'dinda.kirana@gmail.com', 'UIN Sunan Kalijaga', $jurusanTI, '22106050012');
         Pendaftaran::updateOrCreate(
             ['user_id' => $p4->id],
             [
@@ -208,7 +204,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         // =========================================================================
 
         // Kasus 5: Waiting List Prioritas #1 (Siap Dipromosikan)
-        $p5 = $createPeserta('Eko Prasetyo', 'eko.prasetyo@students.amikom.ac.id', 'Universitas Amikom Yogyakarta', $jurusanTI, '22.11.4580');
+        $p5 = $createPeserta('Eko Prasetyo', 'eko.prasetyo@gmail.com', 'Universitas Amikom Yogyakarta', $jurusanTI, '22.11.4580');
         $reg5 = Pendaftaran::updateOrCreate(
             ['user_id' => $p5->id],
             [
@@ -225,7 +221,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         $lampirkanDokumen($reg5);
 
         // Kasus 6: Waiting List Prioritas #2
-        $p6 = $createPeserta('Fani Rahmawati', 'fani.rahma@uii.ac.id', 'Universitas Islam Indonesia', $jurusanTI, '22523098');
+        $p6 = $createPeserta('Fani Rahmawati', 'fani.rahma@gmail.com', 'Universitas Islam Indonesia', $jurusanTI, '22523098');
         $reg6 = Pendaftaran::updateOrCreate(
             ['user_id' => $p6->id],
             [
@@ -242,7 +238,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         $lampirkanDokumen($reg6);
 
         // Kasus 7: Waiting List Tertutup Otomatis (Awal Bulan Magang Dimulai AC-04-7)
-        $p7 = $createPeserta('Gilang Ramadhan', 'gilang.ramadhan@usd.ac.id', 'Universitas Sanata Dharma', $jurusanTI, '225314050');
+        $p7 = $createPeserta('Gilang Ramadhan', 'gilang.ramadhan@gmail.com', 'Universitas Sanata Dharma', $jurusanTI, '225314050');
         Pendaftaran::updateOrCreate(
             ['user_id' => $p7->id],
             [
@@ -258,7 +254,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         );
 
         // Kasus 8: Pendaftaran Ditolak Verifikasi
-        $p8 = $createPeserta('Hana Safitri', 'hana.safitri@mail.uajy.ac.id', 'Universitas Atma Jaya Yogyakarta', $jurusanSI, '220711904');
+        $p8 = $createPeserta('Hana Safitri', 'hana.safitri@gmail.com', 'Universitas Atma Jaya Yogyakarta', $jurusanSI, '220711904');
         Pendaftaran::updateOrCreate(
             ['user_id' => $p8->id],
             [
@@ -274,7 +270,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         );
 
         // Kasus 9: Penempatan Dibatalkan Sebelum Tanggal Mulai (Kuota Kembali, AC-05-4)
-        $p9 = $createPeserta('Indra Kurniawan', 'indra.kurniawan@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jurusanTI, '123220088');
+        $p9 = $createPeserta('Indra Kurniawan', 'indra.kurniawan@gmail.com', 'UPN Veteran Yogyakarta', $jurusanTI, '123220088');
         $reg9 = Pendaftaran::updateOrCreate(
             ['user_id' => $p9->id],
             [
@@ -307,7 +303,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         // =========================================================================
 
         // Kasus 10: Penempatan Aktif Baru Mulai (Minggu Pertama)
-        $p10 = $createPeserta('Joko Susilo', 'joko.susilo@ugm.ac.id', 'Universitas Gadjah Mada', $jurusanTI, '22/492110/TK/54110');
+        $p10 = $createPeserta('Joko Susilo', 'joko.susilo@gmail.com', 'Universitas Gadjah Mada', $jurusanTI, '22/492110/TK/54110');
         $reg10 = Pendaftaran::updateOrCreate(
             ['user_id' => $p10->id],
             [
@@ -355,7 +351,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         );
 
         // Kasus 11: Penempatan Aktif Teladan (Tugas Berjalan & Logbook Disetujui)
-        $p11 = $createPeserta('Kartika Putri', 'kartika.putri@uny.ac.id', 'Universitas Negeri Yogyakarta', $jurusanTI, '22537144018');
+        $p11 = $createPeserta('Kartika Putri', 'kartika.putri@gmail.com', 'Universitas Negeri Yogyakarta', $jurusanTI, '22537144018');
         $reg11 = Pendaftaran::updateOrCreate(
             ['user_id' => $p11->id],
             [
@@ -404,7 +400,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         );
 
         // Kasus 12: Penempatan Aktif dengan Logbook SLA Breached (>3 Hari Belum Direviu)
-        $p12 = $createPeserta('Lukman Hakim', 'lukman.hakim@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jurusanSI, '123220101');
+        $p12 = $createPeserta('Lukman Hakim', 'lukman.hakim@gmail.com', 'UPN Veteran Yogyakarta', $jurusanSI, '123220101');
         $penempatan12 = Penempatan::updateOrCreate(
             ['peserta_id' => $p12->id],
             [
@@ -428,7 +424,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         );
 
         // Kasus 13: Penempatan Aktif dengan Tugas Terlambat (Overdue BR-16)
-        $p13 = $createPeserta('Maya Anggraini', 'maya.anggraini@amikom.ac.id', 'Universitas Amikom Yogyakarta', $jurusanTI, '22.11.4900');
+        $p13 = $createPeserta('Maya Anggraini', 'maya.anggraini@gmail.com', 'Universitas Amikom Yogyakarta', $jurusanTI, '22.11.4900');
         $penempatan13 = Penempatan::updateOrCreate(
             ['peserta_id' => $p13->id],
             [
@@ -454,7 +450,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         );
 
         // Kasus 14: Penempatan Aktif dengan Umpan Balik Revisi Tugas
-        $p14 = $createPeserta('Naufal Rizky', 'naufal.rizky@uii.ac.id', 'Universitas Islam Indonesia', $jurusanTI, '22523120');
+        $p14 = $createPeserta('Naufal Rizky', 'naufal.rizky@gmail.com', 'Universitas Islam Indonesia', $jurusanTI, '22523120');
         $penempatan14 = Penempatan::updateOrCreate(
             ['peserta_id' => $p14->id],
             [
@@ -493,7 +489,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
             ['bulan_mulai' => now('Asia/Jakarta')->startOfMonth()->toDateString()],
             ['jumlah' => 5, 'terisi' => 1, 'aktif' => true, 'dibuat_oleh' => $admin?->id ?? 1]
         );
-        $p15 = $createPeserta('Olivia Tan', 'olivia.tan@komdigi.go.id', 'Politeknik Siber dan Sandi Negara', $jurusanTI, '20220199');
+        $p15 = $createPeserta('Olivia Tan', 'olivia.tan@gmail.com', 'Politeknik Siber dan Sandi Negara', $jurusanTI, '20220199');
         Penempatan::updateOrCreate(
             ['peserta_id' => $p15->id],
             [
@@ -513,7 +509,7 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
         // =========================================================================
 
         // Kasus 16: Penempatan Menjelang Selesai (Menunggu Penilaian Akhir)
-        $p16 = $createPeserta('Panji Nugroho', 'panji.nugroho@ugm.ac.id', 'Universitas Gadjah Mada', $jurusanTI, '21/481900/TK/53900');
+        $p16 = $createPeserta('Panji Nugroho', 'panji.nugroho@gmail.com', 'Universitas Gadjah Mada', $jurusanTI, '21/481900/TK/53900');
         Penempatan::updateOrCreate(
             ['peserta_id' => $p16->id],
             [
@@ -528,8 +524,8 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
             ]
         );
 
-        // Kasus 17: Penempatan dengan Draft Penilaian
-        $p17 = $createPeserta('Qori Amanda', 'qori.amanda@uny.ac.id', 'Universitas Negeri Yogyakarta', $jurusanTI, '21537144055');
+        // Kasus 17: Penempatan Menjelang Selesai
+        $p17 = $createPeserta('Qori Amanda', 'qori.amanda@gmail.com', 'Universitas Negeri Yogyakarta', $jurusanTI, '21537144055');
         $penempatan17 = Penempatan::updateOrCreate(
             ['peserta_id' => $p17->id],
             [
@@ -543,28 +539,9 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
                 'status' => StatusPenempatanEnum::Aktif,
             ]
         );
-        $penilaian17 = Penilaian::updateOrCreate(
-            ['penempatan_id' => $penempatan17->id],
-            [
-                'pembimbing_id' => $pembimbing->id,
-                'nilai_akhir' => 78.50,
-                'predikat' => 'B',
-                'catatan' => 'Draft penilaian awal bimbingan, masih menunggu review laporan akhir.',
-                'status' => StatusPenilaianEnum::Draft,
-            ]
-        );
-        foreach ($rubrikList as $rubrik) {
-            PenilaianDetail::updateOrCreate(
-                ['penilaian_id' => $penilaian17->id, 'rubrik_id' => $rubrik->id],
-                [
-                    'skor' => 80,
-                    'bobot_snapshot' => $rubrik->bobot,
-                ]
-            );
-        }
 
-        // Kasus 18: Penempatan dengan Nilai Final Sempurna (Predikat A, Lembar Nilai Terbit)
-        $p18 = $createPeserta('Rian Ardiansyah', 'rian.ardiansyah@upnyk.ac.id', 'UPN Veteran Yogyakarta', $jurusanTI, '123210012');
+        // Kasus 18: Penempatan Selesai Hari Ini
+        $p18 = $createPeserta('Rian Ardiansyah', 'rian.ardiansyah@gmail.com', 'UPN Veteran Yogyakarta', $jurusanTI, '123210012');
         $penempatan18 = Penempatan::updateOrCreate(
             ['peserta_id' => $p18->id],
             [
@@ -578,28 +555,9 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
                 'status' => StatusPenempatanEnum::Aktif,
             ]
         );
-        $penilaian18 = Penilaian::updateOrCreate(
-            ['penempatan_id' => $penempatan18->id],
-            [
-                'pembimbing_id' => $pembimbing->id,
-                'nilai_akhir' => 92.00,
-                'predikat' => 'A',
-                'catatan' => 'Kinerja luar biasa dalam membangun modul integrasi data dinas.',
-                'status' => StatusPenilaianEnum::Final,
-            ]
-        );
-        foreach ($rubrikList as $rubrik) {
-            PenilaianDetail::updateOrCreate(
-                ['penilaian_id' => $penilaian18->id, 'rubrik_id' => $rubrik->id],
-                [
-                    'skor' => 92,
-                    'bobot_snapshot' => $rubrik->bobot,
-                ]
-            );
-        }
 
         // Kasus 19: Penempatan Selesai Penuh (Alumni Magang / Masuk Arsip SuperAdmin BR-07)
-        $p19 = $createPeserta('Siti Nurhaliza', 'siti.nurhaliza@amikom.ac.id', 'Universitas Amikom Yogyakarta', $jurusanTI, '21.11.3999', false);
+        $p19 = $createPeserta('Siti Nurhaliza', 'siti.nurhaliza@gmail.com', 'Universitas Amikom Yogyakarta', $jurusanTI, '21.11.3999', false);
         $penempatan19 = Penempatan::updateOrCreate(
             ['peserta_id' => $p19->id],
             [
@@ -615,28 +573,9 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
                 'status' => StatusPenempatanEnum::Selesai,
             ]
         );
-        $penilaian19 = Penilaian::updateOrCreate(
-            ['penempatan_id' => $penempatan19->id],
-            [
-                'pembimbing_id' => $pembimbing->id,
-                'nilai_akhir' => 88.00,
-                'predikat' => 'A',
-                'catatan' => 'Lulus program magang dengan predikat Sangat Baik. Sertifikat dan lembar nilai telah terbit.',
-                'status' => StatusPenilaianEnum::Final,
-            ]
-        );
-        foreach ($rubrikList as $rubrik) {
-            PenilaianDetail::updateOrCreate(
-                ['penilaian_id' => $penilaian19->id, 'rubrik_id' => $rubrik->id],
-                [
-                    'skor' => 88,
-                    'bobot_snapshot' => $rubrik->bobot,
-                ]
-            );
-        }
 
         // Kasus 20: Penempatan Mengundurkan Diri di Tengah Periode (Kuota Hangus, Akun Nonaktif)
-        $p20 = $createPeserta('Taufik Hidayat', 'taufik.hidayat@uii.ac.id', 'Universitas Islam Indonesia', $jurusanTI, '22523299', false);
+        $p20 = $createPeserta('Taufik Hidayat', 'taufik.hidayat@gmail.com', 'Universitas Islam Indonesia', $jurusanTI, '22523299', false);
         Penempatan::updateOrCreate(
             ['peserta_id' => $p20->id],
             [

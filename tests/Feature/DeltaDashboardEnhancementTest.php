@@ -177,19 +177,20 @@ class DeltaDashboardEnhancementTest extends TestCase
         $responseIndex->assertOk();
         $responseIndex->assertSee(route('admin.penempatan.show', $this->penempatan));
 
-        // Sidebar Admin memiliki link Sertifikat dan Survei
+        // Sidebar Admin memiliki link Penempatan dan Kuota
         $responseAdminDash = $this->actingAs($this->admin)->get(route('admin.dashboard'));
         $responseAdminDash->assertOk();
-        $responseAdminDash->assertSee('Sertifikat');
-        $responseAdminDash->assertSee(route('admin.sertifikat.index'));
-        $responseAdminDash->assertSee('Survei Kepuasan');
-        $responseAdminDash->assertSee(route('admin.survei.index'));
+        $responseAdminDash->assertSee('Penempatan');
+        $responseAdminDash->assertSee(route('admin.penempatan.index'));
+        $responseAdminDash->assertSee('Kuota');
+        $responseAdminDash->assertSee(route('admin.kuota.index'));
 
-        // Sidebar SuperAdmin memiliki sub-menu Sertifikat dan Survei
+        // Sidebar SuperAdmin memiliki sub-menu Penempatan dan Kuota
         $responseSaDash = $this->actingAs($this->superAdmin)->get(route('superadmin.dashboard'));
         $responseSaDash->assertOk();
-        $responseSaDash->assertSee('Sertifikat');
-        $responseSaDash->assertSee(route('admin.sertifikat.index'));
+        $responseSaDash->assertSee('Penempatan');
+        $responseSaDash->assertSee(route('admin.penempatan.index'));
+        $responseSaDash->assertSee(route('admin.kuota.index'));
     }
 
     /**
@@ -274,7 +275,6 @@ class DeltaDashboardEnhancementTest extends TestCase
         $response->assertSee('Ringkasan & Biodata');
         $response->assertSee('Riwayat Tugas');
         $response->assertSee('Logbook Harian');
-        $response->assertSee('Rubrik Penilaian Resmi');
         $response->assertSee('Dokumen Pendaftaran');
 
         // Verifikasi jejak audit trail tercatat

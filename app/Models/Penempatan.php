@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Penempatan extends Model
 {
@@ -91,11 +90,6 @@ class Penempatan extends Model
     public function logbooks(): HasMany
     {
         return $this->hasMany(Logbook::class, 'penempatan_id');
-    }
-
-    public function penilaian(): HasOne
-    {
-        return $this->hasOne(Penilaian::class, 'penempatan_id');
     }
 
     public function agendaBimbingan(): HasMany

@@ -297,19 +297,10 @@ class AuditService
         if ($entitas === 'logbook' || $entitas === 'progres_log' || str_contains($text, 'logbook') || str_contains($text, 'presensi')) {
             return 'logbook-presensi';
         }
-        if ($entitas === 'penilaian' || $entitas === 'sertifikat' || str_contains($text, 'nilai') || str_contains($text, 'sk') || str_contains($text, 'sertifikat')) {
-            return 'penilaian-sk';
+        if ($entitas === 'penilaian' || $entitas === 'sertifikat' || str_contains($text, 'nilai') || str_contains($text, 'sertifikat')) {
+            return 'penempatan-mentor';
         }
-        if ($entitas === 'survei' || $entitas === 'survei_kepuasan' || str_contains($text, 'survei') || str_contains($text, 'evaluasi')) {
-            return 'survei-evaluasi';
-        }
-        if (str_starts_with((string) $entitas, 'modul_dinamis') || str_starts_with((string) $entitas, 'modul_data') || str_contains($text, 'modul')) {
-            return 'dynamic-module';
-        }
-        if (str_contains($text, 'backup') || str_contains($text, 'snapshot') || str_contains($text, 'database')) {
-            return 'backup-database';
-        }
-        if (str_contains($text, 'pengaturan') || $entitas === 'jurusan' || $entitas === 'bidang' || $entitas === 'rubrik') {
+        if (str_contains($text, 'pengaturan') || $entitas === 'jurusan' || $entitas === 'bidang' || $entitas === 'rubrik' || str_contains($text, 'backup') || str_contains($text, 'survei')) {
             return 'konfigurasi-master';
         }
 

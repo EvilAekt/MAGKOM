@@ -40,7 +40,6 @@
             <div>
                 <div class="audit-diff-title-row">
                     <span class="audit-diff-title">Inspeksi Mutasi: #<span id="diffInspectorId">{{ $initId }}</span></span>
-                    <span class="audit-diff-req-badge font-mono" id="diffInspectorReqId">{{ $initReqId }}</span>
                 </div>
                 <p class="audit-diff-subtitle font-mono" id="diffInspectorSub">
                     {{ $initAksi }} &bull; {{ $initEntitas }}
@@ -105,10 +104,6 @@
 
     {{-- Forensic Metadata Footer --}}
     <div class="audit-forensic-footer font-mono">
-        <div class="audit-forensic-hmac-wrap truncate">
-            <span class="audit-forensic-hmac-label">HMAC-SHA256:</span>
-            <span class="audit-forensic-hmac-val truncate" id="diffHmac">{{ $initHmac }}</span>
-        </div>
         <div class="audit-forensic-meta-wrap">
             <span id="diffActorMeta">Aktor: {{ $initUser }} (#{{ $initUserId }})</span>
             <span id="diffIpMeta">IP: {{ $initIp }}</span>

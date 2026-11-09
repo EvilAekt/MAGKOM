@@ -19,9 +19,7 @@ use App\Models\Kuota;
 use App\Models\Logbook;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
-use App\Models\Rubrik;
 use App\Models\SlotKhusus;
 use App\Models\Tugas;
 use App\Models\User;
@@ -54,15 +52,6 @@ class EndToEndUatTest extends TestCase
 
         Carbon::setTestNow(Carbon::parse('2026-10-08 09:00:00', 'Asia/Jakarta'));
         CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-10-08 09:00:00', 'Asia/Jakarta'));
-
-        // Seed master rubrik jika belum ada
-        if (Rubrik::count() === 0) {
-            Rubrik::create(['kriteria' => 'Kualitas hasil kerja', 'bobot' => 30, 'aktif' => true]);
-            Rubrik::create(['kriteria' => 'Ketepatan waktu dan penyelesaian tugas', 'bobot' => 20, 'aktif' => true]);
-            Rubrik::create(['kriteria' => 'Inisiatif dan kemampuan belajar', 'bobot' => 20, 'aktif' => true]);
-            Rubrik::create(['kriteria' => 'Komunikasi dan kerja sama', 'bobot' => 15, 'aktif' => true]);
-            Rubrik::create(['kriteria' => 'Etika, disiplin, dan tanggung jawab', 'bobot' => 15, 'aktif' => true]);
-        }
 
         // Siapkan Bidang & Jurusan
         $this->bidang = Bidang::firstOrCreate(
@@ -536,7 +525,7 @@ class EndToEndUatTest extends TestCase
     }
 
     /**
-     * UAT-7: Penilaian: draft, final, ubah nilai dengan alasan, tetapkan Selesai, unduh Lembar Nilai.
+     * UAT-7: Penyelesaian magang dan penerbitan sertifikat alumni.
      */
     public function test_uat_7_penilaian_dan_unduh_lembar_nilai(): void
     {
@@ -569,48 +558,16 @@ class EndToEndUatTest extends TestCase
             'status' => StatusPenempatanEnum::Aktif,
         ]);
 
-        $rubrikAktif = Rubrik::where('aktif', true)->get();
-        $skor = [];
-        foreach ($rubrikAktif as $r) {
-            $skor[$r->id] = 85;
-        }
-
-        // 1. Simpan draf penilaian
-        $draftRes = $this->actingAs($this->pembimbing)->postJson(route('pembimbing.penilaian.store', $penempatan), [
-            'skor' => [$rubrikAktif->first()->id => 85],
-            'is_final' => false,
-        ]);
-        $draftRes->assertStatus(200);
-
-        // 2. Finalisasi penilaian
-        $finalRes = $this->actingAs($this->pembimbing)->postJson(route('pembimbing.penilaian.store', $penempatan), [
-            'skor' => $skor,
-            'catatan' => 'Sangat bertanggung jawab.',
-            'is_final' => true,
-        ]);
-        $finalRes->assertStatus(200);
-
-        // 3. Revisi nilai final dengan alasan
-        foreach ($rubrikAktif as $r) {
-            $skor[$r->id] = 90;
-        }
-        $revisiRes = $this->actingAs($this->pembimbing)->postJson(route('pembimbing.penilaian.store', $penempatan), [
-            'skor' => $skor,
-            'is_final' => true,
-            'alasan' => 'Penambahan nilai atas presentasi akhir yang sangat memukau.',
-        ]);
-        $revisiRes->assertStatus(200);
-
-        // 4. Pembimbing menandai Selesai (BR-10)
+        // 1. Pembimbing menandai Selesai (BR-10) tanpa perlu rubrik/nilai
         $selesaiRes = $this->actingAs($this->pembimbing)->postJson(route('pembimbing.penempatan.selesai', $penempatan));
         $selesaiRes->assertStatus(200);
         $penempatan->refresh();
         $this->assertEquals(StatusPenempatanEnum::Selesai, $penempatan->status);
 
-        // 5. Peserta mengunduh Lembar Nilai PDF
-        $pdfRes = $this->actingAs($peserta)->get(route('peserta.nilai.unduh'));
-        $pdfRes->assertStatus(200);
-        $this->assertEquals('application/pdf', $pdfRes->headers->get('content-type'));
+        // 2. Admin dapat memverifikasi status penempatan telah selesai di daftar penempatan
+        $penempatanRes = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
+        $penempatanRes->assertStatus(200);
+        $penempatanRes->assertSee('Gita Nilai');
     }
 
     /**
