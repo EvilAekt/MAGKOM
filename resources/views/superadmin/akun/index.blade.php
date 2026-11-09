@@ -291,7 +291,7 @@
                                class="form-control @error('current_password') is-invalid @enderror" 
                                placeholder="••••••••" 
                                required>
-                        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('current_password', this)" aria-label="Lihat kata sandi">
+                        <button type="button" class="toggle-password-btn" data-toggle-target="current_password" aria-label="Lihat kata sandi">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -313,7 +313,7 @@
                                class="form-control @error('password') is-invalid @enderror" 
                                placeholder="••••••••" 
                                required>
-                        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('password', this)" aria-label="Lihat kata sandi">
+                        <button type="button" class="toggle-password-btn" data-toggle-target="password" aria-label="Lihat kata sandi">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -335,7 +335,7 @@
                                class="form-control @error('password_confirmation') is-invalid @enderror" 
                                placeholder="••••••••" 
                                required>
-                        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('password_confirmation', this)" aria-label="Lihat kata sandi">
+                        <button type="button" class="toggle-password-btn" data-toggle-target="password_confirmation" aria-label="Lihat kata sandi">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -382,8 +382,7 @@
                             <label class="form-label" style="font-weight: 700;">{{ __('Mode Tampilan Tema') }}</label>
                             <div class="theme-options-grid">
                                 <label class="theme-card-option {{ ($temaAktif ?? 'terang') === 'terang' ? 'selected' : '' }}" 
-                                       data-theme-val="terang" 
-                                       onclick="handleThemeSelection(this, 'terang')">
+                                       data-theme-val="terang">
                                     <input type="radio" name="tema" value="terang" {{ ($temaAktif ?? 'terang') === 'terang' ? 'checked' : '' }}>
                                     <div class="theme-preview-box preview-light">
                                         <span class="preview-dot"></span>
@@ -396,8 +395,7 @@
                                 </label>
 
                                 <label class="theme-card-option {{ ($temaAktif ?? '') === 'gelap' ? 'selected' : '' }}" 
-                                       data-theme-val="gelap" 
-                                       onclick="handleThemeSelection(this, 'gelap')">
+                                       data-theme-val="gelap">
                                     <input type="radio" name="tema" value="gelap" {{ ($temaAktif ?? '') === 'gelap' ? 'checked' : '' }}>
                                     <div class="theme-preview-box preview-dark">
                                         <span class="preview-dot"></span>
@@ -410,8 +408,7 @@
                                 </label>
 
                                 <label class="theme-card-option {{ ($temaAktif ?? '') === 'sistem' ? 'selected' : '' }}" 
-                                       data-theme-val="sistem" 
-                                       onclick="handleThemeSelection(this, 'sistem')">
+                                       data-theme-val="sistem">
                                     <input type="radio" name="tema" value="sistem" {{ ($temaAktif ?? '') === 'sistem' ? 'checked' : '' }}>
                                     <div class="theme-preview-box preview-system">
                                         <span class="preview-dot"></span>
@@ -438,55 +435,6 @@
 </div>
 
 @push('scripts')
-<script>
-    function togglePasswordVisibility(fieldId, btn) {
-        const input = document.getElementById(fieldId);
-        if (!input) return;
-
-        const isPassword = input.type === 'password';
-        input.type = isPassword ? 'text' : 'password';
-
-        if (isPassword) {
-            btn.innerHTML = `
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path>
-                </svg>
-            `;
-            btn.setAttribute('aria-label', 'Sembunyikan kata sandi');
-        } else {
-            btn.innerHTML = `
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                </svg>
-            `;
-            btn.setAttribute('aria-label', 'Lihat kata sandi');
-        }
-    }
-
-    function handleThemeSelection(card, themeValue) {
-        document.querySelectorAll('.theme-card-option').forEach(el => el.classList.remove('selected'));
-        card.classList.add('selected');
-        const radio = card.querySelector('input[type="radio"]');
-        if (radio) radio.checked = true;
-
-        if (typeof window.applyPortalTheme === 'function') {
-            window.applyPortalTheme(themeValue);
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        try {
-            const currentSavedTheme = localStorage.getItem('magkom_theme') || '{{ $temaAktif ?? 'terang' }}';
-            const targetCard = document.querySelector(`.theme-card-option[data-theme-val="${currentSavedTheme}"]`);
-            if (targetCard) {
-                document.querySelectorAll('.theme-card-option').forEach(el => el.classList.remove('selected'));
-                targetCard.classList.add('selected');
-                const radio = targetCard.querySelector('input[type="radio"]');
-                if (radio) radio.checked = true;
-            }
-        } catch (e) {}
-    });
-</script>
+    @vite(['resources/js/pages/superadmin/akun-index.js'])
 @endpush
 @endsection

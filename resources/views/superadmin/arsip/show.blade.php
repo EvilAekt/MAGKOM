@@ -170,14 +170,14 @@
 
     {{-- 3. SEGMENTED PILL TAB CONTROLLER (DS-MAGKOM PARITY) --}}
     <div class="arsip-segmented-tabs" role="tablist">
-        <button type="button" class="arsip-tab-pill active" onclick="switchArsipTab('tab-ringkasan', this)">
+        <button type="button" class="arsip-tab-pill active" data-tab-target="tab-ringkasan">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
             </svg>
             <span>Ringkasan &amp; Biodata</span>
         </button>
-        <button type="button" class="arsip-tab-pill" onclick="switchArsipTab('tab-tugas', this)">
+        <button type="button" class="arsip-tab-pill" data-tab-target="tab-tugas">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 11l3 3L22 4"></path>
                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
@@ -185,7 +185,7 @@
             <span>Riwayat Tugas</span>
             <span class="pill-counter">({{ (string) $penempatan->tugas->count() }})</span>
         </button>
-        <button type="button" class="arsip-tab-pill" onclick="switchArsipTab('tab-logbook', this)">
+        <button type="button" class="arsip-tab-pill" data-tab-target="tab-logbook">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
@@ -193,7 +193,7 @@
             <span>Logbook Harian</span>
             <span class="pill-counter">({{ (string) $penempatan->logbooks->count() }})</span>
         </button>
-        <button type="button" class="arsip-tab-pill" onclick="switchArsipTab('tab-administrasi', this)">
+        <button type="button" class="arsip-tab-pill" data-tab-target="tab-administrasi">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
@@ -490,15 +490,7 @@
 
 </div>
 
-<script>
-    function switchArsipTab(tabId, btn) {
-        document.querySelectorAll('.arsip-tab-pill').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.arsip-tab-pane').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        const target = document.getElementById(tabId);
-        if (target) {
-            target.classList.add('active');
-        }
-    }
-</script>
+@push('scripts')
+    @vite(['resources/js/pages/superadmin/arsip-show.js'])
+@endpush
 @endsection

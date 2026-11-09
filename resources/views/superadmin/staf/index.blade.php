@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div>
-                <button type="button" class="btn-banner-action" onclick="document.getElementById('modalTambahStaf').style.display='flex'">
+                <button type="button" class="btn-banner-action btn-trigger-tambah-staf">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
                     <span>Tambah Staf Baru</span>
                 </button>
@@ -255,13 +255,20 @@
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
                                     <div style="display: inline-flex; gap: 0.375rem; align-items: center; justify-content: flex-end;">
                                         <!-- Edit Profil Staf (AC-11-1) -->
-                                        <button type="button" onclick="openModalEdit('{{ $staf->id }}', '{{ addslashes($staf->nama) }}', '{{ addslashes($staf->email) }}', '{{ $staf->role->value }}', '{{ $staf->bidang_id ?? '' }}')" class="sa-btn-action-outline">
+                                        <button type="button" 
+                                                class="sa-btn-action-outline btn-trigger-edit-staf"
+                                                data-id="{{ $staf->id }}"
+                                                data-nama="{{ $staf->nama }}"
+                                                data-email="{{ $staf->email }}"
+                                                data-role="{{ $staf->role->value }}"
+                                                data-bidang-id="{{ $staf->bidang_id ?? '' }}"
+                                                data-action-url="{{ route('superadmin.staf.update', $staf) }}">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                             Edit
                                         </button>
 
                                         <!-- Regenerate Temporary Password Button (BR-15) -->
-                                        <form action="{{ route('superadmin.staf.regenerate-password', $staf) }}" method="POST" style="display: inline-block; margin: 0;" onsubmit="return confirm('Buat kata sandi sementara baru untuk {{ addslashes($staf->nama) }}? Sesi aktif staf akan ditutup dan staf wajib mengganti kata sandi saat login.');">
+                                        <form action="{{ route('superadmin.staf.regenerate-password', $staf) }}" method="POST" style="display: inline-block; margin: 0;" onsubmit="return confirm('Buat kata sandi sementara baru untuk akun staf ini? Sesi aktif staf akan ditutup dan staf wajib mengganti kata sandi saat login.');">
                                             @csrf
                                             <button type="submit" class="sa-btn-action-ghost" title="Buat kata sandi sementara baru secara instan">
                                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
@@ -270,7 +277,11 @@
                                         </form>
 
                                         <!-- Reset Password Manual Form Button -->
-                                        <button type="button" onclick="openModalReset('{{ $staf->id }}', '{{ addslashes($staf->nama) }}')" class="sa-btn-action-outline">
+                                        <button type="button" 
+                                                class="sa-btn-action-outline btn-trigger-reset-staf"
+                                                data-id="{{ $staf->id }}"
+                                                data-nama="{{ $staf->nama }}"
+                                                data-action-url="{{ route('superadmin.staf.reset-password', $staf) }}">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                                             Reset
                                         </button>
@@ -312,7 +323,7 @@
                 </div>
                 <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Akun Staf Baru</h3>
             </div>
-            <button type="button" onclick="document.getElementById('modalTambahStaf').style.display='none'" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+            <button type="button" data-modal-dismiss="modalTambahStaf" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <form action="{{ route('superadmin.staf.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
@@ -365,7 +376,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="document.getElementById('modalTambahStaf').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
+                <button type="button" data-modal-dismiss="modalTambahStaf" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
@@ -388,7 +399,7 @@
                 </div>
                 <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Reset Kata Sandi Staf</h3>
             </div>
-            <button type="button" onclick="document.getElementById('modalResetSandi').style.display='none'" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+            <button type="button" data-modal-dismiss="modalResetSandi" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <form id="formResetSandi" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
@@ -407,7 +418,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="document.getElementById('modalResetSandi').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
+                <button type="button" data-modal-dismiss="modalResetSandi" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
@@ -430,7 +441,7 @@
                 </div>
                 <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Edit Data Profil Staf</h3>
             </div>
-            <button type="button" onclick="document.getElementById('modalEditStaf').style.display='none'" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+            <button type="button" data-modal-dismiss="modalEditStaf" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <form id="formEditStaf" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
@@ -473,7 +484,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="document.getElementById('modalEditStaf').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
+                <button type="button" data-modal-dismiss="modalEditStaf" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
@@ -484,60 +495,7 @@
     </div>
 </div>
 
-<script>
-    function toggleBidangField(mode) {
-        if (mode === 'tambah') {
-            const roleEl = document.getElementById('tambahRole');
-            const wrapEl = document.getElementById('wrapBidangTambah');
-            const selectEl = document.getElementById('tambahBidang');
-            const gridEl = document.getElementById('gridRoleBidangTambah');
-            if (roleEl && wrapEl && selectEl) {
-                if (roleEl.value === 'admin') {
-                    wrapEl.style.display = 'none';
-                    selectEl.required = false;
-                    selectEl.value = '';
-                    if (gridEl) gridEl.style.gridTemplateColumns = '1fr';
-                } else {
-                    wrapEl.style.display = 'block';
-                    selectEl.required = true;
-                    if (gridEl) gridEl.style.gridTemplateColumns = '1fr 1fr';
-                }
-            }
-        } else if (mode === 'edit') {
-            const roleEl = document.getElementById('editRole');
-            const wrapEl = document.getElementById('wrapBidangEdit');
-            const selectEl = document.getElementById('editBidang');
-            if (roleEl && wrapEl && selectEl) {
-                if (roleEl.value === 'admin') {
-                    wrapEl.style.display = 'none';
-                    selectEl.required = false;
-                    selectEl.value = '';
-                } else {
-                    wrapEl.style.display = 'block';
-                    selectEl.required = true;
-                }
-            }
-        }
-    }
-
-    function openModalReset(stafId, stafNama) {
-        document.getElementById('resetNamaStaf').textContent = stafNama;
-        document.getElementById('formResetSandi').action = '/superadmin/staf/' + stafId + '/reset-password';
-        document.getElementById('modalResetSandi').style.display = 'flex';
-    }
-
-    function openModalEdit(stafId, nama, email, role, bidangId) {
-        document.getElementById('editNama').value = nama;
-        document.getElementById('editEmail').value = email;
-        document.getElementById('editRole').value = role;
-        document.getElementById('editBidang').value = bidangId || '';
-        toggleBidangField('edit');
-        document.getElementById('formEditStaf').action = '/superadmin/staf/' + stafId;
-        document.getElementById('modalEditStaf').style.display = 'flex';
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        toggleBidangField('tambah');
-    });
-</script>
+@push('scripts')
+    @vite(['resources/js/pages/superadmin/staf-index.js'])
+@endpush
 @endsection

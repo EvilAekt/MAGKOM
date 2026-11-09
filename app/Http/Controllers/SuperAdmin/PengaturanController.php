@@ -13,6 +13,7 @@ use App\Models\Pengaturan;
 use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -157,7 +158,7 @@ class PengaturanController extends Controller
     /**
      * Mengekspor snapshot konfigurasi master data dan sistem ke file JSON terstruktur (PRD F-11, Bab 10.2).
      */
-    public function exportMasterSnapshotJson(Request $request)
+    public function exportMasterSnapshotJson(Request $request): Response
     {
         $superadmin = $request->user();
 

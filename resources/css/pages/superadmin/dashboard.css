@@ -2119,6 +2119,9 @@ html:not([data-theme="dark"]) .sa-metric-card-col .stat-subtext {
   position: relative;
   width: 100%;
   height: 190px;
+  border-radius: 10px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  will-change: box-shadow, border-color;
 }
 
 .gt-chart-svg {
@@ -2171,6 +2174,8 @@ html:not([data-theme="dark"]) .sa-metric-card-col .stat-subtext {
 
 .gt-curve-primary {
   stroke: #0d9488;
+  transition: stroke-width 0.2s ease, filter 0.2s ease;
+  will-change: stroke-width, filter;
 }
 
 .gt-curve-secondary {
@@ -2180,6 +2185,20 @@ html:not([data-theme="dark"]) .sa-metric-card-col .stat-subtext {
 .gt-chart-point {
   fill: var(--cv-surface, #ffffff);
   stroke: #0d9488;
+  cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center center;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+  will-change: transform, stroke;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gt-chart-wrapper,
+  .gt-curve-primary,
+  .gt-chart-point {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 /* 5. Demografi: Top Countries Style (Sebaran Calon Peserta) */

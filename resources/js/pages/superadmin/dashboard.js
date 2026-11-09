@@ -1,3 +1,5 @@
+import { initSuperAdminMotion, bindChartHoverAnimations } from '../../services/superadmin-motion.js';
+
 (function () {
   'use strict';
   var TABS = ['ringkasan', 'seleksi', 'bimbingan', 'sistem'];
@@ -550,11 +552,13 @@
         this.classList.add('active');
         var period = this.getAttribute('data-period');
         updateTrendChart(period);
+        bindChartHoverAnimations();
         window.dispatchEvent(new CustomEvent('magkom:trend-filter-changed', { detail: { period: period } }));
       });
     });
 
     select(initial(), false);
+    initSuperAdminMotion('dashboard');
   });
 })();
 
