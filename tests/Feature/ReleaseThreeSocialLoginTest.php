@@ -278,7 +278,7 @@ class ReleaseThreeSocialLoginTest extends TestCase
             'password' => 'SlemanJuara2026',
         ]);
 
-        $response->assertRedirect(route('peserta.profil.show'));
+        $response->assertRedirect(route('peserta.dashboard'));
 
         $this->assertDatabaseHas('users', [
             'nama' => 'Peserta Sleman 2026',

@@ -26,7 +26,7 @@ class PendaftaranKelompokTest extends TestCase
             'tipe_pendaftaran' => 'mandiri',
         ]);
 
-        $response->assertRedirect(route('peserta.profil.show'));
+        $response->assertRedirect(route('peserta.dashboard'));
         $this->assertDatabaseHas('users', [
             'email' => 'mandiri@magkom.test',
             'nama' => 'Peserta Mandiri Sleman',
@@ -66,7 +66,7 @@ class PendaftaranKelompokTest extends TestCase
 
         $response = $this->post('/register', $payload);
 
-        $response->assertRedirect(route('peserta.profil.show'));
+        $response->assertRedirect(route('peserta.dashboard'));
 
         $this->assertDatabaseHas('users', [
             'email' => 'ketua@magkom.test',
@@ -211,7 +211,7 @@ class PendaftaranKelompokTest extends TestCase
         ];
 
         $responseBenar = $this->post('/register', $payloadBenar);
-        $responseBenar->assertRedirect(route('peserta.profil.show'));
+        $responseBenar->assertRedirect(route('peserta.dashboard'));
         $this->assertDatabaseHas('kelompok_magang', ['nama_kelompok' => 'Tim Kuota Tiga Sukses']);
     }
 

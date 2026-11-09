@@ -314,7 +314,7 @@ class ReleaseTwoFeaturesTest extends TestCase
             'password_confirmation' => 'secret1234',
             'cf-turnstile-response' => 'valid_human_token',
         ]);
-        $validReg->assertRedirect(route('peserta.profil.show'));
+        $validReg->assertRedirect(route('peserta.dashboard'));
         $this->assertDatabaseHas('users', ['email' => 'valid.person@tester.test']);
 
         // Logout user agar kembali berstatus guest sebelum uji registrasi saat service down

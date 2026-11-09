@@ -189,7 +189,7 @@ class SecurityDynamicCaptchaTest extends TestCase
         ]);
 
         $response->assertSessionHasNoErrors();
-        $response->assertRedirect(route('peserta.profil.show'));
+        $response->assertRedirect(route('peserta.dashboard'));
         $this->assertDatabaseHas('users', [
             'email' => 'pesertabaru@example.com',
             'nama' => 'Peserta Baru',
