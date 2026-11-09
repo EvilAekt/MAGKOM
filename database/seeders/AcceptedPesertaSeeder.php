@@ -247,13 +247,13 @@ class AcceptedPesertaSeeder extends Seeder
                 'nama' => 'Citra Lestari',
                 'nim_nisn' => '22/498766/SV/21002',
                 'no_hp' => '081298765433',
-                'email' => 'citra@mail.ugm.ac.id',
+                'email' => 'citra.lestari@gmail.com',
             ],
             [
                 'nama' => 'Bagas Wicaksono',
                 'nim_nisn' => '22/498767/SV/21003',
                 'no_hp' => '081298765434',
-                'email' => 'bagas@mail.ugm.ac.id',
+                'email' => 'bagas.wicaksono@gmail.com',
             ],
         ]);
 

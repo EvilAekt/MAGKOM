@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Manajemen Staf Internal - SuperAdmin MagKom')
-@section('page_title', 'Manajemen Staf Internal')
+@section('topbar_title', 'Manajemen Staf Internal')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -9,92 +9,108 @@
     <span class="breadcrumb-current">Manajemen Staf</span>
 @endsection
 
-@section('page_actions')
-    <button type="button" onclick="document.getElementById('modalTambahStaf').style.display='flex'" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 42px; padding: 0 1.25rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s ease; box-shadow: var(--shadow-subtle);">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        <span>Tambah Staf Baru</span>
-    </button>
-@endsection
-
 @push('styles')
-<style>
-    .staf-filter-card {
-        background: var(--neutral-0);
-        border: 1px solid var(--neutral-400);
-        border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
-        border-radius: 12px;
-        padding: 1.25rem 1.5rem;
-        box-shadow: var(--shadow-subtle);
-    }
-
-    /* Dark Mode Overrides for SuperAdmin Staf Management (DS-MagKom Industrial Standard) */
-    [data-theme="dark"] .staf-filter-card,
-    [data-theme="dark"] div[style*="background: var(--neutral-0)"] {
-        background-color: #003566 !important;
-        border-color: #3F51B5 !important;
-        border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
-    }
-
-    [data-theme="dark"] input[type="text"],
-    [data-theme="dark"] input[type="email"],
-    [data-theme="dark"] input[type="password"],
-    [data-theme="dark"] select {
-        background-color: #011C44 !important;
-        color: #F8FAFC !important;
-        border-color: rgba(63, 81, 181, 0.45) !important;
-    }
-
-    [data-theme="dark"] button[style*="background: var(--neutral-900)"] {
-        background-color: #2563EB !important;
-        color: #FFFFFF !important;
-    }
-
-    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-400)"],
-    [data-theme="dark"] div[style*="border-top: 1px solid var(--neutral-200)"],
-    [data-theme="dark"] div[style*="border-bottom: 1px solid var(--neutral-200)"] {
-        border-color: rgba(63, 81, 181, 0.45) !important;
-    }
-
-    /* Modal Dark Mode */
-    [data-theme="dark"] #modalTambahStaf > div,
-    [data-theme="dark"] #modalEditStaf > div,
-    [data-theme="dark"] #modalResetSandi > div {
-        background-color: #003566 !important;
-        border-color: #3F51B5 !important;
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] #modalTambahStaf h3,
-    [data-theme="dark"] #modalEditStaf h3,
-    [data-theme="dark"] #modalResetSandi h3 {
-        color: #F8FAFC !important;
-    }
-
-    [data-theme="dark"] div[style*="background: var(--neutral-100)"] {
-        background-color: #011C44 !important;
-        border-color: rgba(63, 81, 181, 0.45) !important;
-    }
-
-    [data-theme="dark"] button[style*="background: var(--neutral-100)"] {
-        background-color: rgba(255, 255, 255, 0.06) !important;
-        border-color: rgba(63, 81, 181, 0.45) !important;
-        color: #94A3B8 !important;
-    }
-
-    [data-theme="dark"] button[style*="background: var(--neutral-100)"]:hover {
-        background-color: rgba(63, 81, 181, 0.2) !important;
-        color: #F8FAFC !important;
-    }
-</style>
+    @vite(['resources/css/pages/superadmin/superadmin-common.css'])
 @endpush
 
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- 1. FILTER & TOOLBAR CARD -->
+    {{-- 1. Hero Banner Khas Sleman MagKom --}}
+    <div class="sa-hero-banner">
+        <div class="banner-top-row">
+            <div>
+                <h1 class="banner-title">Manajemen Staf Internal</h1>
+                <div class="banner-subtitle">
+                    <span>Cakupan: <strong>Admin Verifikator &amp; Pembimbing</strong></span>
+                    <span class="bullet-separator">&bull;</span>
+                    <span>Total Staf: <strong>{{ $totalStaf }} Akun Terdaftar</strong></span>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn-banner-action" onclick="document.getElementById('modalTambahStaf').style.display='flex'">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+                    <span>Tambah Staf Baru</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
+    <div class="tiles-grid">
+        <!-- 1. Total Staf Internal -->
+        <x-gentelella.tile-stat
+            title="TOTAL STAF"
+            value="{{ $totalStaf }}"
+            color="blue"
+            trendType="info"
+            trendDirection="up"
+            trendText="Internal"
+            subText="Staf Aktif Dinas Kominfo"
+            :sparkBars="[35, 50, 65, 75, 85, 95]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 010 7.75"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 2. Admin Verifikator -->
+        <x-gentelella.tile-stat
+            title="ADMIN VERIFIKATOR"
+            value="{{ $totalAdmin }}"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="Dinas"
+            subText="Verifikasi & Seleksi Berkas"
+            :sparkBars="[20, 35, 50, 65, 80, 90]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 3. Pembimbing Lapangan -->
+        <x-gentelella.tile-stat
+            title="PEMBIMBING LAPANGAN"
+            value="{{ $totalPembimbing }}"
+            color="amber"
+            trendType="warning"
+            trendDirection="up"
+            trendText="Lapangan"
+            subText="Pendamping Mentoring & Unit Kerja"
+            :sparkBars="[30, 45, 60, 70, 80, 95]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 4. Menunggu Ganti Sandi -->
+        <x-gentelella.tile-stat
+            title="MENUNGGU GANTI SANDI"
+            value="{{ $stafPendingPasswordCount }}"
+            color="purple"
+            trendType="danger"
+            trendDirection="up"
+            trendText="Atensi"
+            subText="Wajib Ganti Password Awal"
+            :sparkBars="[15, 25, 40, 55, 70, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+    </div>
+
+    <!-- 3. FILTER & TOOLBAR CARD -->
     <div class="staf-filter-card">
         <form method="GET" action="{{ route('superadmin.staf.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; flex: 1;">
@@ -117,11 +133,11 @@
 
                 <select name="must_change_password" style="height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit; min-width: 170px;">
                     <option value="">Status Kata Sandi</option>
-                    <option value="true" {{ request('must_change_password') === 'true' ? 'selected' : '' }}>Menunggu Ganti (BR-15)</option>
+                    <option value="true" {{ request('must_change_password') === 'true' ? 'selected' : '' }}>Menunggu Ganti Sandi</option>
                     <option value="false" {{ request('must_change_password') === 'false' ? 'selected' : '' }}>Sudah Diganti</option>
                 </select>
 
-                <button type="submit" style="height: 42px; padding: 0 1.25rem; background: var(--neutral-900); color: #FFFFFF; font-weight: 700; font-size: 0.8125rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.375rem;">
+                <button type="submit" class="sa-btn-filter">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                     Filter
                 </button>
@@ -231,7 +247,7 @@
                                     @if($staf->must_change_password)
                                         <div style="margin-top: 0.35rem;">
                                             <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.68rem; font-weight: 700; color: #b45309; background: #fef3c7; border: 1px solid #fde68a; padding: 0.15rem 0.45rem; border-radius: 4px;">
-                                                ⚠️ Wajib Ganti Sandi (BR-15)
+                                                ⚠️ Wajib Ganti Sandi
                                             </span>
                                         </div>
                                     @endif
@@ -310,9 +326,9 @@
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Alamat Email Dinas <span style="color: var(--red-600);">*</span>
+                    Alamat Email Akun Staf (Google / Gmail) <span style="color: var(--red-600);">*</span>
                 </label>
-                <input type="email" name="email" required placeholder="budi@slemankab.go.id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                <input type="email" name="email" required placeholder="budi.santoso@gmail.com" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;" id="gridRoleBidangTambah">
@@ -429,9 +445,9 @@
 
             <div>
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
-                    Alamat Email Dinas <span style="color: var(--red-600);">*</span>
+                    Alamat Email Akun Staf (Google / Gmail) <span style="color: var(--red-600);">*</span>
                 </label>
-                <input type="email" id="editEmail" name="email" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                <input type="email" id="editEmail" name="email" required placeholder="budi.santoso@gmail.com" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
             </div>
 
             <div>

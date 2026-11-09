@@ -58,9 +58,9 @@ class SeedDummyPesertaCommand extends Command
                 ['13', 'Maya Anggraini', 'maya.anggraini@amikom.ac.id', 'Amikom', 'Tugas Terlambat (Overdue BR-16)'],
                 ['14', 'Naufal Rizky', 'naufal.rizky@uii.ac.id', 'UII', 'Tugas Mendapat Catatan Revisi'],
                 ['15', 'Olivia Tan', 'olivia.tan@komdigi.go.id', 'Poltek SSN', 'Penempatan Jalur Slot Khusus Mitra'],
-                ['16', 'Panji Nugroho', 'panji.nugroho@ugm.ac.id', 'UGM', 'Masa Magang Habis (Menunggu Nilai)'],
-                ['17', 'Qori Amanda', 'qori.amanda@uny.ac.id', 'UNY', 'Penilaian Masih Draft'],
-                ['18', 'Rian Ardiansyah', 'rian.ardiansyah@upnyk.ac.id', 'UPN Veteran', 'Nilai Final Terbit (Predikat A)'],
+                ['16', 'Panji Nugroho', 'panji.nugroho@ugm.ac.id', 'UGM', 'Masa Magang Mendekati Selesai'],
+                ['17', 'Qori Amanda', 'qori.amanda@uny.ac.id', 'UNY', 'Penempatan Aktif Menjelang Berakhir'],
+                ['18', 'Rian Ardiansyah', 'rian.ardiansyah@upnyk.ac.id', 'UPN Veteran', 'Penempatan Selesai Hari Ini'],
                 ['19', 'Siti Nurhaliza', 'siti.nurhaliza@amikom.ac.id', 'Amikom', 'Selesai Magang / Arsip Alumni (BR-07)'],
                 ['20', 'Taufik Hidayat', 'taufik.hidayat@uii.ac.id', 'UII', 'Mengundurkan Diri Tengah Periode (Hangus)'],
             ]

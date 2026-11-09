@@ -32,7 +32,7 @@
                     required 
                     autofocus 
                     class="form-input" 
-                    placeholder="email"
+                    placeholder="nama.peserta@gmail.com"
                     autocomplete="email"
                     aria-label="Email"
                 >
