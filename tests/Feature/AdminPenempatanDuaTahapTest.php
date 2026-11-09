@@ -201,6 +201,45 @@ class AdminPenempatanDuaTahapTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_assign_pembimbing_without_bidang_and_bidang_is_automatically_resolved_from_registration(): void
+    {
+        $peserta = User::factory()->create([
+            'nama' => 'Peserta Otomatis Bidang',
+            'role' => RoleEnum::Peserta,
+            'status_aktif' => true,
+        ]);
+
+        $this->jurusan->bidang()->syncWithoutDetaching([$this->bidangEgov->id]);
+
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $peserta->id,
+            'kuota_id' => $this->kuota->id,
+            'bulan_magang_id' => $this->bulanAktif->id,
+            'status' => StatusPendaftaranEnum::Diterima,
+            'durasi_bulan' => 3,
+            'diputuskan_at' => now(),
+        ]);
+
+        // Admin hanya memilih pembimbing_id tanpa bidang_id
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.penempatan.tetapkan'), [
+                'pendaftaran_id' => $pendaftaran->id,
+                'pembimbing_id' => $this->pembimbing->id,
+            ]);
+
+        $response->assertRedirect(route('admin.penempatan.index'));
+        $response->assertSessionHas('success');
+
+        // Bidang dinas otomatis terisi dari kuota jurusan registrasi
+        $this->assertDatabaseHas('penempatan', [
+            'pendaftaran_id' => $pendaftaran->id,
+            'peserta_id' => $peserta->id,
+            'bidang_id' => $this->bidangEgov->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'status' => StatusPenempatanEnum::Aktif->value,
+        ]);
+    }
+
     public function test_penempatan_page_filters_by_bulan_magang_correctly(): void
     {
         $peserta1 = User::factory()->create(['nama' => 'Peserta November']);

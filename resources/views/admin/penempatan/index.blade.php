@@ -1667,21 +1667,32 @@
                 <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                     <div>
-                        <strong>Penetapan Tahap 2:</strong> Pilih pembimbing lapangan dan unit bidang dinas. Surat Keterangan Diterima resmi akan otomatis siap diunduh setelah penempatan disimpan.
+                        <strong>Penetapan Pembimbing Magang:</strong> Bidang dinas telah otomatis terhubung dari pilihan jurusan peserta saat registrasi. Silakan tentukan Pembimbing Lapangan yang akan membimbing peserta ini.
                     </div>
                 </div>
             </div>
 
-            {{-- Bidang Dinas --}}
+            {{-- Hidden input bidang_id otomatis dari pendaftaran --}}
+            <input type="hidden" name="bidang_id" id="tetapkan-bidang-id" value="">
+
+            {{-- Unit Bidang Dinas Terhubung (Read-only Informational Card) --}}
             <div style="display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1.25rem;">
-                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Unit Bidang Dinas <span style="color: #DC2626;">*</span></label>
-                <select name="bidang_id" id="select-tetapkan-bidang" required style="height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
-                    <option value="">-- Pilih Bidang Dinas --</option>
-                    @foreach($bidangList as $b)
-                        <option value="{{ $b->id }}">{{ $b->nama_bidang }}</option>
-                    @endforeach
-                </select>
-                <small style="font-size: 0.725rem; color: var(--neutral-500, #64748B);">Otomatis direkomendasikan sesuai bidang keahlian jurusan pendaftar.</small>
+                <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Unit Bidang Dinas (Otomatis dari Registrasi)</label>
+                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: var(--neutral-50, #F8FAFC); border: 1px solid var(--neutral-200, #E2E8F0); border-radius: 8px;">
+                    <div style="width: 32px; height: 32px; border-radius: 6px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="14" x="3" y="7" rx="2"></rect>
+                            <path d="M9 5h6"></path>
+                            <path d="M12 2v3"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div id="tetapkan-bidang-display" style="font-weight: 700; font-size: 0.875rem; color: var(--neutral-900, #0F172A);">
+                            Dinas Komunikasi dan Informatika
+                        </div>
+                        <small style="font-size: 0.725rem; color: var(--neutral-500, #64748B);">Terhubung langsung dengan kuota jurusan pilihan pendaftar.</small>
+                    </div>
+                </div>
             </div>
 
             {{-- Pembimbing Lapangan --}}
@@ -1703,7 +1714,7 @@
                     Batal
                 </button>
                 <button type="submit" style="padding: 0.55rem 1.4rem; background: #0641CC; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);">
-                    Tetapkan &amp; Aktifkan Penempatan
+                    Tetapkan Pembimbing &amp; Aktifkan
                 </button>
             </div>
         </form>
@@ -1798,11 +1809,13 @@
         const modal = document.getElementById('modal-tetapkan-penempatan');
         const infoEl = document.getElementById('tetapkan-peserta-info');
         const idInput = document.getElementById('tetapkan-pendaftaran-id');
-        const bidangSelect = document.getElementById('select-tetapkan-bidang');
+        const bidangInput = document.getElementById('tetapkan-bidang-id');
+        const bidangDisplay = document.getElementById('tetapkan-bidang-display');
 
         if (infoEl) infoEl.innerText = 'Peserta: ' + namaPeserta + ' (' + namaJurusan + ')';
         if (idInput) idInput.value = pendaftaranId;
-        if (bidangSelect && defaultBidangId) bidangSelect.value = defaultBidangId;
+        if (bidangInput && defaultBidangId) bidangInput.value = defaultBidangId;
+        if (bidangDisplay) bidangDisplay.innerText = defaultBidangNama || 'Dinas Komunikasi dan Informatika';
 
         if (modal) {
             modal.style.display = 'flex';

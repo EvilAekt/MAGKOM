@@ -184,7 +184,9 @@ class PenempatanController extends Controller
         $admin = $request->user();
         $pendaftaran = Pendaftaran::findOrFail($request->integer('pendaftaran_id'));
         $pembimbing = User::findOrFail($request->integer('pembimbing_id'));
-        $bidang = $request->filled('bidang_id') ? Bidang::find($request->integer('bidang_id')) : null;
+        $bidang = $request->filled('bidang_id')
+            ? Bidang::find($request->integer('bidang_id'))
+            : ($pendaftaran->kuota?->jurusan?->bidang?->first() ?? $pembimbing->bidang);
 
         try {
             $this->placementService->tetapkanPenempatan($pendaftaran, $admin, $pembimbing, $bidang);
