@@ -46,6 +46,7 @@ export default defineConfig({
                 'resources/js/pages/pembimbing/tugas-index.js',
                 'resources/js/pages/pembimbing/tugas-review.js',
                 'resources/js/pages/pembimbing/peserta-index.js',
+                'resources/js/pages/pembimbing/peserta-show.js',
                 'resources/js/pages/pembimbing/logbook-index.js',
                 'resources/js/pages/pembimbing/laporan-kinerja-index.js',
                 'resources/js/pages/pembimbing/dashboard.js',

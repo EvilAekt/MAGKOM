@@ -166,20 +166,34 @@ class PesertaController extends Controller
         $logbookPerluRevisi = $penempatan->logbooks->where('status.value', 'perlu_revisi')->count();
         $logbookDisetujui = $penempatan->logbooks->where('status.value', 'disetujui')->count();
 
-        // Hitung durasi dan progres waktu magang
+        // Hitung durasi dan progres waktu magang (Beban & Kalender MagKom)
         $progresHari = 0;
         $totalHariMagang = 1;
         $sisaHari = 0;
 
         if ($penempatan->tgl_mulai && $penempatan->tgl_selesai) {
-            $totalHariMagang = max(1, $penempatan->tgl_mulai->diffInDays($penempatan->tgl_selesai));
-            $hariBerjalan = Carbon::today()->diffInDays($penempatan->tgl_mulai, false);
-            if ($hariBerjalan < 0) {
+            $mulai = $penempatan->tgl_mulai->copy()->startOfDay();
+            $selesai = $penempatan->tgl_selesai->copy()->startOfDay();
+            $today = Carbon::today();
+
+            $totalHariMagang = max(1, $mulai->diffInDays($selesai));
+
+            if ($today->lt($mulai)) {
+                // Magang belum dimulai
+                $hariBerjalan = 0;
                 $progresHari = 0;
+                $sisaHari = $totalHariMagang;
+            } elseif ($today->gte($selesai)) {
+                // Magang telah selesai
+                $hariBerjalan = $totalHariMagang;
+                $progresHari = 100;
+                $sisaHari = 0;
             } else {
+                // Magang sedang berjalan aktif
+                $hariBerjalan = $mulai->diffInDays($today);
                 $progresHari = min(100, (int) round(($hariBerjalan / $totalHariMagang) * 100));
+                $sisaHari = max(0, $today->diffInDays($selesai));
             }
-            $sisaHari = Carbon::today()->diffInDays($penempatan->tgl_selesai, false);
         }
 
         // Metrik Chart Visualisasi (B9)
@@ -199,6 +213,41 @@ class PesertaController extends Controller
         $daftarMinggu = $penempatan->getDaftarMingguMagang();
         $logbookPerMinggu = array_slice($daftarMinggu, 0, 12);
 
+        // Pemisahan tugas per status untuk Kanban Board
+        $tugasBelum = $penempatan->tugas->where('status', StatusTugasEnum::Belum)->sortBy('deadline')->values();
+        $tugasProses = $penempatan->tugas->where('status', StatusTugasEnum::Proses)->sortBy('deadline')->values();
+        $tugasSelesaiList = $penempatan->tugas->where('status', StatusTugasEnum::Selesai)->sortByDesc('updated_at')->values();
+
+        $tugasBelumCount = $tugasBelum->count();
+        $tugasProsesCount = $tugasProses->count();
+        $tugasSelesaiCount = $tugasSelesaiList->count();
+        $totalTugasCalculated = max(1, $totalTugas);
+
+        $persenBelum = (int) round(($tugasBelumCount / $totalTugasCalculated) * 100);
+        $persenProses = (int) round(($tugasProsesCount / $totalTugasCalculated) * 100);
+        $persenSelesai = (int) round(($tugasSelesaiCount / $totalTugasCalculated) * 100);
+
+        // Derajat untuk conic gradient donat
+        $degSelesai = (int) round(($persenSelesai / 100) * 360);
+        $degProses = (int) ($degSelesai + round(($persenProses / 100) * 360));
+
+        // Rekap logbook 12 minggu
+        $logbookDisetujuiCount = 0;
+        $logbookTerlambatCount = 0;
+        $logbookFilledCount = 0;
+
+        foreach ($logbookPerMinggu as $m) {
+            if ($m['status'] === 'disetujui') {
+                $logbookDisetujuiCount++;
+                $logbookFilledCount++;
+            } elseif ($m['status'] === 'perlu_revisi' || ($m['is_lampau'] && $m['status'] === 'belum_diisi')) {
+                $logbookTerlambatCount++;
+                if ($m['status'] === 'perlu_revisi') {
+                    $logbookFilledCount++;
+                }
+            }
+        }
+
         $data = [
             'penempatan' => $penempatan,
             'totalTugas' => $totalTugas,
@@ -213,6 +262,20 @@ class PesertaController extends Controller
             'tugasStats' => $tugasStats,
             'completionRate' => $completionRate,
             'logbookPerMinggu' => $logbookPerMinggu,
+            'tugasBelum' => $tugasBelum,
+            'tugasProses' => $tugasProses,
+            'tugasSelesaiList' => $tugasSelesaiList,
+            'tugasBelumCount' => $tugasBelumCount,
+            'tugasProsesCount' => $tugasProsesCount,
+            'tugasSelesaiCount' => $tugasSelesaiCount,
+            'persenBelum' => $persenBelum,
+            'persenProses' => $persenProses,
+            'persenSelesai' => $persenSelesai,
+            'degSelesai' => $degSelesai,
+            'degProses' => $degProses,
+            'logbookDisetujuiCount' => $logbookDisetujuiCount,
+            'logbookTerlambatCount' => $logbookTerlambatCount,
+            'logbookFilledCount' => $logbookFilledCount,
         ];
 
         if ($request->expectsJson() || $request->wantsJson()) {
