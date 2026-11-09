@@ -159,28 +159,6 @@ class AdminTablePaginationStandardTest extends TestCase
         $this->assertEquals(10, $paginator10->perPage());
     }
 
-    public function test_admin_waiting_list_index_defaults_to_10_per_page_and_accepts_custom_per_page(): void
-    {
-        $response = $this->actingAs($this->admin)->get(route('admin.waiting-list.index'));
-
-        $response->assertOk();
-        $response->assertViewHas('waitingList');
-        $paginator = $response->viewData('waitingList');
-        $this->assertEquals(10, $paginator->perPage());
-
-        $response->assertSee('adm-pagination-wrapper');
-        $response->assertSee('Antrean FIFO');
-        $response->assertSee('Lembar Halaman');
-        $response->assertSee('title="Tampilkan 10 antrean peserta per halaman"', false);
-        $response->assertSee('title="Tampilkan 20 antrean peserta per halaman"', false);
-
-        // Uji query parameter custom ?per_page=20
-        $response20 = $this->actingAs($this->admin)->get(route('admin.waiting-list.index', ['per_page' => 20]));
-        $response20->assertOk();
-        $paginator20 = $response20->viewData('waitingList');
-        $this->assertEquals(20, $paginator20->perPage());
-    }
-
     public function test_admin_penempatan_index_defaults_to_5_per_page_and_accepts_custom_per_page(): void
     {
         $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));

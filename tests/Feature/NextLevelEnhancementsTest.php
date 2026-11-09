@@ -8,7 +8,6 @@ use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
-use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Enums\TipeAuditEnum;
@@ -18,7 +17,6 @@ use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Logbook;
-use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\Pengaturan;
 use App\Models\PesertaProfil;
@@ -278,61 +276,6 @@ final class NextLevelEnhancementsTest extends TestCase
 
         $content = $response->streamedContent();
         $this->assertStringContainsString("'@InsecureActionLog", $content);
-    }
-
-    public function test_admin_can_bulk_close_waiting_list_queue_for_started_month(): void
-    {
-        // Past month
-        $pastMonth = BulanMagang::create([
-            'bulan_mulai' => now()->subMonth()->startOfMonth()->toDateString(),
-            'tgl_buka' => now()->subMonths(2)->toDateString(),
-            'tgl_tutup' => now()->subMonth()->subDays(5)->toDateString(),
-            'aktif' => true,
-        ]);
-
-        $kuotaPast = Kuota::create([
-            'bulan_magang_id' => $pastMonth->id,
-            'jurusan_id' => $this->jurusan->id,
-            'jumlah' => 10,
-            'terisi' => 5,
-            'aktif' => true,
-        ]);
-
-        $peserta = $this->createPeserta('Peserta Waiting', 'waiting@magkom.test');
-
-        $pendaftaran = Pendaftaran::create([
-            'user_id' => $peserta->id,
-            'bulan_magang_id' => $pastMonth->id,
-            'kuota_id' => $kuotaPast->id,
-            'status' => StatusPendaftaranEnum::WaitingList,
-            'diajukan_at' => now()->subDays(15),
-            'durasi_bulan' => 1,
-        ]);
-
-        $response = $this->actingAs($this->admin)
-            ->post(route('admin.waiting-list.tutup', $pastMonth));
-
-        $response->assertRedirect(route('admin.waiting-list.index'));
-        $response->assertSessionHas('success');
-
-        $this->assertSame(StatusPendaftaranEnum::Ditolak, $pendaftaran->fresh()->status);
-        $this->assertStringContainsString('ditutup secara otomatis', (string) $pendaftaran->fresh()->catatan);
-    }
-
-    public function test_admin_cannot_close_waiting_list_queue_for_future_month(): void
-    {
-        $futureMonth = BulanMagang::create([
-            'bulan_mulai' => now()->addMonths(2)->startOfMonth()->toDateString(),
-            'tgl_buka' => now()->addMonth()->toDateString(),
-            'tgl_tutup' => now()->addMonths(2)->subDays(5)->toDateString(),
-            'aktif' => true,
-        ]);
-
-        $response = $this->actingAs($this->admin)
-            ->post(route('admin.waiting-list.tutup', $futureMonth));
-
-        $response->assertRedirect();
-        $response->assertSessionHas('error');
     }
 
     public function test_admin_can_export_rekapitulasi_surat_diterima_csv(): void

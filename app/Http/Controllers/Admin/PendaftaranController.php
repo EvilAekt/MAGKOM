@@ -135,7 +135,6 @@ class PendaftaranController extends Controller
             'total_kelompok' => Pendaftaran::where('tipe', 'kelompok')->count(),
             'diajukan' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)->count(),
             'perlu_perbaikan' => Pendaftaran::where('status', StatusPendaftaranEnum::PerluPerbaikan)->count(),
-            'waiting_list' => Pendaftaran::where('status', StatusPendaftaranEnum::WaitingList)->count(),
             'diterima' => Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)->count(),
             'ditolak' => Pendaftaran::where('status', StatusPendaftaranEnum::Ditolak)->count(),
             'sla_warning' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
