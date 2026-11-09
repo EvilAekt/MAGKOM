@@ -15,7 +15,7 @@
                     Penyelesaian Program Magang Diskominfo Sleman
                 </h3>
                 <p class="saas-card-subtitle">
-                    Selamat! Anda telah menuntaskan seluruh periode magang dengan baik.
+                    Selamat! Anda telah menuntaskan seluruh masa magang dengan baik.
                 </p>
             </div>
             <span class="saas-badge-approved">

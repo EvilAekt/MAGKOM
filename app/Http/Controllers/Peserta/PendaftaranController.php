@@ -34,11 +34,20 @@ class PendaftaranController extends Controller
         protected BulanStatusService $bulanStatusService
     ) {}
 
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         $user = $request->user();
         $profil = $user->profil;
         $profil?->loadMissing(['jurusan.bidang']);
+
+        // Proteksi Alur: Wajib Biodata 100% Lengkap sebelum Memilih Periode & Kuota Magang
+        $hasPendaftaran = Pendaftaran::where('user_id', $user->id)->exists();
+        if (! $hasPendaftaran && (! $profil || ! $profil->isLengkap())) {
+            $persentase = $profil ? $profil->hitungKelengkapan()['persentase'] : 0;
+
+            return redirect()->route('peserta.profil.show')
+                ->with('warning', "Biodata dan profil peserta wajib 100% lengkap (saat ini {$persentase}%) sebelum Anda dapat memilih periode dan kuota magang.");
+        }
 
         $pendaftaranList = Pendaftaran::with(['bulanMagang', 'kuota.jurusan', 'penempatan'])
             ->where('user_id', $user->id)
@@ -141,6 +150,7 @@ class PendaftaranController extends Controller
             'penempatan.bidang',
             'verifikator',
             'dokumen.jenisDokumen',
+            'kelompokMagang.anggota',
         ]);
 
         $profil = $user->profil;
@@ -151,12 +161,15 @@ class PendaftaranController extends Controller
             ->orderBy('wajib', 'desc')
             ->get();
 
-        $dokumenTerunggah = $pendaftaran->dokumen->keyBy('jenis_dokumen_id');
+        $semuaDokumen = $pendaftaran->dokumen;
+        $dokumenTerunggah = $semuaDokumen->whereNull('kelompok_anggota_id')->keyBy('jenis_dokumen_id');
+        $dokumenAnggotaGroup = $semuaDokumen->whereNotNull('kelompok_anggota_id')->groupBy('kelompok_anggota_id');
 
         return view('peserta.pendaftaran.detail', [
             'pendaftaran' => $pendaftaran,
             'jenisDokumenList' => $jenisDokumenList,
             'dokumenTerunggah' => $dokumenTerunggah,
+            'dokumenAnggotaGroup' => $dokumenAnggotaGroup,
             'profil' => $profil,
             'maksMb' => Pengaturan::int('berkas_maks_mb', 2),
         ]);
@@ -175,16 +188,43 @@ class PendaftaranController extends Controller
         $jenjang = $profil?->jenjang ?? JenjangEnum::Smk;
 
         // Validasi kelengkapan seluruh dokumen wajib
-        $dokumenWajibIds = JenisDokumen::where('aktif', true)
+        $dokumenWajibList = JenisDokumen::where('aktif', true)
             ->where('jenjang', $jenjang->value)
             ->where('wajib', true)
-            ->pluck('id');
+            ->get();
 
-        $terunggahIds = $pendaftaran->dokumen()->pluck('jenis_dokumen_id');
-        $belumLengkap = $dokumenWajibIds->diff($terunggahIds);
+        $dokumenWajibIds = $dokumenWajibList->pluck('id');
+        $isKelompok = ($pendaftaran->tipe === 'kelompok' || $pendaftaran->kelompok_magang_id !== null);
 
-        if ($belumLengkap->isNotEmpty()) {
-            return back()->with('error', 'Semua berkas persyaratan wajib harus diunggah sebelum pengajuan dapat dikirim.');
+        if (! $isKelompok) {
+            $terunggahIds = $pendaftaran->dokumen()->whereNull('kelompok_anggota_id')->pluck('jenis_dokumen_id');
+            $belumLengkap = $dokumenWajibIds->diff($terunggahIds);
+
+            if ($belumLengkap->isNotEmpty()) {
+                return back()->with('error', 'Semua berkas persyaratan wajib harus diunggah sebelum pengajuan dapat dikirim.');
+            }
+        } else {
+            // 1. Dokumen kolektif dan dokumen ketua
+            $terunggahKetuaIds = $pendaftaran->dokumen()->whereNull('kelompok_anggota_id')->pluck('jenis_dokumen_id');
+            if ($dokumenWajibIds->diff($terunggahKetuaIds)->isNotEmpty()) {
+                return back()->with('error', 'Berkas persyaratan umum dan berkas Ketua Tim harus dilengkapi terlebih dahulu.');
+            }
+
+            // 2. Dokumen individu untuk seluruh anggota tim (CV & Transkrip / Kartu Pelajar)
+            $pendaftaran->loadMissing('kelompokMagang.anggota');
+            $jenisIndividuWajibIds = $dokumenWajibList
+                ->whereIn('kode', ['cv', 'transkrip', 'kartu_pelajar'])
+                ->pluck('id');
+
+            foreach ($pendaftaran->kelompokMagang?->anggota ?? [] as $anggota) {
+                $terunggahAnggotaIds = $pendaftaran->dokumen()
+                    ->where('kelompok_anggota_id', $anggota->id)
+                    ->pluck('jenis_dokumen_id');
+
+                if ($jenisIndividuWajibIds->diff($terunggahAnggotaIds)->isNotEmpty()) {
+                    return back()->with('error', "Berkas persyaratan untuk anggota kelompok '{$anggota->nama}' belum lengkap (CV & Transkrip Nilai wajib diunggah).");
+                }
+            }
         }
 
         $nilaiLama = ['status' => $pendaftaran->status->value];

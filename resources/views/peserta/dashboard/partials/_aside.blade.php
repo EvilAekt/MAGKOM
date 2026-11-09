@@ -39,7 +39,7 @@
     $tglSelesaiStr = $penempatan?->tgl_selesai ? \Carbon\Carbon::parse($penempatan->tgl_selesai)->isoFormat('D MMM Y') : '17 Jan 2027';
 @endphp
 
-@if(($fase ?? '') !== 'onboarding')
+@if(($fase ?? '') === 'aktif' && !empty($penempatan))
 <div class="saas-aside-stack">
     {{-- ======================================================================
        1. Widget Kalender Bulanan Interaktif (Client-side Navigatable)

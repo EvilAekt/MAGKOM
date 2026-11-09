@@ -18,6 +18,7 @@ class Dokumen extends Model
     protected $fillable = [
         'pendaftaran_id',
         'jenis_dokumen_id',
+        'kelompok_anggota_id',
         'path',
         'nama_asli',
         'mime',
@@ -27,6 +28,7 @@ class Dokumen extends Model
 
     protected $casts = [
         'ukuran' => 'integer',
+        'kelompok_anggota_id' => 'integer',
     ];
 
     public function pendaftaran(): BelongsTo
@@ -37,6 +39,11 @@ class Dokumen extends Model
     public function jenisDokumen(): BelongsTo
     {
         return $this->belongsTo(JenisDokumen::class, 'jenis_dokumen_id');
+    }
+
+    public function kelompokAnggota(): BelongsTo
+    {
+        return $this->belongsTo(KelompokAnggota::class, 'kelompok_anggota_id');
     }
 
     /**

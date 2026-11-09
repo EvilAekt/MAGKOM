@@ -20,6 +20,7 @@ class UnggahDokumenRequest extends FormRequest
 
         return [
             'jenis_dokumen_id' => ['required', 'exists:jenis_dokumen,id'],
+            'kelompok_anggota_id' => ['nullable', 'integer', 'exists:kelompok_anggota,id'],
             'file' => [
                 'required',
                 'file',

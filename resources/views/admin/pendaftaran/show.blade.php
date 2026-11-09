@@ -523,7 +523,22 @@
                                     </div>
                                     <div class="adm-doc-meta">
                                         <div class="adm-doc-title" title="{{ $dok->nama_asli }}">
-                                            {{ $dok->jenisDokumen?->nama ?? 'Dokumen Pendukung' }}
+                                            <span>{{ $dok->jenisDokumen?->nama ?? 'Dokumen Pendukung' }}</span>
+                                            @if($pendaftaran->tipe === 'kelompok' || $pendaftaran->kelompokMagang)
+                                                @if($dok->kelompokAnggota)
+                                                    <span style="font-size: 0.6875rem; font-weight: 700; background: #E0F2FE; color: #0369A1; padding: 2px 7px; border-radius: 999px; margin-left: 6px;">
+                                                        Anggota: {{ $dok->kelompokAnggota->nama }}
+                                                    </span>
+                                                @elseif(in_array($dok->jenisDokumen?->kode, ['cv', 'transkrip', 'kartu_pelajar']))
+                                                    <span style="font-size: 0.6875rem; font-weight: 700; background: #FEF3C7; color: #92400E; padding: 2px 7px; border-radius: 999px; margin-left: 6px;">
+                                                        Ketua Tim
+                                                    </span>
+                                                @else
+                                                    <span style="font-size: 0.6875rem; font-weight: 700; background: #F1F5F9; color: #475569; padding: 2px 7px; border-radius: 999px; margin-left: 6px;">
+                                                        Kolektif Tim
+                                                    </span>
+                                                @endif
+                                            @endif
                                         </div>
                                         <div class="adm-doc-detail">
                                             {{ $dok->nama_asli }} &bull; {{ number_format($dok->ukuran / 1024, 1) }} KB

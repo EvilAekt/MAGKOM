@@ -166,6 +166,7 @@ class PendaftaranController extends Controller
             'bulanMagang',
             'kuota.jurusan',
             'dokumen.jenisDokumen',
+            'dokumen.kelompokAnggota',
             'kelompokMagang.anggota',
         ]);
 

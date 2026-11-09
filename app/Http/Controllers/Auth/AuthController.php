@@ -329,7 +329,7 @@ class AuthController extends Controller
             ? 'Pendaftaran akun kelompok berhasil! Selamat datang '.($user->nama_tampil).'. Silakan lengkapi profil ketua tim.'
             : 'Pendaftaran akun berhasil. Silakan lengkapi profil biodata Anda.';
 
-        return redirect()->route('peserta.profil.show')
+        return redirect()->route('peserta.dashboard')
             ->with('success', $suksesMsg);
     }
 
