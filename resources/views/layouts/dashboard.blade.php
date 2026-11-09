@@ -3306,7 +3306,7 @@
                         </div>
 
                         @php
-                            $isOperasionalPesertaActive = request()->routeIs('superadmin.monitoring.*') || request()->routeIs('superadmin.arsip.*');
+                            $isOperasionalPesertaActive = request()->routeIs('superadmin.arsip.*');
                         @endphp
                         <div class="nav-group-container">
                             <button type="button" class="nav-group-btn {{ $isOperasionalPesertaActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalPesertaActive ? 'true' : 'false' }}">
@@ -3326,7 +3326,6 @@
                                 </svg>
                             </button>
                             <div class="nav-sub-menu {{ $isOperasionalPesertaActive ? 'show' : '' }}">
-                                <a href="{{ route('superadmin.monitoring.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.monitoring.*') ? 'active' : '' }}">{{ __('Monitoring Peserta') }}</a>
                                 <a href="{{ route('superadmin.arsip.index') }}" class="nav-sub-item {{ request()->routeIs('superadmin.arsip.*') ? 'active' : '' }}">{{ __('Arsip Peserta') }}</a>
                             </div>
                         </div>
@@ -3343,7 +3342,7 @@
                                     <line x1="23" y1="11" x2="17" y2="11"></line>
                                 </svg>
                             </span>
-                            <span>{{ __('Data Pengguna') }}<span class="sr-only"> / {{ __('Manajemen Staf') }} {{ __('Pengguna') }}</span></span>
+                            <span>{{ __('Data Staf') }}<span class="sr-only"> / {{ __('Manajemen Staf') }}</span></span>
                         </a>
 
                         <a href="{{ route('superadmin.role.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.role.*') ? 'active' : '' }}">
@@ -3379,6 +3378,18 @@
                             </span>
                             <span>{{ __('Status Sistem') }}</span>
                             <span class="sr-only">Telemetri Kesehatan Kesehatan Infrastruktur</span>
+                        </a>
+
+                        <a href="{{ route('superadmin.backup.index') }}" class="nav-item-link {{ request()->routeIs('superadmin.backup.*') ? 'active' : '' }}">
+                            <span class="nav-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                                </svg>
+                            </span>
+                            <span>{{ __('Backup Database') }}</span>
+                            <span class="sr-only">Disaster Recovery Backup Database</span>
                         </a>
 
                         @php

@@ -236,11 +236,21 @@ class SuperAdminPortalVisualTest extends TestCase
         $resAdmin->assertSee('Laporan Rekapitulasi Pendaftaran');
     }
 
-    public function test_superadmin_can_access_monitoring_peserta_lintas_bidang(): void
+    public function test_superadmin_sidebar_renders_updated_navigation_labels_for_staf_and_backup(): void
     {
-        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.monitoring.index'));
+        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.dashboard'));
 
         $response->assertStatus(200);
-        $response->assertSee('Monitoring Peserta');
+        $response->assertSee('Data Staf');
+        $response->assertSee('Backup Database');
+        $response->assertDontSee('Data Pengguna');
+        $response->assertDontSee('Cadangan Database');
+    }
+
+    public function test_superadmin_monitoring_peserta_route_is_removed(): void
+    {
+        $response = $this->actingAs($this->superAdmin)->get('/superadmin/monitoring-peserta');
+
+        $response->assertStatus(404);
     }
 }

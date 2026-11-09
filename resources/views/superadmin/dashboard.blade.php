@@ -184,11 +184,11 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('superadmin.monitoring.index') }}">
+                    <a href="{{ route('admin.waiting-list.index') }}">
                         <span class="cv-todo-dot {{ $totalWaitingList > 0 ? 'info' : 'ok' }}"></span>
                         <span class="cv-todo-text">
                             <b>{{ $totalWaitingList }} peserta di waiting list</b>
-                            <small>Monitoring Peserta</small>
+                            <small>Antrean Waiting List</small>
                         </span>
                         <span class="cv-todo-go">Buka &rarr;</span>
                     </a>

@@ -143,6 +143,60 @@
     box-shadow: 0 6px 16px rgba(1, 52, 124, 0.08) !important;
 }
 
+/* 2b. Compact Styling untuk Halaman Telemetri & Dashboard Terfokus */
+.health-telemetry-container .tiles-grid .tile_stats_inner.stat,
+.tiles-grid.tiles-grid-compact .tile_stats_inner.stat {
+    padding: 0.85rem 1.15rem !important;
+    min-height: 84px !important;
+}
+
+.health-telemetry-container .tiles-grid .stat-icon,
+.tiles-grid.tiles-grid-compact .stat-icon {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    border-radius: 8px !important;
+}
+
+.health-telemetry-container .tiles-grid .stat-icon svg,
+.tiles-grid.tiles-grid-compact .stat-icon svg {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.health-telemetry-container .tiles-grid .stat-value,
+.health-telemetry-container .tiles-grid .count,
+.tiles-grid.tiles-grid-compact .stat-value,
+.tiles-grid.tiles-grid-compact .count {
+    font-size: 1.35rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.3px !important;
+}
+
+.health-telemetry-container .tiles-grid .stat-label,
+.health-telemetry-container .tiles-grid .count_title,
+.tiles-grid.tiles-grid-compact .stat-label,
+.tiles-grid.tiles-grid-compact .count_title {
+    font-size: 10.5px !important;
+    line-height: 1.2 !important;
+}
+
+.health-telemetry-container .tiles-grid .stat-subtext,
+.health-telemetry-container .tiles-grid .count_bottom,
+.tiles-grid.tiles-grid-compact .stat-subtext,
+.tiles-grid.tiles-grid-compact .count_bottom {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+}
+
+.health-telemetry-container .tiles-grid .stat-spark,
+.health-telemetry-container .tiles-grid .sa-spark,
+.tiles-grid.tiles-grid-compact .stat-spark,
+.tiles-grid.tiles-grid-compact .sa-spark {
+    height: 28px !important;
+}
+
 /* 3. Filter & Toolbar Cards */
 .staf-filter-card {
     background: var(--neutral-0);
@@ -437,6 +491,480 @@
     color: #6EE7B7;
     border-color: rgba(16, 185, 129, 0.3);
 }
+
+/* =========================================================================
+   6. DETAIL ARSIP TABS & PANELS (DS-MagKom Parity)
+   ========================================================================= */
+
+.arsip-tab-bar {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--neutral-300, #CBD5E1);
+    overflow-x: auto;
+    padding-bottom: 2px;
+}
+
+.arsip-tab-btn {
+    padding: 0.75rem 1.25rem;
+    border: none;
+    background: transparent;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--neutral-600, #64748B);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.arsip-tab-btn:hover {
+    color: #01347C;
+}
+
+.arsip-tab-btn.active {
+    color: #01347C;
+    border-bottom-color: #01347C;
+    background: #EFF6FF;
+    border-radius: 8px 8px 0 0;
+}
+
+.arsip-tab-pane {
+    display: none;
+}
+
+.arsip-tab-pane.active {
+    display: block;
+}
+
+.arsip-info-box {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .arsip-tab-bar {
+    border-bottom-color: rgba(63, 81, 181, 0.45) !important;
+}
+
+[data-theme="dark"] .arsip-tab-btn {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .arsip-tab-btn:hover {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .arsip-tab-btn.active {
+    color: #93C5FD !important;
+    background: rgba(37, 99, 235, 0.2) !important;
+    border-bottom-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .arsip-info-box {
+    background: #011C44 !important;
+    border-color: rgba(63, 81, 181, 0.45) !important;
+}
+
+/* =========================================================================
+   SEGMENTED PILL TAB CONTROLLER & ARSIP DETAIL COMPONENTS
+   ========================================================================= */
+
+.arsip-segmented-tabs {
+    background: var(--neutral-0, #FFFFFF);
+    border: 1px solid var(--neutral-400, #CBD5E1);
+    border-radius: 12px;
+    padding: 0.5rem;
+    box-shadow: var(--shadow-subtle, 0 1px 3px rgba(0,0,0,0.05));
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.arsip-tab-pill {
+    flex: 1;
+    min-width: 170px;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--neutral-700, #334155);
+    cursor: pointer;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.15s ease-in-out;
+    text-decoration: none;
+}
+
+.arsip-tab-pill:hover {
+    color: #01347C;
+    background: #F1F5F9;
+}
+
+.arsip-tab-pill.active {
+    background: #01347C !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 2px 6px rgba(1, 52, 124, 0.25);
+}
+
+.arsip-tab-pill .pill-counter {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    background: rgba(0, 0, 0, 0.08);
+    color: inherit;
+    font-weight: 700;
+}
+
+.arsip-tab-pill.active .pill-counter {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: #FFFFFF !important;
+}
+
+/* Kartu Penugasan Magang Modern */
+.arsip-task-card {
+    padding: 1.25rem;
+    border: 1px solid var(--neutral-300, #CBD5E1);
+    border-radius: 10px;
+    background: var(--neutral-100, #F8FAFC);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: border-color 0.15s ease;
+}
+
+.arsip-task-card:hover {
+    border-color: #01347C;
+}
+
+/* Kartu Dokumen Berkas Administrasi */
+.arsip-doc-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 1.15rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--neutral-300, #E2E8F0);
+    background: var(--neutral-0, #FFFFFF);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    gap: 0.75rem;
+    transition: all 0.15s ease;
+}
+
+.arsip-doc-card:hover {
+    border-color: #01347C;
+    box-shadow: 0 4px 12px rgba(1, 52, 124, 0.08);
+    transform: translateY(-1px);
+}
+
+.arsip-doc-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.arsip-doc-icon {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 8px;
+    background: #EFF6FF;
+    color: #01347C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arsip-doc-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--neutral-900, #0F172A);
+    line-height: 1.3;
+}
+
+.arsip-doc-meta {
+    font-size: 0.75rem;
+    color: var(--neutral-600, #64748B);
+    margin-top: 0.2rem;
+    word-break: break-all;
+}
+
+.arsip-doc-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--neutral-300, #E2E8F0);
+}
+
+.btn-doc-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.15s ease;
+}
+
+.btn-doc-action--preview {
+    background: #EFF6FF;
+    color: #01347C;
+    border: 1px solid #BFDBFE;
+}
+
+.btn-doc-action--preview:hover {
+    background: #DBEAFE;
+}
+
+.btn-doc-action--download {
+    background: #F8FAFC;
+    color: var(--neutral-700, #334155);
+    border: 1px solid var(--neutral-300, #CBD5E1);
+}
+
+.btn-doc-action--download:hover {
+    background: #E2E8F0;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .arsip-segmented-tabs {
+    background: #002244 !important;
+    border-color: rgba(63, 81, 181, 0.4) !important;
+}
+
+[data-theme="dark"] .arsip-tab-pill {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .arsip-tab-pill:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .arsip-tab-pill.active {
+    background: #0641CC !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .arsip-task-card,
+[data-theme="dark"] .arsip-doc-card {
+    background: #003566 !important;
+    border-color: #3F51B5 !important;
+}
+
+[data-theme="dark"] .arsip-doc-icon {
+    background: rgba(30, 64, 175, 0.4) !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .arsip-doc-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .arsip-doc-meta {
+    color: #94A3B8 !important;
+}
+
+/* =========================================================================
+   MAGKOM BLUE BADGE & PILL STATUS SYSTEM (DS-MAGKOM SLEMAN STANDARD)
+   ========================================================================= */
+
+.badge-status-blue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.725rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    background: #EFF6FF !important;
+    color: #01347C !important;
+    border: 1px solid #BFDBFE !important;
+    white-space: nowrap;
+}
+
+.badge-counter-blue {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.3rem 0.75rem;
+    border-radius: 9999px;
+    background: #EFF6FF !important;
+    color: #01347C !important;
+    border: 1px solid #BFDBFE !important;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .badge-status-blue,
+[data-theme="dark"] .badge-counter-blue {
+    background: rgba(30, 64, 175, 0.25) !important;
+    color: #93C5FD !important;
+    border-color: rgba(147, 197, 253, 0.4) !important;
+}
+
+/* =========================================================================
+   DISASTER RECOVERY & DATABASE BACKUP HUB STYLES (SEC-03)
+   ========================================================================= */
+
+.backup-stat-card {
+    background: var(--neutral-0, #ffffff);
+    border-radius: 14px;
+    border: 1px solid var(--neutral-200, #E2E8F0);
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.backup-container {
+    background: var(--neutral-0, #ffffff);
+    border: 1px solid var(--neutral-200, #E2E8F0);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.backup-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.backup-table th {
+    background: var(--table-header-bg, #F1F5F9);
+    padding: 0.85rem 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--table-header-color, #1E293B);
+    border-bottom: 2px solid var(--table-header-border, #CBD5E1);
+}
+
+.backup-table td {
+    padding: 0.95rem 1.25rem;
+    border-bottom: 1px solid var(--table-row-border, #EEF0F5);
+    vertical-align: middle;
+    color: var(--table-text-primary, #05070B);
+}
+
+.backup-table tr:hover {
+    background: var(--table-row-hover, rgba(1, 52, 124, 0.04));
+}
+
+.backup-checksum-badge {
+    font-family: monospace;
+    font-size: 0.72rem;
+    color: #64748B;
+    background: #F1F5F9;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #E2E8F0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.backup-btn-download {
+    padding: 0.35rem 0.75rem;
+    background: #01347C;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    margin-right: 0.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: all 0.2s;
+    border: none;
+}
+
+.backup-btn-download:hover {
+    background: #00224F;
+    color: #ffffff;
+}
+
+.backup-btn-delete {
+    padding: 0.35rem 0.65rem;
+    background: #ffffff;
+    border: 1px solid #FECACA;
+    color: #DC2626;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.backup-btn-delete:hover {
+    background: #FEE2E2;
+}
+
+/* Dark Mode Overrides for Backup */
+[data-theme="dark"] .backup-stat-card {
+    background: var(--neutral-0, #182234) !important;
+    border-color: var(--neutral-200, #26354D) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .backup-stat-card span {
+    color: var(--neutral-400, #94A3B8);
+}
+
+[data-theme="dark"] .backup-container {
+    background: var(--neutral-0, #182234) !important;
+    border-color: var(--neutral-200, #26354D) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .backup-table th {
+    background: var(--table-header-bg, #012758) !important;
+    color: var(--table-header-color, #FFFFFF) !important;
+    border-bottom-color: var(--table-header-border, #3F51B5) !important;
+}
+
+[data-theme="dark"] .backup-table td {
+    color: var(--table-text-primary, #FFFFFF) !important;
+    border-bottom-color: var(--table-row-border, rgba(63, 81, 181, 0.28)) !important;
+}
+
+[data-theme="dark"] .backup-table tr:hover {
+    background: var(--table-row-hover, rgba(63, 81, 181, 0.18)) !important;
+}
+
+[data-theme="dark"] .backup-checksum-badge {
+    background: var(--neutral-100, #0F172A) !important;
+    color: var(--neutral-400, #94A3B8) !important;
+    border-color: var(--neutral-200, #26354D) !important;
+}
+
+[data-theme="dark"] .backup-btn-delete {
+    background: var(--neutral-100, #0F172A) !important;
+    color: #F87171 !important;
+    border-color: rgba(220, 38, 38, 0.35) !important;
+}
+
+
+
 
 
 

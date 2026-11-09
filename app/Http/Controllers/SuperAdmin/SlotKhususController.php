@@ -27,7 +27,8 @@ class SlotKhususController extends Controller
     {
         $slotList = SlotKhusus::with('creator')
             ->orderBy('bulan_mulai', 'desc')
-            ->paginate(10, ['*'], 'slot_page');
+            ->paginate(10, ['*'], 'slot_page')
+            ->withQueryString();
 
         $defaultSlot = Pengaturan::int('slot_khusus_default', 3);
 
@@ -46,7 +47,8 @@ class SlotKhususController extends Controller
                     ->orWhere('jalur', JalurEnum::Khusus);
             })
             ->orderBy('tgl_mulai', 'desc')
-            ->paginate(10, ['*'], 'peserta_page');
+            ->paginate(10, ['*'], 'peserta_page')
+            ->withQueryString();
 
         return view('superadmin.slot-khusus.index', [
             'slotList' => $slotList,

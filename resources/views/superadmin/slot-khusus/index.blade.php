@@ -249,7 +249,7 @@
                 </table>
             </div>
 
-            @if($slotList->hasPages())
+            @if($slotList->total() > 0)
                 <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200); background: var(--neutral-100);">
                     {{ $slotList->appends(request()->query())->links() }}
                 </div>
@@ -390,7 +390,7 @@
                 </table>
             </div>
 
-            @if($pesertaKhususList->hasPages())
+            @if($pesertaKhususList->total() > 0)
                 <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200); background: var(--neutral-100);">
                     {{ $pesertaKhususList->appends(request()->query())->links() }}
                 </div>

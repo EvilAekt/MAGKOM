@@ -60,7 +60,7 @@ class StafController extends Controller
             });
         }
 
-        $stafList = $query->paginate(15)->withQueryString();
+        $stafList = $query->paginate(10)->withQueryString();
         $maksPeserta = Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
 
         $stafPendingPasswordCount = User::whereIn('role', [RoleEnum::Admin->value, RoleEnum::Pembimbing->value])

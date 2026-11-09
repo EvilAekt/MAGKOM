@@ -195,7 +195,7 @@
                 </table>
             </div>
 
-            @if($bidangList->hasPages())
+            @if($bidangList->total() > 0)
                 <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200); background: var(--neutral-100);">
                     {{ $bidangList->links() }}
                 </div>

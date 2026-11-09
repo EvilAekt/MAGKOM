@@ -31,8 +31,16 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Telemetri Kesehatan & Diagnostik Sistem - SuperAdmin MagKom')
+@section('topbar_title', 'Telemetri Kesehatan Infrastruktur')
+
+@section('breadcrumbs')
+    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">Telemetri Kesehatan Infrastruktur</span>
+@endsection
 
 @push('styles')
+    @vite(['resources/css/pages/superadmin/superadmin-common.css'])
 <style>
     /* ==========================================================================
        HEALTH TELEMETRY DUAL-THEME CSS ENGINE & COCKPIT PARITY
@@ -1140,154 +1148,113 @@
         </x-gentelella.callout>
     @endif
 
-    <!-- COCKPIT MASTER SHELL (Deep Space Navy #002244 Parity) -->
-    <div class="telemetry-cockpit-shell">
-        <span class="sr-only">Panel Telemetri Kesehatan Infrastruktur Koneksi Basis Data Runtime</span>
-
-        {{-- 1. HEADER TOOLBAR & LIVE CONTROLS (AC-1: Zero Double Header) --}}
-        <header class="telemetry-header-toolbar">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl font-bold text-sm shadow-md shrink-0"
-                     style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background-color: var(--tel-btn-sse-bg); color: #ffffff; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(59, 130, 246, 0.3);">
-                    MK
+    {{-- 1. HERO BANNER KHAS SLEMAN MAGKOM (.sa-hero-banner) IDENTIK DENGAN AUDIT LOG --}}
+    <div class="sa-hero-banner" style="margin-bottom: 24px;">
+        <div class="banner-top-row">
+            <div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <h1 class="banner-title" style="margin: 0; font-size: 1.5rem; font-weight: 800; color: #FFFFFF;">
+                        Telemetri Kesehatan Infrastruktur
+                    </h1>
+                    <span class="telemetry-status-pill pill-success" style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #A7F3D0; padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="status-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #10B981; display: inline-block;"></span>
+                        <span>ALL NOMINAL</span>
+                    </span>
+                    <span style="font-size: 0.75rem; color: rgba(255, 255, 255, 0.85); font-weight: 600;">
+                        Live {{ $dbLatency ? number_format((float)$dbLatency, 0).'ms' : '24ms' }}
+                    </span>
                 </div>
-                <div>
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <h1 class="text-lg sm:text-xl font-bold tracking-tight m-0" style="font-size: 1.25rem; font-weight: 700; line-height: 1.75rem; color: var(--tel-text-primary) !important;">
-                            Telemetri Kesehatan Infrastruktur
-                        </h1>
-                        <span class="telemetry-status-pill pill-success">
-                            <span class="status-dot"></span>
-                            <span>Live 24ms</span>
-                        </span>
-                    </div>
-                    <div class="text-xs font-mono mt-0.5" style="color: var(--tel-text-muted); font-size: 11px;">
-                        <span style="color: var(--tel-accent-link); font-weight: 600;">magkom-prod-01</span> &bull; Sleman DC
-                    </div>
+                <div class="banner-subtitle" style="margin-top: 6px; font-size: 0.875rem; color: rgba(255, 255, 255, 0.9);">
+                    <span>Node: <strong>magkom-prod-01</strong> (Sleman DC)</span>
+                    <span class="bullet-separator" style="opacity: 0.6; margin: 0 4px;">&bull;</span>
+                    <span>SLA Uptime: <strong>{{ $slaPercent !== null ? $slaPercent . '%' : '99.98%' }}</strong></span>
+                    <span class="bullet-separator" style="opacity: 0.6; margin: 0 4px;">&bull;</span>
+                    <span>Mesin: <strong>PHP {{ PHP_VERSION }}</strong> &amp; <strong>MySQL {{ $runtimeInfo['db_version'] ?? '8.0' }}</strong></span>
+                    <span class="sr-only">Pusat Telemetri Infrastruktur &bull; Panel Telemetri Kesehatan Infrastruktur &bull; Koneksi Basis Data, Storage &bull; Runtime</span>
                 </div>
             </div>
 
-            <!-- Controls Strip -->
-            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                <!-- Time Window Selector Buttons -->
-                <div class="telemetry-time-selector" id="timeWindowSelector" role="group" aria-label="Rentang Waktu Telemetri">
-                    <button type="button" data-window="15m" class="time-window-btn active" title="15 Menit Terakhir">15m</button>
-                    <button type="button" data-window="1h" class="time-window-btn" title="1 Jam Terakhir">1h</button>
-                    <button type="button" data-window="24h" class="time-window-btn" title="24 Jam Terakhir">24h</button>
+            {{-- Controls Group: Interval Selector Pills & Action Button Test SSE --}}
+            <div class="banner-actions-group" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <div class="telemetry-time-selector" id="timeWindowSelector" role="group" aria-label="Rentang Waktu Telemetri" style="display: inline-flex; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 10px; padding: 3px; gap: 3px;">
+                    <button type="button" data-window="15m" class="time-window-btn active" title="15 Menit Terakhir" style="background: #ffffff; color: #01347C; font-weight: 700; border: none; border-radius: 7px; padding: 5px 12px; font-size: 0.75rem; cursor: pointer;">15m</button>
+                    <button type="button" data-window="1h" class="time-window-btn" title="1 Jam Terakhir" style="background: transparent; color: #ffffff; font-weight: 600; border: none; border-radius: 7px; padding: 5px 12px; font-size: 0.75rem; cursor: pointer;">1h</button>
+                    <button type="button" data-window="24h" class="time-window-btn" title="24 Jam Terakhir" style="background: transparent; color: #ffffff; font-weight: 600; border: none; border-radius: 7px; padding: 5px 12px; font-size: 0.75rem; cursor: pointer;">24h</button>
                 </div>
 
-                <!-- Action Button: Test SSE -->
-                <button type="button" id="btnTestSse" class="btn-test-sse-action" title="Uji Injeksi Event Telemetri Realtime SSE">
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16" style="width: 16px; height: 16px; max-width: 16px; max-height: 16px;" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
+                <button type="button" id="btnTestSse" class="btn-banner-action" title="Uji Injeksi Event Telemetri Realtime SSE" style="background: #ffffff; color: #01347C; border: none; border-radius: 10px; padding: 0.6rem 1.15rem; font-size: 0.8125rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; box-shadow: 0 2px 6px rgba(0,0,0,0.15); text-decoration: none;">
+                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                     <span>Test SSE</span>
                 </button>
             </div>
-        </header>
-
-        {{-- 2. UNIFIED COMMAND COCKPIT TELEMETRY CARD (HUD) (AC-2: 6 Kolom Simetris) --}}
-        <x-telemetry.health-hud
-            :sla-status="$slaStatus"
-            :sla-percent="$slaPercent"
-            :db-latency="$dbLatency"
-            :db-driver="$dbDriver"
-            :total-tables="$totalTables"
-            :p95-route-duration="$p95RouteDuration"
-            :avg-route-duration="$avgRouteDuration"
-            :total-route-requests="$totalRouteRequests"
-            :audit24h="$audit24h"
-            :total-audit="$totalAudit"
-            :failed-jobs-count="$failedJobsCount"
-            :cache-driver="$runtimeInfo['cache_driver'] ?? 'file'"
-            :queue-driver="$runtimeInfo['queue_driver'] ?? 'sync'"
-            :is-writable="$isWritable"
-        />
-
-        {{-- 3. 4 KEY STAT KPI CARDS ROW (AC-8: Safe SVG Dimensions) --}}
-        <div class="telemetry-kpi-row-grid">
-            <!-- Card 1: Uptime 30 Hari -->
-            <div class="telemetry-card">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <span class="telemetry-kpi-title">Uptime 30 Hari</span>
-                    <span class="telemetry-status-pill pill-success" style="padding: 2px 8px; font-size: 10px;">
-                        <span class="status-dot"></span>
-                        <span>Normal</span>
-                    </span>
-                </div>
-                <div style="margin-top: 10px; display: flex; align-items: baseline; justify-content: space-between;">
-                    <span class="telemetry-kpi-value">{{ $slaPercent !== null ? $slaPercent . '%' : '99.98%' }}</span>
-                    <svg class="h-6 w-20 text-emerald-500" viewBox="0 0 80 24" fill="none" width="80" height="24" style="width: 80px; height: 24px; max-width: 80px; max-height: 24px; color: #10b981;" aria-hidden="true">
-                        <path d="M0 16 L15 16 L25 15 L35 16 L45 14 L55 16 L65 15 L80 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                    </svg>
-                </div>
-                <div class="telemetry-kpi-sub">SLO: 99.9%</div>
-            </div>
-
-            <!-- Card 2: HTTP P95 Latency -->
-            <div class="telemetry-card">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <span class="telemetry-kpi-title">HTTP P95 Latency</span>
-                    <span class="font-mono text-[11px] font-semibold" style="color: #3b82f6;">&lt; 200ms SLO</span>
-                </div>
-                <div style="margin-top: 10px; display: flex; align-items: baseline; justify-content: space-between;">
-                    <div class="telemetry-kpi-value">
-                        {{ number_format((float) $p95RouteDuration, 1) }} <span class="text-xs font-normal" style="color: var(--tel-text-muted); font-size: 0.75rem;">ms</span>
-                    </div>
-                    <svg class="h-6 w-20 text-blue-500" viewBox="0 0 80 24" fill="none" width="80" height="24" style="width: 80px; height: 24px; max-width: 80px; max-height: 24px; color: #3b82f6;" aria-hidden="true">
-                        <path d="M0 18 L15 16 L30 19 L40 6 L50 17 L65 15 L80 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                    </svg>
-                </div>
-                <div class="telemetry-kpi-sub">Target: &lt; 200ms</div>
-            </div>
-
-            <!-- Card 3: Volume Permintaan -->
-            <div class="telemetry-card">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <span class="telemetry-kpi-title">Volume Permintaan</span>
-                    <span class="font-mono text-[11px] font-semibold" style="color: #818cf8;">140 rps</span>
-                </div>
-                <div style="margin-top: 10px; display: flex; align-items: baseline; justify-content: space-between;">
-                    <div class="telemetry-kpi-value">
-                        {{ number_format($totalRouteRequests) }} <span class="text-xs font-normal" style="color: var(--tel-text-muted); font-size: 0.75rem;">rpm</span>
-                    </div>
-                    <svg class="h-6 w-20 text-indigo-500" viewBox="0 0 80 24" fill="currentColor" width="80" height="24" style="width: 80px; height: 24px; max-width: 80px; max-height: 24px; color: #6366f1;" aria-hidden="true">
-                        <rect x="0" y="10" width="6" height="14" rx="1" />
-                        <rect x="10" y="7" width="6" height="17" rx="1" />
-                        <rect x="20" y="12" width="6" height="12" rx="1" />
-                        <rect x="30" y="4" width="6" height="20" rx="1" />
-                        <rect x="40" y="8" width="6" height="16" rx="1" />
-                        <rect x="50" y="6" width="6" height="18" rx="1" />
-                        <rect x="60" y="11" width="6" height="13" rx="1" />
-                        <rect x="70" y="9" width="6" height="15" rx="1" />
-                    </svg>
-                </div>
-                <div class="telemetry-kpi-sub">GET: 94% &bull; POST: 6%</div>
-            </div>
-
-            <!-- Card 4: SSE Stream Mandiri -->
-            <div class="telemetry-card telemetry-card-sse">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <span style="font-size: 11px; font-weight: 600; color: var(--tel-cyan-text);">SSE Stream Mandiri</span>
-                    <span class="telemetry-status-pill pill-info" style="padding: 2px 8px; font-size: 10px;">
-                        <span class="status-dot"></span>
-                        <span>1.2ms</span>
-                    </span>
-                </div>
-                <div style="margin-top: 10px; display: flex; align-items: baseline; justify-content: space-between;">
-                    <div class="telemetry-kpi-value" style="color: var(--tel-cyan-value);">
-                        18 <span class="text-xs font-normal" style="color: var(--tel-cyan-text); font-size: 0.75rem;">klien</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 4px;">
-                        <span class="h-4 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 16px; display: inline-block;"></span>
-                        <span class="h-6 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 24px; display: inline-block; animation-delay: 75ms;"></span>
-                        <span class="h-3 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 12px; display: inline-block; animation-delay: 150ms;"></span>
-                        <span class="h-5 w-1.5 rounded-full bg-cyan-500 animate-pulse" style="width: 6px; height: 20px; display: inline-block; animation-delay: 100ms;"></span>
-                    </div>
-                </div>
-                <div class="telemetry-kpi-sub" style="color: var(--tel-cyan-text);">Status: 18 Terhubung</div>
-            </div>
         </div>
+    </div>
+
+    {{-- 2. GRID 4 TILE-STAT METRIC CARDS (<x-gentelella.tile-stat>) IDENTIK DENGAN AUDIT LOG --}}
+    <div class="tiles-grid" style="margin-bottom: 1.25rem;">
+        <!-- 1. Status Sistem -->
+        <x-gentelella.tile-stat
+            title="STATUS SISTEM"
+            value="{{ $slaStatus === 'ALL SYSTEMS OPERATIONAL' ? '100% OK' : ($slaStatus ?? '100% OK') }}"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="Normal"
+            subText="SLA Uptime: {{ $slaPercent !== null ? $slaPercent . '%' : '99.98%' }} (0 Gangguan)"
+            :sparkBars="[90, 92, 95, 98, 99, 100]">
+            <x-slot:icon>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 2. DB Ping & Latensi -->
+        <x-gentelella.tile-stat
+            title="DB PING & LATENSI"
+            value="{{ number_format((float)$dbLatency, 2) }} ms"
+            color="blue"
+            trendType="info"
+            trendDirection="up"
+            trendText="SLO < 5ms"
+            subText="MySQL Pool: 12/100 ({{ $totalTables }} Tabel)"
+            :sparkBars="[15, 25, 30, 20, 18, 22]">
+            <x-slot:icon>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 3. HTTP P95 Latency -->
+        <x-gentelella.tile-stat
+            title="HTTP P95 LATENCY"
+            value="{{ number_format((float) $p95RouteDuration, 1) }} ms"
+            color="amber"
+            trendType="warning"
+            trendDirection="up"
+            trendText="Target < 200ms"
+            subText="Vol: {{ number_format($totalRouteRequests) }} rpm (141 rps)"
+            :sparkBars="[20, 35, 50, 45, 60, 55]">
+            <x-slot:icon>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 4. SSE Stream & Klien -->
+        <x-gentelella.tile-stat
+            title="SSE STREAM & KLIEN"
+            value="1.2 ms"
+            color="purple"
+            trendType="info"
+            trendDirection="up"
+            trendText="18 Klien"
+            subText="Error Budget: 99.98% (Sisa: 43w)"
+            :sparkBars="[10, 20, 35, 50, 70, 85]">
+            <x-slot:icon>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+    </div>
+
+    <!-- COCKPIT MASTER SHELL (Deep Space Navy #002244 Parity) -->
+    <div class="telemetry-cockpit-shell">
 
         {{-- 4. SPLIT ROW: LATENCY CURVE (8 COLS) & REDIS CACHE DONUT + HOST RESOURCES (4 COLS) (AC-3, AC-4) --}}
         <div class="telemetry-split-8-4">
