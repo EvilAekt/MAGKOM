@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Tambah Peserta Jalur Khusus - SuperAdmin MagKom')
-@section('page_title', 'Pendaftaran Peserta Jalur Khusus')
+@section('topbar_title', 'Pendaftaran Peserta Jalur Khusus')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -11,10 +11,26 @@
     <span class="breadcrumb-current">Tambah Peserta</span>
 @endsection
 
+@push('styles')
+    @vite(['resources/css/pages/superadmin/superadmin-common.css'])
+@endpush
+
 @section('content')
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 980px; margin: 0 auto; width: 100%;">
 
-    <x-gentelella.x-panel title="Formulir Pendaftaran Peserta Jalur Khusus (Langsung Aktif)">
+    {{-- 1. Hero Banner Khas Sleman MagKom --}}
+    <div class="sa-hero-banner">
+        <div class="banner-top-row">
+            <div>
+                <h1 class="banner-title">Pendaftaran Peserta Jalur Khusus</h1>
+                <div class="banner-subtitle">
+                    <span>Cakupan: <strong>Penugasan Instansi &amp; Kemitraan Resmi</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <x-gentelella.x-panel title="Formulir Pendaftaran Peserta Jalur Khusus">
         <div style="background: var(--blue-tint, #EFF6FF); border: 1px solid var(--blue-tint-line, #DBEAFE); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; color: #1E40AF; font-size: 0.875rem; line-height: 1.5;">
             <strong>Informasi Jalur Khusus:</strong> Pendaftaran melalui formulir ini diperuntukkan bagi peserta magang penugasan instansi, rekomendasi khusus, atau program kemitraan resmi. Akun peserta akan langsung dibuat dengan role <strong>Peserta Magang</strong> dan status penempatan <strong>Aktif</strong> tanpa melalui tahapan antrean verifikasi berkas reguler.
         </div>
@@ -42,7 +58,7 @@
                         <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
                             Alamat Email (Unik) <span style="color: var(--red-600);">*</span>
                         </label>
-                        <input type="email" name="email" value="{{ old('email') }}" required placeholder="ihsan@kampus.ac.id" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
+                        <input type="email" name="email" value="{{ old('email') }}" required placeholder="ihsan.peserta@gmail.com" style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; font-family: inherit;">
                         @error('email')
                             <span style="color: var(--red-600); font-size: 0.75rem;">{{ $message }}</span>
                         @enderror
@@ -170,7 +186,7 @@
                             <option value="">-- Tanpa Slot Khusus Spesifik --</option>
                             @foreach($slotKhususList as $slot)
                                 <option value="{{ $slot->id }}" {{ old('slot_khusus_id') == $slot->id ? 'selected' : '' }}>
-                                    {{ $slot->nama_slot }} ({{ $slot->bulan_mulai }} - Kuota: {{ $slot->kapasitas }})
+                                    Slot Khusus {{ $slot->bulan_mulai?->translatedFormat('F Y') }} (Sisa: {{ $slot->sisa }}/{{ $slot->jumlah }})
                                 </option>
                             @endforeach
                         </select>

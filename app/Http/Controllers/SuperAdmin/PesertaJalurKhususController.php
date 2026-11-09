@@ -109,7 +109,7 @@ class PesertaJalurKhususController extends Controller
 
             $plainPassword = $penempatan->plain_password ?? ($validated['password'] ?? 'Mgk-'.substr(md5($validated['email']), 0, 8).'!1');
 
-            return redirect()->route('superadmin.monitoring.index')
+            return redirect()->route('superadmin.slot-khusus.index')
                 ->with('success', "Akun peserta jalur khusus {$penempatan->peserta?->nama} berhasil dibuat dan langsung berstatus aktif.")
                 ->with('akun_baru_dibuat', true)
                 ->with('nama_peserta', $penempatan->peserta?->nama)
