@@ -183,16 +183,7 @@
                         <span class="cv-todo-go">Buka &rarr;</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('admin.waiting-list.index') }}">
-                        <span class="cv-todo-dot {{ $totalWaitingList > 0 ? 'info' : 'ok' }}"></span>
-                        <span class="cv-todo-text">
-                            <b>{{ $totalWaitingList }} peserta di waiting list</b>
-                            <small>Antrean Waiting List</small>
-                        </span>
-                        <span class="cv-todo-go">Buka &rarr;</span>
-                    </a>
-                </li>
+
             </ul>
         </x-gentelella.x-panel>
 
