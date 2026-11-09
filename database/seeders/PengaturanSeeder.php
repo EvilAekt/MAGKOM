@@ -26,7 +26,6 @@ class PengaturanSeeder extends Seeder
             ['kunci' => 'sla_verifikasi_hari', 'nilai' => '5'],
             ['kunci' => 'masa_tenggang_bulan', 'nilai' => '2'],
             ['kunci' => 'retensi_audit_akses_data_hari', 'nilai' => '365'],
-            ['kunci' => 'fitur_analitik_aktif', 'nilai' => '1'],
             ['kunci' => 'fitur_pendaftaran_kelompok_aktif', 'nilai' => '1'],
         ];
 

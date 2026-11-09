@@ -262,12 +262,7 @@ class ReleaseTwoFeaturesTest extends TestCase
         $this->assertStringContainsString("'+628999", $csvContent, 'Formula injection + diawali petik');
         $this->assertStringContainsString("'@GoogleSheetFormula", $csvContent, 'Formula injection @ diawali petik');
 
-        // 2. Ekspor Kuota oleh Admin
-        $resKuota = $this->actingAs($this->admin)->get(route('admin.laporan.kuota'));
-        $resKuota->assertStatus(200);
-        $resKuota->assertHeader('content-type', 'text/csv; charset=UTF-8');
-
-        // 3. Verifikasi bahwa ekspor tercatat di audit log (AC-13-4)
+        // 2. Verifikasi bahwa ekspor tercatat di audit log (AC-13-4)
         $this->assertDatabaseHas('audit_log', [
             'entitas' => 'penempatan',
         ]);

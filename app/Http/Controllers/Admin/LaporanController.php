@@ -33,9 +33,7 @@ class LaporanController extends Controller
     {
         $user = $request->user();
         $tab = $request->input('tab', 'pendaftaran');
-
-        // Jika user bukan superadmin mencoba membuka tab nilai, batasi ke tab pendaftaran
-        if ($tab === 'nilai' && ! $user->isSuperAdmin()) {
+        if (! in_array($tab, ['pendaftaran', 'penempatan'], true)) {
             $tab = 'pendaftaran';
         }
 
@@ -100,8 +98,6 @@ class LaporanController extends Controller
         // Data berdasarkan Tab
         $pendaftaranData = null;
         $penempatanData = null;
-        $kuotaData = null;
-        $slotKhususData = null;
 
         if ($tab === 'pendaftaran') {
             $pQuery = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan'])
@@ -157,17 +153,6 @@ class LaporanController extends Controller
             }
 
             $penempatanData = $penQuery->paginate(10)->withQueryString();
-        } elseif ($tab === 'kuota') {
-            $kuotaData = Kuota::with(['bulanMagang', 'jurusan'])
-                ->join('bulan_magang', 'kuota.bulan_magang_id', '=', 'bulan_magang.id')
-                ->orderBy('bulan_magang.bulan_mulai', 'desc')
-                ->select('kuota.*')
-                ->paginate(15, ['*'], 'kuota_page')
-                ->withQueryString();
-
-            $slotKhususData = SlotKhusus::orderBy('bulan_mulai', 'desc')
-                ->paginate(10, ['*'], 'slot_page')
-                ->withQueryString();
         }
 
         return view('admin.laporan.index', [
@@ -179,8 +164,6 @@ class LaporanController extends Controller
             'statusPenempatan' => StatusPenempatanEnum::cases(),
             'pendaftaranData' => $pendaftaranData,
             'penempatanData' => $penempatanData,
-            'kuotaData' => $kuotaData,
-            'slotKhususData' => $slotKhususData,
             'analyticsKuotaJurusan' => $analyticsKuotaJurusan,
             'analyticsJenjang' => $analyticsJenjang,
             'isSuperAdmin' => $user->isSuperAdmin(),
@@ -208,17 +191,6 @@ class LaporanController extends Controller
         return $this->exportService->exportPenempatan(
             $request->user(),
             $request->only(['status', 'jalur', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal']),
-            $request->input('format', 'csv')
-        );
-    }
-
-    /**
-     * Ekspor realisasi kuota umum vs slot khusus (AC-17-1, F-17).
-     */
-    public function kuota(Request $request): Response
-    {
-        return $this->exportService->exportRealisasiKuota(
-            $request->user(),
             $request->input('format', 'csv')
         );
     }

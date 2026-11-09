@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enums\TipeAuditEnum;
-use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\SlotKhusus;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Symfony\Component\HttpFoundation\Response;
@@ -274,98 +272,6 @@ class ExportReportService
 
             fclose($handle);
         }, 'rekap-penempatan-'.date('YmdHis').'.csv', [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-        ]);
-    }
-
-    /**
-     * Ekspor realisasi kuota umum vs slot khusus (AC-17-1).
-     */
-    public function exportRealisasiKuota(User $user, string $format = 'csv'): Response
-    {
-        $kuotaList = Kuota::with(['bulanMagang', 'jurusan'])->get();
-        $slotKhususList = SlotKhusus::all();
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::AksesData,
-            tabel: 'kuota',
-            idData: null,
-            nilaiLama: null,
-            nilaiBaru: ['kuota_count' => $kuotaList->count(), 'slot_count' => $slotKhususList->count(), 'format' => $format],
-            detail: [
-                'aksi' => $format === 'xlsx' ? 'ekspor_realisasi_kuota_xlsx' : 'ekspor_realisasi_kuota_csv',
-                'entitas' => 'kuota_dan_slot',
-                'jumlah_baris' => $kuotaList->count() + $slotKhususList->count(),
-            ]
-        );
-
-        $headers = ['Kategori Kuota', 'Periode Bulan', 'Target/Jurusan', 'Alokasi Jumlah', 'Terisi', 'Sisa'];
-
-        if ($format === 'xlsx') {
-            $rows = [];
-            foreach ($kuotaList as $k) {
-                $sisa = max(0, $k->jumlah - $k->terisi);
-                $rows[] = [
-                    'Kuota Umum',
-                    $k->bulanMagang?->bulan_mulai?->format('F Y') ?? '-',
-                    $k->jurusan?->nama_jurusan ?? '-',
-                    $k->jumlah,
-                    $k->terisi,
-                    $sisa,
-                ];
-            }
-
-            foreach ($slotKhususList as $s) {
-                $sisaSlot = max(0, $s->jumlah - $s->terisi);
-                $rows[] = [
-                    'Slot Khusus',
-                    $s->bulan_mulai?->format('F Y') ?? '-',
-                    'Internal / Kerjasama',
-                    $s->jumlah,
-                    $s->terisi,
-                    $sisaSlot,
-                ];
-            }
-
-            return $this->xlsxExportService->downloadXlsx(
-                'realisasi-kuota-'.date('YmdHis').'.xlsx',
-                'Realisasi Kuota',
-                $headers,
-                $rows
-            );
-        }
-
-        return response()->streamDownload(function () use ($headers, $kuotaList, $slotKhususList) {
-            $handle = fopen('php://output', 'w');
-            fwrite($handle, "\xEF\xBB\xBFsep=,\r\n"); // UTF-8 BOM + sep=, directive
-            fputcsv($handle, $headers);
-
-            foreach ($kuotaList as $k) {
-                $sisa = max(0, $k->jumlah - $k->terisi);
-                fputcsv($handle, [
-                    'Kuota Umum',
-                    $this->sanitizeCell($k->bulanMagang?->bulan_mulai?->format('F Y')),
-                    $this->sanitizeCell($k->jurusan?->nama_jurusan),
-                    $this->sanitizeCell($k->jumlah),
-                    $this->sanitizeCell($k->terisi),
-                    $this->sanitizeCell($sisa),
-                ]);
-            }
-
-            foreach ($slotKhususList as $s) {
-                $sisaSlot = max(0, $s->jumlah - $s->terisi);
-                fputcsv($handle, [
-                    'Slot Khusus',
-                    $this->sanitizeCell($s->bulan_mulai?->format('F Y')),
-                    'Internal / Kerjasama',
-                    $this->sanitizeCell($s->jumlah),
-                    $this->sanitizeCell($s->terisi),
-                    $this->sanitizeCell($sisaSlot),
-                ]);
-            }
-
-            fclose($handle);
-        }, 'realisasi-kuota-'.date('YmdHis').'.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }

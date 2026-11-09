@@ -42,7 +42,7 @@ class PredikatBatasValidationTest extends TestCase
         $response = $this->actingAs($this->superAdmin)->get(route('superadmin.pengaturan.index'));
 
         $response->assertOk();
-        $response->assertViewHas('totalParameter', 13);
+        $response->assertViewHas('totalParameter', 12);
         $response->assertSee('Parameter Operasional Aktif');
         $response->assertSee('Batas Maksimal Anggota Kelompok');
         $response->assertSee('Durasi Magang Maksimal yang Diizinkan');
@@ -90,7 +90,6 @@ class PredikatBatasValidationTest extends TestCase
             'sla_verifikasi_hari' => 7,
             'masa_tenggang_bulan' => 3,
             'retensi_audit_akses_data_hari' => 180,
-            'fitur_analitik_aktif' => 1,
             'fitur_pendaftaran_kelompok_aktif' => 1,
         ];
 

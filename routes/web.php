@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Enums\RoleEnum;
-use App\Http\Controllers\Admin\AnalitikTahunanController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\KuotaController;
 use App\Http\Controllers\Admin\LaporanController;
@@ -269,9 +268,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/pendaftaran', [LaporanController::class, 'pendaftaran'])->name('laporan.pendaftaran');
     Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
-    Route::get('/laporan/kuota', [LaporanController::class, 'kuota'])->name('laporan.kuota');
-    Route::get('/laporan/tahunan', [AnalitikTahunanController::class, 'index'])->name('laporan.tahunan');
-    Route::get('/laporan/tahunan/export', [AnalitikTahunanController::class, 'export'])->name('laporan.tahunan.export');
 
     // Profil & Pengaturan Akun Administrator
     Route::get('/profil', [AdminProfilController::class, 'show'])->name('profil.show');

@@ -162,30 +162,6 @@
             subText="Telah tuntas dinas" 
             :sparkBars="[30, 45, 55, 65, 75, 85, 100]"
         />
-
-        {{-- Card 5: Realisasi Kuota Umum --}}
-        <x-gentelella.tile-stat 
-            title="Realisasi Kuota Umum" 
-            :value="number_format($metricCards['kuota_terisi'])" 
-            icon="calendar"
-            color="yellow"
-            trendText="Reguler"
-            trendDirection="up"
-            subText="Kursi terisi jalur online dinas" 
-            :sparkBars="[40, 50, 60, 70, 65, 80, 85]"
-        />
-
-        {{-- Card 6: Slot Khusus Terisi --}}
-        <x-gentelella.tile-stat 
-            title="Slot Khusus Terisi" 
-            :value="number_format($metricCards['slot_terisi'])" 
-            icon="briefcase"
-            color="blue"
-            trendText="Mitra"
-            trendDirection="up"
-            subText="Alokasi MoU kemitraan dinas" 
-            :sparkBars="[20, 30, 40, 35, 50, 60, 70]"
-        />
     </div>
 
     <!-- 1.5 VISUAL ANALYTICS & INSIGHTS (AC-17-1) -->
@@ -323,21 +299,6 @@
            color: {{ $tab === 'penempatan' ? '#FFFFFF' : 'var(--neutral-700)' }};">
             Data Penempatan
         </a>
-
-        <a href="{{ route('admin.laporan.index', ['tab' => 'kuota']) }}"
-           style="flex: 1; min-width: 160px; padding: 0.625rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 700; text-align: center; transition: all 0.15s;
-           background: {{ $tab === 'kuota' ? 'var(--blue-600)' : 'transparent' }};
-           color: {{ $tab === 'kuota' ? '#FFFFFF' : 'var(--neutral-700)' }};">
-            Realisasi Kuota & Slot
-        </a>
-
-        @if(\App\Support\Pengaturan::bool('fitur_analitik_aktif', true))
-        <a href="{{ route('admin.laporan.tahunan') }}"
-           style="flex: 1; min-width: 170px; padding: 0.625rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 700; text-align: center; transition: all 0.15s; background: transparent; color: var(--blue-700); border: 1px dashed var(--blue-400); display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-            <span>Analitik Tahunan</span>
-        </a>
-        @endif
     </div>
 
     <!-- 3. TAB 1: REKAP PENDAFTARAN -->
@@ -799,106 +760,6 @@
                         {{ $penempatanData->links() }}
                     </div>
                 @endif
-            </div>
-        </x-gentelella.x-panel>
-    @endif
-
-    <!-- 5. TAB 3: REALISASI KUOTA & SLOT -->
-    @if($tab === 'kuota')
-        <x-gentelella.x-panel class="has-table" title="Laporan Realisasi Kuota Umum vs Slot Khusus">
-            <x-slot:actions>
-                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                    <a href="{{ route('admin.laporan.kuota', ['format' => 'xlsx']) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 1rem; background: #166534; color: #FFFFFF; font-weight: 700; font-size: 0.8rem; text-decoration: none; border-radius: 6px; box-shadow: 0 1px 3px rgba(22, 101, 52, 0.25); transition: background 0.15s ease;"
-                       title="Unduh realisasi kuota berformat Microsoft Excel (.xlsx)">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <path d="M8 13h8"></path>
-                            <path d="M8 17h8"></path>
-                            <path d="M10 9h4"></path>
-                        </svg>
-                        <span>Ekspor Excel (.xlsx)</span>
-                    </a>
-                    <a href="{{ route('admin.laporan.kuota', ['format' => 'csv']) }}"
-                       style="display: inline-flex; align-items: center; gap: 0.45rem; height: 36px; padding: 0 0.85rem; background: #FFFFFF; color: #475569; font-weight: 600; font-size: 0.8rem; text-decoration: none; border-radius: 6px; border: 1.5px solid #CBD5E1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.15s ease;"
-                       title="Unduh format CSV">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                        <span>Ekspor CSV</span>
-                    </a>
-                </div>
-            </x-slot:actions>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
-                <!-- Tabel Kuota Umum -->
-                <div>
-                    <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.75rem;">Realisasi Kuota Umum Per Jurusan</h3>
-                    <div class="adm-table-container">
-                        <div style="overflow-x: auto; width: 100%;">
-                            <table class="adm-table">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: left;">Bulan Magang</th>
-                                        <th style="text-align: left;">Jurusan</th>
-                                        <th class="th-center" style="width: 90px; text-align: center;">Kapasitas</th>
-                                        <th class="th-center" style="width: 80px; text-align: center;">Terisi</th>
-                                        <th class="th-center" style="width: 80px; text-align: center;">Sisa</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($kuotaData as $k)
-                                        <tr>
-                                            <td style="font-weight: 600;">
-                                                {{ $k->bulanMagang?->bulan_mulai?->translatedFormat('M Y') }}
-                                            </td>
-                                            <td>{{ $k->jurusan?->nama_jurusan }}</td>
-                                            <td class="td-center">{{ $k->jumlah }}</td>
-                                            <td class="td-center" style="font-weight: 700; color: #D97706;">{{ $k->terisi }}</td>
-                                            <td class="td-center" style="font-weight: 700; color: #16A34A;">
-                                                {{ max(0, $k->jumlah - $k->terisi) }}
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr><td colspan="5" class="adm-table-empty">Tidak ada data kuota.</td></tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tabel Slot Khusus -->
-                <div>
-                    <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.75rem;">Realisasi Slot Khusus Kemitraan</h3>
-                    <div class="adm-table-container">
-                        <div style="overflow-x: auto; width: 100%;">
-                            <table class="adm-table">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: left;">Bulan Magang</th>
-                                        <th class="th-center" style="width: 100px; text-align: center;">Alokasi Slot</th>
-                                        <th class="th-center" style="width: 90px; text-align: center;">Terisi</th>
-                                        <th class="th-center" style="width: 90px; text-align: center;">Sisa Slot</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($slotKhususData as $sk)
-                                        <tr>
-                                            <td style="font-weight: 600;">
-                                                {{ $sk->bulan_mulai?->translatedFormat('F Y') }}
-                                            </td>
-                                            <td class="td-center">{{ $sk->jumlah }}</td>
-                                            <td class="td-center" style="font-weight: 700; color: #7E22CE;">{{ $sk->terisi }}</td>
-                                            <td class="td-center" style="font-weight: 700; color: #16A34A;">{{ $sk->sisa }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr><td colspan="4" class="adm-table-empty">Tidak ada data slot khusus.</td></tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
             </div>
         </x-gentelella.x-panel>
     @endif

@@ -283,25 +283,7 @@
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-                <!-- Toggle 1: Modul Analitik Tahunan Eksekutif -->
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-300); border-radius: 10px;">
-                    <div style="display: flex; align-items: center; gap: 0.875rem;">
-                        <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--purple-100, #F3E8FF); color: var(--purple-700, #7E22CE); display: flex; align-items: center; justify-content: center;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <div style="font-size: 0.875rem; font-weight: 700; color: var(--neutral-900);">Modul Analitik Tahunan Eksekutif</div>
-                        </div>
-                    </div>
-                    <label style="position: relative; display: inline-flex; align-items: center; cursor: pointer; user-select: none;">
-                        <input type="checkbox" name="fitur_analitik_aktif" value="1" {{ old('fitur_analitik_aktif', $pengaturan['fitur_analitik_aktif'] ?? '1') === '1' ? 'checked' : '' }} style="width: 20px; height: 20px; accent-color: var(--blue-600); cursor: pointer;">
-                        <span style="margin-left: 0.5rem; font-size: 0.8125rem; font-weight: 600; color: var(--neutral-700);">Aktif</span>
-                    </label>
-                </div>
-
-                <!-- Toggle 2: Modul Pendaftaran Kelompok / Tim -->
+                <!-- Toggle 1: Modul Pendaftaran Kelompok / Tim -->
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-300); border-radius: 10px;">
                     <div style="display: flex; align-items: center; gap: 0.875rem;">
                         <div style="width: 32px; height: 32px; border-radius: 6px; background: var(--amber-100, #FEF3C7); color: var(--amber-700, #B45309); display: flex; align-items: center; justify-content: center;">

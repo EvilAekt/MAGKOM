@@ -139,7 +139,6 @@ class SuperAdminBackendStabilityTest extends TestCase
             'batas_predikat_d' => 45,
             'fitur_sertifikat_aktif' => 1,
             'fitur_survei_aktif' => 1,
-            'fitur_analitik_aktif' => 1,
         ];
 
         $response = $this->actingAs($this->superAdmin)->put(route('superadmin.pengaturan.update'), $payload);

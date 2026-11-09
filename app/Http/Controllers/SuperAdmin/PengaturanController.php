@@ -40,7 +40,6 @@ class PengaturanController extends Controller
             'sla_verifikasi_hari',
             'masa_tenggang_bulan',
             'retensi_audit_akses_data_hari',
-            'fitur_analitik_aktif',
             'fitur_pendaftaran_kelompok_aktif',
         ];
 
@@ -77,7 +76,6 @@ class PengaturanController extends Controller
             'sla_verifikasi_hari' => ['nullable', 'integer', 'min:1', 'max:30'],
             'masa_tenggang_bulan' => ['required', 'integer', 'min:1', 'max:12'],
             'retensi_audit_akses_data_hari' => ['nullable', 'integer', 'min:30', 'max:1825'],
-            'fitur_analitik_aktif' => ['nullable', 'boolean'],
             'fitur_pendaftaran_kelompok_aktif' => ['nullable', 'boolean'],
         ]);
 
@@ -89,7 +87,6 @@ class PengaturanController extends Controller
             'deadline_mendekati_hari' => (string) $validated['deadline_mendekati_hari'],
             'masa_tenggang_bulan' => (string) $validated['masa_tenggang_bulan'],
             'retensi_audit_akses_data_hari' => (string) ($validated['retensi_audit_akses_data_hari'] ?? '365'),
-            'fitur_analitik_aktif' => $request->boolean('fitur_analitik_aktif') ? '1' : '0',
         ];
 
         if (isset($validated['slot_khusus_default'])) {
