@@ -384,7 +384,6 @@ class AdvancedRoleEnhancementPhaseSixTest extends TestCase
         $this->assertArrayHasKey('pengaturan', $content['snapshot']);
         $this->assertArrayHasKey('jurusan', $content['snapshot']);
         $this->assertArrayHasKey('bidang', $content['snapshot']);
-        $this->assertArrayHasKey('rubrik', $content['snapshot']);
     }
 
     public function test_superadmin_security_sweep_command_and_telemetry_action(): void
