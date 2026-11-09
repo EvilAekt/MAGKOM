@@ -13,17 +13,19 @@ class JenisDokumenSeeder extends Seeder
     public function run(): void
     {
         $dokumenList = [
-            // Jalur SMK
+            // =========================================================================
+            // 1. KELOMPOK SMK (4 DOKUMEN RESMI)
+            // =========================================================================
             [
                 'kode' => 'surat_pengantar',
-                'nama' => 'Surat Permohonan PKL/Magang dari Kepala Sekolah',
+                'nama' => 'Surat Permohonan PKL dari Sekolah',
                 'jenjang' => JenjangEnum::Smk,
                 'wajib' => true,
                 'aktif' => true,
             ],
             [
                 'kode' => 'cv',
-                'nama' => 'Curriculum Vitae (CV) & Portofolio Keahlian',
+                'nama' => 'Curriculum Vitae (CV) & Tautan Portofolio Proyek',
                 'jenjang' => JenjangEnum::Smk,
                 'wajib' => true,
                 'aktif' => true,
@@ -37,53 +39,50 @@ class JenisDokumenSeeder extends Seeder
             ],
             [
                 'kode' => 'surat_ortu',
-                'nama' => 'Surat Persetujuan Orang Tua / Wali',
+                'nama' => 'Surat Pengantar dari Orang Tua',
                 'jenjang' => JenjangEnum::Smk,
                 'wajib' => false,
                 'aktif' => true,
             ],
 
-            // Jalur Mahasiswa D3
+            // =========================================================================
+            // 2. KELOMPOK KAMPUS - D3 (4 DOKUMEN RESMI)
+            // =========================================================================
             [
                 'kode' => 'surat_pengantar',
-                'nama' => 'Surat Pengantar Magang Resmi dari Fakultas / Program Studi',
-                'jenjang' => JenjangEnum::D3,
-                'wajib' => true,
-                'aktif' => true,
-            ],
-            [
-                'kode' => 'proposal',
-                'nama' => 'Proposal Kegiatan Magang',
+                'nama' => 'Surat Pengantar Magang Resmi dari Dekanat / Fakultas',
                 'jenjang' => JenjangEnum::D3,
                 'wajib' => true,
                 'aktif' => true,
             ],
             [
                 'kode' => 'cv',
-                'nama' => 'Curriculum Vitae (CV) & Portofolio Proyek',
+                'nama' => 'Curriculum Vitae (CV) & Tautan Portofolio Proyek',
                 'jenjang' => JenjangEnum::D3,
                 'wajib' => true,
                 'aktif' => true,
             ],
             [
                 'kode' => 'transkrip',
-                'nama' => 'Salinan Transkrip Nilai Akademik Terakhir',
+                'nama' => 'Transkrip Nilai Akademik Sementara',
                 'jenjang' => JenjangEnum::D3,
-                'wajib' => true,
-                'aktif' => true,
-            ],
-
-            // Jalur Mahasiswa S1
-            [
-                'kode' => 'surat_pengantar',
-                'nama' => 'Surat Pengantar Magang Resmi dari Dekanat / Fakultas',
-                'jenjang' => JenjangEnum::S1,
                 'wajib' => true,
                 'aktif' => true,
             ],
             [
                 'kode' => 'proposal',
-                'nama' => 'Proposal Rencana Kegiatan Magang & Riset',
+                'nama' => 'Proposal Rencana Kegiatan Magang',
+                'jenjang' => JenjangEnum::D3,
+                'wajib' => true,
+                'aktif' => true,
+            ],
+
+            // =========================================================================
+            // 3. KELOMPOK KAMPUS - S1 (4 DOKUMEN RESMI)
+            // =========================================================================
+            [
+                'kode' => 'surat_pengantar',
+                'nama' => 'Surat Pengantar Magang Resmi dari Dekanat / Fakultas',
                 'jenjang' => JenjangEnum::S1,
                 'wajib' => true,
                 'aktif' => true,
@@ -98,6 +97,13 @@ class JenisDokumenSeeder extends Seeder
             [
                 'kode' => 'transkrip',
                 'nama' => 'Transkrip Nilai Akademik Sementara',
+                'jenjang' => JenjangEnum::S1,
+                'wajib' => true,
+                'aktif' => true,
+            ],
+            [
+                'kode' => 'proposal',
+                'nama' => 'Proposal Rencana Kegiatan Magang',
                 'jenjang' => JenjangEnum::S1,
                 'wajib' => true,
                 'aktif' => true,

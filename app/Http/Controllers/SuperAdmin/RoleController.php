@@ -40,11 +40,12 @@ class RoleController extends Controller
 
         $totalPengguna = User::count();
 
-        // Ambil semua permissions beserta relasi rolePermissions yang aktif
+        // Ambil semua permissions beserta relasi rolePermissions yang aktif (10 per halaman)
         $permissions = Permission::with('rolePermissions')
             ->orderBy('urutan')
             ->orderBy('id')
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('superadmin.role.index', [
             'roleCounts' => $roleCounts,
@@ -109,6 +110,7 @@ class RoleController extends Controller
     public function updateMatrix(UpdateRoleMatrixRequest $request): RedirectResponse
     {
         $matrixData = $request->input('matrix', []);
+        $pagePermissionIds = array_filter(array_map('intval', (array) $request->input('page_permission_ids', [])));
         $allRoles = [
             RoleEnum::SuperAdmin->value,
             RoleEnum::Admin->value,
@@ -116,10 +118,14 @@ class RoleController extends Controller
             RoleEnum::Peserta->value,
         ];
 
-        DB::transaction(function () use ($matrixData, $allRoles): void {
-            $allPermissions = Permission::all();
+        DB::transaction(function () use ($matrixData, $pagePermissionIds, $allRoles): void {
+            $targetPermissions = ! empty($pagePermissionIds)
+                ? Permission::whereIn('id', $pagePermissionIds)->get()
+                : (! empty($matrixData)
+                    ? Permission::whereIn('id', array_map('intval', array_keys($matrixData)))->get()
+                    : Permission::all());
 
-            foreach ($allPermissions as $permission) {
+            foreach ($targetPermissions as $permission) {
                 $permissionId = (int) $permission->id;
                 $submittedRolesForPerm = isset($matrixData[$permissionId]) && is_array($matrixData[$permissionId])
                     ? array_keys($matrixData[$permissionId])
@@ -130,6 +136,8 @@ class RoleController extends Controller
                     'keamanan.audit-trail',
                     'staf.manajemen',
                     'konfigurasi.parameter',
+                    'sistem.cadangan-database',
+                    'sistem.telemetri-kesehatan',
                 ], true)) {
                     if (! in_array(RoleEnum::SuperAdmin->value, $submittedRolesForPerm, true)) {
                         $submittedRolesForPerm[] = RoleEnum::SuperAdmin->value;
