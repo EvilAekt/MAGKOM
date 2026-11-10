@@ -1423,7 +1423,7 @@
             transition: transform 0.2s ease;
         }
 
-        /* Dropdown Menu Overlay (Floating Elevation) */
+        /* Dropdown Menu Overlay (270px, Floating Elevation) */
         .user-dropdown-menu {
             position: absolute;
             top: calc(100% + 0.5rem);
@@ -1432,8 +1432,8 @@
             background-color: var(--neutral-0);
             border: 1px solid var(--neutral-400);
             border-radius: 12px;
-            box-shadow: var(--shadow-raised);
-            padding: 0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+            padding: 0.5rem;
             display: none;
             flex-direction: column;
             gap: 0;
@@ -1516,12 +1516,78 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: var(--neutral-100);
+            border-radius: 8px;
+            border-bottom: 1px solid var(--neutral-200);
+            margin-bottom: 2px;
+        }
+
+        .dropdown-header-avatar {
+            width: 38px;
+            height: 38px;
+            background: var(--blue-600);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-base);
+            font-weight: var(--fw-bold);
+            flex-shrink: 0;
+        }
+
+        .dropdown-header-meta {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .dropdown-header-name {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--neutral-800);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.25;
+        }
+
+        .dropdown-header-email {
+            font-size: 0.75rem;
+            color: var(--neutral-600);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+        }
+
+        .dropdown-header-role {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: #02275D;
+            background-color: #FFCB05;
+            display: inline-block;
+            align-self: flex-start;
+            padding: 1px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+            line-height: 1.2;
+        }
+
         .dropdown-item-link,
         .dropdown-item-btn {
             display: flex;
             align-items: center;
             gap: 0.625rem;
-            min-height: 40px;
+            min-height: 38px;
             padding: 0.5rem 0.75rem;
             border-radius: 8px;
             text-decoration: none;
@@ -1540,6 +1606,14 @@
         .dropdown-item-btn:hover {
             background-color: var(--neutral-100);
             color: var(--blue-600);
+        }
+
+        .dropdown-item-btn.logout-action {
+            color: var(--red-600);
+        }
+
+        .dropdown-item-btn.logout-action svg {
+            color: var(--red-600);
         }
 
         .dropdown-item-btn.logout-action:hover {
@@ -3609,10 +3683,11 @@
 
                     <!-- Dropdown Menu Akun -->
                     <div id="userDropdown" class="user-dropdown-menu" role="menu" aria-labelledby="userMenuBtn">
+                        {{-- Dropdown Header Identitas Pengguna (Paritas Gambar 1) --}}
                         <div class="dropdown-header">
                             <div class="dropdown-header-avatar" style="overflow: hidden;">
                                 @if($currentUser?->foto_url)
-                                    <img src="{{ $currentUser->foto_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                    <img src="{{ $currentUser->foto_url }}" alt="{{ $currentUser->nama }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                                 @else
                                     {{ strtoupper(substr($currentUser?->nama ?? 'U', 0, 1)) }}
                                 @endif
@@ -3621,12 +3696,12 @@
                                 <span class="dropdown-header-name">{{ $currentUser?->nama ?? 'Pengguna' }}</span>
                                 <span class="dropdown-header-email">{{ $currentUser?->email ?? '-' }}</span>
                                 <span class="dropdown-header-role">
-                                    @if($userRole === 'pembimbing')
-                                        {{ __('Pembimbing Lapangan') }}
+                                    @if($userRole === 'admin')
+                                        {{ __('Administrator Dinas') }}
                                     @elseif($userRole === 'superadmin')
                                         {{ __('Super Administrator') }}
-                                    @elseif($userRole === 'admin')
-                                        {{ __('Administrator') }}
+                                    @elseif($userRole === 'pembimbing')
+                                        {{ __('Pembimbing Lapangan') }}
                                     @else
                                         {{ ucfirst($userRole) }}
                                     @endif
@@ -3634,7 +3709,7 @@
                             </div>
                         </div>
 
-                        <div class="dropdown-body-links">
+                        <div class="dropdown-divider"></div>
                         @if($userRole === 'peserta')
                             <a href="{{ route('peserta.profil.show') }}" class="dropdown-item-link" role="menuitem">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3651,19 +3726,25 @@
                                 <span>Pengaturan Akun</span>
                             </a>
                         @elseif($userRole === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="dropdown-item-link" role="menuitem">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                </svg>
+                                <span>{{ __('Dashboard') }}</span>
+                            </a>
                             <a href="{{ route('admin.profil.show') }}" class="dropdown-item-link" role="menuitem">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                <span>Profil Saya</span>
+                                <span>{{ __('Profil Saya') }}</span>
                             </a>
                             <a href="{{ route('admin.pengaturan.index') }}" class="dropdown-item-link" role="menuitem">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="3"></circle>
                                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                                 </svg>
-                                <span>Pengaturan Akun</span>
+                                <span>{{ __('Pengaturan Akun') }} <span style="font-size: 0.72rem; opacity: 0.7; font-weight: 400;">({{ __('Ganti Kata Sandi') }})</span></span>
                             </a>
                         @elseif($userRole === 'pembimbing')
                             <a href="{{ route('pembimbing.dashboard') }}" class="dropdown-item-link" role="menuitem">
@@ -3723,10 +3804,8 @@
                         <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                             @csrf
                             <button type="submit" class="dropdown-item-btn logout-action" role="menuitem">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                    <polyline points="16 17 21 12 16 7"></polyline>
-                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                 </svg>
                                 <span>{{ __('Keluar Akun') }}</span>
                             </button>
