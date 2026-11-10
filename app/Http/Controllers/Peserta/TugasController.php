@@ -160,25 +160,58 @@ class TugasController extends Controller
     {
         Gate::authorize('submitProgres', $tugas);
 
+        // Kunci jika tugas sudah selesai
+        if ($tugas->status === StatusTugasEnum::Selesai) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tugas ini telah ditinjau dan dinyatakan selesai oleh pembimbing.',
+                ], 422);
+            }
+
+            return back()->with('error', 'Tugas ini telah ditinjau dan dinyatakan selesai oleh pembimbing.');
+        }
+
+        // Kunci pengumpulan berulang jika tugas sudah pernah dikumpulkan dan belum berstatus perlu revisi
+        $latestProgres = $tugas->progresLogs()->latest('id')->first();
+        if ($latestProgres && $latestProgres->status_review !== StatusReviewProgresEnum::PerluRevisi) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tugas ini sudah diserahkan dan sedang menunggu peninjauan dari pembimbing.',
+                ], 422);
+            }
+
+            return back()->with('error', 'Tugas ini sudah diserahkan dan sedang menunggu peninjauan dari pembimbing.');
+        }
+
         $filePath = null;
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $filePath = $file->store("progres/{$tugas->id}", 'private');
         } elseif ($request->filled('recent_file_path')) {
-            // Anti-IDOR: pastikan file ini benar-benar milik peserta yang login
+            // Anti-IDOR & Path Traversal Guard: pastikan file ini bebas dari traversal dan benar-benar milik peserta
             $recentPath = (string) $request->validated('recent_file_path');
             $user = $request->user();
-            $isOwned = ProgresLog::where('file', $recentPath)
-                ->whereHas('tugas.penempatan', function ($q) use ($user) {
-                    $q->where('peserta_id', $user?->id);
-                })
-                ->exists();
+            $isSafePath = ! str_contains($recentPath, '..') && ! str_contains($recentPath, '\\');
+            $isOwned = $isSafePath && (
+                str_starts_with($recentPath, "progres/{$tugas->id}/")
+                || ProgresLog::where('file', $recentPath)
+                    ->whereHas('tugas.penempatan', function ($q) use ($user) {
+                        $q->where('peserta_id', $user?->id);
+                    })
+                    ->exists()
+            );
 
             if ($isOwned && Storage::disk('private')->exists($recentPath)) {
-                $ext = pathinfo($recentPath, PATHINFO_EXTENSION);
-                $newFilename = Str::random(40).($ext ? ".{$ext}" : '');
-                $filePath = "progres/{$tugas->id}/{$newFilename}";
-                Storage::disk('private')->copy($recentPath, $filePath);
+                if (str_starts_with($recentPath, "progres/{$tugas->id}/")) {
+                    $filePath = $recentPath;
+                } else {
+                    $ext = pathinfo($recentPath, PATHINFO_EXTENSION);
+                    $newFilename = Str::random(40).($ext ? ".{$ext}" : '');
+                    $filePath = "progres/{$tugas->id}/{$newFilename}";
+                    Storage::disk('private')->copy($recentPath, $filePath);
+                }
             }
         }
 
@@ -247,5 +280,69 @@ class TugasController extends Controller
         }
 
         return Storage::disk('private')->download($tugas->file_lampiran, $tugas->nama_file_lampiran ?: 'panduan-tugas');
+    }
+
+    /**
+     * Membatalkan pengiriman tugas yang sedang menunggu peninjauan pembimbing (Unsubmit).
+     */
+    public function batalkanPengiriman(Request $request, Tugas $tugas): mixed
+    {
+        Gate::authorize('submitProgres', $tugas);
+
+        // Kunci jika tugas sudah selesai
+        if ($tugas->status === StatusTugasEnum::Selesai) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tugas ini telah ditinjau dan dinyatakan selesai oleh pembimbing.',
+                ], 422);
+            }
+
+            return back()->with('error', 'Tugas ini telah ditinjau dan dinyatakan selesai oleh pembimbing.');
+        }
+
+        // Ambil progres terakhir yang sedang menunggu review
+        $latestProgres = $tugas->progresLogs()->latest('id')->first();
+        if (! $latestProgres || $latestProgres->status_review !== StatusReviewProgresEnum::Menunggu) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pengiriman tidak dapat dibatalkan karena tugas belum diserahkan atau sudah ditinjau oleh pembimbing.',
+                ], 422);
+            }
+
+            return back()->with('error', 'Pengiriman tidak dapat dibatalkan karena tugas belum diserahkan atau sudah ditinjau oleh pembimbing.');
+        }
+
+        $nilaiLama = $latestProgres->only(['tugas_id', 'file', 'link', 'status_review', 'catatan']);
+        $oldFile = $latestProgres->file;
+        $oldLink = $latestProgres->link;
+
+        // Hapus record progres pending
+        $latestProgres->delete();
+
+        // Catat ke Audit Trail
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'progres_log',
+            idData: $latestProgres->id,
+            nilaiLama: $nilaiLama,
+            detail: ['aksi' => 'batalkan_pengiriman_tugas']
+        );
+
+        if ($request->expectsJson() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengiriman tugas berhasil dibatalkan. Silakan periksa kembali berkas atau tautan Anda.',
+                'unsubmitted_file' => $oldFile,
+                'unsubmitted_link' => $oldLink,
+            ]);
+        }
+
+        return redirect()->route('peserta.tugas.show', $tugas)
+            ->with('success', 'Pengiriman tugas berhasil dibatalkan. Silakan periksa kembali berkas atau tautan Anda.')
+            ->with('unsubmitted_file', $oldFile)
+            ->with('unsubmitted_file_name', $oldFile ? basename($oldFile) : null)
+            ->with('unsubmitted_link', $oldLink);
     }
 }

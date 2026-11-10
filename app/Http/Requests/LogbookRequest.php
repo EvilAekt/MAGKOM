@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Models\Logbook;
 use App\Models\Pengaturan;
 use App\Rules\SafeExternalUrlRule;
 use Carbon\Carbon;
@@ -30,16 +31,31 @@ class LogbookRequest extends FormRequest
         $maksMundurHari = Pengaturan::getInt('logbook_maks_mundur_hari', 3);
         $minDate = Carbon::today()->subDays($maksMundurHari)->toDateString();
         $today = Carbon::today()->toDateString();
-        $maksBerkasKb = Pengaturan::getInt('berkas_maks_mb', 2) * 1024;
+        $maksBerkasMb = Pengaturan::getInt('berkas_maks_mb', 2);
+        $maksBerkasKb = $maksBerkasMb * 1024;
+
+        $isUpdate = $this->isMethod('PUT') || $this->isMethod('PATCH');
+        $logbook = $this->route('logbook');
+
+        $tanggalRules = [
+            'required',
+            'date',
+            "before_or_equal:{$today}",
+        ];
+
+        // Pada mode update jika tanggal sama dengan logbook lama, jangan kenakan batasan mundur hari ini
+        $isExistingUnchangedDate = $isUpdate
+            && $logbook instanceof Logbook
+            && $logbook->tanggal
+            && $this->input('tanggal') === $logbook->tanggal->toDateString();
+
+        if (! $isExistingUnchangedDate) {
+            $tanggalRules[] = "after_or_equal:{$minDate}";
+        }
 
         return [
             'minggu_ke' => ['nullable', 'integer', 'min:1'],
-            'tanggal' => [
-                'required',
-                'date',
-                "before_or_equal:{$today}",
-                "after_or_equal:{$minDate}",
-            ],
+            'tanggal' => $tanggalRules,
             'kegiatan' => ['required', 'string', 'min:10', 'max:5000'],
             'file_laporan' => ['nullable', 'file', 'mimes:pdf', "max:{$maksBerkasKb}"],
             'link_laporan' => ['nullable', 'string', 'max:2048', new SafeExternalUrlRule],
@@ -48,11 +64,13 @@ class LogbookRequest extends FormRequest
 
     public function messages(): array
     {
+        $maksBerkasMb = Pengaturan::getInt('berkas_maks_mb', 2);
+
         return [
             'tanggal.before_or_equal' => 'Tanggal logbook tidak boleh melebihi hari ini.',
             'tanggal.after_or_equal' => 'Tanggal kegiatan sudah melebihi batas toleransi pengisian logbook mundur (BR-09).',
             'file_laporan.mimes' => 'Berkas lampiran logbook harus berformat PDF.',
-            'file_laporan.max' => 'Ukuran berkas lampiran tidak boleh melebihi batas maksimal (2 MB).',
+            'file_laporan.max' => "Ukuran berkas lampiran tidak boleh melebihi batas maksimal ({$maksBerkasMb} MB).",
             'link_laporan.regex' => 'Tautan lampiran harus menggunakan protokol aman HTTPS (https://).',
         ];
     }
