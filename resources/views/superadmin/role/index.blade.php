@@ -47,7 +47,7 @@
     @endif
 
     {{-- 1. Hero Banner Khas Sleman MagKom (Adopsi Pola Logbook Peserta) --}}
-    <div class="sa-role-banner">
+    <div class="sa-role-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Hak Akses dan Role Pengguna</h1>
@@ -67,7 +67,7 @@
     </div>
 
     {{-- 2. KARTU STATISTIK 4 ROLE MENGADOPSI GENTELELLA TILE-STAT --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. SuperAdmin -->
         <x-gentelella.tile-stat
             title="SUPERADMIN"
@@ -139,7 +139,7 @@
     </div>
 
     {{-- 3. FORM MATRIKS HAK AKSES MENYELURUH (MURNI 4 ROLE SISTEM) --}}
-    <x-gentelella.x-panel class="has-table" title="Matriks Wewenang & Hak Akses Modul Dinamis">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Matriks Wewenang & Hak Akses Modul Dinamis">
         <x-slot:toolbox>
             <a href="{{ route('superadmin.staf.index') }}" style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-600); text-decoration: none;">
                 Kelola Akun Staf &rarr;

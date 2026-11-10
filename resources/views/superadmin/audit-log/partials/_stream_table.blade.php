@@ -15,7 +15,7 @@
         }
     }
 @endphp
-<div class="audit-stream-card">
+<div class="audit-stream-card sc-reveal-up sc-delay-2" data-scroll-reveal>
     {{-- Stream Channel Status & Severity Badges --}}
     <div class="audit-stream-header">
         <div class="audit-stream-title-group">

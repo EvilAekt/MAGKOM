@@ -3,7 +3,10 @@
  * - Penanganan modal tambah, edit, dan reset sandi via event delegation
  * - Toggling dinamis bidang penempatan sesuai peran (Admin vs Pembimbing)
  * - Pengisian form aman berbasis atribut HTML5 data-* (kebal newline & kutip)
+ * - Sistem Animasi Universal (Scroll-Craft + GSAP Paritas Pembimbing)
  */
+import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
+
 export function toggleBidangField(mode) {
     if (mode === 'tambah') {
         const roleEl = document.getElementById('tambahRole');
@@ -40,6 +43,8 @@ export function toggleBidangField(mode) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initSuperAdminPageMotion();
+
     const modalTambah = document.getElementById('modalTambahStaf');
     const modalReset = document.getElementById('modalResetSandi');
     const modalEdit = document.getElementById('modalEditStaf');

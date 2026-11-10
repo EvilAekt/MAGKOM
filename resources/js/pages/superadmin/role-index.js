@@ -2,10 +2,14 @@
  * ========================================================
  * MAGKOM GENTELELLA DESIGN SYSTEM: SUPERADMIN ROLE JS
  * Halaman: Hak Akses dan Role Pengguna
+ * Sistem Animasi Universal (Scroll-Craft + GSAP)
  * ========================================================
  */
 
+import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
+
 document.addEventListener('DOMContentLoaded', () => {
+    initSuperAdminPageMotion();
     initPermissionModal();
     initDeleteConfirmations();
 });

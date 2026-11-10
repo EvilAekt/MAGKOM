@@ -19,7 +19,7 @@
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 980px; margin: 0 auto; width: 100%;">
 
     {{-- 1. Hero Banner Khas Sleman MagKom --}}
-    <div class="sa-hero-banner">
+    <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Pendaftaran Peserta Jalur Khusus</h1>
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <x-gentelella.x-panel title="Formulir Pendaftaran Peserta Jalur Khusus">
+    <x-gentelella.x-panel class="sc-reveal-up sc-delay-1" data-scroll-reveal title="Formulir Pendaftaran Peserta Jalur Khusus">
         <div style="background: var(--blue-tint, #EFF6FF); border: 1px solid var(--blue-tint-line, #DBEAFE); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; color: #1E40AF; font-size: 0.875rem; line-height: 1.5;">
             <strong>Informasi Jalur Khusus:</strong> Pendaftaran melalui formulir ini diperuntukkan bagi peserta magang penugasan instansi, rekomendasi khusus, atau program kemitraan resmi. Akun peserta akan langsung dibuat dengan role <strong>Peserta Magang</strong> dan status penempatan <strong>Aktif</strong> tanpa melalui tahapan antrean verifikasi berkas reguler.
         </div>
@@ -215,5 +215,9 @@
     </x-gentelella.x-panel>
 
 </div>
+
+@push('scripts')
+    @vite(['resources/js/pages/superadmin/slot-khusus.js'])
+@endpush
 @endsection
 

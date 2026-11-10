@@ -4,8 +4,10 @@
  */
 
 import { MagKomToast } from '../../components/toast.js';
+import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    initSuperAdminPageMotion();
     initCredentialCopyHandlers();
 });
 

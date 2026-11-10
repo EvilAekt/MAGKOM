@@ -1149,7 +1149,7 @@
     @endif
 
     {{-- 1. HERO BANNER KHAS SLEMAN MAGKOM (.sa-hero-banner) IDENTIK DENGAN AUDIT LOG --}}
-    <div class="sa-hero-banner" style="margin-bottom: 24px;">
+    <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal style="margin-bottom: 24px;">
         <div class="banner-top-row">
             <div>
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
@@ -1191,7 +1191,7 @@
     </div>
 
     {{-- 2. GRID 4 TILE-STAT METRIC CARDS (<x-gentelella.tile-stat>) IDENTIK DENGAN AUDIT LOG --}}
-    <div class="tiles-grid" style="margin-bottom: 1.25rem;">
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal style="margin-bottom: 1.25rem;">
         <!-- 1. Status Sistem -->
         <x-gentelella.tile-stat
             title="STATUS SISTEM"
@@ -1254,7 +1254,7 @@
     </div>
 
     <!-- COCKPIT MASTER SHELL (Deep Space Navy #002244 Parity) -->
-    <div class="telemetry-cockpit-shell">
+    <div class="telemetry-cockpit-shell sc-reveal-up sc-delay-2" data-scroll-reveal>
 
         {{-- 4. SPLIT ROW: LATENCY CURVE (8 COLS) & REDIS CACHE DONUT + HOST RESOURCES (4 COLS) (AC-3, AC-4) --}}
         <div class="telemetry-split-8-4">

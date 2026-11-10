@@ -1,7 +1,10 @@
 /**
  * Modul Detail Arsip Peserta SuperAdmin
  * - Penanganan tab navigasi segmented (Ringkasan, Tugas, Logbook, Administrasi)
+ * - Sistem Animasi Universal (Scroll-Craft + GSAP Paritas Pembimbing)
  */
+import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
+
 export function switchArsipTab(tabId, btn) {
     document.querySelectorAll('.arsip-tab-pill').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.arsip-tab-pane').forEach(p => p.classList.remove('active'));
@@ -16,6 +19,8 @@ export function switchArsipTab(tabId, btn) {
 window.switchArsipTab = switchArsipTab;
 
 document.addEventListener('DOMContentLoaded', () => {
+    initSuperAdminPageMotion();
+
     document.addEventListener('click', (event) => {
         const tabBtn = event.target.closest('.arsip-tab-pill');
         if (tabBtn) {

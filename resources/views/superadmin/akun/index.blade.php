@@ -198,7 +198,7 @@
 <div class="superadmin-akun-wrapper">
 
     {{-- Header Halaman --}}
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div class="sc-reveal-hero" data-scroll-reveal style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
         <div>
             <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0 0 4px 0;">
                 Akun & Preferensi Saya
@@ -218,7 +218,7 @@
     </div>
 
     {{-- Layout 2 Kolom Gentelella --}}
-    <div class="superadmin-akun-grid">
+    <div class="superadmin-akun-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
 
         {{-- Kolom Kiri: Informasi Akun --}}
         <x-gentelella.x-panel title="Informasi Akun" subtitle="Ringkasan kredensial dan hak akses Super Administrator.">

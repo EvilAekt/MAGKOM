@@ -17,7 +17,7 @@
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     {{-- 1. Hero Banner Khas Sleman MagKom --}}
-    <div class="sa-hero-banner">
+    <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Arsip &amp; Rekam Jejak Alumni Magang</h1>
@@ -47,7 +47,7 @@
     </div>
 
     {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Arsip -->
         <x-gentelella.tile-stat
             title="TOTAL ARSIP"
@@ -124,7 +124,7 @@
     </div>
 
     <!-- 3. FILTER & TOOLBAR CARD -->
-    <div class="staf-filter-card">
+    <div class="staf-filter-card sc-reveal-up sc-delay-2" data-scroll-reveal>
         <form method="GET" action="{{ route('superadmin.arsip.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; flex: 1;">
                 {{-- Search Box --}}
@@ -170,7 +170,7 @@
     </div>
 
     {{-- 4. DATA TABLE CARD --}}
-    <div class="gentelella-card" style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
+    <div class="gentelella-card sc-reveal-up sc-delay-3" data-scroll-reveal style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
         <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
             <div>
                 <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">
@@ -291,4 +291,8 @@
         @endif
     </div>
 </div>
+
+@push('scripts')
+    @vite(['resources/js/pages/superadmin/staf-index.js'])
+@endpush
 @endsection

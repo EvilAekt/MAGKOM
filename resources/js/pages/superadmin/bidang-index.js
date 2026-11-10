@@ -2,8 +2,13 @@
  * Modul Interaksi Master Bidang SuperAdmin
  * - Penanganan modal tambah & edit bidang via event delegation
  * - Pengisian form aman berbasis atribut HTML5 data-* (kebal newline & kutip)
+ * - Sistem Animasi Universal (Scroll-Craft + GSAP Paritas Pembimbing)
  */
+import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
+
 document.addEventListener('DOMContentLoaded', () => {
+    initSuperAdminPageMotion();
+
     const modalTambah = document.getElementById('modalTambahBidang');
     const modalEdit = document.getElementById('modalEditBidang');
     const editNama = document.getElementById('editNamaBidang');

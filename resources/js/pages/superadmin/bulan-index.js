@@ -2,7 +2,10 @@
  * Modul Master Periode Bulan Magang SuperAdmin
  * - Penanganan modal tambah & edit periode bulan via event delegation
  * - Pengisian dataset HTML5 data-* (bulan mulai, tgl buka, tgl tutup, override status)
+ * - Sistem Animasi Universal (Scroll-Craft + GSAP Paritas Pembimbing)
  */
+import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
+
 export function openTambahBulanModal() {
     const modal = document.getElementById('modal-tambah-bulan');
     if (modal) modal.style.display = 'flex';
@@ -41,6 +44,8 @@ window.openEditBulanModal = openEditBulanModal;
 window.closeEditBulanModal = closeEditBulanModal;
 
 document.addEventListener('DOMContentLoaded', () => {
+    initSuperAdminPageMotion();
+
     document.addEventListener('click', (event) => {
         // Trigger Buka Tambah
         const triggerTambah = event.target.closest('.btn-trigger-tambah-bulan');

@@ -2,8 +2,13 @@
  * Modul Interaksi Master Jurusan SuperAdmin
  * - Penanganan modal tambah & edit jurusan via event delegation
  * - Pengisian form aman berbasis atribut HTML5 data-* (kebal newline & kutip)
+ * - Sistem Animasi Universal (Scroll-Craft + GSAP Paritas Pembimbing)
  */
+import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
+
 document.addEventListener('DOMContentLoaded', () => {
+    initSuperAdminPageMotion();
+
     const modalTambah = document.getElementById('modalTambahJurusan');
     const modalEdit = document.getElementById('modalEditJurusan');
     const editNama = document.getElementById('editNamaJurusan');

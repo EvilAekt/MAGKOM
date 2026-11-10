@@ -17,7 +17,7 @@
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     {{-- 1. Hero Banner Khas Sleman MagKom (Identik dengan Master Bidang) --}}
-    <div class="sa-hero-banner">
+    <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Pusat Cadangan Basis Data (Disaster Recovery)</h1>
@@ -63,7 +63,7 @@
     @endif
 
     {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat (Identik dengan Master Bidang) --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Snapshot -->
         <x-gentelella.tile-stat
             title="TOTAL SNAPSHOT"
@@ -139,7 +139,7 @@
     </div>
 
     {{-- 3. Data Table Panel Mengadopsi Gentelella X-Panel (Identik dengan Master Bidang) --}}
-    <x-gentelella.x-panel class="has-table" title="Daftar Snapshot Cadangan Basis Data">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Daftar Snapshot Cadangan Basis Data">
         @if($backupFiles->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
@@ -223,4 +223,8 @@
     </x-gentelella.x-panel>
 
 </div>
+
+@push('scripts')
+    @vite(['resources/js/pages/superadmin/staf-index.js'])
+@endpush
 @endsection
