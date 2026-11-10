@@ -12,6 +12,7 @@
 @import './components/notifications.css';
 @import './components/cards.css';
 @import './components/tables.css';
+@import './components/pengaturan-akun.css';
 
 /* Unified Dashboard & Layout Rules */
 @import './layouts/gentelella.css';
