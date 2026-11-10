@@ -1226,7 +1226,7 @@
                         </svg>
                     </div>
                     <h4 style="font-size: 1.125rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin-bottom: 0.375rem;">
-                        Tidak Ada Antrean Peserta Belum Ditempatkan
+                        Tidak ada antrean peserta belum ditempatkan
                     </h4>
                     <p style="font-size: 0.875rem; max-width: 480px; margin: 0 auto; line-height: 1.5;">
                         Seluruh calon peserta lolos berkas telah ditetapkan pembimbing dan bidang dinas.
