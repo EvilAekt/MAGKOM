@@ -1179,22 +1179,17 @@
 
                                 {{-- 6. Kapasitas & Status Ketersediaan Bidang --}}
                                 <td>
-                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                                        <div>
-                                            @if($item['kapasitas'] > 0)
-                                                <span class="badge-status-bidang-buka" style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.6875rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 9999px; background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0;">
-                                                    <span style="width: 5px; height: 5px; border-radius: 50%; background: #10B981;"></span>
-                                                    Dibuka
-                                                </span>
-                                            @else
-                                                <span class="badge-status-bidang-tutup" style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.6875rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 9999px; background: #F1F5F9; color: #64748B; border: 1px solid #CBD5E1;">
-                                                    <span style="width: 5px; height: 5px; border-radius: 50%; background: #94A3B8;"></span>
-                                                    Ditutup
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <span class="kapasitas-text">{{ $item['kapasitas'] }} peserta</span>
-                                    </div>
+                                    @if($item['kapasitas'] > 0)
+                                        <span class="badge-status-bidang-buka" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 9999px; background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; white-space: nowrap;">
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #10B981;"></span>
+                                            Dibuka &bull; <strong class="kapasitas-text" style="font-weight: 700; color: inherit; font-size: inherit;">{{ $item['kapasitas'] }} peserta</strong>
+                                        </span>
+                                    @else
+                                        <span class="badge-status-bidang-tutup" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 9999px; background: #F8FAFC; color: #64748B; border: 1px solid #E2E8F0; white-space: nowrap;">
+                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #94A3B8;"></span>
+                                            Ditutup &bull; <span class="kapasitas-text" style="font-weight: 600; color: inherit; font-size: inherit;">0 peserta</span>
+                                        </span>
+                                    @endif
                                 </td>
 
                                 {{-- 7. Aksi --}}

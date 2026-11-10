@@ -533,18 +533,24 @@
             gap: 0.35rem;
         }
 
-        .adm-badge-kelompok {
+        .adm-badge-kelompok,
+        .adm-badge-individu {
             display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #7C3AED;
-            background: #F5F3FF;
-            padding: 0.15rem 0.45rem;
-            border-radius: 4px;
-            border: 1px solid #DDD6FE;
-            margin-top: 0.35rem;
+            gap: 0.3rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #64748B;
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin-top: 0.15rem;
+            line-height: 1.25;
+        }
+        .adm-badge-kelompok svg,
+        .adm-badge-individu svg {
+            color: #94A3B8;
+            flex-shrink: 0;
         }
 
         .adm-table {
@@ -764,10 +770,16 @@
             color: #94A3B8;
         }
 
-        [data-theme="dark"] .adm-badge-kelompok {
-            color: #C4B5FD;
-            background: rgba(124, 58, 237, 0.25);
-            border-color: rgba(139, 92, 246, 0.35);
+        [data-theme="dark"] .adm-badge-kelompok,
+        [data-theme="dark"] .adm-badge-individu {
+            color: #94A3B8;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+        [data-theme="dark"] .adm-badge-kelompok svg,
+        [data-theme="dark"] .adm-badge-individu svg {
+            color: #64748B;
         }
 
         [data-theme="dark"] .adm-table th {
@@ -1073,14 +1085,6 @@
                                         <span class="adm-reg-badge">
                                             {{ $item->nomor_pendaftaran }}
                                         </span>
-                                        @if($item->tipe === 'kelompok' || $item->kelompokMagang)
-                                            <div style="margin-top: 0.35rem;">
-                                                <span class="adm-badge-kelompok">
-                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                                                    Kelompok ({{ ($item->kelompokMagang?->anggota?->count() ?? 0) + 1 }} Org)
-                                                </span>
-                                            </div>
-                                        @endif
                                     </td>
 
                                     {{-- Calon Peserta --}}
@@ -1098,19 +1102,25 @@
                                                 <div style="font-weight: 700; color: #0F172A; font-size: 0.875rem;">
                                                     {{ $item->user?->nama ?? 'Calon Peserta' }}
                                                 </div>
-                                                <div style="font-size: 0.775rem; color: #64748B;">
-                                                    {{ $item->user?->email }}
-                                                </div>
-                                                @if($item->kelompokMagang)
-                                                    <div style="font-size: 0.725rem; font-weight: 700; color: #7C3AED; margin-top: 0.15rem;">
-                                                        Tim: {{ $item->kelompokMagang->nama_kelompok }}
+                                                @if($item->tipe === 'kelompok' || $item->kelompokMagang)
+                                                    <div>
+                                                        <span class="adm-badge-kelompok" title="{{ $item->kelompokMagang?->nama_kelompok ? 'Tim: ' . $item->kelompokMagang->nama_kelompok : 'Kelompok' }}">
+                                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                                            Kelompok
+                                                            @if($item->kelompokMagang)
+                                                                <span class="sr-only">Tim: {{ $item->kelompokMagang->nama_kelompok }}</span>
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                @else
+                                                    <div>
+                                                        <span class="adm-badge-individu">
+                                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                                            Individu
+                                                        </span>
                                                     </div>
                                                 @endif
-                                                @if($item->user?->profil?->nim_nisn)
-                                                    <div style="font-size: 0.725rem; color: #94A3B8;">
-                                                        {{ $idLabel }}: {{ $item->user->profil->nim_nisn }}
-                                                    </div>
-                                                @endif
+                                                <span class="sr-only">{{ $item->user?->email }} {{ $item->user?->profil?->nim_nisn }}</span>
                                             </div>
                                         </div>
                                     </td>

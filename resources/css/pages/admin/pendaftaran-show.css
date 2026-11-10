@@ -540,7 +540,7 @@
     padding: 0.65rem 0.85rem;
     font-size: 0.8125rem;
     font-family: inherit;
-    resize: vertical;
+    resize: none;
 }
 
 .adm-form-field textarea:focus {
