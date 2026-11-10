@@ -29,7 +29,8 @@ basefw*/
 claude_work/
 /.playwright-mcp
 .mcp.json
-.agents/mcp_config.json
-export-sokudo/
-testsprite_tests/
+.agents/
+skills-lock.json
+AGENTS.md
+GEMINI.md
 .sokudo/
