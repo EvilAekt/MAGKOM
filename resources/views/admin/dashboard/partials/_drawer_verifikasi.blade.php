@@ -37,7 +37,7 @@
 
             <x-gentelella.callout type="warning" title="Alur & Batas Waktu Verifikasi (BR-04 FIFO)">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                    <span>SLA Maksimal:</span>
+                    <span>Batas Waktu Layanan:</span>
                     <strong style="color: #B45309;">3 Hari Kerja (FIFO)</strong>
                 </div>
                 <div style="display: flex; justify-content: space-between;">

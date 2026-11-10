@@ -4,10 +4,10 @@
    ========================================================================== --}}
 @if($pengajuanSlaKritisCount > 0)
     <div style="margin-bottom: 1rem;">
-        <x-gentelella.callout type="danger" title="Perhatian: Berkas Mendekati atau Melewati Batas Waktu SLA Verifikasi (BR-04)">
+        <x-gentelella.callout type="danger" title="Perhatian: Berkas Mendekati atau Melewati Batas Waktu Verifikasi (BR-04)">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <div>
-                    Terdapat <strong>{{ $pengajuanSlaKritisCount }} berkas</strong> calon peserta yang mendekati atau melewati batas waktu SLA verifikasi (3 hari kerja). Segera lakukan peninjauan berkas pendaftar untuk menjaga mutu pelayanan seleksi.
+                    Terdapat <strong>{{ $pengajuanSlaKritisCount }} berkas</strong> calon peserta yang mendekati atau melewati batas waktu standar verifikasi (3 hari kerja). Segera lakukan peninjauan berkas pendaftar untuk menjaga mutu pelayanan seleksi.
                 </div>
                 <a href="{{ route('admin.pendaftaran.index') }}" class="btn btn-sm btn-danger" style="font-weight: 700; border-radius: 6px; text-decoration: none; padding: 0.45rem 1rem;">
                     Buka Antrean Verifikasi &rarr;
@@ -29,7 +29,7 @@
                 {{ $avgVerifikasiHari }} <span style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-500);">Hari</span>
             </div>
             <div style="font-size: 0.7rem; color: var(--green-600); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                ✓ SLA Sesuai Target (Maks. 3 Hari)
+                ✓ Sesuai Target Waktu (Maks. 3 Hari)
             </div>
         </x-gentelella.card>
     </div>

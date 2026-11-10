@@ -71,6 +71,30 @@ class ExportReportService
         if (! empty($filters['sampai_tanggal'])) {
             $query->where('created_at', '<=', $filters['sampai_tanggal'].' 23:59:59');
         }
+        if (! empty($filters['tipe'])) {
+            $tipe = strtolower(trim((string) $filters['tipe']));
+            if ($tipe === 'individu' || $tipe === 'mandiri') {
+                $query->where(function ($q) {
+                    $q->where('tipe', 'mandiri')
+                        ->orWhere('tipe', 'individu')
+                        ->orWhereNull('tipe');
+                });
+            } elseif ($tipe === 'kelompok') {
+                $query->where('tipe', 'kelompok');
+            }
+        }
+        if (! empty($filters['q'])) {
+            $search = '%'.trim((string) $filters['q']).'%';
+            $query->where(function ($qu) use ($search) {
+                $qu->whereHas('user', function ($uq) use ($search) {
+                    $uq->where('nama', 'like', $search)
+                        ->orWhere('email', 'like', $search);
+                })->orWhereHas('user.profil', function ($pq) use ($search) {
+                    $pq->where('nim_nisn', 'like', $search)
+                        ->orWhere('institusi', 'like', $search);
+                });
+            });
+        }
 
         $records = $query->latest('created_at')->get();
 
@@ -193,6 +217,27 @@ class ExportReportService
         }
         if (! empty($filters['sampai_tanggal'])) {
             $query->where('tgl_mulai', '<=', $filters['sampai_tanggal']);
+        }
+        if (! empty($filters['pembimbing_id'])) {
+            $query->where('pembimbing_id', (int) $filters['pembimbing_id']);
+        }
+        if (! empty($filters['bidang_id'])) {
+            $query->where('bidang_id', (int) $filters['bidang_id']);
+        }
+        if (! empty($filters['bulan_magang_id'])) {
+            $bulanId = (int) $filters['bulan_magang_id'];
+            $query->where(function ($q) use ($bulanId) {
+                $q->whereHas('pendaftaran', fn ($qp) => $qp->where('bulan_magang_id', $bulanId))
+                    ->orWhereHas('kuota', fn ($qk) => $qk->where('bulan_magang_id', $bulanId));
+            });
+        }
+        if (! empty($filters['q'])) {
+            $search = '%'.trim((string) $filters['q']).'%';
+            $query->whereHas('peserta', function ($qu) use ($search) {
+                $qu->where('nama', 'like', $search)
+                    ->orWhere('email', 'like', $search)
+                    ->orWhereHas('profil', fn ($qp) => $qp->where('institusi', 'like', $search));
+            });
         }
 
         $records = $query->latest('tgl_mulai')->get();

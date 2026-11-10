@@ -76,9 +76,9 @@
 }
 
 /* ==============================================================================
-   2. Hero Sleman Banner (Full-Width Navy Gradient)
+   2. Hero Sleman Banner (Full-Width Navy Gradient - Scoped to Bento Dashboard)
    ============================================================================== */
-.adm-hero-banner {
+.adm-bento-wrapper .adm-hero-banner {
   width: 100%;
   margin-bottom: 1.25rem;
   background: var(--adm-navy-hero);
@@ -94,7 +94,7 @@
   box-sizing: border-box;
 }
 
-.adm-hero-banner::before {
+.adm-bento-wrapper .adm-hero-banner::before {
   content: "";
   position: absolute;
   top: -40px;
@@ -106,14 +106,14 @@
   pointer-events: none;
 }
 
-.adm-hero-content {
+.adm-bento-wrapper .adm-hero-content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   z-index: 1;
 }
 
-.adm-hero-tag {
+.adm-bento-wrapper .adm-hero-tag {
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.5px;
@@ -122,7 +122,7 @@
   margin-bottom: 8px;
 }
 
-.adm-hero-title {
+.adm-bento-wrapper .adm-hero-title {
   font-size: 28px;
   line-height: 1.25;
   font-weight: 800;
@@ -131,7 +131,7 @@
   letter-spacing: -0.4px;
 }
 
-.adm-hero-desc {
+.adm-bento-wrapper .adm-hero-desc {
   font-size: 13.5px;
   line-height: 1.55;
   font-weight: 500;
@@ -140,7 +140,7 @@
   max-width: 620px;
 }
 
-.adm-hero-status-pill {
+.adm-bento-wrapper .adm-hero-status-pill {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -154,7 +154,7 @@
   letter-spacing: 0.2px;
 }
 
-.adm-status-dot-green {
+.adm-bento-wrapper .adm-status-dot-green {
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -163,7 +163,7 @@
   flex-shrink: 0;
 }
 
-.btn-adm-hero-primary {
+.adm-bento-wrapper .btn-adm-hero-primary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -178,12 +178,12 @@
   box-shadow: 0 4px 14px rgba(255, 195, 0, 0.35);
 }
 
-.btn-adm-hero-primary:hover {
+.adm-bento-wrapper .btn-adm-hero-primary:hover {
   filter: brightness(1.08);
   transform: translateY(-1px);
 }
 
-.btn-adm-hero-outline {
+.adm-bento-wrapper .btn-adm-hero-outline {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -199,12 +199,12 @@
   transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
-.btn-adm-hero-outline:hover {
+.adm-bento-wrapper .btn-adm-hero-outline:hover {
   background: rgba(255, 255, 255, 0.20);
   transform: translateY(-1px);
 }
 
-.adm-hero-graphic {
+.adm-bento-wrapper .adm-hero-graphic {
   display: flex;
   align-items: flex-end;
   gap: 12px;
@@ -214,28 +214,28 @@
   z-index: 1;
 }
 
-.adm-hero-bar {
+.adm-bento-wrapper .adm-hero-bar {
   width: 18px;
   border-radius: 9px;
   transition: height 0.3s ease;
 }
 
-.adm-hero-bar.bar-1 {
+.adm-bento-wrapper .adm-hero-bar.bar-1 {
   height: 42px;
   background: #3F51B5;
 }
 
-.adm-hero-bar.bar-2 {
+.adm-bento-wrapper .adm-hero-bar.bar-2 {
   height: 68px;
   background: #7B8CC9;
 }
 
-.adm-hero-bar.bar-3 {
+.adm-bento-wrapper .adm-hero-bar.bar-3 {
   height: 85px;
   background: var(--adm-yellow-main);
 }
 
-.adm-hero-bar.bar-4 {
+.adm-bento-wrapper .adm-hero-bar.bar-4 {
   height: 55px;
   background: #C5CDE6;
 }
@@ -1244,14 +1244,14 @@
 }
 
 @media (max-width: 640px) {
-  .adm-hero-banner {
+  .adm-bento-wrapper .adm-hero-banner {
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
     gap: 16px;
   }
 
-  .adm-hero-graphic {
+  .adm-bento-wrapper .adm-hero-graphic {
     display: none;
   }
 

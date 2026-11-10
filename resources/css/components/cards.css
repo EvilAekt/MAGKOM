@@ -307,12 +307,21 @@
 
         .adm-hero-content {
             display: flex;
+            flex-direction: row;
             justify-content: space-between;
             align-items: center;
             gap: 1.25rem;
             flex-wrap: wrap;
             position: relative;
             z-index: 2;
+            width: 100%;
+        }
+
+        .adm-hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
         }
 
         .adm-hero-title {

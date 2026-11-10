@@ -77,7 +77,7 @@
                             </td>
                             <td>
                                 @if($isCritical)
-                                    <span class="adm-sla-pill-alert" title="Mendekati Batas SLA">⚠️ Mendekati Batas SLA ({{ $umur }} hari)</span>
+                                    <span class="adm-sla-pill-alert" title="Mendekati Batas Waktu">⚠️ Mendekati Batas Waktu ({{ $umur }} hari)</span>
                                 @else
                                     <span class="adm-sla-pill-norm">{{ $umur === 0 ? 'Hari ini' : $umur . ' hari lalu' }}</span>
                                 @endif

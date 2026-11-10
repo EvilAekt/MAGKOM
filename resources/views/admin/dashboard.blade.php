@@ -17,7 +17,7 @@
         <div class="adm-hero-content">
             <span class="adm-hero-tag">{{ mb_strtoupper(\Carbon\Carbon::now()->translatedFormat('l, d F Y')) }}</span>
             <h1 id="heroHeading" class="adm-hero-title">Dashboard Operasional Administrasi</h1>
-            <p class="adm-hero-desc">Pusat kendali verifikasi berkas pendaftaran, pengawasan SLA, dan alokasi kuota kejuruan dinas.</p>
+            <p class="adm-hero-desc">Pusat kendali verifikasi berkas pendaftaran, standar waktu pelayanan, dan alokasi kuota kejuruan dinas.</p>
             <div class="adm-hero-status-pill">
                 <span class="adm-status-dot-green" aria-hidden="true"></span>
                 <span>Bulan: {{ $activeMonthName }} (Aktif)</span>
@@ -134,7 +134,7 @@
                                 <polyline points="12 6 12 12 16 14"></polyline>
                             </svg>
                         </div>
-                        <span class="adm-pill-badge badge-neutral">SLA 3.6h</span>
+                        <span class="adm-pill-badge badge-neutral">Target ≤ 5 Hari</span>
                     </div>
                     <div class="adm-kpi-body">
                         <span class="adm-kpi-label">Kecepatan Verifikasi</span>
