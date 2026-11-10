@@ -12,8 +12,6 @@ class EnsureUserHasRole
 {
     /**
      * Memeriksa apakah pengguna memiliki salah satu role yang diizinkan (NFR-S1).
-     *
-     * @param string ...$roles
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {

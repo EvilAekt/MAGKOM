@@ -1,21 +1,10 @@
 @extends('layouts.auth')
 
-@section('title', 'Verifikasi Alamat Email - Portal MagKom Sleman')
+@section('title', 'Verifikasi Alamat Email - Magang Kominfo Sleman')
 @section('meta_description', 'Verifikasi alamat email Anda untuk mengaktifkan akses ke Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')
-    <!-- Alert Notifikasi Flash -->
-    @if (session('status') == 'verification-link-sent')
-        <div class="auth-alert-success" role="alert">
-            Tautan verifikasi baru telah berhasil dikirimkan ke alamat email Anda. Silakan periksa kotak masuk atau folder spam.
-        </div>
-    @endif
 
-    @if(isset($errors) && $errors->any())
-        <div class="auth-alert-error" role="alert">
-            {{ $errors->first() }}
-        </div>
-    @endif
 
     <!-- Header Verifikasi Email -->
     <div class="step-badge">

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
-use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
@@ -28,11 +29,17 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
 
     protected function setUp(): void
@@ -64,7 +71,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         ]);
 
         // Users
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator Sleman';
         $this->superAdmin->email = 'superadmin@slemankab.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -74,7 +81,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Verifikator Sleman';
         $this->admin->email = 'admin@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -84,7 +91,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan Aptika';
         $this->pembimbing->email = 'pembimbing@slemankab.go.id';
         $this->pembimbing->password = 'Password123!';
@@ -94,7 +101,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Budi Santoso';
         $this->peserta->email = 'budi@example.com';
         $this->peserta->password = 'Password123!';
@@ -115,7 +122,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
     }
 
     /**
-     * AC-04-4: Admin tidak dapat memindahkan pendaftaran ke Waiting List jika kuota umum masih ada.
+     * AC-04-4 & BR-03: Keputusan verifikasi berkas hanya 'terima' dan 'tolak'; opsi waiting_list ditolak oleh validasi.
      */
     public function test_admin_cannot_assign_waiting_list_if_quota_available(): void
     {
@@ -135,13 +142,12 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
                 'catatan' => 'Pendaftaran dimasukkan ke antrean cadangan.',
             ]);
 
-        $response->assertSessionHas('error');
-        $this->assertStringContainsString('AC-04-4', session('error'));
+        $response->assertSessionHasErrors(['keputusan']);
         $this->assertEquals(StatusPendaftaranEnum::Diajukan, $pendaftaran->fresh()->status);
     }
 
     /**
-     * AC-04-4 & AC-04-6: Admin dapat memindahkan pendaftaran ke Waiting List saat kuota umum penuh.
+     * AC-04-4 & BR-03: Pada kuota penuh, verifikasi berkas admin hanya mendukung 'tolak' atau 'terima'; opsi waiting_list ditolak validasi.
      */
     public function test_admin_can_assign_waiting_list_when_quota_full(): void
     {
@@ -161,16 +167,24 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             'waktu_submit' => now(),
         ]);
 
-        $response = $this->actingAs($this->admin)
+        // Input opsi waiting_list ditolak validasi
+        $responseInvalid = $this->actingAs($this->admin)
             ->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
                 'keputusan' => 'waiting_list',
                 'catatan' => 'Pendaftaran dialihkan ke antrean tunggu karena kuota penuh.',
             ]);
+        $responseInvalid->assertSessionHasErrors(['keputusan']);
 
-        $response->assertRedirect(route('admin.pendaftaran.show', $pendaftaran));
-        $response->assertSessionHas('success', 'Pendaftaran berhasil dialihkan ke antrean Waiting List.');
-        $this->assertEquals(StatusPendaftaranEnum::WaitingList, $pendaftaran->fresh()->status);
-        $this->assertEquals('Pendaftaran dialihkan ke antrean tunggu karena kuota penuh.', $pendaftaran->fresh()->catatan);
+        // Admin menolak pendaftaran saat kuota penuh
+        $responseTolak = $this->actingAs($this->admin)
+            ->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
+                'keputusan' => 'tolak',
+                'catatan' => 'Pendaftaran ditolak karena kuota jurusan untuk periode ini sudah penuh.',
+            ]);
+
+        $responseTolak->assertRedirect(route('admin.pendaftaran.show', $pendaftaran));
+        $responseTolak->assertSessionHas('success', 'Pengajuan pendaftaran berhasil ditolak.');
+        $this->assertEquals(StatusPendaftaranEnum::Ditolak, $pendaftaran->fresh()->status);
     }
 
     /**
@@ -199,7 +213,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
     }
 
     /**
-     * AC-04-3: Catatan penolakan dan perbaikan wajib minimal 10 karakter.
+     * AC-04-3: Catatan penolakan wajib minimal 10 karakter; opsi perlu_perbaikan / revisi ditolak validasi.
      */
     public function test_notes_min_10_chars_enforced_for_rejection_and_revision(): void
     {
@@ -221,13 +235,13 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             ]);
         $responseTolakKurang->assertSessionHasErrors(['catatan']);
 
-        // 2. Perlu perbaikan dengan catatan < 10 karakter
+        // 2. Perlu perbaikan / revisi sudah dihapus dari verifikasi berkas admin
         $responseRevisiKurang = $this->actingAs($this->admin)
             ->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
                 'keputusan' => 'perlu_perbaikan',
-                'catatan' => 'revisi',
+                'catatan' => 'revisi dokumen berkas',
             ]);
-        $responseRevisiKurang->assertSessionHasErrors(['catatan']);
+        $responseRevisiKurang->assertSessionHasErrors(['keputusan']);
 
         // 3. Tolak dengan catatan >= 10 karakter lolos validasi
         $responseTolakLolos = $this->actingAs($this->admin)
@@ -252,7 +266,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
 
         // Kuota 1 sudah ada senilai 5
         // Coba buat kuota 2 senilai 8 (5 + 8 = 13 > batas 12)
-        $response = $this->actingAs($this->superAdmin)
+        $response = $this->actingAs($this->admin)
             ->post(route('admin.kuota.store'), [
                 'bulan_magang_id' => $this->bulan->id,
                 'jurusan_id' => $jurusanDua->id,
@@ -262,7 +276,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
         $response->assertSessionHasErrors(['jumlah']);
 
         // Coba buat kuota 2 senilai 7 (5 + 7 = 12 <= batas 12)
-        $responseLolos = $this->actingAs($this->superAdmin)
+        $responseLolos = $this->actingAs($this->admin)
             ->post(route('admin.kuota.store'), [
                 'bulan_magang_id' => $this->bulan->id,
                 'jurusan_id' => $jurusanDua->id,
@@ -367,8 +381,8 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             'slot_khusus_id' => $slotKhusus->id,
             'pembimbing_id' => $this->pembimbing->id,
             'bidang_id' => $bidangAktif->id,
-            'jalur' => \App\Enums\JalurEnum::Khusus,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Manual,
+            'jalur' => JalurEnum::Khusus,
+            'sumber' => SumberPenempatanEnum::Manual,
             'status' => StatusPenempatanEnum::Aktif,
             'dibuat_oleh' => $this->admin->id,
             'tgl_mulai' => now()->toDateString(),

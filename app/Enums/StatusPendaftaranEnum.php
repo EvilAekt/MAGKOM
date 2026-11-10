@@ -17,7 +17,7 @@ enum StatusPendaftaranEnum: string
     public function label(): string
     {
         return match ($this) {
-            self::BerkasBelumLengkap => 'Berkas Belum Lengkap',
+            self::BerkasBelumLengkap => 'Belum Lengkap',
             self::Diajukan => 'Diajukan',
             self::PerluPerbaikan => 'Perlu Perbaikan',
             self::WaitingList => 'Waiting List',

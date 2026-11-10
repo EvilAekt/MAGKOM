@@ -4,68 +4,85 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Admin\Penempatan\AssignPesertaAction;
+use App\Actions\Admin\Penempatan\BulkReassignPembimbingAction;
+use App\Actions\Admin\Penempatan\CancelPenempatanAction;
+use App\Actions\Admin\Penempatan\CreateManualPenempatanAction;
+use App\Actions\Admin\Penempatan\ReassignPembimbingAction;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\StatusTugasEnum;
 use App\Enums\TipeAuditEnum;
+use App\Exports\Admin\Penempatan\RekapSuratDiterimaExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Penempatan\BatalkanPenempatanRequest;
+use App\Http\Requests\Admin\Penempatan\BulkReassignPembimbingRequest;
+use App\Http\Requests\Admin\Penempatan\PindahPembimbingRequest;
 use App\Http\Requests\PenempatanManualRequest;
+use App\Http\Requests\TetapkanPenempatanRequest;
 use App\Models\Bidang;
+use App\Models\BulanMagang;
+use App\Models\Jurusan;
+use App\Models\Kuota;
+use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\SlotKhusus;
 use App\Models\User;
+use App\Queries\Admin\Penempatan\PenempatanAntreanQuery;
+use App\Queries\Admin\Penempatan\PenempatanIndexQuery;
+use App\Services\Admin\Penempatan\SuratPenerimaanService;
 use App\Services\AuditService;
 use App\Services\PlacementService;
+use App\Services\SuratDiterimaPdfService;
+use App\Services\XlsxExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class PenempatanController extends Controller
 {
     public function __construct(
         protected PlacementService $placementService,
-        protected AuditService $auditService
+        protected AuditService $auditService,
+        protected XlsxExportService $xlsxExportService,
+        protected PenempatanIndexQuery $indexQuery,
+        protected PenempatanAntreanQuery $antreanQuery,
+        protected AssignPesertaAction $assignPesertaAction,
+        protected CreateManualPenempatanAction $createManualAction,
+        protected ReassignPembimbingAction $reassignAction,
+        protected BulkReassignPembimbingAction $bulkReassignAction,
+        protected CancelPenempatanAction $cancelAction,
+        protected SuratPenerimaanService $suratPenerimaanService,
+        protected RekapSuratDiterimaExport $rekapExport
     ) {}
 
     public function index(Request $request): View
     {
-        $query = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan', 'slotKhusus'])
-            ->orderBy('tgl_mulai', 'desc');
+        $penempatanList = $this->indexQuery->getPaginated($request);
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
-        }
-
-        if ($request->filled('pembimbing_id')) {
-            $query->where('pembimbing_id', $request->integer('pembimbing_id'));
-        }
-
-        if ($request->filled('bidang_id')) {
-            $query->where('bidang_id', $request->integer('bidang_id'));
-        }
-
-        if ($request->filled('q')) {
-            $search = '%' . trim((string) $request->input('q')) . '%';
-            $query->whereHas('peserta', function ($qu) use ($search) {
-                $qu->where('nama', 'like', $search)
-                    ->orWhere('email', 'like', $search)
-                    ->orWhereHas('profil', fn ($qp) => $qp->where('institusi', 'like', $search));
-            });
-        }
-
-        $penempatanList = $query->paginate(15)->withQueryString();
         $pembimbingList = User::where('role', RoleEnum::Pembimbing)
             ->where('status_aktif', true)
+            ->with('bidang')
             ->withCount(['penempatanBimbingan as mentee_aktif_count' => function ($q) {
                 $q->where('status', StatusPenempatanEnum::Aktif);
             }])
             ->orderBy('nama')
             ->get();
 
+        $activeTab = $request->input('tab', 'sudah');
+        if (! in_array($activeTab, ['sudah', 'belum'], true)) {
+            $activeTab = 'sudah';
+        }
+
+        $antreanBelumDitempatkan = $this->antreanQuery->getAntrean($request);
+        $totalBelumDitempatkan = $this->antreanQuery->getTotalBelumDitempatkan();
+
+        $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
         $slotKhususList = SlotKhusus::where('aktif', true)->orderBy('bulan_mulai')->get();
         $bidangList = Bidang::where('aktif', true)->orderBy('nama_bidang')->get();
-        $jurusanList = \App\Models\Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
-        $kuotaList = \App\Models\Kuota::with(['bulanMagang', 'jurusan'])->where('aktif', true)->get();
+        $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
+        $kuotaList = Kuota::with(['bulanMagang', 'jurusan'])->where('aktif', true)->get();
         $pesertaList = User::where('role', RoleEnum::Peserta)
             ->where('status_aktif', true)
             ->whereDoesntHave('penempatanPeserta', function ($q) {
@@ -74,12 +91,7 @@ class PenempatanController extends Controller
             ->orderBy('nama')
             ->get();
 
-        $penempatanStats = [
-            'total' => Penempatan::count(),
-            'aktif' => Penempatan::where('status', StatusPenempatanEnum::Aktif)->count(),
-            'selesai' => Penempatan::where('status', StatusPenempatanEnum::Selesai)->count(),
-            'khusus' => Penempatan::whereNotNull('slot_khusus_id')->count(),
-        ];
+        $penempatanStats = $this->indexQuery->getStatistics($totalBelumDitempatkan);
 
         return view('admin.penempatan.index', [
             'penempatanList' => $penempatanList,
@@ -91,6 +103,91 @@ class PenempatanController extends Controller
             'kuotaList' => $kuotaList,
             'pesertaList' => $pesertaList,
             'penempatanStats' => $penempatanStats,
+            'antreanBelumDitempatkan' => $antreanBelumDitempatkan,
+            'bulanList' => $bulanList,
+            'activeTab' => $activeTab,
+        ]);
+    }
+
+    /**
+     * Menetapkan pembimbing dan bidang dinas untuk peserta yang telah diterima (Tahap 2 Penempatan).
+     */
+    public function tetapkan(TetapkanPenempatanRequest $request): RedirectResponse
+    {
+        $this->authorize('manage', Penempatan::class);
+
+        $admin = $request->user();
+        $pendaftaran = Pendaftaran::findOrFail($request->integer('pendaftaran_id'));
+        $pembimbing = User::findOrFail($request->integer('pembimbing_id'));
+        $bidang = $request->filled('bidang_id')
+            ? Bidang::find($request->integer('bidang_id'))
+            : ($pendaftaran->kuota?->jurusan?->bidang?->first() ?? $pembimbing->bidang);
+
+        try {
+            $this->assignPesertaAction->execute($pendaftaran, $admin, $pembimbing, $bidang);
+
+            return redirect()->route('admin.penempatan.index')
+                ->with('success', 'Penetapan pembimbing lapangan untuk '.$pendaftaran->user?->nama.' berhasil disimpan.');
+        } catch (\Throwable $e) {
+            return redirect()->route('admin.penempatan.index')
+                ->with('error', 'Gagal menetapkan penempatan: '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Menampilkan detail lengkap penempatan peserta individual (A9).
+     */
+    public function show(Penempatan $penempatan): View
+    {
+        $this->authorize('view', $penempatan);
+
+        $penempatan->load([
+            'peserta.profil.jurusan',
+            'pembimbing',
+            'bidang',
+            'slotKhusus',
+            'kuota.jurusan',
+            'tugas.progresLogs',
+            'logbooks',
+            'pendaftaran.dokumen',
+        ]);
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::AksesData,
+            tabel: 'penempatan',
+            idData: $penempatan->id,
+            nilaiLama: null,
+            nilaiBaru: null,
+            detail: [
+                'aksi' => 'Melihat detail individual penempatan peserta (A9)',
+                'peserta_id' => $penempatan->peserta_id,
+            ],
+            user: request()->user()?->id
+        );
+
+        $pembimbingList = User::where('role', RoleEnum::Pembimbing)
+            ->where('status_aktif', true)
+            ->withCount(['penempatanBimbingan as mentee_aktif_count' => function ($q) {
+                $q->where('status', StatusPenempatanEnum::Aktif);
+            }])
+            ->orderBy('nama')
+            ->get();
+
+        $tugasCount = $penempatan->tugas->count();
+        $tugasSelesaiCount = $penempatan->tugas->filter(function ($t) {
+            return $t->status === StatusTugasEnum::Selesai;
+        })->count();
+
+        $logbookCount = $penempatan->logbooks->count();
+        $nilaiAkhir = null;
+
+        return view('admin.penempatan.show', [
+            'penempatan' => $penempatan,
+            'pembimbingList' => $pembimbingList,
+            'tugasCount' => $tugasCount,
+            'tugasSelesaiCount' => $tugasSelesaiCount,
+            'logbookCount' => $logbookCount,
+            'nilaiAkhir' => $nilaiAkhir,
         ]);
     }
 
@@ -99,6 +196,8 @@ class PenempatanController extends Controller
      */
     public function storeManual(PenempatanManualRequest $request): RedirectResponse
     {
+        $this->authorize('manage', Penempatan::class);
+
         $admin = $request->user();
         $mode = $request->input('mode', 'terdaftar');
         $jalur = $request->input('jalur', 'khusus');
@@ -107,7 +206,7 @@ class PenempatanController extends Controller
 
         try {
             if ($mode === 'baru') {
-                $penempatan = $this->placementService->tempatkanPesertaBaruManual(
+                $penempatan = $this->createManualAction->executeBaru(
                     userData: [
                         'nama' => (string) $request->input('nama'),
                         'email' => (string) $request->input('email'),
@@ -132,7 +231,7 @@ class PenempatanController extends Controller
                 $peserta = User::findOrFail($request->integer('peserta_id'));
                 $slotKhusus = SlotKhusus::findOrFail($request->integer('slot_khusus_id'));
 
-                $penempatan = $this->placementService->tempatkanManual(
+                $penempatan = $this->createManualAction->executeTerdaftar(
                     peserta: $peserta,
                     slotKhusus: $slotKhusus,
                     pembimbing: $pembimbing,
@@ -143,46 +242,54 @@ class PenempatanController extends Controller
                 );
             }
 
-            return redirect()->route('admin.penempatan.index')
-                ->with('success', 'Penempatan peserta berhasil diproses secara manual.');
+            $redirect = redirect()->route('admin.penempatan.index');
+            if ($mode === 'baru') {
+                $plainPassword = $penempatan->plain_password ?? 'Magkom2026!';
+                $namaPeserta = $penempatan->peserta?->nama ?? 'Peserta';
+                $emailPeserta = $penempatan->peserta?->email ?? '';
+
+                return $redirect->with('success', "Penempatan peserta {$namaPeserta} berhasil diproses. Akun peserta telah aktif dibuat.")
+                    ->with('akun_baru_dibuat', true)
+                    ->with('nama_peserta', $namaPeserta)
+                    ->with('email_peserta', $emailPeserta)
+                    ->with('password_baru', $plainPassword);
+            }
+
+            return $redirect->with('success', 'Penempatan peserta berhasil diproses secara manual.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal memproses penempatan manual: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memproses penempatan manual: '.$e->getMessage());
         }
     }
 
     /**
      * Mengunduh dokumen resmi Surat Keterangan Diterima Magang PDF (AC-16-1, F-16).
      */
-    public function unduhSuratDiterima(Penempatan $penempatan, \App\Services\SuratDiterimaPdfService $pdfService)
+    public function unduhSuratDiterima(Penempatan $penempatan, SuratDiterimaPdfService $pdfService): Response
     {
         $this->authorize('view', $penempatan);
 
-        return $pdfService->generate($penempatan);
+        return $this->suratPenerimaanService->downloadResponse($penempatan, $pdfService);
     }
 
     /**
      * Menyajikan pratinjau dokumen resmi Surat Keterangan Diterima Magang PDF secara inline stream (AC-16-1, F-16).
      */
-    public function pratinjauSuratDiterima(Penempatan $penempatan, \App\Services\SuratDiterimaPdfService $pdfService)
+    public function pratinjauSuratDiterima(Penempatan $penempatan, SuratDiterimaPdfService $pdfService): Response
     {
         $this->authorize('view', $penempatan);
 
-        return $pdfService->stream($penempatan);
+        return $this->suratPenerimaanService->streamResponse($penempatan, $pdfService);
     }
 
     /**
      * Memindahkan pembimbing peserta magang (AC-07-4).
      */
-    public function pindahPembimbing(Penempatan $penempatan, Request $request): RedirectResponse
+    public function pindahPembimbing(Penempatan $penempatan, PindahPembimbingRequest $request): RedirectResponse
     {
-        $request->validate([
-            'pembimbing_id' => ['required', 'exists:users,id'],
-        ]);
-
         $pembimbingBaru = User::findOrFail($request->integer('pembimbing_id'));
 
         try {
-            $this->placementService->pindahPembimbing(
+            $this->reassignAction->execute(
                 penempatan: $penempatan,
                 pembimbingBaru: $pembimbingBaru,
                 admin: $request->user()
@@ -196,21 +303,38 @@ class PenempatanController extends Controller
     }
 
     /**
-     * Membatalkan penerimaan atau mencatat pengunduran diri peserta magang (AC-07-5, BR-07).
+     * Memindahkan pembimbing untuk banyak penempatan peserta sekaligus (Bulk Reassign) (AC-07-4, BR-13, A-12).
      */
-    public function batalkan(Penempatan $penempatan, Request $request): RedirectResponse
+    public function bulkReassignPembimbing(BulkReassignPembimbingRequest $request): RedirectResponse
     {
-        $request->validate([
-            'alasan' => ['required', 'string', 'min:10', 'max:1000'],
-        ], [
-            'alasan.min' => 'Alasan pembatalan/pengunduran diri minimal 10 karakter.',
-        ]);
+        $admin = $request->user();
+        $pembimbingBaru = User::where('id', $request->integer('pembimbing_id'))
+            ->where('role', RoleEnum::Pembimbing)
+            ->where('status_aktif', true)
+            ->firstOrFail();
+
+        $ids = (array) $request->input('penempatan_ids');
 
         try {
-            $this->placementService->batalkanPenempatan(
+            $count = $this->bulkReassignAction->execute($ids, $pembimbingBaru, $admin);
+
+            return redirect()->route('admin.penempatan.index')
+                ->with('success', "Sebanyak {$count} penempatan peserta berhasil dialihkan ke {$pembimbingBaru->nama}.");
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Membatalkan penerimaan atau mencatat pengunduran diri peserta magang (AC-07-5, BR-07).
+     */
+    public function batalkan(Penempatan $penempatan, BatalkanPenempatanRequest $request): RedirectResponse
+    {
+        try {
+            $this->cancelAction->execute(
                 penempatan: $penempatan,
                 admin: $request->user(),
-                alasan: $request->input('alasan')
+                alasan: (string) $request->input('alasan')
             );
 
             return redirect()->route('admin.penempatan.index')
@@ -221,88 +345,15 @@ class PenempatanController extends Controller
     }
 
     /**
-     * Ekspor rekapitulasi data surat keterangan diterima magang ke format CSV (F-16).
+     * Ekspor rekapitulasi data surat keterangan diterima magang (F-16).
+     * Mendukung format XLSX resmi bergaris rapi (default pada UI), CSV sanitasi, dan PDF.
      */
-    public function exportRekapSuratDiterima(Request $request): StreamedResponse
+    public function exportRekapSuratDiterima(Request $request): Response
     {
-        $query = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan', 'slotKhusus'])
-            ->orderBy('tgl_mulai', 'desc');
+        $this->authorize('export', Penempatan::class);
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
-        }
-        if ($request->filled('bidang_id')) {
-            $query->where('bidang_id', $request->integer('bidang_id'));
-        }
+        $records = $this->indexQuery->buildQuery($request)->get();
 
-        $records = $query->get();
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::AksesData,
-            tabel: 'penempatan',
-            idData: null,
-            nilaiLama: null,
-            nilaiBaru: null,
-            detail: [
-                'aksi' => 'Ekspor rekapitulasi surat diterima magang (F-16)',
-                'jumlah_baris' => $records->count(),
-            ],
-            user: $request->user()->id
-        );
-
-        $sanitize = function (mixed $val): string {
-            if ($val === null) {
-                return '';
-            }
-            $s = (string) $val;
-            if ($s !== '' && in_array($s[0], ['=', '+', '-', '@'], true)) {
-                return "'" . $s;
-            }
-            return $s;
-        };
-
-        $fileName = 'rekap-surat-diterima-' . date('Ymd-His') . '.csv';
-
-        return response()->streamDownload(function () use ($records, $sanitize) {
-            $handle = fopen('php://output', 'w');
-            fwrite($handle, "\xEF\xBB\xBF");
-            fputcsv($handle, [
-                'No Penempatan',
-                'Nama Peserta',
-                'NIM/NISN',
-                'Institusi/Kampus',
-                'Jurusan',
-                'Bidang Penempatan',
-                'Pembimbing Lapangan',
-                'Jalur',
-                'Tanggal Mulai',
-                'Tanggal Selesai',
-                'Status',
-                'No Surat Diterima',
-            ]);
-
-            foreach ($records as $item) {
-                fputcsv($handle, [
-                    $sanitize($item->id),
-                    $sanitize($item->peserta?->nama ?? '-'),
-                    $sanitize($item->peserta?->profil?->nim_nisn ?? '-'),
-                    $sanitize($item->peserta?->profil?->institusi ?? '-'),
-                    $sanitize($item->kuota?->jurusan?->nama_jurusan ?? ($item->peserta?->profil?->jurusan?->nama_jurusan ?? '-')),
-                    $sanitize($item->bidang?->nama_bidang ?? '-'),
-                    $sanitize($item->pembimbing?->nama ?? '-'),
-                    $sanitize(strtoupper($item->jalur instanceof \App\Enums\JalurEnum ? $item->jalur->value : (string) ($item->jalur ?? 'REGULER'))),
-                    $sanitize($item->tgl_mulai?->format('d/m/Y') ?? '-'),
-                    $sanitize($item->tgl_selesai?->format('d/m/Y') ?? '-'),
-                    $sanitize(ucfirst($item->status?->value ?? '-')),
-                    $sanitize($item->no_surat ?? '500.12/' . str_pad((string) $item->id, 4, '0', STR_PAD_LEFT) . '/DISKOMINFO/' . date('Y')),
-                ]);
-            }
-
-            fclose($handle);
-        }, $fileName, [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-        ]);
+        return $this->rekapExport->export($records, $request, $request->user());
     }
 }
-
-

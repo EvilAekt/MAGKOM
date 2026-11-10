@@ -1,0 +1,1197 @@
+/* =========================================================================
+   MAGKOM - HALAMAN DETAIL & PEMBERKASAN PENDAFTARAN PESERTA
+   Design System: Clean Minimalist, High Contrast, Anti-Clutter
+   Palet Resmi: Deep Navy #02275D, Gold #FFCB05, Text #212529, Border #E2E8F0
+   ========================================================================= */
+
+/* 1. Page Wrapper */
+.pemberkasan-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    padding: 0 0 28px 0;
+    box-sizing: border-box;
+}
+
+/* 2. Top Navigation Bar */
+.pemberkasan-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-back-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #475569;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-back-nav:hover {
+    background: #f8fafc;
+    border-color: #02275D;
+    color: #02275D;
+}
+
+.btn-cancel-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: #ffffff;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #dc2626;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel-nav:hover {
+    background: #fee2e2;
+    border-color: #dc2626;
+    color: #b91c1c;
+}
+
+/* 3. Hero Banner (Sleek Navy Gradient) */
+.pemberkasan-hero-card {
+    background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.4), transparent 60%),
+                linear-gradient(135deg, #02275D 0%, #01347C 60%, #003566 100%);
+    border-radius: 14px;
+    padding: 20px 24px;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px -2px rgba(2, 39, 93, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.hero-main-flex {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.hero-left-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.hero-reg-pill {
+    display: inline-block;
+    padding: 3px 8px;
+    background: rgba(255, 203, 5, 0.15);
+    border: 1px solid rgba(255, 203, 5, 0.35);
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #FFCB05;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+    width: fit-content;
+}
+
+.hero-title-main {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.hero-right-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.hero-chips-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.hero-chip-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.hero-chip-item.kelompok {
+    background: rgba(255, 203, 5, 0.18);
+    border-color: rgba(255, 203, 5, 0.35);
+    color: #FFCB05;
+    font-weight: 700;
+}
+
+/* 4. Stepper Modern (Clean & Light - DS-MagKom) */
+.pemberkasan-stepper-card {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 16px 24px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.stepper-timeline-modern {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 4px 0;
+}
+
+.stepper-timeline-modern::before {
+    content: '';
+    position: absolute;
+    top: 19px;
+    left: 60px;
+    right: 60px;
+    height: 2px;
+    background: #E2E8F0;
+    z-index: 1;
+}
+
+.stepper-step-modern {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 150px;
+}
+
+.stepper-circle-modern {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #CBD5E1;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 6px;
+    transition: all 0.2s ease;
+}
+
+.stepper-step-modern.completed .stepper-circle-modern {
+    background: #02275D;
+    border-color: #02275D;
+    color: #FFCB05;
+    box-shadow: 0 0 0 3px rgba(2, 39, 93, 0.15);
+}
+
+.stepper-step-modern.active .stepper-circle-modern {
+    background: #02275D;
+    border-color: #02275D;
+    color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(255, 203, 5, 0.35), 0 2px 8px rgba(2, 39, 93, 0.25);
+}
+
+.stepper-step-modern.warning .stepper-circle-modern {
+    background: #FFCB05;
+    border-color: #FFCB05;
+    color: #02275D;
+    box-shadow: 0 0 0 3px rgba(255, 203, 5, 0.25);
+}
+
+.stepper-step-modern.danger .stepper-circle-modern {
+    background: #DC2626;
+    border-color: #DC2626;
+    color: #ffffff;
+}
+
+.stepper-phase-tag {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    color: #94A3B8;
+    margin-bottom: 2px;
+}
+
+.stepper-step-modern.active .stepper-phase-tag {
+    color: #01347C;
+}
+
+.stepper-label-text {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #64748B;
+}
+
+.stepper-step-modern.active .stepper-label-text {
+    color: #02275D;
+    font-weight: 800;
+}
+
+.stepper-step-modern.completed .stepper-label-text {
+    color: #1E293B;
+    font-weight: 700;
+}
+
+/* 5. Main Card & Document Checklist (DS-MagKom Aesthetic) */
+.pemberkasan-main-card {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 22px 26px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+}
+
+.pemberkasan-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.pemberkasan-title-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.pemberkasan-title-flex {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.pemberkasan-title-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
+    color: #FFCB05;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(2, 39, 93, 0.22);
+    border: 1px solid rgba(255, 203, 5, 0.28);
+}
+
+.pemberkasan-heading-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.pemberkasan-accent-line {
+    width: 4px;
+    height: 18px;
+    border-radius: 2px;
+    background: #FFCB05;
+    flex-shrink: 0;
+}
+
+.pemberkasan-title-group h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #02275D;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.pemberkasan-guide-chips {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pemberkasan-chip-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #475569;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    padding: 3px 10px;
+    border-radius: 6px;
+}
+
+.pemberkasan-chip-info svg {
+    color: #01347C;
+}
+
+.pemberkasan-badge-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.pemberkasan-progress-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    background: rgba(2, 39, 93, 0.06);
+    color: #02275D;
+    border: 1.5px solid rgba(1, 52, 124, 0.2);
+    box-shadow: 0 1px 3px rgba(2, 39, 93, 0.06);
+    transition: all 0.2s ease;
+}
+
+.pemberkasan-progress-badge.complete {
+    background: #02275D;
+    color: #FFCB05;
+    border-color: #02275D;
+    box-shadow: 0 3px 10px rgba(2, 39, 93, 0.25);
+}
+
+.pemberkasan-dot-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #FFCB05;
+    box-shadow: 0 0 0 0 rgba(255, 203, 5, 0.7);
+    animation: pemberkasanPulse 2s infinite;
+}
+
+@keyframes pemberkasanPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 203, 5, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(255, 203, 5, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 203, 5, 0); }
+}
+
+.pemberkasan-progress-track {
+    width: 100%;
+    height: 8px;
+    background: #F1F5F9;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 22px;
+}
+
+.pemberkasan-progress-fill {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(90deg, #02275D 0%, #01347C 60%, #FFCB05 100%);
+}
+
+.pemberkasan-progress-fill.complete {
+    background: linear-gradient(90deg, #02275D 0%, #01347C 50%, #FFCB05 100%);
+}
+
+/* 6. Section Sub-Headers */
+.pemberkasan-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.pemberkasan-section-title {
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #02275D;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+}
+
+.pemberkasan-section-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+/* 7. Streamlined Document Card (Zero Bloat, High Polish - DS-MagKom) */
+.doc-card-premium {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.doc-card-premium:hover {
+    border-color: #01347C;
+    background: #FAFBFD;
+    box-shadow: 0 4px 14px rgba(2, 39, 93, 0.07);
+    transform: translateY(-1px);
+}
+
+.doc-card-premium.is-complete {
+    border-color: #CBD5E1;
+    background: #FFFFFF;
+}
+
+.doc-card-premium.is-complete:hover {
+    border-color: #01347C;
+    background: #FAFBFD;
+}
+
+.doc-row-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.doc-left-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 220px;
+    flex: 1;
+}
+
+.doc-type-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(2, 39, 93, 0.07);
+    border: 1px solid rgba(2, 39, 93, 0.12);
+    color: #02275D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.doc-card-premium:hover .doc-type-icon {
+    background: #02275D;
+    border-color: #02275D;
+    color: #FFCB05;
+}
+
+.doc-card-premium.is-complete .doc-type-icon {
+    background: rgba(2, 39, 93, 0.08);
+    border-color: rgba(2, 39, 93, 0.15);
+    color: #02275D;
+}
+
+.doc-card-premium.is-complete:hover .doc-type-icon {
+    background: #02275D;
+    border-color: #02275D;
+    color: #FFCB05;
+}
+
+.doc-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.doc-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.doc-uploaded-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: #02275D;
+    background: rgba(2, 39, 93, 0.05);
+    border: 1px solid rgba(2, 39, 93, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.doc-uploaded-meta svg {
+    color: #02275D;
+    flex-shrink: 0;
+}
+
+.doc-uploaded-filename {
+    font-weight: 600;
+    color: #02275D;
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.doc-uploaded-filesize {
+    color: #64748B;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.doc-title-text {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.35;
+}
+
+.doc-pill-tag {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.doc-pill-tag.wajib {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #DC2626;
+}
+
+.doc-pill-tag.opsional {
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    color: #64748B;
+}
+
+/* 8. Right Action Area */
+.doc-right-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.status-badge-pending {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #94A3B8;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    padding: 3px 10px;
+    border-radius: 9999px;
+}
+
+.btn-upload-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 7px 16px;
+    background: #FFFFFF;
+    border: 1.5px solid #01347C;
+    border-radius: 8px;
+    color: #01347C;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(1, 52, 124, 0.08);
+}
+
+.btn-upload-trigger svg {
+    color: #01347C;
+    transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.btn-upload-trigger:hover {
+    background: #02275D;
+    border-color: #02275D;
+    color: #FFFFFF;
+    box-shadow: 0 3px 10px rgba(2, 39, 93, 0.25);
+    transform: translateY(-1px);
+}
+
+.btn-upload-trigger:hover svg {
+    color: #FFCB05;
+    transform: translateY(-1px);
+}
+
+.btn-upload-trigger.dragover {
+    background: #EFF6FF;
+    border-color: #02275D;
+    box-shadow: 0 0 0 3px rgba(2, 39, 93, 0.15);
+}
+
+.uploaded-chip-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    padding: 4px 10px;
+    border-radius: 7px;
+    font-size: 0.75rem;
+    color: #02275D;
+}
+
+.chip-check-mark {
+    font-weight: 800;
+    color: #02275D;
+}
+
+.chip-file-name {
+    font-weight: 600;
+    color: #0f172a;
+    max-width: 170px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chip-file-size {
+    color: #64748b;
+    font-size: 0.7rem;
+}
+
+.action-btns-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-action-round {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 28px;
+    padding: 0 9px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-action-round:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #94a3b8;
+}
+
+.btn-action-round.view {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #02275D;
+}
+
+.btn-action-round.view:hover {
+    background: #dbeafe;
+    border-color: #93c5fd;
+}
+
+/* 9. Selected File & Replacement Inline Bar */
+.selected-file-confirm-bar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #eff6ff;
+    border: 1px solid #3b82f6;
+    border-radius: 7px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.selected-file-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.selected-file-text {
+    font-size: 0.775rem;
+    font-weight: 700;
+    color: #02275D;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-file-size {
+    font-size: 0.7rem;
+    color: #64748b;
+    flex-shrink: 0;
+}
+
+.selected-file-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-confirm-upload {
+    height: 28px;
+    padding: 0 12px;
+    background: #02275D;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.replace-inline-bar {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* 10. Clean Team Roster Card */
+.team-member-bento {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.team-member-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    gap: 10px;
+}
+
+.team-member-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.team-member-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.775rem;
+    flex-shrink: 0;
+}
+
+.team-member-avatar.ketua {
+    background: #02275D;
+    color: #FFCB05;
+}
+
+.team-member-avatar.anggota {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.team-member-name {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.team-role-tag {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 999px;
+}
+
+.team-role-tag.ketua {
+    background: rgba(2, 39, 93, 0.1);
+    color: #02275D;
+}
+
+.team-role-tag.anggota {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.team-status-pill {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+.team-status-pill.complete {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.team-status-pill.pending {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.team-member-body {
+    padding: 10px 12px;
+    background: #ffffff;
+}
+
+/* 11. Minimalist Submission Card (DS-MagKom Government Sleek) */
+.pemberkasan-submit-card {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 16px 22px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    transition: all 0.2s ease;
+}
+
+.pemberkasan-submit-card.pending {
+    background: linear-gradient(135deg, #FFCB05 0%, #FFC300 100%);
+    border: 1.5px solid #E6B800;
+    box-shadow: 0 4px 18px -2px rgba(255, 203, 5, 0.4);
+}
+
+.pemberkasan-submit-card.ready {
+    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
+    border: 1.5px solid #003566;
+    box-shadow: 0 4px 20px -2px rgba(2, 39, 93, 0.35);
+}
+
+.submit-card-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.submit-icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.submit-icon-circle.pending {
+    background: #02275D;
+    border: 1.5px solid #02275D;
+    color: #FFCB05;
+    box-shadow: 0 2px 8px rgba(2, 39, 93, 0.25);
+}
+
+.submit-icon-circle.ready {
+    background: #FFCB05;
+    border: 1px solid #FFC300;
+    color: #02275D;
+    box-shadow: 0 2px 8px rgba(255, 203, 5, 0.4);
+}
+
+.submit-title-text {
+    font-size: 0.925rem;
+    font-weight: 800;
+}
+
+.submit-title-text.pending {
+    color: #02275D;
+    letter-spacing: -0.01em;
+}
+
+.submit-title-text.ready {
+    color: #FFFFFF;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+}
+
+.btn-submit-final {
+    height: 42px;
+    padding: 0 24px;
+    border-radius: 8px;
+    background: #02275D;
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border: 1px solid #02275D;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(2, 39, 93, 0.25);
+}
+
+.btn-submit-final svg {
+    color: #FFCB05;
+}
+
+.pemberkasan-submit-card.ready .btn-submit-final {
+    background: #FFCB05;
+    border: 1px solid #FFC300;
+    color: #02275D;
+    box-shadow: 0 3px 12px rgba(255, 203, 5, 0.45);
+}
+
+.pemberkasan-submit-card.ready .btn-submit-final svg {
+    color: #02275D;
+}
+
+.pemberkasan-submit-card.ready .btn-submit-final:hover:not(:disabled) {
+    background: #FFC300;
+    border-color: #FFC300;
+    color: #02275D;
+    box-shadow: 0 6px 18px rgba(255, 203, 5, 0.55);
+    transform: translateY(-1px);
+}
+
+.btn-submit-final:hover:not(:disabled) {
+    background: #01347C;
+    border-color: #01347C;
+    box-shadow: 0 4px 14px rgba(2, 39, 93, 0.35);
+    transform: translateY(-1px);
+}
+
+.btn-submit-final:disabled {
+    background: #02275D;
+    border-color: #02275D;
+    color: #FFFFFF;
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.btn-submit-final:disabled svg {
+    color: rgba(255, 203, 5, 0.6);
+}
+
+/* 12. Dark Mode Support */
+[data-theme="dark"] .pemberkasan-main-card,
+[data-theme="dark"] .pemberkasan-stepper-card,
+[data-theme="dark"] .team-member-bento,
+[data-theme="dark"] .doc-card-premium {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .doc-title-text,
+[data-theme="dark"] .team-member-name,
+[data-theme="dark"] .pemberkasan-title-group h3 {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pemberkasan-chip-info {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .pemberkasan-chip-info svg {
+    color: #FFCB05 !important;
+}
+
+[data-theme="dark"] .pemberkasan-progress-track {
+    background: #334155 !important;
+}
+
+[data-theme="dark"] .btn-upload-trigger {
+    background: #0f172a !important;
+    border-color: #0284c7 !important;
+    color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .team-member-header {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .team-member-body {
+    background: #1e293b !important;
+}
+
+[data-theme="dark"] .btn-action-round {
+    background: #334155 !important;
+    border-color: #475569 !important;
+    color: #e2e8f0 !important;
+}
+
+/* 13. Modal & In-App Document Preview Overlay */
+.modal {
+    display: none !important;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.open {
+    display: flex !important;
+}
+
+.modal-box-large {
+    background: #ffffff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 960px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+    animation: modalScaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #02275D;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    font-size: 1.75rem;
+    line-height: 1;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: color 0.15s ease;
+}
+
+.modal-close:hover {
+    color: #0f172a;
+}
+
+.modal-body-preview {
+    position: relative;
+    min-height: 400px;
+    max-height: calc(90vh - 80px);
+    overflow: hidden;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.preview-loading-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 380px;
+    gap: 12px;
+    color: #475569;
+}
+
+.preview-loading-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #02275D;
+    border-radius: 50%;
+    animation: spinModal 0.8s linear infinite;
+}
+
+@keyframes spinModal {
+    to { transform: rotate(360deg); }
+}
+
+[data-theme="dark"] .modal-box-large {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+}
+
+[data-theme="dark"] .modal-title {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .modal-header {
+    border-bottom-color: #334155 !important;
+}
+
+[data-theme="dark"] .modal-body-preview {
+    background: #0f172a !important;
+}
+

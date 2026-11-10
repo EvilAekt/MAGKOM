@@ -1,0 +1,1039 @@
+/* ==========================================================================
+   Detail Penempatan Peserta - Admin Stylesheet
+   Architecture: 12-Column Grid System (8-Col Main : 4-Col Sidebar)
+   Components: Compact Profile Banner, Minimal Metrics Summary, Flat Section Cards,
+               Unified Action Button Hierarchy, and Full Dark Mode Support.
+   ========================================================================== */
+
+.penempatan-detail-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+    width: 100%;
+}
+
+/* ==========================================================================
+   1. Header Toolbar & Action Button Hierarchy
+   ========================================================================== */
+.penempatan-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-action-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    color: #334155;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn-action-back:hover {
+    background: #F8FAFC;
+    border-color: #94A3B8;
+    color: #0F172A;
+}
+
+.btn-action-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    color: #2563EB;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn-action-secondary:hover {
+    background: #EFF6FF;
+    border-color: #BFDBFE;
+    color: #1D4ED8;
+}
+
+.btn-action-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #0641CC;
+    border: 1px solid #0641CC;
+    color: #FFFFFF;
+    padding: 0.55rem 1.15rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 6px -1px rgba(6, 65, 204, 0.35);
+}
+
+.btn-action-primary:hover {
+    background: #0533A3;
+    border-color: #0533A3;
+    color: #FFFFFF;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px -1px rgba(6, 65, 204, 0.4);
+}
+
+/* Action Dropdown Menu */
+.penempatan-dropdown-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-action-dropdown-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    color: #334155;
+    padding: 0.55rem 0.85rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.btn-action-dropdown-trigger:hover,
+.btn-action-dropdown-trigger.is-active {
+    background: #F8FAFC;
+    border-color: #94A3B8;
+    color: #0F172A;
+}
+
+.penempatan-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    min-width: 220px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.06);
+    padding: 0.35rem;
+    z-index: 100;
+    flex-direction: column;
+    gap: 0.2rem;
+    text-align: left;
+}
+
+.penempatan-dropdown-menu.show {
+    display: flex;
+}
+
+.dropdown-action-item {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #334155;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+.dropdown-action-item:hover {
+    background: #F1F5F9;
+    color: #0F172A;
+}
+
+.dropdown-action-item.is-danger {
+    color: #DC2626;
+}
+
+.dropdown-action-item.is-danger:hover {
+    background: #FEF2F2;
+    color: #B91C1C;
+}
+
+/* ==========================================================================
+   2. Compact 1-Line Profile Banner
+   ========================================================================== */
+.penempatan-profile-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 1.15rem 1.45rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.15rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.penempatan-profile-main {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.penempatan-profile-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #06318C 0%, #2563EB 100%);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    font-weight: 800;
+    border: 2px solid #EFF6FF;
+    flex-shrink: 0;
+    overflow: hidden;
+    box-shadow: 0 3px 8px -1px rgba(6, 49, 140, 0.25);
+}
+
+.penempatan-profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.penempatan-profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.penempatan-profile-name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.penempatan-profile-name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.status-badge-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.725rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.status-dot-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.jalur-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.725rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    line-height: 1.3;
+}
+
+.penempatan-profile-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.meta-chip-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.6rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    font-size: 0.775rem;
+    color: #475569;
+}
+
+.meta-chip-item strong {
+    color: #1E293B;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   3. Minimal Metrics Summary (4 Clean Stat Cards)
+   ========================================================================== */
+.penempatan-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.15rem;
+    width: 100%;
+}
+
+@media (max-width: 1080px) {
+    .penempatan-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .penempatan-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.metric-tile-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 1.15rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 125px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.metric-tile-card:hover {
+    border-color: #CBD5E1;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px -3px rgba(15, 23, 42, 0.06);
+}
+
+.metric-tile-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.metric-tile-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748B;
+}
+
+.metric-tile-icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.metric-tile-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0.35rem 0 0.25rem 0;
+    letter-spacing: -0.02em;
+}
+
+.metric-progress-track {
+    width: 100%;
+    height: 5px;
+    background: #F1F5F9;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 0.35rem 0;
+}
+
+.metric-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+.metric-tile-sub {
+    font-size: 0.75rem;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+/* ==========================================================================
+   4. 12-Column Grid System (8-Col Main : 4-Col Sidebar)
+   ========================================================================== */
+.penempatan-grid-12 {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.35rem;
+    width: 100%;
+}
+
+.penempatan-col-8 {
+    grid-column: span 8 / span 12;
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+    min-width: 0;
+}
+
+.penempatan-col-4 {
+    grid-column: span 4 / span 12;
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+    min-width: 0;
+}
+
+@media (max-width: 1080px) {
+    .penempatan-col-8,
+    .penempatan-col-4 {
+        grid-column: span 12 / span 12;
+    }
+}
+
+/* Generic Section Card (Flat Container, Eliminates Nested Boxes) */
+.penempatan-section-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 1.35rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+}
+
+.section-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 0.85rem;
+}
+
+.section-card-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.section-card-title {
+    font-size: 0.975rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+}
+
+.section-card-subtitle {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin: 0;
+}
+
+/* ==========================================================================
+   5. Left Column (8-Col) Components
+   ========================================================================== */
+
+/* Official SK Banner */
+.sk-official-banner {
+    background: linear-gradient(135deg, #06318C 0%, #061E5B 100%);
+    border-radius: 12px;
+    padding: 1.15rem 1.45rem;
+    color: #FFFFFF;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+    box-shadow: 0 4px 14px -2px rgba(6, 49, 140, 0.25);
+}
+
+.sk-official-label {
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #93C5FD;
+    margin-bottom: 0.25rem;
+}
+
+.sk-official-number {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    letter-spacing: 0.02em;
+}
+
+.sk-official-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #DBEAFE;
+}
+
+/* Non-Redundant Placement Details Grid (2x2 Flat) */
+.placement-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.875rem;
+}
+
+@media (max-width: 640px) {
+    .placement-details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.detail-field-card {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 0.875rem 1.1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.detail-field-card:hover {
+    background: #F1F5F9;
+    border-color: #CBD5E1;
+}
+
+.detail-field-icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0641CC;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.detail-field-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.detail-field-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748B;
+    margin-bottom: 0.2rem;
+}
+
+.detail-field-value {
+    font-size: 0.925rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.35;
+    word-break: break-word;
+}
+
+/* Linear Milestone Timeline */
+.timeline-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 1.15rem 1.35rem;
+}
+
+.timeline-bar-wrap {
+    position: relative;
+    padding: 0.75rem 0;
+}
+
+.timeline-bar-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #E2E8F0;
+    transform: translateY(-50%);
+    z-index: 1;
+    border-radius: 999px;
+}
+
+.timeline-bar-progress {
+    height: 100%;
+    background: #2563EB;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+.timeline-points-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.timeline-point-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.timeline-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 3px solid #2563EB;
+    box-shadow: 0 0 0 2px #EFF6FF;
+}
+
+.timeline-dot.is-active {
+    background: #2563EB;
+    border-color: #FFFFFF;
+    box-shadow: 0 0 0 3px #93C5FD;
+}
+
+.timeline-dot.is-end {
+    border-color: #64748B;
+}
+
+.timeline-point-label {
+    font-size: 0.725rem;
+    font-weight: 700;
+    color: #475569;
+}
+
+.timeline-point-date {
+    font-size: 0.7rem;
+    color: #64748B;
+}
+
+/* ==========================================================================
+   6. Right Column (4-Col) Components
+   ========================================================================== */
+
+/* Field Supervisor Card */
+.mentor-profile-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.mentor-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    color: #1D4ED8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.mentor-info-name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.3;
+}
+
+.mentor-info-email {
+    font-size: 0.775rem;
+    color: #64748B;
+    margin-top: 0.15rem;
+}
+
+.mentor-stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.875rem;
+    padding-top: 0.5rem;
+}
+
+.mentor-capacity-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    background: #ECFDF5;
+    color: #065F46;
+    border: 1px solid #A7F3D0;
+    border-radius: 6px;
+    font-size: 0.775rem;
+    font-weight: 700;
+}
+
+/* Document List Card */
+.doc-pdf-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #BFDBFE;
+    background: #EFF6FF;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.doc-pdf-card:hover {
+    background: #EBF3FF;
+    border-color: #93C5FD;
+}
+
+.doc-pdf-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.doc-pdf-icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: #2563EB;
+    border: 1px solid #DBEAFE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.doc-pdf-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #1E40AF;
+    line-height: 1.25;
+}
+
+.doc-pdf-sub {
+    font-size: 0.7rem;
+    color: #3B82F6;
+    margin-top: 0.15rem;
+}
+
+.doc-pdf-actions {
+    display: flex;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+
+.btn-doc-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.btn-doc-view {
+    background: #FFFFFF;
+    color: #2563EB;
+    border: 1px solid #BFDBFE;
+}
+
+.btn-doc-view:hover {
+    background: #EFF6FF;
+    color: #1D4ED8;
+}
+
+.btn-doc-download {
+    background: #2563EB;
+    color: #FFFFFF;
+    border: 1px solid #2563EB;
+}
+
+.btn-doc-download:hover {
+    background: #1D4ED8;
+    border-color: #1D4ED8;
+}
+
+.verified-doc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
+    transition: background-color 0.15s ease;
+}
+
+.verified-doc-item:hover {
+    background: #F1F5F9;
+}
+
+.verified-doc-name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #1E293B;
+}
+
+/* ==========================================================================
+   7. Modals & Dialog Overlay System
+   ========================================================================== */
+.field-label {
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748B;
+    margin-bottom: 0.25rem;
+}
+
+.field-value {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #0F172A;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    padding: 1rem;
+}
+
+.modal-container {
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+}
+
+/* ==========================================================================
+   8. Full Dark Mode Styles
+   ========================================================================== */
+[data-theme="dark"] .btn-action-back,
+[data-theme="dark"] .btn-action-secondary,
+[data-theme="dark"] .btn-action-dropdown-trigger {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .btn-action-back:hover,
+[data-theme="dark"] .btn-action-dropdown-trigger:hover,
+[data-theme="dark"] .btn-action-dropdown-trigger.is-active {
+    background: #202D42 !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .btn-action-secondary {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .btn-action-secondary:hover {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .penempatan-dropdown-menu {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .dropdown-action-item {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .dropdown-action-item:hover {
+    background: #202D42 !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .dropdown-action-item.is-danger {
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .dropdown-action-item.is-danger:hover {
+    background: rgba(220, 38, 38, 0.15) !important;
+    color: #FCA5A5 !important;
+}
+
+[data-theme="dark"] .penempatan-profile-card,
+[data-theme="dark"] .metric-tile-card,
+[data-theme="dark"] .penempatan-section-card {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .penempatan-profile-name,
+[data-theme="dark"] .metric-tile-value,
+[data-theme="dark"] .section-card-title,
+[data-theme="dark"] .detail-field-value,
+[data-theme="dark"] .mentor-info-name,
+[data-theme="dark"] .verified-doc-name,
+[data-theme="dark"] .field-value {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .meta-chip-item {
+    background: #131C2C !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .meta-chip-item strong {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .metric-progress-track {
+    background: #1E293B !important;
+}
+
+[data-theme="dark"] .section-card-header {
+    border-bottom-color: #26354D !important;
+}
+
+[data-theme="dark"] .detail-field-card,
+[data-theme="dark"] .timeline-card-body {
+    background: #131C2C !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .detail-field-card:hover {
+    background: #162238 !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .detail-field-icon-box {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .timeline-bar-line {
+    background: #26354D !important;
+}
+
+[data-theme="dark"] .timeline-dot {
+    background: #182234 !important;
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 2px #1E293B !important;
+}
+
+[data-theme="dark"] .mentor-avatar {
+    background: #101B2C !important;
+    border-color: #26354D !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .mentor-profile-card {
+    border-bottom-color: #26354D !important;
+}
+
+[data-theme="dark"] .doc-pdf-card {
+    background: #131E30 !important;
+    border-color: #1E3A8A !important;
+}
+
+[data-theme="dark"] .doc-pdf-icon-box {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .doc-pdf-title {
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .doc-pdf-sub {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .btn-doc-view {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .verified-doc-item {
+    background: #131C2C !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .field-label {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .modal-container {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .modal-container select,
+[data-theme="dark"] .modal-container textarea {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}

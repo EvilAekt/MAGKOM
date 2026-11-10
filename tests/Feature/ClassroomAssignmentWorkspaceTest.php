@@ -8,6 +8,7 @@ use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
@@ -28,13 +29,16 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
     use RefreshDatabase;
 
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected Penempatan $penempatan;
+
     protected Bidang $bidang;
 
     private function createUser(string $nama, string $email, RoleEnum $role, ?int $bidangId = null): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = Hash::make('Password123!');
@@ -107,6 +111,8 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
             ->get(route('pembimbing.tugas.create'));
 
         $response->assertOk();
+        $response->assertSee('<h1 class="topbar-title">Buat Tugas Baru</h1>', false);
+        $response->assertDontSee('<nav class="breadcrumb-trail"', false);
         $response->assertSee('Buat Tugas Baru');
         $response->assertSee('Classroom Workspace');
         $response->assertSee('formBuatTugasClassroom');
@@ -123,7 +129,7 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
             ->get(route('pembimbing.tugas.create', ['penempatan_id' => $this->penempatan->id]));
 
         $response->assertOk();
-        $response->assertSee('value="' . $this->penempatan->id . '"', false);
+        $response->assertSee('value="'.$this->penempatan->id.'"', false);
         $response->assertSee('selected', false);
     }
 
@@ -163,5 +169,47 @@ class ClassroomAssignmentWorkspaceTest extends TestCase
             ->get(route('pembimbing.tugas.create'));
 
         $response->assertForbidden();
+    }
+
+    public function test_pembimbing_bisa_mengakses_halaman_index_penugasan_berformat_classroom_stream_dan_banner(): void
+    {
+        $tugas = Tugas::create([
+            'penempatan_id' => $this->penempatan->id,
+            'judul' => 'Pengembangan Antarmuka Dashboard Portal MagKom',
+            'deskripsi' => 'Menyusun komponen antarmuka web modern sesuai standar Design System MagKom.',
+            'kategori' => 'Fitur Baru',
+            'kompleksitas' => 'sedang',
+            'deadline' => Carbon::today()->addDays(2),
+        ]);
+
+        $response = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.tugas.index'));
+
+        $response->assertOk();
+        $response->assertSee('classroom-banner', false);
+        $response->assertSee('Tugas & Progres Magang', false);
+        $response->assertSee('Pengembangan Antarmuka Dashboard Portal MagKom');
+        $response->assertSee('Mentee Satu');
+        $response->assertSee('Buat Tugas Baru');
+        $response->assertDontSee('+ + Buat Tugas Baru');
+    }
+
+    public function test_filter_tab_status_dan_perlu_evaluasi_pada_halaman_index_pembimbing(): void
+    {
+        $tugasProses = Tugas::create([
+            'penempatan_id' => $this->penempatan->id,
+            'judul' => 'Tugas Berjalan Dalam Proses',
+            'deskripsi' => 'Tugas sedang dikerjakan mentee',
+            'kategori' => 'Backend',
+            'kompleksitas' => 'tinggi',
+            'deadline' => Carbon::today()->addDays(5),
+            'status' => StatusTugasEnum::Proses,
+        ]);
+
+        $response = $this->actingAs($this->pembimbing)
+            ->get(route('pembimbing.tugas.index', ['status' => 'proses']));
+
+        $response->assertOk();
+        $response->assertSee('Tugas Berjalan Dalam Proses');
     }
 }

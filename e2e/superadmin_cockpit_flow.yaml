@@ -1,0 +1,29 @@
+url: "http://127.0.0.1:8000/login"
+name: "Verifikasi Cockpit SuperAdmin"
+---
+- launchApp
+- inputText:
+    id: "email"
+    text: "superadmin@magkom.go.id"
+- inputText:
+    id: "password"
+    text: "Password123!"
+- inputText:
+    id: "captcha"
+    text: "1234"
+- tapOn:
+    id: "btn-submit-login"
+- assertVisible: "Dashboard SuperAdmin"
+- takeScreenshot: "cockpit-overview"
+- tapOn:
+    id: "btn-tab-seleksi"
+- assertVisible: "Seleksi & Kuota"
+- takeScreenshot: "cockpit-tab-seleksi"
+- tapOn:
+    id: "btn-tab-bimbingan"
+- assertVisible: "Pelaksanaan & Bimbingan"
+- takeScreenshot: "cockpit-tab-bimbingan"
+- tapOn:
+    id: "btn-tab-sistem"
+- assertVisible: "Tata Kelola Sistem & Laporan"
+- takeScreenshot: "cockpit-tab-sistem"

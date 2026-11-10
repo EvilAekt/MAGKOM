@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\SuperAdmin;
 
+use App\Enums\JalurEnum;
+use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SlotKhususRequest;
+use App\Models\Penempatan;
 use App\Models\SlotKhusus;
 use App\Services\AuditService;
+use App\Support\Pengaturan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -19,17 +23,40 @@ class SlotKhususController extends Controller
         protected AuditService $auditService
     ) {}
 
-    public function index(): View
+    public function index(Request $request): View
     {
         $slotList = SlotKhusus::with('creator')
             ->orderBy('bulan_mulai', 'desc')
-            ->paginate(12);
+            ->paginate(10, ['*'], 'slot_page')
+            ->withQueryString();
 
-        $defaultSlot = \App\Support\Pengaturan::int('slot_khusus_default', 3);
+        $defaultSlot = Pengaturan::int('slot_khusus_default', 3);
+
+        $totalAlokasiSlot = (int) SlotKhusus::sum('jumlah');
+        $totalSlotTerisi = (int) SlotKhusus::sum('terisi');
+        $sisaSlotKhusus = max(0, $totalAlokasiSlot - $totalSlotTerisi);
+
+        $pesertaKhususList = Penempatan::with([
+            'peserta.profil.jurusan',
+            'pembimbing',
+            'bidang',
+            'slotKhusus',
+        ])
+            ->where(function ($query) {
+                $query->whereNotNull('slot_khusus_id')
+                    ->orWhere('jalur', JalurEnum::Khusus);
+            })
+            ->orderBy('tgl_mulai', 'desc')
+            ->paginate(10, ['*'], 'peserta_page')
+            ->withQueryString();
 
         return view('superadmin.slot-khusus.index', [
             'slotList' => $slotList,
             'defaultSlot' => $defaultSlot,
+            'totalAlokasiSlot' => $totalAlokasiSlot,
+            'totalSlotTerisi' => $totalSlotTerisi,
+            'sisaSlotKhusus' => $sisaSlotKhusus,
+            'pesertaKhususList' => $pesertaKhususList,
         ]);
     }
 
@@ -78,8 +105,8 @@ class SlotKhususController extends Controller
 
         // Penegakan Aturan Bisnis BR-12 jika hendak menonaktifkan slot khusus
         if (! $targetAktif) {
-            $hasActivePenempatan = \App\Models\Penempatan::where('slot_khusus_id', $slotKhusus->id)
-                ->where('status', \App\Enums\StatusPenempatanEnum::Aktif)
+            $hasActivePenempatan = Penempatan::where('slot_khusus_id', $slotKhusus->id)
+                ->where('status', StatusPenempatanEnum::Aktif)
                 ->exists();
 
             if ($hasActivePenempatan) {

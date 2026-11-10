@@ -4,26 +4,21 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
-use App\Enums\KategoriTugasEnum;
-use App\Enums\KompleksitasTugasEnum;
-use App\Enums\PredikatEnum;
+use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\StatusTugasEnum;
+use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
-use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
-use App\Models\PenilaianDetail;
 use App\Models\PesertaProfil;
-use App\Models\Rubrik;
 use App\Models\Tugas;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
@@ -36,14 +31,23 @@ class DashboardModulesRenderingTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected Bidang $bidang;
+
     protected Jurusan $jurusan;
+
     protected BulanMagang $bulan;
+
     protected Kuota $kuota;
+
     protected Pendaftaran $pendaftaran;
+
     protected Penempatan $penempatan;
 
     protected function setUp(): void
@@ -83,7 +87,7 @@ class DashboardModulesRenderingTest extends TestCase
         ]);
 
         // 3. Users
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator';
         $this->superAdmin->email = 'superadmin@slemankab.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -93,7 +97,7 @@ class DashboardModulesRenderingTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Verifikator';
         $this->admin->email = 'admin@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -103,7 +107,7 @@ class DashboardModulesRenderingTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan';
         $this->pembimbing->email = 'pembimbing@slemankab.go.id';
         $this->pembimbing->password = 'Password123!';
@@ -114,7 +118,7 @@ class DashboardModulesRenderingTest extends TestCase
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Peserta Uji';
         $this->peserta->email = 'peserta@example.com';
         $this->peserta->password = 'Password123!';
@@ -149,8 +153,8 @@ class DashboardModulesRenderingTest extends TestCase
             'kuota_id' => $this->kuota->id,
             'bidang_id' => $this->bidang->id,
             'pembimbing_id' => $this->pembimbing->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'dibuat_oleh' => $this->admin->id,
             'tgl_mulai' => now()->toDateString(),
             'tgl_selesai' => now()->addMonth()->toDateString(),
@@ -165,11 +169,6 @@ class DashboardModulesRenderingTest extends TestCase
         $responseShow->assertStatus(200);
         $responseShow->assertViewIs('admin.pendaftaran.show');
         $responseShow->assertSee('Verifikasi Berkas Calon Peserta');
-
-        $responseWaiting = $this->actingAs($this->admin)->get(route('admin.waiting-list.index'));
-        $responseWaiting->assertStatus(200);
-        $responseWaiting->assertViewIs('admin.waiting-list.index');
-        $responseWaiting->assertSee('Antrean Waiting List');
 
         $responsePenempatan = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
         $responsePenempatan->assertStatus(200);
@@ -203,7 +202,7 @@ class DashboardModulesRenderingTest extends TestCase
             'judul' => 'Pengembangan Modul MagKom',
             'deskripsi' => 'Rancang implementasi Blade UI dashboard',
             'kategori' => 'Project',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'deadline' => now()->addDays(7)->toDateString(),
             'status' => StatusTugasEnum::Belum,
         ]);
@@ -223,39 +222,6 @@ class DashboardModulesRenderingTest extends TestCase
         $resTugasPembimbingShow = $this->actingAs($this->pembimbing)->get(route('pembimbing.tugas.show', $tugas));
         $resTugasPembimbingShow->assertStatus(200);
         $resTugasPembimbingShow->assertViewIs('pembimbing.tugas.show');
-
-        // 4. Pembimbing Penilaian
-        $resPenilaianIndex = $this->actingAs($this->pembimbing)->get(route('pembimbing.penilaian.index'));
-        $resPenilaianIndex->assertStatus(200);
-        $resPenilaianIndex->assertViewIs('pembimbing.penilaian.index');
-
-        $resPenilaianShow = $this->actingAs($this->pembimbing)->get(route('pembimbing.penilaian.show', $this->penempatan));
-        $resPenilaianShow->assertStatus(200);
-        $resPenilaianShow->assertViewIs('pembimbing.penilaian.show');
-
-        // 5. Peserta Nilai Final
-        $penilaian = Penilaian::create([
-            'penempatan_id' => $this->penempatan->id,
-            'pembimbing_id' => $this->pembimbing->id,
-            'nilai_akhir' => 90.0,
-            'predikat' => 'A',
-            'status' => StatusPenilaianEnum::Final,
-            'catatan' => 'Sangat memuaskan dalam pengerjaan proyek.',
-        ]);
-
-        foreach (Rubrik::where('aktif', true)->get() as $rubrik) {
-            PenilaianDetail::create([
-                'penilaian_id' => $penilaian->id,
-                'rubrik_id' => $rubrik->id,
-                'skor' => 90.0,
-                'bobot_snapshot' => $rubrik->bobot,
-            ]);
-        }
-
-        $resNilaiPeserta = $this->actingAs($this->peserta)->get(route('peserta.nilai.show'));
-        $resNilaiPeserta->assertStatus(200);
-        $resNilaiPeserta->assertViewIs('peserta.nilai.show');
-        $resNilaiPeserta->assertSee('90.00');
     }
 
     /** @test */
@@ -267,7 +233,6 @@ class DashboardModulesRenderingTest extends TestCase
         $this->actingAs($this->superAdmin)->get(route('superadmin.slot-khusus.index'))->assertOk();
         $this->actingAs($this->superAdmin)->get(route('superadmin.jurusan.index'))->assertOk();
         $this->actingAs($this->superAdmin)->get(route('superadmin.bidang.index'))->assertOk();
-        $this->actingAs($this->superAdmin)->get(route('superadmin.rubrik.index'))->assertOk();
         $this->actingAs($this->superAdmin)->get(route('superadmin.pengaturan.index'))->assertOk();
         $this->actingAs($this->superAdmin)->get(route('superadmin.audit-log.index'))->assertOk();
     }

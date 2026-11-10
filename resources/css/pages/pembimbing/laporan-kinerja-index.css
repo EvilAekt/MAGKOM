@@ -1,0 +1,832 @@
+/**
+ * Laporan Peserta Bimbingan - Portal Pembimbing MagKom
+ * Stylesheet khusus untuk tampilan Tile KPI, Popover Ekspor, dan Tabel Data Penempatan Peserta
+ */
+
+.laporan-kinerja-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* 1. Classroom Hero Banner Khas Sleman MagKom (Gambar 2 Parity) */
+.classroom-banner.laporan-hero-banner {
+    background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                linear-gradient(135deg, #01347C 0%, #003566 100%);
+    border-radius: 16px;
+    padding: 28px 32px;
+    color: #ffffff;
+    position: relative;
+    overflow: visible !important; /* Wajib visible agar popover ekspor tidak terpotong */
+    box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    z-index: 25; /* Berada di atas tiles grid */
+    margin-bottom: 0.5rem;
+}
+
+.banner-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+}
+
+.banner-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+}
+
+.banner-subtitle {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.92);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    line-height: 1.5;
+}
+
+.adm-export-dropdown-wrap {
+    position: relative;
+}
+
+/* Tombol Ekspor di dalam Hero Banner Card (Selaras tombol "+ Beri Tugas Baru" Gambar 2) */
+.btn-export-rekap-banner {
+    background: #ffffff;
+    color: #01347C;
+    text-decoration: none;
+    padding: 0.65rem 1.35rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+}
+
+.btn-export-rekap-banner:hover {
+    background: #f8fafc;
+    color: #002244;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+}
+
+.adm-export-chevron {
+    transition: transform 0.2s ease;
+}
+
+.adm-export-dropdown-wrap.is-open .adm-export-chevron {
+    transform: rotate(180deg);
+}
+
+/* Popover Floating Card (Gambar 5 & Anti-Clipping Gambar 1) */
+.adm-export-popover,
+.adm-export-popover.adm-export-popover-right {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0 !important;
+    left: auto !important; /* Wajib: Mengesampingkan left: 0 dari admin/dashboard.css agar tidak melenceng ke kanan */
+    width: 320px;
+    max-width: calc(100vw - 32px);
+    background: var(--neutral-0, #FFFFFF);
+    border: 1px solid var(--neutral-200, #E2E8F0);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    animation: admPopoverFadeIn 0.15s ease-out;
+}
+
+@keyframes admPopoverFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.adm-popover-pointer,
+.adm-popover-pointer.adm-pointer-right {
+    position: absolute;
+    top: -6px;
+    right: 28px !important;
+    left: auto !important; /* Wajib: Mengesampingkan left: 24px dari admin/dashboard.css */
+    width: 12px;
+    height: 12px;
+    background: var(--neutral-0, #FFFFFF);
+    border-top: 1px solid var(--neutral-200, #E2E8F0);
+    border-left: 1px solid var(--neutral-200, #E2E8F0);
+    transform: rotate(45deg);
+}
+
+.adm-popover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--neutral-100, #F1F5F9);
+}
+
+.adm-popover-title {
+    font-size: 0.8125rem;
+    font-weight: 800;
+    color: var(--neutral-900, #0F172A);
+}
+
+.adm-popover-desc {
+    font-size: 0.6875rem;
+    color: var(--neutral-500, #64748B);
+}
+
+.adm-popover-row-count {
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    white-space: nowrap;
+}
+
+.adm-popover-formats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.adm-format-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--neutral-200, #E2E8F0);
+    background: #F8FAFC;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin: 0;
+    user-select: none;
+}
+
+.adm-format-card:hover {
+    background: #F1F5F9;
+    border-color: var(--neutral-300, #CBD5E1);
+}
+
+.adm-format-card.adm-format-selected {
+    border: 2px solid #0641CC;
+    background: rgba(6, 65, 204, 0.05);
+}
+
+.adm-format-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+
+.adm-format-radio {
+    margin-top: 3px;
+    cursor: pointer;
+    accent-color: #0641CC;
+}
+
+.adm-format-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.adm-format-name-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.adm-format-name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--neutral-900, #0F172A);
+}
+
+.badge-format-ext {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.05rem 0.35rem;
+    border-radius: 4px;
+}
+
+.badge-ext-xlsx {
+    background: #DCFCE7;
+    color: #166534;
+}
+
+.badge-ext-csv {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.badge-ext-pdf {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.adm-format-desc {
+    font-size: 0.6875rem;
+    color: var(--neutral-500, #64748B);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.adm-format-meta {
+    display: flex;
+    align-items: center;
+}
+
+.adm-badge-recommend {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #059669;
+    background: #ECFDF5;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid #A7F3D0;
+}
+
+.adm-badge-quick {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #2563EB;
+    background: #EFF6FF;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid #BFDBFE;
+}
+
+.adm-badge-legal {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #DC2626;
+    background: #FEF2F2;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid #FECACA;
+}
+
+.adm-popover-cta {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--neutral-100, #F1F5F9);
+}
+
+.adm-btn-popover-cancel {
+    height: 32px;
+    padding: 0 0.85rem;
+    background: transparent;
+    border: 1px solid var(--neutral-300, #CBD5E1);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--neutral-600, #475569);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.adm-btn-popover-cancel:hover {
+    background: var(--neutral-100, #F1F5F9);
+    color: var(--neutral-800, #1E293B);
+}
+
+.adm-btn-popover-download {
+    height: 32px;
+    padding: 0 0.85rem;
+    background: #0641CC;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: background 0.15s ease;
+}
+
+.adm-btn-popover-download:hover {
+    background: #0533A3;
+}
+
+/* 2. Tile Stats Grid MagKom Gentelella (Gambar 2) */
+.tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+    margin-bottom: 4px;
+}
+
+.tiles-grid .tile_stats_count {
+    width: 100% !important;
+    padding: 0 !important;
+    float: none !important;
+    margin: 0 !important;
+}
+
+.tiles-grid .tile_stats_inner.stat {
+    border-radius: 12px !important;
+    padding: 1.15rem 1.25rem !important;
+    background: #ffffff !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05) !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease !important;
+}
+
+.tiles-grid .tile_stats_inner.stat:hover {
+    transform: translateY(-2.5px) !important;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+    border-color: #CBD5E1 !important;
+}
+
+.tiles-grid .stat-spark {
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 3.5px !important;
+    height: 36px !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+    padding-left: 8px !important;
+}
+
+.tiles-grid .stat-spark i {
+    width: 4px !important;
+    border-radius: 2px !important;
+    transition: height 0.3s ease !important;
+}
+
+.tiles-grid .stat-yellow .stat-change.down {
+    color: #d97706 !important;
+    background: rgba(245, 158, 11, 0.12) !important;
+}
+
+/* 3. Sel Tabel & Avatar Box Sesuai Pola Data Penempatan Peserta */
+.mentee-table-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.mentee-avatar-square {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0641CC 0%, #2563EB 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);
+}
+
+.mentee-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.mentee-info-name {
+    font-weight: 700;
+    color: var(--neutral-900, #0F172A);
+    font-size: 0.875rem;
+}
+
+.mentee-info-nim {
+    font-size: 0.725rem;
+    color: var(--neutral-400, #94A3B8);
+}
+
+.institusi-col-text {
+    font-weight: 600;
+    color: var(--neutral-800, #1E293B);
+    font-size: 0.875rem;
+}
+
+.jurusan-subtext {
+    font-size: 0.75rem;
+    color: var(--neutral-500, #64748B);
+    margin-top: 0.1rem;
+}
+
+.bidang-text {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0641CC;
+}
+
+.ratio-highlight-tugas {
+    font-weight: 700;
+    color: var(--neutral-800, #1E293B);
+}
+
+.ratio-highlight-logbook {
+    font-weight: 700;
+    color: #059669;
+}
+
+.ratio-subtext {
+    font-size: 0.75rem;
+    color: var(--neutral-500, #64748B);
+}
+
+/* Status Badges Pastel Selaras dengan Data Penempatan Peserta */
+.status-pill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.status-pill-aktif {
+    background: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #A7F3D0;
+}
+
+.status-pill-selesai {
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #DBEAFE;
+}
+
+.status-pill-nonaktif {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #FECACA;
+}
+
+.status-pill-default {
+    background: #F1F5F9;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .adm-export-popover,
+[data-theme="dark"] .adm-popover-pointer {
+    background: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .adm-popover-title,
+[data-theme="dark"] .adm-format-name,
+[data-theme="dark"] .mentee-info-name,
+[data-theme="dark"] .institusi-col-text,
+[data-theme="dark"] .ratio-highlight-tugas {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .adm-format-card {
+    background: #0F172A !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .adm-format-card:hover {
+    background: #1E293B !important;
+}
+
+[data-theme="dark"] .adm-format-card.adm-format-selected {
+    border-color: #3B82F6 !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+[data-theme="dark"] .adm-popover-desc,
+[data-theme="dark"] .adm-format-desc,
+[data-theme="dark"] .mentee-info-nim,
+[data-theme="dark"] .jurusan-subtext,
+[data-theme="dark"] .ratio-subtext {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .adm-popover-row-count {
+    background: rgba(30, 58, 138, 0.4) !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .tiles-grid .tile_stats_inner.stat {
+    background: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .bidang-text {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .status-pill-aktif {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34D399;
+    border-color: rgba(52, 211, 153, 0.3);
+}
+
+[data-theme="dark"] .status-pill-selesai {
+    background: rgba(37, 99, 235, 0.2);
+    color: #60A5FA;
+    border-color: rgba(96, 165, 250, 0.3);
+}
+
+[data-theme="dark"] .status-pill-nonaktif {
+    background: rgba(239, 68, 68, 0.2);
+    color: #F87171;
+    border-color: rgba(248, 113, 113, 0.3);
+}
+
+[data-theme="dark"] .status-pill-default {
+    background: rgba(148, 163, 184, 0.2);
+    color: #CBD5E1;
+    border-color: rgba(203, 213, 225, 0.3);
+}
+
+[data-theme="dark"] .btn-export-rekap-banner {
+    background: #1E293B;
+    color: #38BDF8;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .btn-export-rekap-banner:hover {
+    background: #334155;
+    color: #7DD3FC;
+}
+
+/* Filter Bar 3-Dimensi: Nama Peserta, Status, dan Bulan */
+.laporan-filter-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #CBD5E1;
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+    padding: 1.15rem 1.35rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    margin-bottom: 1.25rem;
+}
+
+.laporan-filter-form {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.laporan-filter-form .filter-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.laporan-filter-form .filter-group label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--neutral-600, #666666);
+    display: block;
+    margin-bottom: 6px;
+}
+
+.laporan-filter-form .filter-control {
+    width: 100%;
+    height: 42px;
+    border: 1px solid var(--neutral-400, #D0D3D9);
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 0.875rem;
+    background: var(--neutral-100, #F8FAFC);
+    color: var(--neutral-800, #1D2530);
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.laporan-filter-form .filter-control:focus {
+    border-color: #0641CC;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
+}
+
+/* Search Input Wrapper for Laporan Filter (Selaras Tugas & Progres Magang) */
+.laporan-filter-form .peserta-search-input-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.laporan-filter-form .peserta-search-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px 0 36px;
+    border-radius: 8px;
+    border: 1px solid var(--neutral-400, #D0D3D9);
+    font-size: 0.875rem;
+    background: var(--neutral-100, #F8FAFC);
+    color: var(--neutral-800, #1D2530);
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.laporan-filter-form .peserta-search-input:focus {
+    border-color: #0641CC;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
+}
+
+.laporan-filter-form .peserta-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 13px;
+    color: #94A3B8;
+    pointer-events: none;
+}
+
+.laporan-filter-form .filter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.laporan-filter-form .btn-filter-apply {
+    height: 42px;
+    padding: 0 1.25rem;
+    background: #0641CC !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);
+    text-decoration: none;
+}
+
+.laporan-filter-form .btn-filter-apply:hover {
+    background: #003566 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(6, 65, 204, 0.3);
+}
+
+.laporan-filter-form .btn-filter-reset {
+    height: 42px;
+    padding: 0 14px;
+    background: var(--neutral-200, #EEF0F5);
+    color: var(--neutral-800, #1D2530);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: background 0.15s ease;
+}
+
+.laporan-filter-form .btn-filter-reset:hover {
+    background: var(--neutral-400, #D0D3D9);
+    color: #1E293B;
+}
+
+[data-theme="dark"] .laporan-filter-card {
+    background-color: #003566 !important;
+    border-color: #3F51B5 !important;
+    border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
+}
+
+[data-theme="dark"] .laporan-filter-form .filter-group label {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .laporan-filter-form .filter-control {
+    background: #011C44 !important;
+    border-color: rgba(63, 81, 181, 0.45) !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .laporan-filter-form .peserta-search-input {
+    background: #011C44 !important;
+    border-color: rgba(63, 81, 181, 0.45) !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .laporan-filter-form .btn-filter-apply {
+    background: #2563EB !important;
+}
+
+[data-theme="dark"] .laporan-filter-form .btn-filter-apply:hover {
+    background: #1D4ED8 !important;
+}
+
+[data-theme="dark"] .laporan-filter-form .btn-filter-reset {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .laporan-filter-form .peserta-search-input:focus {
+    border-color: #3B82F6;
+    background: #1E293B;
+}
+
+[data-theme="dark"] .laporan-filter-form .peserta-search-icon {
+    color: #64748B;
+}
+
+[data-theme="dark"] .laporan-filter-form .btn-filter-reset {
+    background: #334155;
+    color: #E2E8F0;
+}
+
+/* ==============================================================================
+   Scroll-Craft Motion System (GPU-Accelerated Viewport Scroll Reveals)
+   ============================================================================== */
+[data-scroll-reveal] {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition-property: transform, opacity;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-scroll-reveal].is-revealed {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.sc-reveal-up {
+  transform: translateY(20px);
+  transition-duration: 0.50s;
+}
+
+.sc-reveal-hero {
+  transform: translateY(-16px);
+  transition-duration: 0.60s;
+}
+
+.sc-reveal-scale {
+  transform: scale(0.97) translateY(12px);
+  transition-duration: 0.55s;
+}
+
+.sc-reveal-side {
+  transform: translateX(20px);
+  transition-duration: 0.55s;
+}
+
+.sc-delay-1 { transition-delay: 0.06s; }
+.sc-delay-2 { transition-delay: 0.12s; }
+.sc-delay-3 { transition-delay: 0.18s; }
+.sc-delay-4 { transition-delay: 0.24s; }
+.sc-delay-5 { transition-delay: 0.30s; }
+
+/* Scroll-Craft Lifecycle Lock & Instant Reveal Utilities */
+[data-scroll-reveal].is-revealed.sc-settled {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
+
+[data-scroll-reveal].sc-instant-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

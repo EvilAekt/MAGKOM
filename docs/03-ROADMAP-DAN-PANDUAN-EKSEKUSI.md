@@ -1,6 +1,8 @@
-# Peta Jalan & Panduan Eksekusi Pengembangan MagKom
+# Peta Jalan & Panduan Eksekusi Pengembangan MagKom (Arsip Historis Gelombang 0–4)
 
-Dokumen ini adalah **peta navigasi implementasi teknis (Execution Roadmap)** untuk membangun portal MagKom (Magang Kominfo) dari nol secara sistematis, terukur, dan terkontrol. Tujuannya adalah memastikan developer atau agen AI memiliki panduan langkah-demi-langkah yang presisi tanpa menyimpang dari spesifikasi bisnis dan arsitektur teknis.
+> [!NOTE]
+> ### Dokumen Rekaman Historis (Historical Baseline Archive)
+> Dokumen ini adalah catatan historis rencana implementasi gelombang awal Rilis 1 (Must Have) s/d Rilis 3 (Could Have) per Oktober 2026. Seluruh gelombang di bawah ini telah berhasil diselesaikan pada baseline stabil saat ini. Untuk rencana perbaikan lanjutan dan arsitektur aktif per November 2026, rujuk [**`01-PRD-MagKom.md`**](./01-PRD-MagKom.md) v1.3 dan [**`DEVELOPMENT-GUIDE.md`**](./DEVELOPMENT-GUIDE.md).
 
 ---
 
@@ -8,7 +10,7 @@ Dokumen ini adalah **peta navigasi implementasi teknis (Execution Roadmap)** unt
 
 1. **Ikuti Urutan Gelombang (Wave-by-Wave)**: Jangan melompat ke fitur pendaftaran atau tugas sebelum fondasi autentikasi, enum, database, dan audit selesai di Gelombang 0 dan 1.
 2. **Atomic & Test-Driven**: Setiap penyelesaian tugas harus disertai unit/feature test yang relevan sebelum lanjut ke tugas berikutnya.
-3. **No Hallucinated APIs**: Selalu gunakan arsitektur Laravel 10 dan PHP 8.3 yang terdokumentasi di [`02-TDD-MagKom.md`](file:///g:/MAGKOM/docs/02-TDD-MagKom.md).
+3. **No Hallucinated APIs**: Selalu gunakan arsitektur Laravel 10 dan PHP 8.3 yang terdokumentasi di [`02-TDD-MagKom.md`](./02-TDD-MagKom.md).
 4. **Guardrail Bisnis Kunci**:
    - Kuota mutlak dikunci dengan `lockForUpdate()` di dalam transaksi.
    - SuperAdmin berstatus read-only pada ranah pembimbing (tugas, review, penilaian).
@@ -242,7 +244,7 @@ gantt
 ## 5. Ringkasan Keterkaitan Dokumen
 
 Untuk navigasi lebih dalam, silakan buka:
-- 📄 Spesifikasi Kebutuhan Lengkap: [`01-PRD-MagKom.md`](file:///g:/MAGKOM/docs/01-PRD-MagKom.md)
-- 🛠️ Desain Arsitektur & Teknis: [`02-TDD-MagKom.md`](file:///g:/MAGKOM/docs/02-TDD-MagKom.md)
-- 🗄️ Kamus Data & Skema Database: [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](file:///g:/MAGKOM/docs/04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md)
-- 🔒 Blueprint Keamanan, RBAC & Audit: [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](file:///g:/MAGKOM/docs/05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md)
+- 📄 Spesifikasi Kebutuhan Lengkap: [`01-PRD-MagKom.md`](./01-PRD-MagKom.md)
+- 🛠️ Desain Arsitektur & Teknis: [`02-TDD-MagKom.md`](./02-TDD-MagKom.md)
+- 🗄️ Kamus Data & Skema Database: [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md)
+- 🔒 Blueprint Keamanan, RBAC & Audit: [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](./05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md)

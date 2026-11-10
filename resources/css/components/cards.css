@@ -1,0 +1,552 @@
+        /* =====================================================================
+           CARD SURFACES REFACTORING (Mode Terang #01347C & Mode Gelap #003566/#02275D)
+           ===================================================================== */
+        /* Mode Terang: Highlight Card & Stat Card memakai #01347C */
+        html:not([data-theme="dark"]) .card-highlight,
+        html:not([data-theme="dark"]) .stat-card-accent,
+        html:not([data-theme="dark"]) .cv-stat-card {
+            background-color: #01347C !important;
+            border: 1px solid #3F51B5 !important;
+            box-shadow: 0 10px 20px -3px rgba(1, 52, 124, 0.22), 0 4px 6px -4px rgba(1, 52, 124, 0.15) !important;
+            color: #FFFFFF !important;
+        }
+        html:not([data-theme="dark"]) .card-highlight .card-title,
+        html:not([data-theme="dark"]) .stat-card-accent .stat-val,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-val,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-title {
+            color: #FFFFFF !important;
+            font-weight: 700;
+        }
+        html:not([data-theme="dark"]) .card-highlight .card-desc,
+        html:not([data-theme="dark"]) .stat-card-accent .stat-label,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-label,
+        html:not([data-theme="dark"]) .cv-stat-card .cv-stat-sub {
+            color: #BBBBBB !important;
+            font-weight: 600;
+        }
+        html:not([data-theme="dark"]) .cv-stat-badge {
+            background-color: #FFCB05 !important;
+            color: #02275D !important;
+            font-weight: 700;
+        }
+
+        /* Mode Terang: Container Card Utama (Tabel & Form) */
+        html:not([data-theme="dark"]) .x_panel,
+        html:not([data-theme="dark"]) .card,
+        html:not([data-theme="dark"]) .cv-card,
+        html:not([data-theme="dark"]) .gentelella-card,
+        html:not([data-theme="dark"]) .gentelella-filter-bar,
+        html:not([data-theme="dark"]) .staf-filter-card,
+        html:not([data-theme="dark"]) .sa-panel:not(.sa-panel--sub) {
+            background-color: #FFFFFF;
+            border: 1.5px solid #CBD5E1;
+            border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+            box-shadow: 0 2px 8px rgba(1, 52, 124, 0.04);
+        }
+        html:not([data-theme="dark"]) .x_title h2,
+        html:not([data-theme="dark"]) .card-title {
+            color: #212529 !important;
+            font-weight: 700;
+        }
+
+        /* Mode Gelap: Card memakai #003566 / #02275D dengan border #3F51B5 */
+        [data-theme="dark"] .x_panel,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .cv-stat-card,
+        [data-theme="dark"] .cv-card,
+        [data-theme="dark"] .tile_stats_inner {
+            background-color: #003566 !important;
+            border: 1.5px solid #3F51B5 !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+            color: #FFFFFF !important;
+        }
+
+        /* =========================================================================
+           GENTELELLA MODERN TILE-STAT COMPONENT (Dual Theme & Universal Parity)
+           ========================================================================= */
+        .tile_stats_inner.stat {
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+            border: 1.5px solid #CBD5E1 !important;
+            border-radius: 12px !important;
+            padding: 1rem 1.25rem !important;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 0.875rem !important;
+            position: relative !important;
+            overflow: hidden !important;
+            height: 100% !important;
+            min-height: 94px !important;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+        }
+
+        .tile_stats_inner.stat:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08) !important;
+        }
+
+        .tile_stats_inner.stat::before {
+            display: none !important;
+        }
+
+        /* Tipografi Mode Terang */
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .count,
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .stat-value {
+            color: #0f172a !important;
+            font-weight: 700 !important;
+        }
+
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .count_top,
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .count_title,
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .stat-label {
+            color: #64748b !important;
+            font-weight: 600 !important;
+        }
+
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .count_bottom,
+        html:not([data-theme="dark"]) .tile_stats_inner.stat .stat-subtext {
+            color: #64748b !important;
+        }
+
+        /* 1. Icon Badge Kiri */
+        .tile_stats_inner.stat .stat-icon {
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
+        }
+
+        .tile_stats_inner.stat .stat-icon.teal {
+            background: rgba(26, 187, 156, 0.12) !important;
+            color: #1abb9c !important;
+        }
+
+        .tile_stats_inner.stat .stat-icon.yellow {
+            background: rgba(245, 159, 0, 0.12) !important;
+            color: #f59f00 !important;
+        }
+
+        .tile_stats_inner.stat .stat-icon.blue {
+            background: rgba(6, 111, 209, 0.12) !important;
+            color: #066fd1 !important;
+        }
+
+        .tile_stats_inner.stat .stat-icon.red {
+            background: rgba(214, 57, 57, 0.12) !important;
+            color: #d63939 !important;
+        }
+
+        /* 2. Konten Tengah (Typography Stack) */
+        .tile_stats_inner.stat .stat-content {
+            flex: 1 !important;
+            min-width: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 2px !important;
+        }
+
+        .tile_stats_inner.stat .stat-label,
+        .tile_stats_inner.stat .count_top,
+        .tile_stats_inner.stat .count_title {
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.4px !important;
+            color: #64748b !important;
+            line-height: 1.2 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+
+        .tile_stats_inner.stat .stat-value-row {
+            display: flex !important;
+            align-items: baseline !important;
+            gap: 0.5rem !important;
+            flex-wrap: nowrap !important;
+        }
+
+        .tile_stats_inner.stat .stat-value,
+        .tile_stats_inner.stat .count {
+            font-size: 1.65rem !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.5px !important;
+            color: #0f172a !important;
+            line-height: 1.15 !important;
+            margin: 0 !important;
+        }
+
+        /* Trend Percentage Pill */
+        .tile_stats_inner.stat .stat-change {
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            border-radius: 4px !important;
+            padding: 1px 5px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 2px !important;
+            line-height: 1.2 !important;
+        }
+
+        .tile_stats_inner.stat .stat-change.up {
+            color: #10b981 !important;
+            background: rgba(16, 185, 129, 0.1) !important;
+        }
+
+        .tile_stats_inner.stat .stat-change.down {
+            color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.1) !important;
+        }
+
+        .tile_stats_inner.stat .stat-subtext,
+        .tile_stats_inner.stat .count_bottom {
+            font-size: 12px !important;
+            font-weight: 400 !important;
+            color: #64748b !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            line-height: 1.35 !important;
+        }
+
+        /* 3. Sparkline Kanan */
+        .tile_stats_inner.stat .stat-spark,
+        .tile_stats_inner.stat .sa-spark {
+            display: flex !important;
+            align-items: flex-end !important;
+            gap: 3px !important;
+            height: 32px !important;
+            margin-left: auto !important;
+            flex-shrink: 0 !important;
+            padding-right: 2px !important;
+        }
+
+        .tile_stats_inner.stat .stat-spark i,
+        .tile_stats_inner.stat .sa-spark i {
+            width: 3.5px !important;
+            border-radius: 1.5px !important;
+            transform-origin: bottom center !important;
+            will-change: transform !important;
+            transition: height 0.3s ease !important;
+        }
+
+        .tile_stats_inner.stat.stat-teal .stat-spark i,
+        .tile_stats_inner.stat.stat-teal .sa-spark i {
+            background: #1abb9c !important;
+            opacity: 0.85 !important;
+        }
+
+        .tile_stats_inner.stat.stat-yellow .stat-spark i,
+        .tile_stats_inner.stat.stat-yellow .sa-spark i {
+            background: #f59f00 !important;
+            opacity: 0.85 !important;
+        }
+
+        .tile_stats_inner.stat.stat-blue .stat-spark i,
+        .tile_stats_inner.stat.stat-blue .sa-spark i {
+            background: #066fd1 !important;
+            opacity: 0.85 !important;
+        }
+
+        .tile_stats_inner.stat.stat-red .stat-spark i,
+        .tile_stats_inner.stat.stat-red .sa-spark i {
+            background: #d63939 !important;
+            opacity: 0.85 !important;
+        }
+
+        /* Mode Gelap Tile-Stat */
+        [data-theme="dark"] .tile_stats_inner.stat {
+            background-color: #003566 !important;
+            background: #003566 !important;
+            border: 1.5px solid #3f51b5 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        [data-theme="dark"] .tile_stats_inner.stat:hover {
+            border-color: #5c6bc0 !important;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        [data-theme="dark"] .tile_stats_inner.stat .stat-value,
+        [data-theme="dark"] .tile_stats_inner.stat .count {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+        }
+
+        [data-theme="dark"] .tile_stats_inner.stat .stat-label,
+        [data-theme="dark"] .tile_stats_inner.stat .count_top,
+        [data-theme="dark"] .tile_stats_inner.stat .count_title {
+            color: #cbd5e1 !important;
+            font-weight: 600 !important;
+        }
+
+        [data-theme="dark"] .tile_stats_inner.stat .stat-subtext,
+        [data-theme="dark"] .tile_stats_inner.stat .count_bottom {
+            color: #cbd5e1 !important;
+        }
+
+        /* 0. SLEMAN NAVY HERO BANNER (Signature MagKom Theme) */
+        .adm-hero-banner {
+            background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                        linear-gradient(135deg, #01347C 0%, #003566 100%);
+            border-radius: 16px;
+            padding: 24px 30px;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            margin-bottom: 1.5rem;
+        }
+
+        .adm-hero-content {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .adm-hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .adm-hero-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 6px 0;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        .adm-hero-subtitle {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            line-height: 1.5;
+        }
+
+        .adm-hero-subtitle .sep {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .adm-hero-banner {
+                padding: 20px 22px;
+            }
+            .adm-hero-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        [data-theme="dark"] .adm-hero-banner {
+            background: radial-gradient(80% 120% at 100% 0%, rgba(99, 102, 241, 0.2), transparent 60%),
+                        linear-gradient(135deg, #0A192F 0%, #0F172A 100%);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 4. Grid Khusus 4 Kolom Metrik Hub Laporan Admin (Sejajar & Proporsional) */
+        .adm-laporan-kpi-grid {
+            display: grid !important;
+            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            gap: 1.25rem !important;
+            width: 100% !important;
+            margin-bottom: 1.75rem !important;
+        }
+
+        .adm-laporan-kpi-grid .tile_stats_count {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            flex: initial !important;
+        }
+
+        @media (max-width: 1200px) {
+            .adm-laporan-kpi-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 1rem !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .adm-laporan-kpi-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.875rem !important;
+            }
+        }
+        [data-theme="dark"] .x_panel,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .cv-card,
+        [data-theme="dark"] .gentelella-card,
+        [data-theme="dark"] .gentelella-filter-bar,
+        [data-theme="dark"] .staf-filter-card,
+        [data-theme="dark"] .sa-panel:not(.sa-panel--sub) {
+            border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
+        }
+        [data-theme="dark"] .card-title,
+        [data-theme="dark"] .x_title h2,
+        [data-theme="dark"] .stat-val,
+        [data-theme="dark"] .cv-stat-val,
+        [data-theme="dark"] .cv-stat-title,
+        [data-theme="dark"] .tile_stats_inner .count,
+        [data-theme="dark"] .tile_stats_inner .stat-value {
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .cv-stat-label,
+        [data-theme="dark"] .cv-stat-sub,
+        [data-theme="dark"] .tile_stats_inner .count_top,
+        [data-theme="dark"] .tile_stats_inner .stat-label,
+        [data-theme="dark"] .tile_stats_inner .count_title,
+        [data-theme="dark"] .tile_stats_inner .count_bottom,
+        [data-theme="dark"] .tile_stats_inner .count_subtext {
+            color: #BBBBBB !important;
+        }
+        [data-theme="dark"] .tile_stats_inner .count_icon,
+        [data-theme="dark"] .tile_stats_inner .stat-icon {
+            color: #FFCB05 !important;
+        }
+
+        /* Action Buttons (Primary #01347C, Interactive #3F51B5) */
+        .btn-primary, .btn-primary-gradient {
+            background: #01347C !important;
+            border-color: #01347C !important;
+            color: #FFFFFF !important;
+        }
+        .btn-primary:hover, .btn-primary-gradient:hover {
+            background: #003566 !important;
+            border-color: #003566 !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .btn-primary,
+        [data-theme="dark"] .btn-primary-gradient {
+            background: #3F51B5 !important;
+            border-color: #3F51B5 !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .btn-primary:hover,
+        [data-theme="dark"] .btn-primary-gradient:hover {
+            background: #01347C !important;
+            border-color: #01347C !important;
+            color: #FFFFFF !important;
+        }
+
+        /* Mode Menciut Desktop (nav-sm) */
+        @media (min-width: 992px) {
+            body.nav-sm .sidebar-brand-text,
+            body.nav-sm .profile_info,
+            body.nav-sm .menu_section h3,
+            body.nav-sm .nav-section-label,
+            body.nav-sm .nav-item-link span:not(.nav-item-icon),
+            body.nav-sm .nav-group-btn span.nav-group-btn-left span:not(.nav-item-icon),
+            body.nav-sm .nav-group-chevron,
+            body.nav-sm .nav-sub-menu {
+                display: none !important;
+            }
+
+            body.nav-sm .site_title {
+                padding: 1rem 0;
+                justify-content: center;
+            }
+
+            body.nav-sm .profile {
+                padding: 0.75rem 0;
+                justify-content: center;
+            }
+
+            body.nav-sm .nav-item-link,
+            body.nav-sm .nav-group-btn {
+                justify-content: center;
+                padding: 0.625rem 0;
+            }
+
+            body.nav-sm .sidebar-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 0.75rem 0;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Mobile Breakpoint (< 992px) */
+        @media (max-width: 991.98px) {
+            .left_col.dashboard-sidebar {
+                transform: translateX(-100%);
+                box-shadow: var(--shadow-modal);
+                width: 256px !important;
+            }
+
+            .left_col.dashboard-sidebar.drawer-open {
+                transform: translateX(0);
+            }
+
+            .top_nav,
+            .right_col,
+            .gentelella-footer {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            .right_col {
+                padding: 1rem 1rem 2.5rem;
+            }
+        }
+
+        /* ==========================================================================
+           Hero Banner Blue - Manajemen Kuota & Periode (Signature Contour Parity)
+           ========================================================================== */
+        .hero-banner-blue {
+            background: var(--cv-contour) right -40px top -20px / 720px auto no-repeat,
+                        radial-gradient(80% 120% at 100% 0%, rgba(7, 81, 255, 0.4), transparent 60%),
+                        linear-gradient(160deg, #06318C 0%, #061E5B 100%) !important;
+            border-radius: 16px;
+            padding: 2rem 2.25rem;
+            color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 24px -4px rgba(6, 49, 140, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            min-height: 190px;
+        }
+
+        .hero-banner-blue::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        }
+
+        [data-theme="dark"] .hero-banner-blue {
+            background: var(--cv-contour) right -40px top -20px / 720px auto no-repeat,
+                        radial-gradient(80% 120% at 100% 0%, rgba(7, 81, 255, 0.25), transparent 60%),
+                        linear-gradient(160deg, #102138 0%, #0d1b2f 100%) !important;
+            border-color: #26354D;
+        }
+

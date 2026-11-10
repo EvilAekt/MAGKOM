@@ -22,10 +22,14 @@ class Pendaftaran extends Model
         'user_id',
         'bulan_magang_id',
         'kuota_id',
+        'tipe',
+        'kelompok_magang_id',
         'durasi_bulan',
         'status',
         'verifikator_id',
         'catatan',
+        'file_surat_diterima',
+        'surat_diterima_uploaded_at',
         'diajukan_at',
         'diputuskan_at',
     ];
@@ -35,11 +39,17 @@ class Pendaftaran extends Model
         'durasi_bulan' => 'integer',
         'diajukan_at' => 'datetime',
         'diputuskan_at' => 'datetime',
+        'surat_diterima_uploaded_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function kelompokMagang(): BelongsTo
+    {
+        return $this->belongsTo(KelompokMagang::class, 'kelompok_magang_id');
     }
 
     public function bulanMagang(): BelongsTo
@@ -72,7 +82,15 @@ class Pendaftaran extends Model
      */
     public function getNomorPendaftaranAttribute(): string
     {
-        return '#REG-' . str_pad((string) $this->id, 5, '0', STR_PAD_LEFT);
+        return '#REG-'.str_pad((string) $this->id, 5, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Accessor kompatibilitas alias untuk waktu keputusan / verifikasi berkas.
+     */
+    public function getVerifikasiAtAttribute(): mixed
+    {
+        return $this->diputuskan_at;
     }
 
     /**

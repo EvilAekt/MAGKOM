@@ -43,4 +43,8 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URL', '/auth/google/callback'),
     ],
 
+    'realtime' => [
+        'sse_enabled' => env('REALTIME_SSE_ENABLED', true),
+    ],
+
 ];

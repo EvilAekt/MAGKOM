@@ -55,7 +55,7 @@ class TurnstileService
                 return [
                     'success' => false,
                     'reachable' => false,
-                    'error_codes' => ['http-error-' . $response->status()],
+                    'error_codes' => ['http-error-'.$response->status()],
                 ];
             }
 

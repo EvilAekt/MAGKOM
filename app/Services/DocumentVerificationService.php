@@ -23,7 +23,7 @@ class DocumentVerificationService
             return $existing;
         }
 
-        $kodeUnik = 'MK-VRF-' . strtoupper(Str::random(12));
+        $kodeUnik = 'MK-VRF-'.strtoupper(Str::random(12));
 
         $peserta = $penempatan->peserta;
         $profil = $peserta?->profil;
@@ -69,7 +69,7 @@ class DocumentVerificationService
      */
     public function getVerificationUrl(string $kodeUnik): string
     {
-        return url('/verifikasi-dokumen/' . $kodeUnik);
+        return url('/verifikasi-dokumen/'.$kodeUnik);
     }
 
     /**
@@ -168,15 +168,25 @@ SVG;
     private function isFunctionModule(int $r, int $c, int $size): bool
     {
         // Finder kiri atas (termasuk separator 8x8)
-        if ($r <= 7 && $c <= 7) return true;
+        if ($r <= 7 && $c <= 7) {
+            return true;
+        }
         // Finder kanan atas (termasuk separator)
-        if ($r <= 7 && $c >= $size - 8) return true;
+        if ($r <= 7 && $c >= $size - 8) {
+            return true;
+        }
         // Finder kiri bawah (termasuk separator)
-        if ($r >= $size - 8 && $c <= 7) return true;
+        if ($r >= $size - 8 && $c <= 7) {
+            return true;
+        }
         // Timing
-        if ($r === 6 || $c === 6) return true;
+        if ($r === 6 || $c === 6) {
+            return true;
+        }
         // Alignment di (16,16) -> rentang 14..18
-        if ($r >= 14 && $r <= 18 && $c >= 14 && $c <= 18) return true;
+        if ($r >= 14 && $r <= 18 && $c >= 14 && $c <= 18) {
+            return true;
+        }
 
         return false;
     }

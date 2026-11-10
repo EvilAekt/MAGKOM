@@ -1,0 +1,1815 @@
+/**
+ * MAGKOM - Portal Pembimbing: Tugas Review & Evaluation Workspace
+ * Desain antarmuka selaras Google Classroom Review Canvas & MagKom Sleman Blue
+ */
+
+:root {
+    --review-primary: #0641CC;
+    --review-primary-hover: #0534A8;
+    --review-primary-tint: #E6EEFF;
+    --review-primary-tint-border: #B3C8FF;
+    --review-success: #166534;
+    --review-success-hover: #14532D;
+    --review-success-bg: #E8F7EE;
+    --review-success-border: #16A34A;
+    --review-warning: #92400E;
+    --review-warning-bg: #FEF3C7;
+    --review-warning-border: #FDE68A;
+    --review-danger: #991B1B;
+    --review-danger-hover: #7F1D1D;
+    --review-danger-bg: #FEE8E8;
+    --review-danger-border: #DC2626;
+    --review-border: #D0D3D9;
+    --review-bg-canvas: #F5F7FB;
+    --review-surface: #FFFFFF;
+    --review-text-main: #1D2530;
+    --review-text-muted: #666666;
+}
+
+/* 1. Main Workspace Container */
+.review-workspace {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 120px);
+    background: var(--review-bg-canvas);
+    border-radius: 14px;
+    border: 1px solid var(--review-border);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* 2. Topbar Navigation */
+.review-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 64px;
+    padding: 10px 1.25rem;
+    background: var(--review-surface);
+    border-bottom: 1px solid var(--review-border);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    gap: 1rem;
+    box-sizing: border-box;
+}
+
+.review-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.review-btn-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: var(--review-text-muted);
+    text-decoration: none;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+}
+
+.review-btn-close:hover {
+    background: #F1F5F9;
+    color: var(--review-text-main);
+    border-color: #E2E8F0;
+}
+
+.review-v-divider {
+    width: 1px;
+    height: 24px;
+    background: #E2E8F0;
+}
+
+/* Mentee Selector Dropdown & Pagination */
+.review-mentee-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+}
+
+.review-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.review-mentee-picker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px 5px 6px;
+    background: #F8FAFC;
+    border: 1px solid var(--review-border);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--review-text-main);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.review-mentee-picker:hover {
+    background: #F1F5F9;
+    border-color: #94A3B8;
+}
+
+.review-mentee-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--review-primary);
+    color: #FFFFFF;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.review-mentee-picker-name {
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Dropdown Menu Sibling Tugas / Mentee */
+.review-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 300px;
+    max-width: 90vw;
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+    z-index: 100;
+    overflow: hidden;
+    padding: 6px 0;
+}
+
+.review-dropdown-menu.show {
+    display: block;
+    animation: reviewDropdownFade 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes reviewDropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.review-dropdown-header {
+    padding: 8px 14px 6px 14px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid #F1F5F9;
+    background: #FAFAFA;
+}
+
+.review-dropdown-scroll {
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.review-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #0F172A;
+    transition: background 0.15s ease;
+}
+
+.review-dropdown-item:hover {
+    background: #F1F5F9;
+}
+
+.review-dropdown-item.active {
+    background: #EFF6FF;
+}
+
+.review-dropdown-item-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--review-primary-tint);
+    border: 1.5px solid var(--review-primary-tint-border);
+    color: var(--review-primary);
+    font-size: 0.75rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.review-dropdown-item.active .review-dropdown-item-avatar {
+    background: var(--review-primary);
+    border-color: var(--review-primary);
+    color: #FFFFFF;
+}
+
+.review-dropdown-item-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+    gap: 1px;
+}
+
+.review-dropdown-item-name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.review-dropdown-item-inst {
+    font-size: 0.725rem;
+    color: #64748B;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.review-dropdown-item-check {
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.review-nav-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--review-border);
+    background: var(--review-surface);
+    color: var(--review-text-muted);
+    text-decoration: none;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.review-nav-arrow:hover:not(.disabled) {
+    background: #F1F5F9;
+    color: var(--review-text-main);
+    border-color: #94A3B8;
+}
+
+.review-nav-arrow.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Submission Indicator Chip */
+.review-sub-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    color: #1D4ED8;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.review-sub-chip:hover {
+    background: #DBEAFE;
+}
+
+/* Topbar Actions Right */
+.review-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.review-status-badge {
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.review-status-badge.belum {
+    background: #F1F5F9;
+    color: #475569;
+}
+
+.review-status-badge.proses {
+    background: #FEF3C7;
+    color: #B45309;
+}
+
+.review-status-badge.selesai {
+    background: #EFF6FF;
+    color: var(--review-primary, #0641CC);
+    border: 1px solid #BFDBFE;
+}
+
+.review-status-badge.perlu_revisi {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+.review-btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.review-btn-action.btn-return {
+    background: var(--review-primary);
+    color: #FFFFFF;
+}
+
+.review-btn-action.btn-return:hover {
+    background: var(--review-primary-hover);
+    box-shadow: 0 4px 12px rgba(6, 65, 204, 0.3);
+}
+
+.review-btn-action.btn-complete {
+    background: var(--review-primary, #0641CC);
+    color: #FFFFFF;
+}
+
+.review-btn-action.btn-complete:hover {
+    background: var(--review-primary-hover, #0534A8);
+    box-shadow: 0 4px 12px rgba(6, 65, 204, 0.3);
+}
+
+.review-btn-action.btn-edit {
+    background: #FFFFFF;
+    color: #0F172A;
+    border: 1px solid var(--review-border);
+}
+
+.review-btn-action.btn-edit:hover {
+    background: #F8FAFC;
+    border-color: #94A3B8;
+}
+
+/* Tombol Batal di Sebelah Kanan Tandai Selesai */
+.review-btn-cancel {
+    height: 38px;
+    padding: 0 18px;
+    border: 1px solid var(--review-border, #D0D3D9);
+    background: #FFFFFF;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--review-text-main, #374151);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.review-btn-cancel:hover {
+    background: #F1F5F9;
+    color: #0F172A;
+    border-color: #94A3B8;
+}
+
+/* 3. Main Workspace Body (Two Columns: Canvas & Sidebar) */
+.review-body-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    flex: 1;
+    min-height: 0;
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.review-body-layout.is-collapsed {
+    grid-template-columns: 1fr 0px;
+}
+
+/* Floating Restore Tab on Right Edge (TASK-04 - Icon-Only) */
+.btn-restore-sidebar {
+    position: absolute;
+    right: 0;
+    top: 14px;
+    z-index: 40;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: var(--review-surface, #FFFFFF);
+    border: 1px solid var(--review-border, #D0D3D9);
+    border-right: none;
+    border-radius: 18px 0 0 18px;
+    box-shadow: -2px 4px 12px rgba(0, 0, 0, 0.08);
+    color: var(--review-primary, #0641CC);
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.15s ease;
+}
+
+.btn-restore-sidebar:hover {
+    background: var(--review-primary-tint, #E6EEFF);
+    transform: translateX(-3px);
+}
+
+.review-body-layout.is-collapsed .btn-restore-sidebar {
+    display: inline-flex;
+    animation: restoreSlideIn 0.2s ease;
+}
+
+@keyframes restoreSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Left Main Canvas */
+.review-main-canvas {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1.25rem;
+    overflow-y: auto;
+    min-width: 0;
+}
+
+/* Tab Switcher: Kiriman vs Instruksi */
+.review-canvas-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #F1F5F9;
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+    align-self: flex-start;
+}
+
+.review-tab-btn {
+    padding: 6px 14px;
+    border-radius: 7px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--review-text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.review-tab-btn:hover {
+    color: var(--review-primary);
+}
+
+.review-tab-btn.active {
+    background: #FFFFFF;
+    color: var(--review-primary);
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+/* Canvas View Panels */
+.review-panel-view {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.review-panel-view.d-none {
+    display: none !important;
+}
+
+/* Submission Card */
+.review-submission-card {
+    background: var(--review-surface);
+    border: 1px solid var(--review-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+/* Compact Submission Card (TASK-06) */
+.review-submission-card--compact {
+    padding: 1.125rem 1.25rem;
+}
+
+.submission-header-compact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 0.875rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--neutral-200, #EEF0F5);
+    flex-wrap: wrap;
+}
+
+.submission-info-compact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.submission-time-badge {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--review-text-main, #1D2530);
+}
+
+.submission-author-text {
+    font-size: 0.8125rem;
+    color: var(--review-text-muted, #666666);
+}
+
+.submission-status-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.review-status-pill {
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.review-status-pill.pill-success {
+    background: #EFF6FF;
+    color: var(--review-primary, #0641CC);
+    border: 1px solid #BFDBFE;
+}
+
+/* Notice Status Tugas Telah Ditandai Selesai di Sidebar */
+.review-completed-notice {
+    padding: 1rem 1.25rem;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--review-primary, #0641CC);
+    font-weight: 700;
+    margin-top: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.review-status-pill.pill-danger {
+    background: var(--review-danger-bg, #FEE8E8);
+    color: var(--review-danger, #991B1B);
+    border: 1px solid var(--review-danger-border, #DC2626);
+}
+
+.review-status-pill.pill-warning {
+    background: var(--review-warning-bg, #FEF3C7);
+    color: var(--review-warning, #92400E);
+    border: 1px solid var(--review-warning-border, #FDE68A);
+}
+
+/* Compact Link Strip (TASK-06) */
+.compact-link-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0.65rem 1rem;
+    background: var(--review-primary-tint, #E6EEFF);
+    border: 1px solid var(--review-primary-tint-border, #B3C8FF);
+    border-radius: 8px;
+    margin-bottom: 0.875rem;
+}
+
+.compact-link-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.compact-link-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #FFFFFF;
+    color: var(--review-primary, #0641CC);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.compact-link-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex-wrap: wrap;
+}
+
+.compact-link-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--review-primary, #0641CC);
+    white-space: nowrap;
+}
+
+.compact-link-anchor {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--review-primary, #0641CC);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 420px;
+    text-decoration: underline;
+}
+
+.btn-compact-open {
+    padding: 6px 12px;
+    background: var(--review-primary, #0641CC);
+    color: #FFFFFF;
+    font-size: 0.775rem;
+    font-weight: 700;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+    flex-shrink: 0;
+}
+
+.btn-compact-open:hover {
+    background: var(--review-primary-hover, #0534A8);
+}
+
+/* Compact File Strip (TASK-06) */
+.compact-file-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0.65rem 1rem;
+    background: var(--neutral-100, #F8FAFC);
+    border: 1px solid var(--neutral-400, #D0D3D9);
+    border-radius: 8px;
+    margin-bottom: 0.875rem;
+}
+
+.compact-file-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.compact-file-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #FFFFFF;
+    color: var(--neutral-800, #1D2530);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.compact-file-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.compact-file-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--neutral-600, #666666);
+}
+
+.compact-file-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--neutral-800, #1D2530);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 380px;
+}
+
+.btn-compact-download {
+    padding: 6px 12px;
+    background: var(--neutral-800, #1D2530);
+    color: #FFFFFF;
+    font-size: 0.775rem;
+    font-weight: 700;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+    flex-shrink: 0;
+}
+
+.btn-compact-download:hover {
+    background: #000000;
+}
+
+/* Compact Notes Box (TASK-06) */
+.compact-notes-wrap {
+    background: var(--neutral-100, #F8FAFC);
+    border: 1px solid var(--neutral-200, #EEF0F5);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+}
+
+.compact-notes-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--neutral-600, #666666);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.compact-notes-content {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--neutral-800, #1D2530);
+    white-space: pre-line;
+}
+
+.submission-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 1px solid #F1F5F9;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.submission-title-group h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--review-text-main);
+    margin: 0 0 4px 0;
+}
+
+.submission-meta-sub {
+    font-size: 0.8125rem;
+    color: var(--review-text-muted);
+}
+
+/* Interactive Link Preview Card */
+.review-link-preview-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 1rem 1.25rem;
+    background: #EFF6FF;
+    border: 1.5px solid #BFDBFE;
+    border-radius: 10px;
+    margin-bottom: 1.25rem;
+}
+
+.link-preview-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.link-preview-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #DBEAFE;
+    color: #1D4ED8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.link-preview-text {
+    min-width: 0;
+}
+
+.link-preview-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #1E40AF;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+}
+
+.link-preview-url {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #1D4ED8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 480px;
+    display: block;
+    text-decoration: none;
+}
+
+.link-preview-url:hover {
+    text-decoration: underline;
+}
+
+.btn-open-external {
+    padding: 8px 16px;
+    background: #1D4ED8;
+    color: #FFFFFF;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-open-external:hover {
+    background: #1E40AF;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
+}
+
+/* File Attachment Preview Box */
+.review-file-preview-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 1rem 1.25rem;
+    background: #EFF6FF;
+    border: 1.5px solid #BFDBFE;
+    border-radius: 10px;
+    margin-bottom: 1.25rem;
+}
+
+.file-preview-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.file-preview-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #DBEAFE;
+    color: #1D4ED8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.file-preview-name {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #1E40AF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 450px;
+}
+
+.file-preview-meta {
+    font-size: 0.75rem;
+    color: #3B82F6;
+}
+
+.btn-download-file {
+    padding: 8px 16px;
+    background: #1D4ED8;
+    color: #FFFFFF;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-download-file:hover {
+    background: #1E40AF;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
+}
+
+/* Intern Notes / Progress Description */
+.submission-notes-box {
+    padding: 1rem 1.25rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--review-text-main);
+    white-space: pre-line;
+}
+
+/* Empty Submission State */
+.review-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+    background: var(--review-surface);
+    border: 1px dashed var(--review-border);
+    border-radius: 12px;
+}
+
+.review-empty-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #F1F5F9;
+    color: #94A3B8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.review-empty-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--review-text-main);
+    margin: 0 0 6px 0;
+}
+
+.review-empty-desc {
+    font-size: 0.875rem;
+    color: var(--review-text-muted);
+    max-width: 440px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Instruction Tab Content */
+.instruction-card {
+    background: var(--review-surface);
+    border: 1px solid var(--review-border);
+    border-radius: 12px;
+    padding: 1.75rem;
+}
+
+.instruction-task-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--review-text-main);
+    margin: 0 0 1rem 0;
+    line-height: 1.35;
+}
+
+.instruction-text-content {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: #334155;
+    padding: 1.25rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.instruction-resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+}
+
+/* 4. Right Sidebar: Evaluation & Feedback Console */
+.review-sidebar {
+    background: var(--review-surface);
+    border-left: 1px solid var(--review-border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.sidebar-header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--review-text-main);
+    margin: 0;
+}
+
+.btn-toggle-sidebar {
+    background: transparent;
+    border: none;
+    color: var(--review-text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-toggle-sidebar:hover {
+    background: #F1F5F9;
+    color: var(--review-text-main);
+}
+
+.sidebar-content {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Submission Summary Card in Sidebar */
+.sidebar-submission-meta {
+    padding: 0.875rem 1rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8125rem;
+}
+
+.meta-label {
+    color: var(--review-text-muted);
+}
+
+.meta-val {
+    font-weight: 600;
+    color: var(--review-text-main);
+}
+
+.meta-val.overdue {
+    color: #DC2626;
+}
+
+/* Form Evaluation Radios (Outcome-Based Mentoring) */
+.eval-decision-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.eval-decision-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--review-text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 2px 0;
+}
+
+.eval-radio-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.eval-radio-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1.5px solid var(--review-border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--review-text-main);
+    background: var(--review-surface);
+}
+
+.eval-radio-pill:hover {
+    border-color: #94A3B8;
+}
+
+.eval-radio-pill input[type="radio"] {
+    accent-color: var(--review-primary);
+    cursor: pointer;
+}
+
+.eval-radio-pill.selected-diterima {
+    border-color: #3B82F6;
+    background: #EFF6FF;
+    color: #1E40AF;
+}
+
+.eval-radio-pill.selected-revisi {
+    border-color: #DC2626;
+    background: #FEF2F2;
+    color: #991B1B;
+}
+
+/* Quick Snippets Dropdown */
+.review-template-select {
+    width: 100%;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--review-border);
+    padding: 0 10px;
+    font-size: 0.8125rem;
+    background: #F8FAFC;
+    color: var(--review-text-main);
+    outline: none;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.review-template-select:focus {
+    border-color: var(--review-primary);
+}
+
+/* Feedback Textarea & Floating Card Box */
+.review-feedback-field {
+    position: relative;
+    background: #F1F5F9;
+    border-bottom: 1px solid #94A3B8;
+    border-radius: 8px 8px 0 0;
+    padding: 24px 14px 10px 14px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-feedback-field:hover {
+    background: #E8EDF5;
+    border-bottom-color: #64748B;
+}
+
+.review-feedback-field:focus-within,
+.review-feedback-field.is-focused {
+    background: #E8EDF5;
+    border-bottom-color: transparent;
+}
+
+/* Animasi Garis Aksen Bawah (Material Active Indicator) */
+.review-feedback-field::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--review-primary, #0641CC);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.review-feedback-field:focus-within::after,
+.review-feedback-field.is-focused::after {
+    transform: scaleX(1);
+}
+
+.review-feedback-field.has-error {
+    border-bottom-color: #DC2626;
+    background: #FEF2F2;
+}
+
+.review-feedback-field.has-error::after {
+    background: #DC2626;
+    transform: scaleX(1);
+}
+
+/* Floating Label di Dalam Box */
+.review-feedback-label {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748B;
+    transform-origin: top left;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                font-weight 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    z-index: 2;
+}
+
+.review-feedback-label .label-title {
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+}
+
+.review-feedback-label .label-badge-req {
+    font-size: 0.725rem;
+    font-weight: 600;
+    color: #DC2626;
+    transition: opacity 0.2s ease;
+}
+
+/* Floating Animation saat Fokus ATAU Memiliki Nilai */
+.review-feedback-field:focus-within .review-feedback-label,
+.review-feedback-field.is-focused .review-feedback-label,
+.review-feedback-field.has-value .review-feedback-label {
+    transform: translateY(-8px) scale(0.82);
+}
+
+/* Pewarnaan Label saat Fokus Aktif */
+.review-feedback-field:focus-within .review-feedback-label .label-title,
+.review-feedback-field.is-focused .review-feedback-label .label-title {
+    color: var(--review-primary, #0641CC);
+    font-weight: 700;
+}
+
+.review-feedback-field.has-value:not(:focus-within):not(.is-focused) .review-feedback-label .label-title {
+    color: #475569;
+    font-weight: 600;
+}
+
+.review-feedback-field.has-error .review-feedback-label .label-title {
+    color: #DC2626 !important;
+}
+
+/* Textarea Bersih Tanpa Border Tambahan di Dalam Card Box */
+.review-feedback-textarea-clean {
+    width: 100%;
+    min-height: 84px;
+    box-sizing: border-box;
+    border: 0;
+    background: transparent;
+    outline: none;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    font-family: inherit;
+    color: var(--review-text-main, #1D2530);
+    resize: vertical;
+    padding: 0;
+    margin: 0;
+    z-index: 1;
+}
+
+.review-feedback-textarea {
+    width: 100%;
+    min-height: 110px;
+    border-radius: 8px;
+    border: 1px solid var(--review-border);
+    padding: 10px 12px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    color: var(--review-text-main);
+    outline: none;
+    resize: vertical;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.review-feedback-textarea:focus {
+    border-color: var(--review-primary);
+    box-shadow: 0 0 0 3px rgba(1, 52, 124, 0.12);
+}
+
+.btn-submit-review {
+    width: 100%;
+    height: 40px;
+    background: #01347C;
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.btn-submit-review:hover {
+    background: #002244;
+    box-shadow: 0 4px 12px rgba(1, 52, 124, 0.25);
+}
+
+/* Section Complete Task */
+.sidebar-complete-section {
+    padding-top: 1.25rem;
+    border-top: 1px solid #E2E8F0;
+}
+
+.btn-mark-finished {
+    width: 100%;
+    height: 40px;
+    background: #059669;
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.btn-mark-finished:hover {
+    background: #047857;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+}
+
+/* Previous Feedback History */
+.sidebar-history-section {
+    padding-top: 1.25rem;
+    border-top: 1px solid #E2E8F0;
+}
+
+.history-item {
+    padding: 10px 12px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--review-text-muted);
+    margin-bottom: 4px;
+}
+
+.history-body {
+    font-size: 0.8125rem;
+    color: var(--review-text-main);
+    line-height: 1.5;
+}
+
+/* 5. Dark Mode Support */
+[data-theme="dark"] .review-workspace,
+[data-theme="dark"] .review-topbar,
+[data-theme="dark"] .review-sidebar,
+[data-theme="dark"] .review-submission-card,
+[data-theme="dark"] .instruction-card {
+    background: #182234 !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .review-main-canvas {
+    background: #0F172A !important;
+}
+
+[data-theme="dark"] .review-canvas-tabs {
+    background: #1E293B !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .review-tab-btn.active {
+    background: #26354D !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .submission-title-group h3,
+[data-theme="dark"] .instruction-task-title,
+[data-theme="dark"] .sidebar-header h2,
+[data-theme="dark"] .eval-decision-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .submission-notes-box,
+[data-theme="dark"] .instruction-text-content,
+[data-theme="dark"] .sidebar-submission-meta,
+[data-theme="dark"] .history-item {
+    background: #1E293B !important;
+    border-color: #26354D !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .review-feedback-field {
+    background: #1E293B !important;
+    border-bottom-color: #475569 !important;
+}
+
+[data-theme="dark"] .review-feedback-field:hover {
+    background: #25334D !important;
+    border-bottom-color: #64748B !important;
+}
+
+[data-theme="dark"] .review-feedback-field:focus-within,
+[data-theme="dark"] .review-feedback-field.is-focused {
+    background: #1E293B !important;
+}
+
+[data-theme="dark"] .review-feedback-label {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .review-feedback-textarea-clean {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .review-feedback-textarea,
+[data-theme="dark"] .review-template-select,
+[data-theme="dark"] .eval-radio-pill {
+    background: #1E293B !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .review-dropdown-menu {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .review-dropdown-header {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .review-dropdown-item:hover {
+    background: #1E293B !important;
+}
+
+[data-theme="dark"] .review-dropdown-item.active {
+    background: #1E293B !important;
+}
+
+[data-theme="dark"] .review-dropdown-item-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .review-dropdown-item-inst {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .review-mentee-picker {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .review-nav-arrow {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .review-btn-action.btn-edit {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}
+
+/* Integrated Section & Unified Actions (Task 01) */
+.review-integrated-section {
+    background: #FFFFFF;
+    border: 1px solid var(--review-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.section-top-badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.section-label-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--review-primary, #0641CC);
+}
+
+/* Split Button Evaluasi ala Buat Tugas (Tandai Selesai + Sub-Tombol Kembalikan) */
+.review-split-btn {
+    display: inline-flex;
+    align-items: stretch;
+    position: relative;
+    border-radius: 9999px;
+    box-shadow: 0 2px 8px rgba(12, 42, 107, 0.2);
+    background: #0c2a6b;
+    vertical-align: middle;
+}
+
+.review-btn-primary-action {
+    height: 38px;
+    padding: 0 16px 0 18px;
+    border: none;
+    background: #0c2a6b;
+    color: #ffffff;
+    border-radius: 9999px 0 0 9999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.review-btn-primary-action:hover:not(:disabled) {
+    background: #081e4d;
+}
+
+.review-btn-primary-action:disabled {
+    background: #E5E7EB;
+    color: #9CA3AF;
+    cursor: not-allowed;
+}
+
+.review-btn-caret {
+    width: 36px;
+    height: 38px;
+    border: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    background: #0c2a6b;
+    color: #ffffff;
+    border-radius: 0 9999px 9999px 0;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    padding: 0;
+}
+
+.review-btn-caret:hover:not(:disabled) {
+    background: #081e4d;
+}
+
+.review-btn-caret:disabled {
+    background: #E5E7EB;
+    color: #9CA3AF;
+    cursor: not-allowed;
+}
+
+/* Dropdown Menu Opsi Evaluasi ala Buat Tugas (Sesuai Design Opsi Tugaskan) */
+.review-split-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-width: 100%;
+    box-sizing: border-box;
+    background: #EEF2F9;
+    border: 1px solid #DCE3F1;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(12, 42, 107, 0.16);
+    padding: 4px 0;
+    z-index: 100;
+    display: none;
+}
+
+.card-submission-title {
+    font-size: 0.875rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--review-primary, #0641CC);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.review-split-menu.is-open {
+    display: block;
+    animation: menuFadeIn 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-menu-item {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1E293B;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    text-align: left;
+    font-family: inherit;
+    user-select: none;
+}
+
+.review-menu-item:hover:not(:disabled) {
+    background: rgba(12, 42, 107, 0.08);
+    color: #0c2a6b;
+    font-weight: 600;
+}
+
+.review-menu-item:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: transparent;
+}
+
+.review-menu-item--danger {
+    color: #374151;
+}
+
+.review-menu-item--danger:hover:not(:disabled) {
+    background: #FEE2E2;
+    color: #991B1B;
+    font-weight: 600;
+}
+
+.review-menu-divider {
+    height: 1px;
+    background: #DCE3F1;
+    margin: 4px 0;
+}
+
+/* Sidebar Evaluasi Button */
+.sidebar-evaluasi-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.btn-sidebar-kembalikan {
+    width: 100%;
+    height: 42px;
+    padding: 0 16px;
+    border: none;
+    background: var(--review-danger, #991B1B);
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
+}
+
+.btn-sidebar-kembalikan:hover {
+    background: var(--review-danger-hover, #7F1D1D);
+    box-shadow: 0 4px 12px rgba(153, 27, 27, 0.25);
+}
+
+.review-no-submission-hint {
+    padding: 8px 12px;
+    background: var(--neutral-100, #F8FAFC);
+    border: 1px dashed var(--neutral-400, #D0D3D9);
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--review-text-muted, #666666);
+}
+
+.btn-unified-selesai:hover {
+    background: #047857 !important;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+}
+
+.btn-unified-kembalikan:hover {
+    background: #B91C1C !important;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .review-body-layout {
+        grid-template-columns: 1fr;
+    }
+    .review-sidebar {
+        border-left: none;
+        border-top: 1px solid var(--review-border);
+    }
+}
+

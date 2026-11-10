@@ -1,8 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Periode Bulan Magang - SuperAdmin MagKom Sleman')
-@section('page_title', 'Manajemen Periode Bulan Magang')
-@section('page_description', 'Kelola jadwal pembukaan pendaftaran dan override status ketersediaan bulan magang.')
+@section('title', 'Bulan Magang - SuperAdmin MagKom Sleman')
+@section('topbar_title', 'Manajemen Bulan Magang')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -10,68 +9,144 @@
     <span class="breadcrumb-current">Bulan Magang</span>
 @endsection
 
-@section('page_actions')
-    <button type="button" onclick="openTambahBulanModal()" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 42px; padding: 0 1.25rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s ease; box-shadow: var(--shadow-subtle);">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        <span>Tambah Periode Bulan</span>
-    </button>
-@endsection
+@push('styles')
+    @vite(['resources/css/pages/superadmin/superadmin-common.css'])
+@endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- 1. ALERT BANNER OPERASIONAL JADWAL -->
-    <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; box-shadow: var(--shadow-subtle);">
-        <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-600); color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-        </div>
-        <div>
-            <h2 style="font-size: 0.9375rem; font-weight: 700; color: var(--blue-700); margin: 0 0 0.25rem 0;">
-                Otomasi Siklus & Override Status Pendaftaran
-            </h2>
-            <p style="font-size: 0.8125rem; color: var(--neutral-700); margin: 0; line-height: 1.5;">
-                Secara default sistem menghitung status ketersediaan berdasarkan rentang tanggal buka-tutup pendaftaran. SuperAdmin dapat melakukan intervensi manual (Override) jika kuota telah habis atau terdapat kebijakan diskresi khusus dinas.
-            </p>
+    {{-- 1. Hero Banner Khas Sleman MagKom --}}
+    <div class="sa-hero-banner">
+        <div class="banner-top-row">
+            <div>
+                <h1 class="banner-title">Manajemen Bulan Magang</h1>
+                <div class="banner-subtitle">
+                    <span>Cakupan: <strong>Jadwal &amp; Siklus Pendaftaran</strong></span>
+                    <span class="bullet-separator">&bull;</span>
+                    <span>Total Periode: <strong>{{ $totalBulan }} Bulan Terdata</strong></span>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn-banner-action btn-trigger-tambah-bulan">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Tambah Bulan Magang</span>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- 2. DATA TABLE CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-            <div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Daftar Periode Bulan Magang</h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.125rem 0 0 0;">Riwayat jadwal gelombang magang dan status penerimaan calon peserta.</p>
-            </div>
-            <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
-                Total: <strong>{{ $bulanList->total() }} Periode</strong>
-            </span>
-        </div>
+    {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
+    <div class="tiles-grid">
+        <!-- 1. Total Periode Bulan -->
+        <x-gentelella.tile-stat
+            title="TOTAL PERIODE"
+            value="{{ $totalBulan }}"
+            color="blue"
+            trendType="info"
+            trendDirection="up"
+            trendText="Periode"
+            subText="Riwayat Bulan Magang Terdaftar"
+            :sparkBars="[30, 45, 60, 75, 85, 95]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
 
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+        <!-- 2. Periode Aktif -->
+        <x-gentelella.tile-stat
+            title="PERIODE AKTIF"
+            value="{{ $totalAktif }}"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="Operasional"
+            subText="Bulan Magang Berstatus Aktif"
+            :sparkBars="[25, 40, 55, 70, 80, 90]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 3. Pendaftaran Terbuka -->
+        <x-gentelella.tile-stat
+            title="PENDAFTARAN BUKA"
+            value="{{ $pendaftaranBuka }}"
+            color="amber"
+            trendType="warning"
+            trendDirection="up"
+            trendText="Registrasi"
+            subText="Sedang Masuk Rentang Buka"
+            :sparkBars="[20, 35, 50, 65, 80, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 14 14"></polyline>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 4. Override Status -->
+        <x-gentelella.tile-stat
+            title="OVERRIDE STATUS"
+            value="{{ $totalOverride }}"
+            color="purple"
+            trendType="danger"
+            trendDirection="up"
+            trendText="Manual"
+            subText="Periode Dikontrol Khusus"
+            :sparkBars="[15, 25, 40, 55, 70, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+    </div>
+
+    <!-- DATA TABLE CARD -->
+    <x-gentelella.x-panel class="has-table" title="Daftar Bulan Magang">
+        <x-slot:toolbox>
+            <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
+                Total: <strong>{{ method_exists($bulanList, 'total') ? $bulanList->total() : $bulanList->count() }} Periode</strong>
+            </span>
+        </x-slot:toolbox>
+        <div class="table-responsive-gentelella" style="overflow-x: auto;">
+            <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                 <thead>
-                    <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        <th style="padding: 1rem 1.25rem; font-weight: 700;">Bulan Magang</th>
-                        <th style="padding: 1rem 1rem; font-weight: 700;">Periode Buka Pendaftaran</th>
-                        <th style="padding: 1rem 1rem; font-weight: 700;">Override Status</th>
-                        <th style="padding: 1rem 1rem; font-weight: 700; width: 130px; text-align: center;">Status Aktif</th>
-                        <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right; width: 200px;">Aksi</th>
+                    <tr class="headings">
+                        <th>Bulan Magang</th>
+                        <th>Jadwal Buka Pendaftaran</th>
+                        <th>Override Status</th>
+                        <th style="width: 130px; text-align: center;">Status Aktif</th>
+                        <th style="text-align: right; width: 200px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($bulanList as $bulan)
-                        <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 1rem 1.25rem; font-weight: 700; color: var(--blue-700); font-size: 0.9375rem;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--blue-600);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+                        <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
+                            <td style="padding: 1rem 1.25rem; font-weight: 700; font-size: 0.9375rem;">
+                                <div class="sa-text-accent-blue" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
                                     {{ $bulan->bulan_mulai?->translatedFormat('F Y') }}
                                 </div>
                                 <div style="font-size: 0.75rem; color: var(--neutral-500); font-weight: 500; margin-top: 0.2rem;">
@@ -82,18 +157,15 @@
                                 <div style="font-weight: 600; color: var(--neutral-800);">
                                     {{ $bulan->tgl_buka?->format('d M Y') }} s/d {{ $bulan->tgl_tutup?->format('d M Y') }}
                                 </div>
-                                <div style="font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.15rem;">
-                                    Durasi pendaftaran dinas
-                                </div>
                             </td>
                             <td style="padding: 1rem 1rem; white-space: nowrap;">
                                 @if($bulan->override_status)
-                                    <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: 9999px; background: var(--blue-tint); color: var(--blue-700); font-weight: 700; font-size: 0.75rem; border: 1px solid var(--blue-tint-line);">
+                                    <span class="sa-badge-blue">
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"></circle></svg>
                                         Override: {{ strtoupper($bulan->override_status->value) }}
                                     </span>
                                 @else
-                                    <span style="display: inline-flex; align-items: center; gap: 0.375rem; color: var(--neutral-500); font-size: 0.8125rem; font-weight: 500;">
+                                    <span class="sa-badge-neutral">
                                         <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--neutral-400);"></span>
                                         Otomatis (Jadwal)
                                     </span>
@@ -114,15 +186,22 @@
                             </td>
                             <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
                                 <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
-                                    <button type="button" onclick="openEditBulanModal({{ $bulan->id }}, '{{ $bulan->bulan_mulai?->format('Y-m-d') }}', '{{ $bulan->tgl_buka?->format('Y-m-d') }}', '{{ $bulan->tgl_tutup?->format('Y-m-d') }}', '{{ $bulan->override_status?->value ?? '' }}')" style="padding: 0.45rem 0.875rem; background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--neutral-800); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.375rem;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='var(--neutral-0)'">
+                                    <button type="button" 
+                                            class="sa-btn-action-outline btn-trigger-edit-bulan"
+                                            data-id="{{ $bulan->id }}"
+                                            data-bulan-mulai="{{ $bulan->bulan_mulai?->format('Y-m-d') }}"
+                                            data-tgl-buka="{{ $bulan->tgl_buka?->format('Y-m-d') }}"
+                                            data-tgl-tutup="{{ $bulan->tgl_tutup?->format('Y-m-d') }}"
+                                            data-override-status="{{ $bulan->override_status?->value ?? '' }}"
+                                            data-action-url="{{ route('superadmin.bulan.update', $bulan) }}">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                         Edit
                                     </button>
 
-                                    <form method="POST" action="{{ route('superadmin.bulan.toggle', $bulan) }}" style="display: inline-block; margin: 0;" onsubmit="return confirm('Ubah status aktif periode bulan ini?');">
+                                    <form method="POST" action="{{ route('superadmin.bulan.toggle', $bulan) }}" style="display: inline-block; margin: 0;" onsubmit="return confirm('Ubah status aktif bulan magang ini?');">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" style="padding: 0.45rem 0.875rem; background: {{ $bulan->aktif ? 'var(--red-100)' : 'var(--green-100)' }}; border: 1px solid {{ $bulan->aktif ? 'var(--red-300)' : 'rgba(22, 163, 74, 0.25)' }}; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: {{ $bulan->aktif ? 'var(--red-700)' : 'var(--green-700)' }}; cursor: pointer; transition: all 0.15s;">
+                                        <button type="submit" class="{{ $bulan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" style="{{ $bulan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}">
                                             {{ $bulan->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
                                         </button>
                                     </form>
@@ -135,8 +214,8 @@
                                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
                                 </div>
-                                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada data periode bulan magang.</p>
-                                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Periode Bulan</strong> untuk memulai gelombang pendaftaran.</p>
+                                <p style="font-size: 1rem; font-weight: 600; color: var(--neutral-800); margin: 0 0 0.25rem 0;">Belum ada data bulan magang.</p>
+                                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Bulan Magang</strong> untuk memulai gelombang pendaftaran.</p>
                             </td>
                         </tr>
                     @endforelse
@@ -144,12 +223,12 @@
             </table>
         </div>
 
-        @if($bulanList->hasPages())
+        @if($bulanList->total() > 0)
             <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200); background: var(--neutral-100);">
                 {{ $bulanList->links() }}
             </div>
         @endif
-    </div>
+    </x-gentelella.x-panel>
 </div>
 
 <!-- =====================================================================
@@ -162,13 +241,13 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Periode Bulan Magang</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Bulan Magang</h3>
             </div>
-            <button type="button" onclick="closeTambahBulanModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+            <button type="button" data-modal-dismiss="modal-tambah-bulan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0 0 1.25rem 0; line-height: 1.4;">
-            Buat jadwal pembukaan periode magang baru untuk calon peserta dinas.
+            Buat jadwal pembukaan bulan magang baru untuk calon peserta dinas.
         </p>
 
         <form method="POST" action="{{ route('superadmin.bulan.store') }}" style="display: flex; flex-direction: column; gap: 1.25rem;">
@@ -209,11 +288,11 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="closeTambahBulanModal()" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
+                <button type="button" data-modal-dismiss="modal-tambah-bulan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
-                    Simpan Periode
+                    Simpan Bulan Magang
                 </button>
             </div>
         </form>
@@ -230,9 +309,9 @@
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                 </div>
-                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Perbarui Periode Bulan Magang</h3>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Perbarui Bulan Magang</h3>
             </div>
-            <button type="button" onclick="closeEditBulanModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+            <button type="button" data-modal-dismiss="modal-edit-bulan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0 0 1.25rem 0; line-height: 1.4;">
@@ -277,7 +356,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="closeEditBulanModal()" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
+                <button type="button" data-modal-dismiss="modal-edit-bulan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
@@ -288,31 +367,7 @@
     </div>
 </div>
 
-<script>
-    function openTambahBulanModal() {
-        document.getElementById('modal-tambah-bulan').style.display = 'flex';
-    }
-    function closeTambahBulanModal() {
-        document.getElementById('modal-tambah-bulan').style.display = 'none';
-    }
-
-    function openEditBulanModal(bulanId, bulanMulai, tglBuka, tglTutup, overrideStatus) {
-        document.getElementById('form-edit-bulan').action = '/superadmin/bulan/' + bulanId;
-        document.getElementById('edit-bulan-mulai').value = bulanMulai;
-        document.getElementById('edit-tgl-buka').value = tglBuka;
-        document.getElementById('edit-tgl-tutup').value = tglTutup;
-        document.getElementById('edit-override-status').value = overrideStatus;
-        document.getElementById('modal-edit-bulan').style.display = 'flex';
-    }
-    function closeEditBulanModal() {
-        document.getElementById('modal-edit-bulan').style.display = 'none';
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeTambahBulanModal();
-            closeEditBulanModal();
-        }
-    });
-</script>
+@push('scripts')
+    @vite(['resources/js/pages/superadmin/bulan-index.js'])
+@endpush
 @endsection

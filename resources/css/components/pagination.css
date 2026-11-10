@@ -1,0 +1,335 @@
+        /* =====================================================================
+           MAGKOM DESIGN SYSTEM: PAGINATION COMPONENT
+           ===================================================================== */
+        .magkom-pagination-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 0.25rem 0;
+            font-size: 0.8125rem;
+            color: var(--neutral-700);
+        }
+
+        .magkom-pagination-summary {
+            color: var(--neutral-600);
+            font-size: 0.8125rem;
+        }
+
+        .magkom-pagination-summary strong {
+            color: var(--neutral-900);
+            font-weight: 700;
+        }
+
+        .magkom-pagination-list {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .magkom-page-item {
+            display: inline-flex;
+        }
+
+        .magkom-page-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+            padding: 0 0.65rem;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--neutral-700);
+            background: var(--neutral-0);
+            border: 1px solid var(--neutral-300, #D0D3D9);
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        a.magkom-page-link:hover {
+            background: var(--neutral-100);
+            color: var(--blue-700);
+            border-color: var(--blue-tint-line);
+        }
+
+        .magkom-page-item.active .magkom-page-link {
+            background: var(--blue-600);
+            color: #FFFFFF !important;
+            border-color: var(--blue-600);
+            font-weight: 700;
+        }
+
+        .magkom-page-item.disabled .magkom-page-link {
+            color: var(--neutral-400);
+            background: var(--neutral-150);
+            border-color: var(--neutral-200);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* GUARDRAIL: Cegah SVG pagination membengkak ke ukuran raksasa */
+        .magkom-pagination-nav svg,
+        .pagination svg,
+        nav[role="navigation"] svg {
+            width: 14px !important;
+            height: 14px !important;
+            max-width: 14px !important;
+            max-height: 14px !important;
+            display: inline-block !important;
+            vertical-align: middle;
+        }
+
+        /* Tema Gelap (Dark Mode Parity) */
+        [data-theme="dark"] .magkom-pagination-nav {
+            color: #94A3B8;
+        }
+        [data-theme="dark"] .magkom-pagination-summary {
+            color: #94A3B8;
+        }
+        [data-theme="dark"] .magkom-pagination-summary strong {
+            color: #F8FAFC;
+        }
+        [data-theme="dark"] .magkom-page-link {
+            background: var(--neutral-0);
+            border-color: var(--neutral-300);
+            color: #CBD5E1;
+        }
+        [data-theme="dark"] a.magkom-page-link:hover {
+            background: var(--neutral-100);
+            color: #93C5FD;
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        [data-theme="dark"] .magkom-page-item.active .magkom-page-link {
+            background: var(--blue-600);
+            color: #FFFFFF !important;
+            border-color: var(--blue-600);
+        }
+        [data-theme="dark"] .magkom-page-item.disabled .magkom-page-link {
+            background: rgba(30, 41, 59, 0.5);
+            border-color: rgba(51, 65, 85, 0.5);
+            color: #64748B;
+        }
+
+        /* =====================================================================
+           MAGKOM DASHBOARD KUOTA PAGINATION (Identik Referensi Gambar 5)
+           ===================================================================== */
+        .kuota-pagination-wrapper {
+            margin-top: 1.25rem;
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--cv-line, #E2E8F0);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .kuota-pagination-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .kuota-pagination-bottom {
+            padding-top: 0.625rem;
+            border-top: 1px solid var(--cv-line, #E2E8F0);
+        }
+
+        .kuota-pagination-summary {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .kuota-pagination-counter {
+            font-size: 0.75rem;
+            color: var(--neutral-600, #64748B);
+        }
+
+        .kuota-immutable-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: #059669;
+        }
+
+        .kuota-per-page-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .kuota-per-page-label {
+            color: var(--neutral-600, #64748B);
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .kuota-per-page-group {
+            display: inline-flex;
+            align-items: center;
+            background: var(--neutral-100, #F8FAFC);
+            border: 1px solid var(--neutral-300, #E2E8F0);
+            border-radius: 8px;
+            padding: 2px;
+            gap: 2px;
+        }
+
+        .kuota-per-page-pill {
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--neutral-600, #64748B);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            line-height: 1.25;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kuota-per-page-pill:hover:not(.active) {
+            background: #E2E8F0;
+            color: #0F172A;
+            text-decoration: none;
+        }
+
+        .kuota-per-page-pill.active {
+            background: var(--blue-600, #0641CC);
+            color: #FFFFFF !important;
+            font-weight: 700;
+            box-shadow: 0 1px 2px rgba(6, 65, 204, 0.2);
+            text-decoration: none;
+        }
+
+        .kuota-pagination-lembar-info {
+            font-size: 0.75rem;
+            color: var(--neutral-600, #64748B);
+        }
+
+        .kuota-page-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .kuota-page-btn-nav {
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--neutral-300, #E2E8F0);
+            background: transparent;
+            color: var(--neutral-600, #64748B);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kuota-page-btn-nav:hover:not(.disabled) {
+            background: #F1F5F9;
+            color: #0F172A;
+            text-decoration: none;
+        }
+
+        .kuota-page-btn-nav.disabled {
+            color: #94A3B8;
+            cursor: not-allowed;
+            opacity: 0.5;
+            background: transparent;
+            text-decoration: none;
+        }
+
+        .kuota-page-num {
+            min-width: 28px;
+            height: 28px;
+            padding: 0 0.35rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--neutral-600, #64748B);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+
+        .kuota-page-num:hover:not(.active) {
+            background: #F1F5F9;
+            color: #0F172A;
+            text-decoration: none;
+        }
+
+        .kuota-page-num.active {
+            background: var(--blue-600, #0641CC);
+            color: #FFFFFF !important;
+            font-weight: 700;
+            box-shadow: 0 1px 2px rgba(6, 65, 204, 0.2);
+            text-decoration: none;
+        }
+
+        .kuota-page-ellipsis {
+            padding: 0 0.25rem;
+            color: var(--neutral-500, #94A3B8);
+            font-size: 0.75rem;
+        }
+
+        /* Dark Mode Overrides Kuota Pagination */
+        [data-theme="dark"] .kuota-pagination-wrapper,
+        [data-theme="dark"] .kuota-pagination-bottom {
+            border-color: #334155;
+        }
+        [data-theme="dark"] .kuota-immutable-pill {
+            color: #34D399;
+        }
+        [data-theme="dark"] .kuota-per-page-group {
+            background: #0F172A;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .kuota-per-page-pill:hover:not(.active) {
+            background: #1E293B;
+            color: #F8FAFC;
+        }
+        [data-theme="dark"] .kuota-per-page-pill.active {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+        [data-theme="dark"] .kuota-page-btn-nav {
+            border-color: #334155;
+            color: #94A3B8;
+        }
+        [data-theme="dark"] .kuota-page-btn-nav:hover:not(.disabled) {
+            background: #1E293B;
+            color: #F8FAFC;
+        }
+        [data-theme="dark"] .kuota-page-num:hover:not(.active) {
+            background: #1E293B;
+            color: #F8FAFC;
+        }
+        [data-theme="dark"] .kuota-page-num.active {
+            background: #3B82F6;
+            color: #FFFFFF !important;
+        }

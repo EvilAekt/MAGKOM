@@ -1,0 +1,418 @@
+        :root {
+            /* =========================================================================
+               SuperAdmin Executive Dashboard Design Tokens (Precision 1:1 Parity)
+               ========================================================================= */
+            --navy-900: #062456;      /* teks paling gelap, hover sidebar */
+            --navy-800: #0A2A6A;      /* sidebar, topbar, footer, tile ikon, bar navy, teks judul & angka */
+            --navy-700: #0B3180;      /* ujung terang gradient hero */
+            --active-blue: #1E4FBF;   /* item sidebar aktif */
+
+            --indigo-600: #3F4FB8;    /* kartu Hak Akses, titik timeline, link "Diff", angka Sabtu/Minggu */
+            --periwinkle-400: #6F86D8;/* bar hero ke-2 */
+            --periwinkle-200: #B9C3E3;/* bar "Diajukan" */
+            --lavender-100: #E4E9F8;  /* pill, track progress */
+            --lavender-50:  #EEF1FB;  /* tile statistik, baris audit, ujung bawah kartu KPI */
+
+            --yellow-500: #FFC700;    /* tombol utama, bar kuning, aksen judul */
+            --yellow-400: #FFD43B;    /* ujung terang gradient kartu kuning */
+            --yellow-200: #FFE680;    /* kartu Akun Staf Internal (atas) */
+            --yellow-100: #FFF4C7;    /* tile AUTH, kartu slot */
+
+            --red-500: #E04A4A;       /* kartu Perlu Tindakan (atas-kiri) */
+            --red-600: #B92B2B;       /* kartu Perlu Tindakan (bawah-kanan) */
+            --red-bar: #D9444A;       /* bar "Lewat SLA" */
+
+            --page-bg: #EDF1FA;       /* latar area konten */
+            --card: #FFFFFF;
+            --border: #E1E6F3;
+            --text: #0A2A6A;
+            --muted: #5B6785;         /* teks sekunder di kartu putih */
+            --muted-on-navy: #8FA3D4; /* label grup sidebar, chevron */
+            --track: #E6EAF4;         /* track progress/segmen kosong di kartu putih */
+
+            --sa-radius-card: 24px;
+            --sa-radius-hero: 28px;
+            --sa-radius-tile: 12px;
+            --sa-radius-pill: 999px;
+            --sa-shadow-card: 0 1px 2px rgba(10,42,106,.04), 0 10px 24px -12px rgba(10,42,106,.14);
+            --sa-border-card: 1px solid var(--border);
+
+            --sa-font-sans: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, sans-serif;
+            --sa-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+            /* =========================================================================
+               11 Master CSS Peeper Tokens - MagKom Rebranded Palette (PRD-TASK-2026-10-28-UI-02)
+               ========================================================================= */
+            --magkom-primary-blue: #01347C;
+            --magkom-midnight-navy: #003566;
+            --magkom-abyssal-navy: #02275D;
+            --magkom-indigo-accent: #3F51B5;
+            --magkom-amber-gold: #FFC300;
+            --magkom-sun-yellow: #FFCB05;
+            --magkom-dark-charcoal: #212529;
+            --magkom-pure-black: #000000;
+            --magkom-gray-medium: #AAAAAA;
+            --magkom-gray-light: #BBBBBB;
+            --magkom-pure-white: #FFFFFF;
+
+            /* Backward-Compatibility & Semantic Aliases */
+            --brand-darkest: var(--magkom-abyssal-navy);
+            --brand-navy: var(--magkom-primary-blue);
+            --brand-accent: var(--magkom-indigo-accent);
+            --brand-ice: #E6EEFF;
+
+            --blue-600: var(--magkom-primary-blue);           /* Warna utama aksi/brand */
+            --blue-700: var(--magkom-midnight-navy);          /* Warna hover brand */
+            --blue-800: var(--magkom-abyssal-navy);
+            --blue-500: var(--magkom-indigo-accent);          /* Warna aksen terang */
+            --blue-tint: rgba(1, 52, 124, 0.08);              /* Background badge/highlight card */
+            --blue-tint-line: var(--magkom-indigo-accent);    /* Border pembatas aksen */
+            --hover-row-bg: rgba(1, 52, 124, 0.04);
+            --sky-100: #E6EEFF;
+
+            /* Signature Contour Wave Pattern (Topographic SVG Background) */
+            --cv-contour: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300' viewBox='0 0 600 300' fill='none' stroke='white' stroke-opacity='.09' stroke-width='1.2'%3E%3Cpath d='M-20 220C80 180 120 250 220 200S380 90 480 130 620 60 640 40'/%3E%3Cpath d='M-20 250C90 210 140 280 240 230S390 120 500 160 630 90 650 70'/%3E%3Cpath d='M-20 190C70 150 110 220 200 170S370 60 460 100 610 30 630 10'/%3E%3Cpath d='M-20 280C100 240 160 300 260 260S400 150 520 190 640 120 660 100'/%3E%3Cellipse cx='470' cy='120' rx='60' ry='26'/%3E%3Cellipse cx='470' cy='120' rx='34' ry='14'/%3E%3Cellipse cx='470' cy='120' rx='12' ry='5'/%3E%3C/svg%3E");
+
+            /* Header & Sidebar Tokens (Identik dengan Peserta) */
+            --topbar-bg-start: var(--magkom-primary-blue);
+            --topbar-bg-end: var(--magkom-midnight-navy);
+            --topbar-border: rgba(255, 255, 255, 0.14);
+            --topbar-text: var(--magkom-pure-white);
+            --topbar-text-muted: var(--magkom-gray-light);
+
+            --sidebar-bg: var(--magkom-abyssal-navy);
+            --sidebar-text: var(--magkom-gray-light);
+            --sidebar-active-bg: var(--magkom-primary-blue);
+            --sidebar-active-border: transparent;
+
+            /* Card Tokens (Mode Terang) */
+            --card-surface: var(--magkom-pure-white);
+            --card-border: var(--magkom-gray-light);
+            --card-text-primary: var(--magkom-dark-charcoal);
+            --card-text-muted: var(--magkom-gray-medium);
+
+            /* Highlight / Metric Card Khusus (#01347C) */
+            --card-highlight-bg: var(--magkom-primary-blue);
+            --card-highlight-border: var(--magkom-indigo-accent);
+            --card-highlight-text: var(--magkom-pure-white);
+            --card-highlight-badge-bg: var(--magkom-sun-yellow);
+            --card-highlight-badge-text: var(--magkom-abyssal-navy);
+
+            --neutral-0: #FFFFFF;
+            --neutral-100: #F8FAFC;
+            --neutral-150: #F5F7FB;
+            --neutral-200: #EEF0F5;
+            --neutral-400: #D0D3D9;
+            --neutral-500: #7A8494;
+            --neutral-600: #666666;
+            --neutral-700: #333333;
+            --neutral-800: #1D2530;
+            --neutral-900: #05070B;
+
+            /* Status Tokens */
+            --green-100: #E8F7EE;
+            --green-600: #16A34A;
+            --green-700: #166534;
+
+            --amber-100: #FFFBEB;
+            --amber-200: #FEF3C7;
+            --amber-300: var(--magkom-sun-yellow);
+            --amber-500: #F59E0B;
+            --amber-600: #D97706;
+            --amber-700: #92400E;
+
+            --red-100: #FEF2F2;
+            --red-200: #FEE2E2;
+            --red-300: #FECACA;
+            --red-600: #DC2626;
+            --red-700: #991B1B;
+
+            /* Focus & Elevation */
+            --focus-ring: 0 0 0 3px rgba(63, 81, 181, 0.35);
+            --shadow-subtle: 0 1px 3px rgba(15, 23, 42, 0.08);
+            --shadow-raised: 0 4px 12px rgba(15, 23, 42, 0.10);
+            --shadow-modal: 0 24px 48px -8px rgba(15, 28, 51, 0.28);
+            --sidebar-width: 230px;
+            --topbar-height: 64px;
+
+            --font-sans: 'Open Sans', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+            /* Tipografi Bobot Standar MagKom (Plan 2026-10-16) */
+            --fw-regular: 400;
+            --fw-medium: 500;
+            --fw-semibold: 600;
+            --fw-bold: 700;
+
+            /* Table Tokens - Light Mode (PRD-TASK-2026-10-28-PLAN4-REVAMP) */
+            --table-header-bg: #F1F5F9;
+            --table-header-color: #1E293B;
+            --table-header-border: #CBD5E1;
+            --table-row-border: #EEF0F5;
+            --table-row-zebra: #F8FAFC;
+            --table-row-hover: rgba(1, 52, 124, 0.04);
+            --table-text-primary: #05070B;
+            --table-text-secondary: #64748B;
+        }
+
+        /* Dark Mode Tokens & Overrides (DS-MagKom Industrial Standard) */
+        [data-theme="dark"] {
+            --neutral-0: var(--magkom-midnight-navy);     /* Card surface #003566 */
+            --neutral-50: var(--magkom-abyssal-navy);    /* Container sidebar/topbar gelap #02275D */
+            --neutral-100: var(--magkom-midnight-navy);   /* Input background */
+            --neutral-150: var(--magkom-dark-charcoal);   /* Main canvas background #212529 */
+            --neutral-200: #2C3A4E;   /* Borders & Separators */
+            --neutral-300: var(--magkom-indigo-accent);   /* Secondary borders / accent borders */
+            --neutral-400: var(--magkom-gray-medium);   /* Subdued text / icons / borders */
+            --neutral-500: var(--magkom-gray-light);   /* Muted labels & timestamps */
+            --neutral-600: #CBD5E1;   /* Body text secondary */
+            --neutral-700: #E2E8F0;   /* Body text primary */
+            --neutral-800: var(--magkom-pure-white);   /* Headings & prominent text */
+            --neutral-900: var(--magkom-pure-white);   /* Maximum contrast highlights */
+
+            --blue-600: #3B82F6;
+            --blue-700: #93C5FD;
+            --blue-tint: rgba(59, 130, 246, 0.18);
+            --blue-tint-line: rgba(147, 197, 253, 0.35);
+            --hover-row-bg: rgba(255, 255, 255, 0.06);
+            --sky-100: var(--magkom-midnight-navy);
+
+            /* Topbar Mode Gelap */
+            --topbar-bg-start: var(--magkom-abyssal-navy);
+            --topbar-bg-end: var(--magkom-midnight-navy);
+            --topbar-border: rgba(63, 81, 181, 0.35);
+
+            /* Sidebar Mode Gelap */
+            --sidebar-bg: #011C44;
+            --sidebar-text: var(--magkom-gray-light);
+            --sidebar-active-bg: var(--magkom-primary-blue);
+            --sidebar-active-border: transparent;
+
+            /* Card Mode Gelap */
+            --card-surface: var(--magkom-midnight-navy);
+            --card-border: var(--magkom-indigo-accent);
+            --card-text-primary: var(--magkom-pure-white);
+            --card-text-muted: var(--magkom-gray-light);
+
+            --card-highlight-bg: var(--magkom-abyssal-navy);
+            --card-highlight-border: var(--magkom-indigo-accent);
+            --card-highlight-text: var(--magkom-pure-white);
+            --card-highlight-badge-bg: var(--magkom-sun-yellow);
+            --card-highlight-badge-text: var(--magkom-pure-black);
+
+            --green-100: rgba(16, 185, 129, 0.15);
+            --green-600: #34D399;
+            --green-700: #6EE7B7;
+
+            --amber-100: rgba(217, 119, 6, 0.15);
+            --amber-200: rgba(245, 158, 11, 0.25);
+            --amber-500: #FBBF24;
+            --amber-600: #F59E0B;
+            --amber-700: var(--magkom-sun-yellow);
+
+            --red-100: rgba(239, 68, 68, 0.15);
+            --red-200: rgba(239, 68, 68, 0.25);
+            --red-600: #F87171;
+            --red-700: #FCA5A5;
+
+            --focus-ring: 0 0 0 3px rgba(63, 81, 181, 0.35);
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.4);
+            --shadow-raised: 0 4px 16px rgba(0, 0, 0, 0.5);
+            --shadow-modal: 0 24px 48px -8px rgba(0, 0, 0, 0.7);
+
+            /* Cockpit & Gentelella Unified Theme Tokens (Passes WCAG AA) */
+            --cv-surface: var(--magkom-midnight-navy);
+            --cv-paper: #011C44;
+            --cv-line: #2C3A4E;
+            --cv-line-strong: var(--magkom-indigo-accent);
+            --cv-ink: var(--magkom-pure-white);
+            --cv-ink-2: var(--magkom-gray-light);
+            --cv-ink-3: var(--magkom-gray-medium);
+
+            /* Table Tokens - Dark Mode (PRD-TASK-2026-10-28-PLAN4-REVAMP) */
+            --table-header-bg: #012758;
+            --table-header-color: #FFFFFF;
+            --table-header-border: #3F51B5;
+            --table-row-border: rgba(63, 81, 181, 0.28);
+            --table-row-zebra: rgba(255, 255, 255, 0.03);
+            --table-row-hover: rgba(63, 81, 181, 0.18);
+            --table-text-primary: #FFFFFF;
+            --table-text-secondary: #94A3B8;
+        }
+
+        [data-theme="dark"] body {
+            background-color: var(--neutral-150);
+            color: var(--neutral-700);
+        }
+
+        /* Topbar & Breadcrumb Mode Gelap */
+        [data-theme="dark"] .top_nav,
+        [data-theme="dark"] .dashboard-topbar-wrapper {
+            background: linear-gradient(135deg, #02275D 0%, #003566 100%) !important;
+            border-bottom: 1px solid rgba(63, 81, 181, 0.35) !important;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        [data-theme="dark"] .dashboard-topbar {
+            background: transparent !important;
+            border-bottom: none !important;
+        }
+
+        [data-theme="dark"] .user-name-text {
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .user-dropdown-menu {
+            background-color: var(--neutral-0);
+            border-color: var(--neutral-200);
+            box-shadow: var(--shadow-raised);
+        }
+
+        [data-theme="dark"] .dropdown-item-link {
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .dropdown-item-link:hover {
+            background-color: var(--neutral-100);
+            color: #FFFFFF;
+        }
+
+        [data-theme="dark"] .dropdown-divider {
+            border-top-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .breadcrumb-trail a {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        [data-theme="dark"] .breadcrumb-trail a:hover {
+            color: #FFCB05 !important;
+            text-decoration: underline;
+        }
+
+        [data-theme="dark"] .breadcrumb-separator {
+            color: rgba(255, 255, 255, 0.4) !important;
+        }
+
+        [data-theme="dark"] .breadcrumb-current {
+            color: #FFFFFF !important;
+        }
+
+        /* Sidebar Navigasi Mode Gelap */
+        [data-theme="dark"] .dashboard-sidebar,
+        [data-theme="dark"] .left_col {
+            background-color: #011C44 !important;
+            border-right-color: rgba(63, 81, 181, 0.2) !important;
+        }
+
+        [data-theme="dark"] .sidebar-header {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="dark"] .sidebar-brand-title {
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .sidebar-brand-subtitle {
+            color: var(--magkom-gray-light, #BBBBBB) !important;
+            opacity: 0.85;
+        }
+
+        [data-theme="dark"] .nav-section-label,
+        [data-theme="dark"] .menu_section h3 {
+            color: var(--magkom-gray-light, #BBBBBB) !important;
+            opacity: 0.85;
+        }
+
+        [data-theme="dark"] .nav-item-link {
+            color: var(--magkom-gray-light, #BBBBBB);
+        }
+
+        [data-theme="dark"] .nav-item-link:hover,
+        [data-theme="dark"] .nav-group-btn:hover {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            color: #FFFFFF !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            border-radius: 8px !important;
+            transform: translateX(4px);
+        }
+
+        [data-theme="dark"] .nav-item-link.active {
+            background: #0E438A !important;
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+            border-radius: 8px !important;
+            border: 1px solid rgba(147, 197, 253, 0.35) !important;
+            border-left: none !important;
+            box-shadow: 0 4px 14px rgba(1, 30, 75, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+            animation: activePillBreathe 3.5s ease-in-out infinite;
+        }
+
+        [data-theme="dark"] .nav-item-icon {
+            color: #AAAAAA;
+            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease;
+        }
+
+        [data-theme="dark"] .nav-item-link:hover .nav-item-icon,
+        [data-theme="dark"] .nav-group-btn:hover .nav-item-icon {
+            color: #FFCB05 !important;
+            transform: scale(1.1) translateY(-1px);
+        }
+
+        [data-theme="dark"] .nav-item-link.active .nav-item-icon {
+            color: #FFCB05 !important;
+        }
+
+        /* Kartu & Kontainer Universal */
+        [data-theme="dark"] .app-card,
+        [data-theme="dark"] .card-modern,
+        [data-theme="dark"] .dashboard-card,
+        [data-theme="dark"] .stat-card,
+        [data-theme="dark"] .identity-card,
+        [data-theme="dark"] .form-card-container,
+        [data-theme="dark"] .settings-card,
+        [data-theme="dark"] .bg-white:not(.badge-white):not(.text-white) {
+            background-color: var(--neutral-0) !important;
+            border-color: var(--neutral-200) !important;
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .card-header,
+        [data-theme="dark"] .panel-header {
+            border-bottom-color: var(--neutral-200);
+        }
+
+        [data-theme="dark"] .card-footer,
+        [data-theme="dark"] .panel-footer {
+            border-top-color: var(--neutral-200);
+            background-color: rgba(15, 23, 42, 0.4);
+        }
+
+        /* Heading & Teks Universal */
+        [data-theme="dark"] h1,
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3,
+        [data-theme="dark"] h4,
+        [data-theme="dark"] .text-slate-900,
+        [data-theme="dark"] .text-gray-900 {
+            color: var(--neutral-800) !important;
+        }
+
+        [data-theme="dark"] p,
+        [data-theme="dark"] .text-slate-700,
+        [data-theme="dark"] .text-gray-700 {
+            color: var(--neutral-700);
+        }
+
+        [data-theme="dark"] .text-slate-500,
+        [data-theme="dark"] .text-gray-500,
+        [data-theme="dark"] .text-slate-400,
+        [data-theme="dark"] .text-gray-400 {
+            color: var(--neutral-500) !important;
+        }
+
+        [data-theme="dark"] .border-slate-200,
+        [data-theme="dark"] .border-gray-200,
+        [data-theme="dark"] .border-slate-100,
+        [data-theme="dark"] .border-gray-100 {
+            border-color: var(--neutral-200) !important;
+        }

@@ -1,0 +1,430 @@
+/* ========================================================
+   MAGKOM GENTELELLA DESIGN SYSTEM: CLASSROOM TUGAS INDEX
+   Portal Peserta: Modul Daftar Penugasan & Proyek Magang
+   ======================================================== */
+
+.classroom-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* 1. Class Banner Header Khas Sleman MagKom (SuperAdmin Studio Parity) */
+.classroom-banner {
+    background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                linear-gradient(135deg, #01347C 0%, #003566 100%);
+    border-radius: 16px;
+    padding: 28px 32px;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.banner-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+}
+
+.banner-subtitle {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.92);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    line-height: 1.5;
+}
+
+/* 2. Tile Stats Grid */
+.tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+/* 3. Segmented Pill Tab Filter Navigasi (SuperAdmin Cockpit Parity) */
+.classroom-tabs {
+    display: flex;
+    gap: 10px;
+    margin: -4px -4px 18px -4px;
+    padding: 6px 4px 10px 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tab-pill {
+    background: #ffffff;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 9999px;
+    padding: 8px 18px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    font-family: inherit;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    will-change: transform;
+}
+
+.tab-pill:hover {
+    color: #01347C;
+    background: #F8FAFC;
+    border-color: #94A3B8;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+}
+
+.tab-pill.active {
+    color: #ffffff;
+    background: #01347C;
+    border-color: #01347C;
+    font-weight: 700;
+    box-shadow: 0 3px 12px rgba(1, 52, 124, 0.25);
+    transform: translateY(-1px);
+}
+
+.tab-pill-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: #F1F5F9;
+    color: #334155;
+    transition: all 0.2s ease;
+}
+
+.tab-pill:hover .tab-pill-badge {
+    background: #E2E8F0;
+    color: #0F172A;
+}
+
+.tab-pill.active .tab-pill-badge {
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+}
+
+/* Alert badge untuk tugas lewat tenggat */
+.tab-pill-badge.badge-overdue {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.tab-pill.active .tab-pill-badge.badge-overdue {
+    background: #DC2626;
+    color: #ffffff;
+}
+
+/* 4. Assignment Stream Cards */
+.assignment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.assignment-card {
+    background: #ffffff;
+    border: 1px solid #CBD5E1;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    position: relative;
+}
+
+.assignment-card:hover {
+    border-color: #01347C;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(1, 52, 124, 0.12);
+}
+
+.assignment-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.assignment-card.selesai .assignment-icon-wrapper {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+.assignment-card.proses .assignment-icon-wrapper {
+    background: #FEF3C7;
+    color: #B45309;
+}
+
+.assignment-card.terlambat .assignment-icon-wrapper {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.assignment-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.assignment-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.assignment-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.assignment-card:hover .assignment-title {
+    color: #01347C;
+}
+
+.assignment-due {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.assignment-due.terlambat {
+    color: #DC2626;
+    font-weight: 700;
+}
+
+.assignment-due.mendekati {
+    color: #D97706;
+    font-weight: 700;
+}
+
+.assignment-desc {
+    font-size: 0.8125rem;
+    color: #475569;
+    line-height: 1.45;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.assignment-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #E2E8F0;
+}
+
+.assignment-meta-tags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    color: #64748B;
+}
+
+.assignment-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #F1F5F9;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+/* 5. Tombol Aksi Buka Tugas Khas Sleman SuperAdmin */
+.btn-tugas-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    font-size: 0.775rem;
+    font-weight: 700;
+    color: #01347C;
+    background: #ffffff;
+    border: 1.5px solid #01347C;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(1, 52, 124, 0.06);
+}
+
+.assignment-card:hover .btn-tugas-action,
+.btn-tugas-action:hover {
+    background: #01347C;
+    color: #ffffff;
+    transform: translateX(2px);
+    box-shadow: 0 3px 8px rgba(1, 52, 124, 0.22);
+}
+
+.btn-tugas-action svg {
+    transition: transform 0.2s ease;
+}
+
+.assignment-card:hover .btn-tugas-action svg,
+.btn-tugas-action:hover svg {
+    transform: translateX(2px);
+}
+
+/* 6. Filter Empty State (Muncul bila filter tidak menemukan data) */
+.filter-empty-state {
+    display: none;
+    text-align: center;
+    padding: 48px 24px;
+    border: 1px dashed #CBD5E1;
+    border-radius: 12px;
+    background: #F8FAFC;
+    margin-top: 8px;
+}
+
+.filter-empty-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px auto;
+}
+
+.filter-empty-title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 4px;
+}
+
+.filter-empty-desc {
+    font-size: 0.875rem;
+    color: #64748B;
+    max-width: 420px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* 7. Dark Mode Harmonization */
+[data-theme="dark"] .assignment-card {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .assignment-card:hover {
+    border-color: #38BDF8 !important;
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.15) !important;
+}
+
+[data-theme="dark"] .assignment-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .assignment-desc {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .tab-pill {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .tab-pill:hover {
+    background: #1E293B !important;
+    color: #38BDF8 !important;
+    border-color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .tab-pill.active {
+    background: #0284C7 !important;
+    border-color: #0284C7 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .tab-pill-badge {
+    background: #0F172A !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .assignment-tag {
+    background: #0F172A !important;
+    color: #CBD5E1 !important;
+    border: 1px solid #26354D;
+}
+
+[data-theme="dark"] .assignment-footer {
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .btn-tugas-action {
+    background: transparent !important;
+    border-color: #38BDF8 !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .assignment-card:hover .btn-tugas-action,
+[data-theme="dark"] .btn-tugas-action:hover {
+    background: #0284C7 !important;
+    border-color: #0284C7 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .filter-empty-state {
+    background: #182234 !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .filter-empty-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .filter-empty-desc {
+    color: #94A3B8 !important;
+}
+

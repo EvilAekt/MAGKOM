@@ -14,7 +14,6 @@ use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
-use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
@@ -27,6 +26,7 @@ use Carbon\Carbon;
 use Database\Seeders\JenisDokumenSeeder;
 use Database\Seeders\RubrikSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class AdminSuperAdminPhaseFourTest extends TestCase
@@ -34,17 +34,24 @@ class AdminSuperAdminPhaseFourTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
+
     protected Bidang $bidang;
 
     protected function createTestUser(string $nama, string $email, RoleEnum $role, bool $statusAktif = true): User
     {
-        $u = new User();
+        $u = new User;
         $u->nama = $nama;
         $u->email = $email;
         $u->password = 'Password123!';
@@ -200,7 +207,7 @@ class AdminSuperAdminPhaseFourTest extends TestCase
     }
 
     /**
-     * Modul 3: Urutan FIFO antrean verifikasi (diajukan_at asc) & PlacementService@terima (AC-04-1, BR-05).
+     * Modul 3: Urutan pendaftaran admin default terbaru (created_at desc) dan terlama (created_at asc).
      */
     public function test_antrean_verifikasi_admin_mengurutkan_fifo_berdasarkan_diajukan_at(): void
     {
@@ -228,21 +235,21 @@ class AdminSuperAdminPhaseFourTest extends TestCase
         $p2->created_at = Carbon::parse('2026-10-05 10:00:00');
         $p2->saveQuietly();
 
+        // 1. Default urutan adalah 'terbaru' (Pendaftar kedua muncul di urutan pertama)
         $response = $this->actingAs($this->admin)
             ->get(route('admin.pendaftaran.index'));
 
         $response->assertOk();
         $list = $response->viewData('pendaftaranList');
+        $this->assertEquals($p2->id, $list->items()[0]->id);
+        $this->assertEquals($p1->id, $list->items()[1]->id);
 
-        // Pendaftar pertama harus muncul di urutan pertama (FIFO)
-        $this->assertEquals($p1->id, $list->items()[0]->id);
-        $this->assertEquals($p2->id, $list->items()[1]->id);
-
-        // Jika user memilih urutan terbaru, Pendaftar kedua muncul di urutan pertama
-        $responseTerbaru = $this->actingAs($this->admin)
-            ->get(route('admin.pendaftaran.index', ['sort' => 'terbaru']));
-        $listTerbaru = $responseTerbaru->viewData('pendaftaranList');
-        $this->assertEquals($p2->id, $listTerbaru->items()[0]->id);
+        // 2. Jika user memilih urutan 'terlama', Pendaftar pertama muncul di urutan pertama
+        $responseTerlama = $this->actingAs($this->admin)
+            ->get(route('admin.pendaftaran.index', ['sort' => 'terlama']));
+        $listTerlama = $responseTerlama->viewData('pendaftaranList');
+        $this->assertEquals($p1->id, $listTerlama->items()[0]->id);
+        $this->assertEquals($p2->id, $listTerlama->items()[1]->id);
     }
 
     public function test_placement_service_terima_mencatat_status_lama_secara_akurat_pada_audit_trail(): void
@@ -315,7 +322,7 @@ class AdminSuperAdminPhaseFourTest extends TestCase
     {
         // Buat rekaman audit log
         AuditLog::create([
-            'request_id' => (string) \Illuminate\Support\Str::uuid(),
+            'request_id' => (string) Str::uuid(),
             'tipe' => TipeAuditEnum::Aksi,
             'aksi' => 'test.aksi',
             'entitas' => 'kuota',

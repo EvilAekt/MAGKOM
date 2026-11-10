@@ -1,0 +1,2052 @@
+/* ========================================================
+   MAGKOM GENTELELLA DESIGN SYSTEM: CLASSROOM TUGAS INDEX
+   Portal Pembimbing: Manajemen Penugasan & Progres Mentee
+   ======================================================== */
+
+.classroom-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+
+/* 1. Classroom Hero Banner Khas Sleman MagKom */
+.classroom-banner {
+    background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                linear-gradient(135deg, #01347C 0%, #003566 100%);
+    border-radius: 16px;
+    padding: 28px 32px;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.banner-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+}
+
+.banner-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+}
+
+.banner-subtitle {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.92);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    line-height: 1.5;
+}
+
+.btn-create-task {
+    background: #ffffff;
+    color: #01347C;
+    text-decoration: none;
+    padding: 0.65rem 1.35rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+}
+
+.btn-create-task:hover {
+    background: #f8fafc;
+    color: #002244;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+}
+
+/* 2. Tile Stats Grid MagKom Gentelella */
+.tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.tiles-grid .tile_stats_count {
+    width: 100% !important;
+    padding: 0 !important;
+    float: none !important;
+    margin: 0 !important;
+}
+
+.tiles-grid .tile_stats_inner.stat {
+    border-radius: 12px !important;
+    padding: 1.15rem 1.25rem !important;
+    background: #ffffff !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05) !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease !important;
+}
+
+.tiles-grid .tile_stats_inner.stat:hover {
+    transform: translateY(-2.5px) !important;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+    border-color: #CBD5E1 !important;
+}
+
+.tiles-grid .stat-spark {
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 3.5px !important;
+    height: 36px !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+    padding-left: 8px !important;
+}
+
+.tiles-grid .stat-spark i {
+    width: 4px !important;
+    border-radius: 2px !important;
+    transition: height 0.3s ease !important;
+}
+
+.tiles-grid .stat-yellow .stat-change.down {
+    color: #d97706 !important;
+    background: rgba(245, 158, 11, 0.12) !important;
+}
+
+/* 3. Segmented Pill Tab Filter Navigasi & View Switcher */
+.classroom-tabs-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 4px;
+}
+
+.classroom-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    padding: 4px;
+    border-radius: 9999px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.classroom-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.tab-pill {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 9999px;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    font-family: inherit;
+    line-height: 1.4;
+}
+
+.tab-pill:hover {
+    color: #01347C;
+    background: #E2E8F0;
+    border-color: transparent;
+}
+
+.tab-pill.active {
+    color: #FFFFFF;
+    background: #01347C;
+    border-color: #01347C;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(1, 52, 124, 0.28);
+}
+
+.tab-pill-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 9999px;
+    font-size: 0.725rem;
+    font-weight: 700;
+    background: #E2E8F0;
+    color: #334155;
+    transition: all 0.2s ease;
+}
+
+.tab-pill:hover .tab-pill-badge {
+    background: #CBD5E1;
+    color: #0F172A;
+}
+
+.tab-pill.active .tab-pill-badge {
+    background: rgba(255, 255, 255, 0.24);
+    color: #FFFFFF;
+}
+
+.tab-pill-badge.badge-warning {
+    background: #FEF3C7;
+    color: #B45309;
+}
+
+.tab-pill.active .tab-pill-badge.badge-warning {
+    background: #FFCB05;
+    color: #01347C;
+}
+
+.tab-pill-badge.badge-warning {
+    background: #FEF3C7;
+    color: #B45309;
+}
+
+.tab-pill.active .tab-pill-badge.badge-warning {
+    background: #F59E0B;
+    color: #ffffff;
+}
+
+/* View Switcher */
+.view-switcher-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #F1F5F9;
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid #CBD5E1;
+}
+
+.btn-toggle-view {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 7px;
+    color: #64748B;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.btn-toggle-view:hover {
+    color: #01347C;
+}
+
+.btn-toggle-view.active {
+    background: #ffffff;
+    color: #01347C;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* 2.5 Filter Bar Card (Mirrors Logbook Filter Bar 1:1) */
+.tugas-filter-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #CBD5E1;
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+    padding: 1.15rem 1.35rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    margin-bottom: 24px;
+}
+
+.tugas-filter-form {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.tugas-filter-form .filter-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.tugas-filter-form .filter-group label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #475569;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.tugas-filter-form .filter-control {
+    width: 100%;
+    height: 42px;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 0.875rem;
+    background: #F8FAFC;
+    color: #0F172A;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.tugas-filter-form .filter-control:focus {
+    border-color: #0641CC;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
+}
+
+.tugas-filter-form .peserta-search-input-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.tugas-filter-form .peserta-search-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px 0 36px;
+    border-radius: 8px;
+    border: 1px solid #CBD5E1;
+    font-size: 0.875rem;
+    background: #F8FAFC;
+    color: #0F172A;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.tugas-filter-form .peserta-search-input:focus {
+    border-color: #0641CC;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
+}
+
+.tugas-filter-form .peserta-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 13px;
+    color: #94A3B8;
+    pointer-events: none;
+}
+
+.tugas-filter-form .filter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.tugas-filter-form .btn-filter-apply {
+    height: 42px;
+    padding: 0 1.25rem;
+    background: #0641CC !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);
+    text-decoration: none;
+}
+
+.tugas-filter-form .btn-filter-apply:hover {
+    background: #003566 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(6, 65, 204, 0.3);
+}
+
+.tugas-filter-form .btn-filter-reset {
+    height: 42px;
+    padding: 0 14px;
+    background: #E2E8F0;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.15s ease;
+}
+
+.tugas-filter-form .btn-filter-reset:hover {
+    background: #CBD5E1;
+    color: #1E293B;
+}
+
+/* 4. Filter Toolbar */
+.task-filter-toolbar {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #CBD5E1;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    margin-bottom: 20px;
+}
+
+.toolbar-select,
+.toolbar-input {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    border: 1.5px solid #CBD5E1;
+    padding: 0 0.85rem;
+    font-size: 0.875rem;
+    color: #0F172A;
+    background: #ffffff;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.toolbar-select:focus,
+.toolbar-input:focus {
+    border-color: #01347C;
+    box-shadow: 0 0 0 3px rgba(1, 52, 124, 0.12);
+}
+
+.toolbar-btn-search {
+    height: 40px;
+    padding: 0 1.25rem;
+    background: #01347C;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 1px 2px rgba(1, 52, 124, 0.15);
+    transition: all 0.15s ease;
+}
+
+.toolbar-btn-search:hover {
+    background: #002659;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(1, 52, 124, 0.25);
+}
+
+.toolbar-btn-reset {
+    height: 40px;
+    padding: 0 1rem;
+    background: #F1F5F9;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #CBD5E1;
+    transition: background 0.15s ease;
+}
+
+.toolbar-btn-reset:hover {
+    background: #E2E8F0;
+    color: #0F172A;
+}
+
+/* 5. Assignment Stream Cards (Tugas Kartu Bersih & Proporsional) */
+.assignment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.assignment-card {
+    background: #ffffff;
+    border: 1px solid #CBD5E1;
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    color: inherit;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    position: relative;
+}
+
+.assignment-card:hover {
+    border-color: #01347C;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(1, 52, 124, 0.12);
+}
+
+.assignment-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.assignment-icon-wrapper.selesai {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+.assignment-icon-wrapper.proses,
+.assignment-icon-wrapper.perlu-review {
+    background: #FEF3C7;
+    color: #B45309;
+}
+
+.assignment-icon-wrapper.overdue,
+.assignment-icon-wrapper.terlambat {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.assignment-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.assignment-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.assignment-title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.assignment-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.assignment-title a:hover,
+.assignment-card:hover .assignment-title a {
+    color: #01347C;
+}
+
+.assignment-due {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.assignment-due.terlambat {
+    color: #DC2626;
+    font-weight: 700;
+}
+
+.assignment-due.mendekati {
+    color: #D97706;
+    font-weight: 700;
+}
+
+/* Mentee Subtitle Chip */
+.mentee-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    color: #475569;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.mentee-avatar-mini {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #BFDBFE;
+}
+
+.mentee-name {
+    font-weight: 600;
+    color: #1E293B;
+}
+
+.mentee-inst {
+    color: #64748B;
+}
+
+.assignment-desc {
+    font-size: 0.875rem;
+    color: #475569;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Assignment Card Footer */
+.assignment-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #E2E8F0;
+}
+
+.assignment-meta-tags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    color: #64748B;
+}
+
+.assignment-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #F1F5F9;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.assignment-tag.tag-progres {
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #DBEAFE;
+}
+
+.assignment-tag.tag-pending-review {
+    background: #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+}
+
+.assignment-tag-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+}
+.assignment-tag-link:hover {
+    opacity: 0.85;
+}
+
+.tag-link-external {
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+}
+
+/* Tombol Aksi Khas Sleman MagKom */
+.btn-tugas-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #01347C;
+    background: #ffffff;
+    border: 1.5px solid #01347C;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(1, 52, 124, 0.06);
+}
+
+.assignment-card:hover .btn-tugas-action,
+.btn-tugas-action:hover {
+    background: #01347C;
+    color: #ffffff;
+    transform: translateX(2px);
+    box-shadow: 0 3px 8px rgba(1, 52, 124, 0.22);
+}
+
+.btn-tugas-action.btn-action-highlight {
+    background: #01347C;
+    color: #ffffff;
+    border-color: #01347C;
+}
+
+.btn-tugas-action.btn-action-highlight:hover {
+    background: #002659;
+    border-color: #002659;
+}
+
+.btn-tugas-action svg {
+    transition: transform 0.2s ease;
+}
+
+.assignment-card:hover .btn-tugas-action svg,
+.btn-tugas-action:hover svg {
+    transform: translateX(2px);
+}
+
+/* 6. Empty State */
+.empty-state-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px dashed #CBD5E1;
+    padding: 56px 24px;
+    text-align: center;
+}
+
+.empty-state-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+}
+
+.empty-state-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 6px;
+}
+
+.empty-state-desc {
+    font-size: 0.875rem;
+    color: #64748B;
+    max-width: 460px;
+    margin: 0 auto 1.25rem auto;
+    line-height: 1.5;
+}
+
+/* 7. Table Mode Container */
+.classroom-tasks-table-wrapper,
+.classroom-table-container,
+.table-view-container {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #CBD5E1;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    overflow: hidden;
+    width: 100%;
+}
+
+[data-theme="dark"] .classroom-tasks-table-wrapper,
+[data-theme="dark"] .classroom-table-container {
+    background: #182234 !important;
+    border-color: #26354D !important;
+}
+
+.table-responsive-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.task-table thead tr {
+    border-bottom: 1px solid #CBD5E1;
+    background: #F8FAFC;
+    color: #64748B;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.task-table th {
+    padding: 0.875rem 1.25rem;
+    font-weight: 700;
+}
+
+.task-table tbody tr {
+    border-bottom: 1px solid #F1F5F9;
+    transition: background 0.15s ease;
+}
+
+.task-table tbody tr:hover {
+    background: #F8FAFC;
+}
+
+.task-table td {
+    padding: 0.875rem 1.25rem;
+    vertical-align: middle;
+}
+
+.task-table .col-judul {
+    min-width: 280px;
+    text-align: left;
+}
+
+.task-table .col-peserta {
+    min-width: 200px;
+    text-align: left;
+}
+
+.task-table .col-due {
+    width: 175px;
+    text-align: left;
+}
+
+.task-table .col-status {
+    width: 130px;
+    text-align: center;
+}
+
+.task-table .col-aksi {
+    width: 100px;
+    text-align: right;
+}
+
+/* Sembunyikan kolom peserta magang saat mode fokus aktif pada tabel */
+.classroom-table-container.is-focused .col-peserta,
+.task-table.table-focused-mentee .col-peserta {
+    display: none !important;
+}
+
+.btn-mentee-filter-link {
+    background: transparent;
+    border: none;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-family: inherit;
+    transition: opacity 0.15s ease;
+}
+
+.btn-mentee-filter-link:hover .table-mentee-name {
+    color: #01347C;
+    text-decoration: underline;
+}
+
+.table-mentee-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.table-mentee-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0F172A;
+}
+
+.table-mentee-inst {
+    font-size: 0.75rem;
+    color: #64748B;
+}
+
+.table-empty-td {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    color: #64748B;
+    font-size: 0.875rem;
+}
+
+.task-table td .task-status-pill {
+    margin: 0 auto;
+}
+
+.task-table td .btn-tugas-action {
+    margin-left: auto;
+}
+
+/* ========================================================
+   TABEL RINGKASAN PESERTA MAGANG (TABLE MODE: MENTEE LIST)
+   ======================================================== */
+
+.mentee-summary-table {
+    width: 100%;
+}
+
+.mentee-summary-table th {
+    padding: 0.875rem 1.25rem;
+    font-weight: 700;
+}
+
+.mentee-summary-table .col-mentee-no {
+    width: 48px;
+    min-width: 48px;
+    text-align: center;
+    color: #64748B;
+}
+
+.mentee-summary-table .col-mentee-peserta {
+    min-width: 240px;
+    text-align: left;
+}
+
+.mentee-summary-table .col-mentee-inst {
+    min-width: 200px;
+    text-align: left;
+}
+
+.mentee-summary-table .col-mentee-total {
+    width: 120px;
+    text-align: center;
+}
+
+.mentee-summary-table .col-mentee-status {
+    min-width: 220px;
+    text-align: left;
+}
+
+.mentee-summary-table .col-mentee-aksi {
+    width: 130px;
+    text-align: right;
+}
+
+.mentee-table-row {
+    transition: background 0.15s ease;
+}
+
+.mentee-table-row:hover {
+    background: #F8FAFC;
+}
+
+.mentee-table-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mentee-avatar-mini {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    border: 1.5px solid #BFDBFE;
+    color: #01347C;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.mentee-table-names {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.mentee-table-primary-name {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.3;
+}
+
+.mentee-table-sub-inst {
+    font-size: 0.775rem;
+    color: #64748B;
+}
+
+.mentee-table-inst-text {
+    font-size: 0.85rem;
+    color: #475569;
+    font-weight: 500;
+}
+
+.mentee-progress-chips {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.mentee-summary-table td .btn-tugas-action {
+    margin-left: auto;
+}
+
+/* 8. Dark Mode Support */
+[data-theme="dark"] .tugas-filter-card {
+    background: #003566 !important;
+    border-color: #3F51B5 !important;
+    border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
+}
+
+[data-theme="dark"] .tugas-filter-form .btn-filter-apply {
+    background: #2563EB !important;
+}
+
+[data-theme="dark"] .tugas-filter-form .btn-filter-apply:hover {
+    background: #1D4ED8 !important;
+}
+
+[data-theme="dark"] .assignment-card,
+[data-theme="dark"] .task-filter-toolbar,
+[data-theme="dark"] .table-view-container,
+[data-theme="dark"] .empty-state-card {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .tugas-filter-form .filter-group label {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .tugas-filter-form .filter-control {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .tugas-filter-form .btn-filter-reset {
+    background: #26354D !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .tugas-filter-form .btn-filter-reset:hover {
+    background: #334155 !important;
+}
+
+[data-theme="dark"] .assignment-card:hover {
+    border-color: #38BDF8 !important;
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.15) !important;
+}
+
+[data-theme="dark"] .assignment-title,
+[data-theme="dark"] .assignment-title a,
+[data-theme="dark"] .empty-state-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .assignment-desc,
+[data-theme="dark"] .empty-state-desc {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .mentee-chip {
+    color: #94A3B8 !important;
+}
+[data-theme="dark"] .mentee-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .mentee-avatar-mini {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .tab-pill {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .tab-pill:hover {
+    background: #1E293B !important;
+    color: #38BDF8 !important;
+    border-color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .tab-pill.active {
+    background: #0284C7 !important;
+    border-color: #0284C7 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .tab-pill-badge {
+    background: #0F172A !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .view-switcher-group {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .btn-toggle-view.active {
+    background: #182234 !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .toolbar-select,
+[data-theme="dark"] .toolbar-input {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .assignment-tag {
+    background: #0F172A !important;
+    color: #CBD5E1 !important;
+    border: 1px solid #26354D;
+}
+
+[data-theme="dark"] .assignment-footer {
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .btn-tugas-action {
+    background: transparent !important;
+    border-color: #38BDF8 !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .assignment-card:hover .btn-tugas-action,
+[data-theme="dark"] .btn-tugas-action:hover {
+    background: #0284C7 !important;
+    border-color: #0284C7 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .task-table thead tr {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .task-table tbody tr {
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .task-table tbody tr:hover {
+    background: #1E293B !important;
+}
+
+/* ========================================================
+   PARADIGMA MENTEE-FIRST: KARTU PESERTA & STREAM CLASSROOM
+   ======================================================== */
+
+.mentee-stream-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}
+
+.mentee-classroom-card {
+    background: #ffffff;
+    border: 1px solid #CBD5E1;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.mentee-classroom-card:hover {
+    border-color: #01347C;
+    box-shadow: 0 4px 14px rgba(1, 52, 124, 0.08);
+}
+
+.mentee-card-header {
+    width: 100%;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: background 0.15s ease;
+}
+
+.mentee-card-header:hover {
+    background: #F8FAFC;
+}
+
+.mentee-panel-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.mentee-panel-title-wrap .mentee-avatar-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #BFDBFE;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.mentee-panel-title-wrap .mentee-primary-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 2px 0;
+    line-height: 1.3;
+}
+
+.mentee-panel-title-wrap .mentee-sub-inst {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: #64748B;
+    margin: 0;
+}
+
+.mentee-card-link {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.mentee-card-link:hover {
+    text-decoration: none !important;
+    background: #F8FAFC;
+}
+
+.mentee-card-header-focused {
+    cursor: default;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.mentee-chevron-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    color: #475569;
+    background: transparent;
+    border: none;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+.mentee-chevron-back-btn:hover {
+    background: #F1F5F9;
+    color: #01347C;
+    transform: translateX(-2px);
+    text-decoration: none;
+}
+
+.mentee-classroom-card.is-expanded .mentee-card-header {
+    background: #F8FAFC;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.mentee-info-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.mentee-avatar-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #BFDBFE;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.mentee-text-meta {
+    min-width: 0;
+}
+
+.mentee-primary-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 2px 0;
+    line-height: 1.3;
+}
+
+.mentee-sub-inst {
+    font-size: 0.8125rem;
+    color: #64748B;
+    margin: 0;
+}
+
+.mentee-meta-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.mentee-stats-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.mentee-count-chip {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    background: #F1F5F9;
+    color: #334155;
+    white-space: nowrap;
+}
+
+.mentee-count-chip.selesai {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+.mentee-count-chip.review {
+    background: #FEF3C7;
+    color: #B45309;
+}
+
+.mentee-chevron-icon {
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mentee-classroom-card.is-expanded .mentee-chevron-icon {
+    transform: rotate(180deg);
+    color: #01347C;
+}
+
+/* ========================================================
+   FOCUSED MENTEE VIEW: MASTER-DETAIL SCOPE
+   ======================================================== */
+
+.default-panel-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0;
+}
+
+/* Panel Title Extension: Pastikan Header Terpadu Membentang Penuh ke Ujung Kanan */
+#tugasMainPanel .x_title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#tugasMainPanel .x_title h2 {
+    flex: 1 1 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Container Flex Header Panel Title */
+.panel-header-title-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.panel-header-title-flex .default-panel-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--neutral-900, #0F172A);
+    white-space: nowrap;
+}
+
+/* Header Terpadu (Identitas Mentee di Kiri, Tombol Kembali di Ujung Kanan Sesuai Foto) */
+.mentee-unified-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    width: auto;
+    gap: 16px;
+    vertical-align: middle;
+    animation: slideInDownFade 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.btn-back-mentee-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 22px;
+    border-radius: 9999px;
+    background: #01347C;
+    border: none;
+    color: #FFFFFF !important;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(1, 52, 124, 0.28);
+    margin-left: auto;
+}
+
+.btn-back-mentee-modern:hover {
+    background: #002244;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(1, 52, 124, 0.38);
+}
+
+.btn-back-mentee-modern svg {
+    stroke: #FFFFFF;
+    transition: transform 0.2s ease;
+}
+
+.btn-back-mentee-modern:hover svg {
+    transform: translateX(-3px);
+}
+
+.header-mentee-col {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-mentee-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    border: 1.5px solid #BFDBFE;
+    color: #01347C;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.header-mentee-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.header-mentee-name {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.25;
+}
+
+.header-mentee-inst {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #64748B;
+    line-height: 1.2;
+}
+
+/* Mode Tampilan Kartu Mentee */
+.mentee-classroom-card.is-expanded .mentee-chevron-icon {
+    transform: rotate(180deg);
+}
+
+/* ========================================================
+   ANIMASI FLUIDA & STAGGERED CASCADE
+   ======================================================== */
+@keyframes slideInDownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInCascade {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUpBounce {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.classroom-task-row {
+    animation: fadeInCascade 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.classroom-task-row:nth-child(1) { animation-delay: 0.02s; }
+.classroom-task-row:nth-child(2) { animation-delay: 0.06s; }
+.classroom-task-row:nth-child(3) { animation-delay: 0.10s; }
+.classroom-task-row:nth-child(4) { animation-delay: 0.14s; }
+.classroom-task-row:nth-child(5) { animation-delay: 0.18s; }
+.classroom-task-row:nth-child(6) { animation-delay: 0.22s; }
+.classroom-task-row:nth-child(7) { animation-delay: 0.26s; }
+.classroom-task-row:nth-child(8) { animation-delay: 0.30s; }
+
+.mentee-classroom-card {
+    animation: fadeInUpBounce 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.mentee-classroom-card:nth-child(1) { animation-delay: 0.02s; }
+.mentee-classroom-card:nth-child(2) { animation-delay: 0.05s; }
+.mentee-classroom-card:nth-child(3) { animation-delay: 0.08s; }
+.mentee-classroom-card:nth-child(4) { animation-delay: 0.11s; }
+.mentee-classroom-card:nth-child(5) { animation-delay: 0.14s; }
+
+.d-none {
+    display: none !important;
+}
+
+/* Drawer Tugas di dalam Mentee (Format Ramping Ala Google Classroom Gambar 3) */
+.mentee-tasks-drawer {
+    padding: 10px 18px 16px 18px;
+    background: #ffffff;
+}
+
+.classroom-tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.classroom-task-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.classroom-task-row:hover {
+    background: #F8FAFC;
+    border-color: #01347C;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(1, 52, 124, 0.08);
+}
+
+.classroom-task-row:focus-visible {
+    outline: none;
+    border-color: #01347C;
+    box-shadow: 0 0 0 3px rgba(1, 52, 124, 0.2);
+}
+
+.classroom-task-row:active {
+    transform: translateY(0);
+}
+
+.task-row-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.task-row-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.task-row-icon.icon-default {
+    background: #F1F5F9;
+    color: #475569;
+}
+
+.task-row-icon.icon-selesai {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+.task-row-icon.icon-pending {
+    background: #FEF3C7;
+    color: #B45309;
+}
+
+.task-row-title-wrap {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.task-row-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #0F172A;
+    text-decoration: none;
+    line-height: 1.35;
+}
+
+.task-row-title:hover {
+    color: #01347C;
+    text-decoration: underline;
+}
+
+.task-row-category {
+    font-size: 0.725rem;
+    font-weight: 600;
+    color: #64748B;
+    background: #F1F5F9;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.task-row-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+.task-row-due {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #475569;
+    white-space: nowrap;
+    width: 155px;
+    min-width: 155px;
+    text-align: left;
+    font-variant-numeric: tabular-nums;
+    display: inline-flex;
+    align-items: center;
+}
+
+.task-row-due.overdue {
+    color: #DC2626;
+    font-weight: 600;
+}
+
+.task-status-pill {
+    width: 104px;
+    min-width: 104px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.task-status-pill .badge {
+    width: 100% !important;
+    min-width: 104px !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 5px 12px !important;
+    border-radius: 9999px !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em !important;
+    line-height: 1.2 !important;
+}
+
+.btn-tugas-action {
+    width: 88px;
+    min-width: 88px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #01347C;
+    border: 1.5px solid #01347C;
+    background: transparent;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.btn-tugas-action:hover {
+    background: #01347C;
+    color: #FFFFFF;
+}
+
+.empty-mentee-tasks {
+    padding: 20px;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #64748B;
+}
+
+.btn-create-task-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 6px 14px;
+    background: #01347C;
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.15s ease;
+}
+
+.btn-create-task-inline:hover {
+    background: #002244;
+}
+
+/* Dark Mode Overrides for Mentee Stream */
+[data-theme="dark"] .mentee-classroom-card,
+[data-theme="dark"] .mentee-tasks-drawer {
+    background: #182234 !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .mentee-card-header:hover,
+[data-theme="dark"] .mentee-classroom-card.is-expanded .mentee-card-header {
+    background: #1E293B !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .mentee-primary-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .mentee-sub-inst {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .mentee-avatar-circle {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .mentee-count-chip {
+    background: #0F172A !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .classroom-task-row {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .classroom-task-row:hover {
+    background: #1E293B !important;
+    border-color: #38BDF8 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .classroom-task-row:focus-visible {
+    border-color: #38BDF8 !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3) !important;
+}
+
+[data-theme="dark"] .task-row-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .task-row-category {
+    background: #1E293B !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .task-row-due {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .classroom-tabs {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .tab-pill {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .tab-pill:hover {
+    background: #1E293B !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .tab-pill.active {
+    background: #01347C !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .tab-pill-badge {
+    background: #1E293B !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .default-panel-title,
+[data-theme="dark"] .header-mentee-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .header-mentee-inst {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .header-v-divider {
+    background: #26354D !important;
+}
+
+[data-theme="dark"] .header-mentee-avatar {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .btn-back-mentee-modern {
+    background: #1D4ED8 !important;
+    border: none !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-back-mentee-modern:hover {
+    background: #2563EB !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-tugas-action {
+    color: #93C5FD !important;
+    border-color: #3F51B5 !important;
+}
+
+[data-theme="dark"] .btn-tugas-action:hover {
+    background: #3F51B5 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .mentee-summary-table thead tr {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .mentee-table-row {
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .mentee-table-row:hover {
+    background: #1E293B !important;
+}
+
+[data-theme="dark"] .mentee-table-primary-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .mentee-table-inst-text,
+[data-theme="dark"] .mentee-summary-table .col-mentee-no {
+    color: #94A3B8 !important;
+}
+
+/* 9. Responsive Adjustments */
+@media (max-width: 768px) {
+    .classroom-banner {
+        padding: 22px 20px;
+    }
+    .banner-top-row {
+        flex-direction: column;
+    }
+    .assignment-card {
+        padding: 16px;
+        gap: 14px;
+    }
+    .assignment-header-row {
+        flex-direction: column;
+        gap: 6px;
+    }
+    .mentee-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .mentee-meta-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .classroom-task-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .task-row-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+
+/* ==============================================================================
+   Scroll-Craft Motion System (GPU-Accelerated Viewport Scroll Reveals)
+   ============================================================================== */
+[data-scroll-reveal] {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition-property: transform, opacity;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-scroll-reveal].is-revealed {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.sc-reveal-up {
+  transform: translateY(20px);
+  transition-duration: 0.50s;
+}
+
+.sc-reveal-hero {
+  transform: translateY(-16px);
+  transition-duration: 0.60s;
+}
+
+.sc-reveal-scale {
+  transform: scale(0.97) translateY(12px);
+  transition-duration: 0.55s;
+}
+
+.sc-reveal-side {
+  transform: translateX(20px);
+  transition-duration: 0.55s;
+}
+
+.sc-delay-1 { transition-delay: 0.06s; }
+.sc-delay-2 { transition-delay: 0.12s; }
+.sc-delay-3 { transition-delay: 0.18s; }
+.sc-delay-4 { transition-delay: 0.24s; }
+.sc-delay-5 { transition-delay: 0.30s; }
+
+/* Scroll-Craft Lifecycle Lock & Instant Reveal Utilities */
+[data-scroll-reveal].is-revealed.sc-settled {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
+
+[data-scroll-reveal].sc-instant-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

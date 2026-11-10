@@ -1,0 +1,1527 @@
+/* ========================================================
+   MAGKOM GENTELELLA DESIGN SYSTEM: LOGBOOK REVIEW INDEX
+   Portal Pembimbing: Review Logbook Harian Peserta
+   ======================================================== */
+
+.classroom-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+
+/* 1. Classroom Hero Banner Khas Sleman MagKom */
+.classroom-banner {
+    background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                linear-gradient(135deg, #01347C 0%, #003566 100%);
+    border-radius: 16px;
+    padding: 28px 32px;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.banner-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+}
+
+.banner-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+}
+
+.banner-subtitle {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.92);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    line-height: 1.5;
+}
+
+.btn-create-task {
+    background: #ffffff;
+    color: #01347C;
+    text-decoration: none;
+    padding: 0.65rem 1.35rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+}
+
+.btn-create-task:hover {
+    background: #f8fafc;
+    color: #002244;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+}
+
+/* 2. Tile Stats Grid MagKom Gentelella */
+.tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.tiles-grid .tile_stats_count {
+    width: 100% !important;
+    padding: 0 !important;
+    float: none !important;
+    margin: 0 !important;
+}
+
+.tiles-grid .tile_stats_inner.stat {
+    border-radius: 12px !important;
+    padding: 1.15rem 1.25rem !important;
+    background: #ffffff !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05) !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease !important;
+}
+
+.tiles-grid .tile_stats_inner.stat:hover {
+    transform: translateY(-2.5px) !important;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+    border-color: #CBD5E1 !important;
+}
+
+.tiles-grid .stat-spark {
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 3.5px !important;
+    height: 36px !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+    padding-left: 8px !important;
+}
+
+.tiles-grid .stat-spark i {
+    width: 4px !important;
+    border-radius: 2px !important;
+    transition: height 0.3s ease !important;
+}
+
+.tiles-grid .stat-yellow .stat-change.down {
+    color: #d97706 !important;
+    background: rgba(245, 158, 11, 0.12) !important;
+}
+
+/* 3. Filter Bar Card */
+.logbook-filter-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #CBD5E1;
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+    padding: 1.15rem 1.35rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    margin-bottom: 24px;
+}
+
+.logbook-filter-form {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.filter-group-date {
+    width: 160px;
+}
+
+.filter-group label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #475569;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.filter-control {
+    width: 100%;
+    height: 42px;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 0.875rem;
+    background: #F8FAFC;
+    color: #0F172A;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.filter-control:focus {
+    border-color: #0641CC;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
+}
+
+.peserta-search-input-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.peserta-search-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px 0 36px;
+    border-radius: 8px;
+    border: 1px solid #CBD5E1;
+    font-size: 0.875rem;
+    background: #F8FAFC;
+    color: #0F172A;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.peserta-search-input:focus {
+    border-color: #0641CC;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(6, 65, 204, 0.12);
+}
+
+.peserta-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 13px;
+    color: #94A3B8;
+    pointer-events: none;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-filter-apply {
+    height: 42px;
+    padding: 0 1.25rem;
+    background: #0641CC !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 6px rgba(6, 65, 204, 0.2);
+    text-decoration: none;
+}
+
+.btn-filter-apply:hover {
+    background: #003566 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(6, 65, 204, 0.3);
+}
+
+.btn-filter-reset {
+    height: 42px;
+    padding: 0 14px;
+    background: #E2E8F0;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.15s ease;
+}
+
+.btn-filter-reset:hover {
+    background: #CBD5E1;
+    color: #1E293B;
+}
+
+/* Dark Mode Overrides for Filter Card */
+[data-theme="dark"] .logbook-filter-card {
+    background-color: #003566 !important;
+    border-color: #3F51B5 !important;
+    border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
+}
+
+[data-theme="dark"] .logbook-filter-card label {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .filter-control,
+[data-theme="dark"] .peserta-search-input {
+    background-color: #011C44 !important;
+    color: #F8FAFC !important;
+    border-color: rgba(63, 81, 181, 0.45) !important;
+}
+
+[data-theme="dark"] .btn-filter-apply {
+    background: #2563EB !important;
+}
+
+[data-theme="dark"] .btn-filter-apply:hover {
+    background: #1D4ED8 !important;
+}
+
+[data-theme="dark"] .btn-filter-reset {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #94A3B8 !important;
+}
+
+/* 4. Table Modern Khas Classroom */
+.table-logbook-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+
+.table-logbook {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.table-logbook thead th {
+    padding: 12px 16px;
+    background: #F8FAFC;
+    color: #64748B;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.table-logbook tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #F1F5F9;
+    vertical-align: top;
+}
+
+.table-logbook tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-logbook tbody tr:hover td {
+    background-color: #F8FAFC;
+}
+
+.checkbox-col {
+    width: 40px;
+    text-align: center;
+    padding-top: 18px !important;
+}
+
+.logbook-checkbox {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: #01347C;
+}
+
+.date-badge {
+    font-weight: 700;
+    color: #0F172A;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.avatar-initials-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    border: 1px solid #BFDBFE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    flex-shrink: 0;
+}
+
+.mentee-identity-flex {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.activity-desc-box {
+    line-height: 1.5;
+    color: #334155;
+}
+
+.supervisor-notes-box {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #FFFBEB;
+    border-left: 3px solid #F59E0B;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    color: #92400E;
+    line-height: 1.45;
+}
+
+.btn-logbook-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid #01347C;
+    background: #01347C;
+    color: #ffffff;
+    transition: all 0.18s ease;
+}
+
+.btn-logbook-action:hover {
+    background: #002244;
+    border-color: #002244;
+}
+
+.table-empty-td {
+    padding: 3rem 1.5rem !important;
+    text-align: center;
+    color: #64748B;
+}
+
+/* 5. Floating Bulk Action Bar */
+.bulk-floating-bar {
+    display: none;
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0F172A;
+    color: #ffffff;
+    padding: 0.75rem 1.75rem;
+    border-radius: 9999px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    align-items: center;
+    gap: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.bulk-count-badge {
+    background: #01347C;
+    color: #ffffff;
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 800;
+}
+
+.btn-bulk-approve {
+    height: 36px;
+    padding: 0 1.25rem;
+    background: #01347C;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background 0.15s ease;
+}
+
+.btn-bulk-approve:hover {
+    background: #002244;
+}
+
+.btn-bulk-cancel {
+    background: transparent;
+    border: none;
+    color: #94A3B8;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* 6. Modal Overlay & Dialog */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1.5rem;
+}
+
+.modal-dialog-box {
+    background: #ffffff;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 100%;
+    padding: 1.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #E2E8F0;
+}
+
+.modal-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.modal-title {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+}
+
+.modal-subtitle {
+    font-size: 0.8125rem;
+    color: #64748B;
+    margin: 0.25rem 0 0 0;
+}
+
+.modal-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #94A3B8;
+    line-height: 1;
+}
+
+.modal-close-btn:hover {
+    color: #0F172A;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.modal-footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid #E2E8F0;
+    padding-top: 1rem;
+}
+
+.btn-modal-cancel {
+    height: 40px;
+    padding: 0 1.25rem;
+    background: #F1F5F9;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-modal-submit {
+    height: 40px;
+    padding: 0 1.5rem;
+    background: #01347C;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-modal-submit:hover {
+    background: #002244;
+}
+
+
+
+/* ========================================================
+   TASK 02 B: MENTEE CLASSROOM CARD STYLES (MATCH TUGAS PAGE)
+   ======================================================== */
+
+.view-switcher-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #F1F5F9;
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid #CBD5E1;
+}
+
+.btn-toggle-view {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 7px;
+    color: #64748B;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.btn-toggle-view:hover {
+    color: #01347C;
+}
+
+.btn-toggle-view.active {
+    background: #ffffff;
+    color: #01347C;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.mentee-stream-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.mentee-classroom-card {
+    background: #ffffff;
+    border: 1px solid #CBD5E1;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.mentee-classroom-card:hover {
+    border-color: #01347C;
+    box-shadow: 0 4px 14px rgba(1, 52, 124, 0.08);
+}
+
+.mentee-card-header {
+    width: 100%;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: background 0.15s ease;
+}
+
+.mentee-card-header:hover {
+    background: #F8FAFC;
+}
+
+.mentee-panel-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.mentee-panel-title-wrap .mentee-avatar-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #BFDBFE;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.mentee-panel-title-wrap .mentee-primary-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 2px 0;
+    line-height: 1.3;
+}
+
+.mentee-panel-title-wrap .mentee-sub-inst {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: #64748B;
+    margin: 0;
+}
+
+.mentee-card-link {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.mentee-card-link:hover {
+    text-decoration: none !important;
+    background: #F8FAFC;
+}
+
+.mentee-card-header-focused {
+    cursor: default;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.mentee-chevron-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    color: #475569;
+    background: transparent;
+    border: none;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+.mentee-chevron-back-btn:hover {
+    background: #F1F5F9;
+    color: #01347C;
+    transform: translateX(-2px);
+    text-decoration: none;
+}
+
+.mentee-classroom-card.is-expanded .mentee-card-header {
+    background: #F8FAFC;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.mentee-info-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.mentee-avatar-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #BFDBFE;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.mentee-text-meta {
+    min-width: 0;
+}
+
+.mentee-primary-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 2px 0;
+    line-height: 1.3;
+}
+
+.mentee-sub-inst {
+    font-size: 0.8125rem;
+    color: #64748B;
+    margin: 0;
+}
+
+.mentee-meta-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.mentee-stats-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.mentee-count-chip {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    background: #F1F5F9;
+    color: #334155;
+    white-space: nowrap;
+}
+
+.mentee-count-chip.selesai {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+.mentee-count-chip.review {
+    background: #FEF3C7;
+    color: #B45309;
+}
+
+.mentee-chevron-icon {
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mentee-classroom-card.is-expanded .mentee-chevron-icon {
+    transform: rotate(180deg);
+    color: #01347C;
+}
+
+.mentee-tasks-drawer {
+    padding: 10px 18px 16px 18px;
+    background: #ffffff;
+}
+
+.classroom-tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.classroom-task-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
+    transition: all 0.15s ease;
+}
+
+.classroom-task-row:hover {
+    background: #F8FAFC;
+    border-color: #01347C;
+}
+
+.task-row-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+}
+
+.task-row-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.task-row-icon.icon-default {
+    background: #F1F5F9;
+    color: #475569;
+}
+
+.task-row-icon.icon-selesai {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+.task-row-title-wrap {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.task-row-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.35;
+}
+
+.task-row-category {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #01347C;
+    background: #EFF6FF;
+    padding: 2px 8px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.task-row-due {
+    font-size: 0.8125rem;
+    color: #64748B;
+    line-height: 1.4;
+}
+
+.task-row-catatan-text {
+    font-size: 0.8125rem;
+    color: #475569;
+    background: #F8FAFC;
+    border-left: 3px solid #01347C;
+    padding: 6px 10px;
+    border-radius: 0 6px 6px 0;
+    margin-top: 4px;
+}
+
+.task-row-status-col {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.btn-open-catatan-modal {
+    padding: 6px 14px;
+    background: #01347C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 7px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-open-catatan-modal:hover {
+    background: #002244;
+    transform: translateY(-1px);
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .mentee-classroom-card,
+[data-theme="dark"] .mentee-tasks-drawer {
+    background: #182234 !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .mentee-card-header:hover,
+[data-theme="dark"] .mentee-classroom-card.is-expanded .mentee-card-header {
+    background: #1E293B !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .mentee-primary-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .mentee-sub-inst {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .mentee-avatar-circle {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .mentee-count-chip {
+    background: #0F172A !important;
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .classroom-task-row {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .classroom-task-row:hover {
+    background: #1E293B !important;
+    border-color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .task-row-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .task-row-catatan-text {
+    background: #1E293B !important;
+    color: #CBD5E1 !important;
+}
+
+
+/* ========================================================
+   FOCUSED MENTEE VIEW: MASTER-DETAIL SCOPE (LOGBOOK)
+   ======================================================== */
+
+.default-panel-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0;
+}
+
+#logbookMainPanel .x_title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#logbookMainPanel .x_title h2 {
+    flex: 1 1 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.d-none {
+    display: none !important;
+}
+
+/* Container Flex Header Panel Title */
+.panel-header-title-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.logbook-panel-header-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px;
+    vertical-align: middle;
+}
+
+.mentee-unified-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    width: auto;
+    gap: 16px;
+    vertical-align: middle;
+}
+
+.default-panel-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.3;
+}
+
+.header-mentee-col {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-mentee-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    border: 1.5px solid #BFDBFE;
+    color: #01347C;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.header-mentee-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.header-mentee-name {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.25;
+}
+
+.header-mentee-inst {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #64748B;
+    line-height: 1.2;
+}
+
+.btn-back-mentee-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 22px;
+    border-radius: 9999px;
+    background: #01347C;
+    border: none;
+    color: #FFFFFF !important;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(1, 52, 124, 0.28);
+    margin-left: auto;
+}
+
+.btn-back-mentee-modern.is-hidden {
+    display: none !important;
+}
+
+.btn-back-mentee-modern:hover {
+    background: #002244;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(1, 52, 124, 0.38);
+}
+
+.btn-back-mentee-modern svg {
+    stroke: #FFFFFF;
+    transition: transform 0.2s ease;
+}
+
+.btn-back-mentee-modern:hover svg {
+    transform: translateX(-3px);
+}
+
+/* Mode Tampilan Kartu Mentee */
+.mentee-classroom-card.is-expanded .mentee-chevron-icon {
+    transform: rotate(180deg);
+}
+
+/* Animasi */
+@keyframes slideInDownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInCascade {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUpBounce {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] .default-panel-title,
+[data-theme="dark"] .header-mentee-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .header-mentee-inst {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .header-mentee-avatar {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .btn-back-mentee-modern {
+    background: #1D4ED8 !important;
+    border: none !important;
+    color: #FFFFFF !important;
+}
+
+/* ========================================================
+   INLINE NOTE EDITOR ACCORDION FOR LOGBOOK ENTRIES
+   ======================================================== */
+
+.inline-note-editor {
+    margin-top: 12px;
+    padding: 14px 16px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    animation: inlineNoteSlideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes inlineNoteSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================================
+   MATERIAL FLOATING CARD FIELD FOR LOGBOOK NOTES
+   Mengadopsi Desain Google Classroom & Buat Tugas
+   ======================================================== */
+
+.logbook-note-field-filled {
+    position: relative;
+    background: #E8EDF5;
+    border-bottom: 1px solid #5F6368;
+    border-radius: 6px 6px 0 0;
+    padding: 22px 16px 8px 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logbook-note-field-filled:hover {
+    background: #DDE3ED;
+    border-bottom-color: #202124;
+}
+
+.logbook-note-field-filled:focus-within,
+.logbook-note-field-filled.is-focused {
+    background: #E8EDF5;
+    border-bottom-color: transparent;
+}
+
+/* Garis Animasi Biru di Tepi Bawah (Mekar dari Tengah) */
+.logbook-note-field-filled::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #01347C;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.logbook-note-field-filled:focus-within::after,
+.logbook-note-field-filled.is-focused::after {
+    transform: scaleX(1);
+}
+
+/* Floating Label Transition */
+.logbook-note-floating-label {
+    position: absolute;
+    left: 16px;
+    top: 18px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #5F6368;
+    line-height: 1;
+    pointer-events: none;
+    transform-origin: left top;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                font-weight 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.logbook-note-floating-label .required-star {
+    color: #EF4444;
+    font-weight: 700;
+}
+
+/* Floating State: Saat Fokus ATAU Saat Memiliki Nilai/Isi */
+.logbook-note-field-filled:focus-within .logbook-note-floating-label,
+.logbook-note-field-filled.is-focused .logbook-note-floating-label,
+.logbook-note-field-filled.has-value .logbook-note-floating-label {
+    transform: translateY(-10px) scale(0.78);
+}
+
+/* Label Color saat Aktif Fokus */
+.logbook-note-field-filled:focus-within .logbook-note-floating-label,
+.logbook-note-field-filled.is-focused .logbook-note-floating-label {
+    color: #01347C;
+    font-weight: 600;
+}
+
+/* Label Color saat Terisi tapi sedang tidak fokus */
+.logbook-note-field-filled.has-value:not(:focus-within):not(.is-focused) .logbook-note-floating-label {
+    color: #5F6368;
+    font-weight: 500;
+}
+
+/* Clean Textarea Tanpa Border Bawaan */
+.logbook-note-clean-textarea {
+    width: 100%;
+    min-height: 72px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: #1E293B;
+    line-height: 1.5;
+    resize: vertical;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.logbook-note-clean-textarea:focus {
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+
+.inline-note-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-note-cancel {
+    padding: 6px 14px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #64748B;
+    background: transparent;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-note-cancel:hover {
+    background: #F1F5F9;
+    color: #334155;
+}
+
+.btn-note-save {
+    padding: 6px 16px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    background: #01347C;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(1, 52, 124, 0.25);
+    transition: all 0.15s ease;
+}
+
+.btn-note-save:hover {
+    background: #002244;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(1, 52, 124, 0.35);
+}
+
+/* Supervisor Notes Box */
+.supervisor-notes-box {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #F8FAFC;
+    border-left: 3px solid #01347C;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    color: #334155;
+    line-height: 1.5;
+}
+
+.supervisor-notes-box .notes-label {
+    color: #01347C;
+    font-weight: 700;
+}
+
+/* Dark Theme Compatibility */
+[data-theme="dark"] .inline-note-editor {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .logbook-note-field-filled {
+    background: #1E293B;
+    border-bottom-color: #475569;
+}
+
+[data-theme="dark"] .logbook-note-field-filled:hover {
+    background: #27354A;
+}
+
+[data-theme="dark"] .logbook-note-field-filled:focus-within,
+[data-theme="dark"] .logbook-note-field-filled.is-focused {
+    background: #1E293B;
+}
+
+[data-theme="dark"] .logbook-note-field-filled::after {
+    background: #38BDF8;
+}
+
+[data-theme="dark"] .logbook-note-floating-label {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .logbook-note-field-filled:focus-within .logbook-note-floating-label,
+[data-theme="dark"] .logbook-note-field-filled.is-focused .logbook-note-floating-label {
+    color: #38BDF8;
+}
+
+[data-theme="dark"] .logbook-note-clean-textarea {
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .supervisor-notes-box {
+    background: #1E293B;
+    border-left-color: #38BDF8;
+    color: #E2E8F0;
+}
+
+[data-theme="dark"] .supervisor-notes-box .notes-label {
+    color: #38BDF8;
+}
+
+
+/* ==============================================================================
+   Scroll-Craft Motion System (GPU-Accelerated Viewport Scroll Reveals)
+   ============================================================================== */
+[data-scroll-reveal] {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition-property: transform, opacity;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-scroll-reveal].is-revealed {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.sc-reveal-up {
+  transform: translateY(20px);
+  transition-duration: 0.50s;
+}
+
+.sc-reveal-hero {
+  transform: translateY(-16px);
+  transition-duration: 0.60s;
+}
+
+.sc-reveal-scale {
+  transform: scale(0.97) translateY(12px);
+  transition-duration: 0.55s;
+}
+
+.sc-reveal-side {
+  transform: translateX(20px);
+  transition-duration: 0.55s;
+}
+
+.sc-delay-1 { transition-delay: 0.06s; }
+.sc-delay-2 { transition-delay: 0.12s; }
+.sc-delay-3 { transition-delay: 0.18s; }
+.sc-delay-4 { transition-delay: 0.24s; }
+.sc-delay-5 { transition-delay: 0.30s; }
+
+/* Scroll-Craft Lifecycle Lock & Instant Reveal Utilities */
+[data-scroll-reveal].is-revealed.sc-settled {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
+
+[data-scroll-reveal].sc-instant-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

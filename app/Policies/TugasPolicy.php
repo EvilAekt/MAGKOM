@@ -33,8 +33,12 @@ class TugasPolicy
             return false;
         }
 
-        return $penempatan->peserta_id === $user->id
-            || $penempatan->pembimbing_id === $user->id;
+        // Peserta hanya boleh melihat jika tugas sudah berstatus dipublikasikan
+        if ($penempatan->peserta_id === $user->id) {
+            return $tugas->status_publikasi === 'dipublikasikan';
+        }
+
+        return $penempatan->pembimbing_id === $user->id;
     }
 
     /**
@@ -78,7 +82,8 @@ class TugasPolicy
         }
 
         return $penempatan->peserta_id === $user->id
-            && $penempatan->status === StatusPenempatanEnum::Aktif;
+            && $penempatan->status === StatusPenempatanEnum::Aktif
+            && $tugas->status_publikasi === 'dipublikasikan';
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Models\RouteMetric;
+use App\Services\RealtimeEventService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -12,6 +14,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        // Publikasi otomatis tugas terjadwal setiap menit (Asia/Jakarta)
+        $schedule->command('magkom:publikasikan-tugas-terjadwal')
+            ->everyMinute()
+            ->withoutOverlapping();
+
         $schedule->command('magkom:nonaktifkan-peserta')
             ->dailyAt('00:01')
             ->timezone('Asia/Jakarta')
@@ -22,8 +29,25 @@ class Kernel extends ConsoleKernel
             ->monthlyOn(1, '02:00')
             ->timezone('Asia/Jakarta')
             ->withoutOverlapping();
-    }
 
+        // Cadangan basis data harian otomatis (Disaster Recovery & SEC-03)
+        $schedule->command('magkom:backup-database --clean-old')
+            ->dailyAt('02:00')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
+
+        // Pembersihan keamanan berkala & higienitas sistem (PRD 8.4, 10.3)
+        $schedule->command('magkom:security-sweep')
+            ->dailyAt('03:00')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
+
+        // Pemangkasan metrik telemetri & event outbox lama (Cegah Bloat Basis Data)
+        $schedule->call(function () {
+            RouteMetric::pruneOld(days: 3, keepMax: 3000);
+            app(RealtimeEventService::class)->pruneOldEvents(days: 3);
+        })->dailyAt('03:30')->timezone('Asia/Jakarta');
+    }
 
     /**
      * Register the commands for the application.

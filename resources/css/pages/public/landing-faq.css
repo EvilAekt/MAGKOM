@@ -1,0 +1,332 @@
+/* ==========================================================================
+   MAGKOM FAQ REDESIGN (Parity with User Reference Layout & MAGKOM Theme)
+   2-Column Layout: Visual 3D FAQ Illustration (Left) + Categorized Accordion (Right)
+   ========================================================================== */
+
+.faq-section-bg {
+    background-color: var(--secondary, #f8fafc);
+    padding: 5rem 1.25rem;
+    border-top: 1px solid var(--border, #e2e8f0);
+    border-bottom: 1px solid var(--border, #e2e8f0);
+    position: relative;
+    overflow: hidden;
+}
+
+[data-theme="dark"] .faq-section-bg {
+    background-color: #0b1120;
+    border-color: #1e293b;
+}
+
+.faq-redesign-container {
+    max-width: 76rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) minmax(400px, 1.35fr);
+    gap: 3.5rem;
+    align-items: center;
+}
+
+@media (max-width: 992px) {
+    .faq-redesign-container {
+        grid-template-columns: 1fr;
+        gap: 2.75rem;
+    }
+}
+
+/* ==========================================================================
+   KOLOM KIRI: VISUAL 3D FAQ ILLUSTRATION
+   ========================================================================== */
+.faq-visual-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 1rem;
+}
+
+.faq-illustration-card {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    aspect-ratio: 16 / 11;
+    background: radial-gradient(circle at 50% 60%, rgba(245, 158, 11, 0.08) 0%, rgba(27, 56, 96, 0.03) 65%, transparent 70%);
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+[data-theme="dark"] .faq-illustration-card {
+    background: radial-gradient(circle at 50% 60%, rgba(59, 130, 246, 0.12) 0%, rgba(15, 23, 42, 0.2) 65%, transparent 70%);
+}
+
+.faq-svg-canvas {
+    width: 100%;
+    height: 100%;
+    max-height: 380px;
+    overflow: visible;
+    filter: drop-shadow(0 15px 30px rgba(15, 23, 42, 0.08));
+}
+
+[data-theme="dark"] .faq-svg-canvas {
+    filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.35));
+}
+
+/* ==========================================================================
+   KOLOM KANAN: ACCENT BAR, HEADING & CATEGORIZED ACCORDION
+   ========================================================================== */
+.faq-content-col {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Top Accent Bar */
+.faq-accent-bar {
+    width: 58px;
+    height: 5px;
+    background: linear-gradient(90deg, #1b3860 0%, #0751ff 100%);
+    border-radius: 9999px;
+    margin-bottom: 1.25rem;
+}
+
+[data-theme="dark"] .faq-accent-bar {
+    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+}
+
+/* Character Pointing Arm Animation (Hardware-Accelerated) */
+.faq-pointing-arm {
+    transform-origin: 185px 160px;
+    animation: pointingGesture 2.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    will-change: transform;
+}
+
+@keyframes pointingGesture {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    35% {
+        transform: rotate(-7deg);
+    }
+    70% {
+        transform: rotate(2deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .faq-pointing-arm {
+        animation: none !important;
+    }
+}
+
+/* Headline */
+.faq-headline-bold {
+    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-size: clamp(1.65rem, 2.7vw, 2.25rem);
+    font-weight: 400;
+    line-height: 1.25;
+    color: #1e293b;
+    margin: 0 0 1.75rem;
+    letter-spacing: -0.015em;
+}
+
+[data-theme="dark"] .faq-headline-bold {
+    color: #f8fafc;
+}
+
+.faq-headline-bold strong {
+    font-weight: 800;
+    color: #0f172a;
+}
+
+[data-theme="dark"] .faq-headline-bold strong {
+    color: #ffffff;
+}
+
+/* Category Accordion Stack */
+.faq-category-stack {
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.85rem;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+[data-theme="dark"] .faq-category-stack {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+    border-color: #1e293b;
+}
+
+/* Category Button Item */
+.faq-category-item {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.faq-category-item:last-child {
+    border-bottom: none;
+}
+
+.faq-category-header-btn {
+    width: 100%;
+    padding: 1.05rem 1.45rem;
+    background: #1b3860;
+    background: linear-gradient(135deg, #1b3860 0%, #122846 100%);
+    color: #ffffff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-sans, 'Source Sans 3', sans-serif);
+    font-size: 0.98rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+}
+
+[data-theme="dark"] .faq-category-header-btn {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f1f33 100%);
+}
+
+.faq-category-header-btn:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    padding-left: 1.65rem;
+    box-shadow: inset 4px 0 0 #60a5fa;
+}
+
+[data-theme="dark"] .faq-category-header-btn:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    box-shadow: inset 4px 0 0 #93c5fd;
+}
+
+.faq-category-item.is-expanded .faq-category-header-btn {
+    background: linear-gradient(135deg, #0f233d 0%, #1b3860 100%);
+    box-shadow: inset 4px 0 0 #3b82f6;
+}
+
+[data-theme="dark"] .faq-category-item.is-expanded .faq-category-header-btn {
+    background: linear-gradient(135deg, #091321 0%, #152b47 100%);
+    box-shadow: inset 4px 0 0 #60a5fa;
+}
+
+.faq-category-icon-chevron {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-category-item.is-expanded .faq-category-icon-chevron {
+    transform: rotate(180deg);
+}
+
+/* Sub-Questions Container inside expanded category */
+.faq-questions-drawer {
+    display: none;
+    padding: 0.75rem 1.15rem 1rem;
+    background: #ffffff;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+[data-theme="dark"] .faq-questions-drawer {
+    background: #0f172a;
+    border-color: #1e293b;
+}
+
+.faq-category-item.is-expanded .faq-questions-drawer {
+    display: flex;
+}
+
+/* Individual Question Card (Gold Strip Accent seperti referensi) */
+.faq-sub-qa-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.faq-sub-question-btn {
+    width: 100%;
+    padding: 0.85rem 1.15rem;
+    background: #f59e0b; /* Emas MAGKOM */
+    background: linear-gradient(135deg, #f59e0b 0%, #eab308 100%);
+    color: #0f172a;
+    border: none;
+    border-radius: 0.5rem;
+    font-family: var(--font-sans, 'Source Sans 3', sans-serif);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.22);
+    transition: all 0.2s ease;
+}
+
+.faq-sub-question-btn:hover {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+}
+
+.faq-sub-qa-item.is-open .faq-sub-question-btn {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    color: #ffffff;
+}
+
+.faq-sub-qa-toggle-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.faq-sub-qa-item.is-open .faq-sub-qa-toggle-icon {
+    transform: rotate(45deg); /* Plus to X */
+}
+
+/* Answer Pane */
+.faq-sub-answer-pane {
+    display: none;
+    padding: 1.15rem 1.25rem;
+    background: #ffffff;
+    border: 1.5px solid #fde68a;
+    border-top: none;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    color: #334155;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .faq-sub-answer-pane {
+    background: #182234;
+    border-color: rgba(245, 158, 11, 0.4);
+    color: #e2e8f0;
+}
+
+.faq-sub-qa-item.is-open .faq-sub-answer-pane {
+    display: block;
+    animation: fadeInFaqAnswer 0.25s ease-out forwards;
+}
+
+@keyframes fadeInFaqAnswer {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

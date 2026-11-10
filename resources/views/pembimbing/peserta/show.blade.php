@@ -1,321 +1,325 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Profil Mentee: ' . ($penempatan->peserta?->nama ?? 'Peserta') . ' - Portal MagKom')
+@section('title', 'Profil Peserta Bimbingan: ' . ($penempatan->peserta?->nama ?? 'Peserta') . ' - Portal MagKom')
+@section('topbar_title', 'Profil Peserta Bimbingan')
+@section('content_area_class', 'mentee-canvas-bg')
+
+@push('styles')
+    @vite(['resources/css/pages/pembimbing/peserta-show.css'])
+@endpush
 
 @section('content')
-<div class="dashboard-content" style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="dashboard-content mentee-profile-page">
+    <h1 class="sr-only">Profil 360° Mentee Bimbingan</h1>
 
-    <!-- Breadcrumb & Navigasi Kembali -->
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-        <div>
-            <nav style="font-size: 0.8rem; color: var(--neutral-500); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-                <a href="{{ route('pembimbing.dashboard') }}" style="color: var(--neutral-600); text-decoration: none;">Dashboard</a>
-                <span>/</span>
-                <a href="{{ route('pembimbing.peserta.index') }}" style="color: var(--neutral-600); text-decoration: none;">Peserta Bimbingan</a>
-                <span>/</span>
-                <span style="color: var(--neutral-900); font-weight: 600;">{{ $penempatan->peserta?->nama }}</span>
-            </nav>
-            <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
-                Profil 360° Mentee Bimbingan
-            </h1>
+    {{-- 1. Top Action & Date Bar --}}
+    <div class="mentee-date-action-bar">
+        <div class="date-pill-amber">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>{{ \Carbon\Carbon::now()->isoFormat('dddd, DD MMM Y') }}</span>
         </div>
-        <div style="display: flex; gap: 0.75rem;">
-            <a href="{{ route('pembimbing.peserta.index') }}" class="btn" style="background: var(--neutral-100); color: var(--neutral-700); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
-                &larr; Kembali ke Direktori
-            </a>
-            <a href="{{ route('pembimbing.penilaian.show', $penempatan->id) }}" class="btn" style="background: #0641CC; color: #ffffff; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="8" r="7"></circle>
-                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                </svg>
-                Lembar Nilai Magang
-            </a>
-        </div>
+        <a href="{{ route('pembimbing.peserta.index') }}" class="btn-back-navy" title="Kembali ke Direktori Peserta Bimbingan">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Kembali</span>
+        </a>
     </div>
 
-    <!-- Header Profil Hero Card -->
-    <div style="background: #ffffff; border-radius: 16px; border: 1px solid var(--neutral-200); padding: 1.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
-        <div style="display: flex; align-items: center; gap: 1.25rem;">
-            <div style="width: 68px; height: 68px; border-radius: 16px; background: linear-gradient(135deg, #0641CC 0%, #3B82F6 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(6, 65, 204, 0.25);">
-                {{ strtoupper(substr($penempatan->peserta?->nama ?? 'P', 0, 2)) }}
+    {{-- 2. Hero Card Profil Mentee (Navy Blue Card #0F3875) --}}
+    @php
+        $profil = $penempatan->peserta?->profil;
+        $isSmk = $profil?->jenjang === \App\Enums\JenjangEnum::Smk;
+    @endphp
+    <div class="mentee-hero-card">
+        <div class="mentee-hero-left">
+            <div class="mentee-avatar-gold-ring">
+                <span>{{ strtoupper(substr($penempatan->peserta?->nama ?? 'P', 0, 2)) }}</span>
             </div>
-            <div>
-                <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-                    <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
-                        {{ $penempatan->peserta?->nama }}
-                    </h2>
-                    <span style="font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px; background: {{ $penempatan->status->value === 'aktif' ? '#d1fae5' : '#e0e7ff' }}; color: {{ $penempatan->status->value === 'aktif' ? '#065f46' : '#3730a3' }};">
-                        Status: {{ ucfirst($penempatan->status->value) }}
+            <div class="mentee-hero-identity">
+                <h1 class="mentee-hero-name">{{ $penempatan->peserta?->nama }}</h1>
+                <p class="mentee-hero-institution">{{ $profil?->institusi ?? ($isSmk ? 'Sekolah Belum Dilengkapi' : 'Institusi Belum Dilengkapi') }}</p>
+                <div class="mentee-badges-row">
+                    <span class="badge-status-pill badge-status-aktif">
+                        {{ ucfirst($penempatan->status->value) }}
                     </span>
-                    <span style="font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px; background: rgba(6, 65, 204, 0.08); color: #0641CC;">
+                    <span class="badge-status-pill badge-jalur-outline">
                         Jalur {{ ucfirst($penempatan->jalur?->value ?? 'Umum') }}
                     </span>
                 </div>
-                <div style="font-size: 0.875rem; color: var(--neutral-600); margin-top: 0.25rem;">
-                    {{ $penempatan->peserta?->profil?->institusi ?? 'Institusi Belum Dilengkapi' }} &bull; {{ $penempatan->peserta?->profil?->jurusan?->nama_jurusan ?? 'Jurusan Belum Dilengkapi' }}
-                </div>
-                <div style="font-size: 0.8rem; color: var(--neutral-500); margin-top: 0.2rem;">
-                    Bidang: <strong>{{ $penempatan->bidang?->nama_bidang ?? '-' }}</strong> &bull; NIM/NISN: <strong>{{ $penempatan->peserta?->profil?->nim_nisn ?? '-' }}</strong>
+                <div class="mentee-action-buttons-row">
+                    <a href="{{ route('pembimbing.logbook.index', ['masuk' => $penempatan->id]) }}" class="btn-pill-action btn-pill-logbook" title="Lihat logbook harian mentee">
+                        Logbook
+                    </a>
+                    <a href="{{ route('pembimbing.tugas.index', ['masuk' => $penempatan->id]) }}" class="btn-pill-action btn-pill-tugas" title="Lihat tugas mentee">
+                        Tugas
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Quick Action Buttons -->
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <a href="{{ route('pembimbing.logbook.index', ['penempatan_id' => $penempatan->id]) }}" style="padding: 0.5rem 0.85rem; background: var(--neutral-100); color: var(--neutral-700); font-size: 0.8rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                Logbook Mentee
-            </a>
-            <a href="{{ route('pembimbing.tugas.index', ['penempatan_id' => $penempatan->id]) }}" style="padding: 0.5rem 0.85rem; background: rgba(6, 65, 204, 0.08); color: #0641CC; font-size: 0.8rem; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-                Tugas Mentee
-            </a>
+        <div class="mentee-hero-right">
+            <div class="data-peserta-header">DATA PESERTA</div>
+            <div class="data-peserta-grid">
+                <div class="data-peserta-cell">
+                    <span class="data-peserta-label">EMAIL</span>
+                    <span class="data-peserta-val" title="{{ $penempatan->peserta?->email }}">{{ $penempatan->peserta?->email ?? '-' }}</span>
+                </div>
+                <div class="data-peserta-cell">
+                    <span class="data-peserta-label">TELEPON / WA</span>
+                    <span class="data-peserta-val">{{ $penempatan->peserta?->no_telp ?? $profil?->no_hp ?? '-' }}</span>
+                </div>
+                <div class="data-peserta-cell">
+                    <span class="data-peserta-label">{{ $isSmk ? 'KOMPETENSI KEAHLIAN' : 'PROGRAM STUDI' }}</span>
+                    <span class="data-peserta-val">{{ $profil?->jurusan?->nama_jurusan ?? '-' }}</span>
+                </div>
+                <div class="data-peserta-cell">
+                    <span class="data-peserta-label">{{ $isSmk ? 'NISN' : 'NIM' }}</span>
+                    <span class="data-peserta-val">{{ $profil?->nim_nisn ?? '-' }}</span>
+                </div>
+                <div class="data-peserta-cell cell-full-width">
+                    <span class="data-peserta-label">BIDANG</span>
+                    <span class="data-peserta-val">{{ $penempatan->bidang?->nama_bidang ?? 'Dinas Komunikasi dan Informatika' }}</span>
+                </div>
+            </div>
+            @if($profil?->nama_pembimbing_sekolah)
+                <div class="data-peserta-dosen-note">
+                    {{ ($isSmk ? 'Guru Pembimbing: ' : 'Dosen Pembimbing: ') . $profil->nama_pembimbing_sekolah }}
+                </div>
+            @endif
         </div>
     </div>
 
-    <!-- 3 Widget KPI Kinerja Mentee -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;">
-        
-        <!-- Widget 1: Tugas Mentee -->
-        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-500); text-transform: uppercase;">Penyelesaian Tugas</span>
-                <span style="font-size: 0.8rem; font-weight: 700; color: #0641CC;">
-                    {{ $tugasSelesai }} / {{ $totalTugas }} Selesai
-                </span>
-            </div>
-            @php
-                $persenTugas = $totalTugas > 0 ? (int) round(($tugasSelesai / $totalTugas) * 100) : 0;
-            @endphp
-            <div style="height: 8px; width: 100%; background: var(--neutral-100); border-radius: 999px; overflow: hidden; margin-bottom: 0.75rem;">
-                <div style="height: 100%; width: {{ $persenTugas }}%; background: #10b981; border-radius: 999px;"></div>
-            </div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--neutral-500);">
-                <span>{{ $tugasAktif }} tugas sedang berjalan</span>
-                <span>Tingkat Selesai: {{ $persenTugas }}%</span>
-            </div>
-        </div>
-
-        <!-- Widget 2: Logbook Harian -->
-        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-500); text-transform: uppercase;">Kedisiplinan Logbook</span>
-                <span style="font-size: 0.8rem; font-weight: 700; color: #d97706;">
-                    Total {{ $totalLogbook }} Entri
-                </span>
-            </div>
-            <div style="display: flex; gap: 0.75rem; margin-bottom: 0.5rem;">
-                <div style="flex: 1; background: #f0fdf4; padding: 0.4rem 0.6rem; border-radius: 6px; text-align: center;">
-                    <div style="font-size: 0.7rem; color: #166534;">Disetujui</div>
-                    <div style="font-size: 0.95rem; font-weight: 700; color: #15803d;">{{ $logbookDisetujui }}</div>
+    {{-- 3. Baris 3 Kartu Metrik Ringkasan (3-Column KPI Cards) --}}
+    <div class="mentee-kpi-summary-grid">
+        {{-- KARTU 1: PROGRES TUGAS (DEEP BLUE) --}}
+        <div class="kpi-card kpi-card-blue">
+            <div class="kpi-card-title">PROGRES TUGAS</div>
+            <div class="kpi-donut-layout">
+                <div class="donut-chart-circle" style="--deg-selesai: {{ $degSelesai }}deg; --deg-proses: {{ $degProses }}deg;">
+                    <div class="donut-chart-inner">
+                        <span class="donut-percentage-text">{{ $completionRate }}%</span>
+                    </div>
                 </div>
-                <div style="flex: 1; background: #fef2f2; padding: 0.4rem 0.6rem; border-radius: 6px; text-align: center;">
-                    <div style="font-size: 0.7rem; color: #991b1b;">Perlu Revisi</div>
-                    <div style="font-size: 0.95rem; font-weight: 700; color: #b91c1c;">{{ $logbookPerluRevisi }}</div>
+                <div class="donut-chart-legends">
+                    <div class="donut-legend-pill" title="Tugas Selesai: {{ $tugasSelesaiCount }}">
+                        <div class="legend-pill-left">
+                            <span class="legend-dot-indicator dot-selesai"></span>
+                            <span class="legend-pill-text">Selesai</span>
+                        </div>
+                        <span class="legend-pill-count">{{ $tugasSelesaiCount }}</span>
+                    </div>
+                    <div class="donut-legend-pill" title="Tugas Dikerjakan: {{ $tugasProsesCount }}">
+                        <div class="legend-pill-left">
+                            <span class="legend-dot-indicator dot-dikerjakan"></span>
+                            <span class="legend-pill-text">Dikerjakan</span>
+                        </div>
+                        <span class="legend-pill-count">{{ $tugasProsesCount }}</span>
+                    </div>
+                    <div class="donut-legend-pill" title="Tugas Belum Dikerjakan: {{ $tugasBelumCount }}">
+                        <div class="legend-pill-left">
+                            <span class="legend-dot-indicator dot-belum"></span>
+                            <span class="legend-pill-text">Belum</span>
+                        </div>
+                        <span class="legend-pill-count">{{ $tugasBelumCount }}</span>
+                    </div>
                 </div>
             </div>
-            <div style="font-size: 0.75rem; color: var(--neutral-500); text-align: right;">
-                Rata-rata 1 entri per hari kerja dinas
+        </div>
+
+        {{-- KARTU 2: PERIODE MAGANG (VIBRANT YELLOW) --}}
+        <div class="kpi-card kpi-card-yellow">
+            <div class="kpi-card-title">PERIODE MAGANG</div>
+            <div class="periode-metric-huge">{{ max(0, $sisaHari) }}</div>
+            <div class="periode-subtitle">hari tersisa dari {{ $totalHariMagang }}</div>
+            <div class="periode-progress-track">
+                <div class="periode-progress-fill" style="width: {{ min(100, $progresHari) }}%;"></div>
+            </div>
+            <div class="periode-dates-row">
+                <span>{{ $penempatan->tgl_mulai?->format('d M Y') ?? '-' }}</span>
+                <span>{{ $penempatan->tgl_selesai?->format('d M Y') ?? '-' }}</span>
             </div>
         </div>
 
-        <!-- Widget 3: Status Nilai Magang -->
-        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--neutral-500); text-transform: uppercase;">Status Penilaian</span>
-                @if($penempatan->penilaian?->status->value === 'final')
-                    <span style="font-size: 0.75rem; font-weight: 600; background: #d1fae5; color: #065f46; padding: 0.15rem 0.5rem; border-radius: 999px;">Final</span>
-                @elseif($penempatan->penilaian?->status->value === 'draft')
-                    <span style="font-size: 0.75rem; font-weight: 600; background: #fef3c7; color: #92400e; padding: 0.15rem 0.5rem; border-radius: 999px;">Draft</span>
-                @else
-                    <span style="font-size: 0.75rem; font-weight: 500; background: var(--neutral-100); color: var(--neutral-600); padding: 0.15rem 0.5rem; border-radius: 999px;">Belum Dinilai</span>
-                @endif
+        {{-- KARTU 3: LOGBOOK (PURE WHITE) --}}
+        <div class="kpi-card kpi-card-white">
+            <div class="kpi-card-header-flex">
+                <span class="kpi-card-title">LOGBOOK</span>
+                <span class="logbook-progress-summary">{{ $logbookFilledCount }} dari 12 minggu</span>
             </div>
-            <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-top: 0.25rem;">
-                <span style="font-size: 1.75rem; font-weight: 800; color: var(--neutral-900);">
-                    {{ $penempatan->penilaian ? number_format((float) $penempatan->penilaian->nilai_akhir, 2) : '-' }}
+            <div class="logbook-weeks-grid-12">
+                @for($w = 1; $w <= 12; $w++)
+                    @php
+                        $mInfo = $logbookPerMinggu[$w - 1] ?? null;
+                        $boxClass = 'box-pending';
+                        if ($mInfo) {
+                            if ($mInfo['status'] === 'disetujui') {
+                                $boxClass = 'box-selesai';
+                            } elseif ($mInfo['status'] === 'perlu_revisi' || ($mInfo['is_lampau'] && $mInfo['status'] === 'belum_diisi')) {
+                                $boxClass = 'box-terlambat';
+                            }
+                        }
+                    @endphp
+                    <div class="logbook-week-box {{ $boxClass }}" title="Minggu ke-{{ $w }}: {{ $mInfo ? ucfirst(str_replace('_', ' ', $mInfo['status'])) : 'Mendatang' }}">
+                        {{ $w }}
+                    </div>
+                @endfor
+            </div>
+            <div class="logbook-legends-row">
+                <span class="logbook-legend-entry">
+                    <span class="legend-color-dot dot-logbook-selesai"></span>
+                    <span>Selesai <strong>{{ $logbookDisetujuiCount }}</strong></span>
                 </span>
-                @if($penempatan->penilaian?->predikat)
-                    <span style="font-size: 1.1rem; font-weight: 700; color: #0641CC;">
-                        Predikat {{ $penempatan->penilaian->predikat }}
-                    </span>
-                @endif
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; font-size: 0.75rem;">
-                <span style="color: var(--neutral-500);">Berdasarkan 5 kriteria rubrik</span>
-                <a href="{{ route('pembimbing.penilaian.show', $penempatan->id) }}" style="color: #0641CC; font-weight: 600; text-decoration: none;">
-                    Kelola Nilai &rarr;
-                </a>
+                <span class="logbook-legend-entry">
+                    <span class="legend-color-dot dot-logbook-terlambat"></span>
+                    <span>Terlambat <strong>{{ $logbookTerlambatCount }}</strong></span>
+                </span>
             </div>
         </div>
-
     </div>
 
-    <!-- Rincian Data Diri & Timeline Magang -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
-        
-        <!-- Kolom Data Kontak & Akademik -->
-        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin: 0 0 1rem 0; padding-bottom: 0.75rem; border-bottom: 1px solid var(--neutral-100);">
-                Data Pribadi & Kontak Akademik
-            </h3>
-            <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.875rem;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">Email Resmi</span>
-                    <span style="font-weight: 600; color: var(--neutral-900);">{{ $penempatan->peserta?->email }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">Nomor Telepon / WA</span>
-                    <span style="font-weight: 600; color: var(--neutral-900);">{{ $penempatan->peserta?->no_telp ?? '-' }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">Asal Kampus / Sekolah</span>
-                    <span style="font-weight: 600; color: var(--neutral-900);">{{ $penempatan->peserta?->profil?->institusi ?? '-' }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">Program Studi</span>
-                    <span style="font-weight: 600; color: var(--neutral-900);">{{ $penempatan->peserta?->profil?->jurusan?->nama_jurusan ?? '-' }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">NIM / NISN</span>
-                    <span style="font-weight: 600; color: var(--neutral-900);">{{ $penempatan->peserta?->profil?->nim_nisn ?? '-' }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">Dosen Pembimbing Kampus</span>
-                    <span style="font-weight: 600; color: var(--neutral-900);">{{ $penempatan->peserta?->profil?->nama_dosen_pembimbing ?? '-' }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">Kontak Dosen / Kampus</span>
-                    <span style="font-weight: 600; color: var(--neutral-900);">{{ $penempatan->peserta?->profil?->kontak_dosen_pembimbing ?? '-' }}</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Kolom Timeline Magang & Masa Tenggang -->
-        <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-            <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin: 0 0 1rem 0; padding-bottom: 0.75rem; border-bottom: 1px solid var(--neutral-100);">
-                Timeline Periode & Ketentuan Akun
-            </h3>
-            <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.875rem;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">Tanggal Mulai Magang</span>
-                    <span style="font-weight: 600; color: var(--neutral-900);">{{ $penempatan->tgl_mulai?->format('d F Y') ?? '-' }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">Tanggal Rencana Selesai</span>
-                    <span style="font-weight: 600; color: var(--neutral-900);">{{ $penempatan->tgl_selesai?->format('d F Y') ?? '-' }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">Total Durasi</span>
-                    <span style="font-weight: 600; color: var(--neutral-900);">{{ $totalHariMagang }} Hari Kalender</span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">Sisa Waktu Magang</span>
-                    <span style="font-weight: 600; color: {{ $sisaHari <= 7 && $penempatan->status->value === 'aktif' ? '#b91c1c' : 'var(--neutral-900)' }};">
-                        @if($penempatan->status->value === 'selesai')
-                            Selesai Ditetapkan
-                        @else
-                            {{ $sisaHari < 0 ? 'Melewati batas ' . abs($sisaHari) . ' hari' : $sisaHari . ' Hari Tersisa' }}
-                        @endif
-                    </span>
-                </div>
-                <div style="display: flex; justify-content: space-between; border-top: 1px dashed var(--neutral-200); padding-top: 0.75rem;">
-                    <span style="color: var(--neutral-500);">Tanggal Ditetapkan Selesai</span>
-                    <span style="font-weight: 600; color: #059669;">{{ $penempatan->tgl_ditetapkan_selesai?->format('d F Y') ?? 'Belum Ditetapkan' }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--neutral-500);">Batas Masa Tenggang Akun (BR-11)</span>
-                    <span style="font-weight: 600; color: var(--neutral-900);">{{ $penempatan->tgl_nonaktif?->format('d F Y') ?? '-' }}</span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Riwayat Penugasan Mentee Ini -->
-    <div style="background: #ffffff; border-radius: 14px; border: 1px solid var(--neutral-200); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-200); display: flex; justify-content: space-between; align-items: center; background: #fafafa;">
-            <div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-900); margin: 0;">
-                    Riwayat Penugasan ({{ $penempatan->tugas->count() }})
-                </h3>
-                <span style="font-size: 0.75rem; color: var(--neutral-500);">
-                    Daftar seluruh tugas terstruktur yang telah diberikan kepada mentee ini.
-                </span>
-            </div>
-            <a href="{{ route('pembimbing.tugas.index', ['penempatan_id' => $penempatan->id]) }}" style="font-size: 0.8rem; font-weight: 600; color: #0641CC; text-decoration: none;">
-                Kelola Tugas &rarr;
+    {{-- 4. Riwayat Penugasan (Kanban Task Board) --}}
+    <div class="mentee-kanban-board-card">
+        <div class="kanban-header-row">
+            <h2 class="kanban-main-title">Riwayat Penugasan</h2>
+            <a href="{{ route('pembimbing.tugas.index', ['masuk' => $penempatan->id]) }}" class="btn-kelola-tugas">
+                <span>Kelola Tugas</span>
+                <span class="arrow-symbol">&rarr;</span>
             </a>
         </div>
 
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
-                <thead>
-                    <tr style="border-bottom: 1px solid var(--neutral-200); background: #f8fafc; color: var(--neutral-600); font-size: 0.75rem; text-transform: uppercase;">
-                        <th style="padding: 0.875rem 1.5rem;">Judul Tugas</th>
-                        <th style="padding: 0.875rem 1rem;">Kategori</th>
-                        <th style="padding: 0.875rem 1rem;">Kompleksitas</th>
-                        <th style="padding: 0.875rem 1rem;">Deadline</th>
-                        <th style="padding: 0.875rem 1rem;">Status</th>
-                        <th style="padding: 0.875rem 1.5rem; text-align: right;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($penempatan->tugas as $tugas)
-                        <tr style="border-bottom: 1px solid var(--neutral-100);">
-                            <td style="padding: 0.875rem 1.5rem;">
-                                <div style="font-weight: 600; color: var(--neutral-900);">
-                                    {{ $tugas->judul }}
-                                </div>
-                                <div style="font-size: 0.75rem; color: var(--neutral-500);">
-                                    {{ $tugas->progresLogs->count() }} Laporan Progres
-                                </div>
-                            </td>
-                            <td style="padding: 0.875rem 1rem;">
-                                <span style="font-size: 0.75rem; background: var(--neutral-100); color: var(--neutral-700); padding: 0.15rem 0.45rem; border-radius: 4px;">
-                                    {{ $tugas->kategori }}
+        {{-- Segmented Progress Bar & Legend --}}
+        <div class="kanban-segmented-wrapper">
+            <div class="kanban-legend-status-row">
+                <div class="kanban-legend-item">
+                    <span class="legend-color-dot dot-kanban-belum"></span>
+                    <span>Belum <strong>{{ $tugasBelumCount }}</strong></span>
+                </div>
+                <div class="kanban-legend-item">
+                    <span class="legend-color-dot dot-kanban-proses"></span>
+                    <span>Proses <strong>{{ $tugasProsesCount }}</strong></span>
+                </div>
+                <div class="kanban-legend-item">
+                    <span class="legend-color-dot dot-kanban-selesai"></span>
+                    <span>Selesai <strong>{{ $tugasSelesaiCount }}</strong></span>
+                </div>
+            </div>
+            <div class="kanban-segmented-bar">
+                <div class="segment-fill segment-belum" style="width: {{ $persenBelum }}%;" title="Belum: {{ $tugasBelumCount }} ({{ $persenBelum }}%)"></div>
+                <div class="segment-fill segment-proses" style="width: {{ $persenProses }}%;" title="Proses: {{ $tugasProsesCount }} ({{ $persenProses }}%)"></div>
+                <div class="segment-fill segment-selesai" style="width: {{ $persenSelesai }}%;" title="Selesai: {{ $tugasSelesaiCount }} ({{ $persenSelesai }}%)"></div>
+            </div>
+        </div>
+
+        {{-- 3 Kolom Kanban Board --}}
+        <div class="kanban-columns-grid">
+            {{-- KOLOM 1: BELUM --}}
+            <div class="kanban-column">
+                <div class="kanban-column-pill">
+                    <div class="column-pill-title">
+                        <span class="status-indicator-dot dot-belum"></span>
+                        <span>Belum</span>
+                    </div>
+                    <span class="column-pill-count">{{ $tugasBelumCount }}</span>
+                </div>
+                <div class="kanban-cards-stack">
+                    @forelse($tugasBelum as $tugas)
+                        <div class="kanban-task-card card-style-belum">
+                            <h3 class="task-card-title">{{ $tugas->judul }}</h3>
+                            <p class="task-card-subtitle">{{ $tugas->kategori }} &bull; {{ $tugas->progresLogs->count() }} laporan progres</p>
+                            <div class="task-card-footer">
+                                <span class="task-card-date">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    <span>{{ $tugas->deadline?->format('d M Y') ?? '-' }}</span>
                                 </span>
-                            </td>
-                            <td style="padding: 0.875rem 1rem;">
-                                <span style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-700);">
-                                    {{ ucfirst($tugas->kompleksitas?->value ?? 'Sedang') }}
-                                </span>
-                            </td>
-                            <td style="padding: 0.875rem 1rem; font-size: 0.8rem; color: var(--neutral-800);">
-                                {{ $tugas->deadline?->format('d M Y') }}
-                            </td>
-                            <td style="padding: 0.875rem 1rem;">
-                                @if($tugas->status->value === 'selesai')
-                                    <span style="font-size: 0.75rem; font-weight: 600; background: #d1fae5; color: #065f46; padding: 0.15rem 0.5rem; border-radius: 999px;">
-                                        Selesai
-                                    </span>
-                                @elseif($tugas->status->value === 'proses')
-                                    <span style="font-size: 0.75rem; font-weight: 600; background: #fef3c7; color: #92400e; padding: 0.15rem 0.5rem; border-radius: 999px;">
-                                        Proses
-                                    </span>
-                                @else
-                                    <span style="font-size: 0.75rem; font-weight: 500; background: var(--neutral-100); color: var(--neutral-600); padding: 0.15rem 0.5rem; border-radius: 999px;">
-                                        Belum
-                                    </span>
-                                @endif
-                            </td>
-                            <td style="padding: 0.875rem 1.5rem; text-align: right;">
-                                <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}" style="font-size: 0.75rem; font-weight: 600; color: #0641CC; text-decoration: none;">
-                                    Detail &rarr;
+                                <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}" class="btn-card-action-outline">
+                                    Detail
                                 </a>
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
                     @empty
-                        <tr>
-                            <td colspan="6" style="padding: 2rem 1.5rem; text-align: center; color: var(--neutral-500);">
-                                Belum ada penugasan yang dibuat untuk mentee ini.
-                            </td>
-                        </tr>
+                        <div class="kanban-card-empty">
+                            <span>Tidak ada tugas berstatus belum dikerjakan.</span>
+                        </div>
                     @endforelse
-                </tbody>
-            </table>
+                </div>
+            </div>
+
+            {{-- KOLOM 2: PROSES --}}
+            <div class="kanban-column">
+                <div class="kanban-column-pill">
+                    <div class="column-pill-title">
+                        <span class="status-indicator-dot dot-proses"></span>
+                        <span>Proses</span>
+                    </div>
+                    <span class="column-pill-count">{{ $tugasProsesCount }}</span>
+                </div>
+                <div class="kanban-cards-stack">
+                    @forelse($tugasProses as $tugas)
+                        <div class="kanban-task-card card-style-proses">
+                            <h3 class="task-card-title">{{ $tugas->judul }}</h3>
+                            <p class="task-card-subtitle">{{ $tugas->kategori }} &bull; {{ $tugas->progresLogs->count() }} laporan progres</p>
+                            <div class="task-card-footer">
+                                <span class="task-card-date {{ $tugas->deadline && $tugas->deadline->isToday() ? 'is-today' : '' }}">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    <span>{{ $tugas->deadline?->format('d M Y') ?? '-' }}{{ $tugas->deadline && $tugas->deadline->isToday() ? ' • Hari ini' : '' }}</span>
+                                </span>
+                                <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}" class="btn-card-action-dark">
+                                    Detail
+                                </a>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="kanban-card-empty">
+                            <span>Tidak ada tugas dalam proses pengerjaan.</span>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+
+            {{-- KOLOM 3: SELESAI --}}
+            <div class="kanban-column">
+                <div class="kanban-column-pill">
+                    <div class="column-pill-title">
+                        <span class="status-indicator-dot dot-selesai"></span>
+                        <span>Selesai</span>
+                    </div>
+                    <span class="column-pill-count">{{ $tugasSelesaiCount }}</span>
+                </div>
+                <div class="kanban-cards-stack">
+                    @forelse($tugasSelesaiList as $tugas)
+                        <div class="kanban-task-card card-style-selesai">
+                            <h3 class="task-card-title">{{ $tugas->judul }}</h3>
+                            <p class="task-card-subtitle">{{ $tugas->kategori }} &bull; {{ $tugas->progresLogs->count() }} laporan progres</p>
+                            <div class="task-card-footer">
+                                <span class="task-card-date">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    <span>{{ $tugas->deadline?->format('d M Y') ?? '-' }}</span>
+                                </span>
+                                <a href="{{ route('pembimbing.tugas.show', $tugas->id) }}" class="btn-card-action-outline">
+                                    Detail
+                                </a>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="kanban-card-empty">
+                            <span>Belum ada tugas yang diselesaikan.</span>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
         </div>
     </div>
 
 </div>
 @endsection
+
+@push('scripts')
+    @vite(['resources/js/pages/pembimbing/peserta-show.js'])
+@endpush

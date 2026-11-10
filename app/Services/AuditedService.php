@@ -24,7 +24,7 @@ abstract class AuditedService
 
             return $hasil;
         } catch (Throwable $e) {
-            $this->audit->service(static::class, $metode, $argumen, 'gagal:' . class_basename($e), $this->hitungDurasiMs($mulai));
+            $this->audit->service(static::class, $metode, $argumen, 'gagal:'.class_basename($e), $this->hitungDurasiMs($mulai));
             throw $e;
         }
     }

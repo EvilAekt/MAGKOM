@@ -1,0 +1,870 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Redesign Tugas Magang – Semua Tampilan</title>
+<style>body{margin:0;background:#e5e7eb;font-family:system-ui,sans-serif}nav{position:sticky;top:0;z-index:5;background:#111827;padding:10px 12px;display:flex;gap:8px;flex-wrap:wrap}nav button{border:0;border-radius:18px;padding:8px 14px;background:#374151;color:#fff;font-size:13px;cursor:pointer}nav button.on{background:#fff;color:#111827;font-weight:600}iframe{width:100%;border:0;background:#fff}</style></head><body>
+<nav><button data-i="0" class="on">1. Buat Tugas Baru</button><button data-i="1">2. Dialog Tugaskan ke</button><button data-i="2">3. Dialog Tambahkan link</button><button data-i="3">4. Dialog Upload File</button><button data-i="4">5. Menu Opsi Tugaskan</button><button data-i="5">6. Popup Tenggat</button><button data-i="6">7. Detail Tugas (Peserta)</button></nav>
+<iframe id="f0" title="1. Buat Tugas Baru" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;/head&gt;&lt;body&gt;
+
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;style&gt;
+body{margin:0}
+button,input,textarea{font-family:inherit}
+@media (max-width:900px){.body{flex-direction:column !important}.side{width:auto !important;border-left:0 !important;border-top:1px solid #dadce0}}
+&lt;/style&gt;
+
+&lt;div style=&quot;min-height: 900px; background: #f8f9fc; font-family: &#x27;Noto Sans&#x27;, system-ui, sans-serif; color: #1f2937; display: flex; flex-direction: column&quot;&gt;
+
+&lt;header style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px; background: #0c2a6b; display: flex; align-items: center; gap: 16px; color: #fff&quot;&gt;
+&lt;button aria-label=&quot;Menu&quot; style=&quot;width: 44px; height: 44px; border: 1px solid #3b5393; background: #1a3a80; border-radius: 10px; display: grid; place-items: center; color: #fff&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M4 7h16M4 12h16M4 17h16&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;nav aria-label=&quot;Breadcrumb&quot; style=&quot;font-size: 14px; color: #c7d2ee&quot;&gt;&lt;span&gt;Beranda&lt;/span&gt; &lt;span style=&quot;margin: 0 6px&quot;&gt;/&lt;/span&gt; &lt;span style=&quot;color: #fff; font-weight: 600&quot;&gt;Dashboard&lt;/span&gt;&lt;/nav&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 8px; border: 1px solid #3b5393; border-radius: 28px; background: #12327a&quot;&gt;
+&lt;div style=&quot;width: 36px; height: 36px; border-radius: 50%; background: #fff; color: #0c2a6b; display: grid; place-items: center; font-weight: 700; font-size: 14px&quot;&gt;B&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 2px; align-items: flex-start&quot;&gt;
+&lt;span style=&quot;font-size: 14px; font-weight: 700; line-height: 1.1&quot;&gt;Budi Santoso, S.Kom&lt;/span&gt;
+&lt;span style=&quot;font-size: 11px; font-weight: 700; line-height: 1.2; background: #fbbf24; color: #3b2a00; border-radius: 10px; padding: 1px 8px&quot;&gt;Pembimbing&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/header&gt;
+&lt;div style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px 0 16px; background: #ffffff; border-bottom: 1px solid #dadce0; display: flex; align-items: center; gap: 12px; position: relative&quot;&gt;
+&lt;div style=&quot;width: 40px; height: 40px; border-radius: 50%; background: #dbe7ff; display: grid; place-items: center; color: #1d4ed8&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;5&quot; y=&quot;4&quot; width=&quot;14&quot; height=&quot;17&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M9 3h6v3H9zM8.5 11h7M8.5 15h7&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/div&gt;
+&lt;div style=&quot;font-size: 22px; font-weight: 500; color: #111827&quot;&gt;Buat Tugas Baru&lt;/div&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+
+&lt;div style=&quot;display: flex&quot;&gt;
+&lt;button disabled=&quot;&quot; style=&quot;height: 40px; padding: 0 20px; border: 0; background: #e5e7eb; color: #6b7280; border-radius: 20px 0 0 20px; font-size: 14px; font-weight: 600&quot;&gt;Tugaskan Sekarang&lt;/button&gt;
+&lt;button aria-label=&quot;Opsi penjadwalan&quot; style=&quot;width: 44px; height: 40px; border: 0; border-left: 1px solid #fff; color: #fff; border-radius: 0 20px 20px 0; display: grid; place-items: center; background-color: #0c2a6b&quot;&gt;
+&lt;svg width=&quot;16&quot; height=&quot;16&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;button style=&quot;height: 40px; padding: 0 16px; border: 1px solid #c4c9d4; background: #fff; border-radius: 20px; font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Batal&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;body&quot; style=&quot;flex: 1; display: flex; align-items: stretch&quot;&gt;
+
+&lt;main style=&quot;flex: 1; min-width: 0; padding: 24px; display: flex; justify-content: center&quot;&gt;
+&lt;div style=&quot;width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 24px&quot;&gt;
+
+&lt;section style=&quot;background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 24px; border-width: 4px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;background: #e8edf5; border-bottom: 2px solid #1d4ed8; border-radius: 4px 4px 0 0; padding: 10px 16px 8px&quot;&gt;
+&lt;label for=&quot;judul&quot; style=&quot;display: block; font-size: 12px; font-weight: 600; color: #1d4ed8&quot;&gt;Judul Penugasan*&lt;/label&gt;
+&lt;input id=&quot;judul&quot; type=&quot;text&quot; style=&quot;width: 100%; box-sizing: border-box; border: 0; background: transparent; outline: none; font-size: 18px; padding: 6px 0; color: #111827&quot;&gt;
+&lt;/div&gt;
+&lt;div style=&quot;background: #f8f9fc; border-bottom: 1px solid #6b7280; border-radius: 4px 4px 0 0&quot;&gt;
+&lt;label for=&quot;petunjuk&quot; style=&quot;display: block; padding: 12px 16px 0; font-size: 12px; font-weight: 600; color: #4b5563&quot;&gt;Petunjuk &amp;amp; Instruksi Pengerjaan*&lt;/label&gt;
+&lt;textarea id=&quot;petunjuk&quot; placeholder=&quot;Jelaskan apa yang harus dikerjakan, hasil yang diharapkan, dan kriteria selesai. Gunakan penomoran agar langkah mudah diikuti.&quot; style=&quot;width: 100%; box-sizing: border-box; min-height: 150px; border: 0; background: transparent; outline: none; resize: vertical; padding: 8px 16px; font-size: 15px; line-height: 1.6; color: #111827&quot;&gt;&lt;/textarea&gt;
+&lt;div style=&quot;display: flex; gap: 4px; padding: 4px 12px 8px; color: #374151&quot;&gt;
+&lt;button aria-label=&quot;Tebal&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-weight: 800; font-size: 16px; color: inherit&quot;&gt;B&lt;/button&gt;
+&lt;button aria-label=&quot;Miring&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-style: italic; font-weight: 600; font-size: 16px; font-family: serif; color: inherit&quot;&gt;I&lt;/button&gt;
+&lt;button aria-label=&quot;Garis bawah&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; text-decoration: underline; font-weight: 600; font-size: 16px; color: inherit&quot;&gt;U&lt;/button&gt;
+&lt;button aria-label=&quot;Daftar bernomor&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 6h10M10 12h10M10 18h10M4 6h2M4 12h2M4 18h2&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;button aria-label=&quot;Hapus format&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 5h12M12 5l-3 14M5 19l14-14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;section style=&quot;border: 1px solid #dadce0; border-radius: 8px; padding: 24px; background-color: #ffffff; border-width: 3px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 10px&quot;&gt;
+&lt;h2 style=&quot;margin: 0; font-size: 18px; font-weight: 600; color: #1d4ed8&quot;&gt;Lampirkan&lt;/h2&gt;
+&lt;span style=&quot;font-size: 13px; color: #4b5563&quot;&gt;Materi acuan (opsional) · 0 lampiran&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 20px; background-color: transparent; border-style: solid; border-width: 1px; border-color: #DADCE0; height: 102px; border-radius: 8px&quot;&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Upload File&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M12 16V4M7 9l5-5 5 5M5 20h14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Upload File&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Tambahkan Link&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Link&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;/div&gt;
+&lt;/main&gt;
+
+&lt;aside class=&quot;side&quot; style=&quot;width: 360px; flex: none; box-sizing: border-box; background: #fff; border-left-style: solid; border-left-color: #dadce0; padding: 24px; display: flex; flex-direction: column; gap: 22px; border-style: solid; border-color: #DADCE0; border-radius: 8px; border-width: 1px; height: 612px&quot;&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tugaskan ke*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 1px solid #c4c9d4; background: #f3f4f8; border-radius: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #111827; text-align: left; border-color: #DADCE0&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;circle cx=&quot;9&quot; cy=&quot;8&quot; r=&quot;3.5&quot;&gt;&lt;/circle&gt;&lt;path d=&quot;M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pilih peserta magang&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Kategori Bidang*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; font-size: 15px; color: #4b5563; text-align: left; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-style: solid; border-color: #DADCE0&quot;&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pengembangan Web&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tenggat*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #4b5563; text-align: left; border-style: solid; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-color: #DADCE0; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;3.5&quot; y=&quot;5&quot; width=&quot;17&quot; height=&quot;15&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M3.5 10h17M8 3v4M16 3v4&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Minggu, 29 Nov 2026&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;div style=&quot;font-size: 12.5px; line-height: 1.5; color: #4b5563&quot;&gt;Berakhir pukul 23.59 WIB. Tidak boleh melewati tanggal selesai magang peserta.&lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;/aside&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;&lt;/html&gt;" style="display:block;height:900px"></iframe>
+<iframe id="f1" title="2. Dialog Tugaskan ke" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;/head&gt;&lt;body&gt;
+
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;style&gt;
+body{margin:0}
+button,input,textarea{font-family:inherit}
+@media (max-width:900px){.body{flex-direction:column !important}.side{width:auto !important;border-left:0 !important;border-top:1px solid #dadce0}}
+&lt;/style&gt;
+
+&lt;div style=&quot;position: relative; min-height: 900px; background: #f8f9fc; font-family: &#x27;Noto Sans&#x27;, system-ui, sans-serif; color: #1f2937; display: flex; flex-direction: column&quot;&gt;
+
+&lt;header style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px; background: #0c2a6b; display: flex; align-items: center; gap: 16px; color: #fff&quot;&gt;
+&lt;button aria-label=&quot;Menu&quot; style=&quot;width: 44px; height: 44px; border: 1px solid #3b5393; background: #1a3a80; border-radius: 10px; display: grid; place-items: center; color: #fff&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M4 7h16M4 12h16M4 17h16&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;nav aria-label=&quot;Breadcrumb&quot; style=&quot;font-size: 14px; color: #c7d2ee&quot;&gt;&lt;span&gt;Beranda&lt;/span&gt; &lt;span style=&quot;margin: 0 6px&quot;&gt;/&lt;/span&gt; &lt;span style=&quot;color: #fff; font-weight: 600&quot;&gt;Dashboard&lt;/span&gt;&lt;/nav&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 8px; border: 1px solid #3b5393; border-radius: 28px; background: #12327a&quot;&gt;
+&lt;div style=&quot;width: 36px; height: 36px; border-radius: 50%; background: #fff; color: #0c2a6b; display: grid; place-items: center; font-weight: 700; font-size: 14px&quot;&gt;B&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 2px; align-items: flex-start&quot;&gt;
+&lt;span style=&quot;font-size: 14px; font-weight: 700; line-height: 1.1&quot;&gt;Budi Santoso, S.Kom&lt;/span&gt;
+&lt;span style=&quot;font-size: 11px; font-weight: 700; line-height: 1.2; background: #fbbf24; color: #3b2a00; border-radius: 10px; padding: 1px 8px&quot;&gt;Pembimbing&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/header&gt;
+&lt;div style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px 0 16px; background: #ffffff; border-bottom: 1px solid #dadce0; display: flex; align-items: center; gap: 12px; position: relative&quot;&gt;
+&lt;div style=&quot;width: 40px; height: 40px; border-radius: 50%; background: #dbe7ff; display: grid; place-items: center; color: #1d4ed8&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;5&quot; y=&quot;4&quot; width=&quot;14&quot; height=&quot;17&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M9 3h6v3H9zM8.5 11h7M8.5 15h7&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/div&gt;
+&lt;div style=&quot;font-size: 22px; font-weight: 500; color: #111827&quot;&gt;Buat Tugas Baru&lt;/div&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+
+&lt;div style=&quot;display: flex&quot;&gt;
+&lt;button disabled=&quot;&quot; style=&quot;height: 40px; padding: 0 20px; border: 0; background: #e5e7eb; color: #6b7280; border-radius: 20px 0 0 20px; font-size: 14px; font-weight: 600&quot;&gt;Tugaskan Sekarang&lt;/button&gt;
+&lt;button aria-label=&quot;Opsi penjadwalan&quot; style=&quot;width: 44px; height: 40px; border: 0; border-left: 1px solid #fff; color: #fff; border-radius: 0 20px 20px 0; display: grid; place-items: center; background-color: #0c2a6b&quot;&gt;
+&lt;svg width=&quot;16&quot; height=&quot;16&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;button style=&quot;height: 40px; padding: 0 16px; border: 1px solid #c4c9d4; background: #fff; border-radius: 20px; font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Batal&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;body&quot; style=&quot;flex: 1; display: flex; align-items: stretch&quot;&gt;
+
+&lt;main style=&quot;flex: 1; min-width: 0; padding: 24px; display: flex; justify-content: center&quot;&gt;
+&lt;div style=&quot;width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 24px&quot;&gt;
+
+&lt;section style=&quot;background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 24px; border-width: 4px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;background: #e8edf5; border-bottom: 2px solid #1d4ed8; border-radius: 4px 4px 0 0; padding: 10px 16px 8px&quot;&gt;
+&lt;label for=&quot;judul&quot; style=&quot;display: block; font-size: 12px; font-weight: 600; color: #1d4ed8&quot;&gt;Judul Penugasan*&lt;/label&gt;
+&lt;input id=&quot;judul&quot; type=&quot;text&quot; style=&quot;width: 100%; box-sizing: border-box; border: 0; background: transparent; outline: none; font-size: 18px; padding: 6px 0; color: #111827&quot;&gt;
+&lt;/div&gt;
+&lt;div style=&quot;background: #f8f9fc; border-bottom: 1px solid #6b7280; border-radius: 4px 4px 0 0&quot;&gt;
+&lt;label for=&quot;petunjuk&quot; style=&quot;display: block; padding: 12px 16px 0; font-size: 12px; font-weight: 600; color: #4b5563&quot;&gt;Petunjuk &amp;amp; Instruksi Pengerjaan*&lt;/label&gt;
+&lt;textarea id=&quot;petunjuk&quot; placeholder=&quot;Jelaskan apa yang harus dikerjakan, hasil yang diharapkan, dan kriteria selesai. Gunakan penomoran agar langkah mudah diikuti.&quot; style=&quot;width: 100%; box-sizing: border-box; min-height: 150px; border: 0; background: transparent; outline: none; resize: vertical; padding: 8px 16px; font-size: 15px; line-height: 1.6; color: #111827&quot;&gt;&lt;/textarea&gt;
+&lt;div style=&quot;display: flex; gap: 4px; padding: 4px 12px 8px; color: #374151&quot;&gt;
+&lt;button aria-label=&quot;Tebal&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-weight: 800; font-size: 16px; color: inherit&quot;&gt;B&lt;/button&gt;
+&lt;button aria-label=&quot;Miring&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-style: italic; font-weight: 600; font-size: 16px; font-family: serif; color: inherit&quot;&gt;I&lt;/button&gt;
+&lt;button aria-label=&quot;Garis bawah&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; text-decoration: underline; font-weight: 600; font-size: 16px; color: inherit&quot;&gt;U&lt;/button&gt;
+&lt;button aria-label=&quot;Daftar bernomor&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 6h10M10 12h10M10 18h10M4 6h2M4 12h2M4 18h2&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;button aria-label=&quot;Hapus format&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 5h12M12 5l-3 14M5 19l14-14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;section style=&quot;border: 1px solid #dadce0; border-radius: 8px; padding: 24px; background-color: #ffffff; border-width: 3px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 10px&quot;&gt;
+&lt;h2 style=&quot;margin: 0; font-size: 18px; font-weight: 600; color: #1d4ed8&quot;&gt;Lampirkan&lt;/h2&gt;
+&lt;span style=&quot;font-size: 13px; color: #4b5563&quot;&gt;Materi acuan (opsional) · 0 lampiran&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 20px; background-color: transparent; border-style: solid; border-width: 1px; border-color: #DADCE0; height: 102px; border-radius: 8px&quot;&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Upload File&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M12 16V4M7 9l5-5 5 5M5 20h14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Upload File&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Tambahkan Link&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Link&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;/div&gt;
+&lt;/main&gt;
+
+&lt;aside class=&quot;side&quot; style=&quot;width: 360px; flex: none; box-sizing: border-box; background: #fff; border-left-style: solid; border-left-color: #dadce0; padding: 24px; display: flex; flex-direction: column; gap: 22px; border-style: solid; border-color: #DADCE0; border-radius: 8px; border-width: 1px; height: 612px&quot;&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tugaskan ke*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 1px solid #c4c9d4; background: #f3f4f8; border-radius: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #111827; text-align: left; border-color: #DADCE0&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;circle cx=&quot;9&quot; cy=&quot;8&quot; r=&quot;3.5&quot;&gt;&lt;/circle&gt;&lt;path d=&quot;M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pilih peserta magang&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Kategori Bidang*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; font-size: 15px; color: #4b5563; text-align: left; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-style: solid; border-color: #DADCE0&quot;&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pengembangan Web&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tenggat*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #4b5563; text-align: left; border-style: solid; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-color: #DADCE0; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;3.5&quot; y=&quot;5&quot; width=&quot;17&quot; height=&quot;15&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M3.5 10h17M8 3v4M16 3v4&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Minggu, 29 Nov 2026&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;div style=&quot;font-size: 12.5px; line-height: 1.5; color: #4b5563&quot;&gt;Berakhir pukul 23.59 WIB. Tidak boleh melewati tanggal selesai magang peserta.&lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;/aside&gt;&lt;div style=&quot;position: absolute; inset: 0; background: rgba(32,33,36,0.55); display: flex; align-items: center; justify-content: center&quot;&gt;&lt;div role=&quot;dialog&quot; aria-label=&quot;Tugaskan ke&quot; style=&quot;width: 600px; background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); overflow: hidden&quot;&gt;&lt;div style=&quot;height: 46px; box-sizing: border-box; display: flex; align-items: flex-end; padding: 0 16px 10px; font-size: 15px; color: #111827; border-bottom: 1px solid #dadce0&quot;&gt;Tugaskan ke&lt;/div&gt;&lt;div style=&quot;height: 44px; box-sizing: border-box; display: flex; align-items: center; gap: 18px; padding: 0 20px; border-bottom: 1px solid #dadce0; font-size: 13px; color: #111827&quot;&gt;&lt;span style=&quot;width: 18px; height: 18px; border-radius: 2px; background: #1d4ed8; display: grid; place-items: center; flex: none&quot;&gt;&lt;svg width=&quot;14&quot; height=&quot;14&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;#fff&quot; stroke-width=&quot;3.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M5 12l5 5L20 7&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/span&gt;&lt;span&gt;Semua peserta&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;height: 44px; box-sizing: border-box; display: flex; align-items: center; gap: 18px; padding: 0 20px; border-bottom: 1px solid #dadce0; font-size: 13px; color: #111827&quot;&gt;&lt;span style=&quot;width: 18px; height: 18px; border-radius: 2px; background: #1d4ed8; display: grid; place-items: center; flex: none&quot;&gt;&lt;svg width=&quot;14&quot; height=&quot;14&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;#fff&quot; stroke-width=&quot;3.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M5 12l5 5L20 7&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/span&gt;&lt;span style=&quot;width: 26px; height: 26px; border-radius: 50%; background: #5f9a32; color: #fff; display: grid; place-items: center; font-size: 15px; flex: none&quot;&gt;N&lt;/span&gt;&lt;span style=&quot;margin-left: 2px&quot;&gt;Naufal Pratama&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;height: 50px; box-sizing: border-box; background: #e9eef7; padding: 0 20px; display: flex; align-items: center; justify-content: flex-end; gap: 22px&quot;&gt;&lt;button style=&quot;border: 0; background: transparent; padding: 0; font-size: 13px; font-weight: 500; color: #1d4ed8&quot;&gt;Batal&lt;/button&gt;&lt;button style=&quot;height: 34px; width: 78px; border: 0; background: #1d4ed8; border-radius: 17px; font-size: 13px; font-weight: 700; color: #fff&quot;&gt;Selesai&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;&lt;/html&gt;" style="display:none;height:900px"></iframe>
+<iframe id="f2" title="3. Dialog Tambahkan link" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;/head&gt;&lt;body&gt;
+
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;style&gt;
+body{margin:0}
+button,input,textarea{font-family:inherit}
+@media (max-width:900px){.body{flex-direction:column !important}.side{width:auto !important;border-left:0 !important;border-top:1px solid #dadce0}}
+&lt;/style&gt;
+
+&lt;div style=&quot;position: relative; min-height: 900px; background: #f8f9fc; font-family: &#x27;Noto Sans&#x27;, system-ui, sans-serif; color: #1f2937; display: flex; flex-direction: column&quot;&gt;
+
+&lt;header style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px; background: #0c2a6b; display: flex; align-items: center; gap: 16px; color: #fff&quot;&gt;
+&lt;button aria-label=&quot;Menu&quot; style=&quot;width: 44px; height: 44px; border: 1px solid #3b5393; background: #1a3a80; border-radius: 10px; display: grid; place-items: center; color: #fff&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M4 7h16M4 12h16M4 17h16&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;nav aria-label=&quot;Breadcrumb&quot; style=&quot;font-size: 14px; color: #c7d2ee&quot;&gt;&lt;span&gt;Beranda&lt;/span&gt; &lt;span style=&quot;margin: 0 6px&quot;&gt;/&lt;/span&gt; &lt;span style=&quot;color: #fff; font-weight: 600&quot;&gt;Dashboard&lt;/span&gt;&lt;/nav&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 8px; border: 1px solid #3b5393; border-radius: 28px; background: #12327a&quot;&gt;
+&lt;div style=&quot;width: 36px; height: 36px; border-radius: 50%; background: #fff; color: #0c2a6b; display: grid; place-items: center; font-weight: 700; font-size: 14px&quot;&gt;B&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 2px; align-items: flex-start&quot;&gt;
+&lt;span style=&quot;font-size: 14px; font-weight: 700; line-height: 1.1&quot;&gt;Budi Santoso, S.Kom&lt;/span&gt;
+&lt;span style=&quot;font-size: 11px; font-weight: 700; line-height: 1.2; background: #fbbf24; color: #3b2a00; border-radius: 10px; padding: 1px 8px&quot;&gt;Pembimbing&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/header&gt;
+&lt;div style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px 0 16px; background: #ffffff; border-bottom: 1px solid #dadce0; display: flex; align-items: center; gap: 12px; position: relative&quot;&gt;
+&lt;div style=&quot;width: 40px; height: 40px; border-radius: 50%; background: #dbe7ff; display: grid; place-items: center; color: #1d4ed8&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;5&quot; y=&quot;4&quot; width=&quot;14&quot; height=&quot;17&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M9 3h6v3H9zM8.5 11h7M8.5 15h7&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/div&gt;
+&lt;div style=&quot;font-size: 22px; font-weight: 500; color: #111827&quot;&gt;Buat Tugas Baru&lt;/div&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+
+&lt;div style=&quot;display: flex&quot;&gt;
+&lt;button disabled=&quot;&quot; style=&quot;height: 40px; padding: 0 20px; border: 0; background: #e5e7eb; color: #6b7280; border-radius: 20px 0 0 20px; font-size: 14px; font-weight: 600&quot;&gt;Tugaskan Sekarang&lt;/button&gt;
+&lt;button aria-label=&quot;Opsi penjadwalan&quot; style=&quot;width: 44px; height: 40px; border: 0; border-left: 1px solid #fff; color: #fff; border-radius: 0 20px 20px 0; display: grid; place-items: center; background-color: #0c2a6b&quot;&gt;
+&lt;svg width=&quot;16&quot; height=&quot;16&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;button style=&quot;height: 40px; padding: 0 16px; border: 1px solid #c4c9d4; background: #fff; border-radius: 20px; font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Batal&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;body&quot; style=&quot;flex: 1; display: flex; align-items: stretch&quot;&gt;
+
+&lt;main style=&quot;flex: 1; min-width: 0; padding: 24px; display: flex; justify-content: center&quot;&gt;
+&lt;div style=&quot;width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 24px&quot;&gt;
+
+&lt;section style=&quot;background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 24px; border-width: 4px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;background: #e8edf5; border-bottom: 2px solid #1d4ed8; border-radius: 4px 4px 0 0; padding: 10px 16px 8px&quot;&gt;
+&lt;label for=&quot;judul&quot; style=&quot;display: block; font-size: 12px; font-weight: 600; color: #1d4ed8&quot;&gt;Judul Penugasan*&lt;/label&gt;
+&lt;input id=&quot;judul&quot; type=&quot;text&quot; style=&quot;width: 100%; box-sizing: border-box; border: 0; background: transparent; outline: none; font-size: 18px; padding: 6px 0; color: #111827&quot;&gt;
+&lt;/div&gt;
+&lt;div style=&quot;background: #f8f9fc; border-bottom: 1px solid #6b7280; border-radius: 4px 4px 0 0&quot;&gt;
+&lt;label for=&quot;petunjuk&quot; style=&quot;display: block; padding: 12px 16px 0; font-size: 12px; font-weight: 600; color: #4b5563&quot;&gt;Petunjuk &amp;amp; Instruksi Pengerjaan*&lt;/label&gt;
+&lt;textarea id=&quot;petunjuk&quot; placeholder=&quot;Jelaskan apa yang harus dikerjakan, hasil yang diharapkan, dan kriteria selesai. Gunakan penomoran agar langkah mudah diikuti.&quot; style=&quot;width: 100%; box-sizing: border-box; min-height: 150px; border: 0; background: transparent; outline: none; resize: vertical; padding: 8px 16px; font-size: 15px; line-height: 1.6; color: #111827&quot;&gt;&lt;/textarea&gt;
+&lt;div style=&quot;display: flex; gap: 4px; padding: 4px 12px 8px; color: #374151&quot;&gt;
+&lt;button aria-label=&quot;Tebal&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-weight: 800; font-size: 16px; color: inherit&quot;&gt;B&lt;/button&gt;
+&lt;button aria-label=&quot;Miring&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-style: italic; font-weight: 600; font-size: 16px; font-family: serif; color: inherit&quot;&gt;I&lt;/button&gt;
+&lt;button aria-label=&quot;Garis bawah&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; text-decoration: underline; font-weight: 600; font-size: 16px; color: inherit&quot;&gt;U&lt;/button&gt;
+&lt;button aria-label=&quot;Daftar bernomor&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 6h10M10 12h10M10 18h10M4 6h2M4 12h2M4 18h2&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;button aria-label=&quot;Hapus format&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 5h12M12 5l-3 14M5 19l14-14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;section style=&quot;border: 1px solid #dadce0; border-radius: 8px; padding: 24px; background-color: #ffffff; border-width: 3px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 10px&quot;&gt;
+&lt;h2 style=&quot;margin: 0; font-size: 18px; font-weight: 600; color: #1d4ed8&quot;&gt;Lampirkan&lt;/h2&gt;
+&lt;span style=&quot;font-size: 13px; color: #4b5563&quot;&gt;Materi acuan (opsional) · 0 lampiran&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 20px; background-color: transparent; border-style: solid; border-width: 1px; border-color: #DADCE0; height: 102px; border-radius: 8px&quot;&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Upload File&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M12 16V4M7 9l5-5 5 5M5 20h14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Upload File&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Tambahkan Link&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Link&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;/div&gt;
+&lt;/main&gt;
+
+&lt;aside class=&quot;side&quot; style=&quot;width: 360px; flex: none; box-sizing: border-box; background: #fff; border-left-style: solid; border-left-color: #dadce0; padding: 24px; display: flex; flex-direction: column; gap: 22px; border-style: solid; border-color: #DADCE0; border-radius: 8px; border-width: 1px; height: 612px&quot;&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tugaskan ke*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 1px solid #c4c9d4; background: #f3f4f8; border-radius: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #111827; text-align: left; border-color: #DADCE0&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;circle cx=&quot;9&quot; cy=&quot;8&quot; r=&quot;3.5&quot;&gt;&lt;/circle&gt;&lt;path d=&quot;M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pilih peserta magang&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Kategori Bidang*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; font-size: 15px; color: #4b5563; text-align: left; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-style: solid; border-color: #DADCE0&quot;&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pengembangan Web&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tenggat*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #4b5563; text-align: left; border-style: solid; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-color: #DADCE0; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;3.5&quot; y=&quot;5&quot; width=&quot;17&quot; height=&quot;15&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M3.5 10h17M8 3v4M16 3v4&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Minggu, 29 Nov 2026&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;div style=&quot;font-size: 12.5px; line-height: 1.5; color: #4b5563&quot;&gt;Berakhir pukul 23.59 WIB. Tidak boleh melewati tanggal selesai magang peserta.&lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;/aside&gt;&lt;div style=&quot;position: absolute; inset: 0; background: rgba(32,33,36,0.55); display: flex; align-items: center; justify-content: center&quot;&gt;&lt;div role=&quot;dialog&quot; aria-label=&quot;Tambahkan link&quot; style=&quot;width: 440px; background: #fff; border-radius: 8px; box-shadow: 0 8px 28px rgba(0,0,0,0.3); padding: 24px&quot;&gt;&lt;div style=&quot;font-size: 16px; font-weight: 500; color: #111827&quot;&gt;Tambahkan link&lt;/div&gt;&lt;div style=&quot;margin-top: 20px; background: #e8edf5; border-bottom: 2px solid #b3261e; border-radius: 4px 4px 0 0; padding: 8px 16px 6px&quot;&gt;&lt;div style=&quot;font-size: 12px; font-weight: 600; color: #b3261e&quot;&gt;Link*&lt;/div&gt;&lt;div style=&quot;height: 28px; display: flex; align-items: center&quot;&gt;&lt;span style=&quot;width: 1px; height: 20px; background: #b3261e&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin: 6px 0 0 16px; font-size: 12px; color: #b3261e&quot;&gt;*Wajib diisi&lt;/div&gt;&lt;div style=&quot;margin-top: 28px; display: flex; justify-content: flex-end; gap: 8px&quot;&gt;&lt;button style=&quot;height: 40px; padding: 0 16px; border: 0; background: transparent; border-radius: 20px; font-size: 14px; font-weight: 600; color: #1d4ed8&quot;&gt;Batal&lt;/button&gt;&lt;button disabled=&quot;&quot; style=&quot;height: 40px; padding: 0 16px; border: 0; background: transparent; border-radius: 20px; font-size: 14px; font-weight: 600; color: #6b7280&quot;&gt;Tambahkan link&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;&lt;/html&gt;" style="display:none;height:900px"></iframe>
+<iframe id="f3" title="4. Dialog Upload File" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;/head&gt;&lt;body&gt;
+
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;style&gt;
+body{margin:0}
+button,input,textarea{font-family:inherit}
+@media (max-width:900px){.body{flex-direction:column !important}.side{width:auto !important;border-left:0 !important;border-top:1px solid #dadce0}}
+&lt;/style&gt;
+
+&lt;div style=&quot;position: relative; min-height: 900px; background: #f8f9fc; font-family: &#x27;Noto Sans&#x27;, system-ui, sans-serif; color: #1f2937; display: flex; flex-direction: column&quot;&gt;
+
+&lt;header style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px; background: #0c2a6b; display: flex; align-items: center; gap: 16px; color: #fff&quot;&gt;
+&lt;button aria-label=&quot;Menu&quot; style=&quot;width: 44px; height: 44px; border: 1px solid #3b5393; background: #1a3a80; border-radius: 10px; display: grid; place-items: center; color: #fff&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M4 7h16M4 12h16M4 17h16&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;nav aria-label=&quot;Breadcrumb&quot; style=&quot;font-size: 14px; color: #c7d2ee&quot;&gt;&lt;span&gt;Beranda&lt;/span&gt; &lt;span style=&quot;margin: 0 6px&quot;&gt;/&lt;/span&gt; &lt;span style=&quot;color: #fff; font-weight: 600&quot;&gt;Dashboard&lt;/span&gt;&lt;/nav&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 8px; border: 1px solid #3b5393; border-radius: 28px; background: #12327a&quot;&gt;
+&lt;div style=&quot;width: 36px; height: 36px; border-radius: 50%; background: #fff; color: #0c2a6b; display: grid; place-items: center; font-weight: 700; font-size: 14px&quot;&gt;B&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 2px; align-items: flex-start&quot;&gt;
+&lt;span style=&quot;font-size: 14px; font-weight: 700; line-height: 1.1&quot;&gt;Budi Santoso, S.Kom&lt;/span&gt;
+&lt;span style=&quot;font-size: 11px; font-weight: 700; line-height: 1.2; background: #fbbf24; color: #3b2a00; border-radius: 10px; padding: 1px 8px&quot;&gt;Pembimbing&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/header&gt;
+&lt;div style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px 0 16px; background: #ffffff; border-bottom: 1px solid #dadce0; display: flex; align-items: center; gap: 12px; position: relative&quot;&gt;
+&lt;div style=&quot;width: 40px; height: 40px; border-radius: 50%; background: #dbe7ff; display: grid; place-items: center; color: #1d4ed8&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;5&quot; y=&quot;4&quot; width=&quot;14&quot; height=&quot;17&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M9 3h6v3H9zM8.5 11h7M8.5 15h7&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/div&gt;
+&lt;div style=&quot;font-size: 22px; font-weight: 500; color: #111827&quot;&gt;Buat Tugas Baru&lt;/div&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+
+&lt;div style=&quot;display: flex&quot;&gt;
+&lt;button disabled=&quot;&quot; style=&quot;height: 40px; padding: 0 20px; border: 0; background: #e5e7eb; color: #6b7280; border-radius: 20px 0 0 20px; font-size: 14px; font-weight: 600&quot;&gt;Tugaskan Sekarang&lt;/button&gt;
+&lt;button aria-label=&quot;Opsi penjadwalan&quot; style=&quot;width: 44px; height: 40px; border: 0; border-left: 1px solid #fff; color: #fff; border-radius: 0 20px 20px 0; display: grid; place-items: center; background-color: #0c2a6b&quot;&gt;
+&lt;svg width=&quot;16&quot; height=&quot;16&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;button style=&quot;height: 40px; padding: 0 16px; border: 1px solid #c4c9d4; background: #fff; border-radius: 20px; font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Batal&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;body&quot; style=&quot;flex: 1; display: flex; align-items: stretch&quot;&gt;
+
+&lt;main style=&quot;flex: 1; min-width: 0; padding: 24px; display: flex; justify-content: center&quot;&gt;
+&lt;div style=&quot;width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 24px&quot;&gt;
+
+&lt;section style=&quot;background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 24px; border-width: 4px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;background: #e8edf5; border-bottom: 2px solid #1d4ed8; border-radius: 4px 4px 0 0; padding: 10px 16px 8px&quot;&gt;
+&lt;label for=&quot;judul&quot; style=&quot;display: block; font-size: 12px; font-weight: 600; color: #1d4ed8&quot;&gt;Judul Penugasan*&lt;/label&gt;
+&lt;input id=&quot;judul&quot; type=&quot;text&quot; style=&quot;width: 100%; box-sizing: border-box; border: 0; background: transparent; outline: none; font-size: 18px; padding: 6px 0; color: #111827&quot;&gt;
+&lt;/div&gt;
+&lt;div style=&quot;background: #f8f9fc; border-bottom: 1px solid #6b7280; border-radius: 4px 4px 0 0&quot;&gt;
+&lt;label for=&quot;petunjuk&quot; style=&quot;display: block; padding: 12px 16px 0; font-size: 12px; font-weight: 600; color: #4b5563&quot;&gt;Petunjuk &amp;amp; Instruksi Pengerjaan*&lt;/label&gt;
+&lt;textarea id=&quot;petunjuk&quot; placeholder=&quot;Jelaskan apa yang harus dikerjakan, hasil yang diharapkan, dan kriteria selesai. Gunakan penomoran agar langkah mudah diikuti.&quot; style=&quot;width: 100%; box-sizing: border-box; min-height: 150px; border: 0; background: transparent; outline: none; resize: vertical; padding: 8px 16px; font-size: 15px; line-height: 1.6; color: #111827&quot;&gt;&lt;/textarea&gt;
+&lt;div style=&quot;display: flex; gap: 4px; padding: 4px 12px 8px; color: #374151&quot;&gt;
+&lt;button aria-label=&quot;Tebal&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-weight: 800; font-size: 16px; color: inherit&quot;&gt;B&lt;/button&gt;
+&lt;button aria-label=&quot;Miring&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-style: italic; font-weight: 600; font-size: 16px; font-family: serif; color: inherit&quot;&gt;I&lt;/button&gt;
+&lt;button aria-label=&quot;Garis bawah&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; text-decoration: underline; font-weight: 600; font-size: 16px; color: inherit&quot;&gt;U&lt;/button&gt;
+&lt;button aria-label=&quot;Daftar bernomor&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 6h10M10 12h10M10 18h10M4 6h2M4 12h2M4 18h2&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;button aria-label=&quot;Hapus format&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 5h12M12 5l-3 14M5 19l14-14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;section style=&quot;border: 1px solid #dadce0; border-radius: 8px; padding: 24px; background-color: #ffffff; border-width: 3px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 10px&quot;&gt;
+&lt;h2 style=&quot;margin: 0; font-size: 18px; font-weight: 600; color: #1d4ed8&quot;&gt;Lampirkan&lt;/h2&gt;
+&lt;span style=&quot;font-size: 13px; color: #4b5563&quot;&gt;Materi acuan (opsional) · 0 lampiran&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 20px; background-color: transparent; border-style: solid; border-width: 1px; border-color: #DADCE0; height: 102px; border-radius: 8px&quot;&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Upload File&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M12 16V4M7 9l5-5 5 5M5 20h14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Upload File&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Tambahkan Link&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Link&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;/div&gt;
+&lt;/main&gt;
+
+&lt;aside class=&quot;side&quot; style=&quot;width: 360px; flex: none; box-sizing: border-box; background: #fff; border-left-style: solid; border-left-color: #dadce0; padding: 24px; display: flex; flex-direction: column; gap: 22px; border-style: solid; border-color: #DADCE0; border-radius: 8px; border-width: 1px; height: 612px&quot;&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tugaskan ke*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 1px solid #c4c9d4; background: #f3f4f8; border-radius: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #111827; text-align: left; border-color: #DADCE0&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;circle cx=&quot;9&quot; cy=&quot;8&quot; r=&quot;3.5&quot;&gt;&lt;/circle&gt;&lt;path d=&quot;M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pilih peserta magang&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Kategori Bidang*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; font-size: 15px; color: #4b5563; text-align: left; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-style: solid; border-color: #DADCE0&quot;&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pengembangan Web&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tenggat*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #4b5563; text-align: left; border-style: solid; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-color: #DADCE0; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;3.5&quot; y=&quot;5&quot; width=&quot;17&quot; height=&quot;15&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M3.5 10h17M8 3v4M16 3v4&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Minggu, 29 Nov 2026&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;div style=&quot;font-size: 12.5px; line-height: 1.5; color: #4b5563&quot;&gt;Berakhir pukul 23.59 WIB. Tidak boleh melewati tanggal selesai magang peserta.&lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;/aside&gt;&lt;div style=&quot;position: absolute; inset: 0; background: rgba(32,33,36,0.55); display: flex; align-items: center; justify-content: center&quot;&gt;&lt;div role=&quot;dialog&quot; aria-label=&quot;Upload File&quot; style=&quot;width: 600px; background: #fff; border-radius: 8px; box-shadow: 0 8px 28px rgba(0,0,0,0.3); padding: 24px&quot;&gt;
+&lt;div style=&quot;font-size: 16px; font-weight: 500; color: #111827&quot;&gt;Upload File&lt;/div&gt;
+&lt;div style=&quot;margin-top: 20px; border: 2px dashed #8b92a1; border-radius: 12px; min-height: 280px; box-sizing: border-box; padding: 28px 16px; justify-content: center; display: flex; flex-direction: column; align-items: center; gap: 12px; background: #f8f9fc&quot;&gt;
+&lt;svg width=&quot;84&quot; height=&quot;62&quot; viewBox=&quot;0 0 150 110&quot; aria-hidden=&quot;true&quot;&gt;&lt;defs&gt;&lt;linearGradient id=&quot;g&quot; x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;1&quot; y2=&quot;1&quot;&gt;&lt;stop offset=&quot;0&quot; stop-color=&quot;#4cc760&quot;&gt;&lt;/stop&gt;&lt;stop offset=&quot;1&quot; stop-color=&quot;#b8e3fb&quot;&gt;&lt;/stop&gt;&lt;/linearGradient&gt;&lt;/defs&gt;&lt;path d=&quot;M38 100a30 30 0 0 1-2-60 38 38 0 0 1 72-8 28 28 0 0 1 8 56z&quot; fill=&quot;url(#g)&quot; stroke=&quot;#222&quot; stroke-width=&quot;1.5&quot;&gt;&lt;/path&gt;&lt;path d=&quot;M75 82V52M62 64l13-13 13 13&quot; fill=&quot;none&quot; stroke=&quot;#222&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;button style=&quot;height: 40px; padding: 0 24px; border: 0; background: #1d4ed8; color: #fff; border-radius: 20px; font-size: 14px; font-weight: 600&quot;&gt;Pilih File&lt;/button&gt;
+&lt;div style=&quot;font-size: 13px; color: #1f2937&quot;&gt;atau tarik file ke sini&lt;/div&gt;
+&lt;div style=&quot;font-size: 12px; color: #4b5563&quot;&gt;PDF, ZIP, DOCX · maks. 5MB&lt;/div&gt;
+&lt;/div&gt;
+&lt;div style=&quot;margin-top: 28px; display: flex; justify-content: flex-end; gap: 8px&quot;&gt;&lt;button style=&quot;height: 40px; padding: 0 16px; border: 0; background: transparent; border-radius: 20px; font-size: 14px; font-weight: 600; color: #1d4ed8&quot;&gt;Batal&lt;/button&gt;&lt;button disabled=&quot;&quot; style=&quot;height: 40px; padding: 0 16px; border: 0; background: transparent; border-radius: 20px; font-size: 14px; font-weight: 600; color: #6b7280&quot;&gt;Upload&lt;/button&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;&lt;/html&gt;" style="display:none;height:900px"></iframe>
+<iframe id="f4" title="5. Menu Opsi Tugaskan" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;/head&gt;&lt;body&gt;
+
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;style&gt;
+body{margin:0}
+button,input,textarea{font-family:inherit}
+@media (max-width:900px){.body{flex-direction:column !important}.side{width:auto !important;border-left:0 !important;border-top:1px solid #dadce0}}
+&lt;/style&gt;
+
+&lt;div style=&quot;position: relative; min-height: 900px; background: #f8f9fc; font-family: &#x27;Noto Sans&#x27;, system-ui, sans-serif; color: #1f2937; display: flex; flex-direction: column&quot;&gt;
+
+&lt;header style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px; background: #0c2a6b; display: flex; align-items: center; gap: 16px; color: #fff&quot;&gt;
+&lt;button aria-label=&quot;Menu&quot; style=&quot;width: 44px; height: 44px; border: 1px solid #3b5393; background: #1a3a80; border-radius: 10px; display: grid; place-items: center; color: #fff&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M4 7h16M4 12h16M4 17h16&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;nav aria-label=&quot;Breadcrumb&quot; style=&quot;font-size: 14px; color: #c7d2ee&quot;&gt;&lt;span&gt;Beranda&lt;/span&gt; &lt;span style=&quot;margin: 0 6px&quot;&gt;/&lt;/span&gt; &lt;span style=&quot;color: #fff; font-weight: 600&quot;&gt;Dashboard&lt;/span&gt;&lt;/nav&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 8px; border: 1px solid #3b5393; border-radius: 28px; background: #12327a&quot;&gt;
+&lt;div style=&quot;width: 36px; height: 36px; border-radius: 50%; background: #fff; color: #0c2a6b; display: grid; place-items: center; font-weight: 700; font-size: 14px&quot;&gt;B&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 2px; align-items: flex-start&quot;&gt;
+&lt;span style=&quot;font-size: 14px; font-weight: 700; line-height: 1.1&quot;&gt;Budi Santoso, S.Kom&lt;/span&gt;
+&lt;span style=&quot;font-size: 11px; font-weight: 700; line-height: 1.2; background: #fbbf24; color: #3b2a00; border-radius: 10px; padding: 1px 8px&quot;&gt;Pembimbing&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/header&gt;
+&lt;div style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px 0 16px; background: #ffffff; border-bottom: 1px solid #dadce0; display: flex; align-items: center; gap: 12px; position: relative&quot;&gt;
+&lt;div style=&quot;width: 40px; height: 40px; border-radius: 50%; background: #dbe7ff; display: grid; place-items: center; color: #1d4ed8&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;5&quot; y=&quot;4&quot; width=&quot;14&quot; height=&quot;17&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M9 3h6v3H9zM8.5 11h7M8.5 15h7&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/div&gt;
+&lt;div style=&quot;font-size: 22px; font-weight: 500; color: #111827&quot;&gt;Buat Tugas Baru&lt;/div&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+
+&lt;div style=&quot;display: flex&quot;&gt;
+&lt;button disabled=&quot;&quot; style=&quot;height: 40px; padding: 0 20px; border: 0; background: #e5e7eb; color: #6b7280; border-radius: 20px 0 0 20px; font-size: 14px; font-weight: 600&quot;&gt;Tugaskan Sekarang&lt;/button&gt;
+&lt;button aria-label=&quot;Opsi penjadwalan&quot; style=&quot;width: 44px; height: 40px; border: 0; border-left: 1px solid #fff; color: #fff; border-radius: 0 20px 20px 0; display: grid; place-items: center; background-color: #0c2a6b&quot;&gt;
+&lt;svg width=&quot;16&quot; height=&quot;16&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;button style=&quot;height: 40px; padding: 0 16px; border: 1px solid #c4c9d4; background: #fff; border-radius: 20px; font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Batal&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;body&quot; style=&quot;flex: 1; display: flex; align-items: stretch&quot;&gt;
+
+&lt;main style=&quot;flex: 1; min-width: 0; padding: 24px; display: flex; justify-content: center&quot;&gt;
+&lt;div style=&quot;width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 24px&quot;&gt;
+
+&lt;section style=&quot;background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 24px; border-width: 4px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;background: #e8edf5; border-bottom: 2px solid #1d4ed8; border-radius: 4px 4px 0 0; padding: 10px 16px 8px&quot;&gt;
+&lt;label for=&quot;judul&quot; style=&quot;display: block; font-size: 12px; font-weight: 600; color: #1d4ed8&quot;&gt;Judul Penugasan*&lt;/label&gt;
+&lt;input id=&quot;judul&quot; type=&quot;text&quot; style=&quot;width: 100%; box-sizing: border-box; border: 0; background: transparent; outline: none; font-size: 18px; padding: 6px 0; color: #111827&quot;&gt;
+&lt;/div&gt;
+&lt;div style=&quot;background: #f8f9fc; border-bottom: 1px solid #6b7280; border-radius: 4px 4px 0 0&quot;&gt;
+&lt;label for=&quot;petunjuk&quot; style=&quot;display: block; padding: 12px 16px 0; font-size: 12px; font-weight: 600; color: #4b5563&quot;&gt;Petunjuk &amp;amp; Instruksi Pengerjaan*&lt;/label&gt;
+&lt;textarea id=&quot;petunjuk&quot; placeholder=&quot;Jelaskan apa yang harus dikerjakan, hasil yang diharapkan, dan kriteria selesai. Gunakan penomoran agar langkah mudah diikuti.&quot; style=&quot;width: 100%; box-sizing: border-box; min-height: 150px; border: 0; background: transparent; outline: none; resize: vertical; padding: 8px 16px; font-size: 15px; line-height: 1.6; color: #111827&quot;&gt;&lt;/textarea&gt;
+&lt;div style=&quot;display: flex; gap: 4px; padding: 4px 12px 8px; color: #374151&quot;&gt;
+&lt;button aria-label=&quot;Tebal&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-weight: 800; font-size: 16px; color: inherit&quot;&gt;B&lt;/button&gt;
+&lt;button aria-label=&quot;Miring&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-style: italic; font-weight: 600; font-size: 16px; font-family: serif; color: inherit&quot;&gt;I&lt;/button&gt;
+&lt;button aria-label=&quot;Garis bawah&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; text-decoration: underline; font-weight: 600; font-size: 16px; color: inherit&quot;&gt;U&lt;/button&gt;
+&lt;button aria-label=&quot;Daftar bernomor&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 6h10M10 12h10M10 18h10M4 6h2M4 12h2M4 18h2&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;button aria-label=&quot;Hapus format&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 5h12M12 5l-3 14M5 19l14-14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;section style=&quot;border: 1px solid #dadce0; border-radius: 8px; padding: 24px; background-color: #ffffff; border-width: 3px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 10px&quot;&gt;
+&lt;h2 style=&quot;margin: 0; font-size: 18px; font-weight: 600; color: #1d4ed8&quot;&gt;Lampirkan&lt;/h2&gt;
+&lt;span style=&quot;font-size: 13px; color: #4b5563&quot;&gt;Materi acuan (opsional) · 0 lampiran&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 20px; background-color: transparent; border-style: solid; border-width: 1px; border-color: #DADCE0; height: 102px; border-radius: 8px&quot;&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Upload File&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M12 16V4M7 9l5-5 5 5M5 20h14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Upload File&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Tambahkan Link&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Link&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;/div&gt;
+&lt;/main&gt;
+
+&lt;aside class=&quot;side&quot; style=&quot;width: 360px; flex: none; box-sizing: border-box; background: #fff; border-left-style: solid; border-left-color: #dadce0; padding: 24px; display: flex; flex-direction: column; gap: 22px; border-style: solid; border-color: #DADCE0; border-radius: 8px; border-width: 1px; height: 612px&quot;&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tugaskan ke*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 1px solid #c4c9d4; background: #f3f4f8; border-radius: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #111827; text-align: left; border-color: #DADCE0&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;circle cx=&quot;9&quot; cy=&quot;8&quot; r=&quot;3.5&quot;&gt;&lt;/circle&gt;&lt;path d=&quot;M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pilih peserta magang&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Kategori Bidang*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; font-size: 15px; color: #4b5563; text-align: left; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-style: solid; border-color: #DADCE0&quot;&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pengembangan Web&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tenggat*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #4b5563; text-align: left; border-style: solid; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-color: #DADCE0; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;3.5&quot; y=&quot;5&quot; width=&quot;17&quot; height=&quot;15&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M3.5 10h17M8 3v4M16 3v4&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Minggu, 29 Nov 2026&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;div style=&quot;font-size: 12.5px; line-height: 1.5; color: #4b5563&quot;&gt;Berakhir pukul 23.59 WIB. Tidak boleh melewati tanggal selesai magang peserta.&lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;/aside&gt;&lt;div style=&quot;position: absolute; inset: 0; background: rgba(32,33,36,0.55); &quot;&gt;&lt;/div&gt;&lt;div style=&quot;position: absolute; top: 122px; right: 100px; width: 210px; background: #eef2f9; border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); padding: 8px 0&quot;&gt;&lt;div style=&quot;padding: 12px 20px; font-size: 14px; color: #7b8291;&quot;&gt;Tugaskan Sekarang&lt;/div&gt;&lt;div style=&quot;padding: 12px 20px; font-size: 14px; color: #7b8291;&quot;&gt;Jadwalkan&lt;/div&gt;&lt;div style=&quot;padding: 12px 20px; font-size: 14px; color: #7b8291;&quot;&gt;Simpan draf&lt;/div&gt;&lt;div style=&quot;padding: 12px 20px; font-size: 14px; color: #111827; border-top: 1px solid #c9d0de; margin-top: 6px; padding-top: 18px&quot;&gt;Hapus draf&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;&lt;/html&gt;" style="display:none;height:900px"></iframe>
+<iframe id="f5" title="6. Popup Tenggat" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;/head&gt;&lt;body&gt;
+
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;style&gt;
+body{margin:0}
+button,input,textarea{font-family:inherit}
+@media (max-width:900px){.body{flex-direction:column !important}.side{width:auto !important;border-left:0 !important;border-top:1px solid #dadce0}}
+&lt;/style&gt;
+
+&lt;div style=&quot;position: relative; min-height: 900px; background: #f8f9fc; font-family: &#x27;Noto Sans&#x27;, system-ui, sans-serif; color: #1f2937; display: flex; flex-direction: column&quot;&gt;
+
+&lt;header style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px; background: #0c2a6b; display: flex; align-items: center; gap: 16px; color: #fff&quot;&gt;
+&lt;button aria-label=&quot;Menu&quot; style=&quot;width: 44px; height: 44px; border: 1px solid #3b5393; background: #1a3a80; border-radius: 10px; display: grid; place-items: center; color: #fff&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M4 7h16M4 12h16M4 17h16&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;nav aria-label=&quot;Breadcrumb&quot; style=&quot;font-size: 14px; color: #c7d2ee&quot;&gt;&lt;span&gt;Beranda&lt;/span&gt; &lt;span style=&quot;margin: 0 6px&quot;&gt;/&lt;/span&gt; &lt;span style=&quot;color: #fff; font-weight: 600&quot;&gt;Dashboard&lt;/span&gt;&lt;/nav&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 8px; border: 1px solid #3b5393; border-radius: 28px; background: #12327a&quot;&gt;
+&lt;div style=&quot;width: 36px; height: 36px; border-radius: 50%; background: #fff; color: #0c2a6b; display: grid; place-items: center; font-weight: 700; font-size: 14px&quot;&gt;B&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 2px; align-items: flex-start&quot;&gt;
+&lt;span style=&quot;font-size: 14px; font-weight: 700; line-height: 1.1&quot;&gt;Budi Santoso, S.Kom&lt;/span&gt;
+&lt;span style=&quot;font-size: 11px; font-weight: 700; line-height: 1.2; background: #fbbf24; color: #3b2a00; border-radius: 10px; padding: 1px 8px&quot;&gt;Pembimbing&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/header&gt;
+&lt;div style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px 0 16px; background: #ffffff; border-bottom: 1px solid #dadce0; display: flex; align-items: center; gap: 12px; position: relative&quot;&gt;
+&lt;div style=&quot;width: 40px; height: 40px; border-radius: 50%; background: #dbe7ff; display: grid; place-items: center; color: #1d4ed8&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;5&quot; y=&quot;4&quot; width=&quot;14&quot; height=&quot;17&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M9 3h6v3H9zM8.5 11h7M8.5 15h7&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/div&gt;
+&lt;div style=&quot;font-size: 22px; font-weight: 500; color: #111827&quot;&gt;Buat Tugas Baru&lt;/div&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+
+&lt;div style=&quot;display: flex&quot;&gt;
+&lt;button disabled=&quot;&quot; style=&quot;height: 40px; padding: 0 20px; border: 0; background: #e5e7eb; color: #6b7280; border-radius: 20px 0 0 20px; font-size: 14px; font-weight: 600&quot;&gt;Tugaskan Sekarang&lt;/button&gt;
+&lt;button aria-label=&quot;Opsi penjadwalan&quot; style=&quot;width: 44px; height: 40px; border: 0; border-left: 1px solid #fff; color: #fff; border-radius: 0 20px 20px 0; display: grid; place-items: center; background-color: #0c2a6b&quot;&gt;
+&lt;svg width=&quot;16&quot; height=&quot;16&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;button style=&quot;height: 40px; padding: 0 16px; border: 1px solid #c4c9d4; background: #fff; border-radius: 20px; font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Batal&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;body&quot; style=&quot;flex: 1; display: flex; align-items: stretch&quot;&gt;
+
+&lt;main style=&quot;flex: 1; min-width: 0; padding: 24px; display: flex; justify-content: center&quot;&gt;
+&lt;div style=&quot;width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 24px&quot;&gt;
+
+&lt;section style=&quot;background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 24px; border-width: 4px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;background: #e8edf5; border-bottom: 2px solid #1d4ed8; border-radius: 4px 4px 0 0; padding: 10px 16px 8px&quot;&gt;
+&lt;label for=&quot;judul&quot; style=&quot;display: block; font-size: 12px; font-weight: 600; color: #1d4ed8&quot;&gt;Judul Penugasan*&lt;/label&gt;
+&lt;input id=&quot;judul&quot; type=&quot;text&quot; style=&quot;width: 100%; box-sizing: border-box; border: 0; background: transparent; outline: none; font-size: 18px; padding: 6px 0; color: #111827&quot;&gt;
+&lt;/div&gt;
+&lt;div style=&quot;background: #f8f9fc; border-bottom: 1px solid #6b7280; border-radius: 4px 4px 0 0&quot;&gt;
+&lt;label for=&quot;petunjuk&quot; style=&quot;display: block; padding: 12px 16px 0; font-size: 12px; font-weight: 600; color: #4b5563&quot;&gt;Petunjuk &amp;amp; Instruksi Pengerjaan*&lt;/label&gt;
+&lt;textarea id=&quot;petunjuk&quot; placeholder=&quot;Jelaskan apa yang harus dikerjakan, hasil yang diharapkan, dan kriteria selesai. Gunakan penomoran agar langkah mudah diikuti.&quot; style=&quot;width: 100%; box-sizing: border-box; min-height: 150px; border: 0; background: transparent; outline: none; resize: vertical; padding: 8px 16px; font-size: 15px; line-height: 1.6; color: #111827&quot;&gt;&lt;/textarea&gt;
+&lt;div style=&quot;display: flex; gap: 4px; padding: 4px 12px 8px; color: #374151&quot;&gt;
+&lt;button aria-label=&quot;Tebal&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-weight: 800; font-size: 16px; color: inherit&quot;&gt;B&lt;/button&gt;
+&lt;button aria-label=&quot;Miring&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; font-style: italic; font-weight: 600; font-size: 16px; font-family: serif; color: inherit&quot;&gt;I&lt;/button&gt;
+&lt;button aria-label=&quot;Garis bawah&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; text-decoration: underline; font-weight: 600; font-size: 16px; color: inherit&quot;&gt;U&lt;/button&gt;
+&lt;button aria-label=&quot;Daftar bernomor&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 6h10M10 12h10M10 18h10M4 6h2M4 12h2M4 18h2&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;button aria-label=&quot;Hapus format&quot; style=&quot;width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; display: grid; place-items: center; color: inherit&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 5h12M12 5l-3 14M5 19l14-14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;section style=&quot;border: 1px solid #dadce0; border-radius: 8px; padding: 24px; background-color: #ffffff; border-width: 3px; border-top-color: #0c2a6b&quot;&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 10px&quot;&gt;
+&lt;h2 style=&quot;margin: 0; font-size: 18px; font-weight: 600; color: #1d4ed8&quot;&gt;Lampirkan&lt;/h2&gt;
+&lt;span style=&quot;font-size: 13px; color: #4b5563&quot;&gt;Materi acuan (opsional) · 0 lampiran&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 20px; background-color: transparent; border-style: solid; border-width: 1px; border-color: #DADCE0; height: 102px; border-radius: 8px&quot;&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Upload File&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M12 16V4M7 9l5-5 5 5M5 20h14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Upload File&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; align-items: center; gap: 8px&quot;&gt;
+&lt;button aria-label=&quot;Tambahkan Link&quot; style=&quot;width: 52px; height: 52px; border: 1px solid #c4c9d4; background: #fff; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;span style=&quot;font-size: 13px; color: #374151&quot;&gt;Link&lt;/span&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;/div&gt;
+&lt;/main&gt;
+
+&lt;aside class=&quot;side&quot; style=&quot;width: 360px; flex: none; box-sizing: border-box; background: #fff; border-left-style: solid; border-left-color: #dadce0; padding: 24px; display: flex; flex-direction: column; gap: 22px; border-style: solid; border-color: #DADCE0; border-radius: 8px; border-width: 1px; height: 612px&quot;&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tugaskan ke*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 1px solid #c4c9d4; background: #f3f4f8; border-radius: 8px; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #111827; text-align: left; border-color: #DADCE0&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;circle cx=&quot;9&quot; cy=&quot;8&quot; r=&quot;3.5&quot;&gt;&lt;/circle&gt;&lt;path d=&quot;M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pilih peserta magang&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Kategori Bidang*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; font-size: 15px; color: #4b5563; text-align: left; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-style: solid; border-color: #DADCE0&quot;&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Pengembangan Web&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 8px&quot;&gt;
+&lt;div style=&quot;font-size: 14px; font-weight: 600; color: #374151&quot;&gt;Tenggat*&lt;/div&gt;
+&lt;button style=&quot;height: 48px; padding: 0 16px; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #6b7280; background: #f3f4f8; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 10px; font-size: 15px; color: #4b5563; text-align: left; border-style: solid; border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-color: #DADCE0; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;3.5&quot; y=&quot;5&quot; width=&quot;17&quot; height=&quot;15&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M3.5 10h17M8 3v4M16 3v4&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span style=&quot;flex: 1&quot;&gt;Minggu, 29 Nov 2026&lt;/span&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;div style=&quot;font-size: 12.5px; line-height: 1.5; color: #4b5563&quot;&gt;Berakhir pukul 23.59 WIB. Tidak boleh melewati tanggal selesai magang peserta.&lt;/div&gt;
+&lt;/div&gt;
+
+
+
+&lt;/aside&gt;
+&lt;/div&gt;
+&lt;div style=&quot;position: absolute; top: 480px; right: 24px; width: 260px; height: 190px; box-sizing: border-box; background: #fff; border: 1px solid #dadce0; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.18); padding: 18px 24px&quot;&gt;&lt;div style=&quot;font-size: 16px; font-weight: 500; color: #111827&quot;&gt;Batas tanggal &amp;amp; waktu&lt;/div&gt;&lt;div style=&quot;position: absolute; left: 24px; right: 24px; top: 85px; height: 54px; background: #e0e5ee; border-bottom: 2px solid #1d4ed8; border-radius: 4px 4px 0 0; padding: 8px 12px; box-sizing: border-box&quot;&gt;&lt;div style=&quot;font-size: 12px; font-weight: 500; color: #1d4ed8&quot;&gt;Batas waktu&lt;/div&gt;&lt;div style=&quot;font-size: 16px; color: #111827; margin-top: 2px; white-space: nowrap&quot;&gt;29/11/2026&lt;/div&gt;&lt;span style=&quot;position: absolute; right: 2px; top: 3px; width: 44px; height: 44px; border-radius: 50%; background: #d3dae6; display: grid; place-items: center&quot;&gt;&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;#1f2937&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;3.5&quot; y=&quot;5&quot; width=&quot;17&quot; height=&quot;15&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M3.5 10h17M8 3v4M16 3v4&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;position: absolute; left: 36px; top: 150px; font-size: 12px; color: #4b5563&quot;&gt;HH/BB/TTTT&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;position: absolute; top: 144px; right: 48px; width: 358px; box-sizing: border-box; background: #e9eef7; border-radius: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); padding: 20px 11px 4px&quot;&gt;&lt;div style=&quot;height: 32px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; padding: 0 8px 0 10px&quot;&gt;&lt;span style=&quot;display: flex; align-items: center; gap: 22px&quot;&gt;&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;#1f2937&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M15 6l-6 6 6 6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;span style=&quot;font-size: 15px; display: flex; align-items: center; gap: 8px&quot;&gt;Nov&lt;svg width=&quot;10&quot; height=&quot;10&quot; viewBox=&quot;0 0 10 10&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M1 3h8L5 8z&quot; fill=&quot;#1f2937&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/span&gt;&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;#1f2937&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M9 6l6 6-6 6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/span&gt;&lt;span style=&quot;display: flex; align-items: center; gap: 22px&quot;&gt;&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;#1f2937&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M15 6l-6 6 6 6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;span style=&quot;font-size: 15px; display: flex; align-items: center; gap: 8px&quot;&gt;2026&lt;svg width=&quot;10&quot; height=&quot;10&quot; viewBox=&quot;0 0 10 10&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M1 3h8L5 8z&quot; fill=&quot;#1f2937&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/span&gt;&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;#1f2937&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M9 6l6 6-6 6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;display: grid; grid-template-columns: repeat(7, 48px)&quot;&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center; font-size: 14px; color: #1f2937&quot;&gt;M&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center; font-size: 14px; color: #1f2937&quot;&gt;S&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center; font-size: 14px; color: #1f2937&quot;&gt;S&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center; font-size: 14px; color: #1f2937&quot;&gt;R&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center; font-size: 14px; color: #1f2937&quot;&gt;K&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center; font-size: 14px; color: #1f2937&quot;&gt;J&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center; font-size: 14px; color: #1f2937&quot;&gt;S&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;2&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937; border: 1px solid #1d4ed8;&quot;&gt;3&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;4&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;5&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;6&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;7&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;8&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;9&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;10&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;11&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;12&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;13&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;14&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;15&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;16&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;17&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;18&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;19&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;20&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;21&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;22&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;23&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;24&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;25&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;26&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;27&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;28&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937; background: #1d4ed8; color: #fff; font-weight: 600;&quot;&gt;29&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #1f2937;&quot;&gt;30&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #8b92a1;&quot;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #8b92a1;&quot;&gt;2&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #8b92a1;&quot;&gt;3&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #8b92a1;&quot;&gt;4&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;width: 48px; height: 48px; display: grid; place-items: center&quot;&gt;&lt;span style=&quot;width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; box-sizing: border-box; font-size: 15px; color: #8b92a1;&quot;&gt;5&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;height: 48px; margin-top: 9px; display: flex; justify-content: space-between; align-items: center&quot;&gt;&lt;button style=&quot;height: 48px; padding: 0 12px; border: 0; background: transparent; border-radius: 24px; font-size: 14px; font-weight: 500; color: #1d4ed8&quot;&gt;Hapus&lt;/button&gt;&lt;span&gt;&lt;button style=&quot;height: 48px; padding: 0 12px; border: 0; background: transparent; border-radius: 24px; font-size: 14px; font-weight: 500; color: #1d4ed8&quot;&gt;Batal&lt;/button&gt;&lt;button style=&quot;height: 48px; padding: 0 12px; border: 0; background: transparent; border-radius: 24px; font-size: 14px; font-weight: 500; color: #1d4ed8&quot;&gt;Oke&lt;/button&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/body&gt;&lt;/html&gt;" style="display:none;height:900px"></iframe>
+<iframe id="f6" title="7. Detail Tugas (Peserta)" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;/head&gt;&lt;body&gt;
+
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;style&gt;
+body{margin:0}
+button,input,textarea{font-family:inherit}
+@media (max-width:900px){.cols{flex-direction:column !important}.rside{width:auto !important}}
+&lt;/style&gt;
+
+&lt;div style=&quot;min-height: 940px; background: #ffffff; font-family: &#x27;Noto Sans&#x27;, system-ui, sans-serif; color: #1f2937; display: flex; flex-direction: column&quot;&gt;
+
+&lt;header style=&quot;height: 64px; box-sizing: border-box; padding: 0 24px; background: #053b82; display: flex; align-items: center; gap: 16px; color: #fff&quot;&gt;
+&lt;button aria-label=&quot;Menu&quot; style=&quot;width: 44px; height: 44px; border: 1px solid #3b6aae; background: #12489a; border-radius: 10px; display: grid; place-items: center; color: #fff&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M4 7h16M4 12h16M4 17h16&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;div style=&quot;font-size: 18px; font-weight: 700&quot;&gt;Detail Tugas Bimbingan&lt;/div&gt;
+&lt;div style=&quot;flex: 1&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 12px; padding: 6px 14px 6px 8px; border: 1px solid #3b6aae; border-radius: 28px; background: #0d4390&quot;&gt;
+&lt;div style=&quot;width: 36px; height: 36px; border-radius: 50%; background: #fff; color: #053b82; display: grid; place-items: center; font-weight: 700; font-size: 14px&quot;&gt;N&lt;/div&gt;
+&lt;div style=&quot;display: flex; flex-direction: column; gap: 1px&quot;&gt;
+&lt;span style=&quot;font-size: 14px; font-weight: 700; line-height: 1.2&quot;&gt;Naufal Pratama&lt;/span&gt;
+&lt;span style=&quot;font-size: 11px; font-weight: 600; line-height: 1.2; color: #bcd4f7&quot;&gt;Peserta Magang&lt;/span&gt;
+&lt;/div&gt;
+&lt;svg width=&quot;16&quot; height=&quot;16&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M6 9l6 6 6-6&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/div&gt;
+&lt;/header&gt;
+
+&lt;main style=&quot;flex: 1; padding: 28px 24px 48px; display: flex; justify-content: center&quot;&gt;
+&lt;div class=&quot;cols&quot; style=&quot;width: 100%; max-width: 1260px; display: flex; gap: 24px; align-items: flex-start&quot;&gt;
+
+&lt;section style=&quot;flex: 1; min-width: 0&quot;&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 16px&quot;&gt;
+&lt;div style=&quot;flex: none; width: 44px; height: 44px; border-radius: 50%; background: #dbe7ff; display: grid; place-items: center; color: #1d4ed8&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;rect x=&quot;5&quot; y=&quot;4&quot; width=&quot;14&quot; height=&quot;17&quot; rx=&quot;2&quot;&gt;&lt;/rect&gt;&lt;path d=&quot;M9 3h6v3H9zM8.5 11h7M8.5 15h7&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;/div&gt;
+&lt;h1 style=&quot;flex: 1; margin: 0; font-size: 30px; line-height: 1.3; font-weight: 400; color: #1f2937&quot;&gt;Penyusunan Draf Laporan Akhir Magang &amp;amp; Portofolio&lt;/h1&gt;
+&lt;button aria-label=&quot;Opsi lainnya&quot; style=&quot;flex: none; width: 44px; height: 44px; border: 0; background: transparent; border-radius: 50%; display: grid; place-items: center; color: #374151&quot;&gt;
+&lt;svg width=&quot;20&quot; height=&quot;20&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;currentColor&quot; aria-hidden=&quot;true&quot;&gt;&lt;circle cx=&quot;12&quot; cy=&quot;5&quot; r=&quot;2&quot;&gt;&lt;/circle&gt;&lt;circle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;2&quot;&gt;&lt;/circle&gt;&lt;circle cx=&quot;12&quot; cy=&quot;19&quot; r=&quot;2&quot;&gt;&lt;/circle&gt;&lt;/svg&gt;
+&lt;/button&gt;
+&lt;/div&gt;
+&lt;div style=&quot;margin-top: 20px; font-size: 14px; color: #4b5563&quot;&gt;Budi Santoso, S.Kom &lt;span style=&quot;margin: 0 8px&quot;&gt;•&lt;/span&gt; 3 Nov 2026&lt;/div&gt;
+&lt;div style=&quot;margin-top: 8px; font-size: 14px; color: #111827&quot;&gt;Kompleksitas: Sedang &lt;span style=&quot;margin: 0 6px&quot;&gt;|&lt;/span&gt; Tenggat 24 Jan 2027, 23.59 WIB&lt;/div&gt;
+&lt;hr style=&quot;border: 0; border-top: 1px solid #c4c9d4; margin: 24px 0; stroke: #1f2937; border-color: #1f2937&quot;&gt;
+&lt;div style=&quot;font-size: 14px; line-height: 1.7; color: #1f2937&quot;&gt;
+&lt;p style=&quot;margin: 0 0 14px&quot;&gt;Menyusun laporan akhir PKL/Magang Bab 1 s/d Bab 4 dan melampirkan lembar pengesahan pembimbing.&lt;/p&gt;
+&lt;ul style=&quot;margin: 0 0 14px; padding-left: 40px&quot;&gt;
+&lt;li&gt;Susun draf laporan Bab 1 s/d Bab 4&lt;/li&gt;
+&lt;li&gt;Lampirkan lembar pengesahan pembimbing&lt;/li&gt;
+&lt;li&gt;Unggah hasil dalam format PDF&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p style=&quot;margin: 0&quot;&gt;Kumpulkan melalui panel Tugas Anda sebelum tenggat.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;aside class=&quot;rside&quot; style=&quot;width: 300px; flex: none; display: flex; flex-direction: column; gap: 16px; border-style: none; border-width: 3px; border-color: #DADCE0; border-radius: 8px&quot;&gt;
+
+&lt;section style=&quot;background: #e9eef7; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; border-style: solid; border-width: 1px; border-color: #bcd4f7&quot;&gt;
+&lt;div style=&quot;display: flex; align-items: baseline; justify-content: space-between&quot;&gt;
+&lt;h2 style=&quot;margin: 0; font-size: 22px; font-weight: 400; color: #1f2937&quot;&gt;Tugas Anda&lt;/h2&gt;
+&lt;span style=&quot;font-size: 14px; color: #b3261e&quot;&gt;Belum diserahkan&lt;/span&gt;
+&lt;/div&gt;
+&lt;button style=&quot;height: 40px; border: 1px solid #1d4ed8; background: #fff; border-radius: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; font-weight: 500; color: #1d4ed8&quot;&gt;
+&lt;svg width=&quot;16&quot; height=&quot;16&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M12 5v14M5 12h14&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+Tambah berkas&lt;/button&gt;
+
+
+
+&lt;button disabled=&quot;&quot; style=&quot;height: 40px; border: 0; background: #d5d9e2; color: #5b6272; border-radius: 20px; font-size: 14px; font-weight: 500&quot;&gt;Serahkan&lt;/button&gt;
+&lt;div style=&quot;font-size: 12px; font-style: italic; text-align: center; color: #4b5563&quot;&gt;Pekerjaan tidak dapat diserahkan setelah tenggat&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;section style=&quot;background: #e9eef7; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 16px; border-style: solid; border-width: 1px; border-color: #bcd4f7&quot;&gt;
+&lt;div style=&quot;display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 500; color: #1f2937&quot;&gt;
+&lt;svg width=&quot;22&quot; height=&quot;22&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;circle cx=&quot;12&quot; cy=&quot;8&quot; r=&quot;4&quot;&gt;&lt;/circle&gt;&lt;path d=&quot;M4 21a8 8 0 0 1 16 0&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+Komentar pribadi
+&lt;/div&gt;
+&lt;button style=&quot;border: 0; background: transparent; padding: 4px 0 4px 36px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: #1d4ed8; text-align: left&quot;&gt;
+&lt;svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M4 5h16v11H9l-5 4zM8 9h8M8 12h5&quot;&gt;&lt;/path&gt;&lt;/svg&gt;
+&lt;span&gt;Tambah komentar untuk Budi Santoso&lt;/span&gt;&lt;/button&gt;
+&lt;/section&gt;
+
+&lt;/aside&gt;
+&lt;/div&gt;
+&lt;/main&gt;
+
+&lt;footer style=&quot;height: 52px; background: #053b82; color: #bcd4f7; font-size: 12px; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px&quot;&gt;
+Portal MagKom • Dinas Komunikasi dan Informatika Kabupaten Sleman
+&lt;/footer&gt;
+
+&lt;/div&gt;
+&lt;/body&gt;&lt;/html&gt;" style="display:none;height:940px"></iframe>
+<script>
+var b=document.querySelectorAll('nav button');
+b.forEach(function(x){x.onclick=function(){b.forEach(function(y){y.classList.remove('on')});x.classList.add('on');document.querySelectorAll('iframe').forEach(function(f,j){f.style.display=(j==x.dataset.i)?'block':'none'})}});
+</script></body></html>

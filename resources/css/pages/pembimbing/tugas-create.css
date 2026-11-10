@@ -1,0 +1,1725 @@
+/* =========================================================================
+   MAGKOM — HALAMAN BUAT TUGAS BARU PEMBIMBING (Classroom Redesign)
+   Mengacu pada folder Designnnn dan standar design system MAGKOM.
+   ========================================================================= */
+
+.tugas-workspace {
+    font-family: 'Noto Sans', 'Open Sans', system-ui, -apple-system, sans-serif;
+    color: var(--neutral-900, #111827);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* --- Top Header & Action Bar (Sesuai Designnnn/Buat Tugas Baru@1x.png) --- */
+.tugas-topbar {
+    height: 64px;
+    box-sizing: border-box;
+    padding: 0 24px 0 16px;
+    background: #ffffff;
+    border-bottom: 1px solid #dadce0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    position: relative;
+    border-radius: 8px 8px 0 0;
+}
+
+@media (max-width: 640px) {
+    .tugas-topbar {
+        height: auto;
+        padding: 12px 16px;
+        flex-wrap: wrap;
+    }
+}
+
+.tugas-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tugas-icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #dbe7ff;
+    color: #1d4ed8;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+
+.tugas-page-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: #111827;
+    margin: 0;
+    line-height: 1;
+}
+
+.tugas-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Split Button Tugaskan Sekarang */
+.tugas-split-btn {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+.tugas-btn-primary-action {
+    height: 40px;
+    padding: 0 20px;
+    border: none;
+    background: #0c2a6b;
+    color: #ffffff;
+    border-radius: 20px 0 0 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tugas-btn-primary-action:hover:not(:disabled) {
+    background: #081e4d;
+}
+
+.tugas-btn-primary-action:disabled {
+    background: #e5e7eb;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+.tugas-btn-caret {
+    width: 44px;
+    height: 40px;
+    border: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    background: #0c2a6b;
+    color: #ffffff;
+    border-radius: 0 20px 20px 0;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.tugas-btn-caret:hover:not(:disabled) {
+    background: #081e4d;
+}
+
+.tugas-btn-caret:disabled {
+    background: #e5e7eb;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+/* Dropdown Menu Opsi Tugaskan (Sesuai Designnnn/Menu · Opsi Tugaskan@1x.png) */
+.tugas-split-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    width: 210px;
+    background: #eef2f9;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    padding: 8px 0;
+    z-index: 100;
+    display: none;
+    border: none;
+}
+
+.tugas-split-menu.is-open {
+    display: block;
+    animation: menuFadeIn 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes menuFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tugas-menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    user-select: none;
+}
+
+.tugas-menu-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #0c2a6b;
+}
+
+.tugas-menu-divider {
+    height: 1px;
+    background: #c9d0de;
+    margin: 6px 0;
+}
+
+.tugas-menu-item--danger {
+    color: #111827;
+    padding-top: 14px;
+    padding-bottom: 12px;
+}
+
+.tugas-menu-item--danger:hover {
+    background: rgba(179, 38, 30, 0.08);
+    color: #b3261e;
+}
+
+.tugas-btn-cancel {
+    height: 40px;
+    padding: 0 18px;
+    border: 1px solid #c4c9d4;
+    background: #ffffff;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tugas-btn-cancel:hover {
+    background: #f3f4f8;
+    color: #111827;
+}
+
+/* --- Layout Grid (Dua Kolom) --- */
+.tugas-body-layout {
+    display: flex;
+    width: 100%;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.tugas-main-column {
+    flex: 1 1 0%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.tugas-side-column {
+    width: 380px;
+    flex-shrink: 0;
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 960px) {
+    .tugas-body-layout {
+        flex-direction: column;
+    }
+    .tugas-side-column {
+        width: 100%;
+    }
+}
+
+/* --- Card Panel Kiri --- */
+.tugas-card {
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-top: 4px solid #0c2a6b;
+    box-sizing: border-box;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.tugas-card:focus-within {
+    box-shadow: 0 6px 20px rgba(12, 42, 107, 0.08);
+    border-color: #93c5fd;
+}
+
+.tugas-card--accent {
+    border-top: 3px solid #0c2a6b;
+}
+
+/* Input Fields Bergaya Modern ala Google Classroom (Material Floating Label) */
+.tugas-field-filled {
+    position: relative;
+    background: #e8edf5;
+    border-bottom: 1px solid #5f6368;
+    border-radius: 4px 4px 0 0;
+    min-height: 56px;
+    height: 56px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tugas-field-filled:hover {
+    background: #dde3ed;
+    border-bottom-color: #202124;
+}
+
+.tugas-field-filled:focus-within,
+.tugas-field-filled.is-focused {
+    background: #e8edf5;
+    border-bottom-color: transparent;
+}
+
+.tugas-field-filled::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #1a73e8;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.tugas-field-filled:focus-within::after,
+.tugas-field-filled.is-focused::after {
+    transform: scaleX(1);
+}
+
+.tugas-field-filled.has-error {
+    border-bottom-color: #b3261e;
+    background: #fef2f2;
+}
+
+.tugas-field-filled.has-error::after {
+    background: #b3261e;
+    transform: scaleX(1);
+}
+
+.tugas-field-filled-label {
+    position: absolute;
+    left: 16px;
+    top: 18px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #5f6368;
+    line-height: 1;
+    pointer-events: none;
+    transform-origin: left top;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                font-weight 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    z-index: 1;
+}
+
+/* Floating animation when focused OR has value */
+.tugas-field-filled:focus-within .tugas-field-filled-label,
+.tugas-field-filled.is-focused .tugas-field-filled-label,
+.tugas-field-filled.has-value .tugas-field-filled-label {
+    transform: translateY(-10px) scale(0.75);
+}
+
+/* Label color transitions */
+.tugas-field-filled:focus-within .tugas-field-filled-label,
+.tugas-field-filled.is-focused .tugas-field-filled-label {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.tugas-field-filled.has-value:not(:focus-within):not(.is-focused) .tugas-field-filled-label {
+    color: #5f6368;
+    font-weight: 500;
+}
+
+.tugas-field-filled.has-error .tugas-field-filled-label {
+    color: #b3261e !important;
+}
+
+.tugas-input-clean {
+    width: 100%;
+    height: 28px;
+    box-sizing: border-box;
+    border: 0;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0;
+    margin-bottom: 8px;
+    color: #111827;
+    line-height: 28px;
+    font-family: inherit;
+    z-index: 2;
+}
+
+/* Petunjuk & Instruksi Container dengan Animasi Floating Label ala Google Classroom */
+.tugas-instruction-box {
+    position: relative;
+    background: #e8edf5;
+    border-bottom: 1px solid #5f6368;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    cursor: text;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tugas-instruction-box:hover {
+    background: #dde3ed;
+    border-bottom-color: #202124;
+}
+
+.tugas-instruction-box:focus-within,
+.tugas-instruction-box.is-focused {
+    background: #e8edf5;
+    border-bottom-color: transparent;
+}
+
+.tugas-instruction-box::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #1a73e8;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.tugas-instruction-box:focus-within::after,
+.tugas-instruction-box.is-focused::after {
+    transform: scaleX(1);
+}
+
+.tugas-instruction-box.has-error {
+    border-bottom-color: #b3261e;
+    background: #fef2f2;
+}
+
+.tugas-instruction-box.has-error::after {
+    background: #b3261e;
+    transform: scaleX(1);
+}
+
+.tugas-instruction-label {
+    position: absolute;
+    left: 16px;
+    top: 18px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #5f6368;
+    line-height: 1;
+    pointer-events: none;
+    transform-origin: left top;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                font-weight 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    z-index: 5;
+}
+
+/* Floating animation when focused OR has value */
+.tugas-instruction-box:focus-within .tugas-instruction-label,
+.tugas-instruction-box.is-focused .tugas-instruction-label,
+.tugas-instruction-box.has-value .tugas-instruction-label {
+    transform: translateY(-10px) scale(0.75);
+}
+
+/* Label color transitions */
+.tugas-instruction-box:focus-within .tugas-instruction-label,
+.tugas-instruction-box.is-focused .tugas-instruction-label {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.tugas-instruction-box.has-value:not(:focus-within):not(.is-focused) .tugas-instruction-label {
+    color: #5f6368;
+    font-weight: 500;
+}
+
+.tugas-instruction-box.has-error .tugas-instruction-label {
+    color: #b3261e !important;
+}
+
+.tugas-textarea-clean {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 160px;
+    border: 0;
+    background: transparent;
+    outline: none;
+    resize: vertical;
+    padding: 8px 16px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #111827;
+    font-family: inherit;
+}
+
+.tugas-visual-editor {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 140px;
+    max-height: 380px;
+    overflow-y: auto;
+    border: 0;
+    background: transparent;
+    outline: none;
+    padding: 26px 16px 10px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #111827;
+    font-family: inherit;
+    word-break: break-word;
+    z-index: 2;
+}
+
+.tugas-visual-editor:empty:before {
+    content: none;
+}
+
+.tugas-visual-editor b,
+.tugas-visual-editor strong {
+    font-weight: 700;
+}
+
+.tugas-visual-editor i,
+.tugas-visual-editor em {
+    font-style: italic;
+}
+
+.tugas-visual-editor u {
+    text-decoration: underline;
+}
+
+.tugas-visual-editor ol {
+    padding-left: 24px;
+    margin: 8px 0;
+}
+
+.tugas-visual-editor ul {
+    padding-left: 20px;
+    margin: 8px 0;
+}
+
+.tugas-visual-editor li {
+    margin-bottom: 4px;
+}
+
+.tugas-format-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px 8px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    color: #374151;
+    position: relative;
+    z-index: 1;
+}
+
+.tugas-tool-btn {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    background: transparent;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+    color: #374151;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), color 0.18s ease, transform 0.1s ease;
+}
+
+.tugas-tool-btn:hover {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.tugas-tool-btn:active {
+    transform: scale(0.92);
+    background: #dadce0;
+}
+
+.tugas-tool-btn.is-active {
+    background: #dadce0;
+    color: #111827;
+    font-weight: 700;
+}
+
+/* Card Lampiran */
+.tugas-lampiran-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tugas-lampiran-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1d4ed8;
+}
+
+.tugas-lampiran-meta {
+    font-size: 13px;
+    color: #4b5563;
+}
+
+.tugas-lampiran-selector-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 48px;
+    background: transparent;
+    border: 1px solid #dadce0;
+    min-height: 104px;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.tugas-circle-action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.tugas-circle-btn {
+    width: 52px;
+    height: 52px;
+    border: 1px solid #c4c9d4;
+    background: #ffffff;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tugas-circle-btn:hover {
+    border-color: #1d4ed8;
+    color: #1d4ed8;
+    background: #f0f5ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 78, 216, 0.15);
+}
+
+.tugas-circle-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+/* Lampiran Preview Cards */
+.tugas-attached-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.tugas-attached-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #dadce0;
+    background: #f8f9fc;
+}
+
+.tugas-attached-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.tugas-file-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-weight: 800;
+    font-size: 11px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.tugas-file-badge.badge-link {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.tugas-attached-info {
+    min-width: 0;
+}
+
+.tugas-attached-name {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tugas-attached-meta {
+    margin: 2px 0 0 0;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.tugas-btn-remove-attachment {
+    border: none;
+    background: transparent;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    transition: all 0.15s ease;
+}
+
+.tugas-btn-remove-attachment:hover {
+    color: #b3261e;
+    background: #fee2e2;
+}
+
+/* --- Parameter Penugasan (Sidebar Kanan) --- */
+.tugas-side-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tugas-side-label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.tugas-side-label .req {
+    color: #b3261e;
+}
+
+.tugas-side-trigger {
+    height: 48px;
+    padding: 0 16px;
+    border: 1px solid #dadce0;
+    background: #f3f4f8;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14.5px;
+    color: #111827;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.tugas-side-trigger:hover {
+    background: #e8ecf4;
+    border-color: #c4c9d4;
+}
+
+.tugas-side-trigger .trigger-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tugas-side-trigger .trigger-icon-left {
+    color: #4b5563;
+    flex-shrink: 0;
+}
+
+.tugas-side-trigger .trigger-icon-chevron {
+    color: #6b7280;
+    flex-shrink: 0;
+}
+
+.tugas-side-select {
+    height: 48px;
+    padding: 0 16px;
+    border: 1px solid #dadce0;
+    background: #f3f4f8;
+    border-radius: 8px;
+    font-size: 14.5px;
+    color: #111827;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    cursor: pointer;
+}
+
+.tugas-side-select:focus {
+    border-color: #1d4ed8;
+    background: #ffffff;
+}
+
+/* Custom Select Kategori Bidang ala Google Classroom (Topik) & Skema Warna MAGKOM */
+.tugas-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.tugas-custom-select-trigger {
+    height: 48px;
+    padding: 0 16px;
+    border: 1px solid #dadce0;
+    border-bottom: 2px solid #5f6368;
+    background: #e8edf5;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: #111827;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    user-select: none;
+    position: relative;
+}
+
+.tugas-custom-select-trigger:hover {
+    background: #dde4ee;
+    border-bottom-color: #1e293b;
+}
+
+.tugas-custom-select-trigger:hover .trigger-chevron {
+    color: #1e293b;
+}
+
+.tugas-custom-select-trigger.is-open {
+    background: #e2e8f0;
+    border-bottom-color: #01347C; /* Warna Brand MAGKOM */
+}
+
+.tugas-custom-select-trigger.is-open:hover {
+    background: #d8e2ee;
+    border-bottom-color: #01347C;
+}
+
+.tugas-custom-select-trigger .trigger-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tugas-custom-select-trigger.is-placeholder .trigger-text {
+    color: #64748b;
+    font-weight: 400;
+}
+
+.tugas-custom-select-trigger .trigger-chevron {
+    color: #5f6368;
+    flex-shrink: 0;
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), color 0.22s ease;
+}
+
+.tugas-custom-select-trigger.is-open .trigger-chevron {
+    transform: rotate(180deg);
+    color: #01347C; /* Warna Brand MAGKOM */
+}
+
+/* Dropdown Menu Popup */
+.tugas-custom-select-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    margin: 0;
+    padding: 6px 0;
+    list-style: none;
+    z-index: 60;
+    display: none;
+    max-height: 260px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.tugas-custom-select-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tugas-custom-select-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tugas-custom-select-menu::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+
+.tugas-custom-select-menu::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.tugas-custom-select-menu.is-open {
+    display: block;
+    animation: menuFadeIn 0.16s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tugas-custom-select-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 16px;
+    font-size: 14px;
+    color: #1f2937;
+    cursor: pointer;
+    transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), color 0.18s ease;
+    user-select: none;
+}
+
+.tugas-custom-select-option:hover {
+    background: #e8f0fe; /* Google Classroom / MAGKOM Soft Blue Hover */
+    color: #01347C; /* Warna Brand MAGKOM */
+}
+
+.tugas-custom-select-option:active {
+    background: #d4e4f7;
+}
+
+.tugas-custom-select-option.is-selected {
+    background: #e1ecf8;
+    color: #01347C; /* Warna Brand MAGKOM */
+    font-weight: 600;
+}
+
+.tugas-custom-select-option.is-selected:hover {
+    background: #d4e4f7;
+    color: #012b66;
+}
+
+.tugas-custom-select-option .option-check {
+    color: #01347C; /* Warna Brand MAGKOM */
+    flex-shrink: 0;
+    transition: transform 0.18s ease;
+}
+
+.tugas-custom-select-option:hover .option-check {
+    transform: scale(1.1);
+}
+
+/* Tingkat Kompleksitas (Segmented Control) */
+.tugas-segmented-control {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.tugas-segment-item {
+    position: relative;
+    cursor: pointer;
+}
+
+.tugas-segment-item input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.tugas-segment-box {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    background: #f3f4f8;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #4b5563;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.tugas-segment-item input[type="radio"]:checked + .tugas-segment-box {
+    background: #fffbeb;
+    border-color: #f59e0b;
+    color: #b45309;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(245, 158, 11, 0.25);
+}
+
+.tugas-side-hint {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #4b5563;
+}
+
+/* Info Box Panduan Pembimbing */
+.tugas-info-banner {
+    padding: 14px 16px;
+    border-radius: 8px;
+    background: #f8f9fc;
+    border: 1px solid #dadce0;
+    font-size: 12.5px;
+    color: #4b5563;
+    line-height: 1.5;
+}
+
+.tugas-info-banner-title {
+    font-weight: 700;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+/* --- Dialog Modals (Universal) --- */
+.tugas-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(32, 33, 36, 0.55);
+    z-index: 1050;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.tugas-modal-backdrop.is-active {
+    display: flex;
+}
+
+.tugas-dialog {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    animation: modalPopIn 0.2s ease-out;
+}
+
+@keyframes modalPopIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.tugas-dialog--mentee {
+    width: 600px;
+    max-width: 100%;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.tugas-dialog--upload {
+    width: 600px;
+    max-width: 100%;
+    padding: 24px;
+}
+
+.tugas-dialog--link {
+    width: 440px;
+    max-width: 100%;
+    padding: 24px;
+}
+
+.tugas-dialog--schedule {
+    width: 440px;
+    max-width: 100%;
+    padding: 24px;
+}
+
+.tugas-dialog-header {
+    height: 46px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 16px 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #111827;
+    border-bottom: 1px solid #dadce0;
+}
+
+.tugas-dialog-search {
+    padding: 8px 16px;
+    border-bottom: 1px solid #dadce0;
+    background: #f8f9fc;
+}
+
+.tugas-dialog-search input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #dadce0;
+    font-size: 13px;
+    outline: none;
+}
+
+.tugas-dialog-search input:focus {
+    border-color: #1d4ed8;
+}
+
+.tugas-mentee-list {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 380px;
+}
+
+.tugas-mentee-row {
+    height: 44px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 0 20px;
+    border-bottom: 1px solid #dadce0;
+    font-size: 13px;
+    color: #111827;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.tugas-mentee-row:hover {
+    background: #f8fafc;
+}
+
+.tugas-mentee-row.is-all {
+    font-weight: 600;
+    background: #ffffff;
+}
+
+.tugas-mentee-row.is-all:hover {
+    background: #f8fafc;
+}
+
+.tugas-mentee-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    color: #ffffff;
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+    font-weight: 700;
+    flex: none;
+}
+
+.tugas-mentee-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.tugas-mentee-name {
+    font-size: 13px;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tugas-mentee-sub {
+    font-size: 12px;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tugas-dialog-footer {
+    height: 50px;
+    box-sizing: border-box;
+    background: #e9eef7;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 22px;
+    border-top: none;
+}
+
+.tugas-dialog-btn-text {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1d4ed8;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.tugas-dialog-btn-text:hover {
+    opacity: 0.8;
+}
+
+.tugas-dialog-btn-pill {
+    height: 34px;
+    width: 78px;
+    border: 0;
+    background: #1d4ed8;
+    border-radius: 17px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background 0.2s ease;
+    padding: 0;
+}
+
+.tugas-dialog-btn-pill:hover:not(:disabled) {
+    background: #1e40af;
+}
+
+.tugas-dialog-btn-pill:disabled {
+    background: #cbd5e1;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* Upload Dropzone Modal */
+.tugas-dropzone {
+    margin-top: 16px;
+    border: 2px dashed #8b92a1;
+    border-radius: 12px;
+    min-height: 280px;
+    box-sizing: border-box;
+    padding: 28px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #f8f9fc;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.tugas-dropzone:hover,
+.tugas-dropzone.drag-over {
+    border-color: #1d4ed8;
+    background: #eff6ff;
+}
+
+.tugas-dropzone-cloud {
+    margin-bottom: 4px;
+}
+
+.tugas-dropzone-btn-choose {
+    height: 40px;
+    padding: 0 24px;
+    border: none;
+    background: #1d4ed8;
+    color: #ffffff;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.tugas-dropzone-btn-choose:hover {
+    background: #1e40af;
+}
+
+.tugas-dropzone-hint {
+    font-size: 13px;
+    color: #1f2937;
+    margin-top: 2px;
+}
+
+.tugas-dropzone-format {
+    font-size: 12px;
+    color: #4b5563;
+}
+
+/* Datepicker Popup Tenggat */
+.tugas-calendar-popup {
+    position: fixed;
+    z-index: 1060;
+    width: 358px;
+    background: #e9eef7;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    padding: 20px 14px 12px;
+    display: none;
+    box-sizing: border-box;
+}
+
+#popupCalendarJadwal {
+    z-index: 1100;
+}
+
+.tugas-calendar-popup.is-active {
+    display: block;
+}
+
+.tugas-cal-header {
+    height: 36px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+}
+
+.tugas-cal-nav-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tugas-cal-nav-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: #1f2937;
+}
+
+.tugas-cal-nav-btn:hover {
+    background: #d3dae6;
+}
+
+.tugas-cal-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.tugas-cal-grid-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.tugas-cal-day-name {
+    height: 36px;
+    display: grid;
+    place-items: center;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #4b5563;
+}
+
+.tugas-cal-grid-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 4px;
+}
+
+.tugas-cal-date-btn {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    font-size: 14.5px;
+    color: #111827;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.tugas-cal-date-btn:hover:not(:disabled) {
+    background: #d3dae6;
+}
+
+.tugas-cal-date-btn.is-selected {
+    background: #1d4ed8 !important;
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+.tugas-cal-date-btn.is-today {
+    border: 1px solid #1d4ed8;
+}
+
+.tugas-cal-date-btn:disabled {
+    color: #a0aec0;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.tugas-cal-footer {
+    height: 46px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px;
+    border-top: 1px solid #d3dae6;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .tugas-workspace {
+    color: #f3f4f6;
+}
+
+[data-theme="dark"] .tugas-card,
+[data-theme="dark"] .tugas-side-column,
+[data-theme="dark"] .tugas-dialog {
+    background: #111c2e;
+    border-color: #26354d;
+    color: #f3f4f6;
+}
+
+[data-theme="dark"] .tugas-topbar {
+    border-bottom-color: #26354d;
+}
+
+[data-theme="dark"] .tugas-page-title,
+[data-theme="dark"] .tugas-side-label,
+[data-theme="dark"] .tugas-dialog-header {
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .tugas-field-filled {
+    background: #1a273e;
+}
+
+[data-theme="dark"] .tugas-input-clean,
+[data-theme="dark"] .tugas-textarea-clean {
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .tugas-instruction-box {
+    background: #152238;
+    border-bottom-color: #3e506e;
+}
+
+[data-theme="dark"] .tugas-instruction-label,
+[data-theme="dark"] .tugas-lampiran-meta,
+[data-theme="dark"] .tugas-side-hint {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .tugas-side-trigger,
+[data-theme="dark"] .tugas-side-select,
+[data-theme="dark"] .tugas-segment-box {
+    background: #152238;
+    border-color: #26354d;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .tugas-attached-card,
+[data-theme="dark"] .tugas-dialog-search {
+    background: #152238;
+    border-color: #26354d;
+}
+
+[data-theme="dark"] .tugas-dialog-footer {
+    background: #0d1726;
+}
+
+[data-theme="dark"] .tugas-mentee-row {
+    border-bottom-color: #26354d;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .tugas-mentee-row:hover {
+    background: #1a273e;
+}
+
+[data-theme="dark"] .tugas-btn-cancel {
+    background: #152238;
+    border-color: #26354d;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .tugas-btn-cancel:hover {
+    background: #1e2e48;
+}
+
+[data-theme="dark"] .tugas-split-menu {
+    background: #152238;
+    border-color: #26354d;
+}
+
+[data-theme="dark"] .tugas-menu-item {
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .tugas-menu-item:hover {
+    background: #1e2e48;
+}
+
+[data-theme="dark"] .tugas-custom-select-trigger {
+    background: #152238;
+    border-color: #26354d;
+    border-bottom-color: #64748b;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .tugas-custom-select-trigger.is-placeholder .trigger-text {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .tugas-custom-select-trigger:hover {
+    background: #1c2b45;
+    border-bottom-color: #94a3b8;
+}
+
+[data-theme="dark"] .tugas-custom-select-trigger.is-open {
+    background: #1e3052;
+    border-bottom-color: #3b82f6;
+}
+
+[data-theme="dark"] .tugas-custom-select-trigger.is-open .trigger-chevron {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .tugas-custom-select-menu {
+    background: #152238;
+    border-color: #26354d;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .tugas-custom-select-option {
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .tugas-custom-select-option:hover {
+    background: #1e3256;
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .tugas-custom-select-option.is-selected {
+    background: #1a3059;
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .tugas-custom-select-option.is-selected:hover {
+    background: #233e70;
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .tugas-custom-select-option .option-check {
+    color: #60a5fa;
+}
+
+/* =========================================================================
+   ANIMASI INTERAKSI & TOAST ALA GOOGLE CLASSROOM
+   ========================================================================= */
+
+/* Button Loading Spinner */
+.tugas-btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: tugasSpin 0.75s linear infinite;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+@keyframes tugasSpin {
+    to { transform: rotate(360deg); }
+}
+
+.tugas-btn-primary-action.is-loading {
+    opacity: 0.85;
+    cursor: wait;
+    pointer-events: none;
+}
+
+.tugas-btn-primary-action.is-success {
+    background: #059669 !important;
+}
+
+/* Slide Down Fade-in Animation untuk Kartu Baru */
+@keyframes tugasSlideDownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tugas-animate-slide-down {
+    animation: tugasSlideDownFade 0.35s cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+/* Toast Notification ala Google Material 3 */
+.tugas-toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.tugas-toast {
+    pointer-events: auto;
+    min-width: 300px;
+    max-width: 440px;
+    background: #1e293b;
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tugas-toast.is-show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.tugas-toast--success {
+    background: #0f172a;
+    border-left: 4px solid #10b981;
+}
+
+.tugas-toast--error {
+    background: #0f172a;
+    border-left: 4px solid #ef4444;
+}
+
+.tugas-toast-icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+}
+
+.tugas-toast-text {
+    flex: 1;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.tugas-toast-close {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: grid;
+    place-items: center;
+    transition: color 0.15s ease;
+}
+
+.tugas-toast-close:hover {
+    color: #ffffff;
+}
+

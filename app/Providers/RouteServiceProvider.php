@@ -47,7 +47,8 @@ class RouteServiceProvider extends ServiceProvider
 
         // NFR-S2: Proteksi login & brute-force (5 percobaan per menit)
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = strtolower((string) $request->input('email')) . '|' . $request->ip();
+            $throttleKey = strtolower((string) $request->input('email')).'|'.$request->ip();
+
             return Limit::perMinute(5)->by($throttleKey);
         });
 

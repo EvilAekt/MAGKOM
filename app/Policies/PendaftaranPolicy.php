@@ -53,10 +53,10 @@ class PendaftaranPolicy
     }
 
     /**
-     * Menentukan apakah admin/superadmin dapat mereview dan memutuskan pendaftaran.
+     * Menentukan apakah admin dapat mereview dan memutuskan pendaftaran (Task A: SuperAdmin strictly read-only).
      */
     public function review(User $user, Pendaftaran $pendaftaran): bool
     {
-        return $user->isAdmin() || $user->isSuperAdmin();
+        return $user->isAdmin();
     }
 }

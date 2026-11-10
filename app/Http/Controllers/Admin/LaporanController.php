@@ -9,17 +9,16 @@ use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Http\Controllers\Controller;
 use App\Models\BulanMagang;
+use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
 use App\Models\SlotKhusus;
 use App\Services\ExportReportService;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class LaporanController extends Controller
 {
@@ -34,24 +33,22 @@ class LaporanController extends Controller
     {
         $user = $request->user();
         $tab = $request->input('tab', 'pendaftaran');
-
-        // Jika user bukan superadmin mencoba membuka tab nilai, batasi ke tab pendaftaran
-        if ($tab === 'nilai' && ! $user->isSuperAdmin()) {
+        if (! in_array($tab, ['pendaftaran', 'penempatan'], true)) {
             $tab = 'pendaftaran';
         }
 
         // Ringkasan Statistik Eksekutif (Cards Metrik)
         $metricCards = [
             'total_pendaftaran' => Pendaftaran::count(),
-            'total_diterima'    => Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)->count(),
-            'penempatan_aktif'  => Penempatan::where('status', StatusPenempatanEnum::Aktif)->count(),
-            'penempatan_selesai'=> Penempatan::where('status', StatusPenempatanEnum::Selesai)->count(),
-            'kuota_terisi'      => (int) Kuota::sum('terisi'),
-            'slot_terisi'       => (int) SlotKhusus::sum('terisi'),
+            'total_diterima' => Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)->count(),
+            'penempatan_aktif' => Penempatan::where('status', StatusPenempatanEnum::Aktif)->count(),
+            'penempatan_selesai' => Penempatan::where('status', StatusPenempatanEnum::Selesai)->count(),
+            'kuota_terisi' => (int) Kuota::sum('terisi'),
+            'slot_terisi' => (int) SlotKhusus::sum('terisi'),
         ];
 
         $bulanMagangList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
-        $jurusanList = \App\Models\Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
+        $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
 
         // Visual Analytics Keterisian Kuota per Jurusan (AC-17-1)
         $analyticsKuotaJurusan = Kuota::with('jurusan')
@@ -62,6 +59,7 @@ class LaporanController extends Controller
                 $kuota = (int) $k->total_kuota;
                 $terisi = (int) $k->total_terisi;
                 $persen = $kuota > 0 ? min(100, (int) round(($terisi / $kuota) * 100)) : 0;
+
                 return [
                     'nama_jurusan' => $k->jurusan?->nama_jurusan ?? 'Jurusan Lain',
                     'kuota' => $kuota,
@@ -100,9 +98,6 @@ class LaporanController extends Controller
         // Data berdasarkan Tab
         $pendaftaranData = null;
         $penempatanData = null;
-        $kuotaData = null;
-        $slotKhususData = null;
-        $nilaiData = null;
 
         if ($tab === 'pendaftaran') {
             $pQuery = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan'])
@@ -118,17 +113,21 @@ class LaporanController extends Controller
                 $jurusanId = $request->integer('jurusan_id');
                 $pQuery->where(function ($q) use ($jurusanId) {
                     $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
-                      ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
+                        ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
                 });
             }
             if ($request->filled('dari_tanggal')) {
-                $pQuery->where('created_at', '>=', $request->input('dari_tanggal') . ' 00:00:00');
+                $pQuery->where('created_at', '>=', $request->input('dari_tanggal').' 00:00:00');
             }
             if ($request->filled('sampai_tanggal')) {
-                $pQuery->where('created_at', '<=', $request->input('sampai_tanggal') . ' 23:59:59');
+                $pQuery->where('created_at', '<=', $request->input('sampai_tanggal').' 23:59:59');
             }
 
-            $pendaftaranData = $pQuery->paginate(10)->withQueryString();
+            $perPage = (int) $request->input('per_page', 5);
+            if (! in_array($perPage, [5, 10, 25, 50], true)) {
+                $perPage = 5;
+            }
+            $pendaftaranData = $pQuery->paginate($perPage)->withQueryString();
         } elseif ($tab === 'penempatan') {
             $penQuery = Penempatan::with(['peserta.profil', 'pembimbing', 'bidang', 'kuota.jurusan', 'slotKhusus'])
                 ->orderBy('tgl_mulai', 'desc');
@@ -143,7 +142,7 @@ class LaporanController extends Controller
                 $jurusanId = $request->integer('jurusan_id');
                 $penQuery->where(function ($q) use ($jurusanId) {
                     $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
-                      ->orWhereHas('peserta.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
+                        ->orWhereHas('peserta.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
                 });
             }
             if ($request->filled('dari_tanggal')) {
@@ -153,82 +152,55 @@ class LaporanController extends Controller
                 $penQuery->where('tgl_mulai', '<=', $request->input('sampai_tanggal'));
             }
 
-            $penempatanData = $penQuery->paginate(10)->withQueryString();
-        } elseif ($tab === 'kuota') {
-            $kuotaData = Kuota::with(['bulanMagang', 'jurusan'])
-                ->join('bulan_magang', 'kuota.bulan_magang_id', '=', 'bulan_magang.id')
-                ->orderBy('bulan_magang.bulan_mulai', 'desc')
-                ->select('kuota.*')
-                ->paginate(15, ['*'], 'kuota_page')
-                ->withQueryString();
-
-            $slotKhususData = SlotKhusus::orderBy('bulan_mulai', 'desc')
-                ->paginate(10, ['*'], 'slot_page')
-                ->withQueryString();
-        } elseif ($tab === 'nilai' && $user->isSuperAdmin()) {
-            $nilaiData = Penilaian::with(['penempatan.peserta.profil', 'pembimbing'])
-                ->latest()
-                ->paginate(10)
-                ->withQueryString();
+            $perPage = (int) $request->input('per_page', 5);
+            if (! in_array($perPage, [5, 10, 25, 50], true)) {
+                $perPage = 5;
+            }
+            $penempatanData = $penQuery->paginate($perPage)->withQueryString();
         }
 
         return view('admin.laporan.index', [
-            'tab'               => $tab,
-            'metricCards'       => $metricCards,
-            'bulanMagangList'   => $bulanMagangList,
-            'jurusanList'       => $jurusanList,
-            'statusPendaftaran' => StatusPendaftaranEnum::cases(),
-            'statusPenempatan'  => StatusPenempatanEnum::cases(),
-            'pendaftaranData'   => $pendaftaranData,
-            'penempatanData'    => $penempatanData,
-            'kuotaData'         => $kuotaData,
-            'slotKhususData'    => $slotKhususData,
-            'nilaiData'         => $nilaiData,
+            'tab' => $tab,
+            'metricCards' => $metricCards,
+            'bulanMagangList' => $bulanMagangList,
+            'jurusanList' => $jurusanList,
+            'statusPendaftaran' => [
+                StatusPendaftaranEnum::Diajukan,
+                StatusPendaftaranEnum::Diterima,
+                StatusPendaftaranEnum::Ditolak,
+                StatusPendaftaranEnum::Dibatalkan,
+            ],
+            'statusPenempatan' => StatusPenempatanEnum::cases(),
+            'pendaftaranData' => $pendaftaranData,
+            'penempatanData' => $penempatanData,
             'analyticsKuotaJurusan' => $analyticsKuotaJurusan,
-            'analyticsJenjang'  => $analyticsJenjang,
-            'isSuperAdmin'      => $user->isSuperAdmin(),
+            'analyticsJenjang' => $analyticsJenjang,
+            'isSuperAdmin' => $user->isSuperAdmin(),
         ]);
     }
 
     /**
      * Ekspor rekapitulasi data pendaftaran peserta (AC-17-1, F-17).
+     * Mendukung format XLSX (default untuk tabel rapi bergaris) dan CSV Sanitasi.
      */
-    public function pendaftaran(Request $request): StreamedResponse
+    public function pendaftaran(Request $request): Response
     {
         return $this->exportService->exportPendaftaran(
             $request->user(),
-            $request->only(['bulan_magang_id', 'status', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal'])
+            $request->only(['bulan_magang_id', 'status', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal', 'q', 'tipe']),
+            $request->input('format', 'csv')
         );
     }
 
     /**
      * Ekspor rekapitulasi data penempatan peserta (AC-17-1, F-17).
      */
-    public function penempatan(Request $request): StreamedResponse
+    public function penempatan(Request $request): Response
     {
         return $this->exportService->exportPenempatan(
             $request->user(),
-            $request->only(['status', 'jalur', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal'])
+            $request->only(['status', 'jalur', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal', 'q', 'pembimbing_id', 'bidang_id', 'bulan_magang_id']),
+            $request->input('format', 'csv')
         );
-    }
-
-    /**
-     * Ekspor realisasi kuota umum vs slot khusus (AC-17-1, F-17).
-     */
-    public function kuota(Request $request): StreamedResponse
-    {
-        return $this->exportService->exportRealisasiKuota($request->user());
-    }
-
-    /**
-     * Ekspor rekapitulasi nilai peserta (Hanya SuperAdmin, AC-17-1, A-20).
-     */
-    public function nilai(Request $request): StreamedResponse
-    {
-        if (! $request->user()->isSuperAdmin()) {
-            throw new AuthorizationException('Rekapitulasi nilai hanya dapat diakses oleh SuperAdmin (PRD 3.3, A-20).');
-        }
-
-        return $this->exportService->exportNilai($request->user());
     }
 }

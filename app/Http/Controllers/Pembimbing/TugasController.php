@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Pembimbing;
 
+use App\Actions\Pembimbing\Tugas\CreateBatchTugasAction;
+use App\Actions\Pembimbing\Tugas\MarkTugasCompletedAction;
+use App\Actions\Pembimbing\Tugas\ReviewTugasProgresAction;
+use App\Actions\Pembimbing\Tugas\UpdateTugasAction;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
-use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReviewProgresRequest;
 use App\Http\Requests\TugasRequest;
 use App\Models\Penempatan;
 use App\Models\ProgresLog;
 use App\Models\Tugas;
-use App\Services\AuditService;
+use App\Models\TugasTemplate;
+use App\Services\Pembimbing\TugasDashboardService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,7 +28,11 @@ use Illuminate\View\View;
 class TugasController extends Controller
 {
     public function __construct(
-        protected AuditService $auditService
+        protected TugasDashboardService $dashboardService,
+        protected CreateBatchTugasAction $createBatchAction,
+        protected UpdateTugasAction $updateAction,
+        protected MarkTugasCompletedAction $markCompletedAction,
+        protected ReviewTugasProgresAction $reviewProgresAction
     ) {}
 
     /**
@@ -32,54 +40,7 @@ class TugasController extends Controller
      */
     public function index(Request $request): View|JsonResponse
     {
-        $user = $request->user();
-
-        $query = Tugas::with(['penempatan.peserta.profil.jurusan', 'penempatan.bidang', 'progresLogs'])
-            ->whereHas('penempatan', function ($q) use ($user) {
-                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
-                    $q->where('pembimbing_id', $user->id);
-                }
-            });
-
-        if ($request->filled('penempatan_id')) {
-            $query->where('penempatan_id', $request->input('penempatan_id'));
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
-        }
-
-        if ($request->filled('kategori')) {
-            $query->where('kategori', $request->input('kategori'));
-        }
-
-        if ($request->filled('q')) {
-            $search = '%' . $request->input('q') . '%';
-            $query->where(function ($q) use ($search) {
-                $q->where('judul', 'like', $search)
-                    ->orWhere('deskripsi', 'like', $search)
-                    ->orWhereHas('penempatan.peserta', function ($qp) use ($search) {
-                        $qp->where('nama', 'like', $search);
-                    });
-            });
-        }
-
-        $tugasList = $query->latest()->paginate(15)->withQueryString();
-
-        // Ambil daftar penempatan mentee aktif untuk dropdown buat tugas
-        $penempatanList = Penempatan::with(['peserta.profil.jurusan', 'bidang'])
-            ->where(function ($q) use ($user) {
-                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
-                    $q->where('pembimbing_id', $user->id);
-                }
-            })
-            ->where('status', StatusPenempatanEnum::Aktif)
-            ->get();
-
-        $data = [
-            'tugasList' => $tugasList,
-            'penempatanList' => $penempatanList,
-        ];
+        $data = $this->dashboardService->getDashboardData($request, $request->user());
 
         if ($request->expectsJson() || $request->wantsJson()) {
             return response()->json([
@@ -108,56 +69,67 @@ class TugasController extends Controller
             ->get();
 
         $selectedPenempatanId = $request->integer('penempatan_id', 0);
+        $selectedTemplate = null;
+        if ($request->filled('template_id')) {
+            $selectedTemplate = TugasTemplate::accessibleBy($user->id)
+                ->find($request->integer('template_id'));
+        }
+
+        $templates = TugasTemplate::accessibleBy($user->id)->latest()->get();
 
         return view('pembimbing.tugas.create', [
             'penempatanList' => $penempatanList,
             'selectedPenempatanId' => $selectedPenempatanId > 0 ? $selectedPenempatanId : null,
+            'selectedTemplate' => $selectedTemplate,
+            'templates' => $templates,
         ]);
     }
 
     /**
-     * Memberikan tugas baru kepada peserta bimbingan (AC-08).
+     * Memberikan tugas baru kepada satu atau beberapa peserta bimbingan (AC-08).
      */
     public function store(TugasRequest $request): JsonResponse|RedirectResponse
     {
-        $penempatan = Penempatan::findOrFail($request->validated('penempatan_id'));
-
-        // Penegakan batasan hak akses & isolasi SuperAdmin (AC-08-5)
-        Gate::authorize('create', [Tugas::class, $penempatan]);
-
-        $payload = $request->validated();
-        unset($payload['file_lampiran']);
-
-        $tugas = Tugas::create($payload);
-
-        if ($request->hasFile('file_lampiran')) {
-            $file = $request->file('file_lampiran');
-            $path = $file->store("tugas/{$tugas->id}", 'private');
-            $tugas->update([
-                'file_lampiran' => $path,
-                'nama_file_lampiran' => $file->getClientOriginalName(),
-                'ukuran_file_lampiran' => $file->getSize(),
-            ]);
+        $penempatanIds = $request->input('penempatan_ids', []);
+        if (empty($penempatanIds) && $request->filled('penempatan_id')) {
+            $penempatanIds = [(int) $request->input('penempatan_id')];
         }
 
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'tugas',
-            idData: $tugas->id,
-            nilaiLama: null,
-            nilaiBaru: $tugas->only(['judul', 'kategori', 'kompleksitas', 'deadline', 'link_referensi', 'nama_file_lampiran']),
-            detail: ['aksi' => 'buat_tugas']
+        $penempatans = Penempatan::with(['peserta.profil.jurusan', 'bidang'])
+            ->whereIn('id', $penempatanIds)
+            ->get();
+
+        if ($penempatans->isEmpty()) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Peserta bimbingan tidak ditemukan.',
+                ], 422);
+            }
+
+            return back()->withErrors(['penempatan_ids' => 'Minimal satu peserta magang harus dipilih.'])->withInput();
+        }
+
+        $result = $this->createBatchAction->execute(
+            penempatans: $penempatans,
+            validated: $request->validated(),
+            fileLampiran: $request->file('file_lampiran'),
+            user: $request->user()
         );
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
             return redirect()->route('pembimbing.tugas.index')
-                ->with('success', 'Tugas baru berhasil diberikan kepada mentee.');
+                ->with('success', $result['message']);
         }
+
+        $createdTugasList = $result['tugasList'];
+        $primaryTugas = $createdTugasList->isNotEmpty() ? $createdTugasList->first() : null;
 
         return response()->json([
             'success' => true,
-            'message' => 'Tugas baru berhasil dibuat.',
-            'data' => $tugas->load('penempatan.peserta'),
+            'message' => $result['message'],
+            'data' => $primaryTugas,
+            'items' => $createdTugasList,
         ], 201);
     }
 
@@ -177,8 +149,34 @@ class TugasController extends Controller
             ]);
         }
 
+        $user = $request->user();
+        $querySiblings = Tugas::with(['penempatan.peserta.profil', 'progresLogs'])
+            ->whereHas('penempatan', function ($q) use ($user) {
+                if (! $user->isAdmin() && ! $user->isSuperAdmin()) {
+                    $q->where('pembimbing_id', $user->id);
+                }
+            });
+
+        if ($tugas->batch_id) {
+            $querySiblings->where('batch_id', $tugas->batch_id);
+        } else {
+            $querySiblings->where('penempatan_id', $tugas->penempatan_id);
+        }
+
+        $siblingTugasList = $querySiblings->oldest('id')->get();
+        if ($siblingTugasList->isEmpty()) {
+            $siblingTugasList = collect([$tugasData]);
+        }
+
+        $currentIndex = $siblingTugasList->search(fn ($item) => $item->id === $tugas->id);
+        $prevTugas = ($currentIndex !== false && $currentIndex > 0) ? $siblingTugasList->get($currentIndex - 1) : null;
+        $nextTugas = ($currentIndex !== false && $currentIndex < $siblingTugasList->count() - 1) ? $siblingTugasList->get($currentIndex + 1) : null;
+
         return view('pembimbing.tugas.show', [
             'tugas' => $tugasData,
+            'siblingTugasList' => $siblingTugasList,
+            'prevTugas' => $prevTugas,
+            'nextTugas' => $nextTugas,
         ]);
     }
 
@@ -197,46 +195,52 @@ class TugasController extends Controller
     }
 
     /**
+     * Menampilkan formulir pengubahan data penugasan (AC-08-7).
+     */
+    public function edit(Tugas $tugas): View|RedirectResponse
+    {
+        Gate::authorize('update', $tugas);
+
+        if ($tugas->status === StatusTugasEnum::Selesai) {
+            return redirect()->route('pembimbing.tugas.show', $tugas)
+                ->withErrors(['error' => 'Tugas yang telah berstatus selesai tidak dapat diedit kembali.']);
+        }
+
+        return view('pembimbing.tugas.edit', [
+            'tugas' => $tugas->load('penempatan.peserta.profil.jurusan'),
+        ]);
+    }
+
+    /**
      * Memperbarui informasi atau status penugasan.
      */
     public function update(TugasRequest $request, Tugas $tugas): JsonResponse|RedirectResponse
     {
-        Gate::authorize('update', $tugas);
-
-        $nilaiLama = $tugas->only(['judul', 'deskripsi', 'link_referensi', 'nama_file_lampiran', 'kategori', 'kompleksitas', 'deadline', 'status']);
-        $payload = $request->validated();
-        unset($payload['file_lampiran']);
-
-        if ($request->hasFile('file_lampiran')) {
-            if ($tugas->file_lampiran && Storage::disk('private')->exists($tugas->file_lampiran)) {
-                Storage::disk('private')->delete($tugas->file_lampiran);
-            }
-            $file = $request->file('file_lampiran');
-            $path = $file->store("tugas/{$tugas->id}", 'private');
-            $payload['file_lampiran'] = $path;
-            $payload['nama_file_lampiran'] = $file->getClientOriginalName();
-            $payload['ukuran_file_lampiran'] = $file->getSize();
-        }
-
-        $tugas->update($payload);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'tugas',
-            idData: $tugas->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: $tugas->only(['judul', 'link_referensi', 'nama_file_lampiran', 'kategori', 'kompleksitas', 'deadline', 'status']),
-            detail: ['aksi' => 'update_tugas']
+        $result = $this->updateAction->execute(
+            tugas: $tugas,
+            validated: $request->validated(),
+            fileLampiran: $request->file('file_lampiran')
         );
 
+        if (! $result['success']) {
+            if ($request->expectsJson() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $result['message'],
+                ], $result['status']);
+            }
+
+            return back()->withErrors(['error' => $result['message']]);
+        }
+
         if (! $request->expectsJson() && ! $request->wantsJson()) {
-            return back()->with('success', 'Data tugas berhasil diperbarui.');
+            return back()->with('success', $result['message']);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Data tugas berhasil diperbarui.',
-            'data' => $tugas,
+            'message' => $result['message'],
+            'data' => $result['tugas'],
         ]);
     }
 
@@ -245,28 +249,18 @@ class TugasController extends Controller
      */
     public function selesai(Request $request, Tugas $tugas): JsonResponse|RedirectResponse
     {
-        Gate::authorize('update', $tugas);
+        $updatedTugas = $this->markCompletedAction->execute($tugas);
 
-        $nilaiLama = ['status' => $tugas->status->value];
-        $tugas->update(['status' => StatusTugasEnum::Selesai]);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'tugas',
-            idData: $tugas->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: ['status' => StatusTugasEnum::Selesai->value],
-            detail: ['aksi' => 'selesaikan_tugas_oleh_pembimbing']
-        );
+        $message = 'Status tugas berhasil ditandai sebagai Selesai.';
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
-            return back()->with('success', 'Status tugas berhasil ditandai sebagai Selesai.');
+            return back()->with('success', $message);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Status tugas berhasil ditandai sebagai Selesai.',
-            'data' => $tugas,
+            'message' => $message,
+            'data' => $updatedTugas,
         ]);
     }
 
@@ -275,24 +269,7 @@ class TugasController extends Controller
      */
     public function reviewProgres(ReviewProgresRequest $request, ProgresLog $progres): JsonResponse|RedirectResponse
     {
-        $tugas = $progres->tugas;
-        Gate::authorize('reviewProgres', $tugas);
-
-        $nilaiLama = $progres->only(['status_review', 'feedback']);
-
-        $progres->update([
-            'status_review' => $request->validated('status_review'),
-            'feedback' => $request->validated('feedback'),
-        ]);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'progres_log',
-            idData: $progres->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: $request->validated(),
-            detail: ['aksi' => 'review_progres_tugas']
-        );
+        $updatedProgres = $this->reviewProgresAction->execute($progres, $request->validated());
 
         if (! $request->expectsJson() && ! $request->wantsJson()) {
             return back()->with('success', 'Evaluasi umpan balik progres tugas berhasil disimpan.');
@@ -301,7 +278,7 @@ class TugasController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Evaluasi progres tugas berhasil disimpan.',
-            'data' => $progres,
+            'data' => $updatedProgres,
         ]);
     }
 }

@@ -45,9 +45,11 @@ class LandingPageTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertSee('Portal MagKom - Informasi Kuota & Pendaftaran Magang Kominfo');
+        $response->assertSee('MAGKOM – Portal Magang Diskominfo Sleman 2026');
         $response->assertSee('meta name="description"', false);
+        $response->assertSee('Daftar magang di Diskominfo Sleman', false);
         $response->assertSee('property="og:title"', false);
+        $response->assertSee('Magang Kominfo Sleman 2026', false);
     }
 
     public function test_landing_page_mengelompokkan_jurusan_smk_dan_mahasiswa_dengan_status_akurat(): void
@@ -56,8 +58,8 @@ class LandingPageTest extends TestCase
 
         $response->assertStatus(200);
         // Memastikan tab jurusan SMK dan Mahasiswa tampil (AC-01-1)
-        $response->assertSee('Jalur SMK (Sekolah Menengah Kejuruan)');
-        $response->assertSee('Jalur Mahasiswa (D3 / S1)');
+        $response->assertSee('Siswa SMK');
+        $response->assertSee('Mahasiswa (D3/S1)');
 
         // Memastikan master jurusan tampil
         $response->assertSee('Teknik Komputer dan Jaringan (TKJ)');
@@ -65,18 +67,19 @@ class LandingPageTest extends TestCase
 
         // Memastikan status ketersediaan tampil
         $response->assertSee('Tersedia');
-        $response->assertSee('Segera Dibuka');
     }
 
-    public function test_landing_page_menampilkan_label_waiting_list_jika_kuota_habis_dan_tombol_tetap_aktif(): void
+    public function test_landing_page_menampilkan_label_kuota_penuh_jika_kuota_habis_dan_tombol_nonaktif(): void
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
         // Jurusan TKJ diisi penuh 5 dari 5 (AC-01-3)
-        $response->assertSee('Kuota Penuh (Waiting List)');
-        $response->assertSee('Pendaftaran masuk antrean tunggu');
-        $response->assertSee('Daftar Waiting List');
+        $response->assertSee('Penuh');
+        $response->assertSee('Kuota Penuh');
+        $response->assertDontSee('Waiting List');
+        $response->assertDontSee('Daftar Waiting List');
+        $response->assertDontSee('data-is-waiting="1"', false);
     }
 
     public function test_slot_khusus_tidak_pernah_bocor_di_response_publik_ac_01_5(): void
@@ -145,5 +148,80 @@ class LandingPageTest extends TestCase
         // Data di database tidak berubah
         $kuota->refresh();
         $this->assertNotEquals($jumlahTidakValid, $kuota->jumlah);
+    }
+
+    public function test_landing_page_menampilkan_menu_akun_dan_dropdown_saat_sudah_login_sebagai_peserta(): void
+    {
+        $peserta = User::firstOrNew(['email' => 'peserta.auth@gmail.com']);
+        $peserta->nama = 'Ahmad Santoso';
+        $peserta->password = bcrypt('Password#123');
+        $peserta->role = RoleEnum::Peserta;
+        $peserta->email_verified_at = now();
+        $peserta->status_aktif = true;
+        $peserta->save();
+
+        $response = $this->actingAs($peserta)->get('/');
+
+        $response->assertStatus(200);
+        $response->assertDontSee('class="btn-header-login"', false);
+        $response->assertDontSee('>Daftar</a>', false);
+        $response->assertSee(route('peserta.dashboard'));
+        $response->assertSee('Dashboard');
+
+        // Verifikasi tujuan navigasi ke portal peserta beserta kelengkapan profil dan rute logout
+        $dashboardResponse = $this->actingAs($peserta)->get(route('peserta.dashboard'));
+        $dashboardResponse->assertOk();
+        $dashboardResponse->assertSee('Ahmad Santoso');
+        $dashboardResponse->assertSee(route('peserta.profil.show'));
+        $dashboardResponse->assertSee(route('peserta.pengaturan.index'));
+        $dashboardResponse->assertSee(route('logout'));
+    }
+
+    public function test_landing_page_memuat_tautan_eksplorasi_peta_alur_interaktif(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        // Memastikan tombol eksplorasi alur interaktif menautkan ke rute peta-alur dan pop up modal telah dihapus
+        $response->assertSee(route('peta-alur'));
+        $response->assertSee('Peta Alur Interaktif');
+        $response->assertSee('href="#tahapan"', false);
+        $response->assertDontSee('id="petaAlurModal"', false);
+
+        // Pastikan rute peta alur publik dapat diakses
+        $petaResponse = $this->get(route('peta-alur'));
+        $petaResponse->assertOk();
+    }
+
+    public function test_landing_page_menampilkan_menu_akun_staf_saat_login_sebagai_admin(): void
+    {
+        $admin = User::firstOrNew(['email' => 'admin.landing@kominfo.go.id']);
+        $admin->nama = 'Siti Administrator';
+        $admin->password = bcrypt('Password#123');
+        $admin->role = RoleEnum::Admin;
+        $admin->email_verified_at = now();
+        $admin->status_aktif = true;
+        $admin->save();
+
+        $response = $this->actingAs($admin)->get('/');
+
+        $response->assertStatus(200);
+        $response->assertDontSee('class="btn-header-login"', false);
+        $response->assertDontSee('>Daftar</a>', false);
+        $response->assertSee(route('admin.dashboard'));
+        $response->assertSee('Dashboard');
+
+        // Verifikasi bahwa admin diarahkan ke dashboard admin dengan data identitas staf lengkap
+        $adminDashboardResponse = $this->actingAs($admin)->get(route('admin.dashboard'));
+        $adminDashboardResponse->assertOk();
+        $adminDashboardResponse->assertSee('Siti Administrator');
+        $adminDashboardResponse->assertSee('Admin');
+        $adminDashboardResponse->assertSee(route('admin.profil.show'));
+        $adminDashboardResponse->assertSee(route('admin.pengaturan.index'));
+
+        // Pastikan pengguna tanpa login ditolak mengakses dashboard admin
+        auth()->logout();
+        $guestResponse = $this->get(route('admin.dashboard'));
+        $guestResponse->assertRedirect(route('login'));
     }
 }

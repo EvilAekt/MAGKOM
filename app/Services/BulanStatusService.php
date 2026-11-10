@@ -26,13 +26,13 @@ class BulanStatusService
             return $bulan->override_status;
         }
 
-        $buka  = CarbonImmutable::parse($bulan->tgl_buka, 'Asia/Jakarta')->startOfDay();
+        $buka = CarbonImmutable::parse($bulan->tgl_buka, 'Asia/Jakarta')->startOfDay();
         $tutup = CarbonImmutable::parse($bulan->tgl_tutup, 'Asia/Jakarta')->endOfDay();
 
         return match (true) {
-            $sekarang->lt($buka)   => StatusKetersediaanEnum::Segera,
+            $sekarang->lt($buka) => StatusKetersediaanEnum::Segera,
             $sekarang->lte($tutup) => StatusKetersediaanEnum::Tersedia,
-            default                => StatusKetersediaanEnum::Tutup,
+            default => StatusKetersediaanEnum::Tutup,
         };
     }
 

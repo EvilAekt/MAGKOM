@@ -4,24 +4,28 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
-use App\Enums\StatusLogbookEnum;
+use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
-use App\Enums\StatusTugasEnum;
+use App\Enums\SumberPenempatanEnum;
+use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
-use App\Models\Logbook;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
-use App\Models\Tugas;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Tests\TestCase;
 
 class PesertaPortalWorkflowTest extends TestCase
@@ -29,11 +33,23 @@ class PesertaPortalWorkflowTest extends TestCase
     use RefreshDatabase;
 
     protected User $peserta;
+
     protected Jurusan $jurusan;
+
+    /**
+     * @var array<int, string>
+     */
+    protected array $originalViewPaths = [];
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->originalViewPaths = View::getFinder()->getPaths();
+        $localViewsPath = realpath(__DIR__.'/../../resources/views');
+        if ($localViewsPath && is_dir($localViewsPath)) {
+            View::getFinder()->setPaths([$localViewsPath]);
+        }
 
         if (Jurusan::count() === 0 || BulanMagang::count() === 0 || JenisDokumen::count() === 0) {
             $this->seed();
@@ -44,42 +60,55 @@ class PesertaPortalWorkflowTest extends TestCase
         $this->peserta = new User([
             'nama' => 'Budi Peserta Test',
             'email' => 'peserta.workflow@kominfo.test',
-            'password' => bcrypt('Secret#2026'),
+            'password' => Hash::make('Secret#2026'),
             'status_aktif' => true,
             'must_change_password' => false,
         ]);
         $this->peserta->role = RoleEnum::Peserta;
-        $this->peserta->email_verified_at = now();
+        $this->peserta->email_verified_at = Carbon::now();
         $this->peserta->save();
+    }
+
+    protected function tearDown(): void
+    {
+        if (! empty($this->originalViewPaths)) {
+            View::getFinder()->setPaths($this->originalViewPaths);
+        }
+
+        parent::tearDown();
     }
 
     public function test_halaman_profil_dapat_dibuka_dan_biodata_tersimpan_dengan_kontak_darurat(): void
     {
         // 1. Buka halaman profil
-        $response = $this->actingAs($this->peserta)->get(route('peserta.profil.show'));
+        $response = $this->actingAs($this->peserta)->get(URL::route('peserta.profil.show'));
         $response->assertStatus(200);
         $response->assertSee('Biodata & Profil Peserta');
 
         // 2. Simpan profil lengkap
         $postData = [
             'institusi' => 'SMK Negeri 2 Depok Sleman',
+            'nama_pembimbing_sekolah' => 'Bpk. Hendro, S.Pd',
             'nim_nisn' => '1234567890',
             'jenjang' => 'smk',
             'jurusan_id' => $this->jurusan->id,
             'no_hp' => '081234567890',
+            'alamat' => 'Jl. Kaliurang KM 9, Sleman',
             'nama_kontak_darurat' => 'Siti Wali',
             'no_kontak_darurat' => '089876543210',
             'hubungan_kontak_darurat' => 'Ibu Kandung',
         ];
 
-        $postResponse = $this->actingAs($this->peserta)->post(route('peserta.profil.simpan'), $postData);
-        $postResponse->assertRedirect(route('peserta.profil.show'));
+        $postResponse = $this->actingAs($this->peserta)->post(URL::route('peserta.profil.simpan'), $postData);
+        $postResponse->assertRedirect(URL::route('peserta.profil.show'));
         $postResponse->assertSessionHas('success');
 
         $this->assertDatabaseHas('peserta_profil', [
             'user_id' => $this->peserta->id,
             'nim_nisn' => '1234567890',
             'institusi' => 'SMK Negeri 2 Depok Sleman',
+            'nama_pembimbing_sekolah' => 'Bpk. Hendro, S.Pd',
+            'alamat' => 'Jl. Kaliurang KM 9, Sleman',
             'nama_kontak_darurat' => 'Siti Wali',
             'no_kontak_darurat' => '089876543210',
         ]);
@@ -87,33 +116,35 @@ class PesertaPortalWorkflowTest extends TestCase
 
     public function test_peserta_dapat_unggah_dan_hapus_foto_profil(): void
     {
-        \Illuminate\Support\Facades\Storage::fake('public');
+        Storage::fake('public');
 
         // 1. Simpan profil beserta upload berkas foto (valid 1x1 PNG bytes tanpa ketergantungan GD extension)
         $pngContent = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
-        $file = \Illuminate\Http\UploadedFile::fake()->createWithContent('pasfoto_formal.png', $pngContent);
+        $file = UploadedFile::fake()->createWithContent('pasfoto_formal.png', $pngContent);
+
+        $jurusanMhs = Jurusan::where('kategori', 'mahasiswa')->first() ?? $this->jurusan;
 
         $postData = [
             'institusi' => 'Universitas Gadjah Mada',
             'nim_nisn' => '22/123456/TK/54321',
             'jenjang' => 's1',
-            'jurusan_id' => $this->jurusan->id,
+            'jurusan_id' => $jurusanMhs->id,
             'no_hp' => '081298765432',
             'foto' => $file,
         ];
 
-        $response = $this->actingAs($this->peserta)->post(route('peserta.profil.simpan'), $postData);
-        $response->assertRedirect(route('peserta.profil.show'));
+        $response = $this->actingAs($this->peserta)->post(URL::route('peserta.profil.simpan'), $postData);
+        $response->assertRedirect(URL::route('peserta.profil.show'));
         $response->assertSessionHas('success');
 
         $profil = PesertaProfil::where('user_id', $this->peserta->id)->firstOrFail();
         $this->assertNotNull($profil->foto);
         $this->assertNotNull($profil->foto_url);
-        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($profil->foto);
+        Storage::disk('public')->assertExists($profil->foto);
 
         // 2. Buka halaman profil dan pastikan url foto dirender
         $this->peserta->refresh();
-        $pageResponse = $this->actingAs($this->peserta)->get(route('peserta.profil.show'));
+        $pageResponse = $this->actingAs($this->peserta)->get(URL::route('peserta.profil.show'));
         $pageResponse->assertStatus(200);
         $pageResponse->assertSee($profil->foto);
 
@@ -122,22 +153,84 @@ class PesertaPortalWorkflowTest extends TestCase
             'institusi' => 'Universitas Gadjah Mada',
             'nim_nisn' => '22/123456/TK/54321',
             'jenjang' => 's1',
-            'jurusan_id' => $this->jurusan->id,
+            'jurusan_id' => $jurusanMhs->id,
             'no_hp' => '081298765432',
             'hapus_foto' => '1',
         ];
 
-        $delResponse = $this->actingAs($this->peserta)->post(route('peserta.profil.simpan'), $deleteData);
-        $delResponse->assertRedirect(route('peserta.profil.show'));
+        $delResponse = $this->actingAs($this->peserta)->post(URL::route('peserta.profil.simpan'), $deleteData);
+        $delResponse->assertRedirect(URL::route('peserta.profil.show'));
 
         $profilFresh = $profil->fresh();
         $this->assertNull($profilFresh->foto);
         $this->assertNull($profilFresh->foto_url);
     }
 
+    public function test_data_registrasi_akademik_dan_nama_terkunci_permanen_setelah_registrasi(): void
+    {
+        // 1. Buat profil awal peserta
+        $profil = PesertaProfil::create([
+            'user_id' => $this->peserta->id,
+            'nim_nisn' => '1029384756',
+            'institusi' => 'SMK Negeri 2 Depok Sleman',
+            'jurusan_id' => $this->jurusan->id,
+            'jenjang' => JenjangEnum::Smk,
+            'no_hp' => '081234567890',
+            'alamat' => 'Sleman',
+            'nama_kontak_darurat' => 'Wali Asli',
+            'no_kontak_darurat' => '089876543210',
+        ]);
+
+        $jurusanLain = Jurusan::where('id', '!=', $this->jurusan->id)->first() ?? $this->jurusan;
+
+        // 2. Peserta mencoba mengubah data registrasi (institusi, nim, jenjang, jurusan, nama)
+        $tamperedData = [
+            'nama' => 'Nama Baru Diubah Ilegal',
+            'institusi' => 'Institut Teknologi Palsu',
+            'nim_nisn' => '9999999999',
+            'jenjang' => 's1',
+            'jurusan_id' => $jurusanLain->id,
+            'no_hp' => '089988776655', // data yang sah untuk diubah
+            'nama_pembimbing_sekolah' => 'Drs. Pembimbing Baru, M.Pd', // sah untuk diubah
+        ];
+
+        $response = $this->actingAs($this->peserta)->post(URL::route('peserta.profil.simpan'), $tamperedData);
+        $response->assertRedirect(URL::route('peserta.profil.show'));
+        $response->assertSessionHas('success');
+
+        // 3. Verifikasi: data registrasi TIDAK BERUBAH di database (immutable)
+        $profilFresh = $profil->fresh();
+        $this->assertSame('SMK Negeri 2 Depok Sleman', $profilFresh->institusi);
+        $this->assertSame('1029384756', $profilFresh->nim_nisn);
+        $this->assertSame(JenjangEnum::Smk, $profilFresh->jenjang);
+        $this->assertSame($this->jurusan->id, $profilFresh->jurusan_id);
+
+        // Data yang diizinkan untuk diperbarui berhasil ter-update
+        $this->assertSame('089988776655', $profilFresh->no_hp);
+        $this->assertSame('Drs. Pembimbing Baru, M.Pd', $profilFresh->nama_pembimbing_sekolah);
+
+        // Nama user tetap sesuai identitas resmi awal
+        $this->assertSame('Budi Peserta Test', $this->peserta->fresh()->nama);
+    }
+
     public function test_halaman_pendaftaran_dapat_dibuka_dan_menampilkan_view(): void
     {
-        $response = $this->actingAs($this->peserta)->get(route('peserta.pendaftaran.index'));
+        PesertaProfil::firstOrCreate(
+            ['user_id' => $this->peserta->id],
+            [
+                'nim_nisn' => '1234567890',
+                'institusi' => 'SMK Negeri 2 Depok Sleman',
+                'jurusan_id' => $this->jurusan->id,
+                'jenjang' => JenjangEnum::Smk,
+                'no_hp' => '081234567890',
+                'foto' => 'peserta-foto/fake.jpg',
+                'alamat' => 'Sleman',
+                'nama_kontak_darurat' => 'Wali',
+                'no_kontak_darurat' => '089876543210',
+            ]
+        );
+
+        $response = $this->actingAs($this->peserta)->get(URL::route('peserta.pendaftaran.index'));
         $response->assertStatus(200);
         $response->assertSee('Riwayat Pendaftaran Magang');
     }
@@ -155,10 +248,10 @@ class PesertaPortalWorkflowTest extends TestCase
             'bulan_magang_id' => $bulan->id,
             'kuota_id' => $kuota->id,
             'durasi_bulan' => 3,
-            'status' => \App\Enums\StatusPendaftaranEnum::BerkasBelumLengkap,
+            'status' => StatusPendaftaranEnum::BerkasBelumLengkap,
         ]);
 
-        $response = $this->actingAs($this->peserta)->get(route('peserta.pendaftaran.detail', $pendaftaran));
+        $response = $this->actingAs($this->peserta)->get(URL::route('peserta.pendaftaran.detail', $pendaftaran));
         $response->assertStatus(200);
         $response->assertSee('Detail & Berkas Pendaftaran');
         $response->assertSee('Berkas Persyaratan Magang');
@@ -171,16 +264,16 @@ class PesertaPortalWorkflowTest extends TestCase
             $pembimbing = new User([
                 'nama' => 'Pembimbing Test',
                 'email' => 'pembimbing.workflow@kominfo.test',
-                'password' => bcrypt('Secret#2026'),
+                'password' => Hash::make('Secret#2026'),
                 'status_aktif' => true,
                 'must_change_password' => false,
             ]);
             $pembimbing->role = RoleEnum::Pembimbing;
-            $pembimbing->email_verified_at = now();
+            $pembimbing->email_verified_at = Carbon::now();
             $pembimbing->save();
         }
 
-        $bidang = \App\Models\Bidang::firstOrCreate([
+        $bidang = Bidang::firstOrCreate([
             'nama_bidang' => 'Aptika',
         ], [
             'deskripsi' => 'Bidang Aptika',
@@ -192,10 +285,10 @@ class PesertaPortalWorkflowTest extends TestCase
         ], [
             'pembimbing_id' => $pembimbing->id,
             'bidang_id' => $bidang->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
-            'tgl_mulai' => now()->subDay()->format('Y-m-d'),
-            'tgl_selesai' => now()->addMonths(3)->format('Y-m-d'),
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'tgl_mulai' => Carbon::now()->subDay()->format('Y-m-d'),
+            'tgl_selesai' => Carbon::now()->addMonths(3)->format('Y-m-d'),
             'status' => StatusPenempatanEnum::Aktif,
         ]);
     }
@@ -203,7 +296,7 @@ class PesertaPortalWorkflowTest extends TestCase
     public function test_halaman_logbook_dapat_dibuka_dan_menampilkan_view_peserta(): void
     {
         $this->ensurePenempatanAktif();
-        $response = $this->actingAs($this->peserta)->get(route('peserta.logbook.index'));
+        $response = $this->actingAs($this->peserta)->get(URL::route('peserta.logbook.index'));
         $response->assertStatus(200);
         $response->assertSee('Logbook Mingguan');
     }
@@ -211,22 +304,14 @@ class PesertaPortalWorkflowTest extends TestCase
     public function test_halaman_tugas_dapat_dibuka(): void
     {
         $this->ensurePenempatanAktif();
-        $response = $this->actingAs($this->peserta)->get(route('peserta.tugas.index'));
+        $response = $this->actingAs($this->peserta)->get(URL::route('peserta.tugas.index'));
         $response->assertStatus(200);
         $response->assertSee('Tugas & Progres Magang');
     }
 
-    public function test_halaman_nilai_dapat_dibuka_dengan_graceful_handling_saat_belum_final(): void
-    {
-        $this->ensurePenempatanAktif();
-        $response = $this->actingAs($this->peserta)->get(route('peserta.nilai.show'));
-        $response->assertStatus(200);
-        $response->assertSee('Lembar Nilai Belum Tersedia');
-    }
-
     public function test_topbar_menampilkan_nama_peserta_dan_dropdown_profil(): void
     {
-        $response = $this->actingAs($this->peserta)->get(route('peserta.profil.show'));
+        $response = $this->actingAs($this->peserta)->get(URL::route('peserta.profil.show'));
         $response->assertStatus(200);
         $response->assertSee('Budi Peserta Test');
         $response->assertSee('userProfileBtn');

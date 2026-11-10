@@ -1,8 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Master Jurusan - SuperAdmin MagKom')
-@section('page_title', 'Master Data Jurusan')
-@section('page_description', 'Kelola daftar jurusan program pendidikan (SMK dan Perguruan Tinggi) untuk alokasi kuota magang.')
+@section('topbar_title', 'Master Data Jurusan')
 
 @section('breadcrumbs')
     <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
@@ -10,49 +9,117 @@
     <span class="breadcrumb-current">Master Jurusan</span>
 @endsection
 
-@section('page_actions')
-    <button type="button" onclick="document.getElementById('modalTambahJurusan').style.display='flex'" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 42px; padding: 0 1.25rem; background: var(--blue-600); color: #FFFFFF; font-weight: 700; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s ease; box-shadow: var(--shadow-subtle);">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        <span>Tambah Jurusan Baru</span>
-    </button>
-@endsection
+@push('styles')
+    @vite(['resources/css/pages/superadmin/superadmin-common.css'])
+@endpush
 
 @section('content')
-<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
-    <!-- 1. ALERT BANNER ATURAN PENONAKTIFAN (BR-12) -->
-    <div style="background: var(--blue-tint); border: 1px solid var(--blue-tint-line); border-left: 4px solid var(--blue-600); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; box-shadow: var(--shadow-subtle);">
-        <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-600); color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-        </div>
-        <div>
-            <h2 style="font-size: 0.9375rem; font-weight: 700; color: var(--blue-700); margin: 0 0 0.25rem 0;">
-                Aturan Penonaktifan Jurusan (BR-12)
-            </h2>
-            <p style="font-size: 0.8125rem; color: var(--neutral-700); margin: 0; line-height: 1.5;">
-                Jurusan tidak dapat dinonaktifkan jika masih terikat dengan kuota aktif pada periode pendaftaran berjalan atau masih memiliki peserta magang aktif yang ditempatkan di dinas.
-            </p>
+    {{-- 1. Hero Banner Khas Sleman MagKom --}}
+    <div class="sa-hero-banner">
+        <div class="banner-top-row">
+            <div>
+                <h1 class="banner-title">Master Data Jurusan</h1>
+                <div class="banner-subtitle">
+                    <span>Cakupan: <strong>Klasifikasi SMK &amp; Mahasiswa</strong></span>
+                    <span class="bullet-separator">&bull;</span>
+                    <span>Total Jurusan: <strong>{{ $totalJurusan }} Program Studi</strong></span>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn-banner-action btn-trigger-tambah-jurusan">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Tambah Jurusan Baru</span>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- 2. DATA TABLE CARD -->
-    <div style="background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-subtle);">
-        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--neutral-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-            <div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800); margin: 0;">Master Program Studi & Jurusan</h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0.125rem 0 0 0;">Daftar program kualifikasi akademik yang diakomodasi untuk seleksi magang.</p>
-            </div>
+    {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
+    <div class="tiles-grid">
+        <!-- 1. Total Jurusan -->
+        <x-gentelella.tile-stat
+            title="TOTAL JURUSAN"
+            value="{{ $totalJurusan }}"
+            color="blue"
+            trendType="info"
+            trendDirection="up"
+            trendText="Prodi"
+            subText="Total Jurusan Terdaftar di Sistem"
+            :sparkBars="[30, 45, 60, 75, 85, 95]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 2. Mahasiswa / Perguruan Tinggi -->
+        <x-gentelella.tile-stat
+            title="MAHASISWA / PT"
+            value="{{ $jurusanMahasiswa }}"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="PT"
+            subText="Program Studi Jenjang D3/D4/S1"
+            :sparkBars="[25, 40, 55, 70, 80, 90]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 3. SMK / Vokasi -->
+        <x-gentelella.tile-stat
+            title="SMK / VOKASI"
+            value="{{ $jurusanSmk }}"
+            color="amber"
+            trendType="warning"
+            trendDirection="up"
+            trendText="Vokasi"
+            subText="Kompetensi Keahlian SMK/MAK"
+            :sparkBars="[20, 35, 50, 65, 80, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+
+        <!-- 4. Status Aktif -->
+        <x-gentelella.tile-stat
+            title="STATUS AKTIF"
+            value="{{ $jurusanAktif }}"
+            color="teal"
+            trendType="success"
+            trendDirection="up"
+            trendText="Aktif"
+            subText="Dapat Dipilih Calon Peserta"
+            :sparkBars="[15, 25, 40, 55, 70, 85]">
+            <x-slot:icon>
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </x-slot:icon>
+        </x-gentelella.tile-stat>
+    </div>
+
+    <!-- DATA TABLE CARD -->
+    <x-gentelella.x-panel class="has-table" title="Master Program Studi & Jurusan">
+        <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total Jurusan: <strong>{{ method_exists($jurusanList, 'total') ? $jurusanList->total() : $jurusanList->count() }}</strong>
             </span>
-        </div>
+        </x-slot:toolbox>
 
         @if($jurusanList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
@@ -63,19 +130,19 @@
                 <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0;">Klik tombol <strong>Tambah Jurusan Baru</strong> untuk menambahkan prodi baru.</p>
             </div>
         @else
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
+            <div class="table-responsive-gentelella" style="overflow-x: auto;">
+                <table class="table jambo_table bulk_action" style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
                     <thead>
-                        <tr style="background: var(--neutral-100); border-bottom: 1px solid var(--neutral-400); color: var(--neutral-700); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                            <th style="padding: 1rem 1.25rem; font-weight: 700;">Nama Jurusan</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; width: 240px;">Kategori Pendidikan</th>
-                            <th style="padding: 1rem 1rem; font-weight: 700; width: 130px; text-align: center;">Status</th>
-                            <th style="padding: 1rem 1.25rem; font-weight: 700; text-align: right; width: 200px;">Aksi</th>
+                        <tr class="headings">
+                            <th>Nama Jurusan</th>
+                            <th style="width: 240px;">Kategori Pendidikan</th>
+                            <th style="width: 130px; text-align: center;">Status</th>
+                            <th style="text-align: right; width: 200px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($jurusanList as $jurusan)
-                            <tr style="border-bottom: 1px solid var(--neutral-200); transition: background 0.15s ease;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='transparent'">
+                            <tr class="sa-table-row" style="border-bottom: 1px solid var(--neutral-200);">
                                 <td style="padding: 1rem 1.25rem;">
                                     <div style="font-weight: 700; color: var(--neutral-900); font-size: 0.9375rem;">
                                         {{ $jurusan->nama_jurusan }}
@@ -86,12 +153,12 @@
                                 </td>
                                 <td style="padding: 1rem 1rem; white-space: nowrap;">
                                     @if($jurusan->kategori === 'smk')
-                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: #F3E8FF; color: #6B21A8; border: 1px solid rgba(107, 33, 168, 0.2);">
+                                        <span class="sa-badge-purple">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                                             SMK / Vokasi
                                         </span>
                                     @else
-                                        <span style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: var(--blue-tint); color: var(--blue-700); border: 1px solid var(--blue-tint-line);">
+                                        <span class="sa-badge-blue">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
                                             Perguruan Tinggi (D3/D4/S1)
                                         </span>
@@ -112,7 +179,12 @@
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
                                     <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
-                                        <button type="button" onclick="openModalEditJurusan('{{ $jurusan->id }}', '{{ addslashes($jurusan->nama_jurusan) }}', '{{ $jurusan->kategori }}')" style="padding: 0.45rem 0.875rem; background: var(--neutral-0); border: 1px solid var(--neutral-400); border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--neutral-800); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.375rem;" onmouseover="this.style.background='var(--neutral-100)'" onmouseout="this.style.background='var(--neutral-0)'">
+                                        <button type="button" 
+                                                class="sa-btn-action-outline btn-trigger-edit-jurusan"
+                                                data-id="{{ $jurusan->id }}"
+                                                data-nama="{{ $jurusan->nama_jurusan }}"
+                                                data-kategori="{{ $jurusan->kategori }}"
+                                                data-action-url="{{ route('superadmin.jurusan.update', $jurusan) }}">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                             Edit
                                         </button>
@@ -120,7 +192,7 @@
                                         <form action="{{ route('superadmin.jurusan.toggle', $jurusan) }}" method="POST" style="display: inline-block; margin: 0;">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" onclick="return confirm('{{ $jurusan->aktif ? 'Nonaktifkan jurusan ini? Pastikan tidak ada kuota dan penempatan aktif.' : 'Aktifkan kembali jurusan ini?' }}')" style="padding: 0.45rem 0.875rem; background: {{ $jurusan->aktif ? 'var(--red-100)' : 'var(--green-100)' }}; border: 1px solid {{ $jurusan->aktif ? 'var(--red-300)' : 'rgba(22, 163, 74, 0.25)' }}; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: {{ $jurusan->aktif ? 'var(--red-700)' : 'var(--green-700)' }}; cursor: pointer; transition: all 0.15s;">
+                                            <button type="submit" onclick="return confirm('{{ $jurusan->aktif ? 'Nonaktifkan jurusan ini? Pastikan tidak ada kuota dan penempatan aktif.' : 'Aktifkan kembali jurusan ini?' }}')" class="{{ $jurusan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" style="{{ $jurusan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}">
                                                 {{ $jurusan->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
                                             </button>
                                         </form>
@@ -132,13 +204,13 @@
                 </table>
             </div>
 
-            @if($jurusanList->hasPages())
+            @if($jurusanList->total() > 0)
                 <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--neutral-200); background: var(--neutral-100);">
                     {{ $jurusanList->links() }}
                 </div>
             @endif
         @endif
-    </div>
+    </x-gentelella.x-panel>
 </div>
 
 <!-- =====================================================================
@@ -153,7 +225,7 @@
                 </div>
                 <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Jurusan Baru</h3>
             </div>
-            <button type="button" onclick="document.getElementById('modalTambahJurusan').style.display='none'" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+            <button type="button" data-modal-dismiss="modalTambahJurusan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <form action="{{ route('superadmin.jurusan.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
@@ -176,7 +248,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="document.getElementById('modalTambahJurusan').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
+                <button type="button" data-modal-dismiss="modalTambahJurusan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
@@ -199,7 +271,7 @@
                 </div>
                 <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Edit Master Jurusan</h3>
             </div>
-            <button type="button" onclick="document.getElementById('modalEditJurusan').style.display='none'" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+            <button type="button" data-modal-dismiss="modalEditJurusan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <form id="formEditJurusan" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
@@ -223,7 +295,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="document.getElementById('modalEditJurusan').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
+                <button type="button" data-modal-dismiss="modalEditJurusan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
@@ -234,12 +306,7 @@
     </div>
 </div>
 
-<script>
-    function openModalEditJurusan(id, nama, kategori) {
-        document.getElementById('editNamaJurusan').value = nama;
-        document.getElementById('editKategoriJurusan').value = kategori;
-        document.getElementById('formEditJurusan').action = '/superadmin/jurusan/' + id;
-        document.getElementById('modalEditJurusan').style.display = 'flex';
-    }
-</script>
+@push('scripts')
+    @vite(['resources/js/pages/superadmin/jurusan-index.js'])
+@endpush
 @endsection

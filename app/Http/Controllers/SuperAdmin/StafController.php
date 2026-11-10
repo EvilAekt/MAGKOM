@@ -12,9 +12,13 @@ use App\Models\Bidang;
 use App\Models\Penempatan;
 use App\Models\User;
 use App\Services\AuditService;
+use App\Support\Pengaturan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -44,21 +48,37 @@ class StafController extends Controller
             $query->where('status_aktif', filter_var($request->input('status_aktif'), FILTER_VALIDATE_BOOLEAN));
         }
 
+        if ($request->filled('must_change_password')) {
+            $query->where('must_change_password', filter_var($request->input('must_change_password'), FILTER_VALIDATE_BOOLEAN));
+        }
+
         if ($request->filled('search')) {
-            $search = '%' . $request->input('search') . '%';
+            $search = '%'.$request->input('search').'%';
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', $search)
-                  ->orWhere('email', 'like', $search);
+                    ->orWhere('email', 'like', $search);
             });
         }
 
-        $stafList = $query->paginate(15);
-        $maksPeserta = \App\Support\Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
+        $stafList = $query->paginate(10)->withQueryString();
+        $maksPeserta = Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
+
+        $stafPendingPasswordCount = User::whereIn('role', [RoleEnum::Admin->value, RoleEnum::Pembimbing->value])
+            ->where('must_change_password', true)
+            ->count();
+
+        $totalStaf = User::whereIn('role', [RoleEnum::Admin->value, RoleEnum::Pembimbing->value])->count();
+        $totalAdmin = User::where('role', RoleEnum::Admin->value)->count();
+        $totalPembimbing = User::where('role', RoleEnum::Pembimbing->value)->count();
 
         return view('superadmin.staf.index', [
             'stafList' => $stafList,
             'bidangList' => Bidang::aktif()->get(),
             'maksPeserta' => $maksPeserta,
+            'stafPendingPasswordCount' => $stafPendingPasswordCount,
+            'totalStaf' => $totalStaf,
+            'totalAdmin' => $totalAdmin,
+            'totalPembimbing' => $totalPembimbing,
         ]);
     }
 
@@ -71,43 +91,58 @@ class StafController extends Controller
             'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'role' => ['required', Rule::in([RoleEnum::Admin->value, RoleEnum::Pembimbing->value])],
-            'bidang_id' => ['nullable', 'exists:bidang,id'],
-            'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'],
+            'bidang_id' => [
+                Rule::requiredIf(fn () => $request->input('role') === RoleEnum::Pembimbing->value),
+                'nullable',
+                'exists:bidang,id',
+            ],
+            'password' => ['nullable', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'],
         ], [
+            'bidang_id.required' => 'Bidang Unit Kerja wajib dipilih untuk peran Pembimbing Lapangan.',
             'password.regex' => 'Kata sandi harus mengandung kombinasi huruf dan angka.',
         ]);
 
-        $staf = new User();
-        $staf->nama = $validated['nama'];
-        $staf->email = $validated['email'];
-        $staf->password = Hash::make($validated['password']);
-        $staf->role = RoleEnum::from($validated['role']);
-        $staf->bidang_id = ! empty($validated['bidang_id']) ? (int) $validated['bidang_id'] : null;
-        $staf->email_verified_at = now();
-        $staf->must_change_password = true;
-        $staf->status_aktif = true;
-        $staf->dibuat_oleh = $request->user()->id;
-        $staf->save();
+        $plainPassword = ! empty($validated['password']) ? (string) $validated['password'] : ('Mk'.Str::random(10).'!1');
+        $roleEnum = RoleEnum::from($validated['role']);
+        $bidangId = ($roleEnum === RoleEnum::Admin) ? null : (! empty($validated['bidang_id']) ? (int) $validated['bidang_id'] : null);
 
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'users',
-            idData: $staf->id,
-            nilaiBaru: [
-                'nama' => $staf->nama,
-                'email' => $staf->email,
-                'role' => $staf->role->value,
-                'status_aktif' => true,
-                'must_change_password' => true,
-            ],
-            detail: [
-                'aksi' => 'Membuat akun staf baru (' . $staf->role->label() . ')',
-                'superadmin_id' => $request->user()->id,
-            ]
-        );
+        $staf = DB::transaction(function () use ($validated, $plainPassword, $roleEnum, $bidangId, $request) {
+            $staf = new User;
+            $staf->nama = $validated['nama'];
+            $staf->email = $validated['email'];
+            $staf->password = Hash::make($plainPassword);
+            $staf->role = $roleEnum;
+            $staf->bidang_id = $bidangId;
+            $staf->email_verified_at = now();
+            $staf->must_change_password = true;
+            $staf->status_aktif = true;
+            $staf->dibuat_oleh = $request->user()->id;
+            $staf->save();
+
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Aksi,
+                tabel: 'users',
+                idData: $staf->id,
+                nilaiBaru: [
+                    'nama' => $staf->nama,
+                    'email' => $staf->email,
+                    'role' => $staf->role->value,
+                    'status_aktif' => true,
+                    'must_change_password' => true,
+                ],
+                detail: [
+                    'aksi' => 'Membuat akun staf baru ('.$staf->role->label().') (SEC-02)',
+                    'superadmin_id' => $request->user()->id,
+                ]
+            );
+
+            return $staf;
+        });
 
         return redirect()->route('superadmin.staf.index')
-            ->with('success', 'Akun staf berhasil dibuat. Serahkan kata sandi awal kepada staf secara manual.');
+            ->with('success', "Akun staf {$staf->nama} ({$staf->role->label()}) berhasil dibuat. Kata sandi awal: [ {$plainPassword} ]")
+            ->with('password_baru', $plainPassword)
+            ->with('nama_staf', $staf->nama);
     }
 
     /**
@@ -123,7 +158,13 @@ class StafController extends Controller
             'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($staf->id)],
             'role' => ['required', Rule::in([RoleEnum::Admin->value, RoleEnum::Pembimbing->value])],
-            'bidang_id' => ['nullable', 'exists:bidang,id'],
+            'bidang_id' => [
+                Rule::requiredIf(fn () => $request->input('role') === RoleEnum::Pembimbing->value),
+                'nullable',
+                'exists:bidang,id',
+            ],
+        ], [
+            'bidang_id.required' => 'Bidang Unit Kerja wajib dipilih untuk peran Pembimbing Lapangan.',
         ]);
 
         $nilaiLama = [
@@ -133,28 +174,33 @@ class StafController extends Controller
             'bidang_id' => $staf->bidang_id,
         ];
 
-        $staf->nama = $validated['nama'];
-        $staf->email = $validated['email'];
-        $staf->role = RoleEnum::from($validated['role']);
-        $staf->bidang_id = ! empty($validated['bidang_id']) ? (int) $validated['bidang_id'] : null;
-        $staf->save();
+        $roleEnum = RoleEnum::from($validated['role']);
+        $bidangId = ($roleEnum === RoleEnum::Admin) ? null : (! empty($validated['bidang_id']) ? (int) $validated['bidang_id'] : null);
 
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'users',
-            idData: $staf->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: [
-                'nama' => $staf->nama,
-                'email' => $staf->email,
-                'role' => $staf->role->value,
-                'bidang_id' => $staf->bidang_id,
-            ],
-            detail: [
-                'aksi' => 'Memperbarui data profil staf (' . $staf->role->label() . ')',
-                'superadmin_id' => $request->user()->id,
-            ]
-        );
+        DB::transaction(function () use ($staf, $validated, $roleEnum, $bidangId, $nilaiLama, $request) {
+            $staf->nama = $validated['nama'];
+            $staf->email = $validated['email'];
+            $staf->role = $roleEnum;
+            $staf->bidang_id = $bidangId;
+            $staf->save();
+
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Aksi,
+                tabel: 'users',
+                idData: $staf->id,
+                nilaiLama: $nilaiLama,
+                nilaiBaru: [
+                    'nama' => $staf->nama,
+                    'email' => $staf->email,
+                    'role' => $staf->role->value,
+                    'bidang_id' => $staf->bidang_id,
+                ],
+                detail: [
+                    'aksi' => 'Memperbarui data profil staf ('.$staf->role->label().')',
+                    'superadmin_id' => $request->user()->id,
+                ]
+            );
+        });
 
         return redirect()->route('superadmin.staf.index')
             ->with('success', "Data profil staf {$staf->nama} berhasil diperbarui.");
@@ -181,8 +227,8 @@ class StafController extends Controller
             'remember_token' => null,
         ]);
 
-        if (\Illuminate\Support\Facades\Schema::hasTable('sessions')) {
-            \Illuminate\Support\Facades\DB::table('sessions')->where('user_id', $staf->id)->delete();
+        if (Schema::hasTable('sessions')) {
+            DB::table('sessions')->where('user_id', $staf->id)->delete();
         }
 
         $this->auditService->catat(
@@ -245,8 +291,8 @@ class StafController extends Controller
         $staf->status_aktif = $statusBaru;
         if (! $statusBaru) {
             $staf->remember_token = null; // Revoke remember token (SEC-03)
-            if (\Illuminate\Support\Facades\Schema::hasTable('sessions')) {
-                \Illuminate\Support\Facades\DB::table('sessions')->where('user_id', $staf->id)->delete();
+            if (Schema::hasTable('sessions')) {
+                DB::table('sessions')->where('user_id', $staf->id)->delete();
             }
         }
         $staf->save();
@@ -264,7 +310,44 @@ class StafController extends Controller
         );
 
         $statusLabel = $statusBaru ? 'diaktifkan' : 'dinonaktifkan';
+
         return redirect()->route('superadmin.staf.index')
             ->with('success', "Akun staf {$staf->nama} berhasil {$statusLabel}.");
+    }
+
+    /**
+     * Menghasilkan kata sandi acak sementara dan menandai must_change_password untuk staf (PRD 3.2, BR-15).
+     */
+    public function regenerateTemporaryPassword(User $staf, Request $request): RedirectResponse
+    {
+        if ($staf->isSuperAdmin() || $staf->isPeserta()) {
+            return back()->with('error', 'Regenerasi kata sandi instan hanya berlaku untuk akun Admin dan Pembimbing.');
+        }
+
+        $tempPassword = 'Mk'.Str::random(8).'!9';
+
+        $staf->update([
+            'password' => Hash::make($tempPassword),
+            'must_change_password' => true,
+            'remember_token' => null,
+        ]);
+
+        if (Schema::hasTable('sessions')) {
+            DB::table('sessions')->where('user_id', $staf->id)->delete();
+        }
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'users',
+            idData: $staf->id,
+            detail: [
+                'aksi' => 'Regenerasi kata sandi acak sementara staf (BR-15)',
+                'staf_email' => $staf->email,
+                'superadmin_id' => $request->user()->id,
+            ]
+        );
+
+        return redirect()->route('superadmin.staf.index')
+            ->with('success', "Kata sandi sementara untuk staf {$staf->nama} berhasil dibuat: [ {$tempPassword} ]. Harap salin dan serahkan secara manual (BR-15).");
     }
 }

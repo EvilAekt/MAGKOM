@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi Keabsahan Dokumen Resmi - MagKom Sleman</title>
+    <!-- Preload Aset Logo Prioritas Tinggi (Cegah Flicker / Kedipan saat Navigasi) -->
+    <link rel="preload" as="image" href="{{ asset('images/logo-sleman.png') }}" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,17 +20,22 @@
     <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-900 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-blue-900/20">
-                    MK
+                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1 border border-slate-200 shadow-sm">
+                    @include('partials.logo-sleman', ['class' => 'w-full h-full object-contain', 'width' => '32', 'height' => '32'])
                 </div>
                 <div>
                     <h1 class="font-bold text-base text-slate-900 leading-tight">Dinas Komunikasi dan Informatika</h1>
-                    <p class="text-xs text-slate-500 font-medium">Pemerintah Kabupaten Sleman &bull; Portal MagKom</p>
+                    <p class="text-xs text-slate-500 font-medium">Pemerintah Kabupaten Sleman &bull; Magang Kominfo</p>
                 </div>
             </div>
-            <a href="{{ route('landing') }}" class="text-xs font-semibold text-blue-800 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors">
-                &larr; Portal Utama
-            </a>
+            <div class="flex items-center space-x-2">
+                <a href="{{ route('landing') }}" class="text-xs font-semibold text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 px-3 py-1.5 rounded-lg border border-slate-200 transition-colors">
+                    &larr; Portal Utama
+                </a>
+                <a href="{{ route('landing') }}#kuota" class="hidden sm:inline-flex text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg shadow-sm transition-colors">
+                    Pilih Kuota
+                </a>
+            </div>
         </div>
     </header>
 
@@ -91,10 +98,6 @@
                                 <dd class="sm:col-span-2 font-semibold text-slate-900">
                                     @if($dokumen->tipe_dokumen === 'surat_diterima')
                                         Surat Keterangan Diterima Magang
-                                    @elseif($dokumen->tipe_dokumen === 'lembar_nilai')
-                                        Lembar Nilai Resmi Magang
-                                    @elseif($dokumen->tipe_dokumen === 'sertifikat')
-                                        Sertifikat Kelulusan Praktik Kerja Lapangan
                                     @else
                                         {{ ucwords(str_replace('_', ' ', $dokumen->tipe_dokumen)) }}
                                     @endif
@@ -187,8 +190,21 @@
 
     <!-- Footer Resmi -->
     <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
-        <p>&copy; {{ date('Y') }} Dinas Komunikasi dan Informatika Kabupaten Sleman. Seluruh hak cipta dilindungi.</p>
-        <p class="mt-1">Jl. Parasamya No. 1, Beran, Tridadi, Sleman, D.I. Yogyakarta 55511</p>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div>
+                <p>&copy; {{ date('Y') }} Dinas Komunikasi dan Informatika Kabupaten Sleman.</p>
+                <p class="mt-0.5 text-slate-400">Jl. Parasamya No. 1, Beran, Tridadi, Sleman, D.I. Yogyakarta 55511</p>
+            </div>
+            <div class="flex items-center space-x-3 text-slate-600 font-medium">
+                <a href="{{ route('landing') }}" class="hover:text-blue-600 transition-colors">Beranda</a>
+                <span>&bull;</span>
+                <a href="{{ route('landing') }}#kuota" class="hover:text-blue-600 transition-colors">Kuota Magang</a>
+                <span>&bull;</span>
+                <a href="{{ route('panduan-alur') }}" class="hover:text-blue-600 transition-colors">Peta Alur</a>
+                <span>&bull;</span>
+                <a href="{{ route('kebijakan-privasi') }}" class="hover:text-blue-600 transition-colors">Kebijakan Privasi</a>
+            </div>
+        </div>
     </footer>
 
 </body>

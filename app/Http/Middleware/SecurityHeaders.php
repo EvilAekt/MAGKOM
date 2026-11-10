@@ -26,10 +26,15 @@ class SecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 
+        if ($request->user() || $request->routeIs('berkas.*') || $request->is('*/unduh*', '*/lampiran*', '*/download*')) {
+            $response->headers->set('Cache-Control', 'no-store, private, must-revalidate');
+            $response->headers->set('Pragma', 'no-cache');
+        }
+
         if (app()->isProduction()) {
             $response->headers->set(
                 'Content-Security-Policy',
-                "default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
+                "default-src 'self'; img-src 'self' data: https:; script-src 'self' https://challenges.cloudflare.com https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; frame-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
             );
         }
 

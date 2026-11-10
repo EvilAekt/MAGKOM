@@ -9,6 +9,7 @@ use App\Models\BulanMagang;
 use App\Models\Kuota;
 use App\Services\BulanStatusService;
 use App\Services\QuotaAllocationService;
+use App\Support\Pengaturan;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -21,10 +22,12 @@ class PendaftaranRequest extends FormRequest
 
     public function rules(): array
     {
+        $maxDurasi = Pengaturan::int('durasi_magang_maks_bulan', 6);
+
         return [
             'bulan_magang_id' => ['required', 'exists:bulan_magang,id'],
-            'kuota_id'        => ['required', 'exists:kuota,id'],
-            'durasi_bulan'    => ['required', 'integer', 'min:1', 'max:6'],
+            'kuota_id' => ['required', 'exists:kuota,id'],
+            'durasi_bulan' => ['required', 'integer', 'min:1', 'max:'.$maxDurasi],
         ];
     }
 
@@ -34,6 +37,14 @@ class PendaftaranRequest extends FormRequest
             $user = $this->user();
             if (! $user) {
                 return;
+            }
+
+            // Validasi sakelar fitur pendaftaran kelompok
+            if ($user->kelompokMagang && ! Pengaturan::bool('fitur_pendaftaran_kelompok_aktif', true)) {
+                $validator->errors()->add(
+                    'pendaftaran',
+                    'Pendaftaran melalui jalur kelompok saat ini dinonaktifkan oleh administrator.'
+                );
             }
 
             // 1. Validasi aturan BR-17: hanya 1 pendaftaran aktif per peserta
@@ -67,17 +78,29 @@ class PendaftaranRequest extends FormRequest
             if ($bulan && $kuota && $kuota->bulan_magang_id !== $bulan->id) {
                 $validator->errors()->add('kuota_id', 'Alokasi kuota tidak sesuai dengan periode bulan magang yang dipilih.');
             }
+
+            // 4. Validasi prasyarat kelengkapan profil peserta (Strict 100%)
+            $profil = $user->profil ?? $user->fresh()?->profil;
+            if (! $profil || ! $profil->isLengkap()) {
+                $persentase = $profil ? $profil->hitungKelengkapan()['persentase'] : 0;
+                $validator->errors()->add(
+                    'profil',
+                    "Biodata profil Anda belum 100% lengkap (saat ini {$persentase}%). Silakan lengkapi seluruh data wajib (pasfoto resmi, kontak darurat wali, dan data akademik) sebelum mengajukan pendaftaran magang."
+                );
+            }
         });
     }
 
     public function messages(): array
     {
+        $maxDurasi = Pengaturan::int('durasi_magang_maks_bulan', 6);
+
         return [
             'bulan_magang_id.required' => 'Periode bulan magang wajib dipilih.',
             'kuota_id.required' => 'Jurusan kuota magang wajib dipilih.',
             'durasi_bulan.required' => 'Durasi magang wajib ditentukan.',
             'durasi_bulan.min' => 'Durasi magang minimal 1 bulan.',
-            'durasi_bulan.max' => 'Durasi magang maksimal 6 bulan.',
+            'durasi_bulan.max' => 'Durasi magang maksimal '.$maxDurasi.' bulan.',
         ];
     }
 }

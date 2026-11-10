@@ -10,7 +10,6 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\SlotKhusus;
 use App\Models\User;
-use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 
 class PeriodeKuotaSeeder extends Seeder

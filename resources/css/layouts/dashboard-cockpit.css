@@ -1,0 +1,2688 @@
+/* ==========================================================================
+   Dashboard Cockpit Unified CSS - MagKom Sleman
+   Mengadopsi Estetika Visual "Lovable Clearview" ke dalam Arsitektur Gentelella
+   Mencakup 4 Role: SuperAdmin, Admin Operasional, Pembimbing, dan Peserta
+   ========================================================================== */
+
+:root {
+  /* Sleman Official Rebranded Palette (PRD-TASK-2026-10-28-UI-02) */
+  --cv-blue-950: #02275D;
+  --cv-blue-900: #01347C;
+  --cv-blue-800: #003566;
+  --cv-blue-700: #01347C;
+  --cv-blue-600: #3F51B5;
+  --cv-blue-tint: rgba(1, 52, 124, 0.08);
+  --cv-blue-tint-line: #3F51B5;
+
+  /* Surfaces & Paper Grid */
+  --cv-paper: #f8fafc;
+  --cv-surface: #ffffff;
+  --cv-line: #BBBBBB;
+  --cv-line-strong: #3F51B5;
+  --cv-ink: #212529;
+  --cv-ink-2: #334155;
+  --cv-ink-3: #AAAAAA;
+
+  /* Status Colors */
+  --cv-ok: #16a34a;
+  --cv-ok-tint: #f0fdf4;
+  --cv-warn: #FFCB05;
+  --cv-warn-tint: #fffbeb;
+  --cv-bad: #ef4444;
+  --cv-bad-tint: #fef2f2;
+
+  /* Clean Paper Background */
+  --cv-grid-paper: none;
+}
+
+/* ==========================================================================
+   1. Asymmetrical 2-Column Cockpit Layout
+   ========================================================================== */
+.cv-cockpit-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1.5rem;
+  align-items: start;
+  width: 100%;
+}
+
+.cv-cockpit-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.cv-aside-sticky {
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Aside Todo List & Items */
+.cv-todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cv-todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.85rem;
+  background: var(--neutral-100, #f8fafc);
+  border: 1px solid var(--neutral-300, #e2e8f0);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.cv-todo-item:hover {
+  background: var(--blue-tint, #eff6ff);
+  border-color: #bfdbfe;
+}
+
+.cv-todo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cv-todo-dot.danger {
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+.cv-todo-dot.warning {
+  background: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+
+.cv-todo-dot.info {
+  background: #0751ff;
+  box-shadow: 0 0 6px rgba(7, 81, 255, 0.4);
+}
+
+.cv-todo-dot.success {
+  background: #10b981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+}
+
+/* Aside Quick Action Grid & Buttons */
+.cv-quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.cv-quick-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 40px;
+  padding: 0.5rem 0.875rem;
+  background: var(--cv-blue-tint, #EFF6FF) !important;
+  border: 1px solid rgba(6, 65, 204, 0.25) !important;
+  border-radius: 8px;
+  font-size: 0.785rem;
+  font-weight: 700;
+  color: var(--cv-blue-700, #0641CC) !important;
+  text-decoration: none !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.cv-quick-btn svg {
+  color: inherit;
+  stroke: currentColor;
+  transition: all 0.2s ease;
+}
+
+.cv-quick-btn:hover,
+.cv-quick-btn:focus,
+.cv-quick-btn:active {
+  background: var(--cv-blue-700, #0641CC) !important;
+  border-color: var(--cv-blue-700, #0641CC) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(6, 65, 204, 0.25);
+  text-decoration: none !important;
+}
+
+.cv-quick-btn:hover svg,
+.cv-quick-btn:focus svg,
+.cv-quick-btn:active svg {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+  transform: scale(1.08);
+}
+
+.cv-quick-btn:hover span,
+.cv-quick-btn:focus span,
+.cv-quick-btn:active span {
+  color: #FFFFFF !important;
+}
+
+.cv-quick-btn.primary {
+  grid-column: 1 / -1;
+  background: var(--magkom-primary-blue, #01347C) !important;
+  border-color: var(--magkom-primary-blue, #01347C) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 6px rgba(1, 52, 124, 0.25);
+}
+
+.cv-quick-btn.primary:hover,
+.cv-quick-btn.primary:focus,
+.cv-quick-btn.primary:active {
+  background: #0751FF !important;
+  border-color: #0751FF !important;
+  color: #FFFFFF !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(7, 81, 255, 0.35);
+}
+
+/* SuperAdmin-Compliant Action Links (.sa-link, .cv-link-action, .cv-btn-view-all) */
+.sa-link,
+.cv-link-action,
+.cv-btn-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 8px;
+  background: var(--cv-blue-tint, #EFF6FF) !important;
+  color: var(--cv-blue-700, #0641CC) !important;
+  border: 1px solid rgba(6, 65, 204, 0.25) !important;
+  text-decoration: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.sa-link span,
+.cv-link-action span,
+.cv-btn-view-all span {
+  color: inherit !important;
+}
+
+.sa-link:hover,
+.sa-link:focus,
+.sa-link:active,
+.cv-link-action:hover,
+.cv-link-action:focus,
+.cv-link-action:active,
+.cv-btn-view-all:hover,
+.cv-btn-view-all:focus,
+.cv-btn-view-all:active {
+  background: var(--cv-blue-700, #0641CC) !important;
+  color: #FFFFFF !important;
+  border-color: var(--cv-blue-700, #0641CC) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(6, 65, 204, 0.25);
+  text-decoration: none !important;
+}
+
+.sa-link:hover span,
+.sa-link:focus span,
+.sa-link:active span,
+.cv-link-action:hover span,
+.cv-link-action:focus span,
+.cv-link-action:active span,
+.cv-btn-view-all:hover span,
+.cv-btn-view-all:focus span,
+.cv-btn-view-all:active span {
+  color: #FFFFFF !important;
+}
+
+.cv-link-action--warning {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  color: var(--amber-700, #B45309) !important;
+}
+
+.cv-link-action--warning:hover,
+.cv-link-action--warning:focus {
+  background: #B45309 !important;
+  border-color: #B45309 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 10px rgba(180, 83, 9, 0.25);
+}
+
+.cv-link-action--warning:hover span,
+.cv-link-action--warning:focus span {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cv-quick-btn {
+  background: rgba(59, 130, 246, 0.15) !important;
+  border-color: rgba(147, 197, 253, 0.3) !important;
+  color: #93C5FD !important;
+}
+
+[data-theme="dark"] .cv-quick-btn:hover,
+[data-theme="dark"] .cv-quick-btn:focus {
+  background: #2563EB !important;
+  border-color: #3B82F6 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .cv-quick-btn:hover svg,
+[data-theme="dark"] .cv-quick-btn:focus svg {
+  stroke: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cv-quick-btn.primary {
+  background: #01347C !important;
+  border-color: #3F51B5 !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cv-quick-btn.primary:hover {
+  background: #2563EB !important;
+  border-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .sa-link,
+[data-theme="dark"] .cv-link-action,
+[data-theme="dark"] .cv-btn-view-all {
+  background: rgba(59, 130, 246, 0.15) !important;
+  color: #93C5FD !important;
+  border-color: rgba(147, 197, 253, 0.3) !important;
+}
+
+[data-theme="dark"] .sa-link:hover,
+[data-theme="dark"] .sa-link:focus,
+[data-theme="dark"] .sa-link:active,
+[data-theme="dark"] .cv-link-action:hover,
+[data-theme="dark"] .cv-link-action:focus,
+[data-theme="dark"] .cv-link-action:active,
+[data-theme="dark"] .cv-btn-view-all:hover,
+[data-theme="dark"] .cv-btn-view-all:focus,
+[data-theme="dark"] .cv-btn-view-all:active {
+  background: #2563EB !important;
+  color: #FFFFFF !important;
+  border-color: #3B82F6 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .sa-link:hover span,
+[data-theme="dark"] .cv-link-action:hover span,
+[data-theme="dark"] .cv-btn-view-all:hover span {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cv-link-action--warning {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #FCD34D !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="dark"] .cv-link-action--warning:hover {
+  background: #D97706 !important;
+  border-color: #F59E0B !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cv-todo-item {
+  background: var(--neutral-150, #182234);
+  border-color: var(--neutral-300, #26354d);
+}
+
+/* ==========================================================================
+   Goals Progress Track (Paritas Visual Modern Metric / Kuota Magang)
+   ========================================================================== */
+.cv-goal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.25rem 0;
+}
+
+.cv-goal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.cv-goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cv-goal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.cv-goal-title {
+  font-size: 0.885rem;
+  font-weight: 700;
+  color: var(--neutral-800, #1e293b);
+  letter-spacing: -0.01em;
+}
+
+.cv-goal-category-badge {
+  font-size: 0.675rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  background: var(--neutral-150, #f1f5f9);
+  color: var(--neutral-600, #475569);
+  border-radius: 6px;
+  border: 1px solid var(--neutral-300, #e2e8f0);
+}
+
+.cv-goal-val-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.cv-goal-val {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.825rem;
+  font-weight: 800;
+  color: var(--neutral-700, #334155);
+  letter-spacing: 0.02em;
+}
+
+.cv-goal-pct {
+  font-size: 0.725rem;
+  font-weight: 700;
+  color: var(--neutral-500, #64748b);
+}
+
+.cv-goal-pct.full {
+  color: #ef4444;
+  font-weight: 800;
+}
+
+.cv-goal-track {
+  width: 100%;
+  height: 6px;
+  background: var(--neutral-200, #e2e8f0);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.cv-goal-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Dark Mode Overrides for Goals Track */
+[data-theme="dark"] .cv-goal-title {
+  color: var(--neutral-900, #f8fafc);
+}
+
+[data-theme="dark"] .cv-goal-category-badge {
+  background: var(--neutral-200, #1e293b);
+  color: var(--neutral-500, #94a3b8);
+  border-color: var(--neutral-300, #334155);
+}
+
+[data-theme="dark"] .cv-goal-val {
+  color: var(--neutral-800, #e2e8f0);
+}
+
+[data-theme="dark"] .cv-goal-track {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .cv-goal-pct.full {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #F87171 !important;
+}
+
+[data-theme="dark"] .cv-goal-pct:not(.full) {
+  color: var(--neutral-400, #94a3b8) !important;
+}
+
+@media (max-width: 1200px) and (min-width: 992px) {
+  .cv-cockpit-layout {
+    grid-template-columns: minmax(0, 1fr) 290px;
+    gap: 1.15rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .cv-cockpit-layout {
+    grid-template-columns: 1fr;
+  }
+  .cv-aside-sticky {
+    position: static;
+  }
+}
+
+/* 4-Metric Grid Dock within Hero Banner (Strict 4-Columns on Desktop) */
+.adm-metrics-dock-grid,
+.cv-hero-banner .tile_count,
+.gentelella-hero-banner .tile_count {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  margin: 1.25rem 0 0 0 !important;
+}
+
+@media (max-width: 1100px) {
+  .adm-metrics-dock-grid,
+  .cv-hero-banner .tile_count,
+  .gentelella-hero-banner .tile_count {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .adm-metrics-dock-grid,
+  .cv-hero-banner .tile_count,
+  .gentelella-hero-banner .tile_count {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.adm-metric-card-col,
+.cv-hero-banner .tile_stats_count,
+.gentelella-hero-banner .tile_stats_count {
+  flex: none !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+}
+
+.adm-metric-card-col .tile_stats_inner,
+.cv-hero-banner .tile_stats_inner,
+.gentelella-hero-banner .tile_stats_inner {
+  padding: 0.95rem 1rem !important;
+  height: 100% !important;
+}
+
+/* 3 Attention SLA & Operational Efficiency Cards */
+.adm-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 860px) {
+  .adm-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   2. Atmospheric Hero Banner (Clean Navy Gradient Solid)
+   ========================================================================== */
+.cv-hero-banner,
+.gentelella-hero-banner {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #01347C 0%, #003566 100%);
+  box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 1.75rem 2rem 1.75rem 2rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .cv-hero-banner,
+  .gentelella-hero-banner {
+    padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+  }
+}
+
+.cv-hero-banner::after,
+.gentelella-hero-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+[data-theme="dark"] .cv-hero-banner,
+[data-theme="dark"] .gentelella-hero-banner {
+  background: linear-gradient(135deg, #102138 0%, #0d1b2f 100%);
+  border-color: #26354D;
+}
+
+.cv-eyebrow {
+  font-family: var(--font-display, 'Lexend', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fbbf24;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cv-hero-title {
+  font-family: var(--font-display, 'Lexend', sans-serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0.35rem 0;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.cv-hero-sub {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 65ch;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.cv-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-display, 'Lexend', sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  backdrop-filter: blur(4px);
+  margin-top: 0.75rem;
+}
+
+.cv-stamp .dot-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.35);
+}
+
+/* ==========================================================================
+   3. Integrated Four-Metric Dock
+   ========================================================================== */
+.cv-hero-dock {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 1.5rem -2rem 0 -2rem;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 900px) {
+  .cv-hero-dock {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.cv-hero-dock .tile_stats_count {
+  padding: 1.15rem 1.5rem !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-bottom: none !important;
+  margin: 0 !important;
+  color: #ffffff;
+}
+
+.cv-hero-dock .tile_stats_count:last-child {
+  border-right: none !important;
+}
+
+.cv-hero-dock .tile_stats_count .count_top {
+  color: rgba(255, 255, 255, 0.72) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+.cv-hero-dock .tile_stats_count .count {
+  color: #ffffff !important;
+  font-size: 1.85rem !important;
+  font-weight: 700 !important;
+  font-family: var(--font-display, 'Lexend', sans-serif) !important;
+  line-height: 1.2 !important;
+}
+
+.cv-hero-dock .tile_stats_count .count_bottom {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 0.725rem !important;
+}
+
+/* ==========================================================================
+   4. Statusline Ribbon (Horizontal Status Strip)
+   ========================================================================== */
+.cv-statusline {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: var(--neutral-0, #ffffff);
+  border: 1px solid var(--cv-line);
+  border-radius: 10px;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.8125rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+[data-theme="dark"] .cv-statusline {
+  background: var(--cv-surface, #182234);
+  border-color: var(--cv-line, #26354D);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.cv-statusline::-webkit-scrollbar {
+  display: none;
+}
+
+.cv-statusline-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+
+.cv-statusline-item dt {
+  color: var(--cv-ink-3);
+  font-weight: 600;
+  margin: 0;
+}
+
+.cv-statusline-item dd {
+  color: var(--cv-ink);
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ==========================================================================
+   5. Attention SLA Hazard Card
+   ========================================================================== */
+.cv-attention-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.25rem;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  padding: 1.15rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.08);
+}
+
+.cv-attention-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: repeating-linear-gradient(-45deg, #f59e0b 0 8px, #fbbf24 8px 16px);
+}
+
+.cv-attention-count {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #d97706;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-align: center;
+  font-family: monospace;
+}
+
+.cv-attention-count small {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 768px) {
+  .cv-attention-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   6. Segmented Quota Seat Bars (.cv-seg)
+   ========================================================================== */
+.cv-seg {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 3px;
+  height: 9px;
+  margin-top: 0.35rem;
+}
+
+.cv-seg i {
+  border-radius: 2px;
+  background: var(--cv-line, #E2E8F0);
+  display: block;
+  height: 100%;
+}
+
+.cv-seg i.f,
+.cv-seg i.filled {
+  background: linear-gradient(180deg, #FBBF24, #F59E0B) !important;
+}
+
+.cv-seg.full i.f,
+.cv-seg.full i.filled {
+  background: linear-gradient(180deg, #F59E0B, #D97706) !important;
+}
+
+/* ==========================================================================
+   7. Aside Todo & Quick Action List
+   ========================================================================== */
+.cv-todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.cv-todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0.85rem;
+  background: var(--cv-paper);
+  border: 1px solid var(--cv-line);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.15s ease;
+}
+
+.cv-todo-item:hover {
+  background: #ffffff;
+  border-color: var(--cv-blue-600);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.cv-todo-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cv-todo-dot.danger { background: #ef4444; }
+.cv-todo-dot.warning { background: #f59e0b; }
+.cv-todo-dot.info { background: #2563eb; }
+.cv-todo-dot.success { background: #10b981; }
+
+.cv-quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.cv-quick-actions .btn-block {
+  grid-column: 1 / -1;
+  text-align: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   8. Modern Workbench Tables & Avatars
+   ========================================================================== */
+.cv-avatar-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--cv-blue-tint);
+  color: var(--cv-blue-800);
+  font-weight: 700;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cv-avatar-md {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--cv-blue-tint);
+  color: var(--cv-blue-800);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cv-table-modern {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+
+.cv-table-modern th {
+  background: var(--table-header-bg, #F1F5F9);
+  color: var(--table-header-color, #1E293B);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--table-header-border, var(--cv-line));
+  text-align: left;
+}
+
+.cv-table-modern td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--table-row-border, var(--cv-line));
+  vertical-align: middle;
+  color: var(--table-text-primary, var(--cv-ink));
+}
+
+.cv-table-modern tr:hover td {
+  background-color: var(--table-row-hover, rgba(1, 52, 124, 0.04));
+}
+
+[data-theme="dark"] .cv-table-modern th {
+  background: var(--table-header-bg, #012758);
+  color: var(--table-header-color, #FFFFFF);
+  border-bottom-color: var(--table-header-border, #3F51B5);
+}
+
+[data-theme="dark"] .cv-table-modern td {
+  border-bottom-color: var(--table-row-border, rgba(63, 81, 181, 0.28));
+  color: var(--table-text-primary, #FFFFFF);
+}
+
+[data-theme="dark"] .cv-table-modern tr:hover td {
+  background-color: var(--table-row-hover, rgba(63, 81, 181, 0.18));
+}
+
+/* Vibrant Avatar Palettes (Image 1 Parity: JD, AS, RJ, EW, MK) */
+.cv-avatar-palette-1 { background: #0D9488 !important; color: #ffffff !important; } /* Emerald / Teal */
+.cv-avatar-palette-2 { background: #0284C7 !important; color: #ffffff !important; } /* Sky Blue */
+.cv-avatar-palette-3 { background: #7C3AED !important; color: #ffffff !important; } /* Purple / Violet */
+.cv-avatar-palette-4 { background: #D97706 !important; color: #ffffff !important; } /* Amber / Orange */
+.cv-avatar-palette-5 { background: #E11D48 !important; color: #ffffff !important; } /* Rose / Coral */
+
+/* Modern Status Dot Badges (Image 1 Parity: ● Paid, ● Processing, ● Pending, ● Cancelled) */
+.cv-status-dot-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.cv-status-dot-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cv-status-dot-badge.success {
+  color: #059669;
+  background: rgba(16, 185, 129, 0.12);
+}
+.cv-status-dot-badge.success .dot { background: #10B981; }
+
+.cv-status-dot-badge.info {
+  color: #0284C7;
+  background: rgba(14, 165, 233, 0.12);
+}
+.cv-status-dot-badge.info .dot { background: #0EA5E9; }
+
+.cv-status-dot-badge.warning {
+  color: #D97706;
+  background: rgba(245, 158, 11, 0.12);
+}
+.cv-status-dot-badge.warning .dot { background: #F59E0B; }
+
+.cv-status-dot-badge.danger {
+  color: #E11D48;
+  background: rgba(244, 63, 94, 0.12);
+}
+.cv-status-dot-badge.danger .dot { background: #F43F5E; }
+
+.cv-status-dot-badge.neutral {
+  color: #64748B;
+  background: rgba(100, 116, 139, 0.12);
+}
+.cv-status-dot-badge.neutral .dot { background: #94A3B8; }
+
+[data-theme="dark"] .cv-status-dot-badge.success { color: #34D399; background: rgba(16, 185, 129, 0.18); }
+[data-theme="dark"] .cv-status-dot-badge.info { color: #38BDF8; background: rgba(14, 165, 233, 0.18); }
+[data-theme="dark"] .cv-status-dot-badge.warning { color: #FBBF24; background: rgba(245, 158, 11, 0.18); }
+[data-theme="dark"] .cv-status-dot-badge.danger { color: #FB7185; background: rgba(244, 63, 94, 0.18); }
+[data-theme="dark"] .cv-status-dot-badge.neutral { color: #94A3B8; background: rgba(148, 163, 184, 0.18); }
+
+/* Modern Top-Right Action Button (Image 1 Parity: "View All ->") */
+.cv-btn-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.775rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--cv-line, #CBD5E1);
+  background: var(--neutral-0, #FFFFFF);
+  color: var(--neutral-700, #334155);
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.cv-btn-view-all:hover {
+  background: var(--cv-blue-tint, #EFF6FF) !important;
+  color: var(--magkom-primary-blue, #01347C) !important;
+  border-color: var(--cv-blue-700, #0641CC) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(6, 65, 204, 0.15);
+  text-decoration: none;
+}
+
+[data-theme="dark"] .cv-btn-view-all {
+  border-color: rgba(63, 81, 181, 0.45);
+  background: #111C2E;
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .cv-btn-view-all:hover {
+  background: rgba(59, 130, 246, 0.2) !important;
+  color: #93C5FD !important;
+  border-color: #3B82F6 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* ==========================================================================
+   9. Slide-over Drawer & Quick Modals (Lovable Clearview Interactive Console)
+   ========================================================================== */
+.cv-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 1040;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.cv-drawer-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cv-slide-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(560px, 100vw);
+  background: #ffffff;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
+  z-index: 1050;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.cv-slide-drawer.active {
+  transform: translateX(0);
+}
+
+.cv-drawer-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--cv-line, #E2E8F0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F8FAFC;
+}
+
+.cv-drawer-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--cv-blue-900, #061E5B);
+}
+
+.cv-drawer-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #64748B;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.cv-drawer-close:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+.cv-drawer-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.cv-drawer-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--cv-line, #E2E8F0);
+  background: #F8FAFC;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Telemetry Status Dot */
+.cv-pulse-live {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: cvPulse 2s infinite;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+@keyframes cvPulse {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* Mobile Floating Action Button (FAB) */
+.cv-mobile-fab {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 999;
+  background: var(--cv-blue-800, #06318C);
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.75rem 1.25rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 10px 25px rgba(6, 49, 140, 0.35);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cv-mobile-fab:hover {
+  background: var(--cv-blue-900, #061E5B);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 1200px) {
+  .cv-mobile-fab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+/* ==========================================================================
+   14. Guardrail: Defensive SVG Sizing for Admin Components
+   Prevents unconstrained SVGs from exploding to viewport width in non-Tailwind contexts
+   ========================================================================== */
+.empty-state svg,
+.adm-table-card svg:not([width]),
+.x_content svg:not([width]),
+.adm-empty-state-wrap svg {
+  max-width: 48px;
+  max-height: 48px;
+  display: inline-block;
+}
+
+/* ==========================================================================
+   PRD-TASK-2026-10-28-UI-02: Card Styling Rebranding (Dual-Theme Standard)
+   ========================================================================== */
+.cv-stat-card, .metric-card-highlight {
+    background-color: var(--card-highlight-bg, #01347C) !important;
+    border: 1px solid var(--card-highlight-border, #3F51B5) !important;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 10px 20px -3px rgba(1, 52, 124, 0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cv-stat-card:hover, .metric-card-highlight:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 24px -2px rgba(1, 52, 124, 0.32);
+}
+
+.cv-stat-card .cv-stat-label, .metric-card-highlight .cv-stat-label {
+    color: var(--magkom-gray-light, #BBBBBB) !important;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cv-stat-card .cv-stat-value, .metric-card-highlight .cv-stat-value {
+    color: var(--magkom-pure-white, #FFFFFF) !important;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.cv-stat-card .cv-stat-badge, .metric-card-highlight .cv-stat-badge {
+    background-color: var(--magkom-sun-yellow, #FFCB05) !important;
+    color: var(--magkom-abyssal-navy, #02275D) !important;
+    font-weight: 700;
+    border-radius: 9999px;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+}
+
+/* Standard Content Cards (Tabel & Form) */
+.cv-card {
+    background-color: var(--card-surface, #FFFFFF) !important;
+    border: 1px solid var(--card-border, #BBBBBB) !important;
+    border-top: 3px solid var(--magkom-primary-blue, #01347C) !important;
+    border-radius: 12px;
+}
+
+/* ==========================================================================
+   Statusline Ribbon Dashboard Peserta (POV Belum Diterima / Seleksi / Onboarding)
+   ========================================================================== */
+.saas-statusline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 16px;
+    background: var(--cv-surface, #ffffff);
+    border: 1px solid var(--neutral-300, #e2e8f0);
+    border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+    align-items: center;
+}
+
+@media (min-width: 992px) {
+    .saas-statusline {
+        grid-template-columns: minmax(12rem, 1fr) minmax(18rem, 2fr) minmax(12rem, 1fr);
+    }
+}
+
+.saas-statusline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 4px 6px;
+    min-width: 0;
+}
+
+.saas-statusline-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(2, 39, 93, 0.08);
+    color: var(--magkom-abyssal-navy, #02275D);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.saas-statusline-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
+.saas-statusline-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin-bottom: 2px;
+}
+
+.saas-statusline-value {
+    font-size: 0.875rem;
+    color: #0f172a;
+    font-weight: 600;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+.saas-statusline-value.is-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: normal;
+}
+
+/* ==========================================================================
+   Fase Seleksi: Status Pendaftaran Magang Aktif Card
+   Desain DS-MagKom (Sleman Abyssal Navy #02275D, Sleman Gold #FFCB05)
+   ========================================================================== */
+.saas-card {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.saas-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.saas-card-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.saas-heading-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.saas-reg-chip {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    color: #02275D;
+    background: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    padding: 2px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+}
+
+.saas-card-subtitle {
+    font-size: 0.875rem;
+    color: #64748B;
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* Status Pill Badge */
+.saas-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.saas-status-pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Status Variations */
+.saas-status-pill.saas-status-default {
+    background: #F1F5F9;
+    border-color: #CBD5E1;
+    color: #475569;
+}
+.saas-status-pill.saas-status-default .saas-status-pill-dot {
+    background: #64748B;
+}
+
+.saas-status-pill.saas-status-info {
+    background: #EFF6FF;
+    border-color: #BFDBFE;
+    color: #1D4ED8;
+}
+.saas-status-pill.saas-status-info .saas-status-pill-dot {
+    background: #2563EB;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.saas-status-pill.saas-status-warning {
+    background: #F0FDF4;
+    border-color: #BAE6FD;
+    color: #0369A1;
+}
+.saas-status-pill.saas-status-warning .saas-status-pill-dot {
+    background: #0284C7;
+}
+
+.saas-status-pill.saas-status-amber {
+    background: #FFFBEB;
+    border-color: #FDE68A;
+    color: #B45309;
+}
+.saas-status-pill.saas-status-amber .saas-status-pill-dot {
+    background: #D97706;
+}
+
+.saas-status-pill.saas-status-success {
+    background: #DCFCE7;
+    border-color: #86EFAC;
+    color: #15803D;
+}
+.saas-status-pill.saas-status-success .saas-status-pill-dot {
+    background: #16A34A;
+}
+
+.saas-status-pill.saas-status-danger {
+    background: #FEE2E2;
+    border-color: #FECACA;
+    color: #DC2626;
+}
+.saas-status-pill.saas-status-danger .saas-status-pill-dot {
+    background: #EF4444;
+}
+
+/* Info Strip Grid */
+.saas-info-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+@media (max-width: 991px) {
+    .saas-info-strip {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 575px) {
+    .saas-info-strip {
+        grid-template-columns: 1fr;
+    }
+}
+
+.saas-info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    min-width: 0;
+}
+
+.saas-info-item:hover {
+    background: #FFFFFF;
+    border-color: #CBD5E1;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+}
+
+.saas-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #EFF6FF;
+    color: #02275D;
+    flex-shrink: 0;
+}
+
+.saas-info-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.saas-info-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748B;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.saas-info-val {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.35;
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* ==========================================================================
+   Streamlined Pendaftaran Active Row (Riwayat Parity - Compact & Clean)
+   ========================================================================== */
+.saas-pendaftaran-stream-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.saas-pendaftaran-stream-row:hover {
+    background: #F8FAFC;
+    border-color: #01347C;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(1, 52, 124, 0.08);
+}
+
+.saas-pendaftaran-stream-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    flex: 1;
+}
+
+.saas-pendaftaran-stream-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.saas-pendaftaran-stream-row:hover .saas-pendaftaran-stream-icon {
+    transform: scale(1.05);
+}
+
+.saas-pendaftaran-stream-icon.icon-diterima {
+    background: #DCFCE7;
+    color: #15803D;
+    border: 1px solid #BBF7D0;
+}
+
+.saas-pendaftaran-stream-icon.icon-pending {
+    background: #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+}
+
+.saas-pendaftaran-stream-icon.icon-verifikasi {
+    background: rgba(2, 39, 93, 0.06);
+    color: #02275D;
+    border: 1px solid rgba(2, 39, 93, 0.18);
+}
+
+.saas-pendaftaran-stream-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.saas-pendaftaran-stream-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.saas-pendaftaran-stream-title-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #02275D;
+    text-decoration: none;
+    line-height: 1.35;
+    transition: color 0.15s ease;
+}
+
+.saas-pendaftaran-stream-row:hover .saas-pendaftaran-stream-title-text {
+    color: #01347C;
+}
+
+.saas-pendaftaran-stream-meta {
+    font-size: 0.775rem;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    line-height: 1.4;
+}
+
+.saas-pendaftaran-stream-meta strong {
+    color: #334155;
+    font-weight: 600;
+}
+
+.saas-meta-bullet {
+    color: #CBD5E1;
+}
+
+.saas-pendaftaran-stream-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 860px) {
+    .saas-pendaftaran-stream-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 14px;
+    }
+
+    .saas-pendaftaran-stream-right {
+        width: 100%;
+        justify-content: space-between;
+        padding-top: 10px;
+        border-top: 1px dashed #E2E8F0;
+    }
+}
+
+[data-theme="dark"] .saas-pendaftaran-stream-row {
+    background: #182234 !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .saas-pendaftaran-stream-row:hover {
+    border-color: #01347C !important;
+}
+
+[data-theme="dark"] .saas-pendaftaran-stream-title-text {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .saas-pendaftaran-stream-meta {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .saas-pendaftaran-stream-meta strong {
+    color: #E2E8F0 !important;
+}
+
+/* Alert Catatan Revisi */
+.saas-alert-catatan {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-left: 4px solid #F59E0B;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+}
+
+.saas-alert-catatan-icon {
+    color: #D97706;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.saas-alert-catatan-content {
+    min-width: 0;
+}
+
+.saas-alert-catatan-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #92400E;
+    margin: 0 0 4px 0;
+}
+
+.saas-alert-catatan-desc {
+    font-size: 0.84375rem;
+    color: #78350F;
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* Divider & Actions */
+.saas-divider-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #F1F5F9;
+}
+
+.saas-action-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: #64748B;
+    min-width: 0;
+}
+
+.saas-action-hint svg {
+    color: #02275D;
+    flex-shrink: 0;
+}
+
+.saas-action-buttons {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.saas-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #02275D;
+    color: #ffffff !important;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    box-shadow: 0 2px 6px rgba(2, 39, 93, 0.25);
+    border: 1px solid #02275D;
+    transition: all 0.15s ease;
+}
+
+.saas-btn-primary:hover {
+    background: #01347C;
+    border-color: #01347C;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(2, 39, 93, 0.35);
+    color: #ffffff !important;
+}
+
+.saas-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    color: #02275D !important;
+    border: 1px solid #CBD5E1;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: all 0.15s ease;
+}
+
+.saas-btn-secondary:hover {
+    background: #F8FAFC;
+    border-color: #02275D;
+    color: #02275D !important;
+}
+
+/* ==========================================================================
+   Modal Formulir Pengajuan Pendaftaran Magang Peserta
+   Desain DS-MagKom (Sleman Abyssal Navy #02275D, Gold Sleman #FFCB05, Clean SaaS)
+   ========================================================================== */
+.pendaftaran-modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.pendaftaran-modal-backdrop.open {
+    display: flex;
+    opacity: 1;
+}
+
+.pendaftaran-modal-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 580px;
+    padding: 20px 24px;
+    box-shadow: 0 25px 50px -12px rgba(2, 39, 93, 0.25);
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.pendaftaran-modal-card::-webkit-scrollbar {
+    display: none;
+}
+
+.pendaftaran-modal-backdrop.open .pendaftaran-modal-card {
+    transform: translateY(0) scale(1);
+}
+
+.pendaftaran-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+    gap: 12px;
+}
+
+.pendaftaran-modal-header-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pendaftaran-modal-icon-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
+    color: #FFCB05;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(2, 39, 93, 0.2);
+}
+
+.pendaftaran-modal-title {
+    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 2px 0;
+    line-height: 1.2;
+}
+
+.pendaftaran-modal-subtitle {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.pendaftaran-modal-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.15rem;
+    line-height: 1;
+    transition: all 0.2s ease;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.pendaftaran-modal-close:hover {
+    background: #fee2e2;
+    color: #ef4444;
+    border-color: #fca5a5;
+    transform: rotate(90deg);
+}
+
+/* Summary Card Peserta (Compact Banner) */
+.pendaftaran-summary-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pendaftaran-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.pendaftaran-summary-jurusan {
+    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.25;
+}
+
+.pendaftaran-summary-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(2, 39, 93, 0.08);
+    color: #02275D;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(2, 39, 93, 0.15);
+    flex-shrink: 0;
+}
+
+.pendaftaran-summary-sub {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: #475569;
+    line-height: 1.3;
+    flex-wrap: wrap;
+}
+
+.pendaftaran-summary-sub strong {
+    color: #0f172a;
+}
+
+.pendaftaran-summary-bullet {
+    color: #94a3b8;
+}
+
+/* Form Body & Group */
+.pendaftaran-form-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pendaftaran-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pendaftaran-label {
+    font-size: 0.775rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pendaftaran-label .req {
+    color: #ef4444;
+}
+
+.pendaftaran-select {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0f172a;
+    background-color: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.pendaftaran-select:focus {
+    border-color: #02275D;
+    box-shadow: 0 0 0 3px rgba(2, 39, 93, 0.12);
+}
+
+.pendaftaran-hint {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.25;
+}
+
+/* Chips Durasi Magang */
+.duration-chips-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.duration-chip-btn {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 6px 8px;
+    min-height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    text-align: center;
+}
+
+.duration-chip-btn:hover {
+    border-color: #02275D;
+    background: #f0f5ff;
+    transform: translateY(-1px);
+}
+
+.duration-chip-btn.is-active {
+    border-color: #02275D !important;
+    background: #02275D !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(2, 39, 93, 0.25);
+    transform: translateY(-1px);
+}
+
+.duration-chip-val {
+    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.duration-chip-btn.is-active .duration-chip-val {
+    color: #ffffff;
+}
+
+.duration-chip-sub {
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #64748b;
+}
+
+.duration-chip-btn.is-active .duration-chip-sub {
+    color: #FFCB05 !important;
+}
+
+/* Preview Box Periode */
+.pendaftaran-preview-box {
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+    border-radius: 8px;
+    border: 1.5px dashed #93c5fd;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pendaftaran-preview-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(2, 39, 93, 0.08);
+    color: #02275D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pendaftaran-preview-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.pendaftaran-preview-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+}
+
+.pendaftaran-preview-date {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #02275D;
+    line-height: 1.25;
+}
+
+/* Modal Footer */
+.pendaftaran-modal-footer {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+.pendaftaran-btn-cancel {
+    padding: 8px 16px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #64748b;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.pendaftaran-btn-cancel:hover {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.pendaftaran-btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
+    border: 1px solid #01347C;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(2, 39, 93, 0.2);
+    transition: all 0.2s ease;
+}
+
+.pendaftaran-btn-submit:hover:not(:disabled) {
+    background: linear-gradient(135deg, #01347C 0%, #002244 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(2, 39, 93, 0.3);
+}
+
+.pendaftaran-btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Dark Mode Harmonization */
+[data-theme="dark"] .pendaftaran-modal-card {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pendaftaran-modal-header,
+[data-theme="dark"] .pendaftaran-modal-footer {
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .pendaftaran-modal-title {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pendaftaran-summary-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .pendaftaran-summary-jurusan {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pendaftaran-select {
+    background-color: #1e293b !important;
+    border-color: #475569 !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .duration-chip-btn {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .pendaftaran-preview-box {
+    background: #1e293b !important;
+    border-color: #0284c7 !important;
+}
+
+[data-theme="dark"] .pendaftaran-preview-date {
+    color: #38bdf8 !important;
+}
+
+/* ==========================================================================
+   Pemberkasan Peserta: Compact Document Cards & Member Switcher
+   DS-MagKom Parity (Sleman Abyssal Navy #02275D, Sleman Gold #FFCB05)
+   ========================================================================== */
+
+.pemberkasan-section-title {
+    font-family: var(--font-display, 'Lexend', sans-serif);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 18px 0 10px 0;
+}
+
+.pemberkasan-section-badge {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #02275D;
+    border: 1px solid #bfdbfe;
+}
+
+/* Compact Document Row & Anti-Stretched Upload */
+.doc-card-compact {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+.doc-card-compact:hover {
+    border-color: #93c5fd;
+    box-shadow: 0 2px 8px rgba(2, 39, 93, 0.04);
+}
+
+.doc-card-compact.is-complete {
+    border-color: #bbf7d0;
+    background: #fcfdfd;
+}
+
+.doc-row-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.doc-info-compact {
+    min-width: 220px;
+    flex: 1;
+}
+
+.doc-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 2px;
+}
+
+.doc-name-compact {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.doc-badge-pill {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.doc-badge-pill.wajib {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.doc-badge-pill.opsional {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.doc-hint-compact {
+    font-size: 0.72rem;
+    color: #64748b;
+    line-height: 1.35;
+}
+
+.doc-action-compact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.status-dot-pending {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #b45309;
+    background: #fef3c7;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+/* Compact Upload Trigger Button (Anti-Kepanjangan) */
+.btn-pick-file {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: #eff6ff;
+    border: 1.5px solid #93c5fd;
+    border-radius: 8px;
+    color: #1d4ed8;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.btn-pick-file:hover {
+    background: #02275D;
+    border-color: #02275D;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(2, 39, 93, 0.2);
+}
+
+.btn-pick-file.dragover {
+    background: #dbeafe;
+    border-color: #1d4ed8;
+}
+
+/* Compact Uploaded File Bar */
+.uploaded-pill-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    color: #166534;
+}
+
+.status-dot-uploaded {
+    font-weight: 800;
+    color: #16a34a;
+    font-size: 0.8125rem;
+}
+
+.uploaded-file-name {
+    font-weight: 600;
+    color: #0f172a;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.uploaded-file-size {
+    color: #64748b;
+    font-size: 0.7rem;
+}
+
+.uploaded-actions-btns {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-doc-act {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 28px;
+    padding: 0 9px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-doc-act:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #94a3b8;
+}
+
+.btn-doc-act.view {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.btn-doc-act.view:hover {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    color: #1e40af;
+}
+
+.replace-bar-compact {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.replace-prompt {
+    font-size: 0.775rem;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Compact Selected File Confirmation Bar */
+.selected-bar-compact {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #eff6ff;
+    border: 1.5px solid #3b82f6;
+    border-radius: 8px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.selected-file-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.selected-file-name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-file-size {
+    font-size: 0.72rem;
+    color: #64748b;
+    flex-shrink: 0;
+}
+
+.selected-file-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Member Person Card (Kelompok Simpel Tanpa Tab) */
+.member-person-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.member-person-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.member-person-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.member-avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.8125rem;
+    flex-shrink: 0;
+}
+
+.member-avatar-circle.ketua {
+    background: #02275D;
+    color: #ffffff;
+}
+
+.member-avatar-circle.anggota {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.member-person-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.member-role-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+}
+
+.member-role-badge.ketua {
+    background: rgba(2, 39, 93, 0.1);
+    color: #02275D;
+}
+
+.member-role-badge.anggota {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.member-person-sub {
+    font-size: 0.72rem;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.member-status-pill {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 999px;
+}
+
+.member-status-pill.complete {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.member-status-pill.pending {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.member-person-body {
+    padding: 10px 12px;
+    background: #ffffff;
+}
+
+/* Dark Mode Harmonization */
+[data-theme="dark"] .pemberkasan-section-title {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .doc-card-compact {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .doc-name-compact {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .btn-pick-file {
+    background: #0f172a !important;
+    border-color: #0284c7 !important;
+    color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .btn-pick-file:hover {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .uploaded-pill-box {
+    background: #064e3b !important;
+    border-color: #059669 !important;
+    color: #a7f3d0 !important;
+}
+
+[data-theme="dark"] .uploaded-file-name {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .btn-doc-act {
+    background: #334155 !important;
+    border-color: #475569 !important;
+    color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .member-person-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .member-person-header {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .member-person-body {
+    background: #1e293b !important;
+}
+
+[data-theme="dark"] .member-person-name {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .replace-bar-compact {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .selected-bar-compact {
+    background: #0f172a !important;
+    border-color: #0284c7 !important;
+}
+
+
+

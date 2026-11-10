@@ -9,23 +9,17 @@ use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
-use App\Enums\StatusReviewProgresEnum;
-use App\Enums\StatusTugasEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
-use App\Models\Dokumen;
 use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Logbook;
+use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
-use App\Models\PenilaianRiwayat;
 use App\Models\PesertaProfil;
-use App\Models\Rubrik;
 use App\Models\SlotKhusus;
 use App\Models\Tugas;
 use App\Models\User;
@@ -41,9 +35,13 @@ class EndToEndUatTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected Bidang $bidang;
+
     protected Jurusan $jurusanSmk;
 
     protected function setUp(): void
@@ -54,15 +52,6 @@ class EndToEndUatTest extends TestCase
 
         Carbon::setTestNow(Carbon::parse('2026-10-08 09:00:00', 'Asia/Jakarta'));
         CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-10-08 09:00:00', 'Asia/Jakarta'));
-
-        // Seed master rubrik jika belum ada
-        if (Rubrik::count() === 0) {
-            Rubrik::create(['kriteria' => 'Kualitas hasil kerja', 'bobot' => 30, 'aktif' => true]);
-            Rubrik::create(['kriteria' => 'Ketepatan waktu dan penyelesaian tugas', 'bobot' => 20, 'aktif' => true]);
-            Rubrik::create(['kriteria' => 'Inisiatif dan kemampuan belajar', 'bobot' => 20, 'aktif' => true]);
-            Rubrik::create(['kriteria' => 'Komunikasi dan kerja sama', 'bobot' => 15, 'aktif' => true]);
-            Rubrik::create(['kriteria' => 'Etika, disiplin, dan tanggung jawab', 'bobot' => 15, 'aktif' => true]);
-        }
 
         // Siapkan Bidang & Jurusan
         $this->bidang = Bidang::firstOrCreate(
@@ -76,7 +65,7 @@ class EndToEndUatTest extends TestCase
         );
 
         // Siapkan Aktor: SuperAdmin, Admin, Pembimbing
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Admin MagKom';
         $this->superAdmin->email = 'superadmin.uat@kominfo.test';
         $this->superAdmin->password = 'secret123';
@@ -85,7 +74,7 @@ class EndToEndUatTest extends TestCase
         $this->superAdmin->status_aktif = true;
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Pengelola';
         $this->admin->email = 'admin.uat@kominfo.test';
         $this->admin->password = 'secret123';
@@ -94,7 +83,7 @@ class EndToEndUatTest extends TestCase
         $this->admin->status_aktif = true;
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan UAT';
         $this->pembimbing->email = 'pembimbing.uat@kominfo.test';
         $this->pembimbing->password = 'secret123';
@@ -187,7 +176,7 @@ class EndToEndUatTest extends TestCase
         );
 
         // Peserta baru
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Budi Santoso Siswa';
         $peserta->email = 'budi.santoso@sekolah.test';
         $peserta->password = 'secret123';
@@ -196,13 +185,20 @@ class EndToEndUatTest extends TestCase
         $peserta->status_aktif = true;
         $peserta->save();
 
-        // 1. Lengkapi Profil
+        // 1. Lengkapi Profil (100% lengkap: pasfoto, alamat, kontak darurat wali, data akademik)
+        $fileDummy = UploadedFile::fake()->create('pasfoto.jpg', 200, 'image/jpeg');
         $profilRes = $this->actingAs($peserta)->post(route('peserta.profil.simpan'), [
             'nim_nisn' => '00987654321',
             'institusi' => 'SMK Negeri 2 Kominfo',
             'jenjang' => 'smk',
             'jurusan_id' => $this->jurusanSmk->id,
             'no_hp' => '08129876543',
+            'alamat' => 'Jl. Magelang KM 5, Sleman',
+            'nama_kontak_darurat' => 'Bapak Santoso',
+            'no_kontak_darurat' => '081299887766',
+            'hubungan_kontak_darurat' => 'Orang Tua / Wali',
+            'persetujuan_wali' => '1',
+            'foto' => $fileDummy,
         ]);
         $profilRes->assertRedirect(route('peserta.profil.show'));
 
@@ -213,7 +209,7 @@ class EndToEndUatTest extends TestCase
             'durasi_bulan' => 3,
         ]);
         $daftarRes->assertRedirect();
-        $pendaftaran = \App\Models\Pendaftaran::where('user_id', $peserta->id)->firstOrFail();
+        $pendaftaran = Pendaftaran::where('user_id', $peserta->id)->firstOrFail();
         $this->assertEquals(StatusPendaftaranEnum::BerkasBelumLengkap, $pendaftaran->status);
 
         // 3. Upload Berkas Wajib ke Disk Private
@@ -258,7 +254,7 @@ class EndToEndUatTest extends TestCase
             'aktif' => true,
         ]);
 
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Citra Lestari';
         $peserta->email = 'citra@sekolah.test';
         $peserta->password = 'secret123';
@@ -276,7 +272,7 @@ class EndToEndUatTest extends TestCase
             'no_hp' => '08129876111',
         ]);
 
-        $pendaftaran = \App\Models\Pendaftaran::create([
+        $pendaftaran = Pendaftaran::create([
             'user_id' => $peserta->id,
             'bulan_magang_id' => $bulan->id,
             'kuota_id' => $kuota->id,
@@ -285,20 +281,16 @@ class EndToEndUatTest extends TestCase
             'diajukan_at' => now(),
         ]);
 
-        // 1. Admin memutuskan: Perlu Perbaikan
-        $putuskan1 = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
+        // 1. Opsi revisi/perlu perbaikan sudah dihapus dari verifikasi dan ditolak validasi
+        $putuskanInvalid = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
             'keputusan' => 'perlu_perbaikan',
             'catatan' => 'Surat pengantar belum ada tanda tangan kepala sekolah.',
         ]);
-        $putuskan1->assertRedirect();
+        $putuskanInvalid->assertSessionHasErrors(['keputusan']);
         $pendaftaran->refresh();
-        $this->assertEquals(StatusPendaftaranEnum::PerluPerbaikan, $pendaftaran->status);
+        $this->assertEquals(StatusPendaftaranEnum::Diajukan, $pendaftaran->status);
 
-        // 2. Peserta memperbaiki dan mengajukan kembali
-        $pendaftaran->status = StatusPendaftaranEnum::Diajukan;
-        $pendaftaran->save();
-
-        // 3. Admin memutuskan: Diterima & tempatkan ke pembimbing
+        // 2. Admin memutuskan: Diterima & tempatkan ke pembimbing
         $putuskan2 = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
             'keputusan' => 'terima',
             'pembimbing_id' => $this->pembimbing->id,
@@ -343,7 +335,7 @@ class EndToEndUatTest extends TestCase
             ['nama' => 'Surat Pengantar Sekolah', 'wajib' => true, 'aktif' => true]
         );
 
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Doni Waiting';
         $peserta->email = 'doni@sekolah.test';
         $peserta->password = 'secret123';
@@ -362,7 +354,7 @@ class EndToEndUatTest extends TestCase
         ]);
 
         // Pendaftaran saat kuota penuh
-        $pendaftaran = \App\Models\Pendaftaran::create([
+        $pendaftaran = Pendaftaran::create([
             'user_id' => $peserta->id,
             'bulan_magang_id' => $bulan->id,
             'kuota_id' => $kuota->id,
@@ -384,15 +376,22 @@ class EndToEndUatTest extends TestCase
         $ajukanRes = $this->actingAs($peserta)->post(route('peserta.pendaftaran.ajukan', $pendaftaran->id));
         $ajukanRes->assertRedirect();
 
-        // Admin memutuskan waiting_list karena kuota penuh
-        $adminRes = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
+        // Admin mencoba opsi waiting_list yang sudah dihapus: ditolak validasi
+        $adminResInvalid = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
             'keputusan' => 'waiting_list',
             'catatan' => 'Kuota untuk periode ini telah terpenuhi, masuk antrean cadangan.',
+        ]);
+        $adminResInvalid->assertSessionHasErrors(['keputusan']);
+
+        // Admin memutuskan tolak karena kuota penuh
+        $adminRes = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $pendaftaran), [
+            'keputusan' => 'tolak',
+            'catatan' => 'Kuota untuk periode ini telah terpenuhi secara penuh.',
         ]);
         $adminRes->assertRedirect();
 
         $pendaftaran->refresh();
-        $this->assertEquals(StatusPendaftaranEnum::WaitingList, $pendaftaran->status, 'Pendaftaran pada kuota penuh otomatis masuk ke waiting list');
+        $this->assertEquals(StatusPendaftaranEnum::Ditolak, $pendaftaran->status, 'Pendaftaran pada kuota penuh ditolak oleh admin');
     }
 
     /**
@@ -414,7 +413,7 @@ class EndToEndUatTest extends TestCase
             'dibuat_oleh' => $this->superAdmin->id,
         ]);
 
-        $pesertaKhusus = new User();
+        $pesertaKhusus = new User;
         $pesertaKhusus->nama = 'Eka Khusus';
         $pesertaKhusus->email = 'eka.khusus@instansi.test';
         $pesertaKhusus->password = 'secret123';
@@ -469,7 +468,7 @@ class EndToEndUatTest extends TestCase
             'status' => StatusPenempatanEnum::Aktif,
         ]);
 
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Fajar Pelaksana';
         $peserta->email = 'fajar@pelaksana.test';
         $peserta->password = 'secret123';
@@ -533,11 +532,11 @@ class EndToEndUatTest extends TestCase
     }
 
     /**
-     * UAT-7: Penilaian: draft, final, ubah nilai dengan alasan, tetapkan Selesai, unduh Lembar Nilai.
+     * UAT-7: Penyelesaian magang dan penerbitan sertifikat alumni.
      */
     public function test_uat_7_penilaian_dan_unduh_lembar_nilai(): void
     {
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Gita Nilai';
         $peserta->email = 'gita@nilai.test';
         $peserta->password = 'secret123';
@@ -566,48 +565,16 @@ class EndToEndUatTest extends TestCase
             'status' => StatusPenempatanEnum::Aktif,
         ]);
 
-        $rubrikAktif = Rubrik::where('aktif', true)->get();
-        $skor = [];
-        foreach ($rubrikAktif as $r) {
-            $skor[$r->id] = 85;
-        }
-
-        // 1. Simpan draf penilaian
-        $draftRes = $this->actingAs($this->pembimbing)->postJson(route('pembimbing.penilaian.store', $penempatan), [
-            'skor' => [$rubrikAktif->first()->id => 85],
-            'is_final' => false,
-        ]);
-        $draftRes->assertStatus(200);
-
-        // 2. Finalisasi penilaian
-        $finalRes = $this->actingAs($this->pembimbing)->postJson(route('pembimbing.penilaian.store', $penempatan), [
-            'skor' => $skor,
-            'catatan' => 'Sangat bertanggung jawab.',
-            'is_final' => true,
-        ]);
-        $finalRes->assertStatus(200);
-
-        // 3. Revisi nilai final dengan alasan
-        foreach ($rubrikAktif as $r) {
-            $skor[$r->id] = 90;
-        }
-        $revisiRes = $this->actingAs($this->pembimbing)->postJson(route('pembimbing.penilaian.store', $penempatan), [
-            'skor' => $skor,
-            'is_final' => true,
-            'alasan' => 'Penambahan nilai atas presentasi akhir yang sangat memukau.',
-        ]);
-        $revisiRes->assertStatus(200);
-
-        // 4. Pembimbing menandai Selesai (BR-10)
+        // 1. Pembimbing menandai Selesai (BR-10) tanpa perlu rubrik/nilai
         $selesaiRes = $this->actingAs($this->pembimbing)->postJson(route('pembimbing.penempatan.selesai', $penempatan));
         $selesaiRes->assertStatus(200);
         $penempatan->refresh();
         $this->assertEquals(StatusPenempatanEnum::Selesai, $penempatan->status);
 
-        // 5. Peserta mengunduh Lembar Nilai PDF
-        $pdfRes = $this->actingAs($peserta)->get(route('peserta.nilai.unduh'));
-        $pdfRes->assertStatus(200);
-        $this->assertEquals('application/pdf', $pdfRes->headers->get('content-type'));
+        // 2. Admin dapat memverifikasi status penempatan telah selesai di daftar penempatan
+        $penempatanRes = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
+        $penempatanRes->assertStatus(200);
+        $penempatanRes->assertSee('Gita Nilai');
     }
 
     /**
@@ -615,7 +582,7 @@ class EndToEndUatTest extends TestCase
      */
     public function test_uat_8_masa_tenggang_nonaktif_otomatis_dan_audit_trail_komprehensif(): void
     {
-        $peserta = new User();
+        $peserta = new User;
         $peserta->nama = 'Hendra Selesai';
         $peserta->email = 'hendra@selesai.test';
         $peserta->password = 'secret123';

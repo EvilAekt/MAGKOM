@@ -8,21 +8,19 @@ use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
-use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\SumberPenempatanEnum;
+use App\Enums\TipeAuditEnum;
 use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Logbook;
-use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\Pengaturan;
 use App\Models\PesertaProfil;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -32,10 +30,15 @@ final class NextLevelEnhancementsTest extends TestCase
     use RefreshDatabase;
 
     private User $superAdmin;
+
     private User $admin;
+
     private User $pembimbing;
+
     private Bidang $bidang;
+
     private Jurusan $jurusan;
+
     private BulanMagang $bulanMagang;
 
     protected function setUp(): void
@@ -68,7 +71,7 @@ final class NextLevelEnhancementsTest extends TestCase
 
     private function createUser(string $nama, string $email, RoleEnum $role, ?int $bidangId = null): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = Hash::make('Password123!');
@@ -140,6 +143,7 @@ final class NextLevelEnhancementsTest extends TestCase
 
         $auditCount = AuditLog::where('entitas', 'logbook')
             ->whereIn('entitas_id', [$logbook1->id, $logbook2->id])
+            ->where('aksi', 'bulk_review_logbook')
             ->count();
         $this->assertSame(2, $auditCount);
     }
@@ -175,31 +179,6 @@ final class NextLevelEnhancementsTest extends TestCase
 
         $response->assertForbidden();
         $this->assertSame(StatusLogbookEnum::Terkirim, $unownedLogbook->fresh()->status);
-    }
-
-    public function test_pembimbing_can_export_rekap_bimbingan_bidang_csv_safely(): void
-    {
-        $peserta = $this->createPeserta('=FormulaInjection', 'formula@magkom.test');
-
-        Penempatan::create([
-            'peserta_id' => $peserta->id,
-            'pembimbing_id' => $this->pembimbing->id,
-            'bidang_id' => $this->bidang->id,
-            'tgl_mulai' => now()->subDays(10),
-            'tgl_selesai' => now()->addDays(20),
-            'status' => StatusPenempatanEnum::Aktif,
-            'jalur' => JalurEnum::Umum->value,
-            'sumber' => SumberPenempatanEnum::Online->value,
-        ]);
-
-        $response = $this->actingAs($this->pembimbing)
-            ->get(route('pembimbing.penilaian.ekspor-bidang'));
-
-        $response->assertOk();
-        $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
-
-        $content = $response->streamedContent();
-        $this->assertStringContainsString("'=FormulaInjection", $content);
     }
 
     public function test_last_superadmin_protection_prevents_deactivation(): void
@@ -277,7 +256,7 @@ final class NextLevelEnhancementsTest extends TestCase
         AuditLog::create([
             'waktu' => now(),
             'user_id' => $this->superAdmin->id,
-            'tipe' => \App\Enums\TipeAuditEnum::Aksi,
+            'tipe' => TipeAuditEnum::Aksi,
             'aksi' => '@InsecureActionLog',
             'entitas' => 'pengaturan',
             'entitas_id' => 1,
@@ -297,61 +276,6 @@ final class NextLevelEnhancementsTest extends TestCase
 
         $content = $response->streamedContent();
         $this->assertStringContainsString("'@InsecureActionLog", $content);
-    }
-
-    public function test_admin_can_bulk_close_waiting_list_queue_for_started_month(): void
-    {
-        // Past month
-        $pastMonth = BulanMagang::create([
-            'bulan_mulai' => now()->subMonth()->startOfMonth()->toDateString(),
-            'tgl_buka' => now()->subMonths(2)->toDateString(),
-            'tgl_tutup' => now()->subMonth()->subDays(5)->toDateString(),
-            'aktif' => true,
-        ]);
-
-        $kuotaPast = Kuota::create([
-            'bulan_magang_id' => $pastMonth->id,
-            'jurusan_id' => $this->jurusan->id,
-            'jumlah' => 10,
-            'terisi' => 5,
-            'aktif' => true,
-        ]);
-
-        $peserta = $this->createPeserta('Peserta Waiting', 'waiting@magkom.test');
-
-        $pendaftaran = Pendaftaran::create([
-            'user_id' => $peserta->id,
-            'bulan_magang_id' => $pastMonth->id,
-            'kuota_id' => $kuotaPast->id,
-            'status' => StatusPendaftaranEnum::WaitingList,
-            'diajukan_at' => now()->subDays(15),
-            'durasi_bulan' => 1,
-        ]);
-
-        $response = $this->actingAs($this->admin)
-            ->post(route('admin.waiting-list.tutup', $pastMonth));
-
-        $response->assertRedirect(route('admin.waiting-list.index'));
-        $response->assertSessionHas('success');
-
-        $this->assertSame(StatusPendaftaranEnum::Ditolak, $pendaftaran->fresh()->status);
-        $this->assertStringContainsString('ditutup secara otomatis', (string) $pendaftaran->fresh()->catatan);
-    }
-
-    public function test_admin_cannot_close_waiting_list_queue_for_future_month(): void
-    {
-        $futureMonth = BulanMagang::create([
-            'bulan_mulai' => now()->addMonths(2)->startOfMonth()->toDateString(),
-            'tgl_buka' => now()->addMonth()->toDateString(),
-            'tgl_tutup' => now()->addMonths(2)->subDays(5)->toDateString(),
-            'aktif' => true,
-        ]);
-
-        $response = $this->actingAs($this->admin)
-            ->post(route('admin.waiting-list.tutup', $futureMonth));
-
-        $response->assertRedirect();
-        $response->assertSessionHas('error');
     }
 
     public function test_admin_can_export_rekapitulasi_surat_diterima_csv(): void

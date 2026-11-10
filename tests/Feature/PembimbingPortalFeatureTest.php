@@ -28,10 +28,15 @@ class PembimbingPortalFeatureTest extends TestCase
     use RefreshDatabase;
 
     protected User $pembimbingA;
+
     protected User $pembimbingB;
+
     protected User $pesertaA;
+
     protected User $superAdmin;
+
     protected Bidang $bidang;
+
     protected Penempatan $penempatanA;
 
     protected function setUp(): void
@@ -44,7 +49,7 @@ class PembimbingPortalFeatureTest extends TestCase
             'aktif' => true,
         ]);
 
-        $this->pembimbingA = new User();
+        $this->pembimbingA = new User;
         $this->pembimbingA->nama = 'Budi Santoso (Pembimbing A)';
         $this->pembimbingA->email = 'pembimbing.a@slemankab.go.id';
         $this->pembimbingA->password = bcrypt('password123');
@@ -55,7 +60,7 @@ class PembimbingPortalFeatureTest extends TestCase
         $this->pembimbingA->must_change_password = false;
         $this->pembimbingA->save();
 
-        $this->pembimbingB = new User();
+        $this->pembimbingB = new User;
         $this->pembimbingB->nama = 'Siti Rahma (Pembimbing B)';
         $this->pembimbingB->email = 'pembimbing.b@slemankab.go.id';
         $this->pembimbingB->password = bcrypt('password123');
@@ -66,7 +71,7 @@ class PembimbingPortalFeatureTest extends TestCase
         $this->pembimbingB->must_change_password = false;
         $this->pembimbingB->save();
 
-        $this->pesertaA = new User();
+        $this->pesertaA = new User;
         $this->pesertaA->nama = 'Ahmad Mentee';
         $this->pesertaA->email = 'ahmad.mentee@kampus.ac.id';
         $this->pesertaA->password = bcrypt('password123');
@@ -76,7 +81,7 @@ class PembimbingPortalFeatureTest extends TestCase
         $this->pesertaA->must_change_password = false;
         $this->pesertaA->save();
 
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator';
         $this->superAdmin->email = 'superadmin@slemankab.go.id';
         $this->superAdmin->password = bcrypt('password123');

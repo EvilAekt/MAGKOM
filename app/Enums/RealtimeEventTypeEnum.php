@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Enums;
+
+enum RealtimeEventTypeEnum: string
+{
+    case PendaftaranBaru = 'pendaftaran_baru';
+    case StatusPendaftaran = 'status_pendaftaran';
+    case KuotaBerubah = 'kuota_berubah';
+    case LogbookBaru = 'logbook_baru';
+    case LogbookDireviu = 'logbook_direviu';
+    case TugasBaru = 'tugas_baru';
+    case TugasDikumpulkan = 'tugas_dikumpulkan';
+    case ProgresDireviu = 'progres_direviu';
+    case AncamanKeamanan = 'ancaman_keamanan';
+    case TelemetriRoute = 'telemetri_route';
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::PendaftaranBaru => 'Pendaftaran Baru Masuk',
+            self::StatusPendaftaran => 'Pembaruan Status Pendaftaran',
+            self::KuotaBerubah => 'Pembaruan Ketersediaan Kuota',
+            self::LogbookBaru => 'Setoran Logbook Harian Mentee',
+            self::LogbookDireviu => 'Review Logbook Harian Selesai',
+            self::TugasBaru => 'Tugas Magang Baru Diterbitkan',
+            self::TugasDikumpulkan => 'Pengumpulan Progres Tugas Mentee',
+            self::ProgresDireviu => 'Umpan Balik Progres Tugas Mentee',
+            self::AncamanKeamanan => 'Peringatan Keamanan Sistem',
+            self::TelemetriRoute => 'Telemetri Waktu Eksekusi Route',
+        };
+    }
+}

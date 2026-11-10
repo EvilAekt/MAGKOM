@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
-use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
-use App\Enums\StatusTugasEnum;
-use App\Models\Bidang;
+use App\Enums\SumberPenempatanEnum;
 use App\Models\BulanMagang;
-use App\Models\JenisDokumen;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
-use App\Models\Rubrik;
 use App\Models\Tugas;
 use App\Models\User;
 use Database\Seeders\JenisDokumenSeeder;
@@ -33,12 +28,19 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
     use RefreshDatabase;
 
     protected User $superAdmin;
+
     protected User $admin;
+
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected BulanMagang $bulan;
+
     protected Jurusan $jurusan;
+
     protected Kuota $kuota;
+
     protected Penempatan $penempatan;
 
     protected function setUp(): void
@@ -70,7 +72,7 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
         ]);
 
         // Users
-        $this->superAdmin = new User();
+        $this->superAdmin = new User;
         $this->superAdmin->nama = 'Super Administrator Sleman';
         $this->superAdmin->email = 'superadmin@slemankab.go.id';
         $this->superAdmin->password = 'Password123!';
@@ -80,7 +82,7 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
         $this->superAdmin->email_verified_at = now();
         $this->superAdmin->save();
 
-        $this->admin = new User();
+        $this->admin = new User;
         $this->admin->nama = 'Admin Verifikator Sleman';
         $this->admin->email = 'admin@slemankab.go.id';
         $this->admin->password = 'Password123!';
@@ -90,7 +92,7 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
         $this->admin->email_verified_at = now();
         $this->admin->save();
 
-        $this->pembimbing = new User();
+        $this->pembimbing = new User;
         $this->pembimbing->nama = 'Pembimbing Lapangan Aptika';
         $this->pembimbing->email = 'pembimbing@slemankab.go.id';
         $this->pembimbing->password = 'Password123!';
@@ -100,7 +102,7 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
         $this->pembimbing->email_verified_at = now();
         $this->pembimbing->save();
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Budi Santoso';
         $this->peserta->email = 'budi@example.com';
         $this->peserta->password = 'Password123!';
@@ -123,8 +125,8 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
             'peserta_id' => $this->peserta->id,
             'kuota_id' => $this->kuota->id,
             'pembimbing_id' => $this->pembimbing->id,
-            'jalur' => \App\Enums\JalurEnum::Umum,
-            'sumber' => \App\Enums\SumberPenempatanEnum::Online,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
             'dibuat_oleh' => $this->admin->id,
             'tgl_mulai' => now()->toDateString(),
             'tgl_selesai' => now()->addMonths(2)->toDateString(),
@@ -159,32 +161,14 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
     }
 
     /** @test */
-    public function superadmin_can_view_monitoring_peserta_aktif_index_and_detail_read_only(): void
+    public function superadmin_monitoring_peserta_routes_are_decommissioned(): void
     {
-        // 1. Tambahkan tugas untuk peserta
-        Tugas::create([
-            'penempatan_id' => $this->penempatan->id,
-            'judul' => 'Instalasi Jaringan Server Diskominfo',
-            'deskripsi' => 'Konfigurasi switch VLAN dan gateway',
-            'kategori' => 'Infrastruktur',
-            'kompleksitas' => KompleksitasEnum::Sedang,
-            'deadline' => now()->addDays(5)->toDateString(),
-            'status' => StatusTugasEnum::Proses,
-        ]);
+        // Memastikan rute legacy /superadmin/monitoring-peserta merespons 404 Not Found
+        $resIndex = $this->actingAs($this->superAdmin)->get('/superadmin/monitoring-peserta');
+        $resIndex->assertStatus(404);
 
-        // 2. Akses index monitoring
-        $resIndex = $this->actingAs($this->superAdmin)->get(route('superadmin.monitoring.index'));
-        $resIndex->assertStatus(200);
-        $resIndex->assertViewIs('superadmin.monitoring.index');
-        $resIndex->assertSee('Budi Santoso');
-        $resIndex->assertSee('SMK Negeri 2 Depok Sleman');
-
-        // 3. Akses detail monitoring baca-saja
-        $resShow = $this->actingAs($this->superAdmin)->get(route('superadmin.monitoring.show', $this->penempatan));
-        $resShow->assertStatus(200);
-        $resShow->assertViewIs('superadmin.monitoring.show');
-        $resShow->assertSee('Mode Pemantauan Baca-Saja (SuperAdmin)');
-        $resShow->assertSee('Instalasi Jaringan Server Diskominfo');
+        $resShow = $this->actingAs($this->superAdmin)->get('/superadmin/monitoring-peserta/'.$this->penempatan->id);
+        $resShow->assertStatus(404);
     }
 
     /** @test */
@@ -275,27 +259,5 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
             'password' => 'Password123!',
         ]);
         $resSuperAdmin->assertRedirect(route('superadmin.dashboard'));
-    }
-
-    /** @test */
-    public function waiting_list_index_supports_filtering_by_jurusan_and_bulan(): void
-    {
-        Pendaftaran::create([
-            'user_id' => $this->peserta->id,
-            'bulan_magang_id' => $this->bulan->id,
-            'kuota_id' => $this->kuota->id,
-            'durasi_bulan' => 1,
-            'status' => StatusPendaftaranEnum::WaitingList,
-            'diajukan_at' => now(),
-        ]);
-
-        $response = $this->actingAs($this->admin)->get(route('admin.waiting-list.index', [
-            'bulan_magang_id' => $this->bulan->id,
-            'jurusan_id' => $this->jurusan->id,
-        ]));
-
-        $response->assertStatus(200);
-        $response->assertViewIs('admin.waiting-list.index');
-        $response->assertSee('Budi Santoso');
     }
 }

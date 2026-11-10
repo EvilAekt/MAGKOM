@@ -9,19 +9,15 @@ use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
-use App\Enums\StatusPenilaianEnum;
 use App\Enums\SumberPenempatanEnum;
 use App\Models\AgendaBimbingan;
-use App\Models\AuditLog;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Penilaian;
 use App\Models\PesertaProfil;
-use App\Models\Rubrik;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
@@ -33,12 +29,19 @@ final class AdvancedThreePillarsDashboardTest extends TestCase
     use RefreshDatabase;
 
     private User $superAdmin;
+
     private User $admin;
+
     private User $pembimbing1;
+
     private User $pembimbing2;
+
     private Bidang $bidang;
+
     private Jurusan $jurusan;
+
     private BulanMagang $bulanMagang;
+
     private Kuota $kuota;
 
     protected function setUp(): void
@@ -72,17 +75,6 @@ final class AdvancedThreePillarsDashboardTest extends TestCase
             'aktif' => true,
         ]);
 
-        Rubrik::create([
-            'kriteria' => 'Kedisiplinan & Etika',
-            'bobot' => 20,
-            'aktif' => true,
-        ]);
-        Rubrik::create([
-            'kriteria' => 'Kompetensi Teknis',
-            'bobot' => 40,
-            'aktif' => true,
-        ]);
-
         $this->superAdmin = $this->createUser('Super Admin MagKom', 'superadmin@slemankab.go.id', RoleEnum::SuperAdmin);
         $this->admin = $this->createUser('Admin Dinas Magang', 'admin@slemankab.go.id', RoleEnum::Admin);
         $this->pembimbing1 = $this->createUser('Pembimbing Aptika Satu', 'pembimbing1@slemankab.go.id', RoleEnum::Pembimbing, $this->bidang->id);
@@ -91,7 +83,7 @@ final class AdvancedThreePillarsDashboardTest extends TestCase
 
     private function createUser(string $nama, string $email, RoleEnum $role, ?int $bidangId = null): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = Hash::make('Password123!');
@@ -158,189 +150,12 @@ final class AdvancedThreePillarsDashboardTest extends TestCase
         $response->assertSee('Offboarding Watchdog');
         $response->assertSee('Peserta Selesai Segera');
         $response->assertSee('Timeline Gelombang Magang');
-        $response->assertSee('Hub Sertifikat');
-    }
-
-    public function test_admin_sertifikat_index_and_cetak_alumni_terverifikasi(): void
-    {
-        $peserta = $this->createPeserta('Alumni Terbaik Magang', 'alumni@ugm.ac.id');
-        $penempatan = Penempatan::create([
-            'peserta_id' => $peserta->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'bidang_id' => $this->bidang->id,
-            'kuota_id' => $this->kuota->id,
-            'sumber' => SumberPenempatanEnum::Online->value,
-            'jalur' => JalurEnum::Umum,
-            'tgl_mulai' => now()->subMonths(3),
-            'tgl_selesai' => now()->subDays(2),
-            'status' => StatusPenempatanEnum::Selesai,
-        ]);
-
-        $penilaian = Penilaian::create([
-            'penempatan_id' => $penempatan->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'nilai_akhir' => 92.50,
-            'predikat' => 'A',
-            'status' => StatusPenilaianEnum::Final,
-            'catatan' => 'Kinerja luar biasa.',
-        ]);
-
-        // Akses index sertifikat
-        $response = $this->actingAs($this->admin)->get(route('admin.sertifikat.index'));
-        $response->assertOk();
-        $response->assertSee('Alumni Terbaik Magang');
-        $response->assertSee('500.12/SRT/');
-
-        // Cetak pratinjau sertifikat HTML
-        $previewResp = $this->actingAs($this->admin)->get(route('admin.sertifikat.cetak', [
-            'penempatan' => $penempatan->id,
-            'preview' => 1,
-        ]));
-        $previewResp->assertOk();
-        $previewResp->assertSee('Sertifikat Kelulusan');
-        $previewResp->assertSee('Alumni Terbaik Magang');
-        $previewResp->assertSee('92.50');
-
-        // Unduh berkas PDF
-        $downloadResp = $this->actingAs($this->admin)->get(route('admin.sertifikat.cetak', $penempatan->id));
-        $downloadResp->assertOk();
-        $this->assertEquals('application/pdf', $downloadResp->headers->get('content-type'));
-    }
-
-    public function test_admin_sertifikat_denies_unfinalized_evaluation(): void
-    {
-        $peserta = $this->createPeserta('Alumni Belum Final', 'belumfinal@ugm.ac.id');
-        $penempatan = Penempatan::create([
-            'peserta_id' => $peserta->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'bidang_id' => $this->bidang->id,
-            'kuota_id' => $this->kuota->id,
-            'sumber' => SumberPenempatanEnum::Online->value,
-            'jalur' => JalurEnum::Umum,
-            'tgl_mulai' => now()->subMonths(3),
-            'tgl_selesai' => now()->subDays(2),
-            'status' => StatusPenempatanEnum::Selesai,
-        ]);
-
-        // Belum ada penilaian atau status masih draft
-        Penilaian::create([
-            'penempatan_id' => $penempatan->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'nilai_akhir' => 80.0,
-            'predikat' => 'B',
-            'status' => StatusPenilaianEnum::Draft,
-        ]);
-
-        $response = $this->actingAs($this->admin)->get(route('admin.sertifikat.cetak', $penempatan->id));
-        $response->assertForbidden();
+        $response->assertSee('Daftar Peserta');
     }
 
     // =========================================================================
-    // PILAR 2: DASHBOARD PEMBIMBING & AGENDA MENTORING DENGAN ANTI-IDOR
+    // PILAR 2: DASHBOARD PEMBIMBING DENGAN RADAR CAPAIAN & MONITORING
     // =========================================================================
-
-    public function test_pembimbing_can_schedule_mentoring_session(): void
-    {
-        $peserta = $this->createPeserta('Mentee Aptika', 'mentee@ugm.ac.id');
-        $penempatan = Penempatan::create([
-            'peserta_id' => $peserta->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'bidang_id' => $this->bidang->id,
-            'kuota_id' => $this->kuota->id,
-            'sumber' => SumberPenempatanEnum::Online->value,
-            'jalur' => JalurEnum::Umum,
-            'tgl_mulai' => now()->subMonths(1),
-            'tgl_selesai' => now()->addMonths(2),
-            'status' => StatusPenempatanEnum::Aktif,
-        ]);
-
-        $payload = [
-            'penempatan_id' => $penempatan->id,
-            'judul_kegiatan' => 'Review Sesi 1: Arsitektur Backend',
-            'tipe' => 'tatap_muka',
-            'tgl_bimbingan' => now()->addDays(2)->toDateString(),
-            'jam_mulai' => '10:00',
-            'lokasi_ruang' => 'Ruang Diskusi Aptika',
-            'notulensi_arahan' => 'Mempersiapkan rancangan ERD database.',
-        ];
-
-        $response = $this->actingAs($this->pembimbing1)->post(route('pembimbing.agenda.store'), $payload);
-
-        $response->assertRedirect(route('pembimbing.agenda.index'));
-        $this->assertDatabaseHas('agenda_bimbingan', [
-            'penempatan_id' => $penempatan->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'judul_kegiatan' => 'Review Sesi 1: Arsitektur Backend',
-            'status' => 'terjadwal',
-        ]);
-    }
-
-    public function test_pembimbing_cannot_schedule_mentoring_for_other_mentees_anti_idor(): void
-    {
-        $peserta = $this->createPeserta('Mentee Pembimbing Dua', 'mentee2@ugm.ac.id');
-        $penempatan = Penempatan::create([
-            'peserta_id' => $peserta->id,
-            'pembimbing_id' => $this->pembimbing2->id, // Milik Pembimbing 2
-            'bidang_id' => $this->bidang->id,
-            'kuota_id' => $this->kuota->id,
-            'sumber' => SumberPenempatanEnum::Online->value,
-            'jalur' => JalurEnum::Umum,
-            'tgl_mulai' => now()->subMonths(1),
-            'tgl_selesai' => now()->addMonths(2),
-            'status' => StatusPenempatanEnum::Aktif,
-        ]);
-
-        $payload = [
-            'penempatan_id' => $penempatan->id,
-            'judul_kegiatan' => 'Intrusi IDOR Mentoring',
-            'tipe' => 'daring',
-            'tgl_bimbingan' => now()->addDays(1)->toDateString(),
-            'jam_mulai' => '13:00',
-        ];
-
-        // Pembimbing 1 mencoba menjadwalkan mentee milik Pembimbing 2
-        $response = $this->actingAs($this->pembimbing1)->post(route('pembimbing.agenda.store'), $payload);
-
-        $response->assertForbidden();
-    }
-
-    public function test_pembimbing_can_update_agenda_and_notulensi(): void
-    {
-        $peserta = $this->createPeserta('Mentee Notulensi', 'notulen@ugm.ac.id');
-        $penempatan = Penempatan::create([
-            'peserta_id' => $peserta->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'bidang_id' => $this->bidang->id,
-            'kuota_id' => $this->kuota->id,
-            'sumber' => SumberPenempatanEnum::Online->value,
-            'jalur' => JalurEnum::Umum,
-            'tgl_mulai' => now()->subMonths(1),
-            'tgl_selesai' => now()->addMonths(2),
-            'status' => StatusPenempatanEnum::Aktif,
-        ]);
-
-        $agenda = AgendaBimbingan::create([
-            'penempatan_id' => $penempatan->id,
-            'pembimbing_id' => $this->pembimbing1->id,
-            'judul_kegiatan' => 'Evaluasi Pekanan',
-            'tipe' => 'tatap_muka',
-            'tgl_bimbingan' => now()->toDateString(),
-            'jam_mulai' => '09:00',
-            'status' => 'terjadwal',
-        ]);
-
-        $response = $this->actingAs($this->pembimbing1)->put(route('pembimbing.agenda.update', $agenda->id), [
-            'status' => 'selesai',
-            'notulensi_arahan' => 'Peserta memahami konsep middleware dan token autentikasi.',
-        ]);
-
-        $response->assertRedirect(route('pembimbing.agenda.index'));
-        $this->assertDatabaseHas('agenda_bimbingan', [
-            'id' => $agenda->id,
-            'status' => 'selesai',
-            'notulensi_arahan' => 'Peserta memahami konsep middleware dan token autentikasi.',
-        ]);
-    }
 
     public function test_pembimbing_dashboard_displays_competency_radar_and_mentee_agenda(): void
     {
@@ -430,6 +245,6 @@ final class AdvancedThreePillarsDashboardTest extends TestCase
         // 4. Hapus berkas backup
         $deleteResp = $this->actingAs($this->superAdmin)->delete(route('superadmin.backup.destroy', $latestFile));
         $deleteResp->assertRedirect(route('superadmin.backup.index'));
-        $this->assertFileDoesNotExist($backupDir . DIRECTORY_SEPARATOR . $latestFile);
+        $this->assertFileDoesNotExist($backupDir.DIRECTORY_SEPARATOR.$latestFile);
     }
 }

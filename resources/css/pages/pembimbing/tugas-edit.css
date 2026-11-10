@@ -1,0 +1,312 @@
+/* =========================================================================
+   MAGKOM — HALAMAN EDIT TUGAS MENTEE PEMBIMBING (Classroom Workspace)
+   Mengadaptasi struktur Google Classroom dan design system MAGKOM.
+   ========================================================================= */
+
+@import './tugas-create.css';
+
+/* Locked Mentee Info Card on Aside */
+.tugas-locked-mentee-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+}
+
+.tugas-locked-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    border: 1.5px solid #BFDBFE;
+    color: #01347C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.9375rem;
+    flex-shrink: 0;
+}
+
+.tugas-locked-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.tugas-locked-name {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tugas-locked-sub {
+    font-size: 0.775rem;
+    color: #64748B;
+    line-height: 1.25;
+}
+
+/* Existing Attached File Box */
+.tugas-existing-file-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    gap: 10px;
+}
+
+.tugas-existing-file-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.tugas-existing-file-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #1E40AF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tugas-existing-file-size {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin-left: 4px;
+}
+
+.tugas-btn-file-download {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #01347C;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.tugas-btn-file-download:hover {
+    text-decoration: underline;
+    color: #002244;
+}
+
+/* =========================================================================
+   Lampiran Cards Styling (Tautan Referensi & Berkas Baru)
+   ========================================================================= */
+.tugas-attached-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.tugas-attached-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    transition: all 0.2s ease;
+}
+
+.tugas-attached-card:hover {
+    border-color: #CBD5E1;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+}
+
+.tugas-attached-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+}
+
+.tugas-file-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #DBEAFE;
+    color: #1D4ED8;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+
+.tugas-file-badge.badge-link {
+    background: #E0F2FE;
+    color: #0284C7;
+}
+
+.tugas-attached-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.tugas-attached-name {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0F172A;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.35;
+}
+
+.tugas-attached-link-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0641CC;
+    text-decoration: none;
+    line-height: 1.35;
+}
+
+.tugas-attached-link-name span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 460px;
+}
+
+.tugas-attached-link-name:hover span {
+    text-decoration: underline;
+    color: #0534A8;
+}
+
+.tugas-external-icon {
+    flex-shrink: 0;
+    color: #0641CC;
+}
+
+.tugas-attached-meta {
+    margin: 2px 0 0 0;
+    font-size: 0.775rem;
+    color: #64748B;
+}
+
+.tugas-btn-remove-attachment {
+    border: none;
+    background: transparent;
+    color: #94A3B8;
+    cursor: pointer;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+
+.tugas-btn-remove-attachment:hover {
+    color: #DC2626;
+    background: #FEE2E2;
+    transform: scale(1.05);
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .tugas-locked-mentee-card {
+    background: #182234 !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .tugas-locked-avatar {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .tugas-locked-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .tugas-locked-sub {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .tugas-existing-file-card {
+    background: #172554 !important;
+    border-color: #1E40AF !important;
+}
+
+[data-theme="dark"] .tugas-existing-file-name {
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .tugas-existing-file-size {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .tugas-btn-file-download {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .tugas-attached-card {
+    background: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .tugas-attached-card:hover {
+    border-color: #475569 !important;
+}
+
+[data-theme="dark"] .tugas-file-badge {
+    background: rgba(29, 78, 216, 0.2) !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .tugas-file-badge.badge-link {
+    background: rgba(2, 132, 199, 0.2) !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .tugas-attached-name {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .tugas-attached-link-name {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .tugas-attached-link-name:hover span {
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .tugas-external-icon {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .tugas-attached-meta {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .tugas-btn-remove-attachment:hover {
+    color: #F87171 !important;
+    background: rgba(239, 68, 68, 0.18) !important;
+}
+

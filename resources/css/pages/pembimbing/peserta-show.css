@@ -1,0 +1,1069 @@
+/**
+ * MAGKOM - Portal Pembimbing: Profil Peserta Bimbingan (Modern Revamp V2)
+ * Slicing visual 100% persis mockup resmi (Canvas #E9F0F6, Kuning Emas Sleman #FFC300, Badge #4E6992)
+ */
+
+:root {
+    --mentee-amber: #FFC300;
+    --mentee-amber-vibrant: #FFC300;
+    --mentee-amber-bright: #FFD84D;
+    --mentee-amber-dark: #E6B000;
+    --mentee-navy-card: #0F3875;
+    --mentee-navy-deep: #0F2C59;
+    --mentee-navy-darker: #0A1E3F;
+    --mentee-kpi-blue: #28487A;
+    --mentee-kpi-badge: #4E6992;
+    --mentee-royal-blue: #2563EB;
+    --mentee-danger: #EF4444;
+    --mentee-success: #10B981;
+    --mentee-surface: #FFFFFF;
+    --mentee-canvas-bg: #E8F1FA;
+    --mentee-gray-track: #F1F5F9;
+    --mentee-border: #DCE3EC;
+    --mentee-text-navy: #0F172A;
+    --mentee-text-slate: #1E293B;
+    --mentee-text-muted: #64748B;
+    --mentee-text-light-blue: #93C5FD;
+}
+
+/* ==========================================================================
+   1. Page Container & Canvas Background (#E9F0F6)
+   ========================================================================== */
+.dashboard-content-area.mentee-canvas-bg,
+body.role-pembimbing .right_col.dashboard-main,
+body:has(.mentee-profile-page) .dashboard-content-area {
+    background-color: var(--mentee-canvas-bg) !important;
+}
+
+.mentee-profile-page {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: var(--mentee-text-navy);
+    background-color: var(--mentee-canvas-bg);
+    min-height: 100%;
+}
+
+/* ==========================================================================
+   2. Top Action & Date Bar
+   ========================================================================== */
+.mentee-date-action-bar {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--mentee-surface);
+    border: 1px solid var(--mentee-border);
+    border-radius: 12px;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    gap: 1rem;
+}
+
+.date-pill-amber {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--mentee-amber);
+    color: var(--mentee-text-navy);
+    font-weight: 700;
+    font-size: 0.875rem;
+    padding: 0.55rem 1.15rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(255, 195, 0, 0.2);
+}
+
+.date-pill-amber svg {
+    color: var(--mentee-text-navy);
+    flex-shrink: 0;
+}
+
+.btn-back-navy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--mentee-navy-deep);
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.55rem 1.25rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 2px 6px rgba(15, 44, 89, 0.25);
+}
+
+.btn-back-navy:hover {
+    background-color: #0A1E3F;
+    color: #FFFFFF;
+    transform: translateX(-2px);
+}
+
+.btn-back-navy svg {
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   3. Hero Card Profil Mentee (Navy Card #0F3875)
+   ========================================================================== */
+.mentee-hero-card {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--mentee-navy-card);
+    border-radius: 16px;
+    padding: 2.25rem 2.5rem;
+    color: #FFFFFF;
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 2.5rem;
+    box-shadow: 0 10px 25px -5px rgba(15, 56, 117, 0.35);
+    margin-bottom: 1.25rem;
+    align-items: center;
+}
+
+.mentee-hero-left {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+}
+
+.mentee-avatar-gold-ring {
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+    border-radius: 50%;
+    background-color: var(--mentee-navy-darker);
+    border: 4.5px solid var(--mentee-amber);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mentee-amber);
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    box-shadow: 0 0 24px rgba(255, 195, 0, 0.35);
+    flex-shrink: 0;
+}
+
+.mentee-hero-identity {
+    display: grid;
+    grid-template-areas:
+        "name badges"
+        "institution institution"
+        "actions actions";
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 0.85rem;
+    row-gap: 0.35rem;
+}
+
+.mentee-hero-name {
+    grid-area: name;
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    white-space: nowrap;
+}
+
+.mentee-badges-row {
+    grid-area: badges;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    justify-self: start;
+}
+
+.badge-status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1;
+}
+
+/* Badge Aktif dengan Live Glowing Indicator Dot */
+.badge-status-aktif {
+    background: rgba(16, 185, 129, 0.18);
+    border: 1px solid rgba(16, 185, 129, 0.45);
+    color: #6EE7B7;
+    backdrop-filter: blur(4px);
+}
+
+.badge-status-aktif::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #10B981;
+    box-shadow: 0 0 6px #10B981;
+    margin-right: 6px;
+    display: inline-block;
+}
+
+/* Badge Jalur Umum Emas Sleman */
+.badge-jalur-outline {
+    background: rgba(255, 195, 0, 0.12);
+    border: 1px solid rgba(255, 195, 0, 0.45);
+    color: var(--mentee-amber);
+    backdrop-filter: blur(4px);
+}
+
+.mentee-hero-institution {
+    grid-area: institution;
+    font-size: 0.875rem;
+    color: #CBD5E1;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 500;
+}
+
+.mentee-action-buttons-row {
+    grid-area: actions;
+    display: flex;
+    gap: 0.85rem;
+    margin-top: 0.65rem;
+    align-items: center;
+}
+
+.btn-pill-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 115px;
+    min-height: 44px;
+    padding: 0.65rem 1.85rem;
+    border-radius: 9999px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.btn-pill-logbook {
+    background-color: transparent;
+    border: 1.5px solid rgba(255, 255, 255, 0.75);
+    color: #FFFFFF;
+}
+
+.btn-pill-logbook:hover {
+    background-color: rgba(255, 255, 255, 0.18);
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-pill-tugas {
+    background-color: var(--mentee-amber);
+    border: 1.5px solid var(--mentee-amber);
+    color: var(--mentee-navy-deep);
+}
+
+.btn-pill-tugas:hover {
+    background-color: var(--mentee-amber-dark);
+    border-color: var(--mentee-amber-dark);
+    color: var(--mentee-navy-deep);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(255, 195, 0, 0.35);
+}
+
+.mentee-hero-right {
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    padding-left: 2.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.data-peserta-header {
+    color: var(--mentee-amber);
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.875rem;
+}
+
+.data-peserta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 2rem;
+}
+
+.data-peserta-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.cell-full-width {
+    grid-column: span 2;
+}
+
+.data-peserta-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--mentee-text-light-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.data-peserta-val {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    word-break: break-word;
+    line-height: 1.35;
+}
+
+.data-peserta-dosen-note {
+    font-size: 0.75rem;
+    color: #94A3B8;
+    font-style: italic;
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+}
+
+/* ==========================================================================
+   4. Baris 3 Kartu Metrik Ringkasan (3-Column KPI Cards)
+   ========================================================================== */
+.mentee-kpi-summary-grid {
+    width: 100%;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.kpi-card {
+    border-radius: 16px;
+    padding: 1.35rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+    will-change: transform, box-shadow;
+}
+
+.kpi-card:hover {
+    transform: translateY(-4px);
+}
+
+.kpi-card-title {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+}
+
+/* KARTU 1: PROGRES TUGAS (DEEP BLUE) */
+.kpi-card-blue {
+    background-color: var(--mentee-kpi-blue);
+    color: #FFFFFF;
+    box-shadow: 0 6px 18px rgba(40, 72, 122, 0.25);
+}
+
+.kpi-card-blue:hover {
+    box-shadow: 0 12px 28px rgba(40, 72, 122, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.kpi-card-blue:hover .donut-chart-circle {
+    transform: scale(1.03);
+}
+
+.kpi-card-blue .kpi-card-title {
+    color: #C7D2FE;
+}
+
+.kpi-donut-layout {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 0.35rem 0;
+}
+
+.donut-chart-circle {
+    width: 124px;
+    height: 124px;
+    min-width: 124px;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: conic-gradient(
+        var(--mentee-amber) 0deg var(--deg-selesai, 180deg),
+        #FFFFFF var(--deg-selesai, 180deg) var(--deg-proses, 300deg),
+        var(--mentee-kpi-badge) var(--deg-proses, 300deg) 360deg
+    );
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.donut-chart-inner {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background-color: var(--mentee-kpi-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.donut-percentage-text {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.donut-chart-legends {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+}
+
+.donut-legend-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+    padding: 0.5rem 0.85rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: default;
+}
+
+.donut-legend-pill:hover {
+    background-color: rgba(255, 255, 255, 0.24);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.legend-pill-left {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.legend-dot-indicator {
+    width: 9px;
+    height: 9px;
+    min-width: 9px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.legend-dot-indicator.dot-selesai {
+    background-color: var(--mentee-amber); /* #FFC300 */
+}
+
+.legend-dot-indicator.dot-dikerjakan {
+    background-color: #FFFFFF;
+}
+
+.legend-dot-indicator.dot-belum {
+    background-color: #A0AEC0;
+}
+
+.legend-pill-text {
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    letter-spacing: 0.01em;
+}
+
+.legend-pill-count {
+    color: #FFFFFF;
+    font-weight: 800;
+    font-size: 0.875rem;
+}
+
+/* KARTU 2: PERIODE MAGANG (VIBRANT YELLOW #FFC300) */
+.kpi-card-yellow {
+    background-color: var(--mentee-amber);
+    color: var(--mentee-text-navy);
+    box-shadow: 0 6px 18px rgba(255, 195, 0, 0.25);
+}
+
+.kpi-card-yellow:hover {
+    box-shadow: 0 12px 28px rgba(255, 195, 0, 0.45), 0 0 0 1px rgba(10, 30, 63, 0.08);
+}
+
+.kpi-card-yellow:hover .periode-metric-huge {
+    transform: scale(1.02);
+}
+
+.kpi-card-yellow .kpi-card-title {
+    color: var(--mentee-text-navy);
+}
+
+.periode-metric-huge {
+    font-size: 3.25rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--mentee-text-navy);
+    margin: 0.25rem 0;
+    transform-origin: left bottom;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.periode-subtitle {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--mentee-text-slate);
+    margin-bottom: 0.75rem;
+}
+
+.periode-progress-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 9999px;
+    background-color: rgba(15, 23, 42, 0.16);
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+.periode-progress-fill {
+    height: 100%;
+    background-color: var(--mentee-text-navy);
+    border-radius: 9999px;
+    transition: width 0.3s ease;
+}
+
+.periode-dates-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--mentee-text-slate);
+}
+
+/* KARTU 3: LOGBOOK (PURE WHITE DENGAN KONTRAS TINGGI TERHADAP KANVAS #E9F0F6) */
+.kpi-card-white {
+    background-color: var(--mentee-surface);
+    color: var(--mentee-text-navy);
+    border: 1px solid var(--mentee-border);
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+}
+
+.kpi-card-white:hover {
+    border-color: #CBD5E1;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+}
+
+.kpi-card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.65rem;
+}
+
+.kpi-card-white .kpi-card-title {
+    color: var(--mentee-text-navy);
+    margin-bottom: 0;
+}
+
+.logbook-progress-summary {
+    font-size: 0.75rem;
+    color: var(--mentee-text-muted);
+    font-weight: 500;
+}
+
+.logbook-weeks-grid-12 {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    margin: 0.5rem 0;
+}
+
+.logbook-week-box {
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, filter 0.2s ease, background-color 0.2s ease;
+    will-change: transform, box-shadow;
+}
+
+.logbook-week-box:hover {
+    transform: translateY(-3px) scale(1.14);
+    z-index: 2;
+}
+
+.box-selesai {
+    background-color: var(--mentee-navy-deep);
+    color: #FFFFFF;
+}
+
+.box-selesai:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 4px 12px rgba(10, 30, 63, 0.4);
+}
+
+.box-terlambat {
+    background-color: var(--mentee-danger);
+    color: #FFFFFF;
+}
+
+.box-terlambat:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.45);
+}
+
+.box-pending {
+    background-color: var(--mentee-gray-track);
+    color: var(--mentee-text-muted);
+}
+
+.box-pending:hover {
+    background-color: #CBD5E1;
+    color: var(--mentee-navy-deep);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logbook-legends-row {
+    display: flex;
+    gap: 1.25rem;
+    font-size: 0.75rem;
+    color: var(--mentee-text-navy);
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.legend-color-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.4rem;
+    flex-shrink: 0;
+}
+
+.dot-logbook-selesai { background-color: var(--mentee-navy-deep); }
+.dot-logbook-terlambat { background-color: var(--mentee-danger); }
+
+/* ==========================================================================
+   5. Riwayat Penugasan (Kanban Task Board - PURE WHITE TERHADAP KANVAS #E9F0F6)
+   ========================================================================== */
+.mentee-kanban-board-card {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--mentee-surface);
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+    border: 1px solid var(--mentee-border);
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+}
+
+.kanban-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.kanban-main-title {
+    font-size: 1.375rem;
+    font-weight: 800;
+    color: var(--mentee-text-navy);
+    margin: 0;
+}
+
+.btn-kelola-tugas {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background-color: var(--mentee-amber);
+    color: var(--mentee-text-navy);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-kelola-tugas:hover {
+    background-color: var(--mentee-amber-dark);
+    color: var(--mentee-text-navy);
+    transform: translateX(2px);
+}
+
+.btn-kelola-tugas .arrow-symbol {
+    font-weight: 800;
+}
+
+/* Segmented Bar */
+.kanban-segmented-wrapper {
+    margin-bottom: 1.5rem;
+}
+
+.kanban-legend-status-row {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--mentee-text-navy);
+    margin-bottom: 0.5rem;
+}
+
+.dot-kanban-belum { background-color: var(--mentee-navy-deep); }
+.dot-kanban-proses { background-color: var(--mentee-amber); }
+.dot-kanban-selesai { background-color: var(--mentee-royal-blue); }
+
+.kanban-segmented-bar {
+    width: 100%;
+    height: 8px;
+    border-radius: 9999px;
+    overflow: hidden;
+    display: flex;
+    background-color: var(--mentee-border);
+}
+
+.segment-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.segment-belum { background-color: var(--mentee-navy-deep); }
+.segment-proses { background-color: var(--mentee-amber); }
+.segment-selesai { background-color: var(--mentee-royal-blue); }
+
+/* Kanban Columns Grid */
+.kanban-columns-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+.kanban-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.kanban-column-pill {
+    background-color: var(--mentee-gray-track);
+    border-radius: 10px;
+    padding: 0.55rem 0.875rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.column-pill-title {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    color: var(--mentee-text-navy);
+}
+
+.status-indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-indicator-dot.dot-belum { background-color: #94A3B8; }
+.status-indicator-dot.dot-proses { background-color: var(--mentee-amber); }
+.status-indicator-dot.dot-selesai { background-color: var(--mentee-royal-blue); }
+
+.column-pill-count {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: var(--mentee-navy-deep);
+    color: #FFFFFF;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kanban-cards-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.kanban-task-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+    padding: 1.25rem 1.25rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+    will-change: transform, box-shadow;
+}
+
+.kanban-task-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    border-radius: 14px 14px 0 0;
+    z-index: 1;
+}
+
+.kanban-task-card:hover {
+    transform: translateY(-4px);
+}
+
+.task-card-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.35;
+}
+
+.task-card-subtitle {
+    font-size: 0.75rem;
+    margin: 0;
+    opacity: 0.9;
+}
+
+.task-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    gap: 0.5rem;
+}
+
+.task-card-date {
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 500;
+}
+
+.task-card-date svg {
+    flex-shrink: 0;
+}
+
+/* Card Style: Belum (Navy) */
+.card-style-belum {
+    background-color: var(--mentee-navy-card);
+    color: #FFFFFF;
+}
+
+.card-style-belum:hover {
+    box-shadow: 0 10px 24px rgba(10, 30, 63, 0.35), 0 0 0 1px rgba(148, 163, 184, 0.3);
+}
+
+.card-style-belum::before {
+    background-color: #94A3B8;
+}
+
+.card-style-belum .task-card-title { color: #FFFFFF; }
+.card-style-belum .task-card-subtitle { color: var(--mentee-text-light-blue); }
+.card-style-belum .task-card-date { color: var(--mentee-text-light-blue); }
+
+.btn-card-action-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    color: #FFFFFF;
+    background-color: transparent;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.85rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-card-action-outline:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+}
+
+/* Card Style: Proses (KUNING EMAS SLEMAN #FFC300) */
+.card-style-proses {
+    background-color: var(--mentee-amber);
+    color: var(--mentee-text-navy);
+}
+
+.card-style-proses:hover {
+    box-shadow: 0 10px 24px rgba(255, 195, 0, 0.38), 0 0 0 1px rgba(10, 30, 63, 0.18);
+}
+
+.card-style-proses::before {
+    background-color: var(--mentee-navy-darker);
+}
+
+.card-style-proses .task-card-title { color: var(--mentee-text-navy); }
+.card-style-proses .task-card-subtitle { color: #334155; }
+.card-style-proses .task-card-date { color: var(--mentee-text-navy); }
+.card-style-proses .task-card-date.is-today { font-weight: 800; }
+
+.btn-card-action-dark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--mentee-text-navy);
+    color: var(--mentee-text-navy);
+    background-color: transparent;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.85rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-card-action-dark:hover {
+    background-color: var(--mentee-text-navy);
+    color: var(--mentee-amber);
+}
+
+/* Card Style: Selesai (Royal Blue) */
+.card-style-selesai {
+    background-color: var(--mentee-royal-blue);
+    color: #FFFFFF;
+}
+
+.card-style-selesai:hover {
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.38), 0 0 0 1px rgba(255, 195, 0, 0.3);
+}
+
+.card-style-selesai::before {
+    background-color: var(--mentee-amber);
+}
+
+.card-style-selesai .task-card-title { color: #FFFFFF; }
+.card-style-selesai .task-card-subtitle { color: #BFDBFE; }
+.card-style-selesai .task-card-date { color: #BFDBFE; }
+
+/* Empty state placeholder */
+.kanban-card-empty {
+    border: 1.5px dashed var(--mentee-border);
+    border-radius: 10px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    color: var(--mentee-text-muted);
+    font-size: 0.8125rem;
+    background-color: #FAFAFA;
+}
+
+/* ==========================================================================
+   6. Responsivitas Layar (Tablet & Mobile Breakpoints)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .mentee-hero-card {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .mentee-hero-right {
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        padding-left: 0;
+        padding-top: 1.5rem;
+    }
+
+    .mentee-kpi-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kanban-columns-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .mentee-profile-page {
+        padding: 0;
+    }
+
+    .mentee-hero-left {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .mentee-hero-identity {
+        grid-template-areas:
+            "name"
+            "badges"
+            "institution"
+            "actions";
+        grid-template-columns: 1fr;
+        justify-items: center;
+        row-gap: 0.5rem;
+    }
+
+    .mentee-hero-name {
+        white-space: normal;
+    }
+
+    .mentee-avatar-gold-ring {
+        width: 100px;
+        height: 100px;
+        min-width: 100px;
+        font-size: 2.125rem;
+        border-width: 4px;
+        margin-bottom: 0.5rem;
+    }
+
+    .mentee-badges-row,
+    .mentee-action-buttons-row {
+        justify-content: center;
+    }
+
+    .data-peserta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cell-full-width {
+        grid-column: span 1;
+    }
+
+    .kanban-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+}

@@ -31,10 +31,20 @@ class JurusanController extends Controller
     {
         $jurusanList = Jurusan::orderBy('kategori', 'asc')
             ->orderBy('nama_jurusan', 'asc')
-            ->paginate(20);
+            ->paginate(10)
+            ->withQueryString();
+
+        $totalJurusan = Jurusan::count();
+        $jurusanMahasiswa = Jurusan::where('kategori', 'mahasiswa')->count();
+        $jurusanSmk = Jurusan::where('kategori', 'smk')->count();
+        $jurusanAktif = Jurusan::where('aktif', true)->count();
 
         return view('superadmin.jurusan.index', [
             'jurusanList' => $jurusanList,
+            'totalJurusan' => $totalJurusan,
+            'jurusanMahasiswa' => $jurusanMahasiswa,
+            'jurusanSmk' => $jurusanSmk,
+            'jurusanAktif' => $jurusanAktif,
         ]);
     }
 
@@ -119,9 +129,9 @@ class JurusanController extends Controller
 
             // 2. Cek apakah ada pendaftaran aktif pada jurusan ini (BR-12)
             $hasActivePendaftaran = Pendaftaran::where(function ($q) use ($jurusan) {
-                    $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusan->id))
-                      ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusan->id));
-                })
+                $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusan->id))
+                    ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusan->id));
+            })
                 ->whereIn('status', [
                     StatusPendaftaranEnum::Diajukan,
                     StatusPendaftaranEnum::WaitingList,
@@ -161,6 +171,7 @@ class JurusanController extends Controller
         );
 
         $statusLabel = $targetAktif ? 'diaktifkan' : 'dinonaktifkan';
+
         return redirect()->route('superadmin.jurusan.index')
             ->with('success', "Jurusan {$jurusan->nama_jurusan} berhasil {$statusLabel}.");
     }

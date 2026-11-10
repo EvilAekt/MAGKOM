@@ -149,7 +149,7 @@
     </div>
 
     <div style="text-align: right; margin-bottom: 12px;">
-        <span class="badge-verified">&#10003; TERVERIFIKASI SISTEM PORTAL MAGKOM KOMINFO</span>
+        <span class="badge-verified">&#10003; TERVERIFIKASI SISTEM MAGANG KOMINFO SLEMAN</span>
     </div>
 
     {{-- BIODATA PESERTA --}}
@@ -366,7 +366,7 @@
             <td style="width: 55%;">
                 <div style="font-size: 9.5pt; color: #4a5568;">
                     Catatan Validasi Dokumen:<br>
-                    &bull; Dicetak secara digital melalui sistem Portal MagKom.<br>
+                    &bull; Dicetak secara digital melalui sistem Magang Kominfo.<br>
                     &bull; Keabsahan berkas telah melalui pra-pemeriksaan dokumen fisik.<br>
                     &bull; Kode Hash Integritas: <code>{{ substr($dokumen->hash ?? hash('sha256', $dokumen->id . 'magkom'), 0, 16) }}...</code>
                 </div>

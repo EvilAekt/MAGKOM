@@ -29,13 +29,16 @@ class RichTaskAssignmentTest extends TestCase
     use RefreshDatabase;
 
     protected User $pembimbing;
+
     protected User $peserta;
+
     protected User $pesertaLain;
+
     protected Penempatan $penempatan;
 
     private function createUser(string $nama, string $email, RoleEnum $role, ?int $bidangId = null): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $nama;
         $user->email = $email;
         $user->password = Hash::make('Password123!');

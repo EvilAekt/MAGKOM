@@ -1,0 +1,1690 @@
+/**
+ * ==============================================================================
+ * MagKom Sleman - Dashboard Pembimbing Bento Grid Modern (Executive Edition)
+ * Resources: resources/css/pages/pembimbing/dashboard.css
+ * Precision Match with Sleman Reference Mock (Normal & Dark Mode)
+ * ==============================================================================
+ */
+
+:root {
+  /* Canvas Background & Cards (Mode Terang) */
+  --bento-bg: #E9EEF5;
+  --bento-card-bg: #FFFFFF;
+  --bento-card-border: #e3e8f0;
+  --bento-card-shadow: 0 4px 18px rgba(0, 53, 102, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+
+  /* Typography Colors */
+  --bento-text-title: #003566;
+  --bento-text-main: #212529;
+  --bento-text-muted: #5b6573;
+  --bento-text-subtle: #AAAAAA;
+
+  /* MagKom Sleman Brand Palette */
+  --magkom-navy-main: #003566;
+  --magkom-navy-mid: #01347C;
+  --magkom-navy-dark: #02275D;
+  --magkom-yellow-main: #FFC300;
+  --magkom-yellow-bright: #FFD84D;
+  --magkom-indigo: #3F51B5;
+
+  /* Hero & Banner Gradients */
+  --bento-navy-hero: linear-gradient(135deg, #003566 0%, #01347C 100%);
+  --bento-navy-dark: #02275D;
+  --bento-navy-card: #FFFFFF;
+
+  /* Sleman Golden Yellow Accents */
+  --bento-yellow: #FFC300;
+  --bento-yellow-hover: #FFCB05;
+  --bento-yellow-text: #02275D;
+
+  /* Primary Accents */
+  --bento-blue-accent: #003566;
+  --bento-blue-soft: #E3ECF8;
+  --bento-indigo-soft: #E6E9F8;
+  --bento-amber-soft: #FFF3C7;
+
+  /* Semantic Alerts */
+  --bento-red: #d64545;
+  --bento-amber: #FFC300;
+  --bento-green: #0b6b46;
+
+  /* Dot Matrix Empty (13% Navy) */
+  --bento-dot-empty: rgba(0, 53, 102, 0.13);
+}
+
+/* ==============================================================================
+   Dark Mode Overrides (Reactive via [data-theme="dark"])
+   ============================================================================== */
+[data-theme="dark"] {
+  --bento-bg: #061630;
+  --bento-card-bg: #0E2548;
+  --bento-card-border: rgba(255, 255, 255, 0.07);
+  --bento-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.50);
+
+  --bento-text-title: #EAF0FA;
+  --bento-text-main: #EAF0FA;
+  --bento-text-muted: #9FB0CC;
+  --bento-text-subtle: #5E7194;
+
+  --bento-navy-hero: linear-gradient(135deg, #003566 0%, #01347C 100%);
+  --bento-navy-dark: #031B40;
+  --bento-navy-card: #0E2548;
+
+  /* Dark Alert Cards */
+  --bento-red: #d64545;
+  --bento-amber: #FFC300;
+
+  /* Dot Matrix Empty (12% White) */
+  --bento-dot-empty: rgba(255, 255, 255, 0.12);
+}
+
+/* ==============================================================================
+   Canvas Background Application (Role Pembimbing)
+   ============================================================================== */
+body.role-pembimbing,
+body.role-pembimbing .main_container,
+body.role-pembimbing .dashboard-content-area,
+.bento-dashboard-wrapper {
+  background-color: var(--bento-bg) !important;
+}
+
+
+/* ==============================================================================
+   0. Sidebar & Topbar Precision Alignment (Role Pembimbing)
+   Palette Reference: Sidebar #02275D (#031B40 Dark), Header #003566 -> #01347C
+   ============================================================================== */
+body.role-pembimbing .left_col,
+body.role-pembimbing .dashboard-sidebar,
+body.role-pembimbing #mainSidebar {
+  background-color: #02275D !important;
+}
+
+[data-theme="dark"] body.role-pembimbing .left_col,
+[data-theme="dark"] body.role-pembimbing .dashboard-sidebar,
+[data-theme="dark"] body.role-pembimbing #mainSidebar {
+  background-color: #031B40 !important;
+}
+
+body.role-pembimbing .top_nav,
+body.role-pembimbing .dashboard-topbar-wrapper {
+  background: linear-gradient(135deg, #003566 0%, #01347C 100%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+body.role-pembimbing .sidebar-brand-emblem {
+  background-color: #0b3a7a !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+body.role-pembimbing .nav-section-label,
+body.role-pembimbing .sidebar-nav h3,
+body.role-pembimbing .menu_section h3 {
+  color: #8fa3c4 !important;
+}
+
+body.role-pembimbing .nav-item-link,
+body.role-pembimbing .nav.side-menu > li > a {
+  color: #c2cde0 !important;
+  transition: all 0.15s ease !important;
+}
+
+body.role-pembimbing .nav-item-link:hover,
+body.role-pembimbing .nav.side-menu > li > a:hover {
+  background: rgba(11, 67, 150, 0.4) !important;
+  color: #ffffff !important;
+}
+
+body.role-pembimbing .nav-item-link.active,
+body.role-pembimbing .nav.side-menu > li.active > a,
+body.role-pembimbing .nav.side-menu > li.current-page > a {
+  background: #0b4396 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* ==============================================================================
+   1. Dashboard Outer Wrapper (Fluid Rata Kanan-Kiri)
+   ============================================================================== */
+.bento-dashboard-wrapper {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0.5rem 0 1.5rem 0;
+  box-sizing: border-box;
+}
+
+.bento-layout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 1.25rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+.bento-col-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.bento-col-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 320px;
+  flex-shrink: 0;
+  height: 100%;
+  justify-content: space-between;
+}
+
+/* Base Card */
+.bento-card {
+  background: var(--bento-card-bg);
+  border: 1px solid var(--bento-card-border);
+  border-radius: 16px;
+  box-shadow: var(--bento-card-shadow);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* ==============================================================================
+   2. Hero Navy Banner (Full-Width 100% di atas Grid)
+   ============================================================================== */
+.bento-hero-banner {
+  width: 100%;
+  margin-bottom: 1.25rem;
+  background: var(--bento-navy-hero);
+  border-radius: 20px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+  box-shadow: 0 6px 24px rgba(8, 51, 119, 0.25);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.bento-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 1;
+}
+
+.bento-hero-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--bento-yellow);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.bento-hero-title {
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+}
+
+.bento-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-bento-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bento-yellow);
+  color: var(--bento-yellow-text);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.btn-bento-hero-cta:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.bento-hero-graphic {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 80px;
+  padding-right: 12px;
+  flex-shrink: 0;
+}
+
+.bento-hero-bar {
+  width: 16px;
+  border-radius: 8px;
+}
+
+.bento-hero-bar.bar-1 {
+  height: 38px;
+  background: #3b4b75;
+}
+
+.bento-hero-bar.bar-2 {
+  height: 64px;
+  background: #2563eb;
+}
+
+.bento-hero-bar.bar-3 {
+  height: 80px;
+  background: var(--bento-yellow);
+}
+
+.bento-hero-bar.bar-4 {
+  height: 52px;
+  background: #cbd5e1;
+}
+
+/* ==============================================================================
+   3. Row 3 KPI Mini-Cards
+   ============================================================================== */
+.bento-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.bento-kpi-card {
+  padding: 18px 20px;
+  min-height: 160px;
+  border-radius: 18px;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+
+[data-theme="dark"] .bento-kpi-card {
+  background: #0E2548;
+}
+
+/* Lingkaran Aksen Sudut Kanan-Bawah (Tint Presisi 140px) */
+.bento-kpi-card::after {
+  content: "";
+  position: absolute;
+  right: -25px;
+  bottom: -30px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.2s ease;
+}
+
+.kpi-card-mentee::after {
+  background: #E3ECF8;
+}
+
+.kpi-card-tugas::after {
+  background: #E6E9F8;
+}
+
+.kpi-card-evaluasi::after {
+  background: #FFF3C7;
+}
+
+[data-theme="dark"] .kpi-card-mentee::after {
+  background: #17386E;
+  opacity: 0.70;
+}
+
+[data-theme="dark"] .kpi-card-tugas::after {
+  background: #1D2B72;
+  opacity: 0.70;
+}
+
+[data-theme="dark"] .kpi-card-evaluasi::after {
+  background: #3B3112;
+  opacity: 0.70;
+}
+
+.bento-kpi-top,
+.bento-kpi-body {
+  position: relative;
+  z-index: 1;
+}
+
+.bento-kpi-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.bento-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bento-icon-blue {
+  background: #003566;
+  color: #ffffff;
+}
+
+.bento-icon-indigo {
+  background: #3F51B5;
+  color: #ffffff;
+}
+
+.bento-icon-amber {
+  background: #FFC300;
+  color: #02275D;
+}
+
+[data-theme="dark"] .bento-icon-blue {
+  background: #4C84E8;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .bento-icon-indigo {
+  background: #3F51B5;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .bento-icon-amber {
+  background: #FFC300;
+  color: #02275D;
+}
+
+.bento-pill-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge-green {
+  background: #e4f6ee;
+  color: #0b6b46;
+}
+
+[data-theme="dark"] .badge-green {
+  background: rgba(11, 107, 70, 0.20);
+  color: #6FE3B0;
+}
+
+.badge-indigo {
+  background: #e8eaf8;
+  color: #2f3d96;
+}
+
+[data-theme="dark"] .badge-indigo {
+  background: rgba(63, 81, 181, 0.22);
+  color: #C5CEFF;
+}
+
+.badge-amber {
+  background: #fff4cc;
+  color: #7a5a00;
+}
+
+[data-theme="dark"] .badge-amber {
+  background: rgba(255, 195, 0, 0.18);
+  color: #FFD54D;
+}
+
+.badge-neutral {
+  background: #F1F4F9;
+  color: #003566;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .badge-neutral {
+  background: rgba(255, 255, 255, 0.08);
+  color: #EAF0FA;
+}
+
+.bento-kpi-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #475569;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 6px;
+}
+
+[data-theme="dark"] .bento-kpi-label {
+  color: #94a3b8;
+}
+
+.bento-kpi-val-row {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.bento-kpi-number {
+  font-size: 36px;
+  font-weight: 800;
+  color: #003566;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+[data-theme="dark"] .bento-kpi-number {
+  color: #FFFFFF;
+}
+
+.bento-kpi-sub {
+  font-size: 18px;
+  font-weight: 600;
+  color: #5b6573;
+}
+
+[data-theme="dark"] .bento-kpi-sub {
+  color: #9FB0CC;
+}
+
+/* Progress Bars & Segmented Dash (Stretch 100% Fluid) */
+.bento-dot-matrix {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* 1. Bar Progress untuk 3 KPI Cards (20 Segmen) */
+.matrix-kpi-bars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.matrix-kpi-bars .matrix-dot {
+  flex: 1 1 0;
+  height: 7px;
+  border-radius: 3.5px;
+  min-width: 0;
+  transition: background-color 0.15s ease;
+}
+
+.matrix-dot {
+  flex: 1 1 0;
+  height: 7px;
+  border-radius: 3.5px;
+  min-width: 0;
+}
+
+.matrix-dot.dot-empty {
+  background: var(--bento-dot-empty);
+}
+
+.matrix-blue .dot-filled {
+  background: #003566;
+}
+
+[data-theme="dark"] .matrix-blue .dot-filled {
+  background: #4C84E8;
+}
+
+.matrix-indigo .dot-filled {
+  background: #3F51B5;
+}
+
+[data-theme="dark"] .matrix-indigo .dot-filled {
+  background: #3F51B5;
+}
+
+.matrix-amber .dot-filled {
+  background: #FFC300;
+}
+
+[data-theme="dark"] .matrix-amber .dot-filled {
+  background: #FFC300;
+}
+
+/* ==============================================================================
+   4. Row 2 Mid-Analytics Cards (Distribusi & Kuota)
+   ============================================================================== */
+.bento-mid-row {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1.25rem;
+}
+
+.bento-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.bento-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bento-title-indicator {
+  display: inline-block;
+  width: 3px;
+  height: 16px;
+  background: var(--bento-yellow);
+  border-radius: 2px;
+}
+
+.bento-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--bento-text-main);
+  margin: 0;
+}
+
+/* Distribusi Tugas */
+.bento-distribusi-card {
+  padding: 20px 24px;
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #FFFFFF;
+  border: 1px solid #e3e8f0;
+}
+
+[data-theme="dark"] .bento-distribusi-card {
+  background: #0E2548;
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+.bento-distribusi-chart-box {
+  background: #FFFFFF;
+  border: 1px solid #e3e8f0;
+  border-radius: 14px;
+  padding: 16px 20px 10px 20px;
+  min-height: 235px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+[data-theme="dark"] .bento-distribusi-chart-box {
+  background: #0E2548;
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+.bento-bars-track {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  height: 195px;
+  align-items: end;
+}
+
+.bento-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bento-bar-container {
+  width: 100%;
+  max-width: 105px;
+  height: 165px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background-color: #e5edf8;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #e5edf8,
+    #e5edf8 6px,
+    #d3e0f2 6px,
+    #d3e0f2 12px
+  );
+  border: 1px solid #cad6e8;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .bento-bar-container {
+  background-color: #132644;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #132644,
+    #132644 6px,
+    #1c365d 6px,
+    #1c365d 12px
+  );
+  border: 1px solid rgba(76, 132, 232, 0.28);
+}
+
+.bento-bar {
+  width: 100%;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 32px;
+  padding-top: 8px;
+  box-sizing: border-box;
+}
+
+.bento-bar-val {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.bar-selesai {
+  background: #B9C6E2;
+}
+
+[data-theme="dark"] .bar-selesai {
+  background: #4A6199;
+}
+
+.bar-dikerjakan {
+  background: #003566;
+}
+
+[data-theme="dark"] .bar-dikerjakan {
+  background: #4C84E8;
+}
+
+.bar-review {
+  background: #FFC300;
+}
+
+.bar-review .bento-bar-val {
+  color: #02275D;
+}
+
+[data-theme="dark"] .bar-review {
+  background: #FFC300;
+}
+
+[data-theme="dark"] .bar-review .bento-bar-val {
+  color: #02275D;
+}
+
+.bar-terlambat {
+  background: #d64545;
+}
+
+[data-theme="dark"] .bar-terlambat {
+  background: #d64545;
+}
+
+.bento-bar-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--bento-text-muted);
+  margin-top: 10px;
+}
+
+/* Kuota Bimbingan Radial Gauge */
+.bento-kuota-card {
+  padding: 20px 24px;
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #ffffff;
+  background-image: radial-gradient(circle at 50% 65%, rgba(11, 50, 123, 0.05) 0%, transparent 65%);
+}
+
+[data-theme="dark"] .bento-kuota-card {
+  background: #0E2548;
+  border-color: rgba(255, 255, 255, 0.07);
+  background-image: radial-gradient(circle at 50% 65%, rgba(56, 189, 248, 0.12) 0%, transparent 65%);
+}
+
+.bento-kuota-gauge-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 235px;
+  flex: 1;
+}
+
+.bento-gauge-wrapper {
+  position: relative;
+  width: 260px;
+  height: 145px;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.bento-gauge-svg {
+  display: block;
+  width: 260px;
+  height: 145px;
+}
+
+.gauge-track {
+  stroke: #E6EAF2;
+  stroke-width: 20px;
+}
+
+[data-theme="dark"] .gauge-track {
+  stroke: #1F3A66;
+}
+
+.gauge-fill {
+  stroke: #003566;
+  stroke-width: 20px;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+[data-theme="dark"] .gauge-fill {
+  stroke: #4C84E8;
+}
+
+.bento-gauge-center {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.gauge-center-percent {
+  font-size: 48px;
+  font-weight: 900;
+  color: #003566;
+  line-height: 1;
+}
+
+[data-theme="dark"] .gauge-center-percent {
+  color: #4C84E8;
+}
+
+.bento-gauge-caption {
+  font-size: 13px;
+  color: var(--bento-text-muted);
+  font-weight: 600;
+  margin-top: 14px;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+/* ==============================================================================
+   5. Highlight Roster Banner (Kuning Emas Sleman #FFC72C)
+   ============================================================================== */
+.bento-highlight-card {
+  background: linear-gradient(135deg, #FFC300 0%, #FFD84D 100%);
+  border-radius: 16px;
+  padding: 18px 24px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #02275D;
+  box-shadow: 0 4px 16px rgba(255, 195, 0, 0.2);
+  box-sizing: border-box;
+}
+
+.bento-roster-header {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.roster-big-val {
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--bento-yellow-text);
+}
+
+.roster-sub-slash {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--bento-yellow-text);
+  opacity: 0.85;
+  margin-right: 8px;
+}
+
+.roster-caps-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--bento-yellow-text);
+  text-transform: uppercase;
+}
+
+.bento-roster-bars-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.roster-track-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.roster-track-name {
+  width: 52px;
+  flex-shrink: 0;
+  color: var(--bento-yellow-text);
+}
+
+.roster-segments-bar {
+  flex: 1;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.roster-dash {
+  flex: 1;
+  height: 10px;
+  border-radius: 4px;
+}
+
+.dash-filled-navy {
+  background: #02275d;
+}
+
+.dash-filled-white {
+  background: #ffffff;
+}
+
+.dash-faded {
+  background: rgba(2, 39, 93, 0.15);
+}
+
+.roster-track-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--bento-yellow-text);
+  width: 44px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ==============================================================================
+   6. Kolom Samping (Calendar Widget)
+   ============================================================================== */
+.bento-calendar-card {
+  position: relative;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, #E8EFFB 0%, #DCE6F7 100%);
+  border: 1px solid #cfdaf0;
+}
+
+[data-theme="dark"] .bento-calendar-card {
+  background: linear-gradient(180deg, #12305A 0%, #0D2549 100%);
+  border-color: #2F5190;
+}
+
+.bento-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cal-title-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.cal-month-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: inherit;
+}
+
+.cal-month-dropdown-wrap,
+.cal-year-dropdown-wrap {
+  position: relative;
+}
+
+.cal-month-trigger-btn,
+.cal-year-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #003566;
+  background: rgba(0, 53, 102, 0.07);
+  border: 1px solid #cfdaf0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cal-month-trigger-btn:hover,
+.cal-year-trigger-btn:hover {
+  background: #003566;
+  color: #ffffff;
+  border-color: #003566;
+}
+
+[data-theme="dark"] .cal-month-trigger-btn,
+[data-theme="dark"] .cal-year-trigger-btn {
+  color: #EAF0FA;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #2F5190;
+}
+
+[data-theme="dark"] .cal-month-trigger-btn:hover,
+[data-theme="dark"] .cal-year-trigger-btn:hover {
+  background: #4C84E8;
+  color: #ffffff;
+  border-color: #4C84E8;
+}
+
+.cal-month-popover,
+.cal-year-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  z-index: 60;
+  min-width: 175px;
+  padding: 10px;
+  background: #FFFFFF;
+  border: 1px solid #cfdaf0;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -3px rgba(0, 53, 102, 0.2);
+}
+
+.cal-month-popover {
+  left: 0;
+}
+
+.cal-year-popover {
+  right: 0;
+}
+
+[data-theme="dark"] .cal-month-popover,
+[data-theme="dark"] .cal-year-popover {
+  background: #0E2548;
+  border-color: #2F5190;
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5);
+}
+
+.cal-month-popover-header,
+.cal-year-popover-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #5b6573;
+}
+
+.cal-year-popover-header {
+  justify-content: space-between;
+}
+
+[data-theme="dark"] .cal-month-popover-header,
+[data-theme="dark"] .cal-year-popover-header {
+  color: #9FB0CC;
+}
+
+.cal-month-popover-title,
+.cal-year-popover-title {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cal-year-jump-btn {
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #003566;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.cal-year-jump-btn:hover {
+  background: #E8EFFB;
+}
+
+[data-theme="dark"] .cal-year-jump-btn {
+  color: #4C84E8;
+}
+
+[data-theme="dark"] .cal-year-jump-btn:hover {
+  background: #16335F;
+}
+
+.cal-month-grid,
+.cal-year-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.cal-month-option-btn,
+.cal-year-option-btn {
+  padding: 6px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #212529;
+  background: #F1F4F9;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.cal-month-option-btn:hover,
+.cal-year-option-btn:hover {
+  background: #E8EFFB;
+  border-color: #003566;
+  color: #003566;
+}
+
+.cal-month-option-btn.active,
+.cal-year-option-btn.active {
+  background: #003566;
+  color: #FFFFFF;
+  font-weight: 800;
+}
+
+[data-theme="dark"] .cal-month-option-btn,
+[data-theme="dark"] .cal-year-option-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #EAF0FA;
+}
+
+[data-theme="dark"] .cal-month-option-btn:hover,
+[data-theme="dark"] .cal-year-option-btn:hover {
+  background: #16335F;
+  border-color: #4C84E8;
+  color: #4C84E8;
+}
+
+[data-theme="dark"] .cal-month-option-btn.active,
+[data-theme="dark"] .cal-year-option-btn.active {
+  background: #4C84E8;
+  color: #FFFFFF;
+}
+
+.cal-nav-btn {
+  background: none;
+  border: none;
+  color: var(--bento-text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.cal-nav-btn:hover {
+  background: rgba(100, 116, 139, 0.12);
+  color: var(--bento-text-main);
+}
+
+.bento-calendar-days-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--bento-text-muted);
+  margin-bottom: 8px;
+}
+
+.bento-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+  align-items: center;
+}
+
+/* Sel Tanggal Berbentuk Semi-Oval Kapsul Vertikal */
+.cal-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: #212529;
+  width: 26px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border-radius: 11px; /* Bentuk Semi-Oval Kapsul */
+  cursor: pointer;
+  background: #FFFFFF;
+  border: 1px solid #cfdaf0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+[data-theme="dark"] .cal-date {
+  background: #16335F;
+  border: 1px solid #2F5190;
+  color: #EAF0FA;
+}
+
+/* Akhir pekan di kalender (Kolom Sabtu & Minggu) */
+.cal-date:nth-child(7n+6),
+.cal-date:nth-child(7n) {
+  color: #3F51B5;
+}
+
+[data-theme="dark"] .cal-date:nth-child(7n+6),
+[data-theme="dark"] .cal-date:nth-child(7n) {
+  color: #8FA2FF;
+}
+
+.cal-date:hover:not(.date-muted):not(.date-selected):not(.date-today) {
+  background: #e2e8f0;
+  color: #003566;
+  transform: translateY(-1px);
+}
+
+.cal-date.date-muted {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: #AAAAAA;
+  opacity: 0.45;
+  cursor: default;
+}
+
+[data-theme="dark"] .cal-date.date-muted {
+  color: #5E7194;
+}
+
+/* Hari Ini (Today): Full Color Solid Navy Sleman */
+.cal-date.date-today {
+  background: #003566 !important;
+  border-color: #003566 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  border-radius: 11px !important;
+  box-shadow: 0 3px 8px rgba(0, 53, 102, 0.35) !important;
+}
+
+[data-theme="dark"] .cal-date.date-today {
+  background: #4C84E8 !important;
+  border-color: #4C84E8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 8px rgba(76, 132, 232, 0.35) !important;
+}
+
+/* Tanggal Terpilih yang Diklik (Selected): Hanya di Luar Angka (Outline Ring) */
+.cal-date.date-selected:not(.date-today) {
+  background: #E8EFFB !important;
+  border: 2px solid #003566 !important;
+  color: #003566 !important;
+  font-weight: 800 !important;
+  border-radius: 11px !important;
+  box-shadow: 0 0 0 2px rgba(0, 53, 102, 0.15) !important;
+  transform: scale(1.05);
+}
+
+[data-theme="dark"] .cal-date.date-selected:not(.date-today) {
+  background: #16335F !important;
+  border: 2px solid #4C84E8 !important;
+  color: #EAF0FA !important;
+  box-shadow: 0 0 0 2px rgba(76, 132, 232, 0.25) !important;
+}
+
+/* Hari Ini yang Sedang Dipilih: Full Color Solid + Gold Ring Border */
+.cal-date.date-today.date-selected {
+  background: #003566 !important;
+  border: 2px solid #FFC300 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 3px 8px rgba(0, 53, 102, 0.35) !important;
+}
+
+[data-theme="dark"] .cal-date.date-today.date-selected {
+  background: #4C84E8 !important;
+  border: 2px solid #FFC300 !important;
+  color: #ffffff !important;
+}
+
+/* ==============================================================================
+   7. Kolom Samping (Side Alert Cards)
+   ============================================================================== */
+.bento-side-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.bento-alert-card {
+  flex: 1 1 0;
+  border-radius: 18px;
+  padding: 22px 24px;
+  min-height: 165px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.card-alert-red {
+  background: linear-gradient(135deg, #d64545 0%, #b42323 100%);
+  color: #ffffff;
+}
+
+.card-alert-amber {
+  background: linear-gradient(135deg, #FFF6D1 0%, #FFE58A 100%);
+  color: #003566;
+  border: 1px solid #FFE58A;
+}
+
+.card-alert-amber .alert-card-title,
+.card-alert-amber .alert-big-number {
+  color: #003566;
+}
+
+.card-alert-amber .alert-sub-slash {
+  color: #02275D;
+}
+
+[data-theme="dark"] .card-alert-amber {
+  background: linear-gradient(135deg, #3F3200 0%, #241C00 100%);
+  border: 1px solid rgba(255, 195, 0, 0.30);
+}
+
+[data-theme="dark"] .card-alert-amber .alert-card-title,
+[data-theme="dark"] .card-alert-amber .alert-sub-slash {
+  color: #FFE9A8;
+}
+
+[data-theme="dark"] .card-alert-amber .alert-big-number {
+  color: #FFC300;
+}
+
+.alert-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.alert-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Badge Box Translucent Putih untuk Card Perlu Perhatian */
+.icon-wrap-white {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.22);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+/* Badge Box Kuning Emas Sleman untuk Card Mendekati Selesai */
+.icon-wrap-amber-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #FFC300;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #003566;
+  box-shadow: 0 2px 6px rgba(255, 195, 0, 0.35);
+}
+
+.alert-icon-wrap svg {
+  width: 18px;
+  height: 18px;
+}
+
+[data-theme="dark"] .icon-wrap-amber-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #FFC300;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #003566;
+  box-shadow: 0 2px 6px rgba(255, 195, 0, 0.35);
+}
+
+.alert-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.alert-val-row {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.alert-big-number {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.alert-sub-slash {
+  font-size: 20px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+/* 2. Bar Progress untuk Alert Cards (13 Segmen Stretch 100%) */
+.matrix-alert-bars {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.matrix-alert-bars .matrix-dot {
+  flex: 1 1 0;
+  height: 10px;
+  border-radius: 5px;
+  min-width: 0;
+  transition: opacity 0.15s ease;
+}
+
+.matrix-alert-white .dot-filled-white {
+  background: #ffffff;
+}
+
+.matrix-alert-white .dot-faded-white {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.matrix-alert-dark .dot-filled-dark {
+  background: #02275D;
+}
+
+.matrix-alert-dark .dot-faded-dark {
+  background: rgba(2, 39, 93, 0.20);
+}
+
+[data-theme="dark"] .matrix-alert-dark .dot-filled-dark {
+  background: #FFC300;
+}
+
+[data-theme="dark"] .matrix-alert-dark .dot-faded-dark {
+  background: rgba(255, 195, 0, 0.25);
+}
+
+/* ==============================================================================
+   9. Footer Sleman Khas Executive Bento (Dark Navy Bar Rata Penuh)
+   ============================================================================== */
+body.role-pembimbing .gentelella-footer {
+  margin-left: var(--sidebar-width) !important;
+  width: calc(100% - var(--sidebar-width)) !important;
+  max-width: calc(100% - var(--sidebar-width)) !important;
+  box-sizing: border-box !important;
+  background: #003566 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #c9d6ea !important;
+  padding: 12px 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+[data-theme="dark"] body.role-pembimbing .gentelella-footer {
+  background: #031B40 !important;
+}
+
+body.role-pembimbing .gentelella-footer span {
+  color: #c9d6ea !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  display: inline-block !important;
+}
+
+/* ==============================================================================
+   8. Responsive Breakpoints
+   ============================================================================== */
+@media (max-width: 991.98px) {
+  body.role-pembimbing .gentelella-footer {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .bento-layout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-col-side {
+    width: 100%;
+  }
+
+  .bento-side-alerts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .bento-hero-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 22px 24px;
+  }
+
+  .bento-hero-graphic {
+    align-self: flex-end;
+  }
+
+  .bento-kpi-row {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-mid-row {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-side-alerts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .bento-distribusi-card,
+  .bento-kuota-card {
+    min-height: 360px;
+    padding: 18px 20px;
+  }
+
+  .bento-bars-track {
+    gap: 0.75rem;
+    height: 220px;
+  }
+
+  .bento-bar-container {
+    height: 180px;
+    max-width: 70px;
+  }
+
+  .bento-bar-val {
+    font-size: 15px;
+  }
+
+  .bento-gauge-wrapper,
+  .bento-gauge-svg {
+    width: 200px;
+    height: 120px;
+  }
+
+  .gauge-center-percent {
+    font-size: 38px;
+  }
+}
+
+/* ==============================================================================
+   Scroll-Craft Motion System (GPU-Accelerated Viewport Scroll Reveals)
+   ============================================================================== */
+[data-scroll-reveal] {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition-property: transform, opacity;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-scroll-reveal].is-revealed {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Varian 1: Float Up (KPI Cards & Roster Banner) */
+.sc-reveal-up {
+  transform: translateY(24px);
+  transition-duration: 0.55s;
+}
+
+/* Varian 2: Hero Drop (Top-Down Horizon Reveal) */
+.sc-reveal-hero {
+  transform: translateY(-16px);
+  transition-duration: 0.65s;
+}
+
+/* Varian 3: Scale In (Analytics Distribution & Gauge Cards) */
+.sc-reveal-scale {
+  transform: scale(0.96) translateY(16px);
+  transition-duration: 0.60s;
+}
+
+/* Varian 4: Slide From Right (Aside Rail: Calendar & Alerts) */
+.sc-reveal-side {
+  transform: translateX(24px);
+  transition-duration: 0.60s;
+}
+
+/* Stagger Delay Classes */
+.sc-delay-1 { transition-delay: 0.08s; }
+.sc-delay-2 { transition-delay: 0.16s; }
+.sc-delay-3 { transition-delay: 0.24s; }
+.sc-delay-4 { transition-delay: 0.32s; }
+.sc-delay-5 { transition-delay: 0.40s; }
+
+/* ==============================================================================
+   Chart Animation Base Styling (Orchestrated by GSAP Timeline in dashboard.js)
+   ============================================================================== */
+
+/* Pastikan titik tumpu bar berada di dasar untuk scaleY */
+.bento-bar {
+  transform-origin: bottom center;
+  will-change: transform, opacity;
+}
+
+.bento-bar-val {
+  will-change: transform, opacity;
+}
+
+.gauge-fill {
+  will-change: stroke-dashoffset;
+}
+
+.roster-dash {
+  will-change: transform, opacity;
+}
+
+.matrix-dot {
+  will-change: transform, opacity;
+}
+
+/* WCAG 2.1 AA Guardrail: Langsung tampil statis jika reduce-motion aktif */
+@media (prefers-reduced-motion: reduce) {
+  .bento-bar,
+  .bento-bar-val,
+  .gauge-fill,
+  .roster-dash,
+  .matrix-dot {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+
+/* Scroll-Craft Lifecycle Lock & Instant Reveal Utilities */
+[data-scroll-reveal].is-revealed.sc-settled {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
+
+[data-scroll-reveal].sc-instant-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
+
+/* WCAG 2.1 AA Motion Guardrail */
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

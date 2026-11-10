@@ -11,7 +11,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class TurnstileRule implements ValidationRule
 {
     /**
-     * @param bool $isRegistration True untuk registrasi (fail-closed), false untuk login (fail-open) (AC-14-2).
+     * @param  bool  $isRegistration  True untuk registrasi (fail-closed), false untuk login (fail-open) (AC-14-2).
      */
     public function __construct(
         protected bool $isRegistration = false
@@ -31,6 +31,7 @@ class TurnstileRule implements ValidationRule
                 // AC-14-2: Registrasi ditolak jika captcha down (Fail-Closed)
                 $fail('Layanan verifikasi keamanan (captcha) sedang mengalami gangguan. Silakan coba beberapa saat lagi.');
             }
+
             // AC-14-2: Login tetap diizinkan berjalan dengan perlindungan rate limit (Fail-Open)
             return;
         }

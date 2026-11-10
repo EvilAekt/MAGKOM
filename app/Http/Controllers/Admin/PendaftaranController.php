@@ -4,235 +4,178 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\RoleEnum;
+use App\Actions\Admin\Pendaftaran\PutuskanPendaftaranAction;
 use App\Enums\StatusPendaftaranEnum;
-use App\Enums\StatusPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Exceptions\Domain\KuotaPenuhException;
 use App\Exceptions\Domain\StatusSudahBerubahException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\KeputusanPendaftaranRequest;
-use App\Models\Bidang;
-use App\Models\BulanMagang;
-use App\Models\Jurusan;
 use App\Models\Pendaftaran;
-use App\Models\User;
+use App\Queries\Admin\Pendaftaran\PendaftaranIndexQuery;
 use App\Services\AuditService;
-use App\Services\PlacementService;
+use App\Services\DocumentArchiveService;
+use App\Services\SuratDiterimaPdfService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class PendaftaranController extends Controller
 {
     public function __construct(
-        protected PlacementService $placementService,
+        protected PendaftaranIndexQuery $indexQuery,
+        protected PutuskanPendaftaranAction $putuskanAction,
         protected AuditService $auditService
     ) {}
 
+    /**
+     * Menampilkan daftar antrean verifikasi pendaftaran magang dengan filter dan statistik.
+     */
     public function index(Request $request): View
     {
-        $query = Pendaftaran::with(['user.profil', 'bulanMagang', 'kuota.jurusan', 'penempatan']);
-
-        $sort = $request->input('sort', 'fifo');
-        if ($sort === 'terbaru') {
-            $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
-        } elseif ($sort === 'terlama') {
-            $query->orderBy('created_at', 'asc')->orderBy('id', 'asc');
-        } else {
-            // AC-04-1 & BR-05: FIFO antrean verifikasi berdasarkan waktu pengajuan berkas
-            $query->orderByRaw('COALESCE(diajukan_at, created_at) ASC')->orderBy('id', 'asc');
-        }
-
-        if ($request->filled('q')) {
-            $rawSearch = trim((string) $request->input('q'));
-            $cleanId = ltrim(str_ireplace(['#', 'REG-'], '', $rawSearch), '0');
-            $search = '%' . $rawSearch . '%';
-            $query->where(function ($q) use ($search, $cleanId) {
-                if ($cleanId !== '' && is_numeric($cleanId)) {
-                    $q->orWhere('id', (int) $cleanId);
-                }
-                $q->orWhereHas('user', function ($qu) use ($search) {
-                    $qu->where('nama', 'like', $search)
-                        ->orWhere('email', 'like', $search)
-                        ->orWhereHas('profil', function ($qp) use ($search) {
-                            $qp->where('institusi', 'like', $search)
-                                ->orWhere('nim_nisn', 'like', $search);
-                        });
-                });
-            });
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
-        }
-
-        if ($request->filled('bulan_magang_id')) {
-            $query->where('bulan_magang_id', $request->integer('bulan_magang_id'));
-        }
-
-        if ($request->filled('jurusan_id')) {
-            $jurusanId = $request->integer('jurusan_id');
-            $query->where(function ($q) use ($jurusanId) {
-                $q->whereHas('kuota', fn ($qk) => $qk->where('jurusan_id', $jurusanId))
-                  ->orWhereHas('user.profil', fn ($qp) => $qp->where('jurusan_id', $jurusanId));
-            });
-        }
-
-        if ($request->filled('jalur')) {
-            $jalur = $request->input('jalur');
-            $query->whereHas('penempatan', fn ($qp) => $qp->where('jalur', $jalur));
-        }
-
-        // SLA Watchdog Filter (PRD 2.3 & F-04: target verifikasi <= 5 hari kerja)
-        if ($request->filled('sla')) {
-            $sla = $request->input('sla');
-            if ($sla === 'breach' || $sla === 'terlambat') {
-                $query->where('status', StatusPendaftaranEnum::Diajukan)
-                    ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(5)]);
-            } elseif ($sla === 'mendekati') {
-                $query->where('status', StatusPendaftaranEnum::Diajukan)
-                    ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(3)])
-                    ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays(5)]);
-            } elseif ($sla === 'aman') {
-                $query->where('status', StatusPendaftaranEnum::Diajukan)
-                    ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays(3)]);
-            }
-        }
-
-        // AC-04-1: Pagination 25 per halaman
-        $pendaftaranList = $query->paginate(25)->withQueryString();
-        $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
-        $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
-
-        $queueStats = [
-            'total' => Pendaftaran::count(),
-            'diajukan' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)->count(),
-            'perlu_perbaikan' => Pendaftaran::where('status', StatusPendaftaranEnum::PerluPerbaikan)->count(),
-            'waiting_list' => Pendaftaran::where('status', StatusPendaftaranEnum::WaitingList)->count(),
-            'diterima' => Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)->count(),
-            'ditolak' => Pendaftaran::where('status', StatusPendaftaranEnum::Ditolak)->count(),
-            'sla_warning' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
-                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(3)])
-                ->count(),
-            'sla_breach' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
-                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(5)])
-                ->count(),
-            'sla_mendekati' => Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)
-                ->whereRaw('COALESCE(diajukan_at, created_at) <= ?', [now()->subDays(3)])
-                ->whereRaw('COALESCE(diajukan_at, created_at) > ?', [now()->subDays(5)])
-                ->count(),
-        ];
-
         return view('admin.pendaftaran.index', [
-            'pendaftaranList' => $pendaftaranList,
-            'bulanList' => $bulanList,
-            'jurusanList' => $jurusanList,
+            'pendaftaranList' => $this->indexQuery->paginate($request),
+            'bulanList' => $this->indexQuery->getBulanList(),
+            'jurusanList' => $this->indexQuery->getJurusanList(),
             'statusEnum' => StatusPendaftaranEnum::cases(),
-            'queueStats' => $queueStats,
+            'queueStats' => $this->indexQuery->getQueueStats(),
         ]);
     }
 
+    /**
+     * Menampilkan detail pengajuan pendaftaran, berkas, serta opsi keputusan admin.
+     */
     public function show(Pendaftaran $pendaftaran): View
     {
-        $pendaftaran->load(['user.profil.jurusan', 'bulanMagang', 'kuota.jurusan', 'dokumen.jenisDokumen']);
-
-        $pembimbingList = User::where('role', RoleEnum::Pembimbing)
-            ->where('status_aktif', true)
-            ->withCount(['penempatanBimbingan as mentee_aktif_count' => function ($q) {
-                $q->where('status', StatusPenempatanEnum::Aktif);
-            }])
-            ->orderBy('nama')
-            ->get();
-
-        $bidangList = Bidang::where('aktif', true)->orderBy('nama_bidang')->get();
-
-        // Hitung sisa kuota jurusan untuk bulan magang pendaftaran terkait (AC-04-4)
-        $kuota = $pendaftaran->kuota;
-        $sisaKuota = $kuota ? max(0, $kuota->jumlah - $kuota->terisi) : 0;
+        $showData = $this->indexQuery->getShowData($pendaftaran);
 
         return view('admin.pendaftaran.show', [
             'pendaftaran' => $pendaftaran,
-            'pembimbingList' => $pembimbingList,
-            'bidangList' => $bidangList,
-            'sisaKuota' => $sisaKuota,
+            'pembimbingList' => $showData['pembimbingList'],
+            'bidangList' => $showData['bidangList'],
+            'sisaKuota' => $showData['sisaKuota'],
+            'duplikasiNimCount' => $showData['duplikasiNimCount'],
         ]);
     }
 
+    /**
+     * Memproses keputusan verifikasi berkas pendaftaran (terima atau tolak).
+     */
     public function putuskan(KeputusanPendaftaranRequest $request, Pendaftaran $pendaftaran): RedirectResponse
     {
         $admin = $request->user();
         $keputusan = $request->input('keputusan');
 
         try {
-            if ($keputusan === 'terima') {
-                $pembimbing = User::find($request->integer('pembimbing_id'));
-                $bidang = $request->filled('bidang_id') ? Bidang::find($request->integer('bidang_id')) : null;
+            $result = $this->putuskanAction->execute(
+                $admin,
+                $pendaftaran,
+                $keputusan,
+                $request->input('catatan'),
+                $request->file('file_surat_diterima'),
+                $request->filled('pembimbing_id') ? (int) $request->input('pembimbing_id') : null,
+                $request->filled('bidang_id') ? (int) $request->input('bidang_id') : null
+            );
 
-                $this->placementService->terima($pendaftaran, $admin, $pembimbing, $bidang);
-
-                return redirect()->route('admin.pendaftaran.show', $pendaftaran)
-                    ->with('success', 'Pendaftaran berhasil diterima dan peserta resmi ditempatkan.');
-            }
-
-            if ($keputusan === 'waiting_list') {
-                // AC-04-4: Opsi Waiting List ditolak jika kuota umum belum penuh
-                $kuota = $pendaftaran->kuota;
-                if ($kuota && ($kuota->jumlah - $kuota->terisi) > 0) {
-                    return back()->with('error', 'Keputusan Waiting List ditolak (AC-04-4): Kuota umum jurusan ini belum penuh.');
-                }
-
-                if (! in_array($pendaftaran->status, [StatusPendaftaranEnum::Diajukan, StatusPendaftaranEnum::PerluPerbaikan], true)) {
-                    throw new StatusSudahBerubahException();
-                }
-
-                $pendaftaran->update([
-                    'status' => StatusPendaftaranEnum::WaitingList,
-                    'verifikator_id' => $admin->id,
-                    'diputuskan_at' => now(),
-                    'catatan' => $request->input('catatan'),
-                ]);
-
-                $this->auditService->catat(
-                    tipe: TipeAuditEnum::Aksi,
-                    tabel: 'pendaftaran',
-                    idData: $pendaftaran->id,
-                    nilaiLama: ['status' => StatusPendaftaranEnum::Diajukan->value],
-                    nilaiBaru: ['status' => StatusPendaftaranEnum::WaitingList->value],
-                    detail: [
-                        'aksi' => 'Memindahkan pendaftaran ke antrean Waiting List karena kuota penuh',
-                        'admin_id' => $admin->id,
-                        'catatan' => $request->input('catatan'),
-                    ]
-                );
-
-                return redirect()->route('admin.pendaftaran.show', $pendaftaran)
-                    ->with('success', 'Pendaftaran berhasil dialihkan ke antrean Waiting List.');
-            }
-
-            if ($keputusan === 'tolak') {
-                $this->placementService->tolak($pendaftaran, $admin, $request->input('catatan'));
-
-                return redirect()->route('admin.pendaftaran.show', $pendaftaran)
-                    ->with('success', 'Pengajuan pendaftaran berhasil ditolak.');
-            }
-
-            if ($keputusan === 'perlu_perbaikan') {
-                $this->placementService->mintaPerbaikan($pendaftaran, $admin, $request->input('catatan'));
-
-                return redirect()->route('admin.pendaftaran.show', $pendaftaran)
-                    ->with('success', 'Permintaan perbaikan berkas telah dikirimkan ke peserta.');
-            }
+            return redirect()->route('admin.pendaftaran.show', $pendaftaran)
+                ->with('success', $result['message']);
         } catch (StatusSudahBerubahException $e) {
             // AC-04-5: Pesan ramah saat terjadi bentrok keputusan bersamaan
             return back()->with('error', 'Status pendaftaran sudah berubah, muat ulang halaman (AC-04-5).');
         } catch (KuotaPenuhException $e) {
-            // AC-04-6: Arahkan ke Waiting List bila kuota ternyata penuh saat diterima
-            return back()->with('error', 'Kuota umum telah terisi penuh. Silakan alihkan pendaftaran ke antrean Waiting List (AC-04-6).');
+            // AC-04-6: Pesan saat kuota ternyata penuh saat diterima
+            return back()->with('error', 'Kuota umum telah terisi penuh. Pengajuan tidak dapat diterima.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal memproses keputusan: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memproses keputusan: '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Mengunduh bundel seluruh berkas pendaftaran peserta dalam arsip ZIP terstruktur (PRD F-03, Bab 8.4, NFR-S6).
+     */
+    public function downloadBundelZip(Request $request, DocumentArchiveService $archiveService): BinaryFileResponse|RedirectResponse
+    {
+        $query = Pendaftaran::with(['user.profil', 'dokumen.jenisDokumen', 'bulanMagang', 'kuota.jurusan']);
+
+        if ($request->filled('pendaftaran_ids')) {
+            $ids = (array) $request->input('pendaftaran_ids');
+            $query->whereIn('id', $ids);
+        } elseif ($request->filled('bulan_magang_id')) {
+            $query->where('bulan_magang_id', $request->integer('bulan_magang_id'));
+        } elseif ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        } else {
+            // Default: ambil pendaftaran berstatus diterima atau diajukan (maksimal 50 entri per bundel untuk keselamatan memori)
+            $query->whereIn('status', [StatusPendaftaranEnum::Diterima, StatusPendaftaranEnum::Diajukan]);
         }
 
-        return back();
+        $pendaftarans = $query->latest('id')->take(50)->get();
+
+        if ($pendaftarans->isEmpty()) {
+            return back()->with('error', 'Tidak ada data pendaftaran yang memenuhi kriteria untuk diunduh berkasnya.');
+        }
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::AksesData,
+            tabel: 'dokumen',
+            idData: null,
+            nilaiLama: null,
+            nilaiBaru: null,
+            detail: [
+                'aksi' => 'Unduh bundel arsip ZIP berkas pendaftaran peserta',
+                'jumlah_pendaftar' => $pendaftarans->count(),
+            ]
+        );
+
+        $zipPath = $archiveService->createRegistrationBatchZip($pendaftarans);
+        $downloadName = 'bundel-berkas-magkom-'.date('Ymd-His').'.zip';
+
+        return response()->download($zipPath, $downloadName, [
+            'Content-Type' => 'application/zip',
+            'X-Content-Type-Options' => 'nosniff',
+        ])->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Mengunduh surat keterangan diterima yang telah diunggah admin atau fallback ke PDF generator.
+     */
+    public function unduhSuratDiterima(Pendaftaran $pendaftaran, SuratDiterimaPdfService $pdfService): Response|BinaryFileResponse
+    {
+        $filePath = $pendaftaran->file_surat_diterima ?: $pendaftaran->penempatan?->file_surat_diterima;
+        if ($filePath && Storage::disk('local')->exists($filePath)) {
+            $pesertaNama = Str::slug($pendaftaran->user?->nama ?? 'peserta');
+
+            return Storage::disk('local')->download($filePath, "surat-keterangan-diterima-{$pesertaNama}.pdf");
+        }
+
+        if ($pendaftaran->penempatan) {
+            return $pdfService->generate($pendaftaran->penempatan);
+        }
+
+        abort(404, 'Berkas surat keterangan diterima belum tersedia.');
+    }
+
+    /**
+     * Menyajikan pratinjau surat keterangan diterima yang telah diunggah admin atau fallback ke PDF stream.
+     */
+    public function pratinjauSuratDiterima(Pendaftaran $pendaftaran, SuratDiterimaPdfService $pdfService): Response|BinaryFileResponse
+    {
+        $filePath = $pendaftaran->file_surat_diterima ?: $pendaftaran->penempatan?->file_surat_diterima;
+        if ($filePath && Storage::disk('local')->exists($filePath)) {
+            return response()->file(Storage::disk('local')->path($filePath), [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="surat-keterangan-diterima.pdf"',
+            ]);
+        }
+
+        if ($pendaftaran->penempatan) {
+            return $pdfService->stream($pendaftaran->penempatan);
+        }
+
+        abort(404, 'Berkas surat keterangan diterima belum tersedia.');
     }
 }

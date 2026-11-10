@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Penempatan extends Model
 {
@@ -34,6 +33,7 @@ class Penempatan extends Model
         'tgl_selesai',
         'tgl_ditetapkan_selesai',
         'tgl_nonaktif',
+        'file_surat_diterima',
         'status',
     ];
 
@@ -92,11 +92,6 @@ class Penempatan extends Model
         return $this->hasMany(Logbook::class, 'penempatan_id');
     }
 
-    public function penilaian(): HasOne
-    {
-        return $this->hasOne(Penilaian::class, 'penempatan_id');
-    }
-
     public function agendaBimbingan(): HasMany
     {
         return $this->hasMany(AgendaBimbingan::class, 'penempatan_id');
@@ -127,6 +122,7 @@ class Penempatan extends Model
         $minggu = (int) floor($diffDays / 7) + 1;
 
         $totalMinggu = $this->total_minggu;
+
         return min(max(1, $minggu), $totalMinggu);
     }
 
@@ -183,22 +179,22 @@ class Penempatan extends Model
 
             $statusPengisian = 'belum_diisi';
             if ($logbook) {
-                $statusVal = $logbook->status->value ?? (string) $logbook->status;
+                $statusVal = $logbook->status instanceof \BackedEnum ? $logbook->status->value : (string) ($logbook->status?->value ?? $logbook->status ?? '');
                 $statusPengisian = $statusVal;
             } elseif ($isMendatang) {
                 $statusPengisian = 'mendatang';
             }
 
             $hasil[] = [
-                'minggu_ke'       => $i,
-                'tgl_awal'        => $tglAwal,
-                'tgl_akhir'       => $tglAkhir,
-                'label_periode'   => $tglAwal->translatedFormat('d M') . ' – ' . $tglAkhir->translatedFormat('d M Y'),
-                'is_aktif'        => $isAktif,
-                'is_lampau'       => $isLampau,
-                'is_mendatang'    => $isMendatang,
-                'logbook'         => $logbook,
-                'status'          => $statusPengisian,
+                'minggu_ke' => $i,
+                'tgl_awal' => $tglAwal,
+                'tgl_akhir' => $tglAkhir,
+                'label_periode' => $tglAwal->translatedFormat('d M').' – '.$tglAkhir->translatedFormat('d M Y'),
+                'is_aktif' => $isAktif,
+                'is_lampau' => $isLampau,
+                'is_mendatang' => $isMendatang,
+                'logbook' => $logbook,
+                'status' => $statusPengisian,
             ];
         }
 

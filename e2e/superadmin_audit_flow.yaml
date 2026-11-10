@@ -1,0 +1,21 @@
+url: "http://127.0.0.1:8000/login"
+name: "Verifikasi Jejak Audit SuperAdmin"
+---
+- launchApp
+- inputText:
+    id: "email"
+    text: "superadmin@magkom.go.id"
+- inputText:
+    id: "password"
+    text: "Password123!"
+- inputText:
+    id: "captcha"
+    text: "1234"
+- tapOn:
+    id: "btn-submit-login"
+- assertVisible: "Dashboard SuperAdmin"
+- openLink: "http://127.0.0.1:8000/superadmin/audit-log"
+- assertVisible: "Jejak Audit"
+- takeScreenshot: "audit-log-overview"
+- assertVisible: "Pencarian & Filter Aliran Audit"
+- takeScreenshot: "audit-log-filter"

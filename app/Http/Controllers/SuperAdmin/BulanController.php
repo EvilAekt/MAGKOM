@@ -26,11 +26,24 @@ class BulanController extends Controller
 
     public function index(): View
     {
-        $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->paginate(12);
+        $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->paginate(10)->withQueryString();
+
+        $totalBulan = BulanMagang::count();
+        $totalAktif = BulanMagang::where('aktif', true)->count();
+        $today = now()->toDateString();
+        $pendaftaranBuka = BulanMagang::where('aktif', true)
+            ->where('tgl_buka', '<=', $today)
+            ->where('tgl_tutup', '>=', $today)
+            ->count();
+        $totalOverride = BulanMagang::whereNotNull('override_status')->count();
 
         return view('superadmin.bulan.index', [
             'bulanList' => $bulanList,
             'statusEnum' => StatusKetersediaanEnum::cases(),
+            'totalBulan' => $totalBulan,
+            'totalAktif' => $totalAktif,
+            'pendaftaranBuka' => $pendaftaranBuka,
+            'totalOverride' => $totalOverride,
         ]);
     }
 
@@ -94,7 +107,7 @@ class BulanController extends Controller
             $hasActivePenempatan = Penempatan::where('status', StatusPenempatanEnum::Aktif)
                 ->where(function ($q) use ($bulan) {
                     $q->whereHas('kuota', fn ($qk) => $qk->where('bulan_magang_id', $bulan->id))
-                      ->orWhereHas('pendaftaran', fn ($qp) => $qp->where('bulan_magang_id', $bulan->id));
+                        ->orWhereHas('pendaftaran', fn ($qp) => $qp->where('bulan_magang_id', $bulan->id));
                 })
                 ->exists();
 

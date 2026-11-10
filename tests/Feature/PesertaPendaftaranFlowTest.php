@@ -8,6 +8,7 @@ use App\Enums\JenjangEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Dokumen;
 use App\Models\JenisDokumen;
@@ -17,6 +18,8 @@ use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\PesertaProfil;
 use App\Models\User;
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Database\Seeders\JenisDokumenSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -28,18 +31,24 @@ class PesertaPendaftaranFlowTest extends TestCase
     use RefreshDatabase;
 
     protected User $peserta;
+
     protected BulanMagang $bulan;
+
     protected Kuota $kuota;
+
     protected Jurusan $jurusan;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        Carbon::setTestNow(Carbon::parse('2026-10-15 10:00:00', 'Asia/Jakarta'));
+        CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-10-15 10:00:00', 'Asia/Jakarta'));
+
         Storage::fake('private');
         $this->seed(JenisDokumenSeeder::class);
 
-        $this->peserta = new User();
+        $this->peserta = new User;
         $this->peserta->nama = 'Ahmad Fajar';
         $this->peserta->email = 'ahmad.fajar@example.com';
         $this->peserta->password = 'Password123!';
@@ -62,12 +71,15 @@ class PesertaPendaftaranFlowTest extends TestCase
             'jurusan_id' => $this->jurusan->id,
             'jenjang' => JenjangEnum::Smk,
             'no_hp' => '081234567890',
+            'foto' => 'peserta-foto/fake_avatar.jpg',
+            'nama_kontak_darurat' => 'Bapak Fajar',
+            'no_kontak_darurat' => '081298765432',
         ]);
 
         $this->bulan = BulanMagang::create([
             'bulan_mulai' => '2026-11-01',
             'tgl_buka' => '2026-10-01',
-            'tgl_tutup' => '2026-10-25',
+            'tgl_tutup' => '2026-10-31',
             'aktif' => true,
         ]);
 
@@ -80,8 +92,23 @@ class PesertaPendaftaranFlowTest extends TestCase
         ]);
     }
 
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow();
+        CarbonImmutable::setTestNow();
+
+        parent::tearDown();
+    }
+
     public function test_peserta_can_view_pendaftaran_index_and_available_periods(): void
     {
+        $bidang = Bidang::create([
+            'nama_bidang' => 'Bidang Aptika',
+            'kode' => 'APTIKA',
+            'aktif' => true,
+        ]);
+        $this->jurusan->bidang()->attach($bidang->id);
+
         $response = $this->actingAs($this->peserta)->get(route('peserta.pendaftaran.index'));
 
         $response->assertOk();
@@ -89,6 +116,8 @@ class PesertaPendaftaranFlowTest extends TestCase
         $response->assertSee('Buat Pengajuan Baru');
         $response->assertSee('November 2026');
         $response->assertSee('Teknik Komputer dan Jaringan');
+        $response->assertSee('Bidang Aptika');
+        $response->assertSee('Daftar Sekarang');
     }
 
     public function test_peserta_can_create_new_draft_pendaftaran(): void
@@ -123,8 +152,8 @@ class PesertaPendaftaranFlowTest extends TestCase
         $response->assertSee('1. Berkas Persyaratan');
         $response->assertSee('2. Verifikasi Berkas');
         $response->assertSee('3. Keputusan');
-        $response->assertSee('Surat Permohonan PKL/Magang dari Kepala Sekolah');
-        $response->assertSee('Curriculum Vitae (CV) & Portofolio Keahlian');
+        $response->assertSee('Surat Permohonan PKL dari Sekolah');
+        $response->assertSee('Curriculum Vitae (CV) & Tautan Portofolio Proyek');
         $response->assertSee('Salinan Kartu Pelajar');
     }
 
@@ -187,8 +216,8 @@ class PesertaPendaftaranFlowTest extends TestCase
             Dokumen::create([
                 'pendaftaran_id' => $pendaftaran->id,
                 'jenis_dokumen_id' => $jenis->id,
-                'path' => 'dokumen/test_' . $jenis->kode . '.pdf',
-                'nama_asli' => 'test_' . $jenis->kode . '.pdf',
+                'path' => 'dokumen/test_'.$jenis->kode.'.pdf',
+                'nama_asli' => 'test_'.$jenis->kode.'.pdf',
                 'mime' => 'application/pdf',
                 'ukuran' => 204800,
                 'hash' => md5($jenis->kode),
@@ -214,7 +243,7 @@ class PesertaPendaftaranFlowTest extends TestCase
             'diputuskan_at' => now(),
         ]);
 
-        $pembimbing = new User();
+        $pembimbing = new User;
         $pembimbing->nama = 'Bambang Pembimbing';
         $pembimbing->email = 'bambang@sleman.go.id';
         $pembimbing->password = 'Password123!';
@@ -342,8 +371,8 @@ class PesertaPendaftaranFlowTest extends TestCase
             Dokumen::create([
                 'pendaftaran_id' => $pendaftaran->id,
                 'jenis_dokumen_id' => $jenis->id,
-                'path' => 'dokumen/test_' . $jenis->kode . '.pdf',
-                'nama_asli' => 'test_' . $jenis->kode . '.pdf',
+                'path' => 'dokumen/test_'.$jenis->kode.'.pdf',
+                'nama_asli' => 'test_'.$jenis->kode.'.pdf',
                 'mime' => 'application/pdf',
                 'ukuran' => 204800,
                 'hash' => md5($jenis->kode),
@@ -436,7 +465,7 @@ class PesertaPendaftaranFlowTest extends TestCase
         $unsignedRes->assertStatus(403);
 
         // 3. Peserta lain ditolak mengakses berkas privat orang lain (403 IDOR prevention)
-        $pesertaLain = new User();
+        $pesertaLain = new User;
         $pesertaLain->nama = 'Peserta Lain';
         $pesertaLain->email = 'peserta.lain@example.com';
         $pesertaLain->password = 'Password123!';

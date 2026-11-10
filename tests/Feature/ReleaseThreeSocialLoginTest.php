@@ -29,9 +29,9 @@ class ReleaseThreeSocialLoginTest extends TestCase
      */
     protected function createUser(array $attributes = []): User
     {
-        $user = new User();
+        $user = new User;
         $user->nama = $attributes['nama'] ?? 'Pengguna Uji';
-        $user->email = $attributes['email'] ?? ('test_' . uniqid() . '@example.com');
+        $user->email = $attributes['email'] ?? ('test_'.uniqid().'@example.com');
         $user->password = Hash::make('Password123!');
         $user->role = $attributes['role'] ?? RoleEnum::Peserta;
         $user->status_aktif = $attributes['status_aktif'] ?? true;
@@ -81,8 +81,8 @@ class ReleaseThreeSocialLoginTest extends TestCase
 
     public function test_new_user_can_register_and_login_via_google_oauth(): void
     {
-        $uniqueEmail = 'peserta_baru_oauth_' . uniqid() . '@example.com';
-        $googleId = 'google_id_' . uniqid();
+        $uniqueEmail = 'peserta_baru_oauth_'.uniqid().'@example.com';
+        $googleId = 'google_id_'.uniqid();
 
         $this->mockGoogleUser($googleId, $uniqueEmail, 'Calon Peserta OAuth');
 
@@ -110,7 +110,7 @@ class ReleaseThreeSocialLoginTest extends TestCase
     public function test_existing_verified_peserta_can_link_account_and_login(): void
     {
         $existingUser = $this->createUser([
-            'email' => 'peserta_verified_' . uniqid() . '@example.com',
+            'email' => 'peserta_verified_'.uniqid().'@example.com',
             'role' => RoleEnum::Peserta,
             'status_aktif' => true,
             'email_verified_at' => now(),
@@ -118,7 +118,7 @@ class ReleaseThreeSocialLoginTest extends TestCase
             'provider_id' => null,
         ]);
 
-        $googleId = 'google_id_linked_' . uniqid();
+        $googleId = 'google_id_linked_'.uniqid();
         $this->mockGoogleUser($googleId, $existingUser->email, $existingUser->nama);
 
         $response = $this->get(route('oauth.callback', 'google'));
@@ -135,7 +135,7 @@ class ReleaseThreeSocialLoginTest extends TestCase
     {
         // Pengguna lokal belum verifikasi email (misalnya registrasi belum konfirmasi)
         $unverifiedUser = $this->createUser([
-            'email' => 'peserta_unverified_' . uniqid() . '@example.com',
+            'email' => 'peserta_unverified_'.uniqid().'@example.com',
             'role' => RoleEnum::Peserta,
             'status_aktif' => true,
             'email_verified_at' => null,
@@ -143,7 +143,7 @@ class ReleaseThreeSocialLoginTest extends TestCase
             'provider_id' => null,
         ]);
 
-        $attackerGoogleId = 'google_attacker_' . uniqid();
+        $attackerGoogleId = 'google_attacker_'.uniqid();
         $this->mockGoogleUser($attackerGoogleId, $unverifiedUser->email, 'Attacker User');
 
         $response = $this->get(route('oauth.callback', 'google'));
@@ -162,7 +162,7 @@ class ReleaseThreeSocialLoginTest extends TestCase
     public function test_staff_roles_cannot_use_social_login(): void
     {
         $adminUser = $this->createUser([
-            'email' => 'admin_staff_' . uniqid() . '@example.com',
+            'email' => 'admin_staff_'.uniqid().'@example.com',
             'role' => RoleEnum::Admin,
             'status_aktif' => true,
             'email_verified_at' => now(),
@@ -170,7 +170,7 @@ class ReleaseThreeSocialLoginTest extends TestCase
             'provider_id' => null,
         ]);
 
-        $this->mockGoogleUser('google_admin_' . uniqid(), $adminUser->email, $adminUser->nama);
+        $this->mockGoogleUser('google_admin_'.uniqid(), $adminUser->email, $adminUser->nama);
 
         $response = $this->get(route('oauth.callback', 'google'));
 
@@ -185,9 +185,9 @@ class ReleaseThreeSocialLoginTest extends TestCase
 
     public function test_existing_oauth_peserta_can_login_directly(): void
     {
-        $googleId = 'google_existing_' . uniqid();
+        $googleId = 'google_existing_'.uniqid();
         $oauthUser = $this->createUser([
-            'email' => 'peserta_oauth_' . uniqid() . '@example.com',
+            'email' => 'peserta_oauth_'.uniqid().'@example.com',
             'role' => RoleEnum::Peserta,
             'status_aktif' => true,
             'email_verified_at' => now(),
@@ -205,9 +205,9 @@ class ReleaseThreeSocialLoginTest extends TestCase
 
     public function test_inactive_oauth_user_cannot_login(): void
     {
-        $googleId = 'google_inactive_' . uniqid();
+        $googleId = 'google_inactive_'.uniqid();
         $inactiveUser = $this->createUser([
-            'email' => 'peserta_nonaktif_' . uniqid() . '@example.com',
+            'email' => 'peserta_nonaktif_'.uniqid().'@example.com',
             'role' => RoleEnum::Peserta,
             'status_aktif' => false,
             'email_verified_at' => now(),
@@ -247,13 +247,14 @@ class ReleaseThreeSocialLoginTest extends TestCase
         $response->assertSee('Masuk dengan Google');
     }
 
-    public function test_register_page_renders_google_register_button(): void
+    public function test_register_page_does_not_render_google_register_button(): void
     {
         $response = $this->get(route('register'));
 
         $response->assertStatus(200);
-        $response->assertSee(route('oauth.redirect', 'google'));
-        $response->assertSee('Daftar dengan Google');
+        $response->assertDontSee('btn-register-google');
+        $response->assertDontSee('Register dengan Google');
+        $response->assertDontSee('Daftar dengan Google');
     }
 
     public function test_simplified_registration_renders_exact_fields(): void
@@ -277,7 +278,7 @@ class ReleaseThreeSocialLoginTest extends TestCase
             'password' => 'SlemanJuara2026',
         ]);
 
-        $response->assertRedirect(route('peserta.profil.show'));
+        $response->assertRedirect(route('peserta.dashboard'));
 
         $this->assertDatabaseHas('users', [
             'nama' => 'Peserta Sleman 2026',
@@ -286,4 +287,3 @@ class ReleaseThreeSocialLoginTest extends TestCase
         ]);
     }
 }
-

@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Enums\JalurEnum;
 use App\Enums\JenjangEnum;
+use App\Enums\KompleksitasEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPendaftaranEnum;
@@ -15,6 +16,7 @@ use App\Enums\SumberPenempatanEnum;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
+use App\Models\KelompokMagang;
 use App\Models\Kuota;
 use App\Models\Logbook;
 use App\Models\Pendaftaran;
@@ -78,7 +80,7 @@ class AcceptedPesertaSeeder extends Seeder
 
         // 3. Pastikan Akun Pembimbing
         $pembimbing = User::firstOrNew(['email' => 'pembimbing@magkom.go.id']);
-        $pembimbing->nama = 'Budi Santoso, S.Kom (Pembimbing Lapangan)';
+        $pembimbing->nama = 'Budi Santoso, S.Kom';
         $pembimbing->password = Hash::make('Password123!');
         $pembimbing->role = RoleEnum::Pembimbing;
         $pembimbing->bidang_id = $bidangAptika->id;
@@ -89,7 +91,7 @@ class AcceptedPesertaSeeder extends Seeder
 
         // 4. Update Akun Peserta: peserta@magkom.go.id
         $peserta = User::firstOrNew(['email' => 'peserta@magkom.go.id']);
-        $peserta->nama = 'Naufal Pratama (Peserta Magang)';
+        $peserta->nama = 'Naufal Pratama';
         $peserta->password = Hash::make('Password123!');
         $peserta->role = RoleEnum::Peserta;
         $peserta->email_verified_at = now();
@@ -115,7 +117,7 @@ class AcceptedPesertaSeeder extends Seeder
         // 6. Buat / Update Pengajuan Pendaftaran menjadi DITERIMA
         $pendaftaran = Pendaftaran::where('user_id', $peserta->id)->latest()->first();
         if (! $pendaftaran) {
-            $pendaftaran = new Pendaftaran();
+            $pendaftaran = new Pendaftaran;
             $pendaftaran->user_id = $peserta->id;
         }
 
@@ -131,7 +133,7 @@ class AcceptedPesertaSeeder extends Seeder
         // 7. Buat / Update Penempatan Aktif
         $penempatan = Penempatan::where('peserta_id', $peserta->id)->first();
         if (! $penempatan) {
-            $penempatan = new Penempatan();
+            $penempatan = new Penempatan;
             $penempatan->peserta_id = $peserta->id;
         }
 
@@ -154,7 +156,7 @@ class AcceptedPesertaSeeder extends Seeder
             'judul' => 'Analisis Kebutuhan Sistem & Pemetaan API MagKom',
             'deskripsi' => 'Pelajari dokumen PRD dan buat pemetaan rancangan endpoint serta arsitektur data.',
             'kategori' => 'Analisis & Riset',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'deadline' => Carbon::now()->subDays(3)->toDateString(),
             'status' => StatusTugasEnum::Selesai,
         ]);
@@ -164,7 +166,7 @@ class AcceptedPesertaSeeder extends Seeder
             'judul' => 'Slicing & Integrasi Frontend Dashboard Peserta',
             'deskripsi' => 'Rancang antarmuka dashboard responsif dengan Design System MagKom dan hubungkan dengan data backend.',
             'kategori' => 'Frontend Development',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Tinggi,
+            'kompleksitas' => KompleksitasEnum::Tinggi,
             'deadline' => Carbon::now()->addDays(4)->toDateString(),
             'status' => StatusTugasEnum::Proses,
         ]);
@@ -174,7 +176,7 @@ class AcceptedPesertaSeeder extends Seeder
             'judul' => 'Uji Fungsional & Penyusunan Dokumen Laporan Magang',
             'deskripsi' => 'Lakukan pengujian antarmuka dan mulai susun draf bab 3 laporan magang terkait kegiatan praktis.',
             'kategori' => 'Testing & Laporan',
-            'kompleksitas' => \App\Enums\KompleksitasEnum::Sedang,
+            'kompleksitas' => KompleksitasEnum::Sedang,
             'deadline' => Carbon::now()->addDays(14)->toDateString(),
             'status' => StatusTugasEnum::Belum,
         ]);
@@ -206,6 +208,98 @@ class AcceptedPesertaSeeder extends Seeder
             'tanggal' => Carbon::parse($penempatan->tgl_mulai)->addDays(15)->toDateString(),
             'kegiatan' => 'Menjalankan pengujian integrasi fungsional menyeluruh pada modul dashboard, logbook, tugas, dan verifikasi status penempatan magang.',
             'status' => StatusLogbookEnum::Terkirim,
+        ]);
+
+        // =========================================================================
+        // 10. POV PESERTA KELOMPOK DITERIMA: kelompok@magkom.go.id
+        // =========================================================================
+        $ketuaKelompok = User::firstOrNew(['email' => 'kelompok@magkom.go.id']);
+        $ketuaKelompok->nama = 'Dimas Pratama (Ketua Tim)';
+        $ketuaKelompok->password = Hash::make('Password123!');
+        $ketuaKelompok->role = RoleEnum::Peserta;
+        $ketuaKelompok->email_verified_at = now();
+        $ketuaKelompok->status_aktif = true;
+        $ketuaKelompok->must_change_password = false;
+        $ketuaKelompok->save();
+
+        PesertaProfil::updateOrCreate(
+            ['user_id' => $ketuaKelompok->id],
+            [
+                'institusi' => 'Universitas Gadjah Mada',
+                'nim_nisn' => '22/498765/SV/21001',
+                'jenjang' => JenjangEnum::S1,
+                'jurusan_id' => $jurusan->id,
+                'no_hp' => '081298765432',
+                'nama_kontak_darurat' => 'Pramono (Orang Tua)',
+                'no_kontak_darurat' => '081298765430',
+                'hubungan_kontak_darurat' => 'Orang Tua / Wali',
+            ]
+        );
+
+        $kelompokMagang = KelompokMagang::updateOrCreate(
+            ['ketua_user_id' => $ketuaKelompok->id],
+            ['nama_kelompok' => 'Tim Inovasi Smart Sleman']
+        );
+
+        $kelompokMagang->anggota()->delete();
+        $kelompokMagang->anggota()->createMany([
+            [
+                'nama' => 'Citra Lestari',
+                'nim_nisn' => '22/498766/SV/21002',
+                'no_hp' => '081298765433',
+                'email' => 'citra.lestari@gmail.com',
+            ],
+            [
+                'nama' => 'Bagas Wicaksono',
+                'nim_nisn' => '22/498767/SV/21003',
+                'no_hp' => '081298765434',
+                'email' => 'bagas.wicaksono@gmail.com',
+            ],
+        ]);
+
+        $pendaftaranKelompok = Pendaftaran::where('user_id', $ketuaKelompok->id)->latest()->first();
+        if (! $pendaftaranKelompok) {
+            $pendaftaranKelompok = new Pendaftaran;
+            $pendaftaranKelompok->user_id = $ketuaKelompok->id;
+        }
+
+        $pendaftaranKelompok->bulan_magang_id = $bulanMagang->id;
+        $pendaftaranKelompok->kuota_id = $kuota->id;
+        $pendaftaranKelompok->tipe = 'kelompok';
+        $pendaftaranKelompok->kelompok_magang_id = $kelompokMagang->id;
+        $pendaftaranKelompok->durasi_bulan = 3;
+        $pendaftaranKelompok->status = StatusPendaftaranEnum::Diterima;
+        $pendaftaranKelompok->diajukan_at = Carbon::now()->subDays(18);
+        $pendaftaranKelompok->diputuskan_at = Carbon::now()->subDays(12);
+        $pendaftaranKelompok->catatan = 'Selamat! Permohonan magang tim Anda telah disetujui untuk Bidang Aptika Diskominfo Sleman.';
+        $pendaftaranKelompok->save();
+
+        $penempatanKelompok = Penempatan::where('peserta_id', $ketuaKelompok->id)->first();
+        if (! $penempatanKelompok) {
+            $penempatanKelompok = new Penempatan;
+            $penempatanKelompok->peserta_id = $ketuaKelompok->id;
+        }
+
+        $penempatanKelompok->pendaftaran_id = $pendaftaranKelompok->id;
+        $penempatanKelompok->kuota_id = $kuota->id;
+        $penempatanKelompok->bidang_id = $bidangAptika->id;
+        $penempatanKelompok->pembimbing_id = $pembimbing->id;
+        $penempatanKelompok->jalur = JalurEnum::Umum;
+        $penempatanKelompok->sumber = SumberPenempatanEnum::Online;
+        $penempatanKelompok->tgl_mulai = Carbon::now()->subDays(12)->toDateString();
+        $penempatanKelompok->tgl_selesai = Carbon::now()->addDays(78)->toDateString();
+        $penempatanKelompok->status = StatusPenempatanEnum::Aktif;
+        $penempatanKelompok->save();
+
+        Tugas::where('penempatan_id', $penempatanKelompok->id)->delete();
+        Tugas::create([
+            'penempatan_id' => $penempatanKelompok->id,
+            'judul' => 'Perancangan Modul Integrasi Kolaboratif Tim',
+            'deskripsi' => 'Koordinasikan pembagian peran pengerjaan proyek integrasi API data publik dengan rekan kelompok.',
+            'kategori' => 'Proyek Tim',
+            'kompleksitas' => KompleksitasEnum::Sedang,
+            'deadline' => Carbon::now()->addDays(5)->toDateString(),
+            'status' => StatusTugasEnum::Proses,
         ]);
     }
 }
