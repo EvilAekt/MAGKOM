@@ -75,7 +75,7 @@ class PenempatanController extends Controller
             $activeTab = 'sudah';
         }
 
-        $antreanBelumDitempatkan = $this->antreanQuery->getAntrean($request);
+        $antreanBelumDitempatkan = $this->antreanQuery->getPaginated($request, 5);
         $totalBelumDitempatkan = $this->antreanQuery->getTotalBelumDitempatkan();
 
         $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();

@@ -1216,123 +1216,110 @@
             </form>
         </div>
 
-        <div class="admin-card" style="border-top: 3px solid #01347C; border-left: none; background: #FFFFFF;">
-            <div style="padding: 1.15rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--neutral-200, #E2E8F0); background: #FFFFFF; flex-wrap: wrap; gap: 0.75rem;">
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="ID Card Tanda Pengenal Peserta Magang Dinas">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect width="18" height="14" x="3" y="7" rx="2"></rect>
-                            <path d="M9 5h6"></path>
-                            <path d="M12 2v3"></path>
-                            <circle cx="12" cy="13" r="2.5"></circle>
-                            <path d="M8 18h8"></path>
+        <x-gentelella.x-panel title="Antrean Peserta Lolos Berkas (Menunggu Penempatan)">
+            @if($antreanBelumDitempatkan->isEmpty())
+                <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600, #64748B);">
+                    <div style="width: 64px; height: 64px; border-radius: 50%; background: #F8FAFC; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: #94A3B8; border: 1px solid #E2E8F0;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
                         </svg>
                     </div>
-                    <div>
-                        <h3 style="font-size: 1rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">
-                            Antrean Peserta Lolos Berkas (Menunggu Penempatan)
-                        </h3>
-                        <p style="font-size: 0.8125rem; color: var(--neutral-500, #64748B); margin: 0.2rem 0 0 0;">
-                            Peserta di bawah ini telah disetujui berkasnya pada Tahap 1 dan siap ditetapkan Pembimbing Lapangan serta Bidang Dinas.
-                        </p>
-                    </div>
+                    <h4 style="font-size: 1.125rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin-bottom: 0.375rem;">
+                        Tidak Ada Antrean Peserta Belum Ditempatkan
+                    </h4>
+                    <p style="font-size: 0.875rem; max-width: 480px; margin: 0 auto; line-height: 1.5;">
+                        Seluruh calon peserta lolos berkas telah ditetapkan pembimbing dan bidang dinas.
+                    </p>
                 </div>
-            </div>
-
-            <div style="overflow-x: auto; width: 100%;">
-                <table class="adm-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 30%; min-width: 220px; text-align: left;">Peserta Magang</th>
-                            <th style="width: 28%; min-width: 200px; text-align: left;">Jurusan</th>
-                            <th style="width: 18%; min-width: 140px; text-align: left;">Bulan Magang</th>
-                            <th style="width: 13%; min-width: 110px; text-align: center;">Diterima Pada</th>
-                            <th style="width: 11%; min-width: 100px; text-align: center;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($antreanBelumDitempatkan as $antrean)
-                            @php
-                                $firstBidang = $antrean->kuota?->jurusan?->bidang?->first();
-                                $defBidangId = $firstBidang?->id;
-                                $defBidangNama = $firstBidang?->nama_bidang ?? 'Dinas Kominfo';
-                            @endphp
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 0.85rem;">
-                                        <div style="width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #01347C 0%, #0641CC 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
-                                            {{ strtoupper(substr($antrean->user?->nama ?? 'P', 0, 1)) }}
-                                        </div>
-                                        <div>
-                                            <div style="font-weight: 700; color: #1E293B; font-size: 0.875rem;">
-                                                {{ $antrean->user?->nama }}
+            @else
+                <div class="adm-table-container">
+                    <div style="overflow-x: auto; width: 100%;">
+                        <table class="adm-table admin-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 28%; min-width: 220px; text-align: left;">Peserta Magang</th>
+                                    <th style="width: 26%; min-width: 200px; text-align: left;">Jurusan</th>
+                                    <th style="width: 18%; min-width: 140px; text-align: left;">Bulan Magang</th>
+                                    <th style="width: 16%; min-width: 130px; text-align: center;">Diterima Pada</th>
+                                    <th style="width: 12%; min-width: 100px; text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($antreanBelumDitempatkan as $antrean)
+                                    @php
+                                        $firstBidang = $antrean->kuota?->jurusan?->bidang?->first();
+                                        $defBidangId = $firstBidang?->id;
+                                        $defBidangNama = $firstBidang?->nama_bidang ?? 'Dinas Kominfo';
+                                    @endphp
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.85rem;">
+                                                <div style="width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #01347C 0%, #0641CC 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
+                                                    {{ strtoupper(substr($antrean->user?->nama ?? 'P', 0, 1)) }}
+                                                </div>
+                                                <div>
+                                                    <div style="font-weight: 700; color: #1E293B; font-size: 0.875rem;">
+                                                        {{ $antrean->user?->nama }}
+                                                    </div>
+                                                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
+                                                        NIM: {{ $antrean->user?->profil?->nim_nisn ?? '-' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="font-weight: 600; color: #1E293B;">
+                                                {{ $antrean->kuota?->jurusan?->nama_jurusan ?? '-' }}
                                             </div>
                                             <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
-                                                NIM: {{ $antrean->user?->profil?->nim_nisn ?? '-' }}
+                                                {{ $antrean->user?->profil?->institusi ?? '-' }}
                                             </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 600; color: #1E293B;">
-                                        {{ $antrean->kuota?->jurusan?->nama_jurusan ?? '-' }}
-                                    </div>
-                                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
-                                        {{ $antrean->user?->profil?->institusi ?? '-' }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <span style="font-weight: 700; color: #0641CC; font-size: 0.8125rem;">
-                                        {{ $antrean->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
-                                    </span>
-                                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
-                                        Durasi: {{ $antrean->durasi_bulan }} Bulan
-                                    </div>
-                                </td>
-                                <td style="text-align: center;">
-                                    <span style="font-size: 0.8125rem; color: #475569;">
-                                        {{ $antrean->diputuskan_at?->translatedFormat('d M Y H:i') ?? '-' }}
-                                    </span>
-                                </td>
-                                <td style="text-align: center;">
-                                    @if(auth()->user()?->isSuperAdmin())
-                                        <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Menunggu Penempatan</span>
-                                    @else
-                                        <div style="display: inline-flex; justify-content: center; align-items: center;">
-                                            <button type="button" 
-                                                    onclick="openTetapkanModal({{ $antrean->id }}, '{{ addslashes($antrean->user?->nama) }}', '{{ addslashes($antrean->kuota?->jurusan?->nama_jurusan ?? '') }}', {{ $defBidangId ?? 'null' }}, '{{ addslashes($defBidangNama) }}')" 
-                                                    style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.95rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                                                <span>Tempatkan</span>
-                                            </button>
-                                        </div>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" style="text-align: center; padding: 3.5rem 1.5rem; background: #FFFFFF;">
-                                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;">
-                                        <div style="width: 48px; height: 48px; border-radius: 50%; background: #F8FAFC; display: flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.25rem; border: 1px solid #E2E8F0;">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="12" r="10"></circle>
-                                                <polyline points="12 6 12 12 16 14"></polyline>
-                                            </svg>
-                                        </div>
-                                        <span style="font-weight: 700; font-size: 0.9375rem; color: #334155;">
-                                            Tidak ada antrean peserta belum ditempatkan
-                                        </span>
-                                        <span style="font-size: 0.8125rem; color: #64748B; max-width: 480px; line-height: 1.5;">
-                                            Seluruh calon peserta lolos berkas telah ditetapkan pembimbing dan bidang dinas.
-                                        </span>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight: 700; color: #0641CC; font-size: 0.8125rem;">
+                                                {{ $antrean->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
+                                            </span>
+                                            <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
+                                                Durasi: {{ $antrean->durasi_bulan }} Bulan
+                                            </div>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <span style="font-size: 0.8125rem; color: #475569;">
+                                                {{ $antrean->diputuskan_at?->translatedFormat('d M Y H:i') ?? '-' }}
+                                            </span>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            @if(auth()->user()?->isSuperAdmin())
+                                                <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Menunggu Penempatan</span>
+                                            @else
+                                                <div style="display: inline-flex; justify-content: center; align-items: center;">
+                                                    <button type="button" 
+                                                            onclick="openTetapkanModal({{ $antrean->id }}, '{{ addslashes($antrean->user?->nama) }}', '{{ addslashes($antrean->kuota?->jurusan?->nama_jurusan ?? '') }}', {{ $defBidangId ?? 'null' }}, '{{ addslashes($defBidangNama) }}')" 
+                                                            style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.95rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                                                        <span>Tempatkan</span>
+                                                    </button>
+                                                </div>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="adm-table-footer">
+                        <x-gentelella.pagination-bar 
+                            :paginator="$antreanBelumDitempatkan" 
+                            :perPageOptions="[5, 10, 25]" 
+                            entity="peserta magang" 
+                            badgeText="Antrean Penempatan" 
+                        />
+                    </div>
+                </div>
+            @endif
+        </x-gentelella.x-panel>
     </div>
 
 </div>

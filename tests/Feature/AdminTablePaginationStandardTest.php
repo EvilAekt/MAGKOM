@@ -180,6 +180,50 @@ class AdminTablePaginationStandardTest extends TestCase
         $this->assertEquals(10, $paginator10->perPage());
     }
 
+    public function test_admin_penempatan_belum_tab_defaults_to_5_per_page_and_accepts_custom_per_page(): void
+    {
+        $pesertaAntrean = new User;
+        $pesertaAntrean->nama = 'Calon Antrean Paginasi';
+        $pesertaAntrean->email = 'calon.paginasi@example.com';
+        $pesertaAntrean->password = 'Password123!';
+        $pesertaAntrean->role = RoleEnum::Peserta;
+        $pesertaAntrean->status_aktif = true;
+        $pesertaAntrean->email_verified_at = now();
+        $pesertaAntrean->save();
+
+        Pendaftaran::create([
+            'user_id' => $pesertaAntrean->id,
+            'bulan_magang_id' => $this->bulan->id,
+            'kuota_id' => $this->kuota->id,
+            'nomor_pendaftaran' => 'REG-202611-0088',
+            'asal_instansi' => 'Universitas Gadjah Mada',
+            'durasi_bulan' => 3,
+            'status' => StatusPendaftaranEnum::Diterima,
+            'diputuskan_at' => now(),
+        ]);
+
+        $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index', ['tab' => 'belum']));
+
+        $response->assertOk();
+        $response->assertViewHas('antreanBelumDitempatkan');
+        $paginator = $response->viewData('antreanBelumDitempatkan');
+        $this->assertEquals(5, $paginator->perPage());
+
+        $response->assertSee('adm-pagination-wrapper');
+        $response->assertSee('Antrean Penempatan');
+        $response->assertSee('Lembar Halaman');
+        $response->assertSee('title="Tampilkan 5 peserta magang per halaman"', false);
+
+        // Uji query parameter custom ?tab=belum&per_page=10
+        $response10 = $this->actingAs($this->admin)->get(route('admin.penempatan.index', [
+            'tab' => 'belum',
+            'per_page' => 10,
+        ]));
+        $response10->assertOk();
+        $paginator10 = $response10->viewData('antreanBelumDitempatkan');
+        $this->assertEquals(10, $paginator10->perPage());
+    }
+
     public function test_admin_laporan_index_pendaftaran_tab_defaults_to_5_per_page_and_accepts_custom_per_page(): void
     {
         $response = $this->actingAs($this->admin)->get(route('admin.laporan.index', ['tab' => 'pendaftaran']));
