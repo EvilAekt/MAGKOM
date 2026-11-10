@@ -41,13 +41,14 @@ Keberhasilan sistem diukur dari:
 - **Presensi Logbook Mingguan**: Pengisian logbook dibatasi maksimal mundur 3 hari kerja (`logbook_maks_mundur_hari = 3`) untuk mencegah pelaporan rapel di akhir masa magang.
 - **Tenggat Tugas Terstruktur**: Wajib berjarak antara hari penugasan hingga sebelum tanggal berakhirnya penempatan mentee. Ambang batas peringatan mendekati deadline dihitung dinamis (default ≤ 3 hari).
 - **Dokumen Sumber**:
-  - [`01-PRD-MagKom.md`](./docs/01-PRD-MagKom.md) (Product Requirements Document)
-  - [`02-TDD-MagKom.md`](./docs/02-TDD-MagKom.md) (Technical Design Document)
-  - [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./docs/04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) (Kamus Data & Skema Basis Data)
-  - [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](./docs/05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md) (Spesifikasi Keamanan & Matriks Perizinan)
-  - [`07-DESIGN-SYSTEM-MAGKOM.md`](./docs/07-DESIGN-SYSTEM-MAGKOM.md) (Design System MagKom)
-  - [`DEVELOPMENT-GUIDE.md`](./docs/DEVELOPMENT-GUIDE.md) (Panduan Pengembangan & Setup)
-  - [`FRONTEND-ARCHITECTURE.md`](./docs/FRONTEND-ARCHITECTURE.md) (Arsitektur Aset Frontend Vite)
+  - [`01-PRD-MagKom.md`](./01-PRD-MagKom.md) (Product Requirements Document)
+  - [`02-TDD-MagKom.md`](./02-TDD-MagKom.md) (Technical Design Document)
+  - [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) (Kamus Data & Skema Basis Data)
+  - [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](./05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md) (Spesifikasi Keamanan & Matriks Perizinan)
+  - [`07-DESIGN-SYSTEM-MAGKOM.md`](./07-DESIGN-SYSTEM-MAGKOM.md) (Design System MagKom)
+  - [`08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md`](./08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md) (Dokumentasi Fitur & Modul Sistem)
+  - [`DEVELOPMENT-GUIDE.md`](./DEVELOPMENT-GUIDE.md) (Panduan Pengembangan & Setup)
+  - [`FRONTEND-ARCHITECTURE.md`](./FRONTEND-ARCHITECTURE.md) (Arsitektur Aset Frontend Vite)
 
 ## Capabilities and Constraints
 
