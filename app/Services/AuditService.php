@@ -195,6 +195,8 @@ class AuditService
     public function sanitasi(mixed $nilai): mixed
     {
         return match (true) {
+            $nilai instanceof \BackedEnum => $nilai->value,
+            $nilai instanceof \UnitEnum => $nilai->name,
             $nilai instanceof Model => [
                 'model' => class_basename($nilai),
                 'id' => $nilai->getKey(),

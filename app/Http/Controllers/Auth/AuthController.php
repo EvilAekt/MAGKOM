@@ -140,6 +140,7 @@ class AuthController extends Controller
     {
         $sekarang = CarbonImmutable::now('Asia/Jakarta');
         $selectedBulan = $request->filled('bulan') ? BulanMagang::find($request->query('bulan')) : null;
+        $selectedBidang = $request->filled('bidang') ? Bidang::find($request->query('bidang')) : null;
         $selectedJurusan = $request->filled('jurusan') ? Jurusan::with('bidang')->find($request->query('jurusan')) : null;
         $selectedTipe = $request->query('tipe', 'mandiri');
         $selectedJumlah = (int) $request->query('jumlah', 1);
@@ -185,6 +186,7 @@ class AuthController extends Controller
 
         return view('auth.register', compact(
             'selectedBulan',
+            'selectedBidang',
             'selectedJurusan',
             'selectedTipe',
             'selectedJumlah',
@@ -323,11 +325,13 @@ class AuthController extends Controller
 
         $preferensiJurusanId = $request->input('redirect_jurusan') ?: ($validated['jurusan_id'] ?? null);
         $preferensiBulanId = $request->input('redirect_bulan');
+        $preferensiBidangId = $request->input('redirect_bidang');
 
-        if ($preferensiBulanId || $preferensiJurusanId) {
+        if ($preferensiBulanId || $preferensiJurusanId || $preferensiBidangId) {
             session([
                 'pendaftaran_preferensi' => [
                     'bulan_id' => $preferensiBulanId,
+                    'bidang_id' => $preferensiBidangId,
                     'jurusan_id' => $preferensiJurusanId,
                     'tipe' => $isKelompok ? 'kelompok' : $request->input('redirect_tipe', 'mandiri'),
                     'jumlah' => $isKelompok ? (count($validated['anggota'] ?? []) + 1) : (int) $request->input('redirect_jumlah', 1),

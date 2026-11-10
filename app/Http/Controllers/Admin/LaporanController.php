@@ -187,7 +187,7 @@ class LaporanController extends Controller
     {
         return $this->exportService->exportPendaftaran(
             $request->user(),
-            $request->only(['bulan_magang_id', 'status', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal']),
+            $request->only(['bulan_magang_id', 'status', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal', 'q', 'tipe']),
             $request->input('format', 'csv')
         );
     }
@@ -199,7 +199,7 @@ class LaporanController extends Controller
     {
         return $this->exportService->exportPenempatan(
             $request->user(),
-            $request->only(['status', 'jalur', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal']),
+            $request->only(['status', 'jalur', 'jurusan_id', 'dari_tanggal', 'sampai_tanggal', 'q', 'pembimbing_id', 'bidang_id', 'bulan_magang_id']),
             $request->input('format', 'csv')
         );
     }

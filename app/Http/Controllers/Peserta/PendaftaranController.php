@@ -4,140 +4,80 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Peserta;
 
+use App\Actions\Peserta\Pendaftaran\AjukanPendaftaranAction;
+use App\Actions\Peserta\Pendaftaran\BatalkanPendaftaranAction;
+use App\Actions\Peserta\Pendaftaran\CreatePendaftaranAction;
 use App\Enums\JenjangEnum;
-use App\Enums\RealtimeEventTypeEnum;
-use App\Enums\StatusKetersediaanEnum;
-use App\Enums\StatusPendaftaranEnum;
-use App\Enums\TipeAuditEnum;
+use App\Exceptions\Domain\PendaftaranAktifGandaException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PendaftaranRequest;
-use App\Models\BulanMagang;
 use App\Models\JenisDokumen;
-use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Services\AuditService;
-use App\Services\BulanStatusService;
-use App\Services\RealtimeEventService;
+use App\Queries\Peserta\Pendaftaran\PendaftaranIndexQuery;
 use App\Services\SuratDiterimaPdfService;
 use App\Support\Pengaturan;
+use DomainException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class PendaftaranController extends Controller
 {
     public function __construct(
-        protected AuditService $auditService,
-        protected BulanStatusService $bulanStatusService
+        protected PendaftaranIndexQuery $indexQuery,
+        protected CreatePendaftaranAction $createAction,
+        protected AjukanPendaftaranAction $ajukanAction,
+        protected BatalkanPendaftaranAction $batalkanAction
     ) {}
 
+    /**
+     * Menampilkan daftar riwayat dan formulir pemilihan periode/kuota magang peserta.
+     */
     public function index(Request $request): View|RedirectResponse
     {
         $user = $request->user();
-        $profil = $user->profil;
-        $profil?->loadMissing(['jurusan.bidang']);
+        $indexData = $this->indexQuery->getIndexData($user);
 
-        // Proteksi Alur: Wajib Biodata 100% Lengkap sebelum Memilih Periode & Kuota Magang
-        $hasPendaftaran = Pendaftaran::where('user_id', $user->id)->exists();
-        if (! $hasPendaftaran && (! $profil || ! $profil->isLengkap())) {
-            $persentase = $profil ? $profil->hitungKelengkapan()['persentase'] : 0;
-
+        if ($indexData['profilIncomplete']) {
             return redirect()->route('peserta.profil.show')
-                ->with('warning', "Biodata dan profil peserta wajib 100% lengkap (saat ini {$persentase}%) sebelum Anda dapat memilih periode dan kuota magang.");
-        }
-
-        $pendaftaranList = Pendaftaran::with(['bulanMagang', 'kuota.jurusan', 'penempatan'])
-            ->where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $pendaftaranAktif = $pendaftaranList->first(function ($p) {
-            return in_array($p->status->value, [
-                StatusPendaftaranEnum::BerkasBelumLengkap->value,
-                StatusPendaftaranEnum::Diajukan->value,
-                StatusPendaftaranEnum::PerluPerbaikan->value,
-                StatusPendaftaranEnum::WaitingList->value,
-                StatusPendaftaranEnum::Diterima->value,
-            ], true);
-        });
-
-        $kategoriJurusan = match ($profil?->jenjang) {
-            JenjangEnum::Smk => 'smk',
-            JenjangEnum::D3, JenjangEnum::S1 => 'mahasiswa',
-            default => null,
-        };
-
-        $bulanAktifList = BulanMagang::with(['kuota' => function ($q) use ($kategoriJurusan) {
-            $q->where('aktif', true)->with('jurusan');
-            if ($kategoriJurusan) {
-                $q->whereHas('jurusan', function ($jq) use ($kategoriJurusan) {
-                    $jq->where('kategori', $kategoriJurusan);
-                });
-            }
-        }])
-            ->where('aktif', true)
-            ->orderBy('bulan_mulai', 'asc')
-            ->get()
-            ->filter(function ($bulan) {
-                return $this->bulanStatusService->status($bulan) === StatusKetersediaanEnum::Tersedia;
-            });
-
-        $kuotaList = collect();
-        if ($profil && $profil->jurusan_id) {
-            $kuotaList = Kuota::with(['bulanMagang', 'jurusan.bidang'])
-                ->where('jurusan_id', $profil->jurusan_id)
-                ->where('aktif', true)
-                ->whereHas('bulanMagang', function ($q) {
-                    $q->where('aktif', true);
-                })
-                ->get()
-                ->filter(function ($kuota) {
-                    return $kuota->bulanMagang && $this->bulanStatusService->status($kuota->bulanMagang, $kuota) === StatusKetersediaanEnum::Tersedia;
-                })
-                ->values();
+                ->with('warning', "Biodata dan profil peserta wajib 100% lengkap (saat ini {$indexData['persentaseProfil']}%) sebelum Anda dapat memilih periode dan kuota magang.");
         }
 
         return view('peserta.pendaftaran.index', [
-            'pendaftaranList' => $pendaftaranList,
-            'pendaftaranAktif' => $pendaftaranAktif,
-            'bulanAktifList' => $bulanAktifList,
-            'profil' => $profil,
-            'kuotaList' => $kuotaList,
+            'pendaftaranList' => $indexData['pendaftaranList'],
+            'pendaftaranAktif' => $indexData['pendaftaranAktif'],
+            'bulanAktifList' => $indexData['bulanAktifList'],
+            'profil' => $indexData['profil'],
+            'kuotaList' => $indexData['kuotaList'],
         ]);
     }
 
+    /**
+     * Membuat draf pendaftaran magang baru dengan perlindungan pessimistic lock (BR-17).
+     */
     public function store(PendaftaranRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $validated = $request->validated();
-        $validated['user_id'] = $user->id;
-        $validated['status'] = StatusPendaftaranEnum::BerkasBelumLengkap;
 
-        if ($user->kelompokMagang) {
-            $validated['tipe'] = 'kelompok';
-            $validated['kelompok_magang_id'] = $user->kelompokMagang->id;
-        } else {
-            $validated['tipe'] = 'mandiri';
-            $validated['kelompok_magang_id'] = null;
+        try {
+            $pendaftaran = $this->createAction->execute($user, $request->validated());
+
+            return redirect()->route('peserta.pendaftaran.detail', $pendaftaran)
+                ->with('success', 'Pengajuan berhasil dibuat. Silakan lengkapi berkas persyaratan.');
+        } catch (PendaftaranAktifGandaException $e) {
+            return redirect()->route('peserta.pendaftaran.index')
+                ->withErrors(['pendaftaran' => $e->getMessage()]);
         }
-
-        $pendaftaran = Pendaftaran::create($validated);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'pendaftaran',
-            idData: $pendaftaran->id,
-            nilaiBaru: $pendaftaran->toArray(),
-            detail: ['aksi' => 'Membuat draf pengajuan pendaftaran magang']
-        );
-
-        return redirect()->route('peserta.pendaftaran.detail', $pendaftaran)
-            ->with('success', 'Pengajuan berhasil dibuat. Silakan lengkapi berkas persyaratan.');
     }
 
+    /**
+     * Menampilkan detail pendaftaran dan checklist unggah dokumen persyaratan.
+     */
     public function detail(Request $request, Pendaftaran $pendaftaran): View
     {
         $this->authorize('view', $pendaftaran);
@@ -182,84 +122,14 @@ class PendaftaranController extends Controller
     {
         $this->authorize('update', $pendaftaran);
 
-        $user = $request->user();
-        $profil = $user->profil;
-        $profil?->loadMissing(['jurusan.bidang']);
-        $jenjang = $profil?->jenjang ?? JenjangEnum::Smk;
+        try {
+            $this->ajukanAction->execute($request->user(), $pendaftaran);
 
-        // Validasi kelengkapan seluruh dokumen wajib
-        $dokumenWajibList = JenisDokumen::where('aktif', true)
-            ->where('jenjang', $jenjang->value)
-            ->where('wajib', true)
-            ->get();
-
-        $dokumenWajibIds = $dokumenWajibList->pluck('id');
-        $isKelompok = ($pendaftaran->tipe === 'kelompok' || $pendaftaran->kelompok_magang_id !== null);
-
-        if (! $isKelompok) {
-            $terunggahIds = $pendaftaran->dokumen()->whereNull('kelompok_anggota_id')->pluck('jenis_dokumen_id');
-            $belumLengkap = $dokumenWajibIds->diff($terunggahIds);
-
-            if ($belumLengkap->isNotEmpty()) {
-                return back()->with('error', 'Semua berkas persyaratan wajib harus diunggah sebelum pengajuan dapat dikirim.');
-            }
-        } else {
-            // 1. Dokumen kolektif dan dokumen ketua
-            $terunggahKetuaIds = $pendaftaran->dokumen()->whereNull('kelompok_anggota_id')->pluck('jenis_dokumen_id');
-            if ($dokumenWajibIds->diff($terunggahKetuaIds)->isNotEmpty()) {
-                return back()->with('error', 'Berkas persyaratan umum dan berkas Ketua Tim harus dilengkapi terlebih dahulu.');
-            }
-
-            // 2. Dokumen individu untuk seluruh anggota tim (CV & Transkrip / Kartu Pelajar)
-            $pendaftaran->loadMissing('kelompokMagang.anggota');
-            $jenisIndividuWajibIds = $dokumenWajibList
-                ->whereIn('kode', ['cv', 'transkrip', 'kartu_pelajar'])
-                ->pluck('id');
-
-            foreach ($pendaftaran->kelompokMagang?->anggota ?? [] as $anggota) {
-                $terunggahAnggotaIds = $pendaftaran->dokumen()
-                    ->where('kelompok_anggota_id', $anggota->id)
-                    ->pluck('jenis_dokumen_id');
-
-                if ($jenisIndividuWajibIds->diff($terunggahAnggotaIds)->isNotEmpty()) {
-                    return back()->with('error', "Berkas persyaratan untuk anggota kelompok '{$anggota->nama}' belum lengkap (CV & Transkrip Nilai wajib diunggah).");
-                }
-            }
+            return redirect()->route('peserta.pendaftaran.detail', $pendaftaran)
+                ->with('success', 'Pendaftaran Anda berhasil diajukan dan sedang menunggu verifikasi berkas oleh admin.');
+        } catch (DomainException $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        $nilaiLama = ['status' => $pendaftaran->status->value];
-
-        $pendaftaran->update([
-            'status' => StatusPendaftaranEnum::Diajukan,
-            'diajukan_at' => now(),
-        ]);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'pendaftaran',
-            idData: $pendaftaran->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: ['status' => StatusPendaftaranEnum::Diajukan->value],
-            detail: ['aksi' => 'Peserta mengajukan berkas lengkap pendaftaran']
-        );
-
-        // Notifikasi Real-time SSE ke Admin (TASK-SSE-05)
-        app(RealtimeEventService::class)->publish(
-            RealtimeEventTypeEnum::PendaftaranBaru,
-            [
-                'title' => 'Pendaftaran Baru Masuk',
-                'message' => "Berkas dari {$user->nama} siap diverifikasi.",
-                'nomor_pendaftaran' => $pendaftaran->nomor_pendaftaran,
-                'action_url' => route('admin.pendaftaran.show', $pendaftaran->id),
-                'badge_target' => '#badge-antrean-menunggu',
-            ],
-            null,
-            'admin'
-        );
-
-        return redirect()->route('peserta.pendaftaran.detail', $pendaftaran)
-            ->with('success', 'Pendaftaran Anda berhasil diajukan dan sedang menunggu verifikasi berkas oleh admin.');
-
     }
 
     /**
@@ -269,29 +139,20 @@ class PendaftaranController extends Controller
     {
         $this->authorize('cancel', $pendaftaran);
 
-        $nilaiLama = ['status' => $pendaftaran->status->value];
+        try {
+            $this->batalkanAction->execute($request->user(), $pendaftaran);
 
-        $pendaftaran->update([
-            'status' => StatusPendaftaranEnum::Dibatalkan,
-        ]);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'pendaftaran',
-            idData: $pendaftaran->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: ['status' => StatusPendaftaranEnum::Dibatalkan->value],
-            detail: ['aksi' => 'Peserta membatalkan pengajuan pendaftaran magang']
-        );
-
-        return redirect()->route('peserta.pendaftaran.index')
-            ->with('success', 'Pengajuan pendaftaran magang berhasil dibatalkan.');
+            return redirect()->route('peserta.pendaftaran.index')
+                ->with('success', 'Pengajuan pendaftaran magang berhasil dibatalkan.');
+        } catch (DomainException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     /**
      * Mengunduh Surat Keterangan Diterima PDF resmi (AC-16-1, F-16).
      */
-    public function unduhSuratDiterima(Penempatan $penempatan, SuratDiterimaPdfService $pdfService)
+    public function unduhSuratDiterima(Penempatan $penempatan, SuratDiterimaPdfService $pdfService): Response|BinaryFileResponse
     {
         $this->authorize('view', $penempatan);
 
@@ -308,7 +169,7 @@ class PendaftaranController extends Controller
     /**
      * Menyajikan pratinjau inline stream Surat Keterangan Diterima PDF resmi (AC-16-1, F-16).
      */
-    public function pratinjauSuratDiterima(Penempatan $penempatan, SuratDiterimaPdfService $pdfService)
+    public function pratinjauSuratDiterima(Penempatan $penempatan, SuratDiterimaPdfService $pdfService): Response|BinaryFileResponse
     {
         $this->authorize('view', $penempatan);
 
@@ -326,7 +187,7 @@ class PendaftaranController extends Controller
     /**
      * Mengunduh Surat Keterangan Diterima dari pendaftaran langsung.
      */
-    public function unduhSuratDiterimaPendaftaran(Pendaftaran $pendaftaran, SuratDiterimaPdfService $pdfService)
+    public function unduhSuratDiterimaPendaftaran(Pendaftaran $pendaftaran, SuratDiterimaPdfService $pdfService): Response|BinaryFileResponse
     {
         $this->authorize('view', $pendaftaran);
 
@@ -346,7 +207,7 @@ class PendaftaranController extends Controller
     /**
      * Menyajikan pratinjau inline stream Surat Keterangan Diterima dari pendaftaran langsung.
      */
-    public function pratinjauSuratDiterimaPendaftaran(Pendaftaran $pendaftaran, SuratDiterimaPdfService $pdfService)
+    public function pratinjauSuratDiterimaPendaftaran(Pendaftaran $pendaftaran, SuratDiterimaPdfService $pdfService): Response|BinaryFileResponse
     {
         $this->authorize('view', $pendaftaran);
 

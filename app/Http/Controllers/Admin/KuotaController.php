@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\RoleEnum;
-use App\Enums\StatusPendaftaranEnum;
-use App\Enums\StatusPenempatanEnum;
-use App\Enums\TipeAuditEnum;
+use App\Actions\Admin\Kuota\StoreBulanMagangAction;
+use App\Actions\Admin\Kuota\StoreKuotaAction;
+use App\Actions\Admin\Kuota\ToggleKuotaAction;
+use App\Actions\Admin\Kuota\UpdateBidangKuotaAction;
+use App\Actions\Admin\Kuota\UpdateBulanMagangAction;
+use App\Actions\Admin\Kuota\UpdateKuotaAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\KuotaRequest;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
-use App\Models\Jurusan;
 use App\Models\Kuota;
-use App\Models\Pendaftaran;
-use App\Models\Penempatan;
-use App\Services\AuditService;
-use Carbon\Carbon;
+use App\Queries\Admin\Kuota\KuotaIndexQuery;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -25,299 +23,69 @@ use Illuminate\View\View;
 class KuotaController extends Controller
 {
     public function __construct(
-        protected AuditService $auditService
+        protected KuotaIndexQuery $indexQuery,
+        protected StoreKuotaAction $storeKuotaAction,
+        protected UpdateKuotaAction $updateKuotaAction,
+        protected ToggleKuotaAction $toggleKuotaAction,
+        protected UpdateBidangKuotaAction $updateBidangKuotaAction,
+        protected StoreBulanMagangAction $storeBulanAction,
+        protected UpdateBulanMagangAction $updateBulanAction
     ) {}
 
+    /**
+     * Menampilkan halaman kontrol kuota dan agregasi bidang magang.
+     */
     public function index(Request $request): View
     {
-        $bulanList = BulanMagang::where('aktif', true)
-            ->orderBy('bulan_mulai', 'asc')
-            ->get();
+        $selectedBulanId = $request->integer('bulan_magang_id', 0);
+        $viewData = $this->indexQuery->getIndexData($selectedBulanId);
 
-        $selectedBulanId = $request->integer('bulan_magang_id', $bulanList->first()?->id ?? 0);
-        $selectedBulan = BulanMagang::with(['kuota.jurusan'])->find($selectedBulanId);
-
-        $jurusanList = Jurusan::where('aktif', true)
-            ->orderBy('kategori', 'asc')
-            ->orderBy('nama_jurusan', 'asc')
-            ->get();
-
-        // Ambil master bidang dan susun data kuota teragregasi per bidang
-        $rawBidang = Bidang::where('aktif', true)
-            ->with([
-                'jurusan' => fn ($q) => $q->where('aktif', true)->orderBy('nama_jurusan'),
-                'users' => fn ($q) => $q->where('role', RoleEnum::Pembimbing)->where('status_aktif', true),
-            ])
-            ->get();
-
-        // Konfigurasi visual avatar & tema per bidang sesuai desain UI
-        $themeMap = [
-            'Aplikasi Informatika & E-Government (EGOV)' => [
-                'alias' => 'Aplikasi Informatika (EGOV)',
-                'inisial' => 'A',
-                'bg_color' => '#EEF2FF',
-                'text_color' => '#4F46E5',
-                'durasi' => '1–6 bulan',
-            ],
-            'Informasi dan Komunikasi Publik (IKP)' => [
-                'alias' => 'Informasi & Komunikasi Publik (IKP)',
-                'inisial' => 'IKP',
-                'bg_color' => '#FDF2F8',
-                'text_color' => '#DB2777',
-                'durasi' => '1–6 bulan',
-            ],
-            'Infrastruktur Teknologi Informasi (ITI)' => [
-                'alias' => 'Infrastruktur TI & Persandian (ITI)',
-                'inisial' => 'ITI',
-                'bg_color' => '#ECFDF5',
-                'text_color' => '#059669',
-                'durasi' => '3–6 bulan',
-            ],
-            'Sekretariat Dinas' => [
-                'alias' => 'Sekretariat',
-                'inisial' => 'S',
-                'bg_color' => '#FFFBEB',
-                'text_color' => '#D97706',
-                'durasi' => '1–6 bulan',
-            ],
-        ];
-
-        $bidangList = $rawBidang->map(function ($bidang) use ($selectedBulan, $themeMap) {
-            $nama = $bidang->nama_bidang;
-            $theme = $themeMap[$nama] ?? null;
-
-            if (! $theme) {
-                if (stripos($nama, 'Aplikasi') !== false || stripos($nama, 'Aptika') !== false) {
-                    $theme = $themeMap['Aplikasi Informatika & E-Government (EGOV)'];
-                } elseif (stripos($nama, 'Statistik') !== false || stripos($nama, 'IKP') !== false || stripos($nama, 'Informasi') !== false) {
-                    $theme = $themeMap['Informasi dan Komunikasi Publik (IKP)'];
-                } elseif (stripos($nama, 'Persandian') !== false || stripos($nama, 'ITI') !== false || stripos($nama, 'Infrastruktur') !== false) {
-                    $theme = $themeMap['Infrastruktur Teknologi Informasi (ITI)'];
-                } elseif (stripos($nama, 'Sekretariat') !== false) {
-                    $theme = $themeMap['Sekretariat Dinas'];
-                } else {
-                    $theme = [
-                        'alias' => $nama,
-                        'inisial' => strtoupper(substr($nama, 0, 1)),
-                        'bg_color' => '#EFF6FF',
-                        'text_color' => '#2563EB',
-                        'durasi' => '1–6 bulan',
-                    ];
-                }
-            }
-
-            $jurusanInBidang = $bidang->jurusan;
-            $jurusanIds = $jurusanInBidang->pluck('id')->toArray();
-
-            // Hitung kuota yang terikat pada jurusan-jurusan di bawah bidang ini
-            $kuotaRows = $selectedBulan
-                ? $selectedBulan->kuota->whereIn('jurusan_id', $jurusanIds)
-                : collect();
-
-            $kapasitas = (int) $kuotaRows->sum('jumlah');
-            $terisi = (int) $kuotaRows->sum('terisi');
-            $persen = $kapasitas > 0 ? min(100, round(($terisi / $kapasitas) * 100)) : 0;
-
-            // Kategori jenjang yang bernaung di bidang ini
-            $hasSmk = $jurusanInBidang->contains('kategori', 'smk');
-            $hasMahasiswa = $jurusanInBidang->contains('kategori', 'mahasiswa');
-            $jenjangBadges = [];
-            if ($hasSmk) {
-                $jenjangBadges[] = 'SMK';
-            }
-            if ($hasMahasiswa) {
-                $jenjangBadges[] = 'D3';
-                $jenjangBadges[] = 'S1';
-            }
-            if (empty($jenjangBadges)) {
-                $jenjangBadges = ['SMK', 'D3', 'S1'];
-            }
-
-            // Kapasitas pembimbing
-            $pembimbingCount = $bidang->users->count();
-            $kapasitasBimbingan = max(10, $pembimbingCount * 3);
-
-            return [
-                'model' => $bidang,
-                'id' => $bidang->id,
-                'nama' => $theme['alias'],
-                'nama_lengkap' => $nama,
-                'inisial' => $theme['inisial'],
-                'bg_color' => $theme['bg_color'],
-                'text_color' => $theme['text_color'],
-                'durasi' => $theme['durasi'],
-                'jurusan_list' => $jurusanInBidang,
-                'jurusan_names' => $jurusanInBidang->pluck('nama_jurusan')->implode(', ') ?: 'Seluruh Kejuruan Terdaftar',
-                'jenjang_badges' => $jenjangBadges,
-                'kapasitas' => $kapasitas,
-                'terisi' => $terisi,
-                'persen' => $persen,
-                'kuota_rows' => $kuotaRows,
-                'pembimbing_count' => $pembimbingCount,
-                'kapasitas_bimbingan' => $kapasitasBimbingan,
-            ];
-        });
-
-        // Hitung total kapasitas & terisi
-        $totalKapasitas = $selectedBulan ? (int) $selectedBulan->kuota->sum('jumlah') : 0;
-        $totalTerisi = $selectedBulan ? (int) $selectedBulan->kuota->sum('terisi') : 0;
-        $globalPersen = $totalKapasitas > 0 ? min(100, round(($totalTerisi / $totalKapasitas) * 100)) : 0;
-
-        // Hitung status buka & sisa hari pendaftaran
-        $isPendaftaranBuka = false;
-        $sisaHariTutup = 0;
-        if ($selectedBulan && $selectedBulan->tgl_buka && $selectedBulan->tgl_tutup) {
-            $now = now();
-            $tglBuka = Carbon::parse($selectedBulan->tgl_buka)->startOfDay();
-            $tglTutup = Carbon::parse($selectedBulan->tgl_tutup)->endOfDay();
-            $isPendaftaranBuka = $now->between($tglBuka, $tglTutup);
-            if ($tglTutup->isFuture()) {
-                $sisaHariTutup = (int) $now->diffInDays($tglTutup, false);
-            }
-        }
-
-        // Siapkan mapping JSON bidang untuk interaksi real-time di modal
-        $bidangJsonData = $bidangList->map(function ($b) {
-            $pembimbingCount = max(2, $b['pembimbing_count']);
-            $kapasitasBimbingan = $pembimbingCount * 6;
-            $kuotaTerpasang = (int) $b['kapasitas'];
-            $sisaKapasitas = max(0, $kapasitasBimbingan - $kuotaTerpasang);
-
-            return [
-                'id' => $b['id'],
-                'nama' => $b['nama'],
-                'nama_lengkap' => $b['nama_lengkap'],
-                'pembimbing_count' => $pembimbingCount,
-                'kapasitas_bimbingan' => $kapasitasBimbingan,
-                'kuota_terpasang' => $kuotaTerpasang,
-                'sisa_kapasitas' => $sisaKapasitas,
-                'jurusans' => $b['jurusan_list']->map(fn ($j) => [
-                    'id' => $j->id,
-                    'nama' => $j->nama_jurusan,
-                    'kategori' => $j->kategori,
-                ])->values(),
-                'jenjang' => $b['jenjang_badges'],
-            ];
-        })->values();
-
-        return view('admin.kuota.index', [
-            'bulanList' => $bulanList,
-            'selectedBulan' => $selectedBulan,
-            'jurusanList' => $jurusanList,
-            'bidangList' => $bidangList,
-            'bidangJsonData' => $bidangJsonData,
-            'totalKapasitas' => $totalKapasitas,
-            'totalTerisi' => $totalTerisi,
-            'globalPersen' => $globalPersen,
-            'isPendaftaranBuka' => $isPendaftaranBuka,
-            'sisaHariTutup' => $sisaHariTutup,
-        ]);
+        return view('admin.kuota.index', $viewData);
     }
 
+    /**
+     * Menyimpan kuota jurusan baru atau memperbarui kuota eksisting.
+     */
     public function store(KuotaRequest $request): RedirectResponse
     {
         $validated = $request->validated();
         $bulanMagangId = (int) $validated['bulan_magang_id'];
         $jumlah = (int) $validated['jumlah'];
 
-        // Jika form mengirimkan array jurusan_ids[] dari modal baru
         $jurusanIds = ! empty($validated['jurusan_ids'])
             ? array_map('intval', (array) $validated['jurusan_ids'])
             : [(int) $validated['jurusan_id']];
 
-        $createdKuotas = [];
-        foreach ($jurusanIds as $jId) {
-            $kuota = Kuota::updateOrCreate(
-                [
-                    'bulan_magang_id' => $bulanMagangId,
-                    'jurusan_id' => $jId,
-                ],
-                [
-                    'jumlah' => $jumlah,
-                    'aktif' => true,
-                ]
-            );
-            $createdKuotas[] = $kuota->id;
-        }
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'kuota',
-            idData: $createdKuotas[0] ?? $bulanMagangId,
-            nilaiBaru: ['kuota_ids' => $createdKuotas, 'jumlah' => $jumlah],
-            detail: ['aksi' => 'Menambahkan kuota jurusan pada bulan magang']
-        );
+        $this->storeKuotaAction->execute($bulanMagangId, $jumlah, $jurusanIds);
 
         return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $bulanMagangId])
             ->with('success', 'Kuota jurusan berhasil ditambahkan.');
     }
 
+    /**
+     * Memperbarui kuota jurusan spesifik secara transaksional.
+     */
     public function update(KuotaRequest $request, Kuota $kuota): RedirectResponse
     {
-        $nilaiLama = $kuota->toArray();
-        $validated = $request->validated();
-
-        $kuota->update($validated);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'kuota',
-            idData: $kuota->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: $kuota->toArray(),
-            detail: ['aksi' => 'Memperbarui alokasi kuota jurusan']
-        );
+        $this->updateKuotaAction->execute($kuota, $request->validated());
 
         return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $kuota->bulan_magang_id])
             ->with('success', 'Alokasi kuota jurusan berhasil diperbarui.');
     }
 
+    /**
+     * Mengaktifkan atau menonaktifkan kuota jurusan dengan validasi peserta aktif (BR-12).
+     */
     public function toggleAktif(Request $request, Kuota $kuota): RedirectResponse
     {
-        $targetAktif = ! $kuota->aktif;
+        $result = $this->toggleKuotaAction->execute($kuota);
 
-        // Penegakan Aturan Bisnis BR-12 & AC-05-6 jika hendak menonaktifkan kuota
-        if (! $targetAktif) {
-            $hasActivePendaftaran = Pendaftaran::where('kuota_id', $kuota->id)
-                ->whereIn('status', [
-                    StatusPendaftaranEnum::Diajukan,
-                    StatusPendaftaranEnum::WaitingList,
-                    StatusPendaftaranEnum::PerluPerbaikan,
-                    StatusPendaftaranEnum::BerkasBelumLengkap,
-                    StatusPendaftaranEnum::Diterima,
-                ])
-                ->exists();
-
-            if ($hasActivePendaftaran) {
-                return back()->with('error', 'Penonaktifan ditolak (BR-12, AC-05-6): Kuota jurusan masih memiliki pendaftaran aktif.');
-            }
-
-            $hasActivePenempatan = Penempatan::where('kuota_id', $kuota->id)
-                ->where('status', StatusPenempatanEnum::Aktif)
-                ->exists();
-
-            if ($hasActivePenempatan) {
-                return back()->with('error', 'Penonaktifan ditolak (BR-12, AC-05-6): Kuota jurusan masih memiliki penempatan peserta aktif.');
-            }
+        if (! $result['success']) {
+            return back()->with('error', $result['message']);
         }
 
-        $nilaiLama = ['aktif' => $kuota->aktif];
-        $kuota->aktif = $targetAktif;
-        $kuota->save();
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'kuota',
-            idData: $kuota->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: ['aktif' => $kuota->aktif],
-            detail: ['aksi' => 'Mengubah status aktif kuota jurusan']
-        );
-
-        $statusText = $kuota->aktif ? 'diaktifkan' : 'dinonaktifkan';
-
         return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $kuota->bulan_magang_id])
-            ->with('success', "Kuota jurusan berhasil {$statusText}.");
+            ->with('success', $result['message']);
     }
 
     /**
@@ -341,23 +109,7 @@ class KuotaController extends Controller
         ]);
 
         $statusAwal = $request->input('status_awal', 'draft');
-        $isAktif = ($statusAwal === 'dibuka');
-
-        $bulan = BulanMagang::create([
-            'nama_bulan' => $validated['nama_bulan'] ?? null,
-            'bulan_mulai' => $validated['bulan_mulai'],
-            'tgl_buka' => $validated['tgl_buka'],
-            'tgl_tutup' => $validated['tgl_tutup'],
-            'aktif' => $isAktif,
-        ]);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'bulan_magang',
-            idData: $bulan->id,
-            nilaiBaru: $bulan->toArray(),
-            detail: ['aksi' => 'Membuat bulan magang baru dari kontrol kuota']
-        );
+        $bulan = $this->storeBulanAction->execute($validated, $statusAwal);
 
         return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $bulan->id])
             ->with('success', 'Bulan magang baru berhasil dibuat.');
@@ -383,96 +135,32 @@ class KuotaController extends Controller
         ]);
 
         $statusAwal = $request->input('status_awal');
-        if ($statusAwal) {
-            $validated['aktif'] = ($statusAwal === 'dibuka');
-        }
-        unset($validated['status_awal']);
-
-        $nilaiLama = $bulanMagang->toArray();
-        $bulanMagang->update($validated);
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'bulan_magang',
-            idData: $bulanMagang->id,
-            nilaiLama: $nilaiLama,
-            nilaiBaru: $bulanMagang->toArray(),
-            detail: ['aksi' => 'Memperbarui jadwal bulan magang dari kontrol kuota']
-        );
+        $this->updateBulanAction->execute($bulanMagang, $validated, $statusAwal);
 
         return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $bulanMagang->id])
             ->with('success', 'Jadwal bulan magang berhasil diperbarui.');
     }
 
     /**
-     * Memperbarui alokasi kuota per bidang (mengalokasikan ke jurusan-jurusan di bawahnya) serta membuka/menutup kuota bidang.
+     * Memperbarui alokasi kuota per bidang serta membuka/menutup kuota bidang.
      */
     public function updateBidangKuota(Request $request, Bidang $bidang): RedirectResponse
     {
         $bulanMagangId = $request->integer('bulan_magang_id');
-        $alokasi = $request->input('alokasi', []); // array of [jurusan_id => jumlah]
+        $alokasi = $request->input('alokasi', []);
         $statusBidang = $request->input('status_bidang', 'buka');
 
         if (! $bulanMagangId) {
             return back()->with('error', 'Bulan magang tidak valid.');
         }
 
-        // Jika admin memilih status tutup bidang, seluruh kuota jurusan dinolkan (kecuali yang sudah terisi peserta)
-        if ($statusBidang === 'tutup') {
-            foreach ($bidang->jurusan as $j) {
-                $kuota = Kuota::firstOrNew([
-                    'bulan_magang_id' => $bulanMagangId,
-                    'jurusan_id' => $j->id,
-                ]);
+        $result = $this->updateBidangKuotaAction->execute($bidang, $bulanMagangId, (array) $alokasi, $statusBidang);
 
-                // Pertahankan sejumlah terisi jika ada peserta aktif agar tidak merusak relasi (BR-12)
-                $kuota->jumlah = $kuota->exists ? $kuota->terisi : 0;
-                $kuota->aktif = ($kuota->jumlah > 0);
-                $kuota->save();
-            }
-
-            $this->auditService->catat(
-                tipe: TipeAuditEnum::Aksi,
-                tabel: 'kuota',
-                idData: $bidang->id,
-                nilaiBaru: ['status_bidang' => 'tutup', 'alokasi' => []],
-                detail: ['aksi' => "Menutup kuota penempatan bidang {$bidang->nama_bidang}"]
-            );
-
-            return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $bulanMagangId])
-                ->with('success', "Kuota penempatan bidang {$bidang->nama_bidang} berhasil ditutup.");
+        if (! $result['success']) {
+            return back()->with('error', $result['message']);
         }
-
-        // Jika status buka, proses alokasi dan hitung total kapasitas
-        $totalAlokasi = 0;
-        foreach ($alokasi as $jurusanId => $jumlah) {
-            $jumlah = max(0, (int) $jumlah);
-            $totalAlokasi += $jumlah;
-
-            $kuota = Kuota::firstOrNew([
-                'bulan_magang_id' => $bulanMagangId,
-                'jurusan_id' => (int) $jurusanId,
-            ]);
-
-            // Cegah penurunan di bawah peserta yang sudah diterima
-            if ($kuota->exists && $jumlah < $kuota->terisi) {
-                return back()->with('error', "Jumlah kuota untuk kejuruan tidak boleh lebih kecil dari peserta yang sudah diterima ({$kuota->terisi}).");
-            }
-
-            $kuota->jumlah = $jumlah;
-            $kuota->aktif = ($jumlah > 0);
-            $kuota->save();
-        }
-
-        $this->auditService->catat(
-            tipe: TipeAuditEnum::Aksi,
-            tabel: 'kuota',
-            idData: $bidang->id,
-            nilaiBaru: ['status_bidang' => 'buka', 'alokasi' => $alokasi, 'total_kapasitas' => $totalAlokasi],
-            detail: ['aksi' => "Memperbarui kuota bidang {$bidang->nama_bidang}"]
-        );
 
         return redirect()->route('admin.kuota.index', ['bulan_magang_id' => $bulanMagangId])
-            ->with('success', "Alokasi kuota bidang {$bidang->nama_bidang} berhasil diperbarui (Total Kapasitas: {$totalAlokasi} peserta).");
+            ->with('success', $result['message']);
     }
 }
