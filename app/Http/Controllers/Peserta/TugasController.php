@@ -190,15 +190,18 @@ class TugasController extends Controller
             $file = $request->file('file');
             $filePath = $file->store("progres/{$tugas->id}", 'private');
         } elseif ($request->filled('recent_file_path')) {
-            // Anti-IDOR: pastikan file ini benar-benar milik peserta yang login atau berkas tugas aktif miliknya
+            // Anti-IDOR & Path Traversal Guard: pastikan file ini bebas dari traversal dan benar-benar milik peserta
             $recentPath = (string) $request->validated('recent_file_path');
             $user = $request->user();
-            $isOwned = str_starts_with($recentPath, "progres/{$tugas->id}/")
+            $isSafePath = ! str_contains($recentPath, '..') && ! str_contains($recentPath, '\\');
+            $isOwned = $isSafePath && (
+                str_starts_with($recentPath, "progres/{$tugas->id}/")
                 || ProgresLog::where('file', $recentPath)
                     ->whereHas('tugas.penempatan', function ($q) use ($user) {
                         $q->where('peserta_id', $user?->id);
                     })
-                    ->exists();
+                    ->exists()
+            );
 
             if ($isOwned && Storage::disk('private')->exists($recentPath)) {
                 if (str_starts_with($recentPath, "progres/{$tugas->id}/")) {

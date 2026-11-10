@@ -21,6 +21,14 @@ class PenempatanPolicy
     }
 
     /**
+     * Menentukan apakah pengguna berhak mengekspor data rekapitulasi penempatan (Admin dan SuperAdmin sebagai auditor).
+     */
+    public function export(User $user): bool
+    {
+        return $user->isAdmin() || $user->isSuperAdmin();
+    }
+
+    /**
      * Menentukan apakah pengguna berhak mengelola penempatan operasional (Task A: SuperAdmin strictly read-only).
      */
     public function manage(User $user): bool

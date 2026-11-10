@@ -35,6 +35,15 @@ class BerkasController extends Controller
         $file = $request->file('file');
         $kelompokAnggotaId = $request->filled('kelompok_anggota_id') ? $request->integer('kelompok_anggota_id') : null;
 
+        if ($kelompokAnggotaId !== null) {
+            $isAnggotaValid = $pendaftaran->kelompok_magang_id !== null
+                && $pendaftaran->kelompokMagang?->anggota()->where('id', $kelompokAnggotaId)->exists();
+
+            if (! $isAnggotaValid) {
+                abort(403, 'Anggota kelompok tidak valid atau tidak terdaftar pada kelompok magang ini.');
+            }
+        }
+
         $dokumenQuery = Dokumen::where('pendaftaran_id', $pendaftaran->id)
             ->where('jenis_dokumen_id', $jenisDokumen->id);
 

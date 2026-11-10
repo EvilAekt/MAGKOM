@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Enums\JalurEnum;
+use App\Actions\Admin\Penempatan\AssignPesertaAction;
+use App\Actions\Admin\Penempatan\BulkReassignPembimbingAction;
+use App\Actions\Admin\Penempatan\CancelPenempatanAction;
+use App\Actions\Admin\Penempatan\CreateManualPenempatanAction;
+use App\Actions\Admin\Penempatan\ReassignPembimbingAction;
 use App\Enums\RealtimeEventTypeEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
-use App\Enums\StatusPenempatanEnum;
-use App\Enums\SumberPenempatanEnum;
 use App\Enums\TipeAuditEnum;
 use App\Exceptions\Domain\StatusSudahBerubahException;
 use App\Models\Bidang;
@@ -17,28 +19,31 @@ use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\Penempatan;
-use App\Models\Pengaturan as PengaturanModel;
-use App\Models\PesertaProfil;
 use App\Models\SlotKhusus;
 use App\Models\User;
-use App\Support\Pengaturan;
-use App\Support\PeriodeMagang;
-use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class PlacementService extends AuditedService
 {
     public function __construct(
         protected AuditService $auditService,
         protected QuotaAllocationService $quotaAllocationService,
-        protected ?RealtimeEventService $realtimeService = null
+        protected ?RealtimeEventService $realtimeService = null,
+        protected ?AssignPesertaAction $assignPesertaAction = null,
+        protected ?CreateManualPenempatanAction $createManualPenempatanAction = null,
+        protected ?ReassignPembimbingAction $reassignPembimbingAction = null,
+        protected ?BulkReassignPembimbingAction $bulkReassignPembimbingAction = null,
+        protected ?CancelPenempatanAction $cancelPenempatanAction = null
     ) {
         parent::__construct($auditService);
         $this->realtimeService = $realtimeService ?? app(RealtimeEventService::class);
+        $this->assignPesertaAction = $assignPesertaAction ?? app(AssignPesertaAction::class);
+        $this->createManualPenempatanAction = $createManualPenempatanAction ?? app(CreateManualPenempatanAction::class);
+        $this->reassignPembimbingAction = $reassignPembimbingAction ?? app(ReassignPembimbingAction::class);
+        $this->bulkReassignPembimbingAction = $bulkReassignPembimbingAction ?? app(BulkReassignPembimbingAction::class);
+        $this->cancelPenempatanAction = $cancelPenempatanAction ?? app(CancelPenempatanAction::class);
     }
 
     /**
@@ -139,72 +144,7 @@ class PlacementService extends AuditedService
         ?Bidang $bidang = null
     ): Penempatan {
         return $this->jalankan(__FUNCTION__, func_get_args(), function () use ($pendaftaran, $admin, $pembimbing, $bidang) {
-            return DB::transaction(function () use ($pendaftaran, $admin, $pembimbing, $bidang) {
-                $p = Pendaftaran::whereKey($pendaftaran->id)->lockForUpdate()->firstOrFail();
-
-                if ($p->status !== StatusPendaftaranEnum::Diterima) {
-                    throw new StatusSudahBerubahException('Penetapan penempatan hanya dapat dilakukan untuk pendaftaran yang telah berstatus Diterima.');
-                }
-
-                if ($p->penempatan()->exists()) {
-                    throw new StatusSudahBerubahException('Peserta ini sudah memiliki data penempatan aktif.');
-                }
-
-                // Hitung rentang periode magang (BR-08)
-                [$mulai, $selesai] = PeriodeMagang::hitung($p->bulanMagang->bulan_mulai, $p->durasi_bulan);
-
-                // Tentukan bidang: input form, default dari relasi jurusan, atau dari bidang pembimbing
-                $bidangId = $bidang?->id
-                    ?? $p->kuota?->jurusan?->bidang?->first()?->id
-                    ?? $pembimbing->bidang_id
-                    ?? $p->kuota?->jurusan?->bidang_id;
-
-                $penempatan = Penempatan::create([
-                    'pendaftaran_id' => $p->id,
-                    'peserta_id' => $p->user_id,
-                    'kuota_id' => $p->kuota_id,
-                    'slot_khusus_id' => null,
-                    'bidang_id' => $bidangId,
-                    'pembimbing_id' => $pembimbing->id,
-                    'jalur' => JalurEnum::Umum,
-                    'sumber' => SumberPenempatanEnum::Online,
-                    'dibuat_oleh' => $admin->id,
-                    'tgl_mulai' => $mulai->toDateString(),
-                    'tgl_selesai' => $selesai->toDateString(),
-                    'file_surat_diterima' => $p->file_surat_diterima,
-                    'status' => StatusPenempatanEnum::Aktif,
-                ]);
-
-                // Catat jejak audit
-                $this->auditService->catat(
-                    tipe: TipeAuditEnum::Aksi,
-                    tabel: 'penempatan',
-                    idData: $penempatan->id,
-                    nilaiLama: null,
-                    nilaiBaru: ['status' => StatusPenempatanEnum::Aktif->value],
-                    detail: [
-                        'pendaftaran_id' => $p->id,
-                        'admin_id' => $admin->id,
-                        'pembimbing_id' => $pembimbing->id,
-                        'bidang_id' => $bidangId,
-                        'aksi' => 'Menetapkan pembimbing lapangan dan bidang dinas penempatan peserta (Tahap 2)',
-                    ]
-                );
-
-                // Notifikasi Real-time SSE ke peserta bahwa penempatan & surat diterima siap
-                $this->realtimeService->publish(
-                    RealtimeEventTypeEnum::StatusPendaftaran,
-                    [
-                        'title' => 'Penempatan Magang Ditetapkan',
-                        'message' => 'Pembimbing lapangan Anda telah ditugaskan. Surat keterangan diterima sudah dapat diunduh.',
-                        'status' => 'penempatan_aktif',
-                        'action_url' => route('peserta.dashboard'),
-                    ],
-                    $p->user_id
-                );
-
-                return $penempatan;
-            }, 3);
+            return $this->assignPesertaAction->execute($pendaftaran, $admin, $pembimbing, $bidang);
         });
     }
 
@@ -342,42 +282,9 @@ class PlacementService extends AuditedService
         return $this->jalankan(__FUNCTION__, func_get_args(), function () use (
             $peserta, $slotKhusus, $pembimbing, $bidang, $bulanMulai, $durasiBulan, $admin
         ) {
-            return DB::transaction(function () use (
+            return $this->createManualPenempatanAction->executeTerdaftar(
                 $peserta, $slotKhusus, $pembimbing, $bidang, $bulanMulai, $durasiBulan, $admin
-            ) {
-                // 1. Kunci dan ambil slot khusus
-                $slot = $this->quotaAllocationService->ambilKuotaKhusus($slotKhusus->id);
-
-                // 2. Hitung periode magang (BR-08)
-                [$mulai, $selesai] = PeriodeMagang::hitung($bulanMulai, $durasiBulan);
-
-                // 3. Buat penempatan jalur khusus
-                $penempatan = Penempatan::create([
-                    'pendaftaran_id' => null,
-                    'peserta_id' => $peserta->id,
-                    'kuota_id' => null,
-                    'slot_khusus_id' => $slot->id,
-                    'bidang_id' => $bidang?->id,
-                    'pembimbing_id' => $pembimbing->id,
-                    'jalur' => JalurEnum::Khusus,
-                    'sumber' => SumberPenempatanEnum::Manual,
-                    'dibuat_oleh' => $admin->id,
-                    'tgl_mulai' => $mulai->toDateString(),
-                    'tgl_selesai' => $selesai->toDateString(),
-                    'file_surat_diterima' => null,
-                    'status' => StatusPenempatanEnum::Aktif,
-                ]);
-
-                $this->auditService->catat(
-                    tipe: TipeAuditEnum::Aksi,
-                    tabel: 'penempatan',
-                    idData: $penempatan->id,
-                    nilaiBaru: $penempatan->toArray(),
-                    detail: ['aksi' => 'Membuat penempatan manual jalur khusus']
-                );
-
-                return $penempatan;
-            });
+            );
         });
     }
 
@@ -401,95 +308,9 @@ class PlacementService extends AuditedService
         return $this->jalankan(__FUNCTION__, func_get_args(), function () use (
             $userData, $profilData, $pembimbing, $bidang, $bulanMulai, $durasiBulan, $jalur, $slotKhususId, $kuotaId, $admin
         ) {
-            return DB::transaction(function () use (
+            return $this->createManualPenempatanAction->executeBaru(
                 $userData, $profilData, $pembimbing, $bidang, $bulanMulai, $durasiBulan, $jalur, $slotKhususId, $kuotaId, $admin
-            ) {
-                // 1. Buat user role peserta (AC-07-3: email terverifikasi, must_change_password aktif)
-                // SEC-01: Shared default password elimination for production & unique credential security
-                $defaultFallback = app()->environment('testing') ? 'Magkom2026!' : ('Mgk-'.Str::random(10).'!#');
-                $plainPassword = ! empty($userData['password']) ? (string) $userData['password'] : $defaultFallback;
-                $peserta = new User;
-                $peserta->nama = $userData['nama'];
-                $peserta->email = $userData['email'];
-                $peserta->password = Hash::make($plainPassword);
-                $peserta->role = RoleEnum::Peserta;
-                $peserta->email_verified_at = now();
-                $peserta->must_change_password = true;
-                $peserta->status_aktif = true;
-                $peserta->password_awal = $plainPassword;
-                $peserta->save();
-
-                // 2. Buat profil peserta
-                $jurusanId = $profilData['jurusan_id'] ?? null;
-                if (! $jurusanId) {
-                    $jurusanId = Jurusan::aktif()->first()?->id ?? Jurusan::first()?->id;
-                }
-
-                PesertaProfil::create([
-                    'user_id' => $peserta->id,
-                    'nim_nisn' => $profilData['nim_nisn'] ?? '-',
-                    'institusi' => $profilData['institusi'] ?? '-',
-                    'jurusan_id' => $jurusanId,
-                    'jenjang' => $profilData['jenjang'] ?? 's1',
-                    'no_hp' => $profilData['no_hp'] ?? '-',
-                ]);
-
-                // 3. Alokasikan kapasitas (slot khusus atau kuota umum)
-                $assignedSlotId = null;
-                $assignedKuotaId = null;
-                $jalurEnum = JalurEnum::Khusus;
-
-                if ($jalur === 'umum' && $kuotaId) {
-                    $kuota = $this->quotaAllocationService->ambilKuotaUmum((int) $kuotaId);
-                    $assignedKuotaId = $kuota->id;
-                    $jalurEnum = JalurEnum::Umum;
-                } elseif ($slotKhususId) {
-                    $slot = $this->quotaAllocationService->ambilKuotaKhusus((int) $slotKhususId);
-                    $assignedSlotId = $slot->id;
-                    $jalurEnum = JalurEnum::Khusus;
-                } else {
-                    $assignedSlotId = null;
-                    $jalurEnum = JalurEnum::Khusus;
-                }
-
-                // 4. Hitung periode magang (BR-08)
-                [$mulai, $selesai] = PeriodeMagang::hitung($bulanMulai, $durasiBulan);
-
-                // 5. Buat penempatan resmi
-                $penempatan = Penempatan::create([
-                    'pendaftaran_id' => null,
-                    'peserta_id' => $peserta->id,
-                    'kuota_id' => $assignedKuotaId,
-                    'slot_khusus_id' => $assignedSlotId,
-                    'bidang_id' => $bidang?->id,
-                    'pembimbing_id' => $pembimbing->id,
-                    'jalur' => $jalurEnum,
-                    'sumber' => SumberPenempatanEnum::Manual,
-                    'dibuat_oleh' => $admin->id,
-                    'tgl_mulai' => $mulai->toDateString(),
-                    'tgl_selesai' => $selesai->toDateString(),
-                    'file_surat_diterima' => null,
-                    'status' => StatusPenempatanEnum::Aktif,
-                ]);
-
-                $this->auditService->catat(
-                    tipe: TipeAuditEnum::Aksi,
-                    tabel: 'penempatan',
-                    idData: $penempatan->id,
-                    nilaiBaru: $penempatan->toArray(),
-                    detail: [
-                        'aksi' => 'Membuat akun dan penempatan manual peserta baru (AC-07-3)',
-                        'user_id' => $peserta->id,
-                        'email' => $peserta->email,
-                        'jalur' => $jalurEnum->value,
-                    ]
-                );
-
-                $penempatan->setRelation('peserta', $peserta);
-                $penempatan->plain_password = $plainPassword;
-
-                return $penempatan;
-            });
+            );
         });
     }
 
@@ -499,44 +320,7 @@ class PlacementService extends AuditedService
     public function pindahPembimbing(Penempatan $penempatan, User $pembimbingBaru, User $admin): Penempatan
     {
         return $this->jalankan(__FUNCTION__, func_get_args(), function () use ($penempatan, $pembimbingBaru, $admin) {
-            return DB::transaction(function () use ($penempatan, $pembimbingBaru, $admin) {
-                $p = Penempatan::whereKey($penempatan->id)->lockForUpdate()->firstOrFail();
-
-                if ($p->status !== StatusPenempatanEnum::Aktif) {
-                    throw new \RuntimeException('Pembimbing hanya dapat dipindahkan untuk penempatan yang berstatus aktif.');
-                }
-
-                // Cek batas beban pembimbing (BR-13)
-                $batasBeban = Pengaturan::int('maks_peserta_aktif_per_pembimbing', 0);
-                if ($batasBeban > 0) {
-                    $bebanAktif = Penempatan::where('pembimbing_id', $pembimbingBaru->id)
-                        ->where('status', StatusPenempatanEnum::Aktif)
-                        ->count();
-
-                    if ($bebanAktif >= $batasBeban) {
-                        throw new \RuntimeException("Pembimbing {$pembimbingBaru->nama} telah mencapai batas beban maksimum ({$batasBeban} peserta aktif).");
-                    }
-                }
-
-                $pembimbingLamaId = $p->pembimbing_id;
-                $p->update(['pembimbing_id' => $pembimbingBaru->id]);
-
-                $this->auditService->catat(
-                    tipe: TipeAuditEnum::Aksi,
-                    tabel: 'penempatan',
-                    idData: $p->id,
-                    nilaiLama: ['pembimbing_id' => $pembimbingLamaId],
-                    nilaiBaru: ['pembimbing_id' => $pembimbingBaru->id],
-                    detail: [
-                        'aksi' => 'Memindahkan pembimbing peserta magang',
-                        'pembimbing_lama_id' => $pembimbingLamaId,
-                        'pembimbing_baru_id' => $pembimbingBaru->id,
-                        'admin_id' => $admin->id,
-                    ]
-                );
-
-                return $p;
-            });
+            return $this->reassignPembimbingAction->execute($penempatan, $pembimbingBaru, $admin);
         });
     }
 
@@ -548,53 +332,7 @@ class PlacementService extends AuditedService
     public function alihkanBatch(array $ids, User $pembimbingBaru, User $admin): int
     {
         return $this->jalankan(__FUNCTION__, func_get_args(), function () use ($ids, $pembimbingBaru, $admin) {
-            $maxBebanSetting = PengaturanModel::where('kunci', 'maks_peserta_aktif_per_pembimbing')->value('nilai');
-            if ($maxBebanSetting !== null && $maxBebanSetting !== '') {
-                $maxBeban = (int) $maxBebanSetting;
-                $currentAktif = Penempatan::where('pembimbing_id', $pembimbingBaru->id)
-                    ->where('status', StatusPenempatanEnum::Aktif)
-                    ->count();
-
-                $penambahanAktif = Penempatan::whereIn('id', $ids)
-                    ->where('status', StatusPenempatanEnum::Aktif)
-                    ->where('pembimbing_id', '!=', $pembimbingBaru->id)
-                    ->count();
-
-                if (($currentAktif + $penambahanAktif) > $maxBeban) {
-                    throw new \RuntimeException("Kapasitas pembimbing {$pembimbingBaru->nama} terlampaui (Batas maksimal: {$maxBeban} mentee aktif, saat ini: {$currentAktif}, penambahan: {$penambahanAktif}).");
-                }
-            }
-
-            return DB::transaction(function () use ($ids, $pembimbingBaru, $admin) {
-                $penempatans = Penempatan::whereIn('id', $ids)->get();
-                $updated = 0;
-
-                foreach ($penempatans as $p) {
-                    if ($p->pembimbing_id === $pembimbingBaru->id) {
-                        continue;
-                    }
-
-                    $pembimbingLamaId = $p->pembimbing_id;
-                    $p->update(['pembimbing_id' => $pembimbingBaru->id]);
-
-                    $this->auditService->catat(
-                        tipe: TipeAuditEnum::Aksi,
-                        tabel: 'penempatan',
-                        idData: $p->id,
-                        nilaiLama: ['pembimbing_id' => $pembimbingLamaId],
-                        nilaiBaru: ['pembimbing_id' => $pembimbingBaru->id],
-                        detail: [
-                            'aksi' => 'Pemindahan pembimbing massal (bulk reassign)',
-                            'admin_id' => $admin->id,
-                            'pembimbing_baru_id' => $pembimbingBaru->id,
-                        ]
-                    );
-
-                    $updated++;
-                }
-
-                return $updated;
-            });
+            return $this->bulkReassignPembimbingAction->execute($ids, $pembimbingBaru, $admin);
         });
     }
 
@@ -604,54 +342,7 @@ class PlacementService extends AuditedService
     public function batalkanPenempatan(Penempatan $penempatan, User $admin, string $alasan): Penempatan
     {
         return $this->jalankan(__FUNCTION__, func_get_args(), function () use ($penempatan, $admin, $alasan) {
-            return DB::transaction(function () use ($penempatan, $admin, $alasan) {
-                $p = Penempatan::whereKey($penempatan->id)->lockForUpdate()->firstOrFail();
-
-                if ($p->status !== StatusPenempatanEnum::Aktif) {
-                    throw new \RuntimeException('Hanya penempatan aktif yang dapat dibatalkan atau dicatat pengunduran dirinya.');
-                }
-
-                $hariIni = today('Asia/Jakarta');
-                $tglMulai = Carbon::parse($p->tgl_mulai);
-                $sebelumMulai = $hariIni->lt($tglMulai);
-
-                if ($sebelumMulai) {
-                    // Sebelum tanggal mulai: kembalikan kuota & akun peserta tetap aktif
-                    if ($p->kuota_id) {
-                        Kuota::whereKey($p->kuota_id)->decrement('terisi');
-                    } elseif ($p->slot_khusus_id) {
-                        SlotKhusus::whereKey($p->slot_khusus_id)->decrement('terisi');
-                    }
-
-                    if ($p->pendaftaran_id) {
-                        Pendaftaran::whereKey($p->pendaftaran_id)->update([
-                            'status' => StatusPendaftaranEnum::Dibatalkan,
-                            'catatan' => $alasan,
-                        ]);
-                    }
-                } else {
-                    // Sejak tanggal mulai: kuota tidak dikembalikan, akun peserta dinonaktifkan
-                    $p->peserta()->update(['status_aktif' => false]);
-                }
-
-                $statusLama = $p->status->value;
-                $p->update(['status' => StatusPenempatanEnum::MengundurkanDiri]);
-
-                $this->auditService->catat(
-                    tipe: TipeAuditEnum::Aksi,
-                    tabel: 'penempatan',
-                    idData: $p->id,
-                    nilaiLama: ['status' => $statusLama],
-                    nilaiBaru: ['status' => StatusPenempatanEnum::MengundurkanDiri->value],
-                    detail: [
-                        'aksi' => $sebelumMulai ? 'Pembatalan sebelum tanggal mulai (kuota dikembalikan)' : 'Pengunduran diri setelah mulai (kuota hangus, akun nonaktif)',
-                        'alasan' => $alasan,
-                        'admin_id' => $admin->id,
-                    ]
-                );
-
-                return $p;
-            });
+            return $this->cancelPenempatanAction->execute($penempatan, $admin, $alasan);
         });
     }
 }

@@ -85,13 +85,13 @@ class AdminDashboardMetricsService
 
         // 10. Data Khusus Tampilan Dashboard Administrasi Rebranded (Figma Design Parity)
         $quotaByMajor = $this->resolveQuotaByMajor($bulanAktif, $kuotaData['kuotaList']);
-        $pendingVerification = $pengajuanMenunggu > 0 ? $pengajuanMenunggu : 1;
-        $quotaFilled = $kuotaData['totalKuotaTerisi'] > 0 ? $kuotaData['totalKuotaTerisi'] : 37;
-        $quotaTotal = $kuotaData['totalKuotaUmum'] > 0 ? $kuotaData['totalKuotaUmum'] : 85;
-        $quotaPercentage = $quotaTotal > 0 ? (int) round(($quotaFilled / $quotaTotal) * 100) : 44;
-        $activeInterns = $pesertaAktifCount > 0 ? $pesertaAktifCount : 4;
-        $avgVerificationDays = $quickStats['avgVerifikasiHari'] > 0 ? $quickStats['avgVerifikasiHari'] : 4.4;
-        $applicantsLast7Days = $quickStats['pendaftaranMingguIni'] > 0 ? $quickStats['pendaftaranMingguIni'] : 7;
+        $pendingVerification = $pengajuanMenunggu;
+        $quotaFilled = $kuotaData['totalKuotaTerisi'];
+        $quotaTotal = $kuotaData['totalKuotaUmum'];
+        $quotaPercentage = $quotaTotal > 0 ? (int) round(($quotaFilled / $quotaTotal) * 100) : 0;
+        $activeInterns = $pesertaAktifCount;
+        $avgVerificationDays = $quickStats['avgVerifikasiHari'];
+        $applicantsLast7Days = $quickStats['pendaftaranMingguIni'];
 
         return [
             'pengajuanMenunggu' => $pengajuanMenunggu,
@@ -258,7 +258,7 @@ class AdminDashboardMetricsService
             });
             $avgVerifikasiHari = round($totalDays / $processedRegistrations->count(), 1);
         } else {
-            $avgVerifikasiHari = 1.5;
+            $avgVerifikasiHari = 0.0;
         }
 
         $kapasitasKuotaAktif = (int) Kuota::where('aktif', true)->sum('jumlah');
@@ -308,18 +308,19 @@ class AdminDashboardMetricsService
                 return str_contains($nama, strtolower($def['shortName'])) || str_contains($nama, $target);
             });
 
-            if ($kuotaItem && $kuotaItem->jumlah > 0) {
+            if ($kuotaItem) {
                 $total = (int) $kuotaItem->jumlah;
                 $filled = min($total, (int) $kuotaItem->terisi);
             } else {
-                $total = $def['default_total'];
-                $filled = $def['default_filled'];
+                $total = 0;
+                $filled = 0;
             }
 
             $remaining = max(0, $total - $filled);
             $isFull = ($filled >= $total && $total > 0);
-            $filledPct = min(100.0, round(($filled / $maxScale) * 100, 1));
-            $remainingPct = min(100.0 - $filledPct, round(($remaining / $maxScale) * 100, 1));
+            $scale = max($maxScale, $total);
+            $filledPct = $scale > 0 ? min(100.0, round(($filled / $scale) * 100, 1)) : 0.0;
+            $remainingPct = $scale > 0 ? min(100.0 - $filledPct, round(($remaining / $scale) * 100, 1)) : 0.0;
 
             $chartData[] = [
                 'name' => $def['name'],

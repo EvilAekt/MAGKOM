@@ -270,4 +270,95 @@ class PesertaTugasBatalKirimTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    public function test_pembatalan_berulang_tidak_merusak_status(): void
+    {
+        // 1. Batalkan ketika tidak ada progres log aktif
+        $response = $this->actingAs($this->peserta)
+            ->post(route('peserta.tugas.batal-kirim', $this->tugas));
+
+        $response->assertSessionHas('error');
+        $this->assertEquals(0, ProgresLog::where('tugas_id', $this->tugas->id)->count());
+        $this->assertEquals(StatusTugasEnum::Proses, $this->tugas->fresh()->status);
+    }
+
+    public function test_recent_file_path_milik_tugas_lain_atau_peserta_lain_ditolak(): void
+    {
+        // Buat file milik peserta lain
+        $otherFile = UploadedFile::fake()->create('other_secret.pdf', 300, 'application/pdf');
+        $otherPath = $otherFile->store('progres/9999', 'private');
+
+        $response = $this->actingAs($this->peserta)
+            ->post(route('peserta.tugas.progres', $this->tugas), [
+                'recent_file_path' => $otherPath,
+                'catatan' => 'Mencoba merujuk file peserta lain.',
+            ]);
+
+        $response->assertRedirect(route('peserta.tugas.show', $this->tugas));
+
+        // Verifikasi file tidak di-attach karena bukan milik peserta/tugas ini
+        $createdProgres = ProgresLog::where('tugas_id', $this->tugas->id)->first();
+        $this->assertNotNull($createdProgres);
+        $this->assertNull($createdProgres->file);
+    }
+
+    public function test_path_traversal_pada_recent_file_path_ditolak(): void
+    {
+        $traversalPath = "progres/{$this->tugas->id}/../../.env";
+
+        $response = $this->actingAs($this->peserta)
+            ->post(route('peserta.tugas.progres', $this->tugas), [
+                'recent_file_path' => $traversalPath,
+                'catatan' => 'Mencoba path traversal.',
+            ]);
+
+        $response->assertRedirect(route('peserta.tugas.show', $this->tugas));
+
+        $createdProgres = ProgresLog::where('tugas_id', $this->tugas->id)->first();
+        $this->assertNotNull($createdProgres);
+        $this->assertNull($createdProgres->file);
+    }
+
+    public function test_file_yang_sudah_tidak_tersedia_di_disk_ditangani_dengan_aman(): void
+    {
+        $nonExistentPath = "progres/{$this->tugas->id}/ghost_file.pdf";
+
+        $response = $this->actingAs($this->peserta)
+            ->post(route('peserta.tugas.progres', $this->tugas), [
+                'recent_file_path' => $nonExistentPath,
+                'catatan' => 'File tidak ada di disk fisik.',
+            ]);
+
+        $response->assertRedirect(route('peserta.tugas.show', $this->tugas));
+
+        $createdProgres = ProgresLog::where('tugas_id', $this->tugas->id)->first();
+        $this->assertNotNull($createdProgres);
+        $this->assertNull($createdProgres->file);
+    }
+
+    public function test_kontrak_json_dan_redirect_sesuai_permintaan_frontend(): void
+    {
+        $file = UploadedFile::fake()->create('dokumen_ajax.pdf', 200, 'application/pdf');
+        $filePath = $file->store("progres/{$this->tugas->id}", 'private');
+
+        ProgresLog::create([
+            'tugas_id' => $this->tugas->id,
+            'catatan' => 'Laporan ajax.',
+            'file' => $filePath,
+            'link' => 'https://example.com/ajax-link',
+            'tgl_lapor' => now()->toDateString(),
+            'status_review' => StatusReviewProgresEnum::Menunggu,
+        ]);
+
+        // AJAX Request (expectsJson)
+        $response = $this->actingAs($this->peserta)
+            ->postJson(route('peserta.tugas.batal-kirim', $this->tugas));
+
+        $response->assertOk();
+        $response->assertJson([
+            'success' => true,
+            'unsubmitted_file' => $filePath,
+            'unsubmitted_link' => 'https://example.com/ajax-link',
+        ]);
+    }
 }

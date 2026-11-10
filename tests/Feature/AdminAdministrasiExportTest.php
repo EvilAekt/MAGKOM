@@ -270,4 +270,140 @@ class AdminAdministrasiExportTest extends TestCase
         $this->assertStringContainsString('application/pdf', (string) $responsePdf->headers->get('Content-Type'));
         $this->assertStringContainsString('.pdf', (string) $responsePdf->headers->get('Content-Disposition'));
     }
+
+    public function test_ekspor_pendaftaran_menerapkan_filter_tipe_bulan_jurusan_status_dan_kombinasi(): void
+    {
+        // Setup data kedua dengan atribut berbeda
+        $jurusan2 = Jurusan::create([
+            'nama_jurusan' => 'Sistem Informasi',
+            'kategori' => 'mahasiswa',
+            'aktif' => true,
+        ]);
+
+        $bulan2 = BulanMagang::create([
+            'bulan_mulai' => now()->addMonths(2)->startOfMonth(),
+            'tgl_buka' => now()->toDateString(),
+            'tgl_tutup' => now()->addDays(30)->toDateString(),
+            'aktif' => true,
+        ]);
+
+        $kuota2 = Kuota::create([
+            'bulan_magang_id' => $bulan2->id,
+            'jurusan_id' => $jurusan2->id,
+            'jumlah' => 5,
+            'terisi' => 1,
+            'aktif' => true,
+        ]);
+
+        $peserta2 = new User([
+            'nama' => 'Bambang Sudarsono',
+            'email' => 'bambang@uny.ac.id',
+            'password' => bcrypt('Password123!'),
+            'status_aktif' => true,
+            'must_change_password' => false,
+        ]);
+        $peserta2->role = RoleEnum::Peserta;
+        $peserta2->email_verified_at = now();
+        $peserta2->save();
+
+        PesertaProfil::create([
+            'user_id' => $peserta2->id,
+            'nim_nisn' => '220002002',
+            'institusi' => 'Universitas Negeri Yogyakarta',
+            'jenjang' => JenjangEnum::S1,
+            'jurusan_id' => $jurusan2->id,
+            'no_hp' => '089876543210',
+        ]);
+
+        $pendaftaran2 = Pendaftaran::create([
+            'user_id' => $peserta2->id,
+            'bulan_magang_id' => $bulan2->id,
+            'kuota_id' => $kuota2->id,
+            'tipe' => 'kelompok',
+            'status' => StatusPendaftaranEnum::Diajukan,
+            'durasi_bulan' => 2,
+            'created_at' => now(),
+        ]);
+
+        // 1. Uji Filter Tipe: mandiri
+        $respTipeMandiri = $this->actingAs($this->admin)->get(route('admin.laporan.pendaftaran', [
+            'format' => 'csv',
+            'tipe' => 'mandiri',
+        ]));
+        $respTipeMandiri->assertOk();
+        $contentMandiri = $respTipeMandiri->streamedContent();
+        $this->assertStringContainsString('Calon Mahasiswa Sleman', $contentMandiri);
+        $this->assertStringNotContainsString('Bambang Sudarsono', $contentMandiri);
+
+        // 2. Uji Filter Tipe: kelompok
+        $respTipeKelompok = $this->actingAs($this->admin)->get(route('admin.laporan.pendaftaran', [
+            'format' => 'csv',
+            'tipe' => 'kelompok',
+        ]));
+        $respTipeKelompok->assertOk();
+        $contentKelompok = $respTipeKelompok->streamedContent();
+        $this->assertStringContainsString('Bambang Sudarsono', $contentKelompok);
+        $this->assertStringNotContainsString('Calon Mahasiswa Sleman', $contentKelompok);
+
+        // 3. Uji Filter Bulan Magang
+        $respBulan = $this->actingAs($this->admin)->get(route('admin.laporan.pendaftaran', [
+            'format' => 'csv',
+            'bulan_magang_id' => $this->bulan->id,
+        ]));
+        $respBulan->assertOk();
+        $contentBulan = $respBulan->streamedContent();
+        $this->assertStringContainsString('Calon Mahasiswa Sleman', $contentBulan);
+        $this->assertStringNotContainsString('Bambang Sudarsono', $contentBulan);
+
+        // 4. Uji Filter Jurusan
+        $respJurusan = $this->actingAs($this->admin)->get(route('admin.laporan.pendaftaran', [
+            'format' => 'csv',
+            'jurusan_id' => $jurusan2->id,
+        ]));
+        $respJurusan->assertOk();
+        $contentJurusan = $respJurusan->streamedContent();
+        $this->assertStringContainsString('Bambang Sudarsono', $contentJurusan);
+        $this->assertStringNotContainsString('Calon Mahasiswa Sleman', $contentJurusan);
+
+        // 5. Uji Filter Status
+        $respStatus = $this->actingAs($this->admin)->get(route('admin.laporan.pendaftaran', [
+            'format' => 'csv',
+            'status' => StatusPendaftaranEnum::Diterima->value,
+        ]));
+        $respStatus->assertOk();
+        $contentStatus = $respStatus->streamedContent();
+        $this->assertStringContainsString('Calon Mahasiswa Sleman', $contentStatus);
+        $this->assertStringNotContainsString('Bambang Sudarsono', $contentStatus);
+
+        // 6. Uji Kombinasi Seluruh Filter (q + tipe + bulan + jurusan + status)
+        $respKombinasi = $this->actingAs($this->admin)->get(route('admin.laporan.pendaftaran', [
+            'format' => 'csv',
+            'q' => 'Bambang',
+            'tipe' => 'kelompok',
+            'bulan_magang_id' => $bulan2->id,
+            'jurusan_id' => $jurusan2->id,
+            'status' => StatusPendaftaranEnum::Diajukan->value,
+        ]));
+        $respKombinasi->assertOk();
+        $contentKombinasi = $respKombinasi->streamedContent();
+        $this->assertStringContainsString('Bambang Sudarsono', $contentKombinasi);
+        $this->assertStringNotContainsString('Calon Mahasiswa Sleman', $contentKombinasi);
+
+        // 7. Uji Konten PDF dan XLSX dengan kombinasi filter
+        $respPdfFiltered = $this->actingAs($this->admin)->get(route('admin.laporan.pendaftaran', [
+            'format' => 'pdf',
+            'q' => 'Bambang',
+            'status' => StatusPendaftaranEnum::Diajukan->value,
+        ]));
+        $respPdfFiltered->assertOk();
+        $this->assertStringContainsString('application/pdf', (string) $respPdfFiltered->headers->get('Content-Type'));
+
+        $respXlsxFiltered = $this->actingAs($this->admin)->get(route('admin.laporan.pendaftaran', [
+            'format' => 'xlsx',
+            'q' => 'Bambang',
+            'status' => StatusPendaftaranEnum::Diajukan->value,
+        ]));
+        $respXlsxFiltered->assertOk();
+        $this->assertStringContainsString('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', (string) $respXlsxFiltered->headers->get('Content-Type'));
+    }
 }
