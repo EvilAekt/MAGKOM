@@ -17,7 +17,7 @@
     }
 @endphp
 
-<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 1080px; margin: 0 auto; width: 100%;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     {{-- ALERT FLASH MESSAGES --}}
     @if(session('success'))

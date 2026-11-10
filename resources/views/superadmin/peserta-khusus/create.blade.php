@@ -16,7 +16,7 @@
 @endpush
 
 @section('content')
-<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 980px; margin: 0 auto; width: 100%;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     {{-- 1. Hero Banner Khas Sleman MagKom --}}
     <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>

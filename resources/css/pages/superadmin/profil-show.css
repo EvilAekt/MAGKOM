@@ -8,8 +8,8 @@
 .profil-page-wrapper {
     background-color: transparent;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0;
     padding: 0 0 32px 0;
     box-sizing: border-box;
 }
@@ -17,6 +17,7 @@
 /* Main Fluid Card Container (Single-Card Modern) */
 .profil-main-card {
     width: 100%;
+    max-width: 100%;
     background: #ffffff;
     border: 1px solid #E2E8F0;
     border-radius: 16px;

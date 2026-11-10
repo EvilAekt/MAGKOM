@@ -1,7 +1,13 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Profil & Data Super Administrator - MagKom')
-@section('page_title', 'Profil & Data Super Administrator')
+@section('title', 'Biodata & Profil Super Administrator - MagKom')
+@section('topbar_title', 'Biodata & Profil Super Administrator')
+
+@section('breadcrumbs')
+    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">Biodata & Profil</span>
+@endsection
 
 @push('styles')
     @vite(['resources/css/pages/superadmin/profil-show.css'])
@@ -72,6 +78,7 @@
                         <div class="profil-name-row">
                             <h2 class="profil-user-name">{{ $user->nama }}</h2>
                             <span class="profil-badge-role">SUPER ADMINISTRATOR</span>
+                            <span class="sr-only">Data Super Administrator</span>
                         </div>
                         <p class="profil-user-email">{{ $user->email }}</p>
                     </div>

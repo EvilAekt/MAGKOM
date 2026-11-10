@@ -1,7 +1,13 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Profil & Data Pembimbing Lapangan - MagKom')
-@section('page_title', 'Profil & Data Pembimbing')
+@section('topbar_title', 'Profil & Data Pembimbing')
+
+@section('breadcrumbs')
+    <a href="{{ route('pembimbing.dashboard') }}">Pembimbing</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">Profil Saya</span>
+@endsection
 
 @push('styles')
     @vite(['resources/css/pages/pembimbing/profil-show.css'])

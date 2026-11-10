@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Akun & Preferensi Saya - Super Administrator MagKom')
+@section('title', 'Pengaturan Akun - Super Administrator MagKom')
+@section('topbar_title', 'Pengaturan Akun')
 
 @section('content')
 <div class="pengaturan-akun-page">
@@ -23,7 +24,7 @@
     @endif
 
     {{-- Hero Banner --}}
-    <div class="settings-hero-banner sc-reveal-hero" data-scroll-reveal>
+    <div class="settings-hero-banner">
         <div class="banner-content-left">
             <h1 class="banner-title">Akun & Preferensi Saya</h1>
             <p class="banner-subtitle">Kelola keamanan kredensial Super Administrator dan preferensi visual aplikasi.</p>
@@ -48,7 +49,7 @@
     </div>
 
     {{-- Bento Grid 2 Kolom --}}
-    <div class="settings-grid-2col sc-reveal-up sc-delay-1" data-scroll-reveal>
+    <div class="settings-grid-2col">
 
         {{-- Kolom Kiri: Informasi Akun --}}
         <div class="settings-white-card">
