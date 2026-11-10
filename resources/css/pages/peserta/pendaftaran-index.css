@@ -1,7 +1,23 @@
 /* ========================================================
    MAGKOM GENTELELLA DESIGN SYSTEM: PENDAFTARAN INDEX
    Portal Peserta: Katalog Kuota & Riwayat Pendaftaran Magang
+   Sleman Identity: #003566, #01347C, #02275D, #FFC300, #FFCB05
    ======================================================== */
+
+:root {
+    --navy-dark: #003566;
+    --navy-primary: #01347C;
+    --navy-deep: #02275D;
+    --gold-primary: #FFC300;
+    --gold-accent: #FFCB05;
+    --gold-light: #FFFBEB;
+    --gold-border: #FDE68A;
+    --gold-text: #854D0E;
+    --text-dark: #212529;
+    --text-muted: #64748B;
+    --border-soft: #E2E8F0;
+    --bg-card: #FFFFFF;
+}
 
 .pendaftaran-container {
     display: flex;
@@ -9,61 +25,74 @@
     gap: 24px;
 }
 
-/* 1. Hero Banner MagKom Sleman */
+/* ========================================================
+   1. HERO BANNER SLEMAN NAVY
+   ======================================================== */
 .pendaftaran-hero {
-    background: radial-gradient(80% 120% at 100% 0%, rgba(255, 203, 5, 0.12), transparent 60%),
-                linear-gradient(135deg, #02275D 0%, #01347C 100%);
+    background: radial-gradient(85% 140% at 100% 10%, rgba(255, 195, 0, 0.12), transparent 55%),
+                linear-gradient(135deg, #003566 0%, #01347C 60%, #02275D 100%);
     border-radius: 16px;
-    padding: 28px 32px;
+    padding: 30px 36px;
     color: #ffffff;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 20px -2px rgba(2, 39, 93, 0.35);
+    box-shadow: 0 8px 24px -4px rgba(0, 53, 102, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.12);
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 24px;
-    flex-wrap: wrap;
+}
+
+/* Watermark Concentric Circular Rings Ornament */
+.hero-rings-ornament {
+    position: absolute;
+    right: -40px;
+    bottom: -60px;
+    width: 320px;
+    height: 320px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.45;
 }
 
 .hero-text-content {
     position: relative;
     z-index: 2;
-    max-width: 640px;
+    max-width: 680px;
 }
 
 .hero-badge-tag {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    background: rgba(255, 203, 5, 0.15);
+    gap: 8px;
+    padding: 5px 14px;
+    background: rgba(0, 0, 0, 0.22);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 203, 5, 0.35);
-    border-radius: 999px;
+    border: 1px solid rgba(255, 195, 0, 0.35);
+    border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    margin-bottom: 10px;
-    color: #FFCB05;
+    margin-bottom: 12px;
+    color: #FFC300;
 }
 
 .hero-badge-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #FFCB05;
-    box-shadow: 0 0 8px #FFCB05;
+    background: #FFC300;
+    box-shadow: 0 0 8px #FFC300;
 }
 
 .hero-title {
-    font-size: 1.5rem;
+    font-size: 1.65rem;
     font-weight: 800;
-    margin: 0 0 8px 0;
-    line-height: 1.3;
+    margin: 0 0 10px 0;
+    line-height: 1.25;
     letter-spacing: -0.02em;
     color: #ffffff;
 }
@@ -71,8 +100,8 @@
 .hero-desc {
     font-size: 0.875rem;
     color: rgba(255, 255, 255, 0.9);
-    line-height: 1.55;
-    margin: 0 0 14px 0;
+    line-height: 1.6;
+    margin: 0 0 16px 0;
 }
 
 .hero-meta-pills {
@@ -84,279 +113,319 @@
 .hero-meta-pill {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
-    background: rgba(0, 0, 0, 0.22);
+    gap: 7px;
+    padding: 6px 14px;
+    background: rgba(0, 0, 0, 0.25);
     border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 500;
+    border-radius: 8px;
+    font-size: 0.775rem;
+    font-weight: 600;
     color: #ffffff;
 }
 
 .hero-meta-pill svg {
-    color: #FFCB05;
+    color: #FFC300;
 }
 
-.hero-cta-box {
-    position: relative;
-    z-index: 2;
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: var(--radius-lg, 12px);
-    padding: 18px 22px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-    min-width: 250px;
-}
-
-/* 2. Active Application Spotlight Card */
+/* ========================================================
+   2. SPOTLIGHT CARD PENGAJUAN AKTIF (TWO-TONE SPLIT)
+   ======================================================== */
 .pendaftaran-active-card {
-    border-top: 4px solid #02275D !important;
-    border-radius: 14px;
-    box-shadow: 0 2px 10px rgba(2, 39, 93, 0.05);
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 20px -2px rgba(2, 39, 93, 0.08);
+    overflow: hidden;
 }
 
-.active-card-header {
+/* Navy Header Topbar */
+.active-card-topbar {
+    background: linear-gradient(135deg, #003566 0%, #01347C 100%);
+    padding: 20px 26px;
+    color: #FFFFFF;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 16px;
     flex-wrap: wrap;
-    margin-bottom: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--neutral-200, #E2E8F0);
 }
 
-.active-card-title {
-    font-size: 1.125rem;
-    font-weight: 800;
-    color: #02275D;
-    margin: 8px 0 2px 0;
-    letter-spacing: -0.01em;
-}
-
-.active-card-date {
-    font-size: 0.8125rem;
-    color: #64748B;
-    margin: 0;
+.active-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .active-reg-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 10px;
-    background: rgba(2, 39, 93, 0.06);
-    color: #02275D;
-    border: 1px solid rgba(2, 39, 93, 0.2);
+    padding: 3px 10px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 6px;
+    color: #FFFFFF;
     font-family: 'JetBrains Mono', Consolas, monospace;
     font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
+    width: fit-content;
 }
 
 .active-reg-badge svg {
-    color: #01347C;
+    color: #FFC300;
 }
 
-.active-grid-info {
+.active-card-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 4px 0 2px 0;
+    letter-spacing: -0.01em;
+}
+
+.active-card-date {
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0;
+}
+
+/* Golden Status Pill */
+.active-badge-gold {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    background: #FFC300;
+    color: #02275D;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
+}
+
+.active-badge-gold svg {
+    color: #02275D;
+}
+
+/* White Body Band */
+.active-card-body {
+    background: #FFFFFF;
+    padding: 24px 26px;
+}
+
+/* 4 Metric Info Grid */
+.active-grid-4 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
-    margin-bottom: 20px;
 }
 
-.active-info-item {
-    background: #F8FAFC;
+.active-metric-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
     border: 1px solid #E2E8F0;
-    border-radius: 8px;
-    padding: 12px 14px;
+    background: #FFFFFF;
     transition: all 0.2s ease;
 }
 
-.active-info-item:hover {
+.active-metric-box:hover {
     border-color: #01347C;
-    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(1, 52, 124, 0.06);
 }
 
-.active-info-label {
-    font-size: 0.6875rem;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: var(--neutral-500, #64748B);
-    letter-spacing: 0.04em;
-    margin-bottom: 4px;
-}
-
-.active-info-value {
-    font-size: 0.9375rem;
-    font-weight: 700;
-    color: #02275D;
+.metric-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #EFF6FF;
+    color: #01347C;
     display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
-.active-info-value svg {
-    color: #01347C;
+.metric-content {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
 }
 
-.active-card-footer {
+.metric-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748B;
+    letter-spacing: 0.05em;
+    line-height: 1.25;
+}
+
+.metric-value {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    color: #02275D;
+    line-height: 1.35;
+    word-break: break-word;
+}
+
+/* Highlighted Box: Status Penempatan */
+.active-metric-box.highlight-placement {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+}
+
+.active-metric-box.highlight-placement:hover {
+    border-color: #FFC300;
+    box-shadow: 0 4px 12px rgba(255, 195, 0, 0.15);
+}
+
+.active-metric-box.highlight-placement .metric-icon-box {
+    background: #FFC300;
+    color: #02275D;
+}
+
+.active-metric-box.highlight-placement .metric-label {
+    color: #854D0E;
+}
+
+.active-metric-box.highlight-placement .metric-value {
+    color: #02275D;
+}
+
+/* Dashed Separator */
+.active-dashed-separator {
+    border: none;
+    border-top: 1px dashed #E2E8F0;
+    margin: 20px 0 16px 0;
+}
+
+/* Footer CTA Action */
+.active-card-cta-row {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 16px;
-    padding-top: 16px;
-    border-top: 1px dashed var(--neutral-200, #E2E8F0);
 }
 
-.active-card-footer .btn-primary {
-    background: #02275D;
-    border: 1.5px solid #02275D;
-    color: #ffffff;
-    font-weight: 700;
+.btn-gold-action {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 9px 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(2, 39, 93, 0.2);
-    transition: all 0.2s ease;
-}
-
-.active-card-footer .btn-primary:hover {
-    background: #01347C;
-    border-color: #01347C;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(2, 39, 93, 0.3);
-}
-
-.active-card-footer .btn-primary svg {
-    color: #FFCB05;
-}
-
-/* 3. Kuota Catalog Cards (Full-Width Row Layout) */
-.kuota-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    width: 100%;
-}
-
-.kuota-card {
-    background: #ffffff;
-    border: 1px solid var(--neutral-300, #CBD5E1);
-    border-radius: var(--radius-lg, 12px);
-    padding: 20px 24px;
-    transition: all 0.25s ease;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    position: relative;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.kuota-card:hover {
-    border-color: #01347C;
-    box-shadow: 0 4px 16px rgba(1, 52, 124, 0.12);
-    transform: translateY(-1px);
-}
-
-.kuota-card-info {
-    flex: 1 1 auto;
-    min-width: 200px;
-}
-
-.kuota-card-stats {
-    flex: 0 0 260px;
-    min-width: 200px;
-}
-
-.kuota-card-cta {
-    flex: 0 0 auto;
-}
-
-.kuota-card-cta .btn-primary {
-    background: #02275D;
-    border: 1.5px solid #02275D;
-    color: #ffffff;
-    transition: all 0.2s ease;
-}
-
-.kuota-card-cta .btn-primary:hover {
-    background: #01347C;
-    border-color: #01347C;
-}
-
-.kuota-card-cta .btn-primary svg {
-    color: #FFCB05;
-}
-
-@media (max-width: 860px) {
-    .kuota-card {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
-        padding: 16px;
-    }
-
-    .kuota-card-stats {
-        flex: 1 1 auto;
-        width: 100%;
-    }
-
-    .kuota-card-cta {
-        width: 100%;
-    }
-}
-
-.kuota-month-name {
-    font-size: 1.125rem;
-    font-weight: 800;
+    background: #FFC300;
     color: #02275D;
-    margin: 0 0 4px 0;
+    border: 1.5px solid #FFC300;
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(255, 195, 0, 0.35);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.kuota-dates {
-    font-size: 0.75rem;
-    color: var(--neutral-500, #64748B);
-    margin-bottom: 16px;
+.btn-gold-action:hover {
+    background: #FFCB05;
+    border-color: #FFCB05;
+    color: #003566;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 195, 0, 0.45);
 }
 
-.kuota-progress-box {
-    background: #F8FAFC;
-    border: 1px solid #E2E8F0;
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-bottom: 16px;
+.btn-gold-action svg {
+    color: #02275D;
 }
 
-.kuota-progress-bar-bg {
-    width: 100%;
-    height: 6px;
-    background: #E2E8F0;
-    border-radius: 999px;
-    overflow: hidden;
-    margin-top: 6px;
+@media (max-width: 1024px) {
+    .active-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.kuota-progress-bar-fill {
-    height: 100%;
-    border-radius: 999px;
-    transition: width 0.3s ease;
+@media (max-width: 640px) {
+    .active-card-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 18px;
+    }
+
+    .active-badge-gold {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .active-card-body {
+        padding: 18px;
+    }
+
+    .active-grid-4 {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-gold-action {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* ========================================================
-   4. RIWAYAT PENDAFTARAN (REFERENSI DESAIN TUGAS PESERTA PEMBIMBING)
+   3. RIWAYAT PENDAFTARAN (MODERN WHITE ACCORDION CARD)
    ======================================================== */
+.riwayat-card-container {
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    overflow: hidden;
+}
+
+.riwayat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.riwayat-title {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #003566;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.riwayat-chevron-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.riwayat-chevron-btn:hover {
+    border-color: #01347C;
+    color: #01347C;
+    background: #F8FAFC;
+}
+
+.riwayat-body {
+    padding: 20px 24px;
+}
+
 .riwayat-stream-list {
     display: flex;
     flex-direction: column;
@@ -392,110 +461,28 @@
     flex: 1;
 }
 
-.riwayat-row-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: rgba(2, 39, 93, 0.07);
-    border: 1px solid rgba(2, 39, 93, 0.14);
-    color: #02275D;
+.riwayat-navy-icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #003566;
+    color: #FFC300;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 6px rgba(0, 53, 102, 0.2);
 }
 
-.riwayat-card-row:hover .riwayat-row-icon,
-.riwayat-row-icon:hover {
-    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
-    border-color: #02275D;
-    color: #FFCB05;
-    transform: scale(1.12) translateY(-2px);
-    box-shadow: 0 6px 16px rgba(2, 39, 93, 0.25), 0 0 0 2px rgba(255, 203, 5, 0.25);
-}
-
-.riwayat-row-icon.icon-diterima {
-    background: #DCFCE7;
-    color: #15803D;
-    border: 1px solid #BBF7D0;
-}
-
-.riwayat-card-row:hover .riwayat-row-icon.icon-diterima,
-.riwayat-row-icon.icon-diterima:hover {
-    background: #15803D;
-    border-color: #15803D;
-    color: #FFFFFF;
-    transform: scale(1.12) translateY(-2px);
-    box-shadow: 0 6px 16px rgba(21, 128, 61, 0.25);
-}
-
-.riwayat-row-icon.icon-pending {
-    background: rgba(2, 39, 93, 0.07);
-    color: #02275D;
-    border: 1px solid rgba(2, 39, 93, 0.14);
-}
-
-.riwayat-card-row:hover .riwayat-row-icon.icon-pending,
-.riwayat-row-icon.icon-pending:hover {
-    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
-    border-color: #02275D;
-    color: #FFCB05;
-    transform: scale(1.12) translateY(-2px);
-    box-shadow: 0 6px 16px rgba(2, 39, 93, 0.25), 0 0 0 2px rgba(255, 203, 5, 0.25);
-}
-
-.riwayat-row-icon.icon-verifikasi,
-.riwayat-row-icon.icon-waiting {
-    background: rgba(2, 39, 93, 0.07);
-    color: #02275D;
-    border: 1px solid rgba(2, 39, 93, 0.14);
-}
-
-.riwayat-card-row:hover .riwayat-row-icon.icon-verifikasi,
-.riwayat-card-row:hover .riwayat-row-icon.icon-waiting,
-.riwayat-row-icon.icon-verifikasi:hover,
-.riwayat-row-icon.icon-waiting:hover {
-    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
-    border-color: #02275D;
-    color: #FFCB05;
-    transform: scale(1.12) translateY(-2px);
-    box-shadow: 0 6px 16px rgba(2, 39, 93, 0.25), 0 0 0 2px rgba(255, 203, 5, 0.25);
-}
-
-.riwayat-row-icon.icon-perbaikan,
-.riwayat-row-icon.icon-warning {
-    background: #FEF3C7;
-    color: #B45309;
-    border: 1px solid #FDE68A;
-}
-
-.riwayat-row-icon.icon-ditolak {
-    background: #FEE2E2;
-    color: #DC2626;
-    border: 1px solid #FECACA;
-}
-
-.riwayat-row-icon.icon-default {
-    background: rgba(2, 39, 93, 0.07);
-    color: #02275D;
-    border: 1px solid rgba(2, 39, 93, 0.14);
-}
-
-.riwayat-card-row:hover .riwayat-row-icon.icon-default,
-.riwayat-row-icon.icon-default:hover {
-    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
-    border-color: #02275D;
-    color: #FFCB05;
-    transform: scale(1.12) translateY(-2px);
-    box-shadow: 0 6px 16px rgba(2, 39, 93, 0.25), 0 0 0 2px rgba(255, 203, 5, 0.25);
+.riwayat-navy-icon-box svg {
+    color: #FFC300;
 }
 
 .riwayat-row-info {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
 }
 
 .riwayat-title-row {
@@ -503,19 +490,6 @@
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
-}
-
-.riwayat-title-text {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #02275D;
-    text-decoration: none;
-    line-height: 1.35;
-    transition: color 0.15s ease;
-}
-
-.riwayat-card-row:hover .riwayat-title-text {
-    color: #01347C;
 }
 
 .riwayat-reg-code {
@@ -528,6 +502,19 @@
     padding: 2px 8px;
     border-radius: 5px;
     letter-spacing: 0.02em;
+}
+
+.riwayat-title-text {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #003566;
+    text-decoration: none;
+    line-height: 1.35;
+    transition: color 0.15s ease;
+}
+
+.riwayat-card-row:hover .riwayat-title-text {
+    color: #01347C;
 }
 
 .riwayat-meta-row {
@@ -556,46 +543,75 @@
     flex-shrink: 0;
 }
 
-.riwayat-status-pill {
-    display: flex;
-    align-items: center;
-}
-
-/* Tombol Aksi Khas Sleman MagKom (.btn-tugas-action parity) */
-.btn-tugas-action {
+/* Riwayat Status Pill Soft Pastel */
+.riwayat-status-pill-soft {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 7px 16px;
+    padding: 5px 14px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.riwayat-status-pill-soft.status-diterima {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+}
+
+.riwayat-status-pill-soft.status-verifikasi,
+.riwayat-status-pill-soft.status-diajukan {
+    background: #EFF6FF;
+    color: #1E40AF;
+    border: 1px solid #BFDBFE;
+}
+
+.riwayat-status-pill-soft.status-perbaikan {
+    background: #FEF2F2;
+    color: #B91C1C;
+    border: 1px solid #FECACA;
+}
+
+.riwayat-status-pill-soft.status-default {
+    background: #F1F5F9;
+    color: #475569;
+    border: 1px solid #E2E8F0;
+}
+
+/* Outline Detail Button */
+.btn-detail-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
     font-size: 0.8125rem;
     font-weight: 700;
-    color: #02275D;
-    background: #ffffff;
-    border: 1.5px solid #02275D;
+    color: #1E293B;
+    background: #FFFFFF;
+    border: 1.5px solid #CBD5E1;
     border-radius: 8px;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     white-space: nowrap;
-    box-shadow: 0 1px 2px rgba(2, 39, 93, 0.06);
 }
 
-.riwayat-card-row:hover .btn-tugas-action,
-.btn-tugas-action:hover {
-    background: #02275D;
+.riwayat-card-row:hover .btn-detail-outline,
+.btn-detail-outline:hover {
     border-color: #02275D;
-    color: #ffffff;
+    color: #02275D;
+    background: #F8FAFC;
     transform: translateX(2px);
-    box-shadow: 0 3px 8px rgba(2, 39, 93, 0.25);
 }
 
-.btn-tugas-action svg {
-    transition: transform 0.2s ease;
+.btn-detail-outline svg {
+    color: #64748B;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.riwayat-card-row:hover .btn-tugas-action svg,
-.btn-tugas-action:hover svg {
-    color: #FFCB05;
+.riwayat-card-row:hover .btn-detail-outline svg,
+.btn-detail-outline:hover svg {
+    color: #02275D;
     transform: translateX(2px);
 }
 
@@ -615,7 +631,125 @@
     }
 }
 
-/* 5. Modal Interaktif Pengajuan */
+/* ========================================================
+   4. KUOTA CATALOG CARDS (UNTUK PESERTA TANPA PENGAJUAN)
+   ======================================================== */
+.kuota-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.kuota-card {
+    background: #ffffff;
+    border: 1px solid var(--neutral-300, #CBD5E1);
+    border-radius: 12px;
+    padding: 20px 24px;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.kuota-card:hover {
+    border-color: #01347C;
+    box-shadow: 0 4px 16px rgba(1, 52, 124, 0.12);
+    transform: translateY(-1px);
+}
+
+.kuota-card-info {
+    flex: 1 1 auto;
+    min-width: 200px;
+}
+
+.kuota-card-stats {
+    flex: 0 0 260px;
+    min-width: 200px;
+}
+
+.kuota-card-cta {
+    flex: 0 0 auto;
+}
+
+.kuota-card-cta .btn-primary {
+    background: #003566;
+    border: 1.5px solid #003566;
+    color: #ffffff;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.kuota-card-cta .btn-primary:hover {
+    background: #01347C;
+    border-color: #01347C;
+}
+
+.kuota-card-cta .btn-primary svg {
+    color: #FFC300;
+}
+
+@media (max-width: 860px) {
+    .kuota-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .kuota-card-stats {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .kuota-card-cta {
+        width: 100%;
+    }
+}
+
+.kuota-month-name {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #003566;
+    margin: 0 0 4px 0;
+}
+
+.kuota-dates {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin-bottom: 16px;
+}
+
+.kuota-progress-box {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+}
+
+.kuota-progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: #E2E8F0;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+.kuota-progress-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+/* ========================================================
+   5. MODAL INTERAKTIF PENGAJUAN MAGANG BARU
+   ======================================================== */
 .pendaftaran-modal-backdrop {
     display: none;
     position: fixed;
@@ -636,7 +770,7 @@
 
 .pendaftaran-modal-card {
     background: #ffffff;
-    border-radius: var(--radius-xl, 16px);
+    border-radius: 16px;
     width: 100%;
     max-width: 600px;
     padding: 28px;
@@ -666,7 +800,7 @@
     height: 38px;
     border-radius: 10px;
     background: rgba(2, 39, 93, 0.08);
-    color: #02275D;
+    color: #003566;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -676,7 +810,7 @@
 .pendaftaran-modal-title {
     font-size: 1.125rem;
     font-weight: 800;
-    color: #02275D;
+    color: #003566;
     margin: 0 0 2px 0;
 }
 
@@ -723,15 +857,15 @@
 .pendaftaran-summary-jurusan {
     font-size: 0.9375rem;
     font-weight: 700;
-    color: #02275D;
+    color: #003566;
 }
 
 .pendaftaran-summary-badge {
     font-size: 0.6875rem;
     font-weight: 700;
-    color: #02275D;
-    background: rgba(2, 39, 93, 0.08);
-    border: 1px solid rgba(2, 39, 93, 0.2);
+    color: #003566;
+    background: rgba(0, 53, 102, 0.08);
+    border: 1px solid rgba(0, 53, 102, 0.2);
     padding: 2px 8px;
     border-radius: 999px;
     text-transform: uppercase;
@@ -818,15 +952,15 @@
 
 .duration-chip-btn:hover {
     border-color: #01347C;
-    background: rgba(2, 39, 93, 0.04);
+    background: rgba(0, 53, 102, 0.04);
 }
 
 .duration-chip-btn.is-active {
-    border-color: #02275D;
-    background: rgba(2, 39, 93, 0.08);
-    color: #02275D;
+    border-color: #003566;
+    background: rgba(0, 53, 102, 0.08);
+    color: #003566;
     font-weight: 700;
-    box-shadow: 0 0 0 2px rgba(2, 39, 93, 0.2);
+    box-shadow: 0 0 0 2px rgba(0, 53, 102, 0.2);
 }
 
 .duration-chip-num {
@@ -840,18 +974,92 @@
     text-transform: uppercase;
 }
 
+.pendaftaran-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #E2E8F0;
+}
+
+.pendaftaran-btn-cancel {
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: 1px solid #CBD5E1;
+    background: #FFFFFF;
+    color: #475569;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pendaftaran-btn-cancel:hover {
+    background: #F1F5F9;
+    color: #1E293B;
+}
+
+.pendaftaran-btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: 1.5px solid #003566;
+    background: #003566;
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 53, 102, 0.2);
+}
+
+.pendaftaran-btn-submit:hover {
+    background: #01347C;
+    border-color: #01347C;
+}
+
+.pendaftaran-preview-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+}
+
+.pendaftaran-preview-icon {
+    color: #01347C;
+}
+
+.pendaftaran-preview-content {
+    font-size: 0.8125rem;
+    color: #1E3A8A;
+}
+
+.pendaftaran-preview-title {
+    font-weight: 700;
+    margin-right: 4px;
+}
+
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
-/* 6. Dark Mode Support */
-[data-theme="dark"] .active-info-item,
+/* ========================================================
+   6. DARK MODE SUPPORT
+   ======================================================== */
+[data-theme="dark"] .active-metric-box,
 [data-theme="dark"] .kuota-progress-box,
 [data-theme="dark"] .pendaftaran-summary-card {
     background: #0F172A !important;
     border-color: #26354D !important;
 }
 
-[data-theme="dark"] .active-info-label,
+[data-theme="dark"] .metric-label,
 [data-theme="dark"] .kuota-dates,
 [data-theme="dark"] .riwayat-meta-row,
 [data-theme="dark"] .pendaftaran-summary-sub,
@@ -859,24 +1067,41 @@
     color: #94A3B8 !important;
 }
 
-[data-theme="dark"] .active-info-value,
+[data-theme="dark"] .metric-value,
 [data-theme="dark"] .kuota-month-name,
 [data-theme="dark"] .riwayat-title-text,
+[data-theme="dark"] .riwayat-title,
 [data-theme="dark"] .pendaftaran-summary-jurusan,
 [data-theme="dark"] .pendaftaran-modal-title {
     color: #F8FAFC !important;
 }
 
-[data-theme="dark"] .active-reg-badge,
-[data-theme="dark"] .riwayat-reg-code {
-    background: #0F172A !important;
+[data-theme="dark"] .active-card-body,
+[data-theme="dark"] .riwayat-card-container {
+    background: #182234 !important;
     border-color: #26354D !important;
-    color: #FFCB05 !important;
+}
+
+[data-theme="dark"] .riwayat-header {
+    border-bottom-color: #26354D !important;
+}
+
+[data-theme="dark"] .active-metric-box.highlight-placement {
+    background: rgba(255, 195, 0, 0.1) !important;
+    border-color: rgba(255, 195, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .active-metric-box.highlight-placement .metric-value {
+    color: #FFC300 !important;
+}
+
+[data-theme="dark"] .active-metric-box.highlight-placement .metric-label {
+    color: #FDE68A !important;
 }
 
 [data-theme="dark"] .kuota-card,
 [data-theme="dark"] .riwayat-card-row {
-    background: #182234 !important;
+    background: #0F172A !important;
     border-color: #26354D !important;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
 }
@@ -891,16 +1116,22 @@
     background: #26354D !important;
 }
 
-[data-theme="dark"] .btn-tugas-action {
+[data-theme="dark"] .btn-detail-outline {
     background: #0F172A !important;
-    border-color: #01347C !important;
+    border-color: #26354D !important;
     color: #F8FAFC !important;
 }
 
-[data-theme="dark"] .btn-tugas-action:hover {
-    background: #02275D !important;
-    border-color: #02275D !important;
-    color: #ffffff !important;
+[data-theme="dark"] .btn-detail-outline:hover {
+    background: #182234 !important;
+    border-color: #FFC300 !important;
+    color: #FFC300 !important;
+}
+
+[data-theme="dark"] .riwayat-chevron-btn {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
 }
 
 [data-theme="dark"] .pendaftaran-modal-card {
@@ -922,8 +1153,7 @@
 }
 
 [data-theme="dark"] .duration-chip-btn.is-active {
-    border-color: #FFCB05 !important;
-    background: rgba(2, 39, 93, 0.6) !important;
-    color: #FFCB05 !important;
+    border-color: #FFC300 !important;
+    background: rgba(0, 53, 102, 0.6) !important;
+    color: #FFC300 !important;
 }
-

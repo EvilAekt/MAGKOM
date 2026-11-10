@@ -29,22 +29,28 @@
             </p>
             <div class="hero-meta-pills">
                 <div class="hero-meta-pill">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                     <span>{{ $profil?->institusi ?? 'Institusi Belum Dicatat' }}</span>
                 </div>
                 <div class="hero-meta-pill">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span>{{ $profil?->jurusan?->nama_jurusan ?? 'Jurusan Belum Dipilih' }}</span>
                 </div>
                 @if($profil?->jenjang)
                     <div class="hero-meta-pill">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-5.825-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-5.825-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
                         <span>{{ strtoupper($profil->jenjang?->value ?? $profil->jenjang) }}</span>
                     </div>
                 @endif
             </div>
         </div>
 
+        {{-- Decorative Concentric Rings (Matching Sleman Mockup) --}}
+        <svg class="hero-rings-ornament" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="200" cy="200" r="140" stroke="#FFC300" stroke-width="1.5" stroke-opacity="0.35" />
+            <circle cx="200" cy="200" r="100" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.25" />
+            <circle cx="200" cy="200" r="60" stroke="#FFC300" stroke-width="1.5" stroke-opacity="0.2" />
+        </svg>
     </div>
 
     {{-- ========================================================
@@ -79,17 +85,23 @@
     @endif
 
     {{-- ========================================================
-         3. SPOTLIGHT CARD PENGAJUAN AKTIF (GENTELELLA CARD)
+         3. SPOTLIGHT CARD PENGAJUAN AKTIF (TWO-TONE SPLIT)
          ======================================================== --}}
     @if($pendaftaranAktif)
-        <x-gentelella.card class="pendaftaran-active-card">
-            <div class="active-card-header">
-                <div>
+        @php
+            $valStatus = $pendaftaranAktif->status->value ?? (string)$pendaftaranAktif->status;
+            $namaPenempatan = $pendaftaranAktif->penempatan?->bidang?->nama_bidang;
+            $isPlacedOrAccepted = ($valStatus === 'diterima' || !empty($namaPenempatan));
+        @endphp
+        <div class="pendaftaran-active-card">
+            {{-- Top Navy Header Band --}}
+            <div class="active-card-topbar">
+                <div class="active-card-meta">
                     <div class="active-reg-badge">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        #REG-{{ str_pad((string)$pendaftaranAktif->id, 5, '0', STR_PAD_LEFT) }}
+                        <span>#REG-{{ str_pad((string)$pendaftaranAktif->id, 5, '0', STR_PAD_LEFT) }}</span>
                     </div>
                     <h2 class="active-card-title">
                         Pengajuan Magang Aktif Sedang Diproses
@@ -100,78 +112,104 @@
                 </div>
 
                 <div>
-                    @php
-                        $valStatus = $pendaftaranAktif->status->value ?? (string)$pendaftaranAktif->status;
-                    @endphp
-                    @if($valStatus === 'berkas_belum_lengkap')
-                        <span class="sr-only">Berkas Belum Lengkap</span>
+                    @if($valStatus === 'diterima')
+                        <div class="active-badge-gold">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Selamat! Diterima Magang</span>
+                        </div>
                     @elseif($valStatus === 'diajukan')
-                        <x-gentelella.badge variant="warning" style="font-size: 0.75rem; padding: 6px 12px;">
-                            Menunggu Verifikasi Admin
-                        </x-gentelella.badge>
+                        <div class="active-badge-gold" style="background: #FEF3C7; color: #92400E;">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <span>Menunggu Verifikasi Admin</span>
+                        </div>
                     @elseif($valStatus === 'waiting_list')
-                        <x-gentelella.badge variant="info" style="font-size: 0.75rem; padding: 6px 12px;">
-                            Waiting List (Antrean)
-                        </x-gentelella.badge>
+                        <div class="active-badge-gold" style="background: #EFF6FF; color: #1E40AF;">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <span>Waiting List (Antrean)</span>
+                        </div>
                     @elseif($valStatus === 'perlu_perbaikan')
-                        <x-gentelella.badge variant="warning" style="font-size: 0.75rem; padding: 6px 12px;">
-                            Perlu Perbaikan Berkas
-                        </x-gentelella.badge>
-                    @elseif($valStatus === 'diterima')
-                        <x-gentelella.badge variant="success" style="font-size: 0.75rem; padding: 6px 12px;">
-                            Selamat! Diterima Magang
-                        </x-gentelella.badge>
+                        <div class="active-badge-gold" style="background: #FEF2F2; color: #B91C1C;">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            <span>Perlu Perbaikan Berkas</span>
+                        </div>
+                    @elseif($valStatus === 'berkas_belum_lengkap')
+                        <div class="active-badge-gold" style="background: #F1F5F9; color: #475569;">
+                            <span>Berkas Belum Lengkap</span>
+                        </div>
                     @else
-                        <x-gentelella.badge variant="secondary">{{ $valStatus }}</x-gentelella.badge>
+                        <div class="active-badge-gold">
+                            <span>{{ ucfirst($valStatus) }}</span>
+                        </div>
                     @endif
                 </div>
             </div>
 
-            <div class="active-grid-info">
-                <div class="active-info-item">
-                    <div class="active-info-label">Bulan Magang</div>
-                    <div class="active-info-value">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        <span>{{ $pendaftaranAktif->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}</span>
+            {{-- Crisp White Lower Body --}}
+            <div class="active-card-body">
+                <div class="active-grid-4">
+                    {{-- 1. Bulan Magang --}}
+                    <div class="active-metric-box">
+                        <div class="metric-icon-box" aria-hidden="true">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <div class="metric-content">
+                            <span class="metric-label">Bulan Magang</span>
+                            <span class="metric-value">{{ $pendaftaranAktif->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}</span>
+                        </div>
+                    </div>
+
+                    {{-- 2. Jurusan Kuota Terdaftar --}}
+                    <div class="active-metric-box">
+                        <div class="metric-icon-box" aria-hidden="true">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-5.825-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+                        </div>
+                        <div class="metric-content">
+                            <span class="metric-label">Jurusan Kuota Terdaftar</span>
+                            <span class="metric-value" title="{{ $pendaftaranAktif->kuota?->jurusan?->nama_jurusan ?? '-' }}">
+                                {{ $pendaftaranAktif->kuota?->jurusan?->nama_jurusan ?? '-' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    {{-- 3. Rencana Durasi Magang --}}
+                    <div class="active-metric-box">
+                        <div class="metric-icon-box" aria-hidden="true">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        </div>
+                        <div class="metric-content">
+                            <span class="metric-label">Rencana Durasi Magang</span>
+                            <span class="metric-value">{{ $pendaftaranAktif->durasi_bulan }} Bulan</span>
+                        </div>
+                    </div>
+
+                    {{-- 4. Status Penempatan (Highlighted) --}}
+                    <div class="active-metric-box {{ $isPlacedOrAccepted ? 'highlight-placement' : '' }}">
+                        <div class="metric-icon-box" aria-hidden="true">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        </div>
+                        <div class="metric-content">
+                            <span class="metric-label">Status Penempatan</span>
+                            <span class="metric-value" title="{{ $namaPenempatan ?? 'Tahap Seleksi Berkas' }}">
+                                {{ $namaPenempatan ?? 'Tahap Seleksi Berkas' }}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="active-info-item">
-                    <div class="active-info-label">Jurusan Kuota Terdaftar</div>
-                    <div class="active-info-value">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-5.825-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
-                        <span>{{ $pendaftaranAktif->kuota?->jurusan?->nama_jurusan ?? '-' }}</span>
-                    </div>
-                </div>
+                {{-- Dashed Separator --}}
+                <div class="active-dashed-separator"></div>
 
-                <div class="active-info-item">
-                    <div class="active-info-label">Rencana Durasi Magang</div>
-                    <div class="active-info-value">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        <span>{{ $pendaftaranAktif->durasi_bulan }} Bulan</span>
-                    </div>
-                </div>
-
-                <div class="active-info-item">
-                    <div class="active-info-label">Status Penempatan</div>
-                    <div class="active-info-value">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                        <span>{{ $pendaftaranAktif->penempatan?->bidang?->nama_bidang ?? 'Tahap Seleksi Berkas' }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="active-card-footer">
-                <div>
-                    <a href="{{ route('peserta.pendaftaran.detail', $pendaftaranAktif) }}" class="btn btn-primary">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                {{-- Golden CTA Button --}}
+                <div class="active-card-cta-row">
+                    <a href="{{ route('peserta.pendaftaran.detail', $pendaftaranAktif) }}" class="btn-gold-action">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        Buka Berkas & Detail Pengajuan
+                        <span>Buka Berkas & Detail Pengajuan</span>
                     </a>
                 </div>
             </div>
-        </x-gentelella.card>
+        </div>
     @endif
 
     {{-- ========================================================
@@ -258,95 +296,92 @@
     @endif
 
     {{-- ========================================================
-         5. TABEL RIWAYAT PENDAFTARAN MAGANG (X-PANEL GENTELELLA)
+         5. TABEL RIWAYAT PENDAFTARAN MAGANG (MODERN WHITE ACCORDION CARD)
          ======================================================== --}}
-    <x-gentelella.x-panel title="Riwayat Pendaftaran Magang">
+    <div class="riwayat-card-container">
+        <div class="riwayat-header">
+            <h2 class="riwayat-title">Riwayat Pendaftaran Magang</h2>
+            <button type="button" class="riwayat-chevron-btn" id="btnToggleRiwayat" aria-label="Toggle Riwayat Pendaftaran">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+            </button>
+        </div>
+
         <span class="sr-only">Buat Pengajuan Baru</span>
 
-        @if($pendaftaranList->isEmpty())
-            <div style="text-align: center; padding: 48px 24px;">
-                <div style="width: 56px; height: 56px; margin: 0 auto 16px auto; background: rgba(2, 39, 93, 0.06); color: #02275D; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                </div>
-                <h3 style="font-size: 1rem; font-weight: 700; color: var(--neutral-800, #1E293B); margin: 0 0 6px 0;">Belum Ada Pengajuan Magang</h3>
-                <p style="font-size: 0.8125rem; color: var(--neutral-500, #64748B); max-width: 420px; margin: 0 auto; line-height: 1.5;">
-                    Anda belum memiliki riwayat pengajuan magang di Dinas Kominfo Sleman.
-                </p>
-            </div>
-        @else
-            <div class="riwayat-stream-list">
-                @foreach($pendaftaranList as $item)
-                    @php
-                        $val = $item->status->value ?? (string)$item->status;
-                    @endphp
-                    <div class="riwayat-card-row">
-                        <div class="riwayat-row-left">
-                            <div class="riwayat-row-icon {{ $val === 'diterima' ? 'icon-diterima' : (in_array($val, ['diajukan', 'waiting_list']) ? 'icon-verifikasi' : ($val === 'perlu_perbaikan' ? 'icon-perbaikan' : ($val === 'berkas_belum_lengkap' ? 'icon-pending' : ($val === 'ditolak' ? 'icon-ditolak' : 'icon-default')))) }}" aria-hidden="true">
-                                @if($val === 'diterima')
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                @elseif(in_array($val, ['diajukan', 'waiting_list']))
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                @elseif($val === 'perlu_perbaikan')
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                                @elseif($val === 'berkas_belum_lengkap')
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                @elseif($val === 'ditolak')
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                @else
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                                @endif
-                            </div>
-
-                            <div class="riwayat-row-info">
-                                <div class="riwayat-title-row">
-                                    <span class="riwayat-reg-code">#REG-{{ str_pad((string)$item->id, 5, '0', STR_PAD_LEFT) }}</span>
-                                    <a href="{{ route('peserta.pendaftaran.detail', $item) }}" class="riwayat-title-text">
-                                        {{ $item->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
-                                    </a>
-                                </div>
-                                <div class="riwayat-meta-row">
-                                    <strong>{{ $item->kuota?->jurusan?->nama_jurusan ?? '-' }}</strong>
-                                    <span class="riwayat-bullet">&bull;</span>
-                                    <span>Rencana: <strong>{{ $item->durasi_bulan }} Bulan</strong></span>
-                                    <span class="riwayat-bullet">&bull;</span>
-                                    <span>Diajukan: {{ $item->created_at->translatedFormat('d M Y, H:i') }} WIB</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="riwayat-row-right">
-                            <div class="riwayat-status-pill">
-                                @if($val === 'berkas_belum_lengkap')
-                                    <span class="sr-only">Berkas Belum Lengkap</span>
-                                @elseif($val === 'diajukan')
-                                    <x-gentelella.badge variant="warning">Menunggu Verifikasi</x-gentelella.badge>
-                                @elseif($val === 'waiting_list')
-                                    <x-gentelella.badge variant="info">Waiting List</x-gentelella.badge>
-                                @elseif($val === 'perlu_perbaikan')
-                                    <x-gentelella.badge variant="warning">Perlu Perbaikan</x-gentelella.badge>
-                                @elseif($val === 'diterima')
-                                    <x-gentelella.badge variant="success">Diterima</x-gentelella.badge>
-                                @elseif($val === 'ditolak')
-                                    <x-gentelella.badge variant="danger">Ditolak</x-gentelella.badge>
-                                @elseif($val === 'dibatalkan')
-                                    <x-gentelella.badge variant="secondary">Dibatalkan</x-gentelella.badge>
-                                @else
-                                    <x-gentelella.badge variant="secondary">{{ $val }}</x-gentelella.badge>
-                                @endif
-                            </div>
-
-                            <a href="{{ route('peserta.pendaftaran.detail', $item) }}" class="btn-tugas-action" title="Lihat detail pendaftaran">
-                                <span>Detail</span>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                            </a>
-                        </div>
+        <div class="riwayat-body" id="riwayatAccordionBody">
+            @if($pendaftaranList->isEmpty())
+                <div style="text-align: center; padding: 48px 24px;">
+                    <div style="width: 56px; height: 56px; margin: 0 auto 16px auto; background: rgba(2, 39, 93, 0.06); color: #02275D; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
                     </div>
-                @endforeach
-            </div>
-        @endif
-    </x-gentelella.x-panel>
+                    <h3 style="font-size: 1rem; font-weight: 700; color: #1E293B; margin: 0 0 6px 0;">Belum Ada Pengajuan Magang</h3>
+                    <p style="font-size: 0.8125rem; color: #64748B; max-width: 420px; margin: 0 auto; line-height: 1.5;">
+                        Anda belum memiliki riwayat pengajuan magang di Dinas Kominfo Sleman.
+                    </p>
+                </div>
+            @else
+                <div class="riwayat-stream-list">
+                    @foreach($pendaftaranList as $item)
+                        @php
+                            $val = $item->status->value ?? (string)$item->status;
+                        @endphp
+                        <div class="riwayat-card-row">
+                            <div class="riwayat-row-left">
+                                <div class="riwayat-navy-icon-box" aria-hidden="true">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </div>
+
+                                <div class="riwayat-row-info">
+                                    <div class="riwayat-title-row">
+                                        <span class="riwayat-reg-code">#REG-{{ str_pad((string)$item->id, 5, '0', STR_PAD_LEFT) }}</span>
+                                        <a href="{{ route('peserta.pendaftaran.detail', $item) }}" class="riwayat-title-text">
+                                            {{ $item->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
+                                        </a>
+                                    </div>
+                                    <div class="riwayat-meta-row">
+                                        <strong>{{ $item->kuota?->jurusan?->nama_jurusan ?? '-' }}</strong>
+                                        <span class="riwayat-bullet">&bull;</span>
+                                        <span>Rencana: <strong>{{ $item->durasi_bulan }} Bulan</strong></span>
+                                        <span class="riwayat-bullet">&bull;</span>
+                                        <span>Diajukan: {{ $item->created_at->translatedFormat('d M Y, H:i') }} WIB</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="riwayat-row-right">
+                                <div>
+                                    @if($val === 'diterima')
+                                        <span class="riwayat-status-pill-soft status-diterima">Diterima</span>
+                                    @elseif(in_array($val, ['diajukan', 'waiting_list']))
+                                        <span class="riwayat-status-pill-soft status-diajukan">Menunggu Verifikasi</span>
+                                    @elseif($val === 'perlu_perbaikan')
+                                        <span class="riwayat-status-pill-soft status-perbaikan">Perlu Perbaikan</span>
+                                    @elseif($val === 'berkas_belum_lengkap')
+                                        <span class="riwayat-status-pill-soft status-default">Belum Lengkap</span>
+                                    @elseif($val === 'ditolak')
+                                        <span class="riwayat-status-pill-soft status-perbaikan">Ditolak</span>
+                                    @elseif($val === 'dibatalkan')
+                                        <span class="riwayat-status-pill-soft status-default">Dibatalkan</span>
+                                    @else
+                                        <span class="riwayat-status-pill-soft status-default">{{ ucfirst($val) }}</span>
+                                    @endif
+                                </div>
+
+                                <a href="{{ route('peserta.pendaftaran.detail', $item) }}" class="btn-detail-outline" title="Lihat detail pendaftaran">
+                                    <span>Detail</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    </div>
 </div>
 
 {{-- ========================================================
@@ -578,6 +613,19 @@
         const select = document.getElementById('kuota_id');
         if (select && select.value) {
             handleKuotaChange(select);
+        }
+
+        const btnToggleRiwayat = document.getElementById('btnToggleRiwayat');
+        const riwayatBody = document.getElementById('riwayatAccordionBody');
+        if (btnToggleRiwayat && riwayatBody) {
+            btnToggleRiwayat.addEventListener('click', () => {
+                const isHidden = riwayatBody.style.display === 'none';
+                riwayatBody.style.display = isHidden ? 'block' : 'none';
+                const svg = btnToggleRiwayat.querySelector('svg');
+                if (svg) {
+                    svg.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+                }
+            });
         }
 
         document.addEventListener('keydown', (e) => {

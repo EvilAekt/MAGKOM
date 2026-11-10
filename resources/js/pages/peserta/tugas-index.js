@@ -1,9 +1,22 @@
 /**
  * Modul Interaksi Classroom Tugas Index Peserta
- * Menangani filter 3-tab (Semua Tugas, Selesai, Lewat Tenggat) dan empty state.
+ * Menangani filter 3-tab (Semua Tugas, Selesai, Lewat Tenggat), accordion toggle, dan empty state.
  */
 
 export function initTugasIndex() {
+    // Accordion Toggle Handler
+    const btnToggle = document.getElementById('btnToggleAssignment');
+    const accordionBody = document.getElementById('assignmentAccordionBody');
+
+    if (btnToggle && accordionBody) {
+        btnToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isCollapsed = accordionBody.classList.toggle('is-collapsed');
+            btnToggle.classList.toggle('collapsed', isCollapsed);
+            btnToggle.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+        });
+    }
+
     const tabsContainer = document.querySelector('.classroom-tabs');
     const assignmentList = document.getElementById('assignmentList');
     const emptyState = document.getElementById('filterEmptyState');

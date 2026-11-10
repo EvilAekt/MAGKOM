@@ -2,439 +2,264 @@
 
 @section('title', 'Akun & Preferensi Saya - Super Administrator MagKom')
 
-@push('styles')
-<style>
-    /* ========================================================
-       MAGKOM GENTELELLA DESIGN SYSTEM: SUPERADMIN AKUN
-       ======================================================== */
-    .superadmin-akun-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-        padding-bottom: 32px;
-    }
-
-    .superadmin-akun-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 24px;
-        align-items: start;
-    }
-
-    @media (max-width: 960px) {
-        .superadmin-akun-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .profile-mini-header {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding-bottom: 20px;
-        margin-bottom: 20px;
-        border-bottom: 1px solid var(--neutral-200, #E2E8F0);
-    }
-
-    .profile-mini-avatar {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        background: #EFF6FF;
-        color: #0751FF;
-        font-size: 1.25rem;
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        overflow: hidden;
-        border: 2px solid #BFDBFE;
-    }
-
-    .profile-mini-avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .info-list {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        margin-bottom: 22px;
-    }
-
-    .info-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 0.875rem;
-    }
-
-    .info-label {
-        color: var(--neutral-500, #64748B);
-    }
-
-    .info-value {
-        color: var(--neutral-800, #1E293B);
-        font-weight: 600;
-        text-align: right;
-    }
-
-    .callout-note {
-        background: #F8FAFC;
-        border: 1px solid var(--neutral-200, #E2E8F0);
-        border-radius: 8px;
-        padding: 12px 16px;
-        font-size: 0.8125rem;
-        color: var(--neutral-600, #475569);
-        line-height: 1.5;
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-    }
-
-    .callout-note a {
-        color: #0751FF;
-        font-weight: 600;
-        text-decoration: none;
-    }
-
-    .callout-note a:hover {
-        text-decoration: underline;
-    }
-
-    /* Password Input */
-    .input-password-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .toggle-password-btn {
-        position: absolute;
-        right: 12px;
-        background: none;
-        border: none;
-        padding: 4px;
-        color: var(--neutral-500, #64748B);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .theme-options-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin-top: 8px;
-    }
-
-    @media (max-width: 640px) {
-        .theme-options-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .theme-card-option {
-        position: relative;
-        border: 1.5px solid var(--neutral-300, #CBD5E1);
-        border-radius: 10px;
-        padding: 12px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        background: #ffffff;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .theme-card-option:hover {
-        border-color: #0751FF;
-    }
-
-    .theme-card-option.selected {
-        border-color: #0641CC !important;
-        box-shadow: 0 0 0 2px rgba(7, 81, 255, 0.2);
-    }
-
-    .theme-card-option input[type="radio"] {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .theme-preview-box {
-        height: 36px;
-        border-radius: 6px;
-        padding: 6px 10px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .preview-light { background: #F1F5F9; border: 1px solid #E2E8F0; }
-    .preview-dark { background: #1E293B; border: 1px solid #0F172A; }
-    .preview-system { background: linear-gradient(115deg, #F1F5F9 48%, #1E293B 48%); border: 1px solid #CBD5E1; }
-
-    .preview-dot { width: 6px; height: 6px; border-radius: 50%; background: #94A3B8; }
-    .preview-bar { height: 4px; flex: 1; border-radius: 2px; background: #CBD5E1; }
-    .preview-dark .preview-dot { background: #60A5FA; }
-    .preview-dark .preview-bar { background: #334155; }
-
-    /* Dark Mode Harmonization */
-    [data-theme="dark"] .profile-mini-header { border-bottom-color: #26354D !important; }
-    [data-theme="dark"] .info-label { color: #94A3B8 !important; }
-    [data-theme="dark"] .info-value { color: #F8FAFC !important; }
-    [data-theme="dark"] .callout-note { background: #0F172A !important; border-color: #26354D !important; color: #94A3B8 !important; }
-    [data-theme="dark"] .theme-card-option { background: #182234; border-color: #26354D; color: #F8FAFC; }
-    [data-theme="dark"] .theme-card-option.selected { border-color: #3B82F6 !important; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); }
-</style>
-@endpush
-
 @section('content')
-<div class="superadmin-akun-wrapper">
+<div class="pengaturan-akun-page">
 
-    {{-- Header Halaman --}}
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-        <div>
-            <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0 0 4px 0;">
-                Akun & Preferensi Saya
-            </h1>
-            <p style="font-size: 0.875rem; color: var(--neutral-500, #64748B); margin: 0;">
-                Kelola keamanan kredensial Super Administrator dan preferensi visual aplikasi.
-            </p>
+    {{-- Flash Notifications --}}
+    @if(session('success'))
+        <x-gentelella.callout type="success" :title="__('Berhasil')">
+            {{ session('success') }}
+        </x-gentelella.callout>
+    @endif
+    @if(session('error'))
+        <x-gentelella.callout type="danger" :title="__('Gagal')">
+            {{ session('error') }}
+        </x-gentelella.callout>
+    @endif
+    @if($errors->any())
+        <x-gentelella.callout type="danger" :title="__('Perhatian')">
+            {{ $errors->first() }}
+        </x-gentelella.callout>
+    @endif
+
+    {{-- Hero Banner --}}
+    <div class="settings-hero-banner">
+        <div class="banner-content-left">
+            <h1 class="banner-title">Akun & Preferensi Saya</h1>
+            <p class="banner-subtitle">Kelola keamanan kredensial Super Administrator dan preferensi visual aplikasi.</p>
+            <div class="banner-capsules-row">
+                <div class="hero-context-pill">
+                    <span class="pill-micro-label">Super Admin</span>
+                    <span class="pill-strong-value">{{ $user->nama }}</span>
+                </div>
+                <div class="hero-context-pill">
+                    <span class="pill-micro-label">Hak Akses</span>
+                    <span class="pill-strong-value">Super Administrator</span>
+                </div>
+            </div>
         </div>
-        <div>
-            <a href="{{ route('superadmin.profil.show') }}" class="btn btn-secondary">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                </svg>
-                <span>Lihat Profil Lengkap</span>
-            </a>
+
+        <div class="banner-gold-widget">
+            <span class="widget-label">Status Akun</span>
+            <span class="widget-status-value">Aktif</span>
+            <span class="widget-subtext">Portal tata kelola sistem</span>
+            <a href="{{ route('superadmin.profil.show') }}" class="btn-gold-action">Lihat Profil Lengkap</a>
         </div>
     </div>
 
-    {{-- Layout 2 Kolom Gentelella --}}
-    <div class="superadmin-akun-grid">
+    {{-- Bento Grid 2 Kolom --}}
+    <div class="settings-grid-2col">
 
         {{-- Kolom Kiri: Informasi Akun --}}
-        <x-gentelella.x-panel title="Informasi Akun" subtitle="Ringkasan kredensial dan hak akses Super Administrator.">
-            <div class="profile-mini-header">
-                <div class="profile-mini-avatar">
+        <div class="settings-white-card">
+            <h2 class="card-heading-title">Informasi Akun</h2>
+            <p class="card-heading-subtitle">Ringkasan kredensial dan hak akses Super Administrator.</p>
+
+            <div class="profile-identity-box">
+                <div class="avatar-circle">
                     @if($user->foto_url)
                         <img src="{{ $user->foto_url }}" alt="{{ $user->nama }}">
                     @else
                         {{ strtoupper(substr($user->nama ?? 'S', 0, 2)) }}
                     @endif
                 </div>
-                <div>
-                    <div style="font-size: 1.0625rem; font-weight: 700; color: var(--neutral-800, #1E293B);">
-                        {{ $user->nama }}
-                    </div>
-                    <x-gentelella.badge variant="danger" style="margin-top: 4px;">
-                        Super Administrator
-                    </x-gentelella.badge>
+                <div class="identity-meta">
+                    <span class="identity-name">{{ $user->nama }}</span>
+                    <span class="role-chip-pill">Super Administrator</span>
                 </div>
             </div>
 
-            <div class="info-list">
-                <div class="info-row">
-                    <span class="info-label">Nama Lengkap</span>
-                    <span class="info-value">{{ $user->nama }}</span>
+            <div class="credential-rows">
+                <div class="credential-row">
+                    <span class="credential-label">Nama Lengkap</span>
+                    <span class="credential-value">{{ $user->nama }}</span>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Alamat Email</span>
-                    <span class="info-value">{{ $user->email }}</span>
+                <div class="credential-row">
+                    <span class="credential-label">Alamat Email</span>
+                    <span class="credential-value">{{ $user->email }}</span>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Nomor Kontak</span>
-                    <span class="info-value">{{ $user->no_telp ?? 'Belum diisi' }}</span>
+                <div class="credential-row">
+                    <span class="credential-label">Nomor Kontak</span>
+                    <span class="credential-value">{{ $user->no_telp ?? 'Belum diisi' }}</span>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Hak Otoritas</span>
-                    <span class="info-value">Pengelola Utama</span>
+                <div class="credential-row">
+                    <span class="credential-label">Hak Otoritas</span>
+                    <span class="credential-value">Pengelola Utama</span>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Status Keamanan</span>
-                    <span class="info-value">
-                        <x-gentelella.badge variant="success">Aktif & Aman</x-gentelella.badge>
+                <div class="credential-row">
+                    <span class="credential-label">Status Keamanan</span>
+                    <span class="credential-value">
+                        <span class="badge-status-gold">Aktif & Aman</span>
                     </span>
                 </div>
             </div>
 
-            <div class="callout-note">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0; color: #0751FF;">
+            <div class="alert-info-box">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="12" y1="16" x2="12" y2="12"></line>
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                 </svg>
                 <span>Foto pasfoto dan nomor telepon dinas dapat diperbarui di halaman <a href="{{ route('superadmin.profil.show') }}">Profil Saya</a>. Konfigurasi sistem global tersedia di <a href="{{ route('superadmin.pengaturan.index') }}">Pengaturan Sistem</a>.</span>
             </div>
-        </x-gentelella.x-panel>
+        </div>
 
         {{-- Kolom Kanan: Ganti Kata Sandi --}}
-        <x-gentelella.x-panel title="Ganti Kata Sandi" subtitle="Gunakan kombinasi sandi tingkat tinggi untuk perlindungan akun Super Admin.">
+        <div class="settings-white-card">
+            <h2 class="card-heading-title">Ganti Kata Sandi</h2>
+            <p class="card-heading-subtitle">Gunakan kombinasi sandi tingkat tinggi untuk perlindungan akun Super Admin.</p>
+
             <form action="{{ route('superadmin.akun.password.update') }}" method="POST" id="passwordForm">
                 @csrf
                 @method('PUT')
 
                 {{-- Kata Sandi Saat Ini --}}
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label for="current_password" class="form-label" style="font-weight: 700;">Kata sandi saat ini</label>
+                <div class="form-group-password">
+                    <label for="current_password" class="form-label-password">Kata sandi saat ini</label>
                     <div class="input-password-wrapper">
                         <input type="password" 
                                name="current_password" 
                                id="current_password" 
-                               class="form-control @error('current_password') is-invalid @enderror" 
-                               placeholder="••••••••" 
+                               class="input-password-field @error('current_password') is-invalid @enderror" 
+                               placeholder="Masukkan kata sandi saat ini" 
                                required>
-                        <button type="button" class="toggle-password-btn" data-toggle-target="current_password" aria-label="Lihat kata sandi">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <button type="button" class="toggle-eye-btn" data-toggle-target="current_password" aria-label="Lihat kata sandi">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                             </svg>
                         </button>
                     </div>
                     @error('current_password')
-                        <span style="font-size: 0.75rem; color: #DC2626; display: block; margin-top: 4px;">{{ $message }}</span>
+                        <div style="font-size: 0.75rem; color: #EF4444; margin-top: 4px;">{{ $message }}</div>
                     @enderror
                 </div>
 
                 {{-- Kata Sandi Baru --}}
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label for="password" class="form-label" style="font-weight: 700;">Kata sandi baru</label>
+                <div class="form-group-password">
+                    <label for="password" class="form-label-password">Kata sandi baru</label>
                     <div class="input-password-wrapper">
                         <input type="password" 
                                name="password" 
                                id="password" 
-                               class="form-control @error('password') is-invalid @enderror" 
-                               placeholder="••••••••" 
+                               class="input-password-field @error('password') is-invalid @enderror" 
+                               placeholder="Masukkan kata sandi baru" 
                                required>
-                        <button type="button" class="toggle-password-btn" data-toggle-target="password" aria-label="Lihat kata sandi">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <button type="button" class="toggle-eye-btn" data-toggle-target="password" aria-label="Lihat kata sandi">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                             </svg>
                         </button>
                     </div>
                     @error('password')
-                        <span style="font-size: 0.75rem; color: #DC2626; display: block; margin-top: 4px;">{{ $message }}</span>
+                        <div style="font-size: 0.75rem; color: #EF4444; margin-top: 4px;">{{ $message }}</div>
                     @enderror
                 </div>
 
                 {{-- Konfirmasi Kata Sandi Baru --}}
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label for="password_confirmation" class="form-label" style="font-weight: 700;">Konfirmasi kata sandi baru</label>
+                <div class="form-group-password">
+                    <label for="password_confirmation" class="form-label-password">Konfirmasi kata sandi baru</label>
                     <div class="input-password-wrapper">
                         <input type="password" 
                                name="password_confirmation" 
                                id="password_confirmation" 
-                               class="form-control @error('password_confirmation') is-invalid @enderror" 
-                               placeholder="••••••••" 
+                               class="input-password-field @error('password_confirmation') is-invalid @enderror" 
+                               placeholder="Ulangi kata sandi baru" 
                                required>
-                        <button type="button" class="toggle-password-btn" data-toggle-target="password_confirmation" aria-label="Lihat kata sandi">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <button type="button" class="toggle-eye-btn" data-toggle-target="password_confirmation" aria-label="Lihat kata sandi">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                             </svg>
                         </button>
                     </div>
                     @error('password_confirmation')
-                        <span style="font-size: 0.75rem; color: #DC2626; display: block; margin-top: 4px;">{{ $message }}</span>
+                        <div style="font-size: 0.75rem; color: #EF4444; margin-top: 4px;">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-bottom: 20px;">
-                    Minimal 8 karakter, kombinasi huruf besar/kecil, angka, dan simbol. Setiap pergantian kata sandi akan tercatat di Audit Log sistem.
-                </div>
+                <div class="password-hint-text">Minimal 8 karakter, kombinasi huruf besar/kecil, angka, dan simbol. Setiap pergantian kata sandi akan tercatat di Audit Log sistem.</div>
 
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-primary" id="btnSubmitPassword">Perbarui Kata Sandi</button>
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('passwordForm').reset()">Batal</button>
+                <div class="password-actions-row">
+                    <button type="submit" class="btn-action-navy" id="btnSubmitPassword">Perbarui Kata Sandi</button>
+                    <button type="button" class="btn-action-outline" onclick="document.getElementById('passwordForm').reset()">Batal</button>
                 </div>
             </form>
-        </x-gentelella.x-panel>
-
-        {{-- Kolom Penuh: Preferensi Antarmuka & Bahasa --}}
-        <div style="grid-column: 1 / -1;">
-            <x-gentelella.x-panel title="{{ __('Preferensi Antarmuka & Bahasa') }}" subtitle="{{ __('Sesuaikan kenyamanan visual dan bahasa saat mengawasi seluruh sistem MagKom.') }}">
-                <form action="{{ route('superadmin.akun.preferensi.update') }}" method="POST">
-                    @csrf
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
-                        {{-- Pilihan Bahasa --}}
-                        <div class="form-group">
-                            <label class="form-label" for="bahasaSelect" style="font-weight: 700;">{{ __('Bahasa Antarmuka') }}</label>
-                            <select name="bahasa" id="bahasaSelect" class="form-control">
-                                <option value="id" {{ ($bahasaAktif ?? 'id') === 'id' ? 'selected' : '' }}>{{ __('Indonesia (Default)') }}</option>
-                                <option value="en" {{ ($bahasaAktif ?? '') === 'en' ? 'selected' : '' }}>{{ __('English (US)') }}</option>
-                            </select>
-                            <span style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 4px; display: block;">
-                                {{ __('Bahasa yang digunakan untuk tata kelola dan menu audit.') }}
-                            </span>
-                        </div>
-
-                        {{-- Pilihan Tema --}}
-                        <div class="form-group">
-                            <label class="form-label" style="font-weight: 700;">{{ __('Mode Tampilan Tema') }}</label>
-                            <div class="theme-options-grid">
-                                <label class="theme-card-option {{ ($temaAktif ?? 'terang') === 'terang' ? 'selected' : '' }}" 
-                                       data-theme-val="terang">
-                                    <input type="radio" name="tema" value="terang" {{ ($temaAktif ?? 'terang') === 'terang' ? 'checked' : '' }}>
-                                    <div class="theme-preview-box preview-light">
-                                        <span class="preview-dot"></span>
-                                        <span class="preview-bar"></span>
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 0.8125rem; font-weight: 700;">{{ __('Terang') }}</div>
-                                        <div style="font-size: 0.6875rem; color: var(--neutral-500, #64748B);">{{ __('Mode default portal') }}</div>
-                                    </div>
-                                </label>
-
-                                <label class="theme-card-option {{ ($temaAktif ?? '') === 'gelap' ? 'selected' : '' }}" 
-                                       data-theme-val="gelap">
-                                    <input type="radio" name="tema" value="gelap" {{ ($temaAktif ?? '') === 'gelap' ? 'checked' : '' }}>
-                                    <div class="theme-preview-box preview-dark">
-                                        <span class="preview-dot"></span>
-                                        <span class="preview-bar"></span>
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 0.8125rem; font-weight: 700;">{{ __('Gelap') }}</div>
-                                        <div style="font-size: 0.6875rem; color: var(--neutral-500, #64748B);">{{ __('Ramah mata untuk malam hari') }}</div>
-                                    </div>
-                                </label>
-
-                                <label class="theme-card-option {{ ($temaAktif ?? '') === 'sistem' ? 'selected' : '' }}" 
-                                       data-theme-val="sistem">
-                                    <input type="radio" name="tema" value="sistem" {{ ($temaAktif ?? '') === 'sistem' ? 'checked' : '' }}>
-                                    <div class="theme-preview-box preview-system">
-                                        <span class="preview-dot"></span>
-                                        <span class="preview-bar"></span>
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 0.8125rem; font-weight: 700;">{{ __('Ikuti Sistem') }}</div>
-                                        <div style="font-size: 0.6875rem; color: var(--neutral-500, #64748B);">{{ __('Menyesuaikan pengaturan OS') }}</div>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 20px;">
-                        <button type="submit" class="btn btn-primary">{{ __('Simpan Preferensi Tampilan') }}</button>
-                    </div>
-                </form>
-            </x-gentelella.x-panel>
         </div>
 
     </div>
 
-</div>
+    {{-- Kartu Penuh Bawah: Preferensi Antarmuka & Bahasa --}}
+    <div class="settings-white-card">
+        <h2 class="card-heading-title">{{ __('Preferensi Antarmuka & Bahasa') }}</h2>
+        <p class="card-heading-subtitle">{{ __('Sesuaikan kenyamanan visual dan bahasa saat mengawasi seluruh sistem MagKom.') }}</p>
 
-@push('scripts')
-    @vite(['resources/js/pages/superadmin/akun-index.js'])
-@endpush
+        <form action="{{ route('superadmin.akun.preferensi.update') }}" method="POST">
+            @csrf
+
+            <div class="pref-horizontal-grid">
+                {{-- Pilihan Bahasa --}}
+                <div>
+                    <label class="pref-label-title" for="bahasaSelect">{{ __('Bahasa Antarmuka') }}</label>
+                    <select name="bahasa" id="bahasaSelect" class="pref-select-field">
+                        <option value="id" {{ ($bahasaAktif ?? 'id') === 'id' ? 'selected' : '' }}>{{ __('Indonesia (Default)') }}</option>
+                        <option value="en" {{ ($bahasaAktif ?? '') === 'en' ? 'selected' : '' }}>{{ __('English (US)') }}</option>
+                    </select>
+                    <div class="pref-helper-caption">{{ __('Bahasa yang digunakan untuk tata kelola dan menu audit.') }}</div>
+                </div>
+
+                {{-- Pilihan Tema --}}
+                <div>
+                    <label class="pref-label-title">{{ __('Mode Tampilan Tema') }}</label>
+                    <div class="theme-cards-grid">
+                        {{-- Terang --}}
+                        <label class="theme-preview-card {{ ($temaAktif ?? 'terang') === 'terang' ? 'selected' : '' }}">
+                            <input type="radio" name="tema" value="terang" {{ ($temaAktif ?? 'terang') === 'terang' ? 'checked' : '' }}>
+                            <div class="theme-mini-box mini-box-light">
+                                <span class="preview-dot"></span>
+                                <span class="preview-bar"></span>
+                            </div>
+                            <div>
+                                <h3 class="theme-card-title">{{ __('Terang') }}</h3>
+                                <p class="theme-card-desc">{{ __('Mode default portal') }}</p>
+                            </div>
+                        </label>
+
+                        {{-- Gelap --}}
+                        <label class="theme-preview-card {{ ($temaAktif ?? '') === 'gelap' ? 'selected' : '' }}">
+                            <input type="radio" name="tema" value="gelap" {{ ($temaAktif ?? '') === 'gelap' ? 'checked' : '' }}>
+                            <div class="theme-mini-box mini-box-dark">
+                                <span class="preview-dot"></span>
+                                <span class="preview-bar"></span>
+                            </div>
+                            <div>
+                                <h3 class="theme-card-title">{{ __('Gelap') }}</h3>
+                                <p class="theme-card-desc">{{ __('Ramah mata untuk malam hari') }}</p>
+                            </div>
+                        </label>
+
+                        {{-- Ikuti Sistem --}}
+                        <label class="theme-preview-card {{ ($temaAktif ?? '') === 'sistem' ? 'selected' : '' }}">
+                            <input type="radio" name="tema" value="sistem" {{ ($temaAktif ?? '') === 'sistem' ? 'checked' : '' }}>
+                            <div class="theme-mini-box mini-box-system">
+                                <span class="preview-dot"></span>
+                                <span class="preview-bar"></span>
+                            </div>
+                            <div>
+                                <h3 class="theme-card-title">{{ __('Ikuti Sistem') }}</h3>
+                                <p class="theme-card-desc">{{ __('Menyesuaikan pengaturan OS') }}</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="btn-action-navy">{{ __('Simpan Preferensi Tampilan') }}</button>
+            </div>
+        </form>
+    </div>
+
+</div>
 @endsection
