@@ -20,5 +20,6 @@
 @import './pages/admin/dashboard.css';
 @import './pages/admin/laporan-tahunan.css';
 @import './pages/admin/penempatan-detail.css';
+@import './pages/admin/pendaftaran-show.css';
 @import './pages/peserta/profil-show.css';
 @import './pages/superadmin/superadmin-common.css';
