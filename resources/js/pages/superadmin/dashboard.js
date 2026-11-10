@@ -1,458 +1,564 @@
-/**
- * ==============================================================================
- * MagKom Sleman - Dashboard SuperAdmin (Bento Grid ES Module)
- * Resources: resources/js/pages/superadmin/dashboard.js
- * Features: Scroll-Craft Viewport Reveal, GSAP Micro-Animations, Dynamic Bento Calendar
- * ==============================================================================
- */
+import { initSuperAdminMotion, bindChartHoverAnimations } from '../../services/superadmin-motion.js';
 
-import gsap from 'gsap';
-import { initScrollCraft } from '../../services/scroll-craft.js';
+(function () {
+  'use strict';
+  var TABS = ['ringkasan', 'seleksi', 'bimbingan', 'sistem'];
+  var KEY = 'magkom_superadmin_active_tab';
 
-/**
- * Inisialisasi Switch Kran Pendaftaran (Interaktif)
- */
-function initKranToggle() {
-    const kranToggle = document.getElementById('sa-toggle-kran');
-    if (!kranToggle) return;
-
-    kranToggle.addEventListener('click', () => {
-        const isChecked = kranToggle.getAttribute('aria-checked') === 'true';
-        const newChecked = !isChecked;
-        kranToggle.setAttribute('aria-checked', String(newChecked));
-        const knob = kranToggle.querySelector('.sa-switch-knob');
-        if (knob) {
-            if (newChecked) {
-                knob.style.transform = 'translateX(0)';
-                kranToggle.style.backgroundColor = 'var(--navy-800, #0A2A6A)';
-            } else {
-                knob.style.transform = 'translateX(-16px)';
-                kranToggle.style.backgroundColor = 'var(--track, #E6EAF4)';
-            }
-        }
+  function applyDataV() {
+    document.querySelectorAll('[data-v]').forEach(function (el) {
+      el.style.setProperty('--v', el.getAttribute('data-v'));
     });
-}
+  }
 
-/**
- * Inisialisasi Interaktivitas Mini Kalender Bento (Identik dengan Kalender Pembimbing)
- * Menampilkan Popover Bulan (12 Bulan), Popover Tahun (Jump 6 Tahun),
- * Sel Kapsul Semi-Oval 11px, Seleksi Tanggal & Weekend Aksen.
- */
-function initBentoCalendar() {
-    const calendarGrid = document.getElementById('bentoCalendarGrid');
-    const monthTitle = document.getElementById('calMonthTitle');
-    const monthTriggerBtn = document.getElementById('calMonthTriggerBtn');
-    const monthPopover = document.getElementById('calMonthPopover');
-    const monthGrid = document.getElementById('calMonthGrid');
-    const yearVal = document.getElementById('calYearVal');
-    const yearTriggerBtn = document.getElementById('calYearTriggerBtn');
-    const yearPopover = document.getElementById('calYearPopover');
-    const yearGrid = document.getElementById('calYearGrid');
-    const yearDecBtn = document.getElementById('calYearDecBtn');
-    const yearIncBtn = document.getElementById('calYearIncBtn');
-    const prevBtn = document.getElementById('calPrevBtn');
-    const nextBtn = document.getElementById('calNextBtn');
+  function select(name, focus) {
+    TABS.forEach(function (t) {
+      var btn = document.getElementById('btn-tab-' + t);
+      var panel = document.getElementById('tab-' + t);
+      if (!btn || !panel) return;
+      var on = t === name;
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+      btn.tabIndex = on ? 0 : -1;
+      panel.hidden = !on;
+      if (on && focus) btn.focus();
+    });
+    try { localStorage.setItem(KEY, name); } catch (e) {}
+    history.replaceState(null, '', name === 'ringkasan' ? location.pathname + location.search : '#' + name);
+  }
 
-    if (!calendarGrid || !monthTitle) return;
+  function initial() {
+    var h = location.hash.replace('#', '');
+    if (TABS.indexOf(h) > -1) return h;
+    try { var s = localStorage.getItem(KEY); if (TABS.indexOf(s) > -1) return s; } catch (e) {}
+    return 'ringkasan';
+  }
 
-    const MONTH_NAMES = [
-        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  // Backward compatibility for existing callers or external buttons
+  window.switchDashboardTab = function (tabId) {
+    var cleanId = tabId.replace('tab-', '');
+    select(cleanId, false);
+  };
+
+  // 1. Slide-Over Drawer Management (Jejak Audit & Inspeksi)
+  function getBackdrop() {
+    var backdrop = document.querySelector('.cv-drawer-backdrop');
+    if (!backdrop) {
+      backdrop = document.createElement('div');
+      backdrop.className = 'cv-drawer-backdrop';
+      backdrop.setAttribute('data-action', 'close-drawer');
+      document.body.appendChild(backdrop);
+    }
+    return backdrop;
+  }
+
+  function openDrawer(drawerSelector, triggerEl) {
+    var drawer = document.querySelector(drawerSelector);
+    if (!drawer) return;
+
+    var backdrop = getBackdrop();
+
+    if (triggerEl) {
+      var mappings = [
+        { attr: 'data-user', target: '.cv-dyn-user' },
+        { attr: 'data-ip', target: '.cv-dyn-ip' },
+        { attr: 'data-action-name', target: '.cv-dyn-action' },
+        { attr: 'data-waktu', target: '.cv-dyn-waktu' }
+      ];
+
+      mappings.forEach(function (m) {
+        var val = triggerEl.getAttribute(m.attr);
+        if (val !== null) {
+          var el = drawer.querySelector(m.target);
+          if (el) el.textContent = val;
+        }
+      });
+    }
+
+    backdrop.classList.add('active');
+    drawer.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAllDrawers() {
+    document.querySelectorAll('.cv-slide-drawer.active').forEach(function (d) {
+      d.classList.remove('active');
+    });
+    var backdrop = document.querySelector('.cv-drawer-backdrop');
+    if (backdrop) {
+      backdrop.classList.remove('active');
+    }
+    document.body.style.overflow = '';
+  }
+
+  // 2. Client-Side SVG Trend Chart Curve Builder
+  function buildCurvePath(points) {
+    if (!points || !points.length) return '';
+    var path = 'M ' + points[0].x + ' ' + points[0].y;
+    for (var i = 0; i < points.length - 1; i++) {
+      var p0 = points[i];
+      var p1 = points[i + 1];
+      var cx1 = p0.x + (p1.x - p0.x) / 2;
+      var cy1 = p0.y;
+      var cx2 = cx1;
+      var cy2 = p1.y;
+      path += ' C ' + cx1 + ' ' + cy1 + ', ' + cx2 + ' ' + cy2 + ', ' + p1.x + ' ' + p1.y;
+    }
+    return path;
+  }
+
+  function updateTrendChart(period) {
+    var wrapper = document.querySelector('.gt-chart-wrapper');
+    if (!wrapper) return;
+
+    var rawData = wrapper.getAttribute('data-trend-datasets');
+    if (!rawData) return;
+
+    var datasets;
+    try {
+      datasets = JSON.parse(rawData);
+    } catch (e) {
+      return;
+    }
+
+    var list = datasets[period];
+    if (!list || !list.length) return;
+
+    var total = 0;
+    var maxVal = 1;
+    list.forEach(function (item) {
+      total += item.count;
+      if (item.count > maxVal) maxVal = item.count;
+    });
+
+    var countPoints = list.length;
+    var stepX = countPoints > 1 ? (740 / (countPoints - 1)) : 740;
+    var primaryPoints = [];
+    var secondaryPoints = [];
+
+    list.forEach(function (item, idx) {
+      var x = 35 + (idx * stepX);
+      var ratio = maxVal > 0 ? (item.count / maxVal) : 0;
+      var y = 150 - (ratio * 120);
+      primaryPoints.push({ x: x, y: y, count: item.count, label: item.bulan });
+
+      var secRatio = ratio * 0.72;
+      var secY = 150 - (secRatio * 120);
+      secondaryPoints.push({ x: x, y: secY });
+    });
+
+    var primaryPath = buildCurvePath(primaryPoints);
+    var secondaryPath = buildCurvePath(secondaryPoints);
+    var lastPt = primaryPoints[primaryPoints.length - 1];
+    var areaPath = primaryPath + ' L ' + lastPt.x + ' 155 L ' + primaryPoints[0].x + ' 155 Z';
+
+    // Update SVG Elements
+    var areaEl = wrapper.querySelector('path[fill*="gtTealGradient"]');
+    if (areaEl) areaEl.setAttribute('d', areaPath);
+
+    var secCurveEl = wrapper.querySelector('.gt-curve-secondary');
+    if (secCurveEl) secCurveEl.setAttribute('d', secondaryPath);
+
+    var primCurveEl = wrapper.querySelector('.gt-curve-primary');
+    if (primCurveEl) primCurveEl.setAttribute('d', primaryPath);
+
+    // Update Hero Number
+    var heroNum = document.querySelector('.gt-hero-stat__number');
+    if (heroNum) heroNum.textContent = total.toLocaleString();
+
+    // Update Axis & Points
+    var svg = wrapper.querySelector('.gt-chart-svg');
+    if (svg) {
+      // Remove old dynamic points & text labels
+      svg.querySelectorAll('.gt-dyn-point, .gt-dyn-label').forEach(function (el) {
+        el.remove();
+      });
+
+      primaryPoints.forEach(function (pt) {
+        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', pt.x);
+        circle.setAttribute('cy', pt.y);
+        circle.setAttribute('r', '3.5');
+        circle.setAttribute('class', 'gt-chart-point gt-dyn-point');
+        circle.setAttribute('stroke-width', '2');
+        svg.appendChild(circle);
+
+        var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('class', 'gt-chart-axis-text gt-dyn-label');
+        text.setAttribute('x', pt.x);
+        text.setAttribute('y', '172');
+        text.setAttribute('text-anchor', 'middle');
+        text.textContent = pt.label;
+        svg.appendChild(text);
+      });
+    }
+  }
+
+  // 3. Dynamic SuperAdmin Calendar Widget (Universal Dynamic Calendar Engine)
+  function initSuperAdminCalendar() {
+    var grid = document.getElementById('saCalendarGrid');
+    var monthTitle = document.getElementById('saCalMonthTitle');
+    var monthTriggerBtn = document.getElementById('saCalMonthTriggerBtn');
+    var monthPopover = document.getElementById('saCalMonthPopover');
+    var monthGrid = document.getElementById('saCalMonthGrid');
+    var yearVal = document.getElementById('saCalYearVal');
+    var yearTriggerBtn = document.getElementById('saCalYearTriggerBtn');
+    var yearPopover = document.getElementById('saCalYearPopover');
+    var yearGrid = document.getElementById('saCalYearGrid');
+    var yearDecBtn = document.getElementById('saCalYearDecBtn');
+    var yearIncBtn = document.getElementById('saCalYearIncBtn');
+    var prevBtn = document.getElementById('saCalPrevBtn');
+    var nextBtn = document.getElementById('saCalNextBtn');
+    if (!grid || !monthTitle) return;
+
+    var MONTH_NAMES = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
     ];
 
-    const MONTH_SHORT_NAMES = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
-        'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
+    var MONTH_SHORT_NAMES = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
+      'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
     ];
 
-    // Acuan tanggal hari ini dari sistem
-    const realToday = new Date();
-    const realYear = realToday.getFullYear();
-    const realMonth = realToday.getMonth();
-    const realDate = realToday.getDate();
+    var realToday = new Date();
+    var realYear = realToday.getFullYear();
+    var realMonth = realToday.getMonth();
+    var realDate = realToday.getDate();
 
-    // Default tampilan acuan: November 2026 (atau tahun berjalan jika di masa depan)
-    let viewYear = realYear >= 2026 ? realYear : 2026;
-    let viewMonth = realYear >= 2026 ? realMonth : 10; // 10 = November (0-based)
-    let popoverBaseYear = viewYear;
-
-    // State tanggal yang diklik user: { year, month, date }
-    let selectedDate = null;
+    var viewYear = realYear;
+    var viewMonth = realMonth;
+    var popoverBaseYear = viewYear;
+    var selectedDate = null;
 
     function renderGrid() {
-        calendarGrid.innerHTML = '';
-        const isCurrentMonthView = (viewYear === realYear && viewMonth === realMonth);
+      grid.innerHTML = '';
+      var isCurrentMonthView = (viewYear === realYear && viewMonth === realMonth);
 
-        // Hari pertama bulan (0: Minggu, 1: Senin, ..., 6: Sabtu)
-        const firstDay = new Date(viewYear, viewMonth, 1).getDay();
-        // Konversi ke ISO offset (Senin = 0, Minggu = 6)
-        const startOffset = (firstDay === 0) ? 6 : (firstDay - 1);
+      var firstDay = new Date(viewYear, viewMonth, 1).getDay();
+      var startOffset = (firstDay === 0) ? 6 : (firstDay - 1);
 
-        const daysInCurrentMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-        const daysInPrevMonth = new Date(viewYear, viewMonth, 0).getDate();
+      var daysInCurrentMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+      var daysInPrevMonth = new Date(viewYear, viewMonth, 0).getDate();
 
-        const fragment = document.createDocumentFragment();
+      var frag = document.createDocumentFragment();
 
-        // 1. Trailing days dari bulan sebelumnya
-        for (let p = startOffset; p > 0; p--) {
-            const span = document.createElement('span');
-            span.className = 'cal-date date-muted';
-            span.tabIndex = -1;
-            span.textContent = daysInPrevMonth - p + 1;
-            fragment.appendChild(span);
-        }
+      // 1. Previous month trailing days
+      for (var p = startOffset; p > 0; p--) {
+        var prevSpan = document.createElement('span');
+        prevSpan.className = 'sa-cal-date date-muted';
+        prevSpan.tabIndex = -1;
+        prevSpan.textContent = daysInPrevMonth - p + 1;
+        frag.appendChild(prevSpan);
+      }
 
-        // 2. Active days bulan ini
-        for (let d = 1; d <= daysInCurrentMonth; d++) {
-            const dayCol = (startOffset + d - 1) % 7;
-            const isWeekend = (dayCol === 5 || dayCol === 6);
-            const isToday = (isCurrentMonthView && d === realDate) || (!isCurrentMonthView && viewMonth === 10 && viewYear === 2026 && d === 9);
-            const isSelected = selectedDate && (selectedDate.year === viewYear && selectedDate.month === viewMonth && selectedDate.date === d);
+      // 2. Current month active days
+      for (var d = 1; d <= daysInCurrentMonth; d++) {
+        var dayCol = (startOffset + d - 1) % 7;
+        var isWeekend = (dayCol === 5 || dayCol === 6);
+        var isToday = (isCurrentMonthView && d === realDate);
+        var isSelected = selectedDate && (selectedDate.year === viewYear && selectedDate.month === viewMonth && selectedDate.date === d);
 
-            const btn = document.createElement('button');
-            btn.type = 'button';
+        var btn = document.createElement('button');
+        btn.type = 'button';
 
-            const classList = ['cal-date'];
-            if (isWeekend) classList.push('date-weekend');
-            if (isToday) classList.push('date-today');
-            if (isSelected) classList.push('date-selected');
+        var classes = ['sa-cal-date'];
+        if (isWeekend) classes.push('date-weekend');
+        if (isToday) classes.push('date-today');
+        if (isSelected) classes.push('date-selected');
 
-            btn.className = classList.join(' ');
-            btn.setAttribute('data-date', d);
-            btn.setAttribute('aria-label', `Tanggal ${d} ${MONTH_NAMES[viewMonth]} ${viewYear}` + (isToday ? ' (Hari ini)' : ''));
-            btn.textContent = d;
+        btn.className = classes.join(' ');
+        btn.setAttribute('data-date', d);
+        btn.setAttribute('aria-label', 'Tanggal ' + d + ' ' + MONTH_NAMES[viewMonth] + ' ' + viewYear + (isToday ? ' (Hari ini)' : ''));
+        btn.textContent = d;
 
-            btn.addEventListener('click', () => {
-                const isAlreadySelected = selectedDate &&
-                    selectedDate.year === viewYear &&
-                    selectedDate.month === viewMonth &&
-                    selectedDate.date === d;
+        btn.addEventListener('click', (function (dayNum) {
+          return function () {
+            var isAlreadySelected = selectedDate &&
+              selectedDate.year === viewYear &&
+              selectedDate.month === viewMonth &&
+              selectedDate.date === dayNum;
 
-                if (isAlreadySelected) {
-                    selectedDate = null;
-                    btn.classList.remove('date-selected');
-                } else {
-                    selectedDate = { year: viewYear, month: viewMonth, date: d };
-                    calendarGrid.querySelectorAll('.cal-date').forEach((el) => {
-                        el.classList.remove('date-selected');
-                    });
-                    btn.classList.add('date-selected');
-                }
-            });
+            if (isAlreadySelected) {
+              selectedDate = null;
+              this.classList.remove('date-selected', 'sa-date-pop');
+            } else {
+              selectedDate = { year: viewYear, month: viewMonth, date: dayNum };
+              grid.querySelectorAll('.sa-cal-date').forEach(function (el) {
+                el.classList.remove('date-selected', 'sa-date-pop');
+              });
+              this.classList.add('date-selected', 'sa-date-pop');
+            }
+          };
+        })(d));
 
-            btn.addEventListener('dblclick', (e) => {
-                e.preventDefault();
-                selectedDate = null;
-                calendarGrid.querySelectorAll('.cal-date').forEach((el) => {
-                    el.classList.remove('date-selected');
-                });
-            });
+        btn.addEventListener('dblclick', function (e) {
+          e.preventDefault();
+          selectedDate = null;
+          grid.querySelectorAll('.sa-cal-date').forEach(function (el) {
+            el.classList.remove('date-selected', 'sa-date-pop');
+          });
+        });
 
-            fragment.appendChild(btn);
-        }
+        frag.appendChild(btn);
+      }
 
-        // 3. Leading days bulan berikutnya (genapkan baris ke kelipatan 7)
-        const totalCells = startOffset + daysInCurrentMonth;
-        const nextFillers = (7 - (totalCells % 7)) % 7;
-        for (let n = 1; n <= nextFillers; n++) {
-            const span = document.createElement('span');
-            span.className = 'cal-date date-muted';
-            span.tabIndex = -1;
-            span.textContent = n;
-            fragment.appendChild(span);
-        }
+      // 3. Next month leading days
+      var totalCells = startOffset + daysInCurrentMonth;
+      var remaining = (7 - (totalCells % 7)) % 7;
+      for (var n = 1; n <= remaining; n++) {
+        var nextSpan = document.createElement('span');
+        nextSpan.className = 'sa-cal-date date-muted';
+        nextSpan.tabIndex = -1;
+        nextSpan.textContent = n;
+        frag.appendChild(nextSpan);
+      }
 
-        calendarGrid.appendChild(fragment);
+      grid.appendChild(frag);
     }
 
     function renderYearPopover() {
-        if (!yearGrid) return;
-        yearGrid.innerHTML = '';
-        const startYear = popoverBaseYear - 2;
-        const endYear = popoverBaseYear + 3; // 6 pilihan tahun (2x3 grid)
+      if (!yearGrid) return;
+      yearGrid.innerHTML = '';
+      var startYear = popoverBaseYear - 2;
+      var endYear = popoverBaseYear + 3;
 
-        for (let y = startYear; y <= endYear; y++) {
-            const yBtn = document.createElement('button');
-            yBtn.type = 'button';
-            yBtn.className = 'cal-year-option-btn' + (y === viewYear ? ' active' : '');
-            yBtn.textContent = y;
-            yBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                viewYear = y;
-                closeYearPopover();
-                updateCalendar();
-            });
-            yearGrid.appendChild(yBtn);
-        }
+      for (var y = startYear; y <= endYear; y++) {
+        var yBtn = document.createElement('button');
+        yBtn.type = 'button';
+        yBtn.className = 'sa-cal-year-option-btn' + (y === viewYear ? ' active' : '');
+        yBtn.textContent = y;
+        yBtn.addEventListener('click', (function (targetYear) {
+          return function (e) {
+            e.stopPropagation();
+            viewYear = targetYear;
+            closeYearPopover();
+            updateCalendar();
+          };
+        })(y));
+        yearGrid.appendChild(yBtn);
+      }
     }
 
     function closeYearPopover() {
-        if (yearPopover) {
-            yearPopover.hidden = true;
-        }
-        if (yearTriggerBtn) {
-            yearTriggerBtn.setAttribute('aria-expanded', 'false');
-        }
+      if (yearPopover) {
+        yearPopover.hidden = true;
+      }
+      if (yearTriggerBtn) {
+        yearTriggerBtn.setAttribute('aria-expanded', 'false');
+      }
     }
 
     function renderMonthPopover() {
-        if (!monthGrid) return;
-        monthGrid.innerHTML = '';
+      if (!monthGrid) return;
+      monthGrid.innerHTML = '';
 
-        for (let m = 0; m < 12; m++) {
-            const mBtn = document.createElement('button');
-            mBtn.type = 'button';
-            mBtn.className = 'cal-month-option-btn' + (m === viewMonth ? ' active' : '');
-            mBtn.textContent = MONTH_SHORT_NAMES[m];
-            mBtn.setAttribute('data-month', m);
-            mBtn.setAttribute('title', MONTH_NAMES[m]);
-            mBtn.setAttribute('aria-label', `Pilih Bulan ${MONTH_NAMES[m]}`);
-            mBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                viewMonth = m;
-                closeMonthPopover();
-                updateCalendar();
-            });
-            monthGrid.appendChild(mBtn);
-        }
+      for (var m = 0; m < 12; m++) {
+        var mBtn = document.createElement('button');
+        mBtn.type = 'button';
+        mBtn.className = 'sa-cal-month-option-btn' + (m === viewMonth ? ' active' : '');
+        mBtn.textContent = MONTH_SHORT_NAMES[m];
+        mBtn.setAttribute('data-month', m);
+        mBtn.setAttribute('title', MONTH_NAMES[m]);
+        mBtn.setAttribute('aria-label', 'Pilih Bulan ' + MONTH_NAMES[m]);
+        mBtn.addEventListener('click', (function (targetMonth) {
+          return function (e) {
+            e.stopPropagation();
+            viewMonth = targetMonth;
+            closeMonthPopover();
+            updateCalendar();
+          };
+        })(m));
+        monthGrid.appendChild(mBtn);
+      }
     }
 
     function closeMonthPopover() {
-        if (monthPopover) {
-            monthPopover.hidden = true;
-        }
-        if (monthTriggerBtn) {
-            monthTriggerBtn.setAttribute('aria-expanded', 'false');
-        }
+      if (monthPopover) {
+        monthPopover.hidden = true;
+      }
+      if (monthTriggerBtn) {
+        monthTriggerBtn.setAttribute('aria-expanded', 'false');
+      }
     }
 
     function toggleMonthPopover() {
-        if (!monthPopover) return;
-        const isHidden = monthPopover.hidden;
-        if (isHidden) {
-            closeYearPopover();
-            renderMonthPopover();
-            monthPopover.hidden = false;
-            if (monthTriggerBtn) monthTriggerBtn.setAttribute('aria-expanded', 'true');
-        } else {
-            closeMonthPopover();
-        }
+      if (!monthPopover) return;
+      var isHidden = monthPopover.hidden;
+      if (isHidden) {
+        closeYearPopover();
+        renderMonthPopover();
+        monthPopover.hidden = false;
+        if (monthTriggerBtn) monthTriggerBtn.setAttribute('aria-expanded', 'true');
+      } else {
+        closeMonthPopover();
+      }
     }
 
     function toggleYearPopover() {
-        if (!yearPopover) return;
-        const isHidden = yearPopover.hidden;
-        if (isHidden) {
-            closeMonthPopover();
-            popoverBaseYear = viewYear;
-            renderYearPopover();
-            yearPopover.hidden = false;
-            if (yearTriggerBtn) yearTriggerBtn.setAttribute('aria-expanded', 'true');
-        } else {
-            closeYearPopover();
-        }
+      if (!yearPopover) return;
+      var isHidden = yearPopover.hidden;
+      if (isHidden) {
+        closeMonthPopover();
+        popoverBaseYear = viewYear;
+        renderYearPopover();
+        yearPopover.hidden = false;
+        if (yearTriggerBtn) yearTriggerBtn.setAttribute('aria-expanded', 'true');
+      } else {
+        closeYearPopover();
+      }
     }
 
     function updateCalendar() {
-        monthTitle.textContent = MONTH_NAMES[viewMonth];
-        if (yearVal) yearVal.textContent = viewYear;
-        renderGrid();
+      monthTitle.textContent = MONTH_NAMES[viewMonth];
+      if (yearVal) yearVal.textContent = viewYear;
+      renderGrid();
     }
 
     if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            viewMonth--;
-            if (viewMonth < 0) {
-                viewMonth = 11;
-                viewYear--;
-            }
-            updateCalendar();
-        });
+      prevBtn.addEventListener('click', function () {
+        viewMonth--;
+        if (viewMonth < 0) {
+          viewMonth = 11;
+          viewYear--;
+        }
+        updateCalendar();
+      });
     }
 
     if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            viewMonth++;
-            if (viewMonth > 11) {
-                viewMonth = 0;
-                viewYear++;
-            }
-            updateCalendar();
-        });
+      nextBtn.addEventListener('click', function () {
+        viewMonth++;
+        if (viewMonth > 11) {
+          viewMonth = 0;
+          viewYear++;
+        }
+        updateCalendar();
+      });
     }
 
     if (monthTriggerBtn) {
-        monthTriggerBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMonthPopover();
-        });
+      monthTriggerBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggleMonthPopover();
+      });
     }
 
     if (yearTriggerBtn) {
-        yearTriggerBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleYearPopover();
-        });
+      yearTriggerBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggleYearPopover();
+      });
     }
 
     if (yearDecBtn) {
-        yearDecBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            popoverBaseYear -= 6;
-            renderYearPopover();
-        });
+      yearDecBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        popoverBaseYear -= 6;
+        renderYearPopover();
+      });
     }
 
     if (yearIncBtn) {
-        yearIncBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            popoverBaseYear += 6;
-            renderYearPopover();
-        });
+      yearIncBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        popoverBaseYear += 6;
+        renderYearPopover();
+      });
     }
 
-    document.addEventListener('click', (e) => {
-        if (monthPopover && !monthPopover.hidden) {
-            if (!monthPopover.contains(e.target) && (!monthTriggerBtn || !monthTriggerBtn.contains(e.target))) {
-                closeMonthPopover();
-            }
+    document.addEventListener('click', function (e) {
+      if (monthPopover && !monthPopover.hidden) {
+        if (!monthPopover.contains(e.target) && (!monthTriggerBtn || !monthTriggerBtn.contains(e.target))) {
+          closeMonthPopover();
         }
-        if (yearPopover && !yearPopover.hidden) {
-            if (!yearPopover.contains(e.target) && (!yearTriggerBtn || !yearTriggerBtn.contains(e.target))) {
-                closeYearPopover();
-            }
+      }
+      if (yearPopover && !yearPopover.hidden) {
+        if (!yearPopover.contains(e.target) && (!yearTriggerBtn || !yearTriggerBtn.contains(e.target))) {
+          closeYearPopover();
         }
+      }
     });
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' || e.keyCode === 27) {
-            closeMonthPopover();
-            closeYearPopover();
-        }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        closeMonthPopover();
+        closeYearPopover();
+      }
     });
 
     updateCalendar();
-}
+  }
 
-/**
- * Inisialisasi Orkestrasi Animasi Chart Menggunakan GSAP Timeline
- * Berjalan saat initial load (Fresh Page Entrance).
- */
-function initGsapChartTimeline() {
-    // 1. Cek prefers-reduced-motion (Aksesibilitas WCAG 2.1 AA)
-    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+  // 4. Document Ready Initialization
+  document.addEventListener('DOMContentLoaded', function () {
+    applyDataV();
+    initSuperAdminCalendar();
 
-    // 2. Persiapan Elemen Target
-    const bars = document.querySelectorAll('.sa-antrean-chart .sa-striped-bar');
-    const barValues = document.querySelectorAll('.sa-antrean-chart .sa-antrean-val');
-    const gaugeFill = document.querySelector('.sa-gauge-fill');
-    const percentEl = document.querySelector('.sa-gauge-percent');
-    const dots = document.querySelectorAll('.sa-dots-row .sa-dot');
+    var list = document.querySelector('[role="tablist"]');
+    if (list) {
+      list.addEventListener('click', function (e) {
+        var b = e.target.closest('[role="tab"]');
+        if (b) select(b.id.replace('btn-tab-', ''), false);
+      });
+      list.addEventListener('keydown', function (e) {
+        var activeEl = document.activeElement;
+        if (!activeEl || !activeEl.id) return;
+        var i = TABS.indexOf(activeEl.id.replace('btn-tab-', ''));
+        if (i < 0) return;
+        var next = {
+          ArrowRight: (i + 1) % TABS.length,
+          ArrowLeft: (i + TABS.length - 1) % TABS.length,
+          Home: 0,
+          End: TABS.length - 1
+        }[e.key];
+        if (next === undefined) return;
+        e.preventDefault();
+        select(TABS[next], true);
+      });
+    }
 
-    if (!bars.length && !gaugeFill) return;
-
-    // 3. Inisialisasi GSAP Master Timeline
-    const masterTl = gsap.timeline({
-        defaults: {
-            ease: "power2.out"
-        }
+    document.querySelectorAll('select[data-auto-submit]').forEach(function (s) {
+      s.addEventListener('change', function () { s.form.submit(); });
     });
 
-    // A. Bar Chart Status Antrean: Tumbuh Vertikal dari Dasar
-    if (bars.length) {
-        masterTl.fromTo(bars,
-            {
-                scaleY: 0,
-                opacity: 0.2
-            },
-            {
-                scaleY: 1,
-                opacity: 1,
-                duration: 0.75,
-                stagger: 0.08,
-                transformOrigin: "bottom center"
-            },
-            0.1
-        );
+    // Global Drawer Trigger Listener
+    document.addEventListener('click', function (e) {
+      var trigger = e.target.closest('[data-action]');
+      if (!trigger) return;
 
-        if (barValues.length) {
-            masterTl.fromTo(barValues,
-                {
-                    opacity: 0,
-                    y: 6
-                },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.35,
-                    stagger: 0.08
-                },
-                0.4
-            );
-        }
-    }
+      var action = trigger.getAttribute('data-action');
+      if (action === 'open-drawer') {
+        e.preventDefault();
+        var target = trigger.getAttribute('data-drawer');
+        if (target) openDrawer(target, trigger);
+      } else if (action === 'close-drawer') {
+        e.preventDefault();
+        closeAllDrawers();
+      }
+    });
 
-    // B. Semi-Circle Radial Gauge & Rolling Percentage Counter
-    if (gaugeFill) {
-        const targetOffset = 157.08; // 50% dari 314.16
-        const gaugePerimeter = 314.16;
+    // Escape Key to Close Drawers
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        closeAllDrawers();
+      }
+    });
 
-        masterTl.fromTo(gaugeFill,
-            {
-                strokeDashoffset: gaugePerimeter
-            },
-            {
-                strokeDashoffset: targetOffset,
-                duration: 1.1,
-                ease: "power2.out"
-            },
-            0.15
-        );
+    // Time filter pills interactivity (Gentelella Network Activities)
+    var pillButtons = document.querySelectorAll('.gt-pill-btn');
+    pillButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        pillButtons.forEach(function (b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        var period = this.getAttribute('data-period');
+        updateTrendChart(period);
+        bindChartHoverAnimations();
+        window.dispatchEvent(new CustomEvent('magkom:trend-filter-changed', { detail: { period: period } }));
+      });
+    });
 
-        if (percentEl) {
-            const counterObj = { val: 0 };
-            percentEl.textContent = '0%';
+    select(initial(), false);
+    initSuperAdminMotion('dashboard');
+  });
+})();
 
-            masterTl.to(counterObj, {
-                val: 50,
-                duration: 1.1,
-                ease: "power2.out",
-                onUpdate: () => {
-                    percentEl.textContent = `${Math.round(counterObj.val)}%`;
-                }
-            }, 0.15);
-        }
-    }
-
-    // C. Dot Matrix Indicator Entrance
-    if (dots.length) {
-        masterTl.fromTo(dots,
-            {
-                scale: 0.6,
-                opacity: 0.2
-            },
-            {
-                scale: 1,
-                opacity: 1,
-                duration: 0.25,
-                stagger: 0.015
-            },
-            0.3
-        );
-    }
-}
-
-// Global window exposure
-if (typeof window !== 'undefined') {
-    window.initBentoCalendar = initBentoCalendar;
-    window.initGsapChartTimeline = initGsapChartTimeline;
-}
-
-// Inisialisasi saat DOM siap
-document.addEventListener('DOMContentLoaded', () => {
-    initScrollCraft();
-    initGsapChartTimeline();
-    initBentoCalendar();
-    initKranToggle();
-});
