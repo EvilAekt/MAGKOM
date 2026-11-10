@@ -1,0 +1,594 @@
+/* =========================================================================
+   DETAIL VERIFIKASI PENDAFTARAN PESERTA (Admin MagKom)
+   Modern Enterprise SaaS Layout & Component Design System
+   ========================================================================= */
+
+/* 1. Header Identity Bar */
+.adm-identity-bar {
+    background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.35), transparent 60%),
+        linear-gradient(135deg, #02275D 0%, #01347C 60%, #003566 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 1.25rem 1.75rem;
+    box-shadow: 0 4px 18px rgba(2, 39, 93, 0.22);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+}
+
+.adm-identity-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.adm-avatar-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 9999px;
+    background: #02275D;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    border: 2.5px solid #FFFFFF;
+    box-shadow: 0 2px 8px rgba(2, 39, 93, 0.3);
+    flex-shrink: 0;
+}
+
+.adm-candidate-name {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.adm-candidate-sub {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.8);
+    flex-wrap: wrap;
+    margin-top: 3px;
+}
+
+.adm-candidate-reg {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.02em;
+}
+
+/* Badges */
+.adm-badge-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.adm-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.adm-badge-diterima {
+    background: #ECFDF5;
+    color: #065F46;
+    border: 1px solid #A7F3D0;
+}
+
+.adm-badge-diterima .adm-status-dot {
+    background: #10B981;
+}
+
+.adm-badge-diajukan {
+    background: #FFFBEB;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+}
+
+.adm-badge-diajukan .adm-status-dot {
+    background: #F59E0B;
+}
+
+.adm-badge-perlu_perbaikan {
+    background: #FFF7ED;
+    color: #C2410C;
+    border: 1px solid #FED7AA;
+}
+
+.adm-badge-perlu_perbaikan .adm-status-dot {
+    background: #F97316;
+}
+
+.adm-badge-waiting_list {
+    background: #EFF6FF;
+    color: #1E40AF;
+    border: 1px solid #BFDBFE;
+}
+
+.adm-badge-waiting_list .adm-status-dot {
+    background: #3B82F6;
+}
+
+.adm-badge-ditolak {
+    background: #FEF2F2;
+    color: #991B1B;
+    border: 1px solid #FECACA;
+}
+
+.adm-badge-ditolak .adm-status-dot {
+    background: #EF4444;
+}
+
+.adm-badge-tipe-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    font-size: 0.725rem;
+    font-weight: 600;
+    background: #F1F5F9;
+    color: #334155;
+    border: 1px solid #E2E8F0;
+}
+
+.adm-badge-reg-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    background: #F8FAFC;
+    color: #334155;
+    border: 1px solid #CBD5E1;
+    letter-spacing: 0.02em;
+}
+
+.adm-btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    transition: all 0.15s ease;
+    min-height: 40px;
+}
+
+.adm-btn-back:hover {
+    background: #FFFFFF;
+    color: #02275D;
+    border-color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 2. Grid Layout Seimbang (Kiri ~57% : Kanan ~43%) */
+.adm-split-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 1024px) {
+    .adm-split-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.adm-sidebar-sticky {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+@media (min-width: 1025px) {
+    .adm-sidebar-sticky {
+        position: sticky;
+        top: 1.5rem;
+    }
+}
+
+/* 3. Daftar Berkas Dokumen */
+.adm-doc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.adm-doc-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 1rem 1.15rem;
+    transition: all 0.15s ease;
+    gap: 1rem;
+}
+
+.adm-doc-item:hover {
+    border-color: #CBD5E1;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+.adm-doc-info {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    min-width: 0;
+}
+
+.adm-doc-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.adm-doc-icon-pdf {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FEE2E2;
+}
+
+.adm-doc-icon-img {
+    background: #EFF6FF;
+    color: #2563EB;
+    border: 1px solid #DBEAFE;
+}
+
+.adm-doc-meta {
+    min-width: 0;
+}
+
+.adm-doc-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0F172A;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.adm-doc-detail {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin-top: 3px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.adm-doc-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.adm-btn-action-preview {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: #334155;
+    border: 1px solid #CBD5E1;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    min-height: 38px;
+}
+
+.adm-btn-action-preview:hover {
+    background: #0641CC;
+    color: #FFFFFF;
+    border-color: #0641CC;
+    box-shadow: 0 2px 8px rgba(6, 65, 204, 0.28);
+}
+
+.adm-btn-action-preview:hover svg {
+    stroke: #FFFFFF;
+}
+
+.adm-btn-action-download {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+    text-decoration: none;
+    transition: all 0.15s ease-in-out;
+    flex-shrink: 0;
+}
+
+.adm-btn-action-download:hover {
+    background: #0641CC;
+    color: #FFFFFF;
+    border-color: #0641CC;
+    box-shadow: 0 2px 8px rgba(6, 65, 204, 0.28);
+}
+
+.adm-btn-action-download:hover svg {
+    stroke: #FFFFFF;
+}
+
+/* 4. Rangkuman Biodata (Kiri Bawah - 2-Kolom Grid) */
+.adm-biodata-grid-2col {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.875rem;
+}
+
+@media (max-width: 640px) {
+    .adm-biodata-grid-2col {
+        grid-template-columns: 1fr;
+    }
+}
+
+.adm-biodata-card-item {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 0.875rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.15s ease;
+}
+
+.adm-biodata-card-item-full {
+    grid-column: 1 / -1;
+}
+
+.adm-biodata-card-item:hover {
+    background: #F1F5F9;
+    border-color: #CBD5E1;
+}
+
+.adm-biodata-dl {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.adm-biodata-item {
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 0.75rem;
+}
+
+.adm-biodata-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.adm-biodata-dt {
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748B;
+}
+
+.adm-biodata-dd {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0F172A;
+    margin: 2px 0 0 0;
+}
+
+.adm-biodata-sub {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin-top: 1px;
+    display: block;
+}
+
+/* 5. Rekam Jejak Timeline (Di Kolom Kanan - Semantic OL) */
+.adm-timeline-ol {
+    position: relative;
+    border-left: 2px solid #E2E8F0;
+    margin: 0.5rem 0 0.5rem 1rem;
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    list-style: none;
+}
+
+.adm-timeline-item {
+    position: relative;
+}
+
+.adm-timeline-dot {
+    position: absolute;
+    left: -1.75rem;
+    top: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #CBD5E1;
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 0 0 2px #E2E8F0;
+}
+
+.adm-timeline-dot.active {
+    background: #10B981;
+    box-shadow: 0 0 0 3px #D1FAE5;
+}
+
+.adm-timeline-dot.completed {
+    background: #10B981;
+    box-shadow: 0 0 0 2px #E2E8F0;
+}
+
+.adm-timeline-dot.pending {
+    background: #CBD5E1;
+    box-shadow: 0 0 0 2px #E2E8F0;
+}
+
+.adm-timeline-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0;
+}
+
+.adm-timeline-time {
+    font-size: 0.75rem;
+    color: #64748B;
+    font-weight: 500;
+    margin-top: 2px;
+    display: block;
+}
+
+/* 6. Form Keputusan Tabs & Aksi */
+.adm-decision-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    background: #F1F5F9;
+    padding: 4px;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+}
+
+.adm-tab-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.adm-tab-pill.active-terima {
+    background: #FFFFFF;
+    color: #065F46;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-weight: 700;
+}
+
+.adm-tab-pill.active-tolak {
+    background: #FFFFFF;
+    color: #991B1B;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-weight: 700;
+}
+
+.adm-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 1rem;
+}
+
+.adm-form-field label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #1E293B;
+}
+
+.adm-form-field textarea {
+    width: 100%;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.8125rem;
+    font-family: inherit;
+    resize: none;
+}
+
+.adm-form-field textarea:focus {
+    outline: none;
+    border-color: #4F46E5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* 7. Modal In-App Pratinjau Dokumen */
+.doc-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.doc-modal.open {
+    display: flex;
+}
+
+.doc-modal-box {
+    background: #FFFFFF;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 960px;
+    max-height: 92vh;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+}
+
+.doc-modal-body {
+    position: relative;
+    flex: 1;
+    background: #F8FAFC;
+    min-height: 500px;
+    overflow: hidden;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

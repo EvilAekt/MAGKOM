@@ -79,16 +79,19 @@ class LegacyCmsAdapter
 
         $heroStyles = $heroDef?->defaultStyles ?? [];
         if ($titleSize = $getter('landing_hero_title_size_px')) {
-            $heroStyles['desktop']['title_size'] = (int) $titleSize;
+            $parsedTitleSize = (int) $titleSize;
+            $heroStyles['desktop']['title_size'] = ($parsedTitleSize >= 44) ? 34 : $parsedTitleSize;
         }
         if ($descSize = $getter('landing_hero_desc_size_px')) {
             $heroStyles['desktop']['desc_size'] = (int) $descSize;
         }
         if ($paddingY = $getter('landing_hero_padding_y_px')) {
-            $heroStyles['desktop']['padding_y'] = (int) $paddingY;
+            $parsedPaddingY = (int) $paddingY;
+            $heroStyles['desktop']['padding_y'] = ($parsedPaddingY >= 60) ? 0 : $parsedPaddingY;
         }
         if ($imgHeight = $getter('landing_hero_image_height_px')) {
-            $heroStyles['desktop']['image_height'] = (int) $imgHeight;
+            $parsedImgHeight = (int) $imgHeight;
+            $heroStyles['desktop']['image_height'] = ($parsedImgHeight >= 400) ? 340 : $parsedImgHeight;
         }
 
         // Terapkan override responsive jika ada
@@ -102,8 +105,8 @@ class LegacyCmsAdapter
         // Bangun blok Kuota dari legacy keys
         $kuotaDef = BlockRegistry::get('kuota');
         $kuotaContent = array_merge($kuotaDef?->defaultContent ?? [], [
-            'heading' => $getter('landing_kuota_heading', 'Ketersediaan Kuota Magang'),
-            'subheading' => $getter('landing_kuota_subheading', 'Pilih jenjang pendidikan dan bulan mulai magang untuk melihat kuota jurusan yang tersedia.'),
+            'heading' => $getter('landing_kuota_heading', 'Pilih Penempatan & Ketersediaan Kuota Magang'),
+            'subheading' => $getter('landing_kuota_subheading', 'Pilih jenjang pendidikan, tentukan bulan mulai, lalu pilih bidang penempatan dan jurusanmu untuk langsung mengamankan kuota pendaftaran.'),
             'q1_label' => $getter('landing_kuota_q1_label', '1. Kamu siapa?'),
             'pill_smk' => $getter('landing_kuota_pill_smk', 'Siswa SMK'),
             'pill_mhs' => $getter('landing_kuota_pill_mhs', 'Mahasiswa (D3/S1)'),
@@ -117,15 +120,17 @@ class LegacyCmsAdapter
             'gauge_desc' => $getter('landing_kuota_gauge_desc', 'Memuat informasi ketersediaan kuota...'),
             'legend_tersedia' => $getter('landing_kuota_legend_tersedia', 'Masih banyak'),
             'legend_hampir' => $getter('landing_kuota_legend_hampir', 'Tinggal sedikit'),
-            'legend_penuh' => $getter('landing_kuota_legend_penuh', 'Penuh / Waiting List'),
+            'legend_penuh' => $getter('landing_kuota_legend_penuh', 'Penuh'),
             'btn_tersedia' => $getter('landing_kuota_btn_tersedia', 'Daftar Sekarang ➔'),
             'btn_waiting' => $getter('landing_kuota_btn_waiting', 'Daftar Waiting List ➔'),
             'btn_tutup' => $getter('landing_kuota_btn_tutup', 'Pendaftaran Ditutup'),
         ]);
 
         $kuotaStyles = $kuotaDef?->defaultStyles ?? [];
+        $kuotaStyles['desktop']['padding_y'] = 24;
         if ($gap = $getter('landing_section_gap_px')) {
-            $kuotaStyles['desktop']['section_gap'] = (int) $gap;
+            $parsedGap = (int) $gap;
+            $kuotaStyles['desktop']['section_gap'] = ($parsedGap >= 60) ? 24 : $parsedGap;
         }
         if ($radius = $getter('landing_card_radius_px')) {
             $kuotaStyles['desktop']['card_radius'] = (int) $radius;

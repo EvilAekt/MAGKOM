@@ -7,6 +7,37 @@
     'use strict';
 
     // =========================================================================
+    // 0. SCROLL POSITION RESET ON PAGE LOAD / REFRESH
+    // =========================================================================
+    // Force browser to disable automatic scroll restoration so refresh always starts at top
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+
+    // Instantly reset scroll position to top
+    try {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    } catch (e) {
+        window.scrollTo(0, 0);
+    }
+
+    // If loaded with a hash in the URL on refresh, clean hash so browser doesn't jump
+    if (window.location.hash) {
+        if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+    }
+
+    // Ensure scroll position is at (0, 0) right before unload
+    window.addEventListener('beforeunload', function () {
+        try {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        } catch (e) {
+            window.scrollTo(0, 0);
+        }
+    });
+
+    // =========================================================================
     // 1. DATA STATE & FALLBACK
     // =========================================================================
     const defaultData = {
@@ -190,73 +221,109 @@
             allCards.forEach(function (card) {
                 const sisa = parseInt(card.getAttribute('data-sisa'), 10) || 0;
                 const total = parseInt(card.getAttribute('data-total'), 10) || 0;
-                const isWaiting = card.getAttribute('data-is-waiting') === '1';
                 const isAvailable = card.getAttribute('data-is-available') === '1';
                 const bulanId = card.getAttribute('data-bulan-id');
-                const jurusanId = card.getAttribute('data-jurusan-id');
+                const bidangId = card.getAttribute('data-bidang-id') || '';
+                const jurusanId = card.getAttribute('data-jurusan-id') || '';
+                const jenjang = card.getAttribute('data-jenjang') || currentJenjang;
                 const statusPill = card.querySelector('.kuota-status-pill');
-                const btnLink = card.querySelector('.btn-card-cta');
+                let btnLink = card.querySelector('.btn-card-cta');
 
                 if (!btnLink) return;
 
                 const baseUrl = btnLink.getAttribute('data-base-url') || '/register';
+                function buildRegisterUrl(tipe, jumlah) {
+                    let url = baseUrl + '?bulan=' + bulanId;
+                    if (bidangId) url += '&bidang=' + bidangId;
+                    if (jenjang) url += '&jenjang=' + (jenjang === 'smk' ? 'smk' : 's1');
+                    if (jurusanId) url += '&jurusan=' + jurusanId;
+                    url += '&tipe=' + tipe + '&jumlah=' + jumlah;
+                    return url;
+                }
+
+                function makeLinkActive(href, text) {
+                    if (btnLink.tagName.toLowerCase() !== 'a') {
+                        const a = document.createElement('a');
+                        a.setAttribute('data-base-url', baseUrl);
+                        btnLink.parentNode.replaceChild(a, btnLink);
+                        btnLink = a;
+                    }
+                    btnLink.className = 'btn-card-action btn-primary-action btn-card-cta';
+                    btnLink.removeAttribute('disabled');
+                    btnLink.setAttribute('href', href);
+                    btnLink.textContent = text;
+                }
+
+                function makeButtonDisabled(text) {
+                    if (btnLink.tagName.toLowerCase() !== 'button') {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.setAttribute('data-base-url', baseUrl);
+                        btnLink.parentNode.replaceChild(btn, btnLink);
+                        btnLink = btn;
+                    }
+                    btnLink.className = 'btn-card-action btn-disabled btn-card-cta';
+                    btnLink.removeAttribute('href');
+                    btnLink.setAttribute('disabled', 'true');
+                    btnLink.textContent = text;
+                }
 
                 if (currentRegMode === 'mandiri') {
                     // Mode Mandiri (1 Orang)
-                    const targetUrl = baseUrl + '?bulan=' + bulanId + '&jurusan=' + jurusanId + '&tipe=mandiri&jumlah=1';
-                    btnLink.setAttribute('href', targetUrl);
-
-                    if (isAvailable && !isWaiting && sisa > 0) {
-                        btnLink.className = 'btn-card-action btn-primary-action btn-card-cta';
-                        btnLink.textContent = 'Daftar Sekarang ➔';
+                    if (isAvailable && sisa > 0) {
+                        makeLinkActive(buildRegisterUrl('mandiri', 1), 'Daftar Sekarang ➔');
                         if (statusPill) {
                             statusPill.className = (total > 0 && sisa / total <= 0.34) ? 'kuota-status-pill status-hampir' : 'kuota-status-pill status-tersedia';
                             statusPill.textContent = (total > 0 && sisa / total <= 0.34) ? 'Tinggal sedikit' : 'Tersedia';
                         }
-                    } else if (isWaiting || (isAvailable && sisa === 0)) {
-                        btnLink.className = 'btn-card-action btn-waitlist-action btn-card-cta';
-                        btnLink.textContent = 'Daftar Waiting List ➔';
+                    } else if (isAvailable && sisa === 0) {
+                        makeButtonDisabled('Kuota Penuh');
                         if (statusPill) {
                             statusPill.className = 'kuota-status-pill status-penuh';
-                            statusPill.textContent = 'Waiting List';
+                            statusPill.textContent = 'Penuh';
+                        }
+                    } else {
+                        makeButtonDisabled('Pendaftaran Ditutup');
+                        if (statusPill) {
+                            statusPill.className = 'kuota-status-pill status-penuh';
+                            statusPill.textContent = 'Tutup';
                         }
                     }
                 } else {
                     // Mode Kelompok (2 - 4 Orang)
-                    const targetUrl = baseUrl + '?bulan=' + bulanId + '&jurusan=' + jurusanId + '&tipe=kelompok&jumlah=' + currentMemberCount;
-                    btnLink.setAttribute('href', targetUrl);
-
-                    if (isAvailable && !isWaiting && sisa >= currentMemberCount) {
+                    if (isAvailable && sisa >= currentMemberCount) {
                         // Kuota cukup untuk tim
-                        btnLink.className = 'btn-card-action btn-primary-action btn-card-cta';
-                        btnLink.textContent = 'Daftar Kelompok (' + currentMemberCount + ' Orang) ➔';
+                        makeLinkActive(buildRegisterUrl('kelompok', currentMemberCount), 'Daftar Kelompok (' + currentMemberCount + ' Orang) ➔');
                         if (statusPill) {
                             statusPill.className = 'kuota-status-pill status-tersedia';
                             statusPill.textContent = 'Tersedia (' + sisa + ' Kursi)';
                         }
-                    } else if (isAvailable && !isWaiting && sisa > 0 && sisa < currentMemberCount) {
+                    } else if (isAvailable && sisa > 0 && sisa < currentMemberCount) {
                         // Kuota kurang untuk seluruh rombongan
-                        btnLink.className = 'btn-card-action btn-waitlist-action btn-card-cta';
-                        btnLink.textContent = 'Daftar Waiting List (' + currentMemberCount + ' Orang) ➔';
+                        makeButtonDisabled('Sisa Kuota Tidak Cukup (' + sisa + ' Kursi)');
                         if (statusPill) {
                             statusPill.className = 'kuota-status-pill status-kurang';
                             statusPill.textContent = 'Sisa ' + sisa + ' Kursi · Tim ' + currentMemberCount;
                         }
-                    } else {
-                        // Kuota habis (0) atau waiting list
-                        btnLink.className = 'btn-card-action btn-waitlist-action btn-card-cta';
-                        btnLink.textContent = 'Daftar Waiting List (' + currentMemberCount + ' Orang) ➔';
+                    } else if (isAvailable && sisa === 0) {
+                        makeButtonDisabled('Kuota Penuh');
                         if (statusPill) {
                             statusPill.className = 'kuota-status-pill status-penuh';
-                            statusPill.textContent = 'Waiting List';
+                            statusPill.textContent = 'Penuh';
+                        }
+                    } else {
+                        makeButtonDisabled('Pendaftaran Ditutup');
+                        if (statusPill) {
+                            statusPill.className = 'kuota-status-pill status-penuh';
+                            statusPill.textContent = 'Tutup';
                         }
                     }
                 }
             });
         }
 
-        // Filter tampilan kartu dan kalkulasi Gauge dari data riil
-        function updateKuotaView() {
+        // Kalkulasi Gauge Ring Meter dari data kartu aktif yang terlihat
+        function refreshGaugeFromVisibleCards() {
             const allCards = carouselTrack.querySelectorAll('.kuota-card');
             let totalSisa = 0;
             let totalKursi = 0;
@@ -271,12 +338,9 @@
                 const isMatch = (cardJenjang === currentJenjang) && (!currentBulanId || cardBulanId === currentBulanId);
 
                 if (isMatch) {
-                    card.style.display = 'flex';
                     totalSisa += sisa;
                     totalKursi += total;
                     visibleCount++;
-                } else {
-                    card.style.display = 'none';
                 }
             });
 
@@ -300,13 +364,95 @@
                     gaugeDesc.innerHTML = 'Ada <strong>' + totalSisa + ' kursi kosong</strong> dari ' + totalKursi + ' total kursi untuk <strong>' + jenjangLabel + '</strong> yang mulai <strong>' + (currentBulanName || '') + '</strong> · <em>Jalur: ' + modeLabel + '</em>.';
                 }
             }
+        }
 
-            // Sinkronkan tombol pendaftaran dan kuota tim
+        // Filter tampilan kartu dan kalkulasi Gauge dari data riil
+        function updateKuotaView() {
+            const allCards = carouselTrack.querySelectorAll('.kuota-card');
+
+            allCards.forEach(function (card) {
+                const cardJenjang = card.getAttribute('data-jenjang');
+                const cardBulanId = card.getAttribute('data-bulan-id');
+                const isMatch = (cardJenjang === currentJenjang) && (!currentBulanId || cardBulanId === currentBulanId);
+
+                if (isMatch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            refreshGaugeFromVisibleCards();
             updateCardActionButtons();
 
             carouselTrack.scrollLeft = 0;
             checkCarouselButtons();
         }
+
+        // Listener Klik Jurusan Pills pada Kartu Kuota (Delegasi Event)
+        carouselTrack.addEventListener('click', function (e) {
+            const pill = e.target.closest('.jurusan-pill-btn');
+            if (!pill) return;
+            e.preventDefault();
+
+            const card = pill.closest('.kuota-card');
+            if (!card) return;
+
+            // Nonaktifkan pill lain di kartu yang sama
+            const cardPills = card.querySelectorAll('.jurusan-pill-btn');
+            cardPills.forEach(function (p) {
+                p.classList.remove('active');
+                p.setAttribute('aria-checked', 'false');
+            });
+
+            // Aktifkan pill yang diklik
+            pill.classList.add('active');
+            pill.setAttribute('aria-checked', 'true');
+
+            // Ambil data atribut dari pill yang dipilih
+            const jId = pill.getAttribute('data-jurusan-id') || '';
+            const sisa = parseInt(pill.getAttribute('data-sisa'), 10) || 0;
+            const total = parseInt(pill.getAttribute('data-total'), 10) || 0;
+            const persen = parseInt(pill.getAttribute('data-persen'), 10) || 0;
+            const badgeLabel = pill.getAttribute('data-badge-label') || (sisa > 0 ? 'Tersedia' : 'Penuh');
+            const badgeClass = pill.getAttribute('data-badge-class') || (sisa > 0 ? 'status-tersedia' : 'status-penuh');
+            const barClass = pill.getAttribute('data-bar-class') || (sisa > 0 ? 'bar-tersedia' : 'bar-penuh');
+
+            // Update data atribut kartu
+            card.setAttribute('data-jurusan-id', jId);
+            card.setAttribute('data-sisa', sisa);
+            card.setAttribute('data-total', total);
+            if (sisa === 0) {
+                card.classList.add('is-penuh');
+            } else {
+                card.classList.remove('is-penuh');
+            }
+
+            // Update elemen visual angka, progress bar, dan status pill di dalam kartu
+            const bigNum = card.querySelector('.kuota-big-number');
+            if (bigNum) bigNum.textContent = sisa;
+
+            const totalLabel = card.querySelector('.kuota-stat-total');
+            if (totalLabel) totalLabel.textContent = 'dari ' + total + ' kursi';
+
+            const barFill = card.querySelector('.kuota-progress-bar-fill');
+            if (barFill) {
+                barFill.style.width = persen + '%';
+                barFill.className = 'kuota-progress-bar-fill ' + barClass;
+            }
+
+            const statusPill = card.querySelector('.kuota-status-pill');
+            if (statusPill) {
+                statusPill.className = 'kuota-status-pill ' + badgeClass;
+                statusPill.textContent = badgeLabel;
+            }
+
+            // Perbarui tombol CTA kartu
+            updateCardActionButtons();
+
+            // Perbarui total gauge ring meter
+            refreshGaugeFromVisibleCards();
+        });
 
         // Listener Jenjang Pills (1. Kamu siapa?)
         jenjangPills.forEach(function (btn) {
@@ -443,11 +589,16 @@
             if (rafId) cancelAnimationFrame(rafId);
             rafId = requestAnimationFrame(function () {
                 const rect = wrap.getBoundingClientRect();
-                const viewH = window.innerHeight;
-                
-                // Hitung progres scroll (0 sampai 1) saat elemen melintas layar
-                const targetPoint = viewH * 0.58;
-                let prog = (targetPoint - rect.top) / rect.height;
+                const header = document.querySelector('.landing-header');
+                const headerH = header ? header.offsetHeight : 68;
+                const startOffset = headerH + 20;
+
+                // Hitung progres scroll sejak bagian atas seksi tiba di posisi baca
+                // Saat user tiba di seksi (rect.top >= startOffset), prog = 0 (mobil tepat di titik START)
+                const scrolled = startOffset - rect.top;
+                const travelRange = Math.max(400, rect.height - 240);
+
+                let prog = scrolled / travelRange;
                 prog = Math.max(0, Math.min(1, prog));
 
                 const currentLen = prog * totalLength;
@@ -502,8 +653,28 @@
             const targetLength = cpLengths[index] || 0;
             const progressTarget = targetLength / totalLength;
             const currentScrollY = window.scrollY || window.pageYOffset;
-            const destinationY = currentScrollY + rect.top + (progressTarget * rect.height) - (window.innerHeight * 0.58);
-            window.scrollTo({ top: destinationY, behavior: 'smooth' });
+            const header = document.querySelector('.landing-header');
+            const headerH = header ? header.offsetHeight : 68;
+            const startOffset = headerH + 20;
+            const travelRange = Math.max(400, rect.height - 240);
+
+            const destinationY = currentScrollY + rect.top - startOffset + (progressTarget * travelRange);
+            window.scrollTo({ top: Math.max(0, destinationY), behavior: 'smooth' });
+        }
+
+        // Click on START node: scroll back to start of road
+        const startNode = wrap.querySelector('[aria-label="Start Node"]');
+        if (startNode) {
+            startNode.style.cursor = 'pointer';
+            startNode.addEventListener('click', function () {
+                const rect = wrap.getBoundingClientRect();
+                const currentScrollY = window.scrollY || window.pageYOffset;
+                const header = document.querySelector('.landing-header');
+                const headerH = header ? header.offsetHeight : 68;
+                const startOffset = headerH + 20;
+                const destinationY = currentScrollY + rect.top - startOffset;
+                window.scrollTo({ top: Math.max(0, destinationY), behavior: 'smooth' });
+            });
         }
 
         checkpointGroups.forEach(function (cp) {
@@ -535,6 +706,8 @@
     function initFaqAccordion() {
         const stackContainer = document.getElementById('faqCategoryAccordion');
         if (!stackContainer) return;
+        if (stackContainer.getAttribute('data-faq-bound') === 'true') return;
+        stackContainer.setAttribute('data-faq-bound', 'true');
 
         // Ambil seluruh item kategori yang ada
         const categoryItems = stackContainer.querySelectorAll('.faq-category-item');
@@ -545,7 +718,8 @@
             const subQaItems = catItem.querySelectorAll('.faq-sub-qa-item');
 
             if (headerBtn && drawer) {
-                headerBtn.addEventListener('click', function () {
+                headerBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
                     const isCurrentlyExpanded = catItem.classList.contains('is-expanded');
 
                     // Tutup kategori lain agar accordion rapi sesuai referensi
@@ -572,6 +746,7 @@
 
                 if (qBtn && aPane) {
                     qBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
                         e.stopPropagation();
                         const isCurrentlyOpen = qaItem.classList.contains('is-open');
 
@@ -716,13 +891,227 @@
     }
 
     // =========================================================================
+    // 6. HEADER SMOOTH SCROLL NAVIGATION & SECTION LANDING OFFSET
+    // =========================================================================
+    function initHeaderScrollNav() {
+        const navLinks = document.querySelectorAll('.landing-nav-link[href^="#"], .landing-header a[href^="#"], a.btn-header-register[href^="#"]');
+        navLinks.forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                const targetId = link.getAttribute('href');
+                if (!targetId || targetId === '#' || !targetId.startsWith('#')) return;
+
+                let targetEl = document.querySelector(targetId);
+                // Jika menuju #peta-alur atau #tahapan, arahkan tepat ke kontainer awal seksi tahapan
+                if (targetId === '#peta-alur' || targetId === '#tahapan') {
+                    const sectionTahapan = document.getElementById('tahapan');
+                    if (sectionTahapan) {
+                        targetEl = sectionTahapan;
+                    }
+                }
+
+                if (targetEl) {
+                    e.preventDefault();
+                    const header = document.querySelector('.landing-header');
+                    const headerHeight = header ? header.offsetHeight : 68;
+                    // Jarak bernapas proporsional 20px di bawah navbar sticky
+                    const targetTop = targetEl.getBoundingClientRect().top + window.scrollY - (headerHeight + 20);
+                    window.scrollTo({
+                        top: Math.max(0, targetTop),
+                        behavior: 'smooth'
+                    });
+
+                    if (window.history && window.history.pushState) {
+                        window.history.pushState(null, '', targetId);
+                    }
+                }
+            });
+        });
+    }
+
+    // =========================================================================
+    // 0. SITE PRELOADER & SPLASH SCREEN DISMISSAL
+    // =========================================================================
+    function initSitePreloader() {
+        const preloader = document.getElementById('sitePreloader');
+        if (!preloader) return;
+
+        // Cek preferensi aksesibilitas minim gerak
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            preloader.classList.add('is-loaded');
+            preloader.style.display = 'none';
+            return;
+        }
+
+        const startTime = Date.now();
+        let dismissed = false;
+
+        function dismissPreloader() {
+            if (dismissed) return;
+            dismissed = true;
+
+            try {
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            } catch (e) {
+                window.scrollTo(0, 0);
+            }
+
+            const elapsed = Date.now() - startTime;
+            // Durasi minimal estetika 650ms agar animasi tidak berkedip
+            const delay = Math.max(0, 650 - elapsed);
+
+            setTimeout(function () {
+                preloader.classList.add('is-loaded');
+                setTimeout(function () {
+                    preloader.style.display = 'none';
+                }, 520);
+            }, delay);
+        }
+
+        // Tutup saat window selesai memuat seluruh asset
+        if (document.readyState === 'complete') {
+            dismissPreloader();
+        } else {
+            window.addEventListener('load', dismissPreloader, { once: true });
+        }
+
+        // Safety fallback timeout: maksimal 2.2 detik agar user tidak pernah terblokir
+        setTimeout(dismissPreloader, 2200);
+    }
+
+    // =========================================================================
+    // 7. HEADER DYNAMIC SCROLL STATE (SHRINK & FROSTED GLASS ELEVATION)
+    // =========================================================================
+    function initHeaderScrollState() {
+        const header = document.querySelector('.landing-header');
+        if (!header) return;
+
+        let ticking = false;
+        function updateHeader() {
+            const isScrolled = (window.scrollY || window.pageYOffset) > 20;
+            header.classList.toggle('is-scrolled', isScrolled);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', function () {
+            if (!ticking) {
+                window.requestAnimationFrame(updateHeader);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        updateHeader();
+    }
+
+    // =========================================================================
+    // 8. SCROLL REVEAL ENTRANCE ANIMATION (FADE-IN UP ON FIRST VIEWPORT ENTRY)
+    // =========================================================================
+    function initScrollReveal() {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+
+        const selectorList = [
+            '#penempatan .section-heading-lg',
+            '#penempatan .section-desc-sub',
+            '#penempatan .kuota-questions-grid',
+            '#penempatan .kuota-highlight-banner',
+            '#penempatan .kuota-carousel-wrapper',
+            '.tahapan-sticky-left',
+            '#tahapanRoadWrap',
+            '.faq-visual-col',
+            '.faq-content-col'
+        ];
+
+        const elements = document.querySelectorAll(selectorList.join(', '));
+        if (!elements.length) return;
+
+        elements.forEach(function (el) {
+            el.classList.add('scroll-reveal');
+            if (el.classList.contains('section-desc-sub')) {
+                el.classList.add('delay-1');
+            } else if (el.classList.contains('kuota-questions-grid')) {
+                el.classList.add('delay-2');
+            }
+        });
+
+        if (!('IntersectionObserver' in window)) {
+            elements.forEach(function (el) {
+                el.classList.add('is-revealed');
+            });
+            return;
+        }
+
+        const revealObserver = new IntersectionObserver(function (entries, observer) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '0px 0px -40px 0px',
+            threshold: 0.08
+        });
+
+        elements.forEach(function (el) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                el.classList.add('is-revealed');
+            } else {
+                revealObserver.observe(el);
+            }
+        });
+    }
+
+    // =========================================================================
     // BOOTSTRAP ON DOM READY
     // =========================================================================
+    function applyDynamicTheme() {
+        const el = document.documentElement;
+        if (!el) return;
+
+        const ds = el.dataset;
+        if (ds.themePrimary) el.style.setProperty('--navy', ds.themePrimary);
+        if (ds.themeNavyDark) el.style.setProperty('--navy-dark', ds.themeNavyDark);
+        if (ds.themeAccent) el.style.setProperty('--accent', ds.themeAccent);
+        if (ds.themeGold) el.style.setProperty('--gold', ds.themeGold);
+        if (ds.themeBg) el.style.setProperty('--background', ds.themeBg);
+        if (ds.themeFontDisplay) el.style.setProperty('--font-display', `'${ds.themeFontDisplay}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`);
+        if (ds.themeFontBody) el.style.setProperty('--font-sans', `'${ds.themeFontBody}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`);
+        if (ds.themeRadius) el.style.setProperty('--border-radius-card', ds.themeRadius);
+        if (ds.themeBtnStyle) {
+            const btnRadius = ds.themeBtnStyle === 'pill' ? '9999px' : (ds.themeBtnStyle === 'sharp' ? '0px' : '8px');
+            el.style.setProperty('--radius-button', btnRadius);
+        }
+    }
+
+    // Apply immediate execution to prevent flash
+    applyDynamicTheme();
+
     document.addEventListener('DOMContentLoaded', function () {
+        try {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        } catch (e) {
+            window.scrollTo(0, 0);
+        }
+        applyDynamicTheme();
+        initSitePreloader();
         initHeroSlider();
         initKuotaExplorer();
         initTahapanRoad();
         initFaqAccordion();
+        initHeaderScrollNav();
+        initHeaderScrollState();
+        initScrollReveal();
+    });
+
+    window.addEventListener('load', function () {
+        try {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        } catch (e) {
+            window.scrollTo(0, 0);
+        }
     });
 
 })();

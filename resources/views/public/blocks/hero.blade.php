@@ -62,7 +62,7 @@
                         <!-- Kolom 1: Overview & CTA -->
                         <div>
                             <p class="hero-kicker" data-wp-editable="hero_kicker">{{ $cmsKicker }}</p>
-                            @if($cmsTitle)
+                            @if($cmsTitle && trim(str_replace(["\r", "\n"], ' ', $cmsTitle)) !== 'Program Magang Kominfo Sleman')
                                 <h1 class="hero-title" data-wp-editable="hero_title">{!! nl2br(e($cmsTitle)) !!}</h1>
                             @else
                                 <h1 class="hero-title" data-wp-editable="hero_title">

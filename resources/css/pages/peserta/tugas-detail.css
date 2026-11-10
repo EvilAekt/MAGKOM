@@ -416,86 +416,29 @@
     line-height: 1.4;
 }
 
-/* Card 2: Komentar Pribadi */
-.private-comments-card {
-    background: #F0F4F9;
-    border: 1px solid #D8E2EC;
-    border-radius: 14px;
-    padding: 18px 20px;
-}
-
-.private-comments-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #1E293B;
-    margin-bottom: 12px;
-}
-
-.private-comment-trigger-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: none;
-    border: none;
-    color: #2563EB;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    cursor: pointer;
-    padding: 4px 0;
-    text-align: left;
-}
-
-.private-comment-trigger-btn:hover {
-    text-decoration: underline;
-}
-
-.private-comments-textarea-wrap {
-    margin-top: 8px;
-}
-
-.private-comments-textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #CBD5E1;
-    border-radius: 8px;
-    font-size: 0.8125rem;
-    font-family: inherit;
-    resize: none;
-    min-height: 60px;
-    background: #FFFFFF;
-    color: #0F172A;
-    box-sizing: border-box;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.private-comments-textarea:focus {
-    outline: none;
-    border-color: #2563EB;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-}
-
 /* =========================================================================
-   MODAL DIALOG (LINK & FILE)
+   MODAL DIALOG (LINK & FILE) — MAGKOM DESIGN SYSTEM & PARITY PEMBIMBING
    ========================================================================= */
-.classroom-modal-backdrop {
+.classroom-modal-backdrop,
+.tugas-modal-backdrop {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(32, 33, 36, 0.55);
     backdrop-filter: blur(2px);
     z-index: 1050;
     align-items: center;
     justify-content: center;
     padding: 16px;
+    box-sizing: border-box;
 }
 
-.classroom-modal-backdrop.show {
+.classroom-modal-backdrop.show,
+.tugas-modal-backdrop.show,
+.tugas-modal-backdrop.is-active {
     display: flex;
     animation: backdropFadeIn 0.2s ease-out;
 }
@@ -503,6 +446,189 @@
 @keyframes backdropFadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+.tugas-dialog {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    animation: modalPopIn 0.2s ease-out;
+}
+
+@keyframes modalPopIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.tugas-dialog--upload {
+    width: 600px;
+    max-width: 100%;
+    padding: 24px;
+}
+
+.tugas-dialog--link {
+    width: 440px;
+    max-width: 100%;
+    padding: 24px;
+}
+
+.tugas-dialog-btn-text {
+    border: 0;
+    background: transparent;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #01347C;
+    cursor: pointer;
+    transition: opacity 0.15s ease, background-color 0.15s ease;
+    border-radius: 6px;
+}
+
+.tugas-dialog-btn-text:hover {
+    opacity: 0.85;
+    background: #F1F5F9;
+}
+
+.tugas-dialog-btn-pill {
+    height: 36px;
+    min-width: 78px;
+    border: 0;
+    background: #01347C;
+    border-radius: 18px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+    padding: 0 18px;
+}
+
+.tugas-dialog-btn-pill:hover:not(:disabled) {
+    background: #00224f;
+}
+
+.tugas-dialog-btn-pill:disabled {
+    background: #cbd5e1;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* Upload Dropzone Modal */
+.tugas-dropzone {
+    margin-top: 16px;
+    border: 2px dashed #8b92a1;
+    border-radius: 12px;
+    min-height: 240px;
+    box-sizing: border-box;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f8f9fc;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.tugas-dropzone:hover,
+.tugas-dropzone.drag-over {
+    border-color: #01347C;
+    background: #eff6ff;
+}
+
+.tugas-dropzone-cloud {
+    margin-bottom: 4px;
+}
+
+.tugas-dropzone-btn-choose {
+    height: 38px;
+    padding: 0 22px;
+    border: none;
+    background: #01347C;
+    color: #ffffff;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.tugas-dropzone-btn-choose:hover {
+    background: #00224f;
+}
+
+.tugas-dropzone-hint {
+    font-size: 13px;
+    color: #1f2937;
+    margin-top: 2px;
+}
+
+.tugas-dropzone-format {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* Input Fields Filled Google Classroom / MagKom */
+.tugas-field-filled {
+    position: relative;
+    background: #e8edf5;
+    border-bottom: 2px solid #5f6368;
+    border-radius: 4px 4px 0 0;
+    min-height: 54px;
+    height: 54px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.tugas-field-filled:hover {
+    background: #dde3ed;
+    border-bottom-color: #202124;
+}
+
+.tugas-field-filled:focus-within,
+.tugas-field-filled.is-focused {
+    background: #e8edf5;
+    border-bottom-color: #01347C;
+}
+
+.tugas-field-filled-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #01347C;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.tugas-input-clean {
+    width: 100%;
+    height: 24px;
+    box-sizing: border-box;
+    border: 0;
+    background: transparent;
+    outline: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+    font-family: inherit;
+    padding: 0;
 }
 
 .classroom-modal-dialog {
@@ -600,19 +726,19 @@
 }
 
 .classroom-modal-tab-btn:hover {
-    color: #2563EB;
+    color: #01347C;
 }
 
 .classroom-modal-tab-btn.active {
-    color: #2563EB;
-    border-bottom-color: #2563EB;
+    color: #01347C;
+    border-bottom-color: #01347C;
 }
 
 .classroom-tab-panel {
     display: none;
     flex: 1;
     overflow-y: auto;
-    padding: 24px;
+    padding: 20px 4px 10px 4px;
 }
 
 .classroom-tab-panel.active {
@@ -639,18 +765,18 @@
 .file-dropzone-box:hover,
 .file-dropzone-box.drag-over {
     background: #EFF6FF;
-    border-color: #2563EB;
+    border-color: #01347C;
 }
 
 .cloud-upload-illustration {
     margin-bottom: 16px;
-    color: #3B82F6;
+    color: #01347C;
 }
 
 .btn-browse-file {
     padding: 8px 22px;
     border-radius: 20px;
-    background: #2563EB;
+    background: #01347C;
     color: #FFFFFF;
     font-size: 0.875rem;
     font-weight: 600;
@@ -661,7 +787,7 @@
 }
 
 .btn-browse-file:hover {
-    background: #1D4ED8;
+    background: #00224f;
 }
 
 .dropzone-label-text {
@@ -754,6 +880,146 @@
     text-align: center;
 }
 
+/* Submitted Work Preview Cards (Google Classroom Parity) */
+.submitted-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.submitted-preview-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    background: #FFFFFF;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.submitted-preview-card:hover {
+    border-color: #01347C;
+    box-shadow: 0 2px 8px rgba(1, 52, 124, 0.08);
+}
+
+.submitted-preview-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+    padding-right: 12px;
+}
+
+.submitted-preview-name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #01347C;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.submitted-preview-name:hover {
+    color: #00224F;
+}
+
+.submitted-preview-type {
+    font-size: 0.6875rem;
+    color: #64748B;
+    margin-top: 3px;
+    font-weight: 500;
+}
+
+.submitted-preview-thumb {
+    width: 48px;
+    height: 38px;
+    border-radius: 4px;
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.submitted-preview-card:hover .submitted-preview-thumb {
+    border-color: #BFDBFE;
+    background: #EFF6FF;
+    color: #01347C;
+}
+
+.submitted-waiting-box {
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+    color: #166534;
+    font-size: 0.8125rem;
+    margin-bottom: 8px;
+}
+
+.submitted-waiting-title {
+    font-weight: 700;
+    margin-bottom: 2px;
+    color: #15803D;
+    font-size: 0.875rem;
+}
+
+.submitted-waiting-subtitle {
+    font-size: 0.75rem;
+    color: #166534;
+}
+
+/* Tombol Batalkan Pengiriman (Outlined Rounded Pill) */
+.btn-batalkan-pengiriman {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 9px 18px;
+    border-radius: 9999px;
+    border: 1.5px solid #01347C;
+    background: #FFFFFF;
+    color: #01347C;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 4px;
+}
+
+.btn-batalkan-pengiriman:hover {
+    background: #EFF6FF;
+    border-color: #00224F;
+    color: #00224F;
+    box-shadow: 0 2px 6px rgba(1, 52, 124, 0.12);
+}
+
+/* Modal Konfirmasi Batalkan Pengiriman */
+.tugas-dialog--batal-kirim {
+    max-width: 420px !important;
+    padding: 24px !important;
+}
+
+.btn-confirm-unsubmit {
+    background: #01347C !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    width: auto !important;
+    padding: 0 20px !important;
+}
+
+.btn-confirm-unsubmit:hover {
+    background: #00224F !important;
+}
+
 /* Submitted Work Link Pill */
 .submitted-item-card {
     display: flex;
@@ -810,8 +1076,8 @@
 }
 
 [data-theme="dark"] .classroom-work-card,
-[data-theme="dark"] .private-comments-card,
 [data-theme="dark"] .classroom-modal-dialog,
+[data-theme="dark"] .tugas-dialog,
 [data-theme="dark"] .classroom-dropdown-menu,
 [data-theme="dark"] .recent-file-card {
     background: #0F172A !important;
@@ -819,10 +1085,31 @@
     color: #E2E8F0 !important;
 }
 
+[data-theme="dark"] .tugas-field-filled {
+    background: #1a273e !important;
+    border-bottom-color: #3b82f6 !important;
+}
+
+[data-theme="dark"] .tugas-input-clean {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .tugas-dropzone {
+    background: #182234 !important;
+    border-color: #3b82f6 !important;
+}
+
+[data-theme="dark"] .tugas-dropzone-hint {
+    color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .tugas-dropzone-format {
+    color: #94a3b8 !important;
+}
+
 [data-theme="dark"] .classroom-work-title,
 [data-theme="dark"] .classroom-modal-title,
 [data-theme="dark"] .recent-file-title,
-[data-theme="dark"] .private-comments-header,
 [data-theme="dark"] .attached-item-name {
     color: #F8FAFC !important;
 }
@@ -848,10 +1135,50 @@
     background: #0F172A !important;
 }
 
-[data-theme="dark"] .private-comments-textarea {
-    background-color: #0F172A !important;
+[data-theme="dark"] .submitted-preview-card {
+    background: #182234 !important;
     border-color: #26354D !important;
-    color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .submitted-preview-name {
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .submitted-preview-thumb {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .btn-batalkan-pengiriman {
+    background: transparent !important;
+    border-color: #38BDF8 !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .btn-batalkan-pengiriman:hover {
+    background: rgba(56, 189, 248, 0.12) !important;
+    color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .tugas-dialog--batal-kirim {
+    background: #182234 !important;
+    border-color: #26354D !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .submitted-waiting-box {
+    background: #064E3B !important;
+    border-color: #059669 !important;
+    color: #A7F3D0 !important;
+}
+
+[data-theme="dark"] .submitted-waiting-title {
+    color: #6EE7B7 !important;
+}
+
+[data-theme="dark"] .submitted-waiting-subtitle {
+    color: #A7F3D0 !important;
 }
 
 @keyframes spinClassroom {

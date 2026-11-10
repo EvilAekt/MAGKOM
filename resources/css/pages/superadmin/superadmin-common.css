@@ -197,6 +197,28 @@
     height: 28px !important;
 }
 
+.stat-spark i,
+.sa-spark i {
+    transform-origin: bottom center;
+    will-change: transform, opacity;
+}
+
+.telemetry-canvas-wrapper,
+#canvasContainer {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    will-change: transform, box-shadow;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .telemetry-canvas-wrapper,
+    #canvasContainer,
+    .stat-spark i,
+    .sa-spark i {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
 /* 3. Filter & Toolbar Cards */
 .staf-filter-card {
     background: var(--neutral-0);
@@ -962,6 +984,12 @@
     color: #F87171 !important;
     border-color: rgba(220, 38, 38, 0.35) !important;
 }
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 
 
 

@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div>
-                <button type="button" class="btn-banner-action" onclick="openTambahBulanModal()">
+                <button type="button" class="btn-banner-action btn-trigger-tambah-bulan">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -186,7 +186,14 @@
                             </td>
                             <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
                                 <div style="display: inline-flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
-                                    <button type="button" onclick="openEditBulanModal({{ $bulan->id }}, '{{ $bulan->bulan_mulai?->format('Y-m-d') }}', '{{ $bulan->tgl_buka?->format('Y-m-d') }}', '{{ $bulan->tgl_tutup?->format('Y-m-d') }}', '{{ $bulan->override_status?->value ?? '' }}')" class="sa-btn-action-outline">
+                                    <button type="button" 
+                                            class="sa-btn-action-outline btn-trigger-edit-bulan"
+                                            data-id="{{ $bulan->id }}"
+                                            data-bulan-mulai="{{ $bulan->bulan_mulai?->format('Y-m-d') }}"
+                                            data-tgl-buka="{{ $bulan->tgl_buka?->format('Y-m-d') }}"
+                                            data-tgl-tutup="{{ $bulan->tgl_tutup?->format('Y-m-d') }}"
+                                            data-override-status="{{ $bulan->override_status?->value ?? '' }}"
+                                            data-action-url="{{ route('superadmin.bulan.update', $bulan) }}">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                         Edit
                                     </button>
@@ -236,7 +243,7 @@
                 </div>
                 <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Bulan Magang</h3>
             </div>
-            <button type="button" onclick="closeTambahBulanModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+            <button type="button" data-modal-dismiss="modal-tambah-bulan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0 0 1.25rem 0; line-height: 1.4;">
@@ -281,7 +288,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="closeTambahBulanModal()" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
+                <button type="button" data-modal-dismiss="modal-tambah-bulan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
@@ -304,7 +311,7 @@
                 </div>
                 <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Perbarui Bulan Magang</h3>
             </div>
-            <button type="button" onclick="closeEditBulanModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+            <button type="button" data-modal-dismiss="modal-edit-bulan" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <p style="font-size: 0.8125rem; color: var(--neutral-600); margin: 0 0 1.25rem 0; line-height: 1.4;">
@@ -349,7 +356,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="closeEditBulanModal()" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
+                <button type="button" data-modal-dismiss="modal-edit-bulan" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
@@ -360,31 +367,7 @@
     </div>
 </div>
 
-<script>
-    function openTambahBulanModal() {
-        document.getElementById('modal-tambah-bulan').style.display = 'flex';
-    }
-    function closeTambahBulanModal() {
-        document.getElementById('modal-tambah-bulan').style.display = 'none';
-    }
-
-    function openEditBulanModal(bulanId, bulanMulai, tglBuka, tglTutup, overrideStatus) {
-        document.getElementById('form-edit-bulan').action = '/superadmin/bulan/' + bulanId;
-        document.getElementById('edit-bulan-mulai').value = bulanMulai;
-        document.getElementById('edit-tgl-buka').value = tglBuka;
-        document.getElementById('edit-tgl-tutup').value = tglTutup;
-        document.getElementById('edit-override-status').value = overrideStatus;
-        document.getElementById('modal-edit-bulan').style.display = 'flex';
-    }
-    function closeEditBulanModal() {
-        document.getElementById('modal-edit-bulan').style.display = 'none';
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeTambahBulanModal();
-            closeEditBulanModal();
-        }
-    });
-</script>
+@push('scripts')
+    @vite(['resources/js/pages/superadmin/bulan-index.js'])
+@endpush
 @endsection

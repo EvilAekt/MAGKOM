@@ -10,8 +10,8 @@
         color="yellow"
         trendType="{{ $pengajuanSlaKritisCount > 0 ? 'warning' : 'success' }}"
         :trendDirection="$pengajuanSlaKritisCount > 0 ? 'down' : 'up'"
-        :trendText="$pengajuanSlaKritisCount > 0 ? $pengajuanSlaKritisCount . ' SLA' : 'Tertib'"
-        subText="{{ $pengajuanSlaKritisCount > 0 ? $pengajuanSlaKritisCount . ' lewat SLA · Perlu Verifikasi Segera' : 'Tertib · Perlu Verifikasi Segera' }}"
+        :trendText="$pengajuanSlaKritisCount > 0 ? $pengajuanSlaKritisCount . ' Kritis' : 'Tertib'"
+        subText="{{ $pengajuanSlaKritisCount > 0 ? $pengajuanSlaKritisCount . ' lewat batas waktu · Perlu Verifikasi Segera' : 'Tertib · Perlu Verifikasi Segera' }}"
         :sparkBars="[75, 80, 70, 85, 90, 65, 60]"
         col="col-md-3 col-sm-6 col-xs-12 adm-metric-card-col"
     />

@@ -42,7 +42,7 @@
     }
 @endphp
 
-<footer id="kontak" class="landing-footer" data-wp-block="footer" data-wp-block-name="Footer & Kontak" data-wp-block-id="{{ $blockId ?? 'block-footer-1' }}" style="order: {{ $order ?? 5 }}; {{ !($visible ?? true) && !($isEditorMode ?? false) ? 'display: none !important;' : '' }}">
+<footer id="kontak" class="landing-footer" data-wp-block="footer" data-wp-block-name="Footer & Kontak" data-wp-block-id="{{ $blockId ?? 'block-footer-1' }}" style="order: {{ $order ?? 5 }}; background-color: #122846 !important; {{ !($visible ?? true) && !($isEditorMode ?? false) ? 'display: none !important;' : '' }}">
     <!-- Background Animated Wifi Signal Waves & Floating Nodes -->
     <div class="footer-wifi-particles" aria-hidden="true">
         <!-- Pulsing Concentric Radar / Wifi Wave Source -->
@@ -57,11 +57,11 @@
         <ul class="wifi-signal-nodes">
             @for($i = 0; $i < 10; $i++)
                 <li>
-                    <svg class="floating-wifi-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 8.82a15 15 0 0 1 20 0" stroke-width="2.2"></path>
-                        <path d="M5 12.86a10.5 10.5 0 0 1 14 0" stroke-width="2.2"></path>
-                        <path d="M8.5 16.9a6 6 0 0 1 7 0" stroke-width="2.2"></path>
-                        <circle cx="12" cy="20" r="1.5" fill="currentColor" stroke="none"></circle>
+                    <svg class="floating-wifi-svg" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 8.82a15 15 0 0 1 20 0" stroke-width="2.2" stroke="#fbbf24"></path>
+                        <path d="M5 12.86a10.5 10.5 0 0 1 14 0" stroke-width="2.2" stroke="#fbbf24"></path>
+                        <path d="M8.5 16.9a6 6 0 0 1 7 0" stroke-width="2.2" stroke="#fbbf24"></path>
+                        <circle cx="12" cy="20" r="1.5" fill="#fbbf24" stroke="none"></circle>
                     </svg>
                 </li>
             @endfor
@@ -69,9 +69,15 @@
     </div>
 
     <div class="landing-footer-grid">
-        <!-- Kolom 1: Alamat -->
+        <!-- Kolom 1: Profil Dinas & Alamat -->
         <div>
-            <h3 class="footer-col-title">Alamat</h3>
+            <div class="footer-brand-header">
+                @include('partials.logo-sleman', ['class' => 'brand-logo-img', 'width' => '36', 'height' => '36', 'style' => 'width: 36px; height: 36px; object-fit: contain;'])
+                <div>
+                    <span class="footer-brand-title">MAGKOM</span>
+                    <span class="footer-brand-sub">Portal Magang · Diskominfo Sleman</span>
+                </div>
+            </div>
             <div class="footer-address-block">
                 <p>{{ $footerAlamat }}</p>
                 <p>Telepon: {{ $footerTelepon }}</p>

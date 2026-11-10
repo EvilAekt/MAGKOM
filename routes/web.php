@@ -181,6 +181,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
         Route::get('/tugas/{tugas}', [PesertaTugasController::class, 'show'])->name('tugas.show');
         Route::get('/tugas/{tugas}/lampiran', [PesertaTugasController::class, 'unduhLampiran'])->name('tugas.lampiran');
         Route::post('/tugas/{tugas}/progres', [PesertaTugasController::class, 'unggahProgres'])->name('tugas.progres');
+        Route::post('/tugas/{tugas}/batal-kirim', [PesertaTugasController::class, 'batalkanPengiriman'])->name('tugas.batal-kirim');
 
         // Pelaksanaan: Logbook Harian (F-09, F-15)
         Route::get('/logbook', [PesertaLogbookController::class, 'index'])->name('logbook.index');

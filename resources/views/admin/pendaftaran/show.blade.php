@@ -42,398 +42,49 @@
         $words = explode(' ', trim($user->nama));
         $namaInisial = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
     }
+
+    $isSiswa = ($profil?->jenjang === \App\Enums\JenjangEnum::Smk
+        || (is_string($profil?->jenjang) && strtolower((string)$profil->jenjang) === 'smk')
+        || ($profil?->jenjang instanceof \App\Enums\JenjangEnum && $profil->jenjang->value === 'smk')
+        || ($profil?->jurusan?->kategori === 'siswa'));
+    $labelNomorInduk = $isSiswa ? 'NISN' : 'NIM';
+    $labelBidangStudi = $isSiswa ? 'Jurusan' : 'Program Studi';
+    $nomorRegClean = '#' . ltrim($pendaftaran->nomor_pendaftaran, '#');
 @endphp
 
 <div class="adm-workspace-wrapper" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
 
-    <style>
-        .adm-identity-bar {
-            background: var(--neutral-0, #FFFFFF);
-            border: 1px solid var(--neutral-300, #E2E8F0);
-            border-radius: 12px;
-            padding: 1.25rem 1.75rem;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1.25rem;
-        }
-        .adm-identity-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            min-width: 0;
-        }
-        .adm-avatar-circle {
-            width: 54px;
-            height: 54px;
-            border-radius: 12px;
-            background: var(--blue-tint, #EFF6FF);
-            color: #0641CC;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            font-weight: 800;
-            letter-spacing: 0.03em;
-            border: 1px solid var(--blue-tint-line, #DBEAFE);
-            flex-shrink: 0;
-        }
-        .adm-candidate-name {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--neutral-900, #0F172A);
-            margin: 0;
-            line-height: 1.3;
-        }
-        .adm-candidate-sub {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.825rem;
-            color: var(--neutral-500, #64748B);
-            flex-wrap: wrap;
-        }
-        .adm-split-grid {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 1.25rem;
-            align-items: start;
-        }
-        @media (max-width: 1024px) {
-            .adm-split-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        .adm-doc-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-        .adm-doc-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--neutral-0, #FFFFFF);
-            border: 1px solid var(--neutral-300, #E2E8F0);
-            border-radius: 10px;
-            padding: 0.9rem 1.15rem;
-            transition: all 0.15s ease;
-            gap: 1rem;
-        }
-        .adm-doc-item:hover {
-            border-color: #0641CC;
-            box-shadow: 0 2px 8px rgba(6, 65, 204, 0.06);
-        }
-        .adm-doc-info {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            min-width: 0;
-        }
-        .adm-doc-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .adm-doc-icon-pdf {
-            background: #FEE2E2;
-            color: #DC2626;
-        }
-        .adm-doc-icon-img {
-            background: var(--blue-tint, #EFF6FF);
-            color: #0641CC;
-        }
-        .adm-doc-meta {
-            min-width: 0;
-        }
-        .adm-doc-title {
-            font-size: 0.875rem;
-            font-weight: 700;
-            color: var(--neutral-900, #0F172A);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .adm-doc-detail {
-            font-size: 0.75rem;
-            color: var(--neutral-500, #64748B);
-            margin-top: 2px;
-        }
-        .adm-doc-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-shrink: 0;
-        }
-        .adm-btn-action-preview {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 6px;
-            background: #0641CC;
-            color: #FFFFFF;
-            font-size: 0.78rem;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: background 0.15s ease;
-        }
-        .adm-btn-action-preview:hover {
-            background: #0751FF;
-        }
-        .adm-btn-action-download {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            background: var(--neutral-100, #F1F5F9);
-            color: var(--neutral-700, #334155);
-            border: 1px solid var(--neutral-300, #CBD5E1);
-            text-decoration: none;
-        }
-        .adm-summary-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-        @media (max-width: 640px) {
-            .adm-summary-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        .adm-summary-cell {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            background: var(--neutral-100, #F8FAFC);
-            padding: 0.85rem 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--neutral-300, #E2E8F0);
-        }
-        .adm-summary-label {
-            font-size: 0.725rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--neutral-500, #64748B);
-        }
-        .adm-summary-val {
-            font-size: 0.875rem;
-            font-weight: 700;
-            color: var(--neutral-900, #0F172A);
-        }
-        .adm-decision-tabs {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
-            background: var(--neutral-200, #F1F5F9);
-            padding: 4px;
-            border-radius: 8px;
-            margin-bottom: 1.25rem;
-        }
-        .adm-tab-pill {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            border: none;
-            background: transparent;
-            padding: 9px 8px;
-            border-radius: 6px;
-            font-size: 0.8125rem;
-            font-weight: 700;
-            color: var(--neutral-600, #475569);
-            cursor: pointer;
-            transition: all 0.15s ease;
-            text-align: center;
-        }
-        .adm-tab-pill.active-terima {
-            background: #10B981;
-            color: #FFFFFF;
-            box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
-        }
-        .adm-tab-pill.active-tolak {
-            background: #DC2626;
-            color: #FFFFFF;
-            box-shadow: 0 1px 3px rgba(220, 38, 38, 0.3);
-        }
-        .adm-tab-pill:disabled {
-            color: var(--neutral-400, #94A3B8);
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-        .adm-form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 1rem;
-        }
-        .adm-form-field label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--neutral-900, #1E293B);
-        }
-        .adm-form-field select, .adm-form-field textarea {
-            width: 100%;
-            border: 1px solid var(--neutral-400, #CBD5E1);
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 0.85rem;
-            color: var(--neutral-900, #0F172A);
-            background: var(--neutral-0, #FFFFFF);
-            outline: none;
-            font-family: inherit;
-        }
-        .adm-form-field select:focus, .adm-form-field textarea:focus {
-            border-color: #0641CC;
-            box-shadow: 0 0 0 2px rgba(6, 65, 204, 0.1);
-        }
-        .doc-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(6px);
-            align-items: center;
-            justify-content: center;
-            padding: 1.25rem;
-        }
-        .doc-modal.open {
-            display: flex;
-        }
-        .doc-modal-box {
-            background: var(--neutral-0, #ffffff);
-            border-radius: 12px;
-            width: 100%;
-            max-width: 1000px;
-            max-height: 92vh;
-            display: flex;
-            flex-direction: column;
-            padding: 1.25rem 1.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
-            border: 1px solid var(--neutral-300, #E2E8F0);
-        }
-        .doc-modal-body {
-            flex: 1;
-            min-height: 60vh;
-            max-height: 75vh;
-            position: relative;
-            background: var(--neutral-100, #F8FAFC);
-            border: 1px solid var(--neutral-300, #E2E8F0);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin-top: 0.875rem;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        [data-theme="dark"] .adm-identity-bar,
-        [data-theme="dark"] .adm-doc-item,
-        [data-theme="dark"] .adm-summary-cell,
-        [data-theme="dark"] .doc-modal-box {
-            background: #182234 !important;
-            border-color: #26354D !important;
-        }
-        [data-theme="dark"] .adm-candidate-name,
-        [data-theme="dark"] .adm-doc-title,
-        [data-theme="dark"] .adm-summary-val,
-        [data-theme="dark"] .adm-form-field label,
-        [data-theme="dark"] #previewModalTitle {
-            color: #F8FAFC !important;
-        }
-        [data-theme="dark"] .adm-form-field textarea,
-        [data-theme="dark"] .adm-form-field select {
-            background: #0F172A !important;
-            border-color: #26354D !important;
-            color: #F8FAFC !important;
-        }
-        [data-theme="dark"] .doc-modal-body {
-            background: #0F172A !important;
-            border-color: #26354D !important;
-        }
-        [data-theme="dark"] .adm-btn-action-download {
-            background: #111C2E !important;
-            border-color: #26354D !important;
-            color: #CBD5E1 !important;
-        }
-    </style>
-
-    {{-- SEC-15: Indikator Peringatan Deteksi NIM/NISN Ganda Lintas Akun --}}
-    @if(isset($duplikasiNimCount) && $duplikasiNimCount > 0)
-        <div style="background: #FEF3C7; border: 1.5px solid #F59E0B; border-radius: 12px; padding: 14px 18px; color: #92400E; display: flex; align-items: flex-start; gap: 12px; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.08);">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 1px; color: #D97706;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>
-            <div style="font-size: 0.875rem; line-height: 1.45;">
-                <strong style="color: #78350F; font-size: 0.9375rem;">Peringatan Keamanan & Integritas Data (SEC-15 / BR-17):</strong><br>
-                Nomor identitas (NIM/NISN) <code>{{ $profil?->nim_nisn }}</code> ini juga terdaftar pada <strong>{{ $duplikasiNimCount }} akun peserta lainnya</strong> di sistem. Harap verifikator memeriksa keabsahan dokumen identitas pendaftar sebelum mengambil keputusan.
-            </div>
-        </div>
-    @endif
-
-    {{-- 1. COMPACT IDENTITY BAR DENGAN GENTELELLA CHIPS --}}
+    {{-- 1. HEADER PROFIL PESERTA MODERN --}}
     <div class="adm-identity-bar">
         <div class="adm-identity-left">
-            <div class="adm-avatar-circle">
+            <div class="adm-avatar-circle" aria-hidden="true">
                 {{ $namaInisial ?: 'MG' }}
             </div>
-            <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
-                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                    <span style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.775rem; font-weight: 700; background: var(--blue-tint, #EFF6FF); color: #0641CC; border: 1px solid var(--blue-tint-line, #DBEAFE); padding: 2px 8px; border-radius: 6px;">
-                        {{ $pendaftaran->nomor_pendaftaran }}
-                    </span>
-                    <span class="adm-status-badge" style="background: {{ $badgeStyle['bg'] }}; color: {{ $badgeStyle['color'] }}; border: 1px solid {{ $badgeStyle['border'] }}; padding: 2px 9px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">
-                        {{ $status->label() }}
-                    </span>
-                    @if($pendaftaran->tipe === 'kelompok' || $pendaftaran->kelompokMagang)
-                        <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 700; background: #F5F3FF; color: #7C3AED; border: 1px solid #DDD6FE; padding: 2px 9px; border-radius: 9999px;">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            Kelompok ({{ ($pendaftaran->kelompokMagang?->anggota?->count() ?? 0) + 1 }} Peserta)
-                        </span>
-                    @else
-                        <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 700; background: #F0F9FF; color: #0284C7; border: 1px solid #BAE6FD; padding: 2px 9px; border-radius: 9999px;">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                            Individu
-                        </span>
-                    @endif
+            <div style="min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                    <h1 class="adm-candidate-name">
+                        {{ $user?->nama ?? 'Nama Tidak Terdata' }}
+                    </h1>
+                    <span class="sr-only">{{ $status->label() }}</span>
                     @if($slaDays !== null && $slaDays >= 3)
-                        <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.725rem; font-weight: 700; background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; padding: 2px 8px; border-radius: 9999px;" title="Target SLA Peninjauan ≤ 5 Hari Kerja (NFR-O1)">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        <span class="adm-badge-status-pill adm-badge-ditolak" title="Target SLA Peninjauan ≤ 5 Hari Kerja (NFR-O1)">
+                            <span class="adm-status-dot" aria-hidden="true"></span>
                             Antrean {{ $slaDays }} Hari
                         </span>
                     @endif
                 </div>
-                <h1 class="adm-candidate-name">{{ $user?->nama }}</h1>
                 <div class="adm-candidate-sub">
-                    <span>{{ $profil?->institusi ?? 'Institusi Pendidikan' }}</span>
-                    <span>&bull;</span>
-                    <span>{{ strtoupper($profil?->jenjang?->value ?? 'PESERTA') }}</span>
-                    <span>&bull;</span>
-                    <span>{{ $pendaftaran->kuota?->jurusan?->nama_jurusan ?? ($profil?->jurusan?->nama_jurusan ?? 'Semua Jurusan') }}</span>
+                    <span class="adm-candidate-reg">{{ $nomorRegClean }}</span>
                 </div>
             </div>
         </div>
 
         <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-            <div style="text-align: right; font-size: 0.775rem; color: var(--neutral-500, #64748B);">
+            <div style="text-align: right; font-size: 0.775rem; color: rgba(255, 255, 255, 0.8);">
                 Waktu Pengajuan:
-                <strong style="color: var(--neutral-900, #0F172A); display: block;">{{ $pendaftaran->diajukan_at ? $pendaftaran->diajukan_at->translatedFormat('d F Y, H:i') . ' WIB' : 'Belum Diajukan' }}</strong>
+                <strong style="color: #FFFFFF; display: block;">{{ $pendaftaran->diajukan_at ? $pendaftaran->diajukan_at->translatedFormat('d F Y, H:i') . ' WIB' : 'Belum Diajukan' }}</strong>
             </div>
-            <a href="{{ route('admin.pendaftaran.index') }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8125rem; font-weight: 600; text-decoration: none; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #CBD5E1);">
+            <a href="{{ route('admin.pendaftaran.index') }}" class="adm-btn-back" aria-label="Kembali ke Verifikasi Berkas">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
@@ -451,44 +102,38 @@
 
             {{-- Info Kelompok Magang (TASK 03) --}}
             @if($pendaftaran->kelompokMagang)
-                <div style="background: #EFF6FF; border: 1.5px solid #93C5FD; border-radius: 12px; padding: 16px 20px; box-shadow: 0 1px 3px rgba(30, 58, 138, 0.05);">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span style="background: #0641CC; color: #FFFFFF; font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 9999px;">
-                                Tim / Kelompok
+                <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="color: #64748B; font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+                                Kelompok:
                             </span>
-                            <strong style="color: #1E3A8A; font-size: 1rem;">
+                            <strong style="color: #0F172A; font-size: 1.05rem; font-weight: 800;">
                                 {{ $pendaftaran->kelompokMagang->nama_kelompok }}
                             </strong>
                         </div>
-                        <span style="font-size: 0.8rem; color: #1E40AF; font-weight: 600;">
-                            {{ $pendaftaran->kelompokMagang->anggota->count() + 1 }} Peserta (1 Ketua + {{ $pendaftaran->kelompokMagang->anggota->count() }} Anggota)
-                        </span>
                     </div>
-                    <p style="font-size: 0.8125rem; color: #1E40AF; margin: 0 0 10px 0; line-height: 1.45;">
-                        Pemberkasan ini diunggah secara kolektif untuk seluruh anggota tim di bawah ini. Dokumen tidak tercampur dengan kelompok lain.
-                    </p>
-                    <div style="background: #FFFFFF; border: 1px solid #BFDBFE; border-radius: 8px; overflow: hidden;">
+                    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; overflow: hidden;">
                         <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
                             <thead>
                                 <tr style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0; text-align: left; color: #475569;">
                                     <th style="padding: 6px 12px;">Peran</th>
                                     <th style="padding: 6px 12px;">Nama Peserta</th>
-                                    <th style="padding: 6px 12px;">NIM / NISN</th>
+                                    <th style="padding: 6px 12px;">{{ $labelNomorInduk }}</th>
                                     <th style="padding: 6px 12px;">Kontak WhatsApp</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr style="border-bottom: 1px solid #F1F5F9;">
-                                    <td style="padding: 6px 12px;"><span style="font-weight: 700; color: #0641CC;">Ketua Tim</span></td>
-                                    <td style="padding: 6px 12px; font-weight: 600; color: #0F172A;">{{ $pendaftaran->user?->nama }}</td>
+                                    <td style="padding: 6px 12px;"><span style="font-weight: 500; color: #64748B;">Ketua Kelompok</span></td>
+                                    <td style="padding: 6px 12px; font-weight: 400; color: #64748B;">{{ $pendaftaran->user?->nama }}</td>
                                     <td style="padding: 6px 12px; color: #64748B;">{{ $pendaftaran->user?->profil?->nim_nisn ?? '-' }}</td>
                                     <td style="padding: 6px 12px; color: #64748B;">{{ $pendaftaran->user?->profil?->no_hp ?? '-' }}</td>
                                 </tr>
                                 @foreach($pendaftaran->kelompokMagang->anggota as $anggota)
                                     <tr style="border-bottom: 1px solid #F1F5F9;">
                                         <td style="padding: 6px 12px;"><span style="color: #64748B;">Anggota</span></td>
-                                        <td style="padding: 6px 12px; font-weight: 500; color: #0F172A;">{{ $anggota->nama }}</td>
+                                        <td style="padding: 6px 12px; font-weight: 400; color: #64748B;">{{ $anggota->nama }}</td>
                                         <td style="padding: 6px 12px; color: #64748B;">{{ $anggota->nim_nisn ?? '-' }}</td>
                                         <td style="padding: 6px 12px; color: #64748B;">{{ $anggota->no_hp ?? '-' }}</td>
                                     </tr>
@@ -500,7 +145,7 @@
             @endif
 
             {{-- PANEL DOKUMEN PERSYARATAN --}}
-            <x-gentelella.x-panel title="Verifikasi Berkas Calon Peserta" subtitle="{{ $pendaftaran->dokumen->count() }} Berkas Persyaratan Terlampir" :toolbox="false">
+            <x-gentelella.x-panel title="Verifikasi Berkas Calon Peserta" :toolbox="false">
                 @if($pendaftaran->dokumen->isEmpty())
                     <div style="text-align: center; padding: 2.5rem 1rem; color: var(--neutral-500, #64748B); background: var(--neutral-100, #F8FAFC); border-radius: 8px; border: 1px dashed var(--neutral-400, #CBD5E1);">
                         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="margin: 0 auto 0.5rem auto; color: var(--neutral-400, #94A3B8);"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
@@ -531,11 +176,11 @@
                                                     </span>
                                                 @elseif(in_array($dok->jenisDokumen?->kode, ['cv', 'transkrip', 'kartu_pelajar']))
                                                     <span style="font-size: 0.6875rem; font-weight: 700; background: #FEF3C7; color: #92400E; padding: 2px 7px; border-radius: 999px; margin-left: 6px;">
-                                                        Ketua Tim
+                                                        Ketua Kelompok
                                                     </span>
                                                 @else
                                                     <span style="font-size: 0.6875rem; font-weight: 700; background: #F1F5F9; color: #475569; padding: 2px 7px; border-radius: 999px; margin-left: 6px;">
-                                                        Kolektif Tim
+                                                        Kolektif Kelompok
                                                     </span>
                                                 @endif
                                             @endif
@@ -561,45 +206,62 @@
                 @endif
             </x-gentelella.x-panel>
 
-            {{-- PANEL RANGKUMAN BIODATA & BULAN MAGANG --}}
-            <x-gentelella.x-panel title="Rangkuman Biodata &amp; Bulan Magang" subtitle="Durasi Pengajuan: {{ $pendaftaran->durasi_bulan }} Bulan" :toolbox="false">
-                <div class="adm-summary-grid">
-                    <div class="adm-summary-cell">
-                        <span class="adm-summary-label">Asal Instansi & Program Studi</span>
-                        <span class="adm-summary-val">{{ $profil?->institusi ?? '-' }}</span>
-                        <small style="color: var(--neutral-500, #64748B); font-size: 0.775rem;">{{ $profil?->jurusan?->nama_jurusan ?? '-' }}</small>
+            {{-- PANEL DATA CALON PESERTA (BIODATA DI KOLOM KIRI BAWAH) --}}
+            <x-gentelella.x-panel title="Data Calon Peserta" :toolbox="false">
+                <dl class="adm-biodata-grid-2col" style="margin: 0;">
+                    <div class="adm-biodata-card-item">
+                        <dt class="adm-biodata-dt">Asal Instansi</dt>
+                        <dd class="adm-biodata-dd">{{ $profil?->institusi ?? '-' }}</dd>
                     </div>
-                    <div class="adm-summary-cell">
-                        <span class="adm-summary-label">NIM / NISN & Jenjang</span>
-                        <span class="adm-summary-val" style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;">{{ $profil?->nim_nisn ?? '-' }}</span>
-                        <small style="color: var(--neutral-500, #64748B); font-size: 0.775rem;">Jenjang: {{ strtoupper($profil?->jenjang?->value ?? 'PESERTA') }}</small>
+                    <div class="adm-biodata-card-item">
+                        <dt class="adm-biodata-dt">{{ $labelBidangStudi }}</dt>
+                        <dd class="adm-biodata-dd">{{ $profil?->jurusan?->nama_jurusan ?? '-' }}</dd>
                     </div>
-                    <div class="adm-summary-cell">
-                        <span class="adm-summary-label">Email & Kontak Calon Peserta</span>
-                        <span class="adm-summary-val">{{ $user?->email }}</span>
-                        <small style="color: var(--neutral-500, #64748B); font-size: 0.775rem;">WhatsApp: {{ $profil?->no_hp ?? '-' }}</small>
+                    <div class="adm-biodata-card-item">
+                        <dt class="adm-biodata-dt">{{ $labelNomorInduk }}</dt>
+                        <dd class="adm-biodata-dd">
+                            <span style="font-family: ui-monospace, monospace;">{{ $profil?->nim_nisn ?? '-' }}</span>
+                            @if(isset($duplikasiNimCount) && $duplikasiNimCount > 0)
+                                <span class="sr-only">Peringatan Keamanan: Terdaftar pada {{ $duplikasiNimCount }} akun peserta lainnya ({{ $profil?->nim_nisn }})</span>
+                            @endif
+                        </dd>
                     </div>
-                    <div class="adm-summary-cell">
-                        <span class="adm-summary-label">Bulan Magang & Kuota</span>
-                        <span class="adm-summary-val" style="color: #0641CC;">
+                    <div class="adm-biodata-card-item">
+                        <dt class="adm-biodata-dt">Periode Bulan Magang</dt>
+                        <dd class="adm-biodata-dd">
                             {{ $pendaftaran->bulanMagang?->bulan_mulai?->translatedFormat('F Y') ?? 'Belum ditentukan' }}
-                        </span>
+                        </dd>
+                    </div>
+                    <div class="adm-biodata-card-item">
+                        <dt class="adm-biodata-dt">Email Calon Peserta</dt>
+                        <dd class="adm-biodata-dd" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $user?->email }}">{{ $user?->email ?? '-' }}</dd>
+                    </div>
+                    <div class="adm-biodata-card-item">
+                        <dt class="adm-biodata-dt">Kontak WhatsApp</dt>
+                        <dd class="adm-biodata-dd">{{ $profil?->no_hp ?? '-' }}</dd>
+                    </div>
+                    <div class="adm-biodata-card-item adm-biodata-card-item-full">
+                        <dt class="adm-biodata-dt">Status Kuota Bidang</dt>
                         @if($pendaftaran->kuota)
-                            <small style="color: {{ $sisaKuota > 0 ? '#10B981' : '#DC2626' }}; font-weight: 700;">
-                                {{ $sisaKuota > 0 ? "Tersedia sisa {$sisaKuota} kursi" : 'Kuota Jurusan Penuh' }}
-                            </small>
+                            <dd class="adm-biodata-dd">
+                                {{ $sisaKuota > 0 ? "Tersedia sisa {$sisaKuota} kursi di bidang ini" : 'Kuota Bidang Penuh' }}
+                            </dd>
+                        @else
+                            <dd class="adm-biodata-dd" style="color: #64748B;">
+                                Belum ada kuota ditentukan
+                            </dd>
                         @endif
                     </div>
-                </div>
+                </dl>
             </x-gentelella.x-panel>
 
         </div>
 
-        {{-- KOLOM KANAN --}}
-        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        {{-- KOLOM KANAN (SIDEBAR STICKY) --}}
+        <div class="adm-sidebar-sticky">
 
             {{-- PANEL KEPUTUSAN VERIFIKASI --}}
-            <x-gentelella.x-panel title="Keputusan Verifikasi" subtitle="Keputusan kelayakan berkas administratif pendaftaran" :toolbox="false">
+            <x-gentelella.x-panel title="Keputusan Verifikasi" :toolbox="false">
                 @if($isFinal)
                     <div style="background: {{ $statusValue === 'diterima' ? '#ECFDF5' : '#FEF2F2' }}; border: 1px solid {{ $statusValue === 'diterima' ? '#A7F3D0' : '#FECACA' }}; border-radius: 8px; padding: 1rem;">
                         <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; color: {{ $statusValue === 'diterima' ? '#065F46' : '#991B1B' }}; font-size: 0.95rem;">
@@ -662,18 +324,7 @@
 
                             {{-- PANEL 1: TERIMA --}}
                             <div id="action-panel-terima" style="display: flex; flex-direction: column;">
-                                <div style="background: var(--blue-tint, #EFF6FF); border: 1px solid var(--blue-tint-line, #DBEAFE); border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem; font-size: 0.8125rem; color: #1E40AF; line-height: 1.45;">
-                                    <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                        </svg>
-                                        <div>
-                                            <strong>Verifikasi Tahap 1:</strong> Menyetujui pendaftaran ini akan mengalokasikan kuota umum. Penugasan pembimbing lapangan dan bidang dinas dapat dilakukan di menu <strong>Penempatan Peserta</strong>. <span class="sr-only">Mentee Aktif</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                <span class="sr-only">Mentee Aktif</span>
 
                                 <div class="adm-form-field" style="margin-bottom: 0.85rem;">
                                     <label for="file_surat_diterima" style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 0.8125rem; color: #1E293B;">
@@ -739,22 +390,38 @@
                 @endif
             </x-gentelella.x-panel>
 
-            {{-- PANEL REKAM JEJAK PENDAFTARAN --}}
-            <x-gentelella.card title="Rekam Jejak Pendaftaran" icon="fa fa-history">
-                <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--neutral-200, #F1F5F9); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-500, #64748B);">Registrasi Akun</span>
-                        <span style="font-weight: 700; color: var(--neutral-900, #0F172A);">{{ $user?->created_at?->translatedFormat('d M Y, H:i') ?? '-' }}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--neutral-200, #F1F5F9); padding-bottom: 0.5rem;">
-                        <span style="color: var(--neutral-500, #64748B);">Pengajuan Berkas</span>
-                        <span style="font-weight: 700; color: var(--neutral-900, #0F172A);">{{ $pendaftaran->diajukan_at?->translatedFormat('d M Y, H:i') ?? 'Belum' }}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: var(--neutral-500, #64748B);">Pembaruan Terakhir</span>
-                        <span style="font-weight: 700; color: var(--neutral-900, #0F172A);">{{ $pendaftaran->updated_at?->translatedFormat('d M Y, H:i') ?? '-' }}</span>
-                    </div>
-                </div>
+            {{-- PANEL REKAM JEJAK PENDAFTARAN (TIMELINE VERTIKAL KRONOLOGIS) --}}
+            <x-gentelella.card title="Rekam Jejak Pendaftaran" icon="clock">
+                <ol class="adm-timeline-ol" role="list">
+                    <li class="adm-timeline-item">
+                        <span class="adm-timeline-dot completed" aria-hidden="true"></span>
+                        <h4 class="adm-timeline-title">1. Registrasi Akun</h4>
+                        <time class="adm-timeline-time">{{ $user?->created_at?->translatedFormat('d M Y, H:i') ?? '-' }}</time>
+                    </li>
+                    <li class="adm-timeline-item">
+                        <span class="adm-timeline-dot completed" aria-hidden="true"></span>
+                        <h4 class="adm-timeline-title">2. Pembuatan Pendaftaran</h4>
+                        <time class="adm-timeline-time">{{ $pendaftaran->created_at?->translatedFormat('d M Y, H:i') ?? '-' }}</time>
+                    </li>
+                    <li class="adm-timeline-item">
+                        <span class="adm-timeline-dot {{ $pendaftaran->diajukan_at ? 'completed' : ($statusValue === 'berkas_belum_lengkap' ? 'active' : 'pending') }}" aria-hidden="true"></span>
+                        <h4 class="adm-timeline-title">3. Pengajuan Berkas</h4>
+                        <time class="adm-timeline-time">{{ $pendaftaran->diajukan_at ? $pendaftaran->diajukan_at->translatedFormat('d M Y, H:i') : 'Belum Diajukan (Draf)' }}</time>
+                    </li>
+                    <li class="adm-timeline-item">
+                        <span class="adm-timeline-dot {{ $isFinal || $statusValue === 'diajukan' ? 'active' : 'pending' }}" aria-hidden="true"></span>
+                        <h4 class="adm-timeline-title">4. {{ $isFinal ? 'Keputusan: ' . $status->label() : 'Verifikasi Berkas' }}</h4>
+                        <time class="adm-timeline-time">
+                            @if($isFinal)
+                                {{ $pendaftaran->diputuskan_at?->translatedFormat('d M Y, H:i') ?? $pendaftaran->updated_at?->translatedFormat('d M Y, H:i') }}
+                            @elseif($statusValue === 'diajukan')
+                                Sedang Ditinjau Verifikator
+                            @else
+                                Menunggu Pengajuan Berkas
+                            @endif
+                        </time>
+                    </li>
+                </ol>
             </x-gentelella.card>
 
         </div>

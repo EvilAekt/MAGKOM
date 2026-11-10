@@ -7,7 +7,7 @@
         <div>
             <div class="cv-eyebrow">{{ now()->translatedFormat('l, d F Y') }}</div>
             <h1 class="cv-hero-title">Dashboard Operasional Administrasi</h1>
-            <p class="cv-hero-sub">Pusat kendali verifikasi berkas pendaftaran, pengawasan SLA, dan alokasi kuota kejuruan dinas.</p>
+            <p class="cv-hero-sub">Pusat kendali verifikasi berkas pendaftaran, standar waktu pelayanan, dan alokasi kuota kejuruan dinas.</p>
             
             <div class="cv-stamp" style="margin-top: 0.65rem;">
                 <span class="dot-pulse"></span>

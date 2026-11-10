@@ -27,12 +27,14 @@
 
         .adm-hero-content {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
             gap: 1.25rem;
             flex-wrap: wrap;
             position: relative;
             z-index: 2;
+            width: 100%;
         }
 
         .adm-hero-title {
@@ -653,9 +655,9 @@
                         </svg>
                     </button>
 
-                    {{-- Floating Dropdown Popover Container --}}
-                    <div id="admExportPopover" class="adm-export-popover" style="display: none;" role="menu" aria-label="Menu Pilihan Format Ekspor">
-                        <div class="adm-popover-pointer"></div>
+                    {{-- Floating Dropdown Popover Container (Right-Aligned) --}}
+                    <div id="admExportPopover" class="adm-export-popover adm-export-popover-right" style="display: none;" role="menu" aria-label="Menu Pilihan Format Ekspor">
+                        <div class="adm-popover-pointer adm-pointer-right"></div>
                         <div class="adm-popover-header">
                             <div>
                                 <div class="adm-popover-title">Ekspor Rekap Cepat</div>

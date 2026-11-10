@@ -1,5 +1,46 @@
         :root {
             /* =========================================================================
+               SuperAdmin Executive Dashboard Design Tokens (Precision 1:1 Parity)
+               ========================================================================= */
+            --navy-900: #062456;      /* teks paling gelap, hover sidebar */
+            --navy-800: #0A2A6A;      /* sidebar, topbar, footer, tile ikon, bar navy, teks judul & angka */
+            --navy-700: #0B3180;      /* ujung terang gradient hero */
+            --active-blue: #1E4FBF;   /* item sidebar aktif */
+
+            --indigo-600: #3F4FB8;    /* kartu Hak Akses, titik timeline, link "Diff", angka Sabtu/Minggu */
+            --periwinkle-400: #6F86D8;/* bar hero ke-2 */
+            --periwinkle-200: #B9C3E3;/* bar "Diajukan" */
+            --lavender-100: #E4E9F8;  /* pill, track progress */
+            --lavender-50:  #EEF1FB;  /* tile statistik, baris audit, ujung bawah kartu KPI */
+
+            --yellow-500: #FFC700;    /* tombol utama, bar kuning, aksen judul */
+            --yellow-400: #FFD43B;    /* ujung terang gradient kartu kuning */
+            --yellow-200: #FFE680;    /* kartu Akun Staf Internal (atas) */
+            --yellow-100: #FFF4C7;    /* tile AUTH, kartu slot */
+
+            --red-500: #E04A4A;       /* kartu Perlu Tindakan (atas-kiri) */
+            --red-600: #B92B2B;       /* kartu Perlu Tindakan (bawah-kanan) */
+            --red-bar: #D9444A;       /* bar "Lewat SLA" */
+
+            --page-bg: #EDF1FA;       /* latar area konten */
+            --card: #FFFFFF;
+            --border: #E1E6F3;
+            --text: #0A2A6A;
+            --muted: #5B6785;         /* teks sekunder di kartu putih */
+            --muted-on-navy: #8FA3D4; /* label grup sidebar, chevron */
+            --track: #E6EAF4;         /* track progress/segmen kosong di kartu putih */
+
+            --sa-radius-card: 24px;
+            --sa-radius-hero: 28px;
+            --sa-radius-tile: 12px;
+            --sa-radius-pill: 999px;
+            --sa-shadow-card: 0 1px 2px rgba(10,42,106,.04), 0 10px 24px -12px rgba(10,42,106,.14);
+            --sa-border-card: 1px solid var(--border);
+
+            --sa-font-sans: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, sans-serif;
+            --sa-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+            /* =========================================================================
                11 Master CSS Peeper Tokens - MagKom Rebranded Palette (PRD-TASK-2026-10-28-UI-02)
                ========================================================================= */
             --magkom-primary-blue: #01347C;

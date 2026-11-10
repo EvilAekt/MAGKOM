@@ -9,10 +9,6 @@
 
 @section('content')
 <div class="logbook-wrapper">
-    <x-gentelella.page-title 
-        title="Logbook & Jurnal Mingguan Peserta" 
-    />
-
     @if(!$penempatan)
         <div class="card-modern" style="border-left: 4px solid var(--amber-700); background: var(--amber-100); margin-bottom: 24px;">
             <div style="display: flex; align-items: flex-start; gap: 16px;">
@@ -107,13 +103,13 @@
         @if(!$mingguAktifSudahDiisi && $penempatan)
             <div class="card-modern" style="background: #EFF6FF; border: 1px solid #BFDBFE; border-left: 4px solid #01347C; margin-bottom: 24px; padding: 18px 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-                    <div style="display: flex; align-items: flex-start; gap: 14px;">
+                    <div style="display: flex; align-items: flex-start; gap: 14px; min-width: 0; flex: 1;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: #DBEAFE; color: #01347C; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <div>
+                        <div style="min-width: 0;">
                             <strong style="font-size: 0.9375rem; color: #1E3A8A; display: block; margin-bottom: 3px;">
                                 Saatnya Mengisi Logbook Minggu ke-{{ $mingguAktif }}
                             </strong>
@@ -122,7 +118,7 @@
                             </p>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="openTambahModal({{ $mingguAktif }})" style="height: 38px; padding: 0 16px; font-weight: 700;">
+                    <button type="button" class="btn btn-primary" onclick="openTambahModal({{ $mingguAktif }})" style="height: 38px; padding: 0 16px; font-weight: 700; flex-shrink: 0;">
                         + Isi Logbook Minggu Ini
                     </button>
                 </div>
@@ -135,11 +131,11 @@
                 <h2 style="font-size: 1.25rem; font-weight: 800; color: #0F172A; margin: 0;">Riwayat Jurnal Mingguan</h2>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                 <span class="badge badge-info" style="font-size: 0.8125rem; padding: 6px 12px;">
                     Total: {{ $logbooks->total() }} Laporan
                 </span>
-                <button type="button" class="btn btn-primary" onclick="openTambahModal()" style="height: 40px; padding: 0 16px; font-weight: 700;">
+                <button type="button" class="btn btn-primary" onclick="openTambahModal()" style="height: 40px; padding: 0 16px; font-weight: 700; flex-shrink: 0;">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -389,44 +385,42 @@
                         <div id="tambah_char_count" class="char-counter-compact">0 karakter (minimal 10 karakter)</div>
                     </div>
 
-                    {{-- Upload / Lampiran Persis Tugas Classroom (Tambah) --}}
-                    <div class="logbook-attachment-section">
-                        <label class="form-label-compact">
-                            <span>Lampiran Berkas / Tautan (Opsional)</span>
-                            <span style="font-size: 0.6875rem; color: #64748B;">PDF (maks. 2MB) atau Link HTTPS</span>
-                        </label>
+                    {{-- Panel Lampiran Terpadu (Single Header + Selector Bulat ala Pembimbing) --}}
+                    <div class="logbook-lampiran-section">
+                        <div class="logbook-lampiran-header">
+                            <label class="form-label-compact" style="margin-bottom: 0;">
+                                <span>Lampiran</span>
+                            </label>
+                            <span class="label-hint" id="tambahLampiranMeta">(opsional) · PDF (maks. 2MB) atau Link HTTPS</span>
+                        </div>
 
-                        <input type="file" id="tambah_file_laporan" name="file_laporan" accept=".pdf" style="display: none;">
-                        <input type="hidden" id="tambah_link_laporan" name="link_laporan" value="{{ old('link_laporan') }}">
-
-                        {{-- Daftar Lampiran Terpilih --}}
-                        <div id="tambahAttachmentsList" class="attached-items-list"></div>
-
-                        {{-- Tombol Dropdown "+ Tambah berkas" (Outlined Pill) --}}
-                        <div class="btn-dropdown-wrapper">
-                            <button type="button" class="btn-add-attachment" id="btnTambahToggleDropdown">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
-                                </svg>
-                                <span>+ Tambah berkas</span>
-                            </button>
-
-                            {{-- Menu Dropdown Melayang (2 Opsi: Link & File) --}}
-                            <div class="classroom-dropdown-menu" id="menuTambahDropdown">
-                                <button type="button" class="dropdown-item-action" data-action="open-logbook-link" data-context="tambah">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                        <div class="logbook-lampiran-selector-box">
+                            <div class="logbook-circle-action-item">
+                                <button type="button" class="logbook-circle-btn" id="btnTambahTriggerUploadFile" aria-label="Upload File" title="Upload File">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 16V4M7 9l5-5 5 5M5 20h14"></path>
                                     </svg>
-                                    <span>Link</span>
                                 </button>
-                                <button type="button" class="dropdown-item-action" data-action="open-logbook-file" data-context="tambah">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                <span class="logbook-circle-label">Upload File</span>
+                            </div>
+
+                            <div class="logbook-circle-action-item">
+                                <button type="button" class="logbook-circle-btn" id="btnTambahTriggerAddLink" aria-label="Link" title="Link">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"></path>
                                     </svg>
-                                    <span>File</span>
                                 </button>
+                                <span class="logbook-circle-label">Link</span>
                             </div>
                         </div>
+
+                        <input type="file" id="tambah_file_laporan" name="file_laporan" accept=".pdf" class="logbook-native-file-input">
+                        <input type="hidden" id="tambah_link_laporan" name="link_laporan" value="{{ old('link_laporan') }}">
+
+                        <div class="logbook-attached-list" id="tambahAttachedFilesContainer"></div>
+                        <div class="logbook-attached-list" id="tambahAttachedLinksContainer"></div>
+                        <div id="tambahFileFeedbackError" class="logbook-field-error" style="display: none;"></div>
+                        <div id="tambahLinkFeedbackError" class="logbook-field-error" style="display: none;"></div>
                     </div>
                 </div>
 
@@ -480,42 +474,42 @@
                     <div id="edit_char_count" class="char-counter-compact">0 karakter</div>
                 </div>
 
-                {{-- Upload / Lampiran Persis Tugas Classroom (Edit) --}}
-                <div class="logbook-attachment-section">
-                    <label class="form-label-compact">
-                        <span>Lampiran Berkas / Tautan</span>
-                        <span style="font-size: 0.6875rem; color: #64748B;">PDF (maks. 2MB) atau Link HTTPS</span>
-                    </label>
+                {{-- Panel Lampiran Terpadu (Single Header + Selector Bulat ala Pembimbing - Edit) --}}
+                <div class="logbook-lampiran-section">
+                    <div class="logbook-lampiran-header">
+                        <label class="form-label-compact" style="margin-bottom: 0;">
+                            <span>Lampiran</span>
+                        </label>
+                        <span class="label-hint" id="editLampiranMeta">(opsional) · PDF (maks. 2MB) atau Link HTTPS</span>
+                    </div>
 
-                    <input type="file" id="edit_file_laporan" name="file_laporan" accept=".pdf" style="display: none;">
-                    <input type="hidden" id="edit_link_laporan" name="link_laporan">
-
-                    {{-- Daftar Lampiran Terpilih / Existing --}}
-                    <div id="editAttachmentsList" class="attached-items-list"></div>
-
-                    {{-- Tombol Dropdown "+ Tambah berkas" --}}
-                    <div class="btn-dropdown-wrapper">
-                        <button type="button" class="btn-add-attachment" id="btnEditToggleDropdown">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            <span>+ Tambah berkas</span>
-                        </button>
-                        <div class="classroom-dropdown-menu" id="menuEditDropdown">
-                            <button type="button" class="dropdown-item-action" data-action="open-logbook-link" data-context="edit">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                    <div class="logbook-lampiran-selector-box">
+                        <div class="logbook-circle-action-item">
+                            <button type="button" class="logbook-circle-btn" id="btnEditTriggerUploadFile" aria-label="Upload File" title="Upload File">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 16V4M7 9l5-5 5 5M5 20h14"></path>
                                 </svg>
-                                <span>Link</span>
                             </button>
-                            <button type="button" class="dropdown-item-action" data-action="open-logbook-file" data-context="edit">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                            <span class="logbook-circle-label">Upload File</span>
+                        </div>
+
+                        <div class="logbook-circle-action-item">
+                            <button type="button" class="logbook-circle-btn" id="btnEditTriggerAddLink" aria-label="Link" title="Link">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"></path>
                                 </svg>
-                                <span>File</span>
                             </button>
+                            <span class="logbook-circle-label">Link</span>
                         </div>
                     </div>
+
+                    <input type="file" id="edit_file_laporan" name="file_laporan" accept=".pdf" class="logbook-native-file-input">
+                    <input type="hidden" id="edit_link_laporan" name="link_laporan">
+
+                    <div class="logbook-attached-list" id="editAttachedFilesContainer"></div>
+                    <div class="logbook-attached-list" id="editAttachedLinksContainer"></div>
+                    <div id="editFileFeedbackError" class="logbook-field-error" style="display: none;"></div>
+                    <div id="editLinkFeedbackError" class="logbook-field-error" style="display: none;"></div>
                 </div>
             </div>
 
@@ -527,57 +521,68 @@
     </div>
 </div>
 
-{{-- =================================================================
-     MODAL SUB-DIALOG 1: ADD LINK (GOOGLE CLASSROOM STYLE)
-     ================================================================= --}}
-<div class="classroom-modal-backdrop" id="modalLogbookLink" role="dialog" aria-modal="true" aria-labelledby="modalLogbookLinkTitle">
-    <div class="classroom-modal-dialog modal-link-size">
-        <div class="classroom-modal-header">
-            <h3 class="classroom-modal-title" id="modalLogbookLinkTitle">Add link</h3>
-            <button type="button" class="classroom-modal-close" data-action="close-logbook-submodal" aria-label="Tutup modal">&times;</button>
+{{-- Dialog Pop-up Unggah Berkas PDF (Sub-modal ala Pembimbing) --}}
+<div class="tugas-modal-backdrop" id="modalLogbookUploadFileDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalUploadFile">
+    <div class="tugas-dialog tugas-dialog--upload">
+        <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalUploadFile">Upload File</div>
+
+        <div class="tugas-dropzone" id="logbookDropzoneArea" tabindex="0" role="button" aria-label="Area drag and drop upload berkas PDF">
+            <svg width="84" height="62" viewBox="0 0 150 110" aria-hidden="true" class="tugas-dropzone-cloud">
+                <defs>
+                    <linearGradient id="cloudGradLogbook" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#4cc760"></stop>
+                        <stop offset="1" stop-color="#b8e3fb"></stop>
+                    </linearGradient>
+                </defs>
+                <path d="M38 100a30 30 0 0 1-2-60 38 38 0 0 1 72-8 28 28 0 0 1 8 56z" fill="url(#cloudGradLogbook)" stroke="#222" stroke-width="1.5"></path>
+                <path d="M75 82V52M62 64l13-13 13 13" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <button type="button" class="tugas-dropzone-btn-choose" id="btnLogbookBrowseFile">Pilih File</button>
+            <div class="tugas-dropzone-hint">atau tarik file ke sini</div>
+            <div class="tugas-dropzone-format">PDF · maks. 2MB</div>
         </div>
-        <div class="classroom-modal-body">
-            <div style="margin-bottom: 8px;">
-                <label for="inputLogbookUrl" style="display: block; font-size: 0.8125rem; font-weight: 700; color: #334155; margin-bottom: 6px;">
-                    Link <span style="color: #DC2626;">*</span>
-                </label>
-                <input type="url" id="inputLogbookUrl" class="form-control" placeholder="https://..." style="width: 100%;">
-                <span style="font-size: 0.75rem; color: #DC2626; display: block; margin-top: 4px;">*Required (gunakan format https://...)</span>
+
+        <input type="file" id="modalStagedFileInput" accept=".pdf" style="display: none;">
+
+        {{-- Preview Berkas Terpilih di dalam Modal --}}
+        <div id="submodalFileInfo" style="display: none; margin-top: 14px; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                <div style="min-width: 0;">
+                    <div id="submodalFileName" style="font-size: 13px; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
+                    <div id="submodalFileSize" style="font-size: 12px; color: #64748b;"></div>
+                </div>
             </div>
+            <button type="button" id="btnSubmodalRemoveFile" style="background: none; border: none; cursor: pointer; color: #ef4444;" title="Hapus berkas">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
         </div>
-        <div class="classroom-modal-footer">
-            <button type="button" class="btn btn-secondary" data-action="close-logbook-submodal" style="padding: 7px 18px; border-radius: 6px; font-weight: 600;">Cancel</button>
-            <button type="button" id="btnSubmitLogbookLink" class="btn btn-primary" style="padding: 7px 20px; border-radius: 6px; font-weight: 600; background: #2563EB; border: none;" disabled>Add link</button>
+
+        <div id="submodalFileError" class="logbook-field-error" style="display: none; margin-top: 8px;"></div>
+
+        <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" class="tugas-dialog-btn-text" id="btnCancelSubmodalFile" data-action="close-submodal">Batal</button>
+            <button type="button" class="tugas-dialog-btn-pill" id="btnSubmodalConfirmFile" disabled>Upload</button>
         </div>
     </div>
 </div>
 
-{{-- =================================================================
-     MODAL SUB-DIALOG 2: INSERT FILES (DROPZONE & BROWSE LOKAL)
-     ================================================================= --}}
-<div class="classroom-modal-backdrop" id="modalLogbookFile" role="dialog" aria-modal="true" aria-labelledby="modalLogbookFileTitle">
-    <div class="classroom-modal-dialog modal-file-size" style="max-height: 480px;">
-        <div class="classroom-modal-header">
-            <h3 class="classroom-modal-title" id="modalLogbookFileTitle">Insert files</h3>
-            <button type="button" class="classroom-modal-close" data-action="close-logbook-submodal" aria-label="Tutup modal">&times;</button>
-        </div>
+{{-- Dialog Pop-up Tambahkan Link (Sub-modal ala Pembimbing) --}}
+<div class="tugas-modal-backdrop" id="modalLogbookAddLinkDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalAddLink">
+    <div class="tugas-dialog tugas-dialog--link">
+        <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalAddLink">Tambahkan link</div>
 
-        <div class="classroom-modal-tabs">
-            <button type="button" class="classroom-modal-tab-btn active">Upload</button>
-        </div>
-
-        <div class="classroom-tab-panel active">
-            <input type="file" id="submodalLogbookFileInput" accept=".pdf" style="display: none;">
-            <div class="file-dropzone-box" id="logbookDropzoneBox">
-                <div class="cloud-upload-illustration">
-                    <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                </div>
-                <button type="button" class="btn-browse-file" id="btnBrowseLogbookFile">Browse</button>
-                <div class="dropzone-label-text">or drag files here to upload</div>
-                <div class="dropzone-sub-text">Maksimal 2MB (Format Berkas PDF)</div>
+        <div style="margin-top: 18px;">
+            <div class="tugas-field-filled" id="submodalLinkFieldFilled" style="padding: 8px 14px;">
+                <label for="inputSubmodalLinkUrl" class="tugas-field-filled-label">Link*</label>
+                <input type="url" id="inputSubmodalLinkUrl" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 15px;">
             </div>
+            <div id="submodalLinkError" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e; display: none;">*Wajib diisi</div>
+        </div>
+
+        <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" class="tugas-dialog-btn-text" id="btnCancelSubmodalLink" data-action="close-submodal">Batal</button>
+            <button type="button" class="tugas-dialog-btn-pill" id="btnSubmodalConfirmLink" disabled>Tambahkan link</button>
         </div>
     </div>
 </div>

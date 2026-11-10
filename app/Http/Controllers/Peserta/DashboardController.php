@@ -84,8 +84,8 @@ class DashboardController extends Controller
 
         // Data Mingguan & Perjalanan Magang
         $daftarMinggu = $penempatan?->getDaftarMingguMagang() ?? [];
-        $mingguAktif = $penempatan?->minggu_aktif ?? 3;
-        $totalMinggu = $penempatan?->total_minggu ?? 13;
+        $mingguAktif = $penempatan?->minggu_aktif ?? 0;
+        $totalMinggu = $penempatan?->total_minggu ?? 0;
         $logbookSudahDiisi = collect($daftarMinggu)->whereIn('status', ['disetujui', 'terkirim'])->count();
         // Logbook belum diisi dihitung dari minggu yang sudah/sedang berjalan (<= minggu aktif) yang belum diisi
         $logbookBelumDiisi = collect($daftarMinggu)
@@ -96,11 +96,11 @@ class DashboardController extends Controller
         // Info Perlu Perhatian (Logbook Minggu Berjalan)
         $mingguAktifItem = collect($daftarMinggu)->firstWhere('minggu_ke', $mingguAktif);
         // Batas pengiriman logbook hari Senin berikutnya (+1 hari dari akhir minggu berjalan)
-        $batasLogbookMingguAktif = $mingguAktifItem ? Carbon::parse($mingguAktifItem['tgl_akhir'])->addDay()->isoFormat('D MMM') : '9 Nov';
-        $isMingguAktifBelumDiisi = $mingguAktifItem ? ($mingguAktifItem['status'] === 'belum_diisi') : true;
+        $batasLogbookMingguAktif = $mingguAktifItem ? Carbon::parse($mingguAktifItem['tgl_akhir'])->addDay()->isoFormat('D MMM') : null;
+        $isMingguAktifBelumDiisi = $mingguAktifItem ? ($mingguAktifItem['status'] === 'belum_diisi') : false;
 
         // Nama Pembimbing Bersih (Tanpa embel-embel jabatan di dalam kurung)
-        $namaPembimbingClean = preg_replace('/\s*\(.*?\)/', '', (string) ($penempatan?->pembimbing?->nama ?? 'Budi Santoso, S.Kom'));
+        $namaPembimbingClean = $penempatan?->pembimbing?->nama ? preg_replace('/\s*\(.*?\)/', '', (string) $penempatan->pembimbing->nama) : null;
 
         // Tanggal-tanggal kegiatan untuk Kalender (Logbook & Deadline Tugas)
         $calendarEventDates = [];

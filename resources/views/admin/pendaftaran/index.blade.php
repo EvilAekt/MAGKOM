@@ -37,12 +37,14 @@
 
         .adm-hero-content {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
             gap: 1.25rem;
             flex-wrap: wrap;
             position: relative;
             z-index: 2;
+            width: 100%;
         }
 
         .adm-hero-title {
@@ -533,18 +535,24 @@
             gap: 0.35rem;
         }
 
-        .adm-badge-kelompok {
+        .adm-badge-kelompok,
+        .adm-badge-individu {
             display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #7C3AED;
-            background: #F5F3FF;
-            padding: 0.15rem 0.45rem;
-            border-radius: 4px;
-            border: 1px solid #DDD6FE;
-            margin-top: 0.35rem;
+            gap: 0.3rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #64748B;
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin-top: 0.15rem;
+            line-height: 1.25;
+        }
+        .adm-badge-kelompok svg,
+        .adm-badge-individu svg {
+            color: #94A3B8;
+            flex-shrink: 0;
         }
 
         .adm-table {
@@ -764,10 +772,16 @@
             color: #94A3B8;
         }
 
-        [data-theme="dark"] .adm-badge-kelompok {
-            color: #C4B5FD;
-            background: rgba(124, 58, 237, 0.25);
-            border-color: rgba(139, 92, 246, 0.35);
+        [data-theme="dark"] .adm-badge-kelompok,
+        [data-theme="dark"] .adm-badge-individu {
+            color: #94A3B8;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+        [data-theme="dark"] .adm-badge-kelompok svg,
+        [data-theme="dark"] .adm-badge-individu svg {
+            color: #64748B;
         }
 
         [data-theme="dark"] .adm-table th {
@@ -807,6 +821,107 @@
                     <span>Verifikasi Berkas Pendaftaran Peserta</span>
                     <span class="sep">&bull;</span>
                     <span>Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
+                </div>
+            </div>
+            <div class="adm-hero-actions">
+                {{-- Unified Export Popover Trigger & Container --}}
+                <div class="adm-export-dropdown-wrap">
+                    <button type="button" 
+                            id="btnToggleExportPopoverPendaftaran" 
+                            class="adm-btn-export-main adm-hero-btn-secondary" 
+                            aria-expanded="false" 
+                            aria-haspopup="menu" 
+                            aria-controls="admExportPopoverPendaftaran"
+                            title="Pilih dan unduh rekap data pendaftaran (Excel, CSV, PDF)">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Ekspor Rekap</span>
+                        <svg id="admExportCaretSvgPendaftaran" class="adm-export-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+
+                    {{-- Floating Dropdown Popover Container (Right-Aligned) --}}
+                    <div id="admExportPopoverPendaftaran" class="adm-export-popover adm-export-popover-right" style="display: none;" role="menu" aria-label="Menu Pilihan Format Ekspor Pendaftaran">
+                        <div class="adm-popover-pointer adm-pointer-right"></div>
+                        <div class="adm-popover-header">
+                            <div>
+                                <div class="adm-popover-title">Ekspor Rekap Cepat</div>
+                                <div class="adm-popover-desc">Data pendaftaran hasil filter aktif</div>
+                            </div>
+                            <span class="adm-popover-row-count tabular-nums">
+                                {{ number_format($pendaftaranList->total()) }} Baris
+                            </span>
+                        </div>
+
+                        <div class="adm-popover-formats" role="radiogroup" aria-label="Format Berkas">
+                            {{-- Format 1: Excel (.xlsx) - Rekomendasi --}}
+                            <label class="adm-format-card adm-format-selected" id="cardFormatPendaftaranXlsx" onclick="handleAdmExportPendaftaranFormatChange('xlsx')">
+                                <div class="adm-format-content">
+                                    <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranXlsx" value="xlsx" checked class="adm-format-radio" onchange="handleAdmExportPendaftaranFormatChange('xlsx')">
+                                    <div class="adm-format-details">
+                                        <div class="adm-format-name-wrap">
+                                            <span class="adm-format-name">Microsoft Excel</span>
+                                            <span class="badge-format-ext badge-ext-xlsx">.xlsx</span>
+                                        </div>
+                                        <p class="adm-format-desc">Tabel resmi bergaris rapi &amp; filterable</p>
+                                    </div>
+                                </div>
+                                <div class="adm-format-meta">
+                                    <span class="adm-badge-recommend">Rekomendasi</span>
+                                </div>
+                            </label>
+
+                            {{-- Format 2: CSV Tabular (.csv) --}}
+                            <label class="adm-format-card" id="cardFormatPendaftaranCsv" onclick="handleAdmExportPendaftaranFormatChange('csv')">
+                                <div class="adm-format-content">
+                                    <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranCsv" value="csv" class="adm-format-radio" onchange="handleAdmExportPendaftaranFormatChange('csv')">
+                                    <div class="adm-format-details">
+                                        <div class="adm-format-name-wrap">
+                                            <span class="adm-format-name">CSV Tabular</span>
+                                            <span class="badge-format-ext badge-ext-csv">.csv</span>
+                                        </div>
+                                        <p class="adm-format-desc">Data mentah teks pemisah koma terstandarisasi</p>
+                                    </div>
+                                </div>
+                                <div class="adm-format-meta">
+                                    <span class="adm-badge-quick">Cepat</span>
+                                </div>
+                            </label>
+
+                            {{-- Format 3: Dokumen Resmi PDF (.pdf) --}}
+                            <label class="adm-format-card" id="cardFormatPendaftaranPdf" onclick="handleAdmExportPendaftaranFormatChange('pdf')">
+                                <div class="adm-format-content">
+                                    <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranPdf" value="pdf" class="adm-format-radio" onchange="handleAdmExportPendaftaranFormatChange('pdf')">
+                                    <div class="adm-format-details">
+                                        <div class="adm-format-name-wrap">
+                                            <span class="adm-format-name">Dokumen Resmi (.pdf)</span>
+                                            <span class="badge-format-ext badge-ext-pdf">.pdf</span>
+                                        </div>
+                                        <p class="adm-format-desc">Rekapitulasi cetak ber-kop resmi kedinasan</p>
+                                    </div>
+                                </div>
+                                <div class="adm-format-meta">
+                                    <span class="adm-badge-legal">Legal Sah</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="adm-popover-cta">
+                            <button type="button" class="adm-btn-popover-cancel" onclick="toggleAdmExportPopoverPendaftaran(false)">
+                                Batal
+                            </button>
+                            <button type="button" id="btnDoExportDownloadPendaftaran" class="adm-btn-popover-download" onclick="triggerPendaftaranExport()">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                <span id="btnExportDownloadTextPendaftaran">Unduh Excel (.xlsx)</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1073,14 +1188,6 @@
                                         <span class="adm-reg-badge">
                                             {{ $item->nomor_pendaftaran }}
                                         </span>
-                                        @if($item->tipe === 'kelompok' || $item->kelompokMagang)
-                                            <div style="margin-top: 0.35rem;">
-                                                <span class="adm-badge-kelompok">
-                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                                                    Kelompok ({{ ($item->kelompokMagang?->anggota?->count() ?? 0) + 1 }} Org)
-                                                </span>
-                                            </div>
-                                        @endif
                                     </td>
 
                                     {{-- Calon Peserta --}}
@@ -1098,19 +1205,25 @@
                                                 <div style="font-weight: 700; color: #0F172A; font-size: 0.875rem;">
                                                     {{ $item->user?->nama ?? 'Calon Peserta' }}
                                                 </div>
-                                                <div style="font-size: 0.775rem; color: #64748B;">
-                                                    {{ $item->user?->email }}
-                                                </div>
-                                                @if($item->kelompokMagang)
-                                                    <div style="font-size: 0.725rem; font-weight: 700; color: #7C3AED; margin-top: 0.15rem;">
-                                                        Tim: {{ $item->kelompokMagang->nama_kelompok }}
+                                                @if($item->tipe === 'kelompok' || $item->kelompokMagang)
+                                                    <div>
+                                                        <span class="adm-badge-kelompok" title="{{ $item->kelompokMagang?->nama_kelompok ? 'Tim: ' . $item->kelompokMagang->nama_kelompok : 'Kelompok' }}">
+                                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                                            Kelompok
+                                                            @if($item->kelompokMagang)
+                                                                <span class="sr-only">Tim: {{ $item->kelompokMagang->nama_kelompok }}</span>
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                @else
+                                                    <div>
+                                                        <span class="adm-badge-individu">
+                                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                                            Individu
+                                                        </span>
                                                     </div>
                                                 @endif
-                                                @if($item->user?->profil?->nim_nisn)
-                                                    <div style="font-size: 0.725rem; color: #94A3B8;">
-                                                        {{ $idLabel }}: {{ $item->user->profil->nim_nisn }}
-                                                    </div>
-                                                @endif
+                                                <span class="sr-only">{{ $item->user?->email }} {{ $item->user?->profil?->nim_nisn }}</span>
                                             </div>
                                         </div>
                                     </td>
@@ -1165,3 +1278,108 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    // =========================================================================
+    // EXPORT REKAP PENDAFTARAN POPOVER MANAGEMENT
+    // =========================================================================
+    function toggleAdmExportPopoverPendaftaran(forceOpen = null) {
+        const popover = document.getElementById('admExportPopoverPendaftaran');
+        const trigger = document.getElementById('btnToggleExportPopoverPendaftaran');
+        const wrap = trigger ? trigger.closest('.adm-export-dropdown-wrap') : null;
+        if (!popover) return;
+
+        const shouldOpen = forceOpen !== null ? forceOpen : popover.style.display === 'none';
+        if (shouldOpen) {
+            popover.style.display = 'flex';
+            if (trigger) trigger.setAttribute('aria-expanded', 'true');
+            if (wrap) wrap.classList.add('is-open');
+        } else {
+            popover.style.display = 'none';
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+            if (wrap) wrap.classList.remove('is-open');
+        }
+    }
+
+    function handleAdmExportPendaftaranFormatChange(format) {
+        const cards = document.querySelectorAll('#admExportPopoverPendaftaran .adm-format-card');
+        cards.forEach(c => c.classList.remove('adm-format-selected'));
+
+        const radio = document.getElementById('radioFormatPendaftaran' + format.charAt(0).toUpperCase() + format.slice(1));
+        if (radio) radio.checked = true;
+
+        const card = document.getElementById('cardFormatPendaftaran' + format.charAt(0).toUpperCase() + format.slice(1));
+        if (card) card.classList.add('adm-format-selected');
+
+        const btnText = document.getElementById('btnExportDownloadTextPendaftaran');
+        if (btnText) {
+            if (format === 'xlsx') {
+                btnText.textContent = 'Unduh Excel (.xlsx)';
+            } else if (format === 'csv') {
+                btnText.textContent = 'Unduh CSV (.csv)';
+            } else if (format === 'pdf') {
+                btnText.textContent = 'Unduh PDF (.pdf)';
+            }
+        }
+    }
+
+    function triggerPendaftaranExport(forcedFormat = null) {
+        let format = forcedFormat;
+        if (!format) {
+            const selectedRadio = document.querySelector('input[name="popover_export_pendaftaran_format"]:checked');
+            format = selectedRadio ? selectedRadio.value : 'xlsx';
+        }
+
+        const currentUrl = new URL(window.location.href);
+        const exportUrl = new URL("{{ route('admin.laporan.pendaftaran') }}", window.location.origin);
+
+        // Salin seluruh filter query string aktif
+        currentUrl.searchParams.forEach((val, key) => {
+            if (key !== 'page') {
+                exportUrl.searchParams.set(key, val);
+            }
+        });
+
+        exportUrl.searchParams.set('format', format);
+
+        // Tutup popover
+        toggleAdmExportPopoverPendaftaran(false);
+
+        // Jalankan download file
+        window.location.href = exportUrl.toString();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const trigger = document.getElementById('btnToggleExportPopoverPendaftaran');
+        const popover = document.getElementById('admExportPopoverPendaftaran');
+
+        if (trigger) {
+            trigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleAdmExportPopoverPendaftaran();
+            });
+        }
+
+        if (popover) {
+            popover.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (popover && popover.style.display !== 'none') {
+                if (!popover.contains(e.target) && trigger && !trigger.contains(e.target)) {
+                    toggleAdmExportPopoverPendaftaran(false);
+                }
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && popover && popover.style.display !== 'none') {
+                toggleAdmExportPopoverPendaftaran(false);
+            }
+        });
+    });
+</script>
+@endpush
