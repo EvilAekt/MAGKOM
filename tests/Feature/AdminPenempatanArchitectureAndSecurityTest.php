@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Actions\Admin\Penempatan\AssignPesertaAction;
+use App\Actions\Admin\Penempatan\BulkReassignPembimbingAction;
+use App\Actions\Admin\Penempatan\CreateManualPenempatanAction;
+use App\Actions\Admin\Penempatan\ReassignPembimbingAction;
 use App\Enums\JalurEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPendaftaranEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\SumberPenempatanEnum;
+use App\Exceptions\Domain\StatusSudahBerubahException;
 use App\Models\Bidang;
 use App\Models\BulanMagang;
 use App\Models\Jurusan;
@@ -504,7 +509,7 @@ class AdminPenempatanArchitectureAndSecurityTest extends TestCase
             'diputuskan_at' => now(),
         ]);
 
-        $action = app(\App\Actions\Admin\Penempatan\AssignPesertaAction::class);
+        $action = app(AssignPesertaAction::class);
 
         // First assignment succeeds
         $penempatan = $action->execute($pendaftaran, $this->admin, $this->pembimbing1, $this->bidang);
@@ -513,7 +518,7 @@ class AdminPenempatanArchitectureAndSecurityTest extends TestCase
         $this->assertEquals($this->peserta->id, $penempatan->peserta_id);
 
         // Second assignment with same pendaftaran fails
-        $this->expectException(\App\Exceptions\Domain\StatusSudahBerubahException::class);
+        $this->expectException(StatusSudahBerubahException::class);
         $this->expectExceptionMessage('Peserta ini sudah memiliki data penempatan aktif.');
 
         $action->execute($pendaftaran, $this->admin, $this->pembimbing2, $this->bidang);
@@ -540,8 +545,8 @@ class AdminPenempatanArchitectureAndSecurityTest extends TestCase
             'diputuskan_at' => now(),
         ]);
 
-        $assignAction = app(\App\Actions\Admin\Penempatan\AssignPesertaAction::class);
-        $manualAction = app(\App\Actions\Admin\Penempatan\CreateManualPenempatanAction::class);
+        $assignAction = app(AssignPesertaAction::class);
+        $manualAction = app(CreateManualPenempatanAction::class);
 
         // 1. Assign online first
         $assignAction->execute($pendaftaran, $this->admin, $this->pembimbing1, $this->bidang);
@@ -576,12 +581,12 @@ class AdminPenempatanArchitectureAndSecurityTest extends TestCase
         // Simulasikan pendaftaran yang statusnya bukan Diterima saat transaksi berlangsung
         $pendaftaran->update(['status' => StatusPendaftaranEnum::Diajukan]);
 
-        $action = app(\App\Actions\Admin\Penempatan\AssignPesertaAction::class);
+        $action = app(AssignPesertaAction::class);
 
         try {
             $action->execute($pendaftaran, $this->admin, $this->pembimbing1, $this->bidang);
             $this->fail('Harusnya melempar StatusSudahBerubahException');
-        } catch (\App\Exceptions\Domain\StatusSudahBerubahException $e) {
+        } catch (StatusSudahBerubahException $e) {
             $this->assertStringContainsString('Diterima', $e->getMessage());
         }
 
@@ -605,7 +610,7 @@ class AdminPenempatanArchitectureAndSecurityTest extends TestCase
             'status' => StatusPenempatanEnum::Aktif,
         ]);
 
-        $action = app(\App\Actions\Admin\Penempatan\ReassignPembimbingAction::class);
+        $action = app(ReassignPembimbingAction::class);
         $result = $action->execute($penempatan, $this->pembimbing2, $this->admin);
 
         $this->assertEquals($this->pembimbing2->id, $result->pembimbing_id);
@@ -638,7 +643,7 @@ class AdminPenempatanArchitectureAndSecurityTest extends TestCase
             'status' => StatusPenempatanEnum::Aktif,
         ]);
 
-        $action = app(\App\Actions\Admin\Penempatan\BulkReassignPembimbingAction::class);
+        $action = app(BulkReassignPembimbingAction::class);
 
         // Pass duplicate IDs and in descending order [$p2->id, $p1->id, $p2->id]
         $updatedCount = $action->execute([$p2->id, $p1->id, $p2->id], $this->pembimbing2, $this->admin);
@@ -662,7 +667,7 @@ class AdminPenempatanArchitectureAndSecurityTest extends TestCase
             'status' => StatusPenempatanEnum::Selesai,
         ]);
 
-        $action = app(\App\Actions\Admin\Penempatan\ReassignPembimbingAction::class);
+        $action = app(ReassignPembimbingAction::class);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Pembimbing hanya dapat dipindahkan untuk penempatan yang berstatus aktif.');
