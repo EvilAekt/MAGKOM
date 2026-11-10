@@ -1150,12 +1150,12 @@
                     <table class="adm-table">
                         <thead>
                             <tr>
-                                <th style="width: 140px;">No. Registrasi</th>
-                                <th>Calon Peserta</th>
-                                <th>Institusi & Jurusan</th>
-                                <th>Bulan Magang</th>
-                                <th style="width: 150px;">Status</th>
-                                <th style="text-align: right; width: 140px;">Aksi</th>
+                                <th style="width: 14%; min-width: 130px; text-align: left;">No. Registrasi</th>
+                                <th style="width: 25%; min-width: 210px; text-align: left;">Calon Peserta</th>
+                                <th style="width: 25%; min-width: 210px; text-align: left;">Institusi & Jurusan</th>
+                                <th style="width: 16%; min-width: 130px; text-align: left;">Bulan Magang</th>
+                                <th style="width: 12%; min-width: 120px; text-align: center;">Status</th>
+                                <th style="width: 8%; min-width: 90px; text-align: center;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1197,7 +1197,7 @@
                                                 || ($item->kuota?->jurusan?->kategori ?? '') === 'smk';
                                             $idLabel = $isSmk ? 'NISN' : 'NIM';
                                         @endphp
-                                        <div class="adm-user-cell">
+                                        <div class="adm-user-cell" style="display: flex; align-items: center; gap: 0.85rem;">
                                             <div class="cv-avatar-sm cv-avatar-palette-{{ $paletteIdx }}" style="width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.825rem; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.06);">
                                                 {{ $initials }}
                                             </div>
@@ -1206,7 +1206,7 @@
                                                     {{ $item->user?->nama ?? 'Calon Peserta' }}
                                                 </div>
                                                 @if($item->tipe === 'kelompok' || $item->kelompokMagang)
-                                                    <div>
+                                                    <div style="margin-top: 4px;">
                                                         <span class="adm-badge-kelompok" title="{{ $item->kelompokMagang?->nama_kelompok ? 'Tim: ' . $item->kelompokMagang->nama_kelompok : 'Kelompok' }}">
                                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                                                             Kelompok
@@ -1216,7 +1216,7 @@
                                                         </span>
                                                     </div>
                                                 @else
-                                                    <div>
+                                                    <div style="margin-top: 4px;">
                                                         <span class="adm-badge-individu">
                                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                                             Individu
@@ -1230,21 +1230,21 @@
 
                                     {{-- Institusi & Jurusan --}}
                                     <td>
-                                        <div style="font-weight: 600; color: #1E293B;">{{ $item->user?->profil?->institusi ?? '-' }}</div>
-                                        <small style="color: #64748B;">{{ $item->kuota?->jurusan?->nama_jurusan ?? ($item->user?->profil?->jurusan ?? '-') }}</small>
+                                        <div style="font-weight: 700; color: #1E293B; font-size: 0.875rem;">{{ $item->user?->profil?->institusi ?? '-' }}</div>
+                                        <div style="color: #64748B; font-size: 0.8125rem; margin-top: 3px;">{{ $item->kuota?->jurusan?->nama_jurusan ?? ($item->user?->profil?->jurusan ?? '-') }}</div>
                                     </td>
 
                                     {{-- Periode --}}
                                     <td>
-                                        <div style="font-weight: 600; color: #0F172A;">
+                                        <div style="font-weight: 700; color: #0F172A; font-size: 0.875rem;">
                                             {{ $item->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
                                         </div>
-                                        <small style="color: #64748B;">Durasi: {{ $item->durasi_bulan }} Bulan</small>
+                                        <div style="color: #64748B; font-size: 0.8125rem; margin-top: 3px;">Durasi: {{ $item->durasi_bulan }} Bulan</div>
                                     </td>
 
                                     {{-- Status Permohonan --}}
                                     <td>
-                                        <div style="display: flex; align-items: center; justify-content: flex-start;">
+                                        <div style="display: flex; align-items: center; justify-content: center;">
                                             <span class="cv-status-dot-badge {{ $statusDotType }}">
                                                 <span class="dot"></span>
                                                 <span>{{ $item->status->label() }}</span>
@@ -1253,7 +1253,7 @@
                                     </td>
 
                                     {{-- Aksi --}}
-                                    <td style="text-align: right;">
+                                    <td style="text-align: center;">
                                         <a href="{{ route('admin.pendaftaran.show', $item) }}" class="adm-btn-tinjau">
                                             <span>Tinjau</span>
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>

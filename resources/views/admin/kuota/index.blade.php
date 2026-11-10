@@ -1113,13 +1113,13 @@
                 <table class="table-bidang">
                     <thead>
                         <tr>
-                            <th style="width: 22%; min-width: 200px;">Bidang</th>
-                            <th style="width: 38%; min-width: 260px;">Jurusan yang Dibutuhkan</th>
-                            <th style="width: 9%; min-width: 85px;">Jenjang</th>
-                            <th style="width: 9%; min-width: 85px;">Durasi</th>
-                            <th style="width: 11%; min-width: 115px;">Kuota Terisi</th>
-                            <th style="width: 6%; min-width: 80px;">Kapasitas</th>
-                            <th style="width: 8%; min-width: 95px; text-align: center; padding-right: 1.5rem;">Aksi</th>
+                            <th style="width: 20%; min-width: 180px; text-align: left;">Bidang</th>
+                            <th style="width: 34%; min-width: 250px; text-align: left;">Jurusan yang Dibutuhkan</th>
+                            <th style="width: 10%; min-width: 85px; text-align: center;">Jenjang</th>
+                            <th style="width: 10%; min-width: 85px; text-align: center;">Durasi</th>
+                            <th style="width: 11%; min-width: 95px; text-align: center;">Kuota Terisi</th>
+                            <th style="width: 9%; min-width: 85px; text-align: center;">Kapasitas</th>
+                            <th style="width: 6%; min-width: 75px; text-align: center;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1127,7 +1127,7 @@
                             <tr>
                                 {{-- 1. Bidang --}}
                                 <td>
-                                    <div class="bidang-cell">
+                                    <div class="bidang-cell" style="display: flex; align-items: center; gap: 0.85rem;">
                                         <div class="avatar-initial" style="background: {{ $item['bg_color'] }}; color: {{ $item['text_color'] }};">
                                             {{ $item['inisial'] }}
                                         </div>
@@ -1149,8 +1149,8 @@
                                 </td>
 
                                 {{-- 3. Jenjang --}}
-                                <td>
-                                    <div class="jenjang-badge-group">
+                                <td style="text-align: center;">
+                                    <div class="jenjang-badge-group" style="justify-content: center;">
                                         @foreach($item['jenjang_badges'] as $badge)
                                             <span class="badge-jenjang-pill">{{ $badge }}</span>
                                         @endforeach
@@ -1158,14 +1158,14 @@
                                 </td>
 
                                 {{-- 4. Durasi --}}
-                                <td>
-                                    <span style="font-weight: 600; font-size: 0.8125rem;">
+                                <td style="text-align: center;">
+                                    <span style="font-weight: 600; font-size: 0.8125rem; color: #334155;">
                                         {{ $item['durasi'] }}
                                     </span>
                                 </td>
 
                                 {{-- 5. Kuota Terisi --}}
-                                <td>
+                                <td style="text-align: center;">
                                     <div style="font-weight: 700; font-size: 0.9375rem; color: #0F172A;">
                                         {{ $item['terisi'] }} <span style="font-size: 0.8125rem; font-weight: 500; color: #64748B;">/ {{ $item['kapasitas'] }}</span>
                                     </div>
@@ -1173,7 +1173,7 @@
                                 </td>
 
                                 {{-- 6. Kapasitas & Status Ketersediaan Bidang --}}
-                                <td>
+                                <td style="text-align: center;">
                                     <span style="font-weight: 700; font-size: 0.875rem; color: #1E293B;">
                                         {{ $item['kapasitas'] }} <span style="font-size: 0.8125rem; font-weight: 500; color: #64748B;">Peserta</span>
                                     </span>
@@ -1187,7 +1187,7 @@
                                 </td>
 
                                 {{-- 7. Aksi --}}
-                                <td style="text-align: center; padding-right: 1.5rem;">
+                                <td style="text-align: center;">
                                     @if(auth()->user()?->isSuperAdmin())
                                         <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Read-Only</span>
                                     @else

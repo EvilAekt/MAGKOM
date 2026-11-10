@@ -483,12 +483,12 @@
                     <table class="adm-table">
                         <thead>
                             <tr>
-                                <th style="width: 16%; text-align: left;">No. Registrasi</th>
-                                <th style="width: 26%; text-align: left;">Nama & Institusi</th>
-                                <th style="width: 22%; text-align: left;">Jurusan</th>
-                                <th style="width: 16%; text-align: left;">Bulan Mulai</th>
-                                <th style="width: 10%; text-align: left;">Durasi</th>
-                                <th style="width: 10%; text-align: left;">Status</th>
+                                <th style="width: 15%; min-width: 130px; text-align: left;">No. Registrasi</th>
+                                <th style="width: 26%; min-width: 210px; text-align: left;">Nama & Institusi</th>
+                                <th style="width: 23%; min-width: 190px; text-align: left;">Jurusan</th>
+                                <th style="width: 15%; min-width: 130px; text-align: left;">Bulan Mulai</th>
+                                <th style="width: 10%; min-width: 85px; text-align: center;">Durasi</th>
+                                <th style="width: 11%; min-width: 105px; text-align: center;">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -518,7 +518,7 @@
                                             <div class="adm-cell-title">
                                                 {{ $p->user?->nama ?? 'Calon Peserta' }}
                                             </div>
-                                            <div class="adm-cell-sub">
+                                            <div class="adm-cell-sub" style="margin-top: 3px;">
                                                 {{ $p->asal_instansi ?? ($p->user?->profil?->institusi ?? '-') }}
                                             </div>
                                         </div>
@@ -539,18 +539,20 @@
                                     </td>
 
                                     {{-- Durasi --}}
-                                    <td>
+                                    <td style="text-align: center;">
                                         <span style="font-weight: 600; color: #475569; font-size: 0.85rem;">
                                             {{ $p->durasi_bulan }} Bulan
                                         </span>
                                     </td>
 
                                     {{-- Status --}}
-                                    <td>
-                                        <span class="cv-status-dot-badge {{ $statusDotType }}">
-                                            <span class="dot"></span>
-                                            <span>{{ $p->status?->label() ?? ucfirst($val) }}</span>
-                                        </span>
+                                    <td style="text-align: center;">
+                                        <div style="display: flex; justify-content: center; align-items: center;">
+                                            <span class="cv-status-dot-badge {{ $statusDotType }}">
+                                                <span class="dot"></span>
+                                                <span>{{ $p->status?->label() ?? ucfirst($val) }}</span>
+                                            </span>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty

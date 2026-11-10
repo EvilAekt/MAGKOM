@@ -1001,15 +1001,15 @@
                         <table class="adm-table admin-table bulk_action">
                         <thead>
                             <tr>
-                                <th style="width: 40px; text-align: center;">
+                                <th style="width: 4%; min-width: 40px; text-align: center;">
                                     <input type="checkbox" id="checkAllPenempatan" onclick="toggleAllPenempatan(this)" style="cursor: pointer; width: 16px; height: 16px;">
                                 </th>
-                                <th>Peserta Magang</th>
-                                <th>Pembimbing Lapangan</th>
-                                <th>Jalur / Bidang Dinas</th>
-                                <th>Bulan Magang</th>
-                                <th>Status</th>
-                                <th style="text-align: right; width: 100px;">Aksi</th>
+                                <th style="width: 25%; min-width: 200px; text-align: left;">Peserta Magang</th>
+                                <th style="width: 23%; min-width: 180px; text-align: left;">Pembimbing Lapangan</th>
+                                <th style="width: 21%; min-width: 170px; text-align: left;">Jalur / Bidang Dinas</th>
+                                <th style="width: 14%; min-width: 130px; text-align: left;">Bulan Magang</th>
+                                <th style="width: 8%; min-width: 90px; text-align: center;">Status</th>
+                                <th style="width: 5%; min-width: 65px; text-align: center;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1034,7 +1034,7 @@
                                         @php
                                             $cleanPesertaNama = str_replace(' (Peserta Magang)', '', (string) ($p->peserta?->nama ?? '-'));
                                         @endphp
-                                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                        <div style="display: flex; align-items: center; gap: 0.85rem;">
                                             <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #0641CC 0%, #2563EB 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; flex-shrink: 0; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
                                                 {{ strtoupper(substr($cleanPesertaNama, 0, 1)) }}
                                             </div>
@@ -1042,10 +1042,10 @@
                                                 <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;">
                                                     {{ $cleanPesertaNama }}
                                                 </div>
-                                                <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 0.1rem;">
+                                                <div style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin-top: 3px;">
                                                     {{ $p->peserta?->profil?->institusi ?? '-' }}
                                                 </div>
-                                                <small style="font-size: 0.7rem; color: var(--neutral-400, #94A3B8);">
+                                                <small style="font-size: 0.7rem; color: var(--neutral-400, #94A3B8); margin-top: 2px; display: block;">
                                                     NIM: {{ $p->peserta?->profil?->nim_nisn ?? '-' }}
                                                 </small>
                                             </div>
@@ -1061,7 +1061,7 @@
                                             {{ $cleanPembimbingNama }}
                                         </div>
                                         @if($p->pembimbing)
-                                            <div style="display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem; flex-wrap: wrap;">
+                                            <div style="display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 4px; flex-wrap: wrap;">
                                                 <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.725rem; color: var(--neutral-600, #475569); background: var(--neutral-100, #F1F5F9); padding: 0.15rem 0.5rem; border-radius: 6px; border: 1px solid var(--neutral-200, #E2E8F0); font-weight: 600;">
                                                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
                                                     <span>{{ $p->pembimbing->mentee_aktif_count ?? 1 }} Mentee Aktif</span>
@@ -1075,7 +1075,7 @@
                                         <div style="font-weight: 600; color: var(--neutral-900, #0F172A);">
                                             {{ $p->bidang?->nama_bidang ?? 'Dinas Kominfo Sleman' }}
                                         </div>
-                                        <div style="margin-top: 0.25rem;">
+                                        <div style="margin-top: 4px;">
                                             @if($p->slotKhusus)
                                                 <span style="font-size: 0.75rem; font-weight: 600; color: var(--neutral-500, #64748B);" title="{{ $p->slotKhusus->nama_mitra ? 'Mitra: '.$p->slotKhusus->nama_mitra : 'Jalur Khusus' }}">
                                                     Khusus
@@ -1093,21 +1093,21 @@
                                         <div style="font-weight: 700; color: var(--neutral-800, #1E293B);">
                                             {{ \Carbon\Carbon::parse($p->tgl_mulai)->translatedFormat('d M Y') }} s/d
                                         </div>
-                                        <div style="font-weight: 700; color: var(--neutral-800, #1E293B);">
+                                        <div style="font-weight: 700; color: var(--neutral-800, #1E293B); margin-top: 2px;">
                                             {{ \Carbon\Carbon::parse($p->tgl_selesai)->translatedFormat('d M Y') }}
                                         </div>
                                     </td>
 
                                     {{-- Status --}}
-                                    <td>
-                                        <span style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: {{ $badgeStyle['bg'] }}; color: {{ $badgeStyle['color'] }}; border: 1px solid {{ $badgeStyle['border'] }};">
+                                    <td style="text-align: center;">
+                                        <span style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; background: {{ $badgeStyle['bg'] }}; color: {{ $badgeStyle['color'] }}; border: 1px solid {{ $badgeStyle['border'] }};">
                                             {{ $statusObj ? $statusObj->label() : ucfirst($statusVal) }}
                                         </span>
                                     </td>
 
                                     {{-- Aksi --}}
-                                    <td style="text-align: right;">
-                                        <div style="display: inline-flex; gap: 0.35rem; align-items: center; justify-content: flex-end;">
+                                    <td style="text-align: center;">
+                                        <div style="display: inline-flex; gap: 0.35rem; align-items: center; justify-content: center;">
                                             @if($p->pembimbing && !auth()->user()?->isSuperAdmin())
                                                 <button type="button" 
                                                         class="action-dropdown-btn" 
@@ -1239,15 +1239,15 @@
                 </div>
             </div>
 
-            <div style="overflow-x: auto;">
-                <table class="admin-table">
+            <div style="overflow-x: auto; width: 100%;">
+                <table class="adm-table">
                     <thead>
-                        <tr style="background: var(--neutral-50, #F8FAFC); border-bottom: 1px solid var(--neutral-200, #E2E8F0);">
-                            <th style="color: var(--neutral-600, #475569); font-weight: 700;">Peserta Magang</th>
-                            <th style="color: var(--neutral-600, #475569); font-weight: 700;">Jurusan</th>
-                            <th style="color: var(--neutral-600, #475569); font-weight: 700;">Bulan Magang</th>
-                            <th style="color: var(--neutral-600, #475569); font-weight: 700;">Diterima Pada</th>
-                            <th style="text-align: right; width: 150px; color: var(--neutral-600, #475569); font-weight: 700;">Aksi</th>
+                        <tr>
+                            <th style="width: 30%; min-width: 220px; text-align: left;">Peserta Magang</th>
+                            <th style="width: 28%; min-width: 200px; text-align: left;">Jurusan</th>
+                            <th style="width: 18%; min-width: 140px; text-align: left;">Bulan Magang</th>
+                            <th style="width: 13%; min-width: 110px; text-align: center;">Diterima Pada</th>
+                            <th style="width: 11%; min-width: 100px; text-align: center;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1257,17 +1257,17 @@
                                 $defBidangId = $firstBidang?->id;
                                 $defBidangNama = $firstBidang?->nama_bidang ?? 'Dinas Kominfo';
                             @endphp
-                            <tr style="background: #FFFFFF;">
+                            <tr>
                                 <td>
-                                    <div style="display: flex; align-items: center; gap: 0.65rem;">
-                                        <div style="width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #01347C 0%, #0641CC 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
+                                    <div style="display: flex; align-items: center; gap: 0.85rem;">
+                                        <div style="width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #01347C 0%, #0641CC 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
                                             {{ strtoupper(substr($antrean->user?->nama ?? 'P', 0, 1)) }}
                                         </div>
                                         <div>
                                             <div style="font-weight: 700; color: #1E293B; font-size: 0.875rem;">
                                                 {{ $antrean->user?->nama }}
                                             </div>
-                                            <div style="font-size: 0.75rem; color: #64748B;">
+                                            <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
                                                 NIM: {{ $antrean->user?->profil?->nim_nisn ?? '-' }}
                                             </div>
                                         </div>
@@ -1277,7 +1277,7 @@
                                     <div style="font-weight: 600; color: #1E293B;">
                                         {{ $antrean->kuota?->jurusan?->nama_jurusan ?? '-' }}
                                     </div>
-                                    <div style="font-size: 0.75rem; color: #64748B;">
+                                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
                                         {{ $antrean->user?->profil?->institusi ?? '-' }}
                                     </div>
                                 </td>
@@ -1285,25 +1285,27 @@
                                     <span style="font-weight: 700; color: #0641CC; font-size: 0.8125rem;">
                                         {{ $antrean->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
                                     </span>
-                                    <div style="font-size: 0.75rem; color: #64748B;">
+                                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
                                         Durasi: {{ $antrean->durasi_bulan }} Bulan
                                     </div>
                                 </td>
-                                <td>
+                                <td style="text-align: center;">
                                     <span style="font-size: 0.8125rem; color: #475569;">
                                         {{ $antrean->diputuskan_at?->translatedFormat('d M Y H:i') ?? '-' }}
                                     </span>
                                 </td>
-                                <td style="text-align: right;">
+                                <td style="text-align: center;">
                                     @if(auth()->user()?->isSuperAdmin())
                                         <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Menunggu Penempatan</span>
                                     @else
-                                        <button type="button" 
-                                                onclick="openTetapkanModal({{ $antrean->id }}, '{{ addslashes($antrean->user?->nama) }}', '{{ addslashes($antrean->kuota?->jurusan?->nama_jurusan ?? '') }}', {{ $defBidangId ?? 'null' }}, '{{ addslashes($defBidangNama) }}')" 
-                                                style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.95rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                                            <span>Tempatkan</span>
-                                        </button>
+                                        <div style="display: inline-flex; justify-content: center; align-items: center;">
+                                            <button type="button" 
+                                                    onclick="openTetapkanModal({{ $antrean->id }}, '{{ addslashes($antrean->user?->nama) }}', '{{ addslashes($antrean->kuota?->jurusan?->nama_jurusan ?? '') }}', {{ $defBidangId ?? 'null' }}, '{{ addslashes($defBidangNama) }}')" 
+                                                    style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.95rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                                                <span>Tempatkan</span>
+                                            </button>
+                                        </div>
                                     @endif
                                 </td>
                             </tr>
