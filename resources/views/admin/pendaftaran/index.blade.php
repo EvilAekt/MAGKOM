@@ -1154,7 +1154,7 @@
                                 <th>Calon Peserta</th>
                                 <th>Institusi & Jurusan</th>
                                 <th>Bulan Magang</th>
-                                <th>Status</th>
+                                <th style="width: 150px;">Status</th>
                                 <th style="text-align: right; width: 140px;">Aksi</th>
                             </tr>
                         </thead>
@@ -1244,17 +1244,20 @@
 
                                     {{-- Status Permohonan --}}
                                     <td>
-                                        <span class="cv-status-dot-badge {{ $statusDotType }}">
-                                            <span class="dot"></span>
-                                            <span>{{ $item->status->label() }}</span>
-                                        </span>
+                                        <div style="display: flex; align-items: center; justify-content: flex-start;">
+                                            <span class="cv-status-dot-badge {{ $statusDotType }}">
+                                                <span class="dot"></span>
+                                                <span>{{ $item->status->label() }}</span>
+                                            </span>
+                                        </div>
                                     </td>
 
                                     {{-- Aksi --}}
                                     <td style="text-align: right;">
                                         <a href="{{ route('admin.pendaftaran.show', $item) }}" class="adm-btn-tinjau">
-                                            <span>Tinjau Berkas</span>
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                            <span>Tinjau</span>
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                            <span class="sr-only" aria-hidden="true" style="display: none;">Tinjau Berkas</span>
                                         </a>
                                     </td>
                                 </tr>

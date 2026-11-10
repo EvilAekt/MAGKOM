@@ -269,7 +269,7 @@
                 <div class="adm-roster-header">
                     <span class="roster-big-val">{{ $quotaFilled }}</span>
                     <span class="roster-sub-slash">/{{ $quotaTotal }}</span>
-                    <span class="roster-caps-label">KUOTA MAGANG DINAS</span>
+                    <span class="roster-caps-label">KUOTA MAGANG PESERTA</span>
                 </div>
                 <div class="adm-roster-bars-box">
                     <div class="roster-track-row">
@@ -304,11 +304,53 @@
             <div class="adm-card adm-calendar-card sc-reveal-side" data-scroll-reveal>
                 <div class="adm-calendar-header">
                     <button type="button" class="cal-nav-btn" id="admCalPrevBtn" aria-label="Bulan Sebelumnya">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
                     </button>
-                    <span class="cal-month-title" id="admCalTitle">{{ $activeMonthName }}</span>
+
+                    <div class="cal-title-container">
+                        <div class="cal-month-dropdown-wrap">
+                            <button type="button" class="cal-month-trigger-btn" id="admCalMonthTriggerBtn" aria-haspopup="true" aria-expanded="false" title="Pilih Bulan">
+                                <span id="admCalMonthTitle">{{ $activeMonthName }}</span>
+                                <svg class="cal-dropdown-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div class="cal-month-popover" id="admCalMonthPopover" role="menu" aria-label="Pilih Bulan" hidden>
+                                <div class="cal-month-popover-header">
+                                    <span class="cal-month-popover-title">Pilih Bulan</span>
+                                </div>
+                                <div class="cal-month-grid" id="admCalMonthGrid">
+                                    {{-- Diisi secara dinamis oleh JavaScript --}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cal-year-dropdown-wrap">
+                            <button type="button" class="cal-year-trigger-btn" id="admCalYearTriggerBtn" aria-haspopup="true" aria-expanded="false" title="Pilih Tahun">
+                                <span id="admCalYearVal">{{ $activeYear }}</span>
+                                <svg class="cal-dropdown-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div class="cal-year-popover" id="admCalYearPopover" role="menu" aria-label="Pilih Tahun" hidden>
+                                <div class="cal-year-popover-header">
+                                    <button type="button" class="cal-year-jump-btn" id="admCalYearDecBtn" aria-label="5 Tahun Sebelumnya">&laquo;</button>
+                                    <span class="cal-year-popover-title">Pilih Tahun</span>
+                                    <button type="button" class="cal-year-jump-btn" id="admCalYearIncBtn" aria-label="5 Tahun Berikutnya">&raquo;</button>
+                                </div>
+                                <div class="cal-year-grid" id="admCalYearGrid">
+                                    {{-- Diisi secara dinamis oleh JavaScript --}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <button type="button" class="cal-nav-btn" id="admCalNextBtn" aria-label="Bulan Berikutnya">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
                     </button>
                 </div>
 
@@ -318,8 +360,8 @@
                     <span>R</span>
                     <span>K</span>
                     <span>J</span>
-                    <span>S</span>
-                    <span class="day-sunday">M</span>
+                    <span class="day-weekend">S</span>
+                    <span class="day-weekend day-sunday">M</span>
                 </div>
 
                 <div class="adm-calendar-grid" id="admCalGrid"

@@ -71,7 +71,7 @@ class KuotaController extends Controller
                 'inisial' => 'ITI',
                 'bg_color' => '#ECFDF5',
                 'text_color' => '#059669',
-                'durasi' => '3–6 bulan',
+                'durasi' => '1–6 bulan',
             ],
             'Sekretariat Dinas' => [
                 'alias' => 'Sekretariat',

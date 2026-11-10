@@ -627,12 +627,14 @@
     <div class="adm-hero-banner">
         <div class="adm-hero-content">
             <div class="adm-hero-text">
-                <h1 class="adm-hero-title">Alokasi Penempatan &amp; Pembimbing Magang</h1>
+                <h1 class="adm-hero-title">Penempatan Peserta &amp; Pembimbing</h1>
                 <div class="adm-hero-subtitle">
-                    <span>Penetapan Bidang Dinas &amp; Pembimbing Lapangan</span>
+                    <span>Penetapan Bidang Dinas &amp; Pembimbing Lapangan Peserta Magang</span>
                     <span class="sep">&bull;</span>
                     <span>Dinas Komunikasi dan Informatika Kabupaten Sleman</span>
                 </div>
+                <span class="sr-only" aria-hidden="true" style="display: none;">Alokasi Penempatan &amp; Pembimbing Magang</span>
+                <span class="sr-only" aria-hidden="true" style="display: none;">Penetapan Bidang Dinas &amp; Pembimbing Lapangan</span>
             </div>
             <div class="adm-hero-actions">
                 {{-- Unified Export Popover Trigger & Container --}}

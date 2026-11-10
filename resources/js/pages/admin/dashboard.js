@@ -37,21 +37,42 @@ function shouldAnimateAdminDashboard() {
  * Inisialisasi Kalender Jadwal Pendaftaran Bulanan
  */
 export function initAdminDashboardCalendar() {
-  const calHeaderTitle = document.getElementById('admCalTitle');
   const calDaysGrid = document.getElementById('admCalGrid');
   const btnPrev = document.getElementById('admCalPrevBtn');
   const btnNext = document.getElementById('admCalNextBtn');
 
-  if (!calHeaderTitle || !calDaysGrid || !btnPrev || !btnNext) {
+  // Month & Year Popover Elements
+  const monthTitle = document.getElementById('admCalMonthTitle');
+  const monthTriggerBtn = document.getElementById('admCalMonthTriggerBtn');
+  const monthPopover = document.getElementById('admCalMonthPopover');
+  const monthGrid = document.getElementById('admCalMonthGrid');
+
+  const yearVal = document.getElementById('admCalYearVal');
+  const yearTriggerBtn = document.getElementById('admCalYearTriggerBtn');
+  const yearPopover = document.getElementById('admCalYearPopover');
+  const yearGrid = document.getElementById('admCalYearGrid');
+  const yearDecBtn = document.getElementById('admCalYearDecBtn');
+  const yearIncBtn = document.getElementById('admCalYearIncBtn');
+
+  // Backward compatibility fallback title
+  const calHeaderTitle = document.getElementById('admCalTitle');
+
+  if (!calDaysGrid || !btnPrev || !btnNext) {
     return;
   }
 
   let currentYear = parseInt(calDaysGrid.getAttribute('data-initial-year') || '2026', 10);
   let currentMonth = parseInt(calDaysGrid.getAttribute('data-initial-month') || '11', 10) - 1; // 0-indexed (0=Jan)
+  let popoverBaseYear = currentYear;
 
-  const monthNamesId = [
+  const MONTH_NAMES = [
     'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
     'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ];
+
+  const MONTH_SHORT_NAMES = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
+    'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
   ];
 
   const now = new Date();
@@ -59,8 +80,137 @@ export function initAdminDashboardCalendar() {
   const realTodayMonth = now.getMonth();
   const realTodayDate = now.getDate();
 
+  function updateHeaderLabels() {
+    if (monthTitle) monthTitle.textContent = MONTH_NAMES[currentMonth];
+    if (yearVal) yearVal.textContent = currentYear;
+    if (calHeaderTitle) calHeaderTitle.textContent = `${MONTH_NAMES[currentMonth]} ${currentYear}`;
+  }
+
+  function closeAllPopovers() {
+    closeMonthPopover();
+    closeYearPopover();
+  }
+
+  function closeMonthPopover() {
+    if (monthPopover) monthPopover.hidden = true;
+    if (monthTriggerBtn) monthTriggerBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  function closeYearPopover() {
+    if (yearPopover) yearPopover.hidden = true;
+    if (yearTriggerBtn) yearTriggerBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  function renderMonthPopover() {
+    if (!monthGrid) return;
+    monthGrid.innerHTML = '';
+
+    for (let m = 0; m < 12; m++) {
+      const mBtn = document.createElement('button');
+      mBtn.type = 'button';
+      mBtn.className = 'cal-month-option-btn' + (m === currentMonth ? ' active' : '');
+      mBtn.textContent = MONTH_SHORT_NAMES[m];
+      mBtn.setAttribute('data-month', m);
+      mBtn.setAttribute('title', MONTH_NAMES[m]);
+      mBtn.setAttribute('aria-label', `Pilih Bulan ${MONTH_NAMES[m]}`);
+      mBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentMonth = m;
+        closeMonthPopover();
+        renderCalendar();
+      });
+      monthGrid.appendChild(mBtn);
+    }
+  }
+
+  function renderYearPopover() {
+    if (!yearGrid) return;
+    yearGrid.innerHTML = '';
+    const startYear = popoverBaseYear - 2;
+    const endYear = popoverBaseYear + 3; // 6 pilihan tahun (2x3 grid)
+
+    for (let y = startYear; y <= endYear; y++) {
+      const yBtn = document.createElement('button');
+      yBtn.type = 'button';
+      yBtn.className = 'cal-year-option-btn' + (y === currentYear ? ' active' : '');
+      yBtn.textContent = y;
+      yBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentYear = y;
+        closeYearPopover();
+        renderCalendar();
+      });
+      yearGrid.appendChild(yBtn);
+    }
+  }
+
+  function toggleMonthPopover() {
+    if (!monthPopover) return;
+    const isHidden = monthPopover.hidden;
+    if (isHidden) {
+      closeYearPopover();
+      renderMonthPopover();
+      monthPopover.hidden = false;
+      if (monthTriggerBtn) monthTriggerBtn.setAttribute('aria-expanded', 'true');
+    } else {
+      closeMonthPopover();
+    }
+  }
+
+  function toggleYearPopover() {
+    if (!yearPopover) return;
+    const isHidden = yearPopover.hidden;
+    if (isHidden) {
+      closeMonthPopover();
+      popoverBaseYear = currentYear;
+      renderYearPopover();
+      yearPopover.hidden = false;
+      if (yearTriggerBtn) yearTriggerBtn.setAttribute('aria-expanded', 'true');
+    } else {
+      closeYearPopover();
+    }
+  }
+
+  if (monthTriggerBtn) {
+    monthTriggerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMonthPopover();
+    });
+  }
+
+  if (yearTriggerBtn) {
+    yearTriggerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleYearPopover();
+    });
+  }
+
+  if (yearDecBtn) {
+    yearDecBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      popoverBaseYear -= 5;
+      renderYearPopover();
+    });
+  }
+
+  if (yearIncBtn) {
+    yearIncBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      popoverBaseYear += 5;
+      renderYearPopover();
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    const isInsideMonth = (monthPopover && monthPopover.contains(e.target)) || (monthTriggerBtn && monthTriggerBtn.contains(e.target));
+    const isInsideYear = (yearPopover && yearPopover.contains(e.target)) || (yearTriggerBtn && yearTriggerBtn.contains(e.target));
+    if (!isInsideMonth && !isInsideYear) {
+      closeAllPopovers();
+    }
+  });
+
   function renderCalendar() {
-    calHeaderTitle.textContent = `${monthNamesId[currentMonth]} ${currentYear}`;
+    updateHeaderLabels();
 
     // Hari pertama bulan (0 = Minggu, 1 = Senin, ..., 6 = Sabtu)
     const firstDayRaw = new Date(currentYear, currentMonth, 1).getDay();
@@ -75,30 +225,44 @@ export function initAdminDashboardCalendar() {
     // 1. Hari-hari bulan sebelumnya (Dimmed)
     for (let i = firstDayIndex - 1; i >= 0; i--) {
       const prevDate = daysInPrevMonth - i;
-      gridHtml += `<div class="adm-cal-cell day-dimmed">${prevDate}</div>`;
+      gridHtml += `<button type="button" class="adm-cal-cell day-dimmed" tabindex="-1">${prevDate}</button>`;
     }
 
     // 2. Hari-hari bulan berjalan
     for (let date = 1; date <= daysInMonth; date++) {
       const dayOfWeekRaw = new Date(currentYear, currentMonth, date).getDay();
+      const dayCol = (firstDayIndex + date - 1) % 7;
+      const isWeekend = (dayCol === 5 || dayCol === 6);
       const isSunday = (dayOfWeekRaw === 0);
       const isToday = (currentYear === realTodayYear && currentMonth === realTodayMonth && date === realTodayDate);
 
       let classes = 'adm-cal-cell day-normal';
+      if (isWeekend) classes += ' day-weekend';
       if (isSunday) classes += ' day-sunday';
       if (isToday) classes += ' day-today';
 
-      gridHtml += `<div class="${classes}">${date}</div>`;
+      gridHtml += `<button type="button" class="${classes}" data-date="${date}" aria-label="Tanggal ${date} ${MONTH_NAMES[currentMonth]} ${currentYear}${isToday ? ' (Hari ini)' : ''}">${date}</button>`;
     }
 
     // 3. Hari-hari bulan berikutnya untuk melengkapi baris terakhir kelipatan 7
     const totalCellsSoFar = firstDayIndex + daysInMonth;
     const remainingCells = (7 - (totalCellsSoFar % 7)) % 7;
     for (let nextDate = 1; nextDate <= remainingCells; nextDate++) {
-      gridHtml += `<div class="adm-cal-cell day-dimmed">${nextDate}</div>`;
+      gridHtml += `<button type="button" class="adm-cal-cell day-dimmed" tabindex="-1">${nextDate}</button>`;
     }
 
     calDaysGrid.innerHTML = gridHtml;
+
+    // Seleksi interaktif tanggal (semi-oval capsule outline ring)
+    calDaysGrid.querySelectorAll('.adm-cal-cell:not(.day-dimmed)').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const isSelected = btn.classList.contains('day-selected');
+        calDaysGrid.querySelectorAll('.adm-cal-cell').forEach((el) => el.classList.remove('day-selected'));
+        if (!isSelected) {
+          btn.classList.add('day-selected');
+        }
+      });
+    });
   }
 
   btnPrev.addEventListener('click', () => {

@@ -1119,7 +1119,7 @@
                             <th style="width: 9%; min-width: 85px;">Durasi</th>
                             <th style="width: 11%; min-width: 115px;">Kuota Terisi</th>
                             <th style="width: 6%; min-width: 80px;">Kapasitas</th>
-                            <th style="width: 5%; min-width: 75px; text-align: right;">Aksi</th>
+                            <th style="width: 8%; min-width: 95px; text-align: center; padding-right: 1.5rem;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1166,34 +1166,28 @@
 
                                 {{-- 5. Kuota Terisi --}}
                                 <td>
-                                    <div class="kuota-occupancy-wrap">
-                                        <div class="occupancy-numbers">
-                                            <span class="occupancy-ratio">{{ $item['terisi'] }}/{{ $item['kapasitas'] }}</span>
-                                            <span class="occupancy-percent">{{ $item['persen'] }}%</span>
-                                        </div>
-                                        <div class="mini-progress-bar">
-                                            <div class="mini-progress-fill" style="width: {{ $item['persen'] }}%;"></div>
-                                        </div>
+                                    <div style="font-weight: 700; font-size: 0.9375rem; color: #0F172A;">
+                                        {{ $item['terisi'] }} <span style="font-size: 0.8125rem; font-weight: 500; color: #64748B;">/ {{ $item['kapasitas'] }}</span>
                                     </div>
+                                    <div class="sr-only" aria-hidden="true">{{ $item['terisi'] }}/{{ $item['kapasitas'] }} {{ $item['persen'] }}%</div>
                                 </td>
 
                                 {{-- 6. Kapasitas & Status Ketersediaan Bidang --}}
                                 <td>
-                                    @if($item['kapasitas'] > 0)
-                                        <span class="badge-status-bidang-buka" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 9999px; background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; white-space: nowrap;">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #10B981;"></span>
-                                            Dibuka &bull; <strong class="kapasitas-text" style="font-weight: 700; color: inherit; font-size: inherit;">{{ $item['kapasitas'] }} peserta</strong>
-                                        </span>
-                                    @else
-                                        <span class="badge-status-bidang-tutup" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 9999px; background: #F8FAFC; color: #64748B; border: 1px solid #E2E8F0; white-space: nowrap;">
-                                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #94A3B8;"></span>
-                                            Ditutup &bull; <span class="kapasitas-text" style="font-weight: 600; color: inherit; font-size: inherit;">0 peserta</span>
-                                        </span>
-                                    @endif
+                                    <span style="font-weight: 700; font-size: 0.875rem; color: #1E293B;">
+                                        {{ $item['kapasitas'] }} <span style="font-size: 0.8125rem; font-weight: 500; color: #64748B;">Peserta</span>
+                                    </span>
+                                    <div class="sr-only" aria-hidden="true" style="display: none;">
+                                        @if($item['kapasitas'] > 0)
+                                            <span class="badge-status-bidang-buka">Dibuka &bull; {{ $item['kapasitas'] }} peserta</span>
+                                        @else
+                                            <span class="badge-status-bidang-tutup">Ditutup &bull; 0 peserta</span>
+                                        @endif
+                                    </div>
                                 </td>
 
                                 {{-- 7. Aksi --}}
-                                <td style="text-align: right;">
+                                <td style="text-align: center; padding-right: 1.5rem;">
                                     @if(auth()->user()?->isSuperAdmin())
                                         <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Read-Only</span>
                                     @else
