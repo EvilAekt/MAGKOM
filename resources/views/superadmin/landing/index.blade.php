@@ -17,7 +17,7 @@
     }
 @endphp
 
-<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 1080px; margin: 0 auto; width: 100%;">
+<div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     {{-- ALERT FLASH MESSAGES --}}
     @if(session('success'))
@@ -38,7 +38,7 @@
     @include('superadmin.landing.partials._draft_status_banner')
 
     {{-- INFO PANEL --}}
-    <div style="background: var(--blue-tint, #EFF6FF); border: 1px solid var(--blue-tint-line, #DBEAFE); border-radius: 8px; padding: 1rem 1.25rem; color: #1E40AF; font-size: 0.875rem; line-height: 1.5; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+    <div class="sc-reveal-hero" data-scroll-reveal style="background: var(--blue-tint, #EFF6FF); border: 1px solid var(--blue-tint-line, #DBEAFE); border-radius: 8px; padding: 1rem 1.25rem; color: #1E40AF; font-size: 0.875rem; line-height: 1.5; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
         <div>
             <strong>CMS Pengelolaan Konten Publik:</strong> Anda dapat mengedit Hero Banner, Alur &amp; Tahapan Magang, FAQ, Footer Kontak, serta Halaman Kebijakan Privasi tanpa harus menyentuh kode program (zero hardcode).
         </div>

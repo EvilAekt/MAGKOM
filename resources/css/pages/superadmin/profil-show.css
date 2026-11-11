@@ -1,0 +1,705 @@
+/* =========================================================================
+   MAGKOM - HALAMAN PROFIL & DATA SUPER ADMINISTRATOR
+   Acuan Desain: Standar Desain Sistem MagKom (Sleman Navy & Gold Accent)
+   Sesuai Aturan AGENTS.md (Vanilla CSS, Scoped, Responsive, No Inline)
+   ========================================================================= */
+
+/* Outer Page Wrapper */
+.profil-page-wrapper {
+    background-color: transparent;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 0 32px 0;
+    box-sizing: border-box;
+}
+
+/* Main Fluid Card Container (Single-Card Modern) */
+.profil-main-card {
+    width: 100%;
+    max-width: 100%;
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    padding: 28px 32px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Page Header Title */
+.profil-page-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+}
+
+/* Alerts / Flash Messages */
+.profil-alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.84rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.profil-alert-success {
+    background: #ECFDF5;
+    color: #065F46;
+    border: 1px solid #A7F3D0;
+}
+.profil-alert-danger {
+    background: #FEF2F2;
+    color: #991B1B;
+    border: 1px solid #FECACA;
+}
+
+/* Form Container */
+#formProfilStaff {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* =========================================================================
+   1. HERO IDENTITY BANNER (NAVY BANNER)
+   ========================================================================= */
+.profil-identity-banner {
+    background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.35), transparent 60%),
+                linear-gradient(135deg, #02275D 0%, #01347C 60%, #003566 100%);
+    border-radius: 14px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 4px 18px rgba(2, 39, 93, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.profil-identity-banner:hover {
+    box-shadow: 0 8px 24px rgba(2, 39, 93, 0.28);
+}
+
+.profil-identity-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+}
+
+/* Avatar Circle */
+.profil-avatar-box {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+}
+
+.profil-avatar-img-wrap {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    background: #02275D;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(2, 39, 93, 0.25);
+}
+
+.profil-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.profil-avatar-initial {
+    color: #ffffff;
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1;
+    user-select: none;
+    text-transform: uppercase;
+}
+
+/* Camera Overlay Badge */
+.profil-camera-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #FFCB05;
+    color: #02275D;
+    border: 2px solid #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.profil-camera-badge:hover {
+    background-color: #F59E0B;
+    transform: scale(1.1);
+}
+
+/* User Info beside Avatar */
+.profil-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.profil-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.profil-user-name {
+    color: #ffffff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profil-badge-role {
+    display: inline-flex;
+    align-items: center;
+    background-color: #FFCB05;
+    color: #02275D;
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+    line-height: 1.2;
+    border: 1px solid rgba(2, 39, 93, 0.15);
+}
+
+.profil-user-email {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8125rem;
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Sisi Kanan Banner: Upload Foto */
+.profil-identity-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.profil-btn-upload-photo {
+    background: #ffffff;
+    color: #0F172A;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.profil-btn-upload-photo:hover {
+    background-color: #F1F5F9;
+    transform: translateY(-1px);
+}
+
+.profil-btn-remove-photo {
+    background: none;
+    border: none;
+    color: #FCA5A5;
+    font-size: 0.72rem;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 2px 4px;
+}
+.profil-btn-remove-photo:hover {
+    color: #EF4444;
+}
+
+.profil-photo-subtext {
+    font-size: 0.72rem;
+    color: #E2E8F0;
+    margin-top: 2px;
+    display: block;
+    text-align: right;
+}
+
+/* =========================================================================
+   2. CARD STATUS / MONITORING OTORITAS SUPERADMIN
+   ========================================================================= */
+.profil-completeness-card {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 18px 24px;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.profil-completeness-card:hover {
+    transform: translateY(-2px);
+    border-color: #BFDBFE;
+    box-shadow: 0 8px 20px -4px rgba(2, 39, 93, 0.1);
+}
+
+.profil-completeness-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profil-completeness-title {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #02275D;
+    margin: 0;
+}
+
+.profil-completeness-percent {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #02275D;
+    line-height: 1;
+}
+
+/* Progress Bar Track */
+.profil-progress-track {
+    width: 100%;
+    height: 6px;
+    background-color: #E2E8F0;
+    border-radius: 999px;
+    margin: 10px 0 16px;
+    overflow: hidden;
+}
+
+.profil-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #02275D 0%, #01347C 85%, #FFCB05 100%);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+/* Checklist 5 Indikator */
+.profil-checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    align-items: center;
+}
+
+.profil-checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.775rem;
+    color: #1E293B;
+    font-weight: 600;
+    padding: 6px 4px;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.profil-checklist-item:hover {
+    background-color: #EFF6FF;
+    transform: translateY(-1px);
+}
+
+.profil-checklist-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.profil-checklist-icon.done {
+    color: #02275D;
+}
+
+.profil-checklist-icon.pending {
+    color: #94A3B8;
+}
+
+/* =========================================================================
+   3. FORM SECTION CARDS (MODULAR CARD WITH SQUIRCLE ICON)
+   ========================================================================= */
+.profil-section-card {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.profil-section-card:hover {
+    transform: translateY(-2px);
+    border-color: #BFDBFE;
+    box-shadow: 0 8px 24px -4px rgba(7, 59, 130, 0.08), 0 2px 6px -1px rgba(7, 59, 130, 0.04);
+}
+
+.profil-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.profil-section-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.profil-section-icon-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
+    color: #FFCB05;
+    border: 1px solid rgba(255, 203, 5, 0.25);
+    box-shadow: 0 3px 8px rgba(2, 39, 93, 0.16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.profil-section-heading {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 2px 0;
+    line-height: 1.25;
+}
+
+.profil-section-subheading {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin: 0;
+    line-height: 1.35;
+}
+
+/* Edit Button */
+.profil-btn-edit {
+    background: #ffffff;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 0.775rem;
+    font-weight: 600;
+    color: #334155;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.profil-btn-edit:hover {
+    background-color: #EFF6FF;
+    border-color: #02275D;
+    color: #02275D;
+    box-shadow: 0 2px 8px rgba(2, 39, 93, 0.15);
+}
+
+/* Lock Icon for System / Readonly Fields */
+.profil-lock-icon {
+    width: 13px;
+    height: 13px;
+    color: #94A3B8;
+    stroke: currentColor;
+    fill: none;
+    margin-left: 5px;
+    vertical-align: middle;
+    display: inline-block;
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+
+/* Form Fields Grid & Controls */
+.profil-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.profil-field-col-full {
+    grid-column: 1 / -1;
+}
+
+.profil-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.profil-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.profil-required {
+    color: #02275D;
+    font-weight: 700;
+}
+
+.profil-input,
+.profil-textarea {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.84rem;
+    color: #0F172A;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.profil-input:focus,
+.profil-textarea:focus {
+    outline: none;
+    border-color: #02275D;
+    box-shadow: 0 0 0 3px rgba(2, 39, 93, 0.12);
+}
+
+.profil-input:read-only,
+.profil-input:disabled {
+    background-color: #F8FAFC !important;
+    color: #64748B !important;
+    cursor: not-allowed !important;
+    border-color: #E2E8F0 !important;
+    box-shadow: none !important;
+}
+
+.profil-input.is-invalid {
+    border-color: #DC2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.profil-field-error {
+    font-size: 0.725rem;
+    color: #DC2626;
+    font-weight: 500;
+}
+
+.profil-helper-text {
+    font-size: 0.725rem;
+    color: #64748B;
+    line-height: 1.35;
+}
+
+/* =========================================================================
+   4. BOTTOM ACTIONS & PERSENTASE BAR
+   ========================================================================= */
+.profil-bottom-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-top: 6px;
+}
+
+.profil-agreement-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.8125rem;
+    color: #475569;
+    line-height: 1.4;
+    flex: 1;
+    min-width: 280px;
+}
+
+.profil-checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    accent-color: #02275D;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.profil-btn-submit {
+    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(2, 39, 93, 0.2);
+    white-space: nowrap;
+    transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.profil-btn-submit:hover:not(:disabled) {
+    background: linear-gradient(135deg, #01347C 0%, #02275D 100%);
+    box-shadow: 0 4px 14px rgba(2, 39, 93, 0.3);
+    transform: translateY(-1px);
+}
+
+.profil-btn-submit:disabled {
+    background: #94A3B8;
+    color: #E2E8F0;
+    cursor: not-allowed;
+    opacity: 0.75;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Spinner Animasi */
+.profil-spinner {
+    animation: profil-spin 1s linear infinite;
+}
+
+@keyframes profil-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* =========================================================================
+   5. RESPONSIVE BREAKPOINTS (TABLET & MOBILE)
+   ========================================================================= */
+@media (max-width: 768px) {
+    .profil-main-card {
+        padding: 20px 16px;
+    }
+    .profil-identity-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    .profil-identity-right {
+        align-items: flex-start;
+        width: 100%;
+    }
+    .profil-checklist-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .profil-fields-grid {
+        grid-template-columns: 1fr;
+    }
+    .profil-bottom-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .profil-btn-submit {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+/* =========================================================================
+   6. DARK THEME OVERRIDES
+   ========================================================================= */
+[data-theme="dark"] .profil-main-card {
+    background: #182234;
+    border-color: #26354D;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .profil-completeness-card,
+[data-theme="dark"] .profil-section-card {
+    background-color: #0F172A;
+    border-color: #26354D;
+}
+
+[data-theme="dark"] .profil-completeness-title,
+[data-theme="dark"] .profil-completeness-percent,
+[data-theme="dark"] .profil-section-heading {
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .profil-checklist-item {
+    color: #E2E8F0;
+}
+[data-theme="dark"] .profil-checklist-item:hover {
+    background-color: #1E293B;
+}
+
+[data-theme="dark"] .profil-label {
+    color: #E2E8F0;
+}
+
+[data-theme="dark"] .profil-input {
+    background-color: #0B132B;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .profil-input:read-only,
+[data-theme="dark"] .profil-input:disabled {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .profil-btn-edit {
+    background: #1E293B;
+    border-color: #334155;
+    color: #E2E8F0;
+}
+
+[data-theme="dark"] .profil-agreement-label {
+    color: #CBD5E1;
+}
+

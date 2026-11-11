@@ -17,7 +17,7 @@
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
     {{-- 1. Hero Banner Khas Sleman MagKom --}}
-    <div class="sa-hero-banner">
+    <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Parameter Konfigurasi Sistem</h1>
@@ -49,7 +49,7 @@
     </div>
 
     {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Parameter -->
         <x-gentelella.tile-stat
             title="TOTAL PARAMETER"
@@ -127,7 +127,7 @@
         </x-gentelella.tile-stat>
     </div>
 
-    <form id="formPengaturanSistem" action="{{ route('superadmin.pengaturan.update') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.5rem;">
+    <form id="formPengaturanSistem" class="sc-reveal-up sc-delay-2" data-scroll-reveal action="{{ route('superadmin.pengaturan.update') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.5rem;">
         @csrf
         @method('PUT')
 
@@ -319,4 +319,8 @@
         @csrf
     </form>
 </div>
+
+@push('scripts')
+    @vite(['resources/js/pages/superadmin/staf-index.js'])
+@endpush
 @endsection

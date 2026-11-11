@@ -43,5 +43,6 @@
 @endsection
 
 @push('scripts')
+    @vite(['resources/js/pages/superadmin/staf-index.js'])
     @include('superadmin.audit-log.partials._scripts')
 @endpush

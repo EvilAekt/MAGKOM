@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Dashboard SuperAdmin - MagKom')
+@section('topbar_title', 'Dashboard SuperAdmin')
 @section('page_title', 'Dashboard SuperAdmin')
 @section('page_description')
 @endsection

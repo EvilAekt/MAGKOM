@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Akun & Preferensi Saya - Super Administrator MagKom')
+@section('title', 'Pengaturan Akun - Super Administrator MagKom')
+@section('topbar_title', 'Pengaturan Akun')
 
 @section('content')
 <div class="pengaturan-akun-page">

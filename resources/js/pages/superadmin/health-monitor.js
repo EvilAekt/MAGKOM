@@ -3,11 +3,16 @@
  * - Rendering Kurva Latensi HTTP & SSE (Native HTML5 Canvas 2D)
  * - Selektor filter rentang waktu (15m, 1h, 24h) & mode grafik (Semua, P95, SSE)
  * - Paginasi client-side tabel endpoint & live SSE telemetry stream
+ * - Sistem Animasi Universal (Scroll-Craft + GSAP Paritas Pembimbing)
  */
+import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
+
 (function () {
     'use strict';
 
     document.addEventListener('DOMContentLoaded', () => {
+        initSuperAdminPageMotion({ animateTables: false });
+
         const canvas = document.getElementById('routeLatencyCanvas');
         const container = document.getElementById('canvasContainer');
         const tooltip = document.getElementById('canvasTooltip');

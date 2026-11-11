@@ -17,7 +17,7 @@
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     {{-- 1. Hero Banner Khas Sleman MagKom --}}
-    <div class="sa-hero-banner">
+    <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Manajemen Bulan Magang</h1>
@@ -40,7 +40,7 @@
     </div>
 
     {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Periode Bulan -->
         <x-gentelella.tile-stat
             title="TOTAL PERIODE"
@@ -124,7 +124,7 @@
     </div>
 
     <!-- DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table" title="Daftar Bulan Magang">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Daftar Bulan Magang">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total: <strong>{{ method_exists($bulanList, 'total') ? $bulanList->total() : $bulanList->count() }} Periode</strong>

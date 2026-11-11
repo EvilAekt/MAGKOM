@@ -17,7 +17,7 @@
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     {{-- 1. Hero Banner Khas Sleman MagKom --}}
-    <div class="sa-hero-banner">
+    <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Master Bidang Dinas Kominfo</h1>
@@ -40,7 +40,7 @@
     </div>
 
     {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Bidang -->
         <x-gentelella.tile-stat
             title="TOTAL BIDANG"
@@ -119,7 +119,7 @@
     </div>
 
     <!-- DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table" title="Daftar Bidang & Unit Kerja Diskominfo">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Daftar Bidang & Unit Kerja Diskominfo">
         @if($bidangList->isEmpty())
             <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600);">
                 <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: var(--neutral-100); display: flex; align-items: center; justify-content: center; color: var(--neutral-500);">

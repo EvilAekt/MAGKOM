@@ -990,6 +990,99 @@
     to { transform: rotate(360deg); }
 }
 
+/* ==========================================================================
+   SUPERADMIN UNIVERSAL SCROLL-CRAFT & MOTION UTILITIES
+   Consistent with Pembimbing motion engine & WCAG 2.1 AA accessibility
+   ========================================================================== */
+
+/* 1. Base Reveal State */
+[data-scroll-reveal] {
+    opacity: 0;
+    will-change: transform, opacity;
+    transition-property: transform, opacity;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 2. Varian Reveal */
+.sc-reveal-hero {
+    transform: translateY(-16px);
+    transition-duration: 0.65s;
+}
+
+.sc-reveal-up {
+    transform: translateY(24px);
+    transition-duration: 0.55s;
+}
+
+.sc-reveal-scale {
+    transform: scale(0.96) translateY(16px);
+    transition-duration: 0.60s;
+}
+
+.sc-reveal-side {
+    transform: translateX(24px);
+    transition-duration: 0.60s;
+}
+
+/* 3. Stagger Delays */
+.sc-delay-1 { transition-delay: 0.08s; }
+.sc-delay-2 { transition-delay: 0.16s; }
+.sc-delay-3 { transition-delay: 0.24s; }
+.sc-delay-4 { transition-delay: 0.32s; }
+.sc-delay-5 { transition-delay: 0.40s; }
+
+/* 4. Active Revealed State */
+[data-scroll-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+}
+
+/* 5. Freeze Transitions After Reveal (Safety Guard) */
+[data-scroll-reveal].sc-settled {
+    transition: none !important;
+    will-change: auto !important;
+}
+
+/* 6. Instant Reveal Fallback */
+[data-scroll-reveal].sc-instant-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* 7. Micro-Interaction Hover Universal */
+.sa-card-panel,
+.card-box,
+.tile_stats_count,
+.sa-table-card,
+.sa-filter-panel,
+.backup-stat-card,
+.sa-card {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.sa-card-panel:hover,
+.card-box:hover,
+.tile_stats_count:hover,
+.backup-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(1, 52, 124, 0.08), 0 12px 24px -8px rgba(1, 52, 124, 0.14);
+}
+
+/* 8. WCAG 2.1 AA Prefers Reduced Motion Guard */
+@media (prefers-reduced-motion: reduce) {
+    [data-scroll-reveal],
+    .sc-reveal-hero,
+    .sc-reveal-up,
+    .sc-reveal-scale,
+    .sc-reveal-side {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
 
 
 

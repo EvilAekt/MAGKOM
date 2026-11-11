@@ -17,7 +17,7 @@
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     {{-- 1. Hero Banner Khas Sleman MagKom --}}
-    <div class="sa-hero-banner">
+    <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Master Data Jurusan</h1>
@@ -40,7 +40,7 @@
     </div>
 
     {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Jurusan -->
         <x-gentelella.tile-stat
             title="TOTAL JURUSAN"
@@ -114,7 +114,7 @@
     </div>
 
     <!-- DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table" title="Master Program Studi & Jurusan">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Master Program Studi & Jurusan">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total Jurusan: <strong>{{ method_exists($jurusanList, 'total') ? $jurusanList->total() : $jurusanList->count() }}</strong>
