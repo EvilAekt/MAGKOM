@@ -398,7 +398,7 @@ class PesertaFullPortalFeatureTest extends TestCase
         $response->assertSee($this->pembimbing->email);
         $response->assertSee('Aksi Cepat Peserta');
         $response->assertSee('saas-quick-grid', false);
-        $response->assertSee('Ketentuan Logbook (BR-09)');
+        $response->assertSee('Ketentuan Logbook');
 
         // AC-5: Pure CSS & Zero Inline Hover JS
         $this->assertStringNotContainsString('onmouseover', strtolower($content));

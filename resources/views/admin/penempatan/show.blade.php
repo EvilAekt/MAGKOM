@@ -433,7 +433,7 @@
             <div>
                 <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">Alihkan Pembimbing Lapangan</h3>
                 <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 0.15rem 0 0 0;">
-                    Pindahkan alokasi peserta ke staf pembimbing lainnya (AC-07-4)
+                    Pindahkan alokasi peserta ke staf pembimbing lainnya
                 </p>
             </div>
             <button type="button" onclick="closePindahModal()" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
@@ -474,7 +474,7 @@
             <div>
                 <h3 style="font-size: 1.0625rem; font-weight: 800; color: #991B1B; margin: 0;">Batalkan Penempatan Peserta</h3>
                 <p style="font-size: 0.75rem; color: #B91C1C; margin: 0.15rem 0 0 0;">
-                    Catat pembatalan / pengunduran diri magang (AC-07-5, BR-07)
+                    Catat pembatalan atau pengunduran diri peserta magang
                 </p>
             </div>
             <button type="button" onclick="closeBatalModal()" style="background: transparent; border: none; font-size: 1.25rem; color: #991B1B; cursor: pointer;">✕</button>

@@ -1331,7 +1331,7 @@
             <div>
                 <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">Penempatan Peserta Jalur Khusus</h3>
                 <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 0.15rem 0 0 0;">
-                    Alokasi peserta magang berdasarkan kuota kemitraan slot khusus dinas (AC-07-3)
+                    Alokasi peserta magang berdasarkan kuota kemitraan slot khusus dinas
                 </p>
             </div>
             <button type="button" onclick="closeManualModal()" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
@@ -1553,7 +1553,7 @@
         <form method="POST" id="form-batal-penempatan" action="" style="padding: 1.5rem;">
             @csrf
             <div style="background: #FFFBEB; border: 1px solid #FCD34D; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.75rem; color: #92400E; line-height: 1.4;">
-                <strong>Ketentuan Pembatalan & Pengunduran Diri (BR-07):</strong>
+                <strong>Ketentuan Pembatalan & Pengunduran Diri:</strong>
                 <ul style="margin: 0.25rem 0 0 1rem; padding: 0;">
                     <li><strong>Sebelum tanggal mulai:</strong> Kuota jurusan/mitra akan otomatis dikembalikan ke sistem.</li>
                     <li><strong>Sejak/setelah tanggal mulai:</strong> Kuota hangus (tidak dikembalikan) dan akun peserta otomatis dinonaktifkan.</li>
@@ -2217,7 +2217,7 @@
                     @endforeach
                 </select>
                 <small style="display: block; font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.35rem;">
-                    Sistem akan memvalidasi batas kapasitas <code>maks_peserta_aktif_per_pembimbing</code> (BR-13).
+                    Sistem akan memvalidasi batas kapasitas beban peserta aktif per pembimbing.
                 </small>
             </div>
 

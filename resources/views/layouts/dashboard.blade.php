@@ -24,7 +24,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
 
     <!-- Gentelella Theme CSS -->
-    <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}?v={{ file_exists(public_path('css/gentelella-theme.css')) ? (string) filemtime(public_path('css/gentelella-theme.css')) : '1.0' }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard-cockpit-unified.css') }}?v={{ file_exists(public_path('css/dashboard-cockpit-unified.css')) ? (string) filemtime(public_path('css/dashboard-cockpit-unified.css')) : '1.0' }}">
 
     <!-- Vite Asset Pipeline (PRD-TASK-VITE-01) -->
@@ -1241,33 +1241,51 @@
         .topbar-left {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 12px;
             min-width: 0;
+            flex: 1;
         }
 
+        .topbar-toggle-btn,
+        #menu_toggle,
         .mobile-toggle-btn {
-            display: none;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
             width: 44px;
             height: 44px;
+            min-width: 44px;
+            min-height: 44px;
+            padding: 0;
             border: 1px solid rgba(255, 255, 255, 0.22) !important;
             background: rgba(255, 255, 255, 0.12) !important;
             border-radius: 8px;
             color: #FFFFFF !important;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
             outline: none;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
         }
 
+        .topbar-toggle-btn:hover,
+        #menu_toggle:hover,
         .mobile-toggle-btn:hover {
             background: rgba(255, 255, 255, 0.22) !important;
-            border-color: rgba(187, 225, 250, 0.4) !important;
+            border-color: rgba(255, 255, 255, 0.4) !important;
             color: #FFFFFF !important;
+            transform: translateY(-1px);
         }
 
+        .topbar-toggle-btn:active,
+        #menu_toggle:active,
+        .mobile-toggle-btn:active {
+            transform: translateY(0);
+        }
+
+        .topbar-toggle-btn:focus-visible,
+        #menu_toggle:focus-visible,
         .mobile-toggle-btn:focus-visible {
-            box-shadow: var(--focus-ring);
+            box-shadow: 0 0 0 3px rgba(255, 203, 5, 0.5) !important;
         }
 
         /* Breadcrumb Navigation */
@@ -1654,7 +1672,7 @@
             box-sizing: border-box !important;
         }
 
-        @media (max-width: 991.98px) {
+        @media (max-width: 1024px) {
             .dashboard-content-area,
             body.role-superadmin .dashboard-content-area,
             body.role-admin .dashboard-content-area,
@@ -2033,37 +2051,96 @@
             display: none;
             position: fixed;
             inset: 0;
-            background-color: rgba(29, 37, 48, 0.5);
-            z-index: 45;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(2px);
+            z-index: 1040 !important;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.25s ease;
         }
 
-        .mobile-drawer-backdrop.active {
-            display: block;
-            opacity: 1;
+        .mobile-drawer-backdrop.active,
+        .mobile-drawer-backdrop.open,
+        body.drawer-open .mobile-drawer-backdrop {
+            display: block !important;
+            opacity: 1 !important;
         }
 
         /* =====================================================================
-           RESPONSIVE BREAKPOINTS (Mobile < 1024px)
+           RESPONSIVE BREAKPOINTS (Mobile and Tablet max-width 1024px)
            ===================================================================== */
-        @media (max-width: 1023.98px) {
-            .dashboard-sidebar {
-                transform: translateX(-100%);
-                box-shadow: var(--shadow-modal);
+        @media (max-width: 1024px) {
+            .dashboard-sidebar,
+            .left_col.dashboard-sidebar,
+            aside#mainSidebar {
+                position: fixed !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 280px !important;
+                max-width: 85vw !important;
+                transform: translateX(-100%) !important;
+                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                z-index: 1050 !important;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35) !important;
             }
 
-            .dashboard-sidebar.drawer-open {
-                transform: translateX(0);
+            .dashboard-sidebar.drawer-open,
+            .dashboard-sidebar.open,
+            body.drawer-open .dashboard-sidebar,
+            body.drawer-open aside#mainSidebar,
+            body.drawer-open .left_col.dashboard-sidebar {
+                transform: translateX(0) !important;
             }
 
-            .dashboard-main {
-                margin-left: 0;
+            .dashboard-main,
+            .right_col,
+            .top_nav,
+            .dashboard-topbar-wrapper,
+            .gentelella-footer,
+            .dashboard-content-area,
+            body.role-superadmin .dashboard-content-area,
+            body.role-admin .dashboard-content-area,
+            body.role-pembimbing .dashboard-content-area,
+            body.gentelella-fluid-body .dashboard-content-area,
+            .dashboard-content-area.gentelella-fluid-canvas {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-topbar-wrapper {
+                height: 58px;
+            }
+            .topbar-title {
+                font-size: 0.95rem;
+            }
+            .topbar-toggle-btn,
+            #menu_toggle {
+                width: 38px;
+                height: 38px;
+                min-width: 38px;
+                min-height: 38px;
+            }
+        }
+
+        @media (max-width: 639.98px) {
+            .user-menu-trigger .user-name-role-wrap {
+                display: none !important;
+            }
+            .user-menu-trigger .dropdown-chevron {
+                display: none !important;
+            }
+        }
+
+        @media (min-width: 2048px) {
+            .dashboard-content-area,
+            .profil-page-wrapper {
+                max-width: 1920px;
+                margin-left: auto;
+                margin-right: auto;
                 width: 100%;
-            }
-
-            .mobile-toggle-btn {
-                display: inline-flex;
             }
         }
 
@@ -2722,21 +2799,30 @@
             }
         }
 
-        /* Mobile Breakpoint (< 992px) */
-        @media (max-width: 991.98px) {
-            .left_col.dashboard-sidebar {
+        /* Mobile and Tablet Breakpoint (max-width: 1024px) */
+        @media (max-width: 1024px) {
+            .left_col.dashboard-sidebar,
+            aside#mainSidebar {
                 transform: translateX(-100%);
-                box-shadow: var(--shadow-modal);
-                width: 256px !important;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+                width: 280px !important;
+                max-width: 85vw !important;
+                z-index: 1050 !important;
             }
 
-            .left_col.dashboard-sidebar.drawer-open {
-                transform: translateX(0);
+            .left_col.dashboard-sidebar.drawer-open,
+            .left_col.dashboard-sidebar.open,
+            aside#mainSidebar.drawer-open,
+            aside#mainSidebar.open,
+            body.drawer-open .left_col.dashboard-sidebar,
+            body.drawer-open aside#mainSidebar {
+                transform: translateX(0) !important;
             }
 
             .top_nav,
             .right_col,
-            .gentelella-footer {
+            .gentelella-footer,
+            .dashboard-content-area {
                 margin-left: 0 !important;
                 width: 100% !important;
             }
@@ -3172,6 +3258,13 @@
                                 <span class="sidebar-brand-subtitle">MAGANG KOMINFO &bull; Dinas Kominfo Sleman MagKom Sleman</span>
                             </span>
                         </a>
+                        <button type="button" 
+                                class="sidebar-drawer-close-btn" 
+                                onclick="toggleGentelellaSidebar(false)" 
+                                aria-label="{{ __('Tutup Navigasi') }}" 
+                                title="{{ __('Tutup Menu') }}">
+                            &times;
+                        </button>
                     </div>
                     <div class="clearfix"></div>
 
@@ -3631,12 +3724,13 @@
             <div class="top_nav dashboard-topbar-wrapper">
                 <header class="nav_menu dashboard-topbar">
                     <div class="topbar-left">
-                        <nav class="nav toggle" style="display: flex; align-items: center;">
-                            <a id="menu_toggle" role="button" aria-label="Toggle Menu Sidebar" onclick="toggleGentelellaSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></a>
-                        </nav>
-
-                        <!-- Tombol Hamburger Mobile Drawer (44x44 target sentuh) -->
-                        <button type="button" class="mobile-toggle-btn" onclick="toggleGentelellaSidebar(true)" aria-label="Buka navigasi menu">
+                        <!-- Tombol Navigasi Menu Tunggal (Desktop Collapse / Mobile Off-Canvas Drawer) -->
+                        <button type="button"
+                                id="menu_toggle"
+                                class="topbar-toggle-btn"
+                                onclick="toggleGentelellaSidebar()"
+                                aria-label="Toggle Menu Navigasi"
+                                title="Navigasi Menu">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="3" y1="12" x2="21" y2="12"></line>
                                 <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -3897,21 +3991,27 @@
     <script>
         // Toggle Sidebar Mobile Drawer
         function toggleSidebar(forceState) {
-            const sidebar = document.getElementById('mainSidebar');
-            const backdrop = document.getElementById('sidebarBackdrop');
-            if (!sidebar || !backdrop) return;
+            if (typeof window.toggleGentelellaSidebar === 'function') {
+                window.toggleGentelellaSidebar(forceState);
+                return;
+            }
+            const sidebar = document.getElementById('mainSidebar') || document.getElementById('sidebarNav') || document.querySelector('.dashboard-sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop') || document.getElementById('drawerBackdrop');
+            if (!sidebar) return;
 
             const shouldOpen = typeof forceState === 'boolean' 
                 ? forceState 
-                : !sidebar.classList.contains('drawer-open');
+                : !(sidebar.classList.contains('drawer-open') || sidebar.classList.contains('open'));
 
             if (shouldOpen) {
-                sidebar.classList.add('drawer-open');
-                backdrop.classList.add('active');
+                sidebar.classList.add('drawer-open', 'open');
+                document.body.classList.add('drawer-open');
+                if (backdrop) backdrop.classList.add('active', 'open');
                 document.body.style.overflow = 'hidden';
             } else {
-                sidebar.classList.remove('drawer-open');
-                backdrop.classList.remove('active');
+                sidebar.classList.remove('drawer-open', 'open');
+                document.body.classList.remove('drawer-open');
+                if (backdrop) backdrop.classList.remove('active', 'open');
                 document.body.style.overflow = '';
             }
         }
@@ -4152,7 +4252,7 @@
         <span>Tindakan</span>
     </button>
 
-    <script src="{{ asset('js/gentelella-theme.js') }}"></script>
+    <script src="{{ asset('js/gentelella-theme.js') }}?v={{ file_exists(public_path('js/gentelella-theme.js')) ? (string) filemtime(public_path('js/gentelella-theme.js')) : '1.0' }}"></script>
     <script src="{{ asset('js/dashboard-cockpit-unified.js') }}"></script>
     <x-sse-toast-listener />
 </body>

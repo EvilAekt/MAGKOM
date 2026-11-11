@@ -26,7 +26,7 @@
                     <span class="bullet-separator">&bull;</span>
                     <span>Total Snapshot: <strong>{{ $totalBackups }} Arsip Tersedia</strong></span>
                     <span class="bullet-separator">&bull;</span>
-                    <span>Status: <strong>SEC-03 SuperAdmin Only</strong></span>
+                    <span>Status: <strong>Akses Khusus SuperAdmin</strong><span class="sr-only">SEC-03 SuperAdmin Only</span></span>
                 </div>
             </div>
             <div class="banner-actions-group">

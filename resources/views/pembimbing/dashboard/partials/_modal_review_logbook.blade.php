@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <x-gentelella.callout type="info" title="Pedoman Mentoring Diskominfo (BR-09)">
+        <x-gentelella.callout type="info" title="Pedoman Mentoring Diskominfo">
             Logbook harian merupakan instrumen kehadiran dan penilaian sikap kerja. Berikan umpan balik konstruktif atau instruksi perbaikan jika laporan belum memadai.
         </x-gentelella.callout>
     </div>

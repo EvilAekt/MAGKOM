@@ -405,33 +405,51 @@
         .topbar-left {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 12px;
             min-width: 0;
+            flex: 1;
         }
 
+        .topbar-toggle-btn,
+        #menu_toggle,
         .mobile-toggle-btn {
-            display: none;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
             width: 44px;
             height: 44px;
+            min-width: 44px;
+            min-height: 44px;
+            padding: 0;
             border: 1px solid rgba(255, 255, 255, 0.22) !important;
             background: rgba(255, 255, 255, 0.12) !important;
             border-radius: 8px;
             color: #FFFFFF !important;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
             outline: none;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
         }
 
+        .topbar-toggle-btn:hover,
+        #menu_toggle:hover,
         .mobile-toggle-btn:hover {
             background: rgba(255, 255, 255, 0.22) !important;
-            border-color: rgba(187, 225, 250, 0.4) !important;
+            border-color: rgba(255, 255, 255, 0.4) !important;
             color: #FFFFFF !important;
+            transform: translateY(-1px);
         }
 
+        .topbar-toggle-btn:active,
+        #menu_toggle:active,
+        .mobile-toggle-btn:active {
+            transform: translateY(0);
+        }
+
+        .topbar-toggle-btn:focus-visible,
+        #menu_toggle:focus-visible,
         .mobile-toggle-btn:focus-visible {
-            box-shadow: var(--focus-ring);
+            box-shadow: 0 0 0 3px rgba(255, 203, 5, 0.5) !important;
         }
 
         /* Breadcrumb Navigation */
@@ -658,10 +676,11 @@
             box-sizing: border-box !important;
         }
 
-        @media (max-width: 991.98px) {
+        @media (max-width: 1024px) {
             .dashboard-content-area,
             body.role-superadmin .dashboard-content-area,
             body.role-admin .dashboard-content-area,
+            body.role-pembimbing .dashboard-content-area,
             body.gentelella-fluid-body .dashboard-content-area,
             .dashboard-content-area.gentelella-fluid-canvas {
                 width: 100% !important;
@@ -719,25 +738,139 @@
         }
 
         /* =====================================================================
-           RESPONSIVE BREAKPOINTS (Mobile < 1024px)
+           RESPONSIVE BREAKPOINTS (Mobile & Tablet <= 1024px)
+           Unified Off-Canvas Sidebar Drawer Architecture
            ===================================================================== */
-        @media (max-width: 1023.98px) {
-            .dashboard-sidebar {
-                transform: translateX(-100%);
-                box-shadow: var(--shadow-modal);
+        .sidebar-drawer-close-btn {
+            display: none !important;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-sidebar,
+            .left_col.dashboard-sidebar,
+            aside#mainSidebar,
+            aside#sidebarNav {
+                position: fixed !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 280px !important;
+                max-width: 85vw !important;
+                transform: translateX(-100%) !important;
+                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                z-index: 1050 !important;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35) !important;
             }
 
-            .dashboard-sidebar.drawer-open {
-                transform: translateX(0);
+            .dashboard-sidebar.drawer-open,
+            .dashboard-sidebar.open,
+            body.drawer-open .dashboard-sidebar,
+            body.drawer-open aside#mainSidebar,
+            body.drawer-open aside#sidebarNav,
+            body.drawer-open .left_col.dashboard-sidebar {
+                transform: translateX(0) !important;
             }
 
-            .dashboard-main {
-                margin-left: 0;
+            .dashboard-main,
+            .right_col,
+            .top_nav,
+            .dashboard-topbar-wrapper,
+            .gentelella-footer,
+            .dashboard-content-area,
+            body.role-superadmin .dashboard-content-area,
+            body.role-admin .dashboard-content-area,
+            body.role-pembimbing .dashboard-content-area,
+            body.gentelella-fluid-body .dashboard-content-area,
+            .dashboard-content-area.gentelella-fluid-canvas,
+            html body.gentelella-body .dashboard-content-area,
+            html body.gentelella-body .right_col,
+            html body.gentelella-body .top_nav,
+            html body.gentelella-body .dashboard-topbar-wrapper,
+            html body.gentelella-body .dashboard-main,
+            html body.gentelella-body .gentelella-footer {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .mobile-drawer-backdrop,
+            .drawer-backdrop {
+                display: none;
+                position: fixed !important;
+                inset: 0 !important;
+                background-color: rgba(15, 23, 42, 0.6) !important;
+                backdrop-filter: blur(2px) !important;
+                z-index: 1040 !important;
+                opacity: 0;
+                transition: opacity 0.25s ease !important;
+            }
+
+            .mobile-drawer-backdrop.active,
+            .mobile-drawer-backdrop.open,
+            .drawer-backdrop.active,
+            .drawer-backdrop.open,
+            body.drawer-open .mobile-drawer-backdrop,
+            body.drawer-open .drawer-backdrop {
+                display: block !important;
+                opacity: 1 !important;
+            }
+
+            .sidebar-drawer-close-btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 44px !important;
+                height: 44px !important;
+                min-width: 44px !important;
+                min-height: 44px !important;
+                background: rgba(255, 255, 255, 0.12) !important;
+                border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                border-radius: 8px !important;
+                color: #FFFFFF !important;
+                font-size: 1.5rem !important;
+                line-height: 1 !important;
+                cursor: pointer !important;
+                transition: all 0.15s ease !important;
+                margin-left: auto !important;
+            }
+
+            .sidebar-drawer-close-btn:hover {
+                background: rgba(255, 255, 255, 0.25) !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-topbar-wrapper {
+                height: 58px;
+            }
+            .topbar-title {
+                font-size: 0.95rem;
+            }
+            .topbar-toggle-btn,
+            #menu_toggle {
+                width: 38px;
+                height: 38px;
+                min-width: 38px;
+                min-height: 38px;
+            }
+        }
+
+        @media (max-width: 639.98px) {
+            .user-menu-trigger .user-name-role-wrap {
+                display: none !important;
+            }
+            .user-menu-trigger .dropdown-chevron {
+                display: none !important;
+            }
+        }
+
+        @media (min-width: 2048px) {
+            .dashboard-content-area,
+            .profil-page-wrapper {
+                max-width: 1920px;
+                margin-left: auto;
+                margin-right: auto;
                 width: 100%;
-            }
-
-            .mobile-toggle-btn {
-                display: inline-flex;
             }
         }
 

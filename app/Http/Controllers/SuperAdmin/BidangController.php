@@ -115,14 +115,14 @@ class BidangController extends Controller
         if (! $targetAktif) {
             $hasActiveStaf = User::where('bidang_id', $bidang->id)->where('status_aktif', true)->exists();
             if ($hasActiveStaf) {
-                return back()->with('error', 'Penonaktifan ditolak (BR-12): Masih terdapat staf aktif yang bertugas di bidang dinas ini.');
+                return back()->with('error', 'Penonaktifan ditolak: Masih terdapat staf aktif yang bertugas di bidang dinas ini.');
             }
 
             $hasActivePenempatan = Penempatan::where('bidang_id', $bidang->id)
                 ->where('status', StatusPenempatanEnum::Aktif)
                 ->exists();
             if ($hasActivePenempatan) {
-                return back()->with('error', 'Penonaktifan ditolak (BR-12): Masih terdapat peserta magang aktif yang ditempatkan di bidang dinas ini.');
+                return back()->with('error', 'Penonaktifan ditolak: Masih terdapat peserta magang aktif yang ditempatkan di bidang dinas ini.');
             }
         }
 

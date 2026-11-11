@@ -68,7 +68,7 @@ class LogbookRequest extends FormRequest
 
         return [
             'tanggal.before_or_equal' => 'Tanggal logbook tidak boleh melebihi hari ini.',
-            'tanggal.after_or_equal' => 'Tanggal kegiatan sudah melebihi batas toleransi pengisian logbook mundur (BR-09).',
+            'tanggal.after_or_equal' => 'Tanggal kegiatan sudah melebihi batas toleransi pengisian logbook mundur.',
             'file_laporan.mimes' => 'Berkas lampiran logbook harus berformat PDF.',
             'file_laporan.max' => "Ukuran berkas lampiran tidak boleh melebihi batas maksimal ({$maksBerkasMb} MB).",
             'link_laporan.regex' => 'Tautan lampiran harus menggunakan protokol aman HTTPS (https://).',

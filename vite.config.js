@@ -7,6 +7,8 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
+                'resources/css/pages/auth/auth-depth.css',
+                'resources/js/pages/auth/auth-depth.js',
                 'resources/css/pages/public/landing.css',
                 'resources/css/pages/public/landing-faq.css',
                 'resources/css/pages/public/panduan-alur.css',

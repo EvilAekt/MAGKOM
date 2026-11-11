@@ -101,7 +101,7 @@ class BulanController extends Controller
                 ->exists();
 
             if ($hasActivePendaftaran) {
-                return back()->with('error', 'Penonaktifan ditolak (BR-12): Periode bulan magang masih memiliki pendaftaran aktif.');
+                return back()->with('error', 'Penonaktifan ditolak: Periode bulan magang masih memiliki pendaftaran aktif.');
             }
 
             $hasActivePenempatan = Penempatan::where('status', StatusPenempatanEnum::Aktif)
@@ -112,7 +112,7 @@ class BulanController extends Controller
                 ->exists();
 
             if ($hasActivePenempatan) {
-                return back()->with('error', 'Penonaktifan ditolak (BR-12): Periode bulan magang masih memiliki penempatan peserta aktif.');
+                return back()->with('error', 'Penonaktifan ditolak: Periode bulan magang masih memiliki penempatan peserta aktif.');
             }
         }
 

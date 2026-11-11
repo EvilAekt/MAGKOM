@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kebijakan Privasi &amp; Perlindungan Data – Magang Diskominfo Sleman</title>
-    <meta name="description" content="Kebijakan Privasi dan komitmen perlindungan data pribadi peserta magang Dinas Komunikasi dan Informatika Kabupaten Sleman.">
+    <title>Kebijakan Privasi &amp; Syarat Ketentuan – Magang Diskominfo Sleman</title>
+    <meta name="description" content="Kebijakan Privasi, komitmen perlindungan data pribadi UU PDP, serta Syarat &amp; Ketentuan Magang Dinas Komunikasi dan Informatika Kabupaten Sleman.">
 
     <!-- Favicon Resmi Sleman / MagKom -->
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
@@ -85,14 +85,14 @@
         </div>
     </header>
 
-    <!-- Konten Utama Kebijakan Privasi -->
+    <!-- Konten Utama Kebijakan Privasi & Syarat Ketentuan -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full flex-grow">
         
         <!-- Breadcrumb Navigasi -->
         <nav class="flex items-center space-x-2 text-xs text-slate-500 mb-6" aria-label="Breadcrumb">
             <a href="{{ route('landing') }}" class="hover:text-blue-600">Beranda</a>
             <span>/</span>
-            <span class="text-slate-900 font-semibold">Kebijakan Privasi</span>
+            <span class="text-slate-900 font-semibold">Kebijakan Privasi &amp; Syarat Ketentuan</span>
         </nav>
 
         <article class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden">
@@ -141,6 +141,35 @@
                     $kebijakanSections = $defaultKebijakanSections;
                 }
 
+                $defaultSyaratSections = [
+                    [
+                        'nomor' => 1,
+                        'judul' => 'Kualifikasi & Status Calon Peserta',
+                        'konten' => 'Program Magang MagKom diperuntukkan bagi peserta didik aktif jenjang SMK/MAK dan mahasiswa aktif (D3, D4, atau S1). Calon peserta wajib melampirkan surat pengantar resmi dari institusi pendidikan asal dan memastikan seluruh data yang diisikan adalah benar serta dapat dipertanggungjawabkan secara hukum.',
+                    ],
+                    [
+                        'nomor' => 2,
+                        'judul' => 'Tata Tertib, Kehadiran & Jam Kerja Kedinasan',
+                        'konten' => 'Peserta magang diwajibkan mematuhi jam operasional kedinasan Pemerintah Kabupaten Sleman (Senin s/d Jumat, pukul 07.30 s/d 15.30 WIB), mengenakan pakaian rapi, sopan, dan beridentitas almamater/institusi, serta menjaga etika dan norma kesopanan birokrasi pemerintahan.',
+                    ],
+                    [
+                        'nomor' => 3,
+                        'judul' => 'Kewajiban Pengisian Logbook Mingguan & Tugas',
+                        'konten' => 'Setiap peserta berkewajiban mencatat aktivitas magang secara berkala pada modul Logbook Mingguan di portal MagKom dan menyelesaikan setiap penugasan teknis yang didelegasikan oleh Pembimbing Lapangan sebelum tenggat waktu berakhir.',
+                        'highlight' => 'Kelalaian pengisian logbook berkala dapat memengaruhi nilai akhir evaluasi dan kelayakan penerbitan sertifikat magang resmi.',
+                    ],
+                    [
+                        'nomor' => 4,
+                        'judul' => 'Kerahasiaan Informasi & Keamanan Siber (Non-Disclosure)',
+                        'konten' => 'Peserta dilarang keras menyebarluaskan, menduplikasi, mempublikasikan, atau membocorkan data internal, kode sumber aplikasi (source code), konfigurasi server/jaringan, atau data pribadi kependudukan masyarakat yang diakses selama masa magang di Dinas Kominfo Sleman kepada pihak luar tanpa izin tertulis.',
+                    ],
+                    [
+                        'nomor' => 5,
+                        'judul' => 'Evaluasi Kinerja, Sertifikat Resmi & Pembatalan Status',
+                        'konten' => 'Penilaian akhir dilakukan oleh pembimbing dinas berdasarkan disiplin, kualitas luaran tugas, dan laporan akhir. Peserta yang menyelesaikan program dengan baik berhak menerima Sertifikat Resmi bertanda tangan elektronik (TTE). Pelanggaran berat terhadap tata tertib atau hukum dapat mengakibatkan pencabutan status magang secara sepihak dan pemberitahuan resmi ke institusi asal.',
+                    ],
+                ];
+
                 $layananEmail = \App\Support\Pengaturan::get('landing_footer_email', 'kominfo@slemankab.go.id');
                 $layananTelepon = \App\Support\Pengaturan::get('landing_footer_telepon', '(0274) 868405');
             @endphp
@@ -153,14 +182,26 @@
                     </svg>
                     <span>{{ $kebijakanBadge }}</span>
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">{{ $kebijakanTitle }}</h1>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Kebijakan Privasi &amp; Syarat Ketentuan MagKom</h1>
                 <p class="text-xs sm:text-sm text-slate-300 mt-2">
                     {{ $kebijakanUpdatedAt }}
                 </p>
             </div>
 
-            <!-- Isi Dokumen Kebijakan -->
-            <div class="p-6 sm:p-10 space-y-8 text-slate-700 leading-relaxed text-sm sm:text-base">
+            <!-- Tab Switcher Antara Kebijakan Privasi dan Syarat & Ketentuan -->
+            <div class="flex border-b border-slate-200 bg-slate-100/80 p-2 gap-2">
+                <button type="button" id="tabBtnPrivasi" onclick="switchDocTab('privasi')" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all bg-white text-blue-700 shadow-sm border border-slate-200 flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <span>Kebijakan Privasi (UU PDP)</span>
+                </button>
+                <button type="button" id="tabBtnSyarat" onclick="switchDocTab('syarat')" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all text-slate-600 hover:text-blue-600 hover:bg-white/60 flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span>Syarat &amp; Ketentuan Magang</span>
+                </button>
+            </div>
+
+            <!-- PANE 1: Isi Dokumen Kebijakan Privasi -->
+            <div id="panePrivasi" class="p-6 sm:p-10 space-y-8 text-slate-700 leading-relaxed text-sm sm:text-base">
                 @foreach($kebijakanSections as $idx => $sec)
                     <section>
                         <div class="flex items-center space-x-2.5 text-navy-800 font-bold text-lg mb-2">
@@ -212,9 +253,45 @@
                         <hr class="border-slate-100">
                     @endif
                 @endforeach
+            </div>
 
-                <!-- Box Navigasi Cepat Terintegrasi -->
-                <div class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <!-- PANE 2: Isi Dokumen Syarat & Ketentuan Magang -->
+            <div id="paneSyarat" class="hidden p-6 sm:p-10 space-y-8 text-slate-700 leading-relaxed text-sm sm:text-base">
+                @foreach($defaultSyaratSections as $sIdx => $syarat)
+                    <section>
+                        <div class="flex items-center space-x-2.5 text-navy-800 font-bold text-lg mb-2">
+                            <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center text-xs font-extrabold border border-amber-200">
+                                {{ $syarat['nomor'] }}
+                            </span>
+                            <h2>Pasal {{ $syarat['nomor'] }}: {{ $syarat['judul'] }}</h2>
+                        </div>
+                        <p class="text-slate-600 pl-9 mb-3">
+                            {{ $syarat['konten'] }}
+                        </p>
+
+                        @if(!empty($syarat['highlight']))
+                            <div class="pl-9 mb-3">
+                                <div class="p-4 bg-amber-50 border border-amber-200/80 rounded-xl text-xs sm:text-sm text-amber-950 flex items-start space-x-3">
+                                    <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                    </svg>
+                                    <p class="leading-relaxed">
+                                        {{ $syarat['highlight'] }}
+                                    </p>
+                                </div>
+                            </div>
+                        @endif
+                    </section>
+
+                    @if(!$loop->last)
+                        <hr class="border-slate-100">
+                    @endif
+                @endforeach
+            </div>
+
+            <!-- Box Navigasi Cepat Terintegrasi -->
+            <div class="p-6 sm:p-10 pt-0">
+                <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div>
                         <h3 class="font-bold text-base text-blue-950">Siap bergabung dengan Diskominfo Sleman?</h3>
                         <p class="text-xs text-blue-700 mt-0.5">Lihat kuota bidang yang tersedia dan mulai langkah pendaftaran Anda.</p>
@@ -228,8 +305,8 @@
                         </a>
                     </div>
                 </div>
-
             </div>
+
         </article>
     </main>
 
@@ -246,5 +323,35 @@
         </div>
     </footer>
 
+    <script>
+        function switchDocTab(tab) {
+            const panePrivasi = document.getElementById('panePrivasi');
+            const paneSyarat = document.getElementById('paneSyarat');
+            const btnPrivasi = document.getElementById('tabBtnPrivasi');
+            const btnSyarat = document.getElementById('tabBtnSyarat');
+
+            if (!panePrivasi || !paneSyarat || !btnPrivasi || !btnSyarat) return;
+
+            if (tab === 'syarat') {
+                panePrivasi.classList.add('hidden');
+                paneSyarat.classList.remove('hidden');
+                btnPrivasi.className = 'flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all text-slate-600 hover:text-blue-600 hover:bg-white/60 flex items-center justify-center gap-2';
+                btnSyarat.className = 'flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all bg-white text-blue-700 shadow-sm border border-slate-200 flex items-center justify-center gap-2';
+                try { history.replaceState(null, '', '#syarat'); } catch (e) {}
+            } else {
+                paneSyarat.classList.add('hidden');
+                panePrivasi.classList.remove('hidden');
+                btnSyarat.className = 'flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all text-slate-600 hover:text-blue-600 hover:bg-white/60 flex items-center justify-center gap-2';
+                btnPrivasi.className = 'flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all bg-white text-blue-700 shadow-sm border border-slate-200 flex items-center justify-center gap-2';
+                try { history.replaceState(null, '', '#privasi'); } catch (e) {}
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.location.hash === '#syarat') {
+                switchDocTab('syarat');
+            }
+        });
+    </script>
 </body>
 </html>

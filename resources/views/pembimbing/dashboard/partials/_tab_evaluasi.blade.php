@@ -4,7 +4,7 @@
 <!-- Matriks Status Kelulusan Seluruh Penempatan -->
 <x-gentelella.x-panel
     title="Matriks Kelulusan & Penetapan Selesai ({{ $allPenempatanList->count() }} Mentee)"
-    subtitle="Pemantauan status magang, penetapan selesai masa bimbingan, dan masa tenggang akun (BR-10, BR-11)."
+    subtitle="Pemantauan status magang, penetapan selesai masa bimbingan, dan masa tenggang akun peserta."
 >
     <x-slot:actions>
         <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
