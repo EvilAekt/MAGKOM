@@ -48,15 +48,15 @@ Dokumentasi MAGKOM diorganisasikan ke dalam 5 pilar spesialisasi utama:
 
 ---
 
-## 👥 Tim Pengembang, Peran & Kontribusi Nyata (Contributors & Impact)
+## 👥 Tim Pengembang & Jobdesk (Contributors & Jobdesk)
 
-Pengembangan sistem **MagKom** diatur melalui kolaborasi 3 pengembang inti dengan pembagian domain, spesialisasi, dan jejak kontribusi nyata (*impact*):
+Sistem **MagKom** dikembangkan secara kolaboratif oleh 3 pengembang inti dengan pembagian peran dan tanggung jawab tugas:
 
-| Pengembang & Akun | Peran & Domain Utama | Kontribusi Nyata (Impact Proyek) | Wewenang Khusus |
-|---|---|---|---|
-| **Adhitya Galang**<br>[`@EvilAekt`](https://github.com/EvilAekt) | **Lead Software Architect & Security Lead** (*Project Owner*) | • Pencegahan *quota race condition* dengan atomic locking `lockForUpdate()`.<br>• Restrukturisasi arsitektur 24+ *Modular Actions* & *Specialized Queries*.<br>• Sistem Disaster Recovery Backup (`.sql.gz`) & mitigasi OWASP zero-leak.<br>• Alur *Unsubmit Workflow* tugas & pemeliharaan 740+ passing tests. | **Approval & Merge Final PR ke `main`**; Penandatangan rilis produksi (*Release Tagging*). |
-| **Aldi Artha Mida**<br>[`@aldiartha`](https://github.com/aldiartha) | **Fullstack Developer & Admin Systems Specialist** (*Admin Domain Lead*) | • Desain alur verifikasi berkas kandidat magang ber-SLA (*SLA Watchdog*).<br>• Otomasi penempatan peserta dua tahap & modal pembimbing *1-click reassign*.<br>• Standardisasi modul ekspor CSV, Excel XLSX, & PDF resmi ber-QR Code.<br>• Harmonisasi visual, popovers, dan tipografi pada 5 tabel data admin. | Pengelola teknis domain Administrasi Kominfo (`/admin/*`). |
-| **Naufal Febrian**<br>[`@NAUFALFEBRIAN62`](https://github.com/NAUFALFEBRIAN62) | **Frontend Specialist & UI/UX Interaction Engineer** (*Peserta Domain Lead*) | • Desain pengalaman pendaftar mobile-first & inovasi pendaftaran tim/kelompok.<br>• Implementasi modern Bento Grid Dashboard peserta & tugas classroom turn-in.<br>• Animasi *Sleman Splash Preloader*, *scroll reveal*, & interaktif roadmap magang.<br>• Penyelarasan tema gelap (*Dark Mode*) & penegakan Zero Inline CSS/JS di Blade. | Pengelola teknis antarmuka publik (`/`) dan portal peserta (`/peserta/*`). |
+| Akun GitHub | Peran & Jabatan | Jobdesk Utama |
+|---|---|---|
+| **[@EvilAekt](https://github.com/EvilAekt)**<br>(Adhitya Galang) | **Lead Software Architect & Security Lead**<br>*(Project Owner / Tech Lead)* | • Menetapkan arah arsitektur sistem, regulasi kedinasan, dan aturan bisnis definitif (*SSOT*).<br>• Mendesain skema tabel database, relasi kunci asing, dan transaksi locking kuota atomik (`lockForUpdate`).<br>• Mengelola arsitektur kernel, middleware otorisasi RBAC, service layer, dan pola Modular Actions & Queries.<br>• Memimpin otomatisasi pengujian (740+ tests di PHPUnit) dan memegang wewenang approval/merge final ke `main`. |
+| **[@aldiartha](https://github.com/aldiartha)**<br>(Aldi Artha Mida) | **Fullstack Developer & Admin Systems Specialist**<br>*(Admin & Placement Domain Lead)* | • Mengelola seluruh logika bisnis dan antarmuka modul Administrasi Kominfo (`/admin/*`).<br>• Merancang alur verifikasi berkas kandidat magang ber-SLA (*SLA Watchdog*) dan penerbitan Surat Penerimaan resmi.<br>• Mengembangkan sistem plotting penempatan dua tahap dan pembatasan beban bimbingan staf dinas (*mentee limiter*).<br>• Menyusun query pelaporan dan standardisasi format ekspor berkas spreadsheet kedinasan (CSV, Excel, PDF). |
+| **[@NAUFALFEBRIAN62](https://github.com/NAUFALFEBRIAN62)**<br>(Naufal Febrian) | **Frontend Specialist & UI/UX Interaction Engineer**<br>*(Public Portal & Peserta Domain Lead)* | • Mengembangkan antarmuka Blade dengan kepatuhan mutlak: **Zero Inline CSS/JS**.<br>• Merancang antarmuka publik dan portal peserta (`/peserta/*`) yang ergonomis, responsif, dan ramah perangkat mobile.<br>• Membangun dashboard modular Bento Grid, turn-in tugas classroom, dan pendaftaran tim/kelompok.<br>• Mengelola interaktivitas Vanilla JavaScript (ES Modules), animasi GSAP, dan harmonisasi Dark Mode (`DS-MagKom`). |
 
 ### Matriks RACI Pengembangan MagKom
 - **Penentuan Aturan Bisnis & Spesifikasi PRD**: Adhitya Galang (**A**), Aldi Artha Mida (**C**), Naufal Febrian (**C**)

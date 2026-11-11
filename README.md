@@ -41,51 +41,13 @@ MagKom menyatukan seluruh mata rantai administrasi tersebut ke dalam satu aplika
 
 ---
 
-## Tim Pengembang, Peran & Kontribusi Nyata (Project Contributors & Impact)
+## Tim Pengembang & Jobdesk
 
-Sistem informasi **MagKom** dibangun, dimodernisasi, dan dipelihara secara kolaboratif oleh 3 pengembang inti dengan pembagian domain arsitektural, peran spesifik, dan jejak kontribusi nyata (*tangible impact*) terhadap keberhasilan proyek:
-
-### 1. Adhitya Galang (`@EvilAekt` / `@Evil_Aekt`)
-- **Peran di Proyek**: **Lead Software Architect, Backend Core & Security Engineer** (*Project Owner / Technical Lead*)
-- **Impact Nyata Terhadap MagKom**:
-  - **Pencegahan Kritis Overbooking Kuota (*Zero Race Condition*)**: Merancang penguncian atomik basis data (`lockForUpdate()`) yang menjamin tidak ada kuota minus saat ribuan request pendaftaran masuk serentak.
-  - **Evolusi Modular Actions & Queries**: Mentransformasi controller monolitik ribuan baris menjadi 24+ *Modular Actions* (`app/Actions/`) dan *Specialized Queries* (`app/Queries/`) yang terisolasi dan mudah diuji.
-  - **Sistem Keamanan & Disaster Recovery**: Membangun mekanisme cadangan basis data mandiri (`.sql.gz`) dengan checksum SHA-256, isolasi otorisasi RBAC dinamis, signed URLs untuk dokumen privat, dan penegakan sanitasi jejak audit multi-kanal.
-  - **Workflow Batal Kirim Tugas (*Unsubmit*)**: Mengembangkan arsitektur penarikan tugas peserta untuk revisi berkas secara aman (*secure file reuse*) sebelum dinilai pembimbing.
-  - **Penjaminan Mutu & CI/CD**: Memimpin otomatisasi pengujian dengan capaian **740+ automated tests (111 test suites)** berkondisi 100% *passing* di PHP 8.3 strict types.
-- **Jobdesk Utama**:
-  - Menetapkan arah arsitektur sistem, regulasi kedinasan, dan aturan bisnis definitif (*SSOT*).
-  - Merancang skema tabel database, relasi kunci asing, dan transaksi locking kuota.
-  - Mengelola arsitektur kernel, middleware otorisasi, dan service layer inti.
-  - Wewenang tunggal persetujuan (*approval*) dan *merge* final Pull Request ke branch `main`.
-
-### 2. Aldi Artha Mida (`@aldiartha`)
-- **Peran di Proyek**: **Fullstack Developer & Administrative Systems Specialist** (*Admin & Placement Domain Lead*)
-- **Impact Nyata Terhadap MagKom**:
-  - **Modernisasi Alur Verifikasi Pendaftar**: Membangun antarmuka verifikasi kandidat modern (`admin-pendaftaran`) yang memangkas waktu seleksi berkas dari hitungan hari menjadi menit dengan integrasi pemantau SLA (*SLA Watchdog*).
-  - **Plotting Penempatan Cerdas Dua Tahap**: Mengotomatiskan pemetaan jurusan terhadap bidang dinas teknis serta mengembangkan modal penunjukan pembimbing dengan *1-click reassign* dan *bulk assignment*.
-  - **Standardisasi Ekspor Dokumen Kedinasan**: Membangun modul ekspor rekapitulasi data pendaftaran, penempatan, dan kinerja ASN ke format CSV, Excel XLSX, dan PDF resmi ber-QR Code dengan proteksi mitigasi *formula injection*.
-  - **Harmonisasi Antarmuka Data Admin**: Merekayasa ulang keselarasan visual, calendar popovers, tipografi, dan spasi kolom pada 5 data tables utama di modul Administrasi Kominfo.
-  - **Decommissioning Fitur Redundan**: Membersihkan residu fitur lawas seperti *waiting list* dan analitik tahunan guna menjaga performa database tetap optimal.
-- **Jobdesk Utama**:
-  - Mengelola seluruh logika bisnis dan antarmuka modul Administrasi Kominfo (`/admin/*`).
-  - Merancang alur verifikasi berkas ber-SLA dan penerbitan Surat Penerimaan resmi.
-  - Mengembangkan sistem pembagian beban bimbingan staf dinas (*mentee workload limiter*).
-  - Menyusun query pelaporan dan standardisasi format ekspor berkas spreadsheet.
-
-### 3. Naufal Febrian (`@NAUFALFEBRIAN62`)
-- **Peran di Proyek**: **Frontend Specialist & UI/UX Interaction Engineer** (*Public Portal & Peserta Domain Lead*)
-- **Impact Nyata Terhadap MagKom**:
-  - **Pengalaman Pendaftar Terpadu (*Mobile-First*)**: Merancang antarmuka publik dan portal peserta (`/peserta/*`) yang ergonomis, responsif, dan mudah diakses oleh siswa SMK serta mahasiswa via smartphone.
-  - **Inovasi Pendaftaran Tim / Kelompok**: Mengembangkan alur registrasi rombongan magang (ketua + anggota) dengan edukasi kuota atomik dan stepper multi-langkah yang transparan.
-  - **Modern Bento Grid Dashboard Peserta**: Membangun dashboard modular peserta yang menyatukan ringkasan masa magang, stepper logbook harian berbatas waktu mundur, kalender aktivitas, dan turn-in tugas ala Google Classroom.
-  - **Branding Visual Khas Pemkab Sleman**: Menciptakan animasi pembuka *Sleman Splash Preloader*, efek *dynamic scroll reveal*, dan interaktif *peta alur magang (diorama roadmap)* yang memperkuat identitas resmi instansi.
-  - **Harmonisasi Dark Mode & Design Tokens**: Mengimplementasikan 11 Master CSS Peeper Tokens (`DS-MagKom`) dan penyeragaman tema gelap lintas seluruh portal sistem.
-- **Jobdesk Utama**:
-  - Mengembangkan antarmuka Blade dengan kepatuhan mutlak: **Zero Inline CSS/JS**.
-  - Mengelola interaktivitas Vanilla JavaScript (ES Modules) dan animasi mikro berbasis GSAP.
-  - Memastikan aksesibilitas antarmuka memenuhi standar WCAG 2.1 AA dan kontras warna yang nyaman.
-  - Menguji pengalaman pengguna dan responsivitas layout di seluruh resolusi layar (Mobile, Tablet, Desktop).
+| Akun GitHub | Peran & Jabatan | Jobdesk Utama |
+| :--- | :--- | :--- |
+| **[@EvilAekt](https://github.com/EvilAekt)**<br>(Adhitya Galang) | **Lead Software Architect & Security Lead**<br>*(Project Owner / Tech Lead)* | • Menetapkan arah arsitektur sistem, regulasi kedinasan, dan aturan bisnis definitif (*SSOT*).<br>• Merancang skema tabel database, relasi kunci asing, dan transaksi locking kuota atomik (`lockForUpdate`).<br>• Mengelola arsitektur kernel, middleware otorisasi RBAC, service layer, dan pola Modular Actions & Queries.<br>• Memimpin otomatisasi pengujian (740+ tests di PHPUnit) dan memegang wewenang approval/merge final ke `main`. |
+| **[@aldiartha](https://github.com/aldiartha)**<br>(Aldi Artha Mida) | **Fullstack Developer & Admin Systems Specialist**<br>*(Admin & Placement Domain Lead)* | • Mengelola seluruh logika bisnis dan antarmuka modul Administrasi Kominfo (`/admin/*`).<br>• Merancang alur verifikasi berkas kandidat magang ber-SLA (*SLA Watchdog*) dan penerbitan Surat Penerimaan resmi.<br>• Mengembangkan sistem plotting penempatan dua tahap dan pembatasan beban bimbingan staf dinas (*mentee limiter*).<br>• Menyusun query pelaporan dan standardisasi format ekspor berkas spreadsheet kedinasan (CSV, Excel, PDF). |
+| **[@NAUFALFEBRIAN62](https://github.com/NAUFALFEBRIAN62)**<br>(Naufal Febrian) | **Frontend Specialist & UI/UX Interaction Engineer**<br>*(Public Portal & Peserta Domain Lead)* | • Mengembangkan antarmuka Blade dengan kepatuhan mutlak: **Zero Inline CSS/JS**.<br>• Merancang antarmuka publik dan portal peserta (`/peserta/*`) yang ergonomis, responsif, dan ramah perangkat mobile.<br>• Membangun dashboard modular Bento Grid, turn-in tugas classroom, dan pendaftaran tim/kelompok.<br>• Mengelola interaktivitas Vanilla JavaScript (ES Modules), animasi GSAP, dan harmonisasi Dark Mode (`DS-MagKom`). |
 
 ---
 
