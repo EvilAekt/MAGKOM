@@ -5,6 +5,17 @@ Format berkas ini mengacu pada panduan [Keep a Changelog](https://keepachangelog
 
 ---
 
+## [1.2.0] - 2026-11-11
+
+### Ditambahkan
+- **Penugasan Serentak Multi-Mentee (Batch Classroom Assignment)**: Pembimbing lapangan dapat menerbitkan tugas batch serentak ke beberapa mentee sekaligus dengan opsi instruksi dan lampiran yang terintegrasi (`CreateBatchTugasAction`).
+- **Pemisahan Arsitektur Landing CMS (`LandingCmsService`)**: Dekomposisi 700+ baris logika CMS dari controller ke service layer mandiri yang dilengkapi validasi form request terisolasi.
+- **Pengamanan CSP & Migrasi Health Monitor**: Penghapusan total 570+ baris script inline pada antarmuka telemetry SuperAdmin ke dalam Vanilla ES Module terisolasi (`resources/js/pages/superadmin/health-monitor.js`).
+- **Tata Kelola Tim Kolaborator & Repositori Resmi**: Penerbitan lisensi proprietary resmi Diskominfo (`LICENSE.md`), panduan kontribusi tim (`CONTRIBUTING.md`), kebijakan pelaporan keamanan (`SECURITY.md`), dan spesifikasi tim 3 kolaborator (User + 2 Rekan).
+- **Paritas Antarmuka Profil & Akun**: Penyeragaman layout profil fluid fullwidth dan struktur dropdown akun pada topbar di keempat peran pengguna.
+
+---
+
 ## [1.1.0] - 2026-11-10
 
 ### Ditambahkan

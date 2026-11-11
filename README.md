@@ -41,6 +41,18 @@ MagKom menyatukan seluruh mata rantai administrasi tersebut ke dalam satu aplika
 
 ---
 
+## Tim Pengembang & Struktur Kolaborasi
+
+Pengembangan, pemeliharaan arsitektur, dan penjaminan mutu sistem informasi **MagKom** dilaksanakan oleh tim pengembang inti dengan pembagian tugas, spesialisasi, dan batasan wewenang yang tegas:
+
+| Profil Pengembang | Peran & Jabatan | Tanggung Jawab Utama | Wewenang Khusus |
+| :--- | :--- | :--- | :--- |
+| **User (Lead Architect)** | *Lead Software Architect & Product Owner* | • Menetapkan arah arsitektur sistem, regulasi kedinasan, dan aturan bisnis definitif (*SSOT*).<br>• Mendesain skema basis data, integritas relasi, dan transaksi kuota atomik (`lockForUpdate`).<br>• Mengawasi arsitektur keamanan RBAC dinamis dan retensi jejak audit forensik. | **Approval & Merge Final PR ke `main`**; Penandatangan rilis produksi (*Release Tagging*). |
+| **Kolaborator 1 (Backend/Security)** | *Senior Backend & Security Engineer / DevOps* | • Mengimplementasikan pola *Modular Actions* (`app/Actions/`), *Specialized Queries* (`app/Queries/`), dan *Service Layer*.<br>• Menerapkan mitigasi keamanan OWASP Top 10 (CSRF, Anti-IDOR, Anti-Formula Injection, SQLi).<br>• Memelihara 740+ automated tests (PHPUnit/Pest), Laravel Pint (PSR-12), dan pipeline CI/CD. | Pengelola teknis direktori `app/`, `database/`, `routes/`, dan `tests/`. |
+| **Kolaborator 2 (Frontend/Docs)** | *Frontend Specialist & UI/UX / QA & Docs Engineer* | • Membangun antarmuka Blade dengan kepatuhan mutlak: **Zero Inline CSS/JS**.<br>• Mengelola token desain Vanilla CSS (`DS-MagKom`), Bento Grid, dan animasi GSAP.<br>• Menguji aksesibilitas WCAG 2.1 AA, responsivitas mobile, dan memelihara *living documentation* (`docs/`). | Pengelola teknis direktori `resources/css/`, `resources/js/`, dan `docs/`. |
+
+---
+
 ## Alur Kerja Sistem
 
 Sistem mengorganisir interaksi antar-pengguna dalam alur kerja empat pilar aktor:
@@ -98,8 +110,9 @@ flowchart TD
 - **Jalur Khusus Kedinasan**: Mengakomodasi penugasan magang kerja sama kelembagaan melalui alokasi slot internal yang terisolasi penuh dari kuota publik (*zero leak*).
 
 ### 3. Pelaksanaan Magang dan Pengendalian Aktivitas
-- **Logbook Harian Berbatas Waktu**: Peserta mencatat uraian pekerjaan dan bukti dokumentasi harian. Untuk mencegah pelaporan rapel di akhir masa magang, sistem memberlakukan batas mundur pengisian maksimal 3 hari kerja (`BR-09`).
-- **Tugas Terstruktur**: Pembimbing dapat menerbitkan instruksi penugasan dengan tenggat waktu. Status ketepatan penyerahan tugas dikalkulasi secara dinamis pada saat submission (`BR-16`).
+- **Logbook Harian Berbatas Waktu**: Peserta mencatat uraian pekerjaan dan bukti dokumentasi harian. Untuk mencegah pelaporan rapel di akhir masa magang, sistem memberlakukan batas mundur pengisian maksimal 3 hari kerja (`BR-09`) serta mendukung multi-lampiran dokumen pendukung.
+- **Tugas Terstruktur & Penugasan Serentak (Batch Classroom)**: Pembimbing dapat menerbitkan instruksi penugasan tunggal maupun tugas serentak (*batch*) ke multi-mentee sekaligus (`BR-19`) dengan tenggat waktu dan lampiran instruksi yang seragam. Status ketepatan penyerahan tugas dikalkulasi secara dinamis pada saat submission (`BR-16`).
+- **Alur Batal Kirim Tugas (Unsubmit Workflow)**: Peserta magang memiliki fleksibilitas untuk membatalkan penyerahan tugas (*unsubmit*) yang telah dikirimkan selama tugas tersebut belum dinilai oleh pembimbing (`BR-18`), memungkinkan revisi berkas tanpa perlu meminta pembatalan manual ke admin.
 - **Penyelesaian Masa Magang**: Pembimbing lapangan dapat menandai penyelesaian magang peserta setelah seluruh periode kerja dan target penugasan terpenuhi.
 
 ### 4. Pengawasan SLA Verifikasi Berkas (SLA Watchdog)
@@ -131,6 +144,11 @@ Aturan operasional sistem dikendalikan terpusat melalui panel SuperAdmin tanpa m
 12. Sakelar fitur analitik eksekutif tahunan.
 13. Sakelar fitur pendaftaran kelompok/tim.
 
+### 8. Desain Antarmuka Bento Grid Modern & Paritas Akun
+- **Bento Grid Architecture**: Tata letak dashboard interaktif modern pada modul Peserta dan Admin yang mengintegrasikan metrik utama, kalender presensi, linimasa progres, dan status tugas secara ergonomis.
+- **Sleman Splash Preloader & Micro-interactions**: Pengalaman transisi antar-halaman yang mulus dengan animasi pembuka berlogo khas Pemerintah Kabupaten Sleman serta interaksi berbasis GSAP.
+- **Paritas Pengaturan Akun & Profil**: Penyeragaman antarmuka profil pengguna fluid fullwidth, preferensi notifikasi, dan dropdown navigasi akun secara konsisten di seluruh 4 peran aktor.
+
 ---
 
 ## Peran Pengguna dan Hak Akses
@@ -149,14 +167,14 @@ Aturan operasional sistem dikendalikan terpusat melalui panel SuperAdmin tanpa m
 | Komponen | Rincian Spesifikasi |
 | :--- | :--- |
 | **Bahasa Pemrograman** | PHP 8.3.x (Type Hinting Ketat, `declare(strict_types=1);`) |
-| **Framework Backend** | Laravel 10.x |
+| **Framework Backend** | Laravel 10.x (Pola *Modular Actions & Specialized Queries Pattern*) |
 | **Basis Data** | MySQL 8.0+ / MariaDB (InnoDB Storage Engine, Foreign Keys, Transactions) |
 | **Frontend Pipeline** | Vite 6.x dengan Vanilla CSS Design Tokens dan Vanilla ES Modules |
 | **Penyimpanan Berkas** | Storage Disk Privat terproteksi Temporary Signed URLs |
 | **Standar Keamanan** | Proteksi CSRF, Anti-IDOR Authorization, Input Sanitization, Anti-Formula Injection, Header HTTP Terenkapsulasi (CSP, X-Frame-Options, X-Content-Type-Options) |
 | **Linter dan Formatter** | Laravel Pint (Standar PSR-12) |
 | **Analisis Statis** | Larastan / PHPStan Level 2 (Memory Limit 1G) |
-| **Framework Pengujian** | PHPUnit 10.x (Feature & Unit Tests dengan basis data SQLite in-memory) |
+| **Framework Pengujian** | PHPUnit 10.x (740+ Automated Feature & Unit Tests, 111 Test Suites dengan basis data SQLite in-memory) |
 
 ---
 
@@ -238,10 +256,11 @@ php artisan test
 ### Komponen Pengujian Utama
 - **`CoreFoundationTest`**: Pengujian integritas model, casting enumerasi, dan immutability audit log.
 - **`QuotaConcurrencyTest`**: Pengujian integritas transaksi atomik alokasi kuota pendaftaran.
-- **`AdminPenempatanDuaTahapTest`**: Pengujian alur penempatan peserta dua tahap dan filter antrean belum ditempatkan.
-- **`TugasLogbookTest`**: Pengujian batas mundur logbook harian dan kalkulasi keterlambatan tugas.
-- **`PredikatBatasValidationTest`**: Pengujian batasan validasi dan audit logging 13 parameter operasional SuperAdmin.
-- **`SuperAdminRolePermissionTest`**: Pengujian isolasi otorisasi matriks peran dinamis dan middleware boundary.
+- **`AdminPenempatanDuaTahapTest` & `AdminPenempatanArchitectureAndSecurityTest`**: Pengujian alur penempatan peserta dua tahap, locking atomik, dan rotasi pembimbing massal.
+- **`TugasLogbookTest` & `PesertaTugasBatalKirimTest`**: Pengujian batas mundur logbook, alur unsubmit tugas peserta, dan pencegahan manipulasi status tugas.
+- **`PembimbingTugasArchitectureSafetyTest` & `PesertaTugasClassroomUploadTest`**: Pengujian pemisahan controller ke Actions/Queries, penugasan batch classroom, dan penggunaan ulang lampiran.
+- **`PembimbingLaporanKinerjaExportArchitectureTest`**: Pengujian sanitasi formula injection pada ekspor CSV/XLSX kinerja peserta.
+- **`PredikatBatasValidationTest` & `SuperAdminRolePermissionTest`**: Pengujian batasan validasi 13 parameter operasional dan isolasi otorisasi RBAC dinamis.
 - **`EndToEndUatTest`**: Pengujian end-to-end skenario alur magang dari registrasi hingga penonaktifan akun pasca-magang.
 
 ---
@@ -251,36 +270,39 @@ php artisan test
 ```text
 MAGKOM/
 ├── app/
+│   ├── Actions/               # Kelas mutasi bisnis tunggal (Admin, Pembimbing, Peserta)
 │   ├── Console/Commands/      # Perintah CLI dan tugas terjadwal
+│   ├── Exports/               # Format ekspor spreadsheet terproteksi (CSV, Excel)
 │   ├── Http/
-│   │   ├── Controllers/       # HTTP controller per modul aktor
+│   │   ├── Controllers/       # Skinny HTTP controllers
 │   │   ├── Middleware/        # Middleware autentikasi, verifikasi peran, dan CSP
 │   │   └── Requests/          # Validasi form request terpusat
 │   ├── Models/                # Model Eloquent dan relasi basis data
-│   └── Services/              # Logika bisnis terisolasi (Placement, Audit, Metrics)
+│   ├── Queries/               # Specialized query objects (filter, sorting, paginasi)
+│   └── Services/              # Logika bisnis terisolasi (Placement, Audit, Metrics, CMS)
 ├── database/
 │   ├── migrations/            # Berkas migrasi skema basis data
 │   └── seeders/               # Seeder data master dan pengguna awal
 ├── docs/
 │   ├── README.md              # Peta navigasi pusat dokumentasi
 │   ├── PRODUCT.md             # Spesifikasi produk & batasan sistem
-│   ├── 01-PRD-MagKom.md       # Product Requirements Document
-│   ├── 02-TDD-MagKom.md       # Technical Design Document
+│   ├── 01-PRD-MagKom.md       # Product Requirements Document (PRD v1.3)
+│   ├── 02-TDD-MagKom.md       # Technical Design Document (TDD v1.4)
 │   ├── 04-SKEMA-DATABASE...   # Skema basis data dan kamus data
 │   ├── 05-KEAMANAN-RBAC...    # Matriks keamanan dan otorisasi
-│   ├── 08-DOKUMENTASI-LENGKAP... # Dokumentasi fitur & modul sistem
+│   ├── 08-DOKUMENTASI-LENGKAP... # Dokumentasi fitur & modul sistem komprehensif
 │   ├── DEVELOPMENT-GUIDE.md   # Panduan instalasi dan quality gates
 │   └── FRONTEND-ARCHITECTURE.md # Arsitektur aset Vite dan panduan Blade
 ├── resources/
-│   ├── css/                   # Stylesheet Vanilla CSS scoped per modul
-│   ├── js/                    # Modul Vanilla JavaScript (ES Modules)
-│   └── views/                 # Template Blade modular
+│   ├── css/                   # Stylesheet Vanilla CSS scoped per modul (DS-MagKom)
+│   ├── js/                    # Modul Vanilla JavaScript (ES Modules & GSAP)
+│   └── views/                 # Template Blade modular (Zero inline CSS/JS)
 ├── routes/
 │   └── web.php                # Definisi rute aplikasi
 ├── tests/
-│   └── Feature/               # 740+ automated feature tests
+│   └── Feature/               # 740+ automated feature tests (111 test suites)
 ├── CHANGELOG.md               # Catatan rilis dan riwayat versi
-├── CONTRIBUTING.md            # Panduan kontribusi pengembang
+├── CONTRIBUTING.md            # Panduan kontribusi pengembang & struktur tim
 ├── LICENSE.md                 # Lisensi kepemilikan dan hak cipta
 ├── README.md                  # Halaman utama repositori
 └── SECURITY.md                # Kebijakan pelaporan kerentanan keamanan

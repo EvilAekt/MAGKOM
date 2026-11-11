@@ -39,11 +39,11 @@ resources/
 │   └── pages/                          <-- Page-Scoped Stylesheets (Vite Entry Points)
 │       ├── public/                     <-- landing.css, landing-faq.css, panduan-alur.css, peta-alur.css
 │       ├── superadmin/                 <-- dashboard.css, audit-log.css, site-editor.css, role-index.css, superadmin-common.css
-│       ├── admin/                      <-- dashboard.css
+│       ├── admin/                      <-- dashboard.css, pendaftaran-show.css
 │       ├── pembimbing/                 <-- dashboard.css, peserta-index.css, peserta-show.css (Profil 360),
 │       │                                   tugas-create.css, tugas-edit.css, tugas-index.css, tugas-review.css,
 │       │                                   logbook-index.css, laporan-kinerja-index.css
-│       └── peserta/                    <-- dashboard.css, pendaftaran-index.css, pemberkasan.css, profil-show.css,
+│       └── peserta/                    <-- dashboard.css (Bento), pendaftaran-index.css, pemberkasan.css, profil-show.css,
 │                                           tugas-index.css, tugas-detail.css, logbook-index.css
 │
 └── js/
@@ -61,14 +61,17 @@ resources/
     │
     ├── services/                       <-- Network & Realtime & Animasi
     │   ├── realtime.js                 <-- Secure SSE Client (RFC 8895)
-    │   └── superadmin-motion.js        <-- GSAP Timeline & Micro-Interactions
+    │   └── superadmin-motion.js        <-- GSAP Timeline & Micro-Interactions Engine
     │
     └── pages/                          <-- Page-Specific Interactivity (Vite Entry Points)
         ├── public/                     <-- landing.js, landing-canvas-runtime.js, panduan-alur.js, peta-alur.js
-        ├── superadmin/                 <-- dashboard.js, cms-builder.js, site-editor/editor-app.js, role-index.js, slot-khusus.js
+        ├── superadmin/                 <-- dashboard.js, health-monitor.js (Zero Inline CSP), cms-builder.js,
+        │                                   site-editor/editor-app.js, role-index.js, slot-khusus.js, akun-index.js,
+        │                                   staf-index.js, bidang-index.js, jurusan-index.js, bulan-index.js
+        ├── admin/                      <-- dashboard.js
         ├── pembimbing/                 <-- dashboard.js, peserta-index.js, peserta-show.js, tugas-create.js, tugas-edit.js,
         │                                   tugas-index.js, tugas-review.js, logbook-index.js, laporan-kinerja-index.js
-        └── peserta/                    <-- tugas-detail.js, tugas-index.js, logbook-index.js, profil-show.js
+        └── peserta/                    <-- dashboard.js (Bento), tugas-detail.js, tugas-index.js, logbook-index.js, profil-show.js
 ```
 
 ---

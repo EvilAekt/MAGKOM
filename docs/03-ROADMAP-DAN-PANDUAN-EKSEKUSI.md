@@ -239,12 +239,22 @@ gantt
 - [ ] **F-19 (OAuth Facebook Social Login)**: Menyusul setelah integrasi Google stabil dan verifikasi aplikasi Meta selesai (opsional/future release).
 - [x] **Automated Feature Test**: `tests/Feature/ReleaseThreeSocialLoginTest.php` lulus 100% (11 tests, 57 assertions).
 
+### Gelombang Penguatan Arsitektur Lanjutan & Modularisasi (November 2026) — [SELESAI 100%]
+- [x] **Dekomposisi Modular Actions & Specialized Queries**: Restrukturisasi controller tebal menjadi kelas mutasi bisnis tunggal (`app/Actions/`) dan query objek terspesialisasi (`app/Queries/`) pada seluruh modul Admin, Pembimbing, dan Peserta.
+- [x] **Fitur Batal Kirim Tugas Peserta (Unsubmit Workflow)**: Implementasi alur penarikan tugas mandiri bagi peserta untuk revisi berkas submission sebelum dinilai pembimbing (`BR-22`).
+- [x] **Penugasan Serentak Multi-Mentee (Batch Classroom Assignment)**: Fitur pembuatan tugas serentak bagi pembimbing lapangan ke banyak mentee aktif sekaligus dalam satu form submit (`BR-23`).
+- [x] **Modernisasi Bento Grid Dashboard & Preloader Sleman**: Perancangan ulang dashboard Peserta dan Admin dengan komponen kartu bento modular, kalender presensi, dan splash screen animasi khas Pemkab Sleman.
+- [x] **Pemisahan Arsitektur Landing CMS & Kepatuhan Penuh CSP**: Dekomposisi 700+ baris logika CMS ke `LandingCmsService` serta migrasi telemetri Health Monitor ke Vanilla ES Module mandiri (`health-monitor.js`) tanpa inline script.
+- [x] **Standardisasi Ekspor Data Kinerja**: Pembangunan modul ekspor CSV dan Excel XLSX terproteksi anti-formula injection untuk penilaian dan portofolio ASN.
+- [x] **Peningkatan Automated Test Suite**: Ekspansi pengujian otomatis hingga mencapai **740+ automated tests (111 test files)** dengan kelulusan 100%.
+
 ---
 
 ## 5. Ringkasan Keterkaitan Dokumen
 
 Untuk navigasi lebih dalam, silakan buka:
-- 📄 Spesifikasi Kebutuhan Lengkap: [`01-PRD-MagKom.md`](./01-PRD-MagKom.md)
-- 🛠️ Desain Arsitektur & Teknis: [`02-TDD-MagKom.md`](./02-TDD-MagKom.md)
+- 📄 Spesifikasi Kebutuhan Lengkap: [`01-PRD-MagKom.md`](./01-PRD-MagKom.md) (PRD v1.3)
+- 🛠️ Desain Arsitektur & Teknis: [`02-TDD-MagKom.md`](./02-TDD-MagKom.md) (TDD v1.4)
+- 📦 Spesifikasi Fitur Modular Komprehensif: [`08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md`](./08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md)
 - 🗄️ Kamus Data & Skema Database: [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md)
 - 🔒 Blueprint Keamanan, RBAC & Audit: [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](./05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md)

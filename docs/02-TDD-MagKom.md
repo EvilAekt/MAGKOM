@@ -4,10 +4,10 @@
 
 | Metadata | Keterangan |
 |---|---|
-| **Versi** | 1.2 (Adendum Pendaftaran Kelompok, Modul Dinamis, Asset Pipeline Vite 6 & Modular Frontend, dan 31 Domain Models) |
-| **Tanggal** | 2 November 2026 |
+| **Versi** | 1.4 (Pola Modular Actions, Specialized Queries, Decoupled CMS Architecture, dan 740+ Automated Feature Tests) |
+| **Tanggal** | 11 November 2026 |
 | **Status** | Approved Engineering Baseline |
-| **Pendamping** | [`01-PRD-MagKom.md`](./01-PRD-MagKom.md) v1.3. PRD menjelaskan **apa dan mengapa**; dokumen ini menjelaskan **bagaimana** membangunnya |
+| **Pendamping** | [`01-PRD-MagKom.md`](./01-PRD-MagKom.md) v1.3 & [`08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md`](./08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md). PRD menjelaskan **apa dan mengapa**; dokumen ini menjelaskan **bagaimana** membangunnya |
 | **Pembaca** | Developer, reviewer kode, dan tim infrastruktur |
 | **Status kode contoh** | Kode di dokumen ini adalah **ilustrasi pola**, bukan kode final. Nama kolom dan kelas mengikuti dokumen ini; detail mengikuti kondisi proyek |
 
@@ -77,13 +77,17 @@ Banyak tutorial dan paket terbaru ditulis untuk Laravel 11 ke atas. Padanan yang
 
 ## 4. Arsitektur dan Struktur Direktori
 
-Arsitektur: monolit Laravel server-rendered dengan pola:  
-**Route → Middleware → Controller (tipis) → Form Request → Service → Model**.  
-Otorisasi lewat Policy; logika bisnis terpusat di Service.
+Arsitektur: monolit Laravel server-rendered dengan pola modular:  
+**Route → Middleware → Form Request → Controller (tipis) → Action / Query / Service → Model**.  
+Otorisasi lewat Policy; mutasi bisnis terisolasi di Action; pembacaan/filter kompleks di Query; kalkulasi domain di Service.
 
 ```text
 magkom/
 ├── app/
+│   ├── Actions/                          # 24+ Kelas Mutasi Bisnis Tunggal (Single Responsibility)
+│   │   ├── Admin/                        # AssignPesertaAction, PutuskanPendaftaranAction, StoreKuotaAction, dll.
+│   │   ├── Pembimbing/                   # CreateBatchTugasAction, ReviewLogbookAction, MarkTugasCompletedAction
+│   │   └── Peserta/                      # AjukanPendaftaranAction, BatalkanPendaftaranAction, CreateLogbookAction
 │   ├── Console/
 │   │   ├── Kernel.php                    # Penjadwalan harian
 │   │   └── Commands/                     # NonaktifkanPesertaSelesai
@@ -93,6 +97,9 @@ magkom/
 │   │                                     # StatusLogbookEnum, StatusPenilaianEnum, TipeAuditEnum
 │   ├── Exceptions/Domain/                # KuotaPenuhException, StatusSudahBerubahException,
 │   │                                     # BebanPembimbingPenuhException, SlotKhususTidakTersediaException
+│   ├── Exports/                          # Format ekspor spreadsheet terproteksi (CSV, Excel)
+│   │   ├── Admin/                        # RekapSuratDiterimaExport
+│   │   └── Pembimbing/                   # LaporanKinerjaCsvExport, LaporanKinerjaExcelExport
 │   ├── Http/
 │   │   ├── Controllers/
 │   │   │   ├── Public/                   # LandingController, KebijakanPrivasiController, HealthController
@@ -113,7 +120,7 @@ magkom/
 │   │   │                                 # TugasController, LogbookController
 │   │   ├── Middleware/                   # EnsureUserHasRole, EnsureParticipantWritable,
 │   │   │                                 # EnsurePasswordChanged, LogAuditTrail, SecurityHeaders, SuperAdminReadOnly
-│   │   └── Requests/                     # Form Request per aksi tulis
+│   │   └── Requests/                     # Form Request per aksi tulis & validasi otorisasi
 │   ├── Models/                           # 25 Domain Model Aktif (User, PesertaProfil, KelompokMagang, KelompokAnggota,
 │   │                                     # Jurusan, Bidang, BidangJurusan, BulanMagang, Kuota, SlotKhusus, Pendaftaran,
 │   │                                     # Dokumen, JenisDokumen, DokumenVerifikasi, Penempatan, Tugas, TugasTemplate,
@@ -121,21 +128,26 @@ magkom/
 │   │                                     # Pengaturan, Permission, RolePermission)
 │   ├── Policies/                         # PendaftaranPolicy, DokumenPolicy, PenempatanPolicy,
 │   │                                     # TugasPolicy, LogbookPolicy
+│   ├── Queries/                          # Specialized Read Queries (Filter, Sorting, Search, Paginasi)
+│   │   ├── Admin/                        # PendaftaranIndexQuery, PenempatanAntreanQuery, KuotaIndexQuery
+│   │   ├── Pembimbing/                   # TugasIndexQuery, LogbookIndexQuery, LaporanKinerjaQuery
+│   │   └── Peserta/                      # LogbookIndexQuery, PendaftaranIndexQuery, PesertaProfilQuery
 │   ├── Services/                         # QuotaAllocationService, PlacementService, BulanStatusService,
 │   │                                     # MasaTenggangService, AuditService, AuditedService (abstract base),
+│   │                                     # LandingCmsService, SuratPenerimaanService, XlsxExportService,
 │   │                                     # BackupDatabaseService, DatabaseInspectorService, SecuritySweepService,
 │   │                                     # LandingBlockRegistry, BlockSchemaValidator, ReusableBlockService,
 │   │                                     # LandingPageDocumentService, LandingCmsStagingService
 │   ├── Support/                          # Pengaturan, PeriodeMagang
 │   └── Providers/                        # AppServiceProvider, AuthServiceProvider
-├── resources/
+│   resources/
 │   ├── css/                              # Vanilla CSS scoped: base/, components/, layouts/, pages/, app.css
 │   ├── js/                               # Vanilla ES Modules: components/, pages/, services/, app.js
 │   └── views/                            # Blade markup-only (bebas inline <style> dan <script>)
 ├── database/                             # Migrations, factories, seeders
 ├── storage/app/private/documents/        # Berkas pendaftar dan lampiran logbook (disk privat)
 ├── routes/web.php
-├── vite.config.js                        # Bundler Vite 6 dengan 48 scoped entry points
+├── vite.config.js                        # Bundler Vite 6 dengan 50+ scoped entry points
 └── config/
 ```
 
@@ -147,11 +159,13 @@ magkom/
 
 | Lapisan | Boleh | Tidak Boleh |
 |---|---|---|
-| **Controller** | Menerima request, memanggil `authorize()`, memanggil Service, return view / redirect | Menulis query bisnis, menghitung kalkulasi bisnis |
-| **Form Request** | Validasi struktur data dan otorisasi dasar | Memodifikasi database |
-| **Service** | Aturan bisnis, DB Transaction, penulisan audit | Mengakses `request()` atau `session()` secara langsung |
-| **Model** | Relasi Eloquent, casting, accessor / mutator sederhana, local scopes | Logika orchestration lintas-model |
-| **Policy** | Memvalidasi kepemilikan data per record | Query agregasi berat |
+| **Controller** | Menerima HTTP request, memanggil `authorize()`, mendelegasikan ke Action/Query/Service, return view / redirect | Menulis query builder panjang, logika mutasi data langsung, kalkulasi domain |
+| **Form Request** | Validasi struktur data dan otorisasi dasar pengguna | Memodifikasi basis data langsung |
+| **Action (`app/Actions/`)** | Menjalankan mutasi bisnis tunggal (Create/Update/Delete), DB transaction, memicu audit trail log | Melakukan rendering tampilan HTML, membaca `session()` atau `request()` langsung |
+| **Query (`app/Queries/`)** | Isolasi filter kompleks, sorting, eager loading, pencarian teks, paginasi | Mengubah state atau memodifikasi data database (read-only) |
+| **Service (`app/Services/`)** | Aturan bisnis lintas entitas, kalkulasi SLA & metrik, ekspor file spreadsheet, integrasi eksternal | Mengakses `request()` atau `session()` secara langsung |
+| **Model** | Relasi Eloquent, casting atribut, accessor / mutator sederhana, local query scopes | Logika orkestrasi mutasi bisnis lintas-model |
+| **Policy** | Memvalidasi kepemilikan data per record (*fine-grained authorization*) | Menjalankan query agregasi berat di dalam loop |
 
 ### 5.2 RBAC dan Policy
 
@@ -463,6 +477,77 @@ class NonaktifkanPesertaSelesai extends Command
     }
 }
 ```
+
+### 5.9 Pola Arsitektur Modular Actions & Specialized Queries
+
+Untuk mematuhi prinsip *Single Responsibility Principle* (SRP) dan mencegah controller membengkak (*Skinny Controllers*), sistem mengadopsi pemisahan tugas mutasi dan pembacaan data:
+
+```
+HTTP Request → Middleware/Policy → Form Request → Controller → Action / Query / Service → Eloquent Model → Database
+```
+
+#### A. Kelas Aksi Mutasi Data (`app/Actions/`)
+Setiap mutasi data dibungkus dalam satu kelas Action mandiri yang mengekspos method publik `execute()`. Kelas Action bertanggung jawab atas integritas transaksi atomik (`DB::transaction`) dan pencatatan audit log forensik (`AuditService`).
+- **`App\Actions\Admin\`**:
+  - `AssignPesertaAction`, `CancelPenempatanAction`: Penempatan peserta dua tahap.
+  - `PutuskanPendaftaranAction`: Keputusan verifikasi berkas (Diterima / Ditolak / Perlu Perbaikan).
+  - `StoreKuotaAction`, `UpdateKuotaAction`, `ToggleKuotaAction`: Mutasi kuota jurusan.
+  - `BulkReassignPembimbingAction`: Rotasi massal pembimbing lapangan.
+- **`App\Actions\Pembimbing\`**:
+  - `CreateBatchTugasAction`: Penugasan serentak multi-mentee ala classroom.
+  - `ReviewTugasProgresAction` & `MarkTugasCompletedAction`: Validasi progres dan penyelesaian tugas.
+  - `ReviewLogbookAction` & `BulkReviewLogbookAction`: Validasi presensi aktivitas harian mentee.
+- **`App\Actions\Peserta\`**:
+  - `AjukanPendaftaranAction`, `BatalkanPendaftaranAction`: Pengajuan dan penarikan pendaftaran.
+  - `CreateLogbookAction` & `UpdateLogbookAction`: Pengisian dan revisi aktivitas harian/mingguan.
+  - `UpdatePesertaProfilAction`: Pembaruan biodata dinamis peserta.
+
+Contoh implementasi Action:
+```php
+namespace App\Actions\Pembimbing\Tugas;
+
+use App\Models\Tugas;
+use App\Models\User;
+use App\Services\AuditService;
+use Illuminate\Support\Facades\DB;
+
+class CreateBatchTugasAction
+{
+    public function __construct(protected AuditService $audit) {}
+
+    public function execute(User $pembimbing, array $validatedData, array $penempatanIds): int
+    {
+        return DB::transaction(function () use ($pembimbing, $validatedData, $penempatanIds) {
+            $count = 0;
+            foreach ($penempatanIds as $penempatanId) {
+                $tugas = Tugas::create(array_merge($validatedData, [
+                    'penempatan_id' => $penempatanId,
+                ]));
+                $this->audit->aksi($pembimbing, 'tugas.batch_create', $tugas);
+                $count++;
+            }
+            return $count;
+        });
+    }
+}
+```
+
+#### B. Kelas Query Terspesialisasi (`app/Queries/`)
+Operasi pembacaan data yang melibatkan filter kompleks, relasi multi-tabel, sorting berurutan, dan paginasi diisolasi ke dalam query classes tersendiri:
+- **`App\Queries\Admin\`**: `PendaftaranIndexQuery`, `PenempatanAntreanQuery`, `PenempatanIndexQuery`, `KuotaIndexQuery`.
+- **`App\Queries\Pembimbing\`**: `TugasIndexQuery`, `LogbookIndexQuery`, `PenempatanAktifQuery`, `LaporanKinerjaQuery`.
+- **`App\Queries\Peserta\`**: `LogbookIndexQuery`, `PendaftaranIndexQuery`, `PesertaProfilQuery`.
+
+### 5.10 Pemisahan Arsitektur Landing CMS (`LandingCmsService`)
+Untuk menjaga performa dan keterbacaan kode, logika manajemen konten landing page visual dipisahkan dari `LandingCmsController` (~800+ baris) ke dalam `LandingCmsService` (~708 baris) dan `UpdateLandingCmsRequest` (~170 baris):
+1. **Schema Validation**: Memvalidasi integritas atribut blok JSON kanvas publik.
+2. **Media & Reusable Block Resolver**: Mengelola relasi aset media dan blok yang dapat digunakan kembali (*reusable blocks*).
+3. **Staging & Production Rollback**: Menangani isolasi draf staging sebelum dipublikasikan ke rute publik `/`.
+
+### 5.11 Pengamanan CSP & Migrasi Health Monitor Modular
+Sesuai kepatuhan **Golden Guardrails (Zero Inline Frontend)**, seluruh kode JavaScript telemetri server pada antarmuka SuperAdmin (`resources/views/superadmin/health/index.blade.php`) telah didekomposisi total dari script inline ke modular ES Module:
+- Berkas JS: `resources/js/pages/superadmin/health-monitor.js` (557 baris kode terstruktur).
+- Menerapkan arsitektur *Event Delegation*, fetch API aman dengan token CSRF otomatis, sanitasi DOM berbasis `textContent`, dan penghapusan atribut `onclick` langsung dari markup Blade.
 
 ---
 

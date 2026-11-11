@@ -22,6 +22,8 @@ Sistem membedakan hak akses secara ketat berdasarkan 4 peran resmi: **SuperAdmin
 | Verifikasi berkas pendaftar (Diterima / Ditolak) | **Ya** | **Ya** | – | – | Middleware `role:admin,superadmin` |
 | Plotting penempatan & reassign pembimbing | **Ya** | **Ya** | – | – | Middleware `role:admin,superadmin` |
 | Beri tugas & review progres tugas mentee | **Lihat** | – | **Ya** | – | `TugasPolicy` (SuperAdmin ditolak mutasi) |
+| Terbitkan tugas serentak (*batch classroom*) | – | – | **Ya** | – | `CreateBatchTugasAction` & `TugasPolicy` |
+| Batal kirim penyerahan tugas (*unsubmit*) | – | – | – | **Ya** | `TugasPolicy@unsubmit` (selama belum dinilai) |
 | Review & minta revisi logbook mingguan | **Lihat** | – | **Ya** | – | `LogbookPolicy` (SuperAdmin ditolak mutasi) |
 | Tetapkan status penempatan Selesai (1-Klik) | **Lihat** | – | **Ya** | – | `PembimbingPesertaController@selesai` |
 | Ekspor portofolio kinerja ASN (PDF/Excel) | **Lihat** | – | **Ya** | – | Controller & Policy Pembimbing |
@@ -111,6 +113,10 @@ Fasilitas cadangan basis data pada [BackupController.php](../app/Http/Controller
 Setiap mutasi entitas bisnis dicatat secara otomatis ke tabel `audit_log` melalui `AuditService` dan `AuditedService` (abstract base):
 - **4 Tipe Rekaman**: `auth` (login/logout/failed), `aksi` (create/update/delete form), `service` (eksekusi domain service logic), `akses_data` (unduh dokumen/ekspor).
 - **4 Kanal Aliran (Channels)**: `auth`, `pendaftaran`, `penempatan`, `system`.
+- **Event Audit Mutasi Baru (November 2026)**:
+  - `tugas.unsubmit`: Tercatat saat peserta membatalkan submission pengerjaan tugas (`BR-22`).
+  - `tugas.batch_create`: Tercatat saat pembimbing menerbitkan tugas massal ke multi-mentee (`BR-23`).
+  - `penempatan.reassign_bulk`: Tercatat saat admin merotasi beberapa pembimbing sekaligus.
 - **Sanitasi Otomatis Data Rahasia**: Seluruh kata sandi, password awal, token OAuth, dan kredensial disensor rekursif (`***REDACTED***`) sebelum payload JSON disimpan ke basis data.
 - **Anti-Formula Injection**: Ekspor riwayat audit log ke format CSV memformat karakter formula spreadsheet (`=`, `+`, `-`, `@`) dengan prepended apostrof (`'`) untuk melindungi perangkat administrator.
 
