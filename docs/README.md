@@ -48,25 +48,25 @@ Dokumentasi MAGKOM diorganisasikan ke dalam 5 pilar spesialisasi utama:
 
 ---
 
-## 👥 Tim Pengembang & Tata Kelola Kolaborasi
+## 👥 Tim Pengembang, Peran & Kontribusi Nyata (Contributors & Impact)
 
-Pengembangan sistem **MagKom** diatur melalui kolaborasi 3 peran terdefinisi dengan pembagian matriks tanggung jawab RACI:
+Pengembangan sistem **MagKom** diatur melalui kolaborasi 3 pengembang inti dengan pembagian domain, spesialisasi, dan jejak kontribusi nyata (*impact*):
 
-| Profil Personil | Jabatan Proyek | Fokus Area | Batasan & Wewenang |
+| Pengembang & Akun | Peran & Domain Utama | Kontribusi Nyata (Impact Proyek) | Wewenang Khusus |
 |---|---|---|---|
-| **User (Lead Architect)** | *Lead Software Architect & Product Owner* | • Arah arsitektur teknis dan aturan bisnis (*SSOT*).<br>• Desain skema basis data & integritas kuota atomik.<br>• Otorisasi keamanan RBAC dan retensi jejak audit. | **Approval & Merge Final PR ke `main`**; Penandatangan rilis produksi (*Release Tagging*). |
-| **Kolaborator 1 (Backend/Security)** | *Senior Backend & Security Engineer / DevOps* | • Pola *Modular Actions* (`app/Actions/`) & *Queries* (`app/Queries/`).<br>• Mitigasi OWASP Top 10 (CSRF, Anti-IDOR, Anti-SQLi).<br>• Pemeliharaan 740+ automated tests (PHPUnit/Pest) & CI/CD. | Pengelola direktori `app/`, `database/`, `routes/`, dan `tests/`. |
-| **Kolaborator 2 (Frontend/Docs)** | *Frontend Specialist & UI/UX / QA & Docs Engineer* | • Presentasi Blade: **Zero Inline CSS/JS**.<br>• Desain token Vanilla CSS (`DS-MagKom`), Bento Grid & GSAP.<br>• Aksesibilitas WCAG 2.1 AA, mobile QA, dan *living docs*. | Pengelola direktori `resources/css/`, `resources/js/`, dan `docs/`. |
+| **Adhitya Galang**<br>[`@EvilAekt`](https://github.com/EvilAekt) | **Lead Software Architect & Security Lead** (*Project Owner*) | • Pencegahan *quota race condition* dengan atomic locking `lockForUpdate()`.<br>• Restrukturisasi arsitektur 24+ *Modular Actions* & *Specialized Queries*.<br>• Sistem Disaster Recovery Backup (`.sql.gz`) & mitigasi OWASP zero-leak.<br>• Alur *Unsubmit Workflow* tugas & pemeliharaan 740+ passing tests. | **Approval & Merge Final PR ke `main`**; Penandatangan rilis produksi (*Release Tagging*). |
+| **Aldi Artha Mida**<br>[`@aldiartha`](https://github.com/aldiartha) | **Fullstack Developer & Admin Systems Specialist** (*Admin Domain Lead*) | • Desain alur verifikasi berkas kandidat magang ber-SLA (*SLA Watchdog*).<br>• Otomasi penempatan peserta dua tahap & modal pembimbing *1-click reassign*.<br>• Standardisasi modul ekspor CSV, Excel XLSX, & PDF resmi ber-QR Code.<br>• Harmonisasi visual, popovers, dan tipografi pada 5 tabel data admin. | Pengelola teknis domain Administrasi Kominfo (`/admin/*`). |
+| **Naufal Febrian**<br>[`@NAUFALFEBRIAN62`](https://github.com/NAUFALFEBRIAN62) | **Frontend Specialist & UI/UX Interaction Engineer** (*Peserta Domain Lead*) | • Desain pengalaman pendaftar mobile-first & inovasi pendaftaran tim/kelompok.<br>• Implementasi modern Bento Grid Dashboard peserta & tugas classroom turn-in.<br>• Animasi *Sleman Splash Preloader*, *scroll reveal*, & interaktif roadmap magang.<br>• Penyelarasan tema gelap (*Dark Mode*) & penegakan Zero Inline CSS/JS di Blade. | Pengelola teknis antarmuka publik (`/`) dan portal peserta (`/peserta/*`). |
 
 ### Matriks RACI Pengembangan MagKom
-- **Penentuan Aturan Bisnis & Spesifikasi PRD**: User (**A**), Backend (**C**), Frontend (**C**)
-- **Desain Skema Basis Data & Konkurensi Kuota**: User (**A/R**), Backend (**R**), Frontend (**I**)
-- **Implementasi Modular Actions, Queries & Services**: User (**A**), Backend (**R**), Frontend (**I**)
-- **Pengerasan Keamanan & Validasi Otorisasi**: User (**A**), Backend (**R**), Frontend (**I**)
-- **Pengembangan Blade, Bento Grid & CSS Tokens**: User (**A**), Backend (**C**), Frontend (**R**)
-- **Pemeliharaan Test Suite Otomatis (740+ Tests)**: User (**A**), Backend (**R**), Frontend (**C**)
-- **Pemeliharaan Living Docs & Changelog**: User (**A**), Backend (**C**), Frontend (**R**)
-- **Review Kode Pull Request & Merge ke `main`**: User (**A**), Backend (**R**), Frontend (**R**)
+- **Penentuan Aturan Bisnis & Spesifikasi PRD**: Adhitya Galang (**A**), Aldi Artha Mida (**C**), Naufal Febrian (**C**)
+- **Desain Skema Basis Data & Konkurensi Kuota**: Adhitya Galang (**A/R**), Aldi Artha Mida (**R**), Naufal Febrian (**I**)
+- **Implementasi Modular Actions, Queries & Services**: Adhitya Galang (**A**), Aldi Artha Mida (**R**), Naufal Febrian (**I**)
+- **Pengerasan Keamanan & Validasi Otorisasi**: Adhitya Galang (**A**), Aldi Artha Mida (**R**), Naufal Febrian (**I**)
+- **Pengembangan Blade, Bento Grid & CSS Tokens**: Adhitya Galang (**A**), Aldi Artha Mida (**C**), Naufal Febrian (**R**)
+- **Pemeliharaan Test Suite Otomatis (740+ Tests)**: Adhitya Galang (**A**), Aldi Artha Mida (**R**), Naufal Febrian (**C**)
+- **Pemeliharaan Living Docs & Changelog**: Adhitya Galang (**A**), Aldi Artha Mida (**C**), Naufal Febrian (**R**)
+- **Review Kode Pull Request & Merge ke `main`**: Adhitya Galang (**A**), Aldi Artha Mida (**R**), Naufal Febrian (**R**)
 
 ---
 

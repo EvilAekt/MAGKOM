@@ -94,8 +94,8 @@ Semua pemeriksaan di atas harus lolos tanpa *warning* kritis sebelum kode dapat 
 
 Setiap *Pull Request* yang diajukan wajib mereferensikan issue/task dan di-review oleh kolaborator sesuai domain tanggung jawab:
 
-| Anggota Tim | Peran | Domain Review & Kewenangan |
+| Anggota Tim & Akun | Peran Proyek | Domain Review & Kewenangan |
 |---|---|---|
-| **User (Lead Architect)** | *Lead Architect & Product Owner* | • **Wewenang Mutlak Approval & Merge ke `main`**.<br>• Review integritas aturan bisnis (`PRD`), arsitektur database, dan security boundary. |
-| **Kolaborator 1 (Backend/Security)** | *Senior Backend & Security Engineer* | • Review teknis seluruh kode di `app/Actions/`, `app/Queries/`, `app/Services/`, `database/`, dan `tests/`.<br>• Verifikasi pencegahan celah keamanan OWASP dan concurrency locking. |
-| **Kolaborator 2 (Frontend/Docs)** | *Frontend Specialist & UI/UX / Docs Engineer* | • Review teknis antarmuka di `resources/css/`, `resources/js/`, dan `resources/views/`.<br>• Penegakan aturan **Zero Inline CSS/JS di Blade** dan pembaruan living documentation (`docs/`). |
+| **Adhitya Galang**<br>[`@EvilAekt`](https://github.com/EvilAekt) | *Lead Software Architect & Security Lead (Project Owner)* | • **Wewenang Mutlak Approval & Merge ke `main`**.<br>• Review integritas aturan bisnis (`PRD`), arsitektur database, dan security boundary. |
+| **Aldi Artha Mida**<br>[`@aldiartha`](https://github.com/aldiartha) | *Fullstack Developer & Admin Systems Specialist* | • Review teknis seluruh kode di modul Administrasi Kominfo (`/admin/*`), kuota formasi, penempatan, dan pelaporan ekspor data kedinasan. |
+| **Naufal Febrian**<br>[`@NAUFALFEBRIAN62`](https://github.com/NAUFALFEBRIAN62) | *Frontend Specialist & UI/UX Interaction Engineer* | • Review teknis antarmuka di `resources/css/`, `resources/js/`, dan `resources/views/`.<br>• Penegakan aturan **Zero Inline CSS/JS di Blade**, aksesibilitas WCAG 2.1 AA, dan pembaruan living documentation (`docs/`). |
