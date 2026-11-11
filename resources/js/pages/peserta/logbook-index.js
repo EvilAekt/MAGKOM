@@ -17,7 +17,7 @@ export function initLogbookIndex() {
     };
 
     // -------------------------------------------------------------------------
-    // 2. Char Counter
+    // 2. Char Counter & Submit State
     // -------------------------------------------------------------------------
     window.updateCharCount = function (textarea, counterId) {
         const counter = document.getElementById(counterId);
@@ -30,6 +30,19 @@ export function initLogbookIndex() {
             counter.textContent = `${len} karakter (memenuhi syarat min. 10)`;
             counter.style.color = '#16A34A';
         }
+
+        if (counterId === 'tambah_char_count') {
+            const btnSubmit = document.getElementById('btnSubmitTambah');
+            const select = document.getElementById('tambah_minggu_ke');
+            const selectedOpt = select ? select.options[select.selectedIndex] : null;
+            const terisi = selectedOpt ? selectedOpt.getAttribute('data-terisi') === '1' : false;
+            const mendatang = selectedOpt ? selectedOpt.getAttribute('data-mendatang') === '1' : false;
+            const hasMinggu = Boolean(select && select.value !== '');
+
+            if (btnSubmit) {
+                btnSubmit.disabled = !hasMinggu || terisi || mendatang || len < 10;
+            }
+        }
     };
 
     // -------------------------------------------------------------------------
@@ -41,12 +54,15 @@ export function initLogbookIndex() {
         const formFields = document.getElementById('formFieldsLogbook');
         const placeholder = document.getElementById('placeholderPilihMinggu');
         const alertSudahDiisi = document.getElementById('alertMingguSudahDiisi');
+        const alertMendatang = document.getElementById('alertMingguMendatang');
         const btnSubmit = document.getElementById('btnSubmitTambah');
+        const inputTanggal = document.getElementById('tambah_tanggal');
 
         if (!mingguVal || mingguVal === '') {
             if (label) label.textContent = '';
             if (formFields) formFields.style.display = 'none';
             if (alertSudahDiisi) alertSudahDiisi.style.display = 'none';
+            if (alertMendatang) alertMendatang.style.display = 'none';
             if (placeholder) placeholder.style.display = 'block';
             if (btnSubmit) btnSubmit.disabled = true;
             return;
@@ -55,6 +71,9 @@ export function initLogbookIndex() {
         const selectedOpt = select ? select.options[select.selectedIndex] : null;
         const periode = selectedOpt ? selectedOpt.getAttribute('data-periode') : '';
         const terisi = selectedOpt ? selectedOpt.getAttribute('data-terisi') === '1' : false;
+        const mendatang = selectedOpt ? selectedOpt.getAttribute('data-mendatang') === '1' : false;
+        const tglAwal = selectedOpt ? selectedOpt.getAttribute('data-tgl-awal') : '';
+        const tglAkhir = selectedOpt ? selectedOpt.getAttribute('data-tgl-akhir') : '';
 
         if (label) {
             label.textContent = periode ? `Periode: ${periode}` : '';
@@ -65,15 +84,43 @@ export function initLogbookIndex() {
         if (terisi) {
             if (formFields) formFields.style.display = 'none';
             if (alertSudahDiisi) alertSudahDiisi.style.display = 'block';
+            if (alertMendatang) alertMendatang.style.display = 'none';
             if (btnSubmit) btnSubmit.disabled = true;
-        } else {
-            if (alertSudahDiisi) alertSudahDiisi.style.display = 'none';
-            if (formFields) formFields.style.display = 'block';
-
-            const textarea = document.getElementById('tambah_kegiatan');
-            const textLen = (textarea?.value || '').trim().length;
-            if (btnSubmit) btnSubmit.disabled = textLen < 10;
+            return;
         }
+
+        if (mendatang) {
+            if (formFields) formFields.style.display = 'none';
+            if (alertSudahDiisi) alertSudahDiisi.style.display = 'none';
+            if (alertMendatang) alertMendatang.style.display = 'block';
+            if (btnSubmit) btnSubmit.disabled = true;
+            return;
+        }
+
+        if (alertSudahDiisi) alertSudahDiisi.style.display = 'none';
+        if (alertMendatang) alertMendatang.style.display = 'none';
+        if (formFields) formFields.style.display = 'block';
+
+        // Sesuaikan rentang kalender tanggal pelaporan sesuai minggu terpilih
+        if (inputTanggal && tglAwal && tglAkhir) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
+            const maxAllowed = tglAkhir < todayStr ? tglAkhir : todayStr;
+
+            inputTanggal.min = tglAwal;
+            inputTanggal.max = maxAllowed;
+
+            if (!inputTanggal.value || inputTanggal.value < tglAwal || inputTanggal.value > maxAllowed) {
+                inputTanggal.value = maxAllowed;
+            }
+        }
+
+        const textarea = document.getElementById('tambah_kegiatan');
+        const textLen = (textarea?.value || '').trim().length;
+        if (btnSubmit) btnSubmit.disabled = textLen < 10;
     };
 
     // -------------------------------------------------------------------------
@@ -226,7 +273,14 @@ export function initLogbookIndex() {
         if (preSelectMinggu && selectMinggu) {
             selectMinggu.value = preSelectMinggu;
             window.onMingguChange(preSelectMinggu);
-        } else if (selectMinggu && selectMinggu.value) {
+        } else if (selectMinggu) {
+            if (!selectMinggu.value) {
+                // Cari opsi pertama yang dapat diisi (tidak disabled)
+                const availableOpt = Array.from(selectMinggu.options).find(opt => opt.value && !opt.disabled);
+                if (availableOpt) {
+                    selectMinggu.value = availableOpt.value;
+                }
+            }
             window.onMingguChange(selectMinggu.value);
         }
 
@@ -246,6 +300,11 @@ export function initLogbookIndex() {
             }
         }
         updateLampiranMeta('tambah');
+
+        const textarea = document.getElementById('tambah_kegiatan');
+        if (textarea) {
+            window.updateCharCount(textarea, 'tambah_char_count');
+        }
     };
 
     window.closeTambahModal = function () {
@@ -315,6 +374,34 @@ export function initLogbookIndex() {
             closeSubmodalLink();
         }
     });
+
+    const formTambah = document.getElementById('formTambahLogbook');
+    if (formTambah) {
+        formTambah.addEventListener('submit', (e) => {
+            const select = document.getElementById('tambah_minggu_ke');
+            const textarea = document.getElementById('tambah_kegiatan');
+            const textLen = (textarea?.value || '').trim().length;
+
+            if (!select || !select.value) {
+                e.preventDefault();
+                alert('Silakan pilih minggu magang yang ingin dilaporkan.');
+                return false;
+            }
+
+            if (textLen < 10) {
+                e.preventDefault();
+                alert('Ringkasan kegiatan & capaian minimal 10 karakter.');
+                if (textarea) textarea.focus();
+                return false;
+            }
+
+            const btnSubmit = document.getElementById('btnSubmitTambah');
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = `<span>Menyimpan...</span>`;
+            }
+        });
+    }
 
     // -------------------------------------------------------------------------
     // 5. SUB-MODAL POPUP DIALOGS (UPLOAD BERKAS & TAMBAH LINK)

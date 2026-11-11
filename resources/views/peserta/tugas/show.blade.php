@@ -14,8 +14,8 @@
         $statusVal = $tugas->status->value ?? (string)$tugas->status;
         $isSelesai = $statusVal === 'selesai';
         $isProses = $statusVal === 'proses';
-        $deadline = \Carbon\Carbon::parse($tugas->deadline);
-        $isTerlambat = !$isSelesai && $deadline->isPast();
+        $deadline = $tugas->deadline ? \Carbon\Carbon::parse($tugas->deadline) : null;
+        $isTerlambat = !$isSelesai && $deadline && $deadline->isPast();
         $penempatan = $tugas->penempatan;
         $mentorNama = $penempatan->pembimbing->nama ?? $penempatan->pembimbing->name ?? 'Budi Santoso, S.Kom';
         $kategoriNama = $tugas->kategori ?? 'Tugas Magang';
@@ -24,6 +24,10 @@
         $hasSubmitted = $tugas->progresLogs->isNotEmpty();
         $latestReviewStatus = $latestProgres?->status_review?->value ?? (string)$latestProgres?->status_review;
         $bisaKumpulLagi = !$isSelesai && (!$hasSubmitted || $latestReviewStatus === 'perlu_revisi');
+
+        // Evaluasi apakah penyerahan dilakukan terlambat (melewati tenggat waktu)
+        $submittedAt = $latestProgres ? \Carbon\Carbon::parse($latestProgres->created_at ?? $latestProgres->tgl_lapor) : null;
+        $isSubmittedLate = $hasSubmitted && $deadline && $submittedAt && $submittedAt->greaterThan($deadline);
     @endphp
 
     {{-- Tombol Kembali ke Daftar Tugas --}}
@@ -108,6 +112,8 @@
                             <span class="classroom-work-status status-done">Selesai</span>
                         @elseif($hasSubmitted && $latestReviewStatus === 'perlu_revisi')
                             <span class="classroom-work-status" style="background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">Perlu Revisi</span>
+                        @elseif($isSubmittedLate)
+                            <span class="classroom-work-status status-turned-in-late">Diserahkan terlambat</span>
                         @elseif($hasSubmitted)
                             <span class="classroom-work-status status-turned-in">Diserahkan</span>
                         @elseif($isTerlambat)
@@ -222,19 +228,39 @@
                             <span>{{ $latestReviewStatus === 'perlu_revisi' ? 'Serahkan Ulang Revisi' : 'Serahkan / Kirim Progres' }}</span>
                         </button>
 
-                        <div class="work-caption-note">
-                            Pekerjaan tidak dapat diserahkan setelah tenggat
-                        </div>
+                        @if($isTerlambat)
+                            <div class="work-caption-note work-caption-note--late">
+                                ⚠️ Tenggat waktu telah berakhir. Tugas tetap dapat diserahkan dan akan dicatat sebagai diserahkan terlambat.
+                            </div>
+                        @else
+                            <div class="work-caption-note">
+                                Pastikan berkas atau tautan sudah benar sebelum diserahkan.
+                            </div>
+                        @endif
                     @elseif($isSelesai)
-                        <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 8px; padding: 14px; text-align: center; color: #065F46; font-size: 0.8125rem;">
-                            ✓ Tugas ini telah ditinjau dan dinyatakan selesai oleh pembimbing.
+                        <div class="submitted-completed-box">
+                            <span class="submitted-check-icon" aria-hidden="true">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </span>
+                            <span>Tugas ini telah ditinjau dan dinyatakan selesai oleh pembimbing.</span>
                         </div>
                     @else
                         {{-- Kasus: sudah diserahkan dan sedang menunggu review --}}
-                        <div class="submitted-waiting-box">
-                            <div class="submitted-waiting-title">✓ Tugas Telah Diserahkan</div>
-                            <div class="submitted-waiting-subtitle">
-                                Diserahkan pada {{ \Carbon\Carbon::parse($latestProgres->created_at ?? $latestProgres->tgl_lapor)->translatedFormat('d M Y, H.i') }} WIB.
+                        <div class="submitted-waiting-box {{ $isSubmittedLate ? 'submitted-waiting-box--late' : '' }}">
+                            <div class="submitted-waiting-status-row">
+                                <span class="submitted-check-icon {{ $isSubmittedLate ? 'submitted-check-icon--late' : '' }}" aria-hidden="true">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </span>
+                                <span class="submitted-waiting-title {{ $isSubmittedLate ? 'submitted-waiting-title--late' : '' }}">
+                                    Tugas Telah Diserahkan{{ $isSubmittedLate ? ' (Terlambat)' : '' }}
+                                </span>
+                            </div>
+                            <div class="submitted-waiting-subtitle {{ $isSubmittedLate ? 'submitted-waiting-subtitle--late' : '' }}">
+                                Diserahkan{{ $isSubmittedLate ? ' terlambat' : '' }} pada {{ \Carbon\Carbon::parse($latestProgres->created_at ?? $latestProgres->tgl_lapor)->translatedFormat('d M Y, H.i') }} WIB{{ $isSubmittedLate ? ' (melewati tenggat)' : '' }}.
                             </div>
                         </div>
 
