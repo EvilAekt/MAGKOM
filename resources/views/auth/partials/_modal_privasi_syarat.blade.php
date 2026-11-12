@@ -4,7 +4,7 @@
     <!-- Header Modal -->
     <div style="background: linear-gradient(135deg, #003566 0%, #01347C 100%); color: #FFFFFF; padding: 22px 28px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #FFC300">
       <div style="display: flex; align-items: center; gap: 12px">
-        <img src="{{ asset('images/auth-sleman-logo.jpg') }}" alt="Lambang Kabupaten Sleman" style="height: 38px; width: auto; border-radius: 4px; display: block">
+        <img src="{{ asset('images/logo-sleman.png') }}" alt="Lambang Kabupaten Sleman" style="height: 38px; width: auto; border-radius: 4px; display: block">
         <div>
           <span style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #FFC300; text-transform: uppercase">Dinas Kominfo Kab. Sleman</span>
           <h2 id="modalPrivasiTitle" style="margin: 0; font-size: 18px; font-weight: 800; line-height: 1.25">Kebijakan Privasi &amp; Syarat Ketentuan</h2>

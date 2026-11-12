@@ -70,4 +70,3 @@ class AuthSecurityAndPolicyTest extends TestCase
         $view->assertSee('Kembali ke Halaman Login');
     }
 }
-

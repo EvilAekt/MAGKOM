@@ -132,10 +132,11 @@
   </svg>
 
   <div style="position: relative; z-index: 1; display: flex; align-items: center; gap: 14px">
-    <img src="{{ asset('images/auth-sleman-logo.jpg') }}" alt="Lambang Kabupaten Sleman" style="height: 52px; width: auto; display: block; border-radius: 4px; flex-shrink: 0">
-    <div style="display: flex; flex-direction: column; gap: 5px">
+    <img src="{{ asset('images/logo-sleman.png') }}" alt="Lambang Kabupaten Sleman" style="height: 52px; width: auto; display: block; border-radius: 4px; flex-shrink: 0">
+    <div style="display: flex; flex-direction: column; gap: 4px">
       <span style="font-size: 20px; font-weight: 800; letter-spacing: 0.08em; line-height: 1">MAGKOM</span>
       <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: #FFC300; line-height: 1.2">DINAS KOMINFO KAB. SLEMAN</span>
+      <span class="sr-only" style="display: none">MAGANG KOMINFO SLEMAN - Magang Kominfo Sleman</span>
     </div>
   </div>
 

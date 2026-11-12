@@ -4,7 +4,6 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Request;
 use Psr\Log\LogLevel;
 use Sentry\Laravel\Integration;
@@ -74,16 +73,6 @@ class Handler extends ExceptionHandler
             }
         });
 
-        $this->renderable(function (ThrottleRequestsException $e, Request $request) {
-            if (! $this->shouldReturnJson($request, $e) && ($request->is('login') || $request->routeIs('login'))) {
-                $headers = $e->getHeaders();
-                $seconds = isset($headers['Retry-After']) ? (int) $headers['Retry-After'] : 60;
-
-                return redirect()->route('login')
-                    ->with('lockout_seconds', $seconds)
-                    ->with('error_lockout', "Akses akun dibekukan sementara karena terlalu banyak percobaan masuk yang gagal. Silakan tunggu {$seconds} detik sebelum mencoba kembali.")
-                    ->withInput($request->only('email'));
-            }
-        });
+        //
     }
 }

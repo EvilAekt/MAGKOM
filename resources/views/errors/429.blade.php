@@ -13,7 +13,7 @@
 </svg>
 @endsection
 
-@section('headline', 'Akses Akun Dibatasi Sementara')
-@section('message', 'Sistem keamanan mendeteksi terlalu banyak percobaan masuk dalam waktu singkat demi melindungi integritas akun dari upaya tidak sah (brute-force). Silakan tunggu sekitar 60 detik sebelum mencoba kembali, atau gunakan opsi pemulihan kata sandi.')
+@section('headline', 'Terlalu Banyak Permintaan')
+@section('message', 'Akses Akun Dibatasi Sementara. Sistem keamanan mendeteksi terlalu banyak percobaan masuk dalam waktu singkat demi melindungi integritas akun dari upaya tidak sah (brute-force). Silakan tunggu sekitar 60 detik sebelum mencoba kembali, atau gunakan opsi pemulihan kata sandi.')
 @section('button_url', route('login'))
 @section('button_text', 'Kembali ke Halaman Login')

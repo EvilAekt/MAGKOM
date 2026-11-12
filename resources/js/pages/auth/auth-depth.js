@@ -375,11 +375,13 @@ export function initAuthInteractions() {
   // Register Type Toggle (Individu vs Kelompok)
   const tabInd = document.querySelector('[data-reg-type="ind"]');
   const tabKel = document.querySelector('[data-reg-type="kel"]');
+  const hiddenTipe = document.getElementById('tipe_pendaftaran');
 
   if (tabInd && tabKel) {
     const activateInd = () => {
       tabInd.setAttribute('aria-pressed', 'true');
       tabKel.setAttribute('aria-pressed', 'false');
+      if (hiddenTipe) hiddenTipe.value = 'mandiri';
 
       tabInd.style.border = '1px solid #003566';
       tabInd.style.background = '#FFFFFF';
@@ -399,6 +401,7 @@ export function initAuthInteractions() {
     const activateKel = () => {
       tabInd.setAttribute('aria-pressed', 'false');
       tabKel.setAttribute('aria-pressed', 'true');
+      if (hiddenTipe) hiddenTipe.value = 'kelompok';
 
       tabKel.style.border = '1px solid #003566';
       tabKel.style.background = '#FFFFFF';
