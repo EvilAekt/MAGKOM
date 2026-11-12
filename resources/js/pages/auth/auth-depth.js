@@ -650,6 +650,36 @@ export function initLockoutCountdown() {
 }
 
 /**
+ * Auto-capitalization & live caret preservation for CAPTCHA inputs
+ */
+export function initAutoCapitalizeCaptcha() {
+  const inputs = document.querySelectorAll('input[name="captcha"], .captcha-input');
+  inputs.forEach((input) => {
+    if (!input.hasAttribute('autocapitalize')) {
+      input.setAttribute('autocapitalize', 'characters');
+    }
+    input.setAttribute('spellcheck', 'false');
+
+    input.addEventListener('input', (event) => {
+      const target = event.target;
+      if (!target || typeof target.value !== 'string') return;
+
+      const start = target.selectionStart;
+      const end = target.selectionEnd;
+      const originalValue = target.value;
+      const upperValue = originalValue.toUpperCase();
+
+      if (originalValue !== upperValue) {
+        target.value = upperValue;
+        if (start !== null && end !== null) {
+          target.setSelectionRange(start, end);
+        }
+      }
+    });
+  });
+}
+
+/**
  * Main initializer for Auth Depth pages
  */
 export function initAuthDepth() {
@@ -661,6 +691,7 @@ export function initAuthDepth() {
   initCascadingEducationFields();
   initPrivacyTermsModal();
   initLockoutCountdown();
+  initAutoCapitalizeCaptcha();
 }
 
 if (document.readyState === 'loading') {

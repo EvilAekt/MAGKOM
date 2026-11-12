@@ -307,8 +307,10 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     // Matriks Hak Akses dan Role (Figma SA-02, PRD 3.1 & 3.3)
     Route::get('/role', [RoleController::class, 'index'])->name('role.index');
     Route::post('/role/permission', [RoleController::class, 'storePermission'])->name('role.permission.store');
-    Route::put('/role/matrix', [RoleController::class, 'updateMatrix'])->name('role.matrix.update');
+    Route::put('/role/permission/{permission}', [RoleController::class, 'updatePermission'])->name('role.permission.update');
     Route::delete('/role/permission/{permission}', [RoleController::class, 'destroyPermission'])->name('role.permission.destroy');
+    Route::put('/role/matrix', [RoleController::class, 'updateMatrix'])->name('role.matrix.update');
+    Route::post('/role/sync', [RoleController::class, 'syncDefaultPermissions'])->name('role.sync');
 
     // Master Data (Jurusan, Bidang, Rubrik) (F-11)
     Route::get('/jurusan', [JurusanController::class, 'index'])->name('jurusan.index');

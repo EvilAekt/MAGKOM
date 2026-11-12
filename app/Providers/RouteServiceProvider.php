@@ -45,11 +45,11 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        // NFR-S2: Proteksi login & brute-force (5 percobaan per menit)
+        // NFR-S2 & PRD v1.3: Proteksi login & brute-force (Maksimal 3 percobaan per menit sebelum lockout)
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = strtolower((string) $request->input('email')).'|'.$request->ip();
+            $throttleKey = strtolower(trim((string) $request->input('email'))).'|'.$request->ip();
 
-            return Limit::perMinute(5)->by($throttleKey);
+            return Limit::perMinute(3)->by($throttleKey);
         });
 
         // NFR-S2: Proteksi spam pendaftaran akun & formulir (10 per jam)
