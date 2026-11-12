@@ -268,6 +268,8 @@ class AuthController extends Controller
             $q->where('aktif', true)->orderBy('nama_jurusan');
         }])->where('aktif', true)->orderBy('nama_bidang')->get();
 
+        $oauthRegisterData = $request->session()->get('oauth_register_data');
+
         return view('auth.register', compact(
             'selectedBulan',
             'selectedBidang',
@@ -277,7 +279,8 @@ class AuthController extends Controller
             'selectedSisaKuota',
             'selectedTotalKuota',
             'jurusanList',
-            'bidangList'
+            'bidangList',
+            'oauthRegisterData'
         ));
     }
 
@@ -320,7 +323,7 @@ class AuthController extends Controller
             'no_telp' => ['sometimes', 'required', 'string', 'max:20', 'regex:/^[0-9\+\-\s]+$/'],
             'password' => $passwordRules,
             'tipe_pendaftaran' => ['nullable', 'string', 'in:mandiri,kelompok'],
-            'jenjang' => ['nullable', 'string', 'in:smk,d3,s1'],
+            'jenjang' => ['nullable', 'string', 'in:smk,d3,s1,mahasiswa'],
             'jurusan_id' => ['nullable', 'integer', 'exists:jurusan,id'],
             'institusi' => ['nullable', 'string', 'max:150'],
             'nim_nisn' => ['nullable', 'string', 'max:50'],
@@ -366,7 +369,9 @@ class AuthController extends Controller
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         ]);
 
-        $user = DB::transaction(function () use ($validated, $request, $isKelompok) {
+        $oauthData = $request->session()->get('oauth_register_data');
+
+        $user = DB::transaction(function () use ($validated, $request, $isKelompok, $oauthData) {
             $user = new User;
             $user->nama = $validated['nama'];
             $user->email = $validated['email'];
@@ -375,19 +380,32 @@ class AuthController extends Controller
             $user->role = RoleEnum::Peserta;
             $user->status_aktif = true;
             $user->email_verified_at = now();
+
+            if (is_array($oauthData) && isset($oauthData['email'], $oauthData['provider'], $oauthData['provider_id'])) {
+                if (strtolower(trim((string) $oauthData['email'])) === $user->email) {
+                    $user->provider = (string) $oauthData['provider'];
+                    $user->provider_id = (string) $oauthData['provider_id'];
+                }
+            }
+
             $user->save();
 
             if (! empty($validated['jurusan_id']) && ! empty($validated['jenjang'])) {
+                $jenjangNormalized = match ($validated['jenjang']) {
+                    'mahasiswa' => 's1',
+                    default => $validated['jenjang'],
+                };
+
                 $profilData = [
                     'user_id' => $user->id,
-                    'jenjang' => $validated['jenjang'],
+                    'jenjang' => $jenjangNormalized,
                     'jurusan_id' => (int) $validated['jurusan_id'],
                     'institusi' => $validated['institusi'] ?? 'Institusi Belum Diatur',
                     'nim_nisn' => $validated['nim_nisn'] ?? '-',
                     'no_hp' => $user->no_telp ?? '-',
                 ];
 
-                if ($validated['jenjang'] === 'smk' && $request->boolean('persetujuan_wali')) {
+                if ($jenjangNormalized === 'smk' && $request->boolean('persetujuan_wali')) {
                     $profilData['persetujuan_wali_at'] = now();
                 }
 
@@ -421,6 +439,7 @@ class AuthController extends Controller
 
         // Anti-Session Fixation: Regenerasi sesi pengguna yang baru login
         $request->session()->regenerate();
+        $request->session()->forget('oauth_register_data');
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,

@@ -44,6 +44,17 @@
       <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5F6B76">Daftarkan akun Anda untuk memulai proses seleksi magang di Dinas Kominfo.</p>
     </div>
 
+    @if(session('warning'))
+      <div style="margin-bottom: 20px; padding: 12px 16px; border-radius: 10px; background: #FEF3C7; border: 1px solid #FCD34D; color: #92400E; font-size: 13.5px; line-height: 1.5; display: flex; align-items: flex-start; gap: 8px">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>{{ session('warning') }}</span>
+      </div>
+    @elseif($errors->any())
+      <div style="margin-bottom: 20px; padding: 12px 16px; border-radius: 10px; background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-size: 13.5px; line-height: 1.5">
+        {{ $errors->first() }}
+      </div>
+    @endif
+
     <form action="{{ route('register') }}" method="POST" novalidate style="display: flex; flex-direction: column; gap: 18px">
       @csrf
       <input type="hidden" name="tipe_pendaftaran" id="tipe_pendaftaran" value="mandiri">
@@ -67,15 +78,15 @@
 
         <div style="position: relative">
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"></path></svg>
-          <input id="nama" name="username" class="fld" type="text" autocomplete="name" aria-label="Nama lengkap" placeholder="nama lengkap" value="{{ old('username', old('nama')) }}" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
+          <input id="nama" name="username" class="fld" type="text" autocomplete="name" aria-label="Nama lengkap" placeholder="nama lengkap" value="{{ old('username', old('nama', $oauthRegisterData['nama'] ?? '')) }}" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
         </div>
 
         <div>
           <div style="position: relative">
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
-            <input id="email" name="email" class="fld" type="email" autocomplete="email" aria-label="Email" aria-describedby="hint-email" placeholder="nama.peserta@gmail.com" value="{{ old('email') }}" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
+            <input id="email" name="email" class="fld" type="email" autocomplete="email" aria-label="Email" aria-describedby="hint-email" placeholder="nama.peserta@gmail.com" value="{{ old('email', $oauthRegisterData['email'] ?? '') }}" {{ !empty($oauthRegisterData['email']) ? 'readonly' : '' }} style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
           </div>
-          <p id="hint-email" style="margin: 6px 0 0; font-size: 12.5px; line-height: 1.4; color: #5F6B76">Gunakan email aktif untuk verifikasi berkas dan notifikasi seleksi.</p>
+          <p id="hint-email" style="margin: 6px 0 0; font-size: 12.5px; line-height: 1.4; color: #5F6B76">{{ !empty($oauthRegisterData['email']) ? 'Email terverifikasi dari akun Google Anda.' : 'Gunakan email aktif untuk verifikasi berkas dan notifikasi seleksi.' }}</p>
         </div>
 
         <div>
