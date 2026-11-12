@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -275,5 +276,15 @@ class User extends Authenticatable implements MustVerifyEmail
             RoleEnum::Admin->value,
             RoleEnum::Pembimbing->value,
         ]);
+    }
+
+    /**
+     * Kirim notifikasi atur ulang kata sandi (Custom HTML Email MAGKOM).
+     *
+     * @param  string  $token
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

@@ -1,14 +1,14 @@
 @extends('layouts.auth-depth', ['variant' => 'forgot'])
 
-@section('title', 'MagKom - Lupa Kata Sandi')
+@section('title', 'MagKom - Lupa Password')
 
 @section('auth-form')
 <section style="flex: 1 1 440px; min-height: 560px; position: relative; box-sizing: border-box; padding: 36px 40px 32px; display: flex; flex-direction: column; background: #FFFFFF">
   <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; max-width: 440px; margin: 0 auto; box-sizing: border-box">
 
     <div style="text-align: center; margin-bottom: 26px">
-      <h1 style="margin: 0 0 8px; font-size: 38px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; color: #003566">Lupa kata sandi?</h1>
-      <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5F6B76">Masukkan alamat email yang terdaftar untuk menerima tautan pemulihan kata sandi.</p>
+      <h1 style="margin: 0 0 8px; font-size: 38px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; color: #003566">Lupa Password?</h1>
+      <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5F6B76">Masukkan alamat email yang terdaftar pada akun Anda. Kami akan mengirimkan tautan untuk mengatur ulang password.</p>
     </div>
 
     @if(session('status'))
@@ -25,36 +25,27 @@
       </div>
     @endif
 
-    <form action="{{ route('password.email') }}" method="POST" novalidate style="display: flex; flex-direction: column; gap: 18px">
+    <form action="{{ route('password.email') }}" method="POST" novalidate style="display: flex; flex-direction: column; gap: 20px">
       @csrf
 
       <div style="display: flex; flex-direction: column; gap: 8px">
-        <label for="email" style="font-size: 14px; font-weight: 600; color: #212529">Email Akun Terdaftar</label>
+        <label for="email" style="font-size: 14px; font-weight: 600; color: #212529">Email Akun Terdaftar <span aria-hidden="true" style="color: #C62828">*</span></label>
         <div style="position: relative">
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
           <input id="email" name="email" class="fld" type="email" required autofocus autocomplete="email" placeholder="contoh: nama.peserta@gmail.com" value="{{ old('email') }}" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
         </div>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 8px">
-        <label for="kode" style="font-size: 14px; font-weight: 600; color: #212529">Kode verifikasi keamanan <span aria-hidden="true" style="color: #C62828">*</span></label>
-        <div style="display: flex; gap: 10px; align-items: center">
-          <div data-captcha-display style="width: 150px; height: 46px; box-sizing: border-box; border-radius: 10px; background: #E6ECF7; color: #003566; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; letter-spacing: 0.32em; padding-left: 0.32em; user-select: none">DE4F</div>
-          <button type="button" class="btn-ico" data-action="refresh-captcha" aria-label="Ganti kode verifikasi" style="width: 46px; height: 46px; border: 1px solid #AAAAAA; border-radius: 10px; background: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center">
-            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#003566" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4M4 4v4h4"></path><path d="M4 13a8 8 0 0 0 14.5 4M20 20v-4h-4"></path></svg>
-          </button>
-        </div>
-        <div style="position: relative">
-          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
-          <input id="kode" class="fld" type="text" maxlength="4" autocomplete="off" placeholder="4 karakter kode di atas" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
-        </div>
-      </div>
-
-      <button type="submit" class="btn-main" style="width: 100%; height: 52px; border: none; border-bottom: 3px solid #FFC300; border-radius: 10px; background: #003566; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Kirim Tautan Pemulihan</button>
+      <button type="submit" class="btn-main" style="width: 100%; height: 52px; border: none; border-bottom: 3px solid #FFC300; border-radius: 10px; background: #003566; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Kirim Tautan Reset</button>
     </form>
 
-    <p style="margin: 24px 0 0; text-align: center; font-size: 15px; color: #5F6B76">Ingat kata sandi Anda? <a href="{{ route('login') }}" style="font-weight: 700; color: #003566; text-decoration: none">Masuk kembali</a></p>
-    <p style="margin: 10px 0 0; text-align: center; font-size: 12.5px; color: #5F6B76">Magang Kominfo • Dinas Kominfo Sleman • v1.0</p>
+    <div style="margin-top: 26px; text-align: center; display: flex; flex-direction: column; gap: 8px">
+      <a href="{{ route('login') }}" style="font-size: 14.5px; font-weight: 700; color: #003566; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <span>Kembali ke Login</span>
+      </a>
+      <p style="margin: 6px 0 0; font-size: 12.5px; color: #5F6B76">Magang Kominfo • Dinas Kominfo Sleman • v1.0</p>
+    </div>
 
   </div>
 </section>

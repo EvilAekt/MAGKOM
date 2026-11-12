@@ -69,14 +69,11 @@ class AuthDepthVisualParityTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertViewIs('auth.forgot-password');
-        $response->assertSee('Lupa kata sandi?');
-        $response->assertSee('Masukkan alamat email yang terdaftar untuk menerima tautan pemulihan kata sandi.');
+        $response->assertSee('Lupa Password?');
+        $response->assertSee('Masukkan alamat email yang terdaftar pada akun Anda.');
         $response->assertSee('Email Akun Terdaftar');
-        $response->assertSee('Kode verifikasi keamanan');
-        $response->assertSee('DE4F');
-        $response->assertSee('Kirim Tautan Pemulihan');
-        $response->assertSee('Ingat kata sandi Anda?');
-        $response->assertSee('Masuk kembali');
+        $response->assertSee('Kirim Tautan Reset');
+        $response->assertSee('Kembali ke Login');
         $response->assertSee(route('login'));
         $response->assertSee('MAGKOM');
         $response->assertSee('DINAS KOMINFO KAB. SLEMAN');
@@ -95,6 +92,6 @@ class AuthDepthVisualParityTest extends TestCase
         $response->assertSessionHas('status');
 
         $followed = $this->followRedirects($response);
-        $followed->assertSee('Jika alamat email terdaftar sebagai peserta aktif, tautan pemulihan kata sandi telah dikirimkan ke kotak masuk Anda.');
+        $followed->assertSee('Jika alamat email terdaftar pada sistem, kami akan mengirimkan instruksi untuk mengatur ulang password.');
     }
 }
