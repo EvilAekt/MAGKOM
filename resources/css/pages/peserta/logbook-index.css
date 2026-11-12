@@ -208,6 +208,12 @@
     align-items: center;
 }
 
+button.week-chip {
+    font-family: inherit;
+    border: none;
+    outline: none;
+}
+
 .week-chip {
     display: inline-flex;
     align-items: center;
@@ -253,6 +259,59 @@
     background: #FFFFFF;
     border: 1.5px solid #E2E8F0;
     color: #64748B;
+    cursor: default;
+    pointer-events: none;
+    user-select: none;
+}
+
+.week-chip.is-upcoming:hover {
+    transform: none;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+/* Alert Notices in Modal */
+.alert-logbook-notice {
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+}
+
+.alert-logbook-notice.is-warning {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+}
+
+.alert-logbook-notice.is-future {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+}
+
+.alert-notice-title {
+    font-size: 0.8125rem;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.alert-notice-title.text-blue {
+    color: #1E3A8A;
+}
+
+.alert-notice-title.text-red {
+    color: #991B1B;
+}
+
+.alert-notice-desc {
+    font-size: 0.75rem;
+    display: block;
+    line-height: 1.4;
+}
+
+.alert-notice-desc.text-blue-muted {
+    color: #1E40AF;
+}
+
+.alert-notice-desc.text-red-muted {
+    color: #B91C1C;
 }
 
 .chip-icon {

@@ -65,14 +65,16 @@
                     @php
                         $isCurrent = $m['minggu_ke'] == $mingguAktif;
                         $hasLog = $m['logbook'] !== null;
-                        
+                        $isPastUnfilled = $m['minggu_ke'] < $mingguAktif && !$hasLog;
+                        $isUpcoming = $m['minggu_ke'] > $mingguAktif;
+
                         if ($hasLog) {
                             $chipClass = 'is-done';
                             $chipIcon = '✓';
                         } elseif ($isCurrent) {
                             $chipClass = 'is-active-week';
                             $chipIcon = '⏳';
-                        } elseif ($m['minggu_ke'] < $mingguAktif) {
+                        } elseif ($isPastUnfilled) {
                             $chipClass = 'is-unfilled';
                             $chipIcon = '📅';
                         } else {
@@ -80,12 +82,29 @@
                             $chipIcon = '📅';
                         }
                     @endphp
-                    <a href="{{ $hasLog ? '#logbook-card-'.$m['logbook']->id : '#riwayatJurnal' }}"
-                       class="week-chip {{ $chipClass }}"
-                       title="Minggu {{ $m['minggu_ke'] }}: {{ $m['label_periode'] }}">
-                        <span class="chip-icon">{{ $chipIcon }}</span>
-                        <span>Minggu {{ $m['minggu_ke'] }}</span>
-                    </a>
+                    @if($hasLog)
+                        <a href="#logbook-card-{{ $m['logbook']->id }}"
+                           class="week-chip {{ $chipClass }}"
+                           title="Minggu {{ $m['minggu_ke'] }}: {{ $m['label_periode'] }} (Sudah diisi)">
+                            <span class="chip-icon">{{ $chipIcon }}</span>
+                            <span>Minggu {{ $m['minggu_ke'] }}</span>
+                        </a>
+                    @elseif($isPastUnfilled || $isCurrent)
+                        <button type="button"
+                                class="week-chip {{ $chipClass }}"
+                                onclick="openTambahModal({{ $m['minggu_ke'] }})"
+                                title="Minggu {{ $m['minggu_ke'] }}: {{ $m['label_periode'] }} (Klik untuk isi)">
+                            <span class="chip-icon">{{ $chipIcon }}</span>
+                            <span>Minggu {{ $m['minggu_ke'] }}</span>
+                        </button>
+                    @else
+                        <span class="week-chip {{ $chipClass }}"
+                              aria-disabled="true"
+                              title="Minggu {{ $m['minggu_ke'] }}: {{ $m['label_periode'] }}">
+                            <span class="chip-icon">{{ $chipIcon }}</span>
+                            <span>Minggu {{ $m['minggu_ke'] }}</span>
+                        </span>
+                    @endif
                 @endforeach
             </div>
 
@@ -304,7 +323,6 @@
                 </div>
                 <div>
                     <h3 class="modal-title-logbook modal-title-text">Isi Logbook Mingguan</h3>
-                    <p class="modal-subtitle-logbook modal-subtitle-text">Laporkan capaian dan aktivitas magang mingguan Anda</p>
                 </div>
             </div>
             <button type="button" onclick="closeTambahModal()" class="modal-close-logbook modal-close-btn" aria-label="Tutup Formulir" title="Tutup">&times;</button>
@@ -314,38 +332,37 @@
             @csrf
             <div class="modal-body-logbook modal-body-compact">
 
-                {{-- Kartu Ringkasan Konteks Penempatan --}}
-                <div class="logbook-summary-card">
-                    <div class="logbook-summary-row">
-                        <span class="logbook-summary-bidang">{{ $penempatan->bidang->nama_bidang ?? 'Dinas Komunikasi dan Informatika Sleman' }}</span>
-                        <span class="logbook-summary-badge">Penempatan Aktif</span>
-                    </div>
-                    <div class="logbook-summary-sub">
-                        <span>Pembimbing: <strong>{{ $penempatan->pembimbing->nama ?? $penempatan->pembimbing->name ?? 'Pembimbing Lapangan' }}</strong></span>
-                        <span class="logbook-summary-bullet">&bull;</span>
-                        <span>Minggu Aktif: <strong>Minggu ke-{{ $mingguAktif }}</strong></span>
-                    </div>
-                </div>
-
                 {{-- 2-Column Grid: Minggu Magang & Tanggal Pelaporan --}}
                 <div class="logbook-modal-grid-2">
                     <div class="form-group-logbook form-group-compact">
                         <label for="tambah_minggu_ke" class="label-logbook form-label-compact">
                             <span>Minggu Magang <span class="req">*</span></span>
-                            <span id="labelRentangMinggu" class="label-rentang-tag"></span>
                         </label>
                         <select id="tambah_minggu_ke" name="minggu_ke" class="select-logbook form-control-compact" required onchange="onMingguChange(this.value)">
                             <option value="">-- Pilih Minggu --</option>
                             @foreach($daftarMinggu as $m)
+                                @php
+                                    $isSudahDiisi = $m['logbook'] !== null;
+                                    $isMendatang = $m['minggu_ke'] > $mingguAktif;
+                                    $isDisabled = $isSudahDiisi || $isMendatang;
+                                    $statusLabel = '';
+                                    if ($isSudahDiisi) {
+                                        $statusLabel = ' (Sudah Diisi)';
+                                    } elseif ($isMendatang) {
+                                        $statusLabel = ' (Belum Dibuka)';
+                                    }
+                                @endphp
                                 <option value="{{ $m['minggu_ke'] }}" 
                                         data-periode="{{ $m['label_periode'] }}"
-                                        data-terisi="{{ $m['logbook'] ? '1' : '0' }}"
-                                        {{ $m['logbook'] ? 'disabled' : '' }}>
-                                    Minggu ke-{{ $m['minggu_ke'] }} ({{ $m['label_periode'] }}) {{ $m['logbook'] ? '— Sudah Diisi' : '' }}
+                                        data-terisi="{{ $isSudahDiisi ? '1' : '0' }}"
+                                        data-mendatang="{{ $isMendatang ? '1' : '0' }}"
+                                        data-tgl-awal="{{ $m['tgl_awal']->toDateString() }}"
+                                        data-tgl-akhir="{{ $m['tgl_akhir']->toDateString() }}"
+                                        {{ $isDisabled ? 'disabled' : '' }}>
+                                    Minggu ke-{{ $m['minggu_ke'] }} ({{ $m['label_periode'] }}){{ $statusLabel }}
                                 </option>
                             @endforeach
                         </select>
-                        <p class="hint-logbook">Pilih minggu laporan yang belum pernah diisi.</p>
                     </div>
 
                     <div class="form-group-logbook form-group-compact">
@@ -355,17 +372,22 @@
                         <input type="date" id="tambah_tanggal" name="tanggal"
                                class="input-logbook form-control-compact"
                                value="{{ old('tanggal', now()->toDateString()) }}"
-                               min="{{ now()->subDays($logbookMaksMundur)->toDateString() }}"
+                               min="{{ \Carbon\Carbon::parse($penempatan->tgl_mulai)->toDateString() }}"
                                max="{{ now()->toDateString() }}"
                                required>
-                        <p class="hint-logbook">Maksimal hari ini.</p>
                     </div>
                 </div>
 
                 {{-- Alert Jika Minggu Sudah Pernah Diisi --}}
-                <div id="alertMingguSudahDiisi" style="display: none; padding: 12px 14px; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px;">
-                    <strong style="font-size: 0.8125rem; color: #1E3A8A; display: block;">Minggu Ini Sudah Pernah Dilaporkan</strong>
-                    <span style="font-size: 0.75rem; color: #1E40AF;">Untuk mengubah data laporan, gunakan tombol <strong>Edit</strong> pada kartu logbook terkait di daftar bawah.</span>
+                <div id="alertMingguSudahDiisi" class="alert-logbook-notice is-warning" style="display: none;">
+                    <strong class="alert-notice-title text-blue">Minggu Ini Sudah Pernah Dilaporkan</strong>
+                    <span class="alert-notice-desc text-blue-muted">Untuk mengubah data laporan, gunakan tombol <strong>Edit</strong> pada kartu logbook terkait di daftar bawah.</span>
+                </div>
+
+                {{-- Alert Jika Minggu Mendatang --}}
+                <div id="alertMingguMendatang" class="alert-logbook-notice is-future" style="display: none;">
+                    <strong class="alert-notice-title text-red">Minggu Belum Berjalan</strong>
+                    <span class="alert-notice-desc text-red-muted">Logbook untuk minggu mendatang belum dapat diisi. Silakan pilih minggu yang sedang aktif atau minggu lampau yang belum diisi.</span>
                 </div>
 
                 <div id="formFieldsLogbook">
@@ -377,8 +399,9 @@
                         </label>
                         <textarea id="tambah_kegiatan" name="kegiatan" rows="4" class="textarea-logbook form-control-compact"
                                   placeholder="Tuliskan aktivitas utama yang diselesaikan, kendala, dan hasil pekerjaan pekan ini..."
-                                  required oninput="updateCharCount(this, 'tambah_char_count')">{{ old('kegiatan') }}</textarea>
-                        <p class="hint-logbook">Uraikan deskripsi kegiatan minimal 10 karakter secara jelas dan profesional.</p>
+                                  required minlength="10"
+                                  oninput="updateCharCount(this, 'tambah_char_count')"
+                                  onchange="updateCharCount(this, 'tambah_char_count')">{{ old('kegiatan') }}</textarea>
                     </div>
 
                     {{-- Panel Lampiran Terpadu --}}
@@ -447,7 +470,6 @@
                 </div>
                 <div>
                     <h3 class="modal-title-logbook modal-title-text">Perbarui Logbook Mingguan</h3>
-                    <p id="modalEditSubtitle" class="modal-subtitle-logbook modal-subtitle-text">Memperbarui rincian logbook</p>
                 </div>
             </div>
             <button type="button" onclick="closeEditModal()" class="modal-close-logbook modal-close-btn" aria-label="Tutup Formulir" title="Tutup">&times;</button>
@@ -461,24 +483,12 @@
             <input type="hidden" id="edit_tanggal" name="tanggal">
 
             <div class="modal-body-logbook modal-body-compact">
-                {{-- Kartu Ringkasan Konteks Penempatan --}}
-                <div class="logbook-summary-card">
-                    <div class="logbook-summary-row">
-                        <span class="logbook-summary-bidang">{{ $penempatan->bidang->nama_bidang ?? 'Dinas Komunikasi dan Informatika Sleman' }}</span>
-                        <span class="logbook-summary-badge" style="background: rgba(255, 195, 0, 0.15); color: #854D0E; border-color: #FDE047;">Mode Edit</span>
-                    </div>
-                    <div class="logbook-summary-sub">
-                        <span>Pembimbing: <strong>{{ $penempatan->pembimbing->nama ?? $penempatan->pembimbing->name ?? 'Pembimbing Lapangan' }}</strong></span>
-                    </div>
-                </div>
-
                 <div class="form-group-logbook form-group-compact">
                     <label for="edit_kegiatan" class="label-logbook form-label-compact">
                         <span>Ringkasan Kegiatan & Capaian <span class="req">*</span></span>
-                        <span id="edit_char_count" class="char-counter-tag char-counter-compact">0 karakter</span>
+                        <span id="edit_char_count" class="char-counter-tag char-counter-compact">0 karakter (minimal 10)</span>
                     </label>
-                    <textarea id="edit_kegiatan" name="kegiatan" rows="4" class="textarea-logbook form-control-compact" required oninput="updateCharCount(this, 'edit_char_count')"></textarea>
-                    <p class="hint-logbook">Perbarui catatan aktivitas dan hasil pekerjaan magang Anda.</p>
+                    <textarea id="edit_kegiatan" name="kegiatan" rows="4" class="textarea-logbook form-control-compact" required minlength="10" oninput="updateCharCount(this, 'edit_char_count')"></textarea>
                 </div>
 
                 {{-- Panel Lampiran Terpadu --}}

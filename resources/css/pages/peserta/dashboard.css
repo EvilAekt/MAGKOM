@@ -1586,7 +1586,287 @@ body,
 }
 
 /* ==============================================================================
-   8. Responsive Media Queries
+   9. Peserta Dashboard Onboarding & Phase Cards (Panduan Alur Pendaftaran Magang)
+   ============================================================================== */
+.saas-card {
+  background: var(--bento-card-bg, #FFFFFF);
+  border: 1px solid var(--bento-card-border, #e3e8f0);
+  border-radius: 16px;
+  box-shadow: var(--bento-card-shadow, 0 4px 18px rgba(0, 53, 102, 0.06));
+  overflow: hidden;
+  margin-bottom: 20px;
+  transition: all 0.2s ease;
+}
+
+.saas-card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--bento-card-border, #e3e8f0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.saas-item-title {
+  font-family: var(--font-display, 'Lexend', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--bento-text-title, #003566);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.saas-card-subtitle {
+  font-size: 0.8125rem;
+  color: var(--bento-text-muted, #5b6573);
+  margin: 4px 0 0 0;
+  line-height: 1.4;
+}
+
+.saas-badge-portal {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #003566;
+  background: #FFF3C7;
+  border: 1px solid #FFC300;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.saas-card-body {
+  padding: 20px 24px;
+}
+
+/* Stepper List 1, 2, 3 (Onboarding Guide) */
+.saas-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.saas-step-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 14px;
+  text-decoration: none !important;
+  color: inherit !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.saas-step-item:hover {
+  border-color: #003566;
+  background: #F8FAFC;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 53, 102, 0.08);
+}
+
+.saas-step-item.completed {
+  border: 1.5px solid #FFC300;
+  background: rgba(255, 195, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(255, 195, 0, 0.12);
+}
+
+.saas-step-item.completed:hover {
+  border-color: #E5B604;
+  background: rgba(255, 195, 0, 0.14);
+  box-shadow: 0 6px 18px rgba(255, 195, 0, 0.20);
+}
+
+.saas-step-item.active {
+  border-color: #003566;
+  background: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(0, 53, 102, 0.06);
+}
+
+.saas-step-item.is-locked {
+  background: #F8FAFC;
+  border-color: #E2E8F0;
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.saas-step-item.is-locked:hover {
+  transform: none;
+  border-color: #E2E8F0;
+  box-shadow: none;
+}
+
+/* Badge Lingkaran 1, 2, 3 / Centang */
+.saas-step-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #003566;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.saas-step-item:hover .saas-step-badge {
+  transform: scale(1.06);
+}
+
+.saas-step-item.completed .saas-step-badge {
+  background: #FFC300;
+  color: #003566;
+  border: 2px solid #E5B604;
+  box-shadow: 0 2px 8px rgba(255, 195, 0, 0.35);
+}
+
+.saas-step-item.is-locked .saas-step-badge {
+  background: #CBD5E1;
+  color: #64748B;
+}
+
+.saas-step-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.saas-step-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: #0F172A;
+  line-height: 1.35;
+}
+
+.saas-step-title > span:first-child {
+  white-space: normal;
+  word-break: break-word;
+}
+
+.saas-step-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  line-height: 1.2;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.saas-step-state.state-done {
+  background: #FEF3C7;
+  color: #003566;
+  border: 1px solid #FFC300;
+  font-weight: 800;
+  box-shadow: 0 1px 3px rgba(255, 195, 0, 0.2);
+}
+
+.saas-step-state.state-action {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+}
+
+.saas-step-state.state-locked {
+  background: #F1F5F9;
+  color: #64748B;
+  border: 1px solid #CBD5E1;
+}
+
+/* Dark Mode Overrides for Onboarding */
+[data-theme="dark"] .saas-card {
+  background: var(--bento-card-bg, #0E2548) !important;
+  border-color: var(--bento-card-border, rgba(255, 255, 255, 0.07)) !important;
+  color: var(--bento-text-main, #EAF0FA) !important;
+}
+
+[data-theme="dark"] .saas-card-header {
+  border-bottom-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+[data-theme="dark"] .saas-item-title {
+  color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .saas-card-subtitle {
+  color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .saas-badge-portal {
+  background: rgba(255, 195, 0, 0.15) !important;
+  color: #FFC300 !important;
+  border-color: rgba(255, 195, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .saas-step-item {
+  background: #0A1B35 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .saas-step-item:hover {
+  background: #0E2548 !important;
+  border-color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .saas-step-item.completed {
+  background: rgba(255, 195, 0, 0.08) !important;
+  border-color: rgba(255, 195, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .saas-step-item.active {
+  background: #0D2447 !important;
+  border-color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .saas-step-item.is-locked {
+  background: #061630 !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="dark"] .saas-step-badge {
+  background: #003566 !important;
+  color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .saas-step-title {
+  color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .saas-step-state.state-done {
+  background: rgba(255, 195, 0, 0.15) !important;
+  color: #FFC300 !important;
+  border-color: rgba(255, 195, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .saas-step-state.state-action {
+  background: rgba(56, 189, 248, 0.15) !important;
+  color: #38BDF8 !important;
+  border-color: rgba(56, 189, 248, 0.35) !important;
+}
+
+[data-theme="dark"] .saas-step-state.state-locked {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #94A3B8 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ==============================================================================
+   10. Responsive Media Queries
    ============================================================================== */
 @media (max-width: 1024px) {
   .bento-layout-grid {
@@ -1803,5 +2083,18 @@ body,
 
   .gauge-center-percent {
     font-size: 28px !important;
+  }
+
+  .saas-card-header {
+    padding: 16px;
+  }
+
+  .saas-card-body {
+    padding: 16px;
+  }
+
+  .saas-step-item {
+    padding: 14px 16px;
+    gap: 12px;
   }
 }

@@ -309,28 +309,34 @@
 /* Footer CTA Action */
 .active-card-cta-row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
+    width: 100%;
 }
 
-.btn-gold-action {
+.btn-gold-action,
+.active-card-cta-row .btn-gold-action {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     background: #FFC300;
     color: #02275D;
     border: 1.5px solid #FFC300;
-    padding: 11px 22px;
+    padding: 10px 24px;
     border-radius: 10px;
     font-size: 0.875rem;
     font-weight: 800;
     text-decoration: none;
     cursor: pointer;
+    width: auto;
+    max-width: 320px;
     box-shadow: 0 2px 8px rgba(255, 195, 0, 0.35);
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.btn-gold-action:hover {
+.btn-gold-action:hover,
+.active-card-cta-row .btn-gold-action:hover {
     background: #FFCB05;
     border-color: #FFCB05;
     color: #003566;
@@ -338,7 +344,8 @@
     box-shadow: 0 4px 14px rgba(255, 195, 0, 0.45);
 }
 
-.btn-gold-action svg {
+.btn-gold-action svg,
+.active-card-cta-row .btn-gold-action svg {
     color: #02275D;
 }
 
@@ -369,8 +376,10 @@
         grid-template-columns: 1fr;
     }
 
-    .btn-gold-action {
-        width: 100%;
+    .btn-gold-action,
+    .active-card-cta-row .btn-gold-action {
+        width: auto;
+        max-width: 100%;
         justify-content: center;
     }
 }

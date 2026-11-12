@@ -122,7 +122,7 @@
     font-weight: 500;
 }
 
-.btn-gold-action {
+.banner-gold-widget .btn-gold-action {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -139,7 +139,7 @@
     cursor: pointer;
 }
 
-.btn-gold-action:hover {
+.banner-gold-widget .btn-gold-action:hover {
     background: #002244;
     color: #ffffff !important;
     text-decoration: none;
