@@ -208,4 +208,144 @@ class RolePermissionTest extends TestCase
             'permission_id' => $customPermission->id,
         ]);
     }
+
+    public function test_system_permissions_are_auto_provisioned_when_accessing_index_on_empty_database(): void
+    {
+        // Kosongkan seluruh permission dan role permissions
+        RolePermission::query()->delete();
+        Permission::query()->delete();
+
+        $this->assertSame(0, Permission::count());
+        $this->assertSame(0, RolePermission::count());
+
+        // Kunjungi halaman index sebagai SuperAdmin
+        $response = $this->actingAs($this->superAdmin)
+            ->get(route('superadmin.role.index'));
+
+        $response->assertOk();
+
+        // 13 Modul definitif sistem harus otomatis ter-provisioning (Auto-provisioning & Self-healing)
+        $this->assertSame(13, Permission::where('is_system', true)->count());
+        $this->assertGreaterThan(0, RolePermission::count());
+
+        $response->assertSee('Portal Publik &amp; Registrasi Calon Peserta', false);
+        $response->assertSee('Sinkronkan Modul Standar');
+    }
+
+    public function test_superadmin_can_update_permission_metadata(): void
+    {
+        $permission = Permission::where('slug', 'kuota.manajemen')->firstOrFail();
+
+        $payload = [
+            'nama_modul' => 'Manajemen Kuota Terpadu Diskominfo',
+            'kategori' => 'Kuota',
+            'deskripsi' => 'Pengaturan batas kuota umum dan khusus dinas yang diselaraskan.',
+        ];
+
+        $response = $this->actingAs($this->superAdmin)
+            ->put(route('superadmin.role.permission.update', $permission), $payload);
+
+        $response->assertRedirect(route('superadmin.role.index'));
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('permissions', [
+            'id' => $permission->id,
+            'nama_modul' => 'Manajemen Kuota Terpadu Diskominfo',
+            'deskripsi' => 'Pengaturan batas kuota umum dan khusus dinas yang diselaraskan.',
+        ]);
+
+        $this->assertDatabaseHas('audit_log', [
+            'aksi' => 'EDIT_HAK_AKSES_MODUL',
+            'entitas' => 'permissions',
+            'entitas_id' => $permission->id,
+        ]);
+    }
+
+    public function test_cannot_modify_slug_of_system_permission(): void
+    {
+        $systemPermission = Permission::where('slug', 'publik.portal-registrasi')->firstOrFail();
+
+        $payload = [
+            'nama_modul' => 'Portal Publik Diskominfo',
+            'slug' => 'hacked.slug.portal',
+            'kategori' => 'Publik',
+            'deskripsi' => 'Akses informasi formasi publik.',
+        ];
+
+        $response = $this->actingAs($this->superAdmin)
+            ->put(route('superadmin.role.permission.update', $systemPermission), $payload);
+
+        $response->assertRedirect(route('superadmin.role.index'));
+
+        // Slug modul sistem wajib tetap publik.portal-registrasi (immutable)
+        $systemPermission->refresh();
+        $this->assertSame('publik.portal-registrasi', $systemPermission->slug);
+        $this->assertSame('Portal Publik Diskominfo', $systemPermission->nama_modul);
+    }
+
+    public function test_superadmin_can_update_slug_of_custom_permission(): void
+    {
+        /** @var Permission $customPermission */
+        $customPermission = Permission::create([
+            'nama_modul' => 'Modul Kustom Lama',
+            'slug' => 'kustom.lama',
+            'kategori' => 'Umum',
+            'is_system' => false,
+        ]);
+
+        $payload = [
+            'nama_modul' => 'Modul Kustom Diperbarui',
+            'slug' => 'kustom.baru',
+            'kategori' => 'Tata Kelola',
+            'deskripsi' => 'Deskripsi kustom.',
+        ];
+
+        $response = $this->actingAs($this->superAdmin)
+            ->put(route('superadmin.role.permission.update', $customPermission), $payload);
+
+        $response->assertRedirect(route('superadmin.role.index'));
+
+        $customPermission->refresh();
+        $this->assertSame('kustom.baru', $customPermission->slug);
+        $this->assertSame('Modul Kustom Diperbarui', $customPermission->nama_modul);
+        $this->assertSame('Tata Kelola', $customPermission->kategori);
+    }
+
+    public function test_superadmin_can_sync_default_permissions_via_post_route(): void
+    {
+        $response = $this->actingAs($this->superAdmin)
+            ->post(route('superadmin.role.sync'));
+
+        $response->assertRedirect(route('superadmin.role.index'));
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('audit_log', [
+            'aksi' => 'SINKRONISASI_MODUL_SISTEM',
+            'entitas' => 'permissions',
+        ]);
+    }
+
+    public function test_non_superadmin_forbidden_from_updating_or_syncing_permissions(): void
+    {
+        $permission = Permission::firstOrFail();
+
+        $this->actingAs($this->admin)
+            ->put(route('superadmin.role.permission.update', $permission), [
+                'nama_modul' => 'Perubahan Ilegal',
+                'kategori' => 'Umum',
+            ])
+            ->assertForbidden();
+
+        $this->actingAs($this->admin)
+            ->post(route('superadmin.role.sync'))
+            ->assertForbidden();
+
+        $this->actingAs($this->pembimbing)
+            ->post(route('superadmin.role.sync'))
+            ->assertForbidden();
+
+        $this->actingAs($this->peserta)
+            ->post(route('superadmin.role.sync'))
+            ->assertForbidden();
+    }
 }

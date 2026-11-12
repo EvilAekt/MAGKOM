@@ -29,6 +29,22 @@ a { color: #003566; }
 a:hover { color: #02275D; text-decoration: underline; }
 input::placeholder { color: #5F6B76; opacity: 1; }
 .fld:focus-visible { outline: 2px solid #3F51B5; outline-offset: 1px; }
+
+/* CAPTCHA Input Auto-Capitalize & Monospace Spacing */
+.captcha-input,
+input[name="captcha"] {
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+}
+
+.captcha-input::placeholder,
+input[name="captcha"]::placeholder {
+  text-transform: none !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+  color: #5F6B76 !important;
+}
 .btn-main:hover { background: #02275D !important; }
 .btn-alt:hover { background: #F3F6FB !important; }
 .btn-ico:hover { background: #F3F6FB !important; }

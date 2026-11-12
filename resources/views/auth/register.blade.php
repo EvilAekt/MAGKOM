@@ -191,7 +191,7 @@
         <div>
           <div style="position: relative">
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"></path></svg>
-            <input id="kode" name="captcha" class="fld" type="text" maxlength="4" autocomplete="off" aria-describedby="hint-kode" placeholder="4 digit kode di atas" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
+            <input id="kode" name="captcha" class="fld captcha-input" type="text" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="hint-kode" placeholder="4 digit kode di atas" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
           </div>
           <p id="hint-kode" style="margin: 6px 0 0; font-size: 12.5px; line-height: 1.4; color: #5F6B76">Masukkan 4 karakter yang tampil pada gambar (tidak sensitif huruf besar/kecil).</p>
         </div>

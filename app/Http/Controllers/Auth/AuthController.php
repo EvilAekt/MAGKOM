@@ -27,7 +27,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -44,11 +44,23 @@ class AuthController extends Controller
 
     public function login(Request $request): RedirectResponse
     {
+        // 1. Normalisasi email (huruf kecil) dan captcha (huruf besar/kapital)
+        $merges = [
+            'email' => strtolower(trim((string) $request->input('email'))),
+        ];
+
+        if ($request->has('captcha')) {
+            $merges['captcha'] = strtoupper(trim((string) $request->input('captcha')));
+        }
+
+        $request->merge($merges);
+
         $turnstileEnabled = (bool) config('services.turnstile.enabled', false);
         $captchaEnabled = (bool) config('captcha.enabled', true);
 
+        // 2. Validasi ketat format email RFC
         $rules = [
-            'email' => ['required', 'string'],
+            'email' => ['required', 'string', 'email:rfc'],
             'password' => ['required', 'string'],
         ];
 
@@ -61,38 +73,50 @@ class AuthController extends Controller
             $rules['captcha'] = ['required', 'string', 'size:4', new CaptchaRule];
         }
 
-        $credentials = $request->validate($rules);
+        $credentials = $request->validate($rules, [
+            'email.email' => 'Format email tidak valid. Harap masukkan alamat email lengkap (contoh: nama@gmail.com).',
+        ]);
 
-        $inputEmail = $credentials['email'];
-        if ($inputEmail === 'admin') {
-            $inputEmail = 'admin@tim.magkom.go.id';
+        $normalizedEmail = $credentials['email'];
+        $clientIp = $request->ip();
+        $throttleKey = $normalizedEmail.'|'.$clientIp;
+        $failCounterKey = 'login_fails:'.$throttleKey;
+
+        // 3. Pengecekan status Rate Limiter (Ambang batas 3 kegagalan)
+        if (RateLimiter::tooManyAttempts($throttleKey, 3)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Auth,
+                tabel: 'users',
+                idData: null,
+                detail: [
+                    'aksi' => 'login_diblokir_rate_limit',
+                    'email' => $normalizedEmail,
+                    'ip_address' => $clientIp,
+                    'user_agent' => substr((string) $request->userAgent(), 0, 255),
+                    'lockout_seconds' => $seconds,
+                    'keterangan' => 'Akun dibekukan sementara karena salah password 3 kali atau lebih.',
+                ]
+            );
+
+            return back()->with([
+                'lockout_seconds' => $seconds,
+                'error_lockout' => 'Akses akun dibekukan sementara karena 3 kali salah memasukkan kata sandi. Silakan tunggu hitung mundur selesai sebelum mencoba kembali.',
+            ])->withErrors([
+                'email' => 'Akses akun dibekukan sementara karena terlalu banyak percobaan masuk yang gagal.',
+            ])->onlyInput('email');
         }
 
-        $loginSuccess = Auth::attempt(['email' => $inputEmail, 'password' => $credentials['password']], $request->boolean('remember'));
-
-        // Fallback khusus lingkungan lokal (development): Berikan fleksibilitas login jika mencoba variasi password umum
-        if (! $loginSuccess && app()->isLocal()) {
-            if ($credentials['email'] === 'admin' || $credentials['email'] === 'admin@tim.magkom.go.id') {
-                $timUser = User::where('email', 'admin@tim.magkom.go.id')->first();
-                if ($timUser && in_array($credentials['password'], ['admin', 'password', 'Password123!'], true)) {
-                    $timUser->password = Hash::make($credentials['password']);
-                    $timUser->save();
-                    $loginSuccess = Auth::attempt(['email' => 'admin@tim.magkom.go.id', 'password' => $credentials['password']], $request->boolean('remember'));
-                }
-            } elseif ($credentials['email'] === 'superadmin@magkom.go.id') {
-                $allowedDevPasswords = ['Password123!', 'SuperAdminMagKom123!', 'password'];
-                if (in_array($credentials['password'], $allowedDevPasswords, true)) {
-                    $superadminUser = User::where('email', 'superadmin@magkom.go.id')->first();
-                    if ($superadminUser) {
-                        $superadminUser->password = Hash::make($credentials['password']);
-                        $superadminUser->save();
-                        $loginSuccess = Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']], $request->boolean('remember'));
-                    }
-                }
-            }
-        }
+        // 4. Autentikasi murni
+        $loginSuccess = Auth::attempt(
+            ['email' => $normalizedEmail, 'password' => $credentials['password']],
+            $request->boolean('remember')
+        );
 
         if ($loginSuccess) {
+            RateLimiter::clear($throttleKey);
+            RateLimiter::clear($failCounterKey);
             $request->session()->regenerate();
             $user = Auth::user();
 
@@ -102,7 +126,11 @@ class AuthController extends Controller
                 idData: $user->id,
                 nilaiLama: null,
                 nilaiBaru: ['email' => $user->email, 'role' => $user->role->value],
-                detail: ['aksi' => 'login_berhasil']
+                detail: [
+                    'aksi' => 'login_berhasil',
+                    'ip_address' => $clientIp,
+                    'user_agent' => substr((string) $request->userAgent(), 0, 255),
+                ]
             );
 
             $targetDashboard = match ($user->role) {
@@ -122,13 +150,69 @@ class AuthController extends Controller
             return redirect()->intended($targetDashboard);
         }
 
+        // 5. Tangani Kegagalan Autentikasi (Password Salah / Kredensial Salah)
+        // Hitung akumulasi kegagalan untuk eskalasi penalti (Tiered Progressive Backoff)
+        $currentFails = (int) RateLimiter::attempts($failCounterKey) + 1;
+        RateLimiter::hit($failCounterKey, 1800); // Simpan riwayat akumulasi kegagalan selama 30 menit
+
+        // Tentukan durasi pembekuan berdasarkan tingkat pelanggaran:
+        // - Tier 1: 3x salah => 60 detik (1 menit)
+        // - Tier 2: 6x salah => 300 detik (5 menit)
+        // - Tier 3: 9x salah ke atas => 900 detik (15 menit)
+        $lockoutDuration = match (true) {
+            $currentFails >= 9 => 900,
+            $currentFails >= 6 => 300,
+            default => 60,
+        };
+
+        // Jika tepat mencapai kelipatan 3 kegagalan, kunci dengan durasi eskalasi penuh
+        if ($currentFails % 3 === 0) {
+            RateLimiter::clear($throttleKey);
+            for ($i = 0; $i < 3; $i++) {
+                RateLimiter::hit($throttleKey, $lockoutDuration);
+            }
+        } else {
+            RateLimiter::hit($throttleKey, $lockoutDuration);
+        }
+
+        // Jika setelah hit ini status akun terkunci, segera arahkan dengan banner lockout!
+        if (RateLimiter::tooManyAttempts($throttleKey, 3)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Auth,
+                tabel: 'users',
+                idData: null,
+                detail: [
+                    'aksi' => 'login_terkunci_baru',
+                    'email' => $normalizedEmail,
+                    'ip_address' => $clientIp,
+                    'akumulasi_gagal' => $currentFails,
+                    'lockout_seconds' => $seconds,
+                ]
+            );
+
+            return back()->with([
+                'lockout_seconds' => $seconds,
+                'error_lockout' => 'Anda telah salah memasukkan kata sandi sebanyak 3 kali. Akses akun dibekukan sementara selama '.$seconds.' detik.',
+            ])->withErrors([
+                'email' => 'Akses akun dibekukan sementara karena Anda telah salah memasukkan kata sandi sebanyak 3 kali.',
+            ])->onlyInput('email');
+        }
+
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
             tabel: 'users',
             idData: null,
             nilaiLama: null,
-            nilaiBaru: ['email_percobaan' => $request->input('email')],
-            detail: ['aksi' => 'login_gagal_kredensial_salah']
+            nilaiBaru: ['email_percobaan' => $normalizedEmail],
+            detail: [
+                'aksi' => 'login_gagal_kredensial_salah',
+                'percobaan_ke' => $currentFails,
+                'sisa_kesempatan' => max(0, 3 - ($currentFails % 3)),
+                'ip_address' => $clientIp,
+                'user_agent' => substr((string) $request->userAgent(), 0, 255),
+            ]
         );
 
         return back()->withErrors([
@@ -199,6 +283,17 @@ class AuthController extends Controller
 
     public function register(Request $request): RedirectResponse
     {
+        // 1. Normalisasi email (huruf kecil) dan captcha (huruf besar/kapital)
+        $merges = [
+            'email' => strtolower(trim((string) $request->input('email'))),
+        ];
+
+        if ($request->has('captcha')) {
+            $merges['captcha'] = strtoupper(trim((string) $request->input('captcha')));
+        }
+
+        $request->merge($merges);
+
         $turnstileEnabled = (bool) config('services.turnstile.enabled', false);
         $captchaEnabled = (bool) config('captcha.enabled', true);
 
@@ -214,11 +309,16 @@ class AuthController extends Controller
             ])->withInput();
         }
 
+        $passwordRules = ['required', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'];
+        if ($request->has('password_confirmation')) {
+            $passwordRules[] = 'confirmed';
+        }
+
         $rules = [
             'nama' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'email' => ['required', 'string', 'email:rfc', 'max:255', 'unique:users,email'],
             'no_telp' => ['sometimes', 'required', 'string', 'max:20', 'regex:/^[0-9\+\-\s]+$/'],
-            'password' => ['required', 'string', Password::min(8)],
+            'password' => $passwordRules,
             'tipe_pendaftaran' => ['nullable', 'string', 'in:mandiri,kelompok'],
             'jenjang' => ['nullable', 'string', 'in:smk,d3,s1'],
             'jurusan_id' => ['nullable', 'integer', 'exists:jurusan,id'],
@@ -247,7 +347,7 @@ class AuthController extends Controller
             $rules['anggota.*.nama'] = ['required', 'string', 'max:255'];
             $rules['anggota.*.nim_nisn'] = ['required', 'string', 'max:50'];
             $rules['anggota.*.no_hp'] = ['required', 'string', 'max:30'];
-            $rules['anggota.*.email'] = ['required', 'email', 'max:255'];
+            $rules['anggota.*.email'] = ['required', 'email:rfc', 'max:255'];
         }
 
         if ($turnstileEnabled) {
@@ -259,7 +359,12 @@ class AuthController extends Controller
             $rules['captcha'] = ['required', 'string', 'size:4', new CaptchaRule];
         }
 
-        $validated = $request->validate($rules);
+        $validated = $request->validate($rules, [
+            'email.email' => 'Alamat email tidak valid. Gunakan format email resmi (contoh: nama@gmail.com).',
+            'password.min' => 'Kata sandi minimal 8 karakter.',
+            'password.regex' => 'Kata sandi harus mengandung kombinasi huruf dan angka.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+        ]);
 
         $user = DB::transaction(function () use ($validated, $request, $isKelompok) {
             $user = new User;
@@ -314,13 +419,21 @@ class AuthController extends Controller
 
         Auth::login($user);
 
+        // Anti-Session Fixation: Regenerasi sesi pengguna yang baru login
+        $request->session()->regenerate();
+
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
             tabel: 'users',
             idData: $user->id,
             nilaiLama: null,
             nilaiBaru: ['nama' => $user->nama, 'email' => $user->email, 'no_telp' => $user->no_telp, 'role' => $user->role->value],
-            detail: ['aksi' => 'registrasi_peserta_baru', 'tipe' => $isKelompok ? 'kelompok' : 'mandiri']
+            detail: [
+                'aksi' => 'registrasi_peserta_baru',
+                'tipe' => $isKelompok ? 'kelompok' : 'mandiri',
+                'ip_address' => $request->ip(),
+                'user_agent' => substr((string) $request->userAgent(), 0, 255),
+            ]
         );
 
         $preferensiJurusanId = $request->input('redirect_jurusan') ?: ($validated['jurusan_id'] ?? null);
