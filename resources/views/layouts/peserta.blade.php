@@ -20,7 +20,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Gentelella Theme CSS -->
-    <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}?v={{ file_exists(public_path('css/gentelella-theme.css')) ? (string) filemtime(public_path('css/gentelella-theme.css')) : '1.0' }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard-cockpit-unified.css') }}">
 
     <!-- Vite Asset Pipeline (PRD-TASK-VITE-01) -->
@@ -1832,18 +1832,59 @@
             }
         }
 
+        .sidebar-drawer-close-btn {
+            display: none !important;
+        }
+
         /* Responsive Breakpoints */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px !important;
+                max-width: 85vw !important;
+                z-index: 1050 !important;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35) !important;
             }
 
-            .sidebar.open {
-                transform: translateX(0);
+            .sidebar.open,
+            .sidebar.drawer-open,
+            body.drawer-open .sidebar {
+                transform: translateX(0) !important;
             }
 
-            .drawer-backdrop.open {
-                display: block;
+            .drawer-backdrop {
+                z-index: 1040 !important;
+                background-color: rgba(15, 23, 42, 0.6) !important;
+                backdrop-filter: blur(2px) !important;
+            }
+
+            .drawer-backdrop.open,
+            .drawer-backdrop.active,
+            body.drawer-open .drawer-backdrop {
+                display: block !important;
+            }
+
+            .sidebar-drawer-close-btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 44px !important;
+                height: 44px !important;
+                min-width: 44px !important;
+                min-height: 44px !important;
+                background: rgba(255, 255, 255, 0.12) !important;
+                border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                border-radius: 8px !important;
+                color: #FFFFFF !important;
+                font-size: 1.5rem !important;
+                line-height: 1 !important;
+                cursor: pointer !important;
+                transition: all 0.15s ease !important;
+                margin-left: auto !important;
+            }
+
+            .sidebar-drawer-close-btn:hover {
+                background: rgba(255, 255, 255, 0.25) !important;
             }
 
             .main-wrapper {
@@ -1933,6 +1974,13 @@
                     <span class="sidebar-brand-subtitle">Magang Kominfo &bull; MAGANG KOMINFO &bull; Dinas Kominfo Sleman MagKom Sleman</span>
                 </span>
             </a>
+            <button type="button" 
+                    class="sidebar-drawer-close-btn" 
+                    onclick="toggleSidebarPeserta(false)" 
+                    aria-label="{{ __('Tutup Navigasi') }}" 
+                    title="{{ __('Tutup Menu') }}">
+                &times;
+            </button>
         </div>
 
         <nav class="sidebar-nav">
@@ -2284,14 +2332,27 @@
                 });
             });
         });
-        function toggleSidebarPeserta() {
+        function toggleSidebarPeserta(forceState) {
             const isMobile = window.innerWidth <= 1024;
             const sidebar = document.getElementById('sidebarNav');
             const backdrop = document.getElementById('drawerBackdrop');
 
             if (isMobile) {
-                if (sidebar) sidebar.classList.toggle('open');
-                if (backdrop) backdrop.classList.toggle('open');
+                if (!sidebar) return;
+                const isCurrentlyOpen = sidebar.classList.contains('open') || sidebar.classList.contains('drawer-open');
+                const shouldOpen = typeof forceState === 'boolean' ? forceState : !isCurrentlyOpen;
+
+                if (shouldOpen) {
+                    sidebar.classList.add('open', 'drawer-open');
+                    document.body.classList.add('drawer-open');
+                    if (backdrop) backdrop.classList.add('open', 'active');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    sidebar.classList.remove('open', 'drawer-open');
+                    document.body.classList.remove('drawer-open');
+                    if (backdrop) backdrop.classList.remove('open', 'active');
+                    document.body.style.overflow = '';
+                }
             } else {
                 const html = document.documentElement;
                 const isCollapsed = html.classList.toggle('sidebar-collapsed');
@@ -2300,6 +2361,23 @@
                 } catch (e) {}
             }
         }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                toggleSidebarPeserta(false);
+            }
+        });
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 1024) {
+                const sidebar = document.getElementById('sidebarNav');
+                const backdrop = document.getElementById('drawerBackdrop');
+                if (sidebar) sidebar.classList.remove('open', 'drawer-open');
+                if (backdrop) backdrop.classList.remove('open', 'active');
+                document.body.classList.remove('drawer-open');
+                document.body.style.overflow = '';
+            }
+        });
 
         function toggleSidebar() {
             toggleSidebarPeserta();
@@ -2432,7 +2510,7 @@
             });
         }
     </script>
-    <script src="{{ asset('js/gentelella-theme.js') }}"></script>
+    <script src="{{ asset('js/gentelella-theme.js') }}?v={{ file_exists(public_path('js/gentelella-theme.js')) ? (string) filemtime(public_path('js/gentelella-theme.js')) : '1.0' }}"></script>
     <script src="{{ asset('js/dashboard-cockpit-unified.js') }}"></script>
     @stack('scripts')
     {{-- Mobile Floating Action Button (FAB) --}}

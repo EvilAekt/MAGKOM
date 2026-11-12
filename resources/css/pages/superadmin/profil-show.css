@@ -1,4 +1,4 @@
-/* =========================================================================
+﻿/* =========================================================================
    MAGKOM - HALAMAN PROFIL & DATA SUPER ADMINISTRATOR
    Acuan Desain: Standar Desain Sistem MagKom (Sleman Navy & Gold Accent)
    Sesuai Aturan AGENTS.md (Vanilla CSS, Scoped, Responsive, No Inline)
@@ -619,32 +619,179 @@
 /* =========================================================================
    5. RESPONSIVE BREAKPOINTS (TABLET & MOBILE)
    ========================================================================= */
+@media (max-width: 1024px) {
+    .profil-checklist-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+}
+
 @media (max-width: 768px) {
+    .profil-page-wrapper {
+        padding: 0 0 20px 0;
+    }
+
     .profil-main-card {
         padding: 20px 16px;
+        gap: 16px;
+        border-radius: 12px;
     }
+
+    /* Hero Banner Mobile */
     .profil-identity-banner {
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
+        padding: 16px;
     }
+
+    .profil-identity-left {
+        width: 100%;
+        gap: 14px;
+    }
+
+    .profil-avatar-box,
+    .profil-avatar-img-wrap {
+        width: 64px;
+        height: 64px;
+    }
+
+    .profil-avatar-initial {
+        font-size: 1.5rem;
+    }
+
+    .profil-user-name {
+        font-size: 1.05rem;
+    }
+
     .profil-identity-right {
-        align-items: flex-start;
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .profil-btn-upload-photo {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 16px;
+    }
+
+    .profil-photo-subtext {
+        text-align: center;
+        margin-top: 4px;
         width: 100%;
     }
+
+    /* Status Card Mobile */
+    .profil-completeness-card {
+        padding: 16px;
+    }
+
+    .profil-completeness-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .profil-completeness-percent {
+        font-size: 0.95rem;
+    }
+
     .profil-checklist-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
     }
+
+    .profil-checklist-item {
+        font-size: 0.75rem;
+        padding: 6px 8px;
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+    }
+
+    /* Section Form Card Mobile */
+    .profil-section-card {
+        padding: 18px 16px;
+        gap: 14px;
+    }
+
+    .profil-section-header {
+        align-items: flex-start;
+    }
+
     .profil-fields-grid {
         grid-template-columns: 1fr;
+        gap: 14px;
     }
+
+    .profil-field-col-full {
+        grid-column: 1;
+    }
+
+    /* Bottom Action Bar Mobile */
     .profil-bottom-actions {
         flex-direction: column;
         align-items: stretch;
+        gap: 14px;
+        padding-top: 4px;
     }
+
+    .profil-agreement-label {
+        font-size: 0.775rem;
+    }
+
     .profil-btn-submit {
-        justify-content: center;
         width: 100%;
+        justify-content: center;
+        padding: 12px 20px;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profil-main-card {
+        padding: 16px 12px;
+    }
+
+    .profil-identity-left {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .profil-name-row {
+        gap: 6px;
+    }
+
+    .profil-badge-role {
+        font-size: 0.575rem;
+        padding: 2px 7px;
+    }
+
+    .profil-checklist-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profil-section-title-wrap {
+        gap: 10px;
+    }
+
+    .profil-section-icon-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+    }
+
+    .profil-section-icon-badge svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .profil-section-heading {
+        font-size: 0.875rem;
+    }
+
+    .profil-btn-edit {
+        padding: 4px 10px;
+        font-size: 0.725rem;
     }
 }
 

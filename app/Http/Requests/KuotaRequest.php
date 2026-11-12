@@ -86,7 +86,7 @@ class KuotaRequest extends FormRequest
                 if ($totalSetelahInput > $maksPerBulan) {
                     $validator->errors()->add(
                         'jumlah',
-                        "Total alokasi kuota umum untuk bulan ini ({$totalSetelahInput}) melebihi batas maksimum yang ditetapkan ({$maksPerBulan} peserta) sesuai aturan instansi (BR-01, AC-05-2)."
+                        "Total alokasi kuota umum untuk bulan ini ({$totalSetelahInput}) melebihi batas maksimum yang ditetapkan ({$maksPerBulan} peserta) sesuai aturan instansi."
                     );
                 }
             }

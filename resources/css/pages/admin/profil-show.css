@@ -1,19 +1,21 @@
 /* =========================================================================
    MAGKOM - HALAMAN PROFIL & DATA STAF ADMINISTRASI
-   Sesuai Standar Design System MagKom & Aturan Ketat AGENTS.md
-   Model Tampilan: Paritas Portal Peserta (Navy Identity Banner & Section Cards)
+   Acuan Desain: Standar Desain Sistem MagKom (Sleman Navy & Gold Accent)
+   Sesuai Aturan AGENTS.md (Vanilla CSS, Scoped, Responsive, No Inline)
    ========================================================================= */
 
 /* Outer Page Wrapper */
-.admin-profil-wrapper {
+.profil-page-wrapper {
     background-color: transparent;
     width: 100%;
-    padding: 0 0 24px 0;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 0 32px 0;
     box-sizing: border-box;
 }
 
-/* Main Container Card (White Elevated) */
-.admin-profil-main-card {
+/* Main Fluid Card Container (Single-Card Modern) */
+.profil-main-card {
     width: 100%;
     max-width: 100%;
     background: #ffffff;
@@ -27,6 +29,16 @@
     gap: 20px;
 }
 
+/* Page Header Title */
+.profil-page-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+}
+
 /* Alerts / Flash Messages */
 .profil-alert {
     padding: 12px 16px;
@@ -36,20 +48,18 @@
     align-items: center;
     gap: 10px;
 }
-
 .profil-alert-success {
     background: #ECFDF5;
     color: #065F46;
     border: 1px solid #A7F3D0;
 }
-
 .profil-alert-danger {
     background: #FEF2F2;
     color: #991B1B;
     border: 1px solid #FECACA;
 }
 
-/* Form Layout */
+/* Form Container */
 #formProfilStaff {
     display: flex;
     flex-direction: column;
@@ -58,11 +68,11 @@
 }
 
 /* =========================================================================
-   PANEL IDENTITAS HEADER (NAVY BANNER)
+   1. HERO IDENTITY BANNER (NAVY BANNER)
    ========================================================================= */
 .profil-identity-banner {
     background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.35), transparent 60%),
-        linear-gradient(135deg, #02275D 0%, #01347C 60%, #003566 100%);
+                linear-gradient(135deg, #02275D 0%, #01347C 60%, #003566 100%);
     border-radius: 14px;
     padding: 20px 24px;
     display: flex;
@@ -86,7 +96,7 @@
     min-width: 0;
 }
 
-/* Avatar Box 72px */
+/* Avatar Circle */
 .profil-avatar-box {
     position: relative;
     width: 72px;
@@ -123,7 +133,7 @@
     text-transform: uppercase;
 }
 
-/* Camera Overlay Badge (Kuning Sleman) */
+/* Camera Overlay Badge */
 .profil-camera-badge {
     position: absolute;
     bottom: -2px;
@@ -147,7 +157,7 @@
     transform: scale(1.1);
 }
 
-/* User Info Beside Avatar */
+/* User Info beside Avatar */
 .profil-user-info {
     display: flex;
     flex-direction: column;
@@ -198,7 +208,7 @@
     text-overflow: ellipsis;
 }
 
-/* Upload & Remove Photo Controls */
+/* Sisi Kanan Banner: Upload Foto */
 .profil-identity-right {
     display: flex;
     flex-direction: column;
@@ -208,26 +218,25 @@
 }
 
 .profil-btn-upload-photo {
-    background-color: #ffffff;
-    color: #02275D;
-    border: 1px solid rgba(255, 255, 255, 0.9);
+    background: #ffffff;
+    color: #0F172A;
+    border: none;
     border-radius: 8px;
     padding: 8px 16px;
     font-size: 0.8125rem;
-    font-weight: 700;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     white-space: nowrap;
-    transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
 .profil-btn-upload-photo:hover {
-    background-color: #F8FAFC;
+    background-color: #F1F5F9;
     transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .profil-btn-remove-photo {
@@ -239,310 +248,301 @@
     text-decoration: underline;
     padding: 2px 4px;
 }
-
 .profil-btn-remove-photo:hover {
     color: #EF4444;
 }
 
 .profil-photo-subtext {
     font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.7);
-    line-height: 1.2;
+    color: #E2E8F0;
+    margin-top: 2px;
+    display: block;
+    text-align: right;
 }
 
 /* =========================================================================
-   INDIKATOR STATUS & KINERJA OPERASIONAL STAF (METRIC CARD)
+   2. CARD STATUS / MONITORING OPERASIONAL
    ========================================================================= */
-.admin-kpi-card {
+.profil-completeness-card {
     background-color: #F8FAFC;
     border: 1px solid #E2E8F0;
     border-radius: 12px;
-    padding: 18px 22px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    padding: 18px 24px;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-.admin-kpi-header {
+.profil-completeness-card:hover {
+    transform: translateY(-2px);
+    border-color: #BFDBFE;
+    box-shadow: 0 8px 20px -4px rgba(2, 39, 93, 0.1);
+}
+
+.profil-completeness-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.admin-kpi-title {
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    color: #475569;
-    text-transform: uppercase;
-}
-
-.admin-kpi-badge {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: #065F46;
-    background: #D1FAE5;
-    padding: 3px 10px;
-    border-radius: 999px;
-    border: 1px solid #A7F3D0;
-    display: inline-flex;
     align-items: center;
-    gap: 6px;
 }
 
-.admin-kpi-bar-track {
+.profil-completeness-title {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #02275D;
+    margin: 0;
+}
+
+.profil-completeness-percent {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #02275D;
+    line-height: 1;
+}
+
+/* Progress Bar Track */
+.profil-progress-track {
     width: 100%;
-    height: 7px;
+    height: 6px;
     background-color: #E2E8F0;
     border-radius: 999px;
+    margin: 10px 0 16px;
     overflow: hidden;
 }
 
-.admin-kpi-bar-fill {
+.profil-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #02275D 0%, #01347C 60%, #10B981 100%);
+    background: linear-gradient(90deg, #02275D 0%, #01347C 85%, #FFCB05 100%);
     border-radius: 999px;
+    transition: width 0.4s ease;
 }
 
-.admin-kpi-checklist-grid {
+/* Checklist 5 Indikator */
+.profil-checklist-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    align-items: center;
 }
 
-.admin-kpi-checklist-item {
+.profil-checklist-item {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.78rem;
+    font-size: 0.775rem;
+    color: #1E293B;
     font-weight: 600;
-    color: #334155;
+    padding: 6px 4px;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.admin-kpi-checklist-icon {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background-color: #02275D;
-    color: #ffffff;
+.profil-checklist-item:hover {
+    background-color: #EFF6FF;
+    transform: translateY(-1px);
+}
+
+.profil-checklist-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    font-weight: 700;
 }
 
-.admin-kpi-metrics-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin-top: 4px;
-    padding-top: 14px;
-    border-top: 1px dashed #CBD5E1;
-}
-
-.admin-metric-box {
-    background: #ffffff;
-    border: 1px solid #E2E8F0;
-    border-radius: 8px;
-    padding: 10px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.admin-metric-num {
-    font-size: 1.25rem;
-    font-weight: 800;
+.profil-checklist-icon.done {
     color: #02275D;
-    line-height: 1.2;
 }
 
-.admin-metric-lbl {
-    font-size: 0.725rem;
-    font-weight: 600;
-    color: #64748B;
-    line-height: 1.2;
+.profil-checklist-icon.pending {
+    color: #94A3B8;
 }
 
 /* =========================================================================
-   SECTION CARD (INFORMASI KEDINASAN & KONTAK OPERASIONAL)
+   3. FORM SECTION CARDS (MODULAR CARD WITH SQUIRCLE ICON)
    ========================================================================= */
-.admin-section-card {
-    background-color: #ffffff;
+.profil-section-card {
+    background-color: #F8FAFC;
     border: 1px solid #E2E8F0;
-    border-radius: 12px;
-    padding: 22px 24px;
+    border-radius: 14px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 18px;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-.admin-section-header {
+.profil-section-card:hover {
+    transform: translateY(-2px);
+    border-color: #BFDBFE;
+    box-shadow: 0 8px 24px -4px rgba(7, 59, 130, 0.08), 0 2px 6px -1px rgba(7, 59, 130, 0.04);
+}
+
+.profil-section-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 12px;
 }
 
-.admin-section-header-left {
+.profil-section-title-wrap {
     display: flex;
     align-items: center;
     gap: 14px;
 }
 
-.admin-section-icon-wrap {
-    width: 42px;
-    height: 42px;
+.profil-section-icon-badge {
+    width: 38px;
+    height: 38px;
     border-radius: 10px;
-    background-color: #02275D;
-    color: #ffffff;
+    background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
+    color: #FFCB05;
+    border: 1px solid rgba(255, 203, 5, 0.25);
+    box-shadow: 0 3px 8px rgba(2, 39, 93, 0.16);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(2, 39, 93, 0.2);
 }
 
-.admin-section-heading {
-    font-size: 1.025rem;
+.profil-section-heading {
+    font-size: 0.95rem;
     font-weight: 700;
     color: #0F172A;
     margin: 0 0 2px 0;
-    line-height: 1.3;
+    line-height: 1.25;
 }
 
-.admin-section-desc {
-    font-size: 0.8125rem;
+.profil-section-subheading {
+    font-size: 0.75rem;
     color: #64748B;
     margin: 0;
     line-height: 1.35;
 }
 
-.admin-section-btn-edit {
+/* Edit Button */
+.profil-btn-edit {
+    background: #ffffff;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 0.775rem;
+    font-weight: 600;
+    color: #334155;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid #CBD5E1;
-    background: #ffffff;
-    color: #475569;
-    font-size: 0.78rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: default;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
-/* Fields Grid */
-.admin-fields-grid {
+.profil-btn-edit:hover {
+    background-color: #EFF6FF;
+    border-color: #02275D;
+    color: #02275D;
+    box-shadow: 0 2px 8px rgba(2, 39, 93, 0.15);
+}
+
+/* Lock Icon for System / Readonly Fields */
+.profil-lock-icon {
+    width: 13px;
+    height: 13px;
+    color: #94A3B8;
+    stroke: currentColor;
+    fill: none;
+    margin-left: 5px;
+    vertical-align: middle;
+    display: inline-block;
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+
+/* Form Fields Grid & Controls */
+.profil-fields-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
 }
 
-.admin-field-group {
+.profil-field-col-full {
+    grid-column: 1 / -1;
+}
+
+.profil-form-group {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.admin-field-group.full-width {
-    grid-column: 1 / -1;
-}
-
-.admin-field-label {
+.profil-label {
     font-size: 0.8125rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #334155;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 }
 
-.admin-required-mark {
-    color: #EF4444;
+.profil-required {
+    color: #02275D;
+    font-weight: 700;
 }
 
-.admin-lock-badge {
-    font-size: 0.65rem;
-    font-weight: 600;
-    color: #64748B;
-    background-color: #F1F5F9;
-    border: 1px solid #E2E8F0;
-    padding: 1px 6px;
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-}
-
-.admin-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.admin-input-leading-icon {
-    position: absolute;
-    left: 12px;
-    color: #94A3B8;
-    display: flex;
-    align-items: center;
-    pointer-events: none;
-}
-
-.admin-input-control {
+.profil-input,
+.profil-textarea {
     width: 100%;
-    height: 42px;
-    padding: 0 14px 0 38px;
+    background-color: #ffffff;
     border: 1px solid #CBD5E1;
     border-radius: 8px;
-    font-size: 0.875rem;
+    padding: 10px 14px;
+    font-size: 0.84rem;
     color: #0F172A;
-    background-color: #ffffff;
-    outline: none;
-    box-sizing: border-box;
     font-family: inherit;
+    box-sizing: border-box;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.admin-input-control:focus {
+.profil-input:focus,
+.profil-textarea:focus {
+    outline: none;
     border-color: #02275D;
     box-shadow: 0 0 0 3px rgba(2, 39, 93, 0.12);
 }
 
-.admin-input-control.readonly {
-    background-color: #F8FAFC;
-    color: #475569;
-    border-color: #E2E8F0;
-    cursor: not-allowed;
+.profil-input:read-only,
+.profil-input:disabled {
+    background-color: #F8FAFC !important;
+    color: #64748B !important;
+    cursor: not-allowed !important;
+    border-color: #E2E8F0 !important;
+    box-shadow: none !important;
 }
 
-.admin-input-control.is-invalid {
-    border-color: #EF4444;
-    background-color: #FEF2F2;
+.profil-input.is-invalid {
+    border-color: #DC2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
-.admin-field-error {
-    font-size: 0.75rem;
-    color: #EF4444;
-    margin-top: 2px;
+.profil-field-error {
+    font-size: 0.725rem;
+    color: #DC2626;
+    font-weight: 500;
 }
 
-.admin-field-helper {
+.profil-helper-text {
     font-size: 0.725rem;
     color: #64748B;
-    margin-top: 2px;
+    line-height: 1.35;
 }
 
 /* =========================================================================
-   BOTTOM ACTIONS & AGREEMENT BAR
+   4. BOTTOM ACTIONS & PERSENTASE BAR
    ========================================================================= */
 .profil-bottom-actions {
-    margin-top: 6px;
+    margin-top: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -598,7 +598,7 @@
 }
 
 .profil-btn-submit:disabled {
-    background-color: #8FA2B8;
+    background: #94A3B8;
     color: #E2E8F0;
     cursor: not-allowed;
     opacity: 0.75;
@@ -606,46 +606,62 @@
     box-shadow: none;
 }
 
-/* Loading Spinner */
+/* Spinner Animasi */
 .profil-spinner {
     animation: profil-spin 1s linear infinite;
 }
 
 @keyframes profil-spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 /* =========================================================================
-   RESPONSIVE DESIGN (TABLET & MOBILE)
+   5. RESPONSIVE BREAKPOINTS (TABLET & MOBILE)
    ========================================================================= */
 @media (max-width: 1024px) {
-    .admin-kpi-checklist-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .profil-checklist-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
     }
 }
 
 @media (max-width: 768px) {
-    .admin-profil-wrapper {
-        padding: 0 0 16px 0;
+    .profil-page-wrapper {
+        padding: 0 0 20px 0;
     }
 
-    .admin-profil-main-card {
+    .profil-main-card {
         padding: 20px 16px;
-        border-radius: 12px;
         gap: 16px;
+        border-radius: 12px;
     }
 
+    /* Hero Banner Mobile */
     .profil-identity-banner {
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
-        padding: 18px 16px;
+        padding: 16px;
+    }
+
+    .profil-identity-left {
+        width: 100%;
+        gap: 14px;
+    }
+
+    .profil-avatar-box,
+    .profil-avatar-img-wrap {
+        width: 64px;
+        height: 64px;
+    }
+
+    .profil-avatar-initial {
+        font-size: 1.5rem;
+    }
+
+    .profil-user-name {
+        font-size: 1.05rem;
     }
 
     .profil-identity-right {
@@ -656,32 +672,181 @@
     .profil-btn-upload-photo {
         width: 100%;
         justify-content: center;
+        padding: 10px 16px;
     }
 
     .profil-photo-subtext {
         text-align: center;
+        margin-top: 4px;
         width: 100%;
     }
 
-    .admin-kpi-checklist-grid {
-        grid-template-columns: 1fr;
+    /* Status Card Mobile */
+    .profil-completeness-card {
+        padding: 16px;
     }
 
-    .admin-kpi-metrics-row {
-        grid-template-columns: 1fr;
+    .profil-completeness-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
     }
 
-    .admin-fields-grid {
-        grid-template-columns: 1fr;
+    .profil-completeness-percent {
+        font-size: 0.95rem;
     }
 
+    .profil-checklist-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .profil-checklist-item {
+        font-size: 0.75rem;
+        padding: 6px 8px;
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+    }
+
+    /* Section Form Card Mobile */
+    .profil-section-card {
+        padding: 18px 16px;
+        gap: 14px;
+    }
+
+    .profil-section-header {
+        align-items: flex-start;
+    }
+
+    .profil-fields-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .profil-field-col-full {
+        grid-column: 1;
+    }
+
+    /* Bottom Action Bar Mobile */
     .profil-bottom-actions {
         flex-direction: column;
         align-items: stretch;
+        gap: 14px;
+        padding-top: 4px;
+    }
+
+    .profil-agreement-label {
+        font-size: 0.775rem;
     }
 
     .profil-btn-submit {
         width: 100%;
         justify-content: center;
+        padding: 12px 20px;
+        font-size: 0.875rem;
     }
+}
+
+@media (max-width: 480px) {
+    .profil-main-card {
+        padding: 16px 12px;
+    }
+
+    .profil-identity-left {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .profil-name-row {
+        gap: 6px;
+    }
+
+    .profil-badge-role {
+        font-size: 0.575rem;
+        padding: 2px 7px;
+    }
+
+    .profil-checklist-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profil-section-title-wrap {
+        gap: 10px;
+    }
+
+    .profil-section-icon-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+    }
+
+    .profil-section-icon-badge svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .profil-section-heading {
+        font-size: 0.875rem;
+    }
+
+    .profil-btn-edit {
+        padding: 4px 10px;
+        font-size: 0.725rem;
+    }
+}
+
+
+/* =========================================================================
+   6. DARK THEME OVERRIDES
+   ========================================================================= */
+[data-theme="dark"] .profil-main-card {
+    background: #182234;
+    border-color: #26354D;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .profil-completeness-card,
+[data-theme="dark"] .profil-section-card {
+    background-color: #0F172A;
+    border-color: #26354D;
+}
+
+[data-theme="dark"] .profil-completeness-title,
+[data-theme="dark"] .profil-completeness-percent,
+[data-theme="dark"] .profil-section-heading {
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .profil-checklist-item {
+    color: #E2E8F0;
+}
+[data-theme="dark"] .profil-checklist-item:hover {
+    background-color: #1E293B;
+}
+
+[data-theme="dark"] .profil-label {
+    color: #E2E8F0;
+}
+
+[data-theme="dark"] .profil-input {
+    background-color: #0B132B;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .profil-input:read-only,
+[data-theme="dark"] .profil-input:disabled {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .profil-btn-edit {
+    background: #1E293B;
+    border-color: #334155;
+    color: #E2E8F0;
+}
+
+[data-theme="dark"] .profil-agreement-label {
+    color: #CBD5E1;
 }

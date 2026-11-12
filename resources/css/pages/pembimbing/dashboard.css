@@ -1522,58 +1522,129 @@ body.role-pembimbing .gentelella-footer span {
 
 @media (max-width: 768px) {
   .bento-hero-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 22px 24px;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+    padding: 18px 16px !important;
+    border-radius: 14px !important;
+  }
+
+  .bento-hero-content {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .bento-hero-title {
+    font-size: clamp(1.2rem, 5vw, 1.4rem) !important;
   }
 
   .bento-hero-graphic {
-    align-self: flex-end;
+    display: none !important;
   }
 
   .bento-kpi-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .bento-kpi-card {
+    min-height: auto !important;
+    padding: 14px 16px !important;
+    border-radius: 14px !important;
   }
 
   .bento-mid-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
   }
 
   .bento-side-alerts {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .bento-calendar-card,
+  .card-alert-red,
+  .card-alert-amber {
+    border-radius: 14px !important;
+    padding: 14px 16px !important;
+  }
+
+  /* Roster card & Mentee list mobile */
+  .bento-roster-card {
+    padding: 16px !important;
+    border-radius: 14px !important;
+  }
+
+  .roster-actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .roster-actions a,
+  .roster-actions button {
+    width: 100% !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 }
 
 @media (max-width: 640px) {
   .bento-distribusi-card,
   .bento-kuota-card {
-    min-height: 360px;
-    padding: 18px 20px;
+    min-height: auto !important;
+    padding: 16px !important;
+    border-radius: 14px !important;
   }
 
   .bento-bars-track {
-    gap: 0.75rem;
-    height: 220px;
+    gap: 0.5rem !important;
+    height: 180px !important;
   }
 
   .bento-bar-container {
-    height: 180px;
-    max-width: 70px;
+    height: 150px !important;
+    max-width: 55px !important;
   }
 
   .bento-bar-val {
-    font-size: 15px;
+    font-size: 13px !important;
   }
 
   .bento-gauge-wrapper,
   .bento-gauge-svg {
-    width: 200px;
-    height: 120px;
+    width: 180px !important;
+    height: 110px !important;
   }
 
   .gauge-center-percent {
-    font-size: 38px;
+    font-size: 32px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .bento-hero-banner {
+    padding: 14px 12px !important;
+  }
+
+  .bento-bars-track {
+    gap: 4px !important;
+  }
+
+  .bento-bar-container {
+    max-width: 44px !important;
+  }
+
+  .bento-gauge-wrapper,
+  .bento-gauge-svg {
+    width: 150px !important;
+    height: 95px !important;
+  }
+
+  .gauge-center-percent {
+    font-size: 26px !important;
   }
 }
 

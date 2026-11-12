@@ -194,7 +194,7 @@ class CreateManualPenempatanAction
                 idData: $penempatan->id,
                 nilaiBaru: $penempatan->toArray(),
                 detail: [
-                    'aksi' => 'Membuat akun dan penempatan manual peserta baru (AC-07-3)',
+                    'aksi' => 'Membuat akun dan penempatan manual peserta baru',
                     'user_id' => $peserta->id,
                     'email' => $peserta->email,
                     'jalur' => $jalurEnum->value,

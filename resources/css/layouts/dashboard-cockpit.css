@@ -2686,3 +2686,193 @@
 
 
 
+
+
+/* =========================================================================
+   FASE 2: MASTER RESPONSIVE MOBILE ARCHITECTURE (ANDROID & IOS < 768px)
+   Scope: KPI Dock, Tab Controller, Attention Card, Side Drawer 100vw, Touch Targets
+   Strict Zero Desktop Disruption: Only operates inside @media (max-width: 768px)
+   ========================================================================= */
+
+@media (max-width: 768px) {
+    /* 1. KPI Docks & Metrics Tiles: 2-Kolom Kompak di HP */
+    .adm-metrics-dock-grid,
+    .cv-hero-dock,
+    .tile_count,
+    .adm-kpi-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+        margin: 0 0 16px 0 !important;
+        width: 100% !important;
+    }
+
+    .tile_stats_count {
+        min-width: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .tile_stats_inner {
+        padding: 12px 14px !important;
+        border-radius: 10px !important;
+    }
+
+    .count {
+        font-size: clamp(1.2rem, 5vw, 1.45rem) !important;
+        margin: 2px 0 !important;
+        line-height: 1.2 !important;
+    }
+
+    .count_top {
+        font-size: 0.7rem !important;
+        gap: 0.35rem !important;
+    }
+
+    .count_bottom {
+        font-size: 0.6875rem !important;
+        gap: 0.25rem !important;
+    }
+
+    /* 2. Sub-Navigasi & Tab Bar: Horizontal Pill Swipe */
+    .dashboard-tab-bar,
+    .nav-tabs,
+    .adm-tab-controller {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        gap: 8px !important;
+        padding: 6px !important;
+        scrollbar-width: none !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .dashboard-tab-bar::-webkit-scrollbar,
+    .nav-tabs::-webkit-scrollbar,
+    .adm-tab-controller::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .dashboard-tab-btn,
+    .adm-tab-item {
+        flex-shrink: 0 !important;
+        padding: 8px 14px !important;
+        font-size: 0.8125rem !important;
+        white-space: nowrap !important;
+    }
+
+    /* 3. Attention Card / Banner Peringatan Verifikasi Mendesak */
+    .cv-attention-card,
+    .attention-banner {
+        grid-template-columns: 1fr !important;
+        padding: 16px !important;
+        gap: 12px !important;
+        border-radius: 12px !important;
+    }
+
+    .cv-attention-actions {
+        width: 100% !important;
+        justify-content: stretch !important;
+    }
+
+    .cv-attention-actions a,
+    .cv-attention-actions button {
+        width: 100% !important;
+        justify-content: center !important;
+        min-height: 44px !important;
+    }
+
+    /* 4. Side Drawer: 100vw Full Screen di Smartphone */
+    .adm-drawer,
+    .cv-side-drawer,
+    .dashboard-drawer-panel {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    .adm-drawer-header,
+    .cv-drawer-header {
+        padding: 14px 16px !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 10 !important;
+    }
+
+    .adm-drawer-close-btn,
+    .cv-drawer-close-btn,
+    .cv-drawer-close {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .adm-drawer-footer,
+    .cv-drawer-footer {
+        position: sticky !important;
+        bottom: 0 !important;
+        padding: 12px 16px max(12px, env(safe-area-inset-bottom)) !important;
+        background: #FFFFFF !important;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .adm-drawer-footer .btn,
+    .adm-drawer-footer a,
+    .adm-drawer-footer button,
+    .cv-drawer-footer .btn,
+    .cv-drawer-footer a,
+    .cv-drawer-footer button {
+        width: 100% !important;
+        min-height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+    }
+
+    [data-theme="dark"] .adm-drawer-footer,
+    [data-theme="dark"] .cv-drawer-footer {
+        background: #0F172A !important;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* 5. Input Form & iOS Safari Anti-Auto-Zoom */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* Penyesuaian Khusus HP Android Layar Kecil (≤ 360px) */
+@media (max-width: 360px) {
+    .adm-metrics-dock-grid,
+    .cv-hero-dock,
+    .tile_count,
+    .adm-kpi-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .adm-bento-side {
+        grid-template-columns: 1fr !important;
+    }
+}

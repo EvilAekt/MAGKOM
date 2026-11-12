@@ -1,0 +1,10 @@
+# Semgrep ignore file
+# Ignore agent skills and tooling scripts
+.agents/
+.gemini/
+
+# Ignore raw Figma/design static HTML/JS mockup export assets
+Designnnn/
+
+# Ignore documentation
+docs/

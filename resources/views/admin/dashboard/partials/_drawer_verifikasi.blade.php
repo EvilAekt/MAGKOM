@@ -35,7 +35,7 @@
                 Gunakan drawer ini untuk memastikan kesesuaian identitas dan jurusan calon peserta sebelum memproses verifikasi penuh.
             </p>
 
-            <x-gentelella.callout type="warning" title="Alur & Batas Waktu Verifikasi (BR-04 FIFO)">
+            <x-gentelella.callout type="warning" title="Alur & Batas Waktu Verifikasi (Standar Layanan FIFO)">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                     <span>Batas Waktu Layanan:</span>
                     <strong style="color: #B45309;">3 Hari Kerja (FIFO)</strong>
