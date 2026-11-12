@@ -87,3 +87,10 @@ Untuk lingkungan *Production / Staging Server* Dinas Kominfo:
 3. **Dedicated Transactional Provider**:
    Disarankan menggunakan layanan transactional mail terkelola (Brevo, Resend, Amazon SES, atau Mailgun) dengan IP reputasi tinggi agar 100% email masuk ke *Primary Inbox* tanpa keterlambatan.
 
+---
+
+## 5. 📌 Kebijakan Branching & Direct Push (test-2)
+
+Branch `test-2` telah dikonfigurasi bebas proteksi gembok (*ruleset direct push allowed*) sehingga developer dapat langsung menjalankan `git push origin test-2` tanpa perlu membuat feature branch atau Pull Request baru.
+
+
