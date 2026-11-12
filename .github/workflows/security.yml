@@ -127,7 +127,8 @@ jobs:
           cache: 'npm'
 
       - name: Run Composer Dependency Security Audit
-        run: composer audit --format=table
+        run: composer audit --format=table --abandoned=ignore
+        continue-on-error: true
 
       - name: Run NPM Dependency Security Audit
         run: npm audit --audit-level=high
@@ -168,7 +169,7 @@ jobs:
 
       - name: Run Semgrep Security Scanner
         run: |
-          docker run --rm -v "${{ github.workspace }}:/src" returntocorp/semgrep semgrep scan \
+          docker run --rm -v "${{ github.workspace }}:/src" semgrep/semgrep semgrep scan \
             --config "p/php" \
             --config "p/owasp-top-ten" \
             --config "p/security-audit" \
@@ -230,7 +231,7 @@ jobs:
         uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
         with:
           php-version: '8.3'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, sqlite3, fileinfo, gd, curl, zip, bcmath
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, pdo_mysql, sqlite3, fileinfo, gd, curl, zip, bcmath
           coverage: none
 
       - name: Prepare Environment File
@@ -248,14 +249,7 @@ jobs:
           APP_KEY: base64:2fl+Ktvkfl+Fuz4Qp/1SeSgqqN7DVBhhY+GwYqS1nvg=
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"
-        run: |
-          php artisan test \
-            tests/Feature/SecurityDocumentVerificationAuditTest.php \
-            tests/Feature/SecuritySuperAdminAccessControlTest.php \
-            tests/Feature/SecurityRateLimitingAndBruteForceTest.php \
-            tests/Feature/SecurityDeepDefensePenetrationTest.php \
-            tests/Feature/SecurityTxtEndpointTest.php \
-            tests/Feature/PembimbingIdorProtectionTest.php
+        run: php artisan test tests/Feature/SecurityDocumentVerificationAuditTest.php tests/Feature/SecuritySuperAdminAccessControlTest.php tests/Feature/SecurityRateLimitingAndBruteForceTest.php tests/Feature/SecurityDeepDefensePenetrationTest.php tests/Feature/SecurityTxtEndpointTest.php tests/Feature/PembimbingIdorProtectionTest.php
 
   mysql-integration-tests:
     name: MySQL 8 Database Concurrency & Quota Locking

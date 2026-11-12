@@ -182,7 +182,7 @@
                     </svg>
                     <span>{{ $kebijakanBadge }}</span>
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Kebijakan Privasi &amp; Syarat Ketentuan MagKom</h1>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">{{ $kebijakanTitle }}</h1>
                 <p class="text-xs sm:text-sm text-slate-300 mt-2">
                     {{ $kebijakanUpdatedAt }}
                 </p>

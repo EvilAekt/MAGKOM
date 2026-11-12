@@ -67,7 +67,7 @@
 
         <div style="position: relative">
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"></path></svg>
-          <input id="nama" name="nama" class="fld" type="text" autocomplete="name" aria-label="Nama lengkap" placeholder="nama lengkap" value="{{ old('nama') }}" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
+          <input id="nama" name="username" class="fld" type="text" autocomplete="name" aria-label="Nama lengkap" placeholder="nama lengkap" value="{{ old('username', old('nama')) }}" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 16px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF">
         </div>
 
         <div>

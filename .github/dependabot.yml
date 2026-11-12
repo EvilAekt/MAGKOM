@@ -9,6 +9,8 @@ updates:
       time: "02:00"
       timezone: "Asia/Jakarta"
     open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
     labels:
       - "area:devops"
       - "maintenance"
@@ -25,6 +27,8 @@ updates:
       time: "03:00"
       timezone: "Asia/Jakarta"
     open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
     labels:
       - "area:backend"
       - "maintenance"
@@ -49,6 +53,8 @@ updates:
       time: "04:00"
       timezone: "Asia/Jakarta"
     open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
     labels:
       - "area:frontend"
       - "maintenance"
