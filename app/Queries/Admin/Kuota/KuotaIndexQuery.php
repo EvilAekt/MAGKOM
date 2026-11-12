@@ -26,17 +26,18 @@ class KuotaIndexQuery
      *     totalTerisi: int,
      *     globalPersen: int,
      *     isPendaftaranBuka: bool,
+     *     isDraft: bool,
+     *     isTerjadwal: bool,
      *     sisaHariTutup: int
      * }
      */
     public function getIndexData(int $selectedBulanId = 0): array
     {
-        $bulanList = BulanMagang::where('aktif', true)
-            ->orderBy('bulan_mulai', 'asc')
+        $bulanList = BulanMagang::orderBy('bulan_mulai', 'asc')
             ->get();
 
         if ($selectedBulanId === 0) {
-            $selectedBulanId = (int) ($bulanList->first()?->id ?? 0);
+            $selectedBulanId = (int) (($bulanList->firstWhere('aktif', true) ?? $bulanList->first())?->id ?? 0);
         }
 
         $selectedBulan = BulanMagang::with(['kuota.jurusan'])->find($selectedBulanId);
@@ -167,14 +168,19 @@ class KuotaIndexQuery
         $totalTerisi = $selectedBulan ? (int) $selectedBulan->kuota->sum('terisi') : 0;
         $globalPersen = $totalKapasitas > 0 ? (int) min(100, round(($totalTerisi / $totalKapasitas) * 100)) : 0;
 
-        // Hitung status buka & sisa hari pendaftaran
+        // Compute registration status flags (draft, scheduled, open, closed) and remaining open days
+        $isDraft = $selectedBulan ? ! $selectedBulan->aktif : false;
         $isPendaftaranBuka = false;
+        $isTerjadwal = false;
         $sisaHariTutup = 0;
-        if ($selectedBulan && $selectedBulan->tgl_buka && $selectedBulan->tgl_tutup) {
+
+        if ($selectedBulan && $selectedBulan->aktif && $selectedBulan->tgl_buka && $selectedBulan->tgl_tutup) {
             $now = now();
             $tglBuka = Carbon::parse($selectedBulan->tgl_buka)->startOfDay();
             $tglTutup = Carbon::parse($selectedBulan->tgl_tutup)->endOfDay();
             $isPendaftaranBuka = $now->between($tglBuka, $tglTutup);
+            $isTerjadwal = ! $isPendaftaranBuka && $tglBuka->isFuture();
+
             if ($tglTutup->isFuture()) {
                 $sisaHariTutup = (int) $now->diffInDays($tglTutup, false);
             }
@@ -214,6 +220,8 @@ class KuotaIndexQuery
             'totalTerisi' => $totalTerisi,
             'globalPersen' => $globalPersen,
             'isPendaftaranBuka' => $isPendaftaranBuka,
+            'isDraft' => $isDraft,
+            'isTerjadwal' => $isTerjadwal,
             'sisaHariTutup' => $sisaHariTutup,
         ];
     }

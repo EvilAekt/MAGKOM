@@ -1,0 +1,80 @@
+/* Scoped styles for Draft & Scheduled period badges and publish controls on /admin/kuota */
+
+.adm-kuota-revamp-wrap .hero-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.adm-kuota-revamp-wrap .hero-status-draft {
+    background: var(--amber-200, #FEF3C7);
+    color: var(--navy-900, #062456);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.adm-kuota-revamp-wrap .hero-dot-draft {
+    background: var(--amber-600, #D97706);
+}
+
+.adm-kuota-revamp-wrap .hero-status-scheduled {
+    background: rgba(219, 234, 254, 0.96);
+    color: var(--navy-900, #062456);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.adm-kuota-revamp-wrap .hero-dot-scheduled {
+    background: #2563EB;
+}
+
+.adm-kuota-revamp-wrap .hero-empty-actions {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.adm-kuota-revamp-wrap .btn-publish-draft-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.15rem;
+    background: var(--green-100, #E8F7EE);
+    border: 1px solid #86EFAC;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--green-700, #166534);
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    box-shadow: 0 1px 2px rgba(22, 101, 52, 0.08);
+}
+
+.adm-kuota-revamp-wrap .btn-publish-draft-action:hover {
+    background: #DCFCE7;
+    border-color: #4ADE80;
+    color: #14532D;
+}
+
+.adm-kuota-revamp-wrap .btn-publish-draft-action:focus-visible {
+    outline: 2px solid #2563EB;
+    outline-offset: 2px;
+}
+
+[data-theme="dark"] .adm-kuota-revamp-wrap .btn-publish-draft-action {
+    background: rgba(22, 163, 74, 0.22);
+    border-color: rgba(74, 222, 128, 0.45);
+    color: #86EFAC;
+}
+
+[data-theme="dark"] .adm-kuota-revamp-wrap .btn-publish-draft-action:hover {
+    background: rgba(22, 163, 74, 0.34);
+    border-color: #4ADE80;
+    color: #DCFCE7;
+}
+
+[data-theme="dark"] .adm-kuota-revamp-wrap .btn-publish-draft-action:focus-visible {
+    outline-color: #93C5FD;
+}
+
