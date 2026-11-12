@@ -926,10 +926,20 @@
                 
                 <div class="hero-main-title">
                     <span>{{ $selectedBulan->nama_bulan ?? ($selectedBulan->bulan_mulai?->translatedFormat('F Y') ?? 'Gelombang 1') }}</span>
-                    @if($isPendaftaranBuka)
+                    @if($isDraft ?? false)
+                        <span class="hero-status-pill hero-status-draft">
+                            <span class="hero-status-dot hero-dot-draft"></span>
+                            <span>Draft</span>
+                        </span>
+                    @elseif($isPendaftaranBuka)
                         <span class="hero-status-pill hero-status-open">
                             <span style="width: 7px; height: 7px; border-radius: 50%; background: #16A34A;"></span>
                             <span>Dibuka</span>
+                        </span>
+                    @elseif($isTerjadwal ?? false)
+                        <span class="hero-status-pill hero-status-scheduled">
+                            <span class="hero-status-dot hero-dot-scheduled"></span>
+                            <span>Terjadwal</span>
                         </span>
                     @else
                         <span class="hero-status-pill hero-status-closed">
@@ -1010,10 +1020,14 @@
                         <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
                     <span>
-                        @if($isPendaftaranBuka && $sisaHariTutup >= 0)
+                        @if($isDraft ?? false)
+                            Status Draft — belum dibuka di portal publik
+                        @elseif($isPendaftaranBuka && $sisaHariTutup >= 0)
                             Ditutup dalam {{ $sisaHariTutup }} hari
                         @elseif($isPendaftaranBuka)
                             Pendaftaran sedang dibuka
+                        @elseif(($isTerjadwal ?? false) && $selectedBulan->tgl_buka)
+                            Pendaftaran dibuka mulai {{ \Carbon\Carbon::parse($selectedBulan->tgl_buka)->translatedFormat('d F Y') }}
                         @else
                             Pendaftaran ditutup
                         @endif
@@ -1031,6 +1045,17 @@
                 <div class="hero-main-title">
                     <span>Belum Ada Periode Bulan Magang</span>
                 </div>
+                @if(! auth()->user()?->isSuperAdmin())
+                    <div class="hero-empty-actions">
+                        <button type="button" class="btn-primary-action" data-kuota-action="open-buat-bulan">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span>Buat bulan baru</span>
+                        </button>
+                    </div>
+                @endif
             </div>
         </div>
     @endif
@@ -1054,7 +1079,7 @@
                     <select name="bulan_magang_id" onchange="this.form.submit()">
                         @foreach($bulanList as $b)
                             <option value="{{ $b->id }}" {{ $selectedBulan && $selectedBulan->id === $b->id ? 'selected' : '' }}>
-                                {{ $b->nama_bulan ? $b->nama_bulan . ' (' . $b->bulan_mulai?->translatedFormat('F Y') . ')' : $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '' }}
+                                {{ $b->nama_bulan ? $b->nama_bulan . ' (' . $b->bulan_mulai?->translatedFormat('F Y') . ')' : $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '(Draft)' }}
                             </option>
                         @endforeach
                     </select>
@@ -1068,6 +1093,15 @@
                         <span>Mode Lihat Saja</span>
                     </span>
                 @else
+                    @if($selectedBulan && ! $selectedBulan->aktif)
+                        <button type="button" class="btn-publish-draft-action" data-kuota-action="publish-draft">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>Buka bulan</span>
+                        </button>
+                    @endif
+
                     @if($selectedBulan)
                         <button type="button" onclick="openUbahBulanModal()" class="btn-outline-action">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1209,15 +1243,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        {{-- =====================================================================
-             5. ALERT VALIDASI PEMBIMBING AKTIF
-             ===================================================================== --}}
-        <div class="adm-kuota-callout-wrap">
-            <x-gentelella.callout type="info" class="alert-validation-box" title="Validasi Kapasitas Pembimbing">
-                Sistem otomatis memvalidasi agar total kuota tidak melebihi kapasitas bimbingan, yaitu jumlah Pembimbing aktif di setiap bidang.
-            </x-gentelella.callout>
         </div>
     </x-gentelella.x-panel>
 
