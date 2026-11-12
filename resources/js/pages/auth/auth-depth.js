@@ -359,18 +359,24 @@ export function initAuthInteractions() {
     });
   });
 
-  // Fixed Captcha Sequence
-  const captchaCodes = ['DE4F', '7KQ2', 'M9XA', 'R3TP'];
-  let currentCaptchaIdx = 0;
-  const captchaDisplay = document.querySelector('[data-captcha-display]');
-  const captchaRefreshBtn = document.querySelector('[data-action="refresh-captcha"]');
+  // Dynamic Captcha Refresh & Image Reload
+  const captchaImages = document.querySelectorAll('[data-captcha-img]');
+  const captchaRefreshButtons = document.querySelectorAll('[data-action="refresh-captcha"]');
 
-  if (captchaRefreshBtn && captchaDisplay) {
-    captchaRefreshBtn.addEventListener('click', () => {
-      currentCaptchaIdx = (currentCaptchaIdx + 1) % captchaCodes.length;
-      captchaDisplay.textContent = captchaCodes[currentCaptchaIdx];
+  const reloadCaptcha = () => {
+    const timestamp = Date.now();
+    captchaImages.forEach((img) => {
+      img.src = '/captcha/image?t=' + timestamp;
     });
-  }
+  };
+
+  captchaRefreshButtons.forEach((btn) => {
+    btn.addEventListener('click', reloadCaptcha);
+  });
+
+  captchaImages.forEach((img) => {
+    img.addEventListener('click', reloadCaptcha);
+  });
 
   // Register Type Toggle (Individu vs Kelompok)
   const tabInd = document.querySelector('[data-reg-type="ind"]');

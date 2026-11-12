@@ -181,7 +181,9 @@
       <div style="display: flex; flex-direction: column; gap: 8px">
         <label for="kode" style="font-size: 14px; font-weight: 700; color: #003566">Kode Verifikasi Keamanan <span aria-hidden="true" style="color: #C62828">*</span></label>
         <div style="display: flex; gap: 10px; align-items: center">
-          <div data-captcha-display style="width: 150px; height: 46px; box-sizing: border-box; border-radius: 10px; background: #E6ECF7; color: #003566; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; letter-spacing: 0.32em; padding-left: 0.32em; user-select: none">DE4F</div>
+          <div style="width: 150px; height: 46px; box-sizing: border-box; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #F8FAFC; border: 1px solid #CBD5E1">
+            <img data-captcha-img src="{{ route('captcha.image') }}" alt="Kode Verifikasi Keamanan" style="width: 150px; height: 46px; display: block; object-fit: cover; user-select: none; cursor: pointer" width="150" height="46" title="Klik untuk memuat ulang kode">
+          </div>
           <button type="button" class="btn-ico" data-action="refresh-captcha" aria-label="Ganti kode verifikasi" style="width: 46px; height: 46px; border: 1px solid #AAAAAA; border-radius: 10px; background: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center">
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#003566" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4M4 4v4h4"></path><path d="M4 13a8 8 0 0 0 14.5 4M20 20v-4h-4"></path></svg>
           </button>
