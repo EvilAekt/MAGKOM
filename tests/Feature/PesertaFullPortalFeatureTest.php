@@ -513,4 +513,90 @@ class PesertaFullPortalFeatureTest extends TestCase
         $response->assertSee('Penyelesaian Program Magang Diskominfo Sleman');
         $response->assertSee('Lulus &amp; Selesai', false);
     }
+
+    public function test_peserta_belum_mulai_menampilkan_status_pra_magang_dan_sisa_hari_penuh(): void
+    {
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $this->peserta->id,
+            'bulan_magang_id' => $this->bulanMagang->id,
+            'kuota_id' => $this->kuota->id,
+            'durasi_bulan' => 2,
+            'status' => StatusPendaftaranEnum::Diterima,
+        ]);
+
+        $penempatan = Penempatan::create([
+            'pendaftaran_id' => $pendaftaran->id,
+            'peserta_id' => $this->peserta->id,
+            'kuota_id' => $this->kuota->id,
+            'bidang_id' => $this->bidang->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'tgl_mulai' => Carbon::now()->addDays(15)->toDateString(),
+            'tgl_selesai' => Carbon::now()->addDays(75)->toDateString(),
+            'status' => StatusPenempatanEnum::Aktif,
+        ]);
+
+        $this->assertEquals(2, $penempatan->durasi_bulan);
+        $this->assertEquals(0, $penempatan->minggu_aktif);
+
+        $response = $this->actingAs($this->peserta)->get(URL::route('peserta.dashboard'));
+        $response->assertOk();
+
+        // Verifikasi badge dan label pra-magang
+        $response->assertSee('Segera Dimulai');
+        $response->assertSee('H-15');
+        $response->assertSee('Mulai dalam 15 hari');
+        $response->assertSee('Durasi 2 Bulan');
+
+        // Verifikasi jumlah bar dot matrix sesuai 2 bulan pilihan peserta
+        $response->assertSee('Bulan ke-1 dari 2 bulan');
+        $response->assertSee('Bulan ke-2 dari 2 bulan');
+        $response->assertDontSee('Bulan ke-3 dari 2 bulan');
+
+        // Verifikasi sisa hari adalah 60 hari penuh
+        $response->assertSee('60');
+        $response->assertSee('hari');
+    }
+
+    public function test_peserta_aktif_durasi_tiga_bulan_menampilkan_tiga_bar_dan_progres(): void
+    {
+        $pendaftaran = Pendaftaran::create([
+            'user_id' => $this->peserta->id,
+            'bulan_magang_id' => $this->bulanMagang->id,
+            'kuota_id' => $this->kuota->id,
+            'durasi_bulan' => 3,
+            'status' => StatusPendaftaranEnum::Diterima,
+        ]);
+
+        $penempatan = Penempatan::create([
+            'pendaftaran_id' => $pendaftaran->id,
+            'peserta_id' => $this->peserta->id,
+            'kuota_id' => $this->kuota->id,
+            'bidang_id' => $this->bidang->id,
+            'pembimbing_id' => $this->pembimbing->id,
+            'jalur' => JalurEnum::Umum,
+            'sumber' => SumberPenempatanEnum::Online,
+            'tgl_mulai' => Carbon::now()->subDays(30)->toDateString(),
+            'tgl_selesai' => Carbon::now()->addDays(60)->toDateString(),
+            'status' => StatusPenempatanEnum::Aktif,
+        ]);
+
+        $this->assertEquals(3, $penempatan->durasi_bulan);
+        $this->assertGreaterThan(0, $penempatan->minggu_aktif);
+
+        $response = $this->actingAs($this->peserta)->get(URL::route('peserta.dashboard'));
+        $response->assertOk();
+
+        // Verifikasi durasi dan bar 3 bulan
+        $response->assertSee('Durasi: 3 Bulan');
+        $response->assertSee('Bulan ke-1 dari 3 bulan');
+        $response->assertSee('Bulan ke-2 dari 3 bulan');
+        $response->assertSee('Bulan ke-3 dari 3 bulan');
+        $response->assertDontSee('Bulan ke-4 dari 3 bulan');
+
+        // Verifikasi sisa hari 60 hari
+        $response->assertSee('60');
+        $response->assertSee('hari');
+    }
 }

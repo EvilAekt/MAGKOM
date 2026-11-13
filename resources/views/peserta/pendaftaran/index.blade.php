@@ -44,13 +44,6 @@
                 @endif
             </div>
         </div>
-
-        {{-- Decorative Concentric Rings (Matching Sleman Mockup) --}}
-        <svg class="hero-rings-ornament" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="200" cy="200" r="140" stroke="#FFC300" stroke-width="1.5" stroke-opacity="0.35" />
-            <circle cx="200" cy="200" r="100" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.25" />
-            <circle cx="200" cy="200" r="60" stroke="#FFC300" stroke-width="1.5" stroke-opacity="0.2" />
-        </svg>
     </div>
 
     {{-- ========================================================
@@ -98,9 +91,6 @@
             <div class="active-card-topbar">
                 <div class="active-card-meta">
                     <div class="active-reg-badge">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
                         <span>#REG-{{ str_pad((string)$pendaftaranAktif->id, 5, '0', STR_PAD_LEFT) }}</span>
                     </div>
                     <h2 class="active-card-title">
@@ -300,7 +290,10 @@
          ======================================================== --}}
     <div class="riwayat-card-container">
         <div class="riwayat-header">
-            <h2 class="riwayat-title">Riwayat Pendaftaran Magang</h2>
+            <div class="riwayat-title-wrap">
+                <span class="riwayat-accent-bar" aria-hidden="true"></span>
+                <h2 class="riwayat-title">Riwayat Pendaftaran Magang</h2>
+            </div>
             <button type="button" class="riwayat-chevron-btn" id="btnToggleRiwayat" aria-label="Toggle Riwayat Pendaftaran">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <polyline points="18 15 12 9 6 15"></polyline>
@@ -452,7 +445,7 @@
                             <option value="{{ $kuota->id }}"
                                     data-bulan-id="{{ $kuota->bulan_magang_id }}"
                                     data-bulan-mulai="{{ $bulanMulaiIso }}"
-                                    {{ old('kuota_id') == $kuota->id ? 'selected' : '' }}>
+                                    {{ old('kuota_id', $preselectedKuotaId ?? request('kuota')) == $kuota->id ? 'selected' : '' }}>
                                 {{ $kuota->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
                                 ({{ $sisa > 0 ? "Tersisa {$sisa} kursi" : 'Penuh (Waiting List)' }})
                             </option>

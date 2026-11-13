@@ -48,12 +48,26 @@ class PendaftaranController extends Controller
                 ->with('warning', "Biodata dan profil peserta wajib 100% lengkap (saat ini {$indexData['persentaseProfil']}%) sebelum Anda dapat memilih periode dan kuota magang.");
         }
 
+        $preferensi = session('pendaftaran_preferensi');
+        $preselectedBulanId = $preferensi['bulan_id'] ?? $request->query('bulan');
+        $preselectedKuotaId = null;
+
+        if ($preselectedBulanId && $indexData['kuotaList']->isNotEmpty()) {
+            $matchingKuota = $indexData['kuotaList']->first(function ($k) use ($preselectedBulanId) {
+                return (string) $k->bulan_magang_id === (string) $preselectedBulanId;
+            });
+            if ($matchingKuota) {
+                $preselectedKuotaId = $matchingKuota->id;
+            }
+        }
+
         return view('peserta.pendaftaran.index', [
             'pendaftaranList' => $indexData['pendaftaranList'],
             'pendaftaranAktif' => $indexData['pendaftaranAktif'],
             'bulanAktifList' => $indexData['bulanAktifList'],
             'profil' => $indexData['profil'],
             'kuotaList' => $indexData['kuotaList'],
+            'preselectedKuotaId' => $preselectedKuotaId,
         ]);
     }
 

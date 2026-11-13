@@ -133,6 +133,24 @@ class AuthController extends Controller
                 ]
             );
 
+            if ($user->role === RoleEnum::Peserta) {
+                $preferensiJurusanId = $request->input('redirect_jurusan');
+                $preferensiBulanId = $request->input('redirect_bulan');
+                $preferensiBidangId = $request->input('redirect_bidang');
+
+                if ($preferensiBulanId || $preferensiJurusanId || $preferensiBidangId) {
+                    session([
+                        'pendaftaran_preferensi' => [
+                            'bulan_id' => $preferensiBulanId,
+                            'bidang_id' => $preferensiBidangId,
+                            'jurusan_id' => $preferensiJurusanId,
+                            'tipe' => $request->input('redirect_tipe', 'mandiri'),
+                            'jumlah' => (int) $request->input('redirect_jumlah', 1),
+                        ],
+                    ]);
+                }
+            }
+
             $targetDashboard = match ($user->role) {
                 RoleEnum::SuperAdmin => route('superadmin.dashboard'),
                 RoleEnum::Admin => route('admin.dashboard'),

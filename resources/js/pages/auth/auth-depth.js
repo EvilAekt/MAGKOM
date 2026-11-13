@@ -382,12 +382,14 @@ export function initAuthInteractions() {
   const tabInd = document.querySelector('[data-reg-type="ind"]');
   const tabKel = document.querySelector('[data-reg-type="kel"]');
   const hiddenTipe = document.getElementById('tipe_pendaftaran');
+  const kelompokSection = document.getElementById('section-kelompok-wrapper');
 
   if (tabInd && tabKel) {
     const activateInd = () => {
       tabInd.setAttribute('aria-pressed', 'true');
       tabKel.setAttribute('aria-pressed', 'false');
       if (hiddenTipe) hiddenTipe.value = 'mandiri';
+      if (kelompokSection) kelompokSection.style.display = 'none';
 
       tabInd.style.border = '1px solid #003566';
       tabInd.style.background = '#FFFFFF';
@@ -408,6 +410,7 @@ export function initAuthInteractions() {
       tabInd.setAttribute('aria-pressed', 'false');
       tabKel.setAttribute('aria-pressed', 'true');
       if (hiddenTipe) hiddenTipe.value = 'kelompok';
+      if (kelompokSection) kelompokSection.style.display = 'flex';
 
       tabKel.style.border = '1px solid #003566';
       tabKel.style.background = '#FFFFFF';
@@ -426,6 +429,13 @@ export function initAuthInteractions() {
 
     tabInd.addEventListener('click', activateInd);
     tabKel.addEventListener('click', activateKel);
+
+    // Initial state based on hidden input
+    if (hiddenTipe && hiddenTipe.value === 'kelompok') {
+      activateKel();
+    } else if (tabInd.getAttribute('aria-pressed') === 'true') {
+      activateInd();
+    }
   }
 }
 
@@ -448,7 +458,9 @@ export function initCascadingEducationFields() {
     return;
   }
 
-  const updateJurusan = () => {
+  const initialJurusanId = jurusanSelect.getAttribute('data-initial-jurusan') || jurusanSelect.value;
+
+  const updateJurusan = (preferredVal) => {
     const selectedJenjang = (jenjangSelect.value || '').toLowerCase().trim();
     const selectedBidang = bidangSelect ? (bidangSelect.value || '').toString().trim() : '';
 
@@ -466,7 +478,7 @@ export function initCascadingEducationFields() {
       }
     }
 
-    const currentSelectedVal = jurusanSelect.value;
+    const currentSelectedVal = preferredVal !== undefined ? preferredVal : jurusanSelect.value;
 
     jurusanSelect.innerHTML = '';
     const defaultOpt = document.createElement('option');
@@ -501,9 +513,14 @@ export function initCascadingEducationFields() {
     }
   };
 
-  jenjangSelect.addEventListener('change', updateJurusan);
+  jenjangSelect.addEventListener('change', () => updateJurusan());
   if (bidangSelect) {
-    bidangSelect.addEventListener('change', updateJurusan);
+    bidangSelect.addEventListener('change', () => updateJurusan());
+  }
+
+  // Jika ada nilai awal saat halaman dimuat
+  if (jenjangSelect.value || (bidangSelect && bidangSelect.value) || initialJurusanId) {
+    updateJurusan(initialJurusanId);
   }
 }
 

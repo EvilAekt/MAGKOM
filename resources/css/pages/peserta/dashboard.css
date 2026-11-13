@@ -1585,6 +1585,19 @@ body,
   background: rgba(255, 195, 0, 0.20);
 }
 
+.alert-note-pra {
+  font-size: 0.725rem;
+  color: #003566;
+  opacity: 0.85;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .alert-note-pra {
+  color: #FFE9A8;
+  opacity: 0.9;
+}
+
 /* ==============================================================================
    9. Peserta Dashboard Onboarding & Phase Cards (Panduan Alur Pendaftaran Magang)
    ============================================================================== */

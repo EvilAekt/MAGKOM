@@ -29,10 +29,9 @@
    1. HERO BANNER SLEMAN NAVY
    ======================================================== */
 .pendaftaran-hero {
-    background: radial-gradient(85% 140% at 100% 10%, rgba(255, 195, 0, 0.12), transparent 55%),
-                linear-gradient(135deg, #003566 0%, #01347C 60%, #02275D 100%);
+    background: linear-gradient(135deg, #002B54 0%, #003566 50%, #01347C 100%);
     border-radius: 16px;
-    padding: 30px 36px;
+    padding: 28px 32px;
     color: #ffffff;
     position: relative;
     overflow: hidden;
@@ -42,18 +41,6 @@
     justify-content: space-between;
     align-items: center;
     gap: 24px;
-}
-
-/* Watermark Concentric Circular Rings Ornament */
-.hero-rings-ornament {
-    position: absolute;
-    right: -40px;
-    bottom: -60px;
-    width: 320px;
-    height: 320px;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.45;
 }
 
 .hero-text-content {
@@ -67,15 +54,13 @@
     align-items: center;
     gap: 8px;
     padding: 5px 14px;
-    background: rgba(0, 0, 0, 0.22);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 195, 0, 0.35);
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 195, 0, 0.4);
     border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: 0.725rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     margin-bottom: 12px;
     color: #FFC300;
 }
@@ -89,7 +74,7 @@
 }
 
 .hero-title {
-    font-size: 1.65rem;
+    font-size: 1.75rem;
     font-weight: 800;
     margin: 0 0 10px 0;
     line-height: 1.25;
@@ -99,7 +84,7 @@
 
 .hero-desc {
     font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.85);
     line-height: 1.6;
     margin: 0 0 16px 0;
 }
@@ -133,15 +118,15 @@
 .pendaftaran-active-card {
     background: #FFFFFF;
     border-radius: 16px;
-    border: 1px solid #E2E8F0;
+    border: 1.5px solid #003566;
     box-shadow: 0 4px 20px -2px rgba(2, 39, 93, 0.08);
     overflow: hidden;
 }
 
 /* Navy Header Topbar */
 .active-card-topbar {
-    background: linear-gradient(135deg, #003566 0%, #01347C 100%);
-    padding: 20px 26px;
+    background: linear-gradient(135deg, #002B54 0%, #003566 100%);
+    padding: 20px 28px;
     color: #FFFFFF;
     display: flex;
     justify-content: space-between;
@@ -159,25 +144,19 @@
 .active-reg-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
     padding: 3px 10px;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid #FFC300;
     border-radius: 6px;
-    color: #FFFFFF;
-    font-family: 'JetBrains Mono', Consolas, monospace;
+    color: #FFC300;
     font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
+    font-weight: 800;
+    letter-spacing: 0.04em;
     width: fit-content;
 }
 
-.active-reg-badge svg {
-    color: #FFC300;
-}
-
 .active-card-title {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     font-weight: 800;
     color: #FFFFFF;
     margin: 4px 0 2px 0;
@@ -194,26 +173,26 @@
 .active-badge-gold {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
+    gap: 7px;
+    padding: 8px 20px;
     background: #FFC300;
-    color: #02275D;
+    color: #002B54;
     border-radius: 9999px;
     font-size: 0.8125rem;
     font-weight: 800;
     letter-spacing: 0.01em;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     white-space: nowrap;
 }
 
 .active-badge-gold svg {
-    color: #02275D;
+    color: #002B54;
 }
 
 /* White Body Band */
 .active-card-body {
     background: #FFFFFF;
-    padding: 24px 26px;
+    padding: 24px 28px;
 }
 
 /* 4 Metric Info Grid */
@@ -244,7 +223,7 @@
     height: 42px;
     border-radius: 10px;
     background: #EFF6FF;
-    color: #01347C;
+    color: #003566;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -263,14 +242,14 @@
     font-weight: 700;
     text-transform: uppercase;
     color: #64748B;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     line-height: 1.25;
 }
 
 .metric-value {
     font-size: 0.9375rem;
     font-weight: 800;
-    color: #02275D;
+    color: #003566;
     line-height: 1.35;
     word-break: break-word;
 }
@@ -278,17 +257,17 @@
 /* Highlighted Box: Status Penempatan */
 .active-metric-box.highlight-placement {
     background: #FFFBEB;
-    border: 1px solid #FDE68A;
+    border: 1px solid #FCD34D;
 }
 
 .active-metric-box.highlight-placement:hover {
     border-color: #FFC300;
-    box-shadow: 0 4px 12px rgba(255, 195, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(255, 195, 0, 0.18);
 }
 
 .active-metric-box.highlight-placement .metric-icon-box {
     background: #FFC300;
-    color: #02275D;
+    color: #002B54;
 }
 
 .active-metric-box.highlight-placement .metric-label {
@@ -296,14 +275,14 @@
 }
 
 .active-metric-box.highlight-placement .metric-value {
-    color: #02275D;
+    color: #002B54;
 }
 
 /* Dashed Separator */
 .active-dashed-separator {
     border: none;
-    border-top: 1px dashed #E2E8F0;
-    margin: 20px 0 16px 0;
+    border-top: 1px dashed #CBD5E1;
+    margin: 24px 0 20px 0;
 }
 
 /* Footer CTA Action */
@@ -321,16 +300,16 @@
     justify-content: center;
     gap: 8px;
     background: #FFC300;
-    color: #02275D;
-    border: 1.5px solid #FFC300;
-    padding: 10px 24px;
-    border-radius: 10px;
+    color: #002B54;
+    border: none;
+    padding: 11px 26px;
+    border-radius: 8px;
     font-size: 0.875rem;
     font-weight: 800;
     text-decoration: none;
     cursor: pointer;
     width: auto;
-    max-width: 320px;
+    max-width: 340px;
     box-shadow: 0 2px 8px rgba(255, 195, 0, 0.35);
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -338,15 +317,14 @@
 .btn-gold-action:hover,
 .active-card-cta-row .btn-gold-action:hover {
     background: #FFCB05;
-    border-color: #FFCB05;
-    color: #003566;
+    color: #002B54;
     transform: translateY(-1px);
     box-shadow: 0 4px 14px rgba(255, 195, 0, 0.45);
 }
 
 .btn-gold-action svg,
 .active-card-cta-row .btn-gold-action svg {
-    color: #02275D;
+    color: #002B54;
 }
 
 @media (max-width: 1024px) {
@@ -390,7 +368,7 @@
 .riwayat-card-container {
     background: #FFFFFF;
     border-radius: 16px;
-    border: 1px solid #E2E8F0;
+    border: 1.5px solid #003566;
     box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
     overflow: hidden;
 }
@@ -401,6 +379,21 @@
     align-items: center;
     padding: 18px 24px;
     border-bottom: 1px solid #F1F5F9;
+}
+
+.riwayat-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.riwayat-accent-bar {
+    width: 4px;
+    height: 18px;
+    background: #FFC300;
+    border-radius: 2px;
+    display: inline-block;
+    flex-shrink: 0;
 }
 
 .riwayat-title {
@@ -471,20 +464,20 @@
 }
 
 .riwayat-navy-icon-box {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
     background: #003566;
-    color: #FFC300;
+    color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(0, 53, 102, 0.2);
+    box-shadow: 0 2px 6px rgba(0, 53, 102, 0.15);
 }
 
 .riwayat-navy-icon-box svg {
-    color: #FFC300;
+    color: #FFFFFF;
 }
 
 .riwayat-row-info {
@@ -502,14 +495,14 @@
 }
 
 .riwayat-reg-code {
-    font-family: 'JetBrains Mono', Consolas, monospace;
-    font-size: 0.75rem;
+    font-family: inherit;
+    font-size: 0.725rem;
     font-weight: 700;
-    color: #02275D;
-    background: rgba(2, 39, 93, 0.06);
-    border: 1px solid rgba(2, 39, 93, 0.18);
+    color: #003566;
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
     padding: 2px 8px;
-    border-radius: 5px;
+    border-radius: 4px;
     letter-spacing: 0.02em;
 }
 
@@ -563,9 +556,11 @@
 }
 
 .riwayat-status-pill-soft.status-diterima {
-    background: #FEF3C7;
-    color: #92400E;
-    border: 1px solid #FDE68A;
+    background: #EAB308;
+    color: #FFFFFF;
+    border: none;
+    font-weight: 700;
+    padding: 4px 16px;
 }
 
 .riwayat-status-pill-soft.status-verifikasi,
@@ -595,9 +590,9 @@
     padding: 6px 14px;
     font-size: 0.8125rem;
     font-weight: 700;
-    color: #1E293B;
+    color: #003566;
     background: #FFFFFF;
-    border: 1.5px solid #CBD5E1;
+    border: 1.5px solid #003566;
     border-radius: 8px;
     text-decoration: none;
     cursor: pointer;
@@ -607,20 +602,20 @@
 
 .riwayat-card-row:hover .btn-detail-outline,
 .btn-detail-outline:hover {
-    border-color: #02275D;
-    color: #02275D;
+    border-color: #01347C;
+    color: #01347C;
     background: #F8FAFC;
     transform: translateX(2px);
 }
 
 .btn-detail-outline svg {
-    color: #64748B;
+    color: #003566;
     transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .riwayat-card-row:hover .btn-detail-outline svg,
 .btn-detail-outline:hover svg {
-    color: #02275D;
+    color: #01347C;
     transform: translateX(2px);
 }
 

@@ -41,8 +41,22 @@
       </div>
     @endif
 
+    @if(request('bulan') || request('bidang') || request('jurusan'))
+      <div style="margin-bottom: 20px; padding: 10px 14px; border-radius: 10px; background: #F8FAFC; border: 1px solid #CBD5E1; border-left: 4px solid #003566; color: #475569; font-size: 13px; line-height: 1.4; display: flex; align-items: center; gap: 8px">
+        <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#003566" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span>Melanjutkan permohonan magang dari kuota pilihan Anda.</span>
+      </div>
+    @endif
+
     <form action="{{ route('login') }}" method="POST" novalidate style="display: flex; flex-direction: column; gap: 16px">
       @csrf
+      @if(request('bulan') || request('bidang') || request('jurusan'))
+        <input type="hidden" name="redirect_bulan" value="{{ request('bulan') }}">
+        <input type="hidden" name="redirect_bidang" value="{{ request('bidang') }}">
+        <input type="hidden" name="redirect_jurusan" value="{{ request('jurusan') }}">
+        <input type="hidden" name="redirect_tipe" value="{{ request('tipe', 'mandiri') }}">
+        <input type="hidden" name="redirect_jumlah" value="{{ request('jumlah', 1) }}">
+      @endif
       <div style="display: flex; flex-direction: column; gap: 8px">
         <label for="email" style="font-size: 14px; font-weight: 600; color: #212529">Email</label>
         <div style="position: relative">
@@ -106,7 +120,7 @@
       </a>
     </form>
 
-    <p style="margin: 22px 0 0; text-align: center; font-size: 15px; color: #5F6B76">Belum punya akun magang? <a href="{{ route('register') }}" style="font-weight: 700; color: #003566; text-decoration: none">Daftar</a></p>
+    <p style="margin: 22px 0 0; text-align: center; font-size: 15px; color: #5F6B76">Belum punya akun magang? <a href="{{ route('register', request()->query()) }}" style="font-weight: 700; color: #003566; text-decoration: none">Daftar</a></p>
     <div style="margin-top: 10px; display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; font-size: 13px"><br>
       <button type="button" data-action="open-modal-privasi" style="background: none; border: none; padding: 0; color: rgb(95, 107, 118); text-decoration: underline; font-family: inherit; font-size: 13px; cursor: pointer">Kebijakan Privasi &amp; Syarat Ketentuan</button>
     </div>
