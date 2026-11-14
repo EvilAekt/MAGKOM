@@ -1,0 +1,88 @@
+name: Laporan Bug (Bug Report)
+description: Laporkan adanya kegagalan fungsi, error, atau anomali pada sistem MAGKOM.
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Terima kasih telah berkontribusi dalam menjaga keandalan sistem **MAGKOM**.
+        > [!IMPORTANT]
+        > **Keamanan & Kerentanan Sistem**: Jangan gunakan formulir ini untuk melaporkan celah keamanan kritis atau rahasia sensitif. Silakan laporkan secara privat sesuai panduan di [SECURITY.md](../SECURITY.md) atau hubungi `keamanan-informasi@magkom.go.id`.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Deskripsi Masalah
+      description: Jelaskan masalah yang terjadi secara ringkas dan padat.
+      placeholder: Terjadi error 500 saat admin menyetujui pendaftaran peserta...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Modul Terdampak (Affected Module)
+      description: Pilih area modul sistem yang mengalami kendala.
+      options:
+        - Portal Publik (Landing Page, FAQ, Alur)
+        - Pendaftaran Calon Peserta
+        - Modul Admin (Verifikasi Berkas, Kuota, Penempatan)
+        - Modul Pembimbing (Classroom, Logbook, Evaluasi)
+        - Modul Peserta (Dashboard, Pengisian Logbook, Tugas)
+        - Modul SuperAdmin (Audit Log, Master Data, Staf)
+        - Backend & REST/SSE API
+        - Frontend (Blade, CSS, Vanilla JS)
+        - Basis Data & Migrasi
+        - CI/CD & Infrastruktur DevOps
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Langkah Reproduksi (Steps to Reproduce)
+      description: Langkah-langkah detail agar pengembang dapat mereproduksi bug ini.
+      placeholder: |
+        1. Masuk sebagai role 'Admin' pada `/login`
+        2. Buka menu 'Verifikasi Berkas'
+        3. Klik tombol 'Tolak' pada pendaftaran peserta X
+        4. Muncul pesan kesalahan...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Perilaku yang Diharapkan (Expected Behavior)
+      description: Apa yang seharusnya terjadi?
+      placeholder: Sistem memvalidasi alasan penolakan dan memperbarui status menjadi Ditolak tanpa exception.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Perilaku Aktual (Actual Behavior)
+      description: Apa yang sebenarnya terjadi saat bug muncul?
+      placeholder: Layar menampilkan halaman error 500 dengan catatan exception...
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Informasi Lingkungan (Environment)
+      description: Sebutkan versi peramban (browser), sistem operasi, atau environment lokal jika berlaku.
+      placeholder: Chrome 130 / Windows 11 / PHP 8.3.x / Node v20 LTS
+    validations:
+      required: false
+
+  - type: textarea
+    id: visual_evidence
+    attributes:
+      label: Tangkapan Layar / Log Tambahan (Optional)
+      description: Tempelkan screenshot, tangkapan pesan log, atau stack trace di sini (pastikan TIDAK ADA token/rahasia!).
+    validations:
+      required: false
+
