@@ -52,6 +52,9 @@ Dokumentasi MAGKOM diorganisasikan ke dalam 5 pilar spesialisasi utama:
 | [**`reports/AUDIT-CANVAS-MODE-LANDING-PAGE-MAGKOM.md`**](./reports/AUDIT-CANVAS-MODE-LANDING-PAGE-MAGKOM.md) | Laporan audit visual dan teknis mode canvas editor landing page. |
 | [**`reports/AUDIT-FITUR-CMS-LANDING-PAGE-SUPERADMIN.md`**](./reports/AUDIT-FITUR-CMS-LANDING-PAGE-SUPERADMIN.md) | Laporan audit menyeluruh fitur CMS visual site editor pada panel SuperAdmin. |
 | [**`reports/2026-10-14-comprehensive-security-and-ui-ux-audit-report.md`**](./reports/2026-10-14-comprehensive-security-and-ui-ux-audit-report.md) | Laporan audit keamanan komprehensif dan evaluasi UI/UX fase awal rilis. |
+| [**`reports/final-performance-validation-report.md`**](./reports/final-performance-validation-report.md) | Laporan validasi performa, benchmarks P0-P3, dan optimasi navigasi sistem. |
+| [**`reports/audit/01-MAGKOM-FEATURE-INVENTORY.md`**](./reports/audit/01-MAGKOM-FEATURE-INVENTORY.md) | Laporan inventarisasi fitur menyeluruh, integrasi logika, dan verifikasi modul. |
+| [**`ops/nginx-performance-optimization.conf`**](./ops/nginx-performance-optimization.conf) | Konfigurasi server Nginx performa tinggi (FastCGI, caching, gzip, static assets). |
 
 ---
 
