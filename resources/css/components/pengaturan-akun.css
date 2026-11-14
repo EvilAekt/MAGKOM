@@ -1,0 +1,722 @@
+/* =========================================================================
+   MAGKOM INDUSTRIAL DESIGN SYSTEM: PENGATURAN AKUN & PREFERENSI
+   Unified Component Stylesheet for all Roles (Pembimbing, Peserta, Admin, SuperAdmin)
+   Reference Mockup: Sleman Abyssal Navy (#003566) & Sleman Gold (#FFCB05 / #FFC300)
+   ========================================================================= */
+
+.pengaturan-akun-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 36px;
+    font-family: inherit;
+}
+
+/* =========================================================================
+   1. HERO BANNER (Sleman Abyssal Navy & Gold Status Widget)
+   ========================================================================= */
+.settings-hero-banner {
+    background: linear-gradient(135deg, #003566 0%, #02275D 100%);
+    border-radius: 16px;
+    padding: 28px 32px;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 16px rgba(0, 53, 102, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-content-left {
+    flex: 1 1 500px;
+    min-width: 280px;
+}
+
+.banner-title {
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 6px 0;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+}
+
+.banner-subtitle {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 16px 0;
+    line-height: 1.5;
+}
+
+.banner-capsules-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.hero-context-pill {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    padding: 8px 14px;
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pill-micro-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1;
+}
+
+.pill-strong-value {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.25;
+}
+
+/* Gold Status Widget */
+.banner-gold-widget {
+    background: #FFCB05;
+    border-radius: 12px;
+    padding: 18px 22px;
+    color: #0F172A;
+    min-width: 220px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.widget-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #1E293B;
+    margin-bottom: 2px;
+    line-height: 1;
+}
+
+.widget-status-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.15;
+    margin-bottom: 4px;
+}
+
+.widget-subtext {
+    font-size: 0.75rem;
+    color: #334155;
+    margin-bottom: 14px;
+    font-weight: 500;
+}
+
+.banner-gold-widget .btn-gold-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: #003566;
+    color: #ffffff !important;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    padding: 9px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.banner-gold-widget .btn-gold-action:hover {
+    background: #002244;
+    color: #ffffff !important;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+/* =========================================================================
+   2. BENTO GRID 2-KOLOM (Informasi Akun + Ganti Kata Sandi)
+   ========================================================================= */
+.settings-grid-2col {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    align-items: stretch;
+}
+
+@media (max-width: 960px) {
+    .settings-grid-2col {
+        grid-template-columns: 1fr;
+    }
+}
+
+.settings-white-card {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 24px 28px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-heading-title {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0 0 4px 0;
+    line-height: 1.3;
+}
+
+.card-heading-subtitle {
+    font-size: 0.8125rem;
+    color: #64748B;
+    margin: 0 0 20px 0;
+    line-height: 1.4;
+}
+
+/* Profile Identity Header (Kolom Kiri) */
+.profile-identity-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.avatar-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1.5px solid #CBD5E1;
+    background: #ffffff;
+    color: #003566;
+    font-weight: 800;
+    font-size: 1.0625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.identity-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.identity-name {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.25;
+}
+
+.role-chip-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid #CBD5E1;
+    background: #ffffff;
+    color: #003566;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    width: fit-content;
+}
+
+/* Credential Rows */
+.credential-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.credential-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    gap: 12px;
+}
+
+.credential-label {
+    color: #64748B;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.credential-value {
+    color: #0F172A;
+    font-weight: 700;
+    text-align: right;
+    word-break: break-word;
+}
+
+.badge-status-gold {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 14px;
+    border-radius: 999px;
+    background: #FFC300;
+    color: #0F172A;
+    font-weight: 800;
+    font-size: 0.75rem;
+    line-height: 1.3;
+}
+
+/* Alert Info Callout */
+.alert-info-box {
+    margin-top: auto;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.8125rem;
+    color: #1E40AF;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.alert-info-box svg {
+    flex-shrink: 0;
+    color: #2563EB;
+    margin-top: 1px;
+}
+
+.alert-info-box a {
+    color: #003566;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.alert-info-box a:hover {
+    color: #02275D;
+}
+
+/* Form Password (Kolom Kanan) */
+.form-group-password {
+    margin-bottom: 16px;
+}
+
+.form-label-password {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 6px;
+}
+
+.input-password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-password-field {
+    width: 100%;
+    height: 42px;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 8px 42px 8px 14px;
+    font-size: 0.875rem;
+    color: #0F172A;
+    background: #ffffff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-sizing: border-box;
+}
+
+.input-password-field:focus {
+    outline: none;
+    border-color: #003566;
+    box-shadow: 0 0 0 3px rgba(0, 53, 102, 0.12);
+}
+
+.input-password-field.is-invalid {
+    border-color: #EF4444;
+    background-color: #FEF2F2;
+}
+
+.input-password-field.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.toggle-eye-btn {
+    position: absolute;
+    right: 6px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.toggle-eye-btn:hover {
+    color: #003566;
+    background-color: #F1F5F9;
+}
+
+.password-hint-text {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin: 10px 0 20px 0;
+    line-height: 1.4;
+}
+
+.password-actions-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: auto;
+}
+
+.btn-action-navy {
+    background: #003566;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.875rem;
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-action-navy:hover {
+    background: #002244;
+    transform: translateY(-1px);
+}
+
+.btn-action-outline {
+    background: #ffffff;
+    color: #475569;
+    font-weight: 700;
+    font-size: 0.875rem;
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: 1.5px solid #CBD5E1;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-action-outline:hover {
+    background: #F8FAFC;
+    color: #1E293B;
+    border-color: #94A3B8;
+}
+
+/* =========================================================================
+   3. BOTTOM FULL-WIDTH CARD (Preferensi Antarmuka & Bahasa)
+   ========================================================================= */
+.pref-horizontal-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 36px;
+    align-items: start;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 960px) {
+    .pref-horizontal-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+.pref-label-title {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 8px;
+}
+
+.pref-select-field {
+    width: 100%;
+    height: 44px;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0F172A;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pref-select-field:focus {
+    outline: none;
+    border-color: #003566;
+    box-shadow: 0 0 0 3px rgba(0, 53, 102, 0.12);
+}
+
+.pref-helper-caption {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin-top: 8px;
+    line-height: 1.4;
+}
+
+.theme-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 640px) {
+    .theme-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.theme-preview-card {
+    position: relative;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 10px;
+    padding: 12px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.theme-preview-card:hover {
+    border-color: #003566;
+}
+
+.theme-preview-card.selected,
+.theme-preview-card:has(input[type="radio"]:checked) {
+    border-color: #003566 !important;
+    box-shadow: 0 0 0 2px rgba(0, 53, 102, 0.25) !important;
+}
+
+.theme-preview-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.theme-mini-box {
+    height: 44px;
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.mini-box-light {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+}
+
+.mini-box-dark {
+    background: #003566;
+    border: 1px solid #002244;
+}
+
+.mini-box-system {
+    background: linear-gradient(115deg, #ffffff 48%, #1E293B 48%);
+    border: 1px solid #CBD5E1;
+}
+
+.preview-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.preview-bar {
+    height: 6px;
+    width: 60px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.mini-box-light .preview-dot { background: #003566; }
+.mini-box-light .preview-bar { background: #CBD5E1; }
+
+.mini-box-dark .preview-dot { background: #FFCB05; }
+.mini-box-dark .preview-bar { background: #64748B; }
+
+.mini-box-system .preview-dot { background: #0284C7; }
+.mini-box-system .preview-bar { background: #94A3B8; }
+
+.theme-card-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.theme-card-desc {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin: 0;
+    line-height: 1.35;
+}
+
+/* =========================================================================
+   4. DARK MODE HARMONIZATION ([data-theme="dark"])
+   ========================================================================= */
+[data-theme="dark"] .settings-white-card {
+    background: #182234;
+    border-color: #26354D;
+    box-shadow: none;
+}
+
+[data-theme="dark"] .card-heading-title {
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .card-heading-subtitle {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .profile-identity-box {
+    border-bottom-color: #26354D;
+}
+
+[data-theme="dark"] .avatar-circle {
+    background: #1E293B;
+    border-color: #334155;
+    color: #60A5FA;
+}
+
+[data-theme="dark"] .identity-name {
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .role-chip-pill {
+    background: #1E293B;
+    border-color: #334155;
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .credential-label {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .credential-value {
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .alert-info-box {
+    background: #0F172A;
+    border-color: #26354D;
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .alert-info-box svg {
+    color: #60A5FA;
+}
+
+[data-theme="dark"] .alert-info-box a {
+    color: #93C5FD;
+}
+
+[data-theme="dark"] .form-label-password,
+[data-theme="dark"] .pref-label-title {
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .input-password-field,
+[data-theme="dark"] .pref-select-field {
+    background: #0F172A;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .input-password-field:focus,
+[data-theme="dark"] .pref-select-field:focus {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .toggle-eye-btn {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .toggle-eye-btn:hover {
+    color: #F8FAFC;
+    background-color: #1E293B;
+}
+
+[data-theme="dark"] .password-hint-text,
+[data-theme="dark"] .pref-helper-caption {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .btn-action-outline {
+    background: #1E293B;
+    color: #CBD5E1;
+    border-color: #334155;
+}
+
+[data-theme="dark"] .btn-action-outline:hover {
+    background: #26354D;
+    color: #F8FAFC;
+    border-color: #475569;
+}
+
+[data-theme="dark"] .theme-preview-card {
+    background: #0F172A;
+    border-color: #26354D;
+}
+
+[data-theme="dark"] .theme-preview-card:hover {
+    border-color: #3B82F6;
+}
+
+[data-theme="dark"] .theme-preview-card.selected,
+[data-theme="dark"] .theme-preview-card:has(input[type="radio"]:checked) {
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3) !important;
+}
+
+[data-theme="dark"] .theme-card-title {
+    color: #F8FAFC;
+}
+
+[data-theme="dark"] .theme-card-desc {
+    color: #94A3B8;
+}
+

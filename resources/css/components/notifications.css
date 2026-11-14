@@ -324,13 +324,16 @@
             display: none;
             position: fixed;
             inset: 0;
-            background-color: rgba(29, 37, 48, 0.5);
-            z-index: 45;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(2px);
+            z-index: 1040;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.25s ease;
         }
 
-        .mobile-drawer-backdrop.active {
+        .mobile-drawer-backdrop.active,
+        .mobile-drawer-backdrop.open,
+        body.drawer-open .mobile-drawer-backdrop {
             display: block;
             opacity: 1;
         }

@@ -56,6 +56,10 @@ class CreateLogbookAction
                     $mingguKe = (int) floor($diffDays / 7) + 1;
                 }
 
+                if ($mingguKe && $mingguKe > $lockedPenempatan->minggu_aktif) {
+                    throw new DomainException("Logbook untuk Minggu ke-{$mingguKe} belum dapat diisi karena periode minggu tersebut belum berjalan.");
+                }
+
                 $tglAwalMinggu = null;
                 $tglAkhirMinggu = null;
                 if ($mingguKe && $lockedPenempatan->tgl_mulai) {

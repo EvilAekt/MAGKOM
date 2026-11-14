@@ -50,6 +50,8 @@
                 class="form-input captcha-input @error('captcha') form-input-error @enderror" 
                 placeholder="4 digit kode di atas"
                 autocomplete="off"
+                autocapitalize="characters"
+                spellcheck="false"
                 aria-label="Kode Verifikasi Keamanan 4 Karakter"
             >
         </div>

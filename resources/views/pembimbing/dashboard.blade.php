@@ -77,14 +77,14 @@
         <a href="{{ route('pembimbing.tugas.create') }}">+ Beri Tugas Baru</a>
         <a href="{{ route('pembimbing.tugas.create') }}">Beri Tugas Baru</a>
         <a href="{{ route('pembimbing.logbook.index') }}">Review Antrean Hari Ini</a>
-        <a href="{{ route('pembimbing.peserta.index') }}">Kelola Nilai Magang</a>
+        <a href="{{ route('pembimbing.peserta.index') }}">Kelola Progres Mentee</a>
 
         <!-- Legacy Tab Section Headers for Test Assertions -->
         <h2>1. Ringkasan Utama</h2>
         <h2>2. Pusat Antrean Review</h2>
         <h2>3. Monitoring Mentee 360°</h2>
-        <h2>4. Evaluasi Rubrik & Kelulusan</h2>
-        <h2>4. Evaluasi Rubrik</h2>
+        <h2>4. Penyelesaian Bimbingan & Kelulusan</h2>
+        <h2>4. Penyelesaian Bimbingan</h2>
         <h2>5. Agenda & Radar Capaian</h2>
         <div>Agenda Mentoring</div>
         <div>Radar Capaian Kompetensi Mentee Bidang</div>
@@ -112,7 +112,8 @@
             @foreach($tugasPrioritasPembimbing as $tugas)
                 @php
                     $menteeName = $tugas->penempatan?->peserta?->nama ?? 'Peserta Magang';
-                    $initials = strtoupper(substr($menteeName, 0, 2));
+                    $words = explode(' ', trim($menteeName));
+                    $initials = strtoupper(count($words) >= 2 ? substr($words[0], 0, 1).substr($words[1], 0, 1) : substr($menteeName, 0, 2));
                 @endphp
                 <div data-task-id="{{ $tugas->id }}">
                     <span class="mentee-avatar-chip">{{ $initials }}</span>

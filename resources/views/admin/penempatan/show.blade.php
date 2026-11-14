@@ -188,20 +188,20 @@
             </div>
         </div>
 
-        {{-- Stat 3: Nilai Akhir --}}
+        {{-- Stat 3: Status Magang --}}
         <div class="metric-tile-card">
             <div class="metric-tile-top">
-                <span class="metric-tile-title">Nilai Akhir</span>
-                <div class="metric-tile-icon-box" style="background: #FFFBEB; color: #D97706;">
+                <span class="metric-tile-title">Status Magang</span>
+                <div class="metric-tile-icon-box" style="background: #ECFDF5; color: #059669;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
                 </div>
             </div>
-            <div class="metric-tile-value">
-                {{ $nilaiAkhir !== null ? number_format((float) $nilaiAkhir, 2) : 'Belum Ada' }}
+            <div class="metric-tile-value" style="font-size: 1.125rem;">
+                {{ $penempatan->status->label() }}
             </div>
             <div class="metric-tile-sub">
-                <span style="font-weight: 700; color: {{ $nilaiAkhir !== null ? '#D97706' : '#64748B' }};">
-                    {{ $penempatan->penilaian?->predikat ? 'Predikat: ' . $penempatan->penilaian->predikat : 'Evaluasi pembimbing' }}
+                <span style="font-weight: 700; color: {{ $penempatan->status === \App\Enums\StatusPenempatanEnum::Selesai ? '#059669' : '#4F46E5' }};">
+                    {{ $penempatan->status === \App\Enums\StatusPenempatanEnum::Selesai ? 'Program Magang Tuntas' : 'Sedang Bimbingan Aktif' }}
                 </span>
             </div>
         </div>
@@ -433,7 +433,7 @@
             <div>
                 <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">Alihkan Pembimbing Lapangan</h3>
                 <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 0.15rem 0 0 0;">
-                    Pindahkan alokasi peserta ke staf pembimbing lainnya (AC-07-4)
+                    Pindahkan alokasi peserta ke staf pembimbing lainnya
                 </p>
             </div>
             <button type="button" onclick="closePindahModal()" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
@@ -474,7 +474,7 @@
             <div>
                 <h3 style="font-size: 1.0625rem; font-weight: 800; color: #991B1B; margin: 0;">Batalkan Penempatan Peserta</h3>
                 <p style="font-size: 0.75rem; color: #B91C1C; margin: 0.15rem 0 0 0;">
-                    Catat pembatalan / pengunduran diri magang (AC-07-5, BR-07)
+                    Catat pembatalan atau pengunduran diri peserta magang
                 </p>
             </div>
             <button type="button" onclick="closeBatalModal()" style="background: transparent; border: none; font-size: 1.25rem; color: #991B1B; cursor: pointer;">✕</button>

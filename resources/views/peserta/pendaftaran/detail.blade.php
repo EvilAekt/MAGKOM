@@ -78,46 +78,36 @@
                 <h1 class="hero-title-main">
                     Pemberkasan {{ $pendaftaran->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
                 </h1>
+                <p class="hero-subtitle">
+                    Pantau tahapan pendaftaran dan kelengkapan berkas magang kamu.
+                </p>
             </div>
 
             <div class="hero-right-content">
-                <div class="hero-chips-wrap">
-                    <div class="hero-chip-item">
-                        <span>{{ $pendaftaran->kuota?->jurusan?->nama_jurusan }}</span>
+                <div class="hero-meta-grid">
+                    <div class="hero-meta-box">
+                        <span class="hero-meta-label">JURUSAN</span>
+                        <span class="hero-meta-value">{{ $pendaftaran->kuota?->jurusan?->nama_jurusan }}</span>
                     </div>
-                    <div class="hero-chip-item">
-                        <span>{{ $pendaftaran->durasi_bulan }} Bulan</span>
+                    <div class="hero-meta-box">
+                        <span class="hero-meta-label">DURASI</span>
+                        <span class="hero-meta-value">{{ $pendaftaran->durasi_bulan }} Bulan</span>
                     </div>
-                    @if($isKelompok)
-                        <div class="hero-chip-item kelompok">
-                            <span>Kelompok: {{ $pendaftaran->kelompokMagang?->nama_kelompok ?? 'Tim' }}</span>
-                        </div>
-                    @else
-                        <div class="hero-chip-item">
-                            <span>Mandiri</span>
-                        </div>
-                    @endif
+                    <div class="hero-meta-box">
+                        <span class="hero-meta-label">JALUR</span>
+                        <span class="hero-meta-value">
+                            @if($isKelompok)
+                                Kelompok: {{ $pendaftaran->kelompokMagang?->nama_kelompok ?? 'Tim' }}
+                            @else
+                                Mandiri
+                            @endif
+                        </span>
+                    </div>
+                    <div class="hero-meta-box {{ $val === 'diterima' ? 'status-box-gold' : ($val === 'diajukan' ? 'status-box-blue' : ($val === 'perlu_perbaikan' ? 'status-box-amber' : ($val === 'ditolak' ? 'status-box-danger' : 'status-box-default'))) }}">
+                        <span class="hero-meta-label">STATUS</span>
+                        <span class="hero-meta-value">{{ $pendaftaran->status->label() }}</span>
+                    </div>
                 </div>
-
-                @if($val !== 'berkas_belum_lengkap')
-                    <div>
-                        @if($val === 'diajukan')
-                            <x-gentelella.badge variant="warning" style="font-size: 0.8125rem; padding: 7px 14px;">Menunggu Verifikasi</x-gentelella.badge>
-                        @elseif($val === 'waiting_list')
-                            <x-gentelella.badge variant="info" style="font-size: 0.8125rem; padding: 7px 14px;">Waiting List</x-gentelella.badge>
-                        @elseif($val === 'perlu_perbaikan')
-                            <x-gentelella.badge variant="warning" style="font-size: 0.8125rem; padding: 7px 14px;">Perlu Perbaikan</x-gentelella.badge>
-                        @elseif($val === 'diterima')
-                            <x-gentelella.badge variant="success" style="font-size: 0.8125rem; padding: 7px 14px;">Diterima Magang</x-gentelella.badge>
-                        @elseif($val === 'ditolak')
-                            <x-gentelella.badge variant="danger" style="font-size: 0.8125rem; padding: 7px 14px;">Ditolak</x-gentelella.badge>
-                        @elseif($val === 'dibatalkan')
-                            <x-gentelella.badge variant="secondary" style="font-size: 0.8125rem; padding: 7px 14px;">Dibatalkan</x-gentelella.badge>
-                        @endif
-                    </div>
-                @else
-                    <span class="sr-only">Status: Berkas Belum Lengkap</span>
-                @endif
             </div>
         </div>
     </div>
@@ -127,11 +117,20 @@
         <div class="stepper-timeline-modern">
             <div class="stepper-step-modern {{ $val === 'berkas_belum_lengkap' ? 'active' : 'completed' }}">
                 <div class="stepper-circle-modern">
-                    @if($val === 'berkas_belum_lengkap') 1 @else <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> @endif
+                    @if($val === 'berkas_belum_lengkap')
+                        1
+                    @else
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    @endif
                 </div>
                 <div class="stepper-phase-tag">Tahap 1</div>
-                <div class="stepper-label-text">1. Berkas Persyaratan</div>
+                <div class="stepper-label-text">
+                    <span class="sr-only">1. Berkas Persyaratan</span>
+                    <span aria-hidden="true">Berkas Persyaratan</span>
+                </div>
             </div>
+
+            <div class="stepper-line {{ !in_array($val, ['berkas_belum_lengkap']) ? 'completed' : '' }}" aria-hidden="true"></div>
 
             <div class="stepper-step-modern {{ in_array($val, ['diajukan', 'waiting_list']) ? 'active' : (in_array($val, ['perlu_perbaikan', 'diterima', 'ditolak']) ? 'completed' : '') }}">
                 <div class="stepper-circle-modern">
@@ -142,10 +141,15 @@
                     @endif
                 </div>
                 <div class="stepper-phase-tag">Tahap 2</div>
-                <div class="stepper-label-text">2. Verifikasi Berkas</div>
+                <div class="stepper-label-text">
+                    <span class="sr-only">2. Verifikasi Berkas</span>
+                    <span aria-hidden="true">Verifikasi Berkas</span>
+                </div>
             </div>
 
-            <div class="stepper-step-modern {{ $val === 'perlu_perbaikan' ? 'warning' : ($val === 'diterima' ? 'completed' : ($val === 'ditolak' ? 'danger' : '')) }}">
+            <div class="stepper-line {{ in_array($val, ['perlu_perbaikan', 'diterima', 'ditolak']) ? 'completed' : '' }}" aria-hidden="true"></div>
+
+            <div class="stepper-step-modern {{ $val === 'perlu_perbaikan' ? 'warning' : ($val === 'diterima' ? 'accepted' : ($val === 'ditolak' ? 'danger' : '')) }}">
                 <div class="stepper-circle-modern">
                     @if($val === 'diterima')
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -159,10 +163,13 @@
                 </div>
                 <div class="stepper-phase-tag">Tahap 3</div>
                 <div class="stepper-label-text">
-                    @if($val === 'perlu_perbaikan') Perbaikan Berkas
-                    @elseif($val === 'diterima') Diterima
-                    @elseif($val === 'ditolak') Ditolak
-                    @else 3. Keputusan @endif
+                    <span class="sr-only">3. Keputusan</span>
+                    <span aria-hidden="true">
+                        @if($val === 'perlu_perbaikan') Perbaikan Berkas
+                        @elseif($val === 'diterima') Diterima
+                        @elseif($val === 'ditolak') Ditolak
+                        @else Keputusan @endif
+                    </span>
                 </div>
             </div>
         </div>
@@ -170,11 +177,11 @@
 
     {{-- Alert Catatan Revisi Admin --}}
     @if($val === 'perlu_perbaikan')
-        <div style="background: #FFFBEB; border: 1.5px solid #FDE68A; border-left: 5px solid #D97706; border-radius: 12px; padding: 16px 20px;">
-            <strong style="font-size: 0.9375rem; font-weight: 700; color: #92400E; display: block;">
+        <div class="pemberkasan-revision-alert">
+            <strong class="revision-title">
                 Catatan Perbaikan Verifikator:
             </strong>
-            <div style="margin-top: 6px; padding: 10px 14px; background: #ffffff; border-radius: 6px; border: 1px solid #FDE68A; font-size: 0.84rem; color: #1E293B;">
+            <div class="revision-body">
                 "{{ $pendaftaran->catatan_admin ?? 'Harap perbarui dokumen yang diminta.' }}"
             </div>
         </div>
@@ -182,22 +189,29 @@
 
     {{-- Alert Kelulusan Diterima & Unduh Surat --}}
     @if($val === 'diterima' && $pendaftaran->penempatan)
-        <div style="background: #ECFDF5; border: 1.5px solid #A7F3D0; border-left: 5px solid #10B981; border-radius: 12px; padding: 16px 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
-                <div>
-                    <strong style="font-size: 0.95rem; font-weight: 800; color: #065F46; display: block;">
+        <div class="pemberkasan-approved-alert">
+            <div class="approved-alert-left">
+                <div class="approved-icon-box" aria-hidden="true">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <div class="approved-text-col">
+                    <strong class="approved-title">
                         Selamat! Permohonan Magang Anda Telah Disetujui
                     </strong>
-                    <span style="font-size: 0.8125rem; color: #047857;">Surat Keterangan Diterima resmi siap diunduh.</span>
+                    <span class="approved-desc">
+                        Surat Keterangan Diterima resmi siap diunduh.
+                    </span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <button type="button" class="btn btn-secondary" onclick="openDocPreview('{{ route('peserta.penempatan.surat-diterima.pratinjau', $pendaftaran->penempatan) }}', '{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}', 'Surat Diterima', 'application/pdf')">
-                        Lihat Surat Diterima
-                    </button>
-                    <a href="{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}" class="btn btn-primary" style="background: #02275D; border-color: #02275D;">
-                        Unduh Surat Diterima (PDF)
-                    </a>
-                </div>
+            </div>
+            <div class="approved-alert-actions">
+                <button type="button" class="btn-approved-preview" onclick="openDocPreview('{{ route('peserta.penempatan.surat-diterima.pratinjau', $pendaftaran->penempatan) }}', '{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}', 'Surat Diterima', 'application/pdf')">
+                    Lihat Surat Diterima
+                </button>
+                <a href="{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}" class="btn-approved-download">
+                    Unduh Surat Diterima (PDF)
+                </a>
             </div>
         </div>
     @endif
@@ -235,20 +249,13 @@
             </div>
             <div class="pemberkasan-badge-wrap">
                 <span class="pemberkasan-progress-badge {{ $uploadedBerkas >= $totalBerkas ? 'complete' : '' }}">
-                    @if($uploadedBerkas >= $totalBerkas)
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span>{{ $uploadedBerkas }}/{{ $totalBerkas }} Berkas</span>
-                    @else
-                        <span class="pemberkasan-dot-pulse" aria-hidden="true"></span>
-                        <span>{{ $uploadedBerkas }}/{{ $totalBerkas }} Berkas</span>
-                    @endif
+                    <span class="pemberkasan-dot-status" aria-hidden="true"></span>
+                    <span>{{ $uploadedBerkas }}/{{ $totalBerkas }} Berkas</span>
                 </span>
             </div>
         </div>
 
-        <div class="pemberkasan-progress-track">
-            <div class="pemberkasan-progress-fill {{ $uploadedBerkas >= $totalBerkas ? 'complete' : '' }}" style="width: {{ $persen }}%;"></div>
-        </div>
+        <div class="pemberkasan-header-divider" aria-hidden="true"></div>
 
         {{-- Daftar Berkas --}}
         <div>
@@ -424,8 +431,8 @@
                 </form>
             </div>
         @else
-            <div style="display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 10px; font-size: 0.8125rem; color: #475569; margin-top: 18px;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #64748B; flex-shrink: 0;">
+            <div class="pemberkasan-locked-notice">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="locked-icon" aria-hidden="true">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                     <path d="M7 11V7a5 5 0 0110 0v4"></path>
                 </svg>

@@ -23,7 +23,7 @@
                         <span class="cv-todo-dot danger"></span>
                         <div>
                             <strong style="font-size: 0.8125rem; color: var(--neutral-900); display: block;">{{ $pengajuanSlaKritisCount }} Berkas Lewat Batas Waktu</strong>
-                            <small style="color: var(--neutral-500); font-size: 0.7rem;">Mendekati Batas Waktu Pelayanan (BR-04)</small>
+                            <small style="color: var(--neutral-500); font-size: 0.7rem;">Mendekati Batas Waktu Pelayanan (SLA Kritis)</small>
                         </div>
                     </div>
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--blue-600);">Buka &rarr;</span>

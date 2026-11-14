@@ -12,10 +12,13 @@
 @import './components/notifications.css';
 @import './components/cards.css';
 @import './components/tables.css';
+@import './components/pengaturan-akun.css';
 
 /* Unified Dashboard & Layout Rules */
 @import './layouts/gentelella.css';
 @import './layouts/dashboard.css';
+@import './layouts/dashboard-layout-tokens.css';
+@import './layouts/peserta-layout-tokens.css';
 @import './layouts/dashboard-cockpit.css';
 @import './pages/admin/dashboard.css';
 @import './pages/admin/laporan-tahunan.css';
@@ -23,3 +26,5 @@
 @import './pages/admin/pendaftaran-show.css';
 @import './pages/peserta/profil-show.css';
 @import './pages/superadmin/superadmin-common.css';
+@import './pages/admin/kuota-draft.css';
+@import './pages/public/panduan-alur-tokens.css';

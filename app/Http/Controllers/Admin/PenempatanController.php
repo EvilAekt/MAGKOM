@@ -75,19 +75,23 @@ class PenempatanController extends Controller
             $activeTab = 'sudah';
         }
 
-        $antreanBelumDitempatkan = $this->antreanQuery->getAntrean($request);
+        $antreanBelumDitempatkan = $this->antreanQuery->getPaginated($request, 5);
         $totalBelumDitempatkan = $this->antreanQuery->getTotalBelumDitempatkan();
 
         $bulanList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
         $slotKhususList = SlotKhusus::where('aktif', true)->orderBy('bulan_mulai')->get();
-        $bidangList = Bidang::where('aktif', true)->orderBy('nama_bidang')->get();
-        $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
+        $bidangList = Bidang::cachedAktif();
+        $jurusanList = Jurusan::cachedAktif();
         $kuotaList = Kuota::with(['bulanMagang', 'jurusan'])->where('aktif', true)->get();
         $pesertaList = User::where('role', RoleEnum::Peserta)
             ->where('status_aktif', true)
             ->whereDoesntHave('penempatanPeserta', function ($q) {
                 $q->where('status', StatusPenempatanEnum::Aktif);
             })
+            ->with(['profil' => function ($q) {
+                $q->select('id', 'user_id', 'institusi');
+            }])
+            ->select('id', 'nama', 'email')
             ->orderBy('nama')
             ->get();
 
@@ -179,7 +183,6 @@ class PenempatanController extends Controller
         })->count();
 
         $logbookCount = $penempatan->logbooks->count();
-        $nilaiAkhir = null;
 
         return view('admin.penempatan.show', [
             'penempatan' => $penempatan,
@@ -187,7 +190,6 @@ class PenempatanController extends Controller
             'tugasCount' => $tugasCount,
             'tugasSelesaiCount' => $tugasSelesaiCount,
             'logbookCount' => $logbookCount,
-            'nilaiAkhir' => $nilaiAkhir,
         ]);
     }
 

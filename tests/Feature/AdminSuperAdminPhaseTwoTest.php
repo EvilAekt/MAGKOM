@@ -192,7 +192,7 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
         $response = $this->actingAs($this->superAdmin)->patch(route('superadmin.staf.toggle', $this->pembimbing));
 
         $response->assertSessionHas('error', function ($msg) {
-            return str_contains($msg, 'Penonaktifan ditolak (BR-12)') && str_contains($msg, 'peserta aktif');
+            return str_contains($msg, 'Penonaktifan ditolak') && str_contains($msg, 'peserta aktif');
         });
 
         $this->assertTrue($this->pembimbing->fresh()->status_aktif);
@@ -208,7 +208,7 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
         $response = $this->actingAs($this->superAdmin)->patch(route('superadmin.staf.toggle', $this->pembimbing));
 
         $response->assertSessionHas('error', function ($msg) {
-            return str_contains($msg, 'Penonaktifan ditolak (BR-12)') && str_contains($msg, 'satu-satunya pembimbing aktif');
+            return str_contains($msg, 'Penonaktifan ditolak') && str_contains($msg, 'satu-satunya pembimbing aktif');
         });
 
         $this->assertTrue($this->pembimbing->fresh()->status_aktif);
@@ -220,7 +220,7 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
         // 1. Coba nonaktifkan kuota yang masih memiliki penempatan aktif
         $resKuota = $this->actingAs($this->admin)->patch(route('admin.kuota.toggle', $this->kuota));
         $resKuota->assertSessionHas('error', function ($msg) {
-            return str_contains($msg, 'Penonaktifan ditolak (BR-12');
+            return str_contains($msg, 'Penonaktifan ditolak') && str_contains($msg, 'penempatan peserta aktif');
         });
         $this->assertTrue($this->kuota->fresh()->aktif);
 
@@ -236,7 +236,7 @@ class AdminSuperAdminPhaseTwoTest extends TestCase
 
         $resBulan = $this->actingAs($this->superAdmin)->patch(route('superadmin.bulan.toggle', $this->bulan));
         $resBulan->assertSessionHas('error', function ($msg) {
-            return str_contains($msg, 'Penonaktifan ditolak (BR-12)');
+            return str_contains($msg, 'Penonaktifan ditolak') && str_contains($msg, 'pendaftaran aktif');
         });
         $this->assertTrue($this->bulan->fresh()->aktif);
     }

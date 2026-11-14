@@ -241,7 +241,7 @@ class PatternRegistry
                 'id' => 'pattern-info-three-cards',
                 'key' => 'info_three_cards',
                 'name' => 'Tiga Kartu Sorotan Program',
-                'description' => 'Tiga kartu ringkas menyajikan pilar utama kegiatan: Mentoring Ahli, Proyek Nyata, dan Sertifikat Resmi.',
+                'description' => 'Tiga kartu ringkas menyajikan pilar utama kegiatan: Mentoring Ahli, Proyek Nyata, dan Portofolio Kedinasan.',
                 'category' => 'Informasi',
                 'thumbnail' => '/images/patterns/info-three-cards.svg',
                 'schema_version' => '1.1',
@@ -255,7 +255,7 @@ class PatternRegistry
                             'items' => [
                                 ['title' => 'Mentor Ahli ASN', 'desc' => 'Didampingi langsung oleh staf pranata komputer dan pranata humas pemerintah yang berpengalaman.', 'icon' => '👥'],
                                 ['title' => 'Implementasi Proyek Riil', 'desc' => 'Berpartisipasi aktif dalam perancangan aplikasi, infrastruktur jaringan, konten publik, dan tata kelola SPBE.', 'icon' => '💻'],
-                                ['title' => 'Sertifikat & Penilaian Sah', 'desc' => 'Menerima lembar penilaian resmi dan sertifikat ber-barcode yang diakui instansi pemerintah.', 'icon' => '📜'],
+                                ['title' => 'Penyelesaian & Portofolio', 'desc' => 'Portofolio proyek nyata dan pengalaman kedinasan yang diakui instansi pemerintah.', 'icon' => '🏆'],
                             ],
                         ],
                         'styles' => [
@@ -449,14 +449,14 @@ class PatternRegistry
                         'title' => 'Alur Pendaftaran Horizontal',
                         'content' => [
                             'heading' => 'Tahapan Lengkap Pelaksanaan Magang di Diskominfo Sleman',
-                            'summary' => 'Alur pelaksanaan magang dirancang transparan dan terintegrasi melalui portal MAGKOM dari pendaftaran awal hingga penerbitan sertifikat digital ber-barcode.',
+                            'summary' => 'Alur pelaksanaan magang dirancang transparan dan terintegrasi melalui portal MAGKOM dari pendaftaran awal hingga penetapan status kelulusan resmi.',
                             'btn_pdf_text' => 'Unduh Panduan PDF',
                             'btn_peta_text' => 'Peta Alur Interaktif',
                             'steps' => [
                                 ['step' => '01', 'title' => 'Buat Akun & Registrasi', 'badge' => 'REGISTRASI', 'desc' => 'Daftarkan akun portal resmi, isi identitas data diri, dan verifikasi email Anda.'],
                                 ['step' => '02', 'title' => 'Pilih Formasi & Seleksi', 'badge' => 'SELEKSI', 'desc' => 'Pilih bidang dan periode bulan, unggah berkas, lalu tunggu hasil verifikasi admin.'],
                                 ['step' => '03', 'title' => 'Pelaksanaan & Logbook', 'badge' => 'PELAKSANAAN', 'desc' => 'Jalani magang luring di Diskominfo Sleman, kerjakan tugas, dan isi logbook harian.'],
-                                ['step' => '04', 'title' => 'Evaluasi & Sertifikat', 'badge' => 'KELULUSAN', 'desc' => 'Dapatkan lembar penilaian akhir dan unduh sertifikat resmi digital langsung dari portal.'],
+                                ['step' => '04', 'title' => 'Selesai Magang', 'badge' => 'KELULUSAN', 'desc' => 'Penyelesaian program magang, pengesahan laporan akhir, dan pelepasan resmi peserta oleh dinas.'],
                             ],
                         ],
                         'styles' => [

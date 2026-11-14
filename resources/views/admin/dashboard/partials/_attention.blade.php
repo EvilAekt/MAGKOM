@@ -4,7 +4,7 @@
    ========================================================================== --}}
 @if($pengajuanSlaKritisCount > 0)
     <div style="margin-bottom: 1rem;">
-        <x-gentelella.callout type="danger" title="Perhatian: Berkas Mendekati atau Melewati Batas Waktu Verifikasi (BR-04)">
+        <x-gentelella.callout type="danger" title="Perhatian: Berkas Mendekati atau Melewati Batas Waktu Verifikasi">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <div>
                     Terdapat <strong>{{ $pengajuanSlaKritisCount }} berkas</strong> calon peserta yang mendekati atau melewati batas waktu standar verifikasi (3 hari kerja). Segera lakukan peninjauan berkas pendaftar untuk menjaga mutu pelayanan seleksi.

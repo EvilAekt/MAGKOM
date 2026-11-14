@@ -200,7 +200,7 @@ class AdminSuperAdminArchitectureAndSecurityTest extends TestCase
         $result = $action->execute($this->kuota);
 
         $this->assertFalse($result['success']);
-        $this->assertStringContainsString('BR-12', $result['message']);
+        $this->assertStringContainsString('pendaftaran aktif', $result['message']);
         $this->assertTrue($this->kuota->fresh()->aktif);
     }
 
@@ -359,7 +359,7 @@ class AdminSuperAdminArchitectureAndSecurityTest extends TestCase
             ->patch(route('superadmin.staf.toggle', $this->pembimbing));
 
         $response->assertSessionHas('error');
-        $this->assertStringContainsString('BR-12', (string) session('error'));
+        $this->assertStringContainsString('Pembimbing masih memiliki penempatan peserta aktif', (string) session('error'));
         $this->assertTrue($this->pembimbing->fresh()->status_aktif);
     }
 

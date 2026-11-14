@@ -8,11 +8,13 @@ use App\Enums\RoleEnum;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SuperAdmin\StorePermissionRequest;
+use App\Http\Requests\SuperAdmin\UpdatePermissionRequest;
 use App\Http\Requests\SuperAdmin\UpdateRoleMatrixRequest;
 use App\Models\Permission;
 use App\Models\RolePermission;
 use App\Models\User;
 use App\Services\AuditService;
+use App\Services\PermissionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -22,7 +24,8 @@ use Illuminate\View\View;
 class RoleController extends Controller
 {
     public function __construct(
-        protected AuditService $auditService
+        protected AuditService $auditService,
+        protected PermissionService $permissionService
     ) {}
 
     /**
@@ -30,6 +33,9 @@ class RoleController extends Controller
      */
     public function index(Request $request): View
     {
+        // Pastikan modul sistem bawaan selalu ter-provisioning secara otomatis (Self-healing & Auto-provisioning)
+        $this->permissionService->ensureSystemPermissionsExist();
+
         // Hitung pengguna per role
         $roleCounts = [
             RoleEnum::SuperAdmin->value => User::where('role', RoleEnum::SuperAdmin)->count(),
@@ -184,6 +190,69 @@ class RoleController extends Controller
 
         return redirect()->route('superadmin.role.index')
             ->with('success', 'Matriks hak akses role berhasil diperbarui secara menyeluruh.');
+    }
+
+    /**
+     * Memperbarui informasi metadata hak akses modul (nama, kategori, deskripsi).
+     */
+    public function updatePermission(UpdatePermissionRequest $request, Permission $permission): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($validated, $permission): void {
+            $oldValues = $permission->only(['nama_modul', 'slug', 'kategori', 'deskripsi']);
+
+            // Core Invariant Protection: Modul sistem tidak boleh diubah slug-nya
+            if ($permission->is_system) {
+                unset($validated['slug']);
+            }
+
+            $permission->update($validated);
+
+            $this->clearPermissionsCache();
+
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Aksi,
+                tabel: 'permissions',
+                idData: $permission->id,
+                nilaiLama: $oldValues,
+                nilaiBaru: $permission->only(['nama_modul', 'slug', 'kategori', 'deskripsi']),
+                detail: [
+                    'aksi' => 'EDIT_HAK_AKSES_MODUL',
+                    'is_system' => $permission->is_system,
+                ]
+            );
+        });
+
+        return redirect()->route('superadmin.role.index')
+            ->with('success', "Hak akses modul '{$permission->nama_modul}' berhasil diperbarui.");
+    }
+
+    /**
+     * Melakukan sinkronisasi ulang modul sistem bawaan secara aman (idempotent).
+     */
+    public function syncDefaultPermissions(Request $request): RedirectResponse
+    {
+        $resetRoles = $request->boolean('reset_roles', false);
+
+        $this->permissionService->provisionDefaultModules(overrideRoles: $resetRoles);
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'permissions',
+            idData: null,
+            detail: [
+                'aksi' => 'SINKRONISASI_MODUL_SISTEM',
+                'reset_roles' => $resetRoles,
+            ]
+        );
+
+        $pesan = $resetRoles
+            ? 'Modul sistem bawaan dan wewenang default berhasil dipulihkan secara menyeluruh.'
+            : 'Modul sistem bawaan berhasil disinkronkan tanpa mengubah wewenang eksisting.';
+
+        return redirect()->route('superadmin.role.index')
+            ->with('success', $pesan);
     }
 
     /**

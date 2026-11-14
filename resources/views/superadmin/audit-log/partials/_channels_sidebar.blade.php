@@ -14,7 +14,7 @@
         }
     }
 @endphp
-<aside class="audit-sidebar-col" aria-label="Navigasi Kanal &amp; Kepatuhan">
+<aside class="audit-sidebar-col sc-reveal-side sc-delay-2" data-scroll-reveal aria-label="Navigasi Kanal &amp; Kepatuhan">
 
     {{-- Panel 1: 15 Audit Channels --}}
     <div class="audit-panel-card">

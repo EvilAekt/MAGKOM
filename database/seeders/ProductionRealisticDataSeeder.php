@@ -29,7 +29,6 @@ use App\Models\Pendaftaran;
 use App\Models\Penempatan;
 use App\Models\PesertaProfil;
 use App\Models\ProgresLog;
-use App\Models\RouteMetric;
 use App\Models\SlotKhusus;
 use App\Models\Tugas;
 use App\Models\TugasTemplate;
@@ -919,42 +918,7 @@ class ProductionRealisticDataSeeder extends Seeder
         }
 
         // =========================================================================
-        // 12. ROUTE METRICS & TELEMETRI LATENSI (60 ENTRI TERAKHIR)
-        // Menghidupkan Grafik Canvas 2D SuperAdmin Health Telemetry
-        // =========================================================================
-        $routes = [
-            ['GET', 'admin.dashboard', '/admin/dashboard', 200, 32.5, 14.2],
-            ['GET', 'pembimbing.dashboard', '/pembimbing/dashboard', 200, 28.4, 12.8],
-            ['GET', 'peserta.dashboard', '/peserta/dashboard', 200, 19.8, 11.5],
-            ['GET', 'public.landing', '/', 200, 15.2, 9.8],
-            ['POST', 'peserta.logbook.store', '/peserta/logbook', 302, 45.1, 15.0],
-            ['GET', 'realtime.stream', '/realtime/stream', 200, 12.0, 8.4],
-            ['GET', 'admin.kuota.index', '/admin/kuota', 200, 24.6, 12.0],
-            ['GET', 'superadmin.health.index', '/superadmin/health-monitor', 200, 35.8, 16.5],
-            ['GET', 'superadmin.audit.index', '/superadmin/audit-logs', 200, 42.0, 18.2],
-        ];
-
-        for ($k = 0; $k < 60; $k++) {
-            $r = $routes[$k % count($routes)];
-            try {
-                RouteMetric::create([
-                    'method' => $r[0],
-                    'route_name' => $r[1],
-                    'uri' => $r[2],
-                    'status_code' => $r[3],
-                    'duration_ms' => $r[4] + rand(-5, 15) + (rand(0, 99) / 100),
-                    'memory_mb' => $r[5] + rand(-1, 3) + (rand(0, 99) / 100),
-                    'user_id' => $admin->id,
-                    'ip' => '127.0.0.1',
-                    'created_at' => $now->copy()->subMinutes(60 - $k),
-                ]);
-            } catch (\Throwable $e) {
-                // Ignore telemetry insert quirks
-            }
-        }
-
-        // =========================================================================
-        // 13. SINKRONISASI HITUNGAN TERISI PADA KUOTA
+        // 12. SINKRONISASI HITUNGAN TERISI PADA KUOTA
         // =========================================================================
         foreach (Kuota::all() as $k) {
             $countTerisi = Penempatan::where('kuota_id', $k->id)

@@ -3,7 +3,10 @@
  * - Penanganan modal tambah, edit, dan reset sandi via event delegation
  * - Toggling dinamis bidang penempatan sesuai peran (Admin vs Pembimbing)
  * - Pengisian form aman berbasis atribut HTML5 data-* (kebal newline & kutip)
+ * - Sistem Animasi Universal (Scroll-Craft + GSAP Paritas Pembimbing)
  */
+import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
+
 export function toggleBidangField(mode) {
     if (mode === 'tambah') {
         const roleEl = document.getElementById('tambahRole');
@@ -40,9 +43,13 @@ export function toggleBidangField(mode) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initSuperAdminPageMotion();
+
     const modalTambah = document.getElementById('modalTambahStaf');
     const modalReset = document.getElementById('modalResetSandi');
     const modalEdit = document.getElementById('modalEditStaf');
+    const modalToggle = document.getElementById('modalKonfirmasiToggleStaf');
+    const modalSandiBaru = document.getElementById('modalKonfirmasiSandiBaru');
 
     const resetNama = document.getElementById('resetNamaStaf');
     const formReset = document.getElementById('formResetSandi');
@@ -109,6 +116,72 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Trigger Buka Modal Konfirmasi Sandi Baru (BR-15 Instant Regenerate)
+        const triggerSandiBaru = event.target.closest('.btn-trigger-sandi-baru');
+        if (triggerSandiBaru) {
+            event.preventDefault();
+            const nama = triggerSandiBaru.dataset.nama || 'Staf';
+            const email = triggerSandiBaru.dataset.email || '-';
+            const actionUrl = triggerSandiBaru.dataset.actionUrl;
+
+            const formSandiBaru = document.getElementById('formSandiBaru');
+            const namaEl = document.getElementById('sandiBaruNama');
+            const emailEl = document.getElementById('sandiBaruEmail');
+
+            if (formSandiBaru && actionUrl) formSandiBaru.action = actionUrl;
+            if (namaEl) namaEl.textContent = nama;
+            if (emailEl) emailEl.textContent = email;
+            if (modalSandiBaru) modalSandiBaru.style.display = 'flex';
+            return;
+        }
+
+        // Trigger Buka Modal Konfirmasi Toggle Status Staf (Nonaktifkan / Aktifkan)
+        const triggerToggle = event.target.closest('.btn-trigger-toggle-staf');
+        if (triggerToggle) {
+            event.preventDefault();
+            const id = triggerToggle.dataset.id;
+            const nama = triggerToggle.dataset.nama || 'Staf';
+            const email = triggerToggle.dataset.email || '-';
+            const isAktif = triggerToggle.dataset.statusAktif === '1';
+            const actionUrl = triggerToggle.dataset.actionUrl || `/superadmin/staf/${id}/toggle`;
+
+            const formToggle = document.getElementById('formToggleStaf');
+            const titleEl = document.getElementById('modalToggleStafTitle');
+            const namaEl = document.getElementById('toggleStafNama');
+            const emailEl = document.getElementById('toggleStafEmail');
+            const msgEl = document.getElementById('toggleStafMessage');
+            const boxAlert = document.getElementById('toggleStafBoxAlert');
+            const iconWrap = document.getElementById('toggleStafIconWrap');
+            const consequenceEl = document.getElementById('toggleStafConsequence');
+            const submitBtn = document.getElementById('btnSubmitToggleStaf');
+            const submitText = document.getElementById('btnSubmitToggleText');
+
+            if (formToggle) formToggle.action = actionUrl;
+            if (namaEl) namaEl.textContent = nama;
+            if (emailEl) emailEl.textContent = email;
+
+            if (isAktif) {
+                if (titleEl) titleEl.textContent = 'Konfirmasi Penonaktifan Staf';
+                if (msgEl) msgEl.textContent = 'Apakah Anda yakin ingin menonaktifkan akun staf berikut?';
+                if (consequenceEl) consequenceEl.textContent = '• Sesi aktif staf akan dicabut seketika dan staf tidak dapat login ke portal hingga diaktifkan kembali.';
+                if (boxAlert) { boxAlert.style.background = '#FFF1F2'; boxAlert.style.borderColor = '#FECDD3'; }
+                if (iconWrap) { iconWrap.style.background = '#FEE2E2'; iconWrap.style.color = '#DC2626'; }
+                if (submitBtn) { submitBtn.style.background = '#DC2626'; }
+                if (submitText) submitText.textContent = 'Ya, Nonaktifkan Staf';
+            } else {
+                if (titleEl) titleEl.textContent = 'Konfirmasi Pengaktifan Staf';
+                if (msgEl) msgEl.textContent = 'Apakah Anda yakin ingin mengaktifkan kembali akun staf berikut?';
+                if (consequenceEl) consequenceEl.textContent = '• Akun staf akan dipulihkan dan staf dapat kembali login ke portal internal MagKom.';
+                if (boxAlert) { boxAlert.style.background = '#F0FDF4'; boxAlert.style.borderColor = '#BBF7D0'; }
+                if (iconWrap) { iconWrap.style.background = '#DCFCE7'; iconWrap.style.color = '#16A34A'; }
+                if (submitBtn) { submitBtn.style.background = '#16A34A'; }
+                if (submitText) submitText.textContent = 'Ya, Aktifkan Staf';
+            }
+
+            if (modalToggle) modalToggle.style.display = 'flex';
+            return;
+        }
+
         // Trigger Tutup Modal via data-modal-dismiss
         const dismissBtn = event.target.closest('[data-modal-dismiss]');
         if (dismissBtn) {
@@ -123,6 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target === modalTambah) modalTambah.style.display = 'none';
         if (event.target === modalReset) modalReset.style.display = 'none';
         if (event.target === modalEdit) modalEdit.style.display = 'none';
+        if (event.target === modalToggle) modalToggle.style.display = 'none';
+        if (event.target === modalSandiBaru) modalSandiBaru.style.display = 'none';
     });
 
     // Keyboard ESC untuk menutup modal
@@ -131,6 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (modalTambah) modalTambah.style.display = 'none';
             if (modalReset) modalReset.style.display = 'none';
             if (modalEdit) modalEdit.style.display = 'none';
+            if (modalToggle) modalToggle.style.display = 'none';
+            if (modalSandiBaru) modalSandiBaru.style.display = 'none';
         }
     });
 });

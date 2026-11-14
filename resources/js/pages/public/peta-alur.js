@@ -26,11 +26,11 @@
         },
         4: {
             num: "04",
-            title: "KELULUSAN",
-            desc: "Unduh Lembar Nilai Magang dan sertifikat dalam bentuk PDF dari portal.",
+            title: "SELESAI MAGANG",
+            desc: "Penyelesaian program magang, pengumpulan laporan akhir, dan penetapan status kelulusan resmi.",
             numColor: "#f59e0b",
             btnColor: "#16a34a",
-            nextText: "Daftar Sekarang ðŸš€"
+            nextText: "Daftar Sekarang 🚀"
         }
     };
 

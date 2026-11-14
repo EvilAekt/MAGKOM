@@ -33,7 +33,7 @@ class ReviewProgresRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'feedback.required' => 'Umpan balik wajib diisi ketika meminta peserta merevisi laporan progres (AC-08-4).',
+            'feedback.required' => 'Umpan balik wajib diisi ketika meminta peserta merevisi laporan progres.',
             'feedback.min' => 'Umpan balik evaluasi revisi minimal berisi 5 karakter.',
         ];
     }

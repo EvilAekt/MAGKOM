@@ -81,5 +81,61 @@ class UserSeeder extends Seeder
                 ]
             );
         }
+
+        // 5. Akun Demo @gmail.com untuk kemudahan pengujian semua role
+        $gmailAccounts = [
+            [
+                'email' => 'superadmin@gmail.com',
+                'nama' => 'Super Administrator (Gmail)',
+                'role' => RoleEnum::SuperAdmin,
+                'bidang_id' => null,
+            ],
+            [
+                'email' => 'admin@gmail.com',
+                'nama' => 'Admin Verifikator (Gmail)',
+                'role' => RoleEnum::Admin,
+                'bidang_id' => null,
+            ],
+            [
+                'email' => 'pembimbing@gmail.com',
+                'nama' => 'Budi Pembimbing (Gmail)',
+                'role' => RoleEnum::Pembimbing,
+                'bidang_id' => $bidang?->id,
+            ],
+            [
+                'email' => 'peserta@gmail.com',
+                'nama' => 'Ahmad Peserta (Gmail)',
+                'role' => RoleEnum::Peserta,
+                'bidang_id' => null,
+            ],
+        ];
+
+        foreach ($gmailAccounts as $acc) {
+            $user = User::firstOrNew(['email' => $acc['email']]);
+            $user->nama = $acc['nama'];
+            $user->password = $defaultPassword;
+            $user->role = $acc['role'];
+            $user->bidang_id = $acc['bidang_id'];
+            $user->email_verified_at = now();
+            $user->status_aktif = true;
+            $user->must_change_password = false;
+            $user->save();
+
+            if ($acc['role'] === RoleEnum::Peserta && $jurusan) {
+                PesertaProfil::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'nim_nisn' => '9988776655',
+                        'institusi' => 'Universitas Gadjah Mada',
+                        'jurusan_id' => $jurusan->id,
+                        'jenjang' => JenjangEnum::S1,
+                        'no_hp' => '081299998888',
+                        'nama_kontak_darurat' => 'Wali Peserta',
+                        'no_kontak_darurat' => '089811112222',
+                        'hubungan_kontak_darurat' => 'Orang Tua / Wali',
+                    ]
+                );
+            }
+        }
     }
 }

@@ -671,22 +671,34 @@ function initDeadlineCalendar() {
 
     triggerBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        positionCalendarPopup();
         renderCalendar();
         popup.classList.add('is-active');
+        positionCalendarPopup();
     });
 
     function positionCalendarPopup() {
         const rect = triggerBtn.getBoundingClientRect();
-        const popupWidth = 358;
+        const popupWidth = Math.min(358, window.innerWidth - 32);
         let left = rect.left;
-        if (left + popupWidth > window.innerWidth) {
+        if (left + popupWidth > window.innerWidth - 16) {
             left = window.innerWidth - popupWidth - 16;
         }
         if (left < 16) left = 16;
 
-        popup.style.top = `${rect.bottom + 8}px`;
+        const popupHeight = popup.offsetHeight || 330;
+        const spaceBelow = window.innerHeight - rect.bottom - 16;
+        const spaceAbove = rect.top - 16;
+
+        let top;
+        if (spaceBelow < popupHeight && spaceAbove > spaceBelow) {
+            top = Math.max(16, rect.top - popupHeight - 8);
+        } else {
+            top = Math.max(16, Math.min(rect.bottom + 8, window.innerHeight - popupHeight - 16));
+        }
+
+        popup.style.top = `${top}px`;
         popup.style.left = `${left}px`;
+        popup.style.width = `${popupWidth}px`;
     }
 
     window.addEventListener('resize', () => {
@@ -723,6 +735,38 @@ function initDeadlineCalendar() {
         });
     }
 
+    function commitDateSelection(dateObj, shouldClose = true) {
+        if (!dateObj) return;
+        selectedDate = dateObj;
+
+        const yyyy = dateObj.getFullYear();
+        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const dd = String(dateObj.getDate()).padStart(2, '0');
+        const isoDate = `${yyyy}-${mm}-${dd}`;
+
+        if (hiddenInput) {
+            hiddenInput.value = isoDate;
+            hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+            hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        if (displayText) {
+            const dayName = daysIndo[dateObj.getDay()];
+            const mName = months[dateObj.getMonth()];
+            displayText.textContent = `${dayName}, ${dd} ${mName} ${yyyy}`;
+        }
+
+        triggerBtn?.closest('.tugas-field-filled')?.classList.add('has-value');
+
+        renderCalendar();
+
+        if (shouldClose) {
+            setTimeout(() => {
+                popup.classList.remove('is-active');
+            }, 180);
+        }
+    }
+
     if (btnCancel) {
         btnCancel.addEventListener('click', () => {
             popup.classList.remove('is-active');
@@ -732,27 +776,25 @@ function initDeadlineCalendar() {
     if (btnClear) {
         btnClear.addEventListener('click', () => {
             selectedDate = null;
-            if (hiddenInput) hiddenInput.value = '';
+            if (hiddenInput) {
+                hiddenInput.value = '';
+                hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+                hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
             if (displayText) displayText.textContent = 'Pilih batas tanggal';
+            triggerBtn?.closest('.tugas-field-filled')?.classList.remove('has-value');
             popup.classList.remove('is-active');
+            renderCalendar();
         });
     }
 
     if (btnOk) {
         btnOk.addEventListener('click', () => {
-            if (selectedDate && hiddenInput) {
-                const yyyy = selectedDate.getFullYear();
-                const mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
-                const dd = String(selectedDate.getDate()).padStart(2, '0');
-                hiddenInput.value = `${yyyy}-${mm}-${dd}`;
-
-                if (displayText) {
-                    const dayName = daysIndo[selectedDate.getDay()];
-                    const mName = months[selectedDate.getMonth()];
-                    displayText.textContent = `${dayName}, ${dd} ${mName} ${yyyy}`;
-                }
+            if (selectedDate) {
+                commitDateSelection(selectedDate, true);
+            } else {
+                popup.classList.remove('is-active');
             }
-            popup.classList.remove('is-active');
         });
     }
 
@@ -800,9 +842,9 @@ function initDeadlineCalendar() {
                 btn.classList.add('is-selected');
             }
 
-            btn.addEventListener('click', () => {
-                selectedDate = dateObj;
-                renderCalendar();
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                commitDateSelection(dateObj, true);
             });
 
             calDatesGrid.appendChild(btn);
@@ -852,22 +894,34 @@ function initJadwalCalendar() {
 
     triggerBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        positionCalendarPopup();
         renderCalendar();
         popup.classList.add('is-active');
+        positionCalendarPopup();
     });
 
     function positionCalendarPopup() {
         const rect = triggerBtn.getBoundingClientRect();
-        const popupWidth = 358;
+        const popupWidth = Math.min(358, window.innerWidth - 32);
         let left = rect.left;
-        if (left + popupWidth > window.innerWidth) {
+        if (left + popupWidth > window.innerWidth - 16) {
             left = window.innerWidth - popupWidth - 16;
         }
         if (left < 16) left = 16;
 
-        popup.style.top = `${rect.bottom + 8}px`;
+        const popupHeight = popup.offsetHeight || 330;
+        const spaceBelow = window.innerHeight - rect.bottom - 16;
+        const spaceAbove = rect.top - 16;
+
+        let top;
+        if (spaceBelow < popupHeight && spaceAbove > spaceBelow) {
+            top = Math.max(16, rect.top - popupHeight - 8);
+        } else {
+            top = Math.max(16, Math.min(rect.bottom + 8, window.innerHeight - popupHeight - 16));
+        }
+
+        popup.style.top = `${top}px`;
         popup.style.left = `${left}px`;
+        popup.style.width = `${popupWidth}px`;
     }
 
     window.addEventListener('resize', () => {
@@ -904,6 +958,36 @@ function initJadwalCalendar() {
         });
     }
 
+    function commitDateSelection(dateObj, shouldClose = true) {
+        if (!dateObj) return;
+        selectedDate = dateObj;
+
+        const yyyy = dateObj.getFullYear();
+        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const dd = String(dateObj.getDate()).padStart(2, '0');
+        const isoDate = `${yyyy}-${mm}-${dd}`;
+
+        if (hiddenInput) {
+            hiddenInput.value = isoDate;
+            hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+            hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        if (displayText) {
+            const dayName = daysIndo[dateObj.getDay()];
+            const mName = months[dateObj.getMonth()];
+            displayText.textContent = `${dayName}, ${dd} ${mName} ${yyyy}`;
+        }
+
+        renderCalendar();
+
+        if (shouldClose) {
+            setTimeout(() => {
+                popup.classList.remove('is-active');
+            }, 180);
+        }
+    }
+
     if (btnCancel) {
         btnCancel.addEventListener('click', () => {
             popup.classList.remove('is-active');
@@ -913,27 +997,24 @@ function initJadwalCalendar() {
     if (btnClear) {
         btnClear.addEventListener('click', () => {
             selectedDate = null;
-            if (hiddenInput) hiddenInput.value = '';
+            if (hiddenInput) {
+                hiddenInput.value = '';
+                hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+                hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
             if (displayText) displayText.textContent = 'Pilih tanggal publikasi';
             popup.classList.remove('is-active');
+            renderCalendar();
         });
     }
 
     if (btnOk) {
         btnOk.addEventListener('click', () => {
-            if (selectedDate && hiddenInput) {
-                const yyyy = selectedDate.getFullYear();
-                const mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
-                const dd = String(selectedDate.getDate()).padStart(2, '0');
-                hiddenInput.value = `${yyyy}-${mm}-${dd}`;
-
-                if (displayText) {
-                    const dayName = daysIndo[selectedDate.getDay()];
-                    const mName = months[selectedDate.getMonth()];
-                    displayText.textContent = `${dayName}, ${dd} ${mName} ${yyyy}`;
-                }
+            if (selectedDate) {
+                commitDateSelection(selectedDate, true);
+            } else {
+                popup.classList.remove('is-active');
             }
-            popup.classList.remove('is-active');
         });
     }
 
@@ -976,9 +1057,9 @@ function initJadwalCalendar() {
                 btn.classList.add('is-selected');
             }
 
-            btn.addEventListener('click', () => {
-                selectedDate = dateObj;
-                renderCalendar();
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                commitDateSelection(dateObj, true);
             });
 
             calDatesGrid.appendChild(btn);

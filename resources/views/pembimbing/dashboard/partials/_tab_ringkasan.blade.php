@@ -236,7 +236,7 @@
         <div class="zenius-bento-card-header">
             <div>
                 <h3 class="zenius-bento-title">Peringatan: {{ $inactiveLogbookMentees->count() }} Mentee Belum Mengisi Logbook &ge; 2 Hari Kerja</h3>
-                <p class="zenius-bento-subtitle">Maksimal pengisian mundur adalah 3 hari kerja sebelum entri logbook hangus (BR-09)</p>
+                <p class="zenius-bento-subtitle">Maksimal pengisian mundur adalah 3 hari kerja sebelum entri logbook terkunci</p>
             </div>
             <span class="zenius-header-pill {{ $kritisLogbook > 0 ? 'pill-red' : 'pill-emerald' }}">
                 {{ $kritisLogbook > 0 ? 'Sinyal Bahaya' : 'Aman Disiplin' }}
@@ -311,7 +311,7 @@
                 <div class="zenius-clean-stat-item item-highlight-kritis">
                     <div class="clean-stat-header">
                         <span class="legend-swatch swatch-red"></span>
-                        <span class="clean-stat-title text-red">Kritis BR-09 (Pop-Out)</span>
+                        <span class="clean-stat-title text-red">Kritis Logbook Tertunda (Pop-Out)</span>
                     </div>
                     <div class="clean-stat-body">
                         <span class="clean-stat-num text-red">{{ $kritisLogbook }} Peserta</span>
@@ -543,7 +543,7 @@
         <div class="zenius-bento-card-header">
             <div>
                 <h3 class="zenius-bento-title">Perhatian: 2 Mentee Mendekati Batas Selesai Magang (&le; 14 Hari)</h3>
-                <p class="zenius-bento-subtitle">Sesuai regulasi, segera susun penilaian rubrik final sebelum periode berakhir (BR-10, BR-11)</p>
+                <p class="zenius-bento-subtitle">Sesuai regulasi, segera susun penilaian rubrik final sebelum periode magang berakhir</p>
             </div>
             <span class="zenius-header-pill pill-red">{{ $offboardingMentees->count() }} Mentee Offboarding</span>
         </div>
@@ -775,7 +775,8 @@
     @foreach($tugasPrioritasPembimbing as $tugas)
         @php
             $menteeName = $tugas->penempatan?->peserta?->nama ?? 'Peserta Magang';
-            $initials = strtoupper(substr($menteeName, 0, 2));
+            $words = explode(' ', trim($menteeName));
+            $initials = strtoupper(count($words) >= 2 ? substr($words[0], 0, 1).substr($words[1], 0, 1) : substr($menteeName, 0, 2));
         @endphp
         <div data-task-id="{{ $tugas->id }}">
             <span class="mentee-avatar-chip">{{ $initials }}</span>

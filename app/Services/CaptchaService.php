@@ -36,6 +36,7 @@ class CaptchaService
 
     /**
      * Render representasi visual kode captcha dalam format SVG murni (tanpa dependensi GD/Imagick).
+     * Dirancang tahan terhadap web scraping dan bot OCR, namun tetap sangat jelas bagi mata manusia.
      */
     public function renderSvg(): string
     {
@@ -43,46 +44,46 @@ class CaptchaService
         $width = (int) config('captcha.width', 160);
         $height = (int) config('captcha.height', 50);
 
-        // Palet warna untuk elemen noise dan teks
-        $textColors = ['#0f172a', '#1e293b', '#1e3a8a', '#1e40af', '#0369a1', '#334155', '#111827'];
-        $noiseColors = ['#94a3b8', '#cbd5e1', '#a5b4fc', '#93c5fd', '#64748b'];
+        // Palet warna kontras tinggi untuk teks (mudah dibaca manusia) dan warna aksen noise
+        $textColors = ['#003566', '#0f172a', '#1e293b', '#1e3a8a', '#1e40af', '#0369a1'];
+        $noiseColors = ['#64748b', '#94a3b8', '#a5b4fc', '#93c5fd', '#38bdf8'];
 
         $elements = [];
 
-        // 1. Noise Lines (4-6 garis lengkung dan lurus pengganggu OCR)
+        // 1. Noise Lines (4-6 garis lengkung & lurus pemecah segmentasi OCR)
         $lineCount = random_int(4, 6);
         for ($i = 0; $i < $lineCount; $i++) {
             $x1 = random_int(5, $width - 5);
-            $y1 = random_int(5, $height - 5);
+            $y1 = random_int(8, $height - 8);
             $x2 = random_int(5, $width - 5);
-            $y2 = random_int(5, $height - 5);
+            $y2 = random_int(8, $height - 8);
             $cx = random_int(20, $width - 20);
-            $cy = random_int(5, $height - 5);
+            $cy = random_int(8, $height - 8);
             $stroke = $noiseColors[array_rand($noiseColors)];
-            $strokeWidth = random_int(10, 20) / 10;
-            $opacity = random_int(40, 75) / 100;
+            $strokeWidth = random_int(12, 22) / 10;
+            $opacity = random_int(35, 65) / 100;
 
             if ($i % 2 === 0) {
                 // Bezier quadratic curve
                 $elements[] = sprintf(
-                    '<path d="M %d %d Q %d %d %d %d" stroke="%s" stroke-width="%.1f" fill="none" opacity="%.2f" />',
+                    '<path d="M %d %d Q %d %d %d %d" stroke="%s" stroke-width="%.1f" fill="none" opacity="%.2f" stroke-linecap="round" />',
                     $x1, $y1, $cx, $cy, $x2, $y2, $stroke, $strokeWidth, $opacity
                 );
             } else {
                 $elements[] = sprintf(
-                    '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="%s" stroke-width="%.1f" opacity="%.2f" />',
+                    '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="%s" stroke-width="%.1f" opacity="%.2f" stroke-linecap="round" />',
                     $x1, $y1, $x2, $y2, $stroke, $strokeWidth, $opacity
                 );
             }
         }
 
-        // 2. Noise Dots (30 titik derau acak)
-        for ($i = 0; $i < 30; $i++) {
+        // 2. Noise Dots (35 titik derau acak)
+        for ($i = 0; $i < 35; $i++) {
             $cx = random_int(5, $width - 5);
             $cy = random_int(5, $height - 5);
-            $r = random_int(8, 18) / 10;
+            $r = random_int(8, 16) / 10;
             $fill = $noiseColors[array_rand($noiseColors)];
-            $opacity = random_int(30, 70) / 100;
+            $opacity = random_int(25, 60) / 100;
 
             $elements[] = sprintf(
                 '<circle cx="%d" cy="%d" r="%.1f" fill="%s" opacity="%.2f" />',
@@ -90,22 +91,40 @@ class CaptchaService
             );
         }
 
-        // 3. Render 4 Karakter Captcha dengan distorsi posisi & rotasi
+        // 3. Render 4 Karakter Captcha
+        // Posisi visual X diatur teratur dari kiri ke kanan (mudah dibaca manusia),
+        // tetapi urutan elemen di dalam SVG diacak (DOM Shuffling) untuk menggagalkan bot parser XML!
         $charCount = strlen($code);
-        $slotWidth = ($width - 30) / max(1, $charCount);
+        $slotWidth = ($width - 32) / max(1, $charCount);
+        $charElements = [];
 
         for ($i = 0; $i < $charCount; $i++) {
             $char = htmlspecialchars($code[$i], ENT_QUOTES | ENT_XML1, 'UTF-8');
-            $x = (int) (18 + ($i * $slotWidth) + ($slotWidth / 2) + random_int(-3, 3));
-            $y = (int) (32 + random_int(-3, 4));
-            $angle = random_int(-18, 18);
-            $fontSize = random_int(26, 30);
+            $visualX = (int) (18 + ($i * $slotWidth) + ($slotWidth / 2) + random_int(-3, 3));
+            $visualY = (int) (31 + random_int(-3, 3));
+            $angle = random_int(-15, 15);
+            $fontSize = random_int(26, 29);
             $color = $textColors[array_rand($textColors)];
 
-            $elements[] = sprintf(
-                '<text x="%d" y="%d" fill="%s" font-family="ui-monospace, Consolas, \'Liberation Mono\', monospace, sans-serif" font-size="%d" font-weight="bold" letter-spacing="2" transform="rotate(%d, %d, %d)" text-anchor="middle" dominant-baseline="central">%s</text>',
-                $x, $y, $color, $fontSize, $angle, $x, $y, $char
+            $charElements[] = sprintf(
+                '<text x="%d" y="%d" fill="%s" font-family="ui-monospace, Consolas, \'Liberation Mono\', Monaco, monospace" font-size="%d" font-weight="800" letter-spacing="2" transform="rotate(%d, %d, %d)" text-anchor="middle" dominant-baseline="central">%s</text>',
+                $visualX, $visualY, $color, $fontSize, $angle, $visualX, $visualY, $char
             );
+        }
+
+        // DOM Shuffling: Acak urutan node dalam XML tanpa mengubah posisi visual
+        shuffle($charElements);
+
+        // Sisipkan 2 decoy hidden elements untuk meracuni bot regex/XML scraper
+        $decoys = [
+            '<text x="-999" y="-999" font-size="0" opacity="0" aria-hidden="true">Z</text>',
+            '<text x="-999" y="-999" font-size="0" opacity="0" aria-hidden="true">9</text>',
+        ];
+        array_splice($charElements, random_int(0, count($charElements)), 0, [$decoys[0]]);
+        array_splice($charElements, random_int(0, count($charElements)), 0, [$decoys[1]]);
+
+        foreach ($charElements as $el) {
+            $elements[] = $el;
         }
 
         $innerContent = implode("\n    ", $elements);
@@ -118,7 +137,7 @@ class CaptchaService
             <stop offset="100%" stop-color="#e2e8f0" />
         </linearGradient>
     </defs>
-    <rect width="100%" height="100%" rx="6" fill="url(#captchaBg)" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect width="100%" height="100%" rx="8" fill="url(#captchaBg)" stroke="#cbd5e1" stroke-width="1.5" />
     {$innerContent}
 </svg>
 SVG;

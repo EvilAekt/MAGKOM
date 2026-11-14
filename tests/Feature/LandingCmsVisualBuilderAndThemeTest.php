@@ -85,12 +85,12 @@ class LandingCmsVisualBuilderAndThemeTest extends TestCase
                 ],
             ],
             [
-                'id' => 'sertifikat',
-                'nama' => 'Sertifikat & Penilaian',
+                'id' => 'selesai_magang',
+                'nama' => 'Kelulusan & Selesai Magang',
                 'items' => [
                     [
-                        'q' => 'Apakah sertifikat memiliki tanda tangan elektronik?',
-                        'a' => 'Ya, diterbitkan resmi dengan verifikasi QR code dan TTE Kepala Dinas.',
+                        'q' => 'Bagaimana proses penyelesaian program magang?',
+                        'a' => 'Peserta mengumpulkan laporan akhir dan mengikuti proses pelepasan resmi.',
                     ],
                 ],
             ],
@@ -113,7 +113,7 @@ class LandingCmsVisualBuilderAndThemeTest extends TestCase
         $this->assertEquals('Persyaratan Umum', $savedFaq[0]['nama']);
         $this->assertCount(2, $savedFaq[0]['items']);
         $this->assertEquals('Apakah terbuka untuk siswa SMK?', $savedFaq[0]['items'][0]['q']);
-        $this->assertEquals('Sertifikat & Penilaian', $savedFaq[1]['nama']);
+        $this->assertEquals('Kelulusan & Selesai Magang', $savedFaq[1]['nama']);
     }
 
     public function test_superadmin_can_update_footer_medsos_tautan_and_akun_via_visual_repeaters(): void

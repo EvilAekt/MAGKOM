@@ -123,7 +123,7 @@ class PesertaTugasClassroomUploadTest extends TestCase
         $response->assertSee('tabBtnUpload');
         $response->assertSee('tabBtnRecent');
         $response->assertDontSee('Komentar pribadi');
-        $response->assertSee('Pekerjaan tidak dapat diserahkan setelah tenggat');
+        $response->assertSee('Pastikan berkas atau tautan sudah benar sebelum diserahkan');
     }
 
     public function test_peserta_can_submit_tugas_with_uploaded_file(): void
@@ -307,5 +307,44 @@ class PesertaTugasClassroomUploadTest extends TestCase
         ]);
 
         $response->assertRedirect(route('peserta.tugas.show', $this->tugas));
+    }
+
+    public function test_peserta_tetap_dapat_mengumpulkan_tugas_yang_melewati_tenggat_dan_berstatus_diserahkan_terlambat(): void
+    {
+        // 1. Buat tugas yang sudah lewat tenggat
+        $tugasTerlambat = Tugas::create([
+            'penempatan_id' => $this->penempatan->id,
+            'judul' => 'Tugas yang Sudah Melewati Tenggat',
+            'deskripsi' => 'Pengumpulan terlambat harus tetap diizinkan.',
+            'kategori' => 'Tugas Tambahan',
+            'kompleksitas' => KompleksitasEnum::Sedang,
+            'deadline' => now()->subDays(2),
+            'status' => StatusTugasEnum::Belum,
+        ]);
+
+        // 2. Peserta melihat detail tugas terlambat: tombol tambah berkas tetap ada dan muncul info terlambat
+        $showResponse = $this->actingAs($this->peserta)->get(route('peserta.tugas.show', $tugasTerlambat));
+        $showResponse->assertOk();
+        $showResponse->assertSee('Terlambat');
+        $showResponse->assertSee('+ Tambah berkas');
+        $showResponse->assertSee('Tenggat waktu telah berakhir. Tugas tetap dapat diserahkan dan akan dicatat sebagai diserahkan terlambat.');
+
+        // 3. Peserta menyerahkan tugas yang terlambat
+        $file = UploadedFile::fake()->create('laporan-susulan.pdf', 500, 'application/pdf');
+        $submitResponse = $this->actingAs($this->peserta)->post(route('peserta.tugas.progres', $tugasTerlambat), [
+            'file' => $file,
+            'catatan' => 'Mohon maaf mengumpulkan terlambat.',
+        ]);
+
+        $submitResponse->assertRedirect(route('peserta.tugas.show', $tugasTerlambat));
+        $submitResponse->assertSessionHas('success');
+
+        // 4. Periksa halaman detail setelah diserahkan: status berubah menjadi "Diserahkan terlambat" dan box berstatus terlambat
+        $afterResponse = $this->actingAs($this->peserta)->get(route('peserta.tugas.show', $tugasTerlambat));
+        $afterResponse->assertOk();
+        $afterResponse->assertSee('Diserahkan terlambat');
+        $afterResponse->assertSee('Tugas Telah Diserahkan (Terlambat)');
+        $afterResponse->assertSee('melewati tenggat');
+        $afterResponse->assertSee('Batalkan pengiriman');
     }
 }

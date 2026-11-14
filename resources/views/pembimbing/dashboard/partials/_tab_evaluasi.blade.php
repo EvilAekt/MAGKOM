@@ -4,11 +4,11 @@
 <!-- Matriks Status Kelulusan Seluruh Penempatan -->
 <x-gentelella.x-panel
     title="Matriks Kelulusan & Penetapan Selesai ({{ $allPenempatanList->count() }} Mentee)"
-    subtitle="Pemantauan status magang, penetapan selesai masa bimbingan, dan masa tenggang akun (BR-10, BR-11)."
+    subtitle="Pemantauan status magang, penetapan selesai masa bimbingan, dan masa tenggang akun peserta."
 >
     <x-slot:actions>
         <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-            <input type="text" onkeyup="filterTableByInput(this, 'table-evaluasi-penilaian')" placeholder="Cari nama mentee..." style="padding: 0.45rem 0.85rem; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.8rem; outline: none; min-width: 190px;">
+            <input type="text" onkeyup="filterTableByInput(this, 'table-kelulusan-mentee')" placeholder="Cari nama mentee..." style="padding: 0.45rem 0.85rem; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.8rem; outline: none; min-width: 190px;">
             <a href="{{ route('pembimbing.peserta.index') }}" style="font-size: 0.8rem; font-weight: 600; color: #0641CC; text-decoration: none;">
                 Kelola Daftar Mentee &rarr;
             </a>
@@ -16,7 +16,7 @@
     </x-slot:actions>
 
     <div style="overflow-x: auto;">
-        <table id="table-evaluasi-penilaian" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+        <table id="table-kelulusan-mentee" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
             <thead>
                 <tr style="border-bottom: 1px solid var(--neutral-200, #E2E8F0); background: #f8fafc; color: var(--neutral-600, #475569); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
                     <th style="padding: 0.875rem 1.5rem;">Peserta Magang</th>
@@ -59,6 +59,11 @@
                         </td>
                         <td style="padding: 1rem 1.5rem; text-align: right; white-space: nowrap;">
                             <div style="display: flex; gap: 0.4rem; justify-content: flex-end;">
+                                @if(! $isSelesai)
+                                    <button type="button" class="btn btn-success btn-xs" data-action="selesaikan-mentee" data-penempatan-id="{{ $penempatan->id }}" data-nama="{{ $penempatan->peserta?->nama }}" data-url="{{ route('pembimbing.penempatan.selesai', $penempatan->id) }}" style="padding: 0.35rem 0.65rem; background: #16A34A; border-color: #16A34A; color: #ffffff; font-size: 0.75rem; font-weight: 600; border-radius: 6px;">
+                                        Tetapkan Selesai
+                                    </button>
+                                @endif
                                 <a href="{{ route('pembimbing.peserta.show', $penempatan->id) }}" style="padding: 0.35rem 0.65rem; background: #0641CC; color: #ffffff; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none;">
                                     Detail Mentee
                                 </a>

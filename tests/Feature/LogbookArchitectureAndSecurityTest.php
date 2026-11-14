@@ -512,4 +512,64 @@ class LogbookArchitectureAndSecurityTest extends TestCase
             ]);
         }
     }
+
+    public function test_peserta_dapat_mengisi_logbook_minggu_sebelumnya_yang_belum_terisi(): void
+    {
+        // Penempatan A tgl_mulai = today - 4 weeks (28 hari lalu), minggu_aktif = 5.
+        // Minggu ke-2: tanggal berada di minggu lampau (21 hari lalu)
+        $tglMinggu2 = Carbon::today()->subWeeks(3)->toDateString();
+
+        $response = $this->actingAs($this->pesertaA)->postJson(route('peserta.logbook.store'), [
+            'minggu_ke' => 2,
+            'tanggal' => $tglMinggu2,
+            'kegiatan' => 'Menyelesaikan dokumentasi teknis modul audit pada minggu kedua magang.',
+        ]);
+
+        $response->assertCreated();
+        $this->assertDatabaseHas('logbook', [
+            'penempatan_id' => $this->penempatanA->id,
+            'minggu_ke' => 2,
+        ]);
+        $savedLogbook = Logbook::where('penempatan_id', $this->penempatanA->id)->where('minggu_ke', 2)->firstOrFail();
+        $this->assertEquals($tglMinggu2, $savedLogbook->tanggal->toDateString());
+    }
+
+    public function test_peserta_dapat_mengisi_logbook_minggu_berjalan(): void
+    {
+        $today = Carbon::today()->toDateString();
+        $mingguAktif = $this->penempatanA->minggu_aktif; // 5
+
+        $response = $this->actingAs($this->pesertaA)->postJson(route('peserta.logbook.store'), [
+            'minggu_ke' => $mingguAktif,
+            'tanggal' => $today,
+            'kegiatan' => 'Menyelesaikan modul logbook peserta dan pembimbing pada minggu berjalan.',
+        ]);
+
+        $response->assertCreated();
+        $this->assertDatabaseHas('logbook', [
+            'penempatan_id' => $this->penempatanA->id,
+            'minggu_ke' => $mingguAktif,
+        ]);
+        $savedLogbook = Logbook::where('penempatan_id', $this->penempatanA->id)->where('minggu_ke', $mingguAktif)->firstOrFail();
+        $this->assertEquals($today, $savedLogbook->tanggal->toDateString());
+    }
+
+    public function test_peserta_ditolak_mengisi_logbook_minggu_selanjutnya_di_masa_depan(): void
+    {
+        $mingguAktif = $this->penempatanA->minggu_aktif; // 5
+        $mingguDepan = $mingguAktif + 1; // 6
+
+        $response = $this->actingAs($this->pesertaA)->postJson(route('peserta.logbook.store'), [
+            'minggu_ke' => $mingguDepan,
+            'tanggal' => Carbon::today()->toDateString(),
+            'kegiatan' => 'Mencoba mengisi logbook untuk minggu mendatang yang belum berjalan.',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['minggu_ke']);
+        $this->assertDatabaseMissing('logbook', [
+            'penempatan_id' => $this->penempatanA->id,
+            'minggu_ke' => $mingguDepan,
+        ]);
+    }
 }

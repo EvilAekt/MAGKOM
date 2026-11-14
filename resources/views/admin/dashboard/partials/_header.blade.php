@@ -19,7 +19,7 @@
             <form method="GET" action="{{ route('admin.dashboard') }}" class="adm-period-form" style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.28); padding: 0.45rem 0.85rem; border-radius: 8px;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #93C5FD;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 <label for="selectBulan" style="font-size: 0.75rem; font-weight: 700; color: #ffffff; margin: 0; text-transform: uppercase;">Pilih Bulan: <span style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.8);">(Bulan Magang)</span> <span class="sr-only">Bulan:</span></label>
-                <select name="bulan_id" id="selectBulan" onchange="this.form.submit()" style="background: transparent; border: none; font-size: 0.85rem; font-weight: 700; color: #ffffff; outline: none; cursor: pointer;">
+                <select name="bulan_id" id="selectBulan" style="background: transparent; border: none; font-size: 0.85rem; font-weight: 700; color: #ffffff; outline: none; cursor: pointer;">
                     @foreach($daftarBulan as $b)
                         <option value="{{ $b->id }}" {{ $bulanAktif && $bulanAktif->id === $b->id ? 'selected' : '' }} style="background: #0F172A; color: #ffffff;">
                             {{ $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '' }}
