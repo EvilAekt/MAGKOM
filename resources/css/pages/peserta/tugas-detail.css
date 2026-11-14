@@ -203,6 +203,12 @@
     color: #16A34A !important;
 }
 
+/* Diserahkan terlambat: MERAH (Google Classroom pattern) */
+.classroom-work-status.status-turned-in-late {
+    color: #DC2626 !important;
+    font-weight: 700;
+}
+
 /* Selesai: hijau */
 .classroom-work-status.status-done {
     color: #10B981 !important;
@@ -954,27 +960,99 @@
     color: #01347C;
 }
 
+/* Status Tugas Diserahkan & Selesai (Google Classroom Simple Style) */
 .submitted-waiting-box {
-    background: #F0FDF4;
-    border: 1px solid #BBF7D0;
-    border-radius: 8px;
-    padding: 12px 14px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    color: #166534;
-    font-size: 0.8125rem;
-    margin-bottom: 8px;
+    gap: 3px;
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
+}
+
+.submitted-waiting-status-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.submitted-check-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #DCFCE7;
+    color: #16A34A;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .submitted-waiting-title {
     font-weight: 700;
-    margin-bottom: 2px;
     color: #15803D;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
+    line-height: 1.25;
 }
 
 .submitted-waiting-subtitle {
     font-size: 0.75rem;
+    color: #64748B;
+    line-height: 1.35;
+}
+
+/* Varian Terlambat (Late Turn-in Box ala Classroom) */
+.submitted-waiting-box--late {
+    background: #FFF5F5;
+    border-color: #FECACA;
+}
+
+.submitted-waiting-box--late .submitted-check-icon,
+.submitted-check-icon--late {
+    background: #FEE2E2 !important;
+    color: #DC2626 !important;
+}
+
+.submitted-waiting-box--late .submitted-waiting-title,
+.submitted-waiting-title--late {
+    color: #DC2626 !important;
+}
+
+.submitted-waiting-box--late .submitted-waiting-subtitle,
+.submitted-waiting-subtitle--late {
+    color: #991B1B !important;
+}
+
+.work-caption-note--late {
+    color: #B91C1C !important;
+    font-weight: 500;
+}
+
+.submitted-completed-box {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
     color: #166534;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.submitted-completed-box .submitted-check-icon {
+    background: #DCFCE7;
+    color: #16A34A;
 }
 
 /* Tombol Batalkan Pengiriman (Outlined Rounded Pill) */
@@ -1167,18 +1245,53 @@
     color: #F8FAFC !important;
 }
 
-[data-theme="dark"] .submitted-waiting-box {
-    background: #064E3B !important;
-    border-color: #059669 !important;
-    color: #A7F3D0 !important;
+[data-theme="dark"] .submitted-waiting-box,
+[data-theme="dark"] .submitted-completed-box {
+    background: #182234 !important;
+    border-color: #26354D !important;
 }
 
-[data-theme="dark"] .submitted-waiting-title {
-    color: #6EE7B7 !important;
+[data-theme="dark"] .submitted-check-icon {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #34D399 !important;
+}
+
+[data-theme="dark"] .submitted-waiting-title,
+[data-theme="dark"] .submitted-completed-box {
+    color: #34D399 !important;
 }
 
 [data-theme="dark"] .submitted-waiting-subtitle {
-    color: #A7F3D0 !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .classroom-work-status.status-turned-in-late {
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .submitted-waiting-box--late {
+    background: #251417 !important;
+    border-color: #5C1D24 !important;
+}
+
+[data-theme="dark"] .submitted-waiting-box--late .submitted-check-icon,
+[data-theme="dark"] .submitted-check-icon--late {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .submitted-waiting-box--late .submitted-waiting-title,
+[data-theme="dark"] .submitted-waiting-title--late {
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .submitted-waiting-box--late .submitted-waiting-subtitle,
+[data-theme="dark"] .submitted-waiting-subtitle--late {
+    color: #FCA5A5 !important;
+}
+
+[data-theme="dark"] .work-caption-note--late {
+    color: #F87171 !important;
 }
 
 @keyframes spinClassroom {

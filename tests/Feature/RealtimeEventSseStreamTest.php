@@ -169,4 +169,79 @@ class RealtimeEventSseStreamTest extends TestCase
         $this->assertStringNotContainsString('Sudah Dibaca', $content);
         $this->assertStringNotContainsString('id: '.$event->id, $content);
     }
+
+    public function test_user_can_mark_batch_events_as_read(): void
+    {
+        $user = User::factory()->create(['role' => RoleEnum::Peserta]);
+        $service = app(RealtimeEventService::class);
+
+        $e1 = $service->publish(RealtimeEventTypeEnum::StatusPendaftaran, ['title' => 'E1'], $user->id);
+        $e2 = $service->publish(RealtimeEventTypeEnum::LogbookDireviu, ['title' => 'E2'], $user->id);
+        $e3 = $service->publish(RealtimeEventTypeEnum::TugasBaru, ['title' => 'E3'], $user->id);
+
+        $response = $this->actingAs($user)->postJson('/realtime/read-batch', [
+            'event_ids' => [$e1->id, $e2->id, $e3->id],
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+            'affected' => 3,
+        ]);
+
+        $e1->refresh();
+        $e2->refresh();
+        $e3->refresh();
+
+        $this->assertNotNull($e1->read_at);
+        $this->assertNotNull($e2->read_at);
+        $this->assertNotNull($e3->read_at);
+    }
+
+    public function test_user_cannot_mark_other_users_events_as_read_in_batch(): void
+    {
+        $userA = User::factory()->create(['role' => RoleEnum::Peserta]);
+        $userB = User::factory()->create(['role' => RoleEnum::Peserta]);
+        $service = app(RealtimeEventService::class);
+
+        $eventA = $service->publish(RealtimeEventTypeEnum::StatusPendaftaran, ['title' => 'Milik A'], $userA->id);
+        $eventB = $service->publish(RealtimeEventTypeEnum::StatusPendaftaran, ['title' => 'Milik B'], $userB->id);
+
+        // User A mencoba menandai event A dan event B sekaligus
+        $response = $this->actingAs($userA)->postJson('/realtime/read-batch', [
+            'event_ids' => [$eventA->id, $eventB->id],
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+            'affected' => 1, // Hanya event milik A yang terpengaruh
+        ]);
+
+        $eventA->refresh();
+        $eventB->refresh();
+
+        $this->assertNotNull($eventA->read_at);
+        $this->assertNull($eventB->read_at); // Event B tetap belum dibaca (Proteksi IDOR)
+    }
+
+    public function test_read_batch_validation_guards(): void
+    {
+        $user = User::factory()->create(['role' => RoleEnum::Peserta]);
+
+        // Payload kosong
+        $this->actingAs($user)->postJson('/realtime/read-batch', [])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['event_ids']);
+
+        // Bukan array
+        $this->actingAs($user)->postJson('/realtime/read-batch', ['event_ids' => 'bukan_array'])
+            ->assertStatus(422);
+    }
+
+    public function test_guest_cannot_access_read_batch(): void
+    {
+        $this->postJson('/realtime/read-batch', ['event_ids' => [1, 2]])
+            ->assertStatus(401);
+    }
 }

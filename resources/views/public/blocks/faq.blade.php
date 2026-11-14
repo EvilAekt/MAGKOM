@@ -30,7 +30,7 @@
                 ],
                 [
                     'q' => 'Apakah akun portal bisa digunakan untuk mendaftar periode berikutnya?',
-                    'a' => 'Akun Anda berlaku permanen di portal MAGKOM. Anda dapat menggunakannya kembali untuk melihat riwayat sertifikat atau mendaftar periode berikutnya setelah magang sebelumnya selesai.'
+                    'a' => 'Akun Anda berlaku permanen di portal MAGKOM. Anda dapat menggunakannya kembali untuk melihat riwayat aktivitas atau mendaftar periode berikutnya setelah magang sebelumnya selesai.'
                 ]
             ]
         ],
@@ -54,7 +54,7 @@
             'items' => [
                 [
                     'q' => 'Apa saja fasilitas dan benefit yang didapatkan peserta magang?',
-                    'a' => 'Peserta mendapatkan bimbingan intensif dari Mentor ASN profesional, akses modul proyek nyata di pemerintahan, sertifikat resmi Diskominfo ber-QR code sah, serta penilaian kompetensi standar industri.'
+                    'a' => 'Peserta mendapatkan bimbingan intensif dari Mentor ASN profesional, akses modul proyek nyata di pemerintahan, portofolio kerja kedinasan riil, serta pengalaman kerja standar industri.'
                 ],
                 [
                     'q' => 'Apakah program magang di Diskominfo Sleman berbayar atau digaji?',

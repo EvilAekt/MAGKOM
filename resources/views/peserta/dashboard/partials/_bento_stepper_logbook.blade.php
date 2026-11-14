@@ -6,6 +6,8 @@
     /** @var array $daftarMinggu */
     /** @var int $mingguAktif */
     /** @var int $totalMinggu */
+    /** @var bool|null $isBelumMulai */
+    $isPraMagang = ($isBelumMulai ?? false) || ($mingguAktif === 0);
 @endphp
 
 <div class="bento-card bento-stepper-card">
@@ -14,7 +16,11 @@
             <span class="bento-title-indicator"></span>
             <h3 class="bento-card-title">Jurnal & Logbook Mingguan</h3>
         </div>
-        <span class="bento-pill-badge badge-neutral">Minggu Berjalan: M{{ $mingguAktif }}</span>
+        @if($isPraMagang)
+            <span class="bento-pill-badge badge-neutral">Pra-Magang</span>
+        @else
+            <span class="bento-pill-badge badge-neutral">Minggu Berjalan: M{{ $mingguAktif }}</span>
+        @endif
     </div>
 
     {{-- Stepper Grid Mingguan M1 s/d M13 (Bisa Diklik Langsung) --}}
@@ -23,12 +29,13 @@
             @php
                 $mKe = $item['minggu_ke'];
                 $st = $item['status'];
-                $isCurrent = ($mKe === $mingguAktif);
                 $chipClass = 'chip-upcoming';
-                if ($mKe < $mingguAktif && ($st === 'disetujui' || $st === 'terkirim')) {
-                    $chipClass = 'chip-filled';
-                } elseif ($mKe === $mingguAktif) {
-                    $chipClass = 'chip-current';
+                if (! $isPraMagang) {
+                    if ($mKe < $mingguAktif && ($st === 'disetujui' || $st === 'terkirim')) {
+                        $chipClass = 'chip-filled';
+                    } elseif ($mKe === $mingguAktif) {
+                        $chipClass = 'chip-current';
+                    }
                 }
             @endphp
             <a href="{{ route('peserta.logbook.index', ['minggu' => $mKe]) }}"

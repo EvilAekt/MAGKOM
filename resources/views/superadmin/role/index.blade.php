@@ -47,7 +47,7 @@
     @endif
 
     {{-- 1. Hero Banner Khas Sleman MagKom (Adopsi Pola Logbook Peserta) --}}
-    <div class="sa-role-banner">
+    <div class="sa-role-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Hak Akses dan Role Pengguna</h1>
@@ -57,7 +57,14 @@
                     <span>Total Pengguna: <strong>{{ $totalPengguna }} Akun Terdaftar</strong></span>
                 </div>
             </div>
-            <div>
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <form action="{{ route('superadmin.role.sync') }}" method="POST" id="formSyncPermissions" style="margin: 0;">
+                    @csrf
+                    <button type="submit" class="btn-banner-sync" id="btnSyncPermissions" title="Sinkronkan dan pastikan seluruh modul sistem terdaftar">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Sinkronkan Modul Standar
+                    </button>
+                </form>
                 <button type="button" class="btn-banner-action" id="btnBukaModalTambah">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
                     Tambah Hak Akses
@@ -67,7 +74,7 @@
     </div>
 
     {{-- 2. KARTU STATISTIK 4 ROLE MENGADOPSI GENTELELLA TILE-STAT --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. SuperAdmin -->
         <x-gentelella.tile-stat
             title="SUPERADMIN"
@@ -139,7 +146,7 @@
     </div>
 
     {{-- 3. FORM MATRIKS HAK AKSES MENYELURUH (MURNI 4 ROLE SISTEM) --}}
-    <x-gentelella.x-panel class="has-table" title="Matriks Wewenang & Hak Akses Modul Dinamis">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-2" data-scroll-reveal title="Matriks Wewenang & Hak Akses Modul Dinamis">
         <x-slot:toolbox>
             <a href="{{ route('superadmin.staf.index') }}" style="font-size: 0.8125rem; font-weight: 700; color: var(--blue-600); text-decoration: none;">
                 Kelola Akun Staf &rarr;
@@ -181,6 +188,32 @@
                                         <span class="badge-module-category">{{ $permission->kategori }}</span>
                                         @if($permission->is_system)
                                             <span class="badge-module-system" title="Modul Bawaan Sistem">System</span>
+                                        @endif
+                                        <button type="button"
+                                                class="btn-edit-permission"
+                                                title="Edit informasi modul '{{ $permission->nama_modul }}'"
+                                                data-id="{{ $permission->id }}"
+                                                data-nama="{{ $permission->nama_modul }}"
+                                                data-slug="{{ $permission->slug }}"
+                                                data-kategori="{{ $permission->kategori }}"
+                                                data-deskripsi="{{ $permission->deskripsi }}"
+                                                data-system="{{ $permission->is_system ? '1' : '0' }}">
+                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                        </button>
+                                        @if(! $permission->is_system)
+                                            <form action="{{ route('superadmin.role.permission.destroy', $permission) }}"
+                                                  method="POST"
+                                                  class="form-delete-permission"
+                                                  style="display: inline-block; margin: 0;"
+                                                  data-module-name="{{ $permission->nama_modul }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="btn-delete-permission"
+                                                        title="Hapus hak akses modul '{{ $permission->nama_modul }}'">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                </button>
+                                            </form>
                                         @endif
                                     </div>
                                     @if($permission->deskripsi)
@@ -285,7 +318,7 @@
                            id="inputNamaModul"
                            name="nama_modul"
                            class="form-input-field"
-                           placeholder="Contoh: Manajemen Sertifikat Elektronik"
+                           placeholder="Contoh: Manajemen Penempatan Peserta"
                            required
                            value="{{ old('nama_modul') }}">
                 </div>
@@ -296,7 +329,7 @@
                            id="inputSlug"
                            name="slug"
                            class="form-input-field"
-                           placeholder="Otomatis dibuat jika kosong (contoh: sertifikat.manajemen)"
+                           placeholder="Otomatis dibuat jika kosong (contoh: penempatan.manajemen)"
                            value="{{ old('slug') }}">
                 </div>
 
@@ -306,7 +339,6 @@
                         <option value="Operasional Seleksi">Operasional Seleksi</option>
                         <option value="Pendaftaran">Pendaftaran</option>
                         <option value="Bimbingan">Bimbingan</option>
-                        <option value="Penilaian">Penilaian</option>
                         <option value="Kuota">Kuota</option>
                         <option value="Penempatan">Penempatan</option>
                         <option value="Tata Kelola">Tata Kelola</option>
@@ -352,6 +384,81 @@
                 <button type="submit" class="btn-primary-action">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
                     Simpan Hak Akses
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- 5. MODAL DIALOG: EDIT HAK AKSES MODUL --}}
+<div class="sa-modal-backdrop" id="modalEditPermission" role="dialog" aria-modal="true" aria-labelledby="modalEditTitle">
+    <div class="sa-modal-content">
+        <div class="sa-modal-header">
+            <h3 class="sa-modal-title" id="modalEditTitle">Edit Informasi Hak Akses Modul</h3>
+            <button type="button" class="btn-modal-close" id="btnTutupEditModal" aria-label="Tutup dialog">&times;</button>
+        </div>
+
+        <form id="formEditPermission" action="" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="sa-modal-body">
+                <div class="form-group-field">
+                    <label class="form-label-field" for="editNamaModul">Nama Modul / Hak Akses <span style="color: #EF4444;">*</span></label>
+                    <input type="text"
+                           id="editNamaModul"
+                           name="nama_modul"
+                           class="form-input-field"
+                           placeholder="Contoh: Manajemen Kuota Bulanan"
+                           required>
+                </div>
+
+                <div class="form-group-field">
+                    <label class="form-label-field" for="editSlug">
+                        Kode Unik / Slug
+                        <span id="badgeEditSystemSlug" style="display: none; font-size: 0.6875rem; background: #E0E7FF; color: #3730A3; padding: 2px 6px; border-radius: 4px; margin-left: 6px; font-weight: 600;">Sistem (Terkunci)</span>
+                    </label>
+                    <input type="text"
+                           id="editSlug"
+                           name="slug"
+                           class="form-input-field"
+                           placeholder="slug.modul">
+                    <div id="slugSystemHelp" style="display: none; font-size: 0.75rem; color: var(--neutral-500); margin-top: 4px;">
+                        <em>Slug modul bawaan sistem dilindungi demi keamanan routing dan otorisasi.</em>
+                    </div>
+                </div>
+
+                <div class="form-group-field">
+                    <label class="form-label-field" for="editSelectKategori">Kategori Modul <span style="color: #EF4444;">*</span></label>
+                    <select id="editSelectKategori" name="kategori" class="form-select-field" required>
+                        <option value="Publik">Publik</option>
+                        <option value="Operasional Seleksi">Operasional Seleksi</option>
+                        <option value="Pendaftaran">Pendaftaran</option>
+                        <option value="Seleksi">Seleksi</option>
+                        <option value="Bimbingan">Bimbingan</option>
+                        <option value="Pelaporan">Pelaporan</option>
+                        <option value="Kuota">Kuota</option>
+                        <option value="Penempatan">Penempatan</option>
+                        <option value="Tata Kelola">Tata Kelola</option>
+                        <option value="Keamanan">Keamanan</option>
+                        <option value="Laporan">Laporan</option>
+                        <option value="Umum">Umum</option>
+                    </select>
+                </div>
+
+                <div class="form-group-field">
+                    <label class="form-label-field" for="editTextareaDeskripsi">Deskripsi Cakupan</label>
+                    <textarea id="editTextareaDeskripsi"
+                              name="deskripsi"
+                              class="form-textarea-field"
+                              placeholder="Deskripsi singkat fungsi dan tujuan hak akses ini..."></textarea>
+                </div>
+            </div>
+
+            <div class="sa-modal-footer">
+                <button type="button" class="btn-secondary" id="btnBatalEditModal">Batal</button>
+                <button type="submit" class="btn-primary-action">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                    Simpan Perubahan
                 </button>
             </div>
         </form>

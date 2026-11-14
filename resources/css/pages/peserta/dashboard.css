@@ -130,6 +130,7 @@ body,
   flex-direction: column;
   gap: 1.25rem;
   min-width: 0;
+  height: 100%;
 }
 
 .bento-col-side {
@@ -171,7 +172,7 @@ body,
   flex-wrap: wrap;
   gap: 20px;
   box-sizing: border-box;
-  margin-bottom: 0.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .bento-hero-content {
@@ -667,6 +668,8 @@ body,
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: 1.25rem;
+  flex: 1;
+  min-height: 0;
 }
 
 .bento-card-header {
@@ -701,6 +704,8 @@ body,
 .bento-distribusi-card {
   padding: 20px 24px;
   min-height: 290px;
+  height: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -718,7 +723,8 @@ body,
   border: 1px solid #e3e8f0;
   border-radius: 14px;
   padding: 16px 20px 10px 20px;
-  min-height: 235px;
+  min-height: 210px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -733,15 +739,16 @@ body,
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
-  height: 195px;
+  height: 100%;
+  min-height: 170px;
   align-items: end;
 }
 
 .bento-bars-track-2col {
   grid-template-columns: repeat(2, 1fr);
-  max-width: 280px;
+  max-width: 220px;
   margin: 0 auto;
-  gap: 2.5rem;
+  gap: 1.75rem;
   width: 100%;
 }
 
@@ -755,8 +762,8 @@ body,
 
 .bento-bar-container {
   width: 100%;
-  max-width: 105px;
-  height: 165px;
+  max-width: 78px;
+  height: 150px;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -769,7 +776,7 @@ body,
     #d3e0f2 12px
   );
   border: 1px solid #cad6e8;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -787,18 +794,18 @@ body,
 
 .bento-bar {
   width: 100%;
-  border-radius: 12px 12px 0 0;
+  border-radius: 10px 10px 0 0;
   display: flex;
   align-items: flex-start;
   justify-content: center;
   transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 32px;
-  padding-top: 8px;
+  min-height: 28px;
+  padding-top: 6px;
   box-sizing: border-box;
 }
 
 .bento-bar-val {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
   color: #ffffff;
 }
@@ -847,13 +854,15 @@ body,
   font-size: 12px;
   font-weight: 700;
   color: var(--bento-text-muted);
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 /* Capaian Logbook Radial Gauge */
 .bento-kuota-card {
   padding: 20px 24px;
   min-height: 290px;
+  height: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -872,23 +881,23 @@ body,
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 235px;
+  min-height: 210px;
   flex: 1;
 }
 
 .bento-gauge-wrapper {
   position: relative;
-  width: 260px;
-  height: 145px;
+  width: 240px;
+  height: 140px;
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .bento-gauge-svg {
   display: block;
-  width: 260px;
-  height: 145px;
+  width: 240px;
+  height: 140px;
 }
 
 .gauge-track {
@@ -912,14 +921,14 @@ body,
 
 .bento-gauge-center {
   position: absolute;
-  bottom: 12px;
+  bottom: 8px;
   left: 0;
   right: 0;
   text-align: center;
 }
 
 .gauge-center-percent {
-  font-size: 48px;
+  font-size: 44px;
   font-weight: 900;
   color: #003566;
   line-height: 1;
@@ -930,10 +939,10 @@ body,
 }
 
 .bento-gauge-caption {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--bento-text-muted);
   font-weight: 600;
-  margin-top: 14px;
+  margin-top: 12px;
   margin-bottom: 4px;
   text-align: center;
 }
@@ -1409,6 +1418,34 @@ body,
   color: #ffffff !important;
 }
 
+/* Event Dot Indicator pada Kalender Bento */
+.cal-date.has-event {
+  position: relative;
+}
+
+.cal-date.has-event::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #003566;
+  pointer-events: none;
+}
+
+.cal-date.date-today.has-event::after {
+  background: #FFC300;
+}
+
+[data-theme="dark"] .cal-date.has-event::after {
+  background: #8FA2FF;
+}
+
+[data-theme="dark"] .cal-date.date-today.has-event::after {
+  background: #FFC300;
+}
+
 /* ==============================================================================
    7. Alert Cards di Kolom Samping (Perlu Perhatian Red Card & Amber Sisa Hari)
    ============================================================================== */
@@ -1576,12 +1613,309 @@ body,
   background: rgba(255, 195, 0, 0.20);
 }
 
+.alert-note-pra {
+  font-size: 0.725rem;
+  color: #003566;
+  opacity: 0.85;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .alert-note-pra {
+  color: #FFE9A8;
+  opacity: 0.9;
+}
+
 /* ==============================================================================
-   8. Responsive Media Queries
+   9. Peserta Dashboard Onboarding & Phase Cards (Panduan Alur Pendaftaran Magang)
+   ============================================================================== */
+.saas-card {
+  background: var(--bento-card-bg, #FFFFFF);
+  border: 1px solid var(--bento-card-border, #e3e8f0);
+  border-radius: 16px;
+  box-shadow: var(--bento-card-shadow, 0 4px 18px rgba(0, 53, 102, 0.06));
+  overflow: hidden;
+  margin-bottom: 20px;
+  transition: all 0.2s ease;
+}
+
+.saas-card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--bento-card-border, #e3e8f0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.saas-item-title {
+  font-family: var(--font-display, 'Lexend', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--bento-text-title, #003566);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.saas-card-subtitle {
+  font-size: 0.8125rem;
+  color: var(--bento-text-muted, #5b6573);
+  margin: 4px 0 0 0;
+  line-height: 1.4;
+}
+
+.saas-badge-portal {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #003566;
+  background: #FFF3C7;
+  border: 1px solid #FFC300;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.saas-card-body {
+  padding: 20px 24px;
+}
+
+/* Stepper List 1, 2, 3 (Onboarding Guide) */
+.saas-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.saas-step-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 14px;
+  text-decoration: none !important;
+  color: inherit !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.saas-step-item:hover {
+  border-color: #003566;
+  background: #F8FAFC;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 53, 102, 0.08);
+}
+
+.saas-step-item.completed {
+  border: 1.5px solid #FFC300;
+  background: rgba(255, 195, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(255, 195, 0, 0.12);
+}
+
+.saas-step-item.completed:hover {
+  border-color: #E5B604;
+  background: rgba(255, 195, 0, 0.14);
+  box-shadow: 0 6px 18px rgba(255, 195, 0, 0.20);
+}
+
+.saas-step-item.active {
+  border-color: #003566;
+  background: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(0, 53, 102, 0.06);
+}
+
+.saas-step-item.is-locked {
+  background: #F8FAFC;
+  border-color: #E2E8F0;
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.saas-step-item.is-locked:hover {
+  transform: none;
+  border-color: #E2E8F0;
+  box-shadow: none;
+}
+
+/* Badge Lingkaran 1, 2, 3 / Centang */
+.saas-step-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #003566;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.saas-step-item:hover .saas-step-badge {
+  transform: scale(1.06);
+}
+
+.saas-step-item.completed .saas-step-badge {
+  background: #FFC300;
+  color: #003566;
+  border: 2px solid #E5B604;
+  box-shadow: 0 2px 8px rgba(255, 195, 0, 0.35);
+}
+
+.saas-step-item.is-locked .saas-step-badge {
+  background: #CBD5E1;
+  color: #64748B;
+}
+
+.saas-step-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.saas-step-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: #0F172A;
+  line-height: 1.35;
+}
+
+.saas-step-title > span:first-child {
+  white-space: normal;
+  word-break: break-word;
+}
+
+.saas-step-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  line-height: 1.2;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.saas-step-state.state-done {
+  background: #FEF3C7;
+  color: #003566;
+  border: 1px solid #FFC300;
+  font-weight: 800;
+  box-shadow: 0 1px 3px rgba(255, 195, 0, 0.2);
+}
+
+.saas-step-state.state-action {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+}
+
+.saas-step-state.state-locked {
+  background: #F1F5F9;
+  color: #64748B;
+  border: 1px solid #CBD5E1;
+}
+
+/* Dark Mode Overrides for Onboarding */
+[data-theme="dark"] .saas-card {
+  background: var(--bento-card-bg, #0E2548) !important;
+  border-color: var(--bento-card-border, rgba(255, 255, 255, 0.07)) !important;
+  color: var(--bento-text-main, #EAF0FA) !important;
+}
+
+[data-theme="dark"] .saas-card-header {
+  border-bottom-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+[data-theme="dark"] .saas-item-title {
+  color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .saas-card-subtitle {
+  color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .saas-badge-portal {
+  background: rgba(255, 195, 0, 0.15) !important;
+  color: #FFC300 !important;
+  border-color: rgba(255, 195, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .saas-step-item {
+  background: #0A1B35 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .saas-step-item:hover {
+  background: #0E2548 !important;
+  border-color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .saas-step-item.completed {
+  background: rgba(255, 195, 0, 0.08) !important;
+  border-color: rgba(255, 195, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .saas-step-item.active {
+  background: #0D2447 !important;
+  border-color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .saas-step-item.is-locked {
+  background: #061630 !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="dark"] .saas-step-badge {
+  background: #003566 !important;
+  color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .saas-step-title {
+  color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .saas-step-state.state-done {
+  background: rgba(255, 195, 0, 0.15) !important;
+  color: #FFC300 !important;
+  border-color: rgba(255, 195, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .saas-step-state.state-action {
+  background: rgba(56, 189, 248, 0.15) !important;
+  color: #38BDF8 !important;
+  border-color: rgba(56, 189, 248, 0.35) !important;
+}
+
+[data-theme="dark"] .saas-step-state.state-locked {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #94A3B8 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ==============================================================================
+   10. Responsive Media Queries
    ============================================================================== */
 @media (max-width: 1024px) {
   .bento-layout-grid {
     grid-template-columns: 1fr;
+  }
+
+  .bento-col-main {
+    height: auto;
   }
 
   .bento-col-side {
@@ -1594,20 +1928,214 @@ body,
 
   .bento-mid-row {
     grid-template-columns: 1fr;
+    flex: initial;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .bento-dashboard-wrapper {
+    padding: 0 !important;
+  }
+
+  /* 1. Sleman Hero Banner Responsive */
   .bento-hero-banner {
-    padding: 20px 18px;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 18px 16px !important;
+    gap: 16px !important;
+    border-radius: 14px !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .bento-hero-content {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .bento-hero-title {
+    font-size: clamp(1.2rem, 5vw, 1.4rem) !important;
+    margin-bottom: 6px !important;
+  }
+
+  .bento-hero-subtitle {
+    font-size: 0.8125rem !important;
+    margin-bottom: 14px !important;
+  }
+
+  .bento-hero-actions {
+    width: 100% !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .btn-bento-hero-cta,
+  .btn-bento-hero-secondary {
+    width: 100% !important;
+    min-height: 44px !important;
+    justify-content: center !important;
+    border-radius: 10px !important;
   }
 
   .bento-hero-right {
-    width: 100%;
-    justify-content: center;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    justify-content: flex-start !important;
+    padding: 12px 14px !important;
+  }
+
+  /* 2. KPI Cards */
+  .bento-kpi-row {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .bento-kpi-card {
+    min-height: auto !important;
+    padding: 14px 16px !important;
+    border-radius: 14px !important;
+  }
+
+  /* 3. Mid Analytics Row */
+  .bento-mid-row {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .bento-distribusi-card,
+  .bento-kuota-card {
+    min-height: auto !important;
+    padding: 16px !important;
+    border-radius: 14px !important;
   }
 
   .bento-bars-track {
-    gap: 0.5rem;
+    gap: 0.5rem !important;
+  }
+
+  .bento-gauge-wrapper,
+  .bento-gauge-svg {
+    width: 190px !important;
+    height: 115px !important;
+  }
+
+  .gauge-center-percent {
+    font-size: 34px !important;
+  }
+
+  /* 4. Side Column & Alerts */
+  .bento-col-side {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    margin-top: 12px !important;
+  }
+
+  .bento-side-alerts {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .bento-calendar-card,
+  .card-alert-red,
+  .card-alert-amber {
+    border-radius: 14px !important;
+    padding: 14px 16px !important;
+  }
+
+  /* 5. Stepper Mingguan */
+  .bento-stepper-card {
+    padding: 14px 16px !important;
+    border-radius: 14px !important;
+  }
+
+  .bento-week-chip {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  /* 6. Form Inputs & Quick Logbook Modal */
+  .modal-dialog,
+  .modal-content {
+    max-width: 95vw !important;
+    margin: 10px auto !important;
+    border-radius: 14px !important;
+  }
+
+  .modal-body {
+    padding: 14px 16px !important;
+  }
+
+  .modal-footer {
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 12px 16px max(12px, env(safe-area-inset-bottom)) !important;
+  }
+
+  .modal-footer .btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .bento-hero-banner {
+    padding: 16px 14px !important;
+  }
+
+  .bento-hero-badges {
+    gap: 6px !important;
+  }
+
+  .bento-badge-status-active,
+  .bento-badge-kelompok,
+  .bento-badge-gold {
+    font-size: 0.7rem !important;
+    padding: 3px 8px !important;
+  }
+
+  .bento-bars-track {
+    gap: 6px !important;
+  }
+
+  .bento-bar-container {
+    max-width: 50px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .bento-hero-banner {
+    padding: 12px 10px !important;
+  }
+
+  .bento-hero-right {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .bento-gauge-wrapper,
+  .bento-gauge-svg {
+    width: 160px !important;
+    height: 100px !important;
+  }
+
+  .gauge-center-percent {
+    font-size: 28px !important;
+  }
+
+  .saas-card-header {
+    padding: 16px;
+  }
+
+  .saas-card-body {
+    padding: 16px;
+  }
+
+  .saas-step-item {
+    padding: 14px 16px;
+    gap: 12px;
   }
 }

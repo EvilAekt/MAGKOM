@@ -80,6 +80,29 @@
     color: #002654;
 }
 
+.btn-banner-sync {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 0.65rem 1.15rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+
+.btn-banner-sync:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
 /* 2. Kartu Ringkasan 4 Role Mengadopsi Gentelella Tile-Stat */
 .tiles-grid {
     display: grid;
@@ -186,6 +209,52 @@
     padding: 0.15rem 0.4rem;
     border-radius: 4px;
     border: 1px solid #CBD5E1;
+}
+
+.btn-edit-permission {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 6px;
+    border: 1px solid var(--neutral-300, #CBD5E1);
+    background: #ffffff;
+    color: var(--neutral-600, #475569);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    vertical-align: middle;
+}
+
+.btn-edit-permission:hover {
+    background: #EFF6FF;
+    border-color: #3B82F6;
+    color: #1D4ED8;
+    transform: scale(1.05);
+}
+
+.btn-delete-permission {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 6px;
+    border: 1px solid #FECACA;
+    background: #FEF2F2;
+    color: #DC2626;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    vertical-align: middle;
+}
+
+.btn-delete-permission:hover {
+    background: #FEE2E2;
+    border-color: #EF4444;
+    color: #991B1B;
+    transform: scale(1.05);
 }
 
 /* Custom Checkbox Toggle */
@@ -517,5 +586,29 @@
 
 [data-theme="dark"] .role-checkbox-item {
     color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .btn-edit-permission {
+    background: #1E293B !important;
+    border-color: #334155 !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .btn-edit-permission:hover {
+    background: #1E3A8A !important;
+    border-color: #3B82F6 !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .btn-delete-permission {
+    background: #450A0A !important;
+    border-color: #7F1D1D !important;
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .btn-delete-permission:hover {
+    background: #7F1D1D !important;
+    border-color: #DC2626 !important;
+    color: #FECACA !important;
 }
 

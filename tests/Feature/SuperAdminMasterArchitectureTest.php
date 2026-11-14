@@ -13,7 +13,6 @@ use Database\Seeders\RubrikSeeder;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class SuperAdminMasterArchitectureTest extends TestCase
@@ -189,52 +188,24 @@ class SuperAdminMasterArchitectureTest extends TestCase
     }
 
     /**
-     * TEST 4: SuperAdmin dapat mengakses Telemetri Kesehatan Sistem dan melihat SLA Uptime banner.
+     * TEST 4: Verifikasi bahwa rute telemetri kesehatan infrastruktur sudah ditiadakan secara permanen (404 Not Found).
      */
-    public function test_superadmin_can_access_system_health_monitor_and_see_sla_banner(): void
+    public function test_telemetry_health_monitor_routes_are_decommissioned(): void
     {
         $this->actingAs($this->superAdmin);
 
-        $response = $this->get(route('superadmin.health.index'));
+        $response = $this->get('/superadmin/health-monitor');
+        $response->assertStatus(404);
 
-        $response->assertStatus(200);
-        $response->assertSee('Pusat Telemetri Infrastruktur');
-        $response->assertSee('ALL NOMINAL');
-        $response->assertSee('DB Ping');
-        $response->assertSee('Host');
-        $response->assertSee('Aksi Pemeliharaan Proaktif');
+        $responseApi = $this->get('/superadmin/health-monitor/telemetry-data');
+        $responseApi->assertStatus(404);
+
+        $responseSweep = $this->post('/superadmin/health-monitor/security-sweep');
+        $responseSweep->assertStatus(404);
     }
 
     /**
-     * TEST 5: Menjalankan ke-4 aksi diagnostik 1-klik di Telemetri Kesehatan.
-     */
-    public function test_superadmin_can_execute_all_four_diagnostic_actions_successfully(): void
-    {
-        $this->actingAs($this->superAdmin);
-
-        // Aksi 1: Security Sweep
-        $resp1 = $this->post(route('superadmin.health.security-sweep'));
-        $resp1->assertRedirect();
-        $resp1->assertSessionHas('status_keberhasilan');
-
-        // Aksi 2: Optimasi Basis Data
-        $resp2 = $this->post(route('superadmin.health.optimize-db'));
-        $resp2->assertRedirect();
-        $resp2->assertSessionHas('status_keberhasilan');
-
-        // Aksi 3: Bersihkan Cache Sistem
-        $resp3 = $this->post(route('superadmin.health.clear-cache'));
-        $resp3->assertRedirect();
-        $resp3->assertSessionHas('status_keberhasilan');
-
-        // Aksi 4: Uji Izin Tulis Storage Disk
-        $resp4 = $this->post(route('superadmin.health.test-storage'));
-        $resp4->assertRedirect();
-        $resp4->assertSessionHas('status_keberhasilan');
-    }
-
-    /**
-     * TEST 6: Verifikasi bahwa rute modul builder dan modul dinamis sudah ditiadakan (404 Not Found).
+     * TEST 5: Verifikasi bahwa rute modul builder dan modul dinamis sudah ditiadakan (404 Not Found).
      */
     public function test_modul_builder_and_dynamic_module_routes_are_decommissioned(): void
     {

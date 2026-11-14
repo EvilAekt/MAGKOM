@@ -99,7 +99,7 @@
         {{-- Status Kepatuhan Pagu Kuota Dinas Bulanan (BR-01) --}}
         <div class="sa-pagu-box" style="border-radius: 10px; padding: 1rem 1.15rem; margin-bottom: 1.25rem;">
             <div class="sa-pagu-box__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span class="sa-table-strong sa-pagu-label" style="font-size: 0.8125rem;">Kepatuhan Pagu Kuota Dinas (BR-01):</span>
+                <span class="sa-table-strong sa-pagu-label" style="font-size: 0.8125rem;">Kepatuhan Pagu Kuota Dinas<span class="sr-only"> (BR-01)</span>:</span>
                 <span class="sa-table-strong {{ $isExceedPagu ? 'sa-color-danger' : 'sa-color-primary' }}" style="font-family: monospace; font-size: 0.875rem;">
                     {{ $totalKuotaUmum }} / {{ $kuotaMaksPagu }} Kursi ({{ $persenPagu }}%)
                 </span>

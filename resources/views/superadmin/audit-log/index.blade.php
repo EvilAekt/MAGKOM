@@ -15,7 +15,6 @@
 
 @push('styles')
     @vite(['resources/css/pages/superadmin/superadmin-common.css', 'resources/css/pages/superadmin/audit-log.css'])
-    @include('superadmin.audit-log.partials._styles')
 @endpush
 
 @section('content')
@@ -43,5 +42,6 @@
 @endsection
 
 @push('scripts')
+    @vite(['resources/js/pages/superadmin/staf-index.js'])
     @include('superadmin.audit-log.partials._scripts')
 @endpush

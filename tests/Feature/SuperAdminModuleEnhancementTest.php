@@ -530,15 +530,15 @@ class SuperAdminModuleEnhancementTest extends TestCase
             ->put(route('superadmin.landing.update'), [
                 'section' => 'tahapan',
                 'tahapan_heading' => 'Tahapan Pendaftaran Magang Sleman Keren',
-                'tahapan_summary' => "Pertama buat akun resmi.\nKedua unggah berkas seleksi.\nKetiga laksanakan magang dinas.\nKeempat terima sertifikat kelulusan.",
+                'tahapan_summary' => "Pertama buat akun resmi.\nKedua unggah berkas seleksi.\nKetiga laksanakan magang dinas.\nKeempat selesaikan program magang secara resmi.",
                 'step1_title' => 'Buat Akun Portal',
                 'step1_desc' => 'Calon pendaftar wajib membuat akun portal resmi Diskominfo.',
                 'step2_title' => 'Kurasi Berkas',
                 'step2_desc' => 'Admin Diskominfo menyeleksi berkas dalam 1-2 hari kerja.',
                 'step3_title' => 'Dinas Lapangan',
                 'step3_desc' => 'Bekerja bersama tim ASN profesional Sleman.',
-                'step4_title' => 'E-Sertifikat',
-                'step4_desc' => 'Unduh sertifikat kelulusan bertanda tangan elektronik sah.',
+                'step4_title' => 'Selesai Magang',
+                'step4_desc' => 'Penyelesaian tugas, laporan akhir, dan pelepasan resmi peserta.',
             ]);
 
         $response->assertRedirect(route('superadmin.landing.index', ['tab' => 'tahapan']));

@@ -31,7 +31,7 @@
                 </div>
                 <div style="display: flex; justify-content: space-between;">
                     <span style="color: #64748B;">Integritas Log:</span>
-                    <span style="font-weight: 700; color: #16A34A;">Append-Only &bull; Imutabel (AC-15)</span>
+                    <span style="font-weight: 700; color: #16A34A;">Append-Only &bull; Imutabel (Integritas Terjamin)</span>
                 </div>
             </div>
 

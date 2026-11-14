@@ -79,7 +79,7 @@ class ReleaseThreeSocialLoginTest extends TestCase
         $responseCallback->assertStatus(404);
     }
 
-    public function test_new_user_can_register_and_login_via_google_oauth(): void
+    public function test_unregistered_google_user_cannot_login_and_is_redirected_to_register(): void
     {
         $uniqueEmail = 'peserta_baru_oauth_'.uniqid().'@example.com';
         $googleId = 'google_id_'.uniqid();
@@ -88,21 +88,17 @@ class ReleaseThreeSocialLoginTest extends TestCase
 
         $response = $this->get(route('oauth.callback', 'google'));
 
-        $response->assertRedirect(route('peserta.profil.show'));
-        $this->assertAuthenticated();
+        $response->assertRedirect(route('register'));
+        $response->assertSessionHas('warning');
+        $this->assertGuest();
 
         $user = User::where('email', $uniqueEmail)->first();
-        $this->assertNotNull($user);
-        $this->assertEquals('Calon Peserta OAuth', $user->nama);
-        $this->assertEquals(RoleEnum::Peserta, $user->role);
-        $this->assertEquals('google', $user->provider);
-        $this->assertEquals($googleId, $user->provider_id);
-        $this->assertTrue($user->status_aktif);
-        $this->assertNotNull($user->email_verified_at);
+        $this->assertNull($user);
+
+        $this->assertEquals($uniqueEmail, session('oauth_register_data')['email']);
 
         $this->assertDatabaseHas('audit_log', [
             'entitas' => 'users',
-            'entitas_id' => $user->id,
             'tipe' => 'aksi',
         ]);
     }

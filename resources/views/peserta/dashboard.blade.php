@@ -80,7 +80,7 @@
             <span>Aktif</span>
             <span>Sisa Hari Magang</span>
             <span>Hari</span>
-            <span>Status Evaluasi / Sertifikat</span>
+            <span>Status Penyelesaian Magang</span>
             <span>Status Evaluasi</span>
             <span>Tugas Selesai</span>
             <span>Logbook Mingguan</span>
@@ -92,7 +92,7 @@
             <div class="saas-quick-grid">
                 <span>Isi Logbook Mingguan</span>
             </div>
-            <span>Ketentuan Logbook (BR-09)</span>
+            <span>Ketentuan Logbook</span>
             <span>Hubungi Helpdesk Magang</span>
             <span class="sr-only">[data-theme="dark"]</span>
             @if($penempatan?->pembimbing)
@@ -118,7 +118,7 @@
             <span>Logbook Mingguan</span>
             <span>Sisa Hari Magang</span>
             <span>Status Evaluasi</span>
-            <span>Status Evaluasi / Sertifikat</span>
+            <span>Status Penyelesaian Magang</span>
             <span>Hari</span>
         </div>
 

@@ -79,7 +79,7 @@ class LandingCmsService
                     ],
                     [
                         'q' => 'Apakah akun portal bisa digunakan untuk mendaftar periode berikutnya?',
-                        'a' => 'Akun Anda berlaku permanen di portal MAGKOM. Anda dapat menggunakannya kembali untuk melihat riwayat sertifikat atau mendaftar periode berikutnya setelah magang sebelumnya selesai.',
+                        'a' => 'Akun Anda berlaku permanen di portal MAGKOM. Anda dapat menggunakannya kembali untuk melihat riwayat aktivitas atau mendaftar periode berikutnya setelah magang sebelumnya selesai.',
                     ],
                 ],
             ],
@@ -103,7 +103,7 @@ class LandingCmsService
                 'items' => [
                     [
                         'q' => 'Apa saja fasilitas dan benefit yang didapatkan peserta magang?',
-                        'a' => 'Peserta mendapatkan bimbingan intensif dari Mentor ASN profesional, akses modul proyek nyata di pemerintahan, sertifikat resmi Diskominfo ber-QR code sah, serta penilaian kompetensi standar industri.',
+                        'a' => 'Peserta mendapatkan bimbingan intensif dari Mentor ASN profesional, akses modul proyek nyata di pemerintahan, portofolio kerja kedinasan riil, serta pengalaman kerja standar industri.',
                     ],
                     [
                         'q' => 'Apakah program magang di Diskominfo Sleman berbayar atau digaji?',
@@ -131,7 +131,7 @@ class LandingCmsService
             ['step' => '01', 'title' => 'Registrasi', 'badge' => 'REGISTRASI', 'desc' => 'Calon peserta membuat akun resmi, mengisi data pribadi, dan menunggu akun diverifikasi admin.'],
             ['step' => '02', 'title' => 'Administrasi & Seleksi', 'badge' => 'ADMINISTRASI & SELEKSI', 'desc' => 'Pilih bidang, unggah berkas, lalu admin memverifikasi dan menyeleksi dalam 1–3 hari kerja.'],
             ['step' => '03', 'title' => 'Pelaksanaan Magang', 'badge' => 'PELAKSANAAN MAGANG', 'desc' => 'Kerjakan tugas, isi logbook harian, dan unggah progres sesuai durasi magang.'],
-            ['step' => '04', 'title' => 'Kelulusan', 'badge' => 'KELULUSAN', 'desc' => 'Unduh Lembar Nilai Magang dan sertifikat dalam bentuk PDF dari portal.'],
+            ['step' => '04', 'title' => 'Selesai Magang', 'badge' => 'KELULUSAN', 'desc' => 'Penyelesaian program magang, pengesahan laporan akhir, dan penetapan status kelulusan resmi.'],
         ];
 
         $defaultFooterMedsos = [
@@ -233,7 +233,7 @@ class LandingCmsService
 
             // Section 3: Tahapan
             'tahapan_heading' => Pengaturan::get('landing_tahapan_heading', 'Bingung cara mendaftarnya?, berikut adalah Tahapan Pendaftaran Magang'),
-            'tahapan_summary' => Pengaturan::get('landing_tahapan_summary', "Pertama calon peserta membuat akun, mengisi data pribadi, dan menunggu verifikasi akun oleh admin.\nKedua calon peserta memilih bidang dan mengunggah berkas, lalu admin melakukan verifikasi dan seleksi. Hasilnya diumumkan di portal MAGKOM.\nKetiga peserta melaksanakan magang, mengerjakan tugas, dan mengisi logbook sesuai durasi yang ditentukan.\nKeempat setelah magang selesai, peserta mendapatkan lembar nilai dan sertifikat yang dapat diunduh."),
+            'tahapan_summary' => Pengaturan::get('landing_tahapan_summary', "Pertama calon peserta membuat akun, mengisi data pribadi, dan menunggu verifikasi akun oleh admin.\nKedua calon peserta memilih bidang dan mengunggah berkas, lalu admin melakukan verifikasi dan seleksi. Hasilnya diumumkan di portal MAGKOM.\nKetiga peserta melaksanakan magang, mengerjakan tugas, dan mengisi logbook sesuai durasi yang ditentukan.\nKeempat setelah magang selesai, peserta menyelesaikan program magang, mengunggah laporan akhir, dan dinyatakan lulus secara resmi."),
             'tahapan_steps' => Pengaturan::json('landing_tahapan_steps', $defaultTahapanSteps),
             'tahapan_btn_pdf' => Pengaturan::get('landing_tahapan_btn_pdf', 'Unduh Panduan PDF'),
             'tahapan_btn_peta' => Pengaturan::get('landing_tahapan_btn_peta', 'Peta Alur Interaktif'),

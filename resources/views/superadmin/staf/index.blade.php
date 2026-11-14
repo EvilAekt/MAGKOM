@@ -17,7 +17,7 @@
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     {{-- 1. Hero Banner Khas Sleman MagKom --}}
-    <div class="sa-hero-banner">
+    <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div>
                 <h1 class="banner-title">Manajemen Staf Internal</h1>
@@ -37,7 +37,7 @@
     </div>
 
     {{-- 2. Grid 4 Kartu Statistik Mengadopsi Gentelella Tile-Stat --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Staf Internal -->
         <x-gentelella.tile-stat
             title="TOTAL STAF"
@@ -111,7 +111,7 @@
     </div>
 
     <!-- 3. FILTER & TOOLBAR CARD -->
-    <div class="staf-filter-card">
+    <div class="staf-filter-card sc-reveal-up sc-delay-2" data-scroll-reveal>
         <form method="GET" action="{{ route('superadmin.staf.index') }}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; flex: 1;">
                 <div style="position: relative; min-width: 240px; flex: 1;">
@@ -152,7 +152,7 @@
     </div>
 
     <!-- 2. DATA TABLE CARD -->
-    <x-gentelella.x-panel class="has-table" title="Daftar Akun Pengguna Internal">
+    <x-gentelella.x-panel class="has-table sc-reveal-up sc-delay-3" data-scroll-reveal title="Daftar Akun Pengguna Internal">
         <x-slot:toolbox>
             <span style="font-size: 0.8125rem; color: var(--neutral-600); font-weight: 600;">
                 Total: <strong>{{ method_exists($stafList, 'total') ? $stafList->total() : $stafList->count() }} Pengguna</strong>
@@ -268,13 +268,16 @@
                                         </button>
 
                                         <!-- Regenerate Temporary Password Button (BR-15) -->
-                                        <form action="{{ route('superadmin.staf.regenerate-password', $staf) }}" method="POST" style="display: inline-block; margin: 0;" onsubmit="return confirm('Buat kata sandi sementara baru untuk akun staf ini? Sesi aktif staf akan ditutup dan staf wajib mengganti kata sandi saat login.');">
-                                            @csrf
-                                            <button type="submit" class="sa-btn-action-ghost" title="Buat kata sandi sementara baru secara instan">
-                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                                                Sandi Baru
-                                            </button>
-                                        </form>
+                                        <button type="button" 
+                                                class="sa-btn-action-ghost btn-trigger-sandi-baru" 
+                                                title="Buat kata sandi sementara baru secara instan"
+                                                data-id="{{ $staf->id }}"
+                                                data-nama="{{ $staf->nama }}"
+                                                data-email="{{ $staf->email }}"
+                                                data-action-url="{{ route('superadmin.staf.regenerate-password', $staf) }}">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                            Sandi Baru
+                                        </button>
 
                                         <!-- Reset Password Manual Form Button -->
                                         <button type="button" 
@@ -286,14 +289,18 @@
                                             Reset
                                         </button>
 
-                                        <!-- Toggle Status Form -->
-                                        <form action="{{ route('superadmin.staf.toggle', $staf) }}" method="POST" style="display: inline-block; margin: 0;">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" onclick="return confirm('{{ $staf->status_aktif ? 'Nonaktifkan akun staf ini?' : 'Aktifkan kembali akun staf ini?' }}')" class="{{ $staf->status_aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" style="{{ $staf->status_aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}">
-                                                {{ $staf->status_aktif ? 'Nonaktifkan' : 'Aktifkan' }}
-                                            </button>
-                                        </form>
+                                        <!-- Toggle Status Button (Triggers Custom Modal Dialog) -->
+                                        <button type="button" 
+                                                class="btn-trigger-toggle-staf {{ $staf->status_aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
+                                                style="{{ $staf->status_aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}"
+                                                data-id="{{ $staf->id }}"
+                                                data-nama="{{ $staf->nama }}"
+                                                data-email="{{ $staf->email }}"
+                                                data-role="{{ $staf->role->value }}"
+                                                data-status-aktif="{{ $staf->status_aktif ? '1' : '0' }}"
+                                                data-action-url="{{ route('superadmin.staf.toggle', $staf) }}">
+                                            {{ $staf->status_aktif ? 'Nonaktifkan' : 'Aktifkan' }}
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -489,6 +496,154 @@
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
                     Perbarui Profil
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================================
+     MODAL KONFIRMASI STATUS AKUN STAF (NONAKTIFKAN / AKTIFKAN)
+     Sesuai MagKom Design System v1.0 & Bebas Native Alert Pop-up
+     ===================================================================== -->
+<div id="modalKonfirmasiToggleStaf" 
+     style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;"
+     role="dialog" 
+     aria-modal="true" 
+     aria-labelledby="modalToggleStafTitle">
+    <div style="background: var(--neutral-0, #FFFFFF); border-radius: 16px; width: 100%; max-width: 480px; padding: 2rem; box-shadow: var(--shadow-modal, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)); position: relative; border: 1px solid var(--neutral-300, #CBD5E1);">
+        
+        <!-- Header Modal -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div id="toggleStafIconWrap" style="width: 42px; height: 42px; border-radius: 10px; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <!-- SVG Warning Icon -->
+                    <svg id="toggleStafIconSvg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="modalToggleStafTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
+                        Konfirmasi Perubahan Akun
+                    </h3>
+                    <span id="toggleStafSubtitle" style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
+                        Manajemen Staf Internal Diskominfo Sleman
+                    </span>
+                </div>
+            </div>
+            <button type="button" 
+                    data-modal-dismiss="modalKonfirmasiToggleStaf" 
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;"
+                    title="Tutup dialog">
+                &times;
+            </button>
+        </div>
+
+        <!-- Form Aksi Nyata -->
+        <form id="formToggleStaf" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem; margin: 0;">
+            @csrf
+            @method('PATCH')
+
+            <!-- Kotak Peringatan Konsekuensi -->
+            <div id="toggleStafBoxAlert" style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
+                <p id="toggleStafMessage" style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
+                    Apakah Anda yakin ingin menonaktifkan akun staf berikut?
+                </p>
+                <div style="background: rgba(255, 255, 255, 0.7); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(225, 29, 72, 0.15);">
+                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleStafNama">
+                        Nama Staf
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--neutral-600, #475569);" id="toggleStafEmail">
+                        email@sleman.go.id
+                    </div>
+                </div>
+                <p id="toggleStafConsequence" style="font-size: 0.75rem; color: #BE123C; margin: 0.65rem 0 0 0; line-height: 1.4;">
+                    &bull; Sesi login aktif staf akan ditutup dan staf tidak dapat mengakses portal MagKom hingga diaktifkan kembali.
+                </p>
+            </div>
+
+            <!-- Footer Tombol Aksi -->
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
+                <button type="button" 
+                        data-modal-dismiss="modalKonfirmasiToggleStaf" 
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
+                    Batal
+                </button>
+                <button type="submit" 
+                        id="btnSubmitToggleStaf" 
+                        style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
+                    <span id="btnSubmitToggleText">Ya, Nonaktifkan Staf</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================================
+     MODAL KONFIRMASI BUAT KATA SANDI SEMENTARA BARU (BR-15)
+     Sesuai MagKom Design System v1.0 & Bebas Native Alert Pop-up
+     ===================================================================== -->
+<div id="modalKonfirmasiSandiBaru" 
+     style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;"
+     role="dialog" 
+     aria-modal="true" 
+     aria-labelledby="modalSandiBaruTitle">
+    <div style="background: var(--neutral-0, #FFFFFF); border-radius: 16px; width: 100%; max-width: 480px; padding: 2rem; box-shadow: var(--shadow-modal, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)); position: relative; border: 1px solid var(--neutral-300, #CBD5E1);">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 42px; height: 42px; border-radius: 10px; background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="modalSandiBaruTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
+                        Buat Kata Sandi Baru
+                    </h3>
+                    <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
+                        Regenerasi Kredensial Akses Staf Internal (BR-15)
+                    </span>
+                </div>
+            </div>
+            <button type="button" 
+                    data-modal-dismiss="modalKonfirmasiSandiBaru" 
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;"
+                    title="Tutup dialog">
+                &times;
+            </button>
+        </div>
+
+        <form id="formSandiBaru" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem; margin: 0;">
+            @csrf
+            <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 1rem 1.25rem;">
+                <p style="font-size: 0.875rem; color: #92400E; margin: 0 0 0.5rem 0; line-height: 1.5;">
+                    Apakah Anda yakin ingin membuat kata sandi sementara baru untuk akun staf berikut?
+                </p>
+                <div style="background: rgba(255, 255, 255, 0.75); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(217, 119, 6, 0.2);">
+                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="sandiBaruNama">Nama Staf</div>
+                    <div style="font-size: 0.75rem; color: var(--neutral-600, #475569);" id="sandiBaruEmail">email@sleman.go.id</div>
+                </div>
+                <div style="margin-top: 0.65rem; font-size: 0.75rem; color: #B45309; line-height: 1.4;">
+                    <strong>Konsekuensi Keamanan:</strong>
+                    <ul style="margin: 0.25rem 0 0 1rem; padding: 0;">
+                        <li>Sesi login aktif staf akan langsung diputus secara paksa.</li>
+                        <li>Staf wajib melakukan penggantian kata sandi saat login berikutnya.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
+                <button type="button" 
+                        data-modal-dismiss="modalKonfirmasiSandiBaru" 
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
+                    Batal
+                </button>
+                <button type="submit" 
+                        style="height: 40px; padding: 0 1.5rem; background: #0641CC; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
+                    <span>Ya, Buat Sandi Sementara</span>
                 </button>
             </div>
         </form>

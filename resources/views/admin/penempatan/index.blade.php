@@ -1,3 +1,7 @@
+@push('styles')
+    @vite(['resources/css/pages/admin/penempatan-index.css'])
+@endpush
+
 @extends('layouts.dashboard')
 
 @section('title', 'Penempatan Peserta - Admin MagKom Sleman')
@@ -7,621 +11,6 @@
 @section('content')
 <div class="gentelella-penempatan-admin" style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
 
-    <style>
-        /* ==========================================================================
-           MAGKOM SLEMAN NAVY HERO BANNER (Signature Theme)
-           Dinas Komunikasi dan Informatika Kabupaten Sleman
-           ========================================================================== */
-        .adm-hero-banner {
-            background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
-                        linear-gradient(135deg, #01347C 0%, #003566 100%);
-            border-radius: 16px;
-            padding: 24px 30px;
-            color: #ffffff;
-            position: relative;
-            overflow: visible;
-            box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            margin-bottom: 0.5rem;
-        }
-
-        .adm-hero-content {
-            display: flex;
-            flex-direction: row !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            gap: 1.25rem;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 2;
-            width: 100%;
-        }
-
-        .adm-hero-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #ffffff;
-            margin: 0 0 6px 0;
-            letter-spacing: -0.01em;
-            line-height: 1.3;
-        }
-
-        .adm-hero-subtitle {
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            line-height: 1.5;
-        }
-
-        .adm-hero-subtitle .sep {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .adm-hero-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .adm-hero-btn-primary {
-            background: #ffffff;
-            color: #01347C;
-            text-decoration: none;
-            padding: 0.65rem 1.25rem;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.875rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-        }
-
-        .adm-hero-btn-primary:hover {
-            background: #F8FAFC;
-            color: #0641CC;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-        }
-
-        .adm-hero-btn-secondary {
-            background: rgba(255, 255, 255, 0.12);
-            color: #ffffff;
-            text-decoration: none;
-            padding: 0.65rem 1.15rem;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .adm-hero-btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            transform: translateY(-1px);
-        }
-
-        @media (max-width: 768px) {
-            .adm-hero-banner {
-                padding: 20px 22px;
-            }
-            .adm-hero-content {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .adm-hero-actions {
-                width: 100%;
-            }
-            .adm-hero-btn-primary, .adm-hero-btn-secondary {
-                flex: 1;
-                justify-content: center;
-            }
-        }
-
-        [data-theme="dark"] .adm-hero-banner {
-            background: radial-gradient(80% 120% at 100% 0%, rgba(99, 102, 241, 0.2), transparent 60%),
-                        linear-gradient(135deg, #0A192F 0%, #0F172A 100%);
-            border-color: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-        }
-
-        .admin-card {
-            background: #ffffff;
-            border-radius: 14px;
-            border: 1.5px solid #CBD5E1;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.875rem;
-        }
-        .admin-table th {
-            background: #F8FAFC;
-            padding: 0.85rem 1.25rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--neutral-600, #475569);
-            border-bottom: 1px solid var(--neutral-200, #E2E8F0);
-        }
-        .admin-table td {
-            padding: 0.95rem 1.25rem;
-            border-bottom: 1px solid var(--neutral-200, #E2E8F0);
-            vertical-align: middle;
-            color: var(--neutral-800, #1E293B);
-        }
-        .admin-table tr:hover {
-            background: #F8FAFC;
-        }
-
-        /* Action Table Buttons: Detail & Surat */
-        .btn-table-action-detail {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            padding: 0.4rem 0.65rem;
-            background: #EEF2FF;
-            color: #4338CA;
-            border: 1px solid #C7D2FE;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            text-decoration: none;
-            transition: all 0.18s ease;
-            cursor: pointer;
-        }
-        .btn-table-action-detail svg {
-            transition: stroke 0.18s ease;
-        }
-        .btn-table-action-detail:hover {
-            background: #0641CC !important;
-            color: #FFFFFF !important;
-            border-color: #0641CC !important;
-            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
-            transform: translateY(-1px);
-        }
-        .btn-table-action-detail:hover svg {
-            color: #FFFFFF !important;
-            stroke: #FFFFFF !important;
-        }
-
-        .btn-table-action-surat {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            padding: 0.4rem 0.65rem;
-            background: #EFF6FF;
-            color: #1D4ED8;
-            border: 1px solid #DBEAFE;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.18s ease;
-        }
-        .btn-table-action-surat svg {
-            transition: stroke 0.18s ease;
-        }
-        .btn-table-action-surat:hover {
-            background: #0641CC !important;
-            color: #FFFFFF !important;
-            border-color: #0641CC !important;
-            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
-            transform: translateY(-1px);
-        }
-        .btn-table-action-surat:hover svg {
-            color: #FFFFFF !important;
-            stroke: #FFFFFF !important;
-        }
-
-        /* Action Dropdown Menu (Opsi 1: More Actions) */
-        .action-dropdown-wrap {
-            position: relative;
-            display: inline-block;
-        }
-        .action-dropdown-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 30px;
-            background: #FFFFFF;
-            border: 1px solid var(--neutral-300, #CBD5E1);
-            border-radius: 6px;
-            color: var(--neutral-700, #334155);
-            cursor: pointer;
-            transition: all 0.18s ease;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-        .action-dropdown-btn:hover,
-        .action-dropdown-btn.active {
-            background: #0641CC !important;
-            border-color: #0641CC !important;
-            color: #FFFFFF !important;
-            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
-            transform: translateY(-1px);
-        }
-        .action-dropdown-btn:hover svg,
-        .action-dropdown-btn.active svg {
-            stroke: #FFFFFF !important;
-            fill: none !important;
-        }
-        .action-dropdown-btn:hover circle,
-        .action-dropdown-btn.active circle {
-            fill: #FFFFFF !important;
-            stroke: #FFFFFF !important;
-        }
-        .action-dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: calc(100% + 4px);
-            min-width: 195px;
-            background: #FFFFFF;
-            border: 1px solid var(--neutral-200, #E2E8F0);
-            border-radius: 8px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-            padding: 0.35rem;
-            z-index: 50;
-            flex-direction: column;
-            gap: 0.2rem;
-            text-align: left;
-        }
-        .action-dropdown-menu.show {
-            display: flex;
-        }
-        .action-dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 0.55rem;
-            width: 100%;
-            padding: 0.5rem 0.75rem;
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: var(--neutral-700, #334155);
-            background: transparent;
-            border: none;
-            border-radius: 6px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.12s ease;
-            box-sizing: border-box;
-            white-space: nowrap;
-        }
-        .action-dropdown-item:hover {
-            background: #F1F5F9;
-            color: #0F172A;
-        }
-        .action-dropdown-item.danger {
-            color: #DC2626;
-        }
-        .action-dropdown-item.danger:hover {
-            background: #FEF2F2;
-            color: #B91C1C;
-        }
-        .action-dropdown-divider {
-            height: 1px;
-            background-color: var(--neutral-200, #E2E8F0);
-            margin: 0.25rem 0;
-        }
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(6px);
-            z-index: 1050;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-        .modal-container {
-            background: #ffffff;
-            border-radius: 16px;
-            max-width: 540px;
-            width: 100%;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            overflow: hidden;
-            border: 1px solid var(--neutral-200, #E2E8F0);
-            animation: modalFadeIn 0.2s ease-out;
-        }
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* =====================================================================
-           DARK MODE OVERRIDES (DS-MagKom Standards)
-           ===================================================================== */
-        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=csv"] {
-            background: #111C2E !important;
-            border-color: #26354D !important;
-            color: #CBD5E1 !important;
-        }
-
-        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=csv"]:hover {
-            background: #162238 !important;
-            border-color: #3B82F6 !important;
-            color: #60A5FA !important;
-        }
-
-        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=xlsx"] {
-            background: #059669 !important;
-            color: #FFFFFF !important;
-            border: none !important;
-        }
-
-        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=xlsx"]:hover {
-            background: #047857 !important;
-        }
-
-        [data-theme="dark"] .admin-card {
-            background-color: #182234 !important;
-            border-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .admin-card label {
-            color: #CBD5E1 !important;
-        }
-
-        [data-theme="dark"] .admin-card input#q-input {
-            background-color: #0F172A !important;
-            border-color: #26354D !important;
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .admin-card select {
-            background-color: #0F172A !important;
-            border-color: #26354D !important;
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .admin-card select option {
-            background-color: #0F172A !important;
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .admin-card a[href*="admin.penempatan.index"] {
-            background: #111C2E !important;
-            border-color: #26354D !important;
-            color: #94A3B8 !important;
-        }
-
-        [data-theme="dark"] .admin-card a[href*="admin.penempatan.index"]:hover {
-            background: #162238 !important;
-            color: #F8FAFC !important;
-            border-color: #3B82F6 !important;
-        }
-
-        [data-theme="dark"] .admin-card div[style*="background: #ffffff"] {
-            background-color: #141E30 !important;
-            border-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .admin-card h3 {
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .admin-table th {
-            background-color: #0E1726 !important;
-            color: #94A3B8 !important;
-            border-bottom-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .admin-table td {
-            background-color: #182234 !important;
-            color: #CBD5E1 !important;
-            border-bottom-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .admin-table tr:hover td,
-        [data-theme="dark"] .admin-table tr:hover {
-            background-color: #162238 !important;
-        }
-
-        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-900"] {
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-800"] {
-            color: #CBD5E1 !important;
-        }
-
-        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-500"] {
-            color: #94A3B8 !important;
-        }
-
-        [data-theme="dark"] .admin-table td a[style*="background: #ffffff"] {
-            background: #111C2E !important;
-            border-color: #26354D !important;
-            color: #CBD5E1 !important;
-        }
-
-        [data-theme="dark"] .admin-table td a[style*="background: #ffffff"]:hover {
-            background: #162238 !important;
-            border-color: #3B82F6 !important;
-            color: #60A5FA !important;
-        }
-
-        [data-theme="dark"] .admin-table td span[style*="background: var(--neutral-100"] {
-            background: #111C2E !important;
-            border-color: #26354D !important;
-            color: #94A3B8 !important;
-        }
-
-        [data-theme="dark"] .btn-table-action-detail {
-            background: #1E1B4B !important;
-            color: #A5B4FC !important;
-            border-color: #3730A3 !important;
-        }
-
-        [data-theme="dark"] .btn-table-action-detail:hover {
-            background: #2563EB !important;
-            border-color: #3B82F6 !important;
-            color: #FFFFFF !important;
-        }
-
-        [data-theme="dark"] .btn-table-action-surat {
-            background: #172554 !important;
-            color: #93C5FD !important;
-            border-color: #1E40AF !important;
-        }
-
-        [data-theme="dark"] .btn-table-action-surat:hover {
-            background: #2563EB !important;
-            border-color: #3B82F6 !important;
-            color: #FFFFFF !important;
-        }
-
-        [data-theme="dark"] .action-dropdown-btn {
-            background: #111C2E !important;
-            border-color: #26354D !important;
-            color: #CBD5E1 !important;
-        }
-
-        [data-theme="dark"] .action-dropdown-btn:hover,
-        [data-theme="dark"] .action-dropdown-btn.active {
-            background: #2563EB !important;
-            border-color: #3B82F6 !important;
-            color: #FFFFFF !important;
-        }
-
-        [data-theme="dark"] .action-dropdown-menu {
-            background: #182234 !important;
-            border-color: #26354D !important;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4) !important;
-        }
-
-        [data-theme="dark"] .action-dropdown-item {
-            color: #CBD5E1 !important;
-        }
-
-        [data-theme="dark"] .action-dropdown-item:hover {
-            background: #233249 !important;
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .action-dropdown-item.danger {
-            color: #F87171 !important;
-        }
-
-        [data-theme="dark"] .action-dropdown-item.danger:hover {
-            background: rgba(220, 38, 38, 0.15) !important;
-            color: #EF4444 !important;
-        }
-
-        [data-theme="dark"] .action-dropdown-divider {
-            background-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .modal-container {
-            background-color: #182234 !important;
-            border-color: #26354D !important;
-            color: #F8FAFC;
-        }
-
-        [data-theme="dark"] .modal-container div[style*="background: #F8FAFC"] {
-            background-color: #141E30 !important;
-            border-bottom-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .modal-container h3 {
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .modal-container p {
-            color: #94A3B8 !important;
-        }
-
-        [data-theme="dark"] .modal-container label {
-            color: #CBD5E1 !important;
-        }
-
-        [data-theme="dark"] .modal-container select,
-        [data-theme="dark"] .modal-container input,
-        [data-theme="dark"] .modal-container textarea {
-            background-color: #0F172A !important;
-            border-color: #26354D !important;
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .modal-container select option {
-            background-color: #0F172A !important;
-            color: #F8FAFC !important;
-        }
-
-        [data-theme="dark"] .modal-container div[style*="background: var(--neutral-100"] {
-            background-color: #0F172A !important;
-            border: 1px solid #26354D !important;
-        }
-
-        [data-theme="dark"] .modal-container div[style*="border-top: 1px solid"] {
-            border-top-color: #26354D !important;
-        }
-
-        [data-theme="dark"] .modal-container button[style*="background: #ffffff"],
-        [data-theme="dark"] .modal-container button[style*="background: var(--neutral-0"] {
-            background: #111C2E !important;
-            border-color: #26354D !important;
-            color: #CBD5E1 !important;
-        }
-
-        [data-theme="dark"] #bulkActionBar {
-            background-color: #182234 !important;
-            border-color: #26354D !important;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
-        }
-
-        [data-theme="dark"] .penempatan-nav-tabs {
-            background: #111C2E !important;
-            border-color: #26354D !important;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4) !important;
-        }
-
-        [data-theme="dark"] #tab-btn-sudah[aria-selected="true"],
-        [data-theme="dark"] #tab-btn-belum[aria-selected="true"] {
-            background-color: #1E293B !important;
-            color: #60A5FA !important;
-            border-color: #3B82F6 !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
-        }
-
-        [data-theme="dark"] #tab-btn-sudah[aria-selected="false"],
-        [data-theme="dark"] #tab-btn-belum[aria-selected="false"] {
-            background-color: transparent !important;
-            color: #94A3B8 !important;
-            border-color: transparent !important;
-        }
-
-        [data-theme="dark"] #tab-badge-sudah,
-        [data-theme="dark"] #tab-badge-belum {
-            background: #0F172A !important;
-            color: #CBD5E1 !important;
-        }
-
-        [data-theme="dark"] .admin-card input#q-input-belum,
-        [data-theme="dark"] #panel-penempatan-belum select {
-            background-color: #0F172A !important;
-            border-color: #26354D !important;
-            color: #F8FAFC !important;
-        }
-    </style>
 
     {{-- 0. SLEMAN NAVY HERO BANNER (Khas MagKom) --}}
     <div class="adm-hero-banner">
@@ -819,7 +208,7 @@
             color="blue"
             trendText="Selesai"
             trendDirection="up"
-            subText="Telah tuntas & dinilai" 
+            subText="Telah tuntas magang" 
             :sparkBars="[25, 40, 45, 60, 70, 80, 90]"
             class="admin-stat-card admin-stat-card--indigo"
         />
@@ -1216,123 +605,110 @@
             </form>
         </div>
 
-        <div class="admin-card" style="border-top: 3px solid #01347C; border-left: none; background: #FFFFFF;">
-            <div style="padding: 1.15rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--neutral-200, #E2E8F0); background: #FFFFFF; flex-wrap: wrap; gap: 0.75rem;">
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #EFF6FF; color: #0641CC; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="ID Card Tanda Pengenal Peserta Magang Dinas">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect width="18" height="14" x="3" y="7" rx="2"></rect>
-                            <path d="M9 5h6"></path>
-                            <path d="M12 2v3"></path>
-                            <circle cx="12" cy="13" r="2.5"></circle>
-                            <path d="M8 18h8"></path>
+        <x-gentelella.x-panel title="Antrean Peserta Lolos Berkas (Menunggu Penempatan)">
+            @if($antreanBelumDitempatkan->isEmpty())
+                <div style="padding: 4rem 1.5rem; text-align: center; color: var(--neutral-600, #64748B);">
+                    <div style="width: 64px; height: 64px; border-radius: 50%; background: #F8FAFC; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: #94A3B8; border: 1px solid #E2E8F0;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
                         </svg>
                     </div>
-                    <div>
-                        <h3 style="font-size: 1rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">
-                            Antrean Peserta Lolos Berkas (Menunggu Penempatan)
-                        </h3>
-                        <p style="font-size: 0.8125rem; color: var(--neutral-500, #64748B); margin: 0.2rem 0 0 0;">
-                            Peserta di bawah ini telah disetujui berkasnya pada Tahap 1 dan siap ditetapkan Pembimbing Lapangan serta Bidang Dinas.
-                        </p>
-                    </div>
+                    <h4 style="font-size: 1.125rem; font-weight: 700; color: var(--neutral-900, #0F172A); margin-bottom: 0.375rem;">
+                        Tidak ada antrean peserta belum ditempatkan
+                    </h4>
+                    <p style="font-size: 0.875rem; max-width: 480px; margin: 0 auto; line-height: 1.5;">
+                        Seluruh calon peserta lolos berkas telah ditetapkan pembimbing dan bidang dinas.
+                    </p>
                 </div>
-            </div>
-
-            <div style="overflow-x: auto; width: 100%;">
-                <table class="adm-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 30%; min-width: 220px; text-align: left;">Peserta Magang</th>
-                            <th style="width: 28%; min-width: 200px; text-align: left;">Jurusan</th>
-                            <th style="width: 18%; min-width: 140px; text-align: left;">Bulan Magang</th>
-                            <th style="width: 13%; min-width: 110px; text-align: center;">Diterima Pada</th>
-                            <th style="width: 11%; min-width: 100px; text-align: center;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($antreanBelumDitempatkan as $antrean)
-                            @php
-                                $firstBidang = $antrean->kuota?->jurusan?->bidang?->first();
-                                $defBidangId = $firstBidang?->id;
-                                $defBidangNama = $firstBidang?->nama_bidang ?? 'Dinas Kominfo';
-                            @endphp
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 0.85rem;">
-                                        <div style="width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #01347C 0%, #0641CC 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
-                                            {{ strtoupper(substr($antrean->user?->nama ?? 'P', 0, 1)) }}
-                                        </div>
-                                        <div>
-                                            <div style="font-weight: 700; color: #1E293B; font-size: 0.875rem;">
-                                                {{ $antrean->user?->nama }}
+            @else
+                <div class="adm-table-container">
+                    <div style="overflow-x: auto; width: 100%;">
+                        <table class="adm-table admin-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 28%; min-width: 220px; text-align: left;">Peserta Magang</th>
+                                    <th style="width: 26%; min-width: 200px; text-align: left;">Jurusan</th>
+                                    <th style="width: 18%; min-width: 140px; text-align: left;">Bulan Magang</th>
+                                    <th style="width: 16%; min-width: 130px; text-align: center;">Diterima Pada</th>
+                                    <th style="width: 12%; min-width: 100px; text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($antreanBelumDitempatkan as $antrean)
+                                    @php
+                                        $firstBidang = $antrean->kuota?->jurusan?->bidang?->first();
+                                        $defBidangId = $firstBidang?->id;
+                                        $defBidangNama = $firstBidang?->nama_bidang ?? 'Dinas Kominfo';
+                                    @endphp
+                                    <tr>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.85rem;">
+                                                <div style="width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #01347C 0%, #0641CC 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
+                                                    {{ strtoupper(substr($antrean->user?->nama ?? 'P', 0, 1)) }}
+                                                </div>
+                                                <div>
+                                                    <div style="font-weight: 700; color: #1E293B; font-size: 0.875rem;">
+                                                        {{ $antrean->user?->nama }}
+                                                    </div>
+                                                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
+                                                        NIM: {{ $antrean->user?->profil?->nim_nisn ?? '-' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="font-weight: 600; color: #1E293B;">
+                                                {{ $antrean->kuota?->jurusan?->nama_jurusan ?? '-' }}
                                             </div>
                                             <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
-                                                NIM: {{ $antrean->user?->profil?->nim_nisn ?? '-' }}
+                                                {{ $antrean->user?->profil?->institusi ?? '-' }}
                                             </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 600; color: #1E293B;">
-                                        {{ $antrean->kuota?->jurusan?->nama_jurusan ?? '-' }}
-                                    </div>
-                                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
-                                        {{ $antrean->user?->profil?->institusi ?? '-' }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <span style="font-weight: 700; color: #0641CC; font-size: 0.8125rem;">
-                                        {{ $antrean->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
-                                    </span>
-                                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
-                                        Durasi: {{ $antrean->durasi_bulan }} Bulan
-                                    </div>
-                                </td>
-                                <td style="text-align: center;">
-                                    <span style="font-size: 0.8125rem; color: #475569;">
-                                        {{ $antrean->diputuskan_at?->translatedFormat('d M Y H:i') ?? '-' }}
-                                    </span>
-                                </td>
-                                <td style="text-align: center;">
-                                    @if(auth()->user()?->isSuperAdmin())
-                                        <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Menunggu Penempatan</span>
-                                    @else
-                                        <div style="display: inline-flex; justify-content: center; align-items: center;">
-                                            <button type="button" 
-                                                    onclick="openTetapkanModal({{ $antrean->id }}, '{{ addslashes($antrean->user?->nama) }}', '{{ addslashes($antrean->kuota?->jurusan?->nama_jurusan ?? '') }}', {{ $defBidangId ?? 'null' }}, '{{ addslashes($defBidangNama) }}')" 
-                                                    style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.95rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                                                <span>Tempatkan</span>
-                                            </button>
-                                        </div>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" style="text-align: center; padding: 3.5rem 1.5rem; background: #FFFFFF;">
-                                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;">
-                                        <div style="width: 48px; height: 48px; border-radius: 50%; background: #F8FAFC; display: flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.25rem; border: 1px solid #E2E8F0;">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="12" r="10"></circle>
-                                                <polyline points="12 6 12 12 16 14"></polyline>
-                                            </svg>
-                                        </div>
-                                        <span style="font-weight: 700; font-size: 0.9375rem; color: #334155;">
-                                            Tidak ada antrean peserta belum ditempatkan
-                                        </span>
-                                        <span style="font-size: 0.8125rem; color: #64748B; max-width: 480px; line-height: 1.5;">
-                                            Seluruh calon peserta lolos berkas telah ditetapkan pembimbing dan bidang dinas.
-                                        </span>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight: 700; color: #0641CC; font-size: 0.8125rem;">
+                                                {{ $antrean->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
+                                            </span>
+                                            <div style="font-size: 0.75rem; color: #64748B; margin-top: 3px;">
+                                                Durasi: {{ $antrean->durasi_bulan }} Bulan
+                                            </div>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <span style="font-size: 0.8125rem; color: #475569;">
+                                                {{ $antrean->diputuskan_at?->translatedFormat('d M Y H:i') ?? '-' }}
+                                            </span>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            @if(auth()->user()?->isSuperAdmin())
+                                                <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Menunggu Penempatan</span>
+                                            @else
+                                                <div style="display: inline-flex; justify-content: center; align-items: center;">
+                                                    <button type="button" 
+                                                            onclick="openTetapkanModal({{ $antrean->id }}, '{{ addslashes($antrean->user?->nama) }}', '{{ addslashes($antrean->kuota?->jurusan?->nama_jurusan ?? '') }}', {{ $defBidangId ?? 'null' }}, '{{ addslashes($defBidangNama) }}')" 
+                                                            style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.95rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                                                        <span>Tempatkan</span>
+                                                    </button>
+                                                </div>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="adm-table-footer">
+                        <x-gentelella.pagination-bar 
+                            :paginator="$antreanBelumDitempatkan" 
+                            :perPageOptions="[5, 10, 25]" 
+                            entity="peserta magang" 
+                            badgeText="Antrean Penempatan" 
+                        />
+                    </div>
+                </div>
+            @endif
+        </x-gentelella.x-panel>
     </div>
 
 </div>
@@ -1344,7 +720,7 @@
             <div>
                 <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0;">Penempatan Peserta Jalur Khusus</h3>
                 <p style="font-size: 0.75rem; color: var(--neutral-500, #64748B); margin: 0.15rem 0 0 0;">
-                    Alokasi peserta magang berdasarkan kuota kemitraan slot khusus dinas (AC-07-3)
+                    Alokasi peserta magang berdasarkan kuota kemitraan slot khusus dinas
                 </p>
             </div>
             <button type="button" onclick="closeManualModal()" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
@@ -1566,7 +942,7 @@
         <form method="POST" id="form-batal-penempatan" action="" style="padding: 1.5rem;">
             @csrf
             <div style="background: #FFFBEB; border: 1px solid #FCD34D; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.75rem; color: #92400E; line-height: 1.4;">
-                <strong>Ketentuan Pembatalan & Pengunduran Diri (BR-07):</strong>
+                <strong>Ketentuan Pembatalan & Pengunduran Diri:</strong>
                 <ul style="margin: 0.25rem 0 0 1rem; padding: 0;">
                     <li><strong>Sebelum tanggal mulai:</strong> Kuota jurusan/mitra akan otomatis dikembalikan ke sistem.</li>
                     <li><strong>Sejak/setelah tanggal mulai:</strong> Kuota hangus (tidak dikembalikan) dan akun peserta otomatis dinonaktifkan.</li>
@@ -2230,7 +1606,7 @@
                     @endforeach
                 </select>
                 <small style="display: block; font-size: 0.75rem; color: var(--neutral-500); margin-top: 0.35rem;">
-                    Sistem akan memvalidasi batas kapasitas <code>maks_peserta_aktif_per_pembimbing</code> (BR-13).
+                    Sistem akan memvalidasi batas kapasitas beban peserta aktif per pembimbing.
                 </small>
             </div>
 

@@ -6,6 +6,7 @@
  */
 
 import gsap from 'gsap';
+import { initScrollCraft } from './scroll-craft.js';
 
 /**
  * Cek apakah animasi entrance diizinkan (Aksesibilitas & Initial Load Guard)
@@ -289,7 +290,93 @@ export function bindChartHoverAnimations() {
 }
 
 /**
- * Inisialisasi Universal SuperAdmin Motion
+ * Animasikan Kartu Statistik & Sparkline Mini Bars (Paritas Pembimbing)
+ * @param {string|HTMLElement} containerSelector
+ */
+export function animateSuperAdminTileStats(containerSelector = '.tiles-grid, .tile_count, .sa-stat-grid, .backup-stats-grid, .audit-kpi-strip') {
+    const container = typeof containerSelector === 'string'
+        ? document.querySelector(containerSelector)
+        : containerSelector;
+    if (!container) return;
+
+    const cards = container.querySelectorAll('.tile_stats_count, .sa-stat-card, .backup-stat-card, .audit-kpi-card');
+    if (!cards.length) return;
+
+    const tl = gsap.timeline({
+        defaults: { ease: 'power2.out' }
+    });
+
+    // 1. Fade & Slide-up pada kartu tile
+    tl.fromTo(cards,
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.42, stagger: 0.07 },
+        0
+    );
+
+    // 2. Staggered Rise pada mini bars sparkline
+    const sparkBars = container.querySelectorAll('.sa-spark i, .stat-spark i');
+    if (sparkBars.length) {
+        tl.fromTo(sparkBars,
+            { scaleY: 0, opacity: 0.2 },
+            { scaleY: 1, opacity: 0.85, duration: 0.38, stagger: 0.015, transformOrigin: 'bottom center' },
+            0.15
+        );
+    }
+
+    // 3. Smooth Numeric Counter Rolling pada nilai angka
+    cards.forEach((card, idx) => {
+        const valEl = card.querySelector('.stat-value, .count, .backup-stat-value, .sa-stat-value, .audit-kpi-val');
+        if (valEl) {
+            attachRollingCounter(valEl, tl, 0.12 + (idx * 0.04));
+        }
+    });
+
+    return tl;
+}
+
+/**
+ * Animasikan Kemunculan Halus Baris Tabel (Staggered Fade-Slide)
+ * @param {string} tableSelector
+ */
+export function animateTableRows(tableSelector = '.sa-table, .gentelella-table, .backup-table, .data-table, .audit-table') {
+    const rows = document.querySelectorAll(`${tableSelector} tbody tr`);
+    if (!rows.length) return;
+
+    // Batasi ke 15 baris pertama untuk efisiensi
+    const animatedRows = Array.from(rows).slice(0, 15);
+    return gsap.fromTo(animatedRows,
+        { opacity: 0, y: 8 },
+        { opacity: 1, y: 0, duration: 0.35, stagger: 0.025, ease: 'power2.out' }
+    );
+}
+
+/**
+ * Inisialisasi Universal SuperAdmin Page Motion (One-Liner Entry Point)
+ * Menggabungkan Scroll-Craft Viewport Reveal + GSAP Tile Stats & Table Rows
+ * @param {Object} options
+ */
+export function initSuperAdminPageMotion(options = {}) {
+    // 1. Jalankan Scroll-Craft Viewport Reveal Engine
+    initScrollCraft(document, options);
+
+    // 2. Cek apakah animasi entrance diizinkan (Aksesibilitas & Session Guard)
+    const isAllowed = shouldAnimatePage('magkom_superadmin_motion');
+    if (!isAllowed) return;
+
+    // 3. Jalankan Tile Stats Entrance & Rolling Counter
+    animateSuperAdminTileStats(options.tileContainer || '.tiles-grid, .tile_count, .sa-stat-grid, .backup-stats-grid, .sa-metrics-row, .audit-kpi-strip');
+
+    // 4. Jalankan Baris Tabel Entrance
+    if (options.animateTables !== false) {
+        animateTableRows(options.tableSelector || '.sa-table, .gentelella-table, .backup-table, .data-table, .audit-table');
+    }
+
+    // 5. Bind Interaksi Chart Hover
+    bindChartHoverAnimations();
+}
+
+/**
+ * Inisialisasi Universal SuperAdmin Motion (Legacy / Fallback)
  * @param {'global'|'dashboard'} context
  */
 export function initSuperAdminMotion(context = 'global') {
@@ -304,11 +391,16 @@ export function initSuperAdminMotion(context = 'global') {
 
 // Global window registration untuk kemudahan akses dan modularitas
 if (typeof window !== 'undefined') {
+    window.initScrollCraft = initScrollCraft;
+    window.initSuperAdminPageMotion = initSuperAdminPageMotion;
     window.MagKomSuperAdminMotion = {
         shouldAnimatePage,
         animateSuperAdminEntrance,
+        animateSuperAdminTileStats,
+        animateTableRows,
         bindChartHoverAnimations,
-        initSuperAdminMotion
+        initSuperAdminMotion,
+        initSuperAdminPageMotion
     };
 }
 

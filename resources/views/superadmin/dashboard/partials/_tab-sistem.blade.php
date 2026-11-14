@@ -66,10 +66,10 @@
             </div>
         </div>
 
-        {{-- Kartu 2: Higienitas Kredensial Staf (BR-15) --}}
+        {{-- Kartu 2: Higienitas Kredensial Staf --}}
         <div class="sa-panel sa-metric {{ ($stafPendingGantiPassword ?? 0) > 0 ? 'sa-metric--warning' : 'sa-metric--primary' }}" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem;">
             <div class="sa-metric__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Higienitas Kredensial Staf (BR-15)</span>
+                <span class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3);">Higienitas Kredensial Staf<span class="sr-only"> (BR-15)</span></span>
                 <span class="sa-metric__icon" style="color: {{ ($stafPendingGantiPassword ?? 0) > 0 ? '#F59E0B' : 'var(--cv-blue-600)' }};"><x-sa.icon name="key" :size="18" /></span>
             </div>
             <div class="sa-metric__value {{ ($stafPendingGantiPassword ?? 0) > 0 ? '' : 'sa-stat-val-primary' }}" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; {{ ($stafPendingGantiPassword ?? 0) > 0 ? 'color: #D97706;' : '' }} line-height: 1.1;">
@@ -298,14 +298,6 @@
                 <span class="sa-link sa-color-danger" style="font-weight: 600; color: #DC2626; font-size: 0.8125rem;">Unduh &rarr;</span>
             </a>
 
-            <a href="{{ route('superadmin.health.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
-                <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
-                    <x-sa.icon name="activity" :size="16" />
-                    <span class="sa-table-strong" style="font-size: 0.8125rem;">Telemetri Kesehatan & Storage Infrastruktur</span>
-                </div>
-                <span class="sa-link" style="font-weight: 600; font-size: 0.8125rem;">Buka &rarr;</span>
-            </a>
-
             <a href="{{ route('superadmin.backup.index') }}" class="sa-list-item sa-list-item--link" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 8px; text-decoration: none; color: var(--cv-ink); transition: all 0.15s ease;">
                 <div class="sa-list-item__left" style="display: flex; align-items: center; gap: 0.6rem;">
                     <x-sa.icon name="database" :size="16" />
@@ -326,11 +318,11 @@
             </div>
             <div class="sa-panel sa-panel--sub" style="background: var(--cv-paper); border: 1px solid var(--cv-line); border-radius: 6px; padding: 0.5rem 0.75rem;">
                 <span class="sa-table-sub" style="font-family: monospace; font-size: 0.6875rem; display: block;">berkas_maks_mb</span>
-                <strong style="font-size: 0.8125rem;">Maks. {{ $berkasMaksMb }} MB (BR-03)</strong>
+                <strong style="font-size: 0.8125rem;">Maks. {{ $berkasMaksMb }} MB</strong>
             </div>
             <div class="sa-panel sa-panel--sub" style="background: var(--cv-paper); border: 1px solid var(--cv-line); border-radius: 6px; padding: 0.5rem 0.75rem;">
                 <span class="sa-table-sub" style="font-family: monospace; font-size: 0.6875rem; display: block;">slot_khusus_default</span>
-                <strong style="font-size: 0.8125rem;">{{ $slotKhususDefault }} Kuota (BR-01)</strong>
+                <strong style="font-size: 0.8125rem;">{{ $slotKhususDefault }} Kuota</strong>
             </div>
         </div>
     </x-sa.panel>

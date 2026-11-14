@@ -17,6 +17,7 @@ use App\Models\Tugas;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class PembimbingDashboardMetricsService
 {
@@ -124,17 +125,28 @@ class PembimbingDashboardMetricsService
         // 13. Aktivitas Mentoring Minggu Ini
         $aktivitasMingguIni = $this->resolveAktivitasMingguIni($allPendingLogbooks, $allPendingProgresLogs, $upcomingAgendaBimbingan);
 
-        // 14. Aktivitas Logbook Mingguan (7 Hari: Sen - Min) untuk Zenius Bar Chart
+        // 14. Aktivitas Logbook Mingguan (7 Hari: Sen - Min) untuk Zenius Bar Chart (1 Single Query)
         $startOfWeek = Carbon::today()->startOfWeek();
+        $endOfWeek = Carbon::today()->endOfWeek();
         $days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+
+        $logbookCountsByDate = [];
+        if (! empty($penempatanIds)) {
+            /** @var array<string, int> $rawCounts */
+            $rawCounts = Logbook::whereIn('penempatan_id', $penempatanIds)
+                ->whereBetween('tanggal', [$startOfWeek->toDateString(), $endOfWeek->toDateString()])
+                ->select(DB::raw('DATE(tanggal) as tgl'), DB::raw('count(*) as aggregate'))
+                ->groupBy('tgl')
+                ->pluck('aggregate', 'tgl')
+                ->toArray();
+            $logbookCountsByDate = $rawCounts;
+        }
+
         $weeklyLogbookActivity = [];
         for ($i = 0; $i < 7; $i++) {
-            $date = $startOfWeek->copy()->addDays($i);
+            $date = $startOfWeek->copy()->addDays($i)->toDateString();
             $dayLabel = $days[$i];
-            $count = Logbook::whereIn('penempatan_id', $penempatanIds)
-                ->whereDate('tanggal', $date)
-                ->count();
-            $weeklyLogbookActivity[$dayLabel] = $count;
+            $weeklyLogbookActivity[$dayLabel] = (int) ($logbookCountsByDate[$date] ?? 0);
         }
 
         return [

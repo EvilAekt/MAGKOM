@@ -11,7 +11,7 @@
     $growthPositive = $growthNum >= 0;
     $growthLabel = rtrim(rtrim(number_format(abs($growthNum), 1, '.', ''), '0'), '.');
 @endphp
-<section class="tiles-grid" style="margin-bottom: 1.5rem;" aria-label="Ringkasan Audit Log">
+<section class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal style="margin-bottom: 1.5rem;" aria-label="Ringkasan Audit Log">
     <!-- 1. Total Aktivitas 24H -->
     <x-gentelella.tile-stat
         title="Total Log (24 Jam)"

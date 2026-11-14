@@ -195,4 +195,23 @@ class SecurityDynamicCaptchaTest extends TestCase
             'nama' => 'Peserta Baru',
         ]);
     }
+
+    public function test_captcha_input_fields_render_auto_capitalize_and_uppercase_classes(): void
+    {
+        // 1. Verifikasi formulir login
+        $loginRes = $this->get(route('login'));
+        $loginRes->assertStatus(200);
+        $loginRes->assertSee('name="captcha"', false);
+        $loginRes->assertSee('autocapitalize="characters"', false);
+        $loginRes->assertSee('spellcheck="false"', false);
+        $loginRes->assertSee('captcha-input', false);
+
+        // 2. Verifikasi formulir registrasi
+        $regRes = $this->get(route('register'));
+        $regRes->assertStatus(200);
+        $regRes->assertSee('name="captcha"', false);
+        $regRes->assertSee('autocapitalize="characters"', false);
+        $regRes->assertSee('spellcheck="false"', false);
+        $regRes->assertSee('captcha-input', false);
+    }
 }

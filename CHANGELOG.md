@@ -5,6 +5,26 @@ Format berkas ini mengacu pada panduan [Keep a Changelog](https://keepachangelog
 
 ---
 
+## [1.3.0] - 2026-11-14
+
+### Ditambahkan
+- **Navigasi Menu Melayang Sidebar Mini (*Mini-Sidebar Floating Flyout*)**: Integrasi portal fixed menu melayang (`position: fixed; left: 72px; z-index: 1060;`) saat sidebar diciutkan (`body.nav-sm`), dilengkapi styling Sleman Navy Blue, penanda aktif royal navy, titik cyan bercahaya, dan tooltip interaktif untuk tautan tunggal.
+- **Standarisasi Modal Konfirmasi Aksi Kritis**: Penggantian dialog browser native (`confirm()`, `prompt()`) dengan dialog modal interaktif berbasis Plus Jakarta Sans, backdrop blur, dan animasi smooth pada Master Bidang, Master Bulan, Master Jurusan, Slot Khusus, dan Pusat Cadangan Basis Data.
+- **Dynamic Anti-Bot SVG Captcha & DOM Shuffling**: Generator kode captcha SVG dinamis internal dengan decoy honeypot fields dan validasi server-side `CaptchaRule` untuk proteksi brute force login tanpa dependensi library eksternal.
+- **Seeder Akun Bersih Gmail (`PurgeAndSeedCleanGmailAccountsSeeder`)**: Otomasi penyelarasan data akun uji coba resmi berbasis format `@gmail.com` lengkap dengan foto profil resmi dan riwayat aktivitas 4 peran.
+- **Perintah Artisan Diagnostik Reset Password (`auth:test-reset`)**: Pengujian mandiri alur pembuatan token lupa password dan cetak URL reset langsung ke CLI.
+- **Panduan Teknis SMTP & Notifikasi Email**: Penerbitan panduan konfigurasi pengiriman email resmi (`docs/09-PANDUAN-SMTP-DAN-NOTIFIKASI-EMAIL.md`).
+
+### Diubah
+- **Optimasi Responsif Universal & Bento Layout**: Penataan ulang kartu antrean penempatan admin, bento hero portal peserta, dan tata letak tabel data adaptif di semua resolusi layar (mobile, tablet, desktop).
+- **Perbaikan Alur Penempatan & Kuota Kelompok**: Sinkronisasi penghitungan sisa kuota kelompok dan penuntasan magang.
+
+### Keamanan
+- Penegakan alur validasi registrasi wajib sebelum login (`WajibRegistrasiSebelumLoginTest`).
+- Penguatan penanganan *progressive account lockout* dan isolasi error autentikasi.
+
+---
+
 ## [1.2.0] - 2026-11-11
 
 ### Ditambahkan

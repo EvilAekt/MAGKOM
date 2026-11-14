@@ -414,12 +414,12 @@ class RevisionPublishingManagementTest extends TestCase
         ], $this->superAdmin);
 
         // Pasang lock buatan untuk mensimulasikan proses publish lain yang sedang berjalan
-        $lock = Cache::lock('landing_cms_publish_lock', 2);
+        $lock = Cache::lock('landing_cms_publish_lock', 1);
         $acquired = $lock->get();
         $this->assertTrue($acquired);
 
         try {
-            // Karena timeout block adalah 3 detik dan lock 2 detik, ketika lock kedaluwarsa, proses tetap selesai aman
+            // Karena timeout block adalah 3 detik dan lock 1 detik, ketika lock kedaluwarsa, proses tetap selesai aman
             $count = $this->stagingService->publishDraft($this->superAdmin);
             $this->assertGreaterThan(0, $count);
         } finally {

@@ -1337,12 +1337,43 @@
     position: fixed;
     z-index: 1060;
     width: 358px;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
     background: #e9eef7;
-    border-radius: 24px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-    padding: 20px 14px 12px;
+    border-radius: 20px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    padding: 16px 14px 14px;
     display: none;
     box-sizing: border-box;
+}
+
+/* Compact Mode pada Viewport dengan Tinggi Terbatas (Laptop ≤ 800px) */
+@media (max-height: 800px) {
+    .tugas-calendar-popup {
+        padding: 12px 10px 10px;
+        border-radius: 16px;
+    }
+    .tugas-cal-date-btn {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 13px !important;
+    }
+    .tugas-cal-day-name {
+        height: 28px !important;
+        font-size: 12px !important;
+    }
+    .tugas-cal-header {
+        height: 30px !important;
+        margin-bottom: 4px !important;
+    }
+    .tugas-cal-weekdays {
+        margin-bottom: 2px !important;
+    }
+    .tugas-cal-footer {
+        height: 38px !important;
+        margin-top: 6px !important;
+    }
 }
 
 #popupCalendarJadwal {

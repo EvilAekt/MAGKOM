@@ -52,7 +52,7 @@ class KeputusanPendaftaranRequest extends FormRequest
             'keputusan.required' => 'Keputusan verifikasi wajib dipilih.',
             'keputusan.in' => 'Pilihan keputusan verifikasi hanya menerima atau menolak berkas.',
             'catatan.required' => 'Alasan penolakan wajib disertakan saat menolak pendaftaran.',
-            'catatan.min' => 'Alasan penolakan minimal berisi 10 karakter sesuai standar verifikasi (AC-04-3).',
+            'catatan.min' => 'Alasan penolakan minimal berisi 10 karakter sesuai standar verifikasi.',
             'pembimbing_id.exists' => 'Pembimbing yang dipilih tidak valid atau sedang tidak aktif.',
             'file_surat_diterima.file' => 'Berkas surat keterangan diterima harus berupa file dokumen.',
             'file_surat_diterima.mimes' => 'Berkas surat keterangan diterima wajib berformat PDF (.pdf).',

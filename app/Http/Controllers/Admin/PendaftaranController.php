@@ -85,7 +85,7 @@ class PendaftaranController extends Controller
                 ->with('success', $result['message']);
         } catch (StatusSudahBerubahException $e) {
             // AC-04-5: Pesan ramah saat terjadi bentrok keputusan bersamaan
-            return back()->with('error', 'Status pendaftaran sudah berubah, muat ulang halaman (AC-04-5).');
+            return back()->with('error', 'Status pendaftaran sudah berubah, silakan muat ulang halaman.');
         } catch (KuotaPenuhException $e) {
             // AC-04-6: Pesan saat kuota ternyata penuh saat diterima
             return back()->with('error', 'Kuota umum telah terisi penuh. Pengajuan tidak dapat diterima.');

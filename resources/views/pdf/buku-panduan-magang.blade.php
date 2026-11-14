@@ -185,7 +185,7 @@
     </p>
 
     <div class="info-box">
-        <strong>PENTING:</strong> Pelaksanaan magang di Diskominfo Kabupaten Sleman dilaksanakan secara <strong>luring (WFO) penuh</strong> di kantor dinas, <strong>bebas biaya (gratis)</strong>, dan peserta tidak dipungut biaya apa pun selama proses seleksi hingga penerbitan sertifikat.
+        <strong>PENTING:</strong> Pelaksanaan magang di Diskominfo Kabupaten Sleman dilaksanakan secara <strong>luring (WFO) penuh</strong> di kantor dinas, <strong>bebas biaya (gratis)</strong>, dan peserta tidak dipungut biaya apa pun selama proses seleksi hingga penyelesaian masa magang.
     </div>
 
     <table class="content-table">
@@ -277,9 +277,9 @@
     </div>
 
     <div class="step-block">
-        <div class="step-header">Langkah 4: Evaluasi Akhir, Lembar Nilai & Sertifikat Resmi</div>
+        <div class="step-header">Langkah 4: Penyelesaian Program Magang & Pelepasan Resmi</div>
         <div class="step-desc">
-            Pada akhir periode magang, pembimbing lapangan menginput evaluasi kinerja. Peserta dapat langsung mengunduh <strong>Lembar Nilai Magang Resmi</strong> serta <strong>Sertifikat Magang</strong> bertandatangan digital Kepala Dinas Komunikasi dan Informatika ber-QR Code validasi keaslian.
+            Pada akhir periode magang, pembimbing lapangan memvalidasi kelengkapan logbook dan laporan akhir. Peserta yang telah menuntaskan seluruh kewajiban akan dinyatakan resmi lulus program magang Diskominfo Sleman.
         </div>
     </div>
 

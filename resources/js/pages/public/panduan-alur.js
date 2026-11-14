@@ -158,18 +158,18 @@
             phase: 'Fase 4: Evaluasi & Kelulusan',
             phaseColor: '#D97706',
             phaseBg: '#FEF3C7',
-            title: 'Penilaian Rubrik 100 Poin & Sertifikat Digital',
-            desc: 'Penutupan magang, pengesahan laporan akhir, evaluasi rubrik objektif 100 poin oleh Pembimbing, dan penerbitan Lembar Nilai Magang resmi & Sertifikat Digital QR Code.',
+            title: 'Penyelesaian Magang & Laporan Akhir',
+            desc: 'Penutupan magang, pengesahan laporan akhir oleh Pembimbing Lapangan, dan penetapan status kelulusan resmi oleh Dinas Kominfo Kabupaten Sleman.',
             actor: 'Pembimbing & Pimpinan Dinas',
             sla: 'Masa Akses 30 Hari',
             checklist: [
                 'Pengunggahan Laporan Akhir Magang yang telah disahkan',
-                'Penilaian 5 aspek: Kehadiran, Kualitas Kerja, Teknis, Inisiatif, Etika',
-                'Unduh Lembar Nilai Resmi (PDF) dan Sertifikat Kelulusan Digital'
+                'Penyelesaian dan review seluruh penugasan serta logbook harian',
+                'Penetapan status resmi Selesai Magang pada portal MAGKOM'
             ],
-            callout: '<strong>Masa Tenggang 30 Hari (BR-10):</strong> Akun peserta tetap aktif selama 30 hari kalender setelah masa magang berakhir untuk mengunduh seluruh dokumen kelulusan.',
-            ctaText: 'Lihat Contoh Sertifikat QR',
-            ctaUrl: '{{ route("landing") }}'
+            callout: '<strong>Masa Tenggang 30 Hari (BR-10):</strong> Akun peserta tetap aktif dalam mode baca-saja selama 30 hari kalender setelah masa magang berakhir untuk mengarsipkan data laporan.',
+            ctaText: 'Pelajari Alur Magang',
+            ctaUrl: '/'
         }
     };
 
@@ -190,7 +190,7 @@
         'perbaikan': { stepNum: 4, label: 'Keputusan: Perlu Perbaikan (Loopback)' },
         5: { stepNum: 5, label: 'Langkah 5 dari 7: Orientasi & Mentor' },
         6: { stepNum: 6, label: 'Langkah 6 dari 7: Logbook Harian' },
-        7: { stepNum: 7, label: 'Langkah 7 dari 7: Nilai & Sertifikat' }
+        7: { stepNum: 7, label: 'Langkah 7 dari 7: Selesai Magang' }
     };
 
     function setSimJenjang(val) {

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             BidangJurusanSeeder::class,
             PengaturanSeeder::class,
             SuperAdminSeeder::class,
+            PermissionSeeder::class,
             PeriodeKuotaSeeder::class,
             JenisDokumenSeeder::class,
             UserSeeder::class,

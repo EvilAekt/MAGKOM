@@ -117,12 +117,42 @@ class DashboardController extends Controller
             }
         }
 
-        // Sisa Hari Magang
+        // Hitung durasi bulan yang dipilih peserta (1, 2, 3, 6 bulan)
+        $durasiBulan = $penempatan?->durasi_bulan
+            ?? (int) ($pendaftaran?->durasi_bulan ?? 3);
+
+        // Siklus Waktu & Sisa Hari Magang (Sesuai Durasi Bulan Pilihan Peserta)
+        $today = now()->startOfDay();
+        $tglMulai = $penempatan?->tgl_mulai ? Carbon::parse($penempatan->tgl_mulai)->startOfDay() : null;
+        $tglSelesai = $penempatan?->tgl_selesai ? Carbon::parse($penempatan->tgl_selesai)->startOfDay() : null;
+
+        $isBelumMulai = false;
+        $hariMenujuMulai = 0;
+        $totalHariMagang = max(1, $durasiBulan * 30);
+        $hariBerjalan = 0;
         $sisaHari = null;
-        $tglSelesai = $penempatan?->tgl_selesai;
-        if ($penempatan && $tglSelesai) {
-            $diff = now()->startOfDay()->diffInDays(Carbon::parse($tglSelesai)->startOfDay(), false);
-            $sisaHari = max(0, (int) $diff);
+        $progresHariPct = 0;
+
+        if ($penempatan && $tglMulai && $tglSelesai) {
+            $totalHariMagang = max(1, (int) $tglMulai->diffInDays($tglSelesai));
+
+            if ($today->lt($tglMulai)) {
+                // Magang belum dimulai (Pra-Magang)
+                $isBelumMulai = true;
+                $hariMenujuMulai = max(1, (int) $today->diffInDays($tglMulai));
+                $sisaHari = $totalHariMagang; // Sisa hari masih utuh sesuai durasi pilihan peserta
+                $progresHariPct = 0;
+            } elseif ($today->gt($tglSelesai)) {
+                // Magang telah selesai
+                $sisaHari = 0;
+                $hariBerjalan = $totalHariMagang;
+                $progresHariPct = 100;
+            } else {
+                // Magang sedang berjalan aktif
+                $hariBerjalan = max(0, (int) $tglMulai->diffInDays($today));
+                $sisaHari = max(0, (int) $today->diffInDays($tglSelesai));
+                $progresHariPct = min(100, (int) round(($hariBerjalan / $totalHariMagang) * 100));
+            }
         }
 
         // Ekstraksi Informasi Bidang Terpilih
@@ -172,6 +202,11 @@ class DashboardController extends Controller
             'calendarEventDates' => $calendarEventDates,
             'namaPembimbingClean' => $namaPembimbingClean,
             'sisaHari' => $sisaHari,
+            'durasiBulan' => $durasiBulan,
+            'totalHariMagang' => $totalHariMagang,
+            'isBelumMulai' => $isBelumMulai,
+            'hariMenujuMulai' => $hariMenujuMulai,
+            'progresHariPct' => $progresHariPct,
             'kelompokMagang' => $user->kelompokMagang ?? $pendaftaran?->kelompokMagang,
         ]);
     }

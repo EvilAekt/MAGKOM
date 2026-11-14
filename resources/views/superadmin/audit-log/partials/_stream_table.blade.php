@@ -15,7 +15,7 @@
         }
     }
 @endphp
-<div class="audit-stream-card">
+<div class="audit-stream-card sc-reveal-up sc-delay-2" data-scroll-reveal>
     {{-- Stream Channel Status & Severity Badges --}}
     <div class="audit-stream-header">
         <div class="audit-stream-title-group">
@@ -128,7 +128,6 @@
                 <option value="penempatan" {{ request('entitas') === 'penempatan' ? 'selected' : '' }}>Penempatan Bimbingan</option>
                 <option value="logbook" {{ request('entitas') === 'logbook' ? 'selected' : '' }}>Logbook Kegiatan</option>
                 <option value="users" {{ in_array(request('entitas'), ['user', 'users']) ? 'selected' : '' }}>Akun Pengguna (RBAC)</option>
-                <option value="nilai_magang" {{ in_array(request('entitas'), ['nilai_magang', 'NilaiMagang']) ? 'selected' : '' }}>Nilai &amp; Sertifikat</option>
             </select>
         </div>
 
@@ -349,31 +348,7 @@
                                 <button 
                                     type="button" 
                                     class="audit-btn-diff {{ $isCritical ? 'audit-btn-diff-critical' : '' }}"
-                                    data-log-payload="{{ (string) json_encode([
-                                        'id' => $log->id,
-                                        'waktu' => $log->waktu ? $log->waktu->format('d M Y H:i:s') . ' WIB' : '-',
-                                        'time_clock' => $log->waktu ? $log->waktu->format('H:i:s') . ' WIB' : '-',
-                                        'channel' => $channelData['label'] ?? ($log->channel ?: 'System'),
-                                        'channel_key' => $log->channel ?: 'system',
-                                        'severity' => $log->severity ?: 'info',
-                                        'user' => $userName . ($user ? ' (' . $userRole . ')' : ''),
-                                        'actor_name' => $userName,
-                                        'actor_id' => $user?->id ?? '-',
-                                        'aksi' => $log->aksi,
-                                        'entitas' => $log->entitas,
-                                        'entitas_id' => $log->entitas_id,
-                                        'request_id' => $log->request_id ?: 'req_' . substr(md5((string)$log->id), 0, 8),
-                                        'ip' => $log->ip ?: '127.0.0.1',
-                                        'user_agent' => $log->user_agent,
-                                        'metode' => $log->metode ?: 'GET',
-                                        'rute' => $log->rute ?: '-',
-                                        'status_http' => $log->status_http ?: 200,
-                                        'durasi_ms' => $log->durasi_ms ?: 0,
-                                        'detail' => $log->detail,
-                                        'nilai_lama' => $log->nilai_lama,
-                                        'nilai_baru' => $log->nilai_baru,
-                                        'hmac' => hash('sha256', ($log->id . ($log->request_id ?? '') . ($log->aksi ?? '') . ($log->waktu?->toISOString() ?? ''))),
-                                    ]) }}"
+                                    data-log-id="{{ $log->id }}"
                                     onclick="inspectAuditMutation(this)"
                                 >
                                     Diff
