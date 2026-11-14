@@ -5,11 +5,11 @@ Portal manajemen magang Dinas Komunikasi dan Informatika (Kominfo)
 
 | Metadata | Keterangan |
 |---|---|
-| **Versi PRD** | 1.2 (Adendum Pendaftaran Kelompok, Modul Dinamis, Logbook Mingguan, dan Keselarasan Baseline Aktual) |
-| **Tanggal** | 2 November 2026 |
+| **Versi PRD** | 1.3 (Adendum Modular Actions, Unsubmit Workflow Tugas, Batch Classroom Assignment, dan Bento Grid Dashboard) |
+| **Tanggal** | 11 November 2026 |
 | **Status** | Approved Engineering Baseline |
-| **Penyusun / Reviewer** | Tim Pengembang MagKom |
-| **Dokumen pendamping** | [`02-TDD-MagKom.md`](./02-TDD-MagKom.md) (Dokumen Desain Teknis v1.3), [`03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md`](./03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md), [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) |
+| **Penyusun / Reviewer** | Tim Pengembang MagKom (User, Kolaborator 1, Kolaborator 2) |
+| **Dokumen pendamping** | [`02-TDD-MagKom.md`](./02-TDD-MagKom.md) (Dokumen Desain Teknis v1.4), [`08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md`](./08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md), [`03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md`](./03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md), [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) |
 | **Sumber** | Rancangan Sistem MagKom Revisi 4 dan keputusan lanjutan. Dokumen ini **berdiri sendiri**: Revisi 4 tidak perlu dibuka untuk memahaminya (ringkasan perubahan ada di [Lampiran A](#lampiran-a-riwayat-revisi)) |
 | **Tech stack wajib** | **Laravel 10** dengan **PHP 8.3** (alasan dan batasan ada di TDD) |
 
@@ -270,6 +270,9 @@ Aturan di bab ini adalah rujukan utama. Contoh tanggal memakai zona waktu WIB (`
 | **BR-19** | **Pusat Cadangan Basis Data (Disaster Recovery):** SuperAdmin memiliki hak operasional membuat snapshot cadangan basis data terisolasi (kompresi `.sql.gz`), memvalidasi checksum SHA-256 integritas forensik, mengunduh file cadangan berizin khusus, dan melakukan pemulihan data langsung dari antarmuka web |
 | **BR-20** | **WordPress-Style Visual Site Editor & CMS Landing Page:** Pengelolaan konten landing page publik dikendalikan secara visual berbasis blok kanvas (Gutenberg style) oleh SuperAdmin. Mendukung pustaka komponen blok, Pattern Library, Reusable Blocks, Media Library picker, Sandbox Staging, serta riwayat revisi dan rollback |
 | **BR-21** | **Dynamic Role-Permission Matrix:** Matriks hak akses perizinan dikelola secara dinamis berbasis data untuk 13 modul sistem utama. SuperAdmin berwenang mengaktifkan atau mencabut izin modul per peran secara visual tanpa menyentuh kode program |
+| **BR-22** | **Alur Batal Kirim Tugas Peserta (Unsubmit Workflow):** Peserta magang berhak membatalkan penyerahan tugas (*unsubmit*) yang telah dikirimkan selama status tugas tersebut belum berstatus `selesai` atau belum diberi umpan balik/nilai oleh Pembimbing Lapangan. Saat dibatalkan, status progres log kembali ke belum diserahkan, lampiran berkas lama tetap aman dan dapat digunakan kembali (*secure file reuse*), serta mutasi dicatat pada kanal audit log |
+| **BR-23** | **Penugasan Serentak Multi-Mentee (Batch Classroom Assignment):** Pembimbing Lapangan berwenang menerbitkan instruksi penugasan serentak kepada seluruh atau sekelompok mentee aktif dalam satu kali submit ala Google Classroom, dengan tenggat waktu, deskripsi, dan lampiran berkas acuan yang seragam |
+| **BR-24** | **Antarmuka Ergonomis Bento Grid & Paritas Akun:** Antarmuka dashboard Peserta dan Admin menerapkan arsitektur layout Bento Grid adaptif yang memisahkan modul metrik, kalender aktivitas, stepper pendaftaran/logbook, serta linimasa progres. Halaman profil dan dropdown akun diseragamkan di keempat peran aktor |
 
 ---
 
@@ -527,6 +530,9 @@ stateDiagram-v2
 | **AC-08-5** | Jika SuperAdmin mencoba membuat tugas, mereview, atau menilai, maka sistem menolak dengan 403 (feature test). Pembimbing hanya mengakses peserta bimbingannya |
 | **AC-08-6** | Jika penempatan sudah selesai (masa tenggang) atau nonaktif, maka seluruh aksi tulis peserta ditolak (halaman baca-saja) |
 | **AC-08-7** | Tugas dapat diedit Pembimbing selama belum selesai; penghapusan tugas tidak tersedia pada versi ini `[Usulan]` |
+| **AC-08-8** | Jika peserta menekan tombol "Batal Kirim" (*unsubmit*) pada tugas yang berstatus diajukan dan belum dinilai pembimbing, maka sistem mengembalikan status tugas menjadi draft/belum selesai, mempertahankan berkas lampiran di storage agar dapat digunakan kembali (*reusable*), dan mencatat mutasi ke audit log (`BR-22`) |
+| **AC-08-9** | Jika peserta mencoba membatalkan penyerahan tugas yang telah dinilai atau diselesaikan oleh pembimbing, maka sistem menolak permintaan dengan kode HTTP 403 / respons penolakan otorisasi (`BR-22`) |
+| **AC-08-10** | Jika pembimbing memilih beberapa mentee aktif pada formulir pembuatan tugas serentak (*batch assignment*), maka sistem mengalokasikan rekaman tugas serentak ke seluruh mentee terpilih dengan tenggat waktu, deskripsi, dan lampiran identik dalam satu transaksi database atomik (`BR-23`) |
 
 ### F-09 Logbook Mingguan (R1)
 **Aktor**: Peserta (mengisi), Pembimbing (meninjau).

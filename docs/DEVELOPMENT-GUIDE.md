@@ -37,7 +37,7 @@ Pastikan mesin pengembangan lokal Anda telah memenuhi spesifikasi berikut:
 ```bash
 git clone https://github.com/EvilAekt/MAGKOM.git
 cd MAGKOM
-git checkout test-2
+git checkout main
 ```
 
 ### Langkah 2: Konfigurasi Environment File
@@ -136,6 +136,17 @@ Memastikan aset CSS dan JavaScript modular terkompilasi tanpa error:
 ```bash
 npm run build
 ```
+
+### 4.5 Konvensi Pembuatan Action & Query Baru
+Untuk menjaga controller tetap ringkas (*Skinny Controllers*) dan mematuhi prinsip *Single Responsibility Principle (SRP)*:
+1. **Kelas Aksi Mutasi (`app/Actions/`)**:
+   - Penamaan: `App\Actions\{Role}\{Domain}\{Verb}{Noun}Action.php` (misal: `App\Actions\Admin\Penempatan\AssignPesertaAction.php`).
+   - Wajib mengekspos public method `execute(...)` dengan type hinting PHP 8.3 ketat.
+   - Bertanggung jawab membungkus mutasi data dalam `DB::transaction(...)` dan memanggil `AuditService` untuk rekam jejak audit forensik.
+2. **Kelas Query Terspesialisasi (`app/Queries/`)**:
+   - Penamaan: `App\Queries\{Role}\{Domain}\{Noun}{Type}Query.php` (misal: `App\Queries\Admin\Pendaftaran\PendaftaranIndexQuery.php`).
+   - Wajib mengekspos method `get(...)` atau `paginate(...)`.
+   - Mengisolasi pemfilteran parameter request, pencarian teks, pengurutan, dan eager loading relasi untuk mencegah N+1 query problem.
 
 ---
 

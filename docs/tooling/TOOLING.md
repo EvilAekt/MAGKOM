@@ -1,6 +1,6 @@
 # Manual & Spesifikasi Ekosistem Tooling (TOOLING.md)
 
-Dokumen ini mencatat seluruh perangkat bantu (*toolkit*), server MCP, antarmuka baris perintah (CLI), serta repositori skill yang telah dipasang dan dikonfigurasi pada Antigravity untuk alur kerja web development harian.
+Dokumen ini mencatat seluruh perangkat bantu (*toolkit*), server MCP, antarmuka baris perintah (CLI), serta repositori skill yang telah dipasang dan dikonfigurasi untuk alur kerja web development harian. Untuk panduan lengkap pipeline GitHub Actions dan DevSecOps, lihat: [**`CI-SECURITY-AND-PROJECTS.md`**](./CI-SECURITY-AND-PROJECTS.md).
 
 ---
 

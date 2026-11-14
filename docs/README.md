@@ -13,40 +13,71 @@ Dokumentasi MAGKOM diorganisasikan ke dalam 5 pilar spesialisasi utama:
 ### 1. Spesifikasi Sistem & Bisnis
 | Dokumen | Deskripsi & Ruang Lingkup | Audiens Utama |
 |---|---|---|
-| [**`01-PRD-MagKom.md`**](./01-PRD-MagKom.md) | **Product Requirements Document (PRD)**<br>• Latar belakang kedinasan, user stories 4 aktor, dan sasaran metrik.<br>• Aturan Bisnis definitif (BR-01 s/d BR-17, tanpa modul usang).<br>• Spesifikasi alur pendaftaran, kuota atomik, penempatan 2 tahap, dan logbook.<br>• 13 Modul Sistem resmi dan kriteria penerimaan (Acceptance Criteria). | Product Owner, Lead Architect, Developer, QA |
-| [**`02-TDD-MagKom.md`**](./02-TDD-MagKom.md) | **Technical Design Document (TDD)**<br>• Arsitektur teknis Laravel 10.x & PHP 8.3.<br>• Pola Skinny Controller, Form Request, Service Layer, dan Policy.<br>• Arsitektur transaksi atomik kuota (`lockForUpdate`).<br>• Desain arsitektur Gutenberg Site Editor & Disaster Recovery Backup. | Tech Lead, Backend Developer, DevOps |
+| [**`PRODUCT.md`**](./PRODUCT.md) | **Product Context & System Boundaries**<br>• Batasan sistem tingkat tinggi, karakteristik 4 aktor pengguna, dan prinsip antarmuka status. | Product Owner, Lead Architect |
+| [**`01-PRD-MagKom.md`**](./01-PRD-MagKom.md) | **Product Requirements Document (PRD v1.3)**<br>• Latar belakang kedinasan, user stories 4 aktor, dan sasaran metrik.<br>• Aturan Bisnis definitif (BR-01 s/d BR-19, termasuk Unsubmit Tugas & Batch Classroom).<br>• Spesifikasi alur pendaftaran, kuota atomik, penempatan 2 tahap, dan logbook.<br>• Kriteria penerimaan (*Acceptance Criteria*) berbasis automated testing. | Product Owner, Lead Architect, Developer, QA |
+| [**`02-TDD-MagKom.md`**](./02-TDD-MagKom.md) | **Technical Design Document (TDD v1.5)**<br>• Arsitektur teknis Laravel 10.x & PHP 8.3.<br>• Pola *Modular Actions* (`app/Actions/`) dan *Specialized Queries* (`app/Queries/`).<br>• Arsitektur transaksi atomik kuota (`lockForUpdate`).<br>• Desain arsitektur Gutenberg Site Editor, Decoupled CMS, & Disaster Recovery Backup. | Tech Lead, Backend Developer, DevOps |
 | [**`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`**](./04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) | **Kamus Data & Skema Basis Data**<br>• Diagram Relasi Entitas (ERD) Mermaid definitif.<br>• Kamus data detail 24 tabel domain aktif dan 5 tabel framework.<br>• Definisi foreign key, indexing, dan CHECK constraints database. | DBA, Backend Developer, Data Analyst |
-| [**`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`**](./05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md) | **Spesifikasi Keamanan, RBAC & Audit Trail**<br>• Matriks hak akses dinamis (`permissions` & `role_permissions`).<br>• Isolasi mutlak SuperAdmin Read-Only pada ranah pembimbing.<br>• Mekanisme Audit Trail append-only 4 kanal stream.<br>• Keamanan berkas privat ber-signed URL dan perlindungan Disaster Recovery. | Security Engineer, Tech Lead, Backend Developer |
-| [**`07-DESIGN-SYSTEM-MAGKOM.md`**](./07-DESIGN-SYSTEM-MAGKOM.md) | **Design System MagKom (DS-MagKom)**<br>• Fondasi 11 Master CSS Peeper Tokens (`variables.css`) & Dark Mode.<br>• Standar tipografi Open Sans & JetBrains Mono.<br>• Katalog komponen UI (Bento Grid, Profil 360 Mentee, Modal, Alert, Timeline).<br>• Standar mikro-interaksi animasi GSAP 3.15. | Frontend Developer, UI/UX Designer |
+| [**`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`**](./05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md) | **Spesifikasi Keamanan, RBAC & Audit Trail**<br>• Matriks hak akses dinamis (`permissions` & `role_permissions`).<br>• Otorisasi Action classes, unsubmit workflow, dan penugasan batch.<br>• Mekanisme Audit Trail append-only 4 kanal stream.<br>• Keamanan berkas privat ber-signed URL dan perlindungan Disaster Recovery. | Security Engineer, Tech Lead, Backend Developer |
+| [**`07-DESIGN-SYSTEM-MAGKOM.md`**](./07-DESIGN-SYSTEM-MAGKOM.md) | **Design System MagKom (DS-MagKom)**<br>• Fondasi 11 Master CSS Peeper Tokens (`variables.css`) & Dark Mode.<br>• Standar tipografi Open Sans & JetBrains Mono.<br>• Katalog komponen UI (Bento Grid, Sleman Preloader, Profil 360 Mentee, Modal, Timeline).<br>• Standar mikro-interaksi animasi GSAP 3.15 dan paritas dropdown akun. | Frontend Developer, UI/UX Designer |
+| [**`08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md`**](./08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md) | **Spesifikasi Lengkap Fitur & Arsitektur Modular**<br>• Rujukan komprehensif seluruh kelas Actions, Queries, dan Service Layer.<br>• Fitur Batal Kirim Tugas (Unsubmit), Classroom-style Upload, & Bento Dashboard.<br>• Ekspor rekapitulasi data terstandarisasi (CSV, Excel XLSX) dan Telemetri Cockpit. | Semua Pengembang |
+| [**`09-PANDUAN-SMTP-DAN-NOTIFIKASI-EMAIL.md`**](./09-PANDUAN-SMTP-DAN-NOTIFIKASI-EMAIL.md) | **Panduan Layanan SMTP & Notifikasi Email Kedinasan**<br>• Konfigurasi protokol SMTP, template notifikasi email sistem.<br>• Alur pengiriman otomatis pemberitahuan seleksi dan bimbingan. | DevOps, SysAdmin, Backend |
 
 ### 2. Arsitektur Teknis Rinci
 | Dokumen | Deskripsi & Ruang Lingkup | Audiens Utama |
 |---|---|---|
-| [**`ARCHITECTURE.md`**](./ARCHITECTURE.md) | **Ikhtisar Arsitektur Aplikasi Pasca-Migrasi**<br>• Arsitektur sistem berlapis, pemisahan dependensi, dan aliran data utama. | Semua Developer |
-| [**`FRONTEND-ARCHITECTURE.md`**](./FRONTEND-ARCHITECTURE.md) | **Arsitektur Frontend & Panduan Aset Vite**<br>• Pipeline Vite 6, 48 entry points terisolasi per halaman.<br>• Aturan wajib: Zero inline script/style di Blade & kepatuhan penuh CSP. | Frontend Developer, Blade Integrator |
+| [**`architecture/BACKEND-ARCHITECTURE.md`**](./architecture/BACKEND-ARCHITECTURE.md) | **Ikhtisar Arsitektur Backend Clean Layered**<br>• Arsitektur sistem berlapis, pemisahan dependensi, dan aliran data utama. | Semua Developer |
+| [**`architecture/FRONTEND-ARCHITECTURE.md`**](./architecture/FRONTEND-ARCHITECTURE.md) | **Arsitektur Frontend & Panduan Aset Vite**<br>• Pipeline Vite 6, 48 entry points terisolasi per halaman.<br>• Aturan wajib: Zero inline script/style di Blade & kepatuhan penuh CSP. | Frontend Developer, Blade Integrator |
+| [**`architecture/FRAMEWORK-UPGRADE-ROADMAP.md`**](./architecture/FRAMEWORK-UPGRADE-ROADMAP.md) | **Roadmap Upgrade Framework (Laravel 11/12 LTS)**<br>• Analisis risiko siklus hidup dependensi, mitigasi CVE, dan matriks kompatibilitas. | Lead Architect, Tech Lead |
 | [**`architecture/ROUTES.md`**](./architecture/ROUTES.md) | **Peta Rute & Endpoint Aplikasi**<br>• Peta seluruh rute `routes/web.php` dan `routes/api.php` beserta proteksi middleware. | Backend & Fullstack Developer |
 
-### 3. Panduan Pengembangan & Lingkungan Kerja
+### 3. Panduan Pengembangan, DevSecOps & Tooling
 | Dokumen | Deskripsi & Ruang Lingkup | Audiens Utama |
 |---|---|---|
 | [**`DEVELOPMENT-GUIDE.md`**](./DEVELOPMENT-GUIDE.md) | **Panduan Pengembangan & Setup Lingkungan**<br>• Prasyarat wajib PHP 8.3, Composer 2, Node 20, dan MySQL 8.0.<br>• Prosedur instalasi lokal, migrasi database, dan seed data awal.<br>• Perintah diagnostik server, quality gates (Pint, PHPStan, PHPUnit). | Developer Baru, DevOps |
-| [**`06-ADDENDUM-KEAMANAN-DAN-QA.md`**](./06-ADDENDUM-KEAMANAN-DAN-QA.md) | **Addendum Keamanan & Penjaminan Kualitas (QA)**<br>• Model ancaman (THR-01 s/d THR-16) dan mitigasi SEC-01 s/d SEC-06.<br>• Katalog pengujian otomatis PHPUnit dan integrasi Strix AI Security Gate. | Security Engineer, QA Tester |
+| [**`tooling/CI-SECURITY-AND-PROJECTS.md`**](./tooling/CI-SECURITY-AND-PROJECTS.md) | **Panduan CI/CD DevSecOps & GitHub Projects**<br>• Pipeline GitHub Actions 5 lapisan, 7 branch protection checks, Semgrep SAST, Gitleaks, dan manajemen board. | DevSecOps, Tech Lead |
+| [**`tooling/TOOLING.md`**](./tooling/TOOLING.md) | **Spesifikasi & Inventaris Tooling Terpasang**<br>• Konfigurasi Model Context Protocol (MCP), CLI tools, dan panduan workflow harian. | AI Agent, Developer |
+| [**`06-ADDENDUM-KEAMANAN-DAN-QA.md`**](./06-ADDENDUM-KEAMANAN-DAN-QA.md) | **Addendum Keamanan & Penjaminan Kualitas (QA)**<br>• Model ancaman (THR-01 s/d THR-16) dan mitigasi SEC-01 s/d SEC-06.<br>• Katalog pengujian otomatis 942 tests PHPUnit dan integrasi Strix AI Security Gate. | Security Engineer, QA Tester |
 
-### 4. Perencanaan Kerja & Task Briefs
-| Direktori | Deskripsi & Ruang Lingkup |
+### 4. Riwayat Perubahan & Siklus Rilis (*Changelog & Releases*)
+| Dokumen | Deskripsi & Ruang Lingkup |
 |---|---|
-| [**`plans/`**](./plans/) | **Repositori Task Briefs & Rencana Kerja Senior Dev**<br>• Berisi dokumen PRD dan brief implementasi fitur terstruktur.<br>• Diatur ke dalam status aktif dan arsip fitur yang telah selesai diimplementasikan. |
+| [**`CHANGELOG.md`**](../CHANGELOG.md) | **Catatan Rilis Resmi MagKom (Keep a Changelog standard)**<br>• Rekam jejak seluruh penambahan fitur (*Added*), perbaikan (*Fixed*), keamanan (*Security*), dan deprecation rilis v1.0.0 s/d v1.3.0. |
 
-### 5. Arsip Catatan Historis (*Historical Records*)
+### 5. Arsip Laporan Audit & Catatan Historis (*Historical & Audit Reports*)
 | Dokumen | Keterangan Historis |
 |---|---|
-| [**`03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md`**](./03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md) | Peta jalan rilis Gelombang 0 s/d 4 fase awal (Oktober 2026). Dipertahankan sebagai arsip tahapan awal proyek. |
-| [**`TECHNICAL-MIGRATION-AUDIT.md`**](./TECHNICAL-MIGRATION-AUDIT.md) | Laporan audit kondisi teknis sebelum migrasi Vite dan penguatan keamanan (2 November 2026). |
-| [**`TECHNICAL-MIGRATION-REPORT.md`**](./TECHNICAL-MIGRATION-REPORT.md) | Laporan eksekusi 10 tahap migrasi teknis PHP 8.3, Vite 6, dan mitigasi SEC-01 s/d SEC-06. |
+| [**`03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md`**](./03-ROADMAP-DAN-PANDUAN-EKSEKUSI.md) | Peta jalan rilis Gelombang 0 s/d 4 fase awal (Oktober 2026) dan rekam jejak rilis terkurasi v1.3.0. |
+| [**`reports/TECHNICAL-MIGRATION-AUDIT.md`**](./reports/TECHNICAL-MIGRATION-AUDIT.md) | Laporan audit kondisi teknis sebelum migrasi Vite dan penguatan keamanan (2 November 2026). |
+| [**`reports/TECHNICAL-MIGRATION-REPORT.md`**](./reports/TECHNICAL-MIGRATION-REPORT.md) | Laporan eksekusi 10 tahap migrasi teknis PHP 8.3, Vite 6, dan mitigasi SEC-01 s/d SEC-06. |
+| [**`reports/AUDIT-CANVAS-MODE-LANDING-PAGE-MAGKOM.md`**](./reports/AUDIT-CANVAS-MODE-LANDING-PAGE-MAGKOM.md) | Laporan audit visual dan teknis mode canvas editor landing page. |
+| [**`reports/AUDIT-FITUR-CMS-LANDING-PAGE-SUPERADMIN.md`**](./reports/AUDIT-FITUR-CMS-LANDING-PAGE-SUPERADMIN.md) | Laporan audit menyeluruh fitur CMS visual site editor pada panel SuperAdmin. |
+| [**`reports/2026-10-14-comprehensive-security-and-ui-ux-audit-report.md`**](./reports/2026-10-14-comprehensive-security-and-ui-ux-audit-report.md) | Laporan audit keamanan komprehensif dan evaluasi UI/UX fase awal rilis. |
 
 ---
 
-## ⚡ 6 Prinsip Emas Pengembangan MagKom ("Golden Guardrails")
+## 👥 Tim Pengembang & Jobdesk (Contributors & Jobdesk)
+
+Sistem **MagKom** dikembangkan secara kolaboratif oleh 3 pengembang inti dengan pembagian peran dan tanggung jawab tugas:
+
+| Akun GitHub | Peran & Jabatan | Jobdesk Utama |
+|---|---|---|
+| **[@EvilAekt](https://github.com/EvilAekt)**<br>(Adhitya Galang) | **Lead Software Architect & Security Lead**<br>*(Project Owner / Tech Lead)* | • Menetapkan arah arsitektur sistem, regulasi kedinasan, dan aturan bisnis definitif (*SSOT*).<br>• Mendesain skema tabel database, relasi kunci asing, dan transaksi locking kuota atomik (`lockForUpdate`).<br>• Mengelola arsitektur kernel, middleware otorisasi RBAC, service layer, dan pola Modular Actions & Queries.<br>• Memimpin otomatisasi pengujian (942 tests di PHPUnit) dan memegang wewenang approval/merge final ke `main`. |
+| **[@aldiartha](https://github.com/aldiartha)**<br>(Aldi Artha Mida) | **Fullstack Developer & Admin Systems Specialist**<br>*(Admin & Placement Domain Lead)* | • Mengelola seluruh logika bisnis dan antarmuka modul Administrasi Kominfo (`/admin/*`).<br>• Merancang alur verifikasi berkas kandidat magang ber-SLA (*SLA Watchdog*) dan penerbitan Surat Penerimaan resmi.<br>• Mengembangkan sistem plotting penempatan dua tahap dan pembatasan beban bimbingan staf dinas (*mentee limiter*).<br>• Menyusun query pelaporan dan standardisasi format ekspor berkas spreadsheet kedinasan (CSV, Excel, PDF). |
+| **[@NAUFALFEBRIAN62](https://github.com/NAUFALFEBRIAN62)**<br>(Naufal Febrian) | **Frontend Specialist & UI/UX Interaction Engineer**<br>*(Public Portal & Peserta Domain Lead)* | • Mengembangkan antarmuka Blade dengan kepatuhan mutlak: **Zero Inline CSS/JS**.<br>• Merancang antarmuka publik dan portal peserta (`/peserta/*`) yang ergonomis, responsif, dan ramah perangkat mobile.<br>• Membangun dashboard modular Bento Grid, turn-in tugas classroom, dan pendaftaran tim/kelompok.<br>• Mengelola interaktivitas Vanilla JavaScript (ES Modules), animasi GSAP, dan harmonisasi Dark Mode (`DS-MagKom`). |
+
+### Matriks RACI Pengembangan MagKom
+- **Penentuan Aturan Bisnis & Spesifikasi PRD**: Adhitya Galang (**A**), Aldi Artha Mida (**C**), Naufal Febrian (**C**)
+- **Desain Skema Basis Data & Konkurensi Kuota**: Adhitya Galang (**A/R**), Aldi Artha Mida (**R**), Naufal Febrian (**I**)
+- **Implementasi Modular Actions, Queries & Services**: Adhitya Galang (**A**), Aldi Artha Mida (**R**), Naufal Febrian (**I**)
+- **Pengerasan Keamanan & Validasi Otorisasi**: Adhitya Galang (**A**), Aldi Artha Mida (**R**), Naufal Febrian (**I**)
+- **Pengembangan Blade, Bento Grid & CSS Tokens**: Adhitya Galang (**A**), Aldi Artha Mida (**C**), Naufal Febrian (**R**)
+- **Pemeliharaan Test Suite Otomatis (942 Tests)**: Adhitya Galang (**A**), Aldi Artha Mida (**R**), Naufal Febrian (**C**)
+- **Pemeliharaan Living Docs & Changelog**: Adhitya Galang (**A**), Aldi Artha Mida (**C**), Naufal Febrian (**R**)
+- **Review Kode Pull Request & Merge ke `main`**: Adhitya Galang (**A**), Aldi Artha Mida (**R**), Naufal Febrian (**R**)
+
+---
+
+## ⚡ 7 Prinsip Emas Pengembangan MagKom ("Golden Guardrails")
 
 Sebelum melakukan perubahan kode atau menambahkan komponen baru, pastikan mematuhi prinsip mutlak berikut:
 
@@ -62,6 +93,8 @@ Sebelum melakukan perubahan kode atau menambahkan komponen baru, pastikan mematu
    Blade hanya menjadi lapisan presentasi markup HTML. Dilarang menulis CSS di `<style>`, JavaScript di `<script>`, atau inline event handler (`onclick`, dll.) di dalam berkas Blade.
 6. **Kepatuhan Runtime PHP 8.3 Mutlak**:  
    Proyek terkunci pada runtime PHP 8.3.x. Dilarang merekomendasikan PHP 8.2 atau menganggap flag `--ignore-platform-req=php` sebagai solusi kompatibilitas runtime aplikasi.
+7. **Pola Backend Wajib Modular Actions & Queries (Skinny Controllers)**:  
+   Controller hanya bertugas mengorkestrasi request HTTP. Logika mutasi bisnis wajib diisolasi di `app/Actions/`, operasi filter/paginasi data kompleks di `app/Queries/`, dan logika domain lintas-tabel di `app/Services/`.
 
 ---
 
@@ -127,11 +160,15 @@ Skema basis data MAGKOM memisahkan secara tegas antara tabel domain aplikasi dan
 
 ## 🚀 Alur Kerja Lintas Dokumen
 
-1. Untuk mempelajari **kebutuhan fitur dan aturan bisnis**: Buka [`01-PRD-MagKom.md`](./01-PRD-MagKom.md).
-2. Untuk mempelajari **arsitektur backend dan service layer**: Buka [`02-TDD-MagKom.md`](./02-TDD-MagKom.md).
-3. Untuk mempelajari **struktur relasi tabel basis data**: Buka [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md).
-4. Untuk mempelajari **matriks perizinan dan audit log**: Buka [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](./05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md).
-5. Untuk mempelajari **standar antarmuka dan design tokens**: Buka [`07-DESIGN-SYSTEM-MAGKOM.md`](./07-DESIGN-SYSTEM-MAGKOM.md).
-6. Untuk panduan **instalasi lokal dan quality gates**: Buka [`DEVELOPMENT-GUIDE.md`](./DEVELOPMENT-GUIDE.md).
-7. Untuk panduan **aset frontend Vite dan larangan Blade**: Buka [`FRONTEND-ARCHITECTURE.md`](./FRONTEND-ARCHITECTURE.md).
-8. Untuk rujukan **peta rute HTTP aktif**: Buka [`architecture/ROUTES.md`](./architecture/ROUTES.md).
+1. Untuk memahami **batasan sistem & profil pengguna**: Buka [`PRODUCT.md`](./PRODUCT.md).
+2. Untuk mempelajari **kebutuhan fitur dan aturan bisnis**: Buka [`01-PRD-MagKom.md`](./01-PRD-MagKom.md).
+3. Untuk mempelajari **arsitektur backend dan service layer**: Buka [`02-TDD-MagKom.md`](./02-TDD-MagKom.md).
+4. Untuk mempelajari **spesifikasi teknis Actions & Queries lengkap**: Buka [`08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md`](./08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md).
+5. Untuk mempelajari **struktur relasi tabel basis data**: Buka [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md).
+6. Untuk mempelajari **matriks perizinan dan audit log**: Buka [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](./05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md).
+7. Untuk mempelajari **standar antarmuka dan design tokens**: Buka [`07-DESIGN-SYSTEM-MAGKOM.md`](./07-DESIGN-SYSTEM-MAGKOM.md).
+8. Untuk panduan **instalasi lokal dan quality gates**: Buka [`DEVELOPMENT-GUIDE.md`](./DEVELOPMENT-GUIDE.md).
+9. Untuk panduan **aset frontend Vite dan larangan Blade**: Buka [`architecture/FRONTEND-ARCHITECTURE.md`](./architecture/FRONTEND-ARCHITECTURE.md).
+10. Untuk panduan **layanan SMTP dan email notifikasi**: Buka [`09-PANDUAN-SMTP-DAN-NOTIFIKASI-EMAIL.md`](./09-PANDUAN-SMTP-DAN-NOTIFIKASI-EMAIL.md).
+11. Untuk panduan **CI/CD DevSecOps & GitHub Projects**: Buka [`tooling/CI-SECURITY-AND-PROJECTS.md`](./tooling/CI-SECURITY-AND-PROJECTS.md).
+12. Untuk rujukan **peta rute HTTP aktif**: Buka [`architecture/ROUTES.md`](./architecture/ROUTES.md).

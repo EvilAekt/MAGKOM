@@ -10,8 +10,8 @@ Web Application (Desktop & Responsive Mobile)
 
 Empat peran aktor resmi dalam sistem (*Role-Based Access Control*), dengan batasan wewenang terisolasi:
 
-- **Peserta Magang**: Siswa SMK dan mahasiswa perguruan tinggi (D3/S1). Volume: ~15 pendaftar per periode formasi bulanan (12 kuota reguler + 3 slot khusus instansi), dengan durasi aktif 1–6 bulan (~90 peserta aktif simultan). Karakteristik: dominan mengakses via perangkat mobile/smartphone; aktivitas harian mencakup pengunggahan berkas persyaratan, pemantauan status pendaftaran, pengerjaan tugas ber-deadline, unggah progres kerja, dan pengisian presensi logbook mingguan.
-- **Pembimbing Lapangan**: Pegawai Aparatur Sipil Negara (ASN) di lingkungan dinas teknis terkait. Aktivitas utama: mengawasi peserta bimbingan, menerbitkan instruksi tugas proyek (didukung library template tugas), mereview laporan progres, memvalidasi logbook mingguan (mendukung *bulk review*), meninjau Profil 360 Mentee, dan menetapkan status selesai magang. Akses dominan via desktop.
+- **Peserta Magang**: Siswa SMK dan mahasiswa perguruan tinggi (D3/S1). Volume: ~15 pendaftar per periode formasi bulanan (12 kuota reguler + 3 slot khusus instansi), dengan durasi aktif 1–6 bulan (~90 peserta aktif simultan). Karakteristik: dominan mengakses via perangkat mobile/smartphone; aktivitas harian mencakup pengunggahan berkas persyaratan, pemantauan status pendaftaran, pengerjaan tugas ber-deadline dengan dukungan unggah ala Google Classroom, opsi membatalkan penyerahan tugas (*unsubmit workflow*) untuk revisi sebelum dinilai pembimbing, dan pengisian presensi logbook aktivitas harian/mingguan.
+- **Pembimbing Lapangan**: Pegawai Aparatur Sipil Negara (ASN) di lingkungan dinas teknis terkait. Aktivitas utama: mengawasi peserta bimbingan, menerbitkan instruksi tugas proyek (tunggal maupun penugasan serentak *batch classroom* ke multi-mentee), mereview laporan progres, memvalidasi logbook mingguan (mendukung *bulk review*), meninjau Profil 360 Mentee, mengunduh rekapitulasi penilaian portofolio (CSV & Excel), dan menetapkan status selesai magang. Akses dominan via desktop.
 - **Admin Verifikator (Administrasi Kominfo)**: Staf sekretariat/tata usaha kedinasan. Aktivitas utama: memverifikasi validitas berkas pendaftar dalam batas SLA (5 hari kerja), memutuskan persetujuan/penolakan permohonan, mengalokasikan kuota formasi bulanan dan bidang dinas, melakukan plotting penempatan dua tahap, menunjuk pembimbing lapangan, dan mengunduh berkas bundel ZIP pendaftar.
 - **SuperAdmin (Administrator Utama)**: Pengelola sistem tingkat tinggi. Aktivitas utama: konfigurasi 12 parameter operasional aplikasi, pengelolaan akun pegawai/staf, pemantauan jejak audit (*audit trail multi-channel*), pengawasan telemetri kesehatan sistem & diagnostik server, pengelolaan jalur khusus kemitraan dinas, manajemen pencadangan basis data (*disaster recovery*), pengelolaan matriks izin akses dinamis (*dynamic RBAC*), serta pengelolaan landing page publik melalui *Visual Site Editor* berbasis blok. Pada ranah pembimbingan (tugas, progres, logbook mentee), SuperAdmin berstatus **Read-Only mutlak** (tidak memiliki hak mutasi data).
 
@@ -41,18 +41,22 @@ Keberhasilan sistem diukur dari:
 - **Presensi Logbook Mingguan**: Pengisian logbook dibatasi maksimal mundur 3 hari kerja (`logbook_maks_mundur_hari = 3`) untuk mencegah pelaporan rapel di akhir masa magang.
 - **Tenggat Tugas Terstruktur**: Wajib berjarak antara hari penugasan hingga sebelum tanggal berakhirnya penempatan mentee. Ambang batas peringatan mendekati deadline dihitung dinamis (default ≤ 3 hari).
 - **Dokumen Sumber**:
-  - [`01-PRD-MagKom.md`](./docs/01-PRD-MagKom.md) (Product Requirements Document)
-  - [`02-TDD-MagKom.md`](./docs/02-TDD-MagKom.md) (Technical Design Document)
-  - [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./docs/04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) (Kamus Data & Skema Basis Data)
-  - [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](./docs/05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md) (Spesifikasi Keamanan & Matriks Perizinan)
-  - [`07-DESIGN-SYSTEM-MAGKOM.md`](./docs/07-DESIGN-SYSTEM-MAGKOM.md) (Design System MagKom)
-  - [`DEVELOPMENT-GUIDE.md`](./docs/DEVELOPMENT-GUIDE.md) (Panduan Pengembangan & Setup)
-  - [`FRONTEND-ARCHITECTURE.md`](./docs/FRONTEND-ARCHITECTURE.md) (Arsitektur Aset Frontend Vite)
+  - [`01-PRD-MagKom.md`](./01-PRD-MagKom.md) (Product Requirements Document)
+  - [`02-TDD-MagKom.md`](./02-TDD-MagKom.md) (Technical Design Document)
+  - [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](./04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) (Kamus Data & Skema Basis Data)
+  - [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](./05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md) (Spesifikasi Keamanan & Matriks Perizinan)
+  - [`07-DESIGN-SYSTEM-MAGKOM.md`](./07-DESIGN-SYSTEM-MAGKOM.md) (Design System MagKom)
+  - [`08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md`](./08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md) (Dokumentasi Fitur & Modul Sistem)
+  - [`DEVELOPMENT-GUIDE.md`](./DEVELOPMENT-GUIDE.md) (Panduan Pengembangan & Setup)
+  - [`architecture/FRONTEND-ARCHITECTURE.md`](./architecture/FRONTEND-ARCHITECTURE.md) (Arsitektur Aset Frontend Vite)
+  - [`09-PANDUAN-SMTP-DAN-NOTIFIKASI-EMAIL.md`](./09-PANDUAN-SMTP-DAN-NOTIFIKASI-EMAIL.md) (Panduan Layanan SMTP & Notifikasi Email)
 
 ## Capabilities and Constraints
 
-- **Stack Terkunci**: **PHP 8.3.x**, **Laravel 10.x**, **Vite 6.x**, **MySQL 8.0+** (InnoDB). Pengujian otomatis menggunakan **PHPUnit 10.x** dengan SQLite `:memory:`.
+- **Stack Terkunci**: **PHP 8.3.x**, **Laravel 10.x**, **Vite 6.x**, **MySQL 8.0+** (InnoDB). Pengujian otomatis menggunakan **PHPUnit 10.x** dengan SQLite `:memory:` dan MySQL concurrency gate (942 automated tests, 6.132 assertions).
+- **Pola Arsitektur Backend**: *Modular Actions & Specialized Queries Pattern* (`app/Actions/`, `app/Queries/`, `app/Services/`) dengan pemisahan orkestrasi controller (*Skinny Controllers*).
 - **Kepatuhan CSP & Asset Management**: Seluruh aset dikelola melalui Vite. Dilarang menyisipkan blok `<style>` atau `<script>` inline di Blade, serta dilarang menambahkan atribut inline event handler (`onclick`, dll.) dan styling statis (`style="..."`).
+- **Antarmuka Bento Grid & GSAP Motion**: Dashboard modular adaptif berbasis CSS Grid terstandarisasi untuk Peserta dan Admin dengan animasi transisi preloader Sleman.
 - **Penerimaan Atomik**: Alokasi kuota umum dan slot khusus wajib diapit transaksi database dengan `lockForUpdate()`.
 - **Penyimpanan Berkas Privat**: Berkas persyaratan pendaftar disimpan pada disk `private` dan diakses hanya lewat temporary signed URL berumur 5 menit yang dilindungi otorisasi Policy.
 - **Modul Visual Site Editor**: SuperAdmin dapat mengelola tata letak dan konten landing page publik melalui antarmuka editor blok visual (WordPress Gutenberg style) yang dilengkapi *Pattern Library*, *Reusable Blocks*, *Media Library*, serta *Revisions History & Rollback*.

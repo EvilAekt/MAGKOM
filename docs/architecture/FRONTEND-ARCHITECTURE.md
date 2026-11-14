@@ -39,11 +39,11 @@ resources/
 │   └── pages/                          <-- Page-Scoped Stylesheets (Vite Entry Points)
 │       ├── public/                     <-- landing.css, landing-faq.css, panduan-alur.css, peta-alur.css
 │       ├── superadmin/                 <-- dashboard.css, audit-log.css, site-editor.css, role-index.css, superadmin-common.css
-│       ├── admin/                      <-- dashboard.css
+│       ├── admin/                      <-- dashboard.css, pendaftaran-show.css
 │       ├── pembimbing/                 <-- dashboard.css, peserta-index.css, peserta-show.css (Profil 360),
 │       │                                   tugas-create.css, tugas-edit.css, tugas-index.css, tugas-review.css,
 │       │                                   logbook-index.css, laporan-kinerja-index.css
-│       └── peserta/                    <-- dashboard.css, pendaftaran-index.css, pemberkasan.css, profil-show.css,
+│       └── peserta/                    <-- dashboard.css (Bento), pendaftaran-index.css, pemberkasan.css, profil-show.css,
 │                                           tugas-index.css, tugas-detail.css, logbook-index.css
 │
 └── js/
@@ -61,14 +61,17 @@ resources/
     │
     ├── services/                       <-- Network & Realtime & Animasi
     │   ├── realtime.js                 <-- Secure SSE Client (RFC 8895)
-    │   └── superadmin-motion.js        <-- GSAP Timeline & Micro-Interactions
+    │   └── superadmin-motion.js        <-- GSAP Timeline & Micro-Interactions Engine
     │
     └── pages/                          <-- Page-Specific Interactivity (Vite Entry Points)
         ├── public/                     <-- landing.js, landing-canvas-runtime.js, panduan-alur.js, peta-alur.js
-        ├── superadmin/                 <-- dashboard.js, cms-builder.js, site-editor/editor-app.js, role-index.js, slot-khusus.js
+        ├── superadmin/                 <-- dashboard.js, health-monitor.js (Zero Inline CSP), cms-builder.js,
+        │                                   site-editor/editor-app.js, role-index.js, slot-khusus.js, akun-index.js,
+        │                                   staf-index.js, bidang-index.js, jurusan-index.js, bulan-index.js
+        ├── admin/                      <-- dashboard.js
         ├── pembimbing/                 <-- dashboard.js, peserta-index.js, peserta-show.js, tugas-create.js, tugas-edit.js,
         │                                   tugas-index.js, tugas-review.js, logbook-index.js, laporan-kinerja-index.js
-        └── peserta/                    <-- tugas-detail.js, tugas-index.js, logbook-index.js, profil-show.js
+        └── peserta/                    <-- dashboard.js (Bento), tugas-detail.js, tugas-index.js, logbook-index.js, profil-show.js
 ```
 
 ---
@@ -130,10 +133,10 @@ MAGKOM menggunakan pustaka resmi **GSAP (GreenSock Animation Platform) 3.15.1** 
 1. **Membuat File Blade:** Tempatkan file view di `resources/views/{role}/{fitur}/index.blade.php`. Turunkan dari `@extends('layouts.dashboard')`.
 2. **Menambahkan Style Khusus (jika diperlukan):**
    - Buat file di `resources/css/pages/{role}/{fitur}.css`.
-   - Daftarkan entry point pada array `input` di [vite.config.js](../vite.config.js).
+   - Daftarkan entry point pada array `input` di [vite.config.js](../../vite.config.js).
    - Muat via `@push('styles')` dengan direktif `@vite(['resources/css/pages/...'])`.
 3. **Menambahkan Script Khusus:**
    - Buat file di `resources/js/pages/{role}/{fitur}.js`.
    - Gunakan atribut HTML5 `data-*` untuk mentransfer data dinamis dari server ke JavaScript. Dilarang menyisipkan tag `<script>` inline berisi variabel Blade.
-   - Daftarkan file JS pada [vite.config.js](../vite.config.js).
+   - Daftarkan file JS pada [vite.config.js](../../vite.config.js).
 4. **Validasi Kompilasi:** Jalankan `npm run build` untuk memastikan seluruh manifest terkompilasi bersih tanpa error.

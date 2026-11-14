@@ -57,6 +57,10 @@ erDiagram
 
 ## 2. Klasifikasi Tabel Basis Data
 
+> [!NOTE]
+> ### Catatan Integritas Arsitektur Basis Data (Baseline November 2026)
+> Skema basis data MagKom per November 2026 tetap **100% stabil dan terkunci** pada **24 tabel domain aktif** dan **5 tabel bawaan framework**. Seluruh pengembangan fitur terbaru (termasuk *Alur Batal Kirim Tugas Peserta / Unsubmit Workflow*, *Penugasan Serentak Multi-Mentee / Batch Classroom*, dan *Bento Grid Dashboard*) dirancang cerdas dengan memaksimalkan model relasi eksisting (`tugas`, `progres_log`, `dokumen`, `penempatan`) tanpa menimbulkan mutasi destruktif, tanpa mengubah nama kolom kontrak, dan tanpa menambahkan tabel baru yang redundan.
+
 Skema basis data MAGKOM dipisahkan secara tegas menjadi dua kelompok:
 1. **Tabel Domain Aplikasi MAGKOM (24 Tabel)**: Seluruh tabel yang dirancang spesifik untuk kebutuhan tata kelola magang Dinas Kominfo.
 2. **Tabel Bawaan Framework Laravel (5 Tabel)**: Tabel standar ekosistem Laravel untuk autentikasi, sesi, token, dan antrean.

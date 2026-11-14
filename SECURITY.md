@@ -1,57 +1,55 @@
-# Kebijakan Keamanan (Security Policy) - MAGKOM
+# Kebijakan Keamanan (Security Policy)
+## MagKom — Portal Manajemen Magang Dinas Komunikasi dan Informatika
 
-Dinas Komunikasi dan Informatika berkomitmen penuh untuk menjaga keamanan informasi dan privasi data seluruh peserta, staf, dan pengelola pada portal **MAGKOM (Portal Manajemen Magang Kominfo)**.
+Dinas Komunikasi dan Informatika Kabupaten Sleman berkomitmen untuk menjaga keamanan sistem informasi kedinasan dan kerahasiaan data pribadi para pendaftar magang sesuai dengan amanat **Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP)**.
 
 ---
 
 ## 1. Versi yang Didukung (Supported Versions)
 
-Saat ini hanya versi aktif yang mendapatkan pembaruan keamanan dan perbaikan celah secara langsung:
+Pembaruan keamanan dan perbaikan celah kerentanan secara aktif diberikan pada versi rilis berikut:
 
-| Versi | Didukung Keamanan | Catatan |
-| :--- | :--- | :--- |
-| `main` / `test-2` (Baseline) | :white_check_mark: Ya | PHP 8.3.x, Laravel 10.x |
-| `< 0.1.0` / Legacy | :x: Tidak | Versi arsip/eksperimental |
-
----
-
-## 2. Pelaporan Kerentanan Secara Privat (Reporting a Vulnerability)
-
-> [!CAUTION]
-> **JANGAN PERNAH** mempublikasikan temuan celah keamanan (vulnerability), bukti eksploitasi (PoC), credential bocor, atau detail kelemahan sistem melalui **GitHub Issues publik** atau Pull Request terbuka.
-
-Jika Anda menemukan atau mencurigai adanya celah keamanan pada sistem MAGKOM, silakan laporkan melalui saluran resmi berikut:
-
-1. **Email Tim Keamanan Informasi**:
-   Kirimkan email ke: **[keamanan-informasi@magkom.go.id](mailto:keamanan-informasi@magkom.go.id)**
-2. **GitHub Private Vulnerability Reporting**:
-   Jika fitur pelaporan privat GitHub Security diaktifkan pada repositori ini, Anda dapat memanfaatkan tab **Security → Report a vulnerability**.
-
-### Informasi yang Wajib Disertakan dalam Laporan:
-- Ringkasan kerentanan (jenis kelemahan, misal: IDOR, SQLi, CSRF, SSRF, XSS).
-- Modul atau endpoint yang terdampak (URL, Controller, Form Request).
-- Langkah demi langkah reproduksi (*step-by-step reproduction guide*).
-- Dampak potensial (*impact analysis*) terhadap kerahasiaan (*confidentiality*), integritas (*integrity*), atau ketersediaan (*availability*) data magang.
-- Rekomendasi perbaikan atau mitigasi (jika ada).
+| Versi | Didukung Secara Aktif | Keterangan |
+| :---: | :---: | :--- |
+| **1.1.x** | :white_check_mark: Ya | Versi produksi stabil saat ini |
+| **1.0.x** | :warning: Terbatas | Hanya pembaruan keamanan kritis |
+| **< 1.0** | :x: Tidak | Versi prototipe / tahap pengembangan awal |
 
 ---
 
-## 3. Komitmen Penanganan & Respons (Response Timeline)
+## 2. Pelaporan Kerentanan (Reporting a Vulnerability)
 
-Tim Keamanan Informasi MagKom akan menindaklanjuti setiap laporan dengan tahapan berikut:
+Jika Anda menemukan celah keamanan (*vulnerability*), kerentanan data pribadi, atau anomali sistem pada aplikasi **MagKom**, mohon untuk **TIDAK** mempublikasikannya secara terbuka melalui *GitHub Public Issues* atau media sosial.
 
-- **Konfirmasi Penerimaan**: Maksimal **1x24 jam** pada hari kerja.
-- **Triage & Validasi**: Tim teknis akan memvalidasi bukti konsep (PoC) dalam kurun waktu **3 hari kerja**.
-- **Perbaikan & Verifikasi**: Patch keamanan akan dibuat pada branch privat terisolasi dan diuji melalui pipeline CI Security Gate sebelum di-merge ke branch utama.
-- **Pengungkapan Terkoordinasi (Coordinated Disclosure)**: Detail kerentanan hanya dapat dipublikasikan setelah patch keamanan resmi dirilis ke server produksi dan disetujui bersama oleh pelapor serta pengelola sistem.
+Kami sangat menghargai prinsip *Responsible Disclosure*. Silakan laporkan temuan Anda secara rahasia melalui saluran resmi berikut:
+
+- **Surel Tim Keamanan Siber**: `kominfo@slemankab.go.id`
+- **Subjek Surel**: `[SECURITY REPORT] - <Judul Kerentanan Singkat>`
+
+### Informasi yang Dibutuhkan dalam Laporan
+Mohon sertakan detail yang memadai agar tim kami dapat mereproduksi dan memvalidasi temuan Anda:
+1. Deskripsi singkat mengenai jenis kerentanan (misal: IDOR, Stored XSS, Broken Access Control, Logic Flaw).
+2. Langkah-langkah detail untuk mereproduksi masalah (*Proof of Concept / PoC*).
+3. URL endpoint, method HTTP, dan payload parameter yang terdampak.
+4. Estimasi tingkat keparahan (*impact assessment*) terhadap kerahasiaan (*confidentiality*), integritas (*integrity*), atau ketersediaan (*availability*) data.
+5. Usulan perbaikan atau remediasi teknis jika tersedia.
 
 ---
 
-## 4. Standar Pengujian Keamanan Internal (DevSecOps Baseline)
+## 3. Komitmen & Waktu Tanggap (SLA)
 
-Repositori ini menerapkan kontrol keamanan berlapis otomatis pada setiap pull request dan commit:
-- **Secret Scanning**: Pendeteksian kebocoran token dan private key secara otomatis (Gitleaks).
-- **Static Application Security Testing (SAST)**: Pemindaian pola kode rentan (Semgrep Laravel Security Rules).
-- **In-Tree Security Unit & Feature Tests**: Pengujian ketat terhadap RBAC, IDOR, brute-force protection, signed URL, dan kuota atomik (`lockForUpdate`).
-- **Dependency Audit**: Pemantauan kerentanan CVE pada Composer dan NPM.
+- **Konfirmasi Awal**: Tim teknis kami akan mengonfirmasi penerimaan laporan Anda dalam kurun waktu **maksimal 2x24 jam kerja**.
+- **Analisis & Remediasi**: Penilaian risiko mendalam dan penyusunan *patch* perbaikan akan diprioritaskan berdasarkan skor keparahan (CVSS).
+- **Publikasi Perbaikan**: Setelah perbaikan berhasil diuji dan diterapkan pada sistem produksi, rilis pembaruan akan dicatat pada `CHANGELOG.md`.
 
+---
+
+## 4. Standar Pertahanan Siber yang Diterapkan
+
+Sistem MagKom dibangun dengan menerapkan mitigasi pengamanan:
+1. **SEC-01 (CSRF)**: Verifikasi token CSRF ketat pada setiap interaksi HTTP bermetode non-idempotent.
+2. **SEC-02 (IDOR & Otorisasi Objek)**: Pengecekan otorisasi berbasis kepemilikan data melalui Laravel Policy pada setiap akses dokumen, berkas persyaratan, dan tugas.
+3. **SEC-03 (SQL Injection)**: Penegakan parameter binding PDO berbasis Eloquent ORM.
+4. **SEC-04 (XSS & Content Security)**: Pengamanan rendering HTML melalui auto-escaping Blade dan penegakan header Content Security Policy (CSP).
+5. **SEC-05 (Brute Force Protection)**: Pembatasan laju (*rate limiting*) berlapis pada seluruh pintu masuk autentikasi dan API.
+6. **SEC-06 (Atomic Concurrency Locking)**: Pengamanan transaksi alokasi kuota menggunakan `lockForUpdate()` untuk mencegah eksploitasi perebutan kuota (*race condition*).

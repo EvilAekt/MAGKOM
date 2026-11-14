@@ -321,15 +321,26 @@ WHERE tipe = 'auth' AND aksi = 'login.gagal' AND waktu > NOW() - INTERVAL 10 MIN
 
 Melengkapi TDD bab 11 (isinya tidak diulang).
 
+> [!IMPORTANT]
+> ### Metrik Test Suite Aktif (Rilis v1.3.0 - 14 November 2026)
+> Seluruh kode sistem MagKom diuji secara ketat melalui rangkaian pengujian otomatis **942 Feature & Unit Tests** yang terbagi ke dalam **126 Test Suites (6.132 assertions)** dengan basis data SQLite in-memory terisolasi (dan MySQL 8 asli untuk pengujian konkurensi grup). Seluruh test suite wajib berstatus hijau (`PASS`) 100% sebelum Pull Request digabungkan ke branch `main`.
+
 | Lapisan | Isi | Penulis | Dijalankan | Gerbang |
 | --- | --- | --- | --- | --- |
 | Unit (U) | `PeriodeMagang`, `BulanStatusService`, `ScoringService`, aksesor Terlambat, sanitasi audit | Developer | CI setiap PR | Hijau; cakupan Services dan Policies minimal 80% |
-| Feature (F) | Semua AC lewat HTTP dan MySQL | Developer | CI setiap PR | Hijau |
-| Security (S) | TCS yang dapat diotomasi, folder `tests/Security` | Developer atau QA | CI setiap PR | Hijau |
+| Feature (F) | Semua AC lewat HTTP dan MySQL (942 skenario pengujian aktif) | Developer | CI setiap PR | Hijau |
+| Security (S) | TCS yang dapat diotomasi, folder `tests/Security` & Anti-IDOR | Developer atau QA | CI setiap PR | Hijau |
 | Konkurensi (K) | Grup `concurrency`, proses PHP terpisah | Senior atau QA | CI pada PR yang menyentuh Service kuota, penempatan, keputusan; dan tiap malam | Hijau |
 | E2E (E) | Playwright untuk 6 alur kritis (B.6) | QA | Tiap malam dan setelah deploy staging | Hijau |
 | Non-fungsional | k6, axe, email, PDF, backup (B.6) | QA | Sebelum go-live dan tiap rilis besar | Lulus B.6 |
 | UAT (M) | UAT-1 sampai UAT-11 (B.7) | Admin, Pembimbing, perwakilan peserta | Staging | Tanda tangan UAT |
+
+#### Test Suite Arsitektur & Keamanan Baru (November 2026)
+1. **`PesertaTugasBatalKirimTest`**: Menguji alur pembatalan penyerahan tugas (*unsubmit*), verifikasi bahwa status dikembalikan ke draft, file tidak terhapus destruktif, dan hak akses terkunci jika sudah dinilai (`BR-22`).
+2. **`PesertaTugasClassroomUploadTest`**: Menguji unggah berkas tugas multi-lampiran ala Google Classroom, validasi MIME type, dan penggunaan ulang berkas (*secure file reuse*).
+3. **`PembimbingTugasArchitectureSafetyTest`**: Menguji dekomposisi Controller ke `CreateBatchTugasAction`, `UpdateTugasAction`, Form Requests, dan penolakan mutlak bagi SuperAdmin (Read-Only).
+4. **`PembimbingLaporanKinerjaExportArchitectureTest`**: Menguji ekspor rekapitulasi penilaian kinerja (CSV dan Excel XLSX) dengan sanitasi formula injection terhadap karakter berbahaya (`=`, `+`, `-`, `@`).
+5. **`AdminPenempatanArchitectureAndSecurityTest`**: Menguji penguncian atomik penempatan dua tahap dan otorisasi rotasi pembimbing massal.
 
 **Kriteria masuk QA** sebuah fitur: DoR PRD 12.1 terpenuhi, build ada di staging, data B.2 termuat. **Kriteria keluar:** DoD PRD 12.2 ditambah gerbang B.8.
 

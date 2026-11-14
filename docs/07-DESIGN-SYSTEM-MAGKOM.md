@@ -336,6 +336,29 @@ Isi menu sidebar per peran mengikuti PRD 9.2.
 
 Setiap daftar dan halaman wajib punya state berikut (PRD 12.2 butir 5): **memuat** (skeleton), **terisi**, **kosong** (menjelaskan langkah berikutnya, ikon inbox), **galat** (menyebut penyebab dan langkah berikutnya, tanpa detail teknis), **nonaktif**, dan **berhasil**. Halaman kustom untuk 403, 404, 419, 429 (dengan sisa waktu tunggu, TDD 8.2), dan 500 `[Celah]`.
 
+### 3.9 Bento Grid Architecture & Modular Partials
+Antarmuka dashboard modern mengadopsi pola tata letak **Bento Grid** yang modular dan adaptif (CSS Grid multi-row/multi-column), memisahkan presentasi ke dalam file partial Blade terisolasi:
+- `_bento_hero.blade.php`: Header personalisasi peran, status penempatan, ringkasan masa aktif magang.
+- `_bento_metrics.blade.php`: Kartu metrik KPI ringkas dengan indikator tren dan status pill dinamis.
+- `_bento_calendar.blade.php`: Kalender kehadiran dan jadwal tenggat waktu interaktif.
+- `_bento_charts.blade.php`: Visualisasi donat/lingkaran progres jam bimbingan dan penyelesaian tugas.
+- `_bento_stepper_logbook.blade.php`: Stepper navigasi pengisian logbook harian berbatas waktu mundur.
+- `_bento_alerts.blade.php`: Banner notifikasi SLA dan peringatan aksi darurat.
+
+### 3.10 Sleman Splash Preloader & Micro-interactions
+- **Sleman Preloader**: Transisi layar pembuka (*splash screen*) dengan SVG resmi Pemkab Sleman dan teks formal "Pemerintah Kabupaten Sleman - Dinas Komunikasi dan Informatika", menghilang secara halus (*fade-out* 400ms) saat dokumen siap.
+- **Scroll Reveal Engine**: Efek pemunculan kartu bertahap (*staggered reveal*) pada halaman landing publik saat pengunjung menggulirkan layar.
+
+### 3.11 GSAP Motion Service Engine
+Pengelolaan animasi micro-interactions dikonsolidasikan dalam service ES Modules tunggal `resources/js/services/superadmin-motion.js`:
+- Animasi hover tombol dan kartu bento grid menggunakan easing `power2.out` (durasi 0,2s).
+- Modal entrance dan popover drawer menggunakan transform `scale(0.95) -> scale(1)` dengan opacity fade.
+- Paritas kalender popover dan dropdown filter tanpa jeda visual.
+
+### 3.12 Paritas Antarmuka Profil & Dropdown Akun
+- **Fluid Profile Layout**: Seluruh 4 peran pengguna (SuperAdmin, Admin, Pembimbing, Peserta) memiliki tata letak halaman profil fluid fullwidth yang seragam.
+- **Account Dropdown Parity**: Menu popover akun pada topbar memiliki dimensi dan struktur navigasi identik (Profil, Pengaturan Sandi, Log Keluar dengan metode POST) di seluruh dashboard.
+
 ---
 
 ## 4. Pemetaan Status PRD ke Tampilan
