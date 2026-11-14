@@ -41,6 +41,13 @@
                 ? forceState
                 : !isCurrentlySmall;
 
+            if (typeof window.closeActiveFlyout === 'function') {
+                window.closeActiveFlyout();
+            }
+            if (typeof window.closeActiveTooltip === 'function') {
+                window.closeActiveTooltip();
+            }
+
             if (targetSmall) {
                 body.classList.remove('nav-md');
                 body.classList.add('nav-sm');

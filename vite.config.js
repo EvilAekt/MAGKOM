@@ -55,6 +55,7 @@ export default defineConfig({
                 'resources/js/pages/superadmin/jurusan-index.js',
                 'resources/js/pages/superadmin/profil-show.js',
                 'resources/js/pages/superadmin/staf-index.js',
+                'resources/js/pages/superadmin/backup-index.js',
                 'resources/js/pages/superadmin/cms-builder.js',
                 'resources/js/pages/superadmin/site-editor/editor-app.js',
                 'resources/js/pages/superadmin/role-index.js',

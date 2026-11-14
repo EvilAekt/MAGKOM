@@ -63,8 +63,15 @@
             </p>
 
             <div class="bento-hero-actions">
-                <a href="{{ route('peserta.tugas.index') }}" class="btn-bento-hero-cta">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                <button type="button" class="btn-bento-hero-cta" data-action="open-drawer" data-drawer="#drawerQuickLogbook" title="Isi Logbook Harian Cepat">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    </svg>
+                    <span>Isi Logbook</span>
+                </button>
+                <a href="{{ route('peserta.tugas.index') }}" class="btn-bento-hero-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>

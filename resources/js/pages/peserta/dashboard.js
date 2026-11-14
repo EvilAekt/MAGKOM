@@ -8,6 +8,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initBentoCalendar();
+    initQuickLogbookForm();
 });
 
 /**
@@ -93,6 +94,11 @@ function initBentoCalendar() {
             const isToday = (isCurrentMonthView && d === realDate);
             const isSelected = selectedDate && (selectedDate.year === viewYear && selectedDate.month === viewMonth && selectedDate.date === d);
 
+            const padMonth = String(viewMonth + 1).padStart(2, '0');
+            const padDate = String(d).padStart(2, '0');
+            const dateKey = `${viewYear}-${padMonth}-${padDate}`;
+            const hasEvent = Boolean(eventDates && eventDates[dateKey]);
+
             const btn = document.createElement('button');
             btn.type = 'button';
 
@@ -100,10 +106,11 @@ function initBentoCalendar() {
             if (isWeekend) classList.push('date-weekend');
             if (isToday) classList.push('date-today');
             if (isSelected) classList.push('date-selected');
+            if (hasEvent) classList.push('has-event');
 
             btn.className = classList.join(' ');
             btn.setAttribute('data-date', d);
-            btn.setAttribute('aria-label', `Tanggal ${d} ${MONTH_NAMES[viewMonth]} ${viewYear}` + (isToday ? ' (Hari ini)' : ''));
+            btn.setAttribute('aria-label', `Tanggal ${d} ${MONTH_NAMES[viewMonth]} ${viewYear}` + (isToday ? ' (Hari ini)' : '') + (hasEvent ? ' (Ada Jadwal/Kegiatan)' : ''));
             btn.textContent = d;
 
             btn.addEventListener('click', () => {
@@ -303,4 +310,77 @@ function initBentoCalendar() {
 
     // Inisialisasi awal
     updateCalendar();
+}
+
+/**
+ * Inisialisasi Pengisian Logbook Kilat via Slide-Over Drawer
+ */
+function initQuickLogbookForm() {
+    const form = document.getElementById('quickLogbookForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitBtn = form.querySelector('button[type="submit"]') || document.querySelector('button[form="quickLogbookForm"]');
+        const originalText = submitBtn ? submitBtn.innerHTML : '';
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Menyimpan...';
+        }
+
+        try {
+            const formData = new FormData(form);
+            const response = await window.axios.post(form.action, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.data && response.data.success) {
+                if (window.MagKomToast) {
+                    window.MagKomToast.success(response.data.message || 'Logbook harian berhasil disimpan!');
+                }
+
+                // Tutup drawer secara aman
+                const closeBtn = document.querySelector('#drawerQuickLogbook [data-action="close-drawer"]');
+                if (closeBtn) {
+                    closeBtn.click();
+                }
+
+                form.reset();
+
+                // Refresh halus untuk merefleksikan metrik baru
+                setTimeout(() => {
+                    window.location.reload();
+                }, 800);
+            }
+        } catch (error) {
+            let errorMsg = 'Terjadi kesalahan saat menyimpan logbook.';
+
+            if (error.response && error.response.status === 422) {
+                const errors = error.response.data.errors;
+                if (errors) {
+                    errorMsg = Object.values(errors).flat().join('<br>');
+                } else if (error.response.data.message) {
+                    errorMsg = error.response.data.message;
+                }
+            } else if (error.response && error.response.data && error.response.data.message) {
+                errorMsg = error.response.data.message;
+            }
+
+            if (window.MagKomToast) {
+                window.MagKomToast.error(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        }
+    });
 }

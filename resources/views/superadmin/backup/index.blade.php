@@ -193,14 +193,15 @@
                                             <span>Unduh</span>
                                         </a>
 
-                                        <form method="POST" action="{{ route('superadmin.backup.destroy', $item['filename']) }}" style="display: inline-block;" onsubmit="return confirm('Hapus berkas snapshot ini secara permanen?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="sa-btn-action-danger">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                                <span>Hapus</span>
-                                            </button>
-                                        </form>
+                                        <button type="button" 
+                                                class="sa-btn-action-danger btn-trigger-delete-backup" 
+                                                data-filename="{{ $item['filename'] }}"
+                                                data-size="{{ $item['size_mb'] }}"
+                                                data-created="{{ $item['created_at'] }}"
+                                                data-action-url="{{ route('superadmin.backup.destroy', $item['filename']) }}">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                            <span>Hapus</span>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -220,7 +221,80 @@
 
 </div>
 
+<!-- =====================================================================
+     MODAL KONFIRMASI HAPUS SNAPSHOT CADANGAN BASIS DATA (HIGH DANGER)
+     Sesuai MagKom Design System v1.0 & Bebas Native Alert Pop-up
+     ===================================================================== -->
+<div id="modalKonfirmasiHapusBackup" 
+     style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;"
+     role="dialog" 
+     aria-modal="true" 
+     aria-labelledby="modalHapusBackupTitle">
+    <div style="background: var(--neutral-0, #FFFFFF); border-radius: 16px; width: 100%; max-width: 480px; padding: 2rem; box-shadow: var(--shadow-modal, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)); position: relative; border: 1px solid #FECDD3;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 42px; height: 42px; border-radius: 10px; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="modalHapusBackupTitle" style="font-size: 1.125rem; font-weight: 800; color: #991B1B; margin: 0; line-height: 1.3;">
+                        Hapus Snapshot Basis Data?
+                    </h3>
+                    <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
+                        Pusat Cadangan & Pemulihan Sistem (Disaster Recovery)
+                    </span>
+                </div>
+            </div>
+            <button type="button" 
+                    data-modal-dismiss="modalKonfirmasiHapusBackup" 
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;" 
+                    title="Tutup dialog">
+                &times;
+            </button>
+        </div>
+
+        <form id="formHapusBackup" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem; margin: 0;">
+            @csrf
+            @method('DELETE')
+            <div style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
+                <p style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
+                    Anda akan menghapus berkas snapshot arsip database berikut secara permanen dari server:
+                </p>
+                <div style="background: #FFFFFF; border-radius: 6px; padding: 0.65rem 0.85rem; border: 1px solid rgba(225, 29, 72, 0.2); font-family: monospace;">
+                    <div style="font-weight: 700; color: #881337; font-size: 0.8125rem; word-break: break-all;" id="hapusBackupFilename">backup-2026.sql.gz</div>
+                    <div style="font-size: 0.75rem; color: var(--neutral-600, #475569); margin-top: 0.25rem; font-family: inherit;" id="hapusBackupMeta">Ukuran: 0 MB &bull; Waktu: -</div>
+                </div>
+                <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #BE123C; line-height: 1.4;">
+                    <strong>PERINGATAN PEMULIHAN SISTEM:</strong>
+                    <ul style="margin: 0.25rem 0 0 1rem; padding: 0;">
+                        <li>Berkas ini tidak dapat dipulihkan kembali setelah dihapus.</li>
+                        <li>Pastikan Anda telah memiliki salinan cadangan sekunder di media penyimpanan eksternal yang aman.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
+                <button type="button" 
+                        data-modal-dismiss="modalKonfirmasiHapusBackup" 
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
+                    Batal
+                </button>
+                <button type="submit" 
+                        style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
+                    <span>Ya, Hapus Snapshot Permanen</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @push('scripts')
-    @vite(['resources/js/pages/superadmin/staf-index.js'])
+    @vite(['resources/js/pages/superadmin/backup-index.js'])
 @endpush
 @endsection

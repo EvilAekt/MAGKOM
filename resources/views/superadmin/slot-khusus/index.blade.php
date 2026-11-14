@@ -77,7 +77,7 @@
                     </svg>
                     <span>Tambah Peserta Khusus</span>
                 </a>
-                <button type="button" class="btn-banner-action" onclick="document.getElementById('modalTambahSlot').style.display='flex'">
+                <button type="button" class="btn-banner-action btn-trigger-tambah-slot" id="btnOpenTambahSlot">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -235,13 +235,16 @@
                                     @endif
                                 </td>
                                 <td style="padding: 1rem 1.25rem; text-align: right; white-space: nowrap;">
-                                    <form action="{{ route('superadmin.slot-khusus.toggle', $slot) }}" method="POST" style="display: inline-block; margin: 0;">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" onclick="return confirm('{{ $slot->aktif ? 'Nonaktifkan slot khusus ini?' : 'Aktifkan kembali slot khusus ini?' }}')" class="{{ $slot->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" style="{{ $slot->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.35);' }}">
-                                            {{ $slot->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
-                                        </button>
-                                    </form>
+                                    <button type="button" 
+                                            class="btn-trigger-toggle-slot {{ $slot->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
+                                            style="{{ $slot->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.35);' }}"
+                                            data-id="{{ $slot->id }}"
+                                            data-instansi="{{ $slot->nama_instansi }}"
+                                            data-jumlah="{{ $slot->jumlah }}"
+                                            data-status-aktif="{{ $slot->aktif ? '1' : '0' }}"
+                                            data-action-url="{{ route('superadmin.slot-khusus.toggle', $slot) }}">
+                                        {{ $slot->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -411,7 +414,7 @@
                 </div>
                 <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900); margin: 0;">Tambah Slot Khusus Internal</h3>
             </div>
-            <button type="button" onclick="document.getElementById('modalTambahSlot').style.display='none'" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
+            <button type="button" data-modal-dismiss="modalTambahSlot" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-500); line-height: 1; padding: 0.25rem;">&times;</button>
         </div>
 
         <form action="{{ route('superadmin.slot-khusus.store') }}" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
@@ -446,11 +449,78 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="document.getElementById('modalTambahSlot').style.display='none'" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
+                <button type="button" data-modal-dismiss="modalTambahSlot" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100); border: 1px solid var(--neutral-400); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700); cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
                     Simpan Slot Khusus
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================================
+     MODAL KONFIRMASI STATUS SLOT KHUSUS INTERNAL (NONAKTIFKAN / AKTIFKAN)
+     Sesuai MagKom Design System v1.0 & Bebas Native Alert Pop-up
+     ===================================================================== -->
+<div id="modalKonfirmasiToggleSlot" 
+     style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;"
+     role="dialog" 
+     aria-modal="true" 
+     aria-labelledby="modalToggleSlotTitle">
+    <div style="background: var(--neutral-0, #FFFFFF); border-radius: 16px; width: 100%; max-width: 480px; padding: 2rem; box-shadow: var(--shadow-modal, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)); position: relative; border: 1px solid var(--neutral-300, #CBD5E1);">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div id="toggleSlotIconWrap" style="width: 42px; height: 42px; border-radius: 10px; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="modalToggleSlotTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
+                        Konfirmasi Status Slot Khusus
+                    </h3>
+                    <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
+                        Slot Magang Kemitraan & Penugasan Khusus
+                    </span>
+                </div>
+            </div>
+            <button type="button" 
+                    data-modal-dismiss="modalKonfirmasiToggleSlot" 
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;"
+                    title="Tutup dialog">
+                &times;
+            </button>
+        </div>
+
+        <form id="formToggleSlot" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem; margin: 0;">
+            @csrf
+            @method('PATCH')
+            <div id="toggleSlotBoxAlert" style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
+                <p id="toggleSlotMessage" style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
+                    Apakah Anda yakin ingin menonaktifkan alokasi slot khusus ini?
+                </p>
+                <div style="background: rgba(255, 255, 255, 0.7); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(220, 38, 38, 0.15);">
+                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleSlotInstansi">Instansi Mitra</div>
+                    <div style="font-size: 0.75rem; color: var(--neutral-600, #475569);" id="toggleSlotDetail">Alokasi: 0 Kuota</div>
+                </div>
+                <p id="toggleSlotConsequence" style="font-size: 0.75rem; color: #BE123C; margin: 0.65rem 0 0 0; line-height: 1.4;">
+                    • Slot yang dinonaktifkan tidak dapat digunakan untuk input penempatan peserta jalur kemitraan baru.
+                </p>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
+                <button type="button" 
+                        data-modal-dismiss="modalKonfirmasiToggleSlot" 
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
+                    Batal
+                </button>
+                <button type="submit" 
+                        id="btnSubmitToggleSlot" 
+                        style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
+                    <span id="btnSubmitToggleSlotText">Ya, Nonaktifkan Slot</span>
                 </button>
             </div>
         </form>

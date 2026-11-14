@@ -883,6 +883,12 @@
         // Toggle Accordion Sub-Menu Sidebar (Figma Node 560-24892)
         function toggleNavGroup(btn) {
             if (!btn) return;
+            if (document.body.classList.contains('nav-sm') && window.innerWidth >= 992) {
+                if (typeof window.triggerNavSmFlyout === 'function') {
+                    window.triggerNavSmFlyout(btn);
+                }
+                return;
+            }
             const isExpanded = btn.getAttribute('aria-expanded') === 'true';
             const subMenu = btn.nextElementSibling;
             if (subMenu) {
@@ -924,6 +930,9 @@
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
+                if (typeof window.closeActiveFlyout === 'function') {
+                    window.closeActiveFlyout();
+                }
                 toggleSidebar(false);
                 const menu = document.getElementById('userDropdown');
                 const btn = document.getElementById('userMenuBtn');

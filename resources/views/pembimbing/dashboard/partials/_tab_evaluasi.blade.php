@@ -59,6 +59,11 @@
                         </td>
                         <td style="padding: 1rem 1.5rem; text-align: right; white-space: nowrap;">
                             <div style="display: flex; gap: 0.4rem; justify-content: flex-end;">
+                                @if(! $isSelesai)
+                                    <button type="button" class="btn btn-success btn-xs" data-action="selesaikan-mentee" data-penempatan-id="{{ $penempatan->id }}" data-nama="{{ $penempatan->peserta?->nama }}" data-url="{{ route('pembimbing.penempatan.selesai', $penempatan->id) }}" style="padding: 0.35rem 0.65rem; background: #16A34A; border-color: #16A34A; color: #ffffff; font-size: 0.75rem; font-weight: 600; border-radius: 6px;">
+                                        Tetapkan Selesai
+                                    </button>
+                                @endif
                                 <a href="{{ route('pembimbing.peserta.show', $penempatan->id) }}" style="padding: 0.35rem 0.65rem; background: #0641CC; color: #ffffff; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none;">
                                     Detail Mentee
                                 </a>

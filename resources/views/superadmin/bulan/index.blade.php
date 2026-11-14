@@ -198,13 +198,15 @@
                                         Edit
                                     </button>
 
-                                    <form method="POST" action="{{ route('superadmin.bulan.toggle', $bulan) }}" style="display: inline-block; margin: 0;" onsubmit="return confirm('Ubah status aktif bulan magang ini?');">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="{{ $bulan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" style="{{ $bulan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}">
-                                            {{ $bulan->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
-                                        </button>
-                                    </form>
+                                    <button type="button" 
+                                            class="btn-trigger-toggle-bulan {{ $bulan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
+                                            style="{{ $bulan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}"
+                                            data-id="{{ $bulan->id }}"
+                                            data-nama="{{ $bulan->nama_bulan ?? $bulan->bulan_mulai?->format('F Y') }}"
+                                            data-status-aktif="{{ $bulan->aktif ? '1' : '0' }}"
+                                            data-action-url="{{ route('superadmin.bulan.toggle', $bulan) }}">
+                                        {{ $bulan->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -361,6 +363,75 @@
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
                     Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================================
+     MODAL KONFIRMASI STATUS BULAN MAGANG (NONAKTIFKAN / AKTIFKAN)
+     Sesuai MagKom Design System v1.0 & Bebas Native Alert Pop-up
+     ===================================================================== -->
+<div id="modalKonfirmasiToggleBulan" 
+     style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;"
+     role="dialog" 
+     aria-modal="true" 
+     aria-labelledby="modalToggleBulanTitle">
+    <div style="background: var(--neutral-0, #FFFFFF); border-radius: 16px; width: 100%; max-width: 480px; padding: 2rem; box-shadow: var(--shadow-modal, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)); position: relative; border: 1px solid var(--neutral-300, #CBD5E1);">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div id="toggleBulanIconWrap" style="width: 42px; height: 42px; border-radius: 10px; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="modalToggleBulanTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
+                        Ubah Status Bulan Magang
+                    </h3>
+                    <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
+                        Pengendalian Gelombang Pendaftaran Peserta
+                    </span>
+                </div>
+            </div>
+            <button type="button" 
+                    data-modal-dismiss="modalKonfirmasiToggleBulan" 
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;" 
+                    title="Tutup dialog">
+                &times;
+            </button>
+        </div>
+
+        <form id="formToggleBulan" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem; margin: 0;">
+            @csrf
+            @method('PATCH')
+            <div id="toggleBulanBoxAlert" style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
+                <p id="toggleBulanMessage" style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
+                    Apakah Anda yakin ingin menonaktifkan periode bulan magang ini?
+                </p>
+                <div style="background: rgba(255, 255, 255, 0.7); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(220, 38, 38, 0.15);">
+                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleBulanNama">Periode Bulan</div>
+                </div>
+                <p id="toggleBulanConsequence" style="font-size: 0.75rem; color: #BE123C; margin: 0.65rem 0 0 0; line-height: 1.4;">
+                    • Menonaktifkan bulan ini akan menutup akses pendaftaran calon peserta baru pada siklus terkait.
+                </p>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
+                <button type="button" 
+                        data-modal-dismiss="modalKonfirmasiToggleBulan" 
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
+                    Batal
+                </button>
+                <button type="submit" 
+                        id="btnSubmitToggleBulan" 
+                        style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
+                    <span id="btnSubmitToggleBulanText">Ya, Nonaktifkan Bulan</span>
                 </button>
             </div>
         </form>

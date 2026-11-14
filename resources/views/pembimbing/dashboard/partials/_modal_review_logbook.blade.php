@@ -41,6 +41,10 @@
         <button type="button" class="btn btn-default" data-action="close-drawer" style="padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600;">
             Tutup
         </button>
+        <button type="button" class="btn btn-success cv-dyn-approve-btn" data-action="quick-approve-logbook" style="background: #16A34A; border-color: #16A34A; color: #ffffff; font-weight: 600; padding: 0.5rem 1.25rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;">
+            <span>&check;</span>
+            <span>Setujui Langsung</span>
+        </button>
         <a href="#" class="btn btn-primary cv-dyn-url" style="background: var(--blue-700, #0641CC); border-color: var(--blue-700, #0641CC); font-weight: 600; padding: 0.5rem 1.25rem; border-radius: 6px; color: #ffffff; text-decoration: none;">
             Buka Form Tanggapan Penuh &rarr;
         </a>

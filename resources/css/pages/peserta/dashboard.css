@@ -1418,6 +1418,34 @@ body,
   color: #ffffff !important;
 }
 
+/* Event Dot Indicator pada Kalender Bento */
+.cal-date.has-event {
+  position: relative;
+}
+
+.cal-date.has-event::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #003566;
+  pointer-events: none;
+}
+
+.cal-date.date-today.has-event::after {
+  background: #FFC300;
+}
+
+[data-theme="dark"] .cal-date.has-event::after {
+  background: #8FA2FF;
+}
+
+[data-theme="dark"] .cal-date.date-today.has-event::after {
+  background: #FFC300;
+}
+
 /* ==============================================================================
    7. Alert Cards di Kolom Samping (Perlu Perhatian Red Card & Amber Sisa Hari)
    ============================================================================== */

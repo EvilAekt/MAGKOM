@@ -42,6 +42,8 @@ export function toggleSidebar(forceState) {
         if (targetSmall) {
             body.classList.remove('nav-md');
             body.classList.add('nav-sm');
+            closeActiveFlyout();
+            closeActiveTooltip();
             try {
                 localStorage.setItem('magkom_sidebar_state', 'sm');
                 localStorage.setItem('sidebar_state', 'sm');
@@ -49,6 +51,8 @@ export function toggleSidebar(forceState) {
         } else {
             body.classList.remove('nav-sm');
             body.classList.add('nav-md');
+            closeActiveFlyout();
+            closeActiveTooltip();
             try {
                 localStorage.setItem('magkom_sidebar_state', 'md');
                 localStorage.setItem('sidebar_state', 'md');
@@ -57,8 +61,96 @@ export function toggleSidebar(forceState) {
     }
 }
 
+let activeFlyout = null;
+let activeTooltip = null;
+
+export function closeActiveFlyout() {
+    if (activeFlyout && activeFlyout.parentNode) {
+        activeFlyout.remove();
+        activeFlyout = null;
+    }
+    document.querySelectorAll('.nav-group-btn.flyout-open').forEach(b => {
+        b.classList.remove('flyout-open');
+    });
+}
+
+export function closeActiveTooltip() {
+    if (activeTooltip && activeTooltip.parentNode) {
+        activeTooltip.remove();
+        activeTooltip = null;
+    }
+}
+
+export function triggerNavSmFlyout(btn) {
+    if (!btn) return;
+    const isAlreadyOpen = btn.classList.contains('flyout-open');
+
+    closeActiveFlyout();
+    closeActiveTooltip();
+
+    if (isAlreadyOpen) {
+        return;
+    }
+
+    const container = btn.closest('.nav-group-container');
+    const subMenu = container ? container.querySelector('.nav-sub-menu') : null;
+    if (!subMenu) return;
+
+    const labelSpan = btn.querySelector('.nav-group-btn-left span:not(.nav-item-icon)');
+    const groupTitle = labelSpan ? labelSpan.textContent.trim() : 'Menu';
+
+    const rect = btn.getBoundingClientRect();
+    const flyout = document.createElement('div');
+    flyout.className = 'nav-sm-flyout-portal';
+    flyout.setAttribute('role', 'menu');
+    flyout.setAttribute('aria-label', groupTitle);
+
+    // Header Grup Flyout
+    const header = document.createElement('div');
+    header.className = 'nav-sm-flyout-header';
+    header.textContent = groupTitle;
+    flyout.appendChild(header);
+
+    // Daftar link submenu
+    const links = subMenu.querySelectorAll('.nav-sub-item');
+    links.forEach(link => {
+        const a = document.createElement('a');
+        a.href = link.href;
+        a.className = 'nav-sm-flyout-item' + (link.classList.contains('active') ? ' active' : '');
+        a.textContent = link.textContent.trim();
+        a.setAttribute('role', 'menuitem');
+        a.addEventListener('click', () => {
+            closeActiveFlyout();
+        });
+        flyout.appendChild(a);
+    });
+
+    document.body.appendChild(flyout);
+
+    // Hitung posisi vertikal agar tidak terpotong tepi layar
+    const flyoutHeight = flyout.offsetHeight;
+    const windowHeight = window.innerHeight;
+    let topPos = rect.top;
+
+    if (topPos + flyoutHeight > windowHeight - 16) {
+        topPos = Math.max(16, windowHeight - flyoutHeight - 16);
+    }
+
+    flyout.style.left = '72px';
+    flyout.style.top = topPos + 'px';
+
+    btn.classList.add('flyout-open');
+    activeFlyout = flyout;
+}
+
 export function toggleNavGroup(btn) {
     if (!btn) return;
+    // Buka flyout melayang jika dalam mode mini (nav-sm) pada desktop
+    if (document.body.classList.contains('nav-sm') && window.innerWidth >= 992) {
+        triggerNavSmFlyout(btn);
+        return;
+    }
+
     const isExpanded = btn.getAttribute('aria-expanded') === 'true';
     const subMenu = btn.nextElementSibling;
     if (subMenu) {
@@ -137,11 +229,19 @@ if (typeof window !== 'undefined') {
         window.toggleGentelellaSidebar = toggleSidebar;
     }
     window.toggleNavGroup = toggleNavGroup;
+    window.triggerNavSmFlyout = triggerNavSmFlyout;
+    window.closeActiveFlyout = closeActiveFlyout;
+    window.closeActiveTooltip = closeActiveTooltip;
     window.toggleUserMenu = toggleUserMenu;
     window.applyPortalTheme = applyPortalTheme;
     window.togglePortalThemeQuick = togglePortalThemeQuick;
 
     document.addEventListener('click', function(e) {
+        // Tutup flyout melayang jika klik di luar
+        if (activeFlyout && !e.target.closest('.nav-sm-flyout-portal') && !e.target.closest('.nav-group-btn')) {
+            closeActiveFlyout();
+        }
+
         const menu = document.getElementById('userDropdown');
         const btn = document.getElementById('userMenuBtn');
         if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
@@ -187,6 +287,8 @@ if (typeof window !== 'undefined') {
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' || e.key === 'Esc') {
+            closeActiveFlyout();
+            closeActiveTooltip();
             toggleSidebar(false);
             const menu = document.getElementById('userDropdown');
             const btn = document.getElementById('userMenuBtn');
@@ -196,6 +298,48 @@ if (typeof window !== 'undefined') {
             }
         }
     });
+
+    // Tooltip pada Single Nav Item saat mode kecil (nav-sm)
+    document.addEventListener('mouseover', function(e) {
+        const isNavSm = document.body.classList.contains('nav-sm') && window.innerWidth >= 992;
+        if (!isNavSm) {
+            closeActiveTooltip();
+            return;
+        }
+
+        const navLink = e.target.closest('.nav-item-link');
+        if (navLink && !navLink.closest('.nav-group-container')) {
+            const spanText = navLink.querySelector('span:not(.nav-item-icon)');
+            if (!spanText) return;
+
+            const text = spanText.textContent.trim();
+            if (!text) return;
+
+            closeActiveTooltip();
+
+            const rect = navLink.getBoundingClientRect();
+            const tooltip = document.createElement('div');
+            tooltip.className = 'nav-sm-tooltip';
+            tooltip.textContent = text;
+            document.body.appendChild(tooltip);
+
+            tooltip.style.left = '72px';
+            tooltip.style.top = (rect.top + (rect.height - tooltip.offsetHeight) / 2) + 'px';
+            activeTooltip = tooltip;
+        }
+    });
+
+    document.addEventListener('mouseout', function(e) {
+        const navLink = e.target.closest('.nav-item-link');
+        if (navLink) {
+            closeActiveTooltip();
+        }
+    });
+
+    window.addEventListener('scroll', function() {
+        closeActiveFlyout();
+        closeActiveTooltip();
+    }, { passive: true });
 
     window.addEventListener('resize', function() {
         if (window.innerWidth > 1024) {

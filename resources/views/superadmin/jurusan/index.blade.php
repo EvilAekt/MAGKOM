@@ -189,13 +189,16 @@
                                             Edit
                                         </button>
 
-                                        <form action="{{ route('superadmin.jurusan.toggle', $jurusan) }}" method="POST" style="display: inline-block; margin: 0;">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" onclick="return confirm('{{ $jurusan->aktif ? 'Nonaktifkan jurusan ini? Pastikan tidak ada kuota dan penempatan aktif.' : 'Aktifkan kembali jurusan ini?' }}')" class="{{ $jurusan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" style="{{ $jurusan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}">
-                                                {{ $jurusan->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
-                                            </button>
-                                        </form>
+                                        <button type="button" 
+                                                class="btn-trigger-toggle-jurusan {{ $jurusan->aktif ? 'sa-btn-action-danger' : 'sa-btn-action-outline' }}" 
+                                                style="{{ $jurusan->aktif ? '' : 'color: var(--green-700); border-color: rgba(22, 163, 74, 0.25);' }}"
+                                                data-id="{{ $jurusan->id }}"
+                                                data-nama="{{ $jurusan->nama_jurusan }}"
+                                                data-kategori="{{ $jurusan->kategori === 'mahasiswa' ? 'Perguruan Tinggi (D3/D4/S1)' : 'SMK / Vokasi' }}"
+                                                data-status-aktif="{{ $jurusan->aktif ? '1' : '0' }}"
+                                                data-action-url="{{ route('superadmin.jurusan.toggle', $jurusan) }}">
+                                            {{ $jurusan->aktif ? 'Nonaktifkan' : 'Aktifkan' }}
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -300,6 +303,84 @@
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: var(--blue-600); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; cursor: pointer; box-shadow: var(--shadow-subtle);">
                     Perbarui Jurusan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================================
+     MODAL KONFIRMASI STATUS JURUSAN (NONAKTIFKAN / AKTIFKAN)
+     Sesuai MagKom Design System v1.0 & Bebas Native Alert Pop-up
+     ===================================================================== -->
+<div id="modalKonfirmasiToggleJurusan" 
+     style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;"
+     role="dialog" 
+     aria-modal="true" 
+     aria-labelledby="modalToggleJurusanTitle">
+    <div style="background: var(--neutral-0, #FFFFFF); border-radius: 16px; width: 100%; max-width: 480px; padding: 2rem; box-shadow: var(--shadow-modal, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)); position: relative; border: 1px solid var(--neutral-300, #CBD5E1);">
+        
+        <!-- Header Modal -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div id="toggleJurusanIconWrap" style="width: 42px; height: 42px; border-radius: 10px; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="modalToggleJurusanTitle" style="font-size: 1.125rem; font-weight: 800; color: var(--neutral-900, #0F172A); margin: 0; line-height: 1.3;">
+                        Konfirmasi Status Jurusan
+                    </h3>
+                    <span style="font-size: 0.8125rem; color: var(--neutral-500, #64748B);">
+                        Master Program Studi &amp; Kualifikasi Akademik
+                    </span>
+                </div>
+            </div>
+            <button type="button" 
+                    data-modal-dismiss="modalKonfirmasiToggleJurusan" 
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--neutral-400, #94A3B8); line-height: 1; padding: 0.25rem; border-radius: 6px;" 
+                    title="Tutup dialog">
+                &times;
+            </button>
+        </div>
+
+        <!-- Form Aksi Nyata -->
+        <form id="formToggleJurusan" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem; margin: 0;">
+            @csrf
+            @method('PATCH')
+
+            <!-- Kotak Peringatan Konsekuensi -->
+            <div id="toggleJurusanBoxAlert" style="background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 1rem 1.25rem;">
+                <p id="toggleJurusanMessage" style="font-size: 0.875rem; color: #9F1239; margin: 0 0 0.5rem 0; line-height: 1.5;">
+                    Apakah Anda yakin ingin menonaktifkan program studi / jurusan ini?
+                </p>
+                <div style="background: rgba(255, 255, 255, 0.7); border-radius: 6px; padding: 0.5rem 0.75rem; border: 1px solid rgba(220, 38, 38, 0.15);">
+                    <div style="font-weight: 700; color: var(--neutral-900, #0F172A); font-size: 0.875rem;" id="toggleJurusanNama">
+                        Nama Jurusan
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--neutral-600, #475569);" id="toggleJurusanKategori">
+                        Perguruan Tinggi (D3/D4/S1)
+                    </div>
+                </div>
+                <p id="toggleJurusanConsequence" style="font-size: 0.75rem; color: #BE123C; margin: 0.65rem 0 0 0; line-height: 1.4;">
+                    • Pastikan tidak ada alokasi kuota dan penempatan aktif. Jurusan tidak akan muncul pada formulir pendaftaran peserta baru.
+                </p>
+            </div>
+
+            <!-- Footer Tombol Aksi -->
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1rem;">
+                <button type="button" 
+                        data-modal-dismiss="modalKonfirmasiToggleJurusan" 
+                        style="height: 40px; padding: 0 1.25rem; background: var(--neutral-100, #F1F5F9); border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: var(--neutral-700, #334155); cursor: pointer;">
+                    Batal
+                </button>
+                <button type="submit" 
+                        id="btnSubmitToggleJurusan" 
+                        style="height: 40px; padding: 0 1.5rem; background: #DC2626; border: none; border-radius: 8px; font-weight: 700; font-size: 0.875rem; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: background 0.15s ease;">
+                    <span id="btnSubmitToggleJurusanText">Ya, Nonaktifkan Jurusan</span>
                 </button>
             </div>
         </form>
