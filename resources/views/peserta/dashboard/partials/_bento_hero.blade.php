@@ -10,9 +10,11 @@
     $namaBidang = $penempatan?->bidang?->nama_bidang ?? 'Aplikasi Informatika (Aptika)';
     $bidangTampil = str_contains(strtolower($namaBidang), 'aplikasi informatika') ? 'Bidang Aptika' : ('Bidang ' . $namaBidang);
     $bidangLabel = strtoupper($bidangTampil);
-    $mingguKe = $mingguAktif ?? 1;
-    $totMinggu = $totalMinggu ?? 13;
-    $progressPct = min(100, (int) round(($mingguKe / max(1, $totMinggu)) * 100));
+    $durasiBln = max(1, $durasiBulan ?? ($penempatan?->durasi_bulan ?? 3));
+    $totMinggu = max(1, $totalMinggu ?? ($penempatan?->total_minggu ?? 13));
+    $mingguKe = $mingguAktif ?? ($penempatan?->minggu_aktif ?? 0);
+    $isPraMagang = ($isBelumMulai ?? false) || ($mingguKe === 0);
+    $progressPct = $isPraMagang ? 0 : min(100, (int) round(($mingguKe / max(1, $totMinggu)) * 100));
     $circumference = 213.6; // 2 * PI * 34
     $strokeDashoffset = $circumference - ($progressPct / 100 * $circumference);
 
@@ -57,12 +59,19 @@
             </h1>
 
             <p class="bento-hero-subtitle">
-                Peserta Magang &bull; <strong>{{ $bidangTampil }}</strong> &bull; Periode: {{ $tglMulaiStr }} s/d {{ $tglSelesaiStr }}
+                Peserta Magang &bull; <strong>{{ $bidangTampil }}</strong> &bull; Durasi: {{ $durasiBln }} Bulan ({{ $tglMulaiStr }} s/d {{ $tglSelesaiStr }})
             </p>
 
             <div class="bento-hero-actions">
-                <a href="{{ route('peserta.tugas.index') }}" class="btn-bento-hero-cta">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                <button type="button" class="btn-bento-hero-cta" data-action="open-drawer" data-drawer="#drawerQuickLogbook" title="Isi Logbook Harian Cepat">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    </svg>
+                    <span>Isi Logbook</span>
+                </button>
+                <a href="{{ route('peserta.tugas.index') }}" class="btn-bento-hero-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
@@ -87,12 +96,17 @@
                     <circle class="bento-hero-gauge-bar" cx="43" cy="43" r="34"
                             style="stroke-dasharray: {{ $circumference }}; stroke-dashoffset: {{ $strokeDashoffset }};"></circle>
                 </svg>
-                <div class="bento-hero-gauge-text">{{ $mingguKe }}/{{ $totMinggu }}</div>
+                <div class="bento-hero-gauge-text">{{ $isPraMagang ? 'H-' . ($hariMenujuMulai ?? 1) : "{$mingguKe}/{$totMinggu}" }}</div>
             </div>
             <div class="bento-hero-gauge-info">
                 <span class="bento-hero-gauge-label">PROGRES MAGANG</span>
-                <span class="bento-hero-gauge-val">Minggu ke-{{ $mingguKe }}</span>
-                <span class="bento-hero-gauge-sub">dari {{ $totMinggu }} minggu ({{ $progressPct }}%)</span>
+                @if($isPraMagang)
+                    <span class="bento-hero-gauge-val">Segera Dimulai</span>
+                    <span class="bento-hero-gauge-sub">Durasi {{ $durasiBln }} Bulan ({{ $totMinggu }} Minggu)</span>
+                @else
+                    <span class="bento-hero-gauge-val">Minggu ke-{{ $mingguKe }}</span>
+                    <span class="bento-hero-gauge-sub">dari {{ $totMinggu }} minggu ({{ $progressPct }}%)</span>
+                @endif
             </div>
         </div>
     </div>

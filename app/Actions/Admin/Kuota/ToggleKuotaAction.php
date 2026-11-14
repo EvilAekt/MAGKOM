@@ -46,7 +46,7 @@ class ToggleKuotaAction
                 if ($hasActivePendaftaran) {
                     return [
                         'success' => false,
-                        'message' => 'Penonaktifan ditolak (BR-12, AC-05-6): Kuota jurusan masih memiliki pendaftaran aktif.',
+                        'message' => 'Penonaktifan ditolak: Kuota jurusan masih memiliki pendaftaran aktif.',
                         'kuota' => $locked,
                     ];
                 }
@@ -58,7 +58,7 @@ class ToggleKuotaAction
                 if ($hasActivePenempatan) {
                     return [
                         'success' => false,
-                        'message' => 'Penonaktifan ditolak (BR-12, AC-05-6): Kuota jurusan masih memiliki penempatan peserta aktif.',
+                        'message' => 'Penonaktifan ditolak: Kuota jurusan masih memiliki penempatan peserta aktif.',
                         'kuota' => $locked,
                     ];
                 }

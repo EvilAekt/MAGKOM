@@ -379,9 +379,9 @@ class AdvancedRoleEnhancementPhaseSixTest extends TestCase
         $this->assertDatabaseHas('password_reset_tokens', ['email' => 'expired_user@example.com']);
         $this->assertDatabaseHas('users', ['email' => 'stale@example.com']);
 
-        // 2. Eksekusi via endpoint controller superadmin
-        $sweepResponse = $this->actingAs($this->superAdmin)->post(route('superadmin.health.security-sweep'));
-        $sweepResponse->assertSessionHas('status_keberhasilan');
+        // 2. Eksekusi pembersihan nyata via Artisan command resmi
+        $this->artisan('magkom:security-sweep')
+            ->assertExitCode(0);
 
         // Verifikasi entri telah bersih
         $this->assertDatabaseMissing('password_reset_tokens', ['email' => 'expired_user@example.com']);

@@ -131,7 +131,7 @@ class StafController extends Controller
                     'must_change_password' => true,
                 ],
                 detail: [
-                    'aksi' => 'Membuat akun staf baru ('.$staf->role->label().') (SEC-02)',
+                    'aksi' => 'Membuat akun staf baru ('.$staf->role->label().')',
                     'superadmin_id' => $request->user()->id,
                 ]
             );
@@ -236,7 +236,7 @@ class StafController extends Controller
             tabel: 'users',
             idData: $staf->id,
             detail: [
-                'aksi' => 'Reset kata sandi staf secara manual dan invalidasi sesi aktif (SEC-04)',
+                'aksi' => 'Reset kata sandi staf secara manual dan invalidasi sesi aktif',
                 'staf_email' => $staf->email,
                 'superadmin_id' => $request->user()->id,
             ]
@@ -262,7 +262,7 @@ class StafController extends Controller
                 ->count();
 
             if ($activeSuperAdminCount <= 1) {
-                return back()->with('error', 'Penonaktifan ditolak (SEC-16): Sistem harus memiliki minimal satu akun SuperAdmin aktif.');
+                return back()->with('error', 'Penonaktifan ditolak: Sistem harus memiliki minimal satu akun SuperAdmin aktif.');
             }
         }
 
@@ -276,7 +276,7 @@ class StafController extends Controller
                 ->exists();
 
             if ($hasActiveMentees) {
-                return back()->with('error', 'Penonaktifan ditolak (BR-12): Pembimbing masih memiliki penempatan peserta aktif. Pindahkan penempatan terlebih dahulu.');
+                return back()->with('error', 'Penonaktifan ditolak: Pembimbing masih memiliki penempatan peserta aktif. Pindahkan penempatan terlebih dahulu.');
             }
 
             $activePembimbingCount = User::where('role', RoleEnum::Pembimbing)
@@ -284,7 +284,7 @@ class StafController extends Controller
                 ->count();
 
             if ($activePembimbingCount <= 1) {
-                return back()->with('error', 'Penonaktifan ditolak (BR-12): Tidak dapat menonaktifkan satu-satunya pembimbing aktif dalam sistem.');
+                return back()->with('error', 'Penonaktifan ditolak: Tidak dapat menonaktifkan satu-satunya pembimbing aktif dalam sistem.');
             }
         }
 
@@ -304,7 +304,7 @@ class StafController extends Controller
             nilaiLama: ['status_aktif' => $statusLama],
             nilaiBaru: ['status_aktif' => $statusBaru],
             detail: [
-                'aksi' => $statusBaru ? 'Mengaktifkan kembali akun staf' : 'Menonaktifkan akun staf dan invalidasi sesi aktif (SEC-03)',
+                'aksi' => $statusBaru ? 'Mengaktifkan kembali akun staf' : 'Menonaktifkan akun staf dan invalidasi sesi aktif',
                 'superadmin_id' => $request->user()->id,
             ]
         );
@@ -341,13 +341,13 @@ class StafController extends Controller
             tabel: 'users',
             idData: $staf->id,
             detail: [
-                'aksi' => 'Regenerasi kata sandi acak sementara staf (BR-15)',
+                'aksi' => 'Regenerasi kata sandi acak sementara staf',
                 'staf_email' => $staf->email,
                 'superadmin_id' => $request->user()->id,
             ]
         );
 
         return redirect()->route('superadmin.staf.index')
-            ->with('success', "Kata sandi sementara untuk staf {$staf->nama} berhasil dibuat: [ {$tempPassword} ]. Harap salin dan serahkan secara manual (BR-15).");
+            ->with('success', "Kata sandi sementara untuk staf {$staf->nama} berhasil dibuat: [ {$tempPassword} ]. Harap salin dan serahkan secara manual kepada staf terkait.");
     }
 }

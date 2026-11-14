@@ -29,7 +29,7 @@
 <div class="sa-fluid-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
 
     {{-- 1. HERO BANNER ALUMNI KHAS SLEMAN MAGKOM --}}
-    <div class="sa-hero-banner">
+    <div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal>
         <div class="banner-top-row">
             <div style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
                 <div style="width: 62px; height: 62px; min-width: 62px; border-radius: 12px; background: #ffffff; color: #01347C; font-weight: 800; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
@@ -95,7 +95,7 @@
     @endphp
 
     {{-- 2. GRID 4 KARTU STATISTIK TILE-STAT (PARITAS DENGAN MANAJEMEN STAF & ARSIP PESERTA) --}}
-    <div class="tiles-grid">
+    <div class="tiles-grid sc-reveal-up sc-delay-1" data-scroll-reveal>
         <!-- 1. Total Penugasan -->
         <x-gentelella.tile-stat
             title="TOTAL PENUGASAN"
@@ -169,7 +169,7 @@
     </div>
 
     {{-- 3. SEGMENTED PILL TAB CONTROLLER (DS-MAGKOM PARITY) --}}
-    <div class="arsip-segmented-tabs" role="tablist">
+    <div class="arsip-segmented-tabs sc-reveal-up sc-delay-2" data-scroll-reveal role="tablist">
         <button type="button" class="arsip-tab-pill active" data-tab-target="tab-ringkasan">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>

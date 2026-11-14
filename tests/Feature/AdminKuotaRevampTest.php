@@ -8,6 +8,7 @@ use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\User;
+use App\Queries\Admin\Kuota\KuotaIndexQuery;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -111,16 +112,17 @@ class AdminKuotaRevampTest extends TestCase
     }
 
     /**
-     * Memastikan info validasi kapasitas pembimbing tampil di bawah tabel.
+     * Memastikan banner info validasi kapasitas pembimbing tidak lagi ditampilkan di bawah tabel.
      */
-    public function test_kuota_page_displays_mentor_capacity_validation_banner(): void
+    public function test_kuota_page_does_not_display_mentor_capacity_validation_banner(): void
     {
         $admin = $this->createAdminUser();
 
         $response = $this->actingAs($admin)->get(route('admin.kuota.index'));
         $response->assertStatus(200);
 
-        $response->assertSee('Sistem otomatis memvalidasi agar total kuota tidak melebihi kapasitas bimbingan, yaitu jumlah Pembimbing aktif di setiap bidang.', false);
+        $response->assertDontSee('Validasi Kapasitas Pembimbing', false);
+        $response->assertDontSee('Sistem otomatis memvalidasi agar total kuota tidak melebihi kapasitas bimbingan, yaitu jumlah Pembimbing aktif di setiap bidang.', false);
     }
 
     /**
@@ -501,5 +503,175 @@ class AdminKuotaRevampTest extends TestCase
                 'aktif' => true,
             ]);
         }
+    }
+
+    private function createSuperAdminUser(): User
+    {
+        $superAdmin = new User;
+        $superAdmin->nama = 'SuperAdmin Kuota Test';
+        $superAdmin->email = 'superadmin.kuota.revamp@slemankab.go.id';
+        $superAdmin->password = 'Password123!';
+        $superAdmin->role = RoleEnum::SuperAdmin;
+        $superAdmin->status_aktif = true;
+        $superAdmin->must_change_password = false;
+        $superAdmin->email_verified_at = now();
+        $superAdmin->save();
+
+        return $superAdmin;
+    }
+
+    /**
+     * Ensures stored Draft bulan stays visible in dropdown with (Draft) label and active month remains default.
+     */
+    public function test_draft_bulan_remains_visible_in_dropdown_while_active_bulan_stays_default(): void
+    {
+        $admin = $this->createAdminUser();
+        $activeBulan = BulanMagang::where('aktif', true)->orderBy('bulan_mulai', 'asc')->firstOrFail();
+
+        // Store an earlier-dated Draft month to confirm active month still wins default selection
+        $storeResponse = $this->actingAs($admin)->post(route('admin.kuota.bulan.store'), [
+            'nama_bulan' => 'Draft Awal',
+            'bulan_mulai' => '2025-02-01',
+            'tgl_buka' => '2025-01-01',
+            'tgl_tutup' => '2025-01-20',
+            'status_awal' => 'draft',
+        ]);
+
+        $draftBulan = BulanMagang::where('nama_bulan', 'Draft Awal')->firstOrFail();
+        $storeResponse->assertRedirect(route('admin.kuota.index', ['bulan_magang_id' => $draftBulan->id]));
+
+        // Default page without query param must prioritize the first active month, while listing the Draft option
+        $defaultResponse = $this->actingAs($admin)->get(route('admin.kuota.index'));
+        $defaultResponse->assertStatus(200);
+        $defaultResponse->assertViewHas('selectedBulan', fn ($selected) => $selected && $selected->id === $activeBulan->id);
+        $defaultResponse->assertSee('(Draft)', false);
+        $defaultResponse->assertSee('Draft Awal', false);
+    }
+
+    /**
+     * Ensures default kuota index falls back to Draft bulan when no active bulan exists.
+     */
+    public function test_default_kuota_index_falls_back_to_draft_when_no_active_bulan_exists(): void
+    {
+        $admin = $this->createAdminUser();
+        BulanMagang::query()->update(['aktif' => false]);
+        $firstDraft = BulanMagang::orderBy('bulan_mulai', 'asc')->firstOrFail();
+
+        $response = $this->actingAs($admin)->get(route('admin.kuota.index'));
+
+        $response->assertStatus(200);
+        $response->assertViewHas('selectedBulan', fn ($selected) => $selected && $selected->id === $firstDraft->id);
+        $response->assertSee('hero-status-draft', false);
+        $response->assertSee('Status Draft', false);
+        $response->assertSee('Buka bulan', false);
+    }
+
+    /**
+     * Ensures Draft bulan renders Draft status (never Dibuka) even if today is inside open-close date range.
+     */
+    public function test_draft_bulan_displays_draft_status_even_inside_open_date_range(): void
+    {
+        $admin = $this->createAdminUser();
+        $draftInRange = BulanMagang::create([
+            'nama_bulan' => 'Febuari Draft',
+            'bulan_mulai' => '2026-11-05',
+            'tgl_buka' => '2026-10-01',
+            'tgl_tutup' => '2026-10-31',
+            'aktif' => false,
+        ]);
+
+        $queryData = app(KuotaIndexQuery::class)->getIndexData($draftInRange->id);
+        $this->assertTrue($queryData['isDraft']);
+        $this->assertFalse($queryData['isPendaftaranBuka']);
+        $this->assertFalse($queryData['isTerjadwal']);
+
+        $response = $this->actingAs($admin)->get(route('admin.kuota.index', ['bulan_magang_id' => $draftInRange->id]));
+        $response->assertStatus(200);
+        $response->assertSee('<span class="hero-status-pill hero-status-draft">', false);
+        $response->assertSee('Status Draft — belum dibuka di portal publik', false);
+        $response->assertDontSee('<span class="hero-status-pill hero-status-open">', false);
+        $response->assertDontSee('<span class="hero-status-pill hero-status-scheduled">', false);
+        $response->assertDontSee('<span class="hero-status-pill hero-status-closed">', false);
+        $response->assertSee('data-kuota-action="publish-draft"', false);
+    }
+
+    /**
+     * Ensures Admin sees Buka bulan on Draft, can publish it via updateBulan, and future open dates show Terjadwal.
+     */
+    public function test_admin_can_publish_draft_bulan_and_future_period_shows_terjadwal_status(): void
+    {
+        $admin = $this->createAdminUser();
+        $draftBulan = BulanMagang::create([
+            'nama_bulan' => 'Febuari',
+            'bulan_mulai' => '2027-04-01',
+            'tgl_buka' => '2027-03-12',
+            'tgl_tutup' => '2027-03-31',
+            'aktif' => false,
+        ]);
+
+        $draftPage = $this->actingAs($admin)->get(route('admin.kuota.index', ['bulan_magang_id' => $draftBulan->id]));
+        $draftPage->assertStatus(200);
+        $draftPage->assertSee('Buka bulan', false);
+        $draftPage->assertSee('data-kuota-action="publish-draft"', false);
+
+        $publishResponse = $this->actingAs($admin)->put(route('admin.kuota.bulan.update', $draftBulan->id), [
+            'nama_bulan' => 'Febuari',
+            'bulan_mulai' => '2027-04-01',
+            'tgl_buka' => '2027-03-12',
+            'tgl_tutup' => '2027-03-31',
+            'status_awal' => 'dibuka',
+        ]);
+
+        $publishResponse->assertSessionHas('success');
+        $this->assertDatabaseHas('bulan_magang', [
+            'id' => $draftBulan->id,
+            'aktif' => true,
+        ]);
+
+        $publishedPage = $this->actingAs($admin)->get(route('admin.kuota.index', ['bulan_magang_id' => $draftBulan->id]));
+        $publishedPage->assertStatus(200);
+        $publishedPage->assertSee('hero-status-scheduled', false);
+        $publishedPage->assertSee('Terjadwal', false);
+        $publishedPage->assertSee('Pendaftaran dibuka mulai '.Carbon::parse('2027-03-12')->translatedFormat('d F Y'), false);
+        $publishedPage->assertDontSee('data-kuota-action="publish-draft"', false);
+        $publishedPage->assertSee('Ubah bulan', false);
+    }
+
+    /**
+     * Ensures SuperAdmin viewing Draft bulan only sees read-only badge without Buka bulan or Ubah bulan buttons.
+     */
+    public function test_superadmin_viewing_draft_bulan_remains_strictly_read_only(): void
+    {
+        $superAdmin = $this->createSuperAdminUser();
+        $draftBulan = BulanMagang::create([
+            'nama_bulan' => 'Draft ReadOnly',
+            'bulan_mulai' => '2027-05-01',
+            'tgl_buka' => '2027-04-01',
+            'tgl_tutup' => '2027-04-20',
+            'aktif' => false,
+        ]);
+
+        $response = $this->actingAs($superAdmin)->get(route('admin.kuota.index', ['bulan_magang_id' => $draftBulan->id]));
+        $response->assertStatus(200);
+        $response->assertSee('<span class="hero-status-pill hero-status-draft">', false);
+        $response->assertSee('Mode Lihat Saja', false);
+        $response->assertDontSee('data-kuota-action="publish-draft"', false);
+        $response->assertDontSee('onclick="openUbahBulanModal()"', false);
+        $response->assertDontSee('onclick="openBuatBulanModal()"', false);
+        $response->assertDontSee('data-kuota-action="open-buat-bulan"', false);
+
+        $mutationResponse = $this->actingAs($superAdmin)->put(route('admin.kuota.bulan.update', $draftBulan->id), [
+            'nama_bulan' => 'Hack Draft',
+            'bulan_mulai' => '2027-05-01',
+            'tgl_buka' => '2027-04-01',
+            'tgl_tutup' => '2027-04-20',
+            'status_awal' => 'dibuka',
+        ]);
+
+        $mutationResponse->assertStatus(403);
+        $this->assertDatabaseHas('bulan_magang', [
+            'id' => $draftBulan->id,
+            'aktif' => false,
+        ]);
     }
 }

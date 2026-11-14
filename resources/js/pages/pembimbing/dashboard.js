@@ -555,14 +555,140 @@ if (typeof window !== 'undefined') {
     window.initGsapChartTimeline = initGsapChartTimeline;
 }
 
+// State untuk quick review logbook di drawer
+let currentReviewUrl = '';
+let currentReviewRow = null;
+
+async function handleQuickApproveLogbook(buttonEl) {
+    if (!currentReviewUrl) return;
+
+    const originalHtml = buttonEl.innerHTML;
+    buttonEl.disabled = true;
+    buttonEl.innerHTML = 'Menyetujui...';
+
+    try {
+        const response = await window.axios.post(currentReviewUrl, {
+            status: 'disetujui'
+        }, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.data && response.data.success) {
+            if (window.MagKomToast) {
+                window.MagKomToast.success('Logbook mentee berhasil disetujui!');
+            }
+
+            // Tutup drawer
+            const closeBtn = document.querySelector('#drawerReviewLogbook [data-action="close-drawer"]');
+            if (closeBtn) closeBtn.click();
+
+            // Hapus baris dari antrean dengan transisi halus
+            if (currentReviewRow) {
+                currentReviewRow.style.transition = 'opacity 0.3s ease';
+                currentReviewRow.style.opacity = '0';
+                setTimeout(() => {
+                    currentReviewRow.remove();
+                }, 300);
+            }
+        }
+    } catch (error) {
+        let errorMsg = 'Gagal menyetujui logbook.';
+        if (error.response && error.response.data && error.response.data.message) {
+            errorMsg = error.response.data.message;
+        }
+        if (window.MagKomToast) {
+            window.MagKomToast.error(errorMsg);
+        } else {
+            alert(errorMsg);
+        }
+    } finally {
+        buttonEl.disabled = false;
+        buttonEl.innerHTML = originalHtml;
+    }
+}
+
+async function handleSelesaikanMentee(buttonEl) {
+    const nama = buttonEl.getAttribute('data-nama') || 'Mentee';
+    const url = buttonEl.getAttribute('data-url');
+    if (!url) return;
+
+    const confirmed = window.confirm(`Apakah Anda yakin ingin menyelesaikan masa bimbingan magang untuk "${nama}"?\n\nPenetapan Selesai 1-Klik akan mengaktifkan masa tenggang akun (2 bulan) dan membuka akses penerbitan sertifikat.`);
+    if (!confirmed) return;
+
+    const originalText = buttonEl.innerHTML;
+    buttonEl.disabled = true;
+    buttonEl.innerHTML = 'Memproses...';
+
+    try {
+        const response = await window.axios.post(url, {}, {
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.data && response.data.success) {
+            if (window.MagKomToast) {
+                window.MagKomToast.success(response.data.message || 'Status bimbingan mentee resmi diselesaikan!');
+            }
+            setTimeout(() => {
+                window.location.reload();
+            }, 800);
+        }
+    } catch (error) {
+        let errorMsg = 'Gagal menyelesaikan bimbingan mentee.';
+        if (error.response && error.response.data && error.response.data.message) {
+            errorMsg = error.response.data.message;
+        }
+        if (window.MagKomToast) {
+            window.MagKomToast.error(errorMsg);
+        } else {
+            alert(errorMsg);
+        }
+    } finally {
+        buttonEl.disabled = false;
+        buttonEl.innerHTML = originalText;
+    }
+}
+
 // Inisialisasi saat DOM siap
 document.addEventListener('DOMContentLoaded', () => {
     initScrollCraft();
     initGsapChartTimeline();
     initBentoCalendar();
 
-    // Delegasi Event untuk Tab Switching & Filter
+    // Restore tab aktif dari hash URL atau localStorage
+    const hash = window.location.hash.replace('#', '');
+    const savedTab = hash || (typeof localStorage !== 'undefined' ? localStorage.getItem('magkom_pembimbing_active_tab') : null);
+    if (savedTab && document.getElementById(savedTab)) {
+        switchPembimbingTab(savedTab);
+    }
+
+    // Delegasi Event untuk Tab Switching, Filter & Aksi Dashboard
     document.addEventListener('click', (event) => {
+        // Tangkap trigger pembuka drawer review logbook
+        const reviewTrigger = event.target.closest('[data-drawer="#drawerReviewLogbook"]');
+        if (reviewTrigger) {
+            currentReviewUrl = reviewTrigger.getAttribute('data-review-action') || '';
+            currentReviewRow = reviewTrigger.closest('tr');
+        }
+
+        // Quick Approve Logbook dari Drawer
+        const approveBtn = event.target.closest('[data-action="quick-approve-logbook"]');
+        if (approveBtn && currentReviewUrl) {
+            event.preventDefault();
+            handleQuickApproveLogbook(approveBtn);
+            return;
+        }
+
+        // Selesaikan Bimbingan Mentee (1-Klik BR-10)
+        const selesaikanBtn = event.target.closest('[data-action="selesaikan-mentee"]');
+        if (selesaikanBtn) {
+            event.preventDefault();
+            handleSelesaikanMentee(selesaikanBtn);
+            return;
+        }
+
         const tabTrigger = event.target.closest('[data-tab]');
         if (tabTrigger) {
             const tabId = tabTrigger.getAttribute('data-tab');

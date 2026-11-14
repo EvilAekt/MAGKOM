@@ -6,6 +6,7 @@ namespace App\Queries\Admin\Penempatan;
 
 use App\Enums\StatusPendaftaranEnum;
 use App\Models\Pendaftaran;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -60,6 +61,19 @@ class PenempatanAntreanQuery
         return Pendaftaran::where('status', StatusPendaftaranEnum::Diterima)
             ->doesntHave('penempatan')
             ->count();
+    }
+
+    /**
+     * Mengambil daftar antrean terfilter dengan paginasi.
+     */
+    public function getPaginated(Request $request, int $defaultPerPage = 5): LengthAwarePaginator
+    {
+        $perPage = (int) $request->input('per_page', $defaultPerPage);
+        if (! in_array($perPage, [5, 10, 25, 50], true)) {
+            $perPage = $defaultPerPage;
+        }
+
+        return $this->buildQuery($request)->paginate($perPage)->withQueryString();
     }
 
     /**

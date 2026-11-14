@@ -11,26 +11,27 @@ use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\SlotKhusus;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class QuotaAllocationService
 {
     /**
-     * Mengambil 1 jatah kuota umum secara atomik dengan locking baris (AC-05-4).
+     * Mengambil jatah kuota umum secara atomik dengan locking baris (AC-05-4).
      * Wajib dijalankan di dalam blok DB::transaction().
      *
      * @throws KuotaPenuhException
      */
-    public function ambilKuotaUmum(int $kuotaId): Kuota
+    public function ambilKuotaUmum(int $kuotaId, int $jumlah = 1): Kuota
     {
         assert(DB::transactionLevel() > 0, 'Metode ambilKuotaUmum harus dipanggil dalam transaksi database.');
 
         $kuota = Kuota::whereKey($kuotaId)->lockForUpdate()->firstOrFail();
 
-        if (! $kuota->aktif || $kuota->terisi >= $kuota->jumlah) {
+        if (! $kuota->aktif || ($kuota->terisi + $jumlah) > $kuota->jumlah) {
             throw new KuotaPenuhException('Kuota umum untuk jurusan dan periode ini sudah terisi penuh.');
         }
 
-        $kuota->increment('terisi');
+        $kuota->increment('terisi', $jumlah);
 
         return $kuota->fresh();
     }
@@ -56,16 +57,28 @@ class QuotaAllocationService
     }
 
     /**
-     * Mengembalikan 1 jatah kuota umum jika pendaftaran dibatalkan atau mengundurkan diri (BR-06).
+     * Mengembalikan jatah kuota umum jika pendaftaran dibatalkan atau mengundurkan diri (BR-06).
+     *
+     * @throws \InvalidArgumentException
      */
-    public function lepasKuotaUmum(int $kuotaId): void
+    public function lepasKuotaUmum(int $kuotaId, int $jumlah = 1): void
     {
         assert(DB::transactionLevel() > 0, 'Metode lepasKuotaUmum harus dipanggil dalam transaksi database.');
 
+        if ($jumlah <= 0) {
+            throw new \InvalidArgumentException('Jumlah kuota yang dilepaskan harus lebih besar dari 0.');
+        }
+
         $kuota = Kuota::whereKey($kuotaId)->lockForUpdate()->firstOrFail();
 
+        if ($kuota->terisi < $jumlah) {
+            Log::warning(
+                "Inkonsistensi akuntansi kuota terdeteksi pada Kuota #{$kuotaId}: jatah terisi ({$kuota->terisi}) lebih kecil dari jumlah yang diminta untuk dilepas ({$jumlah})."
+            );
+        }
+
         if ($kuota->terisi > 0) {
-            $kuota->decrement('terisi');
+            $kuota->decrement('terisi', min($kuota->terisi, $jumlah));
         }
     }
 

@@ -209,7 +209,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
                 'catatan' => 'Alasan penolakan karena dokumen tidak sesuai format resmi.',
             ]);
 
-        $response->assertSessionHas('error', 'Status pendaftaran sudah berubah, muat ulang halaman (AC-04-5).');
+        $response->assertSessionHas('error', 'Status pendaftaran sudah berubah, silakan muat ulang halaman.');
     }
 
     /**
@@ -348,7 +348,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             ->patch(route('superadmin.jurusan.toggle', $this->jurusan));
 
         $responseJurusan->assertSessionHas('error');
-        $this->assertStringContainsString('BR-12', session('error'));
+        $this->assertStringContainsString('Penonaktifan ditolak', session('error'));
         $this->assertTrue($this->jurusan->fresh()->aktif);
 
         // 3. Bidang dengan staf aktif ditolak dinonaktifkan (BR-12)
@@ -362,7 +362,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             ->patch(route('superadmin.bidang.toggle', $bidangAktif));
 
         $responseBidang->assertSessionHas('error');
-        $this->assertStringContainsString('BR-12', session('error'));
+        $this->assertStringContainsString('staf aktif yang bertugas di bidang dinas ini', session('error'));
         $this->assertTrue($bidangAktif->fresh()->aktif);
 
         // 4. Slot khusus dengan penempatan aktif ditolak dinonaktifkan (BR-12)
@@ -393,7 +393,7 @@ class AdminSuperAdminPhaseThreeTest extends TestCase
             ->patch(route('superadmin.slot-khusus.toggle', $slotKhusus));
 
         $responseSlot->assertSessionHas('error');
-        $this->assertStringContainsString('BR-12', session('error'));
+        $this->assertStringContainsString('peserta magang aktif pada slot khusus ini', session('error'));
         $this->assertTrue($slotKhusus->fresh()->aktif);
     }
 

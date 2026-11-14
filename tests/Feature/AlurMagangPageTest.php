@@ -35,7 +35,7 @@ class AlurMagangPageTest extends TestCase
         $response->assertSee('4 Fase');
         $response->assertSee('1–3 Hari Kerja');
         $response->assertSee('100 Poin');
-        $response->assertSee('QR Code Resmi');
+        $response->assertSee('Kelulusan Resmi');
 
         // Simulator controls
         $response->assertSee('Semua Jenjang');
@@ -77,7 +77,7 @@ class AlurMagangPageTest extends TestCase
         $response->assertSee('id="flow-node-start"', false);
         $response->assertSee('START &bull; Akses Portal MagKom', false);
         $response->assertSee('id="flow-node-finish"', false);
-        $response->assertSee('FINISH &bull; Sertifikat QR &amp; Lembar Nilai', false);
+        $response->assertSee('FINISH &bull; Selesai Magang &amp; Pelepasan', false);
 
         // Journey Board container & nodes
         $response->assertSee('journey-board-container');
@@ -114,7 +114,7 @@ class AlurMagangPageTest extends TestCase
         $response->assertSee('First-Come First-Served (FIFO)');
         $response->assertSee('BR-09');
         $response->assertSee('Masa Tenggang Baca-Saja selama 30 Hari Kalender (BR-10)');
-        $response->assertSee('QR Code Keabsahan Dokumen (AC-12)');
+        $response->assertSee('Selesai Magang');
 
         // CTA Banner
         $response->assertSee('Siap Bergabung dengan Tim Diskominfo?');

@@ -21,7 +21,7 @@
     max-width: 76rem;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: minmax(320px, 1fr) minmax(400px, 1.35fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
     gap: 3.5rem;
     align-items: center;
 }
@@ -29,7 +29,25 @@
 @media (max-width: 992px) {
     .faq-redesign-container {
         grid-template-columns: 1fr;
-        gap: 2.75rem;
+        gap: 2.25rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .faq-section-bg {
+        padding: 3rem 1rem !important;
+    }
+    .faq-category-header-btn {
+        padding: 0.875rem 1rem !important;
+        font-size: 0.925rem !important;
+    }
+    .faq-sub-question-btn {
+        padding: 0.75rem 0.85rem !important;
+        font-size: 0.85rem !important;
+    }
+    .faq-sub-answer-pane {
+        padding: 0.85rem 1rem !important;
+        font-size: 0.85rem !important;
     }
 }
 

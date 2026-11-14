@@ -320,7 +320,7 @@
                                 <text x="31" y="-20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">Bimbingan ASN ✓</text>
                             </g>
 
-                            <!-- VIGNETTE 4: Selebrasi E-Sertifikat & Hujan Konfeti (Tahap 4: Pelataran Kantor Diskominfo) -->
+                            <!-- VIGNETTE 4: Selebrasi Selesai Magang & Hujan Konfeti (Tahap 4: Pelataran Kantor Diskominfo) -->
                             <g id="charScene4" class="char-scene-item" transform="translate(760, 375)" style="display: none;">
                                 <ellipse cx="30" cy="48" rx="42" ry="14" fill="#000000" opacity="0.4"/>
                                 <g class="char-jump-joy">
@@ -341,7 +341,7 @@
                                     <polygon points="30,-38 32,-33 38,-33 34,-29 36,-24 30,-27 24,-24 26,-29 22,-33 28,-33" fill="#fde047" class="confetti-c2"/>
                                 </g>
                                 <rect x="-18" y="-33" width="98" height="20" rx="10" fill="#0f172a" stroke="#eab308" stroke-width="1.6"/>
-                                <text x="31" y="-20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">E-Sertifikat Terbit! 🎓</text>
+                                <text x="31" y="-20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">Magang Selesai! 🎓</text>
                             </g>
                         </g>
 
@@ -508,18 +508,18 @@
             outcome: "Aktivitas tercatat rapi dan seluruh capaian kompetensi tervalidasi oleh mentor."
         },
         4: {
-            title: "Tahap 4: Evaluasi Akhir & Lembar Nilai Resmi",
-            badge: "Kelulusan & Penilaian",
+            title: "Tahap 4: Penyelesaian Magang & Laporan Akhir",
+            badge: "Pelepasan & Kelulusan",
             duration: "1–3 Hari Setelah Selesai",
             timelineKey: "tahap4",
-            desc: "Di penghujung masa magang, Pembimbing memberikan evaluasi penilaian menyeluruh (aspek disiplin, ketrampilan teknis, kerjasama tim, dan inisiatif). Peserta dapat langsung mengakses dan mengunduh Lembar Nilai Akhir resmi berformat digital.",
+            desc: "Di penghujung masa magang, Pembimbing Lapangan meninjau laporan akhir dan menetapkan status penyelesaian magang. Peserta mendapatkan pengesahan resmi dan akun beralih ke masa tenggang baca-saja selama 30 hari kalender.",
             requirements: [
-                "Menyelesaikan seluruh kewajiban penugasan dan laporan akhir magang",
-                "Pembimbing menginput lembar nilai akhir (Nilai Angka & Predikat)",
-                "Mengunduh Lembar Nilai Resmi dari portal peserta"
+                "Menyelesaikan seluruh kewajiban penugasan dan logbook mingguan",
+                "Pembimbing mengesahkan Laporan Akhir Magang",
+                "Penetapan status resmi Selesai Magang oleh Dinas Kominfo"
             ],
-            docs: ["Laporan Akhir Magang (PDF)", "Lembar Penilaian Pembimbing"],
-            outcome: "Penerbitan Lembar Nilai Resmi yang mencerminkan pencapaian kompetensi magang."
+            docs: ["Laporan Akhir Magang (PDF)", "Pengesahan Pembimbing"],
+            outcome: "Penetapan status kelulusan magang resmi dan pengarsipan data kepesertaan."
         }
     };
 
@@ -578,17 +578,12 @@
         "Laporan Akhir Magang (PDF)": {
             format: "PDF (Maks. 10 MB)",
             note: "Laporan komprehensif karya atau proyek yang dihasilkan selama penempatan di Diskominfo.",
-            rule: "Wajib disetujui Pembimbing Lapangan sebelum unduh sertifikat."
+            rule: "Wajib disetujui Pembimbing Lapangan untuk menyelesaikan program magang."
         },
-        "Lembar Penilaian Pembimbing": {
-            format: "Digital Scorecard diisi Mentor",
-            note: "Aspek penilaian meliputi Disiplin, Inisiatif, Kerjasama, Integritas, dan Penguasaan Teknis.",
-            rule: "Predikat minimal Cukup untuk berhak memperoleh Sertifikat Resmi."
-        },
-        "E-Sertifikat Resmi Diskominfo": {
-            format: "PDF Resmi bertanda tangan elektronik (TTE) & QR Code",
-            note: "Dapat diverifikasi keasliannya di menu Verifikasi Dokumen portal MagKom.",
-            rule: "Diterbitkan gratis secara digital tanpa dipungut biaya apa pun."
+        "Penyelesaian Program & Pelepasan": {
+            format: "Status Kelulusan Resmi di Portal MAGKOM",
+            note: "Pelepasan resmi peserta magang oleh Dinas Kominfo Kabupaten Sleman.",
+            rule: "Penetapan status tuntas magang oleh mentor ASN."
         }
     };
 

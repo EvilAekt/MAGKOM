@@ -6,6 +6,7 @@ use App\Enums\RoleEnum;
 use App\Enums\StatusLogbookEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusReviewProgresEnum;
+use App\Http\ViewComposers\PesertaLayoutViewComposer;
 use App\Models\Logbook;
 use App\Models\Penempatan;
 use App\Models\ProgresLog;
@@ -59,5 +60,8 @@ class AppServiceProvider extends ServiceProvider
                 $view->with($badgeData);
             }
         });
+
+        // View Composer untuk Layout Peserta (PERF-P2-03)
+        View::composer('layouts.peserta', PesertaLayoutViewComposer::class);
     }
 }

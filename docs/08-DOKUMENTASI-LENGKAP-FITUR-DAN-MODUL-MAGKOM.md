@@ -127,9 +127,15 @@ Pengambilan data terisolasi untuk filter kompleks, pencarian, dan paginasi:
 3. **Manajemen Pengguna & RBAC**:
    - Pengelolaan akun untuk 4 role utama: `SuperAdmin`, `Admin`, `Pembimbing`, `Peserta`.
    - Isolasi hak akses berbasis Laravel Policy dan Spatie-style permission gates.
+   - Seeder akun bersih Gmail (`PurgeAndSeedCleanGmailAccountsSeeder`) untuk standarisasi kredensial uji mandiri lintas peran.
 4. **Manajemen Master Data & Backup**:
    - Pengelolaan Master Bidang Dinas dan Jurusan.
    - Modul Cadangan Basis Data (Database Backup & Restore) otomatis dan manual.
+   - Standarisasi dialog modal konfirmasi aksi kritis (penggantian kata sandi, penonaktifan bidang/jurusan/bulan, dan penghapusan backup) menggantikan dialog native browser.
+5. **Navigasi Menu Melayang Sidebar Mini (*Mini-Sidebar Floating Flyout*)**:
+   - Arsitektur portal mengambang fixed (`position: fixed; left: 72px; z-index: 1060;`) yang aktif saat sidebar diciutkan (`body.nav-sm`).
+   - Penyelarasan palet warna resmi Sleman Navy Blue (`var(--sidebar-bg, #02275D)` pada mode terang dan `#011C44` pada mode gelap).
+   - Penanda kapsul aktif royal navy (`#013D8D`), titik cyan bercahaya (`#38BDF8`), serta tooltip interaktif otomatis untuk tautan menu tunggal.
 
 ---
 
@@ -142,6 +148,8 @@ Sistem telah dirancang dengan pertahanan berlapis (*Defense in Depth*) yang meng
 - **SEC-04 (Cross-Site Scripting / XSS)**: Seluruh keluaran Blade menggunakan `{{ }}` auto-escaping; sanitasi input HTML pada deskripsi tugas.
 - **SEC-05 (Brute Force & Rate Limiting)**: Throttle middleware aktif pada login, registrasi, pengunggahan berkas, dan endpoint SSE (`/realtime/stream`).
 - **SEC-06 (Atomic Concurrency Locking)**: Pengurangan kuota dan klaim slot khusus menggunakan `lockForUpdate()` di dalam transaksi basis data untuk mencegah *race condition*.
+- **SEC-07 (Dynamic Anti-Bot SVG Captcha & DOM Shuffling)**: Generator captcha berbasis vektor SVG dinamis internal dengan rotasi noise, decoy field honeypot, dan validasi server-side `CaptchaRule` tanpa ketergantungan library eksternal.
+- **SEC-08 (Progressive Lockout & Mandatory Registration)**: Validasi kepatuhan alur registrasi sebelum login, penanganan lockout bertahap anti brute-force, dan diagnostik mandiri reset password via Artisan CLI (`auth:test-reset`).
 
 ---
 

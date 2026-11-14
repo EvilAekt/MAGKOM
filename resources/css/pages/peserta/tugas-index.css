@@ -1,7 +1,21 @@
 /* ========================================================
    MAGKOM GENTELELLA DESIGN SYSTEM: CLASSROOM TUGAS INDEX
    Portal Peserta: Modul Daftar Penugasan & Proyek Magang
+   Sleman Identity: #003566, #01347C, #02275D, #FFC300, #FFCB05
    ======================================================== */
+
+:root {
+    --navy-dark: #003566;
+    --navy-primary: #01347C;
+    --navy-deep: #02275D;
+    --gold-primary: #FFC300;
+    --gold-accent: #FFCB05;
+    --text-dark: #212529;
+    --text-slate: #1E293B;
+    --text-muted: #64748B;
+    --border-soft: #E2E8F0;
+    --bg-card: #FFFFFF;
+}
 
 .classroom-container {
     display: flex;
@@ -9,62 +23,318 @@
     gap: 24px;
 }
 
-/* 1. Class Banner Header Khas Sleman MagKom (SuperAdmin Studio Parity) */
+/* ========================================================
+   1. HERO BANNER SLEMAN NAVY WITH PROGRESS WIDGET
+   ======================================================== */
 .classroom-banner {
-    background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
-                linear-gradient(135deg, #01347C 0%, #003566 100%);
+    background: radial-gradient(85% 140% at 100% 10%, rgba(255, 195, 0, 0.12), transparent 55%),
+                linear-gradient(135deg, #003566 0%, #01347C 60%, #02275D 100%);
     border-radius: 16px;
-    padding: 28px 32px;
+    padding: 30px 36px;
     color: #ffffff;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+    box-shadow: 0 8px 24px -4px rgba(0, 53, 102, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.banner-left {
+    position: relative;
+    z-index: 2;
+    flex: 1 1 380px;
+    min-width: 280px;
+}
+
+.banner-tag-gold {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 14px;
+    background: #FFC300;
+    color: #003566;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .banner-title {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 800;
     color: #ffffff;
-    margin: 0 0 6px 0;
-    letter-spacing: -0.01em;
-    line-height: 1.3;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
 }
 
-.banner-subtitle {
-    font-size: 0.9375rem;
-    color: rgba(255, 255, 255, 0.92);
+.banner-info-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 460px;
+}
+
+.banner-info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 14px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 10px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.banner-info-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.72);
+    letter-spacing: 0.06em;
+}
+
+.banner-info-val {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.35;
+}
+
+/* Right Progres Card Widget */
+.banner-progress-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 16px 20px;
+    width: 275px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.progress-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
+.progress-card-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.progress-card-percent {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #003566;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.progress-bar-track {
+    width: 100%;
+    height: 8px;
+    background: #E2E8F0;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #FFC300;
+    border-radius: 9999px;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progress-card-sub {
+    font-size: 0.775rem;
+    color: #64748B;
+    margin: 0;
+    line-height: 1.35;
+}
+
+/* ========================================================
+   2. 3 KPI COUNTER CARDS (GRID 3 KOLOM KOMPAK)
+   ======================================================== */
+.tugas-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.tugas-kpi-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 20px 24px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    line-height: 1.5;
-}
-
-/* 2. Tile Stats Grid */
-.tiles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* 3. Segmented Pill Tab Filter Navigasi (SuperAdmin Cockpit Parity) */
+.tugas-kpi-card:hover {
+    border-color: #01347C;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(1, 52, 124, 0.08);
+}
+
+.tugas-kpi-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.tugas-kpi-icon.icon-total {
+    background: #EFF6FF;
+    color: #003566;
+}
+
+.tugas-kpi-icon.icon-selesai {
+    background: #003566;
+    color: #FFFFFF;
+}
+
+.tugas-kpi-icon.icon-terlambat {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.tugas-kpi-card.kpi-terlambat:hover {
+    border-color: #DC2626;
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.12);
+}
+
+.tugas-kpi-card.kpi-terlambat:hover .tugas-kpi-number {
+    color: #DC2626;
+}
+
+.tugas-kpi-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tugas-kpi-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748B;
+    letter-spacing: 0.05em;
+}
+
+.tugas-kpi-number {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #003566;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+/* ========================================================
+   3. PANEL DAFTAR PENUGASAN (MODERN WHITE ACCORDION CARD)
+   ======================================================== */
+.assignment-panel-container {
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    overflow: hidden;
+}
+
+.assignment-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid #E2E8F0;
+    background: #FFFFFF;
+}
+
+.assignment-panel-title {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #003566;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.assignment-chevron-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.assignment-chevron-btn:hover {
+    border-color: #01347C;
+    color: #01347C;
+    background: #F8FAFC;
+}
+
+.assignment-chevron-btn svg {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.assignment-chevron-btn.collapsed svg {
+    transform: rotate(180deg);
+}
+
+.assignment-panel-body {
+    padding: 20px 24px;
+    background: #F8FAFC;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    transition: all 0.3s ease;
+}
+
+.assignment-panel-body.is-collapsed {
+    display: none;
+}
+
+/* Tab Filter Navigasi Segmented Pill */
 .classroom-tabs {
     display: flex;
     gap: 10px;
-    margin: -4px -4px 18px -4px;
-    padding: 6px 4px 10px 4px;
+    margin-top: -6px;
+    margin-bottom: 20px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    padding: 8px 6px 10px 6px;
+    align-items: center;
 }
 
 .tab-pill {
     background: #ffffff;
     border: 1.5px solid #CBD5E1;
     border-radius: 9999px;
-    padding: 8px 18px;
-    font-size: 0.875rem;
-    font-weight: 600;
+    padding: 7px 18px;
+    font-size: 0.84rem;
+    font-weight: 700;
     color: #475569;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -74,23 +344,21 @@
     white-space: nowrap;
     font-family: inherit;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-    will-change: transform;
 }
 
 .tab-pill:hover {
-    color: #01347C;
+    color: #003566;
     background: #F8FAFC;
     border-color: #94A3B8;
     transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
 }
 
 .tab-pill.active {
     color: #ffffff;
-    background: #01347C;
-    border-color: #01347C;
-    font-weight: 700;
-    box-shadow: 0 3px 12px rgba(1, 52, 124, 0.25);
+    background: #003566;
+    border-color: #003566;
+    font-weight: 800;
+    box-shadow: 0 3px 12px rgba(0, 53, 102, 0.25);
     transform: translateY(-1px);
 }
 
@@ -98,73 +366,109 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 22px;
-    height: 22px;
-    padding: 0 7px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
     border-radius: 9999px;
     font-size: 0.75rem;
-    font-weight: 700;
-    background: #F1F5F9;
-    color: #334155;
+    font-weight: 800;
+    background: #EFF6FF;
+    color: #003566;
     transition: all 0.2s ease;
 }
 
-.tab-pill:hover .tab-pill-badge {
-    background: #E2E8F0;
-    color: #0F172A;
-}
-
 .tab-pill.active .tab-pill-badge {
-    background: rgba(255, 255, 255, 0.22);
-    color: #ffffff;
+    background: #FFC300;
+    color: #02275D;
 }
 
-/* Alert badge untuk tugas lewat tenggat */
 .tab-pill-badge.badge-overdue {
     background: #FEE2E2;
     color: #DC2626;
 }
 
 .tab-pill.active .tab-pill-badge.badge-overdue {
-    background: #DC2626;
-    color: #ffffff;
+    background: #FFC300;
+    color: #02275D;
 }
 
-/* 4. Assignment Stream Cards */
+.tab-pill[data-filter="terlambat"].active {
+    background: #DC2626;
+    border-color: #DC2626;
+    color: #FFFFFF;
+    box-shadow: 0 3px 12px rgba(220, 38, 38, 0.35);
+}
+
+.tab-pill[data-filter="terlambat"].active .tab-pill-badge {
+    background: #FFFFFF;
+    color: #DC2626;
+}
+
+/* ========================================================
+   4. ASSIGNMENT STREAM CARDS
+   ======================================================== */
 .assignment-list {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
+    padding-top: 4px;
+    margin-top: -4px;
+}
+
+.assignment-card,
+.assignment-card:hover,
+.assignment-card:focus,
+.assignment-title,
+.assignment-title a {
+    text-decoration: none !important;
 }
 
 .assignment-card {
     background: #ffffff;
-    border: 1px solid #CBD5E1;
-    border-radius: 10px;
-    padding: 14px 18px;
+    border: 1.5px solid #CBD5E1;
+    border-left: 4px solid #003566;
+    border-radius: 12px;
+    padding: 12px 18px;
     display: flex;
     align-items: flex-start;
     gap: 14px;
-    text-decoration: none;
+    text-decoration: none !important;
     color: inherit;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-    position: relative;
+    box-shadow: 0 2px 6px -1px rgba(0, 53, 102, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .assignment-card:hover {
     border-color: #01347C;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(1, 52, 124, 0.12);
+    border-left-color: #FFC300;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(1, 52, 124, 0.12);
 }
 
-.assignment-icon-wrapper {
-    width: 36px;
-    height: 36px;
+.assignment-card.selesai {
+    border-left: 4px solid #003566;
+}
+
+.assignment-card.proses {
+    border-left: 4px solid #0284C7;
+}
+
+.assignment-card.terlambat {
+    border-left: 4px solid #DC2626;
+}
+
+.assignment-card.terlambat:hover {
+    border-left-color: #DC2626;
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.12);
+}
+
+.assignment-status-icon {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: #EFF6FF;
-    color: #01347C;
+    background: #003566;
+    color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -172,17 +476,12 @@
     margin-top: 2px;
 }
 
-.assignment-card.selesai .assignment-icon-wrapper {
-    background: #DCFCE7;
-    color: #15803D;
+.assignment-status-icon svg {
+    width: 16px;
+    height: 16px;
 }
 
-.assignment-card.proses .assignment-icon-wrapper {
-    background: #FEF3C7;
-    color: #B45309;
-}
-
-.assignment-card.terlambat .assignment-icon-wrapper {
+.assignment-status-icon.icon-overdue {
     background: #FEE2E2;
     color: #DC2626;
 }
@@ -196,31 +495,35 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
 }
 
 .assignment-title {
     font-size: 0.95rem;
-    font-weight: 700;
-    color: #0F172A;
+    font-weight: 800;
+    color: #003566;
     line-height: 1.35;
     margin: 0;
+    padding: 0;
+    text-decoration: none !important;
+    transition: color 0.15s ease;
 }
 
 .assignment-card:hover .assignment-title {
     color: #01347C;
+    text-decoration: none !important;
 }
 
 .assignment-due {
-    font-size: 0.8125rem;
+    font-size: 0.775rem;
     font-weight: 600;
-    color: #475569;
+    color: #64748B;
     white-space: nowrap;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
 }
 
 .assignment-due.terlambat {
@@ -234,14 +537,15 @@
 }
 
 .assignment-desc {
-    font-size: 0.8125rem;
-    color: #475569;
+    font-size: 0.825rem;
+    color: #64748B;
     line-height: 1.45;
     margin-bottom: 8px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+}
+
+.assignment-divider {
+    border-top: 1px solid #E2E8F0;
+    margin: 6px 0 8px 0;
 }
 
 .assignment-footer {
@@ -250,17 +554,13 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 10px;
-    padding-top: 8px;
-    border-top: 1px solid #E2E8F0;
 }
 
 .assignment-meta-tags {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
-    font-size: 0.75rem;
-    color: #64748B;
 }
 
 .assignment-tag {
@@ -269,40 +569,74 @@
     gap: 4px;
     background: #F1F5F9;
     padding: 3px 10px;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    border-radius: 9999px;
+    font-size: 0.725rem;
+    font-weight: 700;
     color: #334155;
+    border: 1px solid #E2E8F0;
 }
 
-/* 5. Tombol Aksi Buka Tugas Khas Sleman SuperAdmin */
+.assignment-tag-reports {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #EEF2FF;
+    color: #4338CA;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.725rem;
+    font-weight: 700;
+    border: 1px solid #E0E7FF;
+}
+
+.assignment-action-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.assignment-badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #003566;
+    color: #FFFFFF;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    font-size: 0.725rem;
+    font-weight: 800;
+}
+
+/* Primary Action Gold Button: Buka Tugas > */
 .btn-tugas-action {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
-    font-size: 0.775rem;
-    font-weight: 700;
-    color: #01347C;
-    background: #ffffff;
-    border: 1.5px solid #01347C;
+    gap: 5px;
+    padding: 6px 14px;
+    font-size: 0.785rem;
+    font-weight: 800;
+    color: #02275D;
+    background: #FFC300;
+    border: 1.5px solid #FFC300;
     border-radius: 8px;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     white-space: nowrap;
-    box-shadow: 0 1px 2px rgba(1, 52, 124, 0.06);
+    box-shadow: 0 2px 6px rgba(255, 195, 0, 0.3);
 }
 
 .assignment-card:hover .btn-tugas-action,
 .btn-tugas-action:hover {
-    background: #01347C;
-    color: #ffffff;
+    background: #FFCB05;
+    border-color: #FFCB05;
+    color: #003566;
     transform: translateX(2px);
-    box-shadow: 0 3px 8px rgba(1, 52, 124, 0.22);
+    box-shadow: 0 4px 14px rgba(255, 195, 0, 0.45);
 }
 
 .btn-tugas-action svg {
+    color: #02275D;
     transition: transform 0.2s ease;
 }
 
@@ -311,7 +645,7 @@
     transform: translateX(2px);
 }
 
-/* 6. Filter Empty State (Muncul bila filter tidak menemukan data) */
+/* Filter Empty State */
 .filter-empty-state {
     display: none;
     text-align: center;
@@ -349,47 +683,160 @@
     line-height: 1.5;
 }
 
-/* 7. Dark Mode Harmonization */
+.assignment-empty-state {
+    text-align: center;
+    padding: 56px 24px;
+    border: 1px dashed #CBD5E1;
+    border-radius: 12px;
+    background: #F8FAFC;
+}
+
+.assignment-empty-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #EFF6FF;
+    color: #01347C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+}
+
+.assignment-empty-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 6px;
+}
+
+.assignment-empty-desc {
+    font-size: 0.875rem;
+    color: #64748B;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+.assignment-pagination {
+    margin-top: 24px;
+}
+
+/* ========================================================
+   5. RESPONSIVE BREAKPOINTS
+   ======================================================== */
+@media (max-width: 1024px) {
+    .classroom-banner {
+        padding: 24px;
+    }
+
+    .banner-progress-card {
+        width: 100%;
+    }
+
+    .tugas-kpi-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .tugas-kpi-card {
+        padding: 16px;
+    }
+
+    .tugas-kpi-number {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .tugas-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .assignment-panel-body {
+        padding: 16px 14px;
+    }
+
+    .assignment-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 14px;
+        gap: 10px;
+    }
+
+    .assignment-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .assignment-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .assignment-action-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .btn-tugas-action {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ========================================================
+   6. DARK MODE SUPPORT
+   ======================================================== */
+[data-theme="dark"] .banner-progress-card,
+[data-theme="dark"] .tugas-kpi-card,
+[data-theme="dark"] .assignment-panel-container,
 [data-theme="dark"] .assignment-card {
     background: #182234 !important;
     border-color: #26354D !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
 }
 
-[data-theme="dark"] .assignment-card:hover {
-    border-color: #38BDF8 !important;
-    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.15) !important;
-}
-
-[data-theme="dark"] .assignment-title {
+[data-theme="dark"] .progress-card-title,
+[data-theme="dark"] .assignment-title,
+[data-theme="dark"] .assignment-panel-title {
     color: #F8FAFC !important;
 }
 
-[data-theme="dark"] .assignment-desc {
+[data-theme="dark"] .progress-card-percent,
+[data-theme="dark"] .tugas-kpi-number {
+    color: #FFC300 !important;
+}
+
+[data-theme="dark"] .progress-card-sub,
+[data-theme="dark"] .tugas-kpi-label,
+[data-theme="dark"] .assignment-desc,
+[data-theme="dark"] .assignment-due {
     color: #94A3B8 !important;
 }
 
+[data-theme="dark"] .progress-bar-track {
+    background: #26354D !important;
+}
+
 [data-theme="dark"] .tab-pill {
-    background: #182234 !important;
+    background: #0F172A !important;
     border-color: #26354D !important;
     color: #94A3B8 !important;
 }
 
 [data-theme="dark"] .tab-pill:hover {
     background: #1E293B !important;
-    color: #38BDF8 !important;
-    border-color: #38BDF8 !important;
+    color: #FFC300 !important;
+    border-color: #FFC300 !important;
 }
 
 [data-theme="dark"] .tab-pill.active {
-    background: #0284C7 !important;
-    border-color: #0284C7 !important;
+    background: #003566 !important;
+    border-color: #FFC300 !important;
     color: #ffffff !important;
-}
-
-[data-theme="dark"] .tab-pill-badge {
-    background: #0F172A !important;
-    color: #CBD5E1 !important;
 }
 
 [data-theme="dark"] .assignment-tag {
@@ -398,25 +845,28 @@
     border: 1px solid #26354D;
 }
 
-[data-theme="dark"] .assignment-footer {
+[data-theme="dark"] .assignment-tag-reports {
+    background: rgba(67, 56, 202, 0.25) !important;
+    color: #A5B4FC !important;
+    border: 1px solid rgba(165, 180, 252, 0.25);
+}
+
+[data-theme="dark"] .assignment-divider {
     border-color: #26354D !important;
 }
 
-[data-theme="dark"] .btn-tugas-action {
-    background: transparent !important;
-    border-color: #38BDF8 !important;
-    color: #38BDF8 !important;
+[data-theme="dark"] .assignment-panel-header {
+    border-bottom-color: #26354D !important;
 }
 
-[data-theme="dark"] .assignment-card:hover .btn-tugas-action,
-[data-theme="dark"] .btn-tugas-action:hover {
-    background: #0284C7 !important;
-    border-color: #0284C7 !important;
-    color: #ffffff !important;
+[data-theme="dark"] .assignment-chevron-btn {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+    color: #94A3B8 !important;
 }
 
 [data-theme="dark"] .filter-empty-state {
-    background: #182234 !important;
+    background: #0F172A !important;
     border-color: #26354D !important;
 }
 
@@ -428,3 +878,56 @@
     color: #94A3B8 !important;
 }
 
+[data-theme="dark"] .assignment-empty-state {
+    background: #0F172A !important;
+    border-color: #26354D !important;
+}
+
+[data-theme="dark"] .assignment-empty-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .assignment-empty-desc {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .tugas-kpi-icon.icon-terlambat {
+    background: rgba(220, 38, 38, 0.25) !important;
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .tugas-kpi-card.kpi-terlambat:hover {
+    border-color: #EF4444 !important;
+}
+
+[data-theme="dark"] .tab-pill-badge.badge-overdue {
+    background: rgba(220, 38, 38, 0.25) !important;
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .tab-pill[data-filter="terlambat"].active {
+    background: #DC2626 !important;
+    border-color: #EF4444 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .tab-pill[data-filter="terlambat"].active .tab-pill-badge {
+    background: #FFFFFF !important;
+    color: #DC2626 !important;
+}
+
+[data-theme="dark"] .assignment-panel-body {
+    background: #0F172A !important;
+}
+
+[data-theme="dark"] .assignment-card.selesai {
+    border-left: 4px solid #38BDF8 !important;
+}
+
+[data-theme="dark"] .assignment-card.proses {
+    border-left: 4px solid #60A5FA !important;
+}
+
+[data-theme="dark"] .assignment-card.terlambat {
+    border-left: 4px solid #EF4444 !important;
+}

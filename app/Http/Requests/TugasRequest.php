@@ -88,7 +88,7 @@ class TugasRequest extends FormRequest
             'judul.required' => 'Judul penugasan wajib diisi.',
             'deskripsi.required' => 'Petunjuk & instruksi pengerjaan wajib diisi.',
             'deadline.required' => 'Batas waktu (deadline) tugas wajib ditentukan.',
-            'deadline.after_or_equal' => 'Batas waktu (deadline) tugas tidak boleh di masa lampau (AC-08-1).',
+            'deadline.after_or_equal' => 'Batas waktu (deadline) tugas tidak boleh di masa lampau.',
             'link_referensi.url' => 'Format tautan referensi tidak valid. Harap gunakan URL lengkap diawali http:// atau https://.',
             'file_lampiran.mimes' => 'Format berkas lampiran tidak didukung. Harap unggah berkas berformat PDF, Word, Excel, PPT, ZIP, atau Gambar.',
             'file_lampiran.max' => 'Ukuran berkas lampiran tidak boleh melebihi 10 MB.',

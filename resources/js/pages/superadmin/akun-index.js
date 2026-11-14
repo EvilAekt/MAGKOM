@@ -2,7 +2,10 @@
  * Modul Pengaturan Akun & Keamanan SuperAdmin
  * - Toggle visibilitas kata sandi via data-toggle-target
  * - Pemilihan tema tampilan portal via event delegation
+ * - Sistem Animasi Universal (Scroll-Craft + GSAP Paritas Pembimbing)
  */
+import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
+
 export function togglePasswordVisibility(fieldId, btn) {
     const input = document.getElementById(fieldId);
     if (!input || !btn) return;
@@ -45,6 +48,8 @@ window.togglePasswordVisibility = togglePasswordVisibility;
 window.handleThemeSelection = handleThemeSelection;
 
 document.addEventListener('DOMContentLoaded', () => {
+    initSuperAdminPageMotion();
+
     // Event delegation untuk toggle password dan theme cards
     document.addEventListener('click', (event) => {
         const toggleBtn = event.target.closest('.toggle-password-btn');

@@ -33,11 +33,11 @@
         <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Menunggu catatan pembimbing</div>
     </div>
 
-    {{-- Metric 3: Penilaian Final Selesai --}}
+    {{-- Metric 3: Peserta Selesai Magang --}}
     <div class="sa-panel sa-metric sa-metric--success" style="background: var(--cv-surface); border: 1px solid var(--cv-line); border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
-        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Penilaian Final Selesai</div>
+        <div class="sa-metric__label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cv-ink-3); margin-bottom: 0.35rem;">Peserta Selesai Magang</div>
         <div class="sa-metric__value sa-stat-val-success" style="font-size: 2.25rem; font-weight: 800; font-family: monospace; line-height: 1.1;">{{ number_format($totalPenilaianSelesai) }}</div>
-        <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Lembar nilai siap diunduh</div>
+        <div class="sa-metric__hint" style="font-size: 0.75rem; color: var(--cv-ink-2); margin-top: 0.35rem;">Program magang tuntas</div>
     </div>
 
     {{-- Metric 4: Staf Pembimbing Aktif --}}
@@ -266,12 +266,12 @@
             <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">Maks. {{ $batasHariLogbookMundur }} Hari</strong>
         </div>
         <div class="sa-policy-item" style="padding: 0.5rem 0;">
-            <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">Masa Tenggang Lembar Nilai</span>
-            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">{{ $masaTenggangUnduhNilaiHari }} Hari Pasca Nonaktif</strong>
+            <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">Masa Tenggang Akun</span>
+            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">{{ $masaTenggangBulan ?? 2 }} Bulan Pasca Magang</strong>
         </div>
         <div class="sa-policy-item" style="padding: 0.5rem 0;">
-            <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">Passing Grade Predikat</span>
-            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">Minimal Nilai {{ $passingGradeNilai }}</strong>
+            <span class="sa-metric__label" style="font-size: 0.725rem; color: var(--cv-ink-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 2px;">Kelulusan Magang</span>
+            <strong class="sa-policy-val" style="font-size: 0.875rem; color: var(--cv-ink);">Penetapan Mentor ASN</strong>
         </div>
         <div class="sa-policy-item sa-policy-item--action" style="text-align: right;">
             <a href="{{ route('superadmin.pengaturan.index') }}" class="sa-link">

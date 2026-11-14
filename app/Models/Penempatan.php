@@ -103,7 +103,35 @@ class Penempatan extends Model
     }
 
     /**
+     * Dapatkan durasi magang yang dipilih peserta dalam satuan bulan.
+     */
+    public function getDurasiBulanAttribute(): int
+    {
+        if ($this->relationLoaded('pendaftaran') && $this->pendaftaran?->durasi_bulan) {
+            return (int) $this->pendaftaran->durasi_bulan;
+        }
+
+        if ($this->pendaftaran_id) {
+            $durasi = $this->pendaftaran()->value('durasi_bulan');
+            if ($durasi) {
+                return (int) $durasi;
+            }
+        }
+
+        if ($this->tgl_mulai && $this->tgl_selesai) {
+            $mulai = $this->tgl_mulai->copy()->startOfDay();
+            $selesai = $this->tgl_selesai->copy()->endOfDay();
+            $diffDays = $mulai->diffInDays($selesai) + 1;
+
+            return max(1, (int) round($diffDays / 30));
+        }
+
+        return 3;
+    }
+
+    /**
      * Dapatkan nomor minggu magang yang sedang berjalan saat ini.
+     * Mengembalikan 0 jika magang belum dimulai (pra-magang).
      */
     public function getMingguAktifAttribute(): int
     {
@@ -115,7 +143,7 @@ class Penempatan extends Model
         $mulai = $this->tgl_mulai->copy()->startOfDay();
 
         if ($today->lt($mulai)) {
-            return 1;
+            return 0;
         }
 
         $diffDays = $mulai->diffInDays($today);

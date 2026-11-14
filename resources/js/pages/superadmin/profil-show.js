@@ -1,10 +1,11 @@
 /**
- * Modul Profil SuperAdmin
- * - Penanganan upload dan preview avatar pasfoto
- * - Validasi ukuran berkas client-side (maksimal 2 MB)
- * - State tombol submit loading
+ * MagKom - Modul Interaktif Halaman Profil Super Administrator
+ * Menangani preview avatar, scroll & focus tombol Edit,
+ * validasi checkbox persetujuan, dan proteksi submit ganda.
  */
+
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Inisialisasi Elemen Avatar & Upload
     const inputFoto = document.getElementById('inputFotoProfil');
     const btnPilihFoto = document.getElementById('btnPilihFoto');
     const btnPilihFotoOverlay = document.getElementById('btnPilihFotoOverlay');
@@ -21,17 +22,33 @@ document.addEventListener('DOMContentLoaded', () => {
     inputFoto?.addEventListener('change', function () {
         if (this.files && this.files[0]) {
             const file = this.files[0];
+
+            // Validasi ukuran maksimal 2 MB
             if (file.size > 2 * 1024 * 1024) {
                 if (window.MagKomToast) {
-                    window.MagKomToast.warning('Ukuran Pasfoto Terlalu Besar', 'Ukuran berkas pasfoto melebihi batas maksimal 2 MB.');
+                    window.MagKomToast.warning('Ukuran Berkas Terlalu Besar', 'Ukuran pasfoto melebihi batas maksimal 2 MB.');
                 } else {
-                    alert('Ukuran berkas pasfoto melebihi batas maksimal 2 MB.');
+                    alert('Ukuran pasfoto melebihi batas maksimal 2 MB.');
                 }
                 this.value = '';
                 return;
             }
+
+            // Validasi format file
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                if (window.MagKomToast) {
+                    window.MagKomToast.warning('Format Tidak Didukung', 'Silakan unggah pasfoto dalam format JPG, PNG, atau WEBP.');
+                } else {
+                    alert('Silakan unggah pasfoto dalam format JPG, PNG, atau WEBP.');
+                }
+                this.value = '';
+                return;
+            }
+
             if (inputHapusFoto) inputHapusFoto.value = '0';
             if (selectedFileName) selectedFileName.textContent = '✓ ' + file.name;
+
             const reader = new FileReader();
             reader.onload = function (e) {
                 if (previewImg) {
@@ -47,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     btnHapusFoto?.addEventListener('click', function () {
-        if (confirm('Apakah Anda yakin ingin menghapus foto profil dan kembali menggunakan inisial bawaan?')) {
+        if (confirm('Apakah Anda yakin ingin menghapus pasfoto profil dan kembali menggunakan inisial bawaan?')) {
             if (inputHapusFoto) inputHapusFoto.value = '1';
             if (inputFoto) inputFoto.value = '';
             if (previewImg) {
@@ -55,24 +72,57 @@ document.addEventListener('DOMContentLoaded', () => {
                 previewImg.style.display = 'none';
             }
             if (fallbackIcon) {
-                fallbackIcon.style.display = 'flex';
+                fallbackIcon.style.display = 'block';
             }
-            if (selectedFileName) selectedFileName.textContent = '(Foto akan dihapus saat Anda menekan tombol Simpan)';
+            if (selectedFileName) {
+                selectedFileName.textContent = 'Foto akan dihapus saat disimpan';
+                selectedFileName.style.color = '#EF4444';
+            }
         }
     });
 
-    document.getElementById('formProfilStaff')?.addEventListener('submit', function () {
-        const btn = document.getElementById('btnSimpanProfil');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = `
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
-                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" style="opacity: 0.75;"></path>
+    // 2. Tombol Edit Scroll & Smooth Focus
+    const btnEditIdentitas = document.getElementById('btnEditIdentitas');
+    const btnEditKontak = document.getElementById('btnEditKontak');
+    const inputNama = document.getElementById('nama');
+    const inputNoTelp = document.getElementById('no_telp');
+
+    btnEditIdentitas?.addEventListener('click', () => {
+        if (inputNama) {
+            inputNama.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            inputNama.focus();
+        }
+    });
+
+    btnEditKontak?.addEventListener('click', () => {
+        if (inputNoTelp) {
+            inputNoTelp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            inputNoTelp.focus();
+        }
+    });
+
+    // 3. Checkbox Persetujuan & Tombol Submit
+    const checkPersetujuan = document.getElementById('checkPersetujuan');
+    const btnSubmitProfil = document.getElementById('btnSubmitProfil');
+    const formProfilStaff = document.getElementById('formProfilStaff');
+
+    checkPersetujuan?.addEventListener('change', function () {
+        if (btnSubmitProfil) {
+            btnSubmitProfil.disabled = !this.checked;
+        }
+    });
+
+    // 4. Proteksi Double Submit
+    formProfilStaff?.addEventListener('submit', function () {
+        if (btnSubmitProfil) {
+            btnSubmitProfil.disabled = true;
+            btnSubmitProfil.innerHTML = `
+                <svg class="profil-spinner" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+                    <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
                 </svg>
-                <span>Menyimpan Data...</span>
+                <span>Menyimpan...</span>
             `;
         }
     });
 });
-

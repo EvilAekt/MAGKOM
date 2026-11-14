@@ -22,7 +22,7 @@ class SecurityRateLimitingAndBruteForceTest extends TestCase
     }
 
     /**
-     * NFR-S2 & OWASP A07: Login rate limiting blocks brute-force after 5 attempts.
+     * NFR-S2 & OWASP A07: Login rate limiting blocks brute-force after 3 attempts.
      */
     public function test_login_rate_limiter_blocks_brute_force_after_threshold(): void
     {
@@ -31,8 +31,8 @@ class SecurityRateLimitingAndBruteForceTest extends TestCase
             'password' => 'PasswordBenar123!',
         ]);
 
-        // 5 percobaan login gagal berturut-turut
-        for ($i = 0; $i < 5; $i++) {
+        // 3 percobaan login gagal berturut-turut
+        for ($i = 0; $i < 3; $i++) {
             $response = $this->post(route('login'), [
                 'email' => 'peserta.target@example.com',
                 'password' => 'PasswordSalah!',
@@ -40,7 +40,7 @@ class SecurityRateLimitingAndBruteForceTest extends TestCase
             $response->assertSessionHasErrors('email');
         }
 
-        // Percobaan ke-6 harus di-throttle (HTTP 429 Too Many Requests)
+        // Percobaan ke-4 harus di-throttle (HTTP 429 Too Many Requests)
         $blockedResponse = $this->post(route('login'), [
             'email' => 'peserta.target@example.com',
             'password' => 'PasswordSalah!',

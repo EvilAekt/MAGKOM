@@ -30,7 +30,7 @@ class PesertaProfilQuery
     {
         $user->loadMissing(['kelompokMagang.anggota']);
         $profil = $user->profil;
-        $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
+        $jurusanList = Jurusan::cachedAktif();
 
         $kelompokMagang = $user->kelompokMagang;
         if (! $kelompokMagang) {

@@ -72,5 +72,7 @@ class Handler extends ExceptionHandler
                 Integration::captureUnhandledException($e);
             }
         });
+
+        //
     }
 }

@@ -2,9 +2,12 @@
  * MAGKOM CMS Super Admin - Visual Form Builders & Theming Interactions
  * Menangani dynamic repeaters untuk Navigasi, FAQ, Footer, Kebijakan, dan Color Pickers
  * Sesuai aturan PSR-12, ESLint, dan arsitektur tanpa inline script di Blade.
+ * Sistem Animasi Universal (Scroll-Craft + GSAP Paritas Pembimbing)
  */
+import { initSuperAdminPageMotion } from '../../services/superadmin-motion.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    initSuperAdminPageMotion();
     initRepeaters();
     initColorPickers();
 });

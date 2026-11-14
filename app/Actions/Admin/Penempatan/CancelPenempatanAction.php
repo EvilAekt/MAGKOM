@@ -41,9 +41,18 @@ class CancelPenempatanAction
             $sebelumMulai = $hariIni->lt($tglMulai);
 
             if ($sebelumMulai) {
+                // Hitung jumlah peserta yang dialokasikan (1 individu atau 1 ketua + N anggota kelompok)
+                $jumlahPeserta = 1;
+                if ($p->pendaftaran_id) {
+                    $pendaftaran = Pendaftaran::with('kelompokMagang.anggota')->find($p->pendaftaran_id);
+                    if ($pendaftaran?->kelompok_magang_id && $pendaftaran->kelompokMagang) {
+                        $jumlahPeserta = 1 + $pendaftaran->kelompokMagang->anggota->count();
+                    }
+                }
+
                 // Sebelum tanggal mulai: kembalikan kuota via QuotaAllocationService & akun peserta tetap aktif
                 if ($p->kuota_id) {
-                    $this->quotaAllocationService->lepasKuotaUmum((int) $p->kuota_id);
+                    $this->quotaAllocationService->lepasKuotaUmum((int) $p->kuota_id, $jumlahPeserta);
                 } elseif ($p->slot_khusus_id) {
                     $this->quotaAllocationService->lepasKuotaKhusus((int) $p->slot_khusus_id);
                 }

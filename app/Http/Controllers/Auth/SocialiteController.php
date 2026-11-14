@@ -9,7 +9,6 @@ use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\AuditService;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -188,41 +187,36 @@ class SocialiteController extends Controller
                 ->with('success', 'Akun Google Anda berhasil ditautkan ke akun MagKom.');
         }
 
-        // Kasus 3: Belum ada akun dengan email ini -> Buat akun Peserta baru
+        // Kasus 3: Belum ada akun dengan email ini -> TOLAK LOGIN & ARAHKAN KE REGISTRASI
+        // Logika bisnis: Pengguna wajib memilih jenjang, bidang, dan jurusan melalui formulir registrasi resmi.
         $name = $oauthUser->getName() ?: 'Peserta Magang';
-
-        $newUser = new User;
-        $newUser->nama = (string) $name;
-        $newUser->email = $email;
-        $newUser->password = null;
-        $newUser->provider = $provider;
-        $newUser->provider_id = $providerId;
-        $newUser->role = RoleEnum::Peserta;
-        $newUser->status_aktif = true;
-        $newUser->email_verified_at = now();
-        $newUser->save();
-
-        event(new Registered($newUser));
-
-        Auth::login($newUser);
-        $request->session()->regenerate();
 
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
             tabel: 'users',
-            idData: $newUser->id,
+            idData: null,
             nilaiLama: null,
             nilaiBaru: [
-                'nama' => $newUser->nama,
-                'email' => $newUser->email,
-                'role' => $newUser->role->value,
+                'email' => $email,
                 'provider' => $provider,
                 'provider_id' => $providerId,
             ],
-            detail: ['aksi' => 'registrasi_oauth_berhasil']
+            detail: [
+                'aksi' => 'login_oauth_ditolak_belum_terdaftar',
+                'alasan' => 'Akun belum terdaftar. Wajib registrasi untuk memilih jenjang dan jurusan magang.',
+                'ip_address' => $request->ip(),
+                'user_agent' => substr((string) $request->userAgent(), 0, 255),
+            ]
         );
 
-        return redirect()->route('peserta.profil.show')
-            ->with('success', 'Pendaftaran berhasil menggunakan akun Google. Silakan lengkapi profil biodata Anda.');
+        $request->session()->put('oauth_register_data', [
+            'email' => $email,
+            'nama' => $name,
+            'provider' => $provider,
+            'provider_id' => $providerId,
+        ]);
+
+        return redirect()->route('register')
+            ->with('warning', 'Akun Google Anda ('.$email.') belum terdaftar di MagKom. Silakan lakukan pendaftaran terlebih dahulu untuk memilih jenjang pendidikan dan jurusan magang.');
     }
 }

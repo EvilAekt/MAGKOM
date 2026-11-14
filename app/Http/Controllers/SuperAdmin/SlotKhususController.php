@@ -110,7 +110,7 @@ class SlotKhususController extends Controller
                 ->exists();
 
             if ($hasActivePenempatan) {
-                return back()->with('error', 'Penonaktifan ditolak (BR-12): Masih terdapat peserta magang aktif pada slot khusus ini.');
+                return back()->with('error', 'Penonaktifan ditolak: Masih terdapat peserta magang aktif pada slot khusus ini.');
             }
         }
 

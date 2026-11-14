@@ -48,7 +48,7 @@ class LaporanController extends Controller
         ];
 
         $bulanMagangList = BulanMagang::orderBy('bulan_mulai', 'desc')->get();
-        $jurusanList = Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
+        $jurusanList = Jurusan::cachedAktif();
 
         // Visual Analytics Keterisian Kuota per Jurusan (AC-17-1)
         $analyticsKuotaJurusan = Kuota::with('jurusan')

@@ -10,7 +10,7 @@
         }
     }
 @endphp
-<div class="sa-hero-banner" style="margin-bottom: 1.5rem;">
+<div class="sa-hero-banner sc-reveal-hero" data-scroll-reveal style="margin-bottom: 1.5rem;">
     <div class="banner-top-row">
         <div>
             <h1 class="banner-title">Audit Log</h1>

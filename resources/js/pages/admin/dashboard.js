@@ -395,5 +395,15 @@ if (typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', () => {
     initAdminDashboardCalendar();
     initAdminDashboardMotion();
+
+    // Event listener pemilihan bulan magang tanpa inline handler
+    const selectBulan = document.getElementById('selectBulan');
+    if (selectBulan) {
+      selectBulan.addEventListener('change', function () {
+        if (this.form) {
+          this.form.submit();
+        }
+      });
+    }
   });
 }
