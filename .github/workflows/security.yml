@@ -188,7 +188,7 @@ jobs:
             --error
 
       - name: Upload Semgrep SARIF Security Report
-        uses: github/codeql-action/upload-sarif@6bb031afdd8eb862ea3fc1848194185e076637e5 # v3.28.11
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
         if: always()
         with:
           sarif_file: semgrep.sarif
