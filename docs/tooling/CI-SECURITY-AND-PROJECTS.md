@@ -302,6 +302,6 @@ Sesuai aturan rekayasa, pembaruan framework major **tidak dilakukan pada pekerja
    - Menjalankan `composer require laravel/framework:^11.0 --no-update` dan penyesuaian dependensi dev.
    - Menjalankan migrasi database di lingkungan staging.
 4. **Fase 4 — Regression Testing Penuh**:
-   - Memastikan seluruh 740+ assertions PHPUnit dan seluruh feature test lulus tanpa regresi.
+   - Memastikan seluruh 942 tests dan 6.132 assertions PHPUnit lulus tanpa regresi.
    - Menjalankan kembali `composer audit` untuk memverifikasi resolusi CVE Symfony.
 

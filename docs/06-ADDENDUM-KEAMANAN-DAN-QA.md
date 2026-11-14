@@ -322,13 +322,13 @@ WHERE tipe = 'auth' AND aksi = 'login.gagal' AND waktu > NOW() - INTERVAL 10 MIN
 Melengkapi TDD bab 11 (isinya tidak diulang).
 
 > [!IMPORTANT]
-> ### Metrik Test Suite Aktif (Baseline November 2026)
-> Seluruh kode sistem MagKom diuji secara ketat melalui rangkaian pengujian otomatis **740+ Feature & Unit Tests** yang terbagi ke dalam **111 Test Suites** dengan basis data SQLite in-memory terisolasi (dan MySQL asli untuk pengujian konkurensi grup). Seluruh test suite wajib berstatus hijau (`PASS`) 100% sebelum Pull Request digabungkan ke branch `main`.
+> ### Metrik Test Suite Aktif (Rilis v1.3.0 - 14 November 2026)
+> Seluruh kode sistem MagKom diuji secara ketat melalui rangkaian pengujian otomatis **942 Feature & Unit Tests** yang terbagi ke dalam **126 Test Suites (6.132 assertions)** dengan basis data SQLite in-memory terisolasi (dan MySQL 8 asli untuk pengujian konkurensi grup). Seluruh test suite wajib berstatus hijau (`PASS`) 100% sebelum Pull Request digabungkan ke branch `main`.
 
 | Lapisan | Isi | Penulis | Dijalankan | Gerbang |
 | --- | --- | --- | --- | --- |
 | Unit (U) | `PeriodeMagang`, `BulanStatusService`, `ScoringService`, aksesor Terlambat, sanitasi audit | Developer | CI setiap PR | Hijau; cakupan Services dan Policies minimal 80% |
-| Feature (F) | Semua AC lewat HTTP dan MySQL (740+ skenario pengujian aktif) | Developer | CI setiap PR | Hijau |
+| Feature (F) | Semua AC lewat HTTP dan MySQL (942 skenario pengujian aktif) | Developer | CI setiap PR | Hijau |
 | Security (S) | TCS yang dapat diotomasi, folder `tests/Security` & Anti-IDOR | Developer atau QA | CI setiap PR | Hijau |
 | Konkurensi (K) | Grup `concurrency`, proses PHP terpisah | Senior atau QA | CI pada PR yang menyentuh Service kuota, penempatan, keputusan; dan tiap malam | Hijau |
 | E2E (E) | Playwright untuk 6 alur kritis (B.6) | QA | Tiap malam dan setelah deploy staging | Hijau |

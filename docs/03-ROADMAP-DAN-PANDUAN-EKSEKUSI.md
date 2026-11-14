@@ -246,7 +246,14 @@ gantt
 - [x] **Modernisasi Bento Grid Dashboard & Preloader Sleman**: Perancangan ulang dashboard Peserta dan Admin dengan komponen kartu bento modular, kalender presensi, dan splash screen animasi khas Pemkab Sleman.
 - [x] **Pemisahan Arsitektur Landing CMS & Kepatuhan Penuh CSP**: Dekomposisi 700+ baris logika CMS ke `LandingCmsService` serta migrasi telemetri Health Monitor ke Vanilla ES Module mandiri (`health-monitor.js`) tanpa inline script.
 - [x] **Standardisasi Ekspor Data Kinerja**: Pembangunan modul ekspor CSV dan Excel XLSX terproteksi anti-formula injection untuk penilaian dan portofolio ASN.
-- [x] **Peningkatan Automated Test Suite**: Ekspansi pengujian otomatis hingga mencapai **740+ automated tests (111 test files)** dengan kelulusan 100%.
+- [x] **Peningkatan Automated Test Suite**: Ekspansi pengujian otomatis hingga mencapai **942 automated tests (126 test files, 6.132 assertions)** dengan kelulusan 100%.
+
+### Rilis Produksi Terkurasi v1.3.0 (14 November 2026) — [SELESAI 100%]
+- [x] **Mini-Sidebar Floating Flyout Menu**: Menu navigasi melayang tetap (`fixed flyout`) saat sidebar mini berstatus diciutkan (`nav-sm`) dengan aksen Sleman Navy Blue (`#02275D` / `#011C44`).
+- [x] **Standarisasi Modal Interaktif SuperAdmin**: Penggantian dialog browser native (`confirm()`, `prompt()`) dengan modal terstandarisasi berbasis Plus Jakarta Sans dan backdrop blur pada Master Bidang, Bulan, Jurusan, Slot Khusus, dan Backup.
+- [x] **Dynamic Anti-Bot SVG Captcha & DOM Shuffling**: Proteksi brute-force login dinamis internal tanpa dependensi library eksternal dengan decoy honeypot.
+- [x] **Seeder Akun Bersih Gmail**: Otomasi penyelarasan akun uji coba 4 peran resmi berformat `@gmail.com` lengkap dengan foto profil dan riwayat aktivitas.
+- [x] **Automated Security Pipeline**: 12 GitHub Actions checks lulus 100% (Semgrep SAST, Gitleaks, CodeQL, MySQL 8 Concurrency Gate).
 
 ---
 
