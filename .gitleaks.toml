@@ -1,0 +1,18 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "MAGKOM allowlist for testing keys, documentation examples, and vendor directories"
+paths = [
+    '''phpunit\.xml''',
+    '''\.env\.example''',
+    '''docs/.*''',
+    '''tests/.*''',
+    '''vendor/.*''',
+    '''node_modules/.*''',
+    '''\.sokudo/.*'''
+]
+regexes = [
+    '''base64:2fl\+Ktvkfl\+Fuz4Qp/1SeSgqqN7DVBhhY\+GwYqS1nvg='''
+]
+
