@@ -191,28 +191,8 @@ final class AdvancedThreePillarsDashboardTest extends TestCase
     }
 
     // =========================================================================
-    // PILAR 3: SUPERADMIN TELEMETRI & DISASTER RECOVERY
+    // PILAR 3: SUPERADMIN DISASTER RECOVERY & BACKUP HUB
     // =========================================================================
-
-    public function test_superadmin_health_monitor_returns_system_telemetry(): void
-    {
-        $response = $this->actingAs($this->superAdmin)->get(route('superadmin.health.index'));
-
-        $response->assertOk();
-        $response->assertSee('Panel Telemetri Kesehatan Infrastruktur');
-        $response->assertSee('Koneksi Basis Data');
-        $response->assertSee('Storage');
-        $response->assertSee('Runtime');
-    }
-
-    public function test_non_superadmin_forbidden_from_health_monitor(): void
-    {
-        $response = $this->actingAs($this->admin)->get(route('superadmin.health.index'));
-        $response->assertForbidden();
-
-        $responsePembimbing = $this->actingAs($this->pembimbing1)->get(route('superadmin.health.index'));
-        $responsePembimbing->assertForbidden();
-    }
 
     public function test_superadmin_can_trigger_database_backup_and_download(): void
     {

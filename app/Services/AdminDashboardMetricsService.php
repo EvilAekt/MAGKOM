@@ -14,6 +14,7 @@ use App\Models\Penempatan;
 use App\Models\SlotKhusus;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class AdminDashboardMetricsService
 {
@@ -23,6 +24,24 @@ class AdminDashboardMetricsService
      * @return array<string, mixed>
      */
     public function buildDashboardData(?string $bulanId = null): array
+    {
+        if (app()->environment('testing')) {
+            return $this->computeFreshDashboardData($bulanId);
+        }
+
+        $cacheKey = 'admin_metrics_dashboard_'.($bulanId ?? 'default');
+
+        return Cache::remember($cacheKey, 30, function () use ($bulanId) {
+            return $this->computeFreshDashboardData($bulanId);
+        });
+    }
+
+    /**
+     * Komputasi segar seluruh data metrik operasional untuk Dashboard Admin (PRD 9.2).
+     *
+     * @return array<string, mixed>
+     */
+    public function computeFreshDashboardData(?string $bulanId = null): array
     {
         // 1. Metrik Operasional Pendaftaran & Penempatan
         $pengajuanMenunggu = Pendaftaran::where('status', StatusPendaftaranEnum::Diajukan)->count();

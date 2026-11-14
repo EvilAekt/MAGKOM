@@ -211,7 +211,68 @@
                     </a>
                 @endguest
             </div>
+
+            <!-- Mobile Navigation Toggle Button (Vanilla JS ES Module Bound) -->
+            <button type="button" 
+                    class="landing-mobile-toggle" 
+                    id="landingMobileToggle"
+                    data-action="toggle-landing-menu" 
+                    aria-controls="landingMobileDrawer" 
+                    aria-expanded="false" 
+                    aria-label="Buka Menu Navigasi">
+                <svg class="toggle-icon toggle-icon-menu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+                <svg class="toggle-icon toggle-icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
+
+        <!-- Backdrop Scrim for Mobile Drawer -->
+        <div class="landing-mobile-backdrop" id="landingMobileBackdrop" data-action="close-landing-menu" aria-hidden="true"></div>
+
+        <!-- Mobile Navigation Drawer -->
+        <nav class="landing-mobile-drawer" id="landingMobileDrawer" aria-label="Navigasi Mobile" aria-hidden="true">
+            <div class="landing-mobile-drawer-inner">
+                <div class="landing-mobile-drawer-links">
+                    @foreach($headerNavLinks as $hNav)
+                        @if(!empty($hNav['label']) && !empty($hNav['url']))
+                            <a href="{{ $hNav['url'] }}" class="landing-mobile-nav-link" data-action="close-landing-menu">{{ $hNav['label'] }}</a>
+                        @endif
+                    @endforeach
+                </div>
+
+                <div class="landing-mobile-auth-group">
+                    @guest
+                        <a href="{{ route('login') }}" class="btn-mobile-login" data-action="close-landing-menu">Login</a>
+                        <a href="#kuota" class="btn-mobile-register" data-action="close-landing-menu">Daftar Magang</a>
+                    @else
+                        @php
+                            $user = auth()->user();
+                            $dashboardRoute = match($user?->role?->value ?? ($user?->role instanceof \App\Enums\RoleEnum ? $user->role->value : 'peserta')) {
+                                'superadmin' => route('superadmin.dashboard'),
+                                'admin' => route('admin.dashboard'),
+                                'pembimbing' => route('pembimbing.dashboard'),
+                                default => route('peserta.dashboard'),
+                            };
+                        @endphp
+                        <a href="{{ $dashboardRoute }}" class="btn-mobile-register" data-action="close-landing-menu" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                            <span>Buka Dashboard</span>
+                        </a>
+                    @endguest
+                </div>
+            </div>
+        </nav>
     </header>
 
     <!-- =======================================================================

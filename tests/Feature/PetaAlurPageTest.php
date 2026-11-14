@@ -133,7 +133,7 @@ class PetaAlurPageTest extends TestCase
         $response->assertSee('REGISTRASI AKUN', false);
         $response->assertSee('ADMINISTRASI & SELEKSI', false);
         $response->assertSee('PELAKSANAAN MAGANG', false);
-        $response->assertSee('KELULUSAN & SERTIFIKAT', false);
+        $response->assertSee('SELESAI MAGANG', false);
 
         // Verifikasi tombol navigasi antar pos (Lanjut Pos) langsung memanggil selectModalStep
         $response->assertSee('selectModalStep(2)', false);

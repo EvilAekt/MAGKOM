@@ -76,8 +76,8 @@
         </div>
 
         <div>
-          <h4 style="margin: 0 0 6px; font-size: 14.5px; font-weight: 700; color: #003566">4. Kelulusan &amp; Sertifikat Resmi</h4>
-          <p style="margin: 0; color: #5F6B76">Sertifikat magang resmi dengan Tanda Tangan Elektronik (TTE) diberikan kepada peserta yang memenuhi seluruh capaian tugas dan berintegritas.</p>
+          <h4 style="margin: 0 0 6px; font-size: 14.5px; font-weight: 700; color: #003566">4. Kelulusan &amp; Penyelesaian Magang</h4>
+          <p style="margin: 0; color: #5F6B76">Status kelulusan resmi diberikan kepada peserta yang telah memenuhi seluruh capaian tugas, mengisi logbook mingguan, dan menjaga integritas kedinasan.</p>
         </div>
       </div>
 

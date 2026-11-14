@@ -161,7 +161,7 @@ class PendaftaranIndexQuery
      */
     public function getJurusanList(): Collection
     {
-        return Jurusan::where('aktif', true)->orderBy('nama_jurusan')->get();
+        return Jurusan::cachedAktif();
     }
 
     /**
@@ -193,7 +193,7 @@ class PendaftaranIndexQuery
             ->orderBy('nama')
             ->get();
 
-        $bidangList = Bidang::where('aktif', true)->orderBy('nama_bidang')->get();
+        $bidangList = Bidang::cachedAktif();
 
         // Hitung sisa kuota jurusan untuk bulan magang pendaftaran terkait (AC-04-4)
         $kuota = $pendaftaran->kuota;

@@ -22,7 +22,7 @@
                     <th style="padding: 0.875rem 1rem;">Kontak & Kampus</th>
                     <th style="padding: 0.875rem 1rem;">Timeline Dinas</th>
                     <th style="padding: 0.875rem 1rem;">Ketuntasan Tugas</th>
-                    <th style="padding: 0.875rem 1rem;">Status Nilai</th>
+                    <th style="padding: 0.875rem 1rem;">Status Magang</th>
                     <th style="padding: 0.875rem 1.5rem; text-align: right;">Aksi Cepat</th>
                 </tr>
             </thead>
@@ -32,7 +32,7 @@
                         $totalTugas = $mentee->tugas->count();
                         $selesaiTugas = $mentee->tugas->where('status', \App\Enums\StatusTugasEnum::Selesai)->count();
                         $persenTugas = $totalTugas > 0 ? (int) round(($selesaiTugas / $totalTugas) * 100) : 0;
-                        $statusNilai = $mentee->penilaian?->status->value ?? 'belum';
+                        $isSelesai = $mentee->status === \App\Enums\StatusPenempatanEnum::Selesai;
                     @endphp
                     <tr style="border-bottom: 1px solid var(--neutral-100, #F1F5F9);">
                         <td style="padding: 1rem 1.5rem;">
@@ -65,8 +65,8 @@
                             </div>
                         </td>
                         <td style="padding: 1rem 1rem;">
-                            <span style="font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px; background: {{ $statusNilai === 'final' ? '#dcfce7' : ($statusNilai === 'draft' ? '#fef3c7' : '#f1f5f9') }}; color: {{ $statusNilai === 'final' ? '#166534' : ($statusNilai === 'draft' ? '#92400e' : '#475569') }};">
-                                {{ ucfirst($statusNilai) }}
+                            <span style="font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px; background: {{ $isSelesai ? '#dcfce7' : '#e0e7ff' }}; color: {{ $isSelesai ? '#166534' : '#3730a3' }};">
+                                {{ $isSelesai ? 'Selesai Magang' : 'Aktif Bimbingan' }}
                             </span>
                         </td>
                         <td style="padding: 1rem 1.5rem; text-align: right; white-space: nowrap;">

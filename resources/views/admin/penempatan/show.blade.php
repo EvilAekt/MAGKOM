@@ -188,20 +188,20 @@
             </div>
         </div>
 
-        {{-- Stat 3: Nilai Akhir --}}
+        {{-- Stat 3: Status Magang --}}
         <div class="metric-tile-card">
             <div class="metric-tile-top">
-                <span class="metric-tile-title">Nilai Akhir</span>
-                <div class="metric-tile-icon-box" style="background: #FFFBEB; color: #D97706;">
+                <span class="metric-tile-title">Status Magang</span>
+                <div class="metric-tile-icon-box" style="background: #ECFDF5; color: #059669;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
                 </div>
             </div>
-            <div class="metric-tile-value">
-                {{ $nilaiAkhir !== null ? number_format((float) $nilaiAkhir, 2) : 'Belum Ada' }}
+            <div class="metric-tile-value" style="font-size: 1.125rem;">
+                {{ $penempatan->status->label() }}
             </div>
             <div class="metric-tile-sub">
-                <span style="font-weight: 700; color: {{ $nilaiAkhir !== null ? '#D97706' : '#64748B' }};">
-                    {{ $penempatan->penilaian?->predikat ? 'Predikat: ' . $penempatan->penilaian->predikat : 'Evaluasi pembimbing' }}
+                <span style="font-weight: 700; color: {{ $penempatan->status === \App\Enums\StatusPenempatanEnum::Selesai ? '#059669' : '#4F46E5' }};">
+                    {{ $penempatan->status === \App\Enums\StatusPenempatanEnum::Selesai ? 'Program Magang Tuntas' : 'Sedang Bimbingan Aktif' }}
                 </span>
             </div>
         </div>

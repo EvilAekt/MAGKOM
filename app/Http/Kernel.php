@@ -13,7 +13,6 @@ use App\Http\Middleware\EnsureSuperAdminReadOnly;
 use App\Http\Middleware\EnsureUserHasRole;
 use App\Http\Middleware\LogAuditTrail;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
-use App\Http\Middleware\RecordRoutePerformance;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
@@ -72,7 +71,6 @@ class Kernel extends HttpKernel
             SubstituteBindings::class,
             SecurityHeaders::class,
             LogAuditTrail::class,
-            RecordRoutePerformance::class,
             EnsureLandingPreviewContext::class,
         ],
 

@@ -648,11 +648,11 @@
                         <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem;">
                             <div>
                                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">Judul Tahap 04</label>
-                                <input type="text" name="step4_title" value="{{ old('step4_title', $cmsData['tahapan_steps'][3]['title'] ?? 'Kelulusan') }}" required style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem;">
+                                <input type="text" name="step4_title" value="{{ old('step4_title', $cmsData['tahapan_steps'][3]['title'] ?? 'Selesai Magang') }}" required style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem;">
                             </div>
                             <div>
                                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">Deskripsi Tahap 04</label>
-                                <input type="text" name="step4_desc" value="{{ old('step4_desc', $cmsData['tahapan_steps'][3]['desc'] ?? 'Unduh Lembar Nilai Magang dan sertifikat dalam bentuk PDF dari portal.') }}" required style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem;">
+                                <input type="text" name="step4_desc" value="{{ old('step4_desc', $cmsData['tahapan_steps'][3]['desc'] ?? 'Penyelesaian program magang, pengumpulan laporan akhir, dan pelepasan resmi peserta oleh dinas.') }}" required style="width: 100%; height: 40px; border: 1px solid var(--neutral-400); border-radius: 6px; padding: 0 0.75rem; font-size: 0.875rem;">
                             </div>
                         </div>
                     </div>

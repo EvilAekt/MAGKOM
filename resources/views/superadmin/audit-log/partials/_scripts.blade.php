@@ -251,67 +251,200 @@ function showAdvancedExportOptions() {
 }
 
 /**
- * Live Inspection Data Payload
+ * Live Inspection Data Payload & On-Demand Async Cache (PERF-P0-02)
  */
 let currentInspectorPayload = null;
+const auditDetailCache = new Map();
+const pendingAuditFetches = new Set();
 
 function inspectAuditMutation(btn) {
     if (!btn) return;
-    try {
-        const raw = btn.getAttribute('data-log-payload');
-        if (!raw) return;
-        const data = JSON.parse(raw);
-        currentInspectorPayload = data;
 
-        // 1. Update Inline Inspector Card Elements
-        const idElem = document.getElementById('diffInspectorId');
-        if (idElem) idElem.textContent = data.id;
-
-        const reqIdElem = document.getElementById('diffInspectorReqId');
-        if (reqIdElem) reqIdElem.textContent = data.request_id;
-
-        const subElem = document.getElementById('diffInspectorSub');
-        if (subElem) {
-            subElem.textContent = data.aksi + ' • ' + (data.entitas ? (data.entitas + (data.entitas_id ? (' #' + data.entitas_id) : '')) : 'Sistem');
+    // 1. Dukungan fallback jika data-log-payload lama masih ada (misal transition cache)
+    const rawPayload = btn.getAttribute('data-log-payload');
+    if (rawPayload) {
+        try {
+            const parsed = JSON.parse(rawPayload);
+            renderAuditInspection(parsed);
+            return;
+        } catch (e) {
+            console.error('Failed to parse legacy audit payload', e);
         }
-
-        const timeOldElem = document.getElementById('diffTimeOld');
-        if (timeOldElem) timeOldElem.textContent = data.time_clock || data.waktu;
-
-        const timeNewElem = document.getElementById('diffTimeNew');
-        if (timeNewElem) timeNewElem.textContent = data.time_clock || data.waktu;
-
-        const preOldElem = document.getElementById('diffPreOld');
-        if (preOldElem) {
-            preOldElem.textContent = data.nilai_lama ? JSON.stringify(data.nilai_lama, null, 2) : '- (Tidak ada data lama)';
-        }
-
-        const preNewElem = document.getElementById('diffPreNew');
-        if (preNewElem) {
-            preNewElem.textContent = data.nilai_baru ? JSON.stringify(data.nilai_baru, null, 2) : '- (Tidak ada data baru)';
-        }
-
-        const hmacElem = document.getElementById('diffHmac');
-        if (hmacElem) hmacElem.textContent = data.hmac || 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
-
-        const actorMetaElem = document.getElementById('diffActorMeta');
-        if (actorMetaElem) actorMetaElem.textContent = 'Aktor: ' + data.actor_name + ' (#' + data.actor_id + ')';
-
-        const ipMetaElem = document.getElementById('diffIpMeta');
-        if (ipMetaElem) ipMetaElem.textContent = 'IP: ' + (data.ip || '127.0.0.1');
-
-        // Scroll smooth to inspector if on screen
-        const inlineCard = document.getElementById('auditDiffInlineCard');
-        if (inlineCard) {
-            inlineCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        // Juga siapkan data di modal #modalLogDetail
-        openModalLogDetail(data);
-
-    } catch (err) {
-        console.error('Failed to parse audit log diff data:', err);
     }
+
+    const logId = btn.getAttribute('data-log-id');
+    if (!logId) return;
+
+    // 2. Cek apakah sudah ada dalam memory cache JavaScript
+    if (auditDetailCache.has(logId)) {
+        renderAuditInspection(auditDetailCache.get(logId));
+        return;
+    }
+
+    // 3. Cegah request duplikat simultan untuk ID yang sama
+    if (pendingAuditFetches.has(logId)) {
+        return;
+    }
+
+    // 4. Set state loading pada UI (Inline Card & Modal)
+    setAuditLoadingState(logId, btn);
+    pendingAuditFetches.add(logId);
+
+    // 5. Fetch detail secara asinkron dari endpoint terotorisasi
+    const url = "{{ url('/superadmin/audit-log') }}/" + encodeURIComponent(logId);
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(async (response) => {
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw {
+                status: response.status,
+                message: errData.message || ('HTTP ' + response.status)
+            };
+        }
+        return response.json();
+    })
+    .then((json) => {
+        if (json.status === 'success' && json.data) {
+            auditDetailCache.set(logId, json.data);
+            renderAuditInspection(json.data);
+        } else {
+            throw { status: 500, message: 'Format data tidak valid.' };
+        }
+    })
+    .catch((err) => {
+        console.error('Failed to fetch audit log detail:', err);
+        setAuditErrorState(logId, err, btn);
+    })
+    .finally(() => {
+        pendingAuditFetches.delete(logId);
+        resetButtonLoadingState(btn);
+    });
+}
+
+function setAuditLoadingState(logId, btn) {
+    if (btn) {
+        btn.dataset.originalText = btn.textContent;
+        btn.textContent = 'Memuat...';
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
+    }
+
+    // Update modal ke state loading
+    const modal = document.getElementById('modalLogDetail');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    const idElem = document.getElementById('logId');
+    if (idElem) idElem.textContent = logId + ' (Memuat data...)';
+
+    const oldPre = document.getElementById('logNilaiLama');
+    if (oldPre) oldPre.textContent = 'Sedang memuat data nilai lama dari server...';
+
+    const newPre = document.getElementById('logNilaiBaru');
+    if (newPre) newPre.textContent = 'Sedang memuat data nilai baru dari server...';
+
+    const payloadPre = document.getElementById('logPayload');
+    if (payloadPre) payloadPre.textContent = 'Sedang mengambil detail aktivitas...';
+
+    // Update inline card jika ada
+    const preOldElem = document.getElementById('diffPreOld');
+    if (preOldElem) preOldElem.textContent = 'Memuat snapshot lama...';
+
+    const preNewElem = document.getElementById('diffPreNew');
+    if (preNewElem) preNewElem.textContent = 'Memuat snapshot baru...';
+}
+
+function resetButtonLoadingState(btn) {
+    if (btn && btn.dataset.originalText) {
+        btn.textContent = btn.dataset.originalText;
+        btn.disabled = false;
+        btn.style.opacity = '1';
+    }
+}
+
+function setAuditErrorState(logId, err, btn) {
+    let errorMsg = 'Gagal memuat jejak audit. Silakan coba lagi.';
+    if (err.status === 403) {
+        errorMsg = 'Akses ditolak: Anda tidak memiliki wewenang untuk memeriksa log ini.';
+    } else if (err.status === 404) {
+        errorMsg = 'Catatan jejak audit #' + logId + ' tidak ditemukan di sistem.';
+    }
+
+    const oldPre = document.getElementById('logNilaiLama');
+    if (oldPre) oldPre.textContent = errorMsg;
+
+    const newPre = document.getElementById('logNilaiBaru');
+    if (newPre) newPre.textContent = errorMsg;
+
+    const preOldElem = document.getElementById('diffPreOld');
+    if (preOldElem) preOldElem.textContent = errorMsg;
+
+    const preNewElem = document.getElementById('diffPreNew');
+    if (preNewElem) preNewElem.textContent = errorMsg;
+
+    const payloadPre = document.getElementById('logPayload');
+    if (payloadPre) {
+        payloadPre.textContent = 'Error: ' + (err.message || errorMsg);
+    }
+}
+
+function renderAuditInspection(data) {
+    if (!data) return;
+    currentInspectorPayload = data;
+
+    // 1. Update Inline Inspector Card Elements
+    const idElem = document.getElementById('diffInspectorId');
+    if (idElem) idElem.textContent = data.id;
+
+    const reqIdElem = document.getElementById('diffInspectorReqId');
+    if (reqIdElem) reqIdElem.textContent = data.request_id || '-';
+
+    const subElem = document.getElementById('diffInspectorSub');
+    if (subElem) {
+        subElem.textContent = (data.aksi || '') + ' • ' + (data.entitas ? (data.entitas + (data.entitas_id ? (' #' + data.entitas_id) : '')) : 'Sistem');
+    }
+
+    const timeOldElem = document.getElementById('diffTimeOld');
+    if (timeOldElem) timeOldElem.textContent = data.time_clock || data.waktu || '-';
+
+    const timeNewElem = document.getElementById('diffTimeNew');
+    if (timeNewElem) timeNewElem.textContent = data.time_clock || data.waktu || '-';
+
+    const preOldElem = document.getElementById('diffPreOld');
+    if (preOldElem) {
+        preOldElem.textContent = data.nilai_lama ? (typeof data.nilai_lama === 'string' ? data.nilai_lama : JSON.stringify(data.nilai_lama, null, 2)) : '- (Tidak ada data lama)';
+    }
+
+    const preNewElem = document.getElementById('diffPreNew');
+    if (preNewElem) {
+        preNewElem.textContent = data.nilai_baru ? (typeof data.nilai_baru === 'string' ? data.nilai_baru : JSON.stringify(data.nilai_baru, null, 2)) : '- (Tidak ada data baru)';
+    }
+
+    const hmacElem = document.getElementById('diffHmac');
+    if (hmacElem) hmacElem.textContent = data.hmac || 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+
+    const actorMetaElem = document.getElementById('diffActorMeta');
+    if (actorMetaElem) actorMetaElem.textContent = 'Aktor: ' + (data.actor_name || '-') + (data.actor_id ? (' (#' + data.actor_id + ')') : '');
+
+    const ipMetaElem = document.getElementById('diffIpMeta');
+    if (ipMetaElem) ipMetaElem.textContent = 'IP: ' + (data.ip || '127.0.0.1');
+
+    // Scroll smooth to inspector if on screen
+    const inlineCard = document.getElementById('auditDiffInlineCard');
+    if (inlineCard) {
+        inlineCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Juga siapkan data di modal #modalLogDetail
+    openModalLogDetail(data);
 }
 
 /**
@@ -417,17 +550,23 @@ function openModalLogDetail(data) {
 
     const logNilaiLama = document.getElementById('logNilaiLama');
     if (logNilaiLama) {
-        logNilaiLama.textContent = data.nilai_lama ? JSON.stringify(data.nilai_lama, null, 2) : '- (Tidak ada nilai lama)';
+        logNilaiLama.textContent = typeof data.nilai_lama === 'string'
+            ? data.nilai_lama
+            : (data.nilai_lama ? JSON.stringify(data.nilai_lama, null, 2) : '- (Tidak ada nilai lama)');
     }
 
     const logNilaiBaru = document.getElementById('logNilaiBaru');
     if (logNilaiBaru) {
-        logNilaiBaru.textContent = data.nilai_baru ? JSON.stringify(data.nilai_baru, null, 2) : '- (Tidak ada nilai baru)';
+        logNilaiBaru.textContent = typeof data.nilai_baru === 'string'
+            ? data.nilai_baru
+            : (data.nilai_baru ? JSON.stringify(data.nilai_baru, null, 2) : '- (Tidak ada nilai baru)');
     }
 
     const logPayload = document.getElementById('logPayload');
     if (logPayload) {
-        logPayload.textContent = data.detail ? JSON.stringify(data.detail, null, 2) : '- (Tidak ada data tambahan)';
+        logPayload.textContent = typeof data.detail === 'string'
+            ? data.detail
+            : (data.detail ? JSON.stringify(data.detail, null, 2) : '- (Tidak ada data tambahan)');
     }
 
     const modal = document.getElementById('modalLogDetail');

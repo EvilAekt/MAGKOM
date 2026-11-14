@@ -823,11 +823,14 @@ html, body {
 @media (max-width: 900px) {
     .peta-alur-topbar {
         height: auto;
-        padding: 0.75rem 1rem;
+        min-height: 56px;
+        padding: 0.6rem 1rem;
         flex-wrap: wrap;
+        row-gap: 0.5rem;
     }
     .peta-alur-main-workspace {
-        height: calc(100vh - 120px);
+        height: calc(100vh - 60px);
+        flex: 1;
     }
     .in-scene-stage-hud,
     #missionHudOverlay {
@@ -848,6 +851,100 @@ html, body {
         left: 0.75rem;
         transform: scale(0.88);
         transform-origin: bottom left;
+    }
+}
+
+@media (max-width: 600px) {
+    .peta-alur-topbar {
+        padding: 0.5rem 0.75rem;
+    }
+    .topbar-branding .topbar-badge {
+        display: none !important;
+    }
+    .topbar-title {
+        font-size: 0.875rem;
+    }
+    .btn-nav-back {
+        padding: 0.35rem 0.65rem;
+        font-size: 0.75rem;
+    }
+    .btn-topbar-register {
+        padding: 0.35rem 0.65rem;
+        font-size: 0.75rem;
+    }
+    .btn-audio-toggle {
+        padding: 0.35rem 0.65rem;
+        font-size: 0.75rem;
+    }
+    .virtual-analog-container {
+        bottom: 0.75rem;
+        left: 0.5rem;
+        transform: scale(0.82);
+        transform-origin: bottom left;
+    }
+    .in-scene-stage-hud,
+    #missionHudOverlay {
+        bottom: 5.2rem;
+        left: 0.5rem;
+        right: 0.5rem;
+        max-height: 44%;
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .peta-alur-topbar {
+        padding: 0.35rem 0.5rem;
+    }
+    .topbar-title {
+        font-size: 0.75rem;
+        max-width: 140px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .virtual-analog-container {
+        bottom: 0.5rem;
+        left: 0.25rem;
+        transform: scale(0.72);
+        transform-origin: bottom left;
+    }
+}
+
+@media (min-width: 2048px) {
+    .peta-alur-topbar {
+        height: 72px;
+        padding: 0 3rem;
+    }
+    .virtual-analog-container {
+        transform: scale(1.15);
+        transform-origin: bottom left;
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .peta-alur-topbar {
+        height: 48px;
+        min-height: 48px;
+        padding: 0.25rem 1rem;
+    }
+    .peta-alur-main-workspace {
+        height: calc(100vh - 48px);
+    }
+    .virtual-analog-container {
+        bottom: 0.5rem;
+        left: 0.5rem;
+        transform: scale(0.7);
+        transform-origin: bottom left;
+    }
+    .in-scene-stage-hud,
+    #missionHudOverlay {
+        right: 0.75rem;
+        left: auto;
+        top: 0.75rem;
+        bottom: auto;
+        width: 340px;
+        max-height: calc(100% - 1.5rem);
     }
 }
 

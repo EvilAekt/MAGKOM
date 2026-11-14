@@ -11,6 +11,7 @@ use App\Models\AuditLog;
 use App\Models\User;
 use App\Services\AuditService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -210,6 +211,67 @@ class AuditLogController extends Controller
             'mutasiPercentage' => $mutasiPercentage,
             'sesiAuth' => $sesiAuth,
             'peringatanKritis' => $peringatanKritis,
+        ]);
+    }
+
+    /**
+     * Mengambil detail satu jejak audit secara asinkron untuk modal inspeksi (PERF-P0-02).
+     */
+    public function show(int $id, AuditService $auditService): JsonResponse
+    {
+        $log = AuditLog::with('user')->find($id);
+
+        if (! $log) {
+            return Response::json([
+                'status' => 'error',
+                'message' => 'Catatan jejak audit tidak ditemukan.',
+            ], 404, [
+                'Cache-Control' => 'no-store, private',
+            ]);
+        }
+
+        $user = $log->user;
+        $userName = $user?->nama ?? 'Sistem / Anonim';
+        $userRole = $user?->role?->label() ?? 'System';
+
+        $channelKey = $log->channel ?: 'system';
+        $channelData = self::CHANNELS[$channelKey] ?? null;
+
+        $detailSanitized = is_array($log->detail) ? $auditService->sanitasi($log->detail) : $log->detail;
+        $nilaiLamaSanitized = is_array($log->nilai_lama) ? $auditService->sanitasi($log->nilai_lama) : $log->nilai_lama;
+        $nilaiBaruSanitized = is_array($log->nilai_baru) ? $auditService->sanitasi($log->nilai_baru) : $log->nilai_baru;
+
+        $payload = [
+            'id' => $log->id,
+            'waktu' => $log->waktu ? $log->waktu->format('d M Y H:i:s').' WIB' : '-',
+            'time_clock' => $log->waktu ? $log->waktu->format('H:i:s').' WIB' : '-',
+            'channel' => $channelData['label'] ?? ($log->channel ?: 'System'),
+            'channel_key' => $channelKey,
+            'severity' => $log->severity ?: 'info',
+            'user' => $userName.($user ? ' ('.$userRole.')' : ''),
+            'actor_name' => $userName,
+            'actor_id' => $user?->id ?? '-',
+            'aksi' => $log->aksi,
+            'entitas' => $log->entitas,
+            'entitas_id' => $log->entitas_id,
+            'request_id' => $log->request_id ?: 'req_'.substr(md5((string) $log->id), 0, 8),
+            'ip' => $log->ip ?: '127.0.0.1',
+            'user_agent' => $log->user_agent,
+            'metode' => $log->metode ?: 'GET',
+            'rute' => $log->rute ?: '-',
+            'status_http' => $log->status_http ?: 200,
+            'durasi_ms' => $log->durasi_ms ?: 0,
+            'detail' => $detailSanitized,
+            'nilai_lama' => $nilaiLamaSanitized,
+            'nilai_baru' => $nilaiBaruSanitized,
+            'hmac' => hash('sha256', ($log->id.($log->request_id ?? '').($log->aksi ?? '').($log->waktu?->toISOString() ?? ''))),
+        ];
+
+        return Response::json([
+            'status' => 'success',
+            'data' => $payload,
+        ], 200, [
+            'Cache-Control' => 'no-store, private',
         ]);
     }
 

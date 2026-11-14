@@ -775,7 +775,8 @@
     @foreach($tugasPrioritasPembimbing as $tugas)
         @php
             $menteeName = $tugas->penempatan?->peserta?->nama ?? 'Peserta Magang';
-            $initials = strtoupper(substr($menteeName, 0, 2));
+            $words = explode(' ', trim($menteeName));
+            $initials = strtoupper(count($words) >= 2 ? substr($words[0], 0, 1).substr($words[1], 0, 1) : substr($menteeName, 0, 2));
         @endphp
         <div data-task-id="{{ $tugas->id }}">
             <span class="mentee-avatar-chip">{{ $initials }}</span>

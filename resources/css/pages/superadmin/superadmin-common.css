@@ -143,14 +143,12 @@
     box-shadow: 0 6px 16px rgba(1, 52, 124, 0.08) !important;
 }
 
-/* 2b. Compact Styling untuk Halaman Telemetri & Dashboard Terfokus */
-.health-telemetry-container .tiles-grid .tile_stats_inner.stat,
+/* 2b. Compact Styling untuk Dashboard Terfokus */
 .tiles-grid.tiles-grid-compact .tile_stats_inner.stat {
     padding: 0.85rem 1.15rem !important;
     min-height: 84px !important;
 }
 
-.health-telemetry-container .tiles-grid .stat-icon,
 .tiles-grid.tiles-grid-compact .stat-icon {
     width: 40px !important;
     height: 40px !important;
@@ -159,14 +157,11 @@
     border-radius: 8px !important;
 }
 
-.health-telemetry-container .tiles-grid .stat-icon svg,
 .tiles-grid.tiles-grid-compact .stat-icon svg {
     width: 20px !important;
     height: 20px !important;
 }
 
-.health-telemetry-container .tiles-grid .stat-value,
-.health-telemetry-container .tiles-grid .count,
 .tiles-grid.tiles-grid-compact .stat-value,
 .tiles-grid.tiles-grid-compact .count {
     font-size: 1.35rem !important;
@@ -174,24 +169,18 @@
     letter-spacing: -0.3px !important;
 }
 
-.health-telemetry-container .tiles-grid .stat-label,
-.health-telemetry-container .tiles-grid .count_title,
 .tiles-grid.tiles-grid-compact .stat-label,
 .tiles-grid.tiles-grid-compact .count_title {
     font-size: 10.5px !important;
     line-height: 1.2 !important;
 }
 
-.health-telemetry-container .tiles-grid .stat-subtext,
-.health-telemetry-container .tiles-grid .count_bottom,
 .tiles-grid.tiles-grid-compact .stat-subtext,
 .tiles-grid.tiles-grid-compact .count_bottom {
     font-size: 11px !important;
     line-height: 1.3 !important;
 }
 
-.health-telemetry-container .tiles-grid .stat-spark,
-.health-telemetry-container .tiles-grid .sa-spark,
 .tiles-grid.tiles-grid-compact .stat-spark,
 .tiles-grid.tiles-grid-compact .sa-spark {
     height: 28px !important;
@@ -203,15 +192,7 @@
     will-change: transform, opacity;
 }
 
-.telemetry-canvas-wrapper,
-#canvasContainer {
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    will-change: transform, box-shadow;
-}
-
 @media (prefers-reduced-motion: reduce) {
-    .telemetry-canvas-wrapper,
-    #canvasContainer,
     .stat-spark i,
     .sa-spark i {
         transition: none !important;
