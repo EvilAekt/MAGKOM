@@ -38,7 +38,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup PHP Environment
-        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: '8.3'
           extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, pdo_mysql, sqlite3, fileinfo, gd, curl, zip, bcmath
@@ -126,7 +126,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup PHP Environment
-        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: '8.3'
           coverage: none
@@ -239,7 +239,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup PHP Environment
-        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: '8.3'
           extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, pdo_mysql, sqlite3, fileinfo, gd, curl, zip, bcmath
@@ -297,7 +297,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup PHP Environment
-        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: '8.3'
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, fileinfo, gd, curl, zip, bcmath
