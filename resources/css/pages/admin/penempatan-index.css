@@ -1,0 +1,613 @@
+/* ==========================================================================
+           MAGKOM SLEMAN NAVY HERO BANNER (Signature Theme)
+           Dinas Komunikasi dan Informatika Kabupaten Sleman
+           ========================================================================== */
+        .adm-hero-banner {
+            background: radial-gradient(80% 120% at 100% 0%, rgba(63, 81, 181, 0.45), transparent 60%),
+                        linear-gradient(135deg, #01347C 0%, #003566 100%);
+            border-radius: 16px;
+            padding: 24px 30px;
+            color: #ffffff;
+            position: relative;
+            overflow: visible;
+            box-shadow: 0 4px 20px -2px rgba(1, 52, 124, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            margin-bottom: 0.5rem;
+        }
+
+        .adm-hero-content {
+            display: flex;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .adm-hero-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 6px 0;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        .adm-hero-subtitle {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            line-height: 1.5;
+        }
+
+        .adm-hero-subtitle .sep {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .adm-hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .adm-hero-btn-primary {
+            background: #ffffff;
+            color: #01347C;
+            text-decoration: none;
+            padding: 0.65rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .adm-hero-btn-primary:hover {
+            background: #F8FAFC;
+            color: #0641CC;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+        }
+
+        .adm-hero-btn-secondary {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.65rem 1.15rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .adm-hero-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .adm-hero-banner {
+                padding: 20px 22px;
+            }
+            .adm-hero-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .adm-hero-actions {
+                width: 100%;
+            }
+            .adm-hero-btn-primary, .adm-hero-btn-secondary {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        [data-theme="dark"] .adm-hero-banner {
+            background: radial-gradient(80% 120% at 100% 0%, rgba(99, 102, 241, 0.2), transparent 60%),
+                        linear-gradient(135deg, #0A192F 0%, #0F172A 100%);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+        }
+
+        .admin-card {
+            background: #ffffff;
+            border-radius: 14px;
+            border: 1.5px solid #CBD5E1;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+        .admin-table th {
+            background: #F8FAFC;
+            padding: 0.85rem 1.25rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--neutral-600, #475569);
+            border-bottom: 1px solid var(--neutral-200, #E2E8F0);
+        }
+        .admin-table td {
+            padding: 0.95rem 1.25rem;
+            border-bottom: 1px solid var(--neutral-200, #E2E8F0);
+            vertical-align: middle;
+            color: var(--neutral-800, #1E293B);
+        }
+        .admin-table tr:hover {
+            background: #F8FAFC;
+        }
+
+        /* Action Table Buttons: Detail & Surat */
+        .btn-table-action-detail {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.4rem 0.65rem;
+            background: #EEF2FF;
+            color: #4338CA;
+            border: 1px solid #C7D2FE;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-decoration: none;
+            transition: all 0.18s ease;
+            cursor: pointer;
+        }
+        .btn-table-action-detail svg {
+            transition: stroke 0.18s ease;
+        }
+        .btn-table-action-detail:hover {
+            background: #0641CC !important;
+            color: #FFFFFF !important;
+            border-color: #0641CC !important;
+            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
+            transform: translateY(-1px);
+        }
+        .btn-table-action-detail:hover svg {
+            color: #FFFFFF !important;
+            stroke: #FFFFFF !important;
+        }
+
+        .btn-table-action-surat {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.4rem 0.65rem;
+            background: #EFF6FF;
+            color: #1D4ED8;
+            border: 1px solid #DBEAFE;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .btn-table-action-surat svg {
+            transition: stroke 0.18s ease;
+        }
+        .btn-table-action-surat:hover {
+            background: #0641CC !important;
+            color: #FFFFFF !important;
+            border-color: #0641CC !important;
+            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
+            transform: translateY(-1px);
+        }
+        .btn-table-action-surat:hover svg {
+            color: #FFFFFF !important;
+            stroke: #FFFFFF !important;
+        }
+
+        /* Action Dropdown Menu (Opsi 1: More Actions) */
+        .action-dropdown-wrap {
+            position: relative;
+            display: inline-block;
+        }
+        .action-dropdown-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: #FFFFFF;
+            border: 1px solid var(--neutral-300, #CBD5E1);
+            border-radius: 6px;
+            color: var(--neutral-700, #334155);
+            cursor: pointer;
+            transition: all 0.18s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        .action-dropdown-btn:hover,
+        .action-dropdown-btn.active {
+            background: #0641CC !important;
+            border-color: #0641CC !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 2px 6px rgba(6, 65, 204, 0.35) !important;
+            transform: translateY(-1px);
+        }
+        .action-dropdown-btn:hover svg,
+        .action-dropdown-btn.active svg {
+            stroke: #FFFFFF !important;
+            fill: none !important;
+        }
+        .action-dropdown-btn:hover circle,
+        .action-dropdown-btn.active circle {
+            fill: #FFFFFF !important;
+            stroke: #FFFFFF !important;
+        }
+        .action-dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 4px);
+            min-width: 195px;
+            background: #FFFFFF;
+            border: 1px solid var(--neutral-200, #E2E8F0);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+            padding: 0.35rem;
+            z-index: 50;
+            flex-direction: column;
+            gap: 0.2rem;
+            text-align: left;
+        }
+        .action-dropdown-menu.show {
+            display: flex;
+        }
+        .action-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--neutral-700, #334155);
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.12s ease;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+        .action-dropdown-item:hover {
+            background: #F1F5F9;
+            color: #0F172A;
+        }
+        .action-dropdown-item.danger {
+            color: #DC2626;
+        }
+        .action-dropdown-item.danger:hover {
+            background: #FEF2F2;
+            color: #B91C1C;
+        }
+        .action-dropdown-divider {
+            height: 1px;
+            background-color: var(--neutral-200, #E2E8F0);
+            margin: 0.25rem 0;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+            z-index: 1050;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .modal-container {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 540px;
+            width: 100%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            border: 1px solid var(--neutral-200, #E2E8F0);
+            animation: modalFadeIn 0.2s ease-out;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* =====================================================================
+           DARK MODE OVERRIDES (DS-MagKom Standards)
+           ===================================================================== */
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=csv"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=csv"]:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=xlsx"] {
+            background: #059669 !important;
+            color: #FFFFFF !important;
+            border: none !important;
+        }
+
+        [data-theme="dark"] a[href*="ekspor-surat-diterima"][href*="format=xlsx"]:hover {
+            background: #047857 !important;
+        }
+
+        [data-theme="dark"] .admin-card {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-card label {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-card input#q-input {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-card select {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-card select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-card a[href*="admin.penempatan.index"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .admin-card a[href*="admin.penempatan.index"]:hover {
+            background: #162238 !important;
+            color: #F8FAFC !important;
+            border-color: #3B82F6 !important;
+        }
+
+        [data-theme="dark"] .admin-card div[style*="background: #ffffff"] {
+            background-color: #141E30 !important;
+            border-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-card h3 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-table th {
+            background-color: #0E1726 !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-table td {
+            background-color: #182234 !important;
+            color: #CBD5E1 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .admin-table tr:hover td,
+        [data-theme="dark"] .admin-table tr:hover {
+            background-color: #162238 !important;
+        }
+
+        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-900"] {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-800"] {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-table td div[style*="color: var(--neutral-500"] {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .admin-table td a[style*="background: #ffffff"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-table td a[style*="background: #ffffff"]:hover {
+            background: #162238 !important;
+            border-color: #3B82F6 !important;
+            color: #60A5FA !important;
+        }
+
+        [data-theme="dark"] .admin-table td span[style*="background: var(--neutral-100"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .btn-table-action-detail {
+            background: #1E1B4B !important;
+            color: #A5B4FC !important;
+            border-color: #3730A3 !important;
+        }
+
+        [data-theme="dark"] .btn-table-action-detail:hover {
+            background: #2563EB !important;
+            border-color: #3B82F6 !important;
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .btn-table-action-surat {
+            background: #172554 !important;
+            color: #93C5FD !important;
+            border-color: #1E40AF !important;
+        }
+
+        [data-theme="dark"] .btn-table-action-surat:hover {
+            background: #2563EB !important;
+            border-color: #3B82F6 !important;
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-btn {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-btn:hover,
+        [data-theme="dark"] .action-dropdown-btn.active {
+            background: #2563EB !important;
+            border-color: #3B82F6 !important;
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-menu {
+            background: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-item {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-item:hover {
+            background: #233249 !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-item.danger {
+            color: #F87171 !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-item.danger:hover {
+            background: rgba(220, 38, 38, 0.15) !important;
+            color: #EF4444 !important;
+        }
+
+        [data-theme="dark"] .action-dropdown-divider {
+            background-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            color: #F8FAFC;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="background: #F8FAFC"] {
+            background-color: #141E30 !important;
+            border-bottom-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container h3 {
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container p {
+            color: #94A3B8 !important;
+        }
+
+        [data-theme="dark"] .modal-container label {
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .modal-container select,
+        [data-theme="dark"] .modal-container input,
+        [data-theme="dark"] .modal-container textarea {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container select option {
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="background: var(--neutral-100"] {
+            background-color: #0F172A !important;
+            border: 1px solid #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container div[style*="border-top: 1px solid"] {
+            border-top-color: #26354D !important;
+        }
+
+        [data-theme="dark"] .modal-container button[style*="background: #ffffff"],
+        [data-theme="dark"] .modal-container button[style*="background: var(--neutral-0"] {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] #bulkActionBar {
+            background-color: #182234 !important;
+            border-color: #26354D !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        [data-theme="dark"] .penempatan-nav-tabs {
+            background: #111C2E !important;
+            border-color: #26354D !important;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        [data-theme="dark"] #tab-btn-sudah[aria-selected="true"],
+        [data-theme="dark"] #tab-btn-belum[aria-selected="true"] {
+            background-color: #1E293B !important;
+            color: #60A5FA !important;
+            border-color: #3B82F6 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        [data-theme="dark"] #tab-btn-sudah[aria-selected="false"],
+        [data-theme="dark"] #tab-btn-belum[aria-selected="false"] {
+            background-color: transparent !important;
+            color: #94A3B8 !important;
+            border-color: transparent !important;
+        }
+
+        [data-theme="dark"] #tab-badge-sudah,
+        [data-theme="dark"] #tab-badge-belum {
+            background: #0F172A !important;
+            color: #CBD5E1 !important;
+        }
+
+        [data-theme="dark"] .admin-card input#q-input-belum,
+        [data-theme="dark"] #panel-penempatan-belum select {
+            background-color: #0F172A !important;
+            border-color: #26354D !important;
+            color: #F8FAFC !important;
+        }

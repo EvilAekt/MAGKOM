@@ -162,7 +162,7 @@
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--cv-line); padding-bottom: 0.4rem;">
                     <dt style="font-size: 0.8125rem; color: var(--cv-ink-2);">
-                        <span>Lembar nilai lengkap</span>
+                        <span>Penyelesaian Magang Tuntas</span>
                         <span class="sa-sr-only">Lembar Nilai Alumni (Target 100%)</span>
                     </dt>
                     <dd style="font-family: monospace; font-weight: 700; color: var(--cv-ink); margin: 0;">
@@ -226,8 +226,8 @@
     <div class="col-md-4 col-sm-12 col-xs-12">
         <x-gentelella.x-panel title="Keamanan">
             <x-slot:actions>
-                <a href="{{ route('superadmin.health.index') }}" class="sa-link">
-                    Detail &rarr;
+                <a href="{{ route('superadmin.audit-log.index') }}" class="sa-link">
+                    Audit &rarr;
                 </a>
             </x-slot:actions>
 

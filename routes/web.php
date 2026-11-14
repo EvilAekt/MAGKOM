@@ -44,7 +44,6 @@ use App\Http\Controllers\SuperAdmin\BackupController;
 use App\Http\Controllers\SuperAdmin\BidangController;
 use App\Http\Controllers\SuperAdmin\BulanController;
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
-use App\Http\Controllers\SuperAdmin\HealthMonitorController;
 use App\Http\Controllers\SuperAdmin\JurusanController;
 use App\Http\Controllers\SuperAdmin\LandingCmsController;
 use App\Http\Controllers\SuperAdmin\LandingCmsSiteEditorController;
@@ -396,15 +395,8 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     // Audit Log Trail (F-13 AC-13-6 & Multi-Channel Stream)
     Route::get('/audit-log/export', [AuditLogController::class, 'export'])->name('audit-log.export');
     Route::get('/audit-log/channel/{channel}', [AuditLogController::class, 'index'])->name('audit-log.channel');
+    Route::get('/audit-log/{id}', [AuditLogController::class, 'show'])->name('audit-log.show')->whereNumber('id');
     Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log.index');
-
-    // Telemetri Kesehatan Sistem & Infrastruktur
-    Route::get('/health-monitor', [HealthMonitorController::class, 'index'])->name('health.index');
-    Route::get('/health-monitor/telemetry-data', [HealthMonitorController::class, 'telemetryData'])->name('health.telemetry-data');
-    Route::post('/health-monitor/security-sweep', [HealthMonitorController::class, 'runSecuritySweep'])->name('health.security-sweep');
-    Route::post('/health-monitor/optimize-db', [HealthMonitorController::class, 'optimizeDatabase'])->name('health.optimize-db');
-    Route::post('/health-monitor/clear-cache', [HealthMonitorController::class, 'clearSystemCache'])->name('health.clear-cache');
-    Route::post('/health-monitor/test-storage', [HealthMonitorController::class, 'testStorageWrite'])->name('health.test-storage');
 
     // Hub Cadangan Basis Data (Disaster Recovery & Backup) (SEC-03)
     Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
@@ -423,5 +415,6 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 // Server-Sent Events (SSE) Real-time Stream & Notifikasi (RFC 8895)
 Route::middleware(['auth'])->group(function () {
     Route::get('/realtime/stream', [RealtimeStreamController::class, 'stream'])->name('realtime.stream');
+    Route::post('/realtime/read-batch', [RealtimeStreamController::class, 'markReadBatch'])->name('realtime.read-batch');
     Route::post('/realtime/read/{id}', [RealtimeStreamController::class, 'markRead'])->name('realtime.read');
 });

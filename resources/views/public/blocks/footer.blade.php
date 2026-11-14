@@ -72,7 +72,14 @@
         <!-- Kolom 1: Profil Dinas & Alamat -->
         <div>
             <div class="footer-brand-header">
-                @include('partials.logo-sleman', ['class' => 'brand-logo-img', 'width' => '36', 'height' => '36', 'style' => 'width: 36px; height: 36px; object-fit: contain;'])
+                @include('partials.logo-sleman', [
+                    'class' => 'brand-logo-img',
+                    'width' => '36',
+                    'height' => '36',
+                    'style' => 'width: 36px; height: 36px; object-fit: contain;',
+                    'loading' => 'lazy',
+                    'fetchpriority' => 'low'
+                ])
                 <div>
                     <span class="footer-brand-title">MAGKOM</span>
                     <span class="footer-brand-sub">Portal Magang · Diskominfo Sleman</span>

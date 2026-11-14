@@ -163,20 +163,20 @@ class BlockRegistry
             'tahapan' => new BlockDefinition(
                 type: 'tahapan',
                 label: 'Alur & Tahapan',
-                description: 'Pohon alur 4 tahapan seleksi, pelaksanaan logbook, hingga kelulusan sertifikat digital.',
+                description: 'Pohon alur 4 tahapan seleksi, pelaksanaan logbook, hingga penyelesaian magang.',
                 icon: '🔄',
                 category: 'Layout',
                 schemaVersion: 1,
                 defaultContent: [
                     'heading' => 'Bingung cara mendaftarnya?, berikut adalah Tahapan Pendaftaran Magang',
-                    'summary' => "Pertama calon peserta membuat akun, mengisi data pribadi, dan menunggu verifikasi akun oleh admin.\nKedua calon peserta memilih bidang dan mengunggah berkas, lalu admin melakukan verifikasi dan seleksi. Hasilnya diumumkan di portal MAGKOM.\nKetiga peserta melaksanakan magang, mengerjakan tugas, dan mengisi logbook sesuai durasi yang ditentukan.\nKeempat setelah magang selesai, peserta mendapatkan lembar nilai dan sertifikat yang dapat diunduh.",
+                    'summary' => "Pertama calon peserta membuat akun, mengisi data pribadi, dan menunggu verifikasi akun oleh admin.\nKedua calon peserta memilih bidang dan mengunggah berkas, lalu admin melakukan verifikasi dan seleksi. Hasilnya diumumkan di portal MAGKOM.\nKetiga peserta melaksanakan magang, mengerjakan tugas, dan mengisi logbook sesuai durasi yang ditentukan.\nKeempat setelah magang selesai, peserta menyelesaikan program magang, mengunggah laporan akhir, dan dinyatakan lulus secara resmi.",
                     'btn_pdf_text' => 'Unduh Panduan PDF',
                     'btn_peta_text' => 'Peta Alur Interaktif',
                     'steps' => [
                         ['step' => '01', 'title' => 'Buat Akun & Profil', 'badge' => 'REGISTRASI', 'desc' => 'Daftar akun peserta dengan email aktif, lengkapi identitas diri dan asal institusi pendidikan.'],
                         ['step' => '02', 'title' => 'Pilih Bidang & Berkas', 'badge' => 'SELEKSI', 'desc' => 'Pilih bidang peminatan sesuai jurusan dan unggah seluruh dokumen persyaratan yang diminta.'],
                         ['step' => '03', 'title' => 'Pelaksanaan & Logbook', 'badge' => 'MAGANG', 'desc' => 'Jalani kegiatan magang secara luring, kerjakan tugas dari pembimbing, dan catat logbook harian.'],
-                        ['step' => '04', 'title' => 'Nilai & Sertifikat', 'badge' => 'KELULUSAN', 'desc' => 'Dapatkan evaluasi kinerja, lembar nilai resmi, dan sertifikat ber-barcode yang sah.'],
+                        ['step' => '04', 'title' => 'Selesai Magang', 'badge' => 'KELULUSAN', 'desc' => 'Penyelesaian program magang, pengumpulan laporan akhir, dan pelepasan resmi peserta oleh dinas.'],
                     ],
                 ],
                 defaultStyles: [
@@ -254,7 +254,7 @@ class BlockRegistry
             'features' => new BlockDefinition(
                 type: 'features',
                 label: 'Keunggulan Program',
-                description: 'Tiga kartu sorot keunggulan program magang (mentor profesional, proyek riil, sertifikat resmi).',
+                description: 'Tiga kartu sorot keunggulan program magang (mentor profesional, proyek riil, portofolio kedinasan).',
                 icon: '⭐',
                 category: 'Konten',
                 schemaVersion: 1,
@@ -263,7 +263,7 @@ class BlockRegistry
                     'items' => [
                         ['title' => 'Mentor Ahli ASN', 'desc' => 'Bimbingan intensif dari praktisi teknologi dan komunikasi bersertifikasi.', 'icon' => '👥'],
                         ['title' => 'Proyek Riil & Nyata', 'desc' => 'Terlibat langsung dalam layanan publik berbasis digital Kabupaten Sleman.', 'icon' => '💻'],
-                        ['title' => 'Sertifikat & Nilai Resmi', 'desc' => 'Dokumen kelulusan resmi ber-barcode untuk menunjang portofolio karir.', 'icon' => '📜'],
+                        ['title' => 'Penyelesaian & Portofolio', 'desc' => 'Pengalaman kerja riil dan portofolio proyek pemerintahan untuk karir profesional.', 'icon' => '🏆'],
                     ],
                 ],
                 defaultStyles: [

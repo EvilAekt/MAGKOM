@@ -1,13 +1,13 @@
 @php
     $tahapanHeading = $content['heading'] ?? \App\Support\Pengaturan::get('landing_tahapan_heading', 'Bingung cara mendaftarnya?, berikut adalah Tahapan Pendaftaran Magang');
-    $tahapanSummary = $content['summary'] ?? \App\Support\Pengaturan::get('landing_tahapan_summary', "Pertama calon peserta membuat akun, mengisi data pribadi, dan menunggu verifikasi akun oleh admin.\nKedua calon peserta memilih bidang dan mengunggah berkas, lalu admin melakukan verifikasi dan seleksi. Hasilnya diumumkan di portal MAGKOM.\nKetiga peserta melaksanakan magang, mengerjakan tugas, dan mengisi logbook sesuai durasi yang ditentukan.\nKeempat setelah magang selesai, peserta mendapatkan lembar nilai dan sertifikat yang dapat diunduh.");
+    $tahapanSummary = $content['summary'] ?? \App\Support\Pengaturan::get('landing_tahapan_summary', "Pertama calon peserta membuat akun, mengisi data pribadi, dan menunggu verifikasi akun oleh admin.\nKedua calon peserta memilih bidang dan mengunggah berkas, lalu admin melakukan verifikasi dan seleksi. Hasilnya diumumkan di portal MAGKOM.\nKetiga peserta melaksanakan magang, mengerjakan tugas, dan mengisi logbook sesuai durasi yang ditentukan.\nKeempat setelah magang selesai, peserta menyelesaikan program magang, mengunggah laporan akhir, dan dinyatakan lulus secara resmi.");
     $tahapanSummaryLines = array_values(array_filter(array_map('trim', explode("\n", str_replace("\r", "", (string) $tahapanSummary)))));
 
     $defaultTahapanSteps = [
         ['step' => '01', 'title' => 'Registrasi', 'badge' => 'REGISTRASI', 'desc' => 'Calon peserta membuat akun, mengisi data pribadi, dan menunggu akun diverifikasi admin.'],
         ['step' => '02', 'title' => 'Administrasi & Seleksi', 'badge' => 'ADMINISTRASI & SELEKSI', 'desc' => 'Pilih bidang, unggah berkas, lalu admin memverifikasi dan menyeleksi dalam 1–3 hari kerja.'],
         ['step' => '03', 'title' => 'Pelaksanaan Magang', 'badge' => 'PELAKSANAAN MAGANG', 'desc' => 'Kerjakan tugas, isi logbook harian, dan unggah progres sesuai durasi magang.'],
-        ['step' => '04', 'title' => 'Kelulusan', 'badge' => 'KELULUSAN', 'desc' => 'Unduh Lembar Nilai Magang dan sertifikat dalam bentuk PDF dari portal.'],
+        ['step' => '04', 'title' => 'Selesai Magang', 'badge' => 'KELULUSAN', 'desc' => 'Penyelesaian program magang, pengumpulan laporan akhir, dan penetapan status kelulusan resmi.'],
     ];
     $tahapanSteps = !empty($content['steps']) && is_array($content['steps']) 
         ? $content['steps'] 

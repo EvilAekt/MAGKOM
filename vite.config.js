@@ -6,6 +6,8 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/css/app.css',
+                'resources/css/layouts/app-layout-tokens.css',
+                'resources/css/layouts/auth-layout-tokens.css',
                 'resources/js/app.js',
                 'resources/css/pages/auth/auth-depth.css',
                 'resources/js/pages/auth/auth-depth.js',
@@ -21,6 +23,9 @@ export default defineConfig({
                 'resources/css/pages/superadmin/superadmin-common.css',
                 'resources/css/pages/admin/dashboard.css',
                 'resources/css/pages/admin/profil-show.css',
+                'resources/css/pages/admin/kuota-index.css',
+                'resources/css/pages/admin/penempatan-index.css',
+                'resources/css/pages/admin/pendaftaran-index.css',
                 'resources/css/pages/peserta/tugas-detail.css',
                 'resources/css/pages/peserta/tugas-index.css',
                 'resources/css/pages/peserta/logbook-index.css',
@@ -47,7 +52,6 @@ export default defineConfig({
                 'resources/js/pages/superadmin/arsip-show.js',
                 'resources/js/pages/superadmin/bidang-index.js',
                 'resources/js/pages/superadmin/bulan-index.js',
-                'resources/js/pages/superadmin/health-monitor.js',
                 'resources/js/pages/superadmin/jurusan-index.js',
                 'resources/js/pages/superadmin/profil-show.js',
                 'resources/js/pages/superadmin/staf-index.js',

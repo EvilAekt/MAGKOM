@@ -66,8 +66,13 @@ class PlacementService extends AuditedService
                     throw new StatusSudahBerubahException;
                 }
 
-                // 2. Kunci dan ambil jatah kuota umum secara atomik (AC-05-4)
-                $this->quotaAllocationService->ambilKuotaUmum($p->kuota_id);
+                // 2. Hitung jumlah peserta (1 individu atau 1 ketua + N anggota kelompok) dan alokasikan kuota secara atomik (AC-05-4, BR-18)
+                $jumlahPeserta = 1;
+                if ($p->kelompok_magang_id && $p->kelompokMagang) {
+                    $jumlahPeserta = 1 + $p->kelompokMagang->anggota()->count();
+                }
+
+                $this->quotaAllocationService->ambilKuotaUmum($p->kuota_id, $jumlahPeserta);
 
                 // 3. Simpan berkas surat keterangan diterima yang diunggah jika ada
                 $filePath = null;

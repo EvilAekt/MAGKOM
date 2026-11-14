@@ -30,6 +30,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
+use Illuminate\View\FileViewFinder;
 use Tests\TestCase;
 
 class PesertaFullPortalFeatureTest extends TestCase
@@ -59,10 +60,12 @@ class PesertaFullPortalFeatureTest extends TestCase
     {
         parent::setUp();
 
-        $this->originalViewPaths = View::getFinder()->getPaths();
+        /** @var FileViewFinder $finder */
+        $finder = View::getFinder();
+        $this->originalViewPaths = $finder->getPaths();
         $localViewsPath = realpath(__DIR__.'/../../resources/views');
         if ($localViewsPath && is_dir($localViewsPath)) {
-            View::getFinder()->setPaths([$localViewsPath]);
+            $finder->setPaths([$localViewsPath]);
         }
 
         $this->seed(JenisDokumenSeeder::class);
@@ -132,7 +135,9 @@ class PesertaFullPortalFeatureTest extends TestCase
     protected function tearDown(): void
     {
         if (! empty($this->originalViewPaths)) {
-            View::getFinder()->setPaths($this->originalViewPaths);
+            /** @var FileViewFinder $finder */
+            $finder = View::getFinder();
+            $finder->setPaths($this->originalViewPaths);
         }
 
         parent::tearDown();
@@ -388,7 +393,7 @@ class PesertaFullPortalFeatureTest extends TestCase
         $response->assertSeeInOrder(['1', 'Aktif']);
         $response->assertSee('Sisa Hari Magang');
         $response->assertSee('Hari');
-        $response->assertSee('Status Evaluasi / Sertifikat');
+        $response->assertSee('Status Penyelesaian Magang');
         $response->assertSee('Budi Pembimbing');
 
         // AC-4: Aside Context Profil Pembimbing, Aksi Cepat & Ketentuan Logbook (BR-09)
@@ -483,7 +488,7 @@ class PesertaFullPortalFeatureTest extends TestCase
     }
 
     /** @test */
-    public function peserta_fase_selesai_melihat_predikat_nilai_dan_tombol_unduh(): void
+    public function peserta_fase_selesai_melihat_status_kelulusan_dan_penyelesaian_magang(): void
     {
         $pendaftaran = Pendaftaran::create([
             'user_id' => $this->peserta->id,

@@ -558,7 +558,7 @@
                         ['step' => '01', 'title' => 'Registrasi', 'badge' => 'REGISTRASI', 'desc' => 'Calon peserta membuat akun resmi, mengisi data pribadi lengkap, dan menunggu verifikasi admin.'],
                         ['step' => '02', 'title' => 'Administrasi & Seleksi', 'badge' => 'ADMINISTRASI & SELEKSI', 'desc' => 'Pilih bidang, unggah berkas, lalu admin menyeleksi dan memverifikasi dalam rentang 1–3 hari kerja.'],
                         ['step' => '03', 'title' => 'Pelaksanaan Magang', 'badge' => 'PELAKSANAAN MAGANG', 'desc' => 'Kerjakan proyek riil, isi logbook harian, serta dapatkan bimbingan langsung dari mentor ASN Sleman.'],
-                        ['step' => '04', 'title' => 'Kelulusan', 'badge' => 'KELULUSAN & SERTIFIKAT', 'desc' => 'Unduh lembar nilai evaluasi dan E-Sertifikat resmi bertanda tangan elektronik Diskominfo Sleman.'],
+                        ['step' => '04', 'title' => 'Selesai Magang', 'badge' => 'SELESAI MAGANG', 'desc' => 'Penyelesaian program magang, pengumpulan laporan akhir, dan pelepasan resmi peserta oleh Diskominfo Sleman.'],
                     ];
                     $stepsData = \App\Support\Pengaturan::json('landing_tahapan_steps', $defaultTahapanSteps);
                     if (empty($stepsData) || count($stepsData) < 4) {
@@ -681,14 +681,14 @@
                     <line x1="4" y1="-12" x2="6" y2="-8" stroke="#ffffff" stroke-width="1.2"/>
                     <!-- Papan Teks Halte Pinggir Jalan -->
                     <rect x="-44" y="10" width="88" height="15" rx="4" fill="#1b3860" stroke="#ffffff" stroke-width="1.2" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));"/>
-                    <text x="0" y="21" text-anchor="middle" font-size="7.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">04 {{ \Illuminate\Support\Str::limit(strtoupper($stepsData[3]['title'] ?? 'KELULUSAN'), 12, '') }}</text>
+                    <text x="0" y="21" text-anchor="middle" font-size="7.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">04 {{ \Illuminate\Support\Str::limit(strtoupper($stepsData[3]['title'] ?? 'SELESAI MAGANG'), 14, '') }}</text>
 
                     <!-- BALON KOMIK / WEBTOON SPEECH BUBBLE POS 4 (Ekor Segitiga Pendek & Rapi, Tidak Menutupi Plang) -->
                     <g class="webtoon-speech-bubble" id="webtoonBubble4">
                         <path d="M -5,-140 L 275,-140 Q 290,-140 290,-125 L 290,-30 Q 290,-15 275,-15 L 50,-15 L 35,0 L 20,-15 L -5,-15 Q -20,-15 -20,-30 L -20,-125 Q -20,-140 -5,-140 Z" fill="#ffffff" stroke="#f59e0b" stroke-width="2.5" style="filter: drop-shadow(0 10px 24px rgba(15,23,42,0.22));"/>
                         <rect x="-3" y="-132" width="56" height="18" rx="9" fill="#f59e0b"/>
                         <text x="25" y="-120" text-anchor="middle" font-size="8.5" font-weight="900" fill="#ffffff" font-family="'Lexend', sans-serif">POS 04</text>
-                        <text x="65" y="-119" text-anchor="start" font-size="11" font-weight="900" fill="#0f172a" font-family="'Lexend', sans-serif">{!! !str_contains(strtoupper($stepsData[3]['title'] ?? ''), 'SERTIFIKAT') && strtoupper($stepsData[3]['title'] ?? '') === 'KELULUSAN' ? 'KELULUSAN & SERTIFIKAT' : strtoupper($stepsData[3]['title'] ?? 'KELULUSAN & SERTIFIKAT') !!}</text>
+                        <text x="65" y="-119" text-anchor="start" font-size="11" font-weight="900" fill="#0f172a" font-family="'Lexend', sans-serif">{!! strtoupper($stepsData[3]['title'] ?? 'SELESAI MAGANG') !!}</text>
                         <line x1="-3" y1="-106" x2="273" y2="-106" stroke="#f1f5f9" stroke-width="1.5"/>
                         <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p4Line1 }}</text>
                         <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p4Line2 }}</text>
@@ -820,7 +820,7 @@
                         </g>
                     </g>
 
-                    <!-- Karakter Pos 4: Wisudawan Magang Utuh Berjubah & Topi Toga Mengangkat E-Sertifikat -->
+                    <!-- Karakter Pos 4: Mahasiswa Magang Selesai Berbaju Rapi & Mengangkat Laporan Akhir Magang -->
                     <g id="charScene4" class="char-scene-item" transform="translate(1960, 280)">
                         <!-- Bayangan di Trotoar -->
                         <ellipse cx="28" cy="68" rx="22" ry="4.5" fill="#0f172a" opacity="0.2"/>
@@ -841,7 +841,7 @@
                         <polygon points="12,4 44,4 28,-3" fill="#0f172a"/>
                         <rect x="21" y="4" width="14" height="4" fill="#1e293b"/>
                         <line x1="28" y1="-3" x2="38" y2="7" stroke="#f59e0b" stroke-width="1.8"/>
-                        <!-- Tangan Mengangkat Tabung E-Sertifikat Kelulusan Emas -->
+                        <!-- Tangan Mengangkat Map Berkas Laporan Akhir Magang -->
                         <g class="char-jump-joy">
                             <path d="M 37,22 L 46,12" stroke="#fed7aa" stroke-width="3.2" stroke-linecap="round"/>
                             <rect x="44" y="2" width="8" height="16" rx="2" fill="#f59e0b" stroke="#ffffff" stroke-width="1.2" transform="rotate(25, 48, 10)"/>

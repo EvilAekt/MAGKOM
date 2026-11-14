@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class Pengaturan extends Model
 {
@@ -125,16 +126,20 @@ class Pengaturan extends Model
     }
 
     /**
-     * Menghapus cache saat data disimpan atau dihapus.
+     * Menghapus cache saat data disimpan atau dihapus secara transaksional aman.
      */
     protected static function booted(): void
     {
         static::saved(function (self $pengaturan) {
-            Cache::forget(self::CACHE_PREFIX.$pengaturan->kunci);
+            DB::afterCommit(function () use ($pengaturan) {
+                Cache::forget(self::CACHE_PREFIX.$pengaturan->kunci);
+            });
         });
 
         static::deleted(function (self $pengaturan) {
-            Cache::forget(self::CACHE_PREFIX.$pengaturan->kunci);
+            DB::afterCommit(function () use ($pengaturan) {
+                Cache::forget(self::CACHE_PREFIX.$pengaturan->kunci);
+            });
         });
     }
 

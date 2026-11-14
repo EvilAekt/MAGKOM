@@ -85,7 +85,7 @@ class LandingCmsSiteEditorController extends Controller
             ['step' => '01', 'title' => 'Registrasi', 'badge' => 'REGISTRASI', 'desc' => 'Calon peserta membuat akun resmi, mengisi data pribadi, dan menunggu akun diverifikasi admin.'],
             ['step' => '02', 'title' => 'Administrasi & Seleksi', 'badge' => 'ADMINISTRASI & SELEKSI', 'desc' => 'Pilih bidang, unggah berkas, lalu admin memverifikasi dan menyeleksi dalam 1–3 hari kerja.'],
             ['step' => '03', 'title' => 'Pelaksanaan Magang', 'badge' => 'PELAKSANAAN MAGANG', 'desc' => 'Kerjakan tugas, isi logbook harian, dan unggah progres sesuai durasi magang.'],
-            ['step' => '04', 'title' => 'Kelulusan', 'badge' => 'KELULUSAN', 'desc' => 'Unduh Lembar Nilai Magang dan sertifikat dalam bentuk PDF dari portal.'],
+            ['step' => '04', 'title' => 'Selesai Magang', 'badge' => 'KELULUSAN', 'desc' => 'Penyelesaian program magang, pengumpulan laporan akhir, dan pelepasan resmi peserta oleh dinas.'],
         ];
 
         $defaultFooterMedsos = [
@@ -108,7 +108,7 @@ class LandingCmsSiteEditorController extends Controller
             [
                 'nomor' => 2,
                 'judul' => 'Data yang Kami Kumpulkan',
-                'konten' => 'Untuk keperluan seleksi administrasi, penempatan bidang, dan penerbitan sertifikat resmi bertanda tangan elektronik (TTE), kami mengumpulkan data yang mencakup identitas diri, kontak aktif, afiliasi akademik, dan dokumen persyaratan resmi.',
+                'konten' => 'Untuk keperluan seleksi administrasi, penempatan bidang, dan penetapan kelulusan resmi, kami mengumpulkan data yang mencakup identitas diri, kontak aktif, afiliasi akademik, dan dokumen persyaratan resmi.',
                 'items' => [
                     'Identitas Diri: Nama lengkap, NISN/NIM, NIK, tempat & tanggal lahir, serta foto profil resmi.',
                     'Kontak: Alamat surel (email) aktif dan nomor telepon/WhatsApp.',

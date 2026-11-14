@@ -318,7 +318,7 @@
                            id="inputNamaModul"
                            name="nama_modul"
                            class="form-input-field"
-                           placeholder="Contoh: Manajemen Sertifikat Elektronik"
+                           placeholder="Contoh: Manajemen Penempatan Peserta"
                            required
                            value="{{ old('nama_modul') }}">
                 </div>
@@ -329,7 +329,7 @@
                            id="inputSlug"
                            name="slug"
                            class="form-input-field"
-                           placeholder="Otomatis dibuat jika kosong (contoh: sertifikat.manajemen)"
+                           placeholder="Otomatis dibuat jika kosong (contoh: penempatan.manajemen)"
                            value="{{ old('slug') }}">
                 </div>
 
@@ -339,7 +339,6 @@
                         <option value="Operasional Seleksi">Operasional Seleksi</option>
                         <option value="Pendaftaran">Pendaftaran</option>
                         <option value="Bimbingan">Bimbingan</option>
-                        <option value="Penilaian">Penilaian</option>
                         <option value="Kuota">Kuota</option>
                         <option value="Penempatan">Penempatan</option>
                         <option value="Tata Kelola">Tata Kelola</option>
@@ -437,7 +436,6 @@
                         <option value="Seleksi">Seleksi</option>
                         <option value="Bimbingan">Bimbingan</option>
                         <option value="Pelaporan">Pelaporan</option>
-                        <option value="Penilaian">Penilaian</option>
                         <option value="Kuota">Kuota</option>
                         <option value="Penempatan">Penempatan</option>
                         <option value="Tata Kelola">Tata Kelola</option>

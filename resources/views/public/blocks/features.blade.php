@@ -3,7 +3,7 @@
     $defaultItems = [
         ['title' => 'Mentor Ahli ASN', 'desc' => 'Bimbingan intensif dari praktisi teknologi dan komunikasi bersertifikasi dinas.', 'icon' => '👥'],
         ['title' => 'Proyek Riil & Nyata', 'desc' => 'Terlibat langsung dalam layanan publik berbasis digital Kabupaten Sleman.', 'icon' => '💻'],
-        ['title' => 'Sertifikat & Nilai Resmi', 'desc' => 'Dokumen kelulusan resmi ber-barcode untuk menunjang portofolio karir.', 'icon' => '📜'],
+        ['title' => 'Penyelesaian & Portofolio', 'desc' => 'Pengalaman kerja riil dan portofolio proyek pemerintahan untuk karir profesional.', 'icon' => '🏆'],
     ];
     $items = !empty($content['items']) && is_array($content['items']) ? $content['items'] : $defaultItems;
 @endphp

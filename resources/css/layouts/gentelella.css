@@ -1263,6 +1263,46 @@ body.nav-sm {
     border-color: #26354D;
 }
 
+@media (max-width: 480px) {
+    .gentelella-modal-backdrop {
+        padding: 0.5rem;
+    }
+    .gentelella-modal-dialog {
+        max-height: 96vh;
+        max-height: 96dvh;
+    }
+    .gentelella-modal-header {
+        padding: 0.75rem 1rem;
+    }
+    .gentelella-modal-title {
+        font-size: 1rem;
+    }
+    .gentelella-modal-body {
+        padding: 1rem;
+        max-height: calc(96vh - 120px);
+        max-height: calc(96dvh - 120px);
+    }
+    .gentelella-modal-footer {
+        padding: 0.75rem 1rem;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .gentelella-modal-backdrop {
+        padding: 0.5rem;
+        align-items: flex-start;
+    }
+    .gentelella-modal-dialog {
+        max-height: 96vh;
+        max-height: 96dvh;
+    }
+    .gentelella-modal-body {
+        max-height: calc(96vh - 100px);
+        max-height: calc(96dvh - 100px);
+    }
+}
+
 /* =====================================================================
    15. UNIVERSAL CARD, PROFILE VIEW, METRIC CARD & CALLOUT BANNERS
    Modern Gentelella Component Styles with MagKom Sleman Design Tokens

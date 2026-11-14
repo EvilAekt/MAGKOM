@@ -80,7 +80,7 @@
             <span>Aktif</span>
             <span>Sisa Hari Magang</span>
             <span>Hari</span>
-            <span>Status Evaluasi / Sertifikat</span>
+            <span>Status Penyelesaian Magang</span>
             <span>Status Evaluasi</span>
             <span>Tugas Selesai</span>
             <span>Logbook Mingguan</span>
@@ -118,7 +118,7 @@
             <span>Logbook Mingguan</span>
             <span>Sisa Hari Magang</span>
             <span>Status Evaluasi</span>
-            <span>Status Evaluasi / Sertifikat</span>
+            <span>Status Penyelesaian Magang</span>
             <span>Hari</span>
         </div>
 

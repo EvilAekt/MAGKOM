@@ -117,4 +117,28 @@ class RealtimeStreamController extends Controller
             'success' => $success,
         ]);
     }
+
+    /**
+     * Menandai kumpulan event notifikasi sebagai telah dibaca secara batch (PERF-P3-01).
+     */
+    public function markReadBatch(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $validated = $request->validate([
+            'event_ids' => 'required|array|min:1|max:50',
+            'event_ids.*' => 'integer|min:1',
+        ]);
+
+        $affected = $this->eventService->markBatchAsRead($validated['event_ids'], $user);
+
+        return response()->json([
+            'success' => true,
+            'affected' => $affected,
+        ]);
+    }
 }

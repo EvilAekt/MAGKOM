@@ -30,10 +30,6 @@
                 </div>
             </div>
             <div class="banner-actions-group">
-                <a href="{{ route('superadmin.health.index') }}" class="btn-banner-action" style="background: rgba(255, 255, 255, 0.15); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.25);">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                    <span>Telemetri Sistem</span>
-                </a>
                 <form method="POST" action="{{ route('superadmin.backup.snapshot') }}" style="display: inline-block;" onsubmit="return confirm('Picu pembuatan snapshot basis data baru sekarang? Proses akan berjalan dengan kompresi Gzip.')">
                     @csrf
                     <button type="submit" class="btn-banner-action">

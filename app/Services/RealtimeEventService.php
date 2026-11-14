@@ -62,6 +62,25 @@ class RealtimeEventService
     }
 
     /**
+     * Menandai sejumlah event sebagai telah dibaca sekaligus dalam satu kueri update (PERF-P3-01).
+     *
+     * @param  array<int>  $eventIds
+     */
+    public function markBatchAsRead(array $eventIds, User $user): int
+    {
+        if (empty($eventIds)) {
+            return 0;
+        }
+
+        return RealtimeEvent::forUser($user)
+            ->whereIn('id', $eventIds)
+            ->whereNull('read_at')
+            ->update([
+                'read_at' => now(),
+            ]);
+    }
+
+    /**
      * Menghapus event outbox yang telah melampaui batas retensi hari (default 7 hari).
      */
     public function pruneOldEvents(int $days = 7): int

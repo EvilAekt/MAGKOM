@@ -226,7 +226,7 @@
             </div>
         </x-gentelella.card>
 
-        <!-- KARTU 3: KEBIJAKAN RETENSI AKUN, SERTIFIKAT & AUDIT TRAIL -->
+        <!-- KARTU 3: KEBIJAKAN RETENSI AKUN & AUDIT TRAIL -->
         <x-gentelella.card :hoverable="false" style="padding: 1.75rem 2rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 1rem;">
                 <div style="width: 38px; height: 38px; border-radius: 8px; background: var(--blue-tint); color: var(--blue-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">

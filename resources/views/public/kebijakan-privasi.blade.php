@@ -110,7 +110,7 @@
                     [
                         'nomor' => 2,
                         'judul' => 'Data yang Kami Kumpulkan',
-                        'konten' => 'Untuk keperluan seleksi administrasi, penempatan bidang, dan penerbitan sertifikat resmi bertanda tangan elektronik (TTE), kami mengumpulkan data yang mencakup:',
+                        'konten' => 'Untuk keperluan seleksi administrasi, penempatan bidang, dan penetapan status kelulusan resmi, kami mengumpulkan data yang mencakup:',
                         'items' => [
                             'Identitas Diri: Nama lengkap, NISN/NIM, NIK, tempat & tanggal lahir, serta foto profil resmi.',
                             'Kontak: Alamat surat elektronik (email) aktif dan nomor telepon/WhatsApp.',
@@ -156,7 +156,7 @@
                         'nomor' => 3,
                         'judul' => 'Kewajiban Pengisian Logbook Mingguan & Tugas',
                         'konten' => 'Setiap peserta berkewajiban mencatat aktivitas magang secara berkala pada modul Logbook Mingguan di portal MagKom dan menyelesaikan setiap penugasan teknis yang didelegasikan oleh Pembimbing Lapangan sebelum tenggat waktu berakhir.',
-                        'highlight' => 'Kelalaian pengisian logbook berkala dapat memengaruhi nilai akhir evaluasi dan kelayakan penerbitan sertifikat magang resmi.',
+                        'highlight' => 'Kelalaian pengisian logbook berkala dapat memengaruhi evaluasi kedisiplinan dan status kelulusan magang.',
                     ],
                     [
                         'nomor' => 4,
@@ -165,8 +165,8 @@
                     ],
                     [
                         'nomor' => 5,
-                        'judul' => 'Evaluasi Kinerja, Sertifikat Resmi & Pembatalan Status',
-                        'konten' => 'Penilaian akhir dilakukan oleh pembimbing dinas berdasarkan disiplin, kualitas luaran tugas, dan laporan akhir. Peserta yang menyelesaikan program dengan baik berhak menerima Sertifikat Resmi bertanda tangan elektronik (TTE). Pelanggaran berat terhadap tata tertib atau hukum dapat mengakibatkan pencabutan status magang secara sepihak dan pemberitahuan resmi ke institusi asal.',
+                        'judul' => 'Penyelesaian Magang, Kelulusan & Pembatalan Status',
+                        'konten' => 'Verifikasi penyelesaian program dilakukan oleh pembimbing dinas berdasarkan disiplin, kualitas luaran tugas, dan laporan akhir. Peserta yang menyelesaikan program dengan baik berhak mendapatkan status lulus program magang resmi. Pelanggaran berat terhadap tata tertib atau hukum dapat mengakibatkan pencabutan status magang secara sepihak dan pemberitahuan resmi ke institusi asal.',
                     ],
                 ];
 

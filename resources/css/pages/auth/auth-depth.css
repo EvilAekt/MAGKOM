@@ -166,3 +166,102 @@ html, body {
   0% { transform: scale(0.95); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
+
+/* ==========================================================================
+   UNIVERSAL RESPONSIVE OVERHAUL - AUTH PAGES (Login & Register)
+   ========================================================================== */
+
+/* Main Auth Frame Responsiveness */
+@media (max-width: 991.98px) {
+  /* Di layar tablet/mobile, sembunyikan visual illustration panel agar pengguna langsung melihat form */
+  section:has(svg.ring),
+  section:has(.slides) {
+    display: none !important;
+  }
+
+  /* Main container wrapper */
+  div:has(> canvas[data-auth-canvas]) {
+    padding: 20px 14px !important;
+    align-items: flex-start !important;
+  }
+
+  /* Main card */
+  main:has(> section) {
+    border-radius: 18px !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    box-shadow: 0 16px 36px rgba(0, 20, 50, 0.35) !important;
+  }
+
+  /* Auth form section */
+  section.auth-panel-scroll,
+  section:has(form[action*="login"]),
+  section:has(form[action*="register"]) {
+    padding: 28px 20px 24px !important;
+    max-height: none !important;
+    min-height: auto !important;
+    width: 100% !important;
+    flex: 1 1 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  div:has(> canvas[data-auth-canvas]) {
+    padding: 12px 8px !important;
+  }
+
+  section.auth-panel-scroll,
+  section:has(form[action*="login"]),
+  section:has(form[action*="register"]) {
+    padding: 20px 14px 18px !important;
+  }
+
+  /* Form header */
+  section:has(form) h1 {
+    font-size: 26px !important;
+  }
+
+  /* Tipe pendaftaran button wrapping */
+  [data-reg-type] {
+    font-size: 13px !important;
+    padding: 6px 8px !important;
+  }
+}
+
+@media (max-width: 320px) {
+  div:has(> canvas[data-auth-canvas]) {
+    padding: 8px 4px !important;
+  }
+
+  section.auth-panel-scroll,
+  section:has(form[action*="login"]),
+  section:has(form[action*="register"]) {
+    padding: 16px 10px 14px !important;
+  }
+
+  section:has(form) h1 {
+    font-size: 22px !important;
+  }
+}
+
+/* Smartphone Landscape Adaptability */
+@media (max-height: 600px) and (orientation: landscape) {
+  div:has(> canvas[data-auth-canvas]) {
+    padding: 12px 16px !important;
+    align-items: flex-start !important;
+  }
+
+  main:has(> section) {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+  }
+
+  section.auth-panel-scroll,
+  section:has(form[action*="login"]),
+  section:has(form[action*="register"]) {
+    padding: 20px 24px !important;
+    max-height: none !important;
+  }
+}
