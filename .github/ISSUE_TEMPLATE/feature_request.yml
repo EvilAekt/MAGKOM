@@ -1,0 +1,76 @@
+name: Permintaan Fitur (Feature Request)
+description: Usulkan ide atau fitur baru untuk meningkatkan sistem MAGKOM.
+title: "[FEATURE]: "
+labels: ["feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Terima kasih telah mengajukan usulan pengembangan untuk **MAGKOM** (Portal Manajemen Magang Kominfo).
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Tujuan Fitur (Feature Goal)
+      description: Apa tujuan utama dari penambahan fitur ini?
+      placeholder: Meningkatkan efisiensi pembimbing dalam memberikan umpan balik tugas peserta secara berurutan...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Masalah yang Ingin Diselesaikan (Problem Statement)
+      description: Masalah apa yang dihadapi pengguna saat ini yang membutuhkan solusi ini?
+      placeholder: Pembimbing kesulitan membedakan tugas yang sudah dinilai vs yang masih tertunda ketika jumlah mentee banyak...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Modul Terkait (Affected Module)
+      description: Pilih area modul yang akan menerima fitur ini.
+      options:
+        - Portal Publik (Landing Page, FAQ, Alur)
+        - Pendaftaran Calon Peserta
+        - Modul Admin (Verifikasi Berkas, Kuota, Penempatan)
+        - Modul Pembimbing (Classroom, Logbook, Evaluasi)
+        - Modul Peserta (Dashboard, Pengisian Logbook, Tugas)
+        - Modul SuperAdmin (Audit Log, Master Data, Staf)
+        - Backend & Service Layer
+        - Frontend UI/UX
+        - Basis Data & Reporting
+        - DevOps & Automation
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solusi yang Diusulkan (Proposed Solution)
+      description: Deskripsikan bagaimana alur kerja fitur yang Anda bayangkan.
+      placeholder: Tambahkan tab penyaring 'Perlu Dinilai' pada antarmuka classroom pembimbing...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Kriteria Penerimaan (Acceptance Criteria)
+      description: Syarat atau kondisi agar fitur ini dianggap sukses dan selesai.
+      placeholder: |
+        - [ ] Pembimbing dapat menyaring tugas berstatus 'Menunggu Penilaian'
+        - [ ] Dilengkapi pengujian otomatis Feature Test (PHPUnit)
+        - [ ] Mematuhi hak akses RBAC (hanya pembimbing dari peserta terkait yang dapat melihat)
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Konteks Tambahan / Referensi (Optional)
+      description: Tautan ke dokumen PRD/TDD, desain UI, atau pertimbangan teknis lainnya.
+    validations:
+      required: false
+

@@ -9,6 +9,8 @@ class MagKomRealtimeEngine {
         this.isConnected = false;
         this.retryTimeout = null;
         this.toastContainer = null;
+        this.pendingReadIds = new Set();
+        this.readBatchTimer = null;
     }
 
     /**
@@ -95,8 +97,7 @@ class MagKomRealtimeEngine {
                 'tugas_baru',
                 'tugas_dikumpulkan',
                 'progres_direviu',
-                'ancaman_keamanan',
-                'telemetri_route'
+                'ancaman_keamanan'
             ];
 
             events.forEach((eventType) => {
@@ -114,6 +115,7 @@ class MagKomRealtimeEngine {
      * Menutup koneksi secara graceful.
      */
     disconnect() {
+        this.flushPendingReads();
         if (this.eventSource) {
             this.eventSource.close();
             this.eventSource = null;
@@ -122,7 +124,8 @@ class MagKomRealtimeEngine {
     }
 
     /**
-     * Mengatur koneksi berdasarkan visibilitas tab browser (menghemat energi & bandwidth).
+     * Mengatur koneksi berdasarkan visibilitas tab browser dan navigasi halaman.
+     * Langsung memutus EventSource saat halaman ditutup atau berpindah agar worker PHP bebas seketika.
      */
     registerVisibilityHandler() {
         document.addEventListener('visibilitychange', () => {
@@ -131,6 +134,14 @@ class MagKomRealtimeEngine {
             } else {
                 this.connect();
             }
+        });
+
+        window.addEventListener('beforeunload', () => {
+            this.disconnect();
+        });
+
+        window.addEventListener('pagehide', () => {
+            this.disconnect();
         });
     }
 
@@ -171,13 +182,8 @@ class MagKomRealtimeEngine {
                 this.markEventAsRead(eventId);
             }
 
-            // Dispatch global event untuk subscriber frontend (seperti Canvas Telemetri)
+            // Dispatch global event untuk subscriber frontend
             window.dispatchEvent(new CustomEvent('magkom:realtime-event', { detail: { eventType, data } }));
-
-            if (eventType === 'telemetri_route') {
-                window.dispatchEvent(new CustomEvent('magkom:telemetry-route', { detail: data }));
-                return; // Jangan tampilkan toast untuk telemetri route reguler
-            }
 
             // TIDAK membunyikan audio chime (dinonaktifkan sesuai preferensi pengguna)
             this.showToast(data.title || 'Pemberitahuan Baru', data.message || '', eventType, data.action_url);
@@ -192,20 +198,51 @@ class MagKomRealtimeEngine {
     }
 
     /**
-     * Menandai event notifikasi sebagai telah dibaca di database agar tidak berulang.
+     * Menandai event notifikasi sebagai telah dibaca dengan batching debounced (PERF-P3-01).
+     * Mengelompokkan event yang tiba serentak ke dalam 1 HTTP POST request untuk menghemat worker FastCGI.
      */
     markEventAsRead(eventId) {
+        if (!eventId) return;
+        const numId = parseInt(eventId, 10);
+        if (isNaN(numId) || numId <= 0) return;
+
+        this.pendingReadIds.add(numId);
+
+        if (this.readBatchTimer) {
+            clearTimeout(this.readBatchTimer);
+        }
+
+        // Window debouncing 250ms
+        this.readBatchTimer = setTimeout(() => {
+            this.flushPendingReads();
+        }, 250);
+    }
+
+    /**
+     * Mengirim kumpulan event ID yang pending dibaca dalam 1 HTTP POST request.
+     */
+    flushPendingReads() {
+        if (!this.pendingReadIds || this.pendingReadIds.size === 0) return;
+
+        const idsToFlush = Array.from(this.pendingReadIds);
+        this.pendingReadIds.clear();
+        this.readBatchTimer = null;
+
         try {
             const csrfMeta = document.querySelector('meta[name="csrf-token"]');
             const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
-            fetch(`/realtime/read/${encodeURIComponent(eventId)}`, {
+
+            fetch('/realtime/read-batch', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': csrfToken,
                     'Accept': 'application/json'
-                }
-            }).catch(() => {});
+                },
+                body: JSON.stringify({ event_ids: idsToFlush })
+            }).catch(() => {
+                // Fail-safe
+            });
         } catch {
             // Fail-safe
         }

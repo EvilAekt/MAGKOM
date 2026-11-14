@@ -67,7 +67,7 @@
                 nama: 'Persandian',
                 ikon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
                 jurusan: ['TKJ', 'Teknik Komputer', 'Keamanan Siber'],
-                kegiatan: 'Membantu pengamanan jaringan dan sertifikat elektronik.',
+                kegiatan: 'Membantu pengamanan jaringan dan tata kelola sistem informasi dinas.',
             },
             {
                 id: 'sekretariat',
@@ -93,7 +93,7 @@
             { judul: 'Registrasi', isi: 'Calon peserta membuat akun, mengisi data pribadi, dan menunggu akun diverifikasi admin.' },
             { judul: 'Administrasi & Seleksi', isi: 'Pilih bidang, unggah berkas, lalu admin memverifikasi dan menyeleksi dalam 1–3 hari kerja.' },
             { judul: 'Pelaksanaan Magang', isi: 'Kerjakan tugas, isi logbook harian, dan unggah progres sesuai durasi magang.' },
-            { judul: 'Kelulusan', isi: 'Unduh Lembar Nilai Magang dan sertifikat dalam bentuk PDF dari portal.' },
+            { judul: 'Selesai Magang', isi: 'Penyelesaian program magang, pengumpulan laporan akhir, dan penetapan status kelulusan resmi.' },
         ],
         faqCategories: [
             {
@@ -124,7 +124,7 @@
                     },
                     {
                         q: 'Apakah akun portal bisa digunakan untuk mendaftar periode berikutnya?',
-                        a: 'Akun Anda berlaku permanen di portal MAGKOM. Anda dapat menggunakannya kembali untuk melihat riwayat sertifikat atau mendaftar periode berikutnya setelah magang sebelumnya selesai.'
+                        a: 'Akun Anda berlaku permanen di portal MAGKOM. Anda dapat menggunakannya kembali untuk melihat riwayat aktivitas atau mendaftar periode berikutnya setelah magang sebelumnya selesai.'
                     }
                 ]
             },
@@ -148,7 +148,7 @@
                 items: [
                     {
                         q: 'Apa saja fasilitas dan benefit yang didapatkan peserta magang?',
-                        a: 'Peserta mendapatkan bimbingan intensif dari Mentor ASN profesional, akses modul proyek nyata di pemerintahan, sertifikat resmi Diskominfo ber-QR code sah, serta penilaian kompetensi standar industri.'
+                        a: 'Peserta mendapatkan bimbingan intensif dari Mentor ASN profesional, akses modul proyek nyata di pemerintahan, portofolio kerja kedinasan riil, serta pengalaman kerja standar industri.'
                     },
                     {
                         q: 'Apakah program magang di Diskominfo Sleman berbayar atau digaji?',
