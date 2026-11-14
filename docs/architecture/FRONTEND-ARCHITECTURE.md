@@ -133,10 +133,10 @@ MAGKOM menggunakan pustaka resmi **GSAP (GreenSock Animation Platform) 3.15.1** 
 1. **Membuat File Blade:** Tempatkan file view di `resources/views/{role}/{fitur}/index.blade.php`. Turunkan dari `@extends('layouts.dashboard')`.
 2. **Menambahkan Style Khusus (jika diperlukan):**
    - Buat file di `resources/css/pages/{role}/{fitur}.css`.
-   - Daftarkan entry point pada array `input` di [vite.config.js](../vite.config.js).
+   - Daftarkan entry point pada array `input` di [vite.config.js](../../vite.config.js).
    - Muat via `@push('styles')` dengan direktif `@vite(['resources/css/pages/...'])`.
 3. **Menambahkan Script Khusus:**
    - Buat file di `resources/js/pages/{role}/{fitur}.js`.
    - Gunakan atribut HTML5 `data-*` untuk mentransfer data dinamis dari server ke JavaScript. Dilarang menyisipkan tag `<script>` inline berisi variabel Blade.
-   - Daftarkan file JS pada [vite.config.js](../vite.config.js).
+   - Daftarkan file JS pada [vite.config.js](../../vite.config.js).
 4. **Validasi Kompilasi:** Jalankan `npm run build` untuk memastikan seluruh manifest terkompilasi bersih tanpa error.

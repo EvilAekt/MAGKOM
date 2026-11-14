@@ -15,7 +15,7 @@ Dokumen ini merupakan referensi teknis komprehensif atas seluruh modul, alur bis
 - **Client Interactions**: Vanilla JavaScript Modular ES Modules (`resources/js/`), GSAP Animations, Event Delegation
 - **Asset Bundler**: Vite 6.x
 - **Basis Data**: MySQL 8.0+ / MariaDB (Mendukung transaksi atomic locking `lockForUpdate`)
-- **Suite Pengujian**: PHPUnit / Pest Testing Suite (740+ Automated Feature & Unit Tests)
+- **Suite Pengujian**: PHPUnit / Pest Testing Suite (942 Automated Feature & Unit Tests, 6.132 assertions)
 
 ---
 

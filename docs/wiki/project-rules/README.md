@@ -1,16 +1,15 @@
 # Project Rules Reference
 
-Seluruh aturan resmi proyek (*Project Rules*) dipusatkan di direktori [`.agents/rules/`](../../../.agents/rules/).
+Seluruh aturan resmi proyek (*Project Rules*) didokumentasikan di dalam direktori ini untuk rujukan pengembang dan AI Coding Agent.
 
-Direktori ini dipertahankan hanya sebagai penanda referensi. Gunakan berkas rujukan resmi berikut:
-- [`.agents/rules/AGENTS.md`](../../../.agents/rules/AGENTS.md) — Aturan permanen arsitektur dan larangan penulisan CSS/JS di Blade.
-- [`.agents/rules/project-context.md`](../../../.agents/rules/project-context.md) — Konteks stack teknis dan direktori repositori.
-- [`.agents/rules/backend-security.md`](../../../.agents/rules/backend-security.md) — Panduan keamanan OWASP dan sanitasi input.
-- [`.agents/rules/code-style.md`](../../../.agents/rules/code-style.md) — Standar penulisan kode PSR-12 dan Skinny Controllers.
-- [`.agents/rules/frontend.md`](../../../.agents/rules/frontend.md) — Panduan arsitektur frontend dan aksesibilitas WCAG.
-- [`.agents/rules/git-workflow.md`](../../../.agents/rules/git-workflow.md) — Konvensi Conventional Commits dan branching.
-- [`.agents/rules/testing.md`](../../../.agents/rules/testing.md) — Metodologi pengujian otomatis PHPUnit.
-- [`.agents/rules/tooling-safety.md`](../../../.agents/rules/tooling-safety.md) — Panduan keselamatan eksekusi perintah terminal.
-- [`.agents/rules/design-skills-routing.md`](../../../.agents/rules/design-skills-routing.md) — Panduan rute keahlian UI/UX.
-- [`.agents/rules/graphify.md`](../../../.agents/rules/graphify.md) — Panduan pemanfaatan AST Knowledge Graph.
+Gunakan berkas rujukan resmi berikut:
+- [`project-context.md`](./project-context.md) — Konteks stack teknis dan direktori repositori.
+- [`backend-security.md`](./backend-security.md) — Panduan keamanan OWASP dan sanitasi input.
+- [`code-style.md`](./code-style.md) — Standar penulisan kode PSR-12 dan Skinny Controllers.
+- [`frontend.md`](./frontend.md) — Panduan arsitektur frontend dan aksesibilitas WCAG.
+- [`git-workflow.md`](./git-workflow.md) — Konvensi Conventional Commits dan branching.
+- [`testing.md`](./testing.md) — Metodologi pengujian otomatis PHPUnit.
+- [`tooling-safety.md`](./tooling-safety.md) — Panduan keselamatan eksekusi perintah terminal.
+- [`design-skills-routing.md`](./design-skills-routing.md) — Panduan rute keahlian UI/UX.
+- [`graphify.md`](./graphify.md) — Panduan pemanfaatan AST Knowledge Graph.
 

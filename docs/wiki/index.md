@@ -6,8 +6,8 @@ Dokumen ini adalah ringkasan memori dan konteks arsitektur proyek untuk AI Agent
 
 ## 1. Arsitektur & Aturan Proyek
 - **Tech Stack**: **Laravel 10.x** (platform terkunci), **PHP 8.3.x Mutlak**, **MySQL 8.0+ / MariaDB 10.5+ (InnoDB)** untuk runtime, **SQLite `:memory:`** untuk testing suite otomatis, **Blade (Server-Rendered Markup)**, **Vite 6.x**, **GSAP 3.15.1**.
-- **Frontend Standard**: **Scoped Vanilla CSS (Design Tokens & CSS Variables)** dan **Modular Vanilla JavaScript (ES Modules)**. Framework eksternal seperti Tailwind utility baru di Blade, Bootstrap, Alpine.js, React, atau jQuery **dilarang keras** sesuai aturan permanen [`.agents/rules/AGENTS.md`](../../.agents/rules/AGENTS.md).
-- **Aturan Pengembangan Agen AI**: Sumber kebenaran tunggal aturan agen tersedia di direktori [`.agents/rules/`](../../.agents/rules/).
+- **Frontend Standard**: **Scoped Vanilla CSS (Design Tokens & CSS Variables)** dan **Modular Vanilla JavaScript (ES Modules)**. Framework eksternal seperti Tailwind utility baru di Blade, Bootstrap, Alpine.js, React, atau jQuery **dilarang keras** sesuai aturan permanen [`project-rules/frontend.md`](./project-rules/frontend.md).
+- **Aturan Pengembangan Agen AI**: Sumber kebenaran tunggal aturan agen tersedia di direktori [`project-rules/`](./project-rules/).
 - **Knowledge Graph Codebase**: Tersedia di direktori `graphify-out/` dan laporan [CODEBASE_GRAPH_REPORT.md](./CODEBASE_GRAPH_REPORT.md).
 
 ---
@@ -36,7 +36,9 @@ Untuk pemahaman mendalam, baca dokumen resmi:
 - [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](../05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md) (Matriks RBAC & Audit Trail)
 - [`07-DESIGN-SYSTEM-MAGKOM.md`](../07-DESIGN-SYSTEM-MAGKOM.md) (Design System MagKom)
 - [`DEVELOPMENT-GUIDE.md`](../DEVELOPMENT-GUIDE.md) (Panduan Orientasi & Quality Gates)
-- [`FRONTEND-ARCHITECTURE.md`](../FRONTEND-ARCHITECTURE.md) (Arsitektur Aset Frontend Vite)
+- [`architecture/FRONTEND-ARCHITECTURE.md`](../architecture/FRONTEND-ARCHITECTURE.md) (Arsitektur Aset Frontend Vite)
+- [`08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md`](../08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md) (Dokumentasi Fitur & Actions)
+- [`09-PANDUAN-SMTP-DAN-NOTIFIKASI-EMAIL.md`](../09-PANDUAN-SMTP-DAN-NOTIFIKASI-EMAIL.md) (Panduan Layanan SMTP & Notifikasi Email)
 - [`architecture/ROUTES.md`](../architecture/ROUTES.md) (Peta Rute & Proteksi Middleware)
 
 ---
