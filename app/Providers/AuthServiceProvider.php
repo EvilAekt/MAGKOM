@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
 use App\Models\Dokumen;
 use App\Models\Logbook;
 use App\Models\Pendaftaran;
@@ -14,6 +13,7 @@ use App\Policies\PendaftaranPolicy;
 use App\Policies\PenempatanPolicy;
 use App\Policies\TugasPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -36,5 +36,16 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
+
+        // RBAC-001: Dynamic permission checks via Gate
+        Gate::before(function ($user, $ability) {
+            if ($user && method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin()) {
+                return true;
+            }
+        });
+
+        Gate::define('permission', function ($user, string $slug) {
+            return $user && method_exists($user, 'hasPermission') && $user->hasPermission($slug);
+        });
     }
 }

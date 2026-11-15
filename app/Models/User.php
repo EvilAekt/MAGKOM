@@ -8,6 +8,7 @@ use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
 use App\Notifications\QueuedVerifyEmailNotification;
 use App\Notifications\ResetPasswordNotification;
+use App\Services\PermissionService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -227,6 +228,10 @@ class User extends Authenticatable implements MustVerifyEmail
             "role_perms_{$roleValue}",
             now()->addMinutes(30),
             static function () use ($roleValue): array {
+                if (Permission::query()->where('is_system', true)->count() === 0) {
+                    app(PermissionService::class)->ensureSystemPermissionsExist();
+                }
+
                 return RolePermission::query()
                     ->where('role', $roleValue)
                     ->join('permissions', 'role_permissions.permission_id', '=', 'permissions.id')

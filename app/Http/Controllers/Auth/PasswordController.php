@@ -7,10 +7,10 @@ namespace App\Http\Controllers\Auth;
 use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Services\AuditService;
+use App\Support\PasswordPolicy;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -35,19 +35,16 @@ class PasswordController extends Controller
     {
         $user = $request->user();
         $isSuperAdmin = $user && method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin();
-
-        $passwordRules = $isSuperAdmin
-            ? ['required', 'string', 'confirmed', Password::min(12)->letters()->mixedCase()->numbers()->symbols()]
-            : ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'];
+        $passwordRules = $isSuperAdmin ? PasswordPolicy::staffRules(confirmed: true) : PasswordPolicy::pesertaRules(confirmed: true);
 
         $request->validate([
             'current_password' => ['required', 'string'],
             'password' => $passwordRules,
-        ], [
+        ], array_merge([
             'password.min' => $isSuperAdmin ? 'Kata sandi baru SuperAdmin minimal 12 karakter dengan huruf besar, huruf kecil, angka, dan simbol.' : 'Kata sandi baru minimal 8 karakter.',
             'password.regex' => 'Kata sandi baru harus mengandung kombinasi huruf dan angka.',
             'password.confirmed' => 'Konfirmasi kata sandi baru tidak cocok.',
-        ]);
+        ], PasswordPolicy::messages()));
 
         // 1. Cek kata sandi lama cocok
         if (! Hash::check($request->input('current_password'), $user->password)) {

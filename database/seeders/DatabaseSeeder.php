@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             JenisDokumenSeeder::class,
         ]);
 
-        if (app()->environment(['local', 'testing'])) {
+        // SEC-001: Demo accounts tidak di-seed otomatis di local dev kecuali ada opt-in eksplisit (SEED_DEMO_ACCOUNTS=true)
+        if (app()->environment('testing') || (app()->isLocal() && (bool) env('SEED_DEMO_ACCOUNTS', false))) {
             $this->call([
                 UserSeeder::class,
                 TestingUserSeeder::class,

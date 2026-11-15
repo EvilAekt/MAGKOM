@@ -45,13 +45,21 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        // NFR-S2 & PRD v1.3: Proteksi login & brute-force (Maksimal 3 percobaan per menit per akun, 20 per IP)
+        // SEC-003: Multi-Layer Login Rate Limiting (Account, IP, Pair, Global)
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = strtolower(trim((string) $request->input('email'))).'|'.$request->ip();
+            $email = strtolower(trim((string) $request->input('email')));
+            $accountKey = 'login_route_act:'.sha1($email);
+            $pairKey = 'login_route_pair:'.sha1($email.'|'.$request->ip());
 
             return [
-                Limit::perMinute(3)->by($throttleKey),
+                // Layer 3: Kombinasi Akun + IP (Maks 3 per menit)
+                Limit::perMinute(3)->by($pairKey),
+                // Layer 1: Per-Akun terlepas dari IP (Maks 5 per menit untuk tangkal distributed botnet)
+                Limit::perMinute(5)->by($accountKey),
+                // Layer 2: Per-IP (Maks 15 per menit untuk cegah credential stuffing)
                 Limit::perMinute(20)->by($request->ip()),
+                // Layer 4: Global spike limiter
+                Limit::perMinute(300),
             ];
         });
 

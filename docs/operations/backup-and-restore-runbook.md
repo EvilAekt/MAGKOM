@@ -1,99 +1,108 @@
-# Standar Operasional Prosedur & Runbook Pemulihan Bencana (DR Runbook)
+# STANDAR OPERASIONAL PROSEDUR & RUNBOOK PEMULIHAN BENCANA (DR RUNBOOK)
 
 **Aplikasi:** MAGKOM (Sistem Informasi Manajemen Magang Kominfo)  
-**Versi Runbook:** 2.0 (Post-Hardening Enkripsi AES-256-CBC)  
+**Versi Runbook:** 3.0 (Streaming Chunked Encryption `MAGKOM_ENC_v2` & Mandatory Offsite Storage)  
 **Dokumen:** `docs/operations/backup-and-restore-runbook.md`  
 **Target Pemulihan Teruji:**  
 - **RTO (Recovery Time Objective):** $\le$ 15 Menit (Aktual restore drill basis data: **44.69 detik**)  
-- **RPO (Recovery Point Objective):** $\le$ 24 Jam (Jadwal snapshot harian pukul 02:00 WIB)  
+- **RPO (Recovery Point Objective):** $\le$ 24 Jam (Jadwal snapshot harian pukul 02:00 WIB + Replikasi Off-site S3)  
 **Tingkat Kerahasiaan:** Internal Instansi / Terbatas (SuperAdmin & Tim Infrastruktur)  
 
 ---
 
-## 1. Pendahuluan & Prinsip Keamanan
+## 1. PENDAHULUAN & PRINSIP KEAMANAN
 
-Dokumen ini merupakan panduan resmi bagi tim administrator infrastruktur dan SuperAdmin untuk melakukan pencadangan terenkripsi dan pemulihan darurat (*disaster recovery drill/incident*) ketika terjadi kerusakan server, korupsi basis data, serangan ransomware, atau kehilangan disk penyimpanan.
+Dokumen ini merupakan panduan resmi bagi tim administrator infrastruktur dan SuperAdmin untuk melakukan pencadangan terenkripsi dan pemulihan darurat (*disaster recovery*) ketika terjadi kerusakan server, korupsi basis data, insiden keamanan, atau kehilangan disk penyimpanan.
 
 ### Ketentuan Keamanan Utama (Guardrails):
-1. **Dilarang Melakukan Restore di Web:** Endpoint pemulihan basis data tidak pernah dibuka melalui antarmuka web publik maupun panel CMS demi mencegah eksploitasi web shell atau penghapusan data massal.
-2. **Enkripsi Kuat Standar Militer (AES-256-CBC):** Seluruh berkas cadangan dienkripsi menggunakan algoritma `AES-256-CBC` dengan otentikasi integritas `HMAC-SHA256` (*Encrypt-then-MAC*) berheader `MAGKOM_ENC_v1`.
-3. **Pemisahan Kunci Enkripsi:** Kunci enkripsi (`BACKUP_ENCRYPTION_KEY`) disimpan pada environment vault server dan dilarang dimasukkan ke dalam arsip cadangan.
-4. **Isolasi Lingkungan Pengujian:** Uji coba pemulihan (*restore drill*) wajib dilakukan pada koneksi atau basis data terisolasi (misal: `mysql_test` / `magkom_test`), dilarang langsung dieksekusi pada basis data produksi tanpa persetujuan insidental.
+1. **Antarmuka Jujur (Interface Honesty - Dilarang Restore di Web):**  
+   Tidak ada tombol atau fitur "Restore Basis Data" pada dashboard web pengguna maupun panel SuperAdmin. Hal ini untuk mencegah risiko destruktif fatal akibat CSRF, kebocoran sesi admin, atau injeksi SQL melalui web. Seluruh proses restorasi basis data **wajib dieksekusi melalui CLI** oleh administrator yang memiliki akses shell server.
+2. **Streaming Chunked Encryption (MAGKOM_ENC_v2):**  
+   Seluruh berkas cadangan diproses secara streaming chunked 64 KB menggunakan `AES-256-CBC` dengan autentikasi `HMAC-SHA256` per-chunk (*Encrypt-then-MAC*). Memori PHP dibatasi secara ketat (< 32 MB RAM) terlepas dari skala data. Format warisan `MAGKOM_ENC_v1` tetap didukung secara otomatis untuk arsip lama.
+3. **Pemisahan Kunci Enkripsi (Decoupled Key Management):**  
+   Kunci enkripsi cadangan (`BACKUP_ENCRYPTION_KEY`) disimpan di environment server secara mandiri. **Dilarang keras menyamakan kunci backup dengan `APP_KEY`** di lingkungan produksi (sistem memiliki guardrail otomatis yang menggagalkan proses jika kunci sama).
+4. **Mandatory Off-Site Replication:**  
+   Pada lingkungan produksi, arsip cadangan wajib direplikasi ke object storage sekunder (`BACKUP_OFFSITE_DISK=s3`). Jika replikasi gagal, status backup dinyatakan gagal (*fail-closed*).
 
 ---
 
-## 2. Parameter & Konfigurasi Lingkungan (`.env`)
+## 2. PARAMETER KONFIGURASI ENVIRONMENT (`.env`)
 
 ```ini
 # ==========================================
 # MAGKOM BACKUP & DISASTER RECOVERY CONFIG
 # ==========================================
-# Lokasi direktori penyimpanan lokal (default: storage/app/backups)
-BACKUP_STORAGE_DIR="storage/app/backups"
-
 # Enkripsi arsip cadangan (Wajib true di production)
 BACKUP_ENCRYPTION_ENABLED=true
 
-# Kunci rahasia 32-karakter atau base64 untuk enkripsi/dekripsi AES-256-CBC
-# Catatan: Simpan salinan kunci ini di Password Manager / Vault fisik terpisah!
-BACKUP_ENCRYPTION_KEY="base64:YOUR_SECRET_BACKUP_KEY_HERE_MIN_32_BYTES"
+# KUNCI MANDIRI (DILARANG SAMA DENGAN APP_KEY PADA PRODUCTION!)
+BACKUP_ENCRYPTION_KEY=base64:YOUR_DEDICATED_SECRET_KEY_MIN_32_BYTES
 
-# Ambang batas ruang disk minimum (MB) sebelum snapshot diizinkan dibuat
+# Identitas versi kunci aktif
+BACKUP_KEY_ID=prod-2026-v1
+
+# Kunci cadangan sebelumnya untuk mendukung dekripsi arsip lama saat rotasi kunci
+BACKUP_FALLBACK_KEYS=base64:FALLBACK_KEY_1...,base64:FALLBACK_KEY_2...
+
+# Ambang batas sisa disk minimum (MB) sebelum snapshot diizinkan dibuat
 BACKUP_MIN_FREE_DISK_MB=500
 
-# Retensi maksimum arsip snapshot (FIFO)
+# Retensi maksimum arsip snapshot lokal (FIFO)
 BACKUP_RETENTION_MAX=30
 
-# Salinan offsite disk (s3, sftp, atau nfs - opsional)
-BACKUP_OFFSITE_DISK=
+# Disk offsite wajib untuk produksi (misal: 's3', 'r2')
+BACKUP_OFFSITE_DISK=s3
 ```
 
 ---
 
-## 3. Prosedur Pembuatan Cadangan (Backup Routine)
+## 3. PROSEDUR PEMBUATAN CADANGAN (BACKUP ROUTINE)
 
-### 3.1 Pencadangan Otomatis Harian (Cron / Task Scheduler)
-Sistem telah menjadwalkan snapshot basis data otomatis setiap hari pada pukul **02:00 WIB** melalui `App\Console\Kernel`:
+### 3.1 Pencadangan Otomatis Harian (Scheduler)
+Sistem menjalankan snapshot basis data otomatis setiap hari pada pukul **02:00 WIB** melalui Scheduler Laravel:
 ```bash
-# Dipanggil otomatis oleh Laravel Scheduler
 php artisan magkom:backup-database --clean-old
 ```
 
-### 3.2 Pencadangan Manual via CLI (Sebelum Deployment / Migrasi Besar)
-Sebelum melakukan rilis kode atau migrasi skema tabel baru:
+### 3.2 Pencadangan Manual via CLI (Pra-Migrasi / Pra-Deployment)
+Sebelum melakukan rilis kode atau migrasi tabel:
 ```bash
-# 1. Snapshot basis data terenkripsi
+# 1. Buat snapshot basis data terenkripsi (AES-256-CBC)
 php artisan magkom:backup-database --clean-old
 
-# 2. Snapshot seluruh dokumen privat peserta (CV, KTM, Surat Pengantar)
-# Perintah ini mengarsipkan storage/app/private ke dalam zip terenkripsi
+# 2. Buat snapshot berkas dokumen privat peserta (storage/app/private)
 php artisan tinker --execute="app(App\Services\BackupDatabaseService::class)->createFilesSnapshot();"
 ```
 
 ---
 
-## 4. Prosedur Pemulihan Basis Data (Database Restore)
+## 4. PROSEDUR PEMULIHAN BASIS DATA (DATABASE RESTORE)
 
 ### 4.1 Langkah Persiapan
 1. Pastikan server basis data target aktif dan dapat diakses.
-2. Siapkan nama berkas arsip yang akan dipulihkan (tersedia di `storage/app/backups/`).
-3. Pastikan `BACKUP_ENCRYPTION_KEY` tersedia di `.env` atau siapkan kunci spesifik.
+2. Tentukan berkas arsip yang akan dipulihkan (tersedia di `storage/app/backups/`).
+3. Pastikan `BACKUP_ENCRYPTION_KEY` tersedia di `.env` atau siapkan opsi `--key`.
 
 ### 4.2 Perintah Eksekusi Restore CLI
 
+Gunakan perintah standar `php artisan backup:restore` atau `magkom:restore-database`:
+
 ```bash
-# Skenario 1: Simulasi Restore Drill ke Database Testing Terisolasi (Aman)
-php artisan magkom:restore-database backup-magkom-mysql-2026-11-15-181838.sql.gz.enc --connection=mysql_test
+# Skenario 1: Simulasi Restore Drill ke Database Testing Terisolasi (Direkomendasikan)
+php artisan backup:restore backup-magkom-mysql-2026-11-15-181838.sql.gz.enc --connection=mysql_test
 
-# Skenario 2: Pemulihan Bencana Riil ke Basis Data Produksi (Membutuhkan Konfirmasi)
-php artisan magkom:restore-database backup-magkom-mysql-2026-11-15-181838.sql.gz.enc --connection=mysql
+# Skenario 2: Pemulihan Bencana ke Basis Data Utama (Interaktif dengan Konfirmasi)
+php artisan backup:restore backup-magkom-mysql-2026-11-15-181838.sql.gz.enc --connection=mysql
 
-# Skenario 3: Otomatisasi CI / Script Bencana (Non-Interaktif)
-php artisan magkom:restore-database backup-magkom-mysql-2026-11-15-181838.sql.gz.enc --connection=mysql --force
+# Skenario 3: Otomatisasi Recovery / Pipeline CI (Non-Interaktif)
+php artisan backup:restore backup-magkom-mysql-2026-11-15-181838.sql.gz.enc --connection=mysql --force
+
+# Skenario 4: Pemulihan dengan Kunci Spesifik (Bypass .env)
+php artisan backup:restore backup-magkom-mysql-2026-11-15-181838.sql.gz.enc --connection=mysql --key="base64:SpesifikKey..."
 ```
 
-### 4.3 Verifikasi Pasca Pemulihan Basis Data
-Segera periksa integritas tabel dan keterkaitan data:
+### 4.3 Verifikasi Integritas Pasca Pemulihan
+Jalankan verifikasi integritas model dan jumlah baris data:
 ```bash
 php artisan tinker --execute="
 echo 'Users: ' . App\Models\User::count() . PHP_EOL;
@@ -104,36 +113,41 @@ echo 'Kuota: ' . App\Models\Kuota::count() . PHP_EOL;
 
 ---
 
-## 5. Prosedur Pemulihan Berkas Privat Peserta (Files Restore)
+## 5. PROSEDUR PEMULIHAN BERKAS PRIVAT PESERTA (FILES RESTORE)
 
-Jika disk penyimpanan berkas mengalami kerusakan atau kehilangan data unggahan:
+Jika storage fisik dokumen rusak atau berkas privat terhapus:
 
 ```bash
-# Memulihkan berkas dokumen dari arsip terenkripsi ke direktori storage/app/private
-php artisan magkom:restore-files backup-magkom-files-2026-11-15-181838.zip.enc
+# Memulihkan berkas dokumen dari arsip zip terenkripsi ke direktori storage/app/private
+php artisan backup:restore-files backup-magkom-files-2026-11-15-181838.zip.enc
 ```
 
-Verifikasi keterbacaan berkas fisik:
+Opsi kustom direktori ekstraksi:
 ```bash
-ls -la storage/app/private/
+php artisan backup:restore-files backup-magkom-files-2026-11-15-181838.zip.enc --target-dir="/mnt/secure-storage/private"
 ```
 
 ---
 
-## 6. Prosedur Rollback & Troubleshooting
+## 6. PROSEDUR ROTASI KUNCI (KEY ROTATION)
 
-| Gejala Masalah | Penyebab | Tindakan Perbaikan |
+1. Buat kunci baru:
+   ```bash
+   php -r "echo 'base64:'.base64_encode(random_bytes(32)).PHP_EOL;"
+   ```
+2. Perbarui `.env`:
+   - Pasang kunci baru pada `BACKUP_ENCRYPTION_KEY`.
+   - Update `BACKUP_KEY_ID` (misal: `prod-2027-v1`).
+   - Masukkan kunci lama ke `BACKUP_FALLBACK_KEYS` dipisahkan tanda koma.
+3. Seluruh snapshot baru menggunakan kunci baru, sedangkan snapshot lama tetap dapat didekripsi melalui fallback keys.
+
+---
+
+## 7. PROSEDUR TROUBLESHOOTING
+
+| Gejala Masalah | Penyebab | Solusi |
 |---|---|---|
-| `Verifikasi integritas HMAC gagal` | Kunci enkripsi (`BACKUP_ENCRYPTION_KEY`) tidak cocok atau berkas rusak saat transfer. | Pastikan menggunakan kunci enkripsi yang sama saat snapshot dibuat. Periksa nilai checksum `sha256` berkas. |
-| `Ruang penyimpanan server tidak mencukupi` | Sisa disk kurang dari batas minimum (500 MB). | Bersihkan log lama atau pangkas berkas usang: `rm storage/logs/*.log`. |
-| `Koneksi MySQL timeout / packet too large` | Kueri multi-statement melebihi `max_allowed_packet`. | Periksa konfigurasi MySQL `my.cnf`: pastikan `max_allowed_packet = 64M` atau lebih tinggi. |
-
----
-
-## 7. Catatan Bukti Drill Pemulihan Aktual (Evidence)
-
-Uji coba pemulihan riil (*Live Restore Drill*) berhasil dibuktikan pada audit hardening:
-- **Tanggal Uji Coba:** 15 November 2026
-- **Berkas Sumber:** `backup-magkom-mysql-2026-11-15-181838.sql.gz.enc` (0.31 MB, AES-256-CBC)
-- **Target Koneksi:** `mysql_test` (MySQL 8.4.3 Port 3306)
-- **Hasil:** **32 Tabel** dipulihkan secara atomik dalam **44.69 detik**. Seluruh relasi integritas (29 pengguna, 20 pendaftaran, 72 entri kuota) terverifikasi utuh tanpa data corrupt.
+| `Verifikasi integritas HMAC gagal` | Kunci enkripsi tidak cocok atau berkas rusak. | Periksa apakah kunci lama sudah dimasukkan ke `BACKUP_FALLBACK_KEYS`. Periksa checksum SHA-256 berkas. |
+| `Ruang penyimpanan server tidak mencukupi` | Sisa disk < 500 MB. | Bersihkan berkas log usang atau snapshot lama via `pruneOldBackups()`. |
+| `Offsite backup disk belum dikonfigurasi` | Pada production, `BACKUP_OFFSITE_DISK` kosong. | Konfigurasikan disk offsite (misal: `s3`) di `.env` produksi. |
+| `Kunci enkripsi cadangan tidak boleh menggunakan APP_KEY` | Guardrail produksi mendeteksi kunci identik. | Hasilkan kunci terpisah untuk `BACKUP_ENCRYPTION_KEY`. |

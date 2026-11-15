@@ -21,6 +21,13 @@ class RestoreDatabaseCommand extends Command
                             {--force : Paksa eksekusi tanpa konfirmasi interaktif di lingkungan production}';
 
     /**
+     * Alias perintah konsol standar.
+     *
+     * @var array<int, string>
+     */
+    protected $aliases = ['backup:restore'];
+
+    /**
      * Deskripsi perintah console.
      *
      * @var string

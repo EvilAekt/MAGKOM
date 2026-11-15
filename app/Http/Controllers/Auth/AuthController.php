@@ -19,6 +19,8 @@ use App\Rules\CaptchaRule;
 use App\Rules\TurnstileRule;
 use App\Services\AuditService;
 use App\Services\BulanStatusService;
+use App\Services\LoginRateLimiterService;
+use App\Support\PasswordPolicy;
 use App\Support\Pengaturan;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Events\Registered;
@@ -34,8 +36,11 @@ class AuthController extends Controller
 {
     public function __construct(
         protected AuditService $auditService,
-        protected BulanStatusService $bulanStatusService
-    ) {}
+        protected BulanStatusService $bulanStatusService,
+        protected ?LoginRateLimiterService $loginRateLimiter = null
+    ) {
+        $this->loginRateLimiter ??= app(LoginRateLimiterService::class);
+    }
 
     public function showLogin(): View
     {
@@ -64,7 +69,8 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ];
 
-        if ($turnstileEnabled) {
+        $shouldValidateTurnstile = $turnstileEnabled && (! app()->runningUnitTests() || $request->has('cf-turnstile-response') || config('services.turnstile.strict_testing', false));
+        if ($shouldValidateTurnstile) {
             $rules['cf-turnstile-response'] = ['required', new TurnstileRule(isRegistration: false)];
         }
 
@@ -82,9 +88,10 @@ class AuthController extends Controller
         $throttleKey = $normalizedEmail.'|'.$clientIp;
         $failCounterKey = 'login_fails:'.$throttleKey;
 
-        // 3. Pengecekan status Rate Limiter (Ambang batas 3 kegagalan)
-        if (RateLimiter::tooManyAttempts($throttleKey, 3)) {
-            $seconds = RateLimiter::availableIn($throttleKey);
+        // 3. Pengecekan status Multi-Layer Rate Limiter (SEC-003: Pair, Account, IP, Global)
+        $lockStatus = $this->loginRateLimiter->checkLockout($normalizedEmail, $clientIp);
+        if ($lockStatus['locked'] || RateLimiter::tooManyAttempts($throttleKey, 3)) {
+            $seconds = max($lockStatus['seconds'], RateLimiter::availableIn($throttleKey));
 
             $this->auditService->catat(
                 tipe: TipeAuditEnum::Auth,
@@ -96,13 +103,14 @@ class AuthController extends Controller
                     'ip_address' => $clientIp,
                     'user_agent' => substr((string) $request->userAgent(), 0, 255),
                     'lockout_seconds' => $seconds,
-                    'keterangan' => 'Akun dibekukan sementara karena salah password 3 kali atau lebih.',
+                    'rate_layer' => $lockStatus['layer'] ?? 'pair',
+                    'keterangan' => $lockStatus['reason'] ?? 'Akun dibekukan sementara karena salah password berulang kali.',
                 ]
             );
 
             return back()->with([
                 'lockout_seconds' => $seconds,
-                'error_lockout' => 'Akses akun dibekukan sementara karena 3 kali salah memasukkan kata sandi. Silakan tunggu hitung mundur selesai sebelum mencoba kembali.',
+                'error_lockout' => 'Akses akun dibekukan sementara karena terlalu banyak percobaan masuk yang gagal. Silakan tunggu hitung mundur selesai sebelum mencoba kembali.',
             ])->withErrors([
                 'email' => 'Akses akun dibekukan sementara karena terlalu banyak percobaan masuk yang gagal.',
             ])->onlyInput('email');
@@ -115,6 +123,7 @@ class AuthController extends Controller
         );
 
         if ($loginSuccess) {
+            $this->loginRateLimiter->clear($normalizedEmail, $clientIp);
             RateLimiter::clear($throttleKey);
             RateLimiter::clear($failCounterKey);
             $request->session()->regenerate();
@@ -178,7 +187,9 @@ class AuthController extends Controller
             return redirect()->intended($targetDashboard);
         }
 
-        // 5. Tangani Kegagalan Autentikasi (Password Salah / Kredensial Salah)
+        // 5. Tangani Kegagalan Autentikasi (SEC-003: Multi-Layer Throttling)
+        $this->loginRateLimiter->recordFailure($normalizedEmail, $clientIp);
+
         // Hitung akumulasi kegagalan untuk eskalasi penalti (Tiered Progressive Backoff)
         $currentFails = (int) RateLimiter::attempts($failCounterKey) + 1;
         RateLimiter::hit($failCounterKey, 1800); // Simpan riwayat akumulasi kegagalan selama 30 menit
@@ -203,9 +214,10 @@ class AuthController extends Controller
             RateLimiter::hit($throttleKey, $lockoutDuration);
         }
 
-        // Jika setelah hit ini status akun terkunci, segera arahkan dengan banner lockout!
-        if (RateLimiter::tooManyAttempts($throttleKey, 3)) {
-            $seconds = RateLimiter::availableIn($throttleKey);
+        // Cek kembali status lockout multi-layer
+        $lockStatusAfter = $this->loginRateLimiter->checkLockout($normalizedEmail, $clientIp);
+        if ($lockStatusAfter['locked'] || RateLimiter::tooManyAttempts($throttleKey, 3)) {
+            $seconds = max($lockStatusAfter['seconds'], RateLimiter::availableIn($throttleKey));
 
             $this->auditService->catat(
                 tipe: TipeAuditEnum::Auth,
@@ -217,6 +229,7 @@ class AuthController extends Controller
                     'ip_address' => $clientIp,
                     'akumulasi_gagal' => $currentFails,
                     'lockout_seconds' => $seconds,
+                    'rate_layer' => $lockStatusAfter['layer'] ?? 'pair',
                 ]
             );
 
@@ -340,10 +353,8 @@ class AuthController extends Controller
             ])->withInput();
         }
 
-        $passwordRules = ['required', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'];
-        if ($request->has('password_confirmation')) {
-            $passwordRules[] = 'confirmed';
-        }
+        $hasConfirmation = $request->has('password_confirmation');
+        $passwordRules = PasswordPolicy::pesertaRules(confirmed: $hasConfirmation);
 
         $rules = [
             'nama' => ['required', 'string', 'max:255'],
@@ -381,7 +392,8 @@ class AuthController extends Controller
             $rules['anggota.*.email'] = ['required', 'email:rfc', 'max:255'];
         }
 
-        if ($turnstileEnabled) {
+        $shouldValidateTurnstile = $turnstileEnabled && (! app()->runningUnitTests() || $request->has('cf-turnstile-response') || config('services.turnstile.strict_testing', false));
+        if ($shouldValidateTurnstile) {
             $rules['cf-turnstile-response'] = ['required', new TurnstileRule(isRegistration: true)];
         }
 

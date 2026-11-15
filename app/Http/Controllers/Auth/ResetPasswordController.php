@@ -9,6 +9,7 @@ use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\AuditService;
+use App\Support\PasswordPolicy;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -106,16 +107,16 @@ class ResetPasswordController extends Controller
      */
     public function reset(Request $request): RedirectResponse
     {
+        $email = (string) $request->input('email');
+        $passwordRules = PasswordPolicy::forEmail($email, confirmed: true);
+
         $request->validate([
             'token' => ['required', 'string'],
             'email' => ['required', 'string', 'email:rfc'],
-            'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'],
-        ], [
+            'password' => $passwordRules,
+        ], array_merge([
             'email.email' => 'Format email tidak valid.',
-            'password.min' => 'Kata sandi baru minimal 8 karakter.',
-            'password.regex' => 'Kata sandi baru harus mengandung kombinasi huruf dan angka.',
-            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
-        ]);
+        ], PasswordPolicy::messages()));
 
         $credentials = [
             'email' => strtolower(trim((string) $request->input('email'))),

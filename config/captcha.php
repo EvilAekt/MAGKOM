@@ -27,6 +27,7 @@ return [
     'width' => 160,
     'height' => 50,
 
-    // Konfigurasi pengujian otomatis
+    // Konfigurasi pengujian otomatis & developer bypass (SEC-001)
     'strict_testing' => false,
+    'dev_bypass' => (bool) env('CAPTCHA_DEV_BYPASS', false),
 ];

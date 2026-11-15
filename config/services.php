@@ -35,6 +35,7 @@ return [
         'enabled' => env('TURNSTILE_ENABLED', false),
         'site_key' => env('TURNSTILE_SITE_KEY', ''),
         'secret_key' => env('TURNSTILE_SECRET_KEY', ''),
+        'login_fail_closed' => (bool) env('TURNSTILE_LOGIN_FAIL_CLOSED', false),
     ],
 
     'google' => [
@@ -46,6 +47,14 @@ return [
     'realtime' => [
         'sse_enabled' => env('REALTIME_SSE_ENABLED', true),
         'polling_interval_seconds' => (int) env('REALTIME_POLLING_INTERVAL', 15),
+    ],
+
+    'antivirus' => [
+        'enabled' => env('ANTIVIRUS_ENABLED', true),
+        'driver' => env('ANTIVIRUS_DRIVER', 'clamscan'),
+        'required' => env('ANTIVIRUS_REQUIRED', false),
+        'clamscan_binary' => env('CLAMSCAN_BINARY', 'clamscan'),
+        'socket' => env('CLAMD_SOCKET', '/var/run/clamav/clamd.ctl'),
     ],
 
 ];

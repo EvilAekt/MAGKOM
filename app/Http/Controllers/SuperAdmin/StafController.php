@@ -12,6 +12,7 @@ use App\Models\Bidang;
 use App\Models\Penempatan;
 use App\Models\User;
 use App\Services\AuditService;
+use App\Support\PasswordPolicy;
 use App\Support\Pengaturan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -96,11 +97,10 @@ class StafController extends Controller
                 'nullable',
                 'exists:bidang,id',
             ],
-            'password' => ['nullable', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'],
-        ], [
+            'password' => PasswordPolicy::staffRules(confirmed: false, required: false),
+        ], array_merge([
             'bidang_id.required' => 'Bidang Unit Kerja wajib dipilih untuk peran Pembimbing Lapangan.',
-            'password.regex' => 'Kata sandi harus mengandung kombinasi huruf dan angka.',
-        ]);
+        ], PasswordPolicy::messages()));
 
         $plainPassword = ! empty($validated['password']) ? (string) $validated['password'] : ('Mk'.Str::random(10).'!1');
         $roleEnum = RoleEnum::from($validated['role']);
@@ -216,10 +216,8 @@ class StafController extends Controller
         }
 
         $validated = $request->validate([
-            'password_baru' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'],
-        ], [
-            'password_baru.regex' => 'Kata sandi harus mengandung kombinasi huruf dan angka.',
-        ]);
+            'password_baru' => PasswordPolicy::staffRules(confirmed: false, required: true),
+        ], PasswordPolicy::messages());
 
         $staf->update([
             'password' => Hash::make($validated['password_baru']),

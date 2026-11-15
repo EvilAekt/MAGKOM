@@ -1,12 +1,22 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Kode Pemulihan 2FA - SuperAdmin MagKom')
+@php
+    $dashboardUrl = match(auth()->user()?->role) {
+        \App\Enums\RoleEnum::SuperAdmin => route('superadmin.dashboard'),
+        \App\Enums\RoleEnum::Admin => route('admin.dashboard'),
+        \App\Enums\RoleEnum::Pembimbing => route('pembimbing.dashboard'),
+        default => route('peserta.dashboard'),
+    };
+    $roleName = auth()->user()?->role?->label() ?? 'Akun';
+@endphp
+
+@section('title', 'Kode Pemulihan 2FA - MagKom')
 @section('topbar_title', 'Kode Pemulihan Darurat (Emergency Recovery Codes)')
 
 @section('breadcrumbs')
-    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <a href="{{ $dashboardUrl }}">{{ $roleName }}</a>
     <span class="breadcrumb-separator">/</span>
-    <a href="{{ route('superadmin.2fa.settings') }}">Keamanan 2FA</a>
+    <a href="{{ route('2fa.settings') }}">Keamanan 2FA</a>
     <span class="breadcrumb-separator">/</span>
     <span class="breadcrumb-current">Recovery Codes</span>
 @endsection
@@ -35,7 +45,7 @@
             <span style="font-size: 0.8125rem; color: #64748B;">
                 Tips: Simpan kode ini ke password manager atau gunakan <strong>Ctrl + P</strong> untuk menyimpan sebagai PDF.
             </span>
-            <a href="{{ route('superadmin.2fa.settings') }}" class="btn btn-primary" style="background: #1E3A8A; color: #ffffff; padding: 0.625rem 1.5rem; border-radius: 6px; font-weight: 600; font-size: 0.875rem; text-decoration: none;">
+            <a href="{{ route('2fa.settings') }}" class="btn btn-primary" style="background: #1E3A8A; color: #ffffff; padding: 0.625rem 1.5rem; border-radius: 6px; font-weight: 600; font-size: 0.875rem; text-decoration: none;">
                 Saya Sudah Menyimpan Seluruh Kode &rarr;
             </a>
         </div>

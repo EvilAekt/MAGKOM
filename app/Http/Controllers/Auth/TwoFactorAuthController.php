@@ -157,7 +157,7 @@ class TwoFactorAuthController extends Controller
         $user = $request->user();
 
         if ($user->hasEnabledTwoFactor()) {
-            return redirect()->route('superadmin.2fa.settings')
+            return redirect()->to($this->getSettingsRoute($user))
                 ->with('info', 'Autentikasi dua faktor sudah aktif pada akun Anda.');
         }
 
@@ -187,7 +187,7 @@ class TwoFactorAuthController extends Controller
         $secret = (string) $request->session()->get('auth.2fa.enroll_secret');
 
         if (empty($secret)) {
-            return redirect()->route('superadmin.2fa.settings');
+            return redirect()->to($this->getSettingsRoute($user));
         }
 
         $request->validate([
@@ -271,8 +271,18 @@ class TwoFactorAuthController extends Controller
             severity: 'warning'
         );
 
-        return redirect()->route('superadmin.2fa.settings')
+        return redirect()->to($this->getSettingsRoute($user))
             ->with('success', 'Autentikasi dua faktor berhasil dinonaktifkan.');
+    }
+
+    /**
+     * Menentukan rute dashboard pengaturan 2FA yang sesuai dengan peran akun pengguna.
+     */
+    protected function getSettingsRoute(?User $user): string
+    {
+        return $user && $user->isSuperAdmin()
+            ? route('superadmin.2fa.settings')
+            : route('2fa.settings');
     }
 
     /**
