@@ -20,9 +20,17 @@ use ZipArchive;
 class BackupDatabaseService
 {
     /**
-     * Header pengenal berkas terenkripsi resmi MAGKOM (BACKUP-001).
+     * Header pengenal berkas terenkripsi resmi MAGKOM (BACKUP-001, BACKUP-002).
      */
-    public const ENC_MAGIC_HEADER = 'MAGKOM_ENC_v1';
+    public const ENC_MAGIC_HEADER = 'MAGKOM_ENC_v2';
+    public const ENC_MAGIC_HEADER_V1 = 'MAGKOM_ENC_v1';
+    public const ENC_MAGIC_HEADER_V2 = 'MAGKOM_ENC_v2';
+
+    /**
+     * Ukuran blok streaming chunk untuk enkripsi dan dekripsi (64 KB).
+     * Menjamin penggunaan memori strictly bounded (< 32 MB) pada arsip skala besar.
+     */
+    public const CHUNK_SIZE = 65536;
 
     /**
      * Batas maksimum arsip cadangan yang dipertahankan (FIFO retention).
@@ -207,9 +215,9 @@ class BackupDatabaseService
             throw new \RuntimeException('Gagal memverifikasi integritas berkas cadangan yang baru dibuat.');
         }
 
-        // 2. Enkripsi Berkas Arsip (BACKUP-001: AES-256-CBC with HMAC-SHA256)
+        // 2. Enkripsi Berkas Arsip (BACKUP-001, BACKUP-002: Streaming Chunked AES-256-CBC with HMAC-SHA256)
         $encryptEnabled = (bool) config('backup.encryption_enabled', true);
-        $key = $encryptionKey ?? (string) config('backup.encryption_key', config('app.key'));
+        $key = $this->resolveEncryptionKey($encryptionKey);
         $isEncrypted = false;
 
         if ($encryptEnabled && ! empty($key)) {
@@ -225,15 +233,8 @@ class BackupDatabaseService
         $sizeMb = round(filesize($targetPath) / (1024 * 1024), 2);
         $checksum = hash_file('sha256', $targetPath);
 
-        // 3. Salin ke Offsite Object Storage / Remote Disk jika dikonfigurasi
-        $offsiteDisk = config('backup.offsite_disk');
-        if (! empty($offsiteDisk)) {
-            try {
-                Storage::disk($offsiteDisk)->putFileAs('backups', new \Illuminate\Http\File($targetPath), $filename);
-            } catch (\Throwable $e) {
-                Log::warning("Gagal menyalin backup ke offsite disk [{$offsiteDisk}]: ".$e->getMessage());
-            }
-        }
+        // 3. Replikasi ke Offsite Object Storage / Remote Disk (BACKUP-003)
+        $this->replicateToOffsite($targetPath, $filename);
 
         // 4. Pangkas cadangan lama melebihi kuota snapshot (FIFO)
         $this->pruneOldBackups(self::MAX_BACKUPS_RETAINED);
@@ -305,7 +306,7 @@ class BackupDatabaseService
         $targetPath = $rawTargetPath;
         $filename = $rawFilename;
         $encryptEnabled = (bool) config('backup.encryption_enabled', true);
-        $key = $encryptionKey ?? (string) config('backup.encryption_key', config('app.key'));
+        $key = $this->resolveEncryptionKey($encryptionKey);
         $isEncrypted = false;
 
         if ($encryptEnabled && ! empty($key)) {
@@ -321,14 +322,8 @@ class BackupDatabaseService
         $sizeMb = round(filesize($targetPath) / (1024 * 1024), 2);
         $checksum = hash_file('sha256', $targetPath);
 
-        $offsiteDisk = config('backup.offsite_disk');
-        if (! empty($offsiteDisk)) {
-            try {
-                Storage::disk($offsiteDisk)->putFileAs('backups', new \Illuminate\Http\File($targetPath), $filename);
-            } catch (\Throwable $e) {
-                Log::warning("Gagal menyalin berkas arsip ke offsite disk [{$offsiteDisk}]: ".$e->getMessage());
-            }
-        }
+        // Replikasi ke Offsite Object Storage / Remote Disk (BACKUP-003)
+        $this->replicateToOffsite($targetPath, $filename);
 
         $this->pruneOldBackups(self::MAX_BACKUPS_RETAINED);
 
@@ -412,43 +407,121 @@ class BackupDatabaseService
     }
 
     /**
-     * Mengenkripsi berkas dengan AES-256-CBC dan HMAC-SHA256 Encrypt-then-MAC (BACKUP-001).
+     * Menyelesaikan kunci enkripsi independen dan memvalidasi guardrail produksi (BACKUP-002).
      */
-    public function encryptFile(string $sourcePath, string $targetPath, string $key): void
+    public function resolveEncryptionKey(?string $explicitKey = null): string
+    {
+        $key = $explicitKey ?? (string) config('backup.encryption_key');
+        $appKey = (string) config('app.key');
+
+        if (empty($key)) {
+            if (app()->isProduction()) {
+                throw new \RuntimeException('Kunci enkripsi cadangan (BACKUP_ENCRYPTION_KEY) wajib dikonfigurasi pada lingkungan produksi.');
+            }
+            $key = $appKey;
+        }
+
+        if (app()->isProduction() && ! empty($appKey) && $key === $appKey) {
+            throw new \RuntimeException('Kunci enkripsi cadangan (BACKUP_ENCRYPTION_KEY) tidak boleh menggunakan APP_KEY pada lingkungan produksi.');
+        }
+
+        return $key;
+    }
+
+    /**
+     * Mereplikasi arsip cadangan ke disk off-site sekunder (BACKUP-003).
+     * Pada produksi, replikasi off-site wajib aktif dan kegagalan memicu exception (fail-closed).
+     */
+    protected function replicateToOffsite(string $targetPath, string $filename): void
+    {
+        $offsiteDisk = config('backup.offsite_disk');
+        $isProduction = app()->isProduction();
+
+        if (empty($offsiteDisk)) {
+            if ($isProduction) {
+                throw new \RuntimeException('Offsite backup disk belum dikonfigurasi. Pada lingkungan produksi, replikasi cadangan ke penyimpanan off-site wajib aktif.');
+            }
+
+            return;
+        }
+
+        try {
+            $uploaded = Storage::disk($offsiteDisk)->putFileAs('backups', new \Illuminate\Http\File($targetPath), $filename);
+            if (! $uploaded) {
+                throw new \RuntimeException("Gagal menyalin berkas arsip ke offsite disk [{$offsiteDisk}].");
+            }
+        } catch (\Throwable $e) {
+            if ($isProduction) {
+                throw new \RuntimeException("Replikasi offsite cadangan ke disk [{$offsiteDisk}] gagal: ".$e->getMessage(), 0, $e);
+            }
+
+            Log::warning("Gagal menyalin backup ke offsite disk [{$offsiteDisk}]: ".$e->getMessage());
+        }
+    }
+
+    /**
+     * Mengenkripsi berkas dengan AES-256-CBC streaming chunked dan HMAC-SHA256 Encrypt-then-MAC (BACKUP-001, BACKUP-002).
+     */
+    public function encryptFile(string $sourcePath, string $targetPath, string $key, ?string $keyId = null): void
     {
         if (! file_exists($sourcePath)) {
             throw new \InvalidArgumentException("Berkas sumber tidak ditemukan: {$sourcePath}");
         }
 
-        $iv = random_bytes(16);
-        $salt = random_bytes(16);
-        $derivedKey = hash_pbkdf2('sha256', $key, $salt, 10000, 32, true);
-
-        $plaintext = (string) file_get_contents($sourcePath);
-        $ciphertext = openssl_encrypt($plaintext, 'aes-256-cbc', $derivedKey, OPENSSL_RAW_DATA, $iv);
-
-        if ($ciphertext === false) {
-            throw new \RuntimeException('Gagal mengenkripsi berkas cadangan dengan OpenSSL.');
+        $sourceHandle = fopen($sourcePath, 'rb');
+        if (! $sourceHandle) {
+            throw new \RuntimeException("Gagal membuka berkas sumber untuk enkripsi: {$sourcePath}");
         }
 
-        $hmac = hash_hmac('sha256', $ciphertext, $derivedKey, true);
-
-        $handle = fopen($targetPath, 'wb');
-        if (! $handle) {
+        $targetHandle = fopen($targetPath, 'wb');
+        if (! $targetHandle) {
+            fclose($sourceHandle);
             throw new \RuntimeException("Gagal membuka target berkas terenkripsi: {$targetPath}");
         }
 
-        // Header paket: Magic (13 B) + Salt (16 B) + IV (16 B) + HMAC (32 B) + Ciphertext
-        fwrite($handle, self::ENC_MAGIC_HEADER);
-        fwrite($handle, $salt);
-        fwrite($handle, $iv);
-        fwrite($handle, $hmac);
-        fwrite($handle, $ciphertext);
-        fclose($handle);
+        try {
+            $keyIdStr = $keyId ?? (string) config('backup.key_id', 'v2-primary');
+            $keyIdLen = min(255, strlen($keyIdStr));
+            $keyIdTruncated = substr($keyIdStr, 0, $keyIdLen);
+
+            $salt = random_bytes(16);
+            $derivedKey = hash_pbkdf2('sha256', $key, $salt, 10000, 32, true);
+
+            // Tulis Header v2: Magic (13 B) + KeyIdLen (1 B) + KeyId (N B) + Salt (16 B)
+            fwrite($targetHandle, self::ENC_MAGIC_HEADER_V2);
+            fwrite($targetHandle, pack('C', $keyIdLen));
+            fwrite($targetHandle, $keyIdTruncated);
+            fwrite($targetHandle, $salt);
+
+            // Streaming proses per-chunk 64 KB untuk menjaga memori tetap bounded (< 32 MB)
+            while (! feof($sourceHandle)) {
+                $chunk = fread($sourceHandle, self::CHUNK_SIZE);
+                if ($chunk === false || $chunk === '') {
+                    break;
+                }
+
+                $chunkIv = random_bytes(16);
+                $ciphertext = openssl_encrypt($chunk, 'aes-256-cbc', $derivedKey, OPENSSL_RAW_DATA, $chunkIv);
+                if ($ciphertext === false) {
+                    throw new \RuntimeException('Gagal mengenkripsi chunk cadangan dengan OpenSSL.');
+                }
+
+                $chunkHmac = hash_hmac('sha256', $chunkIv.$ciphertext, $derivedKey, true);
+
+                // Format chunk: Panjang Ciphertext (4 B, uint32 BE) + IV (16 B) + HMAC (32 B) + Ciphertext
+                fwrite($targetHandle, pack('N', strlen($ciphertext)));
+                fwrite($targetHandle, $chunkIv);
+                fwrite($targetHandle, $chunkHmac);
+                fwrite($targetHandle, $ciphertext);
+            }
+        } finally {
+            fclose($sourceHandle);
+            fclose($targetHandle);
+        }
     }
 
     /**
-     * Mendekripsi berkas terenkripsi dengan verifikasi integritas HMAC-SHA256 (BACKUP-001/BACKUP-002).
+     * Mendekripsi berkas terenkripsi streaming dengan dukungan fallback rotasi kunci (BACKUP-001, BACKUP-002).
      */
     public function decryptFile(string $sourcePath, string $targetPath, string $key): void
     {
@@ -456,16 +529,142 @@ class BackupDatabaseService
             throw new \InvalidArgumentException("Berkas terenkripsi tidak ditemukan: {$sourcePath}");
         }
 
+        // Kumpulkan kandidat kunci: gunakan kunci utama dan fallback keys rotasi jika ada
+        $keyCandidates = array_values(array_unique(array_filter([
+            $key,
+            ...((array) config('backup.fallback_keys', [])),
+        ])));
+
+        $sourceHandle = fopen($sourcePath, 'rb');
+        if (! $sourceHandle) {
+            throw new \RuntimeException("Gagal membuka berkas terenkripsi: {$sourcePath}");
+        }
+
+        $magic = fread($sourceHandle, 13);
+        fclose($sourceHandle);
+
+        if ($magic === self::ENC_MAGIC_HEADER_V2) {
+            $lastException = null;
+            foreach ($keyCandidates as $candidateKey) {
+                try {
+                    $this->decryptFileV2($sourcePath, $targetPath, $candidateKey);
+
+                    return;
+                } catch (\Throwable $e) {
+                    $lastException = $e;
+                    if (file_exists($targetPath)) {
+                        @unlink($targetPath);
+                    }
+                }
+            }
+
+            throw $lastException ?? new \RuntimeException('Gagal mendekripsi berkas v2: Tidak ada kunci yang valid.');
+        }
+
+        if ($magic === self::ENC_MAGIC_HEADER_V1) {
+            $lastException = null;
+            foreach ($keyCandidates as $candidateKey) {
+                try {
+                    $this->decryptFileV1($sourcePath, $targetPath, $candidateKey);
+
+                    return;
+                } catch (\Throwable $e) {
+                    $lastException = $e;
+                    if (file_exists($targetPath)) {
+                        @unlink($targetPath);
+                    }
+                }
+            }
+
+            throw $lastException ?? new \RuntimeException('Gagal mendekripsi berkas v1: Tidak ada kunci yang valid.');
+        }
+
+        throw new \RuntimeException('Header arsip tidak cocok dengan format enkripsi resmi MAGKOM.');
+    }
+
+    /**
+     * Mendekripsi berkas format streaming MAGKOM_ENC_v2 secara chunked (BACKUP-001).
+     */
+    protected function decryptFileV2(string $sourcePath, string $targetPath, string $key): void
+    {
+        $src = fopen($sourcePath, 'rb');
+        if (! $src) {
+            throw new \RuntimeException("Gagal membuka berkas terenkripsi: {$sourcePath}");
+        }
+
+        // Lewati magic header 13 byte
+        fseek($src, 13);
+
+        $keyIdLenBytes = fread($src, 1);
+        if ($keyIdLenBytes === false || strlen($keyIdLenBytes) < 1) {
+            fclose($src);
+            throw new \RuntimeException('Format berkas v2 tidak valid (header terpotong).');
+        }
+
+        $keyIdLen = unpack('C', $keyIdLenBytes)[1];
+        $keyId = ($keyIdLen > 0) ? fread($src, $keyIdLen) : '';
+        $salt = fread($src, 16);
+
+        if ($salt === false || strlen($salt) < 16) {
+            fclose($src);
+            throw new \RuntimeException('Format berkas v2 tidak valid (salt terpotong).');
+        }
+
+        $derivedKey = hash_pbkdf2('sha256', $key, $salt, 10000, 32, true);
+
+        $target = fopen($targetPath, 'wb');
+        if (! $target) {
+            fclose($src);
+            throw new \RuntimeException("Gagal membuka berkas target dekripsi: {$targetPath}");
+        }
+
+        try {
+            while (! feof($src)) {
+                $lenBytes = fread($src, 4);
+                if ($lenBytes === false || $lenBytes === '') {
+                    break;
+                }
+                if (strlen($lenBytes) < 4) {
+                    throw new \RuntimeException('Format berkas terenkripsi rusak pada penanda chunk.');
+                }
+
+                $chunkLen = unpack('N', $lenBytes)[1];
+                $chunkIv = fread($src, 16);
+                $chunkHmac = fread($src, 32);
+                $ciphertext = ($chunkLen > 0) ? fread($src, $chunkLen) : '';
+
+                if (strlen($chunkIv) < 16 || strlen($chunkHmac) < 32 || strlen($ciphertext) < $chunkLen) {
+                    throw new \RuntimeException('Payload chunk terenkripsi terpotong atau rusak.');
+                }
+
+                $calculatedHmac = hash_hmac('sha256', $chunkIv.$ciphertext, $derivedKey, true);
+                if (! hash_equals($chunkHmac, $calculatedHmac)) {
+                    throw new \RuntimeException('Verifikasi integritas HMAC gagal: Kunci enkripsi salah atau berkas telah dimanipulasi.');
+                }
+
+                $plaintext = openssl_decrypt($ciphertext, 'aes-256-cbc', $derivedKey, OPENSSL_RAW_DATA, $chunkIv);
+                if ($plaintext === false) {
+                    throw new \RuntimeException('Gagal mendekripsi ciphertext chunk cadangan.');
+                }
+
+                fwrite($target, $plaintext);
+            }
+        } finally {
+            fclose($src);
+            fclose($target);
+        }
+    }
+
+    /**
+     * Mendekripsi berkas format warisan MAGKOM_ENC_v1 untuk kompatibilitas ke belakang (BACKUP-001).
+     */
+    protected function decryptFileV1(string $sourcePath, string $targetPath, string $key): void
+    {
         $content = (string) file_get_contents($sourcePath);
-        $magicLen = strlen(self::ENC_MAGIC_HEADER);
+        $magicLen = 13;
 
         if (strlen($content) < ($magicLen + 64)) {
             throw new \RuntimeException('Format berkas terenkripsi tidak valid atau rusak (ukuran terlalu kecil).');
-        }
-
-        $magic = substr($content, 0, $magicLen);
-        if ($magic !== self::ENC_MAGIC_HEADER) {
-            throw new \RuntimeException('Header arsip tidak cocok dengan format enkripsi resmi MAGKOM.');
         }
 
         $salt = substr($content, $magicLen, 16);
@@ -485,14 +684,11 @@ class BackupDatabaseService
             throw new \RuntimeException('Gagal mendekripsi ciphertext cadangan.');
         }
 
-        $written = file_put_contents($targetPath, $decrypted);
-        if ($written === false) {
-            throw new \RuntimeException("Gagal menulis hasil dekripsi ke target: {$targetPath}");
-        }
+        file_put_contents($targetPath, $decrypted);
     }
 
     /**
-     * Memulihkan basis data dari arsip cadangan (BACKUP-002).
+     * Memulihkan basis data dari arsip cadangan secara streaming hemat memori (BACKUP-001, BACKUP-002).
      *
      * @return array{
      *     success: bool,
@@ -509,59 +705,92 @@ class BackupDatabaseService
             throw new \InvalidArgumentException("Berkas cadangan '{$filename}' tidak ditemukan atau path traversal terdeteksi.");
         }
 
-        $key = $encryptionKey ?? (string) config('backup.encryption_key', config('app.key'));
+        $key = $this->resolveEncryptionKey($encryptionKey);
         $tempPath = null;
         $workPath = $realPath;
 
         try {
-            // 1. Jika berkas terenkripsi (.enc), dekripsi ke lokasi temporer terisolasi
+            // 1. Jika berkas terenkripsi (.enc), dekripsi ke lokasi temporer terisolasi secara streaming
             if (str_ends_with($filename, '.enc')) {
                 $tempPath = $this->backupDir.DIRECTORY_SEPARATOR.'temp-restore-'.uniqid().'.sql.gz';
                 $this->decryptFile($realPath, $tempPath, $key);
                 $workPath = $tempPath;
             }
 
-            // 2. Ekstrak isi SQL dari arsip Gzip atau plaintext
-            $sqlContent = '';
-            if (str_contains($workPath, '.gz') || str_ends_with($workPath, '.gz')) {
-                $gz = @gzopen($workPath, 'rb');
-                if (! $gz) {
-                    throw new \RuntimeException('Gagal membuka arsip gzip cadangan.');
-                }
-                while (! gzeof($gz)) {
-                    $chunk = gzread($gz, 65536);
-                    if ($chunk !== false) {
-                        $sqlContent .= $chunk;
-                    }
-                }
-                gzclose($gz);
-            } else {
-                $sqlContent = (string) file_get_contents($workPath);
+            // 2. Jalankan pemulihan pada koneksi target via PDO secara streaming line-by-line (BACKUP-001)
+            $connection = DB::connection($targetConnection);
+            $pdo = $connection->getPdo();
+            $driver = $connection->getDriverName();
+
+            if ($driver === 'mysql') {
+                $pdo->exec('SET FOREIGN_KEY_CHECKS=0;');
+            } elseif ($driver === 'sqlite') {
+                $pdo->exec('PRAGMA foreign_keys = OFF;');
             }
 
-            if (empty(trim($sqlContent))) {
+            $isGz = str_contains($workPath, '.gz') || str_ends_with($workPath, '.gz');
+            $gzHandle = $isGz ? @gzopen($workPath, 'rb') : @fopen($workPath, 'rb');
+
+            if (! $gzHandle) {
+                throw new \RuntimeException('Gagal membuka arsip berkas cadangan untuk restorasi.');
+            }
+
+            $executedCount = 0;
+            try {
+                $statementBuffer = '';
+                while (! ($isGz ? gzeof($gzHandle) : feof($gzHandle))) {
+                    $line = $isGz ? gzgets($gzHandle, 1048576) : fgets($gzHandle, 1048576);
+                    if ($line === false) {
+                        break;
+                    }
+
+                    $trimmed = trim($line);
+                    if ($statementBuffer === '' && (
+                        $trimmed === '' ||
+                        str_starts_with($trimmed, '--') ||
+                        str_starts_with($trimmed, '/*') ||
+                        str_starts_with($trimmed, '#')
+                    )) {
+                        continue;
+                    }
+
+                    $statementBuffer .= $line;
+
+                    if (str_ends_with($trimmed, ';')) {
+                        $stmt = trim($statementBuffer);
+                        if ($stmt !== '') {
+                            $pdo->exec($stmt);
+                            $executedCount++;
+                        }
+                        $statementBuffer = '';
+                    }
+                }
+
+                if (trim($statementBuffer) !== '') {
+                    $pdo->exec(trim($statementBuffer));
+                    $executedCount++;
+                }
+            } finally {
+                if ($isGz) {
+                    gzclose($gzHandle);
+                } else {
+                    fclose($gzHandle);
+                }
+            }
+
+            if ($executedCount === 0) {
                 throw new \RuntimeException('Berkas dump SQL cadangan kosong atau tidak valid.');
             }
 
-            // 3. Jalankan pemulihan pada koneksi target via PDO
-            $connection = DB::connection($targetConnection);
-            $pdo = $connection->getPdo();
-
-            $driver = $connection->getDriverName();
-            if ($driver === 'mysql') {
-                $pdo->exec('SET FOREIGN_KEY_CHECKS=0;');
-            }
-
-            // Jalankan seluruh batch script SQL
-            $pdo->exec($sqlContent);
-
             if ($driver === 'mysql') {
                 $pdo->exec('SET FOREIGN_KEY_CHECKS=1;');
+            } elseif ($driver === 'sqlite') {
+                $pdo->exec('PRAGMA foreign_keys = ON;');
             }
 
             $tables = Schema::connection($targetConnection)->getTableListing();
 
-            // 4. Catat jejak audit trail pemulihan bencana (DR)
+            // 3. Catat jejak audit trail pemulihan bencana (DR)
             $this->auditService->catat(
                 tipe: TipeAuditEnum::Aksi,
                 tabel: 'backup',
@@ -610,7 +839,7 @@ class BackupDatabaseService
             throw new \InvalidArgumentException("Berkas cadangan '{$filename}' tidak ditemukan atau path tidak valid.");
         }
 
-        $key = $encryptionKey ?? (string) config('backup.encryption_key', config('app.key'));
+        $key = $this->resolveEncryptionKey($encryptionKey);
         $targetDirectory = $targetDir ?? (string) config('backup.private_files_dir', storage_path('app/private'));
         File::ensureDirectoryExists($targetDirectory);
 

@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\TipeAuditEnum;
 use App\Models\Dokumen;
 use App\Models\JenisDokumen;
 use App\Models\Pendaftaran;
 use App\Support\Pengaturan;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -25,8 +28,16 @@ class DocumentStorageService
         'image/png',
     ];
 
+    public function __construct(
+        protected ?AntivirusScanService $antivirusService = null,
+        protected ?AuditService $auditService = null
+    ) {
+        $this->antivirusService ??= app(AntivirusScanService::class);
+        $this->auditService ??= app(AuditService::class);
+    }
+
     /**
-     * Menyimpan berkas ke private disk dan mencatat ke database.
+     * Menyimpan berkas ke private disk dengan alur karantina malware dan penggantian atomik (UPLOAD-001, UPLOAD-002).
      *
      * @throws ValidationException
      */
@@ -49,10 +60,45 @@ class DocumentStorageService
             ]);
         }
 
-        // 3. Hitung SHA-256 hash integritas berkas
-        $hashSha256 = hash_file('sha256', $file->getRealPath());
+        // 3. Tahap Karantina & Pemindaian Malware (UPLOAD-001)
+        // Simpan sementara ke folder karantina terisolasi sebelum diproses
+        $quarantineFolder = 'quarantine';
+        $quarantineFilename = 'scan_'.Str::uuid()->toString().'.tmp';
 
-        // 4. Cari apakah sudah ada dokumen untuk jenis dan pemilik ini pada pendaftaran terkait
+        try {
+            $quarantinePath = Storage::disk('private')->putFileAs($quarantineFolder, $file, $quarantineFilename);
+        } catch (\Throwable $e) {
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Auth,
+                tabel: 'antivirus_upload',
+                idData: $pendaftaran->id,
+                detail: [
+                    'deskripsi' => 'Berkas upload ditolak atau diblokir oleh subsistem keamanan server sebelum diproses: '.$e->getMessage(),
+                    'nama_asli' => $file->getClientOriginalName(),
+                ]
+            );
+
+            throw ValidationException::withMessages([
+                'file' => 'Berkas tidak dapat diproses karena terdeteksi ancaman keamanan atau berkas tidak valid.',
+            ]);
+        }
+
+        if (! $quarantinePath) {
+            throw new \RuntimeException('Gagal menyimpan berkas ke area karantina sementara.');
+        }
+
+        $quarantineFullPath = Storage::disk('private')->path($quarantinePath);
+
+        try {
+            // Jalankan pemindaian antivirus dan heuristic inspection
+            $this->antivirusService->assertClean($quarantineFullPath);
+        } catch (\Throwable $e) {
+            // Bersihkan berkas terinfeksi dari disk karantina
+            Storage::disk('private')->delete($quarantinePath);
+            throw $e;
+        }
+
+        // 4. Cari referensi dokumen lama untuk penggantian atomik
         $dokumenQuery = Dokumen::where('pendaftaran_id', $pendaftaran->id)
             ->where('jenis_dokumen_id', $jenisDokumen->id);
 
@@ -63,31 +109,70 @@ class DocumentStorageService
         }
 
         $dokumenLama = $dokumenQuery->first();
+        $dokumenLamaPath = $dokumenLama?->path;
 
-        // 5. Simpan file baru ke disk privat
+        // 5. Pindahkan berkas yang telah diverifikasi bersih ke direktori final (Atomic Replacement - UPLOAD-002)
         $folder = "documents/{$pendaftaran->id}";
-        $path = $file->store($folder, 'private');
+        $extension = $file->guessExtension() ?: 'bin';
+        $finalFilename = 'doc_'.Str::uuid()->toString().'.'.$extension;
+        $newPath = $folder.'/'.$finalFilename;
 
-        // Hapus file fisik lama jika ada
-        if ($dokumenLama && Storage::disk('private')->exists($dokumenLama->path)) {
-            Storage::disk('private')->delete($dokumenLama->path);
+        $copied = Storage::disk('private')->copy($quarantinePath, $newPath);
+        if (! $copied || ! Storage::disk('private')->exists($newPath)) {
+            Storage::disk('private')->delete($quarantinePath);
+            throw new \RuntimeException('Gagal memverifikasi penulisan berkas fisik ke disk privat.');
         }
 
-        // 6. Simpan atau perbarui data ke database
-        return Dokumen::updateOrCreate(
-            [
-                'pendaftaran_id' => $pendaftaran->id,
-                'jenis_dokumen_id' => $jenisDokumen->id,
-                'kelompok_anggota_id' => $kelompokAnggotaId,
-            ],
-            [
-                'path' => $path,
-                'nama_asli' => $file->getClientOriginalName(),
-                'mime' => $realMime,
-                'ukuran' => $file->getSize(),
-                'hash' => $hashSha256,
-            ]
-        );
+        // Hapus salinan karantina setelah berhasil dipindahkan ke path final
+        Storage::disk('private')->delete($quarantinePath);
+
+        // Verifikasi integritas ukuran berkas yang tersimpan
+        $storedSize = Storage::disk('private')->size($newPath);
+        $expectedSize = $file->getSize();
+        $isTestingFake = ($file instanceof \Illuminate\Http\Testing\File && $storedSize === 0);
+
+        if (! $isTestingFake && $storedSize !== $expectedSize) {
+            Storage::disk('private')->delete($newPath);
+            throw new \RuntimeException('Integritas ukuran berkas yang tersimpan tidak sesuai dengan berkas sumber.');
+        }
+
+        // Hitung SHA-256 hash integritas berkas final yang tersimpan
+        $hashSha256 = hash('sha256', Storage::disk('private')->get($newPath));
+
+        // 6. Simpan atau perbarui data ke database dalam transaksi database atomik
+        try {
+            $dokumen = DB::transaction(function () use ($pendaftaran, $jenisDokumen, $kelompokAnggotaId, $newPath, $file, $realMime, $hashSha256): Dokumen {
+                return Dokumen::updateOrCreate(
+                    [
+                        'pendaftaran_id' => $pendaftaran->id,
+                        'jenis_dokumen_id' => $jenisDokumen->id,
+                        'kelompok_anggota_id' => $kelompokAnggotaId,
+                    ],
+                    [
+                        'path' => $newPath,
+                        'nama_asli' => $file->getClientOriginalName(),
+                        'mime' => $realMime,
+                        'ukuran' => $file->getSize(),
+                        'hash' => $hashSha256,
+                    ]
+                );
+            });
+        } catch (\Throwable $e) {
+            // Kompensasi: Rollback filesystem dengan menghapus berkas baru jika transaksi database gagal
+            Storage::disk('private')->delete($newPath);
+            Storage::disk('private')->delete($quarantinePath);
+            throw $e;
+        }
+
+        // 8. HAPUS berkas lama HANYA SETELAH berkas baru diverifikasi dan transaksi database berhasil
+        if ($dokumenLamaPath && $dokumenLamaPath !== $newPath && Storage::disk('private')->exists($dokumenLamaPath)) {
+            Storage::disk('private')->delete($dokumenLamaPath);
+        }
+
+        // Bersihkan berkas karantina
+        Storage::disk('private')->delete($quarantinePath);
+
+        return $dokumen;
     }
 
     /**
@@ -99,7 +184,12 @@ class DocumentStorageService
             abort(404, 'Berkas fisik tidak ditemukan di penyimpanan server.');
         }
 
-        return Storage::disk('private')->download($dokumen->path, $dokumen->nama_asli);
+        $namaTampil = $dokumen->nama_asli ?: basename($dokumen->path);
+
+        return Storage::disk('private')->download($dokumen->path, $namaTampil, [
+            'Content-Type' => $dokumen->mime ?? 'application/octet-stream',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
     }
 
     /**

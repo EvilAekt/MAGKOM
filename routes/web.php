@@ -200,36 +200,41 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:pembimbing,admin,superadmin', 'superadmin.readonly'])->prefix('pembimbing')->name('pembimbing.')->group(function () {
     Route::get('/dashboard', [PembimbingDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/peserta', [PembimbingPesertaController::class, 'index'])->name('peserta.index');
-    Route::get('/peserta/{penempatan}', [PembimbingPesertaController::class, 'show'])->name('peserta.show');
+    // RBAC-001: Dynamic permission untuk modul bimbingan & logbook
+    Route::middleware('permission:bimbingan.logbook-tugas')->group(function () {
+        Route::get('/peserta', [PembimbingPesertaController::class, 'index'])->name('peserta.index');
+        Route::get('/peserta/{penempatan}', [PembimbingPesertaController::class, 'show'])->name('peserta.show');
 
-    // Template Tugas Mandiri & API Picker (PRD F-08)
-    Route::get('/tugas/template', [PembimbingTugasTemplateController::class, 'index'])->name('tugas.template.index');
-    Route::post('/tugas/template', [PembimbingTugasTemplateController::class, 'store'])->name('tugas.template.store');
-    Route::get('/tugas/template-picker', [PembimbingTugasTemplateController::class, 'pickerJson'])->name('tugas.template.picker');
-    Route::put('/tugas/template/{template}', [PembimbingTugasTemplateController::class, 'update'])->name('tugas.template.update');
-    Route::delete('/tugas/template/{template}', [PembimbingTugasTemplateController::class, 'destroy'])->name('tugas.template.destroy');
+        // Template Tugas Mandiri & API Picker (PRD F-08)
+        Route::get('/tugas/template', [PembimbingTugasTemplateController::class, 'index'])->name('tugas.template.index');
+        Route::post('/tugas/template', [PembimbingTugasTemplateController::class, 'store'])->name('tugas.template.store');
+        Route::get('/tugas/template-picker', [PembimbingTugasTemplateController::class, 'pickerJson'])->name('tugas.template.picker');
+        Route::put('/tugas/template/{template}', [PembimbingTugasTemplateController::class, 'update'])->name('tugas.template.update');
+        Route::delete('/tugas/template/{template}', [PembimbingTugasTemplateController::class, 'destroy'])->name('tugas.template.destroy');
 
-    Route::get('/tugas', [PembimbingTugasController::class, 'index'])->name('tugas.index');
-    Route::get('/tugas/create', [PembimbingTugasController::class, 'create'])->name('tugas.create');
-    Route::post('/tugas', [PembimbingTugasController::class, 'store'])->name('tugas.store');
-    Route::get('/tugas/{tugas}', [PembimbingTugasController::class, 'show'])->name('tugas.show');
-    Route::get('/tugas/{tugas}/edit', [PembimbingTugasController::class, 'edit'])->name('tugas.edit');
-    Route::put('/tugas/{tugas}', [PembimbingTugasController::class, 'update'])->name('tugas.update');
-    Route::get('/tugas/{tugas}/lampiran', [PembimbingTugasController::class, 'unduhLampiran'])->name('tugas.lampiran');
-    Route::post('/tugas/{tugas}/selesai', [PembimbingTugasController::class, 'selesai'])->name('tugas.selesai');
-    Route::post('/progres/{progres}/review', [PembimbingTugasController::class, 'reviewProgres'])->name('progres.review');
+        Route::get('/tugas', [PembimbingTugasController::class, 'index'])->name('tugas.index');
+        Route::get('/tugas/create', [PembimbingTugasController::class, 'create'])->name('tugas.create');
+        Route::post('/tugas', [PembimbingTugasController::class, 'store'])->name('tugas.store');
+        Route::get('/tugas/{tugas}', [PembimbingTugasController::class, 'show'])->name('tugas.show');
+        Route::get('/tugas/{tugas}/edit', [PembimbingTugasController::class, 'edit'])->name('tugas.edit');
+        Route::put('/tugas/{tugas}', [PembimbingTugasController::class, 'update'])->name('tugas.update');
+        Route::get('/tugas/{tugas}/lampiran', [PembimbingTugasController::class, 'unduhLampiran'])->name('tugas.lampiran');
+        Route::post('/tugas/{tugas}/selesai', [PembimbingTugasController::class, 'selesai'])->name('tugas.selesai');
+        Route::post('/progres/{progres}/review', [PembimbingTugasController::class, 'reviewProgres'])->name('progres.review');
 
-    Route::get('/logbook', [PembimbingLogbookReviewController::class, 'index'])->name('logbook.index');
-    Route::post('/logbook/bulk-review', [PembimbingLogbookReviewController::class, 'bulkReview'])->name('logbook.bulk-review');
-    Route::post('/logbook/{logbook}/review', [PembimbingLogbookReviewController::class, 'review'])->name('logbook.review');
+        Route::get('/logbook', [PembimbingLogbookReviewController::class, 'index'])->name('logbook.index');
+        Route::post('/logbook/bulk-review', [PembimbingLogbookReviewController::class, 'bulkReview'])->name('logbook.bulk-review');
+        Route::post('/logbook/{logbook}/review', [PembimbingLogbookReviewController::class, 'review'])->name('logbook.review');
 
-    Route::post('/penempatan/{penempatan}/selesai', [PembimbingPesertaController::class, 'selesai'])->name('penempatan.selesai');
+        Route::post('/penempatan/{penempatan}/selesai', [PembimbingPesertaController::class, 'selesai'])->name('penempatan.selesai');
+    });
 
-    // Laporan Kinerja Mentoring ASN Sleman
-    Route::get('/laporan-kinerja', [PembimbingLaporanKinerjaController::class, 'index'])->name('laporan-kinerja.index');
-    Route::get('/laporan-kinerja/export', [PembimbingLaporanKinerjaController::class, 'export'])->name('laporan-kinerja.export');
-    Route::get('/laporan-kinerja/cetak', [PembimbingLaporanKinerjaController::class, 'cetak'])->name('laporan-kinerja.cetak');
+    // Laporan Kinerja Mentoring ASN Sleman (RBAC-001)
+    Route::middleware('permission:laporan.kinerja-portofolio')->group(function () {
+        Route::get('/laporan-kinerja', [PembimbingLaporanKinerjaController::class, 'index'])->name('laporan-kinerja.index');
+        Route::get('/laporan-kinerja/export', [PembimbingLaporanKinerjaController::class, 'export'])->name('laporan-kinerja.export');
+        Route::get('/laporan-kinerja/cetak', [PembimbingLaporanKinerjaController::class, 'cetak'])->name('laporan-kinerja.cetak');
+    });
 
     // Profil & Pengaturan Akun Pembimbing
     Route::get('/profil', [PembimbingProfilController::class, 'show'])->name('profil.show');
@@ -243,35 +248,47 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:admin,superadmin', 'superadmin.readonly'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/kuota', [KuotaController::class, 'index'])->name('kuota.index');
-    Route::post('/kuota', [KuotaController::class, 'store'])->name('kuota.store');
-    Route::post('/kuota/bulan', [KuotaController::class, 'storeBulan'])->name('kuota.bulan.store');
-    Route::put('/kuota/bulan/{bulanMagang}', [KuotaController::class, 'updateBulan'])->name('kuota.bulan.update');
-    Route::put('/kuota/bidang/{bidang}', [KuotaController::class, 'updateBidangKuota'])->name('kuota.bidang.update');
-    Route::put('/kuota/{kuota}', [KuotaController::class, 'update'])->name('kuota.update');
-    Route::patch('/kuota/{kuota}/toggle', [KuotaController::class, 'toggleAktif'])->name('kuota.toggle');
+    // Modul Kuota Bulanan & Bidang (RBAC-001)
+    Route::middleware('permission:kuota.manajemen')->group(function () {
+        Route::get('/kuota', [KuotaController::class, 'index'])->name('kuota.index');
+        Route::post('/kuota', [KuotaController::class, 'store'])->name('kuota.store');
+        Route::post('/kuota/bulan', [KuotaController::class, 'storeBulan'])->name('kuota.bulan.store');
+        Route::put('/kuota/bulan/{bulanMagang}', [KuotaController::class, 'updateBulan'])->name('kuota.bulan.update');
+        Route::put('/kuota/bidang/{bidang}', [KuotaController::class, 'updateBidangKuota'])->name('kuota.bidang.update');
+        Route::put('/kuota/{kuota}', [KuotaController::class, 'update'])->name('kuota.update');
+        Route::patch('/kuota/{kuota}/toggle', [KuotaController::class, 'toggleAktif'])->name('kuota.toggle');
+    });
 
-    Route::get('/pendaftaran', [AdminPendaftaranController::class, 'index'])->name('pendaftaran.index');
-    Route::get('/pendaftaran/download-zip', [AdminPendaftaranController::class, 'downloadBundelZip'])->name('pendaftaran.download-zip');
-    Route::get('/pendaftaran/{pendaftaran}', [AdminPendaftaranController::class, 'show'])->name('pendaftaran.show');
-    Route::get('/pendaftaran/{pendaftaran}/surat-diterima', [AdminPendaftaranController::class, 'unduhSuratDiterima'])->name('pendaftaran.surat-diterima');
-    Route::get('/pendaftaran/{pendaftaran}/surat-diterima/pratinjau', [AdminPendaftaranController::class, 'pratinjauSuratDiterima'])->name('pendaftaran.surat-diterima.pratinjau');
-    Route::post('/pendaftaran/{pendaftaran}/putuskan', [AdminPendaftaranController::class, 'putuskan'])->name('pendaftaran.putuskan');
+    // Modul Verifikasi Berkas & Seleksi Administratif (RBAC-001)
+    Route::middleware('permission:seleksi.verifikasi-berkas')->group(function () {
+        Route::get('/pendaftaran', [AdminPendaftaranController::class, 'index'])->name('pendaftaran.index');
+        Route::get('/pendaftaran/download-zip', [AdminPendaftaranController::class, 'downloadBundelZip'])->name('pendaftaran.download-zip');
+        Route::get('/pendaftaran/{pendaftaran}', [AdminPendaftaranController::class, 'show'])->name('pendaftaran.show');
+        Route::get('/pendaftaran/{pendaftaran}/surat-diterima', [AdminPendaftaranController::class, 'unduhSuratDiterima'])->name('pendaftaran.surat-diterima');
+        Route::get('/pendaftaran/{pendaftaran}/surat-diterima/pratinjau', [AdminPendaftaranController::class, 'pratinjauSuratDiterima'])->name('pendaftaran.surat-diterima.pratinjau');
+        Route::post('/pendaftaran/{pendaftaran}/putuskan', [AdminPendaftaranController::class, 'putuskan'])->name('pendaftaran.putuskan');
+    });
 
-    Route::get('/penempatan', [AdminPenempatanController::class, 'index'])->name('penempatan.index');
-    Route::post('/penempatan/tetapkan', [AdminPenempatanController::class, 'tetapkan'])->name('penempatan.tetapkan');
-    Route::get('/penempatan/ekspor-surat-diterima', [AdminPenempatanController::class, 'exportRekapSuratDiterima'])->name('penempatan.ekspor-surat-diterima');
-    Route::post('/penempatan/manual', [AdminPenempatanController::class, 'storeManual'])->name('penempatan.manual');
-    Route::post('/penempatan/bulk-reassign', [AdminPenempatanController::class, 'bulkReassignPembimbing'])->name('penempatan.bulk-reassign');
-    Route::get('/penempatan/{penempatan}', [AdminPenempatanController::class, 'show'])->name('penempatan.show');
-    Route::get('/penempatan/{penempatan}/surat-diterima', [AdminPenempatanController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
-    Route::get('/penempatan/{penempatan}/surat-diterima/pratinjau', [AdminPenempatanController::class, 'pratinjauSuratDiterima'])->name('penempatan.surat-diterima.pratinjau');
-    Route::post('/penempatan/{penempatan}/pindah-pembimbing', [AdminPenempatanController::class, 'pindahPembimbing'])->name('penempatan.pindah-pembimbing');
-    Route::post('/penempatan/{penempatan}/batalkan', [AdminPenempatanController::class, 'batalkan'])->name('penempatan.batalkan');
+    // Modul Penetapan Penempatan & Pembimbing (RBAC-001)
+    Route::middleware('permission:penempatan.pembimbing')->group(function () {
+        Route::get('/penempatan', [AdminPenempatanController::class, 'index'])->name('penempatan.index');
+        Route::post('/penempatan/tetapkan', [AdminPenempatanController::class, 'tetapkan'])->name('penempatan.tetapkan');
+        Route::get('/penempatan/ekspor-surat-diterima', [AdminPenempatanController::class, 'exportRekapSuratDiterima'])->name('penempatan.ekspor-surat-diterima');
+        Route::post('/penempatan/manual', [AdminPenempatanController::class, 'storeManual'])->name('penempatan.manual');
+        Route::post('/penempatan/bulk-reassign', [AdminPenempatanController::class, 'bulkReassignPembimbing'])->name('penempatan.bulk-reassign');
+        Route::get('/penempatan/{penempatan}', [AdminPenempatanController::class, 'show'])->name('penempatan.show');
+        Route::get('/penempatan/{penempatan}/surat-diterima', [AdminPenempatanController::class, 'unduhSuratDiterima'])->name('penempatan.surat-diterima');
+        Route::get('/penempatan/{penempatan}/surat-diterima/pratinjau', [AdminPenempatanController::class, 'pratinjauSuratDiterima'])->name('penempatan.surat-diterima.pratinjau');
+        Route::post('/penempatan/{penempatan}/pindah-pembimbing', [AdminPenempatanController::class, 'pindahPembimbing'])->name('penempatan.pindah-pembimbing');
+        Route::post('/penempatan/{penempatan}/batalkan', [AdminPenempatanController::class, 'batalkan'])->name('penempatan.batalkan');
+    });
 
-    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-    Route::get('/laporan/pendaftaran', [LaporanController::class, 'pendaftaran'])->name('laporan.pendaftaran');
-    Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
+    // Modul Pelaporan & Arsip (RBAC-001)
+    Route::middleware('permission:laporan.kinerja-portofolio')->group(function () {
+        Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::get('/laporan/pendaftaran', [LaporanController::class, 'pendaftaran'])->name('laporan.pendaftaran');
+        Route::get('/laporan/penempatan', [LaporanController::class, 'penempatan'])->name('laporan.penempatan');
+    });
 
     // Profil & Pengaturan Akun Administrator
     Route::get('/profil', [AdminProfilController::class, 'show'])->name('profil.show');
@@ -416,7 +433,16 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::put('/akun/password', [SuperAdminAkunController::class, 'updatePassword'])->name('akun.password.update');
     Route::post('/akun/preferensi', [SuperAdminAkunController::class, 'updatePreferensi'])->name('akun.preferensi.update');
 
-    // Keamanan Akun & Otentikasi Dua Faktor (2FA - AUTH-002)
+    // Keamanan Akun & Otentikasi Dua Faktor (2FA Aliases SuperAdmin)
+    Route::get('/keamanan/2fa', [TwoFactorAuthController::class, 'showSettings'])->name('2fa.settings');
+    Route::post('/keamanan/2fa/enable', [TwoFactorAuthController::class, 'enable'])->name('2fa.enable');
+    Route::post('/keamanan/2fa/confirm', [TwoFactorAuthController::class, 'confirm'])->name('2fa.confirm');
+    Route::post('/keamanan/2fa/disable', [TwoFactorAuthController::class, 'disable'])->name('2fa.disable');
+    Route::post('/keamanan/2fa/recovery-codes', [TwoFactorAuthController::class, 'regenerateRecoveryCodes'])->name('2fa.regenerate-recovery-codes');
+});
+
+// Otentikasi Dua Faktor Terpadu untuk Seluruh Staf (AUTH-002: Multi-Role 2FA)
+Route::middleware(['auth', 'verified', 'must_change_password', 'account.active'])->group(function () {
     Route::get('/keamanan/2fa', [TwoFactorAuthController::class, 'showSettings'])->name('2fa.settings');
     Route::post('/keamanan/2fa/enable', [TwoFactorAuthController::class, 'enable'])->name('2fa.enable');
     Route::post('/keamanan/2fa/confirm', [TwoFactorAuthController::class, 'confirm'])->name('2fa.confirm');

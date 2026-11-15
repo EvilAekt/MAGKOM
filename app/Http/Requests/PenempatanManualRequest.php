@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\RoleEnum;
+use App\Support\PasswordPolicy;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -75,7 +76,7 @@ class PenempatanManualRequest extends FormRequest
             'durasi_bulan' => ['required', 'integer', 'min:1', 'max:6'],
             'tgl_mulai' => ['nullable', 'date'],
             'tgl_selesai' => ['nullable', 'date'],
-            'password' => ['nullable', 'string', 'min:8'],
+            'password' => PasswordPolicy::pesertaRules(confirmed: false, required: false),
         ];
 
         // Validasi Alokasi Jalur

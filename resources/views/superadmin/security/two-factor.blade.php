@@ -1,10 +1,20 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Autentikasi Dua Faktor (2FA) - SuperAdmin MagKom')
+@php
+    $dashboardUrl = match(auth()->user()?->role) {
+        \App\Enums\RoleEnum::SuperAdmin => route('superadmin.dashboard'),
+        \App\Enums\RoleEnum::Admin => route('admin.dashboard'),
+        \App\Enums\RoleEnum::Pembimbing => route('pembimbing.dashboard'),
+        default => route('peserta.dashboard'),
+    };
+    $roleName = auth()->user()?->role?->label() ?? 'Akun';
+@endphp
+
+@section('title', 'Autentikasi Dua Faktor (2FA) - MagKom')
 @section('topbar_title', 'Keamanan Akun & Autentikasi Dua Faktor')
 
 @section('breadcrumbs')
-    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <a href="{{ $dashboardUrl }}">{{ $roleName }}</a>
     <span class="breadcrumb-separator">/</span>
     <span class="breadcrumb-current">Keamanan 2FA</span>
 @endsection
@@ -44,11 +54,11 @@
 
         @if(! $enabled)
             <div style="background: #F8FAFC; border-radius: 8px; padding: 1.5rem; border: 1px dashed #CBD5E1; margin-bottom: 1.5rem;">
-                <h3 style="font-size: 1rem; font-weight: 600; color: #1E293B; margin: 0 0 0.5rem 0;">Mengapa 2FA Sangat Penting untuk SuperAdmin?</h3>
+                <h3 style="font-size: 1rem; font-weight: 600; color: #1E293B; margin: 0 0 0.5rem 0;">Mengapa 2FA Sangat Penting untuk Akun Anda?</h3>
                 <p style="font-size: 0.875rem; color: #475569; line-height: 1.6; margin: 0 0 1rem 0;">
-                    SuperAdmin memiliki wewenang tertinggi terhadap data pendaftaran, kuota magang, pengaturan CMS, dan pencadangan basis data. Mengaktifkan 2FA mencegah pengambilalihan akun meskipun kata sandi Anda bocor atau ditebak.
+                    Akun staf kedinasan memiliki wewenang terhadap data pendaftaran, kuota magang, penilaian mentee, dan dokumen privat peserta magang. Mengaktifkan 2FA mencegah pengambilalihan akun meskipun kata sandi Anda bocor atau ditebak.
                 </p>
-                <form action="{{ route('superadmin.2fa.enable') }}" method="POST">
+                <form action="{{ route('2fa.enable') }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-primary" style="background: #1E3A8A; color: #ffffff; padding: 0.625rem 1.25rem; border-radius: 6px; font-weight: 600; font-size: 0.875rem; border: none; cursor: pointer;">
                         Mulai Aktivasi 2FA Sekarang &rarr;
@@ -62,7 +72,7 @@
                 </p>
 
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <form action="{{ route('superadmin.2fa.regenerate-recovery-codes') }}" method="POST">
+                    <form action="{{ route('2fa.regenerate-recovery-codes') }}" method="POST">
                         @csrf
                         <div style="margin-bottom: 0.5rem;">
                             <input type="password" name="current_password" required placeholder="Masukkan kata sandi saat ini" style="padding: 0.5rem 0.75rem; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.875rem;">
@@ -72,7 +82,7 @@
                         </button>
                     </form>
 
-                    <form action="{{ route('superadmin.2fa.disable') }}" method="POST">
+                    <form action="{{ route('2fa.disable') }}" method="POST">
                         @csrf
                         <div style="margin-bottom: 0.5rem;">
                             <input type="password" name="current_password" required placeholder="Masukkan kata sandi saat ini" style="padding: 0.5rem 0.75rem; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.875rem;">

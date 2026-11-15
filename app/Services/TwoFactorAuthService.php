@@ -44,4 +44,12 @@ class TwoFactorAuthService
 
         return (bool) $this->google2fa->verifyKey($secret, $cleanCode, 1);
     }
+
+    /**
+     * Mendapatkan kode OTP saat ini untuk keperluan pengujian dan verifikasi sinkronisasi.
+     */
+    public function getCurrentOtp(string $secret): string
+    {
+        return $this->google2fa->getCurrentOtp($secret);
+    }
 }

@@ -31,11 +31,13 @@ class SecurityHeaders
             $response->headers->set('Pragma', 'no-cache');
         }
 
-        if (app()->isProduction()) {
-            $response->headers->set(
-                'Content-Security-Policy',
-                "default-src 'self'; img-src 'self' data: https:; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; frame-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
-            );
+        $cspPolicy = "default-src 'self'; img-src 'self' data: https:; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; frame-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self';";
+
+        if (app()->isProduction() || app()->environment('staging') || config('app.csp_enforced', false)) {
+            $response->headers->set('Content-Security-Policy', $cspPolicy);
+        } else {
+            // Non-production (local/dev): Lindungi dengan Content-Security-Policy-Report-Only
+            $response->headers->set('Content-Security-Policy-Report-Only', $cspPolicy);
         }
 
         return $response;

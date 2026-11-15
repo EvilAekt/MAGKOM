@@ -21,6 +21,13 @@ class RestoreFilesCommand extends Command
                             {--force : Paksa ekstraksi tanpa konfirmasi}';
 
     /**
+     * Alias perintah konsol standar.
+     *
+     * @var array<int, string>
+     */
+    protected $aliases = ['backup:restore-files'];
+
+    /**
      * Deskripsi perintah console.
      *
      * @var string

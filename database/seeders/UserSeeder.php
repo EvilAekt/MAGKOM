@@ -25,7 +25,12 @@ class UserSeeder extends Seeder
             throw new RuntimeException('Cannot run UserSeeder in production environment.');
         }
 
-        $defaultPassword = Hash::make('Password123!');
+        // SEC-001: Demo accounts require explicit opt-in outside automated tests
+        if (! app()->environment('testing') && ! (bool) env('SEED_DEMO_ACCOUNTS', false)) {
+            return;
+        }
+
+        $defaultPassword = Hash::make(env('SEED_DEMO_PASSWORD', 'Password123!'));
         $bidang = Bidang::first();
         $jurusan = Jurusan::first();
 

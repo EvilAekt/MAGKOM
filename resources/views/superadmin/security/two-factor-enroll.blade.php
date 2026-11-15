@@ -1,12 +1,22 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Aktivasi 2FA - SuperAdmin MagKom')
+@php
+    $dashboardUrl = match(auth()->user()?->role) {
+        \App\Enums\RoleEnum::SuperAdmin => route('superadmin.dashboard'),
+        \App\Enums\RoleEnum::Admin => route('admin.dashboard'),
+        \App\Enums\RoleEnum::Pembimbing => route('pembimbing.dashboard'),
+        default => route('peserta.dashboard'),
+    };
+    $roleName = auth()->user()?->role?->label() ?? 'Akun';
+@endphp
+
+@section('title', 'Aktivasi 2FA - MagKom')
 @section('topbar_title', 'Langkah Aktivasi Autentikasi Dua Faktor')
 
 @section('breadcrumbs')
-    <a href="{{ route('superadmin.dashboard') }}">SuperAdmin</a>
+    <a href="{{ $dashboardUrl }}">{{ $roleName }}</a>
     <span class="breadcrumb-separator">/</span>
-    <a href="{{ route('superadmin.2fa.settings') }}">Keamanan 2FA</a>
+    <a href="{{ route('2fa.settings') }}">Keamanan 2FA</a>
     <span class="breadcrumb-separator">/</span>
     <span class="breadcrumb-current">Enrollment</span>
 @endsection
@@ -48,7 +58,7 @@
                 Ketikkan kode 6 angka yang saat ini muncul pada aplikasi authenticator Anda untuk mengonfirmasi bahwa sinkronisasi waktu berhasil.
             </p>
 
-            <form action="{{ route('superadmin.2fa.confirm') }}" method="POST">
+            <form action="{{ route('2fa.confirm') }}" method="POST">
                 @csrf
                 <div style="display: flex; gap: 1rem; align-items: center; max-width: 400px; margin-bottom: 1.5rem;">
                     <input type="text" name="code" id="code" required inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" autofocus

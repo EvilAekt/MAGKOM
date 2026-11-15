@@ -227,6 +227,10 @@ class User extends Authenticatable implements MustVerifyEmail
             "role_perms_{$roleValue}",
             now()->addMinutes(30),
             static function () use ($roleValue): array {
+                if (Permission::query()->where('is_system', true)->count() === 0) {
+                    app(\App\Services\PermissionService::class)->ensureSystemPermissionsExist();
+                }
+
                 return RolePermission::query()
                     ->where('role', $roleValue)
                     ->join('permissions', 'role_permissions.permission_id', '=', 'permissions.id')
