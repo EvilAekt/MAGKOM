@@ -1,178 +1,243 @@
-> Diperbarui: 2026-11-09 | mode: Verified Living Documentation
+# Aliran Data dan Siklus Proses MAGKOM
 
-# Alur Data & Skema Database (DATA-FLOW.md)
-
-Dokumen ini menjelaskan aliran data untuk proses bisnis inti, relasi antar entitas, serta Entity-Relationship Diagram (ERD) dari 24 tabel domain model Eloquent aktif dalam Portal MagKom.
-
-> **Catatan Singkronisasi**:  
-> Untuk rincian kamus data (*data dictionary*) lengkap 24 tabel domain dan 5 tabel framework, rujuk dokumen utama [docs/04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md](../04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md).
+| Informasi | Keterangan |
+|---|---|
+| Status | Verified |
+| Terakhir Diverifikasi | 2026-11-15 |
+| Cakupan | Alur data lintas entitas, sekuens interaksi komponen, konkurensi atomik |
+| Referensi Implementasi | `app/Actions/`, `app/Queries/`, `app/Services/`, `routes/web.php` |
 
 ---
 
-## 1. Alur Data Fitur Utama
+## 1. Pendahuluan
 
-### A. Alur Pendaftaran & Seleksi Magang (Tanpa Waiting List)
+Dokumen ini menjelaskan bagaimana data mengalir di dalam sistem MAGKOM pada seluruh proses bisnis utama. Setiap diagram menggambarkan interaksi antara Klien (Browser), Lapisan Keamanan, Controller, Action/Query, Service, dan Basis Data.
+
+---
+
+## 2. Alur 1: Pendaftaran dan Alokasi Kuota Atomik (BR-05)
+
+Pendaftaran magang membutuhkan proteksi konkurensi ketat agar alokasi kuota jurusan tidak mengalami *overselling* atau bernilai negatif saat banyak pendaftar mengakses sistem secara simultan.
+
 ```mermaid
 sequenceDiagram
     autonumber
-    actor P as Calon Peserta
-    participant C as PesertaPendaftaranController
-    participant S as PlacementService
-    participant DB as Database (Pendaftaran, Kuota)
-    participant SEC as DocumentStorageService
+    actor Peserta as Peserta / Ketua Tim
+    participant Browser as Browser Client
+    participant Controller as PendaftaranController
+    participant Action as AjukanPendaftaranAction
+    participant QuotaService as QuotaAllocationService
+    participant DB as MySQL Database
+    participant Audit as AuditService
 
-    P->>C: Mengisi Form & Mengunggah Berkas (KTP, KTM, Surat Pengantar)
-    C->>SEC: Enkripsi nama acak & simpan berkas ke storage/app/berkas/
-    C->>DB: Buat record Pendaftaran (status: DRAFT)
-    P->>C: Klik "Ajukan Pendaftaran"
-    C->>S: Evaluasi kuota jurusan di bulan terpilih via lockForUpdate()
-    alt Kuota Tersedia
-        S->>DB: Ubah status menjadi MENUNGGU_VERIFIKASI
-        C-->>P: Redirect sukses dengan Flash Message
-    else Kuota Penuh
-        S->>DB: Pendaftaran ditolak tegas (Kuota Habis / DITOLAK)
-        C-->>P: Notifikasi kuota penuh (Seleksi transparan tanpa antrean tersembunyi)
+    Peserta->>Browser: Klik "Ajukan Pendaftaran"
+    Browser->>Controller: POST /peserta/pendaftaran/{id}/ajukan (CSRF Token)
+    Controller->>Controller: $this->authorize('ajukan', $pendaftaran)
+    Controller->>Action: execute($pendaftaran)
+    
+    Action->>DB: DB::beginTransaction()
+    Action->>QuotaService: alokasikanKuota($jurusanId, $bulanId, $totalAnggota)
+    
+    critical Penguncian Pesimistik Kuota
+        QuotaService->>DB: SELECT * FROM kuota WHERE jurusan_id=? AND bulan_id=? FOR UPDATE
+        DB-->>QuotaService: Record Kuota Terkunci (Pessimistic Lock)
+        alt Sisa Kuota Cukup (terisi + anggota <= jumlah)
+            QuotaService->>DB: UPDATE kuota SET terisi = terisi + $totalAnggota
+            Action->>DB: UPDATE pendaftaran SET status='diajukan', tgl_pengajuan=NOW()
+            Action->>Audit: catat(TipeAuditEnum::Aksi, 'pengajuan_pendaftaran', ...)
+            Action->>DB: DB::commit()
+            Controller-->>Browser: Redirect ke Dashboard + Flash Sukses
+            Browser-->>Peserta: Tampilan Status "Menunggu Verifikasi"
+        else Kuota Penuh / Tidak Cukup
+            Action->>DB: DB::rollBack()
+            Controller-->>Browser: Redirect Kembali + Error "Kuota Formasi Tidak Mencukupi"
+            Browser-->>Peserta: Tampilan Peringatan Kuota Habis
+        end
     end
 ```
 
-### B. Alur Eksekusi Magang, Logbook & Penyelesaian Bimbingan 1-Klik
+---
+
+## 3. Alur 2: Verifikasi Berkas & SLA Watchdog (BR-06)
+
+Antrean verifikasi berkas dipantau oleh SLA Watchdog dengan batasan waktu 5 hari kerja.
+
 ```mermaid
 sequenceDiagram
     autonumber
-    actor M as Peserta Magang
-    actor B as Pembimbing Lapangan
-    participant T as Tugas & Logbook Controller
-    participant P as Penempatan Model
-    participant PDF as DomPDF Generator
+    actor Admin as Admin Verifikator
+    participant Browser as Browser Admin
+    participant Controller as Admin\PendaftaranController
+    participant Action as PutuskanPendaftaranAction
+    participant Storage as DocumentStorageService
+    participant DB as MySQL Database
 
-    B->>T: Buat Tugas Mandiri / Ambil dari TugasTemplate
-    M->>T: Mengunggah Progres Pengerjaan Tugas & Berkas
-    B->>T: Review & Setujui Tugas (Status: SELESAI)
-    M->>T: Mengisi Logbook Harian (Kegiatan, Capaian, Lampiran)
-    B->>T: Review & Verifikasi Logbook Mingguan
-    Note over B,M: Periode Magang Berakhir
-    B->>P: Klik Tombol "Selesaikan Bimbingan" (1-Klik Completion)
-    P->>P: Update status Penempatan menjadi SELESAI
-    P->>PDF: Opsional cetak Surat Keterangan / Laporan Rekapitulasi
+    Admin->>Browser: Buka Antrean Verifikasi (/admin/pendaftaran)
+    Browser->>Controller: GET /admin/pendaftaran
+    Controller->>DB: PendaftaranIndexQuery (Hitung selisih hari kerja SLA)
+    DB-->>Controller: Daftar pendaftar dengan indikator visual SLA (Hijau/Kuning/Merah)
+    Controller-->>Browser: Render antrean verifikasi
+    
+    Admin->>Browser: Tinjau Berkas Pendaftar
+    Browser->>Controller: GET /admin/pendaftaran/{id}/berkas/{docId}
+    Controller->>Storage: getTemporarySignedUrl($dokumen, ttl: 5 menit)
+    Storage-->>Controller: Temporary Signed URL
+    Controller-->>Browser: Tampilkan pratinjau berkas PDF/Gambar
+
+    Admin->>Browser: Tetapkan Keputusan (Disetujui / Perlu Perbaikan / Ditolak)
+    Browser->>Controller: POST /admin/pendaftaran/{id}/putuskan
+    Controller->>Action: execute($pendaftaranId, $keputusan, $catatan)
+    Action->>DB: UPDATE pendaftaran SET status=$keputusan, catatan_verifikasi=$catatan
+    Action->>DB: INSERT INTO dokumen_verifikasi (riwayat pemeriksaan)
+    
+    alt Keputusan: Disetujui
+        Note over Action,DB: Pendaftar otomatis masuk ke antrean Belum Ditempatkan
+    else Keputusan: Ditolak
+        Action->>DB: Kembalikan alokasi kuota jurusan (UPDATE kuota SET terisi = terisi - $anggota)
+    end
+    
+    Controller-->>Browser: Redirect + Notifikasi Sukses
 ```
 
 ---
 
-## 2. Entity-Relationship Diagram (ERD) Domain Inti
+## 4. Alur 3: Penempatan Dua Tahap & Plotting Pembimbing (BR-07 & BR-08)
+
+Pemisahan antara tahap kelolosan seleksi berkas dan penetapan penempatan bidang dinas.
 
 ```mermaid
-erDiagram
-    USERS ||--o{ PENDAFTARAN : "memiliki"
-    USERS ||--o| PESERTA_PROFIL : "memiliki profil"
-    USERS ||--o{ PENEMPATAN : "peserta / pembimbing"
-    USERS ||--o{ AUDIT_LOG : "mencatat aktivitas"
-    USERS ||--o{ PESERTA_KELOMPOK : "anggota kelompok"
+sequenceDiagram
+    autonumber
+    actor Admin as Admin Verifikator
+    participant Controller as Admin\PenempatanController
+    participant Action as AssignPesertaAction
+    participant PlacementService as PlacementService
+    participant DB as MySQL Database
+    participant PdfService as SuratDiterimaPdfService
+
+    Admin->>Controller: POST /admin/penempatan (pendaftaran_id, bidang_id, pembimbing_id, periode)
+    Controller->>Controller: $this->authorize('assign', Penempatan::class)
+    Controller->>Action: execute(...)
     
-    JURUSAN ||--o{ KUOTA : "alokasi kuota"
-    JURUSAN ||--o{ PENDAFTARAN : "jurusan peserta"
-    BULAN_MAGANG ||--o{ KUOTA : "periode alokasi"
-    BULAN_MAGANG ||--o{ PENDAFTARAN : "periode dipilih"
+    Action->>PlacementService: validasiBebanPembimbing($pembimbingId)
+    PlacementService->>DB: SELECT COUNT(*) FROM penempatan WHERE pembimbing_id=? AND status='aktif'
+    DB-->>PlacementService: Jumlah mentee aktif saat ini
     
-    BIDANG ||--o{ PENEMPATAN : "unit kerja magang"
-    BIDANG ||--o{ TUGAS_TEMPLATE : "template tugas bidang"
-    
-    PENDAFTARAN ||--o{ DOKUMEN : "melampirkan berkas"
-    PENDAFTARAN ||--o| PENEMPATAN : "diterima menjadi"
-    
-    PENEMPATAN ||--o{ TUGAS : "menerima tugas"
-    PENEMPATAN ||--o{ LOGBOOK : "mengisi logbook"
-    
-    TUGAS ||--o{ PROGRES_LOG : "riwayat progres"
-    
-    USERS {
-        bigint id PK
-        string name
-        string email UK
-        string role "peserta|pembimbing|admin|superadmin"
-        boolean is_active
-        boolean must_change_password
-    }
-
-    PESERTA_PROFIL {
-        bigint id PK
-        bigint user_id FK
-        string nim_nis
-        string institusi
-        string no_hp
-        string kontak_darurat
-    }
-
-    BULAN_MAGANG {
-        bigint id PK
-        string nama_bulan
-        int tahun
-        boolean is_aktif
-        date batas_pendaftaran
-    }
-
-    KUOTA {
-        bigint id PK
-        bigint bulan_magang_id FK
-        bigint jurusan_id FK
-        int jumlah_kuota
-        int terisi
-    }
-
-    PENDAFTARAN {
-        bigint id PK
-        bigint user_id FK
-        bigint bulan_magang_id FK
-        bigint jurusan_id FK
-        string status "draft|menunggu_verifikasi|diterima|ditolak"
-        datetime tanggal_pengajuan
-    }
-
-    PENEMPATAN {
-        bigint id PK
-        bigint pendaftaran_id FK
-        bigint peserta_id FK
-        bigint pembimbing_id FK
-        bigint bidang_id FK
-        string status "aktif|selesai|dibatalkan"
-        date tanggal_mulai
-        date tanggal_selesai
-    }
-
-    TUGAS {
-        bigint id PK
-        bigint penempatan_id FK
-        string judul
-        text deskripsi
-        date tenggat_waktu
-        string status "pending|dikerjakan|selesai"
-    }
-
-    LOGBOOK {
-        bigint id PK
-        bigint penempatan_id FK
-        date tanggal
-        int minggu_ke
-        text kegiatan
-        string status_verifikasi "draft|disetujui|catatan"
-    }
-
-    AUDIT_LOG {
-        bigint id PK
-        bigint user_id FK
-        string event
-        string ip_address
-        text detail
-        timestamp created_at
-    }
+    alt Mentee Aktif >= 20 (BR-08)
+        PlacementService-->>Action: Exception "Beban bimbingan pembimbing telah mencapai batas maksimal"
+        Action-->>Controller: Gagal
+        Controller-->>Admin: Pesan Kesalahan Batas Beban Bimbingan
+    else Mentee Aktif < 20
+        Action->>DB: DB::beginTransaction()
+        Action->>DB: INSERT INTO penempatan (pendaftaran_id, bidang_id, pembimbing_id, status='aktif', ...)
+        Action->>PdfService: terbitkanSuratPenerimaan($penempatan)
+        PdfService->>DB: Simpan path PDF Surat Penerimaan ber-QR Code
+        Action->>DB: DB::commit()
+        Controller-->>Admin: Redirect + Pesan Penempatan Sukses
+    end
 ```
 
 ---
 
-## 3. Strategi Penyimpanan Data & Session State
+## 5. Alur 4: Tugas Terstruktur, Batch Assignment & Batal Kirim (BR-18 & BR-19)
 
-1. **Session Driver (`database`)**:
-   - Seluruh sesi pengguna disimpan dalam tabel framework `sessions` MySQL untuk ketahanan serverless/multi-worker dan memungkinkan fitur pembatalan sesi simultan bila diperlukan.
-2. **Cache Store (`database`)**:
-   - Menggunakan tabel framework `cache` untuk agregasi data kuota berkala dan metrik dashboard harian guna meminimalkan query repetitif ke tabel transaksi utama.
-3. **Penyimpanan Berkas Privat (`storage/app/berkas`)**:
-   - Berkas fisik dipisahkan sepenuhnya dari direktori public web. Unduhan divalidasi melalui rute URL bertanda tangan relatif (`signed:relative`) dengan verifikasi otorisasi Form Request / Policy (IDOR mitigation).
+Menggambarkan alur penugasan serentak (*batch classroom*) oleh pembimbing serta hak peserta untuk melakukan *unsubmit* laporan sebelum dinilai.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Pembimbing as Pembimbing Lapangan
+    actor Peserta as Peserta Magang
+    participant ControllerPbd as Pembimbing\TugasController
+    participant ControllerPst as Peserta\TugasController
+    participant BatchAction as CreateBatchTugasAction
+    participant DB as MySQL Database
+
+    Pembimbing->>ControllerPbd: POST /pembimbing/tugas/batch (mentee_ids[], judul, deskripsi, deadline)
+    ControllerPbd->>BatchAction: execute($data)
+    loop Setiap Mentee Terpilih
+        BatchAction->>DB: INSERT INTO tugas (penempatan_id, judul, deskripsi, deadline, status='belum')
+    end
+    ControllerPbd-->>Pembimbing: Notifikasi "Tugas serentak berhasil diterbitkan"
+
+    Note over Peserta,ControllerPst: Peserta Mengerjakan dan Mengirimkan Tugas
+    Peserta->>ControllerPst: POST /peserta/tugas/{id}/submit (berkas_jawaban, catatan)
+    ControllerPst->>DB: INSERT INTO progres_log (tugas_id, status='menunggu', file_hasil)
+    ControllerPst->>DB: UPDATE tugas SET status='proses'
+    ControllerPst-->>Peserta: Notifikasi "Tugas berhasil dikumpulkan"
+
+    Note over Peserta,ControllerPst: Skenario Pembatalan Pengiriman (Unsubmit - BR-18)
+    opt Peserta Menyadari Kesalahan Berkas SEBELUM Dinilai
+        Peserta->>ControllerPst: POST /peserta/tugas/{id}/unsubmit
+        ControllerPst->>DB: SELECT status FROM progres_log WHERE id=?
+        alt Status Progres == 'menunggu' (Belum dinilai)
+            ControllerPst->>DB: DELETE FROM progres_log WHERE id=? (atau status='draf')
+            ControllerPst->>DB: UPDATE tugas SET status='belum'
+            ControllerPst-->>Peserta: "Pengiriman tugas berhasil dibatalkan. Silakan unggah berkas revisi."
+        else Status Progres == 'diterima'
+            ControllerPst-->>Peserta: Ditolak "Tugas telah dinilai pembimbing, tidak dapat dibatalkan."
+        end
+    end
+```
+
+---
+
+## 6. Alur 5: Logbook Harian dengan Batas Mundur H-3 (BR-09)
+
+Validasi batas pengisian logbook untuk mencegah pelaporan rapel di akhir masa magang.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Peserta as Peserta Magang
+    participant Controller as Peserta\LogbookController
+    participant FormRequest as LogbookRequest
+    participant Action as CreateLogbookAction
+    participant DB as MySQL Database
+
+    Peserta->>Controller: POST /peserta/logbook (tgl_kegiatan, uraian, lampiran[])
+    Controller->>FormRequest: Validasi Input
+    
+    critical Pemeriksaan Batas Mundur (BR-09)
+        FormRequest->>FormRequest: Hitung selisih: today() - tgl_kegiatan
+        alt Selisih Hari Kerja > 3 Hari
+            FormRequest-->>Peserta: HTTP 422 "Pengisian logbook maksimal mundur 3 hari kerja"
+        else Selisih <= 3 Hari & Tidak Melebihi Hari Ini
+            FormRequest-->>Controller: Data Valid
+            Controller->>Action: execute($validatedData)
+            Action->>DB: INSERT INTO logbook (penempatan_id, tgl_kegiatan, uraian, status='terkirim')
+            Action->>DB: Simpan lampiran berkas ke storage privat
+            Controller-->>Peserta: Redirect + Flash "Logbook harian berhasil dikirim"
+        end
+    end
+```
+
+---
+
+## 7. Alur 6: Siklus Penyelesaian Magang, Masa Tenggang & Penonaktifan (BR-11 & BR-12)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Pembimbing as Pembimbing Lapangan
+    participant Controller as Pembimbing\TugasController
+    participant Scheduler as Artisan Console Scheduler
+    participant DB as MySQL Database
+    participant Audit as AuditService
+
+    Pembimbing->>Controller: POST /pembimbing/peserta/{id}/selesai
+    Controller->>DB: UPDATE penempatan SET status='selesai', tgl_selesai_aktual=NOW()
+    Controller->>Audit: catat(TipeAuditEnum::Aksi, 'penyelesaian_magang', ...)
+    Controller-->>Pembimbing: "Masa magang mentee berhasil diselesaikan"
+
+    Note over DB: Akun peserta memasuki Masa Tenggang (2 Bulan)
+    Note over DB: Peserta masih dapat login read-only untuk unduh dokumen
+
+    Note over Scheduler,DB: Eksekusi Harian: php artisan magkom:purge-grace-period
+    Scheduler->>DB: SELECT * FROM users WHERE role='peserta' AND penempatan.status='selesai' AND tgl_selesai < (NOW() - 2 Bulan)
+    DB-->>Scheduler: Daftar akun kedaluwarsa
+    loop Setiap Akun Kedaluwarsa
+        Scheduler->>DB: UPDATE users SET is_active = false
+        Scheduler->>Audit: catat(TipeAuditEnum::Service, 'penonaktifan_akun_otomatis', ...)
+    end
+```

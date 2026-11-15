@@ -30,16 +30,17 @@ Dokumen ini adalah ringkasan memori dan konteks arsitektur proyek untuk AI Agent
 
 ## 3. Dokumentasi Induk Resmi
 Untuk pemahaman mendalam, baca dokumen resmi:
-- [`01-PRD-MagKom.md`](../01-PRD-MagKom.md) (Product Requirements Document v1.3)
-- [`02-TDD-MagKom.md`](../02-TDD-MagKom.md) (Technical Design Document v1.3)
-- [`04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md`](../04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md) (Kamus Data 24 Tabel Domain + 5 Tabel Framework)
-- [`05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md`](../05-KEAMANAN-RBAC-DAN-AUDIT-TRAIL.md) (Matriks RBAC & Audit Trail)
-- [`07-DESIGN-SYSTEM-MAGKOM.md`](../07-DESIGN-SYSTEM-MAGKOM.md) (Design System MagKom)
-- [`DEVELOPMENT-GUIDE.md`](../DEVELOPMENT-GUIDE.md) (Panduan Orientasi & Quality Gates)
-- [`architecture/FRONTEND-ARCHITECTURE.md`](../architecture/FRONTEND-ARCHITECTURE.md) (Arsitektur Aset Frontend Vite)
-- [`08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md`](../08-DOKUMENTASI-LENGKAP-FITUR-DAN-MODUL-MAGKOM.md) (Dokumentasi Fitur & Actions)
-- [`09-PANDUAN-SMTP-DAN-NOTIFIKASI-EMAIL.md`](../09-PANDUAN-SMTP-DAN-NOTIFIKASI-EMAIL.md) (Panduan Layanan SMTP & Notifikasi Email)
-- [`architecture/ROUTES.md`](../architecture/ROUTES.md) (Peta Rute & Proteksi Middleware)
+- [`Pusat Dokumentasi (README.md)`](../README.md)
+- [`Ringkasan Produk`](../product/overview.md)
+- [`Spesifikasi Kebutuhan & PRD`](../product/requirements.md)
+- [`Skema Basis Data & Kamus Data`](../architecture/database.md)
+- [`Ikhtisar Keamanan & Matriks RBAC`](../security/security-overview.md)
+- [`Sistem Desain (DS-MagKom)`](../design/design-system.md)
+- [`Panduan Orientasi & Quality Gates`](../development/getting-started.md)
+- [`Arsitektur Frontend Vite`](../architecture/frontend.md)
+- [`Arsitektur Backend & Fitur`](../architecture/backend.md)
+- [`Panduan Layanan SMTP & Notifikasi Surel`](../operations/email-configuration.md)
+- [`Peta Rute & Proteksi Middleware`](../architecture/routes.md)
 
 ---
 

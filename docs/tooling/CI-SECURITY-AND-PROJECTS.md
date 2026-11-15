@@ -7,7 +7,7 @@ Dokumen ini merupakan panduan standar operasional untuk **Senior DevSecOps Engin
 ## 1. Arsitektur Pipeline GitHub Actions
 
 Pipeline CI/CD MagKom diimplementasikan pada file workflow utama:
-[`.github/workflows/security.yml`](file:///.github/workflows/security.yml)
+[`.github/workflows/security.yml`](../../.github/workflows/security.yml)
 
 Pipeline ini dirancang dengan prinsip **Shift-Left Security**, **Least Privilege**, **Supply Chain Security**, serta **Parallel Fast-Feedback**.
 
@@ -72,7 +72,7 @@ Pipeline terbagi menjadi 10 job dengan tanggung jawab terisolasi:
 | `quality-gate` | `ubuntu-latest`<br/>PHP 8.3 | Memvalidasi sintaks composer, memastikan dependensi PHP 8.3, menjalankan linter Laravel Pint (PSR-12), analisis statis Larastan Level 2, dan seluruh suite unit/feature test in-tree menggunakan SQLite `:memory:`. | `contents: read` |
 | `frontend-quality` | `ubuntu-latest`<br/>Node.js 20 LTS | Menjalankan instalasi bersih aset (`npm ci`), audit kerentanan NPM level high/critical (`npm audit`), dan kompilasi produksi Vite 6 (`npm run build`). | `contents: read` |
 | `dependency-audit` | `ubuntu-latest`<br/>PHP 8.3 & Node 20 | Memindai basis data kerentanan publik (CVE) pada dependensi Composer (`composer audit --format=table`) dan NPM. | `contents: read` |
-| `secret-scanning` | `ubuntu-latest`<br/>Gitleaks v2.3.8 | Memindai seluruh commit dan riwayat git dari potensi kebocoran password, private key, database credential, token API, dan token OAuth menggunakan konfigurasi [`.gitleaks.toml`](file:///.gitleaks.toml). | `contents: read` |
+| `secret-scanning` | `ubuntu-latest`<br/>Gitleaks v2.3.8 | Memindai seluruh commit dan riwayat git dari potensi kebocoran password, private key, database credential, token API, dan token OAuth menggunakan konfigurasi [`.gitleaks.toml`](../../.gitleaks.toml). | `contents: read` |
 | `php-security-analysis` | `ubuntu-latest`<br/>Docker (Semgrep) | Menjalankan Static Application Security Testing (SAST) berbasis aturan OWASP Top 10 dan PHP security audit rules. Hasil diunggah dalam format SARIF 2.1.0 ke GitHub Security Code Scanning. | `contents: read`<br/>`security-events: write` |
 | `workflow-security-audit` | `ubuntu-latest`<br/>actionlint & zizmor | Mengaudit berkas GitHub Actions workflow (`.github/workflows/*.yml`) dari kelemahan sintaks (actionlint) serta celah keamanan konfigurasi CI (zizmor: excessive permissions, script injection, unpinned uses). | `contents: read` |
 | `application-security-tests` | `ubuntu-latest`<br/>PHP 8.3 (SQLite) | Mengeksekusi rangkaian pengujian keamanan inti aplikasi: verifikasi berkas & audit trail, isolasi SuperAdmin, proteksi brute-force & rate limiting, deep defense penetration test, endpoint security.txt, serta proteksi IDOR pembimbing. | `contents: read` |
@@ -86,7 +86,7 @@ Pipeline terbagi menjadi 10 job dengan tanggung jawab terisolasi:
 
 ### A. Gitleaks (Secret Scanning)
 - **Engine**: Gitleaks Action v2.3.8.
-- **Konfigurasi**: [`.gitleaks.toml`](file:///.gitleaks.toml) pada root repositori.
+- **Konfigurasi**: [`.gitleaks.toml`](../../.gitleaks.toml) pada root repositori.
 - **Target**: Memastikan tidak ada token rahasia, API keys, private keys, database credentials, atau nilai `.env` produksi yang tidak sengaja ter-commit.
 - **Allowlist**: Berkas `.env.example`, `phpunit.xml`, serta artefak mock pengujian dikecualikan secara eksplisit untuk mencegah *false positive*.
 
@@ -178,13 +178,13 @@ Pengelola dapat mengaktifkan otomatisasi bawaan melalui menu **Project Settings 
 
 Untuk menjaga konsistensi pelaporan dan mempermudah pelacakan pekerjaan, telah disediakan template berikut:
 
-1. [**Laporan Bug**](file:///.github/ISSUE_TEMPLATE/bug_report.yml):
+1. [**Laporan Bug**](../../.github/ISSUE_TEMPLATE/bug_report.yml):
    Memuat modul terdampak, langkah reproduksi sistematis, perilaku yang diharapkan vs aktual, dan informasi lingkungan peramban/OS.
-2. [**Permintaan Fitur**](file:///.github/ISSUE_TEMPLATE/feature_request.yml):
+2. [**Permintaan Fitur**](../../.github/ISSUE_TEMPLATE/feature_request.yml):
    Memuat tujuan fitur, problem statement, usulan alur kerja, kriteria penerimaan (*acceptance criteria*), dan modul terkait.
-3. [**Pull Request Template**](file:///.github/PULL_REQUEST_TEMPLATE.md):
+3. [**Pull Request Template**](../../.github/PULL_REQUEST_TEMPLATE.md):
    Memuat ringkasan perubahan, referensi issue, tipe perubahan, checklist pengujian lokal, analisis dampak keamanan & RBAC, serta konfirmasi tidak adanya perubahan destructive pada database atau Blade.
-4. [**Kebijakan Keamanan (SECURITY.md)**](file:///SECURITY.md):
+4. [**Kebijakan Keamanan (SECURITY.md)**](../../SECURITY.md):
    Menegaskan pelaporan kerentanan secara privat ke `keamanan-informasi@magkom.go.id` dan melarang pembuatan issue publik untuk celah keamanan.
 
 ---
