@@ -11,9 +11,12 @@ Pembaruan keamanan dan perbaikan celah kerentanan secara aktif diberikan pada ve
 
 | Versi | Didukung Secara Aktif | Keterangan |
 | :---: | :---: | :--- |
-| **1.1.x** | :white_check_mark: Ya | Versi produksi stabil saat ini |
-| **1.0.x** | :warning: Terbatas | Hanya pembaruan keamanan kritis |
+| **1.3.x** | :white_check_mark: Ya | Versi produksi stabil saat ini |
+| **1.2.x** | :warning: Terbatas | Pembaruan pemeliharaan keamanan |
+| **1.1.x / 1.0.x** | :warning: Terbatas | Hanya pembaruan keamanan kritis |
 | **< 1.0** | :x: Tidak | Versi prototipe / tahap pengembangan awal |
+
+Spesifikasi arsitektur keamanan lengkap dapat dipelajari pada [docs/security/security-overview.md](docs/security/security-overview.md).
 
 ---
 
