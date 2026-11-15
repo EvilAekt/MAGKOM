@@ -27,8 +27,9 @@ class CaptchaRule implements ValidationRule
             return;
         }
 
-        // Di environment local dev, berikan fleksibilitas penuh agar tidak pernah menghalangi proses pengujian
-        if (app()->isLocal()) {
+        // SEC-001: Jangan membypass keamanan hanya karena APP_ENV=local.
+        // Bypass lokal memerlukan konfigurasi eksplisit opt-in (CAPTCHA_DEV_BYPASS=true).
+        if (app()->isLocal() && (bool) config('captcha.dev_bypass', false)) {
             return;
         }
 

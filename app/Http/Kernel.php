@@ -10,6 +10,8 @@ use App\Http\Middleware\EnsureParticipantWritable;
 use App\Http\Middleware\EnsurePasswordChanged;
 use App\Http\Middleware\EnsurePesertaDiterima;
 use App\Http\Middleware\EnsureSuperAdminReadOnly;
+use App\Http\Middleware\EnsureTwoFactorEnforced;
+use App\Http\Middleware\EnsureUserHasPermission;
 use App\Http\Middleware\EnsureUserHasRole;
 use App\Http\Middleware\LogAuditTrail;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
@@ -103,10 +105,12 @@ class Kernel extends HttpKernel
 
         // Custom Middleware Aliases MagKom
         'role' => EnsureUserHasRole::class,
+        'permission' => EnsureUserHasPermission::class,
         'participant.writable' => EnsureParticipantWritable::class,
         'must_change_password' => EnsurePasswordChanged::class,
         'account.active' => EnsureAccountActive::class,
         'superadmin.readonly' => EnsureSuperAdminReadOnly::class,
         'peserta.diterima' => EnsurePesertaDiterima::class,
+        '2fa.enforced' => EnsureTwoFactorEnforced::class,
     ];
 }

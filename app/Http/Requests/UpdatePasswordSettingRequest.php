@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Support\PasswordPolicy;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
 class UpdatePasswordSettingRequest extends FormRequest
 {
@@ -16,15 +16,9 @@ class UpdatePasswordSettingRequest extends FormRequest
 
     public function rules(): array
     {
-        $isSuperAdmin = $this->user()?->isSuperAdmin() ?? false;
-
-        $passwordRules = $isSuperAdmin
-            ? ['required', 'string', 'confirmed', Password::min(12)->letters()->mixedCase()->numbers()->symbols()]
-            : ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'];
-
         return [
             'current_password' => ['required', 'string'],
-            'password' => $passwordRules,
+            'password' => PasswordPolicy::forUser($this->user(), confirmed: true),
         ];
     }
 
