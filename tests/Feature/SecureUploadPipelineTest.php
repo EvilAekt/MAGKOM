@@ -6,12 +6,14 @@ namespace Tests\Feature;
 
 use App\Enums\StatusPendaftaranEnum;
 use App\Models\BulanMagang;
-use App\Models\Dokumen;
 use App\Models\JenisDokumen;
+use App\Models\Jurusan;
+use App\Models\Kuota;
 use App\Models\Pendaftaran;
 use App\Models\User;
 use App\Services\AntivirusScanService;
 use App\Services\DocumentStorageService;
+use Database\Seeders\JenisDokumenSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -41,13 +43,13 @@ class SecureUploadPipelineTest extends TestCase
             'aktif' => true,
         ]);
 
-        $jurusan = \App\Models\Jurusan::create([
+        $jurusan = Jurusan::create([
             'nama_jurusan' => 'Teknik Informatika',
             'kategori' => 'mahasiswa',
             'aktif' => true,
         ]);
 
-        $kuota = \App\Models\Kuota::create([
+        $kuota = Kuota::create([
             'bulan_magang_id' => $bulan->id,
             'jurusan_id' => $jurusan->id,
             'jumlah' => 10,
@@ -64,7 +66,7 @@ class SecureUploadPipelineTest extends TestCase
             'durasi_bulan' => 1,
         ]);
 
-        $this->seed(\Database\Seeders\JenisDokumenSeeder::class);
+        $this->seed(JenisDokumenSeeder::class);
         $this->jenisDokumen = JenisDokumen::firstOrFail();
 
         $this->service = app(DocumentStorageService::class);

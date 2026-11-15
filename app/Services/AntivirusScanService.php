@@ -118,7 +118,7 @@ class AntivirusScanService
         }
 
         // B. Cek executable magic byte disguise (misal: binary DOS/Windows PE EXE disamarkan jadi PDF/PNG)
-        if (str_starts_with($header, "MZ")) {
+        if (str_starts_with($header, 'MZ')) {
             return [
                 'clean' => false,
                 'threat' => 'Disguised.Windows.Executable.MZ',
@@ -136,7 +136,7 @@ class AntivirusScanService
         }
 
         // D. Cek script shebang berbahaya di awal berkas dokumen
-        if (str_starts_with($header, "#!/bin/sh") || str_starts_with($header, "#!/bin/bash")) {
+        if (str_starts_with($header, '#!/bin/sh') || str_starts_with($header, '#!/bin/bash')) {
             return [
                 'clean' => false,
                 'threat' => 'Disguised.ShellScript.Shebang',

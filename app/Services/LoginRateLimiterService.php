@@ -13,8 +13,11 @@ class LoginRateLimiterService
      * Ambang batas maksimum percobaan login per layer.
      */
     public const MAX_ATTEMPTS_PAIR = 3;       // Layer 3: Kombinasi Akun + IP (3x salah)
+
     public const MAX_ATTEMPTS_ACCOUNT = 5;    // Layer 1: Per Akun dari berbagai IP (5x salah)
+
     public const MAX_ATTEMPTS_IP = 20;        // Layer 2: Per IP menyerang berbagai akun (20x salah)
+
     public const MAX_ATTEMPTS_GLOBAL = 300;   // Layer 4: Ambang batas global seluruh aplikasi (300x/menit)
 
     /**
