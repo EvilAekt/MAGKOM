@@ -11,6 +11,11 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 $kernel = $app->make(Kernel::class);
 $kernel->bootstrap();
 
+if ($app->isProduction() || env('APP_ENV') === 'production') {
+    fwrite(STDERR, "BAHAYA: Script reset_data.php dilarang keras dijalankan di lingkungan production!\n");
+    exit(1);
+}
+
 BulanMagang::query()->update(['override_status' => null]);
 (new PeriodeKuotaSeeder)->run();
 

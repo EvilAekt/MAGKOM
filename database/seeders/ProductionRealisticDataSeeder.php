@@ -37,6 +37,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class ProductionRealisticDataSeeder extends Seeder
 {
@@ -48,6 +49,10 @@ class ProductionRealisticDataSeeder extends Seeder
      */
     public function run(): void
     {
+        if (app()->isProduction()) {
+            throw new RuntimeException('Cannot run ProductionRealisticDataSeeder in production environment.');
+        }
+
         $defaultPassword = Hash::make('Password123!');
         $now = Carbon::now('Asia/Jakarta');
 

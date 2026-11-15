@@ -37,17 +37,17 @@
         {{-- Dropdown Aksi Penempatan (Hanya saat status Aktif dan bukan SuperAdmin) --}}
         @if($statusVal === 'aktif' && !auth()->user()?->isSuperAdmin())
             <div class="penempatan-dropdown-wrap">
-                <button type="button" class="btn-action-dropdown-trigger" id="btnPenempatanDropdown" onclick="togglePenempatanDropdown(event)" title="Opsi aksi penempatan lanjutan">
+                <button type="button" class="btn-action-dropdown-trigger" id="btnPenempatanDropdown" data-action="toggle-dropdown" title="Opsi aksi penempatan lanjutan">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
                     <span>Aksi Penempatan</span>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="penempatan-dropdown-menu" id="menuPenempatanDropdown">
-                    <button type="button" class="dropdown-action-item" onclick="openPindahModal(); closePenempatanDropdown();">
+                    <button type="button" class="dropdown-action-item" data-action="open-pindah-modal">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
                         <span>Pindah Pembimbing</span>
                     </button>
-                    <button type="button" class="dropdown-action-item is-danger" onclick="openBatalModal(); closePenempatanDropdown();">
+                    <button type="button" class="dropdown-action-item is-danger" data-action="open-batal-modal">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         <span>Batalkan Penempatan</span>
                     </button>
@@ -436,7 +436,7 @@
                     Pindahkan alokasi peserta ke staf pembimbing lainnya
                 </p>
             </div>
-            <button type="button" onclick="closePindahModal()" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
+            <button type="button" data-action="close-pindah-modal" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
         </div>
 
         <form method="POST" action="{{ route('admin.penempatan.pindah-pembimbing', $penempatan) }}" style="padding: 1.5rem;">
@@ -456,7 +456,7 @@
             </div>
 
             <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
-                <button type="button" onclick="closePindahModal()" style="padding: 0.6rem 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #E2E8F0); border-radius: 8px; font-weight: 600; font-size: 0.8125rem; cursor: pointer;">
+                <button type="button" data-action="close-pindah-modal" style="padding: 0.6rem 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #E2E8F0); border-radius: 8px; font-weight: 600; font-size: 0.8125rem; cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="padding: 0.6rem 1.25rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer;">
@@ -477,7 +477,7 @@
                     Catat pembatalan atau pengunduran diri peserta magang
                 </p>
             </div>
-            <button type="button" onclick="closeBatalModal()" style="background: transparent; border: none; font-size: 1.25rem; color: #991B1B; cursor: pointer;">✕</button>
+            <button type="button" data-action="close-batal-modal" style="background: transparent; border: none; font-size: 1.25rem; color: #991B1B; cursor: pointer;">✕</button>
         </div>
 
         <form method="POST" action="{{ route('admin.penempatan.batalkan', $penempatan) }}" style="padding: 1.5rem;">
@@ -503,7 +503,7 @@
             </div>
 
             <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
-                <button type="button" onclick="closeBatalModal()" style="padding: 0.6rem 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #E2E8F0); border-radius: 8px; font-weight: 600; font-size: 0.8125rem; cursor: pointer;">
+                <button type="button" data-action="close-batal-modal" style="padding: 0.6rem 1rem; background: var(--neutral-100, #F1F5F9); color: var(--neutral-700, #334155); border: 1px solid var(--neutral-300, #E2E8F0); border-radius: 8px; font-weight: 600; font-size: 0.8125rem; cursor: pointer;">
                     Kembali
                 </button>
                 <button type="submit" style="padding: 0.6rem 1.25rem; background: #DC2626; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer;">
@@ -514,44 +514,5 @@
     </div>
 </div>
 
-<script>
-    function openPindahModal() {
-        document.getElementById('modal-pindah-pembimbing').style.display = 'flex';
-    }
-    function closePindahModal() {
-        document.getElementById('modal-pindah-pembimbing').style.display = 'none';
-    }
-    function openBatalModal() {
-        document.getElementById('modal-batalkan-penempatan').style.display = 'flex';
-    }
-    function closeBatalModal() {
-        document.getElementById('modal-batalkan-penempatan').style.display = 'none';
-    }
-
-    function togglePenempatanDropdown(event) {
-        event.stopPropagation();
-        const menu = document.getElementById('menuPenempatanDropdown');
-        const trigger = document.getElementById('btnPenempatanDropdown');
-        if (menu) {
-            menu.classList.toggle('show');
-            if (trigger) {
-                trigger.classList.toggle('is-active', menu.classList.contains('show'));
-            }
-        }
-    }
-
-    function closePenempatanDropdown() {
-        const menu = document.getElementById('menuPenempatanDropdown');
-        const trigger = document.getElementById('btnPenempatanDropdown');
-        if (menu) menu.classList.remove('show');
-        if (trigger) trigger.classList.remove('is-active');
-    }
-
-    window.addEventListener('click', function(e) {
-        const wrap = document.querySelector('.penempatan-dropdown-wrap');
-        if (wrap && !wrap.contains(e.target)) {
-            closePenempatanDropdown();
-        }
-    });
-</script>
+@vite(['resources/js/pages/admin/penempatan-show.js'])
 @endsection

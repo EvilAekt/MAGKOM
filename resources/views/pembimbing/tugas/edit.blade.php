@@ -108,10 +108,10 @@
                              class="tugas-visual-editor" 
                              contenteditable="true" 
                              role="textbox" 
-                             aria-multiline="true">{!! old('deskripsi', $tugas->deskripsi) !!}</div>
+                             aria-multiline="true">{!! \App\Support\SafeHtmlSanitizer::sanitize(old('deskripsi', $tugas->deskripsi)) !!}</div>
                         <textarea id="inputPetunjuk" 
                                   name="deskripsi" 
-                                  style="display: none;">{{ old('deskripsi', $tugas->deskripsi) }}</textarea>
+                                  style="display: none;">{{ \App\Support\SafeHtmlSanitizer::sanitize(old('deskripsi', $tugas->deskripsi)) }}</textarea>
 
                         {{-- Rich Format Toolbar --}}
                         <div class="tugas-format-toolbar">

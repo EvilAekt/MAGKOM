@@ -126,8 +126,7 @@ class PetaAlurPageTest extends TestCase
         // Verifikasi tombol klakson dan efek gelombang visual klakson mobil
         $response->assertSee('id="btnSteerHorn"', false);
         $response->assertSee('id="carHornRipples"', false);
-        $response->assertSee('triggerCarHorn', false);
-        $response->assertSee('playCarHorn', false);
+        $response->assertSee('data-action="horn"', false);
 
         // Verifikasi konten tahapan dalam Webtoon Bubble
         $response->assertSee('REGISTRASI AKUN', false);
@@ -135,10 +134,10 @@ class PetaAlurPageTest extends TestCase
         $response->assertSee('PELAKSANAAN MAGANG', false);
         $response->assertSee('SELESAI MAGANG', false);
 
-        // Verifikasi tombol navigasi antar pos (Lanjut Pos) langsung memanggil selectModalStep
-        $response->assertSee('selectModalStep(2)', false);
-        $response->assertSee('selectModalStep(3)', false);
-        $response->assertSee('selectModalStep(4)', false);
+        // Verifikasi tombol navigasi antar pos (Lanjut Pos) menggunakan data-modal-step-next
+        $response->assertSee('data-modal-step-next="2"', false);
+        $response->assertSee('data-modal-step-next="3"', false);
+        $response->assertSee('data-modal-step-next="4"', false);
 
         // Verifikasi tombol Daftar Sekarang diarahkan langsung ke section kuota landing page
         $response->assertSee(route('landing').'#kuota', false);

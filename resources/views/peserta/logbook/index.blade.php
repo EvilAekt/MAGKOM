@@ -92,7 +92,7 @@
                     @elseif($isPastUnfilled || $isCurrent)
                         <button type="button"
                                 class="week-chip {{ $chipClass }}"
-                                onclick="openTambahModal({{ $m['minggu_ke'] }})"
+                                data-action="open-tambah-modal" data-minggu="{{ $m['minggu_ke'] }}"
                                 title="Minggu {{ $m['minggu_ke'] }}: {{ $m['label_periode'] }} (Klik untuk isi)">
                             <span class="chip-icon">{{ $chipIcon }}</span>
                             <span>Minggu {{ $m['minggu_ke'] }}</span>
@@ -137,7 +137,7 @@
                     <span class="total-laporan-pill">
                         Total: {{ $logbooks->total() }} Laporan
                     </span>
-                    <button type="button" class="btn-tambah-logbook-gold" onclick="openTambahModal()">
+                    <button type="button" class="btn-tambah-logbook-gold" data-action="open-tambah-modal">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                         </svg>
@@ -158,11 +158,11 @@
                                id="inputSearchLogbook" 
                                class="search-logbook-input" 
                                placeholder="Cari minggu ke- (contoh: 1, 2) atau kata kunci kegiatan..." 
-                               oninput="handleSearchLogbook(this.value)">
+                               >
                         <button type="button" 
                                 id="btnClearSearch" 
                                 class="btn-clear-search" 
-                                onclick="clearSearchLogbook()" 
+                                data-action="clear-search-logbook" 
                                 style="display: none;" 
                                 title="Hapus pencarian">
                             &times;
@@ -184,7 +184,7 @@
                     <p style="font-size: 0.875rem; color: #475569; max-width: 440px; margin: 0 auto 20px auto; line-height: 1.5;">
                         Anda belum membuat catatan kegiatan mingguan. Mulai laporkan capaian magang Anda secara teratur setiap pekan.
                     </p>
-                    <button type="button" class="btn-tambah-logbook-gold" onclick="openTambahModal({{ $mingguAktif }})">
+                    <button type="button" class="btn-tambah-logbook-gold" data-action="open-tambah-modal" data-minggu="{{ $mingguAktif }}">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                         </svg>
@@ -197,7 +197,7 @@
                         <p style="font-size: 0.9375rem; color: #475569; margin: 0;">
                             Tidak ada logbook yang cocok dengan pencarian "<span id="searchQueryText" style="font-weight: 700; color: #0F172A;"></span>".
                         </p>
-                        <button type="button" class="btn btn-secondary" onclick="clearSearchLogbook()" style="margin-top: 12px; font-size: 0.8125rem; height: 32px; padding: 0 14px;">
+                        <button type="button" class="btn btn-secondary" data-action="clear-search-logbook" style="margin-top: 12px; font-size: 0.8125rem; height: 32px; padding: 0 14px;">
                             Reset Pencarian
                         </button>
                     </div>
@@ -215,7 +215,7 @@
                              data-status="{{ $statusValue }}">
                             
                             {{-- Header Accordion --}}
-                            <div class="weekly-card-header" onclick="toggleCard({{ $log->id }})">
+                            <div class="weekly-card-header" data-log-id="{{ $log->id }}">
                                 <div class="weekly-badge-box">
                                     <div class="week-number-squircle {{ $isRevisi ? 'is-revisi' : '' }}">
                                         <span class="squircle-label">MG</span>
@@ -232,7 +232,7 @@
                                     </div>
                                 </div>
 
-                                <div class="weekly-actions-right" onclick="event.stopPropagation();">
+                                <div class="weekly-actions-right">
                                     @if($isRevisi)
                                         <span class="status-capsule capsule-revisi">Perlu Revisi</span>
                                     @elseif($statusValue === 'terkirim')
@@ -244,14 +244,20 @@
                                     @endif
 
                                     <button type="button" class="btn-logbook-edit"
-                                            onclick="openEditModal({{ $log->id }}, {{ $mingguKeTampil }}, '{{ $log->tanggal->toDateString() }}', {{ json_encode($log->kegiatan) }}, '{{ $log->link_laporan ?? '' }}', '{{ $log->file_laporan ? basename($log->file_laporan) : '' }}')">
+                                            data-action="open-edit-modal"
+data-log-id="{{ $log->id }}"
+data-minggu-ke="{{ $mingguKeTampil }}"
+data-tanggal="{{ $log->tanggal->toDateString() }}"
+data-kegiatan="{{ $log->kegiatan }}"
+data-link="{{ $log->link_laporan ?? '' }}"
+data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                                         </svg>
                                         <span>Edit</span>
                                     </button>
 
-                                    <button type="button" class="btn-chevron-toggle" onclick="toggleCard({{ $log->id }})" aria-label="Buka tutup rincian">
+                                    <button type="button" class="btn-chevron-toggle" data-action="toggle-card" data-log-id="{{ $log->id }}" aria-label="Buka tutup rincian">
                                         <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
@@ -312,7 +318,7 @@
 </div>
 
 {{-- Modal Tambah Logbook Mingguan (Sesuai Referensi Pendaftaran Magang) --}}
-<div id="modalTambahLogbook" class="modal-backdrop" onclick="if(event.target === this) closeTambahModal()">
+<div id="modalTambahLogbook" class="modal-backdrop" >
     <div class="modal-card-logbook modal-box-compact">
         <div class="modal-header-logbook modal-header-compact">
             <div class="modal-header-main modal-header-info">
@@ -325,7 +331,7 @@
                     <h3 class="modal-title-logbook modal-title-text">Isi Logbook Mingguan</h3>
                 </div>
             </div>
-            <button type="button" onclick="closeTambahModal()" class="modal-close-logbook modal-close-btn" aria-label="Tutup Formulir" title="Tutup">&times;</button>
+            <button type="button" data-action="close-tambah-modal" class="modal-close-logbook modal-close-btn" aria-label="Tutup Formulir" title="Tutup">&times;</button>
         </div>
 
         <form id="formTambahLogbook" class="modal-form-logbook" action="{{ route('peserta.logbook.store') }}" method="POST" enctype="multipart/form-data">
@@ -338,7 +344,7 @@
                         <label for="tambah_minggu_ke" class="label-logbook form-label-compact">
                             <span>Minggu Magang <span class="req">*</span></span>
                         </label>
-                        <select id="tambah_minggu_ke" name="minggu_ke" class="select-logbook form-control-compact" required onchange="onMingguChange(this.value)">
+                        <select id="tambah_minggu_ke" name="minggu_ke" class="select-logbook form-control-compact" required >
                             <option value="">-- Pilih Minggu --</option>
                             @foreach($daftarMinggu as $m)
                                 @php
@@ -400,8 +406,8 @@
                         <textarea id="tambah_kegiatan" name="kegiatan" rows="4" class="textarea-logbook form-control-compact"
                                   placeholder="Tuliskan aktivitas utama yang diselesaikan, kendala, dan hasil pekerjaan pekan ini..."
                                   required minlength="10"
-                                  oninput="updateCharCount(this, 'tambah_char_count')"
-                                  onchange="updateCharCount(this, 'tambah_char_count')">{{ old('kegiatan') }}</textarea>
+                                  data-counter-target="tambah_char_count"
+                                  >{{ old('kegiatan') }}</textarea>
                     </div>
 
                     {{-- Panel Lampiran Terpadu --}}
@@ -446,7 +452,7 @@
             </div>
 
             <div class="modal-footer-logbook modal-footer-compact">
-                <button type="button" onclick="closeTambahModal()" class="btn-modal-cancel">Batal</button>
+                <button type="button" data-action="close-tambah-modal" class="btn-modal-cancel">Batal</button>
                 <button type="submit" id="btnSubmitTambah" class="btn-modal-submit">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
@@ -459,7 +465,7 @@
 </div>
 
 {{-- Modal Edit Logbook Mingguan (Sesuai Referensi Pendaftaran Magang) --}}
-<div id="modalEditLogbook" class="modal-backdrop" onclick="if(event.target === this) closeEditModal()">
+<div id="modalEditLogbook" class="modal-backdrop" >
     <div class="modal-card-logbook modal-box-compact">
         <div class="modal-header-logbook modal-header-compact">
             <div class="modal-header-main modal-header-info">
@@ -472,7 +478,7 @@
                     <h3 class="modal-title-logbook modal-title-text">Perbarui Logbook Mingguan</h3>
                 </div>
             </div>
-            <button type="button" onclick="closeEditModal()" class="modal-close-logbook modal-close-btn" aria-label="Tutup Formulir" title="Tutup">&times;</button>
+            <button type="button" data-action="close-edit-modal" class="modal-close-logbook modal-close-btn" aria-label="Tutup Formulir" title="Tutup">&times;</button>
         </div>
 
         <form id="formEditLogbook" class="modal-form-logbook" method="POST" enctype="multipart/form-data">
@@ -488,7 +494,7 @@
                         <span>Ringkasan Kegiatan & Capaian <span class="req">*</span></span>
                         <span id="edit_char_count" class="char-counter-tag char-counter-compact">0 karakter (minimal 10)</span>
                     </label>
-                    <textarea id="edit_kegiatan" name="kegiatan" rows="4" class="textarea-logbook form-control-compact" required minlength="10" oninput="updateCharCount(this, 'edit_char_count')"></textarea>
+                    <textarea id="edit_kegiatan" name="kegiatan" rows="4" class="textarea-logbook form-control-compact" required minlength="10" data-counter-target="edit_char_count"></textarea>
                 </div>
 
                 {{-- Panel Lampiran Terpadu --}}
@@ -531,7 +537,7 @@
             </div>
 
             <div class="modal-footer-logbook modal-footer-compact">
-                <button type="button" onclick="closeEditModal()" class="btn-modal-cancel">Batal</button>
+                <button type="button" data-action="close-edit-modal" class="btn-modal-cancel">Batal</button>
                 <button type="submit" class="btn-modal-submit">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>

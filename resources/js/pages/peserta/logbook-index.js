@@ -694,6 +694,95 @@ export function initLogbookIndex() {
             window.handleSearchLogbook('');
         }
     };
+
+    // --- Delegated Event Listeners for CSP Compliance ---
+    document.addEventListener('click', (e) => {
+        const target = e.target;
+
+        const openTambahBtn = target.closest('[data-action="open-tambah-modal"]');
+        if (openTambahBtn) {
+            e.preventDefault();
+            const m = openTambahBtn.dataset.minggu ? parseInt(openTambahBtn.dataset.minggu, 10) : null;
+            window.openTambahModal(m);
+            return;
+        }
+
+        const closeTambahBtn = target.closest('[data-action="close-tambah-modal"]');
+        if (closeTambahBtn) {
+            e.preventDefault();
+            window.closeTambahModal();
+            return;
+        }
+
+        const clearSearchBtn = target.closest('[data-action="clear-search-logbook"]');
+        if (clearSearchBtn) {
+            e.preventDefault();
+            window.clearSearchLogbook();
+            return;
+        }
+
+        const openEditBtn = target.closest('[data-action="open-edit-modal"]');
+        if (openEditBtn) {
+            e.preventDefault();
+            window.openEditModal(
+                openEditBtn.dataset.logId,
+                openEditBtn.dataset.mingguKe,
+                openEditBtn.dataset.tanggal,
+                openEditBtn.dataset.kegiatan,
+                openEditBtn.dataset.link,
+                openEditBtn.dataset.file
+            );
+            return;
+        }
+
+        const closeEditBtn = target.closest('[data-action="close-edit-modal"]');
+        if (closeEditBtn) {
+            e.preventDefault();
+            window.closeEditModal();
+            return;
+        }
+
+        const toggleChevronBtn = target.closest('[data-action="toggle-card"]');
+        if (toggleChevronBtn) {
+            e.preventDefault();
+            window.toggleCard(toggleChevronBtn.dataset.logId);
+            return;
+        }
+
+        const cardHeader = target.closest('.weekly-card-header');
+        if (cardHeader && !target.closest('.weekly-actions-right')) {
+            window.toggleCard(cardHeader.dataset.logId);
+            return;
+        }
+
+        // Modal backdrop click
+        const modalTambah = document.getElementById('modalTambahLogbook');
+        if (target === modalTambah) {
+            window.closeTambahModal();
+            return;
+        }
+        const modalEdit = document.getElementById('modalEditLogbook');
+        if (target === modalEdit) {
+            window.closeEditModal();
+            return;
+        }
+    });
+
+    document.addEventListener('input', (e) => {
+        if (e.target.id === 'searchLogbookInput') {
+            window.handleSearchLogbook(e.target.value);
+        } else if (e.target.dataset.counterTarget) {
+            window.updateCharCount(e.target, e.target.dataset.counterTarget);
+        }
+    });
+
+    document.addEventListener('change', (e) => {
+        if (e.target.id === 'tambah_minggu_ke') {
+            window.onMingguChange(e.target.value);
+        } else if (e.target.dataset.counterTarget) {
+            window.updateCharCount(e.target, e.target.dataset.counterTarget);
+        }
+    });
 }
 
 if (document.readyState === 'loading') {

@@ -433,9 +433,40 @@
         initAnalogJoystick();
         initKeyboardControls();
         initRoadClickAndDrag();
+        initDelegatedEventHandlers();
 
         // Mulai Game Loop 60FPS
         requestAnimationFrame(gameLoop);
+    }
+
+    // Delegated click handler for strict CSP compliance (eliminates inline onclick)
+    function initDelegatedEventHandlers() {
+        document.addEventListener('click', function(e) {
+            const audioBtn = e.target.closest('#btnModalAudioToggle, [data-action="toggle-audio"]');
+            if (audioBtn) {
+                window.toggleModalAudio();
+                return;
+            }
+
+            const hornBtn = e.target.closest('#btnSteerHorn, [data-action="horn"]');
+            if (hornBtn) {
+                window.triggerCarHorn();
+                return;
+            }
+
+            const stepNext = e.target.closest('[data-modal-step-next]');
+            if (stepNext) {
+                e.stopPropagation();
+                window.selectModalStep(parseInt(stepNext.getAttribute('data-modal-step-next'), 10));
+                return;
+            }
+
+            const stepEl = e.target.closest('[data-modal-step]');
+            if (stepEl) {
+                window.selectModalStep(parseInt(stepEl.getAttribute('data-modal-step'), 10));
+                return;
+            }
+        });
     }
 
     // Tampilkan Webtoon Speech Bubble untuk Pos yang Aktif

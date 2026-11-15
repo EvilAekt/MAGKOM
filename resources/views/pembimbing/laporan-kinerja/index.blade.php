@@ -222,7 +222,7 @@
 
             <div class="filter-group">
                 <label for="filterPeserta">Filter Nama Peserta</label>
-                <select name="penempatan_id" id="filterPeserta" class="filter-control" onchange="this.form.submit()">
+                <select name="penempatan_id" id="filterPeserta" class="filter-control" data-action="auto-submit-form">
                     <option value="">Semua Peserta Bimbingan</option>
                     @foreach($penempatanOptions ?? [] as $pen)
                         <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
@@ -234,7 +234,7 @@
 
             <div class="filter-group">
                 <label for="filterStatus">Filter Status</label>
-                <select name="status" id="filterStatus" class="filter-control" onchange="this.form.submit()">
+                <select name="status" id="filterStatus" class="filter-control" data-action="auto-submit-form">
                     <option value="">Semua Status</option>
                     <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
                     <option value="tidak_aktif" {{ request('status') === 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif / Selesai</option>
@@ -244,7 +244,7 @@
 
             <div class="filter-group">
                 <label for="filterBulan">Filter Bulan</label>
-                <select name="bulan" id="filterBulan" class="filter-control" onchange="this.form.submit()">
+                <select name="bulan" id="filterBulan" class="filter-control" data-action="auto-submit-form">
                     <option value="">Semua Bulan</option>
                     @foreach($daftarBulan ?? [] as $val => $label)
                         <option value="{{ $val }}" {{ request('bulan') == $val ? 'selected' : '' }}>

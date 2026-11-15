@@ -219,7 +219,13 @@
                 <h2 class="instruction-task-title" style="margin-top: 0.75rem;">{{ $tugas->judul }}</h2>
 
                 <div class="instruction-text-content">
-                    {!! nl2br(e($tugas->deskripsi)) ?: '<em>Tidak ada instruksi khusus yang disertakan.</em>' !!}
+                    @if(! $tugas->deskripsi)
+                        <em>Tidak ada instruksi khusus yang disertakan.</em>
+                    @elseif(str_contains($tugas->deskripsi, '<'))
+                        {!! \App\Support\SafeHtmlSanitizer::sanitize($tugas->deskripsi) !!}
+                    @else
+                        {!! nl2br(e($tugas->deskripsi)) !!}
+                    @endif
                 </div>
 
                 {{-- Materi / Sumber Daya Acuan dari Pembimbing --}}

@@ -173,8 +173,17 @@
         ]
     };
 
-    // Gabungkan data dari window.MAGKOM_DATA jika disediakan oleh backend Laravel
-    const AppData = Object.assign({}, defaultData, window.MAGKOM_DATA || {});
+    // Gabungkan data dari window.MAGKOM_DATA atau elemen JSON script jika disediakan oleh backend Laravel
+    let injectedData = {};
+    const dataEl = document.getElementById('magkom-landing-data');
+    if (dataEl) {
+        try {
+            injectedData = JSON.parse(dataEl.textContent || '{}');
+        } catch (e) {
+            console.error('Failed to parse magkom-landing-data', e);
+        }
+    }
+    const AppData = Object.assign({}, defaultData, window.MAGKOM_DATA || {}, injectedData);
 
     // Helper status kuota
     function getStatusKuota(sisa, total) {
@@ -1164,6 +1173,16 @@
         initHeaderScrollState();
         initLandingMobileNav();
         initScrollReveal();
+
+        document.addEventListener('submit', function (e) {
+            const form = e.target.closest('form[data-confirm]');
+            if (form) {
+                const msg = form.getAttribute('data-confirm');
+                if (msg && !window.confirm(msg)) {
+                    e.preventDefault();
+                }
+            }
+        });
     });
 
     window.addEventListener('load', function () {

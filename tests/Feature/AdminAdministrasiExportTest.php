@@ -157,7 +157,7 @@ class AdminAdministrasiExportTest extends TestCase
         $response->assertSee('.csv');
         $response->assertSee('Dokumen Resmi (.pdf)');
         $response->assertSee('.pdf');
-        $response->assertSee('triggerPendaftaranExport');
+        $response->assertSee('btnDoExportDownloadPendaftaran');
     }
 
     public function test_halaman_admin_penempatan_menampilkan_popover_anti_clipping(): void

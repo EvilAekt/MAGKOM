@@ -349,7 +349,7 @@
                                     type="button" 
                                     class="audit-btn-diff {{ $isCritical ? 'audit-btn-diff-critical' : '' }}"
                                     data-log-id="{{ $log->id }}"
-                                    onclick="inspectAuditMutation(this)"
+                                    data-action="inspect-audit-mutation"
                                 >
                                     Diff
                                 </button>

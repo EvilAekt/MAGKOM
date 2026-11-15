@@ -184,7 +184,7 @@
 
                 <div class="password-actions-row">
                     <button type="submit" class="btn-action-navy" id="btnSubmitPassword">Perbarui Kata Sandi</button>
-                    <button type="button" class="btn-action-outline" onclick="document.getElementById('passwordForm').reset()">Batal</button>
+                    <button type="reset" class="btn-action-outline">Batal</button>
                 </div>
             </form>
         </div>

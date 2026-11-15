@@ -12,6 +12,7 @@ use App\Models\PesertaProfil;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use RuntimeException;
 
 class UserSeeder extends Seeder
 {
@@ -20,6 +21,10 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        if (app()->isProduction()) {
+            throw new RuntimeException('Cannot run UserSeeder in production environment.');
+        }
+
         $defaultPassword = Hash::make('Password123!');
         $bidang = Bidang::first();
         $jurusan = Jurusan::first();

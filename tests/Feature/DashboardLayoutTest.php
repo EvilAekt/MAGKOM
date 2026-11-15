@@ -334,14 +334,13 @@ BLADE;
 
                 // AC-3: Tombol sidebarThemeToggleBtn memiliki dual-icon (sun-icon & moon-icon) dan aria-pressed
                 $response->assertSee('id="sidebarThemeToggleBtn"', false);
-                $response->assertSee('togglePortalThemeQuick()', false);
+                $response->assertSee('data-action="toggle-theme-quick"', false);
                 $response->assertSee('aria-pressed="false"', false);
                 $response->assertSee('class="sun-icon"', false);
                 $response->assertSee('class="moon-icon"', false);
 
-                // AC-4: Script pendukung engine tema tersedia
-                $response->assertSee('window.applyPortalTheme', false);
-                $response->assertSee('window.togglePortalThemeQuick', false);
+                // AC-4: Script pendukung engine tema tersedia (CSP compliant external script)
+                $response->assertSee('theme-init.js', false);
             }
         } finally {
             $this->removeDummyBladeView();
@@ -370,7 +369,7 @@ BLADE;
 
             // AC-3: Tombol sidebarThemeToggleBtn memiliki dual-icon (sun-icon & moon-icon) dan aria-pressed
             $response->assertSee('id="sidebarThemeToggleBtn"', false);
-            $response->assertSee('togglePortalThemeQuick()', false);
+            $response->assertSee('data-action="toggle-theme-quick"', false);
             $response->assertSee('aria-pressed="false"', false);
             $response->assertSee('class="sun-icon"', false);
             $response->assertSee('class="moon-icon"', false);
@@ -378,9 +377,8 @@ BLADE;
             // F4: Dropdown profil tidak lagi memuat duplikat tombol mode tampilan
             $response->assertDontSee('onclick="togglePortalThemeQuick()" style="width: 100%', false);
 
-            // AC-4: Script pendukung engine tema tersedia
-            $response->assertSee('window.applyPortalTheme', false);
-            $response->assertSee('window.togglePortalThemeQuick', false);
+            // AC-4: Script pendukung engine tema tersedia (CSP compliant external script)
+            $response->assertSee('theme-init.js', false);
         } finally {
             $this->removeDummyBladeView();
         }

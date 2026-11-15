@@ -52,7 +52,7 @@
                 type="button" 
                 id="btnCopyJsonDiff"
                 class="audit-diff-action-btn"
-                onclick="copyDiffJson()"
+                data-action="copy-diff-json"
                 title="Salin payload JSON mutasi ke clipboard"
             >
                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,7 +64,7 @@
                 type="button" 
                 id="btnPrintForensicPdf"
                 class="audit-diff-action-btn audit-diff-btn-pdf"
-                onclick="printForensicProof()"
+                data-action="print-forensic-proof"
                 title="Cetak atau unduh bukti forensik ber-QR"
             >
                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,7 +113,7 @@
 </div>
 
 {{-- MODAL COMPATIBILITY OVERLAY (#modalLogDetail) --}}
-<div id="modalLogDetail" class="audit-modal-backdrop" onclick="if(event.target === this) closeModalLogDetail()" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalLogDetailTitle">
+<div id="modalLogDetail" class="audit-modal-backdrop"  style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalLogDetailTitle">
     <div class="audit-modal-content">
         {{-- Modal Top Header --}}
         <div class="audit-modal-header">
@@ -134,7 +134,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" onclick="closeModalLogDetail()" class="audit-modal-close-btn" title="Tutup [ESC]" aria-label="Tutup modal">
+            <button type="button" data-action="close-modal-log-detail" class="audit-modal-close-btn" title="Tutup [ESC]" aria-label="Tutup modal">
                 &times;
             </button>
         </div>
@@ -190,7 +190,7 @@
 
         {{-- Modal Footer --}}
         <div class="audit-modal-footer">
-            <button type="button" onclick="closeModalLogDetail()" class="audit-modal-btn-dismiss">
+            <button type="button" data-action="close-modal-log-detail" class="audit-modal-btn-dismiss">
                 Tutup [ESC]
             </button>
         </div>

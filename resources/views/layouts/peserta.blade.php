@@ -26,30 +26,8 @@
     <!-- Vite Asset Pipeline (PRD-TASK-VITE-01) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Anti-Flash Theme & Sidebar State Script -->
-    <script>
-        (function() {
-            try {
-                const savedPref = localStorage.getItem('magkom_theme') || '{{ session('tema_tampilan', request()->cookie('tema_tampilan', 'terang')) }}';
-                let effectiveTheme = 'light';
-                if (savedPref === 'sistem') {
-                    effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                } else if (savedPref === 'gelap') {
-                    effectiveTheme = 'dark';
-                } else {
-                    effectiveTheme = 'light';
-                }
-                document.documentElement.setAttribute('data-theme', effectiveTheme);
-                document.documentElement.setAttribute('data-pref-theme', savedPref);
-
-                // Anti-flicker untuk state sidebar collapsed di desktop
-                const savedSidebar = localStorage.getItem('magkom_peserta_sidebar_collapsed');
-                if (savedSidebar === 'true' && window.innerWidth > 1024) {
-                    document.documentElement.classList.add('sidebar-collapsed');
-                }
-            } catch (e) {}
-        })();
-    </script>
+    <!-- Anti-Flash Theme & Sidebar State Script (External, CSP compliant) -->
+    <script src="{{ asset('js/theme-init.js') }}"></script>
 
     <style>
         /* MagKom Peserta Critical Theme & Icon CSS Baseline */
@@ -61,7 +39,7 @@
     @stack('styles')
 </head>
 <body>
-    <div class="drawer-backdrop" id="drawerBackdrop" onclick="toggleSidebarPeserta()"></div>
+    <div class="drawer-backdrop" id="drawerBackdrop" data-action="toggle-sidebar-peserta"></div>
 
     <!-- Sidebar Dashboard Peserta -->
     <aside class="sidebar dashboard-sidebar" id="sidebarNav" aria-label="Navigasi Utama">
@@ -80,7 +58,7 @@
             </a>
             <button type="button" 
                     class="sidebar-drawer-close-btn" 
-                    onclick="toggleSidebarPeserta(false)" 
+                    data-action="close-sidebar-peserta" 
                     aria-label="{{ __('Tutup Navigasi') }}" 
                     title="{{ __('Tutup Menu') }}">
                 &times;
@@ -152,7 +130,7 @@
                 <div class="nav-item-link locked" 
                      role="button" 
                      tabindex="0" 
-                     onclick="notifyLockedFeature('{{ __('Logbook Mingguan') }}')" 
+                     data-locked-feature="{{ __('Logbook Mingguan') }}" 
                      title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                     <span class="nav-item-icon">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -169,7 +147,7 @@
                 <div class="nav-item-link locked" 
                      role="button" 
                      tabindex="0" 
-                     onclick="notifyLockedFeature('{{ __('Tugas & Progres') }}')" 
+                     data-locked-feature="{{ __('Tugas & Progres') }}" 
                      title="{{ __('Terkunci: Fitur tersedia setelah permohonan magang disetujui & ditempatkan') }}">
                     <span class="nav-item-icon">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -192,7 +170,7 @@
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                 </svg>
             </a>
-            <button type="button" id="sidebarThemeToggleBtn" class="sidebar-footer-btn" onclick="togglePortalThemeQuick()" title="{{ __('Ganti Mode Terang / Gelap') }}" aria-label="{{ __('Ganti Mode Terang / Gelap') }}" aria-pressed="false">
+            <button type="button" id="sidebarThemeToggleBtn" class="sidebar-footer-btn" data-action="toggle-theme-quick" title="{{ __('Ganti Mode Terang / Gelap') }}" aria-label="{{ __('Ganti Mode Terang / Gelap') }}" aria-pressed="false">
                 <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" fill="currentColor" fill-opacity="0.25"></path>
                     <path d="M9 18h6"></path>
@@ -218,7 +196,7 @@
                 <button type="button" 
                         class="sidebar-toggle-btn" 
                         id="sidebarToggleBtn" 
-                        onclick="toggleSidebarPeserta()" 
+                        data-action="toggle-sidebar-peserta" 
                         aria-label="{{ __('Buka / Tutup Sidebar') }}" 
                         title="{{ __('Buka / Tutup Sidebar') }}">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -236,7 +214,7 @@
                             aria-expanded="false" 
                             aria-haspopup="true" 
                             aria-label="{{ __('Menu Profil Pengguna') }}"
-                            onclick="toggleProfileMenu(event)">
+                            data-action="toggle-profile-menu">
                         <div class="user-avatar" style="overflow: hidden;">
                             @if(auth()->user()?->profil?->foto_url)
                                 <img src="{{ auth()->user()?->profil?->foto_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
@@ -334,282 +312,6 @@
         <x-flash-alert />
     </div>
 
-    <script>
-        function dismissToast(btn) {
-            const toast = btn.closest('.app-toast');
-            if (!toast) return;
-            toast.classList.add('toast-hiding');
-            setTimeout(() => toast.remove(), 300);
-        }
-
-        // Global MagKomToast helper API for JS triggers
-        window.MagKomToast = {
-            show({ type = 'success', title = '', message = '', duration = 5000, actionUrl = null }) {
-                let container = document.getElementById('toastFloatingContainer');
-                if (!container) {
-                    container = document.createElement('div');
-                    container.className = 'toast-floating-container';
-                    container.id = 'toastFloatingContainer';
-                    document.body.appendChild(container);
-                }
-                const toast = document.createElement('div');
-                toast.className = `app-toast alert-${type === 'error' ? 'error' : type}`;
-                toast.setAttribute('role', 'alert');
-
-                let iconSvg = '';
-                if (type === 'success') {
-                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>';
-                } else if (type === 'warning') {
-                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
-                } else if (type === 'info') {
-                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
-                } else {
-                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
-                }
-
-                const safeActionUrl = actionUrl && (actionUrl.startsWith('/') || actionUrl.startsWith('http://') || actionUrl.startsWith('https://')) ? actionUrl : null;
-
-                toast.innerHTML = `
-                    <div class="toast-icon-badge ${type}">${iconSvg}</div>
-                    <div class="toast-content" style="flex: 1; min-width: 0;">
-                        ${title ? `<div class="toast-title">${title}</div>` : ''}
-                        <div class="toast-desc">${message}</div>
-                        ${safeActionUrl ? `
-                            <div style="margin-top: 8px;">
-                                <a href="${safeActionUrl}" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: #01347C; color: #FFFFFF; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none;">
-                                    <span>Lihat Rincian</span>
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-                                </a>
-                            </div>
-                        ` : ''}
-                    </div>
-                    <button type="button" class="toast-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                `;
-
-                container.appendChild(toast);
-
-                if (duration > 0) {
-                    let timer = setTimeout(() => {
-                        toast.classList.add('toast-hiding');
-                        setTimeout(() => toast.remove(), 300);
-                    }, duration);
-
-                    toast.addEventListener('mouseenter', () => clearTimeout(timer));
-                    toast.addEventListener('mouseleave', () => {
-                        timer = setTimeout(() => {
-                            toast.classList.add('toast-hiding');
-                            setTimeout(() => toast.remove(), 300);
-                        }, 2500);
-                    });
-                }
-            },
-            success(title, message) { this.show({ type: 'success', title, message }); },
-            error(title, message) { this.show({ type: 'error', title, message }); },
-            warning(title, message) { this.show({ type: 'warning', title, message }); },
-            info(title, message) { this.show({ type: 'info', title, message }); }
-        };
-
-        // Auto dismiss toast after 5s with pause on hover
-        document.addEventListener('DOMContentLoaded', function() {
-            const toasts = document.querySelectorAll('.toast-floating-container .app-toast');
-            toasts.forEach(toast => {
-                let timer = setTimeout(() => {
-                    toast.classList.add('toast-hiding');
-                    setTimeout(() => toast.remove(), 300);
-                }, 5000);
-
-                toast.addEventListener('mouseenter', () => clearTimeout(timer));
-                toast.addEventListener('mouseleave', () => {
-                    timer = setTimeout(() => {
-                        toast.classList.add('toast-hiding');
-                        setTimeout(() => toast.remove(), 300);
-                    }, 3000);
-                });
-            });
-        });
-        function toggleSidebarPeserta(forceState) {
-            const isMobile = window.innerWidth <= 1024;
-            const sidebar = document.getElementById('sidebarNav');
-            const backdrop = document.getElementById('drawerBackdrop');
-
-            if (isMobile) {
-                if (!sidebar) return;
-                const isCurrentlyOpen = sidebar.classList.contains('open') || sidebar.classList.contains('drawer-open');
-                const shouldOpen = typeof forceState === 'boolean' ? forceState : !isCurrentlyOpen;
-
-                if (shouldOpen) {
-                    sidebar.classList.add('open', 'drawer-open');
-                    document.body.classList.add('drawer-open');
-                    if (backdrop) backdrop.classList.add('open', 'active');
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    sidebar.classList.remove('open', 'drawer-open');
-                    document.body.classList.remove('drawer-open');
-                    if (backdrop) backdrop.classList.remove('open', 'active');
-                    document.body.style.overflow = '';
-                }
-            } else {
-                const html = document.documentElement;
-                const isCollapsed = html.classList.toggle('sidebar-collapsed');
-                try {
-                    localStorage.setItem('magkom_peserta_sidebar_collapsed', isCollapsed ? 'true' : 'false');
-                } catch (e) {}
-            }
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' || e.key === 'Esc') {
-                toggleSidebarPeserta(false);
-            }
-        });
-
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 1024) {
-                const sidebar = document.getElementById('sidebarNav');
-                const backdrop = document.getElementById('drawerBackdrop');
-                if (sidebar) sidebar.classList.remove('open', 'drawer-open');
-                if (backdrop) backdrop.classList.remove('open', 'active');
-                document.body.classList.remove('drawer-open');
-                document.body.style.overflow = '';
-            }
-        });
-
-        function toggleSidebar() {
-            toggleSidebarPeserta();
-        }
-
-        function notifyLockedFeature(featureName) {
-            if (window.MagKomToast) {
-                window.MagKomToast.show({
-                    type: 'warning',
-                    title: featureName + ' Masih Terkunci',
-                    message: 'Fitur ' + featureName + ' akan aktif secara otomatis setelah permohonan magang Anda disetujui & penempatan telah dimulai.',
-                    duration: 5000
-                });
-            } else {
-                alert(featureName + ' masih terkunci. Fitur akan terbuka setelah permohonan magang Anda disetujui.');
-            }
-        }
-
-        function toggleProfileMenu(e) {
-            e.stopPropagation();
-            const btn = document.getElementById('userProfileBtn');
-            const menu = document.getElementById('userProfileMenu');
-            if (!btn || !menu) return;
-
-            const isOpen = menu.classList.contains('open');
-            if (isOpen) {
-                closeProfileMenu();
-            } else {
-                menu.classList.add('open');
-                btn.setAttribute('aria-expanded', 'true');
-            }
-        }
-
-        function closeProfileMenu() {
-            const btn = document.getElementById('userProfileBtn');
-            const menu = document.getElementById('userProfileMenu');
-            if (menu && menu.classList.contains('open')) {
-                menu.classList.remove('open');
-                if (btn) btn.setAttribute('aria-expanded', 'false');
-            }
-        }
-
-        // Tutup dropdown saat klik di luar
-        document.addEventListener('click', function(e) {
-            const container = document.querySelector('.profile-dropdown-container');
-            if (container && !container.contains(e.target)) {
-                closeProfileMenu();
-            }
-        });
-
-        // Tutup dropdown saat tombol Escape ditekan
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeProfileMenu();
-            }
-        });
-
-        // Theme Switcher Engine Global
-        window.applyPortalTheme = function(theme) {
-            let effective = 'light';
-            if (theme === 'sistem') {
-                effective = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            } else if (theme === 'gelap') {
-                effective = 'dark';
-            } else {
-                effective = 'light';
-            }
-            document.documentElement.setAttribute('data-theme', effective);
-            document.documentElement.setAttribute('data-pref-theme', theme);
-            const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
-            if (toggleBtn) {
-                const isDark = effective === 'dark';
-                toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-                const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
-                toggleBtn.setAttribute('title', titleText);
-                toggleBtn.setAttribute('aria-label', titleText);
-            }
-            try {
-                localStorage.setItem('magkom_theme', theme);
-            } catch (e) {}
-        };
-
-        (function() {
-            const currentEffective = document.documentElement.getAttribute('data-theme') || 'light';
-            const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
-            if (toggleBtn) {
-                const isDark = currentEffective === 'dark';
-                toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-                const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
-                toggleBtn.setAttribute('title', titleText);
-                toggleBtn.setAttribute('aria-label', titleText);
-            }
-        })();
-
-        // Toggle Cepat Terang / Gelap Instan
-        window.togglePortalThemeQuick = function() {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-            const nextTheme = currentTheme === 'dark' ? 'terang' : 'gelap';
-            window.applyPortalTheme(nextTheme);
-            const preferensiUrl = "{{ Route::has('tema.update') ? route('tema.update') : (Route::has('peserta.pengaturan.preferensi.update') ? route('peserta.pengaturan.preferensi.update') : '#') }}";
-            if (preferensiUrl && preferensiUrl !== '#') {
-                fetch(preferensiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                    },
-                    body: JSON.stringify({ tema: nextTheme })
-                }).catch(function() {});
-            }
-        };
-
-        // Listener jika OS tema berubah dan user memilih 'sistem'
-        if (window.matchMedia) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-                const currentPref = document.documentElement.getAttribute('data-pref-theme') || localStorage.getItem('magkom_theme');
-                if (currentPref === 'sistem') {
-                    const effective = e.matches ? 'dark' : 'light';
-                    document.documentElement.setAttribute('data-theme', effective);
-                    const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
-                    if (toggleBtn) {
-                        const isDark = effective === 'dark';
-                        toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-                        const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
-                        toggleBtn.setAttribute('title', titleText);
-                        toggleBtn.setAttribute('aria-label', titleText);
-                    }
-                }
-            });
-        }
-    </script>
     <script src="{{ asset('js/gentelella-theme.js') }}?v={{ file_exists(public_path('js/gentelella-theme.js')) ? (string) filemtime(public_path('js/gentelella-theme.js')) : '1.0' }}"></script>
     <script src="{{ asset('js/dashboard-cockpit-unified.js') }}"></script>
     @stack('scripts')

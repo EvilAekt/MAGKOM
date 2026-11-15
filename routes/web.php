@@ -101,7 +101,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', [ResetPasswordController::class, 'showForgot'])->name('password.request');
     Route::post('/forgot-password', [ResetPasswordController::class, 'sendResetLink'])->name('password.email')->middleware('throttle:5,1');
     Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showReset'])->name('password.reset');
-    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update')->middleware('throttle:6,1');
 });
 
 // Logout (SEC-04: POST only with CSRF protection)
@@ -413,7 +413,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 });
 
 // Server-Sent Events (SSE) Real-time Stream & Notifikasi (RFC 8895)
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified', 'must_change_password', 'account.active'])->group(function () {
     Route::get('/realtime/stream', [RealtimeStreamController::class, 'stream'])->name('realtime.stream');
     Route::post('/realtime/read-batch', [RealtimeStreamController::class, 'markReadBatch'])->name('realtime.read-batch');
     Route::post('/realtime/read/{id}', [RealtimeStreamController::class, 'markRead'])->name('realtime.read');

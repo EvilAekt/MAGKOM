@@ -21,7 +21,7 @@
                 <span>Buka Pratinjau Interaktif</span>
             </a>
 
-            <form action="{{ route('superadmin.landing.discard') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin MEMBUANG seluruh draf perubahan? Editor akan dikembalikan ke versi live saat ini.')" style="margin: 0;">
+            <form action="{{ route('superadmin.landing.discard') }}" method="POST" data-confirm="Apakah Anda yakin ingin MEMBUANG seluruh draf perubahan? Editor akan dikembalikan ke versi live saat ini." style="margin: 0;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; background: #FEF2F2; color: #DC2626; border: 1px solid #FCA5A5; border-radius: 6px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; transition: all 0.2s ease;">
@@ -30,7 +30,7 @@
                 </button>
             </form>
 
-            <form action="{{ route('superadmin.landing.publish') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin MEMPUBLIKASIKAN seluruh draf ini ke publik sekarang? Seluruh pengunjung umum akan langsung melihat perubahannya.')" style="margin: 0;">
+            <form action="{{ route('superadmin.landing.publish') }}" method="POST" data-confirm="Apakah Anda yakin ingin MEMPUBLIKASIKAN seluruh draf ini ke publik sekarang? Seluruh pengunjung umum akan langsung melihat perubahannya." style="margin: 0;">
                 @csrf
                 <button type="submit" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.15rem; background: #16A34A; color: #FFFFFF; border: none; border-radius: 6px; font-weight: 800; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(22, 163, 74, 0.4);">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
