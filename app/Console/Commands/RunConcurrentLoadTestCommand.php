@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -87,6 +88,7 @@ class RunConcurrentLoadTestCommand extends Command
         foreach ($selectedProfiles as $profileKey) {
             if (! isset($this->profileConfigs[$profileKey])) {
                 $this->warn("Profil '{$profileKey}' tidak dikenal, dilewati.");
+
                 continue;
             }
 
@@ -95,7 +97,7 @@ class RunConcurrentLoadTestCommand extends Command
             $totalReqs = $config['total_requests'];
 
             $this->newLine();
-            $this->alert("Menjalankan Profil: ".strtoupper($profileKey)." (Concurrent VUs: {$vus} | Total Requests: {$totalReqs})");
+            $this->alert('Menjalankan Profil: '.strtoupper($profileKey)." (Concurrent VUs: {$vus} | Total Requests: {$totalReqs})");
 
             foreach ($this->targetEndpoints as $epKey => $epDef) {
                 $this->line("  -> Menguji: {$epDef['desc']} [{$epDef['method']} {$epDef['uri']}]...");
@@ -279,8 +281,8 @@ class RunConcurrentLoadTestCommand extends Command
             $request = Request::create($uri, 'GET', [], [], [], $server);
         }
 
-        /** @var \Illuminate\Contracts\Http\Kernel $kernel */
-        $kernel = app(\Illuminate\Contracts\Http\Kernel::class);
+        /** @var Kernel $kernel */
+        $kernel = app(Kernel::class);
 
         try {
             $response = $kernel->handle($request);

@@ -23,7 +23,9 @@ class BackupDatabaseService
      * Header pengenal berkas terenkripsi resmi MAGKOM (BACKUP-001, BACKUP-002).
      */
     public const ENC_MAGIC_HEADER = 'MAGKOM_ENC_v2';
+
     public const ENC_MAGIC_HEADER_V1 = 'MAGKOM_ENC_v1';
+
     public const ENC_MAGIC_HEADER_V2 = 'MAGKOM_ENC_v2';
 
     /**

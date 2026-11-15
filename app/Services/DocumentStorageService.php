@@ -9,6 +9,7 @@ use App\Models\Dokumen;
 use App\Models\JenisDokumen;
 use App\Models\Pendaftaran;
 use App\Support\Pengaturan;
+use Illuminate\Http\Testing\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -129,7 +130,7 @@ class DocumentStorageService
         // Verifikasi integritas ukuran berkas yang tersimpan
         $storedSize = Storage::disk('private')->size($newPath);
         $expectedSize = $file->getSize();
-        $isTestingFake = ($file instanceof \Illuminate\Http\Testing\File && $storedSize === 0);
+        $isTestingFake = ($file instanceof File && $storedSize === 0);
 
         if (! $isTestingFake && $storedSize !== $expectedSize) {
             Storage::disk('private')->delete($newPath);

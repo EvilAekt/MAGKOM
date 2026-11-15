@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use App\Services\LoginRateLimiterService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
@@ -156,7 +157,7 @@ class DistributedBruteForceTest extends TestCase
         }
 
         // Bersihkan throttle (simulasi cooldown 60 detik berlalu sepenuhnya)
-        \Illuminate\Support\Facades\Cache::flush();
+        Cache::flush();
         app(LoginRateLimiterService::class)->clear($this->user->email, $ip);
         RateLimiter::clear($this->user->email.'|'.$ip);
 
