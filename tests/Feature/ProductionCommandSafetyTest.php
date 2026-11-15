@@ -11,6 +11,20 @@ class ProductionCommandSafetyTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected string $originalEnv;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->originalEnv = (string) $this->app['env'];
+    }
+
+    protected function tearDown(): void
+    {
+        $this->app['env'] = $this->originalEnv;
+        parent::tearDown();
+    }
+
     /**
      * Memastikan auth:test-reset dilarang berjalan di lingkungan production.
      */

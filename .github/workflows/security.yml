@@ -82,6 +82,7 @@ jobs:
           APP_KEY: base64:2fl+Ktvkfl+Fuz4Qp/1SeSgqqN7DVBhhY+GwYqS1nvg=
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"
+          REALTIME_SSE_ENABLED: true
         run: php artisan test
 
   mysql-concurrency-test:

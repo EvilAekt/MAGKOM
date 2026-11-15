@@ -17,7 +17,14 @@ class RealtimeStreamConcurrencyTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        config(['services.realtime.sse_enabled' => true]);
         $this->seed(PermissionSeeder::class);
+    }
+
+    protected function tearDown(): void
+    {
+        config(['services.realtime.sse_enabled' => true]);
+        parent::tearDown();
     }
 
     public function test_unauthenticated_request_to_sse_is_redirected_to_login(): void

@@ -14,6 +14,24 @@ use Tests\TestCase;
 
 class ProductionEmailConfigurationTest extends TestCase
 {
+    protected string $originalEnv;
+
+    protected ?string $originalMailer;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->originalEnv = (string) $this->app['env'];
+        $this->originalMailer = config('mail.default');
+    }
+
+    protected function tearDown(): void
+    {
+        $this->app['env'] = $this->originalEnv;
+        Config::set('mail.default', $this->originalMailer);
+        parent::tearDown();
+    }
+
     /**
      * Memastikan perintah email:validate-config mendeteksi konfigurasi tidak layak saat strict/production.
      */

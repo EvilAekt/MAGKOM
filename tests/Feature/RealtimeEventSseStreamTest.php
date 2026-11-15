@@ -15,6 +15,12 @@ class RealtimeEventSseStreamTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        config(['services.realtime.sse_enabled' => true]);
+    }
+
     public function test_guest_is_redirected_to_login_from_sse_stream(): void
     {
         $response = $this->get('/realtime/stream');
