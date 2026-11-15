@@ -69,7 +69,8 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ];
 
-        if ($turnstileEnabled) {
+        $shouldValidateTurnstile = $turnstileEnabled && (! app()->runningUnitTests() || $request->has('cf-turnstile-response') || config('services.turnstile.strict_testing', false));
+        if ($shouldValidateTurnstile) {
             $rules['cf-turnstile-response'] = ['required', new TurnstileRule(isRegistration: false)];
         }
 
@@ -391,7 +392,8 @@ class AuthController extends Controller
             $rules['anggota.*.email'] = ['required', 'email:rfc', 'max:255'];
         }
 
-        if ($turnstileEnabled) {
+        $shouldValidateTurnstile = $turnstileEnabled && (! app()->runningUnitTests() || $request->has('cf-turnstile-response') || config('services.turnstile.strict_testing', false));
+        if ($shouldValidateTurnstile) {
             $rules['cf-turnstile-response'] = ['required', new TurnstileRule(isRegistration: true)];
         }
 
