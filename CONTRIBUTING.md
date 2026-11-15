@@ -71,19 +71,19 @@ Terima kasih atas ketertarikan Anda untuk berkontribusi pada pengembangan sistem
 
 ## 5. Pemeriksaan Kualitas & Uji Otomatis
 
-Sebelum mengajukan *Pull Request*, jalankan tahapan pengujian lokal berikut:
+Sebelum mengajukan *Pull Request*, jalankan 4 tahapan pemeriksaan kualitas lokal berikut (lihat panduan lengkap di [docs/development/development-guide.md](docs/development/development-guide.md)):
 
 ```bash
-# 1. Jalankan seluruh suite tes otomatis (wajib 100% hijau, 740+ tests)
+# 1. Jalankan seluruh suite tes otomatis (wajib 100% hijau, 942 tests)
 php artisan test
 
-# 2. Analisis statis PHPStan / Larastan
+# 2. Analisis statis PHPStan / Larastan Level 2 (0 errors)
 ./vendor/bin/phpstan analyse --memory-limit=1G
 
 # 3. Format kode sesuai standar PSR-12 dengan Laravel Pint
 ./vendor/bin/pint --test
 
-# 4. Kompilasi aset frontend
+# 4. Kompilasi aset frontend Vite (87 entri aset)
 npm run build
 ```
 Semua pemeriksaan di atas harus lolos tanpa *warning* kritis sebelum kode dapat digabungkan ke branch utama.

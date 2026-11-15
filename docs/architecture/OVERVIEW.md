@@ -1,135 +1,164 @@
-> Diperbarui: 2026-11-09 | mode: Verified Living Documentation
+# Ikhtisar Arsitektur Sistem MAGKOM
 
-# Arsitektur Proyek: Portal MagKom (Magang Kominfo)
-
-Portal MagKom adalah aplikasi web terintegrasi untuk manajemen dan transparansi program magang pada Dinas Komunikasi dan Informatika (Kominfo). Sistem melayani 4 peran pengguna utama: **Peserta**, **Pembimbing Lapangan**, **Administrator**, dan **Super Administrator**, dengan fokus pada transparansi kuota penerimaan, tata kelola berkas, monitoring logbook harian, serta tata kelola landing page publik berbasis Gutenberg Visual Site Editor.
+| Informasi | Keterangan |
+|---|---|
+| Status | Verified |
+| Terakhir Diverifikasi | 2026-11-15 |
+| Cakupan | Arsitektur keseluruhan sistem, gaya arsitektur, pilar komponen, batas teknologi |
+| Referensi Implementasi | `app/`, `bootstrap/`, `config/`, `routes/`, `database/migrations/` |
 
 ---
 
-## 1. Ringkasan Eksekutif & Stack Teknologi
+## 1. Gaya dan Filosofi Arsitektur
 
-| Komponen | Teknologi | Keterangan Versi & Konfigurasi |
-| :--- | :--- | :--- |
-| **Bahasa & Runtime** | PHP 8.3.x / Node.js 20.x+ | Strict typing `declare(strict_types=1)` diaktifkan pada controller dan service |
-| **Framework Backend** | Laravel 10.x | Arsitektur MVC + Dedicated Domain Service Layer (`app/Services`) |
-| **Frontend Rendering** | Blade Templates | Komponen Blade modular, native CSS variables, Vite bundler |
-| **Styling & Design System**| Custom Design System (DS-MagKom) + Vanilla CSS | Palet warna korporat Kominfo (Blue 600 `#0751FF`), tipografi Open Sans & Plus Jakarta Sans |
-| **Database & ORM** | MySQL 8.0+ / MariaDB (Eloquent ORM) | 24 Tabel Domain MAGKOM + 5 Tabel Framework Laravel dengan audit log trail dan foreign keys ketat |
-| **Keamanan & Auth** | Laravel Session + Sanctum + Socialite (Google OAuth) | Multi-guard RBAC, rate-limiting kustom, CSRF protection, signed URLs |
-| **Realtime Engine** | Server-Sent Events (SSE) | HTTP streaming mandiri (`/realtime/stream`) via `RealtimeStreamController` |
-| **Reporting & Export** | Barryvdh DomPDF & ZipArchive | Penerbitan PDF Surat Balasan Penerimaan/Penolakan dan bundel berkas ZIP |
-| **Disaster Recovery** | Spatie Backup & Native Service | Backup terenkripsi/terkompresi `.sql.gz` dengan verifikasi hash SHA-256 |
-| **Testing Suite** | PHPUnit 10.x | 54 Feature Test suites + Automated Security Deep Defense Sweep (SQLite in-memory) |
+MAGKOM dirancang menggunakan gaya **Clean Layered Architecture** yang dikombinasikan dengan pola **Modular Actions and Specialized Queries Pattern** di atas framework Laravel 10.x.
+
+Filosofi utama arsitektur ini adalah **Pemisahan Tanggung Jawab Secara Ketat (Strict Separation of Concerns)**:
+1. **Controller Ramping (Skinny Controllers)**: Controller hanya berfungsi menerima permintaan HTTP, memanggil Form Request untuk validasi, mengarahkan otorisasi ke Policy, mendelegasikan proses penulisan ke Action atau pembacaan ke Query, dan mengembalikan HTTP Response (View Blade, Redirect, atau JSON).
+2. **Mutasi Data Terisolasi (Single-Purpose Actions)**: Seluruh operasi yang mengubah keadaan (*state mutations* seperti Create, Update, Delete) ditempatkan dalam kelas Action tersendiri di dalam `app/Actions/`. Setiap Action memiliki satu tanggung jawab tunggal.
+3. **Pembacaan Teroptimasi (Specialized Queries)**: Operasi pembacaan data yang melibatkan filter kompleks, pengurutan dinamis, pencarian, dan paginasi diisolasi ke dalam kelas Query di `app/Queries/`.
+4. **Logika Domain Lintas Entitas (Service Layer)**: Operasi transaksi multi-tabel, integrasi eksternal, perhitungan metrik, ekspor data, dan pencadangan basis data ditangani oleh kelas Service di `app/Services/`.
+5. **Presentasi Bebas Skrip Sebaris (Zero Inline Blade)**: Template Blade hanya berfungsi sebagai lapisan markup semantik HTML. Seluruh aturan tampilan dikelola via stylesheet CSS terpisah dan interaktivitas ditangani via Vanilla ES Modules melalui Vite bundler, mematuhi standar ketat Content Security Policy (CSP).
 
 ---
 
 ## 2. Diagram Arsitektur Tingkat Tinggi
 
+Diagram berikut mengilustrasikan alur interaksi antarlapisan arsitektur dalam sistem MAGKOM:
+
 ```mermaid
-graph TB
-    subgraph ClientLayer ["Client & Interface Layer"]
-        PublicUser["Publik & Calon Peserta"]
-        PesertaUser["Peserta Magang"]
-        PembimbingUser["Pembimbing Lapangan"]
-        AdminUser["Admin & SuperAdmin"]
+graph TD
+    subgraph KlienPengguna ["Lapisan Klien & Antarmuka"]
+        BrowserPublik["Publik / Calon Peserta"]
+        BrowserPeserta["Peserta Magang"]
+        BrowserPembimbing["Pembimbing ASN"]
+        BrowserAdmin["Admin Verifikator"]
+        BrowserSuperAdmin["SuperAdmin"]
     end
 
-    subgraph SecurityLayer ["Security & Ingress Layer"]
-        RateLimiter["Rate Limiter & Throttle"]
-        AuthMiddleware["Auth & Verification Guard"]
-        RbacMiddleware["RBAC (role:peserta,pembimbing,admin,superadmin)"]
-        SignedUrlCheck["Signed URL Verifier (Berkas Privat)"]
+    subgraph GerbangKeamanan ["Lapisan Keamanan & Ingress"]
+        SecurityHeaders["SecurityHeaders (CSP Strict, X-Frame, Nosniff)"]
+        RateLimiter["Rate Limiting & Throttle"]
+        AuthMiddleware["Autentikasi Session & Guard"]
+        RbacMiddleware["Dynamic RBAC Matrix (EnsureUserHasRole)"]
+        SuperAdminGuard["EnsureSuperAdminReadOnly"]
+        SignedUrlMiddleware["ValidateSignature (Temporary Signed URL)"]
     end
 
-    subgraph AppLayer ["Application Core (Laravel 10)"]
-        Controllers["HTTP Controllers (app/Http/Controllers)"]
-        ServiceLayer["Domain Services (app/Services)"]
-        SseEngine["SSE Realtime Stream Engine"]
-        PdfGenerator["DomPDF Letter & Report Engine"]
-        BackupEngine["Backup & Disaster Recovery Service"]
+    subgraph LapisanAplikasi ["Inti Aplikasi Backend (Laravel 10)"]
+        Routes["Peta Rute (routes/web.php - 211 Endpoint)"]
+        FormRequests["Form Request Validation (app/Http/Requests)"]
+        Controllers["Skinny HTTP Controllers (app/Http/Controllers)"]
+        Actions["Modular Actions (app/Actions - 24 Kelas)"]
+        Queries["Specialized Queries (app/Queries - 12 Kelas)"]
+        Services["Domain Services (app/Services - 40 Kelas)"]
+        Policies["Authorization Policies (app/Policies - 5 Kelas)"]
     end
 
-    subgraph DataStorageLayer ["Data & Storage Layer"]
-        MysqlDB[(MySQL Database: 24 Domain + 5 Framework)]
-        PrivateStorage[("Private Storage (storage/app/berkas)")]
-        AuditTrail[(Audit Log Records: audit_log)]
+    subgraph LapisanData ["Lapisan Penyimpanan & Basis Data"]
+        MysqlDB[("MySQL Database (24 Domain + 5 Framework)")]
+        PrivateDisk[("Storage Disk Privat (storage/app/private)")]
+        AuditLogStore[("Tabel Audit Append-Only (audit_log)")]
     end
 
-    PublicUser --> RateLimiter
-    PesertaUser --> AuthMiddleware
-    PembimbingUser --> AuthMiddleware
-    AdminUser --> AuthMiddleware
+    subgraph LapisanLayananTambahan ["Mesin Tambahan"]
+        RealtimeEngine["SSE Stream Engine (/realtime/stream)"]
+        ExportEngine["DomPDF & XlsxExportService (Anti-Formula Injection)"]
+        BackupEngine["BackupDatabaseService (Gzip & SHA-256 Checksum)"]
+    end
 
+    BrowserPublik --> SecurityHeaders
+    BrowserPeserta --> SecurityHeaders
+    BrowserPembimbing --> SecurityHeaders
+    BrowserAdmin --> SecurityHeaders
+    BrowserSuperAdmin --> SecurityHeaders
+
+    SecurityHeaders --> RateLimiter
+    RateLimiter --> AuthMiddleware
     AuthMiddleware --> RbacMiddleware
-    RateLimiter --> Controllers
-    RbacMiddleware --> Controllers
-    SignedUrlCheck --> Controllers
+    RbacMiddleware --> SuperAdminGuard
+    SuperAdminGuard --> Routes
 
-    Controllers --> ServiceLayer
-    ServiceLayer --> SseEngine
-    ServiceLayer --> PdfGenerator
-    ServiceLayer --> BackupEngine
-    ServiceLayer --> MysqlDB
-    ServiceLayer --> AuditTrail
-    Controllers --> PrivateStorage
+    Routes --> FormRequests
+    FormRequests --> Controllers
+    Controllers --> Policies
+    Policies --> Actions
+    Policies --> Queries
+    Actions --> Services
+    Queries --> Services
+    Services --> MysqlDB
+    Services --> PrivateDisk
+    Services --> AuditLogStore
+
+    Controllers --> RealtimeEngine
+    Controllers --> ExportEngine
+    Controllers --> BackupEngine
 ```
 
 ---
 
-## 3. Struktur Direktori Beranotasi
+## 3. Spesifikasi Teknis Komponen Sistem
 
-```text
-MAGKOM/
-├── app/
-│   ├── Console/Commands/       # Perintah Artisan kustom (AnonimkanPeserta, dll.)
-│   ├── Enums/                  # PHP 8.1+ Enums (RealtimeEventTypeEnum, StatusPendaftaran, dll.)
-│   ├── Http/
-│   │   ├── Controllers/        # Controller terbagi per domain: Admin, Auth, Pembimbing, Peserta, Public, SuperAdmin
-│   │   ├── Middleware/         # Guard RBAC, verifikasi email, proteksi password staf, throttle
-│   │   └── Requests/           # Validasi form terpusat (Form Request validation)
-│   ├── Models/                 # 25 Eloquent Models aktif dengan audit hooks dan relasi
-│   ├── Providers/              # Service providers (RouteServiceProvider, AppServiceProvider)
-│   └── Services/               # Domain Services (PlacementService, AuditService, GutenbergBlockService, BackupService, dll.)
-├── database/
-│   ├── factories/              # Factory data uji untuk automated testing
-│   ├── migrations/             # 35 file migrasi database (skema terstruktur 2026 pasca-decommissioning)
-│   └── seeders/                # Database seeder (akun default, master jurusan, izin sistem, pengaturan)
-├── docs/
-│   ├── architecture/           # [READ-ONLY INSPECTOR] Dokumentasi struktural sistem ini
-│   ├── plans/                  # Dokumen rencana teknis (web-planning)
-│   └── *.md                    # Spesifikasi PRD, TDD, Keamanan, Skema DB, dan Design System resmi
-├── public/                     # Web root: index.php, assets build, security.txt RFC 9116
-├── resources/
-│   ├── css/                    # Entry CSS Vite (app.css, pages/, layouts/)
-│   ├── js/                     # Client JavaScript untuk interaksi form, visual editor, dan SSE listener
-│   └── views/                  # Blade template hierarkis (layouts, components, admin, pembimbing, peserta, superadmin)
-├── routes/
-│   ├── web.php                 # Rute utama aplikasi berorientasi session (130+ endpoints)
-│   └── api.php                 # Rute RESTful API / Sanctum
-├── storage/                    # Tempat penyimpanan berkas privat peserta, PDF, dan cache
-└── tests/
-    ├── Feature/                # 54 file pengujian integrasi alur bisnis (UAT, RBAC, IDOR, Lifecycle)
-    └── Unit/                   # Unit test komponen dasar
+| Komponen | Spesifikasi & Versi | Peran dalam Sistem |
+|---|---|---|
+| **Runtime Bahasa** | PHP 8.3.x (`declare(strict_types=1);`) | Eksekusi backend dengan pengetikan statis ketat. |
+| **Framework Web** | Laravel 10.50.x | Pondasi MVC, routing, middleware, Eloquent ORM, dan dependency injection container. |
+| **Basis Data Relasional** | MySQL 8.0+ / MariaDB | Penyimpanan transaksi berintegritas tinggi dengan mesin InnoDB, foreign keys, indeks komposit, dan transactional locking. |
+| **Frontend Pipeline** | Vite 6.x + Laravel Vite Plugin 1.3.x | Bundling 87 aset mandiri (39 file CSS scoped dan 48 file JS modular). |
+| **Sistem Desain UI** | DS-MagKom (Vanilla CSS Tokens) | Konsistensi palet warna kedinasan Pemkab Sleman, Bento Grid layout, dan Dark Mode native. |
+| **Pustaka Animasi** | GSAP 3.15.x | Transisi preloader Sleman dan mikro-interaksi dashboard tanpa memicu jank layout. |
+| **Keamanan HTTP** | Custom Middleware `SecurityHeaders` | Penegakan CSP `script-src 'self'` tanpa `unsafe-inline`, perlindungan clickjacking (`SAMEORIGIN`), dan anti-MIME sniffing. |
+| **Mesin Realtime** | Server-Sent Events (SSE) | Distribusi notifikasi satu arah berbasis HTTP stream pada `/realtime/stream` sesuai RFC 8895. |
+| **Ekspor Dokumen** | `barryvdh/laravel-dompdf` & `XlsxExportService` | Penerbitan Surat Penerimaan resmi ber-QR Code dan lembar kerja Excel/CSV berproteksi formula injection. |
+| **Pencadangan Data** | `BackupDatabaseService` | Snapshot basis data mandiri `.sql.gz` dengan verifikasi integritas hash SHA-256. |
+| **Pengujian Otomatis** | PHPUnit 10.x | 942 automated feature & unit tests yang dijalankan di atas SQLite `:memory:`. |
+
+---
+
+## 4. Aliran Siklus Permintaan HTTP (Request Lifecycle)
+
+Siklus permintaan pada MAGKOM diproses melalui 7 tahapan berurutan:
+
 ```
-
----
-
-## 4. Filosofi Desain & Alur Bisnis Utama
-
-Sistem dirancang dengan pemisahan tanggung jawab yang ketat (*Separation of Concerns*):
-1. **Controller Ramping, Service Gemuk**: Controller hanya menerima input HTTP, memanggil Form Request untuk validasi, mendelegasikan ke `app/Services`, dan mengembalikan view atau JSON.
-2. **Keamanan Berkas Privat**: Berkas lamaran dan identitas (KTP, KTM, Surat Pengantar) tidak diletakkan di `public/`, melainkan di private storage yang hanya bisa diunduh melalui `temporarySignedRoute` dengan batasan waktu aktif.
-3. **Audit Trail Otomatis**: Setiap aksi sensitif (perubahan kuota, keputusan penolakan/penerimaan, persetujuan tugas, pembuatan user, pemulihan backup) dicatat ke tabel `audit_log` via `AuditService`.
-4. **Alokasi Kuota Atomik & Seleksi Tegas**: Menggunakan pesimistic database locking (`lockForUpdate()`) untuk mencegah overbooking kuota bulanan tanpa fasilitas *Waiting List* (pendaftaran ditolak tegas jika kuota habis).
-5. **Penyelesaian Bimbingan 1-Klik**: Pembimbing lapangan dapat menyelesaikan bimbingan peserta secara langsung melalui tombol 1-klik yang mengotomatisasi update status peserta dan arsip data.
-
----
-
-## 5. Indeks Referensi Terkait
-
-- [Dokumentasi Rute Lengkap](./ROUTES.md)
-- [Panduan Standar Pengembangan](./DEV-GUIDE.md)
-- [Arsitektur Styling & Aset](./STYLING.md)
-- [Spesifikasi PRD Terpadu](../01-PRD-MagKom.md)
-- [Dokumen Arsitektur Teknis TDD](../02-TDD-MagKom.md)
-- [Skema Basis Data & Data Dictionary](../04-SKEMA-DATABASE-DAN-DATA-DICTIONARY.md)
+[ HTTP Request Masuk ]
+       │
+       ▼
+ 1. [ Web Server & PHP-FPM ] ── Nginx me-reverse proxy ke PHP-FPM
+       │
+       ▼
+ 2. [ HTTP Middleware Pipeline ]
+    ├── SecurityHeaders (Inject CSP, X-Frame-Options, Nosniff)
+    ├── EncryptCookies & StartSession
+    ├── VerifyCsrfToken (Proteksi metode POST/PUT/DELETE)
+    ├── Authenticate & EnsureAccountActive
+    ├── EnsureUserHasRole (Verifikasi RBAC dinamis)
+    └── EnsureSuperAdminReadOnly (Mencegah modifikasi ranah pembimbing)
+       │
+       ▼
+ 3. [ Routing (`routes/web.php`) ] ── Pencocokan pola URL dan HTTP method
+       │
+       ▼
+ 4. [ Form Request Validation ]
+    ├── Otorisasi dasar via FormRequest::authorize()
+    └── Validasi struktur data via FormRequest::rules() (Gagal: 422 Unprocessable Entity)
+       │
+       ▼
+ 5. [ Controller Action Execution ]
+    ├── Pengecekan otorisasi objek spesifik via Laravel Policy (Gagal: 403 Forbidden)
+    ├── Delegasi ke Action class (jika operasi mutasi/tulis)
+    │   └── Menjalankan DB::transaction dengan lockForUpdate (jika mutasi kuota)
+    └── Delegasi ke Query class (jika operasi pembacaan/filter)
+       │
+       ▼
+ 6. [ Service & Model Operations ]
+    ├── Interaksi basis data via Eloquent ORM
+    ├── Pemuatan / penyimpanan berkas via DocumentStorageService
+    ├── Pencatatan mutasi ke tabel audit_log via AuditService
+    └── Penyiaran event realtime via RealtimeEventService
+       │
+       ▼
+ 7. [ HTTP Response Output ]
+    ├── Render View Blade (HTML semantik bebas skrip inline)
+    ├── Unduhan berkas privat (BinaryFileResponse dengan TTL 5 menit)
+    └── HTTP Redirect dengan flash notification session
+```
