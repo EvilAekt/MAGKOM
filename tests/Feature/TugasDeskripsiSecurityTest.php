@@ -101,6 +101,54 @@ class TugasDeskripsiSecurityTest extends TestCase
         $this->assertSame($validHtml, $cleaned);
     }
 
+    public function test_safe_html_sanitizer_cleans_nested_unwrapped_xss_payloads(): void
+    {
+        // 1. Kasus wajib PRD: <div><img src=x onerror=alert(1)></div>
+        $nestedImg = '<div><img src=x onerror=alert(1)></div>';
+        $cleanedImg = SafeHtmlSanitizer::sanitize($nestedImg);
+        $this->assertStringNotContainsString('img', $cleanedImg);
+        $this->assertStringNotContainsString('onerror', $cleanedImg);
+        $this->assertStringNotContainsString('alert', $cleanedImg);
+        $this->assertSame('', $cleanedImg);
+
+        // 2. Bersarang ganda: <div><span><img src="x" onerror="alert(1)"></span></div>
+        $doubleNested = '<div><span><img src="x" onerror="alert(1)"></span></div>';
+        $cleanedDouble = SafeHtmlSanitizer::sanitize($doubleNested);
+        $this->assertSame('', $cleanedDouble);
+
+        // 3. Script di dalam wrapper div yang tidak diizinkan: <div><script>alert(1)</script>Petunjuk Resmi</div>
+        $nestedScript = '<div><script>alert(1)</script>Petunjuk Resmi</div>';
+        $cleanedScript = SafeHtmlSanitizer::sanitize($nestedScript);
+        $this->assertStringNotContainsString('<script', $cleanedScript);
+        $this->assertStringNotContainsString('alert', $cleanedScript);
+        $this->assertSame('Petunjuk Resmi', $cleanedScript);
+
+        // 4. Link javascript bersarang gambar berbahaya
+        $linkPayload = '<a href="javascript:alert(1)"><img src="x" onerror="alert(2)">Tautan Aman</a>';
+        $cleanedLink = SafeHtmlSanitizer::sanitize($linkPayload);
+        $this->assertStringNotContainsString('javascript', $cleanedLink);
+        $this->assertStringNotContainsString('alert', $cleanedLink);
+        $this->assertStringNotContainsString('<a', $cleanedLink);
+        $this->assertStringNotContainsString('<img', $cleanedLink);
+        $this->assertSame('Tautan Aman', $cleanedLink);
+
+        // 5. SVG / MathML bersarang
+        $svgPayload = '<div><svg><g onload="alert(1)"></g></svg><p>Paragraf</p></div>';
+        $cleanedSvg = SafeHtmlSanitizer::sanitize($svgPayload);
+        $this->assertStringNotContainsString('svg', $cleanedSvg);
+        $this->assertStringNotContainsString('onload', $cleanedSvg);
+        $this->assertSame('<p>Paragraf</p>', $cleanedSvg);
+
+        // 6. Komentar HTML dan atribut berbahaya pada tag aman
+        $attrPayload = '<!-- comment --><p onclick="steal()" style="color:red" class="injected"><b>Format Valid</b></p>';
+        $cleanedAttr = SafeHtmlSanitizer::sanitize($attrPayload);
+        $this->assertStringNotContainsString('<!--', $cleanedAttr);
+        $this->assertStringNotContainsString('onclick', $cleanedAttr);
+        $this->assertStringNotContainsString('style', $cleanedAttr);
+        $this->assertStringNotContainsString('class', $cleanedAttr);
+        $this->assertSame('<p><b>Format Valid</b></p>', $cleanedAttr);
+    }
+
     public function test_tugas_creation_sanitizes_html_injection_in_deskripsi(): void
     {
         $response = $this->actingAs($this->pembimbing)->post(route('pembimbing.tugas.store'), [

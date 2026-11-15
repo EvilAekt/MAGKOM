@@ -46,8 +46,10 @@ class DocumentArchiveService
             // Nama folder sanitasi untuk mencegah Zip Slip / Path Traversal
             $folderName = preg_replace('/[^A-Za-z0-9_\-]/', '_', "{$nim}_{$nama}");
 
-            // Muat relasi dokumen berkas
-            $dokumens = $pendaftaran->dokumen()->with('jenisDokumen')->get();
+            // Gunakan relasi yang sudah dimuat (eager-loaded) untuk mencegah N+1 query
+            $dokumens = $pendaftaran->relationLoaded('dokumen')
+                ? $pendaftaran->dokumen
+                : $pendaftaran->dokumen()->with('jenisDokumen')->get();
 
             if ($dokumens->isEmpty()) {
                 // Buat placeholder catatan berkas kosong
@@ -67,9 +69,15 @@ class DocumentArchiveService
 
                 $storagePath = $dok->path;
                 if ($storagePath && $privateDisk->exists($storagePath)) {
-                    $fileContent = $privateDisk->get($storagePath);
-                    if ($fileContent !== null) {
-                        $zip->addFromString($cleanFileName, $fileContent);
+                    // Gunakan addFile disk-to-disk streaming langsung untuk mencegah memory exhaustion (PERF-002)
+                    $realPath = $privateDisk->path($storagePath);
+                    if (is_file($realPath) && is_readable($realPath)) {
+                        $zip->addFile($realPath, $cleanFileName);
+                    } else {
+                        $fileContent = $privateDisk->get($storagePath);
+                        if ($fileContent !== null) {
+                            $zip->addFromString($cleanFileName, $fileContent);
+                        }
                     }
                 } else {
                     // Masukkan penanda berkas fisik belum sinkron

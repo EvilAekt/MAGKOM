@@ -9,3 +9,15 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+.editorconfig export-ignore
+.gitleaks.toml export-ignore
+.semgrepignore export-ignore
+phpstan.neon export-ignore
+phpunit.xml export-ignore
+phpunit.mysql.xml export-ignore
+.phpunit.result.cache* export-ignore
+tests/ export-ignore
+scratch/ export-ignore
+graphify-out/ export-ignore
+.mcp.json export-ignore
+.agents/ export-ignore

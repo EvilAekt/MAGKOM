@@ -81,13 +81,33 @@ SENTRY_TRACES_SAMPLE_RATE=0.2
 ```
 
 ### Informasi yang Ditangkap:
-- **Konteks Pengguna**: `id`, `role` (kata sandi dan data pribadi disensor secara otomatis).
+- **Konteks Pengguna**: `id`, `role` (kata sandi dan data pribadi disensor secara otomatis melalui `send_default_pii=false`).
 - **Rute HTTP**: URL endpoint, HTTP method, status code.
 - **Breadcrumbs**: Jejak pemanggilan query SQL sebelum exception terjadi.
 
 ---
 
-## 6. Tata Kelola Konkurensi Realtime SSE
+## 6. Strategi Logging Produksi & Rotasi Berkas (Daily Log Rotation)
+
+Untuk mencegah pembengkakan berkas `laravel.log` (seperti temuan audit awal berukuran 28.7 MB), lingkungan produksi menerapkan strategi rotasi harian otomatis:
+
+### Konfigurasi Direkomendasikan:
+```env
+LOG_CHANNEL=stack
+LOG_STACK=daily
+LOG_DAILY_DAYS=14
+LOG_LEVEL=warning
+```
+
+### Karakteristik & Kebijakan Keamanan Log:
+1. **Rotasi Harian (Daily Rotation):** Berkas log otomatis dirotasi per hari (`laravel-YYYY-MM-DD.log`) dan disimpan maksimal 14 hari (`days = 14`), mencegah exhaustion kapasitas disk server.
+2. **Level Log Produksi (`warning`):** Di production, level disetel ke `warning` atau `error` agar log tidak dipenuhi trace debug rutin, namun tetap merekam kegagalan autentikasi, ancaman keamanan, dan fatal error.
+3. **Penyensoran Data Sensitif:** Kata sandi, token reset, kode verifikasi, session cookies, dan informasi kredensial sensitif dilarang dicatat ke dalam log. Nilai sensitif wajib disamarkan (`[REDACTED]`).
+4. **Integrasi Sentry Monolog:** Channel `sentry` telah didaftarkan pada Monolog. Administrator dapat menggabungkan logging lokal dan cloud dengan menyetel `LOG_STACK=daily,sentry`.
+
+---
+
+## 7. Tata Kelola Konkurensi Realtime SSE
 
 Endpoint streaming notifikasi `/realtime/stream` menerapkan batasan konkurensi:
 - **Maksimal 1 Koneksi per Pengguna**: Mencegah penumpukan thread worker PHP-FPM akibat multiple tab browser yang dibuka oleh pengguna yang sama (`RealtimeStreamConcurrencyTest`).

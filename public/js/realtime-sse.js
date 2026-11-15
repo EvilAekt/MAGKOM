@@ -5,8 +5,13 @@
 class MagKomRealtimeEngine {
     constructor() {
         this.streamUrl = null;
+        this.pollUrl = null;
+        this.sseEnabled = true;
+        this.pollingInterval = 15000;
         this.eventSource = null;
         this.isConnected = false;
+        this.isPolling = false;
+        this.pollTimer = null;
         this.retryTimeout = null;
         this.toastContainer = null;
         this.pendingReadIds = new Set();
@@ -14,17 +19,29 @@ class MagKomRealtimeEngine {
     }
 
     /**
-     * Inisialisasi engine dengan endpoint SSE stream URL.
+     * Inisialisasi engine dengan endpoint SSE stream URL atau objek konfigurasi fallback (PERF-001).
      */
-    init(streamUrl) {
-        if (!window.EventSource) {
-            console.warn('[MagKom SSE] Browser tidak mendukung HTML5 EventSource.');
-            return;
+    init(options) {
+        if (typeof options === 'string') {
+            this.streamUrl = options;
+            this.pollUrl = '/realtime/poll';
+            this.sseEnabled = true;
+            this.pollingInterval = 15000;
+        } else if (options && typeof options === 'object') {
+            this.streamUrl = options.streamUrl || '/realtime/stream';
+            this.pollUrl = options.pollUrl || '/realtime/poll';
+            this.sseEnabled = options.sseEnabled !== false;
+            this.pollingInterval = options.pollInterval || 15000;
         }
 
-        this.streamUrl = streamUrl;
         this.ensureToastContainer();
-        this.connect();
+
+        if (this.sseEnabled && window.EventSource) {
+            this.connect();
+        } else {
+            this.startPolling();
+        }
+
         this.registerVisibilityHandler();
     }
 
@@ -84,7 +101,12 @@ class MagKomRealtimeEngine {
 
             this.eventSource.onerror = (err) => {
                 this.isConnected = false;
-                // Browser akan otomatis reconnect sesuai petunjuk retry: 2500 dari server
+                // Jika koneksi SSE ditolak server (misal 503 saat SSE dinonaktifkan), beralih ke polling
+                if (this.eventSource && this.eventSource.readyState === 2) { // 2 = CLOSED
+                    console.info('[MagKom Realtime] Server SSE tidak tersedia. Beralih ke fallback polling.');
+                    this.disconnect();
+                    this.startPolling();
+                }
             };
 
             // Daftarkan listener untuk tipe event spesifik
@@ -112,6 +134,68 @@ class MagKomRealtimeEngine {
     }
 
     /**
+     * Memulai siklus polling berkala (PERF-001).
+     */
+    startPolling() {
+        if (this.isPolling || !this.pollUrl) return;
+        this.isPolling = true;
+        this.pollOnce();
+    }
+
+    /**
+     * Menghentikan polling berkala.
+     */
+    stopPolling() {
+        this.isPolling = false;
+        if (this.pollTimer) {
+            clearTimeout(this.pollTimer);
+            this.pollTimer = null;
+        }
+    }
+
+    /**
+     * Eksekusi satu kali query polling ke server dan jadwalkan polling berikutnya.
+     */
+    async pollOnce() {
+        if (!this.isPolling || !this.pollUrl) return;
+
+        try {
+            const storedLastId = sessionStorage.getItem('magkom_sse_last_event_id') || '0';
+            const separator = this.pollUrl.includes('?') ? '&' : '?';
+            const fullUrl = `${this.pollUrl}${separator}last_event_id=${encodeURIComponent(storedLastId)}`;
+
+            const response = await fetch(fullUrl, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data && Array.isArray(data.events)) {
+                    data.events.forEach(evt => {
+                        this.handleEvent(evt.event_type || evt.event, {
+                            id: evt.id,
+                            lastEventId: evt.id,
+                            data: JSON.stringify(evt.payload || {})
+                        });
+                    });
+                }
+                if (data && data.polling_interval_ms) {
+                    this.pollingInterval = data.polling_interval_ms;
+                }
+            }
+        } catch (e) {
+            // Silently ignore network hiccup during background polling
+        } finally {
+            if (this.isPolling) {
+                this.pollTimer = setTimeout(() => this.pollOnce(), this.pollingInterval);
+            }
+        }
+    }
+
+    /**
      * Menutup koneksi secara graceful.
      */
     disconnect() {
@@ -121,18 +205,29 @@ class MagKomRealtimeEngine {
             this.eventSource = null;
             this.isConnected = false;
         }
+        this.stopPolling();
     }
 
     /**
      * Mengatur koneksi berdasarkan visibilitas tab browser dan navigasi halaman.
-     * Langsung memutus EventSource saat halaman ditutup atau berpindah agar worker PHP bebas seketika.
+     * Langsung memutus EventSource dan polling saat tab tidak aktif agar worker PHP bebas seketika.
      */
     registerVisibilityHandler() {
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                this.disconnect();
+                if (this.isConnected) {
+                    if (this.eventSource) this.eventSource.close();
+                    this.isConnected = false;
+                }
+                if (this.isPolling) {
+                    this.stopPolling();
+                }
             } else {
-                this.connect();
+                if (this.sseEnabled && window.EventSource) {
+                    this.connect();
+                } else {
+                    this.startPolling();
+                }
             }
         });
 
@@ -186,7 +281,7 @@ class MagKomRealtimeEngine {
             window.dispatchEvent(new CustomEvent('magkom:realtime-event', { detail: { eventType, data } }));
 
             // TIDAK membunyikan audio chime (dinonaktifkan sesuai preferensi pengguna)
-            this.showToast(data.title || 'Pemberitahuan Baru', data.message || '', eventType, data.action_url);
+            this.showToast(data.title || 'Pemberitahuan Baru', data.message || '', eventType, data.action_url, data);
 
             // Perbarui badge counter jika disediakan di payload
             if (data.badge_target) {
@@ -394,9 +489,18 @@ window.MagKomRealtime = new MagKomRealtimeEngine();
 if (typeof document !== 'undefined') {
     document.addEventListener('DOMContentLoaded', function () {
         const toastEl = document.getElementById('magkom-toast-container');
-        if (toastEl && window.MagKomRealtime && !window.MagKomRealtime.isConnected) {
+        if (toastEl && window.MagKomRealtime && !window.MagKomRealtime.isConnected && !window.MagKomRealtime.isPolling) {
+            const sseEnabled = toastEl.getAttribute('data-sse-enabled') !== 'false';
             const sseUrl = toastEl.getAttribute('data-sse-url') || '/realtime/stream';
-            window.MagKomRealtime.init(sseUrl);
+            const pollUrl = toastEl.getAttribute('data-poll-url') || '/realtime/poll';
+            const pollInterval = parseInt(toastEl.getAttribute('data-poll-interval') || '15000', 10);
+
+            window.MagKomRealtime.init({
+                streamUrl: sseUrl,
+                pollUrl: pollUrl,
+                sseEnabled: sseEnabled,
+                pollInterval: pollInterval
+            });
         }
     });
 }

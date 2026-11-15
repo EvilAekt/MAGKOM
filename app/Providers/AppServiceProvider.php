@@ -10,10 +10,13 @@ use App\Http\ViewComposers\PesertaLayoutViewComposer;
 use App\Models\Logbook;
 use App\Models\Penempatan;
 use App\Models\ProgresLog;
+use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use RuntimeException;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,6 +33,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Proteksi Pengiriman Email Production (OPS-001): Cegah driver log berjalan di production
+        Event::listen(MessageSending::class, function (): void {
+            if ($this->app->isProduction() && config('mail.default') === 'log') {
+                throw new RuntimeException(
+                    "FATAL: Pengiriman email di lingkungan production dilarang menggunakan driver 'log'. Konfigurasikan MAIL_MAILER=smtp dengan kredensial resmi pada berkas .env server."
+                );
+            }
+        });
+
         // Daftarkan Custom Pagination MagKom (Cegah Tailwind SVG Blowup)
         Paginator::defaultView('vendor.pagination.default');
         Paginator::defaultSimpleView('vendor.pagination.simple-default');

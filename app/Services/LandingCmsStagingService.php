@@ -775,44 +775,34 @@ class LandingCmsStagingService
             return ['valid' => true, 'error' => null];
         }
 
-        // 2. Pengecekan Gambar (JPEG, PNG, WEBP, SVG)
-        if (in_array($clientExt, ['jpg', 'jpeg', 'png', 'webp', 'svg'], true) || str_starts_with($clientMime, 'image/')) {
-            if ($clientExt === 'svg' || $clientMime === 'image/svg+xml') {
-                $fullContent = @file_get_contents($path);
-                if (! $fullContent || (! str_contains($fullContent, '<svg') && ! str_contains($fullContent, '<?xml'))) {
-                    return [
-                        'valid' => false,
-                        'error' => 'Berkas SVG tidak valid atau tidak memiliki tag SVG/XML.',
-                    ];
-                }
+        // 2. Larang Berkas Berbasis SVG Secara Tegas (Stored XSS & XML Injection Protection)
+        $sampleContent = @file_get_contents($path, false, null, 0, 4096) ?: '';
+        $isSvgExtOrMime = ($clientExt === 'svg' || str_contains($clientMime, 'svg'));
+        $containsSvgTags = (stripos($sampleContent, '<svg') !== false || stripos($sampleContent, 'xmlns="http://www.w3.org/2000/svg"') !== false);
 
-                // Proteksi SVG XSS & XXE: Larang skrip, iframe, foreignObject, inline event handlers, dan entity doctype
-                $dangerousPatterns = [
-                    '/<script\b[^>]*>/is',
-                    '/<iframe\b[^>]*>/is',
-                    '/<foreignObject\b[^>]*>/is',
-                    '/<!ENTITY/i',
-                    '/on[a-zA-Z]+\s*=/i',
-                    '/href\s*=\s*["\']\s*javascript:/i',
-                ];
+        if ($isSvgExtOrMime || $containsSvgTags) {
+            return [
+                'valid' => false,
+                'error' => 'Format berkas SVG tidak diizinkan demi keamanan sistem (Stored XSS Protection). Harap gunakan format gambar raster PNG, JPG, atau WEBP.',
+            ];
+        }
 
-                foreach ($dangerousPatterns as $pattern) {
-                    if (preg_match($pattern, $fullContent)) {
-                        return [
-                            'valid' => false,
-                            'error' => 'Berkas SVG memuat skrip berbahaya atau elemen interaktif yang dilarang (SVG XSS Protection).',
-                        ];
-                    }
-                }
-
-                return ['valid' => true, 'error' => null];
-            }
-
+        // 3. Pengecekan Gambar Raster (JPEG, PNG, WEBP)
+        if (in_array($clientExt, ['jpg', 'jpeg', 'png', 'webp'], true) || str_starts_with($clientMime, 'image/')) {
             $imgInfo = @getimagesize($path);
             if ($imgInfo === false) {
                 return [
                     'valid' => false,
-                    'error' => 'Berkas gambar rusak atau tidak valid.',
+                    'error' => 'Berkas gambar rusak atau bukan gambar raster yang valid.',
+                ];
+            }
+
+            // Pastikan format gambar sesuai dengan tipe mime yang didukung
+            $allowedImageTypes = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP];
+            if (! in_array($imgInfo[2], $allowedImageTypes, true)) {
+                return [
+                    'valid' => false,
+                    'error' => 'Tipe gambar tidak didukung. Harap unggah berkas PNG, JPEG, atau WEBP.',
                 ];
             }
 

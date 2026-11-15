@@ -222,3 +222,22 @@ Jika ditemukan isu *blocker* yang tidak dapat diselesaikan dalam jangka waktu de
    php artisan config:clear
    ```
 4. Verifikasi ulang kesehatan aplikasi dengan menjalankan test suite baseline.
+
+---
+
+## 6. Addendum Audit Dependensi Aktual (`composer audit` November 2026)
+
+Hasil pemindaian `composer audit` pada tahap audit kesiapan produksi mengidentifikasi 20 advisories keamanan pada 8 paket upstream:
+
+### 6.1 Rincian Kerentanan Teridentifikasi:
+1. **`dompdf/dompdf` (Versi terpasang: v2.0.8)**:
+   - Terkena CVE-2026-59943 (SVG file leak), CVE-2026-59942 (DoS bitmap), CVE-2026-59941 (uncontrolled resource consumption), CVE-2026-56722 (local file read).
+   - **Mitigasi Terencana:** Update paket pembungkus `barryvdh/laravel-dompdf` ke `^3.0` yang mengadopsi `dompdf/dompdf ^3.1.6+`.
+2. **Komponen Symfony v6.4 (`http-foundation`, `mime`, `routing`, `yaml`)**:
+   - Terkena CVE-2026-45070 (email header injection pada mime), CVE-2026-118516 (path-based routing bypass), CVE-2026-123792 (exponential YAML parsing).
+   - **Mitigasi Terencana:** Jalankan `composer update "symfony/*"` dalam batas versi 6.4 (mengambil patch minor `6.4.56+`) tanpa menimbulkan breaking changes.
+
+### 6.2 Rekomendasi Urutan Eksekusi Bertahap (Non-Disruptive):
+- **Langkah 1 (Patch Minor Dependensi):** Update komponen Symfony ke rilis tambalan 6.4 terbaru (`composer update "symfony/*"`).
+- **Langkah 2 (Update DomPDF):** Uji coba bumping `barryvdh/laravel-dompdf: ^3.0` dan verifikasi tata letak PDF laporan magang (`SuratDiterimaPdfService`, `LaporanMagangPdfService`).
+- **Langkah 3 (Upgrade Major Laravel 11):** Dilakukan sesuai alur kerja 5 Fase di atas setelah soft-launch berjalan stabil.

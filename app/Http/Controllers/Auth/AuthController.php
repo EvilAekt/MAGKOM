@@ -120,6 +120,16 @@ class AuthController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
 
+            // Intersepsi Otentikasi Dua Faktor (AUTH-002: Two-Factor Challenge)
+            if ($user && method_exists($user, 'hasEnabledTwoFactor') && $user->hasEnabledTwoFactor()) {
+                $remember = $request->boolean('remember');
+                Auth::logout();
+                $request->session()->put('auth.2fa.user_id', $user->id);
+                $request->session()->put('auth.2fa.remember', $remember);
+
+                return redirect()->route('two-factor.challenge');
+            }
+
             $this->auditService->catat(
                 tipe: TipeAuditEnum::Aksi,
                 tabel: 'users',

@@ -48,7 +48,7 @@ MAGKOM menyatukan mata rantai administrasi tersebut ke dalam satu sistem terinte
 - **Frontend & Bundler**: Laravel Blade Templates dengan Vite 6.x mengelola 87 entri aset (39 stylesheet CSS dan 48 modul JavaScript ES Modules).
 - **Keamanan HTTP**: Penegakan Content Security Policy (CSP) ketat `script-src 'self'` tanpa `unsafe-inline`, dengan kepatuhan 0 skrip inline di seluruh 185 Blade view.
 - **Pustaka Animasi**: GSAP 3.15 untuk transisi splash preloader Sleman dan mikro-interaksi dashboard tanpa layout thrashing.
-- **Pengujian Otomatis**: PHPUnit 10.x dengan 942 kasus uji terverifikasi yang dieksekusi di atas SQLite `:memory:`.
+- **Pengujian Otomatis**: PHPUnit 10.x dengan 993 kasus uji terverifikasi yang dieksekusi di atas SQLite `:memory:`.
 
 ---
 
@@ -163,7 +163,7 @@ Setelah seeder dijalankan pada lingkungan lokal, akun pengujian berikut tersedia
 Setiap perubahan kode diverifikasi melalui 4 tahapan pemeriksaan lokal dan pipeline CI/CD GitHub Actions:
 
 ```bash
-# 1. Menjalankan seluruh test suite otomatis (942 kasus uji)
+# 1. Menjalankan seluruh test suite otomatis (1.020 kasus uji)
 php artisan test
 
 # 2. Analisis statis PHPStan / Larastan Level 2 (0 error)
@@ -192,12 +192,15 @@ Dokumentasi rekayasa perangkat lunak MAGKOM dikelola secara modular berbasis ker
 - [**Peta 211 Rute HTTP & Middleware (`docs/architecture/routes.md`)**](docs/architecture/routes.md)
 - [**Panduan Lengkap Pengembangan (`docs/development/development-guide.md`)**](docs/development/development-guide.md)
 - [**Konvensi Penulisan Kode (`docs/development/coding-conventions.md`)**](docs/development/coding-conventions.md)
-- [**Katalog 942 Kasus Uji Otomatis (`docs/development/testing.md`)**](docs/development/testing.md)
+- [**Katalog 1.020 Kasus Uji Otomatis (`docs/development/testing.md`)**](docs/development/testing.md)
 - [**Panduan Penanganan Masalah & Solusi Error (`docs/development/troubleshooting.md`)**](docs/development/troubleshooting.md)
 - [**Model Ancaman & Ikhtisar Keamanan (`docs/security/security-overview.md`)**](docs/security/security-overview.md)
 - [**Dynamic RBAC & Kebijakan Otorisasi (`docs/security/authentication-and-authorization.md`)**](docs/security/authentication-and-authorization.md)
+- [**Panduan Otentikasi & 2FA SuperAdmin (`docs/security/superadmin-authentication.md`)**](docs/security/superadmin-authentication.md)
 - [**Rekam Jejak Audit Forensik 4 Kanal (`docs/security/audit-trail.md`)**](docs/security/audit-trail.md)
 - [**Panduan Penerapan Produksi Nginx (`docs/operations/deployment.md`)**](docs/operations/deployment.md)
+- [**Panduan Queue Worker & Antrean Email (`docs/operations/queue-worker-deployment.md`)**](docs/operations/queue-worker-deployment.md)
+- [**Runbook Backup Terenkripsi & Prosedur Restore (`docs/operations/backup-and-restore-runbook.md`)**](docs/operations/backup-and-restore-runbook.md)
 - [**Pusat Cadangan & Pemulihan Basis Data (`docs/operations/backup-and-restore.md`)**](docs/operations/backup-and-restore.md)
 - [**Glosarium Istilah Domain & Teknis (`docs/reference/glossary.md`)**](docs/reference/glossary.md)
 

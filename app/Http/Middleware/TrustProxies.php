@@ -28,13 +28,13 @@ class TrustProxies extends Middleware
 
     /**
      * Get the trusted proxies for the request.
-     * Supports wildcard ('*') or comma-separated IP/CIDR addresses via TRUSTED_PROXIES env.
+     * Supports wildcard ('*') or comma-separated IP/CIDR addresses via config('trustedproxy.proxies').
      *
      * @return array<int, string>|string|null
      */
     protected function proxies(): array|string|null
     {
-        $trusted = env('TRUSTED_PROXIES', config('trustedproxy.proxies', $this->proxies));
+        $trusted = config('trustedproxy.proxies', $this->proxies);
 
         if ($trusted === '*' || $trusted === '**') {
             return '*';

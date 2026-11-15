@@ -10,33 +10,41 @@ use Tests\TestCase;
 
 class TrustProxiesSecurityTest extends TestCase
 {
-    private ?string $originalTrustedProxiesEnv;
+    private ?string $originalConfig;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->originalTrustedProxiesEnv = getenv('TRUSTED_PROXIES') !== false ? (string) getenv('TRUSTED_PROXIES') : null;
+        $this->originalConfig = config('trustedproxy.proxies');
     }
 
     protected function tearDown(): void
     {
-        if ($this->originalTrustedProxiesEnv !== null) {
-            putenv("TRUSTED_PROXIES={$this->originalTrustedProxiesEnv}");
-            $_ENV['TRUSTED_PROXIES'] = $this->originalTrustedProxiesEnv;
-            $_SERVER['TRUSTED_PROXIES'] = $this->originalTrustedProxiesEnv;
-        } else {
-            putenv('TRUSTED_PROXIES');
-            unset($_ENV['TRUSTED_PROXIES'], $_SERVER['TRUSTED_PROXIES']);
-        }
-
+        config(['trustedproxy.proxies' => $this->originalConfig]);
         parent::tearDown();
+    }
+
+    public function test_middleware_does_not_call_env_directly(): void
+    {
+        $middlewareFile = file_get_contents(app_path('Http/Middleware/TrustProxies.php'));
+        $this->assertNotFalse($middlewareFile);
+
+        // Memastikan tidak ada pemanggilan env('TRUSTED_PROXIES') di middleware agar aman dari config:cache
+        $this->assertDoesNotMatchRegularExpression('/\benv\s*\(/', $middlewareFile, 'TrustProxies middleware dilarang memanggil env() secara langsung.');
+    }
+
+    public function test_config_file_exists_and_binds_to_environment(): void
+    {
+        $this->assertFileExists(config_path('trustedproxy.php'));
+        $config = require config_path('trustedproxy.php');
+        $this->assertIsArray($config);
+        $this->assertArrayHasKey('proxies', $config);
+        $this->assertArrayHasKey('headers', $config);
     }
 
     public function test_wildcard_trusted_proxies_resolves_client_ip_from_forwarded_header(): void
     {
-        putenv('TRUSTED_PROXIES=*');
-        $_ENV['TRUSTED_PROXIES'] = '*';
-        $_SERVER['TRUSTED_PROXIES'] = '*';
+        config(['trustedproxy.proxies' => '*']);
 
         $middleware = new TrustProxies;
         $request = Request::create('/test-ip', 'GET', [], [], [], [
@@ -61,13 +69,11 @@ class TrustProxiesSecurityTest extends TestCase
 
     public function test_specific_trusted_proxy_ip_accepts_valid_proxy_and_rejects_untrusted_source(): void
     {
-        putenv('TRUSTED_PROXIES=10.0.0.1, 10.0.0.2');
-        $_ENV['TRUSTED_PROXIES'] = '10.0.0.1, 10.0.0.2';
-        $_SERVER['TRUSTED_PROXIES'] = '10.0.0.1, 10.0.0.2';
+        config(['trustedproxy.proxies' => '10.0.0.1, 10.0.0.2']);
 
         $middleware = new TrustProxies;
 
-        // 1. Request from trusted proxy (10.0.0.1)
+        // 1. Request dari trusted proxy (10.0.0.1)
         $trustedRequest = Request::create('/test-ip', 'GET', [], [], [], [
             'REMOTE_ADDR' => '10.0.0.1',
             'HTTP_X_FORWARDED_FOR' => '198.51.100.50',
@@ -82,7 +88,7 @@ class TrustProxiesSecurityTest extends TestCase
         });
         $this->assertSame('198.51.100.50', $resolvedTrustedIp);
 
-        // 2. Request from untrusted remote address (192.168.1.50) attempting to spoof header
+        // 2. Request dari alamat remote tidak terpercaya (192.168.1.50) yang mencoba spoofing header
         $untrustedRequest = Request::create('/test-ip', 'GET', [], [], [], [
             'REMOTE_ADDR' => '192.168.1.50',
             'HTTP_X_FORWARDED_FOR' => '1.2.3.4',
@@ -99,8 +105,7 @@ class TrustProxiesSecurityTest extends TestCase
 
     public function test_null_trusted_proxies_ignores_forwarded_headers(): void
     {
-        putenv('TRUSTED_PROXIES');
-        unset($_ENV['TRUSTED_PROXIES'], $_SERVER['TRUSTED_PROXIES']);
+        config(['trustedproxy.proxies' => null]);
 
         $middleware = new TrustProxies;
         $request = Request::create('/test-ip', 'GET', [], [], [], [

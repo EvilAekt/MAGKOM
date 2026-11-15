@@ -29,6 +29,17 @@ class RealtimeStreamController extends Controller
             abort(401, 'Unauthenticated');
         }
 
+        // PERF-001: Jika SSE dinonaktifkan di konfigurasi server, tolak secara graceful dan instruksikan fallback
+        if (! config('services.realtime.sse_enabled', true)) {
+            return response()->json([
+                'error' => 'SSE Disabled',
+                'message' => 'Layanan SSE dinonaktifkan untuk menghemat kapasitas worker PHP-FPM. Gunakan fallback polling.',
+                'fallback_poll_url' => route('realtime.poll'),
+            ], 503, [
+                'Retry-After' => '60',
+            ]);
+        }
+
         $userId = (int) $user->id;
         $lockKey = "sse:stream:user:{$userId}";
 
@@ -119,6 +130,44 @@ class RealtimeStreamController extends Controller
             'Cache-Control' => 'no-cache, no-transform',
             'Connection' => 'keep-alive',
             'X-Accel-Buffering' => 'no', // Menghindari buffering pada Nginx Reverse Proxy
+        ]);
+    }
+
+    /**
+     * Endpoint Polling Fallback hemat resource untuk server PHP-FPM terbatas (PERF-001).
+     * Mengembalikan event tertunda dalam satu query cepat tanpa menahan worker FastCGI.
+     */
+    public function poll(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
+        $rawLastId = $request->query('last_event_id', '0');
+        $lastEventId = is_numeric($rawLastId) ? (int) $rawLastId : 0;
+
+        $events = $this->eventService->getPendingEvents($user, $lastEventId, 10);
+
+        $maxId = $lastEventId;
+        $eventData = [];
+        foreach ($events as $event) {
+            $maxId = max($maxId, (int) $event->id);
+            $eventData[] = [
+                'id' => (int) $event->id,
+                'event_type' => $event->event_type,
+                'payload' => $event->payload,
+            ];
+        }
+
+        $intervalSeconds = (int) config('services.realtime.polling_interval_seconds', 15);
+
+        return response()->json([
+            'status' => 'ok',
+            'last_event_id' => $maxId,
+            'polling_interval_ms' => $intervalSeconds * 1000,
+            'events' => $eventData,
         ]);
     }
 
