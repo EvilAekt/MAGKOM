@@ -11,6 +11,7 @@ use Database\Seeders\PermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use PragmaRX\Google2FA\Google2FA;
 use Tests\TestCase;
 
 class SuperAdminTwoFactorAuthTest extends TestCase
@@ -57,7 +58,7 @@ class SuperAdminTwoFactorAuthTest extends TestCase
         $secret = $this->twoFactorService->generateSecretKey();
         session(['auth.2fa.enroll_secret' => $secret]);
 
-        $google2fa = new \PragmaRX\Google2FA\Google2FA;
+        $google2fa = new Google2FA;
         $validCode = $google2fa->getCurrentOtp($secret);
 
         $response = $this->actingAs($this->superAdmin)
@@ -102,7 +103,7 @@ class SuperAdminTwoFactorAuthTest extends TestCase
         $this->assertFalse(Auth::check());
 
         // Masukkan kode TOTP yang benar
-        $google2fa = new \PragmaRX\Google2FA\Google2FA;
+        $google2fa = new Google2FA;
         $validCode = $google2fa->getCurrentOtp($secret);
 
         $successResponse = $this->post(route('two-factor.challenge.verify'), [

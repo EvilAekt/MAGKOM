@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
 use ZipArchive;
@@ -556,10 +557,9 @@ class BackupDatabaseService
 
             if ($driver === 'mysql') {
                 $pdo->exec('SET FOREIGN_KEY_CHECKS=1;');
-                $tables = $pdo->query('SHOW TABLES')->fetchAll(\PDO::FETCH_COLUMN);
-            } else {
-                $tables = $connection->getDoctrineSchemaManager()->listTableNames();
             }
+
+            $tables = Schema::connection($targetConnection)->getTableListing();
 
             // 4. Catat jejak audit trail pemulihan bencana (DR)
             $this->auditService->catat(

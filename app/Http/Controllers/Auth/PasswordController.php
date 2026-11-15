@@ -10,6 +10,7 @@ use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -36,7 +37,7 @@ class PasswordController extends Controller
         $isSuperAdmin = $user && method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin();
 
         $passwordRules = $isSuperAdmin
-            ? ['required', 'string', 'confirmed', \Illuminate\Validation\Rules\Password::min(12)->letters()->mixedCase()->numbers()->symbols()]
+            ? ['required', 'string', 'confirmed', Password::min(12)->letters()->mixedCase()->numbers()->symbols()]
             : ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'];
 
         $request->validate([
