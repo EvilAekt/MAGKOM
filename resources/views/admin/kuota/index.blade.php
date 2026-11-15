@@ -175,7 +175,7 @@
                     <span style="font-weight: 700; color: #1E293B;">Bulan Magang:</span>
                 </div>
                 <form method="GET" action="{{ route('admin.kuota.index') }}" style="display: flex; align-items: center; margin: 0;">
-                    <select name="bulan_magang_id" onchange="this.form.submit()">
+                    <select name="bulan_magang_id" data-action="auto-submit-form">
                         @foreach($bulanList as $b)
                             <option value="{{ $b->id }}" {{ $selectedBulan && $selectedBulan->id === $b->id ? 'selected' : '' }}>
                                 {{ $b->nama_bulan ? $b->nama_bulan . ' (' . $b->bulan_mulai?->translatedFormat('F Y') . ')' : $b->bulan_mulai?->translatedFormat('F Y') }} {{ $b->aktif ? '(Aktif)' : '(Draft)' }}
@@ -202,7 +202,7 @@
                     @endif
 
                     @if($selectedBulan)
-                        <button type="button" onclick="openUbahBulanModal()" class="btn-outline-action">
+                        <button type="button" data-action="open-ubah-bulan" class="btn-outline-action">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 20h9"></path>
                                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
@@ -211,7 +211,7 @@
                         </button>
                     @endif
 
-                    <button type="button" onclick="openBuatBulanModal()" class="btn-primary-action">
+                    <button type="button" data-action="open-buat-bulan" class="btn-primary-action">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -231,7 +231,7 @@
     >
         @if($selectedBulan && !auth()->user()?->isSuperAdmin())
             <x-slot:actions>
-                <button type="button" onclick="openTambahKuotaModal()" class="btn-primary-action btn-tambah-kuota-header">
+                <button type="button" data-action="open-tambah-kuota" class="btn-primary-action btn-tambah-kuota-header">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
                         <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -325,8 +325,13 @@
                                         <span style="font-size: 0.75rem; color: #94A3B8; font-weight: 500;">Read-Only</span>
                                     @else
                                         <button type="button" 
-                                                onclick="openEditBidangModal({{ $item['id'] }}, '{{ addslashes($item['nama']) }}', {{ json_encode($item['jurusan_list']->map(fn($j) => ['id' => $j->id, 'nama' => $j->nama_jurusan, 'jumlah' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->jumlah ?? 0, 'terisi' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->terisi ?? 0])) }}, {{ $item['kapasitas_bimbingan'] }}, {{ $item['pembimbing_count'] }})" 
-                                                class="btn-edit-action">
+                                                class="btn-edit-action"
+                                                data-action="open-edit-bidang"
+                                                data-bidang-id="{{ $item['id'] }}"
+                                                data-bidang-nama="{{ $item['nama'] }}"
+                                                data-kapasitas-bimbingan="{{ $item['kapasitas_bimbingan'] }}"
+                                                data-pembimbing-count="{{ $item['pembimbing_count'] }}"
+                                                data-jurusans="{{ json_encode($item['jurusan_list']->map(fn($j) => ['id' => $j->id, 'nama' => $j->nama_jurusan, 'jumlah' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->jumlah ?? 0, 'terisi' => $selectedBulan?->kuota->where('jurusan_id', $j->id)->first()?->terisi ?? 0])) }}">
                                             Ubah
                                         </button>
                                     @endif
@@ -361,7 +366,7 @@
                 <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Ubah bulan</h3>
                 <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Tentukan jadwal pendaftaran dan mulai magang.</p>
             </div>
-            <button type="button" onclick="closeUbahBulanModal()" class="modal-btn-close-box" aria-label="Tutup">
+            <button type="button" data-action="close-ubah-bulan" class="modal-btn-close-box" aria-label="Tutup">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -455,7 +460,7 @@
                 <div class="status-pills-group">
                     <button type="button" 
                             id="btnUbahStatusDraft"
-                            onclick="setStatusUbahBulan('draft')" 
+                            data-action="set-status-ubah-bulan" data-status="draft" 
                             class="btn-status-pill {{ ! $selectedBulan->aktif ? 'active' : '' }}">
                         <span id="checkIconUbahDraft" style="display: {{ ! $selectedBulan->aktif ? 'inline-flex' : 'none' }}; align-items: center;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -466,7 +471,7 @@
                     </button>
                     <button type="button" 
                             id="btnUbahStatusDibuka"
-                            onclick="setStatusUbahBulan('dibuka')" 
+                            data-action="set-status-ubah-bulan" data-status="dibuka" 
                             class="btn-status-pill {{ $selectedBulan->aktif ? 'active' : '' }}">
                         <span id="checkIconUbahDibuka" style="display: {{ $selectedBulan->aktif ? 'inline-flex' : 'none' }}; align-items: center;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -490,7 +495,7 @@
 
             {{-- 6. Footer Buttons --}}
             <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
-                <button type="button" onclick="closeUbahBulanModal()" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
+                <button type="button" data-action="close-ubah-bulan" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
                     Batal
                 </button>
                 <button type="submit" id="btnSubmitUbahBulan" class="btn-primary-action" style="padding: 0.6rem 1.4rem; font-weight: 700;">
@@ -512,7 +517,7 @@
                 <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Buat bulan baru</h3>
                 <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Tentukan jadwal pendaftaran dan mulai magang.</p>
             </div>
-            <button type="button" onclick="closeBuatBulanModal()" class="modal-btn-close-box" aria-label="Tutup">
+            <button type="button" data-action="close-buat-bulan" class="modal-btn-close-box" aria-label="Tutup">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -600,7 +605,7 @@
                 <div class="status-pills-group">
                     <button type="button" 
                             id="btnStatusDraft"
-                            onclick="setStatusAwal('draft')" 
+                            data-action="set-status-awal" data-status="draft" 
                             class="btn-status-pill active">
                         <span id="checkIconDraft" style="display: inline-flex; align-items: center;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -611,7 +616,7 @@
                     </button>
                     <button type="button" 
                             id="btnStatusDibuka"
-                            onclick="setStatusAwal('dibuka')" 
+                            data-action="set-status-awal" data-status="dibuka" 
                             class="btn-status-pill">
                         <span id="checkIconDibuka" style="display: none; align-items: center;">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -635,7 +640,7 @@
 
             {{-- 6. Footer Buttons --}}
             <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
-                <button type="button" onclick="closeBuatBulanModal()" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
+                <button type="button" data-action="close-buat-bulan" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
                     Batal
                 </button>
                 <button type="submit" class="btn-primary-action" style="padding: 0.6rem 1.4rem; font-weight: 700;">
@@ -657,7 +662,7 @@
                 <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Tambah kuota <span class="sr-only">Alokasikan Kuota Jurusan</span></h3>
                 <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Atur kuota, jurusan, jenjang, dan durasi untuk satu bidang.</p>
             </div>
-            <button type="button" onclick="closeTambahKuotaModal()" class="modal-btn-close-box" aria-label="Tutup">
+            <button type="button" data-action="close-tambah-kuota" class="modal-btn-close-box" aria-label="Tutup">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -683,7 +688,7 @@
                         <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B;">Bidang <span style="color: #DC2626;">*</span></label>
                         <span id="infoBidangKapasitasMini" style="font-size: 0.725rem; color: #0641CC; font-weight: 600;"></span>
                     </div>
-                    <select name="bidang_id" id="tambahKuotaBidangSelect" onchange="onBidangSelected(this.value)" required style="width: 100%; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: #FFFFFF; font-weight: 600; color: #0F172A;">
+                    <select name="bidang_id" id="tambahKuotaBidangSelect"  required style="width: 100%; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: #FFFFFF; font-weight: 600; color: #0F172A;">
                         @foreach($bidangList as $b)
                             <option value="{{ $b['id'] }}" {{ $loop->first ? 'selected' : '' }}>
                                 {{ $b['nama'] }}
@@ -700,10 +705,10 @@
                     {{-- Dinamis diisi via JavaScript --}}
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
-                    <button type="button" class="btn-add-jurusan-chip" onclick="toggleExtraJurusanSelect()">
+                    <button type="button" class="btn-add-jurusan-chip" data-action="toggle-extra-jurusan">
                         <span>+ Jurusan</span>
                     </button>
-                    <select id="extraJurusanSelect" onchange="addExtraJurusan(this)" style="display: none; height: 36px; font-size: 0.8125rem; padding: 0 0.75rem; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #1E293B;">
+                    <select id="extraJurusanSelect"  style="display: none; height: 36px; font-size: 0.8125rem; padding: 0 0.75rem; border-radius: 8px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #1E293B;">
                         <option value="">-- Pilih Jurusan Lain --</option>
                         @foreach($jurusanList as $jur)
                             <option value="{{ $jur->id }}" data-nama="{{ $jur->nama_jurusan }}">
@@ -719,13 +724,13 @@
             <div class="form-row-group">
                 <label style="font-size: 0.8125rem; font-weight: 700; color: #1E293B; margin-bottom: 0.35rem;">Jenjang</label>
                 <div class="jenjang-pills-wrap">
-                    <button type="button" id="pillJenjangSMK" onclick="toggleJenjang('SMK')" class="btn-jenjang-pill">
+                    <button type="button" id="pillJenjangSMK" data-action="toggle-jenjang" data-jenjang="SMK" class="btn-jenjang-pill">
                         <span class="jenjang-check" style="display: none;">✓ </span>SMK
                     </button>
-                    <button type="button" id="pillJenjangD3" onclick="toggleJenjang('D3')" class="btn-jenjang-pill">
+                    <button type="button" id="pillJenjangD3" data-action="toggle-jenjang" data-jenjang="D3" class="btn-jenjang-pill">
                         <span class="jenjang-check" style="display: none;">✓ </span>D3
                     </button>
-                    <button type="button" id="pillJenjangS1" onclick="toggleJenjang('S1')" class="btn-jenjang-pill active">
+                    <button type="button" id="pillJenjangS1" data-action="toggle-jenjang" data-jenjang="S1" class="btn-jenjang-pill active">
                         <span class="jenjang-check" style="display: inline;">✓ </span>S1
                     </button>
                 </div>
@@ -744,7 +749,7 @@
                            min="1" 
                            max="100" 
                            value="3" 
-                           oninput="checkKapasitasLimit()" 
+                            
                            required>
                 </div>
                 <div class="form-row-group">
@@ -788,7 +793,7 @@
 
             {{-- 6. Footer Buttons --}}
             <div class="modal-footer-btns" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
-                <button type="button" onclick="closeTambahKuotaModal()" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
+                <button type="button" data-action="close-tambah-kuota" class="btn-outline-action" style="padding: 0.6rem 1.35rem; font-weight: 600;">
                     Batal
                 </button>
                 <button type="submit" id="btnSubmitTambahKuota" class="btn-primary-action" style="padding: 0.6rem 1.4rem; font-weight: 700;">
@@ -810,7 +815,7 @@
                 <h3 class="modal-title" id="editBidangTitle" style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Ubah Kuota Bidang</h3>
                 <p class="modal-header-desc" style="font-size: 0.8125rem; color: #64748B; margin: 0.25rem 0 0 0;">Atur status buka/tutup dan kapasitas peserta untuk bidang ini.</p>
             </div>
-            <button type="button" onclick="closeEditBidangModal()" class="modal-btn-close-box" aria-label="Tutup">
+            <button type="button" data-action="close-edit-bidang" class="modal-btn-close-box" aria-label="Tutup">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -829,7 +834,7 @@
                 <div class="status-pills-group" style="display: flex; gap: 0.5rem;">
                     <button type="button" 
                             id="btnBidangBuka" 
-                            onclick="setStatusBidang('buka')" 
+                            data-action="set-status-bidang" data-status="buka" 
                             class="btn-status-pill active" 
                             style="flex: 1; height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer;">
                         <span id="checkIconBidangBuka" style="display: inline-flex; align-items: center;">
@@ -841,7 +846,7 @@
                     </button>
                     <button type="button" 
                             id="btnBidangTutup" 
-                            onclick="setStatusBidang('tutup')" 
+                            data-action="set-status-bidang" data-status="tutup" 
                             class="btn-status-pill" 
                             style="flex: 1; height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer;">
                         <span id="checkIconBidangTutup" style="display: none; align-items: center;">
@@ -898,456 +903,13 @@
             </div>
 
             <div class="modal-footer-btns" style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #E2E8F0;">
-                <button type="button" onclick="closeEditBidangModal()" class="btn-outline-action">Batal</button>
+                <button type="button" data-action="close-edit-bidang" class="btn-outline-action">Batal</button>
                 <button type="submit" id="btnSubmitEditBidang" class="btn-primary-action">Simpan Perubahan</button>
             </div>
         </form>
     </div>
 </div>
 
-<script>
-    function openUbahBulanModal() {
-        const modal = document.getElementById('modalUbahBulan');
-        if (modal) { 
-            modal.style.display = 'flex'; 
-            document.body.style.overflow = 'hidden'; 
-
-            // Pasang event listener untuk validasi tanggal dinamis
-            const tglBuka = document.getElementById('ubahBulanTglBuka');
-            const tglTutup = document.getElementById('ubahBulanTglTutup');
-            const tglMulai = document.getElementById('ubahBulanMulai');
-
-            if (tglBuka && tglTutup) {
-                tglBuka.addEventListener('change', function() {
-                    if (this.value) {
-                        tglTutup.min = this.value;
-                        if (tglTutup.value && tglTutup.value < this.value) {
-                            tglTutup.value = this.value;
-                        }
-                    }
-                });
-            }
-
-            if (tglTutup && tglMulai) {
-                tglTutup.addEventListener('change', function() {
-                    if (this.value) {
-                        const nextDay = new Date(this.value);
-                        nextDay.setDate(nextDay.getDate() + 1);
-                        const isoStr = nextDay.toISOString().split('T')[0];
-                        tglMulai.min = isoStr;
-                        if (tglMulai.value && tglMulai.value <= this.value) {
-                            tglMulai.value = isoStr;
-                        }
-                    }
-                });
-            }
-        }
-    }
-    function closeUbahBulanModal() {
-        const modal = document.getElementById('modalUbahBulan');
-        if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
-    }
-
-    function setStatusAwal(status) {
-        const input = document.getElementById('statusAwalInput');
-        const btnDraft = document.getElementById('btnStatusDraft');
-        const btnDibuka = document.getElementById('btnStatusDibuka');
-        const iconDraft = document.getElementById('checkIconDraft');
-        const iconDibuka = document.getElementById('checkIconDibuka');
-
-        if (input) input.value = status;
-
-        if (status === 'draft') {
-            if (btnDraft) btnDraft.classList.add('active');
-            if (btnDibuka) btnDibuka.classList.remove('active');
-            if (iconDraft) iconDraft.style.display = 'inline-flex';
-            if (iconDibuka) iconDibuka.style.display = 'none';
-        } else {
-            if (btnDraft) btnDraft.classList.remove('active');
-            if (btnDibuka) btnDibuka.classList.add('active');
-            if (iconDraft) iconDraft.style.display = 'none';
-            if (iconDibuka) iconDibuka.style.display = 'inline-flex';
-        }
-    }
-
-    function openBuatBulanModal() {
-        const modal = document.getElementById('modalBuatBulan');
-        if (modal) { 
-            modal.style.display = 'flex'; 
-            document.body.style.overflow = 'hidden'; 
-            
-            // Pasang event listener untuk validasi tanggal dinamis
-            const tglBuka = document.getElementById('buatBulanTglBuka');
-            const tglTutup = document.getElementById('buatBulanTglTutup');
-            const tglMulai = document.getElementById('buatBulanMulai');
-
-            if (tglBuka && tglTutup) {
-                tglBuka.addEventListener('change', function() {
-                    if (this.value) {
-                        tglTutup.min = this.value;
-                        if (tglTutup.value && tglTutup.value < this.value) {
-                            tglTutup.value = this.value;
-                        }
-                    }
-                });
-            }
-
-            if (tglTutup && tglMulai) {
-                tglTutup.addEventListener('change', function() {
-                    if (this.value) {
-                        const nextDay = new Date(this.value);
-                        nextDay.setDate(nextDay.getDate() + 1);
-                        const isoStr = nextDay.toISOString().split('T')[0];
-                        tglMulai.min = isoStr;
-                        if (tglMulai.value && tglMulai.value <= this.value) {
-                            tglMulai.value = isoStr;
-                        }
-                    }
-                });
-            }
-        }
-    }
-    function closeBuatBulanModal() {
-        const modal = document.getElementById('modalBuatBulan');
-        if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
-    }
-
-    function setStatusUbahBulan(status) {
-        const input = document.getElementById('statusUbahInput');
-        const btnDraft = document.getElementById('btnUbahStatusDraft');
-        const btnDibuka = document.getElementById('btnUbahStatusDibuka');
-        const iconDraft = document.getElementById('checkIconUbahDraft');
-        const iconDibuka = document.getElementById('checkIconUbahDibuka');
-
-        if (input) input.value = status;
-
-        if (status === 'draft') {
-            if (btnDraft) btnDraft.classList.add('active');
-            if (btnDibuka) btnDibuka.classList.remove('active');
-            if (iconDraft) iconDraft.style.display = 'inline-flex';
-            if (iconDibuka) iconDibuka.style.display = 'none';
-        } else {
-            if (btnDraft) btnDraft.classList.remove('active');
-            if (btnDibuka) btnDibuka.classList.add('active');
-            if (iconDraft) iconDraft.style.display = 'none';
-            if (iconDibuka) iconDibuka.style.display = 'inline-flex';
-        }
-    }
-
-    /* Master Data Bidang & Interaksi Modal Tambah Kuota */
-    const masterBidangData = @json($bidangJsonData ?? []);
-    let activeJurusanIds = [];
-
-    function onBidangSelected(bidangId) {
-        const bidang = masterBidangData.find(b => b.id == bidangId);
-        const container = document.getElementById('jurusanChipsContainer');
-        const miniInfo = document.getElementById('infoBidangKapasitasMini');
-        if (!bidang || !container) return;
-
-        if (miniInfo) {
-            miniInfo.innerText = `${bidang.pembimbing_count} Pembimbing • Sisa: ${bidang.sisa_kapasitas} kursi`;
-        }
-
-        container.innerHTML = '';
-        activeJurusanIds = [];
-
-        if (bidang.jurusans && bidang.jurusans.length > 0) {
-            bidang.jurusans.forEach(j => {
-                activeJurusanIds.push(j.id);
-                const chip = document.createElement('button');
-                chip.type = 'button';
-                chip.className = 'chip-jurusan';
-                chip.id = 'chipJurusan_' + j.id;
-                chip.onclick = function() { toggleJurusanChip(j.id, this); };
-                chip.innerHTML = `<span class="chip-check">✓ </span><span>${j.nama}</span>`;
-                container.appendChild(chip);
-            });
-        } else {
-            container.innerHTML = '<span style="font-size: 0.8125rem; color: #64748B;">Belum ada kejuruan terikat di bidang ini.</span>';
-        }
-
-        updateHiddenJurusanInputs();
-        checkKapasitasLimit();
-    }
-
-    function toggleJurusanChip(jurusanId, element) {
-        const idx = activeJurusanIds.indexOf(jurusanId);
-        const checkSpan = element.querySelector('.chip-check');
-
-        if (idx > -1) {
-            // Uncheck
-            activeJurusanIds.splice(idx, 1);
-            element.classList.add('inactive');
-            if (checkSpan) checkSpan.style.display = 'none';
-        } else {
-            // Check
-            activeJurusanIds.push(jurusanId);
-            element.classList.remove('inactive');
-            if (checkSpan) checkSpan.style.display = 'inline';
-        }
-
-        updateHiddenJurusanInputs();
-    }
-
-    function toggleExtraJurusanSelect() {
-        const select = document.getElementById('extraJurusanSelect');
-        if (!select) return;
-        select.style.display = select.style.display === 'none' ? 'inline-block' : 'none';
-        if (select.style.display !== 'none') select.focus();
-    }
-
-    function addExtraJurusan(selectEl) {
-        const jurId = parseInt(selectEl.value);
-        if (!jurId) return;
-
-        const opt = selectEl.options[selectEl.selectedIndex];
-        const jurNama = opt.getAttribute('data-nama') || opt.text;
-        const container = document.getElementById('jurusanChipsContainer');
-
-        if (!activeJurusanIds.includes(jurId)) {
-            activeJurusanIds.push(jurId);
-            const chip = document.createElement('button');
-            chip.type = 'button';
-            chip.className = 'chip-jurusan';
-            chip.id = 'chipJurusan_' + jurId;
-            chip.onclick = function() { toggleJurusanChip(jurId, this); };
-            chip.innerHTML = `<span class="chip-check">✓ </span><span>${jurNama}</span>`;
-            if (container) container.appendChild(chip);
-            updateHiddenJurusanInputs();
-        }
-
-        selectEl.value = '';
-        selectEl.style.display = 'none';
-    }
-
-    function updateHiddenJurusanInputs() {
-        const hiddenWrap = document.getElementById('hiddenJurusanInputs');
-        if (!hiddenWrap) return;
-        hiddenWrap.innerHTML = '';
-        activeJurusanIds.forEach(id => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'jurusan_ids[]';
-            input.value = id;
-            hiddenWrap.appendChild(input);
-        });
-
-        // Pastikan fallback single jurusan_id jika ada
-        if (activeJurusanIds.length > 0) {
-            const singleInput = document.createElement('input');
-            singleInput.type = 'hidden';
-            singleInput.name = 'jurusan_id';
-            singleInput.value = activeJurusanIds[0];
-            hiddenWrap.appendChild(singleInput);
-        }
-    }
-
-    function toggleJenjang(jenjangCode) {
-        const pill = document.getElementById('pillJenjang' + jenjangCode);
-        const input = document.getElementById('inputJenjang' + jenjangCode);
-        if (!pill || !input) return;
-
-        const checkSpan = pill.querySelector('.jenjang-check');
-        const isActive = pill.classList.contains('active');
-
-        if (isActive) {
-            pill.classList.remove('active');
-            input.disabled = true;
-            if (checkSpan) checkSpan.style.display = 'none';
-        } else {
-            pill.classList.add('active');
-            input.disabled = false;
-            input.value = jenjangCode;
-            if (checkSpan) checkSpan.style.display = 'inline';
-        }
-    }
-
-    function checkKapasitasLimit() {
-        const bidangSelect = document.getElementById('tambahKuotaBidangSelect');
-        const jumlahInput = document.getElementById('tambahKuotaJumlahInput');
-        const boxWarning = document.getElementById('boxWarningKapasitas');
-        const textDetail = document.getElementById('textWarningKapasitasDetail');
-
-        if (!bidangSelect || !jumlahInput || !boxWarning || !textDetail) return;
-
-        const bidangId = bidangSelect.value;
-        const bidang = masterBidangData.find(b => b.id == bidangId);
-        const inputVal = parseInt(jumlahInput.value) || 0;
-
-        if (!bidang) {
-            boxWarning.style.display = 'none';
-            return;
-        }
-
-        if (inputVal > bidang.sisa_kapasitas) {
-            boxWarning.style.display = 'flex';
-            textDetail.innerText = `Kapasitas ${bidang.nama} ${bidang.kapasitas_bimbingan} peserta (${bidang.pembimbing_count} Pembimbing x 6) dan kuota terpasang sudah ${bidang.kuota_terpasang}, sisa kapasitas ${bidang.sisa_kapasitas}. Kurangi jumlah kuota yang ditambahkan atau tambah Pembimbing aktif di bidang ini.`;
-        } else {
-            boxWarning.style.display = 'none';
-        }
-    }
-
-    function openTambahKuotaModal() {
-        const modal = document.getElementById('modalTambahKuota');
-        if (modal) { 
-            modal.style.display = 'flex'; 
-            document.body.style.overflow = 'hidden'; 
-            const bidangSelect = document.getElementById('tambahKuotaBidangSelect');
-            if (bidangSelect && bidangSelect.value) {
-                onBidangSelected(bidangSelect.value);
-            }
-        }
-    }
-    function closeTambahKuotaModal() {
-        const modal = document.getElementById('modalTambahKuota');
-        if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
-    }
-
-    let currentBidangKapasitasMax = 18;
-    let currentBidangJurusans = [];
-
-    function setStatusBidang(status) {
-        const inputStatus = document.getElementById('inputStatusBidang');
-        const btnBuka = document.getElementById('btnBidangBuka');
-        const btnTutup = document.getElementById('btnBidangTutup');
-        const iconBuka = document.getElementById('checkIconBidangBuka');
-        const iconTutup = document.getElementById('checkIconBidangTutup');
-        const wrapAlloc = document.getElementById('wrapJurusanAllocSection');
-        const noticeTutup = document.getElementById('boxBidangTutupNotice');
-        const submitBtn = document.getElementById('btnSubmitEditBidang');
-
-        if (inputStatus) inputStatus.value = status;
-
-        if (status === 'tutup') {
-            if (btnBuka) btnBuka.classList.remove('active');
-            if (btnTutup) btnTutup.classList.add('active');
-            if (iconBuka) iconBuka.style.display = 'none';
-            if (iconTutup) iconTutup.style.display = 'inline-flex';
-            if (wrapAlloc) wrapAlloc.style.display = 'none';
-            if (noticeTutup) noticeTutup.style.display = 'block';
-            if (submitBtn) submitBtn.disabled = false;
-            const warnBox = document.getElementById('boxWarningKapasitasBidang');
-            if (warnBox) warnBox.style.display = 'none';
-            const displayTotal = document.getElementById('totalKapasitasBidangDisplay');
-            if (displayTotal) displayTotal.innerText = '0';
-        } else {
-            if (btnBuka) btnBuka.classList.add('active');
-            if (btnTutup) btnTutup.classList.remove('active');
-            if (iconBuka) iconBuka.style.display = 'inline-flex';
-            if (iconTutup) iconTutup.style.display = 'none';
-            if (wrapAlloc) wrapAlloc.style.display = 'block';
-            if (noticeTutup) noticeTutup.style.display = 'none';
-            recalcTotalKapasitasBidang();
-        }
-    }
-
-    function recalcTotalKapasitasBidang() {
-        const inputs = document.querySelectorAll('.input-kuota-jurusan');
-        let total = 0;
-        inputs.forEach(inp => {
-            total += parseInt(inp.value) || 0;
-        });
-
-        const displayTotal = document.getElementById('totalKapasitasBidangDisplay');
-        if (displayTotal) displayTotal.innerText = total;
-
-        const warnBox = document.getElementById('boxWarningKapasitasBidang');
-        const warnTotal = document.getElementById('warnTotalKapasitas');
-        const warnMax = document.getElementById('warnMaxKapasitas');
-
-        if (total > currentBidangKapasitasMax) {
-            if (warnBox) warnBox.style.display = 'flex';
-            if (warnTotal) warnTotal.innerText = total;
-            if (warnMax) warnMax.innerText = currentBidangKapasitasMax;
-        } else {
-            if (warnBox) warnBox.style.display = 'none';
-        }
-    }
-
-    function openEditBidangModal(bidangId, namaBidang, jurusans, kapasitasBimbingan, pembimbingCount) {
-        const modal = document.getElementById('modalEditBidang');
-        const form = document.getElementById('formEditBidang');
-        const title = document.getElementById('editBidangTitle');
-        const listWrap = document.getElementById('jurusanAllocList');
-        const maxDisplay = document.getElementById('maxKapasitasBimbinganDisplay');
-        const countDisplay = document.getElementById('pembimbingCountDisplay');
-
-        currentBidangKapasitasMax = kapasitasBimbingan || 18;
-        currentBidangJurusans = jurusans || [];
-
-        if (maxDisplay) maxDisplay.innerText = currentBidangKapasitasMax;
-        if (countDisplay) countDisplay.innerText = pembimbingCount || 2;
-        if (title) title.innerText = 'Ubah Kuota: ' + namaBidang;
-        if (form) form.action = '/admin/kuota/bidang/' + bidangId;
-
-        let totalAwal = 0;
-        if (listWrap) {
-            listWrap.innerHTML = '';
-            if (!jurusans || jurusans.length === 0) {
-                listWrap.innerHTML = '<p style="color: #64748B; font-size: 0.85rem; text-align: center; padding: 1.5rem 0;">Belum ada kejuruan terikat di bidang ini.</p>';
-            } else {
-                jurusans.forEach(j => {
-                    totalAwal += (parseInt(j.jumlah) || 0);
-                    const row = document.createElement('div');
-                    row.style = 'display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.65rem 0.85rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px;';
-                    row.innerHTML = `
-                        <div style="flex: 1;">
-                            <strong style="font-size: 0.875rem; color: #0F172A; display: block;">${j.nama}</strong>
-                            <small style="color: #64748B; font-size: 0.725rem;">Terisi: ${j.terisi} kursi</small>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <label style="font-size: 0.75rem; color: #475569; font-weight: 600;">Kuota:</label>
-                            <input type="number" 
-                                   name="alokasi[${j.id}]" 
-                                   class="input-kuota-jurusan"
-                                   value="${j.jumlah}" 
-                                   min="${j.terisi}" 
-                                   max="100" 
-                                   oninput="recalcTotalKapasitasBidang()"
-                                   required 
-                                   style="width: 75px; height: 36px; padding: 0 0.5rem; text-align: center; font-weight: 700; border: 1px solid #CBD5E1; border-radius: 6px;">
-                        </div>
-                    `;
-                    listWrap.appendChild(row);
-                });
-            }
-        }
-
-        // Tentukan status awal: jika totalAwal > 0 maka 'buka', jika 0 maka 'tutup'
-        if (totalAwal > 0) {
-            setStatusBidang('buka');
-        } else {
-            setStatusBidang('tutup');
-        }
-
-        if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
-    }
-
-    function closeEditBidangModal() {
-        const modal = document.getElementById('modalEditBidang');
-        if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
-    }
-
-    // Escape listener
-    window.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeUbahBulanModal();
-            closeBuatBulanModal();
-            closeTambahKuotaModal();
-            closeEditBidangModal();
-        }
-    });
-
-    // Backdrop click listener
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-        overlay.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeUbahBulanModal();
-                closeBuatBulanModal();
-                closeTambahKuotaModal();
-                closeEditBidangModal();
-            }
-        });
-    });
-</script>
+<script type="application/json" id="magkom-bidang-master-data">@json($bidangJsonData ?? [])</script>
+@vite(['resources/js/pages/admin/kuota-index.js'])
 @endsection

@@ -354,7 +354,7 @@
                     <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
                         Peran Akses <span style="color: var(--red-600);">*</span>
                     </label>
-                    <select name="role" id="tambahRole" onchange="toggleBidangField('tambah')" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
+                    <select name="role" id="tambahRole"  required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
                         <option value="admin" selected>Admin Verifikator</option>
                         <option value="pembimbing">Pembimbing Lapangan</option>
                     </select>
@@ -472,7 +472,7 @@
                 <label style="display: block; font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.375rem;">
                     Peran Akses Sistem <span style="color: var(--red-600);">*</span>
                 </label>
-                <select id="editRole" name="role" onchange="toggleBidangField('edit')" required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
+                <select id="editRole" name="role"  required style="width: 100%; height: 42px; border: 1px solid var(--neutral-400); border-radius: 8px; padding: 0 0.875rem; font-size: 0.875rem; background: var(--neutral-0); font-family: inherit;">
                     <option value="admin">Administrasi Kominfo (Verifikator)</option>
                     <option value="pembimbing">Pembimbing Lapangan</option>
                 </select>

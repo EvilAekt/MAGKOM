@@ -13,8 +13,9 @@
     <a href="#spesifikasi-teknis"><img src="https://img.shields.io/badge/Laravel-10.x-FF2D20?style=flat-square&logo=laravel&logoColor=white" alt="Laravel Framework" /></a>
     <a href="#spesifikasi-teknis"><img src="https://img.shields.io/badge/Vite-6.x-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite Frontend" /></a>
     <a href="#spesifikasi-teknis"><img src="https://img.shields.io/badge/MySQL-8.0+-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="MySQL Database" /></a>
-    <a href="#pengujian-otomatis-dan-kualitas-kode"><img src="https://img.shields.io/badge/Tests-740%20Passed-22c55e?style=flat-square" alt="PHPUnit Tests" /></a>
+    <a href="#pengujian-otomatis-dan-kualitas-kode"><img src="https://img.shields.io/badge/Tests-950%2B%20Passed-22c55e?style=flat-square" alt="PHPUnit Tests" /></a>
     <a href="#pengujian-otomatis-dan-kualitas-kode"><img src="https://img.shields.io/badge/Code%20Style-PSR--12%20Pint-1e293b?style=flat-square" alt="Laravel Pint" /></a>
+    <a href="#keamanan-dan-kepatuhan"><img src="https://img.shields.io/badge/CSP-Strict%20Zero%20Inline-0ea5e9?style=flat-square" alt="CSP Strict" /></a>
     <a href="#hak-cipta-dan-ketentuan-penggunaan"><img src="https://img.shields.io/badge/License-Proprietary-dc2626?style=flat-square" alt="Proprietary License" /></a>
   </p>
 </div>
@@ -45,7 +46,7 @@ MagKom menyatukan seluruh mata rantai administrasi tersebut ke dalam satu aplika
 
 | Akun GitHub | Peran & Jabatan | Jobdesk Utama |
 | :--- | :--- | :--- |
-| **[@EvilAekt](https://github.com/EvilAekt)** | **Lead Software Architect & Security Lead**<br>*(Project Owner / Tech Lead)* | • Menetapkan arah arsitektur sistem, regulasi kedinasan, dan aturan bisnis definitif (*SSOT*).<br>• Merancang skema tabel database, relasi kunci asing, dan transaksi locking kuota atomik (`lockForUpdate`).<br>• Mengelola arsitektur kernel, middleware otorisasi RBAC, service layer, dan pola Modular Actions & Queries.<br>• Memimpin otomatisasi pengujian (740+ tests di PHPUnit) dan memegang wewenang approval/merge final ke `main`. |
+| **[@EvilAekt](https://github.com/EvilAekt)** | **Lead Software Architect & Security Lead**<br>*(Project Owner / Tech Lead)* | • Menetapkan arah arsitektur sistem, regulasi kedinasan, dan aturan bisnis definitif (*SSOT*).<br>• Merancang skema tabel database, relasi kunci asing, dan transaksi locking kuota atomik (`lockForUpdate`).<br>• Mengelola arsitektur kernel, middleware otorisasi RBAC, service layer, dan pola Modular Actions & Queries.<br>• Memimpin otomatisasi pengujian (950+ tests di PHPUnit) dan memegang wewenang approval/merge final ke `main`. |
 | **[@aldiartha](https://github.com/aldiartha)** | **Fullstack Developer & Admin Systems Specialist**<br>*(Admin & Placement Domain Lead)* | • Mengelola seluruh logika bisnis dan antarmuka modul Administrasi Kominfo (`/admin/*`).<br>• Merancang alur verifikasi berkas kandidat magang ber-SLA (*SLA Watchdog*) dan penerbitan Surat Penerimaan resmi.<br>• Mengembangkan sistem plotting penempatan dua tahap dan pembatasan beban bimbingan staf dinas (*mentee limiter*).<br>• Menyusun query pelaporan dan standardisasi format ekspor berkas spreadsheet kedinasan (CSV, Excel, PDF). |
 | **[@NAUFALFEBRIAN62](https://github.com/NAUFALFEBRIAN62)** | **Frontend Specialist & UI/UX Interaction Engineer**<br>*(Public Portal & Peserta Domain Lead)* | • Mengembangkan antarmuka Blade dengan kepatuhan mutlak: **Zero Inline CSS/JS**.<br>• Merancang antarmuka publik dan portal peserta (`/peserta/*`) yang ergonomis, responsif, dan ramah perangkat mobile.<br>• Membangun dashboard modular Bento Grid, turn-in tugas classroom, dan pendaftaran tim/kelompok.<br>• Mengelola interaktivitas Vanilla JavaScript (ES Modules), animasi GSAP, dan harmonisasi Dark Mode (`DS-MagKom`). |
 
@@ -169,10 +170,10 @@ Aturan operasional sistem dikendalikan terpusat melalui panel SuperAdmin tanpa m
 | **Basis Data** | MySQL 8.0+ / MariaDB (InnoDB Storage Engine, Foreign Keys, Transactions) |
 | **Frontend Pipeline** | Vite 6.x dengan Vanilla CSS Design Tokens dan Vanilla ES Modules |
 | **Penyimpanan Berkas** | Storage Disk Privat terproteksi Temporary Signed URLs |
-| **Standar Keamanan** | Proteksi CSRF, Anti-IDOR Authorization, Input Sanitization, Anti-Formula Injection, Header HTTP Terenkapsulasi (CSP, X-Frame-Options, X-Content-Type-Options) |
+| **Standar Keamanan** | Proteksi CSRF, Anti-IDOR Authorization, Input Sanitization (Deskripsi Tugas & Laporan), Anti-Formula Injection, Header HTTP Terenkapsulasi (CSP Ketat `script-src 'self'` tanpa `unsafe-inline`, X-Frame-Options SAMEORIGIN, X-Content-Type-Options nosniff) |
 | **Linter dan Formatter** | Laravel Pint (Standar PSR-12) |
-| **Analisis Statis** | Larastan / PHPStan Level 2 (Memory Limit 1G) |
-| **Framework Pengujian** | PHPUnit 10.x (740+ Automated Feature & Unit Tests, 111 Test Suites dengan basis data SQLite in-memory) |
+| **Analisis Statis** | Larastan / PHPStan Level 2 (Memory Limit 1G, 0 Errors) |
+| **Framework Pengujian** | PHPUnit 10.x (950+ Automated Feature & Unit Tests, 130+ Test Suites dengan basis data SQLite in-memory) |
 
 ---
 
@@ -219,6 +220,9 @@ DB_PASSWORD=kata_sandi_database
 ```
 
 ### 4. Migrasi Basis Data dan Seeding Awal
+
+> **Penting (Environment Production):** Sebelum menjalankan migrasi seeding di production, pastikan variabel `SEED_SUPERADMIN_PASSWORD` telah diatur pada file `.env`. Seluruh seeder akun pengujian dan data dummy otomatis dicegah dan tidak akan dieksekusi di environment production.
+
 ```bash
 # Menjalankan skema basis data dan master data konfigurasi
 php artisan migrate --seed --force
@@ -241,7 +245,7 @@ php artisan view:cache
 Setiap perubahan kode diverifikasi melalui rangkaian pengujian otomatis dan pipeline CI/CD GitHub Actions:
 
 ```bash
-# Menjalankan seluruh test suite otomatis (740 tests)
+# Menjalankan seluruh test suite otomatis (950+ tests)
 php artisan test
 
 # Menjalankan analisis statis PHPStan
@@ -253,6 +257,12 @@ php artisan test
 
 ### Komponen Pengujian Utama
 - **`CoreFoundationTest`**: Pengujian integritas model, casting enumerasi, dan immutability audit log.
+- **`SecurityHeadersProductionTest`**: Pengujian kepatuhan ketat CSP (`script-src 'self'`) tanpa `unsafe-inline`/`unsafe-eval`/nonce, serta verifikasi 0 inline `<script>` dan 0 inline `on*=` pada seluruh 185 Blade view.
+- **`SeederProductionSafetyTest`**: Pengujian pencegahan eksekusi seeder akun dummy/testing di lingkungan production dan kewajiban `SEED_SUPERADMIN_PASSWORD`.
+- **`RealtimeStreamConcurrencyTest`**: Pengujian pembatasan 1 koneksi aktif SSE per pengguna dan isolasi resource worker PHP.
+- **`TugasDeskripsiSecurityTest`**: Pengujian sanitasi HTML deskripsi tugas (anti-XSS) dan pembatasan panjang deskripsi.
+- **`TrustProxiesSecurityTest`**: Pengujian konfigurasi dinamis trusted proxy dan proteksi spoofing IP client.
+- **`LoginAggregateThrottleTest`**: Pengujian mitigasi password spraying dan pembatasan login multi-tier per akun dan per IP.
 - **`QuotaConcurrencyTest`**: Pengujian integritas transaksi atomik alokasi kuota pendaftaran.
 - **`AdminPenempatanDuaTahapTest` & `AdminPenempatanArchitectureAndSecurityTest`**: Pengujian alur penempatan peserta dua tahap, locking atomik, dan rotasi pembimbing massal.
 - **`TugasLogbookTest` & `PesertaTugasBatalKirimTest`**: Pengujian batas mundur logbook, alur unsubmit tugas peserta, dan pencegahan manipulasi status tugas.

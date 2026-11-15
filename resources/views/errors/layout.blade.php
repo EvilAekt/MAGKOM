@@ -13,6 +13,7 @@
 
     <!-- Gentelella Theme CSS -->
     <link rel="stylesheet" href="{{ asset('css/gentelella-theme.css') }}">
+    <script src="{{ asset('js/theme-init.js') }}"></script>
 
     <style>
         :root {
@@ -239,7 +240,7 @@
             <a href="@yield('button_url', route('landing'))" class="btn-action-primary">
                 @yield('button_text', 'Kembali ke Beranda')
             </a>
-            <button type="button" onclick="window.history.back()" class="btn-action-secondary">
+            <button type="button" data-action="history-back" class="btn-action-secondary">
                 Halaman Sebelumnya
             </button>
         </div>

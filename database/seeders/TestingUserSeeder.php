@@ -17,6 +17,7 @@ use App\Models\PesertaProfil;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use RuntimeException;
 
 class TestingUserSeeder extends Seeder
 {
@@ -26,6 +27,10 @@ class TestingUserSeeder extends Seeder
      */
     public function run(): void
     {
+        if (app()->isProduction()) {
+            throw new RuntimeException('Cannot run TestingUserSeeder in production environment.');
+        }
+
         $accounts = [
             [
                 'nama' => 'Super Administrator',

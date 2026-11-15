@@ -61,9 +61,9 @@
 
                         <div class="adm-popover-formats" role="radiogroup" aria-label="Format Berkas">
                             {{-- Format 1: Excel (.xlsx) - Rekomendasi --}}
-                            <label class="adm-format-card adm-format-selected" id="cardFormatXlsx" onclick="handleAdmExportFormatChange('xlsx')">
+                            <label class="adm-format-card adm-format-selected" id="cardFormatXlsx" data-action="select-export-format" data-format="xlsx">
                                 <div class="adm-format-content">
-                                    <input type="radio" name="popover_export_format" id="radioFormatXlsx" value="xlsx" checked class="adm-format-radio" onchange="handleAdmExportFormatChange('xlsx')">
+                                    <input type="radio" name="popover_export_format" id="radioFormatXlsx" value="xlsx" checked class="adm-format-radio">
                                     <div class="adm-format-details">
                                         <div class="adm-format-name-wrap">
                                             <span class="adm-format-name">Microsoft Excel</span>
@@ -78,9 +78,9 @@
                             </label>
 
                             {{-- Format 2: CSV Tabular (.csv) --}}
-                            <label class="adm-format-card" id="cardFormatCsv" onclick="handleAdmExportFormatChange('csv')">
+                            <label class="adm-format-card" id="cardFormatCsv" data-action="select-export-format" data-format="csv">
                                 <div class="adm-format-content">
-                                    <input type="radio" name="popover_export_format" id="radioFormatCsv" value="csv" class="adm-format-radio" onchange="handleAdmExportFormatChange('csv')">
+                                    <input type="radio" name="popover_export_format" id="radioFormatCsv" value="csv" class="adm-format-radio">
                                     <div class="adm-format-details">
                                         <div class="adm-format-name-wrap">
                                             <span class="adm-format-name">CSV Tabular</span>
@@ -95,9 +95,9 @@
                             </label>
 
                             {{-- Format 3: Dokumen Resmi PDF (.pdf) --}}
-                            <label class="adm-format-card" id="cardFormatPdf" onclick="handleAdmExportFormatChange('pdf')">
+                            <label class="adm-format-card" id="cardFormatPdf" data-action="select-export-format" data-format="pdf">
                                 <div class="adm-format-content">
-                                    <input type="radio" name="popover_export_format" id="radioFormatPdf" value="pdf" class="adm-format-radio" onchange="handleAdmExportFormatChange('pdf')">
+                                    <input type="radio" name="popover_export_format" id="radioFormatPdf" value="pdf" class="adm-format-radio">
                                     <div class="adm-format-details">
                                         <div class="adm-format-name-wrap">
                                             <span class="adm-format-name">Dokumen Resmi (.pdf)</span>
@@ -113,10 +113,10 @@
                         </div>
 
                         <div class="adm-popover-cta">
-                            <button type="button" class="adm-btn-popover-cancel" onclick="toggleAdmExportPopover(false)">
+                            <button type="button" class="adm-btn-popover-cancel" data-action="cancel-export-popover">
                                 Batal
                             </button>
-                            <button type="button" id="btnDoExportDownload" class="adm-btn-popover-download" onclick="triggerPenempatanExport()">
+                            <button type="button" id="btnDoExportDownload" class="adm-btn-popover-download" data-action="do-export-download">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                                 </svg>
@@ -132,7 +132,7 @@
                         <span>Mode Lihat Saja</span>
                     </span>
                 @elseif(isset($slotKhususList) && $slotKhususList->isNotEmpty())
-                    <button type="button" onclick="openManualModal()" class="adm-hero-btn-primary">
+                    <button type="button" data-action="open-manual-modal" class="adm-hero-btn-primary">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -165,7 +165,11 @@
                     </div>
                 </div>
             </div>
-            <button type="button" onclick="navigator.clipboard.writeText('Email: {{ session('email_peserta') }}\nPassword: {{ session('password_baru') }}'); alert('Kredensial login berhasil disalin!');" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; background: #059669; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(5, 150, 105, 0.25);">
+            <button type="button" 
+                    data-action="copy-credentials" 
+                    data-email="{{ session('email_peserta') }}" 
+                    data-password="{{ session('password_baru') }}" 
+                    style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; background: #059669; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(5, 150, 105, 0.25);">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 <span>Salin Kredensial</span>
             </button>
@@ -251,7 +255,7 @@
                     id="tab-btn-sudah" 
                     role="tab"
                     aria-selected="{{ $activeTab === 'sudah' ? 'true' : 'false' }}"
-                    onclick="switchPenempatanTab('sudah')"
+                    data-action="switch-tab" data-tab="sudah"
                     title="Tampilkan peserta magang yang sudah memiliki pembimbing lapangan"
                     style="display: inline-flex; align-items: center; gap: 0.5rem; height: 38px; padding: 0 1rem; font-size: 0.84375rem; font-weight: {{ $activeTab === 'sudah' ? '700' : '600' }}; border-radius: 7px; border: 1px solid {{ $activeTab === 'sudah' ? 'rgba(226, 232, 240, 0.8)' : 'transparent' }}; background: {{ $activeTab === 'sudah' ? '#FFFFFF' : 'transparent' }}; color: {{ $activeTab === 'sudah' ? '#0641CC' : '#64748B' }}; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: {{ $activeTab === 'sudah' ? '0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)' : 'none' }}; white-space: nowrap;">
                 <svg id="tab-icon-sudah" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; color: {{ $activeTab === 'sudah' ? '#0641CC' : '#64748B' }};">
@@ -270,7 +274,7 @@
                     id="tab-btn-belum" 
                     role="tab"
                     aria-selected="{{ $activeTab === 'belum' ? 'true' : 'false' }}"
-                    onclick="switchPenempatanTab('belum')"
+                    data-action="switch-tab" data-tab="belum"
                     title="Tampilkan antrean peserta lolos berkas yang menunggu penetapan pembimbing"
                     style="display: inline-flex; align-items: center; gap: 0.5rem; height: 38px; padding: 0 1rem; font-size: 0.84375rem; font-weight: {{ $activeTab === 'belum' ? '700' : '600' }}; border-radius: 7px; border: 1px solid {{ $activeTab === 'belum' ? 'rgba(226, 232, 240, 0.8)' : 'transparent' }}; background: {{ $activeTab === 'belum' ? '#FFFFFF' : 'transparent' }}; color: {{ $activeTab === 'belum' ? '#B45309' : '#64748B' }}; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: {{ $activeTab === 'belum' ? '0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)' : 'none' }}; white-space: nowrap;">
                 <svg id="tab-icon-belum" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; color: {{ $activeTab === 'belum' ? '#D97706' : '#64748B' }};">
@@ -391,7 +395,7 @@
                         <thead>
                             <tr>
                                 <th style="width: 4%; min-width: 40px; text-align: center;">
-                                    <input type="checkbox" id="checkAllPenempatan" onclick="toggleAllPenempatan(this)" style="cursor: pointer; width: 16px; height: 16px;">
+                                    <input type="checkbox" id="checkAllPenempatan" style="cursor: pointer; width: 16px; height: 16px;">
                                 </th>
                                 <th style="width: 25%; min-width: 200px; text-align: left;">Peserta Magang</th>
                                 <th style="width: 23%; min-width: 180px; text-align: left;">Pembimbing Lapangan</th>
@@ -416,7 +420,7 @@
                                 @endphp
                                 <tr>
                                     <td style="text-align: center;">
-                                        <input type="checkbox" value="{{ $p->id }}" class="penempatan-checkbox" onchange="updateBulkUI()" style="cursor: pointer; width: 16px; height: 16px;">
+                                        <input type="checkbox" value="{{ $p->id }}" class="penempatan-checkbox" style="cursor: pointer; width: 16px; height: 16px;">
                                     </td>
                                     {{-- Peserta Magang --}}
                                     <td>
@@ -500,7 +504,7 @@
                                             @if($p->pembimbing && !auth()->user()?->isSuperAdmin())
                                                 <button type="button" 
                                                         class="action-dropdown-btn" 
-                                                        onclick="openPindahModal({{ $p->id }}, '{{ addslashes($cleanPesertaNama) }}', {{ $p->pembimbing_id ?? 'null' }})" 
+                                                        data-action="open-pindah-modal" data-penempatan-id="{{ $p->id }}" data-peserta-nama="{{ $cleanPesertaNama }}" data-pembimbing-id="{{ $p->pembimbing_id ?? '' }}" 
                                                         title="Ganti Pembimbing Lapangan"
                                                         aria-label="Ganti Pembimbing Lapangan">
                                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -684,7 +688,7 @@
                                             @else
                                                 <div style="display: inline-flex; justify-content: center; align-items: center;">
                                                     <button type="button" 
-                                                            onclick="openTetapkanModal({{ $antrean->id }}, '{{ addslashes($antrean->user?->nama) }}', '{{ addslashes($antrean->kuota?->jurusan?->nama_jurusan ?? '') }}', {{ $defBidangId ?? 'null' }}, '{{ addslashes($defBidangNama) }}')" 
+                                                            data-action="open-tetapkan-modal" data-pendaftaran-id="{{ $antrean->id }}" data-peserta-nama="{{ $antrean->user?->nama }}" data-jurusan-nama="{{ $antrean->kuota?->jurusan?->nama_jurusan ?? ' }}" data-bidang-id="{{ $defBidangId ?? ' }}" data-bidang-nama="{{ $defBidangNama }}" 
                                                             style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.95rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
                                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                                                         <span>Tempatkan</span>
@@ -723,7 +727,7 @@
                     Alokasi peserta magang berdasarkan kuota kemitraan slot khusus dinas
                 </p>
             </div>
-            <button type="button" onclick="closeManualModal()" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
+            <button type="button" data-action="close-manual-modal" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
         </div>
 
         <form method="POST" action="{{ route('admin.penempatan.manual') }}" id="form-penempatan-manual" style="padding: 1.5rem;">
@@ -742,10 +746,10 @@
 
             {{-- Switcher Mode Peserta --}}
             <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; background: var(--neutral-100, #F1F5F9); padding: 0.35rem; border-radius: 8px;">
-                <button type="button" id="btn-mode-terdaftar" onclick="switchPesertaMode('terdaftar')" style="flex: 1; padding: 0.5rem; font-size: 0.8125rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #0641CC; color: #FFFFFF;">
+                <button type="button" id="btn-mode-terdaftar" data-action="switch-peserta-mode" data-mode="terdaftar" style="flex: 1; padding: 0.5rem; font-size: 0.8125rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: #0641CC; color: #FFFFFF;">
                     Peserta Terdaftar
                 </button>
-                <button type="button" id="btn-mode-baru" onclick="switchPesertaMode('baru')" style="flex: 1; padding: 0.5rem; font-size: 0.8125rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: transparent; color: var(--neutral-700, #334155);">
+                <button type="button" id="btn-mode-baru" data-action="switch-peserta-mode" data-mode="baru" style="flex: 1; padding: 0.5rem; font-size: 0.8125rem; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; background: transparent; color: var(--neutral-700, #334155);">
                     + Daftarkan Peserta Baru
                 </button>
             </div>
@@ -861,11 +865,11 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
                 <div>
                     <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Tanggal Mulai <span style="color: #DC2626;">*</span></label>
-                    <input type="date" name="tgl_mulai" id="input-tgl-mulai" required value="{{ old('tgl_mulai', date('Y-m-d')) }}" onchange="syncManualDates()" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
+                    <input type="date" name="tgl_mulai" id="input-tgl-mulai" required value="{{ old('tgl_mulai', date('Y-m-d')) }}"  style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem;">
                 </div>
                 <div>
                     <label style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800, #1E293B);">Durasi Magang <span style="color: #DC2626;">*</span></label>
-                    <select name="durasi_bulan" id="select-durasi-bulan" onchange="syncManualDates()" style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
+                    <select name="durasi_bulan" id="select-durasi-bulan"  style="width: 100%; height: 42px; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; padding: 0 0.75rem; font-size: 0.875rem; background: #ffffff;">
                         <option value="1" {{ old('durasi_bulan') == 1 ? 'selected' : '' }}>1 Bulan</option>
                         <option value="2" {{ old('durasi_bulan') == 2 ? 'selected' : '' }}>2 Bulan</option>
                         <option value="3" {{ old('durasi_bulan', 3) == 3 ? 'selected' : '' }}>3 Bulan (Standar)</option>
@@ -881,7 +885,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.6rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1.25rem;">
-                <button type="button" onclick="closeManualModal()" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+                <button type="button" data-action="close-manual-modal" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="padding: 0.55rem 1.4rem; background: #0641CC; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);">
@@ -902,7 +906,7 @@
                     Peserta: -
                 </p>
             </div>
-            <button type="button" onclick="closePindahModal()" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
+            <button type="button" data-action="close-pindah-modal" style="background: transparent; border: none; font-size: 1.25rem; color: var(--neutral-400, #94A3B8); cursor: pointer;">✕</button>
         </div>
 
         <form method="POST" id="form-pindah-pembimbing" action="" style="padding: 1.5rem;">
@@ -917,7 +921,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.6rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1.25rem;">
-                <button type="button" onclick="closePindahModal()" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+                <button type="button" data-action="close-pindah-modal" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="padding: 0.55rem 1.4rem; background: #0641CC; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25);">
@@ -936,7 +940,7 @@
                 <h3 style="font-size: 1.0625rem; font-weight: 800; color: #991B1B; margin: 0;">Pembatalan / Pengunduran Diri</h3>
                 <p style="font-size: 0.75rem; color: #B91C1C; margin: 0.15rem 0 0 0;" id="batal-peserta-nama"></p>
             </div>
-            <button type="button" onclick="closeBatalModal()" style="background: transparent; border: none; font-size: 1.25rem; color: #B91C1C; cursor: pointer;">✕</button>
+            <button type="button" data-action="close-batal-modal" style="background: transparent; border: none; font-size: 1.25rem; color: #B91C1C; cursor: pointer;">✕</button>
         </div>
 
         <form method="POST" id="form-batal-penempatan" action="" style="padding: 1.5rem;">
@@ -955,7 +959,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.6rem; border-top: 1px solid var(--neutral-200, #E2E8F0); padding-top: 1.25rem;">
-                <button type="button" onclick="closeBatalModal()" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+                <button type="button" data-action="close-batal-modal" style="padding: 0.55rem 1.25rem; background: #ffffff; border: 1px solid var(--neutral-300, #CBD5E1); color: var(--neutral-700, #334155); border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
                     Kembali
                 </button>
                 <button type="submit" style="padding: 0.55rem 1.4rem; background: #DC2626; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
@@ -967,7 +971,7 @@
 </div>
 
 {{-- MODAL IN-APP PRATINJAU SURAT DITERIMA --}}
-<div id="modal-surat-preview" onclick="if(event.target === this) closeSuratPreview()" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); z-index: 9999; align-items: center; justify-content: center; padding: 1.25rem;">
+<div id="modal-surat-preview"  style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); z-index: 9999; align-items: center; justify-content: center; padding: 1.25rem;">
     <div style="background: #ffffff; border-radius: 16px; width: 100%; max-width: 960px; max-height: 92vh; display: flex; flex-direction: column; padding: 1.25rem 1.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); overflow: hidden; border: 1px solid var(--neutral-200, #E2E8F0);">
         <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--neutral-200, #E2E8F0);">
             <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -984,7 +988,7 @@
                 <a id="surat-modal-download" href="#" style="display: inline-flex; align-items: center; gap: 0.375rem; background: #0641CC; color: #FFFFFF; padding: 0.45rem 0.95rem; border-radius: 8px; font-weight: 600; font-size: 0.8125rem; text-decoration: none; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.2);">
                     Unduh PDF
                 </a>
-                <button type="button" onclick="closeSuratPreview()" style="background: none; border: none; font-size: 1.5rem; line-height: 1; cursor: pointer; color: var(--neutral-400, #94A3B8); padding: 0 0.25rem;">&times;</button>
+                <button type="button" data-action="close-surat-preview" style="background: none; border: none; font-size: 1.5rem; line-height: 1; cursor: pointer; color: var(--neutral-400, #94A3B8); padding: 0 0.25rem;">&times;</button>
             </div>
         </div>
 
@@ -1004,7 +1008,7 @@
                     Peserta: -
                 </p>
             </div>
-            <button type="button" onclick="closeTetapkanModal()" style="background: transparent; border: none; font-size: 1.25rem; color: #94A3B8; cursor: pointer; padding: 0.25rem; line-height: 1;" title="Tutup">✕</button>
+            <button type="button" data-action="close-tetapkan-modal" style="background: transparent; border: none; font-size: 1.25rem; color: #94A3B8; cursor: pointer; padding: 0.25rem; line-height: 1;" title="Tutup">✕</button>
         </div>
 
         <form method="POST" id="form-tetapkan-penempatan" action="{{ route('admin.penempatan.tetapkan') }}" style="padding: 1.5rem;">
@@ -1043,7 +1047,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.65rem; border-top: 1px solid #E2E8F0; padding-top: 1.25rem;">
-                <button type="button" onclick="closeTetapkanModal()" style="padding: 0.55rem 1.15rem; background: #FFFFFF; border: 1px solid #CBD5E1; color: #475569; border-radius: 8px; font-weight: 600; font-size: 0.8125rem; cursor: pointer; transition: all 0.15s ease;">
+                <button type="button" data-action="close-tetapkan-modal" style="padding: 0.55rem 1.15rem; background: #FFFFFF; border: 1px solid #CBD5E1; color: #475569; border-radius: 8px; font-weight: 600; font-size: 0.8125rem; cursor: pointer; transition: all 0.15s ease;">
                     Batal
                 </button>
                 <button type="submit" style="padding: 0.55rem 1.35rem; background: #0641CC; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; box-shadow: 0 1px 3px rgba(6, 65, 204, 0.25); transition: background 0.15s ease;">
@@ -1054,508 +1058,7 @@
     </div>
 </div>
 
-<script>
-    function switchPenempatanTab(tabName) {
-        const sudahPanel = document.getElementById('panel-penempatan-sudah');
-        const belumPanel = document.getElementById('panel-penempatan-belum');
-        const btnSudah = document.getElementById('tab-btn-sudah');
-        const btnBelum = document.getElementById('tab-btn-belum');
-        const iconSudah = document.getElementById('tab-icon-sudah');
-        const iconBelum = document.getElementById('tab-icon-belum');
-        const badgeSudah = document.getElementById('tab-badge-sudah');
-        const badgeBelum = document.getElementById('tab-badge-belum');
-
-        if (tabName === 'belum') {
-            if (sudahPanel) sudahPanel.style.display = 'none';
-            if (belumPanel) belumPanel.style.display = 'block';
-
-            if (btnSudah) {
-                btnSudah.style.background = 'transparent';
-                btnSudah.style.color = '#64748B';
-                btnSudah.style.fontWeight = '600';
-                btnSudah.style.boxShadow = 'none';
-                btnSudah.style.borderColor = 'transparent';
-                btnSudah.setAttribute('aria-selected', 'false');
-            }
-            if (iconSudah) iconSudah.style.color = '#64748B';
-            if (badgeSudah) {
-                badgeSudah.style.background = '#E2E8F0';
-                badgeSudah.style.color = '#475569';
-            }
-
-            if (btnBelum) {
-                btnBelum.style.background = '#FFFFFF';
-                btnBelum.style.color = '#B45309';
-                btnBelum.style.fontWeight = '700';
-                btnBelum.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)';
-                btnBelum.style.borderColor = 'rgba(226, 232, 240, 0.8)';
-                btnBelum.setAttribute('aria-selected', 'true');
-            }
-            if (iconBelum) iconBelum.style.color = '#D97706';
-            if (badgeBelum) {
-                badgeBelum.style.background = '#FEF3C7';
-                badgeBelum.style.color = '#B45309';
-            }
-        } else {
-            if (sudahPanel) sudahPanel.style.display = 'block';
-            if (belumPanel) belumPanel.style.display = 'none';
-
-            if (btnSudah) {
-                btnSudah.style.background = '#FFFFFF';
-                btnSudah.style.color = '#0641CC';
-                btnSudah.style.fontWeight = '700';
-                btnSudah.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)';
-                btnSudah.style.borderColor = 'rgba(226, 232, 240, 0.8)';
-                btnSudah.setAttribute('aria-selected', 'true');
-            }
-            if (iconSudah) iconSudah.style.color = '#0641CC';
-            if (badgeSudah) {
-                badgeSudah.style.background = '#EFF6FF';
-                badgeSudah.style.color = '#0641CC';
-            }
-
-            if (btnBelum) {
-                btnBelum.style.background = 'transparent';
-                btnBelum.style.color = '#64748B';
-                btnBelum.style.fontWeight = '600';
-                btnBelum.style.boxShadow = 'none';
-                btnBelum.style.borderColor = 'transparent';
-                btnBelum.setAttribute('aria-selected', 'false');
-            }
-            if (iconBelum) iconBelum.style.color = '#64748B';
-            if (badgeBelum) {
-                badgeBelum.style.background = '#E2E8F0';
-                badgeBelum.style.color = '#475569';
-            }
-        }
-
-        try {
-            const url = new URL(window.location.href);
-            url.searchParams.set('tab', tabName);
-            window.history.replaceState({}, '', url.toString());
-        } catch (e) {
-            // fallback
-        }
-    }
-
-    function openTetapkanModal(pendaftaranId, namaPeserta, namaJurusan, defaultBidangId, defaultBidangNama) {
-        const modal = document.getElementById('modal-tetapkan-penempatan');
-        const infoEl = document.getElementById('tetapkan-peserta-info');
-        const idInput = document.getElementById('tetapkan-pendaftaran-id');
-        const bidangInput = document.getElementById('tetapkan-bidang-id');
-        const bidangDisplay = document.getElementById('tetapkan-bidang-display');
-
-        if (infoEl) infoEl.innerText = 'Peserta: ' + namaPeserta + ' (' + namaJurusan + ')';
-        if (idInput) idInput.value = pendaftaranId;
-        if (bidangInput && defaultBidangId) bidangInput.value = defaultBidangId;
-        if (bidangDisplay) bidangDisplay.innerText = defaultBidangNama || 'Dinas Komunikasi dan Informatika';
-
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    function closeTetapkanModal() {
-        const modal = document.getElementById('modal-tetapkan-penempatan');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-    }
-    function openManualModal() {
-        const modal = document.getElementById('modal-penempatan-manual');
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-    }
-    function closeManualModal() {
-        const modal = document.getElementById('modal-penempatan-manual');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-    }
-
-    function syncManualDates() {
-        const tglMulaiEl = document.getElementById('input-tgl-mulai');
-        const durasiEl = document.getElementById('select-durasi-bulan');
-        const tglSelesaiEl = document.getElementById('input-tgl-selesai');
-        const bulanMulaiEl = document.getElementById('input-bulan-mulai');
-
-        if (!tglMulaiEl || !tglMulaiEl.value) return;
-
-        const startDate = new Date(tglMulaiEl.value);
-        if (isNaN(startDate.getTime())) return;
-
-        const y = startDate.getFullYear();
-        const m = String(startDate.getMonth() + 1).padStart(2, '0');
-        if (bulanMulaiEl) bulanMulaiEl.value = `${y}-${m}-01`;
-
-        const durasi = durasiEl ? parseInt(durasiEl.value, 10) || 3 : 3;
-        const endDate = new Date(startDate);
-        endDate.setMonth(endDate.getMonth() + durasi);
-        const ey = endDate.getFullYear();
-        const em = String(endDate.getMonth() + 1).padStart(2, '0');
-        const ed = String(endDate.getDate()).padStart(2, '0');
-        if (tglSelesaiEl) tglSelesaiEl.value = `${ey}-${em}-${ed}`;
-    }
-
-    @if($errors->any() && (old('mode') || $errors->has('nama') || $errors->has('email') || $errors->has('nim_nisn') || $errors->has('slot_khusus_id') || $errors->has('peserta_id')))
-        document.addEventListener('DOMContentLoaded', function() {
-            openManualModal();
-            @if(old('mode') === 'baru')
-                switchPesertaMode('baru');
-            @endif
-        });
-    @endif
-
-    function switchPesertaMode(mode) {
-        const btnTerdaftar = document.getElementById('btn-mode-terdaftar');
-        const btnBaru = document.getElementById('btn-mode-baru');
-        const panelTerdaftar = document.getElementById('panel-peserta-terdaftar');
-        const panelBaru = document.getElementById('panel-peserta-baru');
-        const inputMode = document.getElementById('input-mode-peserta');
-        const selectPeserta = document.getElementById('select-peserta-id');
-
-        if (!inputMode) return;
-        inputMode.value = mode;
-
-        if (mode === 'baru') {
-            if (btnBaru) {
-                btnBaru.style.background = '#0641CC';
-                btnBaru.style.color = '#FFFFFF';
-            }
-            if (btnTerdaftar) {
-                btnTerdaftar.style.background = 'transparent';
-                btnTerdaftar.style.color = 'var(--neutral-700, #334155)';
-            }
-            if (panelTerdaftar) panelTerdaftar.style.display = 'none';
-            if (panelBaru) panelBaru.style.display = 'flex';
-            if (selectPeserta) selectPeserta.removeAttribute('required');
-        } else {
-            if (btnTerdaftar) {
-                btnTerdaftar.style.background = '#0641CC';
-                btnTerdaftar.style.color = '#FFFFFF';
-            }
-            if (btnBaru) {
-                btnBaru.style.background = 'transparent';
-                btnBaru.style.color = 'var(--neutral-700, #334155)';
-            }
-            if (panelTerdaftar) panelTerdaftar.style.display = 'block';
-            if (panelBaru) panelBaru.style.display = 'none';
-            if (selectPeserta) selectPeserta.setAttribute('required', 'required');
-        }
-    }
-
-    function toggleRowDropdown(btn, event) {
-        event.stopPropagation();
-        const wrap = btn.closest('.action-dropdown-wrap');
-        if (!wrap) return;
-        const menu = wrap.querySelector('.action-dropdown-menu');
-        if (!menu) return;
-
-        const isOpen = menu.classList.contains('show');
-
-        // Tutup semua dropdown lain yang terbuka
-        document.querySelectorAll('.action-dropdown-menu.show').forEach(m => {
-            if (m !== menu) {
-                m.classList.remove('show');
-                m.closest('.action-dropdown-wrap')?.querySelector('.action-dropdown-btn')?.classList.remove('active');
-            }
-        });
-
-        if (!isOpen) {
-            menu.classList.add('show');
-            btn.classList.add('active');
-
-            // Cek apakah posisi dekat dengan bagian bawah viewport
-            const rect = menu.getBoundingClientRect();
-            if (rect.bottom > window.innerHeight - 20) {
-                menu.style.top = 'auto';
-                menu.style.bottom = 'calc(100% + 4px)';
-            } else {
-                menu.style.top = 'calc(100% + 4px)';
-                menu.style.bottom = 'auto';
-            }
-        } else {
-            menu.classList.remove('show');
-            btn.classList.remove('active');
-        }
-    }
-
-    // Auto-close dropdown saat klik di luar area
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.action-dropdown-wrap')) {
-            document.querySelectorAll('.action-dropdown-menu.show').forEach(m => {
-                m.classList.remove('show');
-                m.closest('.action-dropdown-wrap')?.querySelector('.action-dropdown-btn')?.classList.remove('active');
-            });
-        }
-    });
-
-    function openPindahModal(penempatanId, namaPeserta, pembimbingId) {
-        document.querySelectorAll('.action-dropdown-menu.show').forEach(m => {
-            m.classList.remove('show');
-            m.closest('.action-dropdown-wrap')?.querySelector('.action-dropdown-btn')?.classList.remove('active');
-        });
-        const modal = document.getElementById('modal-pindah-pembimbing');
-        const nameEl = document.getElementById('pindah-peserta-nama');
-        const formEl = document.getElementById('form-pindah-pembimbing');
-        const selectEl = document.getElementById('select-pembimbing-baru');
-
-        if (nameEl) nameEl.innerText = 'Peserta: ' + namaPeserta;
-        if (formEl) formEl.action = '/admin/penempatan/' + penempatanId + '/pindah-pembimbing';
-        if (selectEl && pembimbingId) selectEl.value = pembimbingId;
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    function closePindahModal() {
-        const modal = document.getElementById('modal-pindah-pembimbing');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-    }
-
-    function openBatalModal(penempatanId, namaPeserta) {
-        const modal = document.getElementById('modal-batal-penempatan');
-        const nameEl = document.getElementById('batal-peserta-nama');
-        const formEl = document.getElementById('form-batal-penempatan');
-
-        if (nameEl) nameEl.innerText = 'Peserta: ' + namaPeserta;
-        if (formEl) formEl.action = '/admin/penempatan/' + penempatanId + '/batalkan';
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    function closeBatalModal() {
-        const modal = document.getElementById('modal-batal-penempatan');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-    }
-
-    function openSuratPreview(previewUrl, downloadUrl, title) {
-        const modal = document.getElementById('modal-surat-preview');
-        const iframe = document.getElementById('surat-iframe');
-        const titleEl = document.getElementById('surat-modal-title');
-        const downloadEl = document.getElementById('surat-modal-download');
-
-        if (titleEl) titleEl.innerText = title;
-        if (downloadEl) downloadEl.href = downloadUrl;
-        if (iframe) iframe.src = previewUrl;
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    function closeSuratPreview() {
-        const modal = document.getElementById('modal-surat-preview');
-        const iframe = document.getElementById('surat-iframe');
-
-        if (iframe) iframe.src = 'about:blank';
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeSuratPreview();
-            closeManualModal();
-            closePindahModal();
-            closeBatalModal();
-        }
-    });
-
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-        overlay.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeManualModal();
-                closePindahModal();
-                closeBatalModal();
-                closeBulkReassignModal();
-            }
-        });
-    });
-
-    function toggleAllPenempatan(masterCheckbox) {
-        const checkboxes = document.querySelectorAll('.penempatan-checkbox');
-        checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
-        updateBulkUI();
-    }
-
-    function updateBulkUI() {
-        const checkedBoxes = document.querySelectorAll('.penempatan-checkbox:checked');
-        const count = checkedBoxes.length;
-        const floatingBar = document.getElementById('floating-bulk-bar');
-        const countBadge = document.getElementById('bulk-selected-count');
-
-        if (countBadge) countBadge.innerText = count;
-
-        if (floatingBar) {
-            if (count > 0) {
-                floatingBar.style.display = 'flex';
-            } else {
-                floatingBar.style.display = 'none';
-            }
-        }
-    }
-
-    function openBulkReassignModal() {
-        const checkedBoxes = document.querySelectorAll('.penempatan-checkbox:checked');
-        if (checkedBoxes.length === 0) {
-            const msg = 'Pilih minimal satu penempatan peserta terlebih dahulu.';
-            if (window.MagKomToast) {
-                window.MagKomToast.warning(msg);
-            } else {
-                alert(msg);
-            }
-            return;
-        }
-
-        const container = document.getElementById('bulk-ids-container');
-        if (container) {
-            container.innerHTML = '';
-            checkedBoxes.forEach(cb => {
-                const hidden = document.createElement('input');
-                hidden.type = 'hidden';
-                hidden.name = 'penempatan_ids[]';
-                hidden.value = cb.value;
-                container.appendChild(hidden);
-            });
-        }
-
-        const countEl = document.getElementById('bulk-modal-count');
-        if (countEl) countEl.innerText = checkedBoxes.length;
-
-        const modal = document.getElementById('modal-bulk-reassign');
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    function closeBulkReassignModal() {
-        const modal = document.getElementById('modal-bulk-reassign');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-    }
-
-    // =========================================================================
-    // EXPORT REKAP POPOVER MANAGEMENT
-    // =========================================================================
-    function toggleAdmExportPopover(forceOpen = null) {
-        const popover = document.getElementById('admExportPopover');
-        const trigger = document.getElementById('btnToggleExportPopover');
-        const wrap = trigger ? trigger.closest('.adm-export-dropdown-wrap') : null;
-        if (!popover) return;
-
-        const shouldOpen = forceOpen !== null ? forceOpen : popover.style.display === 'none';
-        if (shouldOpen) {
-            popover.style.display = 'flex';
-            if (trigger) trigger.setAttribute('aria-expanded', 'true');
-            if (wrap) wrap.classList.add('is-open');
-        } else {
-            popover.style.display = 'none';
-            if (trigger) trigger.setAttribute('aria-expanded', 'false');
-            if (wrap) wrap.classList.remove('is-open');
-        }
-    }
-
-    function handleAdmExportFormatChange(format) {
-        const cards = document.querySelectorAll('.adm-format-card');
-        cards.forEach(c => c.classList.remove('adm-format-selected'));
-
-        const radio = document.getElementById('radioFormat' + format.charAt(0).toUpperCase() + format.slice(1));
-        if (radio) radio.checked = true;
-
-        const card = document.getElementById('cardFormat' + format.charAt(0).toUpperCase() + format.slice(1));
-        if (card) card.classList.add('adm-format-selected');
-
-        const btnText = document.getElementById('btnExportDownloadText');
-        if (btnText) {
-            if (format === 'xlsx') {
-                btnText.textContent = 'Unduh Excel (.xlsx)';
-            } else if (format === 'csv') {
-                btnText.textContent = 'Unduh CSV (.csv)';
-            } else if (format === 'pdf') {
-                btnText.textContent = 'Unduh PDF (.pdf)';
-            }
-        }
-    }
-
-    function triggerPenempatanExport(forcedFormat = null) {
-        let format = forcedFormat;
-        if (!format) {
-            const selectedRadio = document.querySelector('input[name="popover_export_format"]:checked');
-            format = selectedRadio ? selectedRadio.value : 'xlsx';
-        }
-
-        const currentUrl = new URL(window.location.href);
-        const exportUrl = new URL("{{ route('admin.penempatan.ekspor-surat-diterima') }}", window.location.origin);
-
-        // Salin seluruh filter query string aktif
-        currentUrl.searchParams.forEach((val, key) => {
-            if (key !== 'page') {
-                exportUrl.searchParams.set(key, val);
-            }
-        });
-
-        exportUrl.searchParams.set('format', format);
-
-        // Tutup popover
-        toggleAdmExportPopover(false);
-
-        // Jalankan download file
-        window.location.href = exportUrl.toString();
-    }
-
-    // Event listener click outside & Escape key
-    document.addEventListener('DOMContentLoaded', function() {
-        const trigger = document.getElementById('btnToggleExportPopover');
-        const popover = document.getElementById('admExportPopover');
-
-        if (trigger) {
-            trigger.addEventListener('click', function(e) {
-                e.stopPropagation();
-                toggleAdmExportPopover();
-            });
-        }
-
-        if (popover) {
-            popover.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
-
-        document.addEventListener('click', function(e) {
-            if (popover && popover.style.display !== 'none') {
-                if (!popover.contains(e.target) && trigger && !trigger.contains(e.target)) {
-                    toggleAdmExportPopover(false);
-                }
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && popover && popover.style.display !== 'none') {
-                toggleAdmExportPopover(false);
-            }
-        });
-    });
-</script>
+@vite(['resources/js/pages/admin/penempatan-index.js'])
 
 {{-- FLOATING BULK ACTION BAR --}}
 @if(!auth()->user()?->isSuperAdmin())
@@ -1565,11 +1068,11 @@
         <span>Peserta Dipilih</span>
     </div>
     <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <button type="button" onclick="openBulkReassignModal()" style="padding: 0.45rem 1rem; background: #0641CC; color: #ffffff; border: none; border-radius: 999px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
+        <button type="button" data-action="open-bulk-reassign" style="padding: 0.45rem 1rem; background: #0641CC; color: #ffffff; border: none; border-radius: 999px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
             <span>Pindahkan Pembimbing Massal</span>
         </button>
-        <button type="button" onclick="toggleAllPenempatan({checked: false})" style="background: transparent; border: none; color: #94A3B8; font-size: 0.8125rem; cursor: pointer; padding: 0.25rem 0.5rem;">
+        <button type="button" data-action="cancel-bulk-selection" style="background: transparent; border: none; color: #94A3B8; font-size: 0.8125rem; cursor: pointer; padding: 0.25rem 0.5rem;">
             Batal
         </button>
     </div>
@@ -1586,7 +1089,7 @@
                     Alihkan <span id="bulk-modal-count" style="font-weight: 700; color: #0641CC;">0</span> penempatan peserta ke pembimbing baru.
                 </p>
             </div>
-            <button type="button" onclick="closeBulkReassignModal()" style="background: transparent; border: none; cursor: pointer; color: var(--neutral-500); font-size: 1.25rem;">&times;</button>
+            <button type="button" data-action="close-bulk-reassign" style="background: transparent; border: none; cursor: pointer; color: var(--neutral-500); font-size: 1.25rem;">&times;</button>
         </div>
 
         <form method="POST" action="{{ route('admin.penempatan.bulk-reassign') }}">
@@ -1611,7 +1114,7 @@
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="closeBulkReassignModal()" style="padding: 0.5rem 1.25rem; background: var(--neutral-200); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
+                <button type="button" data-action="close-bulk-reassign" style="padding: 0.5rem 1.25rem; background: var(--neutral-200); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="padding: 0.5rem 1.5rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">

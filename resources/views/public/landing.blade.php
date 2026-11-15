@@ -305,18 +305,22 @@
     <!-- =======================================================================
          7. BACKEND DATA INJECTION FOR REAL-TIME KUOTA HYDRATION
          ======================================================================= -->
-    <script>
-        window.MAGKOM_REGISTER_URL = "{{ route('register') }}";
-        window.MAGKOM_DATA = {
-            @if(isset($bulanTampil) && $bulanTampil->count() > 0)
-                bulanList: {!! json_encode($bulanTampil->map(fn($b) => \Carbon\CarbonImmutable::parse($b->bulan_mulai)->locale('id')->isoFormat('MMM'))->values()) !!},
-                bulanPanjang: {
-                    @foreach($bulanTampil as $b)
-                        "{{ \Carbon\CarbonImmutable::parse($b->bulan_mulai)->locale('id')->isoFormat('MMM') }}": "{{ \Carbon\CarbonImmutable::parse($b->bulan_mulai)->locale('id')->isoFormat('MMMM Y') }}",
-                    @endforeach
-                },
-            @endif
-        };
+    @php
+        $magkomData = [
+            'registerUrl' => route('register'),
+        ];
+        if (isset($bulanTampil) && $bulanTampil->count() > 0) {
+            $magkomData['bulanList'] = $bulanTampil->map(fn($b) => \Carbon\CarbonImmutable::parse($b->bulan_mulai)->locale('id')->isoFormat('MMM'))->values()->all();
+            $magkomData['bulanPanjang'] = [];
+            foreach ($bulanTampil as $b) {
+                $short = \Carbon\CarbonImmutable::parse($b->bulan_mulai)->locale('id')->isoFormat('MMM');
+                $long = \Carbon\CarbonImmutable::parse($b->bulan_mulai)->locale('id')->isoFormat('MMMM Y');
+                $magkomData['bulanPanjang'][$short] = $long;
+            }
+        }
+    @endphp
+    <script type="application/json" id="magkom-landing-data">
+        {!! json_encode($magkomData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}
     </script>
 
     {{-- WordPress Site Editor Interactive Canvas Runtime --}}

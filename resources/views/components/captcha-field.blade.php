@@ -9,19 +9,20 @@
                 <img 
                     id="captcha-img" 
                     src="{{ route('captcha.image') }}" 
+                    data-refresh-url="{{ route('captcha.image') }}"
+                    data-action="refresh-captcha"
                     alt="Kode Keamanan Captcha" 
                     width="160" 
                     height="50" 
                     style="display: block; width: 160px; height: 50px; cursor: pointer; user-select: none;"
                     title="Klik gambar untuk mengganti kode"
-                    onclick="refreshCaptcha()"
                 >
             </div>
             
             <button 
                 type="button" 
                 id="btn-refresh-captcha" 
-                onclick="refreshCaptcha()" 
+                data-action="refresh-captcha"
                 class="btn-refresh-captcha"
                 style="padding: 0.625rem; border-radius: 8px; border: 1px solid var(--neutral-300); background-color: var(--neutral-0); color: var(--neutral-600); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;"
                 title="Muat ulang kode keamanan"
@@ -59,7 +60,7 @@
             Masukkan 4 karakter yang tampil pada gambar (tidak sensitif huruf besar/kecil).
             @if(app()->isLocal())
                 <span style="display: block; margin-top: 0.35rem; color: var(--blue-600); font-size: 0.75rem; font-weight: 500;">
-                    💡 Mode Dev Lokal: Masukkan kode gambar atau klik <button type="button" onclick="document.getElementById('captcha').value='1234'" style="background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); padding: 1px 6px; border-radius: 4px; color: var(--blue-700); font-weight: 700; cursor: pointer; text-decoration: underline;">1234</button> untuk isi otomatis.
+                    💡 Mode Dev Lokal: Masukkan kode gambar atau klik <button type="button" data-dev-fill-captcha="1234" style="background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); padding: 1px 6px; border-radius: 4px; color: var(--blue-700); font-weight: 700; cursor: pointer; text-decoration: underline;">1234</button> untuk isi otomatis.
                 </span>
             @endif
         </span>
@@ -113,23 +114,4 @@
             color: var(--neutral-500, #94A3B8) !important;
         }
     </style>
-
-    <script>
-        function refreshCaptcha() {
-            const img = document.getElementById('captcha-img');
-            const btn = document.getElementById('btn-refresh-captcha');
-            const input = document.getElementById('captcha');
-            if (btn) {
-                btn.classList.add('spinning');
-                setTimeout(() => btn.classList.remove('spinning'), 500);
-            }
-            if (img) {
-                img.src = '{{ route("captcha.image") }}?' + Date.now();
-            }
-            if (input) {
-                input.value = '';
-                input.focus();
-            }
-        }
-    </script>
 @endif

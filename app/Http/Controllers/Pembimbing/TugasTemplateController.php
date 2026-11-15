@@ -9,6 +9,7 @@ use App\Enums\TipeAuditEnum;
 use App\Http\Controllers\Controller;
 use App\Models\TugasTemplate;
 use App\Services\AuditService;
+use App\Support\SafeHtmlSanitizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -85,6 +86,10 @@ class TugasTemplateController extends Controller
             $isGlobal = true;
         }
 
+        if (isset($validated['deskripsi']) && is_string($validated['deskripsi'])) {
+            $validated['deskripsi'] = SafeHtmlSanitizer::sanitize($validated['deskripsi']);
+        }
+
         $template = TugasTemplate::create([
             'pembimbing_id' => $user->id,
             'judul' => $validated['judul'],
@@ -136,6 +141,10 @@ class TugasTemplateController extends Controller
         ]);
 
         $nilaiLama = $template->only(['judul', 'deskripsi', 'kategori', 'kompleksitas', 'link_referensi']);
+
+        if (isset($validated['deskripsi']) && is_string($validated['deskripsi'])) {
+            $validated['deskripsi'] = SafeHtmlSanitizer::sanitize($validated['deskripsi']);
+        }
 
         $template->update($validated);
 

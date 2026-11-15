@@ -59,9 +59,9 @@
 
                         <div class="adm-popover-formats" role="radiogroup" aria-label="Format Berkas">
                             {{-- Format 1: Excel (.xlsx) - Rekomendasi --}}
-                            <label class="adm-format-card adm-format-selected" id="cardFormatPendaftaranXlsx" onclick="handleAdmExportPendaftaranFormatChange('xlsx')">
+                            <label class="adm-format-card adm-format-selected" id="cardFormatPendaftaranXlsx" data-action="select-pendaftaran-export-format" data-format="xlsx">
                                 <div class="adm-format-content">
-                                    <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranXlsx" value="xlsx" checked class="adm-format-radio" onchange="handleAdmExportPendaftaranFormatChange('xlsx')">
+                                    <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranXlsx" value="xlsx" checked class="adm-format-radio" >
                                     <div class="adm-format-details">
                                         <div class="adm-format-name-wrap">
                                             <span class="adm-format-name">Microsoft Excel</span>
@@ -76,9 +76,9 @@
                             </label>
 
                             {{-- Format 2: CSV Tabular (.csv) --}}
-                            <label class="adm-format-card" id="cardFormatPendaftaranCsv" onclick="handleAdmExportPendaftaranFormatChange('csv')">
+                            <label class="adm-format-card" id="cardFormatPendaftaranCsv" data-action="select-pendaftaran-export-format" data-format="csv">
                                 <div class="adm-format-content">
-                                    <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranCsv" value="csv" class="adm-format-radio" onchange="handleAdmExportPendaftaranFormatChange('csv')">
+                                    <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranCsv" value="csv" class="adm-format-radio" >
                                     <div class="adm-format-details">
                                         <div class="adm-format-name-wrap">
                                             <span class="adm-format-name">CSV Tabular</span>
@@ -93,9 +93,9 @@
                             </label>
 
                             {{-- Format 3: Dokumen Resmi PDF (.pdf) --}}
-                            <label class="adm-format-card" id="cardFormatPendaftaranPdf" onclick="handleAdmExportPendaftaranFormatChange('pdf')">
+                            <label class="adm-format-card" id="cardFormatPendaftaranPdf" data-action="select-pendaftaran-export-format" data-format="pdf">
                                 <div class="adm-format-content">
-                                    <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranPdf" value="pdf" class="adm-format-radio" onchange="handleAdmExportPendaftaranFormatChange('pdf')">
+                                    <input type="radio" name="popover_export_pendaftaran_format" id="radioFormatPendaftaranPdf" value="pdf" class="adm-format-radio" >
                                     <div class="adm-format-details">
                                         <div class="adm-format-name-wrap">
                                             <span class="adm-format-name">Dokumen Resmi (.pdf)</span>
@@ -111,10 +111,10 @@
                         </div>
 
                         <div class="adm-popover-cta">
-                            <button type="button" class="adm-btn-popover-cancel" onclick="toggleAdmExportPopoverPendaftaran(false)">
+                            <button type="button" class="adm-btn-popover-cancel" data-action="cancel-pendaftaran-export">
                                 Batal
                             </button>
-                            <button type="button" id="btnDoExportDownloadPendaftaran" class="adm-btn-popover-download" onclick="triggerPendaftaranExport()">
+                            <button type="button" id="btnDoExportDownloadPendaftaran" class="adm-btn-popover-download" data-action="do-pendaftaran-export">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                                 </svg>
@@ -482,107 +482,4 @@
 </div>
 @endsection
 
-@push('scripts')
-<script>
-    // =========================================================================
-    // EXPORT REKAP PENDAFTARAN POPOVER MANAGEMENT
-    // =========================================================================
-    function toggleAdmExportPopoverPendaftaran(forceOpen = null) {
-        const popover = document.getElementById('admExportPopoverPendaftaran');
-        const trigger = document.getElementById('btnToggleExportPopoverPendaftaran');
-        const wrap = trigger ? trigger.closest('.adm-export-dropdown-wrap') : null;
-        if (!popover) return;
-
-        const shouldOpen = forceOpen !== null ? forceOpen : popover.style.display === 'none';
-        if (shouldOpen) {
-            popover.style.display = 'flex';
-            if (trigger) trigger.setAttribute('aria-expanded', 'true');
-            if (wrap) wrap.classList.add('is-open');
-        } else {
-            popover.style.display = 'none';
-            if (trigger) trigger.setAttribute('aria-expanded', 'false');
-            if (wrap) wrap.classList.remove('is-open');
-        }
-    }
-
-    function handleAdmExportPendaftaranFormatChange(format) {
-        const cards = document.querySelectorAll('#admExportPopoverPendaftaran .adm-format-card');
-        cards.forEach(c => c.classList.remove('adm-format-selected'));
-
-        const radio = document.getElementById('radioFormatPendaftaran' + format.charAt(0).toUpperCase() + format.slice(1));
-        if (radio) radio.checked = true;
-
-        const card = document.getElementById('cardFormatPendaftaran' + format.charAt(0).toUpperCase() + format.slice(1));
-        if (card) card.classList.add('adm-format-selected');
-
-        const btnText = document.getElementById('btnExportDownloadTextPendaftaran');
-        if (btnText) {
-            if (format === 'xlsx') {
-                btnText.textContent = 'Unduh Excel (.xlsx)';
-            } else if (format === 'csv') {
-                btnText.textContent = 'Unduh CSV (.csv)';
-            } else if (format === 'pdf') {
-                btnText.textContent = 'Unduh PDF (.pdf)';
-            }
-        }
-    }
-
-    function triggerPendaftaranExport(forcedFormat = null) {
-        let format = forcedFormat;
-        if (!format) {
-            const selectedRadio = document.querySelector('input[name="popover_export_pendaftaran_format"]:checked');
-            format = selectedRadio ? selectedRadio.value : 'xlsx';
-        }
-
-        const currentUrl = new URL(window.location.href);
-        const exportUrl = new URL("{{ route('admin.laporan.pendaftaran') }}", window.location.origin);
-
-        // Salin seluruh filter query string aktif
-        currentUrl.searchParams.forEach((val, key) => {
-            if (key !== 'page') {
-                exportUrl.searchParams.set(key, val);
-            }
-        });
-
-        exportUrl.searchParams.set('format', format);
-
-        // Tutup popover
-        toggleAdmExportPopoverPendaftaran(false);
-
-        // Jalankan download file
-        window.location.href = exportUrl.toString();
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const trigger = document.getElementById('btnToggleExportPopoverPendaftaran');
-        const popover = document.getElementById('admExportPopoverPendaftaran');
-
-        if (trigger) {
-            trigger.addEventListener('click', function(e) {
-                e.stopPropagation();
-                toggleAdmExportPopoverPendaftaran();
-            });
-        }
-
-        if (popover) {
-            popover.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
-
-        document.addEventListener('click', function(e) {
-            if (popover && popover.style.display !== 'none') {
-                if (!popover.contains(e.target) && trigger && !trigger.contains(e.target)) {
-                    toggleAdmExportPopoverPendaftaran(false);
-                }
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && popover && popover.style.display !== 'none') {
-                toggleAdmExportPopoverPendaftaran(false);
-            }
-        });
-    });
-</script>
-@endpush
+@vite(['resources/js/pages/admin/pendaftaran-index.js'])

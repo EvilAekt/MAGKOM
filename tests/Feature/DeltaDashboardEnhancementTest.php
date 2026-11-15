@@ -176,7 +176,7 @@ class DeltaDashboardEnhancementTest extends TestCase
         $responseIndex = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
         $responseIndex->assertOk();
         $responseIndex->assertDontSee(route('admin.penempatan.show', $this->penempatan));
-        $responseIndex->assertSee('openPindahModal');
+        $responseIndex->assertSee('open-pindah-modal');
 
         // Sidebar Admin memiliki link Penempatan dan Kuota
         $responseAdminDash = $this->actingAs($this->admin)->get(route('admin.dashboard'));

@@ -28,7 +28,7 @@
             <a href="{{ route('pembimbing.tugas.create') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1rem; background: #ffffff; color: var(--neutral-700); font-weight: 600; font-size: 0.8125rem; border: 1px solid var(--neutral-300); border-radius: 8px; text-decoration: none;">
                 Kembali ke Form Tugas
             </a>
-            <button type="button" onclick="openModalTambahTemplate()" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.8125rem; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+            <button type="button" data-action="open-modal-tambah-template" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.8125rem; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 <span>Buat Template Baru</span>
             </button>
@@ -130,7 +130,7 @@
                         </a>
 
                         @if($tmpl->pembimbing_id === auth()->id() || auth()->user()->isSuperAdmin())
-                            <form method="POST" action="{{ route('pembimbing.tugas.template.destroy', $tmpl) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus template ini?');" style="margin: 0;">
+                            <form method="POST" action="{{ route('pembimbing.tugas.template.destroy', $tmpl) }}" data-confirm="Apakah Anda yakin ingin menghapus template ini?" style="margin: 0;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" style="background: transparent; border: none; cursor: pointer; color: #ef4444; padding: 0.25rem; border-radius: 4px;" title="Hapus Template">
@@ -150,7 +150,7 @@
                 <p style="font-size: 0.875rem; color: var(--neutral-600); margin: 0 0 1.25rem 0; max-width: 450px; margin-left: auto; margin-right: auto;">
                     Simpan penugasan yang sering Anda berikan agar dapat digunakan kembali dengan 1-klik saat membimbing angkatan magang baru.
                 </p>
-                <button type="button" onclick="openModalTambahTemplate()" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.8125rem; border: none; border-radius: 8px; cursor: pointer;">
+                <button type="button" data-action="open-modal-tambah-template" style="display: inline-flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.8125rem; border: none; border-radius: 8px; cursor: pointer;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     <span>Buat Template Pertama</span>
                 </button>
@@ -171,7 +171,7 @@
     <div style="background: #ffffff; border-radius: 14px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); padding: 1.75rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--neutral-200); padding-bottom: 1rem;">
             <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--neutral-900); margin: 0;">Buat Template Tugas Baru</h3>
-            <button type="button" onclick="closeModalTambahTemplate()" style="background: transparent; border: none; cursor: pointer; color: var(--neutral-500); font-size: 1.25rem;">&times;</button>
+            <button type="button" data-action="close-modal-tambah-template" style="background: transparent; border: none; cursor: pointer; color: var(--neutral-500); font-size: 1.25rem;">&times;</button>
         </div>
 
         <form method="POST" action="{{ route('pembimbing.tugas.template.store') }}" style="display: flex; flex-direction: column; gap: 1rem;">
@@ -214,7 +214,7 @@
             @endif
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem; border-top: 1px solid var(--neutral-200); padding-top: 1rem;">
-                <button type="button" onclick="closeModalTambahTemplate()" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-200); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
+                <button type="button" data-action="close-modal-tambah-template" style="height: 40px; padding: 0 1.25rem; background: var(--neutral-200); color: var(--neutral-700); font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
                     Batal
                 </button>
                 <button type="submit" style="height: 40px; padding: 0 1.5rem; background: #0641CC; color: #ffffff; font-weight: 600; font-size: 0.875rem; border: none; border-radius: 8px; cursor: pointer;">
@@ -225,14 +225,5 @@
     </div>
 </div>
 
-<script>
-    function openModalTambahTemplate() {
-        const modal = document.getElementById('modalTambahTemplate');
-        if (modal) modal.style.display = 'flex';
-    }
-    function closeModalTambahTemplate() {
-        const modal = document.getElementById('modalTambahTemplate');
-        if (modal) modal.style.display = 'none';
-    }
-</script>
+@vite(['resources/js/pages/pembimbing/tugas-template-index.js'])
 @endsection

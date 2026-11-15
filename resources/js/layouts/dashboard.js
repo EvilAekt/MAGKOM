@@ -249,6 +249,14 @@ if (typeof window !== 'undefined') {
             btn.setAttribute('aria-expanded', 'false');
         }
 
+        // Nav group button toggle
+        const navGroupBtn = e.target.closest('.nav-group-btn');
+        if (navGroupBtn) {
+            e.preventDefault();
+            toggleNavGroup(navGroupBtn);
+            return;
+        }
+
         // Close drawer button
         const closeBtn = e.target.closest('.sidebar-drawer-close-btn, [data-action="close-sidebar"]');
         if (closeBtn) {

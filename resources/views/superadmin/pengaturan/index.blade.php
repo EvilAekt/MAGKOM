@@ -260,7 +260,7 @@
                 <div>
                     <span style="font-size: 0.8125rem; font-weight: 700; color: var(--neutral-800);">Pemeliharaan Penyimpanan Audit Trail</span>
                 </div>
-                <button type="submit" form="formPurgeAudit" onclick="return confirm('Apakah Anda yakin ingin memicu pemangkasan log akses data audit yang melampaui batas retensi sekarang?')" class="btn btn-outline" style="font-size: 0.8125rem; color: var(--red-600); border-color: var(--red-300);">
+                <button type="submit" form="formPurgeAudit" data-confirm="Apakah Anda yakin ingin memicu pemangkasan log akses data audit yang melampaui batas retensi sekarang?" class="btn btn-outline" style="font-size: 0.8125rem; color: var(--red-600); border-color: var(--red-300);">
                     Jalankan Pemangkasan Log Sekarang
                 </button>
             </div>

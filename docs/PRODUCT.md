@@ -53,9 +53,9 @@ Keberhasilan sistem diukur dari:
 
 ## Capabilities and Constraints
 
-- **Stack Terkunci**: **PHP 8.3.x**, **Laravel 10.x**, **Vite 6.x**, **MySQL 8.0+** (InnoDB). Pengujian otomatis menggunakan **PHPUnit 10.x** dengan SQLite `:memory:` dan MySQL concurrency gate (942 automated tests, 6.132 assertions).
+- **Stack Terkunci**: **PHP 8.3.x**, **Laravel 10.x**, **Vite 6.x**, **MySQL 8.0+** (InnoDB). Pengujian otomatis menggunakan **PHPUnit 10.x** dengan SQLite `:memory:` dan MySQL concurrency gate (950+ automated tests, 6.200+ assertions).
 - **Pola Arsitektur Backend**: *Modular Actions & Specialized Queries Pattern* (`app/Actions/`, `app/Queries/`, `app/Services/`) dengan pemisahan orkestrasi controller (*Skinny Controllers*).
-- **Kepatuhan CSP & Asset Management**: Seluruh aset dikelola melalui Vite. Dilarang menyisipkan blok `<style>` atau `<script>` inline di Blade, serta dilarang menambahkan atribut inline event handler (`onclick`, dll.) dan styling statis (`style="..."`).
+- **Kepatuhan CSP & Asset Management**: Seluruh aset dikelola melalui Vite. Dilarang keras menyisipkan blok `<style>` atau `<script>` inline di Blade, serta dilarang menambahkan atribut inline event handler (`onclick`, dll.) dan styling statis (`style="..."`) — terverifikasi 100% (0 inline scripts, 0 inline event handlers di 185 Blade views).
 - **Antarmuka Bento Grid & GSAP Motion**: Dashboard modular adaptif berbasis CSS Grid terstandarisasi untuk Peserta dan Admin dengan animasi transisi preloader Sleman.
 - **Penerimaan Atomik**: Alokasi kuota umum dan slot khusus wajib diapit transaksi database dengan `lockForUpdate()`.
 - **Penyimpanan Berkas Privat**: Berkas persyaratan pendaftar disimpan pada disk `private` dan diakses hanya lewat temporary signed URL berumur 5 menit yang dilindungi otorisasi Policy.

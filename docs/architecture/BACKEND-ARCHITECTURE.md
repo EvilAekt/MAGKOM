@@ -38,7 +38,7 @@ Aplikasi MAGKOM dibangun di atas framework Laravel 10 native dengan pendekatan c
 ### 2.1 Routing & Middleware
 - **Rute Web (`routes/web.php`):** Mengatur rute modul publik, otentikasi, alur peserta, pembimbing, admin, dan superadmin.
 - **Keamanan HTTP (`App\Http\Middleware\SecurityHeaders`):** Menginjeksi security headers standar OWASP:
-  - `Content-Security-Policy`: Menetapkan `default-src 'self'`, `script-src 'self' https://challenges.cloudflare.com https://cdn.tailwindcss.com`, `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`, dan `font-src 'self' https://fonts.gstatic.com data:`.
+  - `Content-Security-Policy`: Menetapkan `default-src 'self'`, `script-src 'self' https://challenges.cloudflare.com`, `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`, dan `font-src 'self' https://fonts.gstatic.com data:`. Zero inline scripts & zero inline event handlers di seluruh Blade view.
   - `X-Content-Type-Options: nosniff`
   - `X-Frame-Options: SAMEORIGIN`
   - `Referrer-Policy: strict-origin-when-cross-origin`

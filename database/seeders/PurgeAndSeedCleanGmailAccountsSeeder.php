@@ -26,6 +26,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
 class PurgeAndSeedCleanGmailAccountsSeeder extends Seeder
 {
@@ -34,6 +35,10 @@ class PurgeAndSeedCleanGmailAccountsSeeder extends Seeder
      */
     public function run(): void
     {
+        if (app()->isProduction()) {
+            throw new RuntimeException('Cannot run PurgeAndSeedCleanGmailAccountsSeeder in production environment.');
+        }
+
         $defaultPassword = Hash::make('Password123!');
         $now = now();
 

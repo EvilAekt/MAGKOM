@@ -23,24 +23,8 @@
     <!-- Vite Asset Pipeline (PRD-TASK-VITE-01) -->
     @vite(['resources/css/app.css', 'resources/css/layouts/auth-layout-tokens.css', 'resources/js/app.js'])
 
-    <!-- Anti-Flash Theme Script -->
-    <script>
-        (function() {
-            try {
-                const savedPref = localStorage.getItem('magkom_theme') || '{{ session('tema_tampilan', request()->cookie('tema_tampilan', 'terang')) }}';
-                let effectiveTheme = 'light';
-                if (savedPref === 'sistem') {
-                    effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                } else if (savedPref === 'gelap') {
-                    effectiveTheme = 'dark';
-                } else {
-                    effectiveTheme = 'light';
-                }
-                document.documentElement.setAttribute('data-theme', effectiveTheme);
-                document.documentElement.setAttribute('data-pref-theme', savedPref);
-            } catch (e) {}
-        })();
-    </script>
+    <!-- Anti-Flash Theme Script (External, CSP compliant) -->
+    <script src="{{ asset('js/theme-init.js') }}"></script>
 
 </head>
 <body>
@@ -114,60 +98,5 @@
             </div>
         </main>
     </div>
-
-    <!-- Script Pembantu Show / Hide Password & Toast Dismiss -->
-    <script>
-        function dismissToast(btn) {
-            const toast = btn.closest('.app-toast') || btn.closest('.app-alert');
-            if (!toast) return;
-            toast.classList.add('toast-hiding');
-            setTimeout(() => toast.remove(), 300);
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            // Auto dismiss alert toast after 5s with pause on hover
-            const alerts = document.querySelectorAll('.alerts-container .app-toast, .alerts-container .app-alert');
-            alerts.forEach(alert => {
-                let timer = setTimeout(() => {
-                    alert.classList.add('toast-hiding');
-                    setTimeout(() => alert.remove(), 300);
-                }, 5000);
-
-                alert.addEventListener('mouseenter', () => clearTimeout(timer));
-                alert.addEventListener('mouseleave', () => {
-                    timer = setTimeout(() => {
-                        alert.classList.add('toast-hiding');
-                        setTimeout(() => alert.remove(), 300);
-                    }, 3000);
-                });
-            });
-
-            // Password Toggle
-            const toggleButtons = document.querySelectorAll('.toggle-password-btn');
-            toggleButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const targetId = this.getAttribute('data-target');
-                    const input = document.getElementById(targetId);
-                    if (input) {
-                        const isPassword = input.getAttribute('type') === 'password';
-                        input.setAttribute('type', isPassword ? 'text' : 'password');
-                        
-                        // Toggle SVG icon
-                        const eyeOpen = this.querySelector('.eye-open');
-                        const eyeClosed = this.querySelector('.eye-closed');
-                        if (eyeOpen && eyeClosed) {
-                            if (isPassword) {
-                                eyeOpen.style.display = 'none';
-                                eyeClosed.style.display = 'block';
-                            } else {
-                                eyeOpen.style.display = 'block';
-                                eyeClosed.style.display = 'none';
-                            }
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>

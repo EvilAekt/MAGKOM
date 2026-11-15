@@ -81,7 +81,7 @@
                             <img id="wp-hero-banner-thumb" 
                                  src="{{ $cmsData['landing_hero_image'] ? Storage::url($cmsData['landing_hero_image']) : asset('images/gedung-kominfo.jpg') }}" 
                                  alt="Thumbnail Banner Hero" 
-                                 onerror="this.src='{{ asset('favicon.png') }}'">
+                                 >
                             <button type="button" class="wp-btn wp-btn-secondary wp-btn-sm" id="btn-change-hero-image">
                                 Ganti Gambar
                             </button>

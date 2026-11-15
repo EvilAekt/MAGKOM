@@ -92,6 +92,7 @@
             }
         }
     </style>
+    <script src="{{ asset('js/theme-init.js') }}"></script>
 </head>
 <body>
 
@@ -104,7 +105,7 @@
             </div>
         </div>
         <div style="display: flex; gap: 8px;">
-            <button onclick="window.print()" style="background: #0641CC; color: #ffffff; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(6, 65, 204, 0.25);">
+            <button data-action="window-print" style="background: #0641CC; color: #ffffff; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(6, 65, 204, 0.25);">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                 Cetak Dokumen (Ctrl+P)
             </button>

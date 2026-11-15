@@ -113,7 +113,7 @@
 
             <div class="filter-group" style="flex: 1;">
                 <label for="selectPenempatan">Filter Nama Peserta</label>
-                <select name="penempatan_id" id="selectPenempatan" class="filter-control" onchange="this.form.submit()">
+                <select name="penempatan_id" id="selectPenempatan" class="filter-control" data-action="auto-submit-form">
                     <option value="">Semua Peserta Bimbingan</option>
                     @foreach($allPenempatan ?? $penempatanList as $pen)
                         <option value="{{ $pen->id }}" {{ request('penempatan_id') == $pen->id ? 'selected' : '' }}>
@@ -125,7 +125,7 @@
 
             <div class="filter-group" style="flex: 1;">
                 <label for="selectBulan">Filter Bulan</label>
-                <select name="bulan" id="selectBulan" class="filter-control" onchange="this.form.submit()">
+                <select name="bulan" id="selectBulan" class="filter-control" data-action="auto-submit-form">
                     <option value="">Semua Bulan</option>
                     @foreach($daftarBulan ?? [] as $val => $label)
                         <option value="{{ $val }}" {{ request('bulan') == $val ? 'selected' : '' }}>

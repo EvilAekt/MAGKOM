@@ -46,12 +46,19 @@
                     $previewUrl = $terunggah->getSignedPreviewUrl(5);
                 @endphp
                 <div class="action-btns-group">
-                    <button type="button" class="btn-action-round view" onclick="openDocPreview('{{ $previewUrl }}', '{{ $downloadUrl }}', '{{ addslashes($jenis->nama) }} - {{ addslashes($terunggah->nama_asli) }}', '{{ $terunggah->mime }}')" title="Lihat Berkas">
+                    <button type="button" 
+                            class="btn-action-round view" 
+                            data-action="open-doc-preview" 
+                            data-preview-url="{{ $previewUrl }}" 
+                            data-download-url="{{ $downloadUrl }}" 
+                            data-title="{{ $jenis->nama }} - {{ $terunggah->nama_asli }}" 
+                            data-mime="{{ $terunggah->mime }}" 
+                            title="Lihat Berkas">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         <span>Lihat</span>
                     </button>
                     @if($bisaUnggah)
-                        <button type="button" class="btn-action-round" onclick="toggleDropzone('{{ $key }}')" title="Ganti Berkas">
+                        <button type="button" class="btn-action-round" data-action="toggle-dropzone" data-key="{{ $key }}" title="Ganti Berkas">
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
                             <span>Ganti</span>
                         </button>
@@ -62,10 +69,10 @@
                     <button type="button"
                             class="btn-upload-trigger"
                             id="dropzone_box_{{ $key }}"
-                            onclick="document.getElementById('file_input_{{ $key }}').click()"
-                            ondragover="handleDragOver(event, this)"
-                            ondragleave="handleDragLeave(event, this)"
-                            ondrop="handleDrop(event, this, '{{ $key }}', {{ $maksMb }})"
+                            data-action="trigger-file-input" data-key="{{ $key }}"
+                            data-dropzone-key="{{ $key }}" data-max-mb="{{ $maksMb }}"
+                            
+                            
                             title="Klik atau seret berkas ke sini">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                         <span>Unggah File</span>
@@ -79,7 +86,7 @@
 
     {{-- Form Unggah (File Input Tersembunyi & Konfirmasi Berkas Ringkas) --}}
     @if($bisaUnggah)
-        <form action="{{ route('peserta.berkas.unggah', $pendaftaran) }}" method="POST" enctype="multipart/form-data" id="form_upload_{{ $key }}" onsubmit="handleUploadSubmit(this, '{{ $key }}')">
+        <form action="{{ route('peserta.berkas.unggah', $pendaftaran) }}" method="POST" enctype="multipart/form-data" id="form_upload_{{ $key }}" class="form-upload-berkas" data-upload-key="{{ $key }}">
             @csrf
             <input type="hidden" name="jenis_dokumen_id" value="{{ $jenis->id }}">
             @if(!empty($anggotaId))
@@ -91,7 +98,7 @@
                    name="file"
                    accept=".pdf,.jpg,.jpeg,.png"
                    style="display: none;"
-                   onchange="handleFileSelected(this, '{{ $key }}', {{ $maksMb }})">
+                   class="doc-file-input" data-key="{{ $key }}" data-max-mb="{{ $maksMb }}">
 
             {{-- Baris Penggantian Berkas --}}
             @if($terunggah)
@@ -100,14 +107,14 @@
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <button type="button"
                                 class="btn-upload-trigger"
-                                onclick="document.getElementById('file_input_{{ $key }}').click()"
-                                ondragover="handleDragOver(event, this)"
-                                ondragleave="handleDragLeave(event, this)"
-                                ondrop="handleDrop(event, this, '{{ $key }}', {{ $maksMb }})">
+                                data-action="trigger-file-input" data-key="{{ $key }}"
+                                data-dropzone-key="{{ $key }}" data-max-mb="{{ $maksMb }}"
+                                
+                                >
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                             <span>Pilih Berkas</span>
                         </button>
-                        <button type="button" class="btn-action-round" onclick="toggleDropzone('{{ $key }}')">
+                        <button type="button" class="btn-action-round" data-action="toggle-dropzone" data-key="{{ $key }}">
                             Batal
                         </button>
                     </div>
@@ -122,7 +129,7 @@
                     <span id="selected_size_{{ $key }}" class="selected-file-size"></span>
                 </div>
                 <div class="selected-file-actions">
-                    <button type="button" class="btn-action-round" onclick="resetFileSelection('{{ $key }}')">
+                    <button type="button" class="btn-action-round" data-action="reset-file-selection" data-key="{{ $key }}">
                         Batal
                     </button>
                     <button type="submit" class="btn-confirm-upload" id="btn_submit_{{ $key }}">

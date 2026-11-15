@@ -9,7 +9,7 @@
         </div>
 
         <div class="wp-modal-body">
-            <form id="wp-create-reusable-form" onsubmit="return false;">
+            <form id="wp-create-reusable-form" >
                 <div class="wp-form-group">
                     <label for="reusable-title-input" class="wp-form-label">Nama Reusable Block <span class="wp-required">*</span></label>
                     <input type="text" id="reusable-title-input" class="wp-input" placeholder="Misal: CTA Pendaftaran Seleksi 2026" required maxlength="100">

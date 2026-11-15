@@ -25,4 +25,25 @@ class TrustProxies extends Middleware
         Request::HEADER_X_FORWARDED_PORT |
         Request::HEADER_X_FORWARDED_PROTO |
         Request::HEADER_X_FORWARDED_AWS_ELB;
+
+    /**
+     * Get the trusted proxies for the request.
+     * Supports wildcard ('*') or comma-separated IP/CIDR addresses via TRUSTED_PROXIES env.
+     *
+     * @return array<int, string>|string|null
+     */
+    protected function proxies(): array|string|null
+    {
+        $trusted = env('TRUSTED_PROXIES', config('trustedproxy.proxies', $this->proxies));
+
+        if ($trusted === '*' || $trusted === '**') {
+            return '*';
+        }
+
+        if (is_string($trusted) && trim($trusted) !== '') {
+            return array_map('trim', explode(',', $trusted));
+        }
+
+        return is_array($trusted) ? $trusted : $this->proxies;
+    }
 }
