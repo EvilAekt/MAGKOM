@@ -370,9 +370,7 @@ jobs:
           DB_DATABASE: magkom_testing
           DB_USERNAME: root
           DB_PASSWORD: root
-        run: |
-          php artisan migrate --force
-          php artisan test tests/Feature/QuotaConcurrencyTest.php
+        run: php artisan test --filter=QuotaConcurrencyTest
 
   codeql-javascript-actions:
     name: CodeQL Analysis (JavaScript & GitHub Actions)

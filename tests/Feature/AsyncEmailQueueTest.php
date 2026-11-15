@@ -8,10 +8,10 @@ use App\Models\User;
 use App\Notifications\QueuedVerifyEmailNotification;
 use App\Notifications\ResetPasswordNotification;
 use Database\Seeders\PermissionSeeder;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class AsyncEmailQueueTest extends TestCase
@@ -98,7 +98,7 @@ class AsyncEmailQueueTest extends TestCase
             'status_aktif' => true,
         ]);
 
-        event(new \Illuminate\Auth\Events\Registered($unverifiedUser));
+        event(new Registered($unverifiedUser));
 
         Notification::assertSentTo(
             $unverifiedUser,
