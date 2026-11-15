@@ -30,7 +30,7 @@ class ReplaceMediaRequest extends FormRequest
             'file' => [
                 'required',
                 'file',
-                'mimes:jpeg,jpg,png,webp,svg,pdf',
+                'mimes:jpeg,jpg,png,webp,pdf',
                 'max:5120', // Maksimal 5 MB
             ],
         ];
@@ -46,7 +46,7 @@ class ReplaceMediaRequest extends FormRequest
         return [
             'file.required' => 'Pilih berkas baru sebagai pengganti.',
             'file.file' => 'Berkas pengganti yang diunggah tidak valid.',
-            'file.mimes' => 'Format berkas hanya boleh berupa JPG, PNG, WEBP, SVG, atau PDF.',
+            'file.mimes' => 'Format berkas hanya boleh berupa JPG, PNG, WEBP, atau PDF (SVG dilarang demi keamanan sistem).',
             'file.max' => 'Ukuran berkas maksimal adalah 5 MB.',
         ];
     }

@@ -35,6 +35,13 @@ class TestResetPasswordCommand extends Command
      */
     public function handle(): int
     {
+        if (app()->isProduction()) {
+            $this->error('❌ PERINTAH DIAGNOSTIK INI DILARANG DIJALANKAN DI LINGKUNGAN PRODUCTION!');
+            $this->warn('Perintah ini mengekspos token reset langsung ke terminal dan hanya boleh digunakan di staging/local.');
+
+            return self::FAILURE;
+        }
+
         $this->info('================================================================');
         $this->info('  MAGKOM AUTH DIAGNOSTIC: UJI FITUR LUPA & RESET PASSWORD       ');
         $this->info('================================================================');

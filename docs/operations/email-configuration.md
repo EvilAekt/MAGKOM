@@ -51,25 +51,71 @@ Seluruh isi surel yang dikirimkan sistem otomatis dicatat ke dalam berkas log lo
 
 Alternatifnya, pengembang dapat menggunakan utilitas lokal seperti **Mailpit** (`MAIL_PORT=1025`) atau **Mailtrap** (`MAIL_PORT=2525`).
 
-### B. Lingkungan Produksi Google Workspace / Gmail SMTP
-Jika dinas menggunakan Google Workspace:
-1. Masuk ke Google Account Keamanan Dinas.
-2. Aktifkan **2-Step Verification**.
-3. Buat **App Password** khusus 16 digit untuk aplikasi MAGKOM.
-4. Gunakan `MAIL_HOST=smtp.gmail.com`, `MAIL_PORT=587`, `MAIL_ENCRYPTION=tls`.
+### B. Rekomendasi Penyedia SMTP Produksi Instansi
 
-### C. Server SMTP Relay Internal Kedinasan
-Jika server web berada dalam jaringan intranet tertutup Pemerintah Daerah:
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=10.10.1.50
-MAIL_PORT=25
-MAIL_ENCRYPTION=null
-```
+> [!CAUTION]
+> **DILARANG MENGGUNAKAN AKUN GMAIL PERSONAL (@gmail.com) UNTUK PRODUKSI.**  
+> Akun Gmail personal memiliki batas pengiriman ketat (500 email/hari), risiko pemblokiran mendadak akibat deteksi otomatis spam Google, dan ketiadaan jaminan SLA atau penyesuaian SPF/DKIM/DMARC dengan domain instansi (`.go.id`).
+
+Untuk kebutuhan produksi instansi pemerintah, gunakan salah satu dari solusi berikut:
+
+1. **SMTP Relay Internal Pemerintah Daerah / Diskominfo (Rekomendasi Utama)**:
+   - Terhubung langsung dengan MTA dinas melalui jaringan privat (LAN/VPN).
+   - Mendukung domain resmi instansi (misal `@diskominfo.go.id` atau `@slemankab.go.id`).
+   - Bebas biaya lisensi pihak ketiga dan memenuhi kedaulatan data SPBE.
+   ```env
+   MAIL_MAILER=smtp
+   MAIL_HOST=10.x.x.x (atau mail-relay.pemda.go.id)
+   MAIL_PORT=25 (unauthenticated internal) atau 587 (authenticated TLS)
+   MAIL_ENCRYPTION=tls
+   ```
+
+2. **Transactional Email Service Provider (Mailgun / AWS SES / Brevo)**:
+   - Cocok untuk server cloud dengan throughput tinggi.
+   - Menyediakan reputasi IP tinggi dan penandatanganan DKIM otomatis.
+   ```env
+   MAIL_MAILER=smtp
+   MAIL_HOST=smtp.mailgun.org
+   MAIL_PORT=587
+   MAIL_USERNAME=postmaster@mg.diskominfo.go.id
+   MAIL_PASSWORD=api-key-smtp
+   MAIL_ENCRYPTION=tls
+   ```
+
+3. **Google Workspace Kedinasan**:
+   - Hanya diizinkan jika menggunakan domain kustom institusi resmi Google Workspace dengan akun khusus aplikasi (service account / app password dinas).
 
 ---
 
-## 4. Perintah Artisan Pengujian Mandiri (CLI Diagnostics)
+## 4. Validasi Kesiapan Pra-Deployment (Pre-Deployment Validation)
+
+Aplikasi dilengkapi perintah audit otomatis untuk memastikan konfigurasi email layak naik ke production:
+
+```bash
+php artisan email:validate-config --strict
+```
+
+Perintah ini memverifikasi:
+- `MAIL_MAILER` bukan `log`, `array`, atau `null`.
+- Host SMTP bukan `localhost` atau loopback `127.0.0.1`.
+- Port SMTP terdefinisi dengan benar (25, 465, 587).
+- Kredensial username dan password terisi.
+- Format `MAIL_FROM_ADDRESS` valid dan tidak menggunakan domain `@example.com`.
+
+Jika konfigurasi belum lengkap, perintah akan menghasilkan kode keluar `FAILURE (1)` dan daftar perbaikan yang harus dipenuhi sebelum deployment diizinkan.
+
+---
+
+## 5. Pengamanan Runtime Driver Log di Production
+
+Untuk mencegah email verifikasi peserta terbuang ke berkas log tanpa diketahui administrator:
+- Jika `APP_ENV=production` dan `MAIL_MAILER=log`, pengiriman email apapun akan secara otomatis memicu `RuntimeException` fatal:
+  `FATAL: Pengiriman email di lingkungan production dilarang menggunakan driver 'log'. Konfigurasikan MAIL_MAILER=smtp dengan kredensial resmi pada berkas .env server.`
+- Pada lingkungan testing dan development lokal, driver `array` dan `log` tetap berfungsi normal.
+
+---
+
+## 6. Perintah Artisan Pengujian Mandiri (CLI Diagnostics)
 
 MAGKOM menyediakan perintah diagnostik internal untuk memverifikasi kesiapan alur surel tanpa perlu membuka browser:
 

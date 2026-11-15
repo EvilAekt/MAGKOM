@@ -31,6 +31,13 @@ class GenerateSampleDocumentsCommand extends Command
      */
     public function handle(): int
     {
+        if (app()->isProduction()) {
+            $this->error('❌ PERINTAH INI DILARANG DIJALANKAN DI LINGKUNGAN PRODUCTION!');
+            $this->warn('Menghasilkan berkas PDF sampel pengujian dilarang pada database production.');
+
+            return Command::FAILURE;
+        }
+
         $pendaftaranId = (int) $this->argument('pendaftaran_id');
 
         $pendaftaran = Pendaftaran::with(['user.profil.jurusan', 'bulanMagang', 'kuota.jurusan', 'dokumen.jenisDokumen'])

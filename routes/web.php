@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\Auth\TwoFactorAuthController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboardController;
 use App\Http\Controllers\Pembimbing\LaporanKinerjaController as PembimbingLaporanKinerjaController;
@@ -103,6 +104,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showReset'])->name('password.reset');
     Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update')->middleware('throttle:6,1');
 });
+
+// Otentikasi Dua Faktor (2FA Challenge - AUTH-002)
+Route::get('/two-factor-challenge', [TwoFactorAuthController::class, 'showChallenge'])->name('two-factor.challenge');
+Route::post('/two-factor-challenge', [TwoFactorAuthController::class, 'verifyChallenge'])->name('two-factor.challenge.verify')->middleware('throttle:10,1');
 
 // Logout (SEC-04: POST only with CSRF protection)
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -410,11 +415,19 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
     Route::get('/akun', [SuperAdminAkunController::class, 'index'])->name('akun.index');
     Route::put('/akun/password', [SuperAdminAkunController::class, 'updatePassword'])->name('akun.password.update');
     Route::post('/akun/preferensi', [SuperAdminAkunController::class, 'updatePreferensi'])->name('akun.preferensi.update');
+
+    // Keamanan Akun & Otentikasi Dua Faktor (2FA - AUTH-002)
+    Route::get('/keamanan/2fa', [TwoFactorAuthController::class, 'showSettings'])->name('2fa.settings');
+    Route::post('/keamanan/2fa/enable', [TwoFactorAuthController::class, 'enable'])->name('2fa.enable');
+    Route::post('/keamanan/2fa/confirm', [TwoFactorAuthController::class, 'confirm'])->name('2fa.confirm');
+    Route::post('/keamanan/2fa/disable', [TwoFactorAuthController::class, 'disable'])->name('2fa.disable');
+    Route::post('/keamanan/2fa/recovery-codes', [TwoFactorAuthController::class, 'regenerateRecoveryCodes'])->name('2fa.regenerate-recovery-codes');
 });
 
-// Server-Sent Events (SSE) Real-time Stream & Notifikasi (RFC 8895)
+// Server-Sent Events (SSE) Real-time Stream & Notifikasi Fallback (RFC 8895 / PERF-001)
 Route::middleware(['auth', 'verified', 'must_change_password', 'account.active'])->group(function () {
     Route::get('/realtime/stream', [RealtimeStreamController::class, 'stream'])->name('realtime.stream');
+    Route::get('/realtime/poll', [RealtimeStreamController::class, 'poll'])->name('realtime.poll')->middleware('throttle:60,1');
     Route::post('/realtime/read-batch', [RealtimeStreamController::class, 'markReadBatch'])->name('realtime.read-batch');
     Route::post('/realtime/read/{id}', [RealtimeStreamController::class, 'markRead'])->name('realtime.read');
 });

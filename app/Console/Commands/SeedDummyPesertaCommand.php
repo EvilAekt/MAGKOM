@@ -28,6 +28,13 @@ class SeedDummyPesertaCommand extends Command
      */
     public function handle(): int
     {
+        if (app()->isProduction()) {
+            $this->error('❌ PERINTAH SEEDER INI DILARANG KERAS DI LINGKUNGAN PRODUCTION!');
+            $this->warn('Menghasilkan akun dan skenario dummy dilarang pada database production.');
+
+            return Command::FAILURE;
+        }
+
         $this->info('Memulai seeding 20 peserta magang dengan berbagai kasus dan kondisi...');
 
         $seeder = new DummyDuaPuluhPesertaSeeder;

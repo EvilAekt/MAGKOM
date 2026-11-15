@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Support;
 
+use DOMComment;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
@@ -24,6 +25,7 @@ class SafeHtmlSanitizer
     private const DANGEROUS_TAGS = [
         'script', 'style', 'iframe', 'object', 'embed', 'applet', 'svg', 'canvas',
         'form', 'input', 'button', 'select', 'textarea', 'frame', 'frameset',
+        'img', 'audio', 'video', 'source', 'track', 'link', 'meta', 'base', 'math',
     ];
 
     /**
@@ -35,7 +37,7 @@ class SafeHtmlSanitizer
             return '';
         }
 
-        $trimmed = trim($html);
+        $trimmed = str_replace("\0", '', trim($html));
         if ($trimmed === '') {
             return '';
         }
@@ -48,8 +50,8 @@ class SafeHtmlSanitizer
         $dom = new DOMDocument;
         libxml_use_internal_errors(true);
 
-        // Gunakan encoding HTML-ENTITIES agar karakter multibyte tidak rusak
-        $encoded = mb_convert_encoding($trimmed, 'HTML-ENTITIES', 'UTF-8');
+        // Gunakan encoding numeric entity UTF-8 yang kompatibel dengan PHP 8.3+ tanpa memicu deprecation notice
+        $encoded = mb_encode_numericentity($trimmed, [0x80, 0x10FFFF, 0, 0x1FFFFF], 'UTF-8');
         $dom->loadHTML('<div>'.$encoded.'</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
 
@@ -79,18 +81,29 @@ class SafeHtmlSanitizer
         }
 
         foreach ($children as $child) {
+            // Hapus komentar HTML sepenuhnya untuk mencegah comment tricks
+            if ($child instanceof DOMComment) {
+                $node->removeChild($child);
+
+                continue;
+            }
+
             if ($child instanceof DOMElement) {
                 $tagName = strtolower($child->tagName);
 
+                // 1. Tag berbahaya: hapus beserta seluruh anak di dalamnya
                 if (in_array($tagName, self::DANGEROUS_TAGS, true)) {
                     $node->removeChild($child);
 
                     continue;
                 }
 
+                // 2. Rekursi terlebih dahulu untuk membersihkan seluruh elemen turunan (bottom-up)
+                self::cleanNode($child);
+
+                // 3. Tag tidak dalam allowlist (misal <h1>, <div>, <span>, <a>):
+                // Pindahkan elemen anak yang sudah bersih ke parent, lalu hapus tag wrapper tersebut
                 if (! in_array($tagName, self::ALLOWED_TAGS, true)) {
-                    // Tag tidak dalam allowlist (misal <h1>, <div>, <span>, <a>, <img>):
-                    // Buka (unwrap) konten di dalamnya ke parent, lalu hapus tag tersebut
                     while ($child->hasChildNodes()) {
                         $firstChild = $child->firstChild;
                         if ($firstChild) {
@@ -102,15 +115,13 @@ class SafeHtmlSanitizer
                     continue;
                 }
 
-                // Tag aman: bersihkan SEMUA atribut (onclick, class, style, src, dll.)
-                while ($child->attributes->length > 0) {
+                // 4. Tag aman: bersihkan SEMUA atribut (onclick, onerror, class, style, src, dll.)
+                while ($child->hasAttributes()) {
                     $attr = $child->attributes->item(0);
                     if ($attr) {
                         $child->removeAttribute($attr->nodeName);
                     }
                 }
-
-                self::cleanNode($child);
             }
         }
     }

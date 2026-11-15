@@ -83,6 +83,8 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    'trusted_hosts' => env('TRUSTED_HOSTS') ? array_filter(array_map('trim', explode(',', env('TRUSTED_HOSTS')))) : [],
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

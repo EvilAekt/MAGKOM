@@ -30,7 +30,7 @@ class UploadMediaRequest extends FormRequest
             'file' => [
                 'required',
                 'file',
-                'mimes:jpeg,jpg,png,webp,svg,pdf',
+                'mimes:jpeg,jpg,png,webp,pdf',
                 'max:5120', // Maksimal 5 MB
             ],
             'alt_text' => ['nullable', 'string', 'max:255'],
@@ -50,7 +50,7 @@ class UploadMediaRequest extends FormRequest
         return [
             'file.required' => 'Pilih berkas yang ingin diunggah.',
             'file.file' => 'Berkas yang diunggah tidak valid.',
-            'file.mimes' => 'Format berkas hanya boleh berupa JPG, PNG, WEBP, SVG, atau PDF.',
+            'file.mimes' => 'Format berkas hanya boleh berupa JPG, PNG, WEBP, atau PDF (SVG dilarang demi keamanan sistem).',
             'file.max' => 'Ukuran berkas maksimal adalah 5 MB.',
         ];
     }

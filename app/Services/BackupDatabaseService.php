@@ -11,10 +11,18 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
+use ZipArchive;
 
 class BackupDatabaseService
 {
+    /**
+     * Header pengenal berkas terenkripsi resmi MAGKOM (BACKUP-001).
+     */
+    public const ENC_MAGIC_HEADER = 'MAGKOM_ENC_v1';
+
     /**
      * Batas maksimum arsip cadangan yang dipertahankan (FIFO retention).
      */
@@ -60,12 +68,19 @@ class BackupDatabaseService
 
         return collect(File::files($this->backupDir))
             ->filter(function ($file) {
-                return (bool) preg_match('/^backup-magkom-[a-zA-Z0-9_\-]+\.(sql\.gz|sql|sqlite)$/', $file->getFilename());
+                return (bool) preg_match('/^backup-magkom-[a-zA-Z0-9_\-]+\.(sql\.gz|sql|sqlite|zip)(\.enc)?$/', $file->getFilename());
             })
             ->map(function ($file) {
                 $filename = $file->getFilename();
-                $isGz = str_ends_with($filename, '.sql.gz');
-                $isSqlite = str_ends_with($filename, '.sqlite');
+                $isEnc = str_ends_with($filename, '.enc');
+                $isGz = str_contains($filename, '.sql.gz');
+                $isSqlite = str_contains($filename, '.sqlite');
+                $isZip = str_contains($filename, '.zip');
+
+                $format = $isZip ? 'Archive Files (ZIP)' : ($isGz ? 'Gzip SQL' : ($isSqlite ? 'SQLite' : 'Raw SQL'));
+                if ($isEnc) {
+                    $format .= ' (AES-256 Encrypted)';
+                }
 
                 return [
                     'filename' => $filename,
@@ -73,8 +88,9 @@ class BackupDatabaseService
                     'created_at' => Carbon::createFromTimestamp($file->getMTime())->translatedFormat('d M Y H:i:s'),
                     'timestamp' => $file->getMTime(),
                     'checksum' => hash_file('sha256', $file->getRealPath()),
-                    'is_compressed' => $isGz,
-                    'format' => $isGz ? 'Gzip SQL' : ($isSqlite ? 'SQLite' : 'Raw SQL'),
+                    'is_compressed' => $isGz || $isZip,
+                    'is_encrypted' => $isEnc,
+                    'format' => $format,
                 ];
             })
             ->sortByDesc('timestamp')
@@ -146,7 +162,21 @@ class BackupDatabaseService
      *
      * @throws \RuntimeException
      */
-    public function createSnapshot(?User $triggeredBy = null): array
+    /**
+     * Memicu pembuatan snapshot basis data instan (mendukung enkripsi AES-256-CBC).
+     *
+     * @return array{
+     *     filename: string,
+     *     size_mb: float,
+     *     checksum: string,
+     *     driver: string,
+     *     path: string,
+     *     is_encrypted: bool
+     * }
+     *
+     * @throws \RuntimeException
+     */
+    public function createSnapshot(?User $triggeredBy = null, ?string $encryptionKey = null): array
     {
         File::ensureDirectoryExists($this->backupDir);
 
@@ -176,13 +206,38 @@ class BackupDatabaseService
             throw new \RuntimeException('Gagal memverifikasi integritas berkas cadangan yang baru dibuat.');
         }
 
+        // 2. Enkripsi Berkas Arsip (BACKUP-001: AES-256-CBC with HMAC-SHA256)
+        $encryptEnabled = (bool) config('backup.encryption_enabled', true);
+        $key = $encryptionKey ?? (string) config('backup.encryption_key', config('app.key'));
+        $isEncrypted = false;
+
+        if ($encryptEnabled && ! empty($key)) {
+            $encFilename = $filename.'.enc';
+            $encTargetPath = $this->backupDir.DIRECTORY_SEPARATOR.$encFilename;
+            $this->encryptFile($targetPath, $encTargetPath, $key);
+            @unlink($targetPath);
+            $targetPath = $encTargetPath;
+            $filename = $encFilename;
+            $isEncrypted = true;
+        }
+
         $sizeMb = round(filesize($targetPath) / (1024 * 1024), 2);
         $checksum = hash_file('sha256', $targetPath);
 
-        // 2. Pangkas cadangan lama melebihi kuota 10 snapshot (FIFO)
+        // 3. Salin ke Offsite Object Storage / Remote Disk jika dikonfigurasi
+        $offsiteDisk = config('backup.offsite_disk');
+        if (! empty($offsiteDisk)) {
+            try {
+                Storage::disk($offsiteDisk)->putFileAs('backups', new \Illuminate\Http\File($targetPath), $filename);
+            } catch (\Throwable $e) {
+                Log::warning("Gagal menyalin backup ke offsite disk [{$offsiteDisk}]: ".$e->getMessage());
+            }
+        }
+
+        // 4. Pangkas cadangan lama melebihi kuota snapshot (FIFO)
         $this->pruneOldBackups(self::MAX_BACKUPS_RETAINED);
 
-        // 3. Catat jejak audit trail forensik (AC-13-6)
+        // 5. Catat jejak audit trail forensik (AC-13-6)
         $this->auditService->catat(
             tipe: TipeAuditEnum::Aksi,
             tabel: 'backup',
@@ -195,6 +250,7 @@ class BackupDatabaseService
                 'size_mb' => $sizeMb,
                 'checksum' => $checksum,
                 'driver' => $driver,
+                'is_encrypted' => $isEncrypted,
             ],
             user: $triggeredBy,
             channel: 'backup-database',
@@ -207,6 +263,100 @@ class BackupDatabaseService
             'checksum' => $checksum,
             'driver' => $driver,
             'path' => $targetPath,
+            'is_encrypted' => $isEncrypted,
+        ];
+    }
+
+    /**
+     * Membuat snapshot cadangan berkas privat pengguna (dokumen peserta).
+     *
+     * @return array{
+     *     filename: string,
+     *     size_mb: float,
+     *     checksum: string,
+     *     driver: string,
+     *     path: string,
+     *     is_encrypted: bool
+     * }
+     */
+    public function createFilesSnapshot(?User $triggeredBy = null, ?string $encryptionKey = null): array
+    {
+        File::ensureDirectoryExists($this->backupDir);
+        $privateDir = (string) config('backup.private_files_dir', storage_path('app/private'));
+        $timestamp = date('Y-m-d-His');
+        $rawFilename = "backup-magkom-files-{$timestamp}.zip";
+        $rawTargetPath = $this->backupDir.DIRECTORY_SEPARATOR.$rawFilename;
+
+        $zip = new ZipArchive;
+        if ($zip->open($rawTargetPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            throw new \RuntimeException('Gagal membuat arsip berkas zip.');
+        }
+
+        if (File::exists($privateDir)) {
+            $files = File::allFiles($privateDir);
+            foreach ($files as $file) {
+                $relative = substr($file->getRealPath(), strlen($privateDir) + 1);
+                $zip->addFile($file->getRealPath(), $relative);
+            }
+        }
+        $zip->close();
+
+        $targetPath = $rawTargetPath;
+        $filename = $rawFilename;
+        $encryptEnabled = (bool) config('backup.encryption_enabled', true);
+        $key = $encryptionKey ?? (string) config('backup.encryption_key', config('app.key'));
+        $isEncrypted = false;
+
+        if ($encryptEnabled && ! empty($key)) {
+            $encFilename = $filename.'.enc';
+            $encTargetPath = $this->backupDir.DIRECTORY_SEPARATOR.$encFilename;
+            $this->encryptFile($targetPath, $encTargetPath, $key);
+            @unlink($targetPath);
+            $targetPath = $encTargetPath;
+            $filename = $encFilename;
+            $isEncrypted = true;
+        }
+
+        $sizeMb = round(filesize($targetPath) / (1024 * 1024), 2);
+        $checksum = hash_file('sha256', $targetPath);
+
+        $offsiteDisk = config('backup.offsite_disk');
+        if (! empty($offsiteDisk)) {
+            try {
+                Storage::disk($offsiteDisk)->putFileAs('backups', new \Illuminate\Http\File($targetPath), $filename);
+            } catch (\Throwable $e) {
+                Log::warning("Gagal menyalin berkas arsip ke offsite disk [{$offsiteDisk}]: ".$e->getMessage());
+            }
+        }
+
+        $this->pruneOldBackups(self::MAX_BACKUPS_RETAINED);
+
+        $this->auditService->catat(
+            tipe: TipeAuditEnum::Aksi,
+            tabel: 'backup',
+            idData: null,
+            nilaiLama: null,
+            nilaiBaru: null,
+            detail: [
+                'aksi' => 'backup.files_snapshot_generated',
+                'filename' => $filename,
+                'size_mb' => $sizeMb,
+                'checksum' => $checksum,
+                'is_encrypted' => $isEncrypted,
+                'type' => 'files',
+            ],
+            user: $triggeredBy,
+            channel: 'backup-files',
+            severity: 'info'
+        );
+
+        return [
+            'filename' => $filename,
+            'size_mb' => $sizeMb,
+            'checksum' => $checksum,
+            'driver' => 'zip',
+            'path' => $targetPath,
+            'is_encrypted' => $isEncrypted,
         ];
     }
 
@@ -239,7 +389,7 @@ class BackupDatabaseService
      */
     public function findBackupPath(string $filename): ?string
     {
-        if (! preg_match('/^backup-magkom-[a-zA-Z0-9_\-]+\.(sql\.gz|sql|sqlite)$/', $filename)) {
+        if (! preg_match('/^backup-magkom-[a-zA-Z0-9_\-]+\.(sql\.gz|sql|sqlite|zip)(\.enc)?$/', $filename)) {
             return null;
         }
 
@@ -258,6 +408,259 @@ class BackupDatabaseService
         }
 
         return $realPath;
+    }
+
+    /**
+     * Mengenkripsi berkas dengan AES-256-CBC dan HMAC-SHA256 Encrypt-then-MAC (BACKUP-001).
+     */
+    public function encryptFile(string $sourcePath, string $targetPath, string $key): void
+    {
+        if (! file_exists($sourcePath)) {
+            throw new \InvalidArgumentException("Berkas sumber tidak ditemukan: {$sourcePath}");
+        }
+
+        $iv = random_bytes(16);
+        $salt = random_bytes(16);
+        $derivedKey = hash_pbkdf2('sha256', $key, $salt, 10000, 32, true);
+
+        $plaintext = (string) file_get_contents($sourcePath);
+        $ciphertext = openssl_encrypt($plaintext, 'aes-256-cbc', $derivedKey, OPENSSL_RAW_DATA, $iv);
+
+        if ($ciphertext === false) {
+            throw new \RuntimeException('Gagal mengenkripsi berkas cadangan dengan OpenSSL.');
+        }
+
+        $hmac = hash_hmac('sha256', $ciphertext, $derivedKey, true);
+
+        $handle = fopen($targetPath, 'wb');
+        if (! $handle) {
+            throw new \RuntimeException("Gagal membuka target berkas terenkripsi: {$targetPath}");
+        }
+
+        // Header paket: Magic (13 B) + Salt (16 B) + IV (16 B) + HMAC (32 B) + Ciphertext
+        fwrite($handle, self::ENC_MAGIC_HEADER);
+        fwrite($handle, $salt);
+        fwrite($handle, $iv);
+        fwrite($handle, $hmac);
+        fwrite($handle, $ciphertext);
+        fclose($handle);
+    }
+
+    /**
+     * Mendekripsi berkas terenkripsi dengan verifikasi integritas HMAC-SHA256 (BACKUP-001/BACKUP-002).
+     */
+    public function decryptFile(string $sourcePath, string $targetPath, string $key): void
+    {
+        if (! file_exists($sourcePath)) {
+            throw new \InvalidArgumentException("Berkas terenkripsi tidak ditemukan: {$sourcePath}");
+        }
+
+        $content = (string) file_get_contents($sourcePath);
+        $magicLen = strlen(self::ENC_MAGIC_HEADER);
+
+        if (strlen($content) < ($magicLen + 64)) {
+            throw new \RuntimeException('Format berkas terenkripsi tidak valid atau rusak (ukuran terlalu kecil).');
+        }
+
+        $magic = substr($content, 0, $magicLen);
+        if ($magic !== self::ENC_MAGIC_HEADER) {
+            throw new \RuntimeException('Header arsip tidak cocok dengan format enkripsi resmi MAGKOM.');
+        }
+
+        $salt = substr($content, $magicLen, 16);
+        $iv = substr($content, $magicLen + 16, 16);
+        $hmac = substr($content, $magicLen + 32, 32);
+        $ciphertext = substr($content, $magicLen + 64);
+
+        $derivedKey = hash_pbkdf2('sha256', $key, $salt, 10000, 32, true);
+        $calculatedHmac = hash_hmac('sha256', $ciphertext, $derivedKey, true);
+
+        if (! hash_equals($hmac, $calculatedHmac)) {
+            throw new \RuntimeException('Verifikasi integritas HMAC gagal: Kunci enkripsi salah atau berkas telah dimanipulasi.');
+        }
+
+        $decrypted = openssl_decrypt($ciphertext, 'aes-256-cbc', $derivedKey, OPENSSL_RAW_DATA, $iv);
+        if ($decrypted === false) {
+            throw new \RuntimeException('Gagal mendekripsi ciphertext cadangan.');
+        }
+
+        $written = file_put_contents($targetPath, $decrypted);
+        if ($written === false) {
+            throw new \RuntimeException("Gagal menulis hasil dekripsi ke target: {$targetPath}");
+        }
+    }
+
+    /**
+     * Memulihkan basis data dari arsip cadangan (BACKUP-002).
+     *
+     * @return array{
+     *     success: bool,
+     *     filename: string,
+     *     target_connection: string,
+     *     tables_count: int,
+     *     tables: array<string>
+     * }
+     */
+    public function restoreDatabase(string $filename, string $targetConnection = 'mysql', ?string $encryptionKey = null, ?User $triggeredBy = null): array
+    {
+        $realPath = $this->findBackupPath($filename);
+        if (! $realPath) {
+            throw new \InvalidArgumentException("Berkas cadangan '{$filename}' tidak ditemukan atau path traversal terdeteksi.");
+        }
+
+        $key = $encryptionKey ?? (string) config('backup.encryption_key', config('app.key'));
+        $tempPath = null;
+        $workPath = $realPath;
+
+        try {
+            // 1. Jika berkas terenkripsi (.enc), dekripsi ke lokasi temporer terisolasi
+            if (str_ends_with($filename, '.enc')) {
+                $tempPath = $this->backupDir.DIRECTORY_SEPARATOR.'temp-restore-'.uniqid().'.sql.gz';
+                $this->decryptFile($realPath, $tempPath, $key);
+                $workPath = $tempPath;
+            }
+
+            // 2. Ekstrak isi SQL dari arsip Gzip atau plaintext
+            $sqlContent = '';
+            if (str_contains($workPath, '.gz') || str_ends_with($workPath, '.gz')) {
+                $gz = @gzopen($workPath, 'rb');
+                if (! $gz) {
+                    throw new \RuntimeException('Gagal membuka arsip gzip cadangan.');
+                }
+                while (! gzeof($gz)) {
+                    $chunk = gzread($gz, 65536);
+                    if ($chunk !== false) {
+                        $sqlContent .= $chunk;
+                    }
+                }
+                gzclose($gz);
+            } else {
+                $sqlContent = (string) file_get_contents($workPath);
+            }
+
+            if (empty(trim($sqlContent))) {
+                throw new \RuntimeException('Berkas dump SQL cadangan kosong atau tidak valid.');
+            }
+
+            // 3. Jalankan pemulihan pada koneksi target via PDO
+            $connection = DB::connection($targetConnection);
+            $pdo = $connection->getPdo();
+
+            $driver = $connection->getDriverName();
+            if ($driver === 'mysql') {
+                $pdo->exec('SET FOREIGN_KEY_CHECKS=0;');
+            }
+
+            // Jalankan seluruh batch script SQL
+            $pdo->exec($sqlContent);
+
+            if ($driver === 'mysql') {
+                $pdo->exec('SET FOREIGN_KEY_CHECKS=1;');
+                $tables = $pdo->query('SHOW TABLES')->fetchAll(\PDO::FETCH_COLUMN);
+            } else {
+                $tables = $connection->getDoctrineSchemaManager()->listTableNames();
+            }
+
+            // 4. Catat jejak audit trail pemulihan bencana (DR)
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Aksi,
+                tabel: 'backup',
+                idData: null,
+                nilaiLama: null,
+                nilaiBaru: null,
+                detail: [
+                    'aksi' => 'backup.database_restored',
+                    'filename' => $filename,
+                    'target_connection' => $targetConnection,
+                    'tables_count' => count($tables),
+                ],
+                user: $triggeredBy,
+                channel: 'backup-restore',
+                severity: 'warning'
+            );
+
+            return [
+                'success' => true,
+                'filename' => $filename,
+                'target_connection' => $targetConnection,
+                'tables_count' => count($tables),
+                'tables' => $tables,
+            ];
+        } finally {
+            if ($tempPath && file_exists($tempPath)) {
+                @unlink($tempPath);
+            }
+        }
+    }
+
+    /**
+     * Memulihkan arsip berkas fisik pengguna (BACKUP-002).
+     *
+     * @return array{
+     *     success: bool,
+     *     filename: string,
+     *     target_dir: string,
+     *     files_count: int
+     * }
+     */
+    public function restoreFiles(string $filename, ?string $targetDir = null, ?string $encryptionKey = null, ?User $triggeredBy = null): array
+    {
+        $realPath = $this->findBackupPath($filename);
+        if (! $realPath) {
+            throw new \InvalidArgumentException("Berkas cadangan '{$filename}' tidak ditemukan atau path tidak valid.");
+        }
+
+        $key = $encryptionKey ?? (string) config('backup.encryption_key', config('app.key'));
+        $targetDirectory = $targetDir ?? (string) config('backup.private_files_dir', storage_path('app/private'));
+        File::ensureDirectoryExists($targetDirectory);
+
+        $tempPath = null;
+        $workPath = $realPath;
+
+        try {
+            if (str_ends_with($filename, '.enc')) {
+                $tempPath = $this->backupDir.DIRECTORY_SEPARATOR.'temp-restore-'.uniqid().'.zip';
+                $this->decryptFile($realPath, $tempPath, $key);
+                $workPath = $tempPath;
+            }
+
+            $zip = new ZipArchive;
+            if ($zip->open($workPath) !== true) {
+                throw new \RuntimeException('Gagal membuka arsip berkas zip.');
+            }
+
+            $extractedFilesCount = $zip->numFiles;
+            $zip->extractTo($targetDirectory);
+            $zip->close();
+
+            $this->auditService->catat(
+                tipe: TipeAuditEnum::Aksi,
+                tabel: 'backup',
+                idData: null,
+                nilaiLama: null,
+                nilaiBaru: null,
+                detail: [
+                    'aksi' => 'backup.files_restored',
+                    'filename' => $filename,
+                    'target_dir' => $targetDirectory,
+                    'files_count' => $extractedFilesCount,
+                ],
+                user: $triggeredBy,
+                channel: 'backup-restore',
+                severity: 'warning'
+            );
+
+            return [
+                'success' => true,
+                'filename' => $filename,
+                'target_dir' => $targetDirectory,
+                'files_count' => $extractedFilesCount,
+            ];
+        } finally {
+            if ($tempPath && file_exists($tempPath)) {
+                @unlink($tempPath);
+            }
+        }
     }
 
     /**
@@ -334,31 +737,17 @@ class BackupDatabaseService
     }
 
     /**
-     * Mencari path binary mysqldump pada sistem host.
+     * Mencari path binary mysqldump pada sistem host (kompatibel Linux & Windows / BACKUP-001).
      */
     protected function resolveMysqldumpBinary(): ?string
     {
+        // 1. Prioritas utama: konfigurasi eksplisit environment atau file konfigurasi
         $customPath = (string) config('database.connections.mysql.dump.dump_binary_path', env('MYSQLDUMP_PATH', ''));
         if (! empty($customPath) && file_exists($customPath)) {
             return $customPath;
         }
 
-        // Lokasi standar yang umum di Windows (Laragon/XAMPP) & Linux
-        $candidates = [
-            'F:\\XAMPEEK\\mysql\\bin\\mysqldump.exe',
-            'C:\\laragon\\bin\\mysql\\mysql-8.0.30-winx64\\bin\\mysqldump.exe',
-            'C:\\xampp\\mysql\\bin\\mysqldump.exe',
-            '/usr/bin/mysqldump',
-            '/usr/local/bin/mysqldump',
-        ];
-
-        foreach ($candidates as $candidate) {
-            if (file_exists($candidate)) {
-                return $candidate;
-            }
-        }
-
-        // Cek apakah 'mysqldump' tersedia di global PATH via 'where' (Windows) atau 'which' (Linux)
+        // 2. Cari di PATH sistem host via perintah bawaan sistem operasi (which / where)
         $lookupCmd = (PHP_OS_FAMILY === 'Windows') ? ['where', 'mysqldump'] : ['which', 'mysqldump'];
         try {
             $process = new Process($lookupCmd);
@@ -371,6 +760,35 @@ class BackupDatabaseService
                 }
             }
         } catch (\Throwable) {
+        }
+
+        // 3. Jalur instalasi standar server Linux / UNIX
+        $linuxCandidates = [
+            '/usr/bin/mysqldump',
+            '/usr/local/bin/mysqldump',
+            '/usr/local/mysql/bin/mysqldump',
+            '/opt/homebrew/bin/mysqldump',
+        ];
+
+        foreach ($linuxCandidates as $candidate) {
+            if (file_exists($candidate)) {
+                return $candidate;
+            }
+        }
+
+        // 4. Jalur pengembangan lokal Windows
+        if (PHP_OS_FAMILY === 'Windows') {
+            $windowsCandidates = [
+                'F:\\XAMPEEK\\mysql\\bin\\mysqldump.exe',
+                'C:\\laragon\\bin\\mysql\\mysql-8.0.30-winx64\\bin\\mysqldump.exe',
+                'C:\\xampp\\mysql\\bin\\mysqldump.exe',
+            ];
+
+            foreach ($windowsCandidates as $candidate) {
+                if (file_exists($candidate)) {
+                    return $candidate;
+                }
+            }
         }
 
         return null;

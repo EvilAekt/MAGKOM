@@ -45,6 +45,7 @@ return [
 
     'realtime' => [
         'sse_enabled' => env('REALTIME_SSE_ENABLED', true),
+        'polling_interval_seconds' => (int) env('REALTIME_POLLING_INTERVAL', 15),
     ],
 
 ];
