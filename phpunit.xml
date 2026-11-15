@@ -28,8 +28,6 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="SESSION_SECURE_COOKIE" value="false"/>
-        <env name="CAPTCHA_ENABLED" value="false"/>
-        <env name="TURNSTILE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="REALTIME_SSE_ENABLED" value="true" force="true"/>
     </php>
