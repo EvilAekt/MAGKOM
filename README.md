@@ -211,7 +211,7 @@ Dokumentasi rekayasa perangkat lunak MAGKOM dikelola secara modular berbasis ker
 Sistem MAGKOM dikembangkan secara kolaboratif oleh 3 pengembang inti:
 
 | Akun GitHub | Peran & Tanggung Jawab Utama |
-|---|---|---|
+|---|---|
 | [@EvilAekt](https://github.com/EvilAekt) | **Lead Software Architect & Security Lead (Project Owner)**<br>Menetapkan arah arsitektur sistem, aturan bisnis definitif, skema basis data, konkurensi kuota atomik, otorisasi RBAC, suite pengujian otomatis, dan wewenang mutlak approval/merge final ke `main`. |
 | [@aldiartha](https://github.com/aldiartha) | **Fullstack Developer & Admin Systems Specialist**<br>Mengelola modul Administrasi Kominfo (`/admin/*`), antrean verifikasi ber-SLA, penempatan dua tahap, pembatasan beban bimbingan, dan rekapitulasi ekspor spreadsheet kedinasan. |
 | [@NAUFALFEBRIAN62](https://github.com/NAUFALFEBRIAN62) | **Frontend Specialist & UI/UX Interaction Engineer**<br>Mengembangkan antarmuka Blade kepatuhan Zero Inline CSS/JS, portal peserta (`/peserta/*`), dashboard Bento Grid, alur pendaftaran kelompok, dan interaktivitas Vanilla ES Modules/GSAP. |
