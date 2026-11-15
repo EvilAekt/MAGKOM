@@ -4,9 +4,9 @@
  */
 document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (e) => {
-        const captchaTrigger = e.target.closest('#captcha-img, #btn-refresh-captcha, [data-action="refresh-captcha"]');
+        const captchaTrigger = e.target.closest('#captcha-img, [data-captcha-img], #btn-refresh-captcha, [data-action="refresh-captcha"]');
         if (captchaTrigger) {
-            const img = document.getElementById('captcha-img');
+            const img = document.getElementById('captcha-img') || document.querySelector('[data-captcha-img]');
             const btn = document.getElementById('btn-refresh-captcha');
             const input = document.getElementById('captcha');
             if (btn) {
@@ -14,8 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => btn.classList.remove('spinning'), 500);
             }
             if (img) {
-                const baseUrl = img.getAttribute('data-refresh-url') || img.src.split('?')[0];
-                img.src = baseUrl + '?' + Date.now();
+                img.src = '/captcha/image?t=' + Date.now();
             }
             if (input) {
                 input.value = '';
