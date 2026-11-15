@@ -215,11 +215,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 chip.id = 'chipJurusan_' + j.id;
                 chip.setAttribute('data-action', 'toggle-jurusan-chip');
                 chip.setAttribute('data-jurusan-id', j.id);
-                chip.innerHTML = `<span class="chip-check">✓ </span><span>${j.nama}</span>`;
+
+                const checkSpan = document.createElement('span');
+                checkSpan.className = 'chip-check';
+                checkSpan.textContent = '✓ ';
+                chip.appendChild(checkSpan);
+
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = j.nama || '';
+                chip.appendChild(nameSpan);
+
                 container.appendChild(chip);
             });
         } else {
-            container.innerHTML = '<span style="font-size: 0.8125rem; color: #64748B;">Belum ada kejuruan terikat di bidang ini.</span>';
+            const emptyMsg = document.createElement('span');
+            emptyMsg.style.fontSize = '0.8125rem';
+            emptyMsg.style.color = '#64748B';
+            emptyMsg.textContent = 'Belum ada kejuruan terikat di bidang ini.';
+            container.appendChild(emptyMsg);
         }
 
         updateHiddenJurusanInputs();
@@ -249,7 +262,16 @@ document.addEventListener('DOMContentLoaded', () => {
             chip.id = 'chipJurusan_' + jurId;
             chip.setAttribute('data-action', 'toggle-jurusan-chip');
             chip.setAttribute('data-jurusan-id', jurId);
-            chip.innerHTML = `<span class="chip-check">✓ </span><span>${jurNama}</span>`;
+
+            const checkSpan = document.createElement('span');
+            checkSpan.className = 'chip-check';
+            checkSpan.textContent = '✓ ';
+            chip.appendChild(checkSpan);
+
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = jurNama || '';
+            chip.appendChild(nameSpan);
+
             if (container) container.appendChild(chip);
             updateHiddenJurusanInputs();
         }
@@ -402,29 +424,50 @@ document.addEventListener('DOMContentLoaded', () => {
         if (listWrap) {
             listWrap.innerHTML = '';
             if (!jurusans || jurusans.length === 0) {
-                listWrap.innerHTML = '<p style="color: #64748B; font-size: 0.85rem; text-align: center; padding: 1.5rem 0;">Belum ada kejuruan terikat di bidang ini.</p>';
+                const emptyP = document.createElement('p');
+                emptyP.style = 'color: #64748B; font-size: 0.85rem; text-align: center; padding: 1.5rem 0;';
+                emptyP.textContent = 'Belum ada kejuruan terikat di bidang ini.';
+                listWrap.appendChild(emptyP);
             } else {
                 jurusans.forEach(j => {
-                    totalAwal += (parseInt(j.jumlah) || 0);
+                    const jumlahVal = parseInt(j.jumlah) || 0;
+                    const terisiVal = parseInt(j.terisi) || 0;
+                    const jurIdVal = parseInt(j.id) || 0;
+                    totalAwal += jumlahVal;
+
                     const row = document.createElement('div');
                     row.style = 'display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.65rem 0.85rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px;';
-                    row.innerHTML = `
-                        <div style="flex: 1;">
-                            <strong style="font-size: 0.875rem; color: #0F172A; display: block;">${j.nama}</strong>
-                            <small style="color: #64748B; font-size: 0.725rem;">Terisi: ${j.terisi} kursi</small>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <label style="font-size: 0.75rem; color: #475569; font-weight: 600;">Kuota:</label>
-                            <input type="number" 
-                                   name="alokasi[${j.id}]" 
-                                   class="input-kuota-jurusan"
-                                   value="${j.jumlah}" 
-                                   min="${j.terisi}" 
-                                   max="100" 
-                                   required 
-                                   style="width: 75px; height: 36px; padding: 0 0.5rem; text-align: center; font-weight: 700; border: 1px solid #CBD5E1; border-radius: 6px;">
-                        </div>
-                    `;
+
+                    const leftDiv = document.createElement('div');
+                    leftDiv.style = 'flex: 1;';
+                    const nameEl = document.createElement('strong');
+                    nameEl.style = 'font-size: 0.875rem; color: #0F172A; display: block;';
+                    nameEl.textContent = j.nama || '';
+                    const subEl = document.createElement('small');
+                    subEl.style = 'color: #64748B; font-size: 0.725rem;';
+                    subEl.textContent = 'Terisi: ' + terisiVal + ' kursi';
+                    leftDiv.appendChild(nameEl);
+                    leftDiv.appendChild(subEl);
+
+                    const rightDiv = document.createElement('div');
+                    rightDiv.style = 'display: flex; align-items: center; gap: 0.5rem;';
+                    const lbl = document.createElement('label');
+                    lbl.style = 'font-size: 0.75rem; color: #475569; font-weight: 600;';
+                    lbl.textContent = 'Kuota:';
+                    const inp = document.createElement('input');
+                    inp.type = 'number';
+                    inp.name = 'alokasi[' + jurIdVal + ']';
+                    inp.className = 'input-kuota-jurusan';
+                    inp.value = jumlahVal;
+                    inp.min = terisiVal;
+                    inp.max = 100;
+                    inp.required = true;
+                    inp.style = 'width: 75px; height: 36px; padding: 0 0.5rem; text-align: center; font-weight: 700; border: 1px solid #CBD5E1; border-radius: 6px;';
+                    rightDiv.appendChild(lbl);
+                    rightDiv.appendChild(inp);
+
+                    row.appendChild(leftDiv);
+                    row.appendChild(rightDiv);
                     listWrap.appendChild(row);
                 });
             }
