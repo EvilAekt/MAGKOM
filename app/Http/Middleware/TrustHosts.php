@@ -13,10 +13,12 @@ class TrustHosts extends Middleware
      */
     public function hosts(): array
     {
-        return [
+        $customHosts = (array) config('app.trusted_hosts', []);
+
+        return array_values(array_filter(array_merge([
             $this->allSubdomainsOfApplicationUrl(),
             'localhost',
             '127.0.0.1',
-        ];
+        ], $customHosts)));
     }
 }

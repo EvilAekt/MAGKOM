@@ -10,6 +10,7 @@ use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -33,11 +34,17 @@ class PasswordController extends Controller
     public function updateGanti(Request $request): RedirectResponse
     {
         $user = $request->user();
+        $isSuperAdmin = $user && method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin();
+
+        $passwordRules = $isSuperAdmin
+            ? ['required', 'string', 'confirmed', Password::min(12)->letters()->mixedCase()->numbers()->symbols()]
+            : ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'];
 
         $request->validate([
             'current_password' => ['required', 'string'],
-            'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*[a-zA-Z])(?=.*\d)/'],
+            'password' => $passwordRules,
         ], [
+            'password.min' => $isSuperAdmin ? 'Kata sandi baru SuperAdmin minimal 12 karakter dengan huruf besar, huruf kecil, angka, dan simbol.' : 'Kata sandi baru minimal 8 karakter.',
             'password.regex' => 'Kata sandi baru harus mengandung kombinasi huruf dan angka.',
             'password.confirmed' => 'Konfirmasi kata sandi baru tidak cocok.',
         ]);

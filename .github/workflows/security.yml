@@ -82,7 +82,56 @@ jobs:
           APP_KEY: base64:2fl+Ktvkfl+Fuz4Qp/1SeSgqqN7DVBhhY+GwYqS1nvg=
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"
+          REALTIME_SSE_ENABLED: true
         run: php artisan test
+
+  mysql-concurrency-test:
+    name: MySQL 8.0 Concurrency & Pessimistic Locking Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: magkom_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP Environment
+        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, fileinfo, gd, curl, zip, bcmath
+          coverage: none
+
+      - name: Prepare Environment File
+        run: cp .env.example .env
+
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Generate Application Key
+        run: php artisan key:generate --force
+
+      - name: Run Concurrency & Quota Allocation Suite on MySQL 8.0 (lockForUpdate)
+        env:
+          APP_ENV: testing
+          APP_KEY: base64:2fl+Ktvkfl+Fuz4Qp/1SeSgqqN7DVBhhY+GwYqS1nvg=
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: magkom_test
+          DB_USERNAME: root
+          DB_PASSWORD: root
+        run: php artisan test --filter=QuotaConcurrencyTest
 
   frontend-quality:
     name: Frontend Quality & Asset Compilation
@@ -322,9 +371,7 @@ jobs:
           DB_DATABASE: magkom_testing
           DB_USERNAME: root
           DB_PASSWORD: root
-        run: |
-          php artisan migrate --force
-          php artisan test tests/Feature/QuotaConcurrencyTest.php
+        run: php artisan test --filter=QuotaConcurrencyTest
 
   codeql-javascript-actions:
     name: CodeQL Analysis (JavaScript & GitHub Actions)

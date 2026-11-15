@@ -17,7 +17,14 @@ class RealtimeStreamConcurrencyTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        config(['services.realtime.sse_enabled' => true]);
         $this->seed(PermissionSeeder::class);
+    }
+
+    protected function tearDown(): void
+    {
+        config(['services.realtime.sse_enabled' => true]);
+        parent::tearDown();
     }
 
     public function test_unauthenticated_request_to_sse_is_redirected_to_login(): void
@@ -91,5 +98,47 @@ class RealtimeStreamConcurrencyTest extends TestCase
         // Request berikutnya berhasil memperoleh koneksi
         $nextResponse = $this->actingAs($user)->get('/realtime/stream');
         $nextResponse->assertOk();
+    }
+
+    public function test_sse_feature_toggle_can_disable_sse_rendering(): void
+    {
+        config(['services.realtime.sse_enabled' => false]);
+
+        $user = User::factory()->create([
+            'status_aktif' => true,
+            'email_verified_at' => now(),
+            'must_change_password' => false,
+        ]);
+
+        $view = $this->actingAs($user)->blade('<x-sse-toast-listener />');
+        $view->assertSee('data-sse-enabled="false"', false);
+        $view->assertSee('data-poll-url', false);
+
+        // Saat SSE dinonaktifkan, endpoint stream mengembalikan status 503 dengan tautan fallback
+        $streamResponse = $this->actingAs($user)->getJson('/realtime/stream');
+        $streamResponse->assertStatus(503);
+        $streamResponse->assertJson([
+            'error' => 'SSE Disabled',
+        ]);
+
+        // Fallback polling tetap dapat diakses dan merespons cepat tanpa loop
+        $pollResponse = $this->actingAs($user)->getJson('/realtime/poll');
+        $pollResponse->assertOk();
+        $pollResponse->assertJsonStructure([
+            'status',
+            'last_event_id',
+            'polling_interval_ms',
+            'events',
+        ]);
+
+        config(['services.realtime.sse_enabled' => true]);
+        $viewEnabled = $this->actingAs($user)->blade('<x-sse-toast-listener />');
+        $viewEnabled->assertSee('data-sse-enabled="true"', false);
+    }
+
+    public function test_unauthenticated_request_to_poll_is_redirected_or_forbidden(): void
+    {
+        $response = $this->get('/realtime/poll');
+        $response->assertRedirect('/login');
     }
 }

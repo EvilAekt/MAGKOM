@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\RoleEnum;
 use App\Enums\StatusPenempatanEnum;
+use App\Notifications\QueuedVerifyEmailNotification;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
@@ -53,6 +54,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
         'password_awal',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
     ];
 
     /**
@@ -77,6 +80,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'status_aktif' => 'boolean',
         'must_change_password' => 'boolean',
         'password_awal' => 'encrypted',
+        'two_factor_secret' => 'encrypted',
+        'two_factor_confirmed_at' => 'datetime',
     ];
 
     /**
@@ -286,5 +291,84 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * Kirim notifikasi verifikasi email secara asinkron via antrean Queue (MAIL-001).
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new QueuedVerifyEmailNotification);
+    }
+
+    /**
+     * Memeriksa apakah otentikasi dua faktor (2FA) telah aktif dan terkonfirmasi (AUTH-002).
+     */
+    public function hasEnabledTwoFactor(): bool
+    {
+        return ! empty($this->two_factor_secret) && $this->two_factor_confirmed_at !== null;
+    }
+
+    /**
+     * Menghasilkan kode pemulihan darurat satu kali pakai (Single-Use Recovery Codes).
+     *
+     * @return array<string> Daftar kode pemulihan plaintext (hanya ditampilkan sekali kepada pengguna).
+     */
+    public function generateRecoveryCodes(): array
+    {
+        $plainCodes = [];
+        $hashedCodes = [];
+
+        for ($i = 0; $i < 8; $i++) {
+            $code = bin2hex(random_bytes(5));
+            $formatted = substr($code, 0, 5).'-'.substr($code, 5, 5);
+            $plainCodes[] = $formatted;
+            $hashedCodes[] = hash('sha256', $formatted);
+        }
+
+        $this->forceFill([
+            'two_factor_recovery_codes' => json_encode($hashedCodes),
+        ])->save();
+
+        return $plainCodes;
+    }
+
+    /**
+     * Memverifikasi dan menggunakan kode pemulihan darurat satu kali pakai.
+     */
+    public function verifyRecoveryCode(string $code): bool
+    {
+        $cleanCode = strtolower(trim($code));
+        $hashedInput = hash('sha256', $cleanCode);
+
+        $codes = json_decode((string) $this->two_factor_recovery_codes, true);
+        if (! is_array($codes)) {
+            return false;
+        }
+
+        $index = array_search($hashedInput, $codes, true);
+        if ($index === false) {
+            return false;
+        }
+
+        // Hapus kode yang telah dipakai agar tidak dapat digunakan ulang (Single-Use Guarantee)
+        unset($codes[$index]);
+        $this->forceFill([
+            'two_factor_recovery_codes' => json_encode(array_values($codes)),
+        ])->save();
+
+        return true;
+    }
+
+    /**
+     * Menonaktifkan otentikasi dua faktor secara penuh.
+     */
+    public function disableTwoFactor(): void
+    {
+        $this->forceFill([
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
+        ])->save();
     }
 }

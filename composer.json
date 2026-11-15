@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.0",
         "laravel/tinker": "^2.8",
+        "pragmarx/google2fa": "^9.1",
         "sentry/sentry-laravel": "^4.29"
     },
     "require-dev": {

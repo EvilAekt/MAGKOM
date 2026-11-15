@@ -130,16 +130,28 @@ server {
     ssl_certificate /etc/ssl/certs/magang.crt;
     ssl_certificate_key /etc/ssl/private/magang.key;
 
-    # Penanganan Khusus Realtime SSE (/realtime/stream) - Wajib Tanpa Buffering
+    # Penanganan Khusus Realtime SSE (/realtime/stream) - Wajib Tanpa Buffering pada PHP-FPM
     location /realtime/stream {
-        proxy_pass http://127.0.0.1:8000; # atau FastCGI pass
-        proxy_buffering off;
-        proxy_cache off;
-        proxy_set_header Connection '';
-        proxy_http_version 1.1;
-        chunked_transfer_encoding off;
-        proxy_read_timeout 86400s;
+        try_files $uri $uri/ /index.php?$query_string;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root/index.php;
+        include fastcgi_params;
+        fastcgi_buffering off;
+        fastcgi_cache off;
+        fastcgi_read_timeout 60s;
+        fastcgi_hide_header X-Powered-By;
     }
+
+    # Catatan: Jika menggunakan Laravel Octane / Reverse Proxy Port 8000 alih-alih PHP-FPM:
+    # location /realtime/stream {
+    #     proxy_pass http://127.0.0.1:8000;
+    #     proxy_buffering off;
+    #     proxy_cache off;
+    #     proxy_set_header Connection '';
+    #     proxy_http_version 1.1;
+    #     chunked_transfer_encoding off;
+    #     proxy_read_timeout 60s;
+    # }
 
     # Static Assets Caching (1 Tahun dengan Immutable Hash Vite)
     location ~* \.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$ {
@@ -172,9 +184,19 @@ server {
 
 ## 4. Konfigurasi Penjadwal Tugas Berkala (Cron Scheduler)
 
-MAGKOM membutuhkan Cron scheduler untuk menjalankan pemeriksaan masa tenggang peserta (`App\Console\Commands\NonaktifkanAkunPascaMagang`), peringatan mendekati deadline tugas, dan pembersihan token kedaluwarsa.
+MAGKOM membutuhkan Cron scheduler aktif untuk mengeksekusi tugas-tugas terdaftar pada `app/Console/Kernel.php`:
 
-Buka konfigurasi crontab server:
+| Jadwal Eksekusi | Perintah Artisan | Deskripsi & Regulasi |
+|---|---|---|
+| **Setiap Menit** (`* * * * *`) | `magkom:publikasikan-tugas-terjadwal` | Mempublikasikan tugas bimbingan yang telah dijadwalkan oleh pembimbing. |
+| **Setiap Hari 00:01 WIB** | `magkom:nonaktifkan-peserta` | Menonaktifkan akun & penempatan peserta yang melewati batas masa tenggang (BR-07). |
+| **Setiap Hari 02:00 WIB** | `magkom:backup-database --clean-old` | Membuat backup basis data terkompresi Gzip dan memangkas snapshot usang. |
+| **Setiap Hari 03:00 WIB** | `magkom:security-sweep` | Membersihkan token kedaluwarsa, berkas arsip zip sementara, dan registrasi menggantung (PRD 8.4, 10.3). |
+| **Setiap Hari 03:30 WIB** | `RealtimeEventService::pruneOldEvents` | Memangkas antrean outbox event realtime yang telah melampaui retensi 3 hari. |
+| **Tanggal 1 Bulanan 02:00 WIB** | `magkom:audit-purge` | Memangkas log audit akses data yang melewati batas retensi 365 hari (NFR-A5). |
+
+### Pemasangan Crontab Server:
+Buka konfigurasi crontab service user (misal `www-data`):
 ```bash
 sudo crontab -u www-data -e
 ```

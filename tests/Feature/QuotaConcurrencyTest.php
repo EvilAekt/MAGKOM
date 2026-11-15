@@ -11,6 +11,7 @@ use App\Models\BulanMagang;
 use App\Models\Jurusan;
 use App\Models\Kuota;
 use App\Models\Pendaftaran;
+use App\Models\SlotKhusus;
 use App\Models\User;
 use App\Services\PlacementService;
 use App\Services\QuotaAllocationService;
@@ -132,5 +133,56 @@ class QuotaConcurrencyTest extends TestCase
         // Verifikasi pendaftaran tetap berstatus Diajukan
         $pendaftaran->refresh();
         $this->assertEquals(StatusPendaftaranEnum::Diajukan, $pendaftaran->status);
+    }
+
+    public function test_alokasi_slot_khusus_atomik_mencegah_overclaim(): void
+    {
+        $service = app(QuotaAllocationService::class);
+        $admin = User::first();
+
+        $slot = SlotKhusus::where('aktif', true)->first();
+        if (! $slot) {
+            $slot = SlotKhusus::create([
+                'jumlah' => 2,
+                'terisi' => 1,
+                'bulan_mulai' => Carbon::parse('2027-01-01'),
+                'dibuat_oleh' => $admin->id,
+                'aktif' => true,
+            ]);
+        } else {
+            $slot->update(['jumlah' => 2, 'terisi' => 1]);
+        }
+
+        // Ambil sisa 1 kursi
+        DB::transaction(function () use ($service, $slot) {
+            $s = $service->ambilKuotaKhusus($slot->id);
+            $this->assertEquals(2, $s->terisi);
+        });
+
+        // Klaim berikutnya harus gagal karena slot khusus penuh
+        $this->expectException(KuotaPenuhException::class);
+        DB::transaction(function () use ($service, $slot) {
+            $service->ambilKuotaKhusus($slot->id);
+        });
+    }
+
+    public function test_lepas_kuota_umum_mengurangi_terisi_secara_konsisten(): void
+    {
+        $service = app(QuotaAllocationService::class);
+        $bulan = BulanMagang::first();
+        $jurusan = Jurusan::first();
+
+        $kuota = Kuota::firstOrCreate(
+            ['bulan_magang_id' => $bulan->id, 'jurusan_id' => $jurusan->id],
+            ['jumlah' => 5, 'terisi' => 3, 'aktif' => true]
+        );
+        $kuota->update(['jumlah' => 5, 'terisi' => 3]);
+
+        DB::transaction(function () use ($service, $kuota) {
+            $service->lepasKuotaUmum($kuota->id, 1);
+        });
+
+        $kuota->refresh();
+        $this->assertEquals(2, $kuota->terisi);
     }
 }
