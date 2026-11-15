@@ -46,7 +46,7 @@
             <div class="toast-title alert-title">{{ __($toastSuccessTitle) }}</div>
             <div class="toast-desc alert-desc">{{ $successMessage }}</div>
         </div>
-        <button type="button" class="toast-close-btn alert-close-btn" onclick="dismissToast(this)" aria-label="{{ __('Tutup notifikasi') }}">
+        <button type="button" class="toast-close-btn alert-close-btn" data-action="dismiss-toast" aria-label="{{ __('Tutup notifikasi') }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -75,7 +75,7 @@
             <div class="toast-title alert-title">{{ __($statusTitle) }}</div>
             <div class="toast-desc alert-desc">{{ $statusMessage }}</div>
         </div>
-        <button type="button" class="toast-close-btn alert-close-btn" onclick="dismissToast(this)" aria-label="{{ __('Tutup notifikasi') }}">
+        <button type="button" class="toast-close-btn alert-close-btn" data-action="dismiss-toast" aria-label="{{ __('Tutup notifikasi') }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -97,7 +97,7 @@
             <div class="toast-title alert-title">{{ session('error_title') ? __(session('error_title')) : __('Terjadi Kesalahan') }}</div>
             <div class="toast-desc alert-desc">{{ $errorMessage }}</div>
         </div>
-        <button type="button" class="toast-close-btn alert-close-btn" onclick="dismissToast(this)" aria-label="{{ __('Tutup notifikasi') }}">
+        <button type="button" class="toast-close-btn alert-close-btn" data-action="dismiss-toast" aria-label="{{ __('Tutup notifikasi') }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -117,7 +117,7 @@
             <div class="toast-title alert-title">{{ session('warning_title') ? __(session('warning_title')) : __('Perhatian') }}</div>
             <div class="toast-desc alert-desc">{{ $warningMessage }}</div>
         </div>
-        <button type="button" class="toast-close-btn alert-close-btn" onclick="dismissToast(this)" aria-label="{{ __('Tutup notifikasi') }}">
+        <button type="button" class="toast-close-btn alert-close-btn" data-action="dismiss-toast" aria-label="{{ __('Tutup notifikasi') }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -139,7 +139,7 @@
             <div class="toast-title alert-title">{{ session('info_title') ? __(session('info_title')) : __('Informasi Sistem') }}</div>
             <div class="toast-desc alert-desc">{{ $infoMessage }}</div>
         </div>
-        <button type="button" class="toast-close-btn alert-close-btn" onclick="dismissToast(this)" aria-label="{{ __('Tutup notifikasi') }}">
+        <button type="button" class="toast-close-btn alert-close-btn" data-action="dismiss-toast" aria-label="{{ __('Tutup notifikasi') }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -167,7 +167,7 @@
                 </ul>
             </div>
         </div>
-        <button type="button" class="toast-close-btn alert-close-btn" onclick="dismissToast(this)" aria-label="{{ __('Tutup notifikasi') }}">
+        <button type="button" class="toast-close-btn alert-close-btn" data-action="dismiss-toast" aria-label="{{ __('Tutup notifikasi') }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>

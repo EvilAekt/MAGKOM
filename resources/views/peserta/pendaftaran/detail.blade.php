@@ -206,7 +206,13 @@
                 </div>
             </div>
             <div class="approved-alert-actions">
-                <button type="button" class="btn-approved-preview" onclick="openDocPreview('{{ route('peserta.penempatan.surat-diterima.pratinjau', $pendaftaran->penempatan) }}', '{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}', 'Surat Diterima', 'application/pdf')">
+                <button type="button" 
+                        class="btn-approved-preview" 
+                        data-action="open-doc-preview" 
+                        data-preview-url="{{ route('peserta.penempatan.surat-diterima.pratinjau', $pendaftaran->penempatan) }}" 
+                        data-download-url="{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}" 
+                        data-title="Surat Diterima" 
+                        data-mime="application/pdf">
                     Lihat Surat Diterima
                 </button>
                 <a href="{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}" class="btn-approved-download">
@@ -420,7 +426,7 @@
                     </div>
                 </div>
 
-                <form action="{{ route('peserta.pendaftaran.ajukan', $pendaftaran) }}" method="POST" id="formAjukanPendaftaran" onsubmit="handleAjukanSubmit(this)">
+                <form action="{{ route('peserta.pendaftaran.ajukan', $pendaftaran) }}" method="POST" id="formAjukanPendaftaran" >
                     @csrf
                     <button type="submit" class="btn-submit-final" id="btnAjukanPendaftaran" {{ !$semuaWajibLengkap ? 'disabled' : '' }}>
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -444,7 +450,7 @@
 
 
 {{-- Modal In-App Pratinjau Dokumen --}}
-<div class="modal" id="docPreviewModal" onclick="if(event.target === this) closeDocPreview()" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
+<div class="modal" id="docPreviewModal"  role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
     <div class="modal-box-large">
         <div class="modal-header" style="margin-bottom: 0; padding-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 10px; overflow: hidden; padding-right: 10px;">
@@ -465,7 +471,7 @@
                 <a id="previewDownloadBtn" href="#" class="btn btn-secondary" style="height: 32px; padding: 0 10px; font-size: 0.75rem;">
                     Unduh
                 </a>
-                <button type="button" class="modal-close" onclick="closeDocPreview()">&times;</button>
+                <button type="button" class="modal-close" data-action="close-doc-preview">&times;</button>
             </div>
         </div>
 
@@ -491,219 +497,5 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-    let previewTimer = null;
-
-    function openDocPreview(previewUrl, downloadUrl, title, mime) {
-        const modal = document.getElementById('docPreviewModal');
-        const modalTitle = document.getElementById('previewModalTitle');
-        const openNewTabBtn = document.getElementById('previewOpenNewTabBtn');
-        const downloadBtn = document.getElementById('previewDownloadBtn');
-        const fallbackBtn = document.getElementById('previewFallbackDownloadBtn');
-        const loading = document.getElementById('previewLoading');
-        const iframe = document.getElementById('previewIframe');
-        const imgWrapper = document.getElementById('previewImageWrapper');
-        const img = document.getElementById('previewImage');
-        const errBox = document.getElementById('previewError');
-
-        if (!modal) return;
-
-        if (previewTimer) {
-            clearTimeout(previewTimer);
-            previewTimer = null;
-        }
-
-        loading.style.display = 'flex';
-        iframe.style.display = 'none';
-        iframe.onload = null;
-        iframe.src = 'about:blank';
-        imgWrapper.style.display = 'none';
-        if (img) {
-            img.onload = null;
-            img.onerror = null;
-            img.removeAttribute('src');
-        }
-        errBox.style.display = 'none';
-
-        modalTitle.textContent = title || 'Pratinjau Dokumen';
-        openNewTabBtn.href = previewUrl;
-        downloadBtn.href = downloadUrl;
-        if (fallbackBtn) fallbackBtn.href = downloadUrl;
-
-        const isPdf = (mime && mime.toLowerCase().includes('pdf')) || (!mime && previewUrl.toLowerCase().includes('pdf'));
-
-        if (isPdf) {
-            const finalPdfUrl = previewUrl.includes('#') ? previewUrl : (previewUrl + '#toolbar=0&navpanes=0');
-            iframe.onload = function() {
-                handlePreviewLoaded();
-            };
-            iframe.style.display = 'block';
-            iframe.src = finalPdfUrl;
-
-            previewTimer = setTimeout(function() {
-                handlePreviewLoaded();
-            }, 600);
-        } else {
-            img.onload = function() {
-                handlePreviewLoaded();
-            };
-            img.onerror = function() {
-                handlePreviewError();
-            };
-            img.src = previewUrl;
-            imgWrapper.style.display = 'flex';
-
-            previewTimer = setTimeout(function() {
-                handlePreviewLoaded();
-            }, 700);
-        }
-
-        modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function handlePreviewLoaded() {
-        if (previewTimer) {
-            clearTimeout(previewTimer);
-            previewTimer = null;
-        }
-        const loading = document.getElementById('previewLoading');
-        if (loading) loading.style.display = 'none';
-    }
-
-    function handlePreviewError() {
-        if (previewTimer) {
-            clearTimeout(previewTimer);
-            previewTimer = null;
-        }
-        const loading = document.getElementById('previewLoading');
-        const iframe = document.getElementById('previewIframe');
-        const imgWrapper = document.getElementById('previewImageWrapper');
-        const errBox = document.getElementById('previewError');
-
-        if (loading) loading.style.display = 'none';
-        if (iframe) iframe.style.display = 'none';
-        if (imgWrapper) imgWrapper.style.display = 'none';
-        if (errBox) errBox.style.display = 'flex';
-    }
-
-    function closeDocPreview() {
-        if (previewTimer) {
-            clearTimeout(previewTimer);
-            previewTimer = null;
-        }
-        const modal = document.getElementById('docPreviewModal');
-        const iframe = document.getElementById('previewIframe');
-        const img = document.getElementById('previewImage');
-
-        if (modal) {
-            modal.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-        if (iframe) {
-            iframe.onload = null;
-            iframe.src = 'about:blank';
-        }
-        if (img) {
-            img.onload = null;
-            img.onerror = null;
-            img.removeAttribute('src');
-        }
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' || e.key === 'Esc') {
-            closeDocPreview();
-        }
-    });
-
-    function toggleDropzone(id) {
-        const wrapper = document.getElementById('dropzone_wrapper_' + id);
-        if (wrapper) {
-            wrapper.style.display = (wrapper.style.display === 'none' || wrapper.style.display === '') ? 'flex' : 'none';
-        }
-    }
-
-    function handleDragOver(e, element) {
-        e.preventDefault();
-        e.stopPropagation();
-        element.classList.add('dragover');
-    }
-    function handleDragLeave(e, element) {
-        e.preventDefault();
-        e.stopPropagation();
-        element.classList.remove('dragover');
-    }
-    function handleDrop(e, element, jenisId, maksMb) {
-        e.preventDefault();
-        e.stopPropagation();
-        element.classList.remove('dragover');
-
-        const files = e.dataTransfer.files;
-        if (files && files.length > 0) {
-            const input = document.getElementById('file_input_' + jenisId);
-            input.files = files;
-            handleFileSelected(input, jenisId, maksMb);
-        }
-    }
-
-    function handleFileSelected(input, jenisId, maksMb) {
-        const file = input.files[0];
-        if (!file) return;
-
-        const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
-        const ext = file.name.split('.').pop().toLowerCase();
-        const maxBytes = maksMb * 1024 * 1024;
-
-        if (!allowedExtensions.includes(ext)) {
-            const msg = 'Format berkas tidak diizinkan. Hanya file PDF, JPG, JPEG, atau PNG yang diterima.';
-            if (window.MagKomToast) window.MagKomToast.warning(msg); else alert(msg);
-            input.value = '';
-            resetFileSelection(jenisId);
-            return;
-        }
-
-        if (file.size > maxBytes) {
-            const msg = `Ukuran berkas (${(file.size / (1024 * 1024)).toFixed(2)} MB) melebihi batas maksimal ${maksMb} MB.`;
-            if (window.MagKomToast) window.MagKomToast.warning(msg); else alert(msg);
-            input.value = '';
-            resetFileSelection(jenisId);
-            return;
-        }
-
-        const bar = document.getElementById('selected_bar_' + jenisId);
-        const nameSpan = document.getElementById('selected_name_' + jenisId);
-        const sizeSpan = document.getElementById('selected_size_' + jenisId);
-
-        nameSpan.textContent = file.name;
-        sizeSpan.textContent = `(${(file.size / 1024).toFixed(1)} KB)`;
-        bar.style.display = 'flex';
-    }
-
-    function resetFileSelection(jenisId) {
-        const input = document.getElementById('file_input_' + jenisId);
-        if (input) input.value = '';
-
-        const bar = document.getElementById('selected_bar_' + jenisId);
-        if (bar) bar.style.display = 'none';
-    }
-
-    function handleUploadSubmit(form, jenisId) {
-        const btn = document.getElementById('btn_submit_' + jenisId);
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = `<span style="display:inline-block;width:12px;height:12px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:6px;"></span> Mengunggah...`;
-        }
-    }
-
-    function handleAjukanSubmit(form) {
-        const btn = document.getElementById('btnAjukanPendaftaran');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = `<span style="display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:8px;"></span> Mengajukan...`;
-        }
-    }
-</script>
-@endpush
+@vite(['resources/js/pages/peserta/pendaftaran-detail.js'])
 @endsection

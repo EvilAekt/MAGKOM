@@ -192,7 +192,14 @@
                                 </div>
 
                                 <div class="adm-doc-actions">
-                                    <button type="button" onclick="openDocPreview('{{ $dok->getSignedPreviewUrl(5) }}', '{{ $dok->getSignedDownloadUrl(5) }}', '{{ addslashes($dok->jenisDokumen?->nama ?? 'Dokumen Persyaratan') }} - {{ addslashes($dok->nama_asli) }}', '{{ $dok->mime }}')" class="adm-btn-action-preview" title="Tinjau berkas langsung di dalam layar">
+                                    <button type="button" 
+                                            class="adm-btn-action-preview" 
+                                            title="Tinjau berkas langsung di dalam layar"
+                                            data-action="open-doc-preview" 
+                                            data-preview-url="{{ $dok->getSignedPreviewUrl(5) }}" 
+                                            data-download-url="{{ $dok->getSignedDownloadUrl(5) }}" 
+                                            data-title="{{ $dok->jenisDokumen?->nama ?? 'Dokumen Persyaratan' }} - {{ $dok->nama_asli }}" 
+                                            data-mime="{{ $dok->mime }}">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                         <span>Tinjau Berkas</span>
                                     </button>
@@ -307,11 +314,11 @@
 
                         {{-- Tab Switcher Aksi (Hanya Terima & Tolak) --}}
                         <div class="adm-decision-tabs">
-                            <button type="button" id="tab-btn-terima" onclick="switchActionTab('terima')" class="adm-tab-pill active-terima">
+                            <button type="button" id="tab-btn-terima" data-action="switch-action-tab" data-tab="terima" class="adm-tab-pill active-terima">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                 <span>Terima</span>
                             </button>
-                            <button type="button" id="tab-btn-tolak" onclick="switchActionTab('tolak')" class="adm-tab-pill">
+                            <button type="button" id="tab-btn-tolak" data-action="switch-action-tab" data-tab="tolak" class="adm-tab-pill">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                 <span>Tolak</span>
                             </button>
@@ -342,7 +349,7 @@
                                     <textarea id="catatan_terima" name="catatan" rows="2" placeholder="Tambahkan catatan verifikasi berkas jika diperlukan..."></textarea>
                                 </div>
 
-                                <button type="submit" onclick="return confirm('Apakah Anda yakin menerima berkas calon peserta ini?');" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #0641CC; color: #FFFFFF; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: background 0.15s ease;">
+                                <button type="submit" data-confirm="Apakah Anda yakin menerima berkas calon peserta ini?" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #0641CC; color: #FFFFFF; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: background 0.15s ease;">
                                     Diterima
                                 </button>
                             </div>
@@ -356,35 +363,13 @@
                                     <textarea id="catatan_tolak" name="catatan" rows="3" placeholder="Tuliskan alasan penolakan pengajuan (min. 10 karakter)..."></textarea>
                                 </div>
 
-                                <button type="submit" onclick="return confirm('Apakah Anda yakin MENOLAK pengajuan pendaftaran ini?');" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #DC2626; color: #FFFFFF; font-weight: 700; font-size: 0.85rem; cursor: pointer;">
+                                <button type="submit" data-confirm="Apakah Anda yakin MENOLAK pengajuan pendaftaran ini?" style="height: 42px; width: 100%; border: none; border-radius: 8px; background: #DC2626; color: #FFFFFF; font-weight: 700; font-size: 0.85rem; cursor: pointer;">
                                     Tolak Pengajuan Pendaftaran
                                 </button>
                             </div>
                         </form>
 
-                        <script>
-                            function switchActionTab(action) {
-                                document.getElementById('keputusan-input').value = action;
-                                
-                                const panels = ['terima', 'tolak'];
-                                panels.forEach(p => {
-                                    const panel = document.getElementById('action-panel-' + p);
-                                    const btn = document.getElementById('tab-btn-' + p);
-                                    if (!panel || !btn) return;
-
-                                    if (p === action) {
-                                        panel.style.display = 'flex';
-                                        btn.className = 'adm-tab-pill active-' + p;
-                                    } else {
-                                        panel.style.display = 'none';
-                                        btn.className = 'adm-tab-pill';
-                                    }
-                                });
-
-                                const catatanTolak = document.getElementById('catatan_tolak');
-                                if (catatanTolak) catatanTolak.required = (action === 'tolak');
-                            }
-                        </script>
+                        
                     </div>
                     @endif
                 @endif
@@ -431,7 +416,7 @@
 </div>
 
 {{-- 3. MODAL IN-APP PRATINJAU DOKUMEN --}}
-<div class="doc-modal" id="docPreviewModal" onclick="if(event.target === this) closeDocPreview()" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
+<div class="doc-modal" id="docPreviewModal"  role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
     <div class="doc-modal-box">
         <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--neutral-300, #E2E8F0);">
             <div style="display: flex; align-items: center; gap: 0.75rem; overflow: hidden; padding-right: 0.75rem;">
@@ -468,7 +453,7 @@
                     </svg>
                     <span>Unduh</span>
                 </a>
-                <button type="button" onclick="closeDocPreview()" style="background: none; border: none; font-size: 1.5rem; line-height: 1; cursor: pointer; color: var(--neutral-400, #94A3B8); padding: 0 0.25rem;" title="Tutup pratinjau (Esc)">&times;</button>
+                <button type="button" data-action="close-doc-preview" style="background: none; border: none; font-size: 1.5rem; line-height: 1; cursor: pointer; color: var(--neutral-400, #94A3B8); padding: 0 0.25rem;" title="Tutup pratinjau (Esc)">&times;</button>
             </div>
         </div>
 
@@ -507,146 +492,5 @@
     </div>
 </div>
 
-<script>
-    let previewTimer = null;
-
-    function openDocPreview(previewUrl, downloadUrl, title, mime) {
-        const modal = document.getElementById('docPreviewModal');
-        const modalTitle = document.getElementById('previewModalTitle');
-        const modalBadge = document.getElementById('previewModalBadge');
-        const openNewTabBtn = document.getElementById('previewOpenNewTabBtn');
-        const downloadBtn = document.getElementById('previewDownloadBtn');
-        const fallbackBtn = document.getElementById('previewFallbackDownloadBtn');
-        const loading = document.getElementById('previewLoading');
-        const iframe = document.getElementById('previewIframe');
-        const imgWrapper = document.getElementById('previewImageWrapper');
-        const img = document.getElementById('previewImage');
-        const errBox = document.getElementById('previewError');
-        const iconContainer = document.getElementById('previewModalIcon');
-
-        if (!modal) return;
-
-        if (previewTimer) {
-            clearTimeout(previewTimer);
-            previewTimer = null;
-        }
-
-        loading.style.display = 'flex';
-        iframe.style.display = 'none';
-        iframe.onload = null;
-        iframe.src = 'about:blank';
-        imgWrapper.style.display = 'none';
-        if (img) {
-            img.onload = null;
-            img.onerror = null;
-            img.removeAttribute('src');
-        }
-        errBox.style.display = 'none';
-
-        modalTitle.textContent = title || 'Pratinjau Dokumen';
-        openNewTabBtn.href = previewUrl;
-        downloadBtn.href = downloadUrl;
-        if (fallbackBtn) fallbackBtn.href = downloadUrl;
-
-        const isPdf = (mime && mime.toLowerCase().includes('pdf')) || (!mime && previewUrl.toLowerCase().includes('pdf'));
-
-        if (isPdf) {
-            modalBadge.textContent = 'PDF';
-            modalBadge.style.background = '#FEE2E2';
-            modalBadge.style.color = '#991B1B';
-            if (iconContainer) {
-                iconContainer.style.background = '#FEE2E2';
-                iconContainer.style.color = '#DC2626';
-            }
-            const finalPdfUrl = previewUrl.includes('#') ? previewUrl : (previewUrl + '#toolbar=0&navpanes=0');
-            iframe.onload = function() {
-                handlePreviewLoaded();
-            };
-            iframe.style.display = 'block';
-            iframe.src = finalPdfUrl;
-
-            previewTimer = setTimeout(function() {
-                handlePreviewLoaded();
-            }, 600);
-        } else {
-            modalBadge.textContent = 'Gambar';
-            modalBadge.style.background = 'var(--blue-tint, #EFF6FF)';
-            modalBadge.style.color = '#0641CC';
-            if (iconContainer) {
-                iconContainer.style.background = 'var(--blue-tint, #EFF6FF)';
-                iconContainer.style.color = '#0641CC';
-            }
-            img.onload = function() {
-                handlePreviewLoaded();
-            };
-            img.onerror = function() {
-                handlePreviewError();
-            };
-            img.src = previewUrl;
-            imgWrapper.style.display = 'flex';
-
-            previewTimer = setTimeout(function() {
-                handlePreviewLoaded();
-            }, 700);
-        }
-
-        modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function handlePreviewLoaded() {
-        if (previewTimer) {
-            clearTimeout(previewTimer);
-            previewTimer = null;
-        }
-        const loading = document.getElementById('previewLoading');
-        if (loading) loading.style.display = 'none';
-    }
-
-    function handlePreviewError() {
-        if (previewTimer) {
-            clearTimeout(previewTimer);
-            previewTimer = null;
-        }
-        const loading = document.getElementById('previewLoading');
-        const iframe = document.getElementById('previewIframe');
-        const imgWrapper = document.getElementById('previewImageWrapper');
-        const errBox = document.getElementById('previewError');
-
-        if (loading) loading.style.display = 'none';
-        if (iframe) iframe.style.display = 'none';
-        if (imgWrapper) imgWrapper.style.display = 'none';
-        if (errBox) errBox.style.display = 'flex';
-    }
-
-    function closeDocPreview() {
-        if (previewTimer) {
-            clearTimeout(previewTimer);
-            previewTimer = null;
-        }
-        const modal = document.getElementById('docPreviewModal');
-        const iframe = document.getElementById('previewIframe');
-        const img = document.getElementById('previewImage');
-
-        if (modal) {
-            modal.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-        if (iframe) {
-            iframe.onload = null;
-            iframe.src = 'about:blank';
-        }
-        if (img) {
-            img.onload = null;
-            img.onerror = null;
-            img.removeAttribute('src');
-        }
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeDocPreview();
-        }
-    });
-</script>
+@vite(['resources/js/pages/admin/pendaftaran-show.js'])
 @endsection

@@ -22,8 +22,13 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             PeriodeKuotaSeeder::class,
             JenisDokumenSeeder::class,
-            UserSeeder::class,
-            TestingUserSeeder::class,
         ]);
+
+        if (app()->environment(['local', 'testing'])) {
+            $this->call([
+                UserSeeder::class,
+                TestingUserSeeder::class,
+            ]);
+        }
     }
 }

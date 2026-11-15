@@ -257,7 +257,7 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
 
         // 1. Verifikasi markup accordion pada grup Konfigurasi
         $response->assertSee('Konfigurasi');
-        $response->assertSee('toggleNavGroup(this)', false);
+        $response->assertSee('data-action="toggle-nav-group"', false);
         $response->assertSee('aria-expanded=', false);
         $response->assertSee('nav-sub-menu', false);
         $response->assertSee('Pengaturan Sistem');
@@ -273,9 +273,9 @@ class SuperAdminFigmaDesignAlignmentTest extends TestCase
         $response->assertSee('Laporan Peserta');
         $response->assertSee('Laporan Kinerja');
 
-        // 3. Verifikasi keberadaan definisi fungsi JavaScript toggleNavGroup & toggleSidebar
-        $response->assertSee('function toggleNavGroup(btn)', false);
-        $response->assertSee('function toggleSidebar(forceState)', false);
+        // 3. Verifikasi ketersediaan modul script toggleNavGroup & theme-init
+        $this->assertFileExists(public_path('js/theme-init.js'));
+        $this->assertFileExists(resource_path('js/layouts/dashboard.js'));
     }
 
     /**

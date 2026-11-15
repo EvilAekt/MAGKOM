@@ -27,6 +27,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use RuntimeException;
 
 class AcceptedPesertaSeeder extends Seeder
 {
@@ -35,6 +36,10 @@ class AcceptedPesertaSeeder extends Seeder
      */
     public function run(): void
     {
+        if (app()->isProduction()) {
+            throw new RuntimeException('Cannot run AcceptedPesertaSeeder in production environment.');
+        }
+
         // 1. Pastikan Bidang Aptika & IKP tersedia
         $bidangAptika = Bidang::firstOrCreate(
             ['nama_bidang' => 'Bidang Aplikasi Informatika (Aptika)'],

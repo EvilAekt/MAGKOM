@@ -166,7 +166,7 @@ class AdminChildPagesExtendedVisualTest extends TestCase
         $response->assertSee($this->pendaftaran->nomor_pendaftaran);
         $response->assertSee('Rian Nugraha');
         $response->assertSee('docPreviewModal');
-        $response->assertSee('openDocPreview');
+        $response->assertSee('open-doc-preview');
         $response->assertSee('Keputusan Verifikasi');
     }
 
@@ -176,8 +176,7 @@ class AdminChildPagesExtendedVisualTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Rian Nugraha');
-        $response->assertSee('modal-surat-preview');
-        $response->assertSee('openSuratPreview');
+        $response->assertSee('open-pindah-modal');
         $response->assertSee('Penempatan');
     }
 }

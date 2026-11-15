@@ -30,6 +30,7 @@ use App\Models\Tugas;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use RuntimeException;
 
 class DummyDuaPuluhPesertaSeeder extends Seeder
 {
@@ -38,6 +39,10 @@ class DummyDuaPuluhPesertaSeeder extends Seeder
      */
     public function run(): void
     {
+        if (app()->isProduction()) {
+            throw new RuntimeException('Cannot run DummyDuaPuluhPesertaSeeder in production environment.');
+        }
+
         $defaultPassword = Hash::make('Password123!');
 
         // Ambil master data pendukung

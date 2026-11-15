@@ -51,7 +51,7 @@
         <!-- Right Action Controls -->
         <div class="topbar-right">
             <!-- Audio Controller -->
-            <button type="button" class="btn-audio-toggle" id="btnModalAudioToggle" onclick="toggleModalAudio()" title="Aktifkan / Nonaktifkan Efek Suara Ramah">
+            <button type="button" class="btn-audio-toggle" id="btnModalAudioToggle" data-action="toggle-audio" title="Aktifkan / Nonaktifkan Efek Suara Ramah">
                 <svg id="audioIconOn" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                 <svg id="audioIconOff" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
                 <span id="audioToggleLabel">Suara: Off</span>
@@ -77,7 +77,7 @@
             <div class="virtual-analog-container" id="gameAnalogContainer" role="region" aria-label="Kontrol Analog Mobil">
                 <!-- Tombol Klakson Mobil (Klik Atas / Tombol Klakson) -->
                 <div class="analog-top-controls">
-                    <button type="button" class="analog-horn-btn" id="btnSteerHorn" onclick="triggerCarHorn()" data-sound-horn="playCarHorn" title="Bunyikan Klakson Mobil (▲ / Panah Atas / W)" aria-label="Bunyikan Klakson Mobil">
+                    <button type="button" class="analog-horn-btn" id="btnSteerHorn" data-action="horn" data-sound-horn="playCarHorn" title="Bunyikan Klakson Mobil (▲ / Panah Atas / W)" aria-label="Bunyikan Klakson Mobil">
                         <span class="horn-icon">&#128227;</span>
                         <span class="horn-label">&#9650; KLAKSON</span>
                     </button>
@@ -576,7 +576,7 @@
 
                 <!-- Pos 1: Halte Registrasi (x: 280, y: 310 di pinggir jalan) -->
                 @php [$p1Line1, $p1Line2] = $formatLines($stepsData[0]['desc'] ?? ''); @endphp
-                <g class="road-checkpoint-group cursor-pointer" id="roadCp1" transform="translate(280, 310)" onclick="selectModalStep(1)" role="button" aria-label="Pilih Pos 1 {{ $stepsData[0]['title'] ?? 'Registrasi' }}" style="cursor: pointer;">
+                <g class="road-checkpoint-group cursor-pointer" id="roadCp1" transform="translate(280, 310)" data-modal-step="1" role="button" aria-label="Pilih Pos 1 {{ $stepsData[0]['title'] ?? 'Registrasi' }}" style="cursor: pointer;">
                     <!-- Tiang Halte Pinggir Jalan yang Rapi & Kokoh Berdiri di Trotoar -->
                     <line x1="0" y1="8" x2="0" y2="36" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
                     <ellipse cx="0" cy="36" rx="9" ry="3" fill="#64748b"/>
@@ -600,7 +600,7 @@
                         <line x1="-3" y1="-106" x2="273" y2="-106" stroke="#f1f5f9" stroke-width="1.5"/>
                         <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p1Line1 }}</text>
                         <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p1Line2 }}</text>
-                        <g class="cursor-pointer btn-webtoon-action" onclick="event.stopPropagation(); selectModalStep(2);" role="button" aria-label="Lanjut ke Pos 2">
+                        <g class="cursor-pointer btn-webtoon-action" data-modal-step-next="2" role="button" aria-label="Lanjut ke Pos 2">
                             <rect x="150" y="-52" width="122" height="26" rx="13" fill="#e11d48" style="filter: drop-shadow(0 2px 6px rgba(225,29,72,0.3));"/>
                             <text x="211" y="-36" text-anchor="middle" font-size="9" font-weight="800" fill="#ffffff" font-family="'Lexend', sans-serif">Lanjut Pos 2 ➔</text>
                         </g>
@@ -609,7 +609,7 @@
 
                 <!-- Pos 2: Halte Administrasi & Seleksi (x: 880, y: 310 di pinggir jalan) -->
                 @php [$p2Line1, $p2Line2] = $formatLines($stepsData[1]['desc'] ?? ''); @endphp
-                <g class="road-checkpoint-group cursor-pointer" id="roadCp2" transform="translate(880, 310)" onclick="selectModalStep(2)" role="button" aria-label="Pilih Pos 2 {{ $stepsData[1]['title'] ?? 'Administrasi & Seleksi' }}" style="cursor: pointer;">
+                <g class="road-checkpoint-group cursor-pointer" id="roadCp2" transform="translate(880, 310)" data-modal-step="2" role="button" aria-label="Pilih Pos 2 {{ $stepsData[1]['title'] ?? 'Administrasi & Seleksi' }}" style="cursor: pointer;">
                     <!-- Tiang Halte Pinggir Jalan yang Rapi & Kokoh Berdiri di Trotoar -->
                     <line x1="0" y1="8" x2="0" y2="36" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
                     <ellipse cx="0" cy="36" rx="9" ry="3" fill="#64748b"/>
@@ -630,7 +630,7 @@
                         <line x1="-3" y1="-106" x2="273" y2="-106" stroke="#f1f5f9" stroke-width="1.5"/>
                         <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p2Line1 }}</text>
                         <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p2Line2 }}</text>
-                        <g class="cursor-pointer btn-webtoon-action" onclick="event.stopPropagation(); selectModalStep(3);" role="button" aria-label="Lanjut ke Pos 3">
+                        <g class="cursor-pointer btn-webtoon-action" data-modal-step-next="3" role="button" aria-label="Lanjut ke Pos 3">
                             <rect x="150" y="-52" width="122" height="26" rx="13" fill="#0284c7" style="filter: drop-shadow(0 2px 6px rgba(2,132,199,0.3));"/>
                             <text x="211" y="-36" text-anchor="middle" font-size="9" font-weight="800" fill="#ffffff" font-family="'Lexend', sans-serif">Lanjut Pos 3 ➔</text>
                         </g>
@@ -639,7 +639,7 @@
 
                 <!-- Pos 3: Halte Pelaksanaan Magang (x: 1480, y: 310 di pinggir jalan) -->
                 @php [$p3Line1, $p3Line2] = $formatLines($stepsData[2]['desc'] ?? ''); @endphp
-                <g class="road-checkpoint-group cursor-pointer" id="roadCp3" transform="translate(1480, 310)" onclick="selectModalStep(3)" role="button" aria-label="Pilih Pos 3 {{ $stepsData[2]['title'] ?? 'Pelaksanaan Magang' }}" style="cursor: pointer;">
+                <g class="road-checkpoint-group cursor-pointer" id="roadCp3" transform="translate(1480, 310)" data-modal-step="3" role="button" aria-label="Pilih Pos 3 {{ $stepsData[2]['title'] ?? 'Pelaksanaan Magang' }}" style="cursor: pointer;">
                     <!-- Tiang Halte Pinggir Jalan yang Rapi & Kokoh Berdiri di Trotoar -->
                     <line x1="0" y1="8" x2="0" y2="36" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
                     <ellipse cx="0" cy="36" rx="9" ry="3" fill="#64748b"/>
@@ -661,7 +661,7 @@
                         <line x1="-3" y1="-106" x2="273" y2="-106" stroke="#f1f5f9" stroke-width="1.5"/>
                         <text x="-3" y="-88" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p3Line1 }}</text>
                         <text x="-3" y="-72" font-size="9.2" font-weight="600" fill="#334155" font-family="'Plus Jakarta Sans', sans-serif">{{ $p3Line2 }}</text>
-                        <g class="cursor-pointer btn-webtoon-action" onclick="event.stopPropagation(); selectModalStep(4);" role="button" aria-label="Lanjut ke Pos 4">
+                        <g class="cursor-pointer btn-webtoon-action" data-modal-step-next="4" role="button" aria-label="Lanjut ke Pos 4">
                             <rect x="150" y="-52" width="122" height="26" rx="13" fill="#0f766e" style="filter: drop-shadow(0 2px 6px rgba(15,118,110,0.3));"/>
                             <text x="211" y="-36" text-anchor="middle" font-size="9" font-weight="800" fill="#ffffff" font-family="'Lexend', sans-serif">Lanjut Pos 4 ➔</text>
                         </g>
@@ -670,7 +670,7 @@
 
                 <!-- Pos 4: Halte Kelulusan (x: 2080, y: 310 di pinggir jalan) -->
                 @php [$p4Line1, $p4Line2] = $formatLines($stepsData[3]['desc'] ?? ''); @endphp
-                <g class="road-checkpoint-group cursor-pointer" id="roadCp4" transform="translate(2080, 310)" onclick="selectModalStep(4)" role="button" aria-label="Pilih Pos 4 {{ $stepsData[3]['title'] ?? 'Kelulusan' }}" style="cursor: pointer;">
+                <g class="road-checkpoint-group cursor-pointer" id="roadCp4" transform="translate(2080, 310)" data-modal-step="4" role="button" aria-label="Pilih Pos 4 {{ $stepsData[3]['title'] ?? 'Kelulusan' }}" style="cursor: pointer;">
                     <!-- Tiang Halte Pinggir Jalan yang Rapi & Kokoh Berdiri di Trotoar -->
                     <line x1="0" y1="8" x2="0" y2="36" stroke="#475569" stroke-width="4.5" stroke-linecap="round"/>
                     <ellipse cx="0" cy="36" rx="9" ry="3" fill="#64748b"/>

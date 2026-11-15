@@ -9,6 +9,7 @@ use App\Enums\StatusPenempatanEnum;
 use App\Enums\StatusTugasEnum;
 use App\Models\Penempatan;
 use App\Rules\SafeExternalUrlRule;
+use App\Support\SafeHtmlSanitizer;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -54,6 +55,12 @@ class TugasRequest extends FormRequest
                 'link_referensi' => trim($this->input('link_referensi')),
             ]);
         }
+
+        if ($this->has('deskripsi') && is_string($this->input('deskripsi'))) {
+            $this->merge([
+                'deskripsi' => SafeHtmlSanitizer::sanitize($this->input('deskripsi')),
+            ]);
+        }
     }
 
     public function rules(): array
@@ -65,7 +72,7 @@ class TugasRequest extends FormRequest
             'penempatan_ids.*' => ['integer', 'distinct', 'exists:penempatan,id'],
             'penempatan_id' => [$isUpdate ? 'sometimes' : 'nullable', 'exists:penempatan,id'],
             'judul' => ['required', 'string', 'max:150'],
-            'deskripsi' => ['nullable', 'string'],
+            'deskripsi' => ['nullable', 'string', 'max:10000'],
             'link_referensi' => ['nullable', 'string', 'max:2048', new SafeExternalUrlRule],
             'file_lampiran' => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,csv,ppt,pptx,zip,png,jpg,jpeg', 'max:10240'],
             'kategori' => ['required', 'string', 'max:50'],
@@ -87,6 +94,7 @@ class TugasRequest extends FormRequest
             'penempatan_ids.*.exists' => 'Satu atau lebih peserta bimbingan tidak ditemukan.',
             'judul.required' => 'Judul penugasan wajib diisi.',
             'deskripsi.required' => 'Petunjuk & instruksi pengerjaan wajib diisi.',
+            'deskripsi.max' => 'Petunjuk & instruksi pengerjaan tidak boleh melebihi 10.000 karakter.',
             'deadline.required' => 'Batas waktu (deadline) tugas wajib ditentukan.',
             'deadline.after_or_equal' => 'Batas waktu (deadline) tugas tidak boleh di masa lampau.',
             'link_referensi.url' => 'Format tautan referensi tidak valid. Harap gunakan URL lengkap diawali http:// atau https://.',

@@ -15,7 +15,7 @@
             ],
             callout: '<strong>Aturan Bisnis Kunci (BR-01):</strong> Calon peserta hanya dapat mendaftar pada 1 bidang dalam 1 periode bulan yang sedang aktif.',
             ctaText: 'Lihat Kuota Tersedia Sekarang',
-            ctaUrl: '{{ route("landing") }}#kuota'
+            ctaUrl: '/#kuota'
         },
         2: {
             phase: 'Fase 1: Pendaftaran & Kuota',
@@ -32,7 +32,7 @@
             ],
             callout: '<strong>Jalur Kelompok (BR-02):</strong> Pendaftaran kelompok didaftarkan oleh 1 orang Ketua Kelompok yang menginput data seluruh anggota perwakilan.',
             ctaText: 'Mulai Buat Akun Peserta',
-            ctaUrl: '{{ route("login") }}'
+            ctaUrl: '/login'
         },
         3: {
             phase: 'Fase 1: Pendaftaran & Kuota',
@@ -50,7 +50,7 @@
             ],
             callout: '<strong>Validitas Dokumen:</strong> Pastikan berkas terbaca jelas dan tidak berbayang agar proses seleksi berkas berjalan lancar tanpa status perbaikan.',
             ctaText: 'Unduh Panduan Lengkap PDF',
-            ctaUrl: '{{ route("panduan.pdf") }}'
+            ctaUrl: '/panduan-magang-pdf'
         },
         4: {
             phase: 'Fase 2: Seleksi & Penempatan',
@@ -67,7 +67,7 @@
             ],
             callout: '<strong>SLA Verifikasi:</strong> Hasil telaah diumumkan secara transparan melalui dashboard peserta maksimal dalam 3 hari kerja setelah berkas diajukan.',
             ctaText: 'Pantau Status Seleksi',
-            ctaUrl: '{{ route("login") }}'
+            ctaUrl: '/login'
         },
         'diterima': {
             phase: 'Fase 2: Seleksi & Penempatan',
@@ -84,7 +84,7 @@
             ],
             callout: '<strong>Kewajiban Konfirmasi (BR-05):</strong> Peserta yang tidak melakukan konfirmasi kehadiran berisiko digantikan oleh antrean Waiting List.',
             ctaText: 'Masuk ke Dashboard Peserta',
-            ctaUrl: '{{ route("login") }}'
+            ctaUrl: '/login'
         },
         'waiting': {
             phase: 'Fase 2: Seleksi & Penempatan',
@@ -101,7 +101,7 @@
             ],
             callout: '<strong>Keadilan Alokasi (BR-03):</strong> Antrean bersifat otomatis tanpa intervensi manual guna menjaga transparansi penuh.',
             ctaText: 'Cek Posisi Antrean Saya',
-            ctaUrl: '{{ route("login") }}'
+            ctaUrl: '/login'
         },
         'perbaikan': {
             phase: 'Fase 2: Seleksi & Penempatan',
@@ -118,7 +118,7 @@
             ],
             callout: '<strong>Batas Waktu:</strong> Apabila dalam 3x24 jam perbaikan tidak dikirimkan, permohonan otomatis berstatus tidak memenuhi syarat.',
             ctaText: 'Unggah Ulang Perbaikan',
-            ctaUrl: '{{ route("login") }}'
+            ctaUrl: '/login'
         },
         5: {
             phase: 'Fase 3: Pelaksanaan & Logbook',
@@ -135,7 +135,7 @@
             ],
             callout: '<strong>Tata Tertib:</strong> Wajib mematuhi jam kerja 07.30 s/d 16.00 WIB dan mengenakan seragam almamater atau pakaian formal rapi.',
             ctaText: 'Lihat Panduan Kedinasan',
-            ctaUrl: '{{ route("landing") }}'
+            ctaUrl: '/'
         },
         6: {
             phase: 'Fase 3: Pelaksanaan & Logbook',
@@ -152,7 +152,7 @@
             ],
             callout: '<strong>Aturan Disiplin (BR-09):</strong> Logbook hanya dapat diisi maksimal H-1 (kemarin). Sistem secara otomatis mengunci tanggal lampau guna menjamin keaslian kegiatan.',
             ctaText: 'Buka Logbook Harian',
-            ctaUrl: '{{ route("login") }}'
+            ctaUrl: '/login'
         },
         7: {
             phase: 'Fase 4: Evaluasi & Kelulusan',
@@ -526,6 +526,60 @@
     document.addEventListener('DOMContentLoaded', () => {
         // Panggil initial auto-fit layout
         autoFitFlowchartCanvas();
+
+        // Delegated click handler for strict CSP compliance (eliminates inline onclick)
+        document.addEventListener('click', (e) => {
+            const jenjangBtn = e.target.closest('[data-sim-jenjang]');
+            if (jenjangBtn) {
+                setSimJenjang(jenjangBtn.getAttribute('data-sim-jenjang'));
+                if (jenjangBtn.hasAttribute('data-node')) {
+                    selectDagNode(jenjangBtn.getAttribute('data-node'));
+                }
+                return;
+            }
+
+            const tipeBtn = e.target.closest('[data-sim-tipe]');
+            if (tipeBtn) {
+                setSimTipe(tipeBtn.getAttribute('data-sim-tipe'));
+                return;
+            }
+
+            const viewBtn = e.target.closest('[data-main-view]');
+            if (viewBtn) {
+                switchMainView(viewBtn.getAttribute('data-main-view'));
+                return;
+            }
+
+            const dagAction = e.target.closest('[data-dag-action]');
+            if (dagAction) {
+                const action = dagAction.getAttribute('data-dag-action');
+                if (action === 'toggle-play') toggleAutoPlayTour();
+                else if (action === 'prev') prevDagStep();
+                else if (action === 'next') nextDagStep();
+                else if (action === 'reset') resetDagTour();
+                return;
+            }
+
+            const dagZoom = e.target.closest('[data-dag-zoom]');
+            if (dagZoom) {
+                const z = dagZoom.getAttribute('data-dag-zoom');
+                if (z === 'reset') resetCanvasZoom();
+                else zoomCanvas(parseFloat(z));
+                return;
+            }
+
+            const nodeEl = e.target.closest('[data-node]');
+            if (nodeEl) {
+                selectDagNode(nodeEl.getAttribute('data-node'));
+                return;
+            }
+
+            const faqBtn = e.target.closest('[data-toggle="faq"]');
+            if (faqBtn) {
+                toggleFaq(faqBtn);
+                return;
+            }
+        });
 
         const urlParams = new URLSearchParams(window.location.search);
         const stepParam = urlParams.get('step') || urlParams.get('fase');

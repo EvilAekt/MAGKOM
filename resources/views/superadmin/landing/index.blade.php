@@ -379,7 +379,7 @@
         <x-gentelella.card title="Opsi Reset Media ke Default Bawaan" icon="fa fa-refresh">
             <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                 @if(!empty($cmsData['hero_image']) && \Illuminate\Support\Facades\Storage::disk('public')->exists($cmsData['hero_image']))
-                    <form action="{{ route('superadmin.landing.destroy-foto') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin menghapus foto banner kustom dan kembali ke foto default bawaan sistem?');">
+                    <form action="{{ route('superadmin.landing.destroy-foto') }}" method="POST" data-confirm="Apakah Anda yakin menghapus foto banner kustom dan kembali ke foto default bawaan sistem?">
                         @csrf
                         @method('DELETE')
                         <button type="submit" style="height: 38px; padding: 0 1.25rem; background: #EF4444; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
@@ -390,7 +390,7 @@
                 @endif
 
                 @if(!empty($cmsData['panduan_pdf']) && \Illuminate\Support\Facades\Storage::disk('public')->exists($cmsData['panduan_pdf']))
-                    <form action="{{ route('superadmin.landing.destroy-panduan') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin menghapus dokumen PDF kustom dan kembali ke template PDF otomatis bawaan sistem?');">
+                    <form action="{{ route('superadmin.landing.destroy-panduan') }}" method="POST" data-confirm="Apakah Anda yakin menghapus dokumen PDF kustom dan kembali ke template PDF otomatis bawaan sistem?">
                         @csrf
                         @method('DELETE')
                         <button type="submit" style="height: 38px; padding: 0 1.25rem; background: #DC2626; color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8125rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">

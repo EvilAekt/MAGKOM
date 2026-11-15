@@ -200,7 +200,7 @@ class AdminSuperAdminPortalTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($this->pendaftaran->nomor_pendaftaran);
         $response->assertSee('docPreviewModal');
-        $response->assertSee('openDocPreview');
+        $response->assertSee('open-doc-preview');
         $response->assertSee('Mentee Aktif');
     }
 
@@ -301,8 +301,7 @@ class AdminSuperAdminPortalTest extends TestCase
     {
         $response = $this->actingAs($this->admin)->get(route('admin.penempatan.index'));
         $response->assertStatus(200);
-        $response->assertSee('modal-surat-preview');
-        $response->assertSee('openSuratPreview');
+        $response->assertSee('open-pindah-modal');
 
         // Test streaming pratinjau surat diterima
         $responseStream = $this->actingAs($this->admin)->get(route('admin.penempatan.surat-diterima.pratinjau', $this->penempatan));

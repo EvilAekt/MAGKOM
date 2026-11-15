@@ -18,30 +18,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS via CDN untuk utilitas layout -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        navy: {
-                            900: '#0c1b2e',
-                            800: '#1b3860',
-                            700: '#234a7d',
-                        },
-                        brand: {
-                            blue: '#0751FF',
-                            gold: '#f59e0b',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Tailwind CSS (Vite Asset Pipeline) -->
+    @vite(['resources/css/pages/public/public-tailwind.css', 'resources/js/pages/public/kebijakan-privasi.js'])
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
@@ -190,11 +168,11 @@
 
             <!-- Tab Switcher Antara Kebijakan Privasi dan Syarat & Ketentuan -->
             <div class="flex border-b border-slate-200 bg-slate-100/80 p-2 gap-2">
-                <button type="button" id="tabBtnPrivasi" onclick="switchDocTab('privasi')" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all bg-white text-blue-700 shadow-sm border border-slate-200 flex items-center justify-center gap-2">
+                <button type="button" id="tabBtnPrivasi" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all bg-white text-blue-700 shadow-sm border border-slate-200 flex items-center justify-center gap-2">
                     <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                     <span>Kebijakan Privasi (UU PDP)</span>
                 </button>
-                <button type="button" id="tabBtnSyarat" onclick="switchDocTab('syarat')" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all text-slate-600 hover:text-blue-600 hover:bg-white/60 flex items-center justify-center gap-2">
+                <button type="button" id="tabBtnSyarat" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all text-slate-600 hover:text-blue-600 hover:bg-white/60 flex items-center justify-center gap-2">
                     <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     <span>Syarat &amp; Ketentuan Magang</span>
                 </button>
@@ -322,36 +300,5 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        function switchDocTab(tab) {
-            const panePrivasi = document.getElementById('panePrivasi');
-            const paneSyarat = document.getElementById('paneSyarat');
-            const btnPrivasi = document.getElementById('tabBtnPrivasi');
-            const btnSyarat = document.getElementById('tabBtnSyarat');
-
-            if (!panePrivasi || !paneSyarat || !btnPrivasi || !btnSyarat) return;
-
-            if (tab === 'syarat') {
-                panePrivasi.classList.add('hidden');
-                paneSyarat.classList.remove('hidden');
-                btnPrivasi.className = 'flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all text-slate-600 hover:text-blue-600 hover:bg-white/60 flex items-center justify-center gap-2';
-                btnSyarat.className = 'flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all bg-white text-blue-700 shadow-sm border border-slate-200 flex items-center justify-center gap-2';
-                try { history.replaceState(null, '', '#syarat'); } catch (e) {}
-            } else {
-                paneSyarat.classList.add('hidden');
-                panePrivasi.classList.remove('hidden');
-                btnSyarat.className = 'flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all text-slate-600 hover:text-blue-600 hover:bg-white/60 flex items-center justify-center gap-2';
-                btnPrivasi.className = 'flex-1 py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center transition-all bg-white text-blue-700 shadow-sm border border-slate-200 flex items-center justify-center gap-2';
-                try { history.replaceState(null, '', '#privasi'); } catch (e) {}
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.location.hash === '#syarat') {
-                switchDocTab('syarat');
-            }
-        });
-    </script>
 </body>
 </html>

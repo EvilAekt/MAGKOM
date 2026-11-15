@@ -389,3 +389,14 @@ class MagKomRealtimeEngine {
 
 // Inisialisasi global
 window.MagKomRealtime = new MagKomRealtimeEngine();
+
+// Auto-inisialisasi dari elemen DOM jika tersedia (CSP compliant)
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', function () {
+        const toastEl = document.getElementById('magkom-toast-container');
+        if (toastEl && window.MagKomRealtime && !window.MagKomRealtime.isConnected) {
+            const sseUrl = toastEl.getAttribute('data-sse-url') || '/realtime/stream';
+            window.MagKomRealtime.init(sseUrl);
+        }
+    });
+}

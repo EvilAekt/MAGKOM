@@ -33,24 +33,8 @@
     <!-- Vite Asset Pipeline (PRD-TASK-VITE-01) -->
     @vite(['resources/css/app.css', 'resources/css/layouts/app-layout-tokens.css', 'resources/js/app.js'])
 
-    <!-- Anti-Flash Theme Script -->
-    <script>
-        (function() {
-            try {
-                const savedPref = localStorage.getItem('magkom_theme') || '{{ session('tema_tampilan', request()->cookie('tema_tampilan', 'terang')) }}';
-                let effectiveTheme = 'light';
-                if (savedPref === 'sistem') {
-                    effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                } else if (savedPref === 'gelap') {
-                    effectiveTheme = 'dark';
-                } else {
-                    effectiveTheme = 'light';
-                }
-                document.documentElement.setAttribute('data-theme', effectiveTheme);
-                document.documentElement.setAttribute('data-pref-theme', savedPref);
-            } catch (e) {}
-        })();
-    </script>
+    <!-- Anti-Flash Theme Script (External, CSP compliant) -->
+    <script src="{{ asset('js/theme-init.js') }}"></script>
 
     @stack('styles')
 </head>
@@ -103,7 +87,7 @@
                             };
                         @endphp
                         <div class="landing-user-menu-wrap" id="landingUserMenuWrap">
-                            <button type="button" id="landingUserMenuBtn" class="landing-user-chip-btn" onclick="toggleLandingUserMenu(event)" aria-expanded="false" aria-haspopup="true" aria-label="Menu Akun {{ $user->nama }}">
+                            <button type="button" id="landingUserMenuBtn" class="landing-user-chip-btn" aria-expanded="false" aria-haspopup="true" aria-label="Menu Akun {{ $user->nama }}">
                                 <div class="landing-user-avatar">
                                     @if($user?->foto_url)
                                         <img src="{{ $user->foto_url }}" alt="{{ $user->nama }}">
@@ -361,52 +345,6 @@
         </div>
     </footer>
 
-    <script>
-        function toggleMobileDrawer() {
-            const drawer = document.getElementById('mobile-drawer');
-            if (drawer) {
-                drawer.classList.toggle('open');
-            }
-        }
-
-        function toggleLandingUserMenu(e) {
-            if (e) e.stopPropagation();
-            const btn = document.getElementById('landingUserMenuBtn');
-            const menu = document.getElementById('landingUserDropdown');
-            if (!btn || !menu) return;
-
-            const isOpen = menu.classList.contains('show');
-            if (isOpen) {
-                menu.classList.remove('show');
-                btn.setAttribute('aria-expanded', 'false');
-            } else {
-                menu.classList.add('show');
-                btn.setAttribute('aria-expanded', 'true');
-            }
-        }
-
-        // Close dropdown when clicking outside or pressing Escape
-        document.addEventListener('click', function(e) {
-            const wrap = document.getElementById('landingUserMenuWrap');
-            const menu = document.getElementById('landingUserDropdown');
-            const btn = document.getElementById('landingUserMenuBtn');
-            if (menu && menu.classList.contains('show') && wrap && !wrap.contains(e.target)) {
-                menu.classList.remove('show');
-                if (btn) btn.setAttribute('aria-expanded', 'false');
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const menu = document.getElementById('landingUserDropdown');
-                const btn = document.getElementById('landingUserMenuBtn');
-                if (menu && menu.classList.contains('show')) {
-                    menu.classList.remove('show');
-                    if (btn) btn.setAttribute('aria-expanded', 'false');
-                }
-            }
-        });
-    </script>
     @stack('scripts')
 </body>
 </html>

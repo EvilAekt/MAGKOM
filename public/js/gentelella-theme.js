@@ -129,6 +129,17 @@
         document.body.style.overflow = '';
     };
 
+    // Delegated close listener for Gentelella modals (CSP compliant)
+    document.addEventListener('click', function (e) {
+        const closeBtn = e.target.closest('.gentelella-modal-close, [data-close-modal]');
+        if (closeBtn) {
+            const modalId = closeBtn.getAttribute('data-close-modal') || closeBtn.closest('.gentelella-modal-backdrop')?.id;
+            if (modalId) {
+                window.closeGentelellaModal(modalId);
+            }
+        }
+    });
+
     // Inisialisasi preferensi sidebar & event listeners saat DOM siap
     document.addEventListener('DOMContentLoaded', function () {
         // 1. Pulihkan Preferensi Sidebar Desktop

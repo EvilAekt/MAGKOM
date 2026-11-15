@@ -72,7 +72,13 @@
 
             {{-- Deskripsi / Rincian Instruksi Tugas --}}
             <div class="classroom-instruction-body">
-                {!! nl2br(e($tugas->deskripsi ?: 'Tidak ada instruksi khusus.')) !!}
+                @if(! $tugas->deskripsi)
+                    Tidak ada instruksi khusus.
+                @elseif(str_contains($tugas->deskripsi, '<'))
+                    {!! \App\Support\SafeHtmlSanitizer::sanitize($tugas->deskripsi) !!}
+                @else
+                    {!! nl2br(e($tugas->deskripsi)) !!}
+                @endif
             </div>
 
             {{-- Lampiran Acuan Pembimbing (Jika Ada) --}}

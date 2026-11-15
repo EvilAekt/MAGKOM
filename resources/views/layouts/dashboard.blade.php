@@ -30,24 +30,8 @@
     <!-- Vite Asset Pipeline (PRD-TASK-VITE-01) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Anti-Flash Theme Script -->
-    <script>
-        (function() {
-            try {
-                const savedPref = localStorage.getItem('magkom_theme') || '{{ session('tema_tampilan', request()->cookie('tema_tampilan', 'terang')) }}';
-                let effectiveTheme = 'light';
-                if (savedPref === 'sistem') {
-                    effectiveTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                } else if (savedPref === 'gelap') {
-                    effectiveTheme = 'dark';
-                } else {
-                    effectiveTheme = 'light';
-                }
-                document.documentElement.setAttribute('data-theme', effectiveTheme);
-                document.documentElement.setAttribute('data-pref-theme', savedPref);
-            } catch (e) {}
-        })();
-    </script>
+    <!-- Anti-Flash Theme Script (External, CSP compliant) -->
+    <script src="{{ asset('js/theme-init.js') }}"></script>
 
     {{-- Stylesheet extracted to resources/css/layouts/dashboard-layout-tokens.css (Vite managed) --}}
     <style>
@@ -111,7 +95,7 @@
     <div class="container body">
         <div class="main_container dashboard-container">
             <!-- Backdrop Scrim Drawer Mobile -->
-            <div id="sidebarBackdrop" class="mobile-drawer-backdrop" onclick="toggleGentelellaSidebar(false)"></div>
+            <div id="sidebarBackdrop" class="mobile-drawer-backdrop" data-action="close-sidebar"></div>
 
             <!-- =====================================================================
                  1. LEFT COL SIDEBAR (Gentelella left_col)
@@ -134,7 +118,7 @@
                         </a>
                         <button type="button" 
                                 class="sidebar-drawer-close-btn" 
-                                onclick="toggleGentelellaSidebar(false)" 
+                                data-action="close-sidebar" 
                                 aria-label="{{ __('Tutup Navigasi') }}" 
                                 title="{{ __('Tutup Menu') }}">
                             &times;
@@ -379,7 +363,7 @@
                             $isOperasionalAdminActive = request()->routeIs('admin.pendaftaran.*') || request()->routeIs('admin.kuota.*') || request()->routeIs('admin.penempatan.*') || request()->routeIs('admin.laporan.*');
                         @endphp
                         <div class="nav-group-container">
-                            <button type="button" class="nav-group-btn {{ $isOperasionalAdminActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalAdminActive ? 'true' : 'false' }}">
+                            <button type="button" class="nav-group-btn {{ $isOperasionalAdminActive ? 'has-active' : '' }}" data-action="toggle-nav-group" aria-expanded="{{ $isOperasionalAdminActive ? 'true' : 'false' }}">
                                 <span class="nav-group-btn-left">
                                     <span class="nav-item-icon">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -407,7 +391,7 @@
                             $isOperasionalPembimbingActive = request()->routeIs('pembimbing.*');
                         @endphp
                         <div class="nav-group-container">
-                            <button type="button" class="nav-group-btn {{ $isOperasionalPembimbingActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalPembimbingActive ? 'true' : 'false' }}">
+                            <button type="button" class="nav-group-btn {{ $isOperasionalPembimbingActive ? 'has-active' : '' }}" data-action="toggle-nav-group" aria-expanded="{{ $isOperasionalPembimbingActive ? 'true' : 'false' }}">
                                 <span class="nav-group-btn-left">
                                     <span class="nav-item-icon">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -433,7 +417,7 @@
                             $isOperasionalPesertaActive = request()->routeIs('superadmin.arsip.*');
                         @endphp
                         <div class="nav-group-container">
-                            <button type="button" class="nav-group-btn {{ $isOperasionalPesertaActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isOperasionalPesertaActive ? 'true' : 'false' }}">
+                            <button type="button" class="nav-group-btn {{ $isOperasionalPesertaActive ? 'has-active' : '' }}" data-action="toggle-nav-group" aria-expanded="{{ $isOperasionalPesertaActive ? 'true' : 'false' }}">
                                 <span class="nav-group-btn-left">
                                     <span class="nav-item-icon">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -510,7 +494,7 @@
                             $isConfigActive = request()->routeIs('superadmin.pengaturan.*') || request()->routeIs('superadmin.landing.*') || request()->routeIs('superadmin.bulan.*') || request()->routeIs('superadmin.slot-khusus.*') || request()->routeIs('superadmin.jurusan.*') || request()->routeIs('superadmin.bidang.*');
                         @endphp
                         <div class="nav-group-container">
-                            <button type="button" class="nav-group-btn {{ $isConfigActive ? 'has-active' : '' }}" onclick="toggleNavGroup(this)" aria-expanded="{{ $isConfigActive ? 'true' : 'false' }}">
+                            <button type="button" class="nav-group-btn {{ $isConfigActive ? 'has-active' : '' }}" data-action="toggle-nav-group" aria-expanded="{{ $isConfigActive ? 'true' : 'false' }}">
                                 <span class="nav-group-btn-left">
                                     <span class="nav-item-icon">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -563,7 +547,7 @@
                     <a href="{{ $pengaturanUrl }}" class="sidebar-footer-btn" title="{{ __('Pengaturan Akun') }}" aria-label="{{ __('Pengaturan Akun') }}">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     </a>
-                    <button type="button" id="sidebarThemeToggleBtn" class="sidebar-footer-btn" onclick="togglePortalThemeQuick()" title="{{ __('Ganti Mode Terang / Gelap') }}" aria-label="{{ __('Ganti Mode Terang / Gelap') }}" aria-pressed="false">
+                    <button type="button" id="sidebarThemeToggleBtn" class="sidebar-footer-btn" data-action="toggle-theme-quick" title="{{ __('Ganti Mode Terang / Gelap') }}" aria-label="{{ __('Ganti Mode Terang / Gelap') }}" aria-pressed="false">
                         <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" fill="currentColor" fill-opacity="0.25"></path>
                             <path d="M9 18h6"></path>
@@ -592,7 +576,7 @@
                         <button type="button"
                                 id="menu_toggle"
                                 class="topbar-toggle-btn"
-                                onclick="toggleGentelellaSidebar()"
+                                data-action="toggle-sidebar"
                                 aria-label="Toggle Menu Navigasi"
                                 title="Navigasi Menu">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -620,7 +604,7 @@
 
                 <!-- Topbar Menu Pengguna -->
                 <div class="topbar-right">
-                    <button type="button" id="userMenuBtn" class="user-menu-trigger" onclick="toggleUserMenu()" aria-expanded="false" aria-haspopup="true">
+                    <button type="button" id="userMenuBtn" class="user-menu-trigger" data-action="toggle-user-menu" aria-expanded="false" aria-haspopup="true">
                         <div class="user-avatar" style="overflow: hidden; padding: 0;">
                             @if($currentUser?->foto_url)
                                 <img src="{{ $currentUser->foto_url }}" alt="{{ $currentUser->nama }}" style="width: 100%; height: 100%; object-fit: cover;">
@@ -851,271 +835,6 @@
         </div>
     </div>
 
-    <!-- Script Interaktivitas Ringan (Vanilla JS) -->
-    <script>
-        // Toggle Sidebar Mobile Drawer
-        function toggleSidebar(forceState) {
-            if (typeof window.toggleGentelellaSidebar === 'function') {
-                window.toggleGentelellaSidebar(forceState);
-                return;
-            }
-            const sidebar = document.getElementById('mainSidebar') || document.getElementById('sidebarNav') || document.querySelector('.dashboard-sidebar');
-            const backdrop = document.getElementById('sidebarBackdrop') || document.getElementById('drawerBackdrop');
-            if (!sidebar) return;
-
-            const shouldOpen = typeof forceState === 'boolean' 
-                ? forceState 
-                : !(sidebar.classList.contains('drawer-open') || sidebar.classList.contains('open'));
-
-            if (shouldOpen) {
-                sidebar.classList.add('drawer-open', 'open');
-                document.body.classList.add('drawer-open');
-                if (backdrop) backdrop.classList.add('active', 'open');
-                document.body.style.overflow = 'hidden';
-            } else {
-                sidebar.classList.remove('drawer-open', 'open');
-                document.body.classList.remove('drawer-open');
-                if (backdrop) backdrop.classList.remove('active', 'open');
-                document.body.style.overflow = '';
-            }
-        }
-
-        // Toggle Accordion Sub-Menu Sidebar (Figma Node 560-24892)
-        function toggleNavGroup(btn) {
-            if (!btn) return;
-            if (document.body.classList.contains('nav-sm') && window.innerWidth >= 992) {
-                if (typeof window.triggerNavSmFlyout === 'function') {
-                    window.triggerNavSmFlyout(btn);
-                }
-                return;
-            }
-            const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-            const subMenu = btn.nextElementSibling;
-            if (subMenu) {
-                if (isExpanded) {
-                    btn.setAttribute('aria-expanded', 'false');
-                    subMenu.classList.remove('show');
-                } else {
-                    btn.setAttribute('aria-expanded', 'true');
-                    subMenu.classList.add('show');
-                }
-            }
-        }
-
-        // Toggle User Profile Dropdown
-        function toggleUserMenu() {
-            const menu = document.getElementById('userDropdown');
-            const btn = document.getElementById('userMenuBtn');
-            if (!menu || !btn) return;
-
-            const isExpanded = menu.classList.contains('show');
-            if (isExpanded) {
-                menu.classList.remove('show');
-                btn.setAttribute('aria-expanded', 'false');
-            } else {
-                menu.classList.add('show');
-                btn.setAttribute('aria-expanded', 'true');
-            }
-        }
-
-        // Event Listener: Klik Luar & Tombol Escape
-        document.addEventListener('click', function(e) {
-            const menu = document.getElementById('userDropdown');
-            const btn = document.getElementById('userMenuBtn');
-            if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
-                menu.classList.remove('show');
-                btn.setAttribute('aria-expanded', 'false');
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                if (typeof window.closeActiveFlyout === 'function') {
-                    window.closeActiveFlyout();
-                }
-                toggleSidebar(false);
-                const menu = document.getElementById('userDropdown');
-                const btn = document.getElementById('userMenuBtn');
-                if (menu && btn) {
-                    menu.classList.remove('show');
-                    btn.setAttribute('aria-expanded', 'false');
-                }
-            }
-        });
-
-        // Theme Switcher Engine Global
-        window.applyPortalTheme = function(theme) {
-            let effective = 'light';
-            if (theme === 'sistem') {
-                effective = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            } else if (theme === 'gelap') {
-                effective = 'dark';
-            } else {
-                effective = 'light';
-            }
-            document.documentElement.setAttribute('data-theme', effective);
-            document.documentElement.setAttribute('data-pref-theme', theme);
-            const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
-            if (toggleBtn) {
-                const isDark = effective === 'dark';
-                toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-                const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
-                toggleBtn.setAttribute('title', titleText);
-                toggleBtn.setAttribute('aria-label', titleText);
-            }
-            try {
-                localStorage.setItem('magkom_theme', theme);
-            } catch (e) {}
-        };
-
-        (function() {
-            const currentEffective = document.documentElement.getAttribute('data-theme') || 'light';
-            const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
-            if (toggleBtn) {
-                const isDark = currentEffective === 'dark';
-                toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-                const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
-                toggleBtn.setAttribute('title', titleText);
-                toggleBtn.setAttribute('aria-label', titleText);
-            }
-        })();
-
-        // Toggle Cepat Terang / Gelap Instan (Harmonisasi Seluruh Dashboard MagKom)
-        window.togglePortalThemeQuick = function() {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-            const nextTheme = currentTheme === 'dark' ? 'terang' : 'gelap';
-            window.applyPortalTheme(nextTheme);
-            const preferensiUrl = "{{ $preferensiUrl }}";
-            if (preferensiUrl && preferensiUrl !== '#') {
-                fetch(preferensiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                    },
-                    body: JSON.stringify({ tema: nextTheme })
-                }).catch(function() {});
-            }
-        };
-
-        if (window.matchMedia) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-                const currentPref = document.documentElement.getAttribute('data-pref-theme') || localStorage.getItem('magkom_theme');
-                if (currentPref === 'sistem') {
-                    const effective = e.matches ? 'dark' : 'light';
-                    document.documentElement.setAttribute('data-theme', effective);
-                    const toggleBtn = document.getElementById('sidebarThemeToggleBtn');
-                    if (toggleBtn) {
-                        const isDark = effective === 'dark';
-                        toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-                        const titleText = isDark ? "{{ __('Beralih ke Mode Terang') }}" : "{{ __('Beralih ke Mode Gelap') }}";
-                        toggleBtn.setAttribute('title', titleText);
-                        toggleBtn.setAttribute('aria-label', titleText);
-                    }
-                }
-            });
-        }
-
-        // Floating Toast / Alert Dismiss Logic
-        function dismissToast(btn) {
-            const toast = btn.closest('.app-alert') || btn.closest('.app-toast');
-            if (!toast) return;
-            toast.classList.add('toast-hiding');
-            setTimeout(() => toast.remove(), 300);
-        }
-
-        // Global MagKomToast helper API for JS triggers
-        window.MagKomToast = {
-            show({ type = 'success', title = '', message = '', duration = 5000, actionUrl = null }) {
-                let container = document.querySelector('.alerts-container');
-                if (!container) {
-                    container = document.createElement('div');
-                    container.className = 'alerts-container';
-                    const mainContent = document.getElementById('mainContent') || document.body;
-                    mainContent.insertBefore(container, mainContent.firstChild);
-                }
-                const toast = document.createElement('div');
-                toast.className = `app-toast app-alert alert-${type === 'error' ? 'error alert-danger' : type}`;
-                toast.setAttribute('role', 'alert');
-
-                let iconSvg = '';
-                if (type === 'success') {
-                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>';
-                } else if (type === 'warning') {
-                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
-                } else if (type === 'info') {
-                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
-                } else {
-                    iconSvg = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
-                }
-
-                const safeActionUrl = actionUrl && (actionUrl.startsWith('/') || actionUrl.startsWith('http://') || actionUrl.startsWith('https://')) ? actionUrl : null;
-
-                toast.innerHTML = `
-                    <div class="toast-icon-badge alert-icon-badge ${type}">${iconSvg}</div>
-                    <div class="toast-content alert-body" style="flex: 1; min-width: 0;">
-                        ${title ? `<div class="toast-title alert-title">${title}</div>` : ''}
-                        <div class="toast-desc alert-desc">${message}</div>
-                        ${safeActionUrl ? `
-                            <div style="margin-top: 8px;">
-                                <a href="${safeActionUrl}" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: #01347C; color: #FFFFFF; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none;">
-                                    <span>Lihat Rincian</span>
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-                                </a>
-                            </div>
-                        ` : ''}
-                    </div>
-                    <button type="button" class="toast-close-btn alert-close-btn" onclick="dismissToast(this)" aria-label="Tutup notifikasi">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                `;
-
-                container.appendChild(toast);
-
-                if (duration > 0) {
-                    let timer = setTimeout(() => {
-                        toast.classList.add('toast-hiding');
-                        setTimeout(() => toast.remove(), 300);
-                    }, duration);
-
-                    toast.addEventListener('mouseenter', () => clearTimeout(timer));
-                    toast.addEventListener('mouseleave', () => {
-                        timer = setTimeout(() => {
-                            toast.classList.add('toast-hiding');
-                            setTimeout(() => toast.remove(), 300);
-                        }, 2500);
-                    });
-                }
-            },
-            success(title, message) { this.show({ type: 'success', title, message }); },
-            error(title, message) { this.show({ type: 'error', title, message }); },
-            warning(title, message) { this.show({ type: 'warning', title, message }); },
-            info(title, message) { this.show({ type: 'info', title, message }); }
-        };
-
-        // Auto dismiss alert toast after 5s with pause on hover
-        document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('.alerts-container .app-alert, .alerts-container .app-toast');
-            alerts.forEach(alert => {
-                let timer = setTimeout(() => {
-                    alert.classList.add('toast-hiding');
-                    setTimeout(() => alert.remove(), 300);
-                }, 5000);
-
-                alert.addEventListener('mouseenter', () => clearTimeout(timer));
-                alert.addEventListener('mouseleave', () => {
-                    timer = setTimeout(() => {
-                        alert.classList.add('toast-hiding');
-                        setTimeout(() => alert.remove(), 300);
-                    }, 3000);
-                });
-            });
-        });
-    </script>
 
     @yield('scripts')
     @stack('scripts')

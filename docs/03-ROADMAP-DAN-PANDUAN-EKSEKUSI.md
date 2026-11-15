@@ -197,7 +197,7 @@ gantt
 #### Fokus Pengerjaan & Implementasi:
 1. **Security Hardening**:
    - [x] Sanitasi kredensial otomatis pada `AuditService` (masking `password`, `token`, `secret`, `api_key` menjadi `[DISAMARKAN]`).
-   - [x] Implementasi Middleware `SecurityHeaders` (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, CSP).
+   - [x] Implementasi Middleware `SecurityHeaders` (`X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, CSP ketat tanpa unsafe-inline).
    - [x] Konfigurasi Rate Limiter di `RouteServiceProvider` (Auth login: 5 req/min, Pendaftaran: 10 req/jam, API: 60 req/min).
 2. **Automated End-to-End Test Suite**:
    - [x] `tests/Feature/EndToEndUatTest.php` mencakup 8 skenario UAT lengkap sesuai PRD Bab 12.3:

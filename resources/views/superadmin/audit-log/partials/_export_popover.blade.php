@@ -6,6 +6,7 @@
 <div 
     id="exportPopover" 
     class="audit-export-popover audit-export-popover-right" 
+    data-export-url="{{ route('superadmin.audit-log.export') }}"
     style="display: none;" 
     role="menu" 
     aria-label="Menu Pilihan Format Ekspor"
@@ -36,7 +37,7 @@
                     value="csv" 
                     checked 
                     class="audit-format-radio"
-                    onchange="handleAuditFormatSelection('csv')"
+                    
                 />
                 <div class="audit-format-details">
                     <div class="audit-format-name-wrap">
@@ -60,7 +61,7 @@
                     id="radioFormatNdjson" 
                     value="ndjson" 
                     class="audit-format-radio"
-                    onchange="handleAuditFormatSelection('ndjson')"
+                    
                 />
                 <div class="audit-format-details">
                     <div class="audit-format-name-wrap">
@@ -84,7 +85,7 @@
                     id="radioFormatPdf" 
                     value="pdf" 
                     class="audit-format-radio"
-                    onchange="handleAuditFormatSelection('pdf')"
+                    
                 />
                 <div class="audit-format-details">
                     <div class="audit-format-name-wrap">
@@ -118,7 +119,7 @@
             type="button" 
             id="btnCancelExportPopover" 
             class="audit-btn-popover-cancel"
-            onclick="toggleExportPopover(false)"
+            data-action="cancel-export-popover"
         >
             Batal
         </button>
@@ -126,7 +127,7 @@
             type="button" 
             id="btnDoPopoverExport" 
             class="audit-btn-popover-download"
-            onclick="triggerAuditExport()"
+            data-action="do-audit-export"
         >
             <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>

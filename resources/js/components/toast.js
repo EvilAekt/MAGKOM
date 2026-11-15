@@ -11,7 +11,7 @@ export function dismissToast(btn) {
 }
 
 export const MagKomToast = {
-    show({ type = 'success', title = '', message = '', duration = 5000 }) {
+    show({ type = 'success', title = '', message = '', actionUrl = null, duration = 5000 }) {
         let container = document.querySelector('.alerts-container');
         if (!container) {
             container = document.createElement('div');
@@ -52,9 +52,21 @@ export const MagKomToast = {
             content.appendChild(descEl);
         }
 
+        if (actionUrl && (actionUrl.startsWith('/') || actionUrl.startsWith('http://') || actionUrl.startsWith('https://'))) {
+            const actionWrap = document.createElement('div');
+            actionWrap.style.marginTop = '8px';
+            const actionLink = document.createElement('a');
+            actionLink.href = actionUrl;
+            actionLink.style.cssText = 'display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: #01347C; color: #FFFFFF; font-size: 0.75rem; font-weight: 600; border-radius: 6px; text-decoration: none;';
+            actionLink.innerHTML = '<span>Lihat Rincian</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>';
+            actionWrap.appendChild(actionLink);
+            content.appendChild(actionWrap);
+        }
+
         const closeBtn = document.createElement('button');
         closeBtn.type = 'button';
         closeBtn.className = 'toast-close-btn alert-close-btn';
+        closeBtn.setAttribute('data-action', 'dismiss-toast');
         closeBtn.setAttribute('aria-label', 'Tutup notifikasi');
         closeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
         closeBtn.addEventListener('click', () => dismissToast(closeBtn));

@@ -27,7 +27,7 @@
             </a>
             
             @if(!isset($isRevisionPreview) || !$isRevisionPreview)
-                <form action="{{ route('superadmin.landing.discard') }}" method="POST" class="preview-action-form" onsubmit="return confirm('Apakah Anda yakin ingin membuang semua draf perubahan? Konten akan dikembalikan ke versi live saat ini.')">
+                <form action="{{ route('superadmin.landing.discard') }}" method="POST" class="preview-action-form" data-confirm="Apakah Anda yakin ingin membuang semua draf perubahan? Konten akan dikembalikan ke versi live saat ini.">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn-preview-discard">
@@ -36,7 +36,7 @@
                     </button>
                 </form>
 
-                <form action="{{ route('superadmin.landing.publish') }}" method="POST" class="preview-action-form" onsubmit="return confirm('Apakah Anda yakin ingin MEMPUBLIKASIKAN perubahan ini ke publik? Seluruh pengunjung umum akan langsung melihat versi baru ini.')">
+                <form action="{{ route('superadmin.landing.publish') }}" method="POST" class="preview-action-form" data-confirm="Apakah Anda yakin ingin MEMPUBLIKASIKAN perubahan ini ke publik? Seluruh pengunjung umum akan langsung melihat versi baru ini.">
                     @csrf
                     <button type="submit" class="btn-preview-publish">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>

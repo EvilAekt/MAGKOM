@@ -8,7 +8,7 @@
 >
     <x-slot:actions>
         <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-            <input type="text" onkeyup="filterTableByInput(this, 'table-kelulusan-mentee')" placeholder="Cari nama mentee..." style="padding: 0.45rem 0.85rem; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.8rem; outline: none; min-width: 190px;">
+            <input type="text" data-table-filter-target="table-kelulusan-mentee" placeholder="Cari nama mentee..." style="padding: 0.45rem 0.85rem; border: 1px solid var(--neutral-300, #CBD5E1); border-radius: 8px; font-size: 0.8rem; outline: none; min-width: 190px;">
             <a href="{{ route('pembimbing.peserta.index') }}" style="font-size: 0.8rem; font-weight: 600; color: #0641CC; text-decoration: none;">
                 Kelola Daftar Mentee &rarr;
             </a>

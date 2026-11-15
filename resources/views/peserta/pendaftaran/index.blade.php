@@ -271,7 +271,7 @@
                             </div>
 
                             <div class="kuota-card-cta">
-                                <button type="button" class="btn btn-primary" onclick="openModalWithKuota('{{ $kuotaItem->id }}')" style="width: 100%; min-width: 170px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; padding: 10px 18px;">
+                                <button type="button" class="btn btn-primary" data-action="open-modal-with-kuota" data-kuota-id="{{ $kuotaItem->id }}" style="width: 100%; min-width: 170px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; padding: 10px 18px;">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                                     </svg>
@@ -381,7 +381,7 @@
      6. MODAL INTERAKTIF PENGAJUAN MAGANG BARU
      ======================================================== --}}
 @if($profilLengkap && !$pendaftaranAktif)
-<div class="pendaftaran-modal-backdrop" id="pendaftaranModal" role="dialog" aria-modal="true" aria-labelledby="modalPendaftaranTitle" onclick="if(event.target === this) closeModalPendaftaran()">
+<div class="pendaftaran-modal-backdrop" id="pendaftaranModal" role="dialog" aria-modal="true" aria-labelledby="modalPendaftaranTitle">
     <div class="pendaftaran-modal-card">
         <div class="pendaftaran-modal-header">
             <div class="pendaftaran-modal-header-main">
@@ -397,12 +397,12 @@
                     </p>
                 </div>
             </div>
-            <button type="button" class="pendaftaran-modal-close" onclick="closeModalPendaftaran()" aria-label="Tutup Formulir">
+            <button type="button" class="pendaftaran-modal-close" data-action="close-modal-pendaftaran" aria-label="Tutup Formulir">
                 &times;
             </button>
         </div>
 
-        <form action="{{ route('peserta.pendaftaran.store') }}" method="POST" id="formPendaftaranBaru" onsubmit="handleFormSubmit(this)">
+        <form action="{{ route('peserta.pendaftaran.store') }}" method="POST" id="formPendaftaranBaru" >
             @csrf
 
             <div class="pendaftaran-form-body">
@@ -435,7 +435,7 @@
                         <span>Pilih Bulan Magang</span>
                         <span class="req">*</span>
                     </label>
-                    <select id="kuota_id" name="kuota_id" class="pendaftaran-select" required onchange="handleKuotaChange(this)">
+                    <select id="kuota_id" name="kuota_id" class="pendaftaran-select" required >
                         <option value="">-- Pilih Bulan Magang --</option>
                         @foreach($kuotaList as $kuota)
                             @php
@@ -469,7 +469,7 @@
                     <div class="duration-chips-grid">
                         @for($d = 1; $d <= 6; $d++)
                             <div class="duration-chip-btn {{ old('durasi_bulan', 3) == $d ? 'is-active' : '' }}"
-                                 onclick="selectDurationChip({{ $d }})"
+                                 data-action="select-duration-chip" data-duration="{{ $d }}"
                                  role="button"
                                  tabindex="0"
                                  aria-pressed="{{ old('durasi_bulan', 3) == $d ? 'true' : 'false' }}">
@@ -482,7 +482,7 @@
                     </div>
 
                     {{-- Native Select tersembunyi untuk submission POST --}}
-                    <select id="durasi_bulan" name="durasi_bulan" style="display: none;" required onchange="updateEstimasiPeriode()">
+                    <select id="durasi_bulan" name="durasi_bulan" style="display: none;" required >
                         @for($d = 1; $d <= 6; $d++)
                             <option value="{{ $d }}" {{ old('durasi_bulan', 3) == $d ? 'selected' : '' }}>{{ $d }} Bulan</option>
                         @endfor
@@ -506,7 +506,7 @@
             </div>
 
             <div class="pendaftaran-modal-footer">
-                <button type="button" class="pendaftaran-btn-cancel" onclick="closeModalPendaftaran()">Batal</button>
+                <button type="button" class="pendaftaran-btn-cancel" data-action="close-modal-pendaftaran">Batal</button>
                 <button type="submit" class="pendaftaran-btn-submit" id="btnSubmitPendaftaran">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
@@ -519,114 +519,5 @@
 </div>
 @endif
 
-@push('scripts')
-<script>
-    function openModalPendaftaran() {
-        const modal = document.getElementById('pendaftaranModal');
-        if (modal) {
-            modal.classList.add('open');
-            updateEstimasiPeriode();
-        }
-    }
-
-    function closeModalPendaftaran() {
-        const modal = document.getElementById('pendaftaranModal');
-        if (modal) modal.classList.remove('open');
-    }
-
-    function openModalWithKuota(kuotaId) {
-        const select = document.getElementById('kuota_id');
-        if (select) {
-            select.value = kuotaId;
-            handleKuotaChange(select);
-        }
-        openModalPendaftaran();
-    }
-
-    function selectDurationChip(months) {
-        const select = document.getElementById('durasi_bulan');
-        if (select) {
-            select.value = months;
-            updateEstimasiPeriode();
-        }
-        const chips = document.querySelectorAll('.duration-chip-btn');
-        chips.forEach((chip, index) => {
-            if (index + 1 === months) {
-                chip.classList.add('is-active');
-            } else {
-                chip.classList.remove('is-active');
-            }
-        });
-    }
-
-    function handleKuotaChange(select) {
-        const selectedOption = select.options[select.selectedIndex];
-        const bulanId = selectedOption ? selectedOption.getAttribute('data-bulan-id') : '';
-        const inputBulan = document.getElementById('bulan_magang_id');
-        if (inputBulan) inputBulan.value = bulanId || '';
-        updateEstimasiPeriode();
-    }
-
-    function updateEstimasiPeriode() {
-        const selectKuota = document.getElementById('kuota_id');
-        const selectDurasi = document.getElementById('durasi_bulan');
-        const previewBox = document.getElementById('previewPeriodeBox');
-        const previewText = document.getElementById('previewPeriodeText');
-
-        if (!selectKuota || !selectDurasi || !previewBox || !previewText) return;
-
-        const selectedOption = selectKuota.options[selectKuota.selectedIndex];
-        const bulanMulaiStr = selectedOption ? selectedOption.getAttribute('data-bulan-mulai') : null;
-        const durasi = parseInt(selectDurasi.value, 10);
-
-        if (bulanMulaiStr && durasi) {
-            const startDate = new Date(bulanMulaiStr);
-            const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + durasi, 0);
-
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
-            const startFmt = startDate.toLocaleDateString('id-ID', options);
-            const endFmt = endDate.toLocaleDateString('id-ID', options);
-
-            previewText.textContent = `${startFmt} s/d ${endFmt} (${durasi} Bulan)`;
-            previewBox.style.display = 'block';
-        } else {
-            previewBox.style.display = 'none';
-        }
-    }
-
-    function handleFormSubmit(form) {
-        const btn = document.getElementById('btnSubmitPendaftaran');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = `<span style="display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:8px;"></span> Menyimpan...`;
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const select = document.getElementById('kuota_id');
-        if (select && select.value) {
-            handleKuotaChange(select);
-        }
-
-        const btnToggleRiwayat = document.getElementById('btnToggleRiwayat');
-        const riwayatBody = document.getElementById('riwayatAccordionBody');
-        if (btnToggleRiwayat && riwayatBody) {
-            btnToggleRiwayat.addEventListener('click', () => {
-                const isHidden = riwayatBody.style.display === 'none';
-                riwayatBody.style.display = isHidden ? 'block' : 'none';
-                const svg = btnToggleRiwayat.querySelector('svg');
-                if (svg) {
-                    svg.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
-                }
-            });
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModalPendaftaran();
-            }
-        });
-    });
-</script>
-@endpush
+@vite(['resources/js/pages/peserta/pendaftaran-index.js'])
 @endsection
