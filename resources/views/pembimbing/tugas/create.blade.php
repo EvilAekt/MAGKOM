@@ -420,7 +420,7 @@
     {{-- Modal Dialog: Upload File --}}
     <div class="tugas-modal-backdrop" id="modalUploadFileDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalUpload">
         <div class="tugas-dialog tugas-dialog--upload">
-            <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalUpload">Upload File</div>
+            <div class="tugas-dialog-header" id="ttlModalUpload">Upload File</div>
 
             <div class="tugas-dropzone" id="tugasDropzoneArea" tabindex="0" role="button" aria-label="Area drag and drop upload berkas">
                 <svg width="84" height="62" viewBox="0 0 150 110" aria-hidden="true" class="tugas-dropzone-cloud">
@@ -462,7 +462,7 @@
     {{-- Modal Dialog: Tambahkan Link --}}
     <div class="tugas-modal-backdrop" id="modalAddLinkDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalLink">
         <div class="tugas-dialog tugas-dialog--link">
-            <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalLink">Tambahkan link</div>
+            <div class="tugas-dialog-header" id="ttlModalLink">Tambahkan link</div>
 
             <div style="margin-top: 18px;">
                 <div class="tugas-field-filled" style="padding: 8px 14px;">

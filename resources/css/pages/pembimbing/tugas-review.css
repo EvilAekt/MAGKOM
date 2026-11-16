@@ -1462,6 +1462,16 @@
 }
 
 /* 5. Dark Mode Support */
+[data-theme="dark"] {
+    --review-surface: #0E2548;
+    --review-bg-canvas: #061630;
+    --review-border: #2F5190;
+    --review-text-main: #EAF0FA;
+    --review-text-muted: #9FB0CC;
+    --review-primary-tint: rgba(6, 22, 48, 0.7);
+    --review-primary-tint-border: #234374;
+}
+
 [data-theme="dark"] .review-workspace,
 [data-theme="dark"] .review-topbar,
 [data-theme="dark"] .review-sidebar,
@@ -1603,6 +1613,99 @@
     background: var(--dm-canvas) !important;
     border-color: var(--dm-border) !important;
     color: var(--dm-text-subtle) !important;
+}
+
+/* 5.1 Empty State Parity (Screenshot 1) */
+[data-theme="dark"] .review-empty-state {
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px dashed #2F5190 !important;
+    box-shadow: 0 4px 20px rgba(0, 35, 75, 0.35) !important;
+}
+
+[data-theme="dark"] .review-empty-icon {
+    background: rgba(76, 132, 232, 0.15) !important;
+    border: 1px solid rgba(76, 132, 232, 0.35) !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .review-empty-title {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .review-empty-desc {
+    color: #9FB0CC !important;
+}
+
+/* 5.2 Compact Link & File Strips (Screenshot 2) */
+[data-theme="dark"] .compact-link-strip,
+[data-theme="dark"] .compact-file-strip {
+    background: rgba(6, 22, 48, 0.65) !important;
+    border: 1px solid #234374 !important;
+}
+
+[data-theme="dark"] .compact-link-label,
+[data-theme="dark"] .compact-file-label {
+    color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .compact-link-anchor {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .compact-file-name {
+    color: #EAF0FA !important;
+}
+
+[data-theme="dark"] .compact-link-icon,
+[data-theme="dark"] .compact-file-icon {
+    background: rgba(76, 132, 232, 0.15) !important;
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .btn-compact-open,
+[data-theme="dark"] .btn-compact-download {
+    background: #1D4ED8 !important;
+    border: 1px solid #3B82F6 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-compact-open:hover,
+[data-theme="dark"] .btn-compact-download:hover {
+    background: #2563EB !important;
+}
+
+/* 5.3 Right Panel Meta Info Contrast (Screenshot 1 & 2) */
+[data-theme="dark"] .meta-label {
+    color: #9FB0CC !important;
+}
+
+[data-theme="dark"] .meta-val {
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .meta-val .text-muted {
+    color: #9FB0CC !important;
+}
+
+/* 5.4 Card Headings & Badges */
+[data-theme="dark"] .card-submission-title {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .section-label-badge {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .section-top-badge-row {
+    border-bottom-color: rgba(255, 255, 255, 0.09) !important;
+}
+
+[data-theme="dark"] .review-sub-chip {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: #EAF0FA !important;
 }
 
 /* Integrated Section & Unified Actions (Task 01) */
