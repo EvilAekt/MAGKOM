@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -28,12 +29,17 @@ class HealthController extends Controller
         }
 
         try {
-            $probeFile = 'probe_'.uniqid().'.tmp';
-            Storage::disk('private')->put($probeFile, 'ok');
-            if (Storage::disk('private')->exists($probeFile)) {
-                $storageOk = true;
-                Storage::disk('private')->delete($probeFile);
-            }
+            // Gunakan status ter-cache selama 60 detik untuk mencegah disk-thrashing & DoS I/O
+            $storageOk = (bool) Cache::remember('health_storage_probe_status', 60, function () {
+                $probeFile = 'health_probe_'.uniqid().'.tmp';
+                Storage::disk('private')->put($probeFile, 'ok');
+                $exists = Storage::disk('private')->exists($probeFile);
+                if ($exists) {
+                    Storage::disk('private')->delete($probeFile);
+                }
+
+                return $exists;
+            });
         } catch (Throwable $e) {
             $storageOk = false;
         }

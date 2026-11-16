@@ -67,7 +67,7 @@ Route::get('/', LandingController::class)->name('landing');
 Route::get('/panduan-alur', AlurMagangController::class)->name('panduan-alur');
 Route::get('/peta-alur', [AlurMagangController::class, 'petaInteraktif'])->name('peta-alur');
 Route::get('/panduan-magang-pdf', [PanduanPdfController::class, 'download'])->name('panduan.pdf');
-Route::get('/health', HealthController::class)->name('health');
+Route::get('/health', HealthController::class)->name('health')->middleware('throttle:30,1');
 Route::view('/kebijakan-privasi', 'public.kebijakan-privasi')->name('kebijakan-privasi');
 Route::get('/.well-known/security.txt', function () {
     $path = public_path('.well-known/security.txt');
@@ -197,7 +197,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 });
 
 // Rute Pembimbing Magang (F-08, F-09, F-10, F-12, SEC-03, SEC-12)
-Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:pembimbing,admin,superadmin', 'superadmin.readonly'])->prefix('pembimbing')->name('pembimbing.')->group(function () {
+Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:pembimbing,admin,superadmin', 'superadmin.readonly', '2fa.enforced'])->prefix('pembimbing')->name('pembimbing.')->group(function () {
     Route::get('/dashboard', [PembimbingDashboardController::class, 'index'])->name('dashboard');
 
     // RBAC-001: Dynamic permission untuk modul bimbingan & logbook
@@ -245,7 +245,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 });
 
 // Rute Admin & SuperAdmin (F-04, F-05, F-07, F-17, SEC-03, Task A SuperAdmin Read-Only)
-Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:admin,superadmin', 'superadmin.readonly'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:admin,superadmin', 'superadmin.readonly', '2fa.enforced'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Modul Kuota Bulanan & Bidang (RBAC-001)
@@ -299,7 +299,7 @@ Route::middleware(['auth', 'verified', 'must_change_password', 'account.active',
 });
 
 // Rute Khusus SuperAdmin (F-06, F-11, F-13, SEC-03)
-Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+Route::middleware(['auth', 'verified', 'must_change_password', 'account.active', 'role:superadmin', '2fa.enforced'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
 
     // Bulan Magang & Slot Khusus

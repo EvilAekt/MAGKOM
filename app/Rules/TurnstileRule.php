@@ -7,6 +7,7 @@ namespace App\Rules;
 use App\Services\TurnstileService;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Log;
 
 class TurnstileRule implements ValidationRule
 {
@@ -37,7 +38,14 @@ class TurnstileRule implements ValidationRule
         $turnstileService = app(TurnstileService::class);
         $result = $turnstileService->verify(is_string($value) ? $value : null, request()->ip());
 
-        // 3. SEC-002: Kebijakan kegagalan pihak ketiga (Cloudflare down / unreachable)
+        // 3. Fallback jika secret key belum disetel pada config server
+        if (in_array('missing-secret-key', $result['error_codes'], true)) {
+            Log::warning('Cloudflare Turnstile diaktifkan namun secret_key belum disetel. Validasi dilewati.');
+
+            return;
+        }
+
+        // 4. SEC-002: Kebijakan kegagalan pihak ketiga (Cloudflare down / unreachable)
         if (! $result['reachable']) {
             if ($this->isRegistration || (bool) config('services.turnstile.login_fail_closed', false)) {
                 $fail('Layanan verifikasi bot keamanan (Cloudflare Turnstile) sedang mengalami gangguan jaringan atau batas waktu. Harap muat ulang halaman dan coba kembali.');
