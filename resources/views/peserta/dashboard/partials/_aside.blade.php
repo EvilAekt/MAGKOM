@@ -47,9 +47,9 @@
     <div class="saas-aside-card saas-calendar-widget" id="saasCalendarWidget" data-event-dates='@json($calendarEventDates ?? [])'>
         {{-- Header Navigasi Kalender --}}
         <div class="saas-calendar-header">
-            <button type="button" class="saas-cal-nav-btn" id="calPrevBtn" aria-label="Bulan Sebelumnya">&lsaquo;</button>
+            <button type="button" class="saas-cal-nav-btn" id="calPrevBtn" aria-label="{{ __('Bulan Sebelumnya') }}">&lsaquo;</button>
             <span class="saas-cal-month-title" id="calMonthTitle">{{ $monthName }}</span>
-            <button type="button" class="saas-cal-nav-btn" id="calNextBtn" aria-label="Bulan Berikutnya">&rsaquo;</button>
+            <button type="button" class="saas-cal-nav-btn" id="calNextBtn" aria-label="{{ __('Bulan Berikutnya') }}">&rsaquo;</button>
         </div>
 
         {{-- Grid Header Hari (S S R K J S M) --}}
@@ -104,11 +104,11 @@
         <div class="saas-cal-legend">
             <span class="saas-cal-legend-item">
                 <span class="saas-cal-legend-dot dot-navy"></span>
-                <span>Hari ini</span>
+                <span>{{ __('Hari ini') }}</span>
             </span>
             <span class="saas-cal-legend-item">
                 <span class="saas-cal-legend-dot dot-gold"></span>
-                <span>Tanggal logbook / tugas</span>
+                <span>{{ __('Tanggal logbook / tugas') }}</span>
             </span>
         </div>
     </div>
@@ -125,12 +125,12 @@
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
             </span>
-            <span class="saas-alert-heading">Perlu Perhatian</span>
+            <span class="saas-alert-heading">{{ __('Perlu Perhatian') }}</span>
         </div>
         <div class="saas-alert-card-body">
             <div class="saas-alert-count">
                 <span class="saas-alert-num">1</span>
-                <span class="saas-alert-label">logbook</span>
+                <span class="saas-alert-label">{{ __('logbook') }}</span>
             </div>
             <p class="saas-alert-desc">
                 Logbook Minggu {{ $mingguAktif }} belum dikirim &ndash; batas {{ $batasLogbookMingguAktif }}
@@ -145,10 +145,10 @@
         <div class="saas-countdown-header">
             <div class="saas-countdown-main">
                 <span class="saas-countdown-num">{{ $sisaHari ?? 72 }}</span>
-                <span class="saas-countdown-label">hari tersisa</span>
+                <span class="saas-countdown-label">{{ __('hari tersisa') }}</span>
             </div>
             <div class="saas-countdown-subhead">
-                MINGGU KE-{{ $mingguAktif }} DARI {{ $totalMinggu }}
+                {{ __('MINGGU KE-') }}{{ $mingguAktif }} {{ __('DARI') }} {{ $totalMinggu }}
             </div>
         </div>
 
@@ -160,26 +160,26 @@
         </div>
 
         <div class="saas-countdown-footer">
-            <span>Mulai {{ $tglMulaiStr }}</span>
-            <span>Selesai {{ $tglSelesaiStr }}</span>
+            <span>{{ __('Mulai') }} {{ $tglMulaiStr }}</span>
+            <span>{{ __('Selesai') }} {{ $tglSelesaiStr }}</span>
         </div>
     </div>
 
     {{-- Fallback Pendampingan / Layanan Helpdesk (Safety saat Pembimbing Null / Tanpa Kontak) --}}
     @if(!$penempatan?->pembimbing)
         <div class="saas-aside-card saas-card" style="padding: 16px; background: #ffffff; border: 1px solid #E2E8F0; border-radius: 14px;">
-            <div style="font-weight: 700; font-size: 0.85rem; color: #0F172A; margin-bottom: 4px;">Pembimbing Lapangan</div>
-            <div style="font-size: 0.8125rem; color: #64748B;">Belum Ditugaskan</div>
+            <div style="font-weight: 700; font-size: 0.85rem; color: #0F172A; margin-bottom: 4px;">{{ __('Pembimbing Lapangan') }}</div>
+            <div style="font-size: 0.8125rem; color: #64748B;">{{ __('Belum Ditugaskan') }}</div>
             <div style="font-size: 0.75rem; color: #94A3B8; margin-top: 2px;">Dinas Kominfo Sleman</div>
             <div style="margin-top: 10px;">
                 <a href="https://wa.me/628122788990" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: #02275D; font-weight: 700; text-decoration: none;">
-                    Hubungi Helpdesk Magang &rarr;
+                    {{ __('Hubungi Helpdesk Magang →') }}
                 </a>
             </div>
         </div>
     @elseif(!($penempatan?->pembimbing?->no_hp ?? $penempatan?->pembimbing?->no_telp))
         <div class="sr-only" aria-hidden="true">
-            <span>Hubungi Helpdesk Magang</span>
+            <span>{{ __('Hubungi Helpdesk Magang') }}</span>
         </div>
     @endif
 </div>

@@ -1,7 +1,7 @@
 @extends('layouts.peserta')
 
-@section('title', 'Detail & Berkas Pendaftaran Magang')
-@section('page_title', 'Detail & Berkas Pendaftaran')
+@section('title', __('Detail & Berkas Pendaftaran Magang'))
+@section('page_title', __('Detail & Berkas Pendaftaran'))
 
 @push('styles')
     @vite(['resources/css/pages/peserta/pemberkasan.css'])
@@ -64,7 +64,7 @@
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-            <span>Kembali ke Riwayat</span>
+            <span>{{ __('Kembali ke Riwayat') }}</span>
         </a>
     </div>
 
@@ -76,35 +76,35 @@
                     #REG-{{ str_pad((string)$pendaftaran->id, 5, '0', STR_PAD_LEFT) }}
                 </div>
                 <h1 class="hero-title-main">
-                    Pemberkasan {{ $pendaftaran->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
+                    {{ __('Pemberkasan') }} {{ $pendaftaran->bulanMagang?->bulan_mulai?->translatedFormat('F Y') }}
                 </h1>
                 <p class="hero-subtitle">
-                    Pantau tahapan pendaftaran dan kelengkapan berkas magang kamu.
+                    {{ __('Pantau tahapan pendaftaran dan kelengkapan berkas magang kamu.') }}
                 </p>
             </div>
 
             <div class="hero-right-content">
                 <div class="hero-meta-grid">
                     <div class="hero-meta-box">
-                        <span class="hero-meta-label">JURUSAN</span>
+                        <span class="hero-meta-label">{{ __('JURUSAN') }}</span>
                         <span class="hero-meta-value">{{ $pendaftaran->kuota?->jurusan?->nama_jurusan }}</span>
                     </div>
                     <div class="hero-meta-box">
-                        <span class="hero-meta-label">DURASI</span>
-                        <span class="hero-meta-value">{{ $pendaftaran->durasi_bulan }} Bulan</span>
+                        <span class="hero-meta-label">{{ __('DURASI') }}</span>
+                        <span class="hero-meta-value">{{ $pendaftaran->durasi_bulan }} {{ __('Bulan') }}</span>
                     </div>
                     <div class="hero-meta-box">
-                        <span class="hero-meta-label">JALUR</span>
+                        <span class="hero-meta-label">{{ __('JALUR') }}</span>
                         <span class="hero-meta-value">
                             @if($isKelompok)
-                                Kelompok: {{ $pendaftaran->kelompokMagang?->nama_kelompok ?? 'Tim' }}
+                                {{ __('Kelompok:') }} {{ $pendaftaran->kelompokMagang?->nama_kelompok ?? __('Tim') }}
                             @else
-                                Mandiri
+                                {{ __('Mandiri') }}
                             @endif
                         </span>
                     </div>
                     <div class="hero-meta-box {{ $val === 'diterima' ? 'status-box-gold' : ($val === 'diajukan' ? 'status-box-blue' : ($val === 'perlu_perbaikan' ? 'status-box-amber' : ($val === 'ditolak' ? 'status-box-danger' : 'status-box-default'))) }}">
-                        <span class="hero-meta-label">STATUS</span>
+                        <span class="hero-meta-label">{{ __('STATUS') }}</span>
                         <span class="hero-meta-value">{{ $pendaftaran->status->label() }}</span>
                     </div>
                 </div>
@@ -123,10 +123,10 @@
                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
                     @endif
                 </div>
-                <div class="stepper-phase-tag">Tahap 1</div>
+                <div class="stepper-phase-tag">{{ __('Tahap 1') }}</div>
                 <div class="stepper-label-text">
-                    <span class="sr-only">1. Berkas Persyaratan</span>
-                    <span aria-hidden="true">Berkas Persyaratan</span>
+                    <span class="sr-only">{{ __('1. Berkas Persyaratan') }}</span>
+                    <span aria-hidden="true">{{ __('Berkas Persyaratan') }}</span>
                 </div>
             </div>
 
@@ -140,10 +140,10 @@
                         2
                     @endif
                 </div>
-                <div class="stepper-phase-tag">Tahap 2</div>
+                <div class="stepper-phase-tag">{{ __('Tahap 2') }}</div>
                 <div class="stepper-label-text">
-                    <span class="sr-only">2. Verifikasi Berkas</span>
-                    <span aria-hidden="true">Verifikasi Berkas</span>
+                    <span class="sr-only">{{ __('2. Verifikasi Berkas') }}</span>
+                    <span aria-hidden="true">{{ __('Verifikasi Berkas') }}</span>
                 </div>
             </div>
 
@@ -161,14 +161,14 @@
                         3
                     @endif
                 </div>
-                <div class="stepper-phase-tag">Tahap 3</div>
+                <div class="stepper-phase-tag">{{ __('Tahap 3') }}</div>
                 <div class="stepper-label-text">
-                    <span class="sr-only">3. Keputusan</span>
+                    <span class="sr-only">{{ __('3. Keputusan') }}</span>
                     <span aria-hidden="true">
-                        @if($val === 'perlu_perbaikan') Perbaikan Berkas
-                        @elseif($val === 'diterima') Diterima
-                        @elseif($val === 'ditolak') Ditolak
-                        @else Keputusan @endif
+                        @if($val === 'perlu_perbaikan') {{ __('Perbaikan Berkas') }}
+                        @elseif($val === 'diterima') {{ __('Diterima') }}
+                        @elseif($val === 'ditolak') {{ __('Ditolak') }}
+                        @else {{ __('Keputusan') }} @endif
                     </span>
                 </div>
             </div>
@@ -179,10 +179,10 @@
     @if($val === 'perlu_perbaikan')
         <div class="pemberkasan-revision-alert">
             <strong class="revision-title">
-                Catatan Perbaikan Verifikator:
+                {{ __('Catatan Perbaikan Verifikator:') }}
             </strong>
             <div class="revision-body">
-                "{{ $pendaftaran->catatan_admin ?? 'Harap perbarui dokumen yang diminta.' }}"
+                "{{ $pendaftaran->catatan_admin ?? __('Harap perbarui dokumen yang diminta.') }}"
             </div>
         </div>
     @endif
@@ -198,10 +198,10 @@
                 </div>
                 <div class="approved-text-col">
                     <strong class="approved-title">
-                        Selamat! Permohonan Magang Anda Telah Disetujui
+                        {{ __('Selamat! Permohonan Magang Anda Telah Disetujui') }}
                     </strong>
                     <span class="approved-desc">
-                        Surat Keterangan Diterima resmi siap diunduh.
+                        {{ __('Surat Keterangan Diterima resmi siap diunduh.') }}
                     </span>
                 </div>
             </div>
@@ -211,12 +211,12 @@
                         data-action="open-doc-preview" 
                         data-preview-url="{{ route('peserta.penempatan.surat-diterima.pratinjau', $pendaftaran->penempatan) }}" 
                         data-download-url="{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}" 
-                        data-title="Surat Diterima" 
+                        data-title="{{ __('Surat Diterima') }}" 
                         data-mime="application/pdf">
-                    Lihat Surat Diterima
+                    {{ __('Lihat Surat Diterima') }}
                 </button>
                 <a href="{{ route('peserta.penempatan.surat-diterima', $pendaftaran->penempatan) }}" class="btn-approved-download">
-                    Unduh Surat Diterima (PDF)
+                    {{ __('Unduh Surat Diterima (PDF)') }}
                 </a>
             </div>
         </div>
@@ -238,16 +238,16 @@
                     <div>
                         <div class="pemberkasan-heading-wrap">
                             <span class="pemberkasan-accent-line" aria-hidden="true"></span>
-                            <h3>Berkas Persyaratan Magang</h3>
+                            <h3>{{ __('Berkas Persyaratan Magang') }}</h3>
                         </div>
                         <div class="pemberkasan-guide-chips">
                             <span class="pemberkasan-chip-info">
                                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                                <span>Format: PDF, JPG, PNG</span>
+                                <span>{{ __('Format: PDF, JPG, PNG') }}</span>
                             </span>
                             <span class="pemberkasan-chip-info">
                                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
-                                <span>Maks. {{ $maksMb }} MB per dokumen</span>
+                                <span>{{ __('Maks. :max MB per dokumen', ['max' => $maksMb]) }}</span>
                             </span>
                         </div>
                     </div>
@@ -256,7 +256,7 @@
             <div class="pemberkasan-badge-wrap">
                 <span class="pemberkasan-progress-badge {{ $uploadedBerkas >= $totalBerkas ? 'complete' : '' }}">
                     <span class="pemberkasan-dot-status" aria-hidden="true"></span>
-                    <span>{{ $uploadedBerkas }}/{{ $totalBerkas }} Berkas</span>
+                    <span>{{ $uploadedBerkas }}/{{ $totalBerkas }} {{ __('Berkas') }}</span>
                 </span>
             </div>
         </div>
@@ -286,9 +286,9 @@
                     <div class="pemberkasan-section-header">
                         <h4 class="pemberkasan-section-title">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            <span>Berkas Tim</span>
+                            <span>{{ __('Berkas Tim') }}</span>
                         </h4>
-                        <span class="pemberkasan-section-badge">1 per Tim</span>
+                        <span class="pemberkasan-section-badge">{{ __('1 per Tim') }}</span>
                     </div>
 
                     @foreach($jenisKolektif as $jenis)
@@ -309,9 +309,9 @@
                     <div class="pemberkasan-section-header">
                         <h4 class="pemberkasan-section-title">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            <span>Berkas Personil Tim</span>
+                            <span>{{ __('Berkas Personil Tim') }}</span>
                         </h4>
-                        <span class="pemberkasan-section-badge">CV & Transkrip</span>
+                        <span class="pemberkasan-section-badge">{!! __('CV & Transkrip') !!}</span>
                     </div>
 
                     {{-- 1. Kartu Ketua --}}
@@ -330,12 +330,12 @@
                                 </div>
                                 <div class="team-member-name">
                                     <span>{{ $pendaftaran->user->nama }}</span>
-                                    <span class="team-role-tag ketua">Ketua (Anda)</span>
+                                    <span class="team-role-tag ketua">{{ __('Ketua (Anda)') }}</span>
                                 </div>
                             </div>
                             <div>
                                 <span class="team-status-pill {{ $ketuaIndividuUploaded >= $ketuaIndividuCount ? 'complete' : 'pending' }}">
-                                    {{ $ketuaIndividuUploaded }}/{{ $ketuaIndividuCount }} Berkas
+                                    {{ $ketuaIndividuUploaded }}/{{ $ketuaIndividuCount }} {{ __('Berkas') }}
                                 </span>
                             </div>
                         </div>
@@ -372,12 +372,12 @@
                                     </div>
                                     <div class="team-member-name">
                                         <span>{{ $anggota->nama }}</span>
-                                        <span class="team-role-tag anggota">Anggota {{ $idx + 1 }}</span>
+                                        <span class="team-role-tag anggota">{{ __('Anggota') }} {{ $idx + 1 }}</span>
                                     </div>
                                 </div>
                                 <div>
                                     <span class="team-status-pill {{ $aUploaded >= $aTotal ? 'complete' : 'pending' }}">
-                                        {{ $aUploaded }}/{{ $aTotal }} Berkas
+                                        {{ $aUploaded }}/{{ $aTotal }} {{ __('Berkas') }}
                                     </span>
                                 </div>
                             </div>
@@ -415,13 +415,13 @@
                         @if($semuaWajibLengkap)
                             <span class="submit-title-text ready">
                                 @if($uploadedBerkas >= $totalBerkas)
-                                    Seluruh berkas persyaratan telah lengkap
+                                    {{ __('Seluruh berkas persyaratan telah lengkap') }}
                                 @else
-                                    Berkas wajib telah lengkap ({{ $uploadedBerkas }}/{{ $totalBerkas }} berkas terunggah)
+                                    {{ __('Berkas wajib telah lengkap (:uploaded/:total berkas terunggah)', ['uploaded' => $uploadedBerkas, 'total' => $totalBerkas]) }}
                                 @endif
                             </span>
                         @else
-                            <span class="submit-title-text pending">{{ $totalWajib - $uploadedWajib }} berkas wajib belum diunggah</span>
+                            <span class="submit-title-text pending">{{ __(':count berkas wajib belum diunggah', ['count' => $totalWajib - $uploadedWajib]) }}</span>
                         @endif
                     </div>
                 </div>
@@ -432,7 +432,7 @@
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                         </svg>
-                        <span>Ajukan Pendaftaran</span>
+                        <span>{{ __('Ajukan Pendaftaran') }}</span>
                     </button>
                 </form>
             </div>
@@ -442,7 +442,7 @@
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                     <path d="M7 11V7a5 5 0 0110 0v4"></path>
                 </svg>
-                <span>Berkas pendaftaran saat ini terkunci karena sedang diproses oleh admin.</span>
+                <span>{{ __('Berkas pendaftaran saat ini terkunci karena sedang diproses oleh admin.') }}</span>
             </div>
         @endif
     </div>
@@ -459,17 +459,17 @@
                 </div>
                 <div style="overflow: hidden;">
                     <h3 class="modal-title" id="previewModalTitle" style="font-size: 0.95rem; margin: 0; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-                        Pratinjau Dokumen
+                        {{ __('Pratinjau Dokumen') }}
                     </h3>
                 </div>
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
                 <a id="previewOpenNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="height: 32px; padding: 0 10px; font-size: 0.75rem;">
-                    Tab Baru
+                    {{ __('Tab Baru') }}
                 </a>
                 <a id="previewDownloadBtn" href="#" class="btn btn-secondary" style="height: 32px; padding: 0 10px; font-size: 0.75rem;">
-                    Unduh
+                    {{ __('Unduh') }}
                 </a>
                 <button type="button" class="modal-close" data-action="close-doc-preview">&times;</button>
             </div>
@@ -478,19 +478,19 @@
         <div class="modal-body-preview">
             <div id="previewLoading" class="preview-loading-overlay">
                 <div class="preview-loading-spinner"></div>
-                <div style="font-size: 0.84rem; font-weight: 700;">Memuat Pratinjau...</div>
+                <div style="font-size: 0.84rem; font-weight: 700;">{{ __('Memuat Pratinjau...') }}</div>
             </div>
 
             <iframe id="previewIframe" src="about:blank" style="width: 100%; height: 75vh; border: none; display: none;"></iframe>
 
             <div id="previewImageWrapper" style="display: none; padding: 20px; width: 100%; height: 100%; text-align: center; overflow: auto; justify-content: center; align-items: center;">
-                <img id="previewImage" alt="Pratinjau Berkas" style="max-width: 100%; max-height: 70vh; border-radius: 8px; object-fit: contain;">
+                <img id="previewImage" alt="{{ __('Pratinjau Berkas') }}" style="max-width: 100%; max-height: 70vh; border-radius: 8px; object-fit: contain;">
             </div>
 
             <div id="previewError" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center;">
-                <div style="font-size: 0.875rem; font-weight: 700; margin-bottom: 6px;">Tidak Dapat Memuat Pratinjau</div>
+                <div style="font-size: 0.875rem; font-weight: 700; margin-bottom: 6px;">{{ __('Tidak Dapat Memuat Pratinjau') }}</div>
                 <a id="previewFallbackDownloadBtn" href="#" class="btn btn-primary" style="height: 34px; padding: 0 14px; font-size: 0.775rem;">
-                    Unduh Berkas
+                    {{ __('Unduh Berkas') }}
                 </a>
             </div>
         </div>

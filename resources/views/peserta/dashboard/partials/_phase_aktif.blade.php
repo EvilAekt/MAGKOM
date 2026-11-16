@@ -26,8 +26,8 @@
         <div class="saas-card-title-bar">
             <div class="saas-title-with-accent">
                 <span class="saas-accent-line"></span>
-                <h2 class="saas-card-heading">Logbook Mingguan</h2>
-                <span class="saas-pill-tag">Minggu {{ $mingguAktif }} dari {{ $totalMinggu }}</span>
+                <h2 class="saas-card-heading">{{ __('Logbook Mingguan') }}</h2>
+                <span class="saas-pill-tag">{{ __('Minggu') }} {{ $mingguAktif }} {{ __('dari') }} {{ $totalMinggu }}</span>
             </div>
         </div>
 
@@ -37,14 +37,14 @@
                 <div class="saas-stat-indicator blue"></div>
                 <div class="saas-stat-body">
                     <span class="saas-stat-num">{{ $logbookSudahDiisi }}</span>
-                    <span class="saas-stat-desc">Sudah diisi</span>
+                    <span class="saas-stat-desc">{{ __('Sudah diisi') }}</span>
                 </div>
             </div>
             <div class="saas-stat-box box-amber saas-static-box">
                 <div class="saas-stat-indicator amber"></div>
                 <div class="saas-stat-body">
                     <span class="saas-stat-num">{{ $logbookBelumDiisi }}</span>
-                    <span class="saas-stat-desc">Belum diisi</span>
+                    <span class="saas-stat-desc">{{ __('Belum diisi') }}</span>
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
                     @endphp
                     <a href="{{ route('peserta.logbook.index', ['minggu' => $mKe]) }}"
                        class="saas-week-pill {{ $pillClass }}"
-                       title="Buka Logbook Minggu {{ $mKe }} ({{ $item['label_periode'] }})">
+                       title="{{ __('Buka Logbook Minggu :ke (:periode)', ['ke' => $mKe, 'periode' => $item['label_periode']]) }}">
                         M{{ $mKe }}
                     </a>
                 @endforeach
@@ -76,15 +76,15 @@
             <div class="saas-stepper-legend">
                 <span class="saas-legend-item">
                     <span class="saas-legend-swatch filled"></span>
-                    <span>Sudah diisi</span>
+                    <span>{{ __('Sudah diisi') }}</span>
                 </span>
                 <span class="saas-legend-item">
                     <span class="saas-legend-swatch unfilled"></span>
-                    <span>Belum diisi</span>
+                    <span>{{ __('Belum diisi') }}</span>
                 </span>
                 <span class="saas-legend-item">
                     <span class="saas-legend-swatch upcoming"></span>
-                    <span>Mendatang</span>
+                    <span>{{ __('Mendatang') }}</span>
                 </span>
             </div>
         </div>
@@ -97,7 +97,7 @@
         <div class="saas-card-title-bar">
             <div class="saas-title-with-accent">
                 <span class="saas-accent-line"></span>
-                <h2 class="saas-card-heading">Tugas dari Pembimbing</h2>
+                <h2 class="saas-card-heading">{{ __('Tugas dari Pembimbing') }}</h2>
             </div>
         </div>
 
@@ -107,21 +107,21 @@
                 <div class="saas-stat-indicator gray"></div>
                 <div class="saas-stat-body">
                     <span class="saas-stat-num">{{ $totalTugas }}</span>
-                    <span class="saas-stat-desc">Total tugas</span>
+                    <span class="saas-stat-desc">{{ __('Total tugas') }}</span>
                 </div>
             </div>
             <div class="saas-stat-box box-blue-soft saas-static-box">
                 <div class="saas-stat-indicator blue"></div>
                 <div class="saas-stat-body">
                     <span class="saas-stat-num">{{ $tugasSelesai }}</span>
-                    <span class="saas-stat-desc">Sudah dikerjakan</span>
+                    <span class="saas-stat-desc">{{ __('Sudah dikerjakan') }}</span>
                 </div>
             </div>
             <div class="saas-stat-box box-red-soft saas-static-box">
                 <div class="saas-stat-indicator red"></div>
                 <div class="saas-stat-body">
                     <span class="saas-stat-num">{{ $tugasLewatTenggat }}</span>
-                    <span class="saas-stat-desc">Lewat tenggat</span>
+                    <span class="saas-stat-desc">{{ __('Lewat tenggat') }}</span>
                 </div>
             </div>
         </div>

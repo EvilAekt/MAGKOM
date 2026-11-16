@@ -1,7 +1,7 @@
 @extends('layouts.peserta')
 
-@section('title', 'Logbook & Jurnal Mingguan Peserta')
-@section('page_title', 'Logbook Mingguan')
+@section('title', __('Logbook & Jurnal Mingguan Peserta'))
+@section('page_title', __('Logbook Mingguan'))
 
 @push('styles')
     @vite(['resources/css/pages/peserta/logbook-index.css'])
@@ -16,9 +16,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                 </svg>
                 <div>
-                    <h3 style="font-size: 1.0625rem; font-weight: 700; color: var(--amber-700); margin-bottom: 4px;">Penempatan Belum Aktif</h3>
+                    <h3 style="font-size: 1.0625rem; font-weight: 700; color: var(--amber-700); margin-bottom: 4px;">{{ __('Penempatan Belum Aktif') }}</h3>
                     <p style="font-size: 0.875rem; color: var(--neutral-700); margin: 0; line-height: 1.5;">
-                        Anda belum memiliki penempatan magang aktif. Fitur pelaporan logbook mingguan akan terbuka secara otomatis setelah status penempatan Anda diverifikasi oleh administrator.
+                        {{ __('Anda belum memiliki penempatan magang aktif. Fitur pelaporan logbook mingguan akan terbuka secara otomatis setelah status penempatan Anda diverifikasi oleh administrator.') }}
                     </p>
                 </div>
             </div>
@@ -30,29 +30,29 @@
                 <h1 class="banner-title">{{ $penempatan->bidang->nama_bidang ?? 'Dinas Komunikasi dan Informatika Sleman' }}</h1>
                 <div class="banner-info-stack">
                     <div class="banner-info-box">
-                        <span class="banner-info-label">PEMBIMBING</span>
-                        <span class="banner-info-val">{{ $penempatan->pembimbing->nama ?? $penempatan->pembimbing->name ?? 'Pembimbing Lapangan' }}</span>
+                        <span class="banner-info-label">{{ __('PEMBIMBING') }}</span>
+                        <span class="banner-info-val">{{ $penempatan->pembimbing->nama ?? $penempatan->pembimbing->name ?? __('Pembimbing Lapangan') }}</span>
                     </div>
                     <div class="banner-info-box">
-                        <span class="banner-info-label">PERIODE</span>
-                        <span class="banner-info-val">{{ \Carbon\Carbon::parse($penempatan->tgl_mulai)->translatedFormat('d M Y') }} s/d {{ \Carbon\Carbon::parse($penempatan->tgl_selesai)->translatedFormat('d M Y') }}</span>
+                        <span class="banner-info-label">{{ __('PERIODE') }}</span>
+                        <span class="banner-info-val">{{ \Carbon\Carbon::parse($penempatan->tgl_mulai)->translatedFormat('d M Y') }} {{ __('s/d') }} {{ \Carbon\Carbon::parse($penempatan->tgl_selesai)->translatedFormat('d M Y') }}</span>
                     </div>
                 </div>
             </div>
 
             <div class="banner-gold-widget">
-                <div class="gold-widget-label">MINGGU BERJALAN SAAT INI</div>
-                <div class="gold-widget-title">Minggu ke-{{ $mingguAktif }}</div>
-                <div class="gold-widget-sub">dari total {{ $totalMinggu }} minggu</div>
+                <div class="gold-widget-label">{{ __('MINGGU BERJALAN SAAT INI') }}</div>
+                <div class="gold-widget-title">{{ __('Minggu ke-:minggu', ['minggu' => $mingguAktif]) }}</div>
+                <div class="gold-widget-sub">{{ __('dari total :total minggu', ['total' => $totalMinggu]) }}</div>
             </div>
         </div>
 
         {{-- Weekly Progress Tracker Card --}}
         <div class="progress-tracker-card">
             <div class="progress-tracker-header">
-                <h2 class="progress-tracker-title">Progres Pelaporan Logbook Mingguan</h2>
+                <h2 class="progress-tracker-title">{{ __('Progres Pelaporan Logbook Mingguan') }}</h2>
                 <div class="tracker-pill-badge">
-                    {{ $totalTerisi }} dari {{ $totalMinggu }} Minggu Terisi ({{ $persentaseTerisi }}%)
+                    {{ __(':terisi dari :total Minggu Terisi (:persen%)', ['terisi' => $totalTerisi, 'total' => $totalMinggu, 'persen' => $persentaseTerisi]) }}
                 </div>
             </div>
 
@@ -85,24 +85,24 @@
                     @if($hasLog)
                         <a href="#logbook-card-{{ $m['logbook']->id }}"
                            class="week-chip {{ $chipClass }}"
-                           title="Minggu {{ $m['minggu_ke'] }}: {{ $m['label_periode'] }} (Sudah diisi)">
+                           title="{{ __('Minggu') }} {{ $m['minggu_ke'] }}: {{ $m['label_periode'] }} ({{ __('Sudah diisi') }})">
                             <span class="chip-icon">{{ $chipIcon }}</span>
-                            <span>Minggu {{ $m['minggu_ke'] }}</span>
+                            <span>{{ __('Minggu') }} {{ $m['minggu_ke'] }}</span>
                         </a>
                     @elseif($isPastUnfilled || $isCurrent)
                         <button type="button"
                                 class="week-chip {{ $chipClass }}"
                                 data-action="open-tambah-modal" data-minggu="{{ $m['minggu_ke'] }}"
-                                title="Minggu {{ $m['minggu_ke'] }}: {{ $m['label_periode'] }} (Klik untuk isi)">
+                                title="{{ __('Minggu') }} {{ $m['minggu_ke'] }}: {{ $m['label_periode'] }}">
                             <span class="chip-icon">{{ $chipIcon }}</span>
-                            <span>Minggu {{ $m['minggu_ke'] }}</span>
+                            <span>{{ __('Minggu') }} {{ $m['minggu_ke'] }}</span>
                         </button>
                     @else
                         <span class="week-chip {{ $chipClass }}"
                               aria-disabled="true"
-                              title="Minggu {{ $m['minggu_ke'] }}: {{ $m['label_periode'] }}">
+                              title="{{ __('Minggu') }} {{ $m['minggu_ke'] }}: {{ $m['label_periode'] }}">
                             <span class="chip-icon">{{ $chipIcon }}</span>
-                            <span>Minggu {{ $m['minggu_ke'] }}</span>
+                            <span>{{ __('Minggu') }} {{ $m['minggu_ke'] }}</span>
                         </span>
                     @endif
                 @endforeach
@@ -111,19 +111,19 @@
             <div class="stepper-legend-row">
                 <div class="legend-item">
                     <span class="legend-dot dot-done"></span>
-                    <span>Sudah diisi</span>
+                    <span>{{ __('Sudah diisi') }}</span>
                 </div>
                 <div class="legend-item">
                     <span class="legend-dot dot-unfilled"></span>
-                    <span>Belum diisi</span>
+                    <span>{{ __('Belum diisi') }}</span>
                 </div>
                 <div class="legend-item">
                     <span class="legend-dot dot-active"></span>
-                    <span>Minggu berjalan</span>
+                    <span>{{ __('Minggu berjalan') }}</span>
                 </div>
                 <div class="legend-item">
                     <span class="legend-dot dot-upcoming"></span>
-                    <span>Mendatang</span>
+                    <span>{{ __('Mendatang') }}</span>
                 </div>
             </div>
         </div>
@@ -131,17 +131,17 @@
         {{-- Card Riwayat Jurnal Mingguan --}}
         <div class="riwayat-jurnal-card" id="riwayatJurnal">
             <div class="riwayat-header-row">
-                <h2 class="riwayat-title">Riwayat Jurnal Mingguan</h2>
+                <h2 class="riwayat-title">{{ __('Riwayat Jurnal Mingguan') }}</h2>
 
                 <div class="riwayat-actions-right">
                     <span class="total-laporan-pill">
-                        Total: {{ $logbooks->total() }} Laporan
+                        {{ __('Total:') }} {{ $logbooks->total() }} {{ __('Laporan') }}
                     </span>
                     <button type="button" class="btn-tambah-logbook-gold" data-action="open-tambah-modal">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                         </svg>
-                        + Isi Logbook Mingguan
+                        + {{ __('Isi Logbook Mingguan') }}
                     </button>
                 </div>
             </div>
@@ -157,14 +157,14 @@
                         <input type="text" 
                                id="inputSearchLogbook" 
                                class="search-logbook-input" 
-                               placeholder="Cari minggu ke- (contoh: 1, 2) atau kata kunci kegiatan..." 
+                               placeholder="{{ __('Cari minggu ke- (contoh: 1, 2) atau kata kunci kegiatan...') }}" 
                                >
                         <button type="button" 
                                 id="btnClearSearch" 
                                 class="btn-clear-search" 
                                 data-action="clear-search-logbook" 
                                 style="display: none;" 
-                                title="Hapus pencarian">
+                                title="{{ __('Hapus pencarian') }}">
                             &times;
                         </button>
                     </div>
@@ -180,25 +180,25 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
                     </div>
-                    <h3 style="font-size: 1.125rem; font-weight: 700; color: #0F172A; margin: 0 0 6px 0;">Belum Ada Riwayat Logbook</h3>
+                    <h3 style="font-size: 1.125rem; font-weight: 700; color: #0F172A; margin: 0 0 6px 0;">{{ __('Belum Ada Riwayat Logbook') }}</h3>
                     <p style="font-size: 0.875rem; color: #475569; max-width: 440px; margin: 0 auto 20px auto; line-height: 1.5;">
-                        Anda belum membuat catatan kegiatan mingguan. Mulai laporkan capaian magang Anda secara teratur setiap pekan.
+                        {{ __('Anda belum membuat catatan kegiatan mingguan. Mulai laporkan capaian magang Anda secara teratur setiap pekan.') }}
                     </p>
                     <button type="button" class="btn-tambah-logbook-gold" data-action="open-tambah-modal" data-minggu="{{ $mingguAktif }}">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                         </svg>
-                        + Isi Logbook Pertama Anda
+                        + {{ __('Isi Logbook Pertama Anda') }}
                     </button>
                 </div>
             @else
                 <div id="logbookCardsContainer">
                     <div id="searchEmptyState" class="card-modern" style="display: none; text-align: center; padding: 40px 20px; margin-bottom: 20px;">
                         <p style="font-size: 0.9375rem; color: #475569; margin: 0;">
-                            Tidak ada logbook yang cocok dengan pencarian "<span id="searchQueryText" style="font-weight: 700; color: #0F172A;"></span>".
+                            {{ __('Tidak ada logbook yang cocok dengan pencarian') }} "<span id="searchQueryText" style="font-weight: 700; color: #0F172A;"></span>".
                         </p>
                         <button type="button" class="btn btn-secondary" data-action="clear-search-logbook" style="margin-top: 12px; font-size: 0.8125rem; height: 32px; padding: 0 14px;">
-                            Reset Pencarian
+                            {{ __('Reset Pencarian') }}
                         </button>
                     </div>
 
@@ -222,11 +222,11 @@
                                         <span class="squircle-number">{{ $mingguKeTampil }}</span>
                                     </div>
                                     <div class="weekly-info-col">
-                                        <div class="weekly-card-title">Logbook Minggu ke-{{ $mingguKeTampil }}</div>
+                                        <div class="weekly-card-title">{{ __('Logbook Minggu ke-:minggu', ['minggu' => $mingguKeTampil]) }}</div>
                                         <div class="weekly-card-meta">
-                                            <span>Periode: <strong>{{ $labelPeriodeTampil }}</strong></span>
+                                            <span>{{ __('Periode:') }} <strong>{{ $labelPeriodeTampil }}</strong></span>
                                             <span class="meta-separator">•</span>
-                                            <span>Dilaporkan: {{ $log->tanggal->translatedFormat('d M Y') }}</span>
+                                            <span>{{ __('Dilaporkan:') }} {{ $log->tanggal->translatedFormat('d M Y') }}</span>
                                         </div>
                                         <div class="weekly-collapsed-preview">{{ Str::limit($log->kegiatan, 110) }}</div>
                                     </div>
@@ -234,11 +234,11 @@
 
                                 <div class="weekly-actions-right">
                                     @if($isRevisi)
-                                        <span class="status-capsule capsule-revisi">Perlu Revisi</span>
+                                        <span class="status-capsule capsule-revisi">{{ __('Perlu Revisi') }}</span>
                                     @elseif($statusValue === 'terkirim')
-                                        <span class="status-capsule capsule-terkirim">✓ Terkirim</span>
+                                        <span class="status-capsule capsule-terkirim">✓ {{ __('Terkirim') }}</span>
                                     @elseif($statusValue === 'disetujui')
-                                        <span class="status-capsule capsule-disetujui">✓ Disetujui</span>
+                                        <span class="status-capsule capsule-disetujui">✓ {{ __('Disetujui') }}</span>
                                     @else
                                         <span class="status-capsule capsule-default">{{ ucfirst($statusValue) }}</span>
                                     @endif
@@ -254,10 +254,10 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                                         </svg>
-                                        <span>Edit</span>
+                                        <span>{{ __('Edit') }}</span>
                                     </button>
 
-                                    <button type="button" class="btn-chevron-toggle" data-action="toggle-card" data-log-id="{{ $log->id }}" aria-label="Buka tutup rincian">
+                                    <button type="button" class="btn-chevron-toggle" data-action="toggle-card" data-log-id="{{ $log->id }}" aria-label="{{ __('Buka tutup rincian') }}">
                                         <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
@@ -274,7 +274,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                                 @endphp
                                 @if($catatanFeedback)
                                     <div style="margin-top: 14px;">
-                                        <x-gentelella.callout type="warning" title="Catatan Review Pembimbing Lapangan">
+                                        <x-gentelella.callout type="warning" title="{{ __('Catatan Review Pembimbing Lapangan') }}">
                                             {{ $catatanFeedback }}
                                         </x-gentelella.callout>
                                     </div>
@@ -287,7 +287,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                                 </svg>
-                                                <span>Unduh Berkas PDF</span>
+                                                <span>{{ __('Unduh Berkas PDF') }}</span>
                                             </a>
                                         @endif
 
@@ -297,7 +297,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                                                 </svg>
-                                                <span>Buka Tautan Lampiran ↗</span>
+                                                <span>{{ __('Buka Tautan Lampiran ↗') }}</span>
                                             </a>
                                         @endif
                                     </div>
@@ -328,10 +328,10 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                     </svg>
                 </div>
                 <div>
-                    <h3 class="modal-title-logbook modal-title-text">Isi Logbook Mingguan</h3>
+                    <h3 class="modal-title-logbook modal-title-text">{{ __('Isi Logbook Mingguan') }}</h3>
                 </div>
             </div>
-            <button type="button" data-action="close-tambah-modal" class="modal-close-logbook modal-close-btn" aria-label="Tutup Formulir" title="Tutup">&times;</button>
+            <button type="button" data-action="close-tambah-modal" class="modal-close-logbook modal-close-btn" aria-label="{{ __('Tutup Formulir') }}" title="{{ __('Tutup') }}">&times;</button>
         </div>
 
         <form id="formTambahLogbook" class="modal-form-logbook" action="{{ route('peserta.logbook.store') }}" method="POST" enctype="multipart/form-data">
@@ -342,10 +342,10 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                 <div class="logbook-modal-grid-2">
                     <div class="form-group-logbook form-group-compact">
                         <label for="tambah_minggu_ke" class="label-logbook form-label-compact">
-                            <span>Minggu Magang <span class="req">*</span></span>
+                            <span>{{ __('Minggu Magang') }} <span class="req">*</span></span>
                         </label>
                         <select id="tambah_minggu_ke" name="minggu_ke" class="select-logbook form-control-compact" required >
-                            <option value="">-- Pilih Minggu --</option>
+                            <option value="">-- {{ __('Pilih Minggu') }} --</option>
                             @foreach($daftarMinggu as $m)
                                 @php
                                     $isSudahDiisi = $m['logbook'] !== null;
@@ -353,9 +353,9 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                                     $isDisabled = $isSudahDiisi || $isMendatang;
                                     $statusLabel = '';
                                     if ($isSudahDiisi) {
-                                        $statusLabel = ' (Sudah Diisi)';
+                                        $statusLabel = ' (' . __('Sudah Diisi') . ')';
                                     } elseif ($isMendatang) {
-                                        $statusLabel = ' (Belum Dibuka)';
+                                        $statusLabel = ' (' . __('Belum Dibuka') . ')';
                                     }
                                 @endphp
                                 <option value="{{ $m['minggu_ke'] }}" 
@@ -365,7 +365,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                                         data-tgl-awal="{{ $m['tgl_awal']->toDateString() }}"
                                         data-tgl-akhir="{{ $m['tgl_akhir']->toDateString() }}"
                                         {{ $isDisabled ? 'disabled' : '' }}>
-                                    Minggu ke-{{ $m['minggu_ke'] }} ({{ $m['label_periode'] }}){{ $statusLabel }}
+                                    {{ __('Minggu ke-:minggu', ['minggu' => $m['minggu_ke']]) }} ({{ $m['label_periode'] }}){{ $statusLabel }}
                                 </option>
                             @endforeach
                         </select>
@@ -373,7 +373,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
 
                     <div class="form-group-logbook form-group-compact">
                         <label for="tambah_tanggal" class="label-logbook form-label-compact">
-                            <span>Tanggal Pelaporan <span class="req">*</span></span>
+                            <span>{{ __('Tanggal Pelaporan') }} <span class="req">*</span></span>
                         </label>
                         <input type="date" id="tambah_tanggal" name="tanggal"
                                class="input-logbook form-control-compact"
@@ -386,25 +386,25 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
 
                 {{-- Alert Jika Minggu Sudah Pernah Diisi --}}
                 <div id="alertMingguSudahDiisi" class="alert-logbook-notice is-warning" style="display: none;">
-                    <strong class="alert-notice-title text-blue">Minggu Ini Sudah Pernah Dilaporkan</strong>
-                    <span class="alert-notice-desc text-blue-muted">Untuk mengubah data laporan, gunakan tombol <strong>Edit</strong> pada kartu logbook terkait di daftar bawah.</span>
+                    <strong class="alert-notice-title text-blue">{{ __('Minggu Ini Sudah Pernah Dilaporkan') }}</strong>
+                    <span class="alert-notice-desc text-blue-muted">{!! __('Untuk mengubah data laporan, gunakan tombol :edit pada kartu logbook terkait di daftar bawah.', ['edit' => '<strong>' . __('Edit') . '</strong>']) !!}</span>
                 </div>
 
                 {{-- Alert Jika Minggu Mendatang --}}
                 <div id="alertMingguMendatang" class="alert-logbook-notice is-future" style="display: none;">
-                    <strong class="alert-notice-title text-red">Minggu Belum Berjalan</strong>
-                    <span class="alert-notice-desc text-red-muted">Logbook untuk minggu mendatang belum dapat diisi. Silakan pilih minggu yang sedang aktif atau minggu lampau yang belum diisi.</span>
+                    <strong class="alert-notice-title text-red">{{ __('Minggu Belum Berjalan') }}</strong>
+                    <span class="alert-notice-desc text-red-muted">{{ __('Logbook untuk minggu mendatang belum dapat diisi. Silakan pilih minggu yang sedang aktif atau minggu lampau yang belum diisi.') }}</span>
                 </div>
 
                 <div id="formFieldsLogbook">
                     {{-- Ringkasan Kegiatan & Capaian --}}
                     <div class="form-group-logbook form-group-compact">
                         <label for="tambah_kegiatan" class="label-logbook form-label-compact">
-                            <span>Ringkasan Kegiatan & Capaian <span class="req">*</span></span>
-                            <span id="tambah_char_count" class="char-counter-tag char-counter-compact">0 karakter (minimal 10)</span>
+                            <span>{!! __('Ringkasan Kegiatan & Capaian') !!} <span class="req">*</span></span>
+                            <span id="tambah_char_count" class="char-counter-tag char-counter-compact">0 {{ __('karakter (minimal 10)') }}</span>
                         </label>
                         <textarea id="tambah_kegiatan" name="kegiatan" rows="4" class="textarea-logbook form-control-compact"
-                                  placeholder="Tuliskan aktivitas utama yang diselesaikan, kendala, dan hasil pekerjaan pekan ini..."
+                                  placeholder="{{ __('Tuliskan aktivitas utama yang diselesaikan, kendala, dan hasil pekerjaan pekan ini...') }}"
                                   required minlength="10"
                                   data-counter-target="tambah_char_count"
                                   >{{ old('kegiatan') }}</textarea>
@@ -414,28 +414,28 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                     <div class="logbook-lampiran-section">
                         <div class="logbook-lampiran-header">
                             <label class="label-logbook form-label-compact" style="margin-bottom: 0;">
-                                <span>Lampiran</span>
+                                <span>{{ __('Lampiran') }}</span>
                             </label>
-                            <span class="label-hint" id="tambahLampiranMeta">(opsional) · PDF (maks. 2MB) atau Link HTTPS</span>
+                            <span class="label-hint" id="tambahLampiranMeta">{{ __('(opsional) · PDF (maks. 2MB) atau Link HTTPS') }}</span>
                         </div>
 
                         <div class="logbook-lampiran-selector-box">
                             <div class="logbook-circle-action-item">
-                                <button type="button" class="logbook-circle-btn" id="btnTambahTriggerUploadFile" aria-label="Upload File" title="Upload File">
+                                <button type="button" class="logbook-circle-btn" id="btnTambahTriggerUploadFile" aria-label="{{ __('Upload File') }}" title="{{ __('Upload File') }}">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M12 16V4M7 9l5-5 5 5M5 20h14"></path>
                                     </svg>
                                 </button>
-                                <span class="logbook-circle-label">Upload File</span>
+                                <span class="logbook-circle-label">{{ __('Upload File') }}</span>
                             </div>
 
                             <div class="logbook-circle-action-item">
-                                <button type="button" class="logbook-circle-btn" id="btnTambahTriggerAddLink" aria-label="Link" title="Link">
+                                <button type="button" class="logbook-circle-btn" id="btnTambahTriggerAddLink" aria-label="{{ __('Link') }}" title="{{ __('Link') }}">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"></path>
                                     </svg>
                                 </button>
-                                <span class="logbook-circle-label">Link</span>
+                                <span class="logbook-circle-label">{{ __('Link') }}</span>
                             </div>
                         </div>
 
@@ -452,12 +452,12 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
             </div>
 
             <div class="modal-footer-logbook modal-footer-compact">
-                <button type="button" data-action="close-tambah-modal" class="btn-modal-cancel">Batal</button>
+                <button type="button" data-action="close-tambah-modal" class="btn-modal-cancel">{{ __('Batal') }}</button>
                 <button type="submit" id="btnSubmitTambah" class="btn-modal-submit">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span>Kirim Logbook Mingguan</span>
+                    <span>{{ __('Kirim Logbook Mingguan') }}</span>
                 </button>
             </div>
         </form>
@@ -475,10 +475,10 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                     </svg>
                 </div>
                 <div>
-                    <h3 class="modal-title-logbook modal-title-text">Perbarui Logbook Mingguan</h3>
+                    <h3 class="modal-title-logbook modal-title-text">{{ __('Perbarui Logbook Mingguan') }}</h3>
                 </div>
             </div>
-            <button type="button" data-action="close-edit-modal" class="modal-close-logbook modal-close-btn" aria-label="Tutup Formulir" title="Tutup">&times;</button>
+            <button type="button" data-action="close-edit-modal" class="modal-close-logbook modal-close-btn" aria-label="{{ __('Tutup Formulir') }}" title="{{ __('Tutup') }}">&times;</button>
         </div>
 
         <form id="formEditLogbook" class="modal-form-logbook" method="POST" enctype="multipart/form-data">
@@ -491,8 +491,8 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
             <div class="modal-body-logbook modal-body-compact">
                 <div class="form-group-logbook form-group-compact">
                     <label for="edit_kegiatan" class="label-logbook form-label-compact">
-                        <span>Ringkasan Kegiatan & Capaian <span class="req">*</span></span>
-                        <span id="edit_char_count" class="char-counter-tag char-counter-compact">0 karakter (minimal 10)</span>
+                        <span>{!! __('Ringkasan Kegiatan & Capaian') !!} <span class="req">*</span></span>
+                        <span id="edit_char_count" class="char-counter-tag char-counter-compact">0 {{ __('karakter (minimal 10)') }}</span>
                     </label>
                     <textarea id="edit_kegiatan" name="kegiatan" rows="4" class="textarea-logbook form-control-compact" required minlength="10" data-counter-target="edit_char_count"></textarea>
                 </div>
@@ -501,28 +501,28 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                 <div class="logbook-lampiran-section">
                     <div class="logbook-lampiran-header">
                         <label class="label-logbook form-label-compact" style="margin-bottom: 0;">
-                            <span>Lampiran</span>
+                            <span>{{ __('Lampiran') }}</span>
                         </label>
-                        <span class="label-hint" id="editLampiranMeta">(opsional) · PDF (maks. 2MB) atau Link HTTPS</span>
+                        <span class="label-hint" id="editLampiranMeta">{{ __('(opsional) · PDF (maks. 2MB) atau Link HTTPS') }}</span>
                     </div>
 
                     <div class="logbook-lampiran-selector-box">
                         <div class="logbook-circle-action-item">
-                            <button type="button" class="logbook-circle-btn" id="btnEditTriggerUploadFile" aria-label="Upload File" title="Upload File">
+                            <button type="button" class="logbook-circle-btn" id="btnEditTriggerUploadFile" aria-label="{{ __('Upload File') }}" title="{{ __('Upload File') }}">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M12 16V4M7 9l5-5 5 5M5 20h14"></path>
                                 </svg>
                             </button>
-                            <span class="logbook-circle-label">Upload File</span>
+                            <span class="logbook-circle-label">{{ __('Upload File') }}</span>
                         </div>
 
                         <div class="logbook-circle-action-item">
-                            <button type="button" class="logbook-circle-btn" id="btnEditTriggerAddLink" aria-label="Link" title="Link">
+                            <button type="button" class="logbook-circle-btn" id="btnEditTriggerAddLink" aria-label="{{ __('Link') }}" title="{{ __('Link') }}">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"></path>
                                 </svg>
                             </button>
-                            <span class="logbook-circle-label">Link</span>
+                            <span class="logbook-circle-label">{{ __('Link') }}</span>
                         </div>
                     </div>
 
@@ -537,12 +537,12 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
             </div>
 
             <div class="modal-footer-logbook modal-footer-compact">
-                <button type="button" data-action="close-edit-modal" class="btn-modal-cancel">Batal</button>
+                <button type="button" data-action="close-edit-modal" class="btn-modal-cancel">{{ __('Batal') }}</button>
                 <button type="submit" class="btn-modal-submit">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span>Simpan Perubahan</span>
+                    <span>{{ __('Simpan Perubahan') }}</span>
                 </button>
             </div>
         </form>
@@ -552,9 +552,9 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
 {{-- Dialog Pop-up Unggah Berkas PDF (Sub-modal ala Pembimbing) --}}
 <div class="tugas-modal-backdrop" id="modalLogbookUploadFileDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalUploadFile">
     <div class="tugas-dialog tugas-dialog--upload">
-        <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalUploadFile">Upload File</div>
+        <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalUploadFile">{{ __('Upload File') }}</div>
 
-        <div class="tugas-dropzone" id="logbookDropzoneArea" tabindex="0" role="button" aria-label="Area drag and drop upload berkas PDF">
+        <div class="tugas-dropzone" id="logbookDropzoneArea" tabindex="0" role="button" aria-label="{{ __('Area drag and drop upload berkas PDF') }}">
             <svg width="84" height="62" viewBox="0 0 150 110" aria-hidden="true" class="tugas-dropzone-cloud">
                 <defs>
                     <linearGradient id="cloudGradLogbook" x1="0" y1="0" x2="1" y2="1">
@@ -565,9 +565,9 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                 <path d="M38 100a30 30 0 0 1-2-60 38 38 0 0 1 72-8 28 28 0 0 1 8 56z" fill="url(#cloudGradLogbook)" stroke="#222" stroke-width="1.5"></path>
                 <path d="M75 82V52M62 64l13-13 13 13" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
-            <button type="button" class="tugas-dropzone-btn-choose" id="btnLogbookBrowseFile">Pilih File</button>
-            <div class="tugas-dropzone-hint">atau tarik file ke sini</div>
-            <div class="tugas-dropzone-format">PDF · maks. 2MB</div>
+            <button type="button" class="tugas-dropzone-btn-choose" id="btnLogbookBrowseFile">{{ __('Pilih File') }}</button>
+            <div class="tugas-dropzone-hint">{{ __('atau tarik file ke sini') }}</div>
+            <div class="tugas-dropzone-format">{{ __('PDF · maks. 2MB') }}</div>
         </div>
 
         <input type="file" id="modalStagedFileInput" accept=".pdf" style="display: none;">
@@ -581,7 +581,7 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
                     <div id="submodalFileSize" style="font-size: 12px; color: #64748b;"></div>
                 </div>
             </div>
-            <button type="button" id="btnSubmodalRemoveFile" style="background: none; border: none; cursor: pointer; color: #ef4444;" title="Hapus berkas">
+            <button type="button" id="btnSubmodalRemoveFile" style="background: none; border: none; cursor: pointer; color: #ef4444;" title="{{ __('Hapus berkas') }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
             </button>
         </div>
@@ -589,8 +589,8 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
         <div id="submodalFileError" class="logbook-field-error" style="display: none; margin-top: 8px;"></div>
 
         <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
-            <button type="button" class="tugas-dialog-btn-text" id="btnCancelSubmodalFile" data-action="close-submodal">Batal</button>
-            <button type="button" class="tugas-dialog-btn-pill" id="btnSubmodalConfirmFile" disabled>Upload</button>
+            <button type="button" class="tugas-dialog-btn-text" id="btnCancelSubmodalFile" data-action="close-submodal">{{ __('Batal') }}</button>
+            <button type="button" class="tugas-dialog-btn-pill" id="btnSubmodalConfirmFile" disabled>{{ __('Upload') }}</button>
         </div>
     </div>
 </div>
@@ -598,19 +598,19 @@ data-file="{{ $log->file_laporan ? basename($log->file_laporan) : '' }}">
 {{-- Dialog Pop-up Tambahkan Link (Sub-modal ala Pembimbing) --}}
 <div class="tugas-modal-backdrop" id="modalLogbookAddLinkDialog" role="dialog" aria-modal="true" aria-labelledby="ttlModalAddLink">
     <div class="tugas-dialog tugas-dialog--link">
-        <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalAddLink">Tambahkan link</div>
+        <div style="font-size: 16px; font-weight: 600; color: #111827;" id="ttlModalAddLink">{{ __('Tambahkan link') }}</div>
 
         <div style="margin-top: 18px;">
             <div class="tugas-field-filled" id="submodalLinkFieldFilled" style="padding: 8px 14px;">
-                <label for="inputSubmodalLinkUrl" class="tugas-field-filled-label">Link*</label>
+                <label for="inputSubmodalLinkUrl" class="tugas-field-filled-label">{{ __('Link*') }}</label>
                 <input type="url" id="inputSubmodalLinkUrl" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 15px;">
             </div>
-            <div id="submodalLinkError" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e; display: none;">*Wajib diisi</div>
+            <div id="submodalLinkError" style="margin: 6px 0 0 8px; font-size: 12px; color: #b3261e; display: none;">{{ __('*Wajib diisi') }}</div>
         </div>
 
         <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
-            <button type="button" class="tugas-dialog-btn-text" id="btnCancelSubmodalLink" data-action="close-submodal">Batal</button>
-            <button type="button" class="tugas-dialog-btn-pill" id="btnSubmodalConfirmLink" disabled>Tambahkan link</button>
+            <button type="button" class="tugas-dialog-btn-text" id="btnCancelSubmodalLink" data-action="close-submodal">{{ __('Batal') }}</button>
+            <button type="button" class="tugas-dialog-btn-pill" id="btnSubmodalConfirmLink" disabled>{{ __('Tambahkan link') }}</button>
         </div>
     </div>
 </div>

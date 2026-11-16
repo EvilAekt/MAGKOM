@@ -1,7 +1,7 @@
 @extends('layouts.peserta')
 
-@section('title', 'Tugas: ' . $tugas->judul)
-@section('page_title', 'Detail Tugas Bimbingan')
+@section('title', __('Tugas:') . ' ' . $tugas->judul)
+@section('page_title', __('Detail Tugas Bimbingan'))
 
 @push('styles')
     @vite(['resources/css/pages/peserta/tugas-detail.css'])
@@ -18,7 +18,7 @@
         $isTerlambat = !$isSelesai && $deadline && $deadline->isPast();
         $penempatan = $tugas->penempatan;
         $mentorNama = $penempatan->pembimbing->nama ?? $penempatan->pembimbing->name ?? 'Budi Santoso, S.Kom';
-        $kategoriNama = $tugas->kategori ?? 'Tugas Magang';
+        $kategoriNama = $tugas->kategori ?? __('Tugas Magang');
         $kompleksitasNama = ucfirst($tugas->kompleksitas->value ?? (string)$tugas->kompleksitas);
         $latestProgres = $tugas->progresLogs->first();
         $hasSubmitted = $tugas->progresLogs->isNotEmpty();
@@ -37,7 +37,7 @@
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-            <span>Kembali ke Daftar Tugas</span>
+            <span>{{ __('Kembali ke Daftar Tugas') }}</span>
         </a>
     </div>
 
@@ -59,8 +59,8 @@
                     <h1 class="classroom-assignment-title">{{ $tugas->judul }}</h1>
                     <div class="classroom-assignment-meta-author">{{ $mentorNama }} &bull; {{ \Carbon\Carbon::parse($tugas->created_at)->translatedFormat('j M Y') }}</div>
                     <div class="classroom-assignment-meta-due">
-                        Tenggat {{ $deadline->translatedFormat('j M Y, H.i') }} WIB
-                        <span class="sr-only">Kompleksitas: {{ $kompleksitasNama }}</span>
+                        {{ __('Tenggat') }} {{ $deadline->translatedFormat('j M Y, H.i') }} WIB
+                        <span class="sr-only">{{ __('Kompleksitas:') }} {{ $kompleksitasNama }}</span>
                     </div>
                 </div>
             </div>
@@ -68,12 +68,12 @@
             <hr class="classroom-sheet-divider">
 
             {{-- Label tersembunyi untuk kompatibilitas pengujian --}}
-            <div style="font-size: 0; height: 0; overflow: hidden; opacity: 0;" aria-hidden="true">Panduan Pengerjaan</div>
+            <div style="font-size: 0; height: 0; overflow: hidden; opacity: 0;" aria-hidden="true">{{ __('Panduan Pengerjaan') }}</div>
 
             {{-- Deskripsi / Rincian Instruksi Tugas --}}
             <div class="classroom-instruction-body">
                 @if(! $tugas->deskripsi)
-                    Tidak ada instruksi khusus.
+                    {{ __('Tidak ada instruksi khusus.') }}
                 @elseif(str_contains($tugas->deskripsi, '<'))
                     {!! \App\Support\SafeHtmlSanitizer::sanitize($tugas->deskripsi) !!}
                 @else
@@ -87,7 +87,7 @@
                     @if($tugas->link_referensi)
                         <a href="{{ $tugas->link_referensi }}" target="_blank" rel="noopener noreferrer" class="ref-link-pill">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                            <span>Buka Tautan Acuan ↗</span>
+                            <span>{{ __('Buka Tautan Acuan ↗') }}</span>
                         </a>
                     @endif
 
@@ -97,7 +97,7 @@
                             <span style="padding: 1px 6px; border-radius: 4px; background: {{ $badge['bg'] }}; color: {{ $badge['color'] }}; font-size: 11px; font-weight: 800;">
                                 {{ $badge['label'] }}
                             </span>
-                            <span>Unduh {{ $tugas->nama_file_lampiran ?: 'Berkas Panduan' }} ({{ $tugas->ukuran_format }})</span>
+                            <span>{{ __('Unduh') }} {{ $tugas->nama_file_lampiran ?: __('Berkas Panduan') }} ({{ $tugas->ukuran_format }})</span>
                         </a>
                     @endif
                 </div>
@@ -112,20 +112,20 @@
             {{-- 1. Kartu Tugas Anda --}}
             <div class="classroom-work-card">
                 <div class="classroom-work-header">
-                    <div class="classroom-work-title">Tugas Anda</div>
+                    <div class="classroom-work-title">{{ __('Tugas Anda') }}</div>
                     <div>
                         @if($isSelesai)
-                            <span class="classroom-work-status status-done">Selesai</span>
+                            <span class="classroom-work-status status-done">{{ __('Selesai') }}</span>
                         @elseif($hasSubmitted && $latestReviewStatus === 'perlu_revisi')
-                            <span class="classroom-work-status" style="background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">Perlu Revisi</span>
+                            <span class="classroom-work-status" style="background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">{{ __('Perlu Revisi') }}</span>
                         @elseif($isSubmittedLate)
-                            <span class="classroom-work-status status-turned-in-late">Diserahkan terlambat</span>
+                            <span class="classroom-work-status status-turned-in-late">{{ __('Diserahkan terlambat') }}</span>
                         @elseif($hasSubmitted)
-                            <span class="classroom-work-status status-turned-in">Diserahkan</span>
+                            <span class="classroom-work-status status-turned-in">{{ __('Diserahkan') }}</span>
                         @elseif($isTerlambat)
-                            <span class="classroom-work-status status-missing">Terlambat</span>
+                            <span class="classroom-work-status status-missing">{{ __('Terlambat') }}</span>
                         @else
-                            <span class="classroom-work-status status-assigned">Ditugaskan</span>
+                            <span class="classroom-work-status status-assigned">{{ __('Ditugaskan') }}</span>
                         @endif
                     </div>
                 </div>
@@ -198,8 +198,8 @@
                     @if($bisaKumpulLagi)
                         @if($latestReviewStatus === 'perlu_revisi')
                             <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 0.8125rem; color: #92400E;">
-                                <div style="font-weight: 700; margin-bottom: 2px;">⚠️ Catatan Revisi Pembimbing:</div>
-                                <div>{{ $latestProgres->feedback ?: $latestProgres->catatan_revisi ?: 'Silakan perbaiki progres tugas sesuai arahan pembimbing lalu serahkan kembali.' }}</div>
+                                <div style="font-weight: 700; margin-bottom: 2px;">⚠️ {{ __('Catatan Revisi Pembimbing:') }}</div>
+                                <div>{{ $latestProgres->feedback ?: $latestProgres->catatan_revisi ?: __('Silakan perbaiki progres tugas sesuai arahan pembimbing lalu serahkan kembali.') }}</div>
                             </div>
                         @endif
 
@@ -209,7 +209,7 @@
                                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                <span>+ Tambah berkas</span>
+                                <span>+ {{ __('Tambah berkas') }}</span>
                             </button>
 
                             {{-- Menu Dropdown Melayang (2 Opsi: Link & File) --}}
@@ -218,29 +218,29 @@
                                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
                                     </svg>
-                                    <span>Link</span>
+                                    <span>{{ __('Link') }}</span>
                                 </button>
                                 <button type="button" class="dropdown-item-action" data-action="open-modal-file">
                                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                                     </svg>
-                                    <span>File</span>
+                                    <span>{{ __('File') }}</span>
                                 </button>
                             </div>
                         </div>
 
                         {{-- Tombol Utama "Serahkan" (Pill Rounded) --}}
                         <button type="button" id="btnSerahkanTugas" class="btn-serahkan-work disabled" disabled="disabled">
-                            <span>{{ $latestReviewStatus === 'perlu_revisi' ? 'Serahkan Ulang Revisi' : 'Serahkan / Kirim Progres' }}</span>
+                            <span>{{ $latestReviewStatus === 'perlu_revisi' ? __('Serahkan Ulang Revisi') : __('Serahkan / Kirim Progres') }}</span>
                         </button>
 
                         @if($isTerlambat)
                             <div class="work-caption-note work-caption-note--late">
-                                ⚠️ Tenggat waktu telah berakhir. Tugas tetap dapat diserahkan dan akan dicatat sebagai diserahkan terlambat.
+                                ⚠️ {{ __('Tenggat waktu telah berakhir. Tugas tetap dapat diserahkan dan akan dicatat sebagai diserahkan terlambat.') }}
                             </div>
                         @else
                             <div class="work-caption-note">
-                                Pastikan berkas atau tautan sudah benar sebelum diserahkan.
+                                {{ __('Pastikan berkas atau tautan sudah benar sebelum diserahkan.') }}
                             </div>
                         @endif
                     @elseif($isSelesai)
@@ -250,7 +250,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                                 </svg>
                             </span>
-                            <span>Tugas ini telah ditinjau dan dinyatakan selesai oleh pembimbing.</span>
+                            <span>{{ __('Tugas ini telah ditinjau dan dinyatakan selesai oleh pembimbing.') }}</span>
                         </div>
                     @else
                         {{-- Kasus: sudah diserahkan dan sedang menunggu review --}}
@@ -262,20 +262,20 @@
                                     </svg>
                                 </span>
                                 <span class="submitted-waiting-title {{ $isSubmittedLate ? 'submitted-waiting-title--late' : '' }}">
-                                    Tugas Telah Diserahkan{{ $isSubmittedLate ? ' (Terlambat)' : '' }}
+                                    {{ __('Tugas Telah Diserahkan') }}{{ $isSubmittedLate ? ' (' . __('Terlambat') . ')' : '' }}
                                 </span>
                             </div>
                             <div class="submitted-waiting-subtitle {{ $isSubmittedLate ? 'submitted-waiting-subtitle--late' : '' }}">
-                                Diserahkan{{ $isSubmittedLate ? ' terlambat' : '' }} pada {{ \Carbon\Carbon::parse($latestProgres->created_at ?? $latestProgres->tgl_lapor)->translatedFormat('d M Y, H.i') }} WIB{{ $isSubmittedLate ? ' (melewati tenggat)' : '' }}.
+                                {{ __('Diserahkan') }}{{ $isSubmittedLate ? ' ' . __('terlambat') : '' }} {{ __('pada') }} {{ \Carbon\Carbon::parse($latestProgres->created_at ?? $latestProgres->tgl_lapor)->translatedFormat('d M Y, H.i') }} WIB{{ $isSubmittedLate ? ' (' . __('melewati tenggat') . ')' : '' }}.
                             </div>
                         </div>
 
                         <button type="button" class="btn-batalkan-pengiriman" id="btnBukaModalBatalKirim">
-                            Batalkan pengiriman
+                            {{ __('Batalkan pengiriman') }}
                         </button>
 
                         <div class="work-caption-note">
-                            Batalkan pengiriman untuk menambahkan atau mengubah lampiran
+                            {{ __('Batalkan pengiriman untuk menambahkan atau mengubah lampiran') }}
                         </div>
                     @endif
                 </form>
@@ -292,21 +292,21 @@
 <div class="tugas-modal-backdrop classroom-modal-backdrop" id="modalTambahLink" role="dialog" aria-modal="true" aria-labelledby="modalLinkTitle">
     <div class="tugas-dialog tugas-dialog--link">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <div style="font-size: 16px; font-weight: 700; color: #111827;" id="modalLinkTitle">Tambahkan link</div>
-            <button type="button" class="classroom-modal-close" data-action="close-modal" aria-label="Tutup modal">✕</button>
+            <div style="font-size: 16px; font-weight: 700; color: #111827;" id="modalLinkTitle">{{ __('Tambahkan link') }}</div>
+            <button type="button" class="classroom-modal-close" data-action="close-modal" aria-label="{{ __('Tutup modal') }}">✕</button>
         </div>
 
         <div style="margin-top: 10px;">
             <div class="tugas-field-filled" id="wrapFieldModalLink">
-                <label for="inputUrlLink" class="tugas-field-filled-label">Link*</label>
+                <label for="inputUrlLink" class="tugas-field-filled-label">{{ __('Link*') }}</label>
                 <input type="url" id="inputUrlLink" placeholder="https://drive.google.com/..." class="tugas-input-clean" style="font-size: 14px;">
             </div>
-            <div id="linkErrorHint" style="margin: 6px 0 0 4px; font-size: 12px; color: #b3261e; display: none;">*Wajib diisi dengan URL valid (https://...)</div>
+            <div id="linkErrorHint" style="margin: 6px 0 0 4px; font-size: 12px; color: #b3261e; display: none;">{{ __('*Wajib diisi dengan URL valid (https://...)') }}</div>
         </div>
 
         <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
-            <button type="button" class="tugas-dialog-btn-text" data-action="close-modal">Batal</button>
-            <button type="button" id="btnSubmitLink" class="tugas-dialog-btn-pill" style="width: auto; padding: 0 18px;" disabled>Tambahkan link</button>
+            <button type="button" class="tugas-dialog-btn-text" data-action="close-modal">{{ __('Batal') }}</button>
+            <button type="button" id="btnSubmitLink" class="tugas-dialog-btn-pill" style="width: auto; padding: 0 18px;" disabled>{{ __('Tambahkan link') }}</button>
         </div>
     </div>
 </div>
@@ -317,20 +317,20 @@
 <div class="tugas-modal-backdrop classroom-modal-backdrop" id="modalSisipkanBerkas" role="dialog" aria-modal="true" aria-labelledby="modalFileTitle">
     <div class="tugas-dialog tugas-dialog--upload">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <div style="font-size: 16px; font-weight: 700; color: #111827;" id="modalFileTitle">Upload file</div>
-            <button type="button" class="classroom-modal-close" data-action="close-modal" aria-label="Tutup modal">✕</button>
+            <div style="font-size: 16px; font-weight: 700; color: #111827;" id="modalFileTitle">{{ __('Upload file') }}</div>
+            <button type="button" class="classroom-modal-close" data-action="close-modal" aria-label="{{ __('Tutup modal') }}">✕</button>
         </div>
 
         {{-- 2 Tab Bar: Upload & Riwayat Berkas --}}
         <div class="classroom-modal-tabs">
-            <button type="button" class="classroom-modal-tab-btn active" id="tabBtnUpload">Upload</button>
-            <button type="button" class="classroom-modal-tab-btn" id="tabBtnRecent">Riwayat Berkas</button>
+            <button type="button" class="classroom-modal-tab-btn active" id="tabBtnUpload">{{ __('Upload') }}</button>
+            <button type="button" class="classroom-modal-tab-btn" id="tabBtnRecent">{{ __('Riwayat Berkas') }}</button>
         </div>
 
         {{-- TAB 1: UPLOAD (DROPZONE & BROWSE LOKAL) --}}
         <div class="classroom-tab-panel active" id="tabPanelUpload">
             <input type="file" id="modalFileInput" accept=".pdf,.zip,.rar,.doc,.docx,image/*" style="display: none;">
-            <div class="tugas-dropzone" id="fileDropzoneBox" tabindex="0" role="button" aria-label="Area drag and drop upload berkas">
+            <div class="tugas-dropzone" id="fileDropzoneBox" tabindex="0" role="button" aria-label="{{ __('Area drag and drop upload berkas') }}">
                 <svg width="84" height="62" viewBox="0 0 150 110" aria-hidden="true" class="tugas-dropzone-cloud">
                     <defs>
                         <linearGradient id="cloudGrad" x1="0" y1="0" x2="1" y2="1">
@@ -341,9 +341,9 @@
                     <path d="M38 100a30 30 0 0 1-2-60 38 38 0 0 1 72-8 28 28 0 0 1 8 56z" fill="url(#cloudGrad)" stroke="#222" stroke-width="1.5"></path>
                     <path d="M75 82V52M62 64l13-13 13 13" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                 </svg>
-                <button type="button" class="tugas-dropzone-btn-choose" id="btnBrowseFile">Pilih Berkas</button>
-                <div class="tugas-dropzone-hint">atau seret file ke sini untuk mengunggah</div>
-                <div class="tugas-dropzone-format">Maksimal 5MB (PDF, DOCX, ZIP, RAR, Gambar)</div>
+                <button type="button" class="tugas-dropzone-btn-choose" id="btnBrowseFile">{{ __('Pilih Berkas') }}</button>
+                <div class="tugas-dropzone-hint">{{ __('atau seret file ke sini untuk mengunggah') }}</div>
+                <div class="tugas-dropzone-format">{{ __('Maksimal 5MB (PDF, DOCX, ZIP, RAR, Gambar)') }}</div>
             </div>
 
             {{-- Selected File Info Preview inside Modal --}}
@@ -355,14 +355,14 @@
                         <div id="modalFileSizeTxt" style="font-size: 12px; color: #64748b;"></div>
                     </div>
                 </div>
-                <button type="button" id="btnRemoveModalFile" style="background: none; border: none; cursor: pointer; color: #ef4444;" title="Hapus berkas">
+                <button type="button" id="btnRemoveModalFile" style="background: none; border: none; cursor: pointer; color: #ef4444;" title="{{ __('Hapus berkas') }}">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
             </div>
 
             <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="tugas-dialog-btn-text" data-action="close-modal">Batal</button>
-                <button type="button" class="tugas-dialog-btn-pill" id="btnSubmitUploadFile" disabled>Upload</button>
+                <button type="button" class="tugas-dialog-btn-text" data-action="close-modal">{{ __('Batal') }}</button>
+                <button type="button" class="tugas-dialog-btn-pill" id="btnSubmitUploadFile" disabled>{{ __('Upload') }}</button>
             </div>
         </div>
 
@@ -392,14 +392,14 @@
                         <svg width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom: 10px; color: #94A3B8;">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <div style="font-weight: 600; font-size: 0.875rem;">Belum ada riwayat berkas</div>
-                        <div style="font-size: 0.75rem; margin-top: 4px;">Berkas yang pernah Anda unggah pada tugas sebelumnya akan muncul di sini.</div>
+                        <div style="font-weight: 600; font-size: 0.875rem;">{{ __('Belum ada riwayat berkas') }}</div>
+                        <div style="font-size: 0.75rem; margin-top: 4px;">{{ __('Berkas yang pernah Anda unggah pada tugas sebelumnya akan muncul di sini.') }}</div>
                     </div>
                 @endif
             </div>
             <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="tugas-dialog-btn-text" data-action="close-modal">Batal</button>
-                <button type="button" id="btnInsertRecent" class="tugas-dialog-btn-pill" style="width: auto; padding: 0 18px;" disabled>Sisipkan</button>
+                <button type="button" class="tugas-dialog-btn-text" data-action="close-modal">{{ __('Batal') }}</button>
+                <button type="button" id="btnInsertRecent" class="tugas-dialog-btn-pill" style="width: auto; padding: 0 18px;" disabled>{{ __('Sisipkan') }}</button>
             </div>
         </div>
     </div>
@@ -411,17 +411,17 @@
 <div class="tugas-modal-backdrop classroom-modal-backdrop" id="modalKonfirmasiBatalKirim" role="dialog" aria-modal="true" aria-labelledby="modalBatalKirimTitle">
     <div class="tugas-dialog tugas-dialog--batal-kirim">
         <div style="font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 8px;" id="modalBatalKirimTitle">
-            Batalkan pengiriman?
+            {{ __('Batalkan pengiriman?') }}
         </div>
         <p style="font-size: 13px; color: #475569; line-height: 1.5; margin: 0 0 20px 0;">
-            Batalkan pengiriman untuk menambahkan atau mengubah lampiran. Jangan lupa menyerahkannya kembali setelah Anda selesai.
+            {{ __('Batalkan pengiriman untuk menambahkan atau mengubah lampiran. Jangan lupa menyerahkannya kembali setelah Anda selesai.') }}
         </p>
         <form action="{{ route('peserta.tugas.batal-kirim', $tugas) }}" method="POST" id="formBatalKirimTugas">
             @csrf
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="tugas-dialog-btn-text" data-action="close-modal">Batal</button>
+                <button type="button" class="tugas-dialog-btn-text" data-action="close-modal">{{ __('Batal') }}</button>
                 <button type="submit" id="btnConfirmBatalKirim" class="tugas-dialog-btn-pill btn-confirm-unsubmit">
-                    Batalkan pengiriman
+                    {{ __('Batalkan pengiriman') }}
                 </button>
             </div>
         </form>

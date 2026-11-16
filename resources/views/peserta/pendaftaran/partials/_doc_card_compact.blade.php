@@ -26,7 +26,7 @@
             <div class="doc-info-col">
                 <div class="doc-name-row">
                     <span class="doc-title-text">{{ $jenis->nama }}</span>
-                    <span class="sr-only">({{ $jenis->wajib ? 'Wajib' : 'Opsional' }})</span>
+                    <span class="sr-only">({{ $jenis->wajib ? __('Wajib') : __('Opsional') }})</span>
                 </div>
                 @if($terunggah)
                     <div class="doc-uploaded-meta">
@@ -53,14 +53,14 @@
                             data-download-url="{{ $downloadUrl }}" 
                             data-title="{{ $jenis->nama }} - {{ $terunggah->nama_asli }}" 
                             data-mime="{{ $terunggah->mime }}" 
-                            title="Lihat Berkas">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                        <span>Lihat</span>
+                            title="{{ __('Lihat Berkas') }}">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <span>{{ __('Lihat') }}</span>
                     </button>
                     @if($bisaUnggah)
-                        <button type="button" class="btn-action-round" data-action="toggle-dropzone" data-key="{{ $key }}" title="Ganti Berkas">
+                        <button type="button" class="btn-action-round" data-action="toggle-dropzone" data-key="{{ $key }}" title="{{ __('Ganti Berkas') }}">
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
-                            <span>Ganti</span>
+                            <span>{{ __('Ganti') }}</span>
                         </button>
                     @endif
                 </div>
@@ -73,12 +73,12 @@
                             data-dropzone-key="{{ $key }}" data-max-mb="{{ $maksMb }}"
                             
                             
-                            title="Klik atau seret berkas ke sini">
+                            title="{{ __('Klik atau seret berkas ke sini') }}">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                        <span>Unggah File</span>
+                        <span>{{ __('Unggah File') }}</span>
                     </button>
                 @else
-                    <span class="status-badge-pending">Belum Ada</span>
+                    <span class="status-badge-pending">{{ __('Belum Ada') }}</span>
                 @endif
             @endif
         </div>
@@ -103,7 +103,7 @@
             {{-- Baris Penggantian Berkas --}}
             @if($terunggah)
                 <div id="dropzone_wrapper_{{ $key }}" class="replace-inline-bar" style="display: none;">
-                    <span style="font-size: 0.775rem; color: #475569;">Pilih file pengganti:</span>
+                    <span style="font-size: 0.775rem; color: #475569;">{{ __('Pilih file pengganti:') }}</span>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <button type="button"
                                 class="btn-upload-trigger"
@@ -112,10 +112,10 @@
                                 
                                 >
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                            <span>Pilih Berkas</span>
+                            <span>{{ __('Pilih Berkas') }}</span>
                         </button>
                         <button type="button" class="btn-action-round" data-action="toggle-dropzone" data-key="{{ $key }}">
-                            Batal
+                            {{ __('Batal') }}
                         </button>
                     </div>
                 </div>
@@ -130,10 +130,10 @@
                 </div>
                 <div class="selected-file-actions">
                     <button type="button" class="btn-action-round" data-action="reset-file-selection" data-key="{{ $key }}">
-                        Batal
+                        {{ __('Batal') }}
                     </button>
                     <button type="submit" class="btn-confirm-upload" id="btn_submit_{{ $key }}">
-                        Unggah
+                        {{ __('Unggah') }}
                     </button>
                 </div>
             </div>
