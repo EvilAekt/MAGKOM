@@ -1575,13 +1575,65 @@
     color: #FFFFFF !important;
 }
 
+/* Filled Field & Floating Label Dark Mode (Judul Penugasan & Link) */
 [data-theme="dark"] .tugas-field-filled {
-    background: var(--dm-canvas);
+    background: rgba(6, 22, 48, 0.75) !important;
+    border-bottom: 1.5px solid #2F5190 !important;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+[data-theme="dark"] .tugas-field-filled:hover {
+    background: rgba(6, 22, 48, 0.9) !important;
+    border-bottom-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .tugas-field-filled:focus-within,
+[data-theme="dark"] .tugas-field-filled.is-focused {
+    background: rgba(6, 22, 48, 0.95) !important;
+    border-bottom-color: transparent !important;
+}
+
+[data-theme="dark"] .tugas-field-filled::after {
+    background: #3B82F6 !important;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.55) !important;
+}
+
+/* Label Awal (Kosong & Belum Fokus) -> Terbaca Jelas */
+[data-theme="dark"] .tugas-field-filled-label {
+    color: #9FB0CC !important;
+    font-weight: 500 !important;
+}
+
+/* Label Saat Fokus (Mengetik) -> Menyala Biru Cerah */
+[data-theme="dark"] .tugas-field-filled:focus-within .tugas-field-filled-label,
+[data-theme="dark"] .tugas-field-filled.is-focused .tugas-field-filled-label {
+    color: #60A5FA !important;
+    font-weight: 700 !important;
+}
+
+/* Label Saat Berisi Nilai (Unfocused) -> Terbaca Jelas */
+[data-theme="dark"] .tugas-field-filled.has-value:not(:focus-within):not(.is-focused) .tugas-field-filled-label {
+    color: #9FB0CC !important;
+    font-weight: 600 !important;
+}
+
+/* Status Error Validasi */
+[data-theme="dark"] .tugas-field-filled.has-error {
+    background: rgba(239, 68, 68, 0.12) !important;
+    border-bottom-color: #EF4444 !important;
+}
+
+[data-theme="dark"] .tugas-field-filled.has-error .tugas-field-filled-label {
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .tugas-field-filled.has-error::after {
+    background: #EF4444 !important;
 }
 
 [data-theme="dark"] .tugas-input-clean,
 [data-theme="dark"] .tugas-textarea-clean {
-    color: var(--dm-text-main);
+    color: #FFFFFF !important;
 }
 
 [data-theme="dark"] .tugas-instruction-box {
