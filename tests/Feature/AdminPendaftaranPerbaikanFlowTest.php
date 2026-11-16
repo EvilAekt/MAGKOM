@@ -208,4 +208,3 @@ class AdminPendaftaranPerbaikanFlowTest extends TestCase
         $response->assertSee($this->peserta->nama);
     }
 }
-

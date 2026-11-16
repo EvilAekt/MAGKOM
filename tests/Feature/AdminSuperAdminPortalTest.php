@@ -247,9 +247,9 @@ class AdminSuperAdminPortalTest extends TestCase
 
     public function test_admin_decision_flow_minta_perbaikan_and_tolak(): void
     {
-        // 1. Opsi revisi / perlu_perbaikan sudah dihapus dari verifikasi dan ditolak validasi
+        // 1. Keputusan selain terima/tolak/perlu_perbaikan ditolak validasi
         $responseRevisi = $this->actingAs($this->admin)->post(route('admin.pendaftaran.putuskan', $this->pendaftaran), [
-            'keputusan' => 'perlu_perbaikan',
+            'keputusan' => 'invalid_decision',
             'catatan' => 'Proposal magang belum ditandatangani oleh dosen pembimbing kampus.',
         ]);
 
