@@ -1,0 +1,106 @@
+====================================================================================================
+AUDIT DARK MODE PORTAL MAGKOM (BASE COMMIT: 3c481d3 / main)
+Tanggal: 2026-11-16
+Status Kategori:
+  BAGUS   : Mengikuti palet acuan dark mode (#061630 / #0E2548), kontras memenuhi WCAG AA.
+  SEDIKIT : Menggunakan token lama (--neutral-*, dsb) atau ada sedikit kebocoran warna terang/border.
+  JELEK   : Menggunakan ratusan hardcoded hex, kontras buruk, tidak seragam dengan dashboard pembimbing.
+====================================================================================================
+
+DAFTAR PRIORITAS UTAMA (ROLE PEMBIMBING):
+----------------------------------------------------------------------------------------------------
+Role         | URL                          | File View                                          | File CSS                                                  | Status  | Catatan
+----------------------------------------------------------------------------------------------------
+Pembimbing   | /pembimbing/logbook          | resources/views/pembimbing/logbook/index.blade.php | resources/css/pages/pembimbing/logbook-index.css          | JELEK   | Target 1: 1326 baris, 213 hex, hanya 2 var. Warna hex hardcoded merusak dark mode.
+Pembimbing   | /pembimbing/tugas            | resources/views/pembimbing/tugas/index.blade.php   | resources/css/pages/pembimbing/tugas-index.css            | JELEK   | Target 2: 1774 baris, 320 hex, hanya 3 var. Kontras tabel dan kartu sangat tidak konsisten.
+Pembimbing   | /pembimbing/laporan-kinerja  | resources/views/pembimbing/laporan-kinerja/index.blade.php | resources/css/pages/pembimbing/laporan-kinerja-index.css | JELEK | Target 3: 719 baris, 134 hex, 35 var. Area filter & rekap bocor warna terang.
+Pembimbing   | /pembimbing/dashboard        | resources/views/pembimbing/dashboard.blade.php     | resources/css/pages/pembimbing/dashboard.css              | BAGUS   | REFERENSI UTAMA: Kanvas #061630, Card #0E2548, Border rgba(255,255,255,0.07).
+Pembimbing   | /pembimbing/peserta          | resources/views/pembimbing/peserta/index.blade.php | resources/css/pages/pembimbing/peserta-index.css          | SEDIKIT | Filter & kartu peserta perlu standarisasi ke token --dm-*.
+Pembimbing   | /pembimbing/peserta/{id}     | resources/views/pembimbing/peserta/show.blade.php  | resources/css/pages/pembimbing/peserta-show.css           | SEDIKIT | Detail profil peserta butuh penyesuaian dark tokens.
+Pembimbing   | /pembimbing/tugas/create     | resources/views/pembimbing/tugas/create.blade.php  | resources/css/pages/pembimbing/tugas-create.css           | SEDIKIT | Form input & card wrapper butuh --dm-surface & --dm-border.
+Pembimbing   | /pembimbing/tugas/{id}/edit  | resources/views/pembimbing/tugas/edit.blade.php    | resources/css/pages/pembimbing/tugas-edit.css             | SEDIKIT | Form editor butuh keseragaman dark mode.
+Pembimbing   | /pembimbing/tugas/{id}       | resources/views/pembimbing/tugas/review.blade.php  | resources/css/pages/pembimbing/tugas-review.css           | SEDIKIT | Review progres & feedback card butuh token --dm-*.
+Pembimbing   | /pembimbing/profil           | resources/views/pembimbing/profil/show.blade.php   | resources/css/pages/pembimbing/profil-show.css            | SEDIKIT | Card profil dan modal ganti foto.
+Pembimbing   | /pembimbing/pengaturan       | resources/views/pembimbing/pengaturan/index.blade.php | resources/css/components/pengaturan-akun.css           | SEDIKIT | Menggunakan komponen bersama pengaturan-akun.css.
+
+ROLE PESERTA:
+----------------------------------------------------------------------------------------------------
+Role         | URL                          | File View                                          | File CSS                                                  | Status  | Catatan
+----------------------------------------------------------------------------------------------------
+Peserta      | /peserta/dashboard           | resources/views/peserta/dashboard.blade.php       | resources/css/pages/peserta/dashboard.css                | SEDIKIT | Kanvas masih memakai token lama / inline style, perlu --dm-canvas & --dm-surface.
+Peserta      | /peserta/profil              | resources/views/peserta/profil/show.blade.php      | resources/css/pages/peserta/profil-show.css               | SEDIKIT | Form data diri & upload berkas perlu token --dm-*.
+Peserta      | /peserta/pengaturan          | resources/views/peserta/pengaturan/index.blade.php | resources/css/components/pengaturan-akun.css              | SEDIKIT | Menggunakan pengaturan-akun.css.
+Peserta      | /peserta/pendaftaran         | resources/views/peserta/pendaftaran/index.blade.php| resources/css/pages/peserta/pendaftaran-index.css         | SEDIKIT | Status timeline & form pendaftaran.
+Peserta      | /peserta/pendaftaran/{id}    | resources/views/peserta/pendaftaran/detail.blade.php| resources/css/pages/peserta/pemberkasan.css             | SEDIKIT | Upload berkas & status verifikasi.
+Peserta      | /peserta/tugas               | resources/views/peserta/tugas/index.blade.php      | resources/css/pages/peserta/tugas-index.css               | SEDIKIT | JANGAN TERTUKAR dengan versi pembimbing. Butuh token --dm-*.
+Peserta      | /peserta/tugas/{id}          | resources/views/peserta/tugas/show.blade.php       | resources/css/pages/peserta/tugas-detail.css              | SEDIKIT | Detail tugas & unggah progres peserta.
+Peserta      | /peserta/logbook             | resources/views/peserta/logbook/index.blade.php    | resources/css/pages/peserta/logbook-index.css             | SEDIKIT | Kalender & form pengisian logbook harian.
+
+ROLE ADMIN:
+----------------------------------------------------------------------------------------------------
+Role         | URL                          | File View                                          | File CSS                                                  | Status  | Catatan
+----------------------------------------------------------------------------------------------------
+Admin        | /admin/dashboard             | resources/views/admin/dashboard.blade.php          | resources/css/pages/admin/dashboard.css                   | SEDIKIT | Command center & metric dock, perlu kanvas #061630 & card #0E2548.
+Admin        | /admin/kuota                 | resources/views/admin/kuota/index.blade.php        | resources/css/pages/admin/kuota-index.css, kuota-draft.css| SEDIKIT | Hero metrics & modal kelola kuota.
+Admin        | /admin/pendaftaran           | resources/views/admin/pendaftaran/index.blade.php  | resources/css/pages/admin/pendaftaran-index.css           | SEDIKIT | Tabel antrean verifikasi & filter bar.
+Admin        | /admin/pendaftaran/{id}      | resources/views/admin/pendaftaran/show.blade.php   | resources/css/pages/admin/pendaftaran-show.css            | SEDIKIT | Detail berkas pendaftar & modal keputusan.
+Admin        | /admin/penempatan            | resources/views/admin/penempatan/index.blade.php   | resources/css/pages/admin/penempatan-index.css            | SEDIKIT | Tab penempatan, popover ekspor & reassign pembimbing.
+Admin        | /admin/penempatan/{id}       | resources/views/admin/penempatan/show.blade.php    | resources/css/pages/admin/penempatan-detail.css           | SEDIKIT | Detail surat penempatan & histori pembimbing.
+Admin        | /admin/laporan               | resources/views/admin/laporan/index.blade.php      | resources/css/pages/admin/laporan-tahunan.css             | SEDIKIT | Memuat style tag internal, perlu diseragamkan ke --dm-*.
+Admin        | /admin/profil                | resources/views/admin/profil/show.blade.php        | resources/css/pages/admin/profil-show.css                 | SEDIKIT | Card data diri profil admin.
+Admin        | /admin/pengaturan            | resources/views/admin/pengaturan/index.blade.php   | resources/css/components/pengaturan-akun.css              | SEDIKIT | Pengaturan preferensi portal admin.
+
+ROLE SUPERADMIN:
+----------------------------------------------------------------------------------------------------
+Role         | URL                          | File View                                          | File CSS                                                  | Status  | Catatan
+----------------------------------------------------------------------------------------------------
+SuperAdmin   | /superadmin/dashboard        | resources/views/superadmin/dashboard.blade.php     | resources/css/pages/superadmin/dashboard.css              | BAGUS   | Desain cockpit eksekutif sudah cukup modern, perlu sinkronkan ke --dm-*.
+SuperAdmin   | /superadmin/bulan            | resources/views/superadmin/bulan/index.blade.php   | resources/css/pages/superadmin/superadmin-common.css      | SEDIKIT | Tabel master bulan & toggle aktif.
+SuperAdmin   | /superadmin/slot-khusus      | resources/views/superadmin/slot-khusus/index.blade.php | resources/css/pages/superadmin/superadmin-common.css   | SEDIKIT | Manajemen slot instansi khusus.
+SuperAdmin   | /superadmin/peserta-khusus/create | resources/views/superadmin/peserta-khusus/create.blade.php | resources/css/pages/superadmin/superadmin-common.css | SEDIKIT | Form pendaftaran jalur khusus.
+SuperAdmin   | /superadmin/staf             | resources/views/superadmin/staf/index.blade.php    | resources/css/pages/superadmin/superadmin-common.css      | SEDIKIT | Tabel akun staf internal & modal kelola.
+SuperAdmin   | /superadmin/role             | resources/views/superadmin/role/index.blade.php    | resources/css/pages/superadmin/role-index.css             | SEDIKIT | Matriks hak akses & permission table.
+SuperAdmin   | /superadmin/jurusan          | resources/views/superadmin/jurusan/index.blade.php | resources/css/pages/superadmin/superadmin-common.css      | SEDIKIT | Master jurusan pendidikan.
+SuperAdmin   | /superadmin/bidang           | resources/views/superadmin/bidang/index.blade.php  | resources/css/pages/superadmin/superadmin-common.css      | SEDIKIT | Master bidang kominfo.
+SuperAdmin   | /superadmin/pengaturan       | resources/views/superadmin/pengaturan/index.blade.php | resources/css/pages/superadmin/superadmin-common.css   | SEDIKIT | Konfigurasi sistem & purge audit log.
+SuperAdmin   | /superadmin/cms-landing      | resources/views/superadmin/landing/index.blade.php | resources/css/pages/superadmin/superadmin-common.css      | SEDIKIT | CMS draft & publish landing page.
+SuperAdmin   | /superadmin/site-editor      | resources/views/superadmin/site-editor/index.blade.php | resources/css/pages/superadmin/site-editor.css        | SEDIKIT | Gutenberg-style site editor canvas & modal.
+SuperAdmin   | /superadmin/arsip-peserta    | resources/views/superadmin/arsip/index.blade.php   | resources/css/pages/superadmin/superadmin-common.css      | SEDIKIT | Tabel arsip lulusan magang.
+SuperAdmin   | /superadmin/arsip-peserta/{id}| resources/views/superadmin/arsip/show.blade.php    | resources/css/pages/superadmin/superadmin-common.css      | SEDIKIT | Detail portofolio arsip.
+SuperAdmin   | /superadmin/audit-log        | resources/views/superadmin/audit-log/index.blade.php | resources/css/pages/superadmin/audit-log.css             | BAGUS   | Stream jejak audit multi-kanal. Periksa _styles.blade.php.
+SuperAdmin   | /superadmin/backup           | resources/views/superadmin/backup/index.blade.php  | resources/css/pages/superadmin/superadmin-common.css      | SEDIKIT | Hub disaster recovery & database snapshot.
+SuperAdmin   | /superadmin/profil           | resources/views/superadmin/profil/show.blade.php   | resources/css/pages/superadmin/profil-show.css            | SEDIKIT | Profil superadmin.
+SuperAdmin   | /superadmin/akun             | resources/views/superadmin/akun/index.blade.php    | resources/css/components/pengaturan-akun.css              | SEDIKIT | Pengaturan kredensial & preferensi.
+SuperAdmin   | /superadmin/keamanan/2fa     | resources/views/superadmin/security/two-factor.blade.php | resources/css/pages/superadmin/superadmin-common.css | SEDIKIT | Enrollment 2FA dan recovery codes.
+
+AUTENTIKASI & HALAMAN PUBLIK:
+----------------------------------------------------------------------------------------------------
+Role         | URL                          | File View                                          | File CSS                                                  | Status  | Catatan
+----------------------------------------------------------------------------------------------------
+Publik       | /                            | resources/views/public/landing.blade.php           | resources/css/pages/public/landing.css, public-tailwind.css| BAGUS | Desain landing publik dengan dark theme bawaan.
+Publik       | /panduan-alur                | resources/views/public/panduan-alur.blade.php      | resources/css/pages/public/panduan-alur.css, panduan-alur-tokens.css | SEDIKIT | Step alur magang publik.
+Publik       | /peta-alur                   | resources/views/public/peta-alur.blade.php         | resources/css/pages/public/peta-alur.css                  | SEDIKIT | Mindmap interaktif alur magang.
+Publik       | /kebijakan-privasi           | resources/views/public/kebijakan-privasi.blade.php | resources/css/pages/public/landing.css                    | SEDIKIT | Dokumen privasi publik.
+Publik       | /verifikasi-dokumen/{kode}   | resources/views/public/verifikasi-dokumen.blade.php| resources/css/pages/public/landing.css                    | SEDIKIT | Cek keaslian surat keterangan / sertifikat.
+Auth         | /login                       | resources/views/auth/login.blade.php               | resources/css/pages/auth/auth-depth.css, layouts/auth-depth.blade.php | BAGUS | Desain Glassmorphism Auth Depth sudah rapi, selaraskan token.
+Auth         | /register                    | resources/views/auth/register.blade.php            | resources/css/pages/auth/auth-depth.css                   | BAGUS   | Form register calon peserta.
+Auth         | /forgot-password             | resources/views/auth/forgot-password.blade.php     | resources/css/pages/auth/auth-depth.css                   | BAGUS   | Request reset password.
+Auth         | /reset-password/{token}      | resources/views/auth/reset-password.blade.php      | resources/css/pages/auth/auth-depth.css                   | BAGUS   | Reset form token.
+Auth         | /two-factor-challenge        | resources/views/auth/two-factor-challenge.blade.php| resources/css/pages/auth/auth-depth.css                   | BAGUS   | OTP/Recovery 2FA challenge.
+Auth         | /email/verify                | resources/views/auth/verify-email.blade.php        | resources/css/pages/auth/auth-depth.css                   | BAGUS   | Verifikasi email.
+Auth         | /password/ganti              | resources/views/auth/ganti-password.blade.php     | resources/css/pages/auth/auth-depth.css                   | BAGUS   | Form wajib ganti password staf pertama kali.
+
+KOMPONEN & LAYOUT GLOBAL:
+----------------------------------------------------------------------------------------------------
+Role         | Komponen / Layout            | File View                                          | File CSS                                                  | Status  | Catatan
+----------------------------------------------------------------------------------------------------
+Layout       | Dashboard Utama (Staff)      | resources/views/layouts/dashboard.blade.php        | resources/css/layouts/dashboard.css, dashboard-layout-tokens.css | SEDIKIT | Sidebar #031B40, Topbar gradient, kanvas #061630.
+Layout       | Layout Peserta               | resources/views/layouts/peserta.blade.php          | resources/css/layouts/peserta-layout-tokens.css           | SEDIKIT | Body & main container peserta perlu token --dm-canvas.
+Layout       | Layout App Generic           | resources/views/layouts/app.blade.php              | resources/css/layouts/app-layout-tokens.css               | SEDIKIT | Standarisasi token layout universal.
+Layout       | Layout Auth Generic          | resources/views/layouts/auth.blade.php             | resources/css/layouts/auth-layout-tokens.css              | SEDIKIT | Layout auth fallback.
+Komponen     | Cards                        | -                                                  | resources/css/components/cards.css                        | SEDIKIT | Samakan surface, border, dan shadow ke token --dm-*.
+Komponen     | Tables                       | -                                                  | resources/css/components/tables.css                       | SEDIKIT | Samakan header, zebra row, border ke token --dm-*.
+Komponen     | Pagination                   | -                                                  | resources/css/components/pagination.css                   | SEDIKIT | Samakan item aktif, disabled, border ke token --dm-*.
+Komponen     | Notifications & Toast        | -                                                  | resources/css/components/notifications.css                | SEDIKIT | Samakan toast & alert popup ke token --dm-*.
+Komponen     | Pengaturan Akun              | -                                                  | resources/css/components/pengaturan-akun.css              | SEDIKIT | Samakan panel profil, tab pengaturan ke token --dm-*.
+====================================================================================================
