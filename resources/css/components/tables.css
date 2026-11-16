@@ -852,15 +852,15 @@
         }
 
         [data-theme="dark"] .jurusan-tag-item {
-            background: #1E293B !important;
-            border-color: #334155 !important;
-            color: #CBD5E1 !important;
+            background: #16335F !important;
+            border-color: #2F5190 !important;
+            color: var(--dm-text-title, #EAF0FA) !important;
         }
 
         [data-theme="dark"] .jurusan-tag-item:hover {
-            background: #283548 !important;
-            border-color: #475569 !important;
-            color: #F8FAFC !important;
+            background: #1E447E !important;
+            border-color: #4C84E8 !important;
+            color: #FFFFFF !important;
         }
 
 

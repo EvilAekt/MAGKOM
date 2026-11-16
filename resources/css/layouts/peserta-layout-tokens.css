@@ -1936,6 +1936,18 @@
             font-weight: 500;
         }
 
+        [data-theme="dark"] .gentelella-footer,
+        [data-theme="dark"] .peserta-footer {
+            background: var(--dm-canvas, #061630) !important;
+            border-top: 1px solid var(--dm-border, rgba(255, 255, 255, 0.07)) !important;
+            color: var(--dm-text-muted, #9FB0CC) !important;
+        }
+
+        [data-theme="dark"] .gentelella-footer span,
+        [data-theme="dark"] .peserta-footer span {
+            color: var(--dm-text-muted, #9FB0CC) !important;
+        }
+
         @media (max-width: 991.98px) {
             .gentelella-footer,
             .peserta-footer {

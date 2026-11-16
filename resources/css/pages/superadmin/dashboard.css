@@ -2110,6 +2110,14 @@ body.role-superadmin .sa-content-canvas {
     border: 1px solid rgba(245, 158, 11, 0.3) !important;
 }
 
+[data-theme="dark"] .sa-card--registered .sa-seg[style*="var(--navy-800)"] {
+    background-color: #FBBF24 !important;
+}
+
+[data-theme="dark"] .sa-card--registered .sa-seg[style*="rgba(10,42,106"] {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
 [data-theme="dark"] .sa-card--roles {
     background: linear-gradient(135deg, #1E1B4B 0%, #0F172A 100%) !important;
     border: 1px solid var(--dm-border) !important;
@@ -2123,6 +2131,10 @@ body.role-superadmin .sa-content-canvas {
 [data-theme="dark"] .sa-staff-title,
 [data-theme="dark"] .sa-staff-val {
     color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-card--staff .sa-progress-fill[style*="var(--navy-800)"] {
+    background-color: #60A5FA !important;
 }
 
 [data-theme="dark"] .sa-staff-val-sub {
