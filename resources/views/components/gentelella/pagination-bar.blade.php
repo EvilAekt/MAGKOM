@@ -70,9 +70,9 @@
             <div class="kuota-page-controls" role="navigation" aria-label="{{ __('Navigasi Lembar Halaman') }}">
                 {{-- Tombol Sebelumnya --}}
                 @if($paginator->onFirstPage())
-                    <button type="button" class="kuota-page-btn-nav disabled" disabled aria-label="{{ __('Lembar Sebelumnya') }}">&laquo; Prev</button>
+                    <button type="button" class="kuota-page-btn-nav disabled" disabled aria-label="{{ __('Lembar Sebelumnya') }}">{!! __('&laquo; Prev') !!}</button>
                 @else
-                    <a href="{{ $paginator->previousPageUrl() }}" class="kuota-page-btn-nav" aria-label="{{ __('Lembar Sebelumnya') }}">&laquo; Prev</a>
+                    <a href="{{ $paginator->previousPageUrl() }}" class="kuota-page-btn-nav" aria-label="{{ __('Lembar Sebelumnya') }}">{!! __('&laquo; Prev') !!}</a>
                 @endif
 
                 {{-- Angka Halaman (Sliding Window) --}}
@@ -102,9 +102,9 @@
 
                 {{-- Tombol Selanjutnya --}}
                 @if($paginator->hasMorePages())
-                    <a href="{{ $paginator->nextPageUrl() }}" class="kuota-page-btn-nav" aria-label="{{ __('Lembar Selanjutnya') }}">Next &raquo;</a>
+                    <a href="{{ $paginator->nextPageUrl() }}" class="kuota-page-btn-nav" aria-label="{{ __('Lembar Selanjutnya') }}">{!! __('Next &raquo;') !!}</a>
                 @else
-                    <button type="button" class="kuota-page-btn-nav disabled" disabled aria-label="{{ __('Lembar Selanjutnya') }}">Next &raquo;</button>
+                    <button type="button" class="kuota-page-btn-nav disabled" disabled aria-label="{{ __('Lembar Selanjutnya') }}">{!! __('Next &raquo;') !!}</button>
                 @endif
             </div>
         </div>
