@@ -230,6 +230,7 @@
         [data-theme="dark"] body.role-superadmin .main_container,
         [data-theme="dark"] body.role-superadmin .dashboard-content-area,
         [data-theme="dark"] body.role-superadmin .right_col,
+        [data-theme="dark"] body.role-superadmin .sa-content-canvas,
         [data-theme="dark"] body.role-peserta,
         [data-theme="dark"] body.role-peserta .main_container,
         [data-theme="dark"] body.role-peserta .dashboard-content-area,
@@ -239,6 +240,9 @@
         [data-theme="dark"] .peserta-main-content,
         [data-theme="dark"] .main-wrapper,
         [data-theme="dark"] .content-area,
+        [data-theme="dark"] .sa-content-canvas,
+        [data-theme="dark"] .sa-page,
+        [data-theme="dark"] .sa-dash,
         [data-theme="dark"] .right_col {
             background-color: var(--dm-canvas) !important;
         }
@@ -386,6 +390,10 @@
         [data-theme="dark"] .identity-card,
         [data-theme="dark"] .form-card-container,
         [data-theme="dark"] .settings-card,
+        [data-theme="dark"] .sa-card,
+        [data-theme="dark"] .sa-panel,
+        [data-theme="dark"] .sa-kpi-card,
+        [data-theme="dark"] .bento-card,
         [data-theme="dark"] .bg-white:not(.badge-white):not(.text-white) {
             background-color: var(--neutral-0) !important;
             border-color: var(--neutral-200) !important;
@@ -2693,16 +2701,16 @@
             font-weight: 700;
         }
 
-        /* Mode Gelap: Card memakai #003566 / #02275D dengan border #3F51B5 */
+        /* Mode Gelap: Standarisasi Master Pembimbing (#0E2548, rgba(255, 255, 255, 0.07), #EAF0FA) */
         [data-theme="dark"] .x_panel,
         [data-theme="dark"] .card,
         [data-theme="dark"] .cv-stat-card,
         [data-theme="dark"] .cv-card,
         [data-theme="dark"] .tile_stats_inner {
-            background-color: #003566 !important;
-            border: 1px solid #3F51B5 !important;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
-            color: #FFFFFF !important;
+            background-color: var(--dm-surface) !important;
+            border: 1px solid var(--dm-border) !important;
+            box-shadow: var(--dm-shadow) !important;
+            color: var(--dm-text-main) !important;
         }
         [data-theme="dark"] .x_panel,
         [data-theme="dark"] .card,
@@ -2720,7 +2728,7 @@
         [data-theme="dark"] .cv-stat-title,
         [data-theme="dark"] .tile_stats_inner .count,
         [data-theme="dark"] .tile_stats_inner .stat-value {
-            color: #FFFFFF !important;
+            color: var(--dm-text-title) !important;
         }
         [data-theme="dark"] .cv-stat-label,
         [data-theme="dark"] .cv-stat-sub,
@@ -2729,7 +2737,7 @@
         [data-theme="dark"] .tile_stats_inner .count_title,
         [data-theme="dark"] .tile_stats_inner .count_bottom,
         [data-theme="dark"] .tile_stats_inner .count_subtext {
-            color: #BBBBBB !important;
+            color: var(--dm-text-muted) !important;
         }
         [data-theme="dark"] .tile_stats_inner .count_icon,
         [data-theme="dark"] .tile_stats_inner .stat-icon {

@@ -78,3 +78,15 @@
     outline-color: var(--periwinkle-400);
 }
 
+[data-theme="dark"] .adm-kuota-revamp-wrap .hero-status-draft {
+    background: rgba(245, 158, 11, 0.2);
+    color: #FCD34D;
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+[data-theme="dark"] .adm-kuota-revamp-wrap .hero-status-scheduled {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93C5FD;
+    border-color: rgba(59, 130, 246, 0.4);
+}
+

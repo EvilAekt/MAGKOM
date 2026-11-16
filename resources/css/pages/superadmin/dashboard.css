@@ -1749,3 +1749,433 @@ body.role-superadmin .sa-content-canvas {
     animation: none !important;
     will-change: auto !important;
 }
+
+/* ==============================================================================
+   Dark Mode Overrides (Reactive via [data-theme="dark"]) - SuperAdmin Dashboard
+   Standar Visual: Pembimbing Bento (#061630, #0E2548, rgba(255,255,255,0.07), #EAF0FA)
+   ============================================================================== */
+[data-theme="dark"] body.role-superadmin,
+[data-theme="dark"] body.role-superadmin .main_container,
+[data-theme="dark"] body.role-superadmin .sa-content-canvas,
+[data-theme="dark"] body.role-superadmin .right_col.dashboard-main,
+[data-theme="dark"] .sa-page,
+[data-theme="dark"] .sa-dash {
+    background-color: var(--dm-canvas) !important;
+    color: var(--dm-text-main) !important;
+}
+
+/* 1. Base Bento Cards */
+[data-theme="dark"] .sa-card {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .sa-card-title {
+    color: var(--dm-text-title) !important;
+}
+
+/* 2. Hero Banner */
+[data-theme="dark"] .sa-hero-banner {
+    background: var(--dm-hero-gradient) !important;
+    border: 1px solid var(--dm-border);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .sa-hero-eyebrow {
+    color: var(--magkom-yellow-main, #FFC300) !important;
+}
+
+[data-theme="dark"] .sa-btn-primary {
+    background: var(--magkom-yellow-main, #FFC300) !important;
+    color: #02275D !important;
+}
+
+[data-theme="dark"] .sa-btn-primary:hover {
+    background: #FFD84D !important;
+}
+
+[data-theme="dark"] .sa-btn-secondary {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .sa-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.16) !important;
+}
+
+/* 3. KPI Cards */
+[data-theme="dark"] .sa-kpi-card {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-kpi-decor,
+[data-theme="dark"] .sa-kpi-decor--yellow {
+    opacity: 0.12;
+}
+
+[data-theme="dark"] .sa-tile-icon {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .sa-tile-icon--navy {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #93C5FD !important;
+}
+
+[data-theme="dark"] .sa-tile-icon--yellow {
+    background: rgba(255, 195, 0, 0.15) !important;
+    color: #FFD84D !important;
+}
+
+[data-theme="dark"] .sa-tile-icon--indigo {
+    background: rgba(99, 102, 241, 0.18) !important;
+    color: #A5B4FC !important;
+}
+
+[data-theme="dark"] .sa-kpi-label {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-kpi-val {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-kpi-unit {
+    color: var(--dm-text-subtle) !important;
+}
+
+[data-theme="dark"] .sa-kpi-sub {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-kpi-sub--faded {
+    color: var(--dm-text-subtle) !important;
+}
+
+/* 4. Pills, Badges, & Time Chips */
+[data-theme="dark"] .sa-pill {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .sa-pill--yellow {
+    background: rgba(255, 195, 0, 0.15) !important;
+    color: #FFD84D !important;
+}
+
+[data-theme="dark"] .sa-live-pill {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .sa-time-chip {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
+}
+
+/* 5. Progress Bars & Segmented Track */
+[data-theme="dark"] .sa-progress-bar,
+[data-theme="dark"] .sa-meter {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 6. Mid-Row Cards (Antrean, Kuota) */
+[data-theme="dark"] .sa-card--antrean,
+[data-theme="dark"] .sa-card--kuota {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-antrean-track {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="dark"] .sa-antrean-fill[style*="var(--navy-800)"] {
+    background-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .sa-antrean-fill[style*="var(--periwinkle-200)"] {
+    background-color: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-antrean-val {
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .sa-antrean-label {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-dot[style*="var(--navy-800)"] {
+    background-color: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-dot[style*="var(--lavender-100)"] {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-theme="dark"] .sa-audit-stacked-bar > div:first-child {
+    background-color: #3B82F6 !important;
+}
+
+[data-theme="dark"] .sa-card--kuota .sa-gauge-wrap path:first-child {
+    stroke: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .sa-card--kuota .sa-gauge-fill {
+    stroke: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-card--kuota .sa-gauge-percent {
+    fill: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-card--kuota .sa-gauge-sub {
+    color: var(--dm-text-muted) !important;
+}
+
+/* 7. Right-Side Cards (Kalender & Attention) */
+[data-theme="dark"] .sa-calendar-card {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-cal-nav-btn {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .cal-month-trigger-btn,
+[data-theme="dark"] .cal-year-trigger-btn {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--dm-text-title) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .cal-month-popover,
+[data-theme="dark"] .cal-year-popover {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+    box-shadow: var(--dm-shadow) !important;
+}
+
+[data-theme="dark"] .cal-month-popover-title,
+[data-theme="dark"] .cal-year-popover-title {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .cal-month-item,
+[data-theme="dark"] .cal-year-item {
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .cal-month-item:hover,
+[data-theme="dark"] .cal-year-item:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .sa-cal-days-header {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .cal-date {
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .cal-date.date-muted {
+    color: var(--dm-text-subtle) !important;
+    opacity: 0.45;
+}
+
+[data-theme="dark"] .cal-date.date-weekend {
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .cal-date.date-today {
+    background: #2563EB !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .sa-card--action {
+    background: linear-gradient(135deg, #450A0A 0%, #7F1D1D 100%) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+/* 8. Baris 3: Pengguna Terdaftar, Hak Akses, Akun Staf Internal */
+[data-theme="dark"] .sa-card--registered {
+    background: linear-gradient(135deg, #78350F 0%, #451A03 100%) !important;
+    border: 1px solid rgba(245, 158, 11, 0.3) !important;
+}
+
+[data-theme="dark"] .sa-card--roles {
+    background: linear-gradient(135deg, #1E1B4B 0%, #0F172A 100%) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-card--staff {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-staff-title,
+[data-theme="dark"] .sa-staff-val {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-staff-val-sub {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-mini-card {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-mini-card-label {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-mini-card-val {
+    color: var(--dm-text-title) !important;
+}
+
+/* 9. Baris 4: Jejak Audit & Konten Kemitraan */
+[data-theme="dark"] .sa-card--audit,
+[data-theme="dark"] .sa-card--content {
+    background: var(--dm-surface) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-audit-tile {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-audit-tile--yellow {
+    background: rgba(255, 195, 0, 0.1) !important;
+    border-color: rgba(255, 195, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .sa-audit-tile-label {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-audit-tile-val {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-timeline-line {
+    background: var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-timeline-item {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-timeline-title {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-timeline-sub {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-timeline-diff {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .sa-content-banner {
+    background: var(--dm-hero-gradient) !important;
+    border: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .sa-slot-card {
+    background: rgba(255, 195, 0, 0.07) !important;
+    border: 1px solid rgba(255, 195, 0, 0.22) !important;
+}
+
+[data-theme="dark"] .sa-slot-card .sa-ring-wrap circle:first-child {
+    stroke: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .sa-slot-card .sa-ring-wrap circle:nth-child(2) {
+    stroke: var(--magkom-yellow-main, #FFC300) !important;
+}
+
+[data-theme="dark"] .sa-slot-card .sa-ring-wrap text {
+    fill: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-slot-label {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-slot-val {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .sa-slot-val-sub {
+    color: var(--dm-text-subtle) !important;
+}
+
+[data-theme="dark"] .sa-jurusan-label {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .sa-jurusan-name {
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .sa-jurusan-val {
+    color: var(--dm-text-title) !important;
+}
+
+/* 10. Drawer & Popover */
+[data-theme="dark"] .cv-slide-drawer {
+    background: var(--dm-surface) !important;
+    border-left: 1px solid var(--dm-border) !important;
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .cv-drawer-header {
+    background: var(--dm-hero-gradient) !important;
+    border-bottom: 1px solid var(--dm-border) !important;
+}
+
+[data-theme="dark"] .cv-drawer-body {
+    background: var(--dm-surface) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .cv-drawer-body strong {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .cv-drawer-body [style*="background: var(--cv-paper, #F8FAFC)"],
+[data-theme="dark"] .cv-drawer-body [style*="background: #ffffff"] {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-main) !important;
+}
+
+[data-theme="dark"] .cv-slide-drawer .cv-dyn-action {
+    color: var(--dm-text-title) !important;
+}
+
+[data-theme="dark"] .cv-slide-drawer [style*="color: #64748B"],
+[data-theme="dark"] .cv-slide-drawer [style*="color: #475569"] {
+    color: var(--dm-text-muted) !important;
+}
+
+[data-theme="dark"] .cv-drawer-footer {
+    background: var(--dm-surface) !important;
+    border-top: 1px solid var(--dm-border) !important;
+}

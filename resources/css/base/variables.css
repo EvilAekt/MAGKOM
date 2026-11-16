@@ -199,25 +199,25 @@
             --dm-warning: #FFC300;
             --dm-dot-empty: rgba(255, 255, 255, 0.12);
 
-            --neutral-0: var(--magkom-midnight-navy);     /* Card surface #003566 */
-            --neutral-50: var(--magkom-abyssal-navy);    /* Container sidebar/topbar gelap #02275D */
-            --neutral-100: var(--magkom-midnight-navy);   /* Input background */
-            --neutral-150: var(--magkom-dark-charcoal);   /* Main canvas background #212529 */
-            --neutral-200: #2C3A4E;   /* Borders & Separators */
-            --neutral-300: var(--magkom-indigo-accent);   /* Secondary borders / accent borders */
-            --neutral-400: var(--magkom-gray-medium);   /* Subdued text / icons / borders */
-            --neutral-500: var(--magkom-gray-light);   /* Muted labels & timestamps */
-            --neutral-600: #CBD5E1;   /* Body text secondary */
-            --neutral-700: #E2E8F0;   /* Body text primary */
-            --neutral-800: var(--magkom-pure-white);   /* Headings & prominent text */
-            --neutral-900: var(--magkom-pure-white);   /* Maximum contrast highlights */
+            --neutral-0: var(--dm-surface);               /* Card surface #0E2548 (Master Pembimbing Reference) */
+            --neutral-50: var(--dm-navy-deep);            /* Container sidebar/topbar gelap #031B40 */
+            --neutral-100: var(--dm-surface);             /* Input background #0E2548 */
+            --neutral-150: var(--dm-canvas);              /* Main canvas background #061630 */
+            --neutral-200: var(--dm-border);              /* Borders & Separators rgba(255,255,255,0.07) */
+            --neutral-300: rgba(255, 255, 255, 0.12);     /* Secondary borders / accent borders */
+            --neutral-400: var(--dm-text-subtle);         /* Subdued text / icons / borders #5E7194 */
+            --neutral-500: var(--dm-text-muted);          /* Muted labels & timestamps #9FB0CC */
+            --neutral-600: #CBD5E1;                       /* Body text secondary */
+            --neutral-700: var(--dm-text-main);           /* Body text primary #EAF0FA */
+            --neutral-800: var(--dm-text-title);          /* Headings & prominent text #EAF0FA */
+            --neutral-900: #FFFFFF;                       /* Maximum contrast highlights */
 
             --blue-600: #3B82F6;
             --blue-700: #93C5FD;
             --blue-tint: rgba(59, 130, 246, 0.18);
             --blue-tint-line: rgba(147, 197, 253, 0.35);
             --hover-row-bg: rgba(255, 255, 255, 0.06);
-            --sky-100: var(--magkom-midnight-navy);
+            --sky-100: var(--dm-surface);
 
             /* Topbar Mode Gelap */
             --topbar-bg-start: var(--magkom-abyssal-navy);
@@ -231,10 +231,10 @@
             --sidebar-active-border: transparent;
 
             /* Card Mode Gelap */
-            --card-surface: var(--magkom-midnight-navy);
-            --card-border: var(--magkom-indigo-accent);
-            --card-text-primary: var(--magkom-pure-white);
-            --card-text-muted: var(--magkom-gray-light);
+            --card-surface: var(--dm-surface);            /* #0E2548 */
+            --card-border: var(--dm-border);              /* rgba(255, 255, 255, 0.07) */
+            --card-text-primary: var(--dm-text-title);    /* #EAF0FA */
+            --card-text-muted: var(--dm-text-muted);      /* #9FB0CC */
 
             --card-highlight-bg: var(--magkom-abyssal-navy);
             --card-highlight-border: var(--magkom-indigo-accent);
