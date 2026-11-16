@@ -112,6 +112,23 @@
 
         /* Dark Mode Tokens & Overrides (DS-MagKom Industrial Standard) */
         [data-theme="dark"] {
+            /* Master Global Dark Mode Tokens (--dm-*) - Acuan: Dashboard Pembimbing */
+            --dm-canvas: #061630;
+            --dm-surface: #0E2548;
+            --dm-border: rgba(255, 255, 255, 0.07);
+            --dm-shadow: 0 4px 20px rgba(0, 0, 0, 0.50);
+
+            --dm-text-title: #EAF0FA;
+            --dm-text-main: #EAF0FA;
+            --dm-text-muted: #9FB0CC;
+            --dm-text-subtle: #5E7194;
+
+            --dm-hero-gradient: linear-gradient(135deg, #003566 0%, #01347C 100%);
+            --dm-navy-deep: #031B40;
+            --dm-danger: #d64545;
+            --dm-warning: #FFC300;
+            --dm-dot-empty: rgba(255, 255, 255, 0.12);
+
             --neutral-0: var(--magkom-midnight-navy);     /* Card surface #003566 */
             --neutral-50: var(--magkom-abyssal-navy);    /* Container sidebar/topbar gelap #02275D */
             --neutral-100: var(--magkom-midnight-navy);   /* Input background */
@@ -138,7 +155,7 @@
             --topbar-border: rgba(63, 81, 181, 0.35);
 
             /* Sidebar Mode Gelap */
-            --sidebar-bg: #011C44;
+            --sidebar-bg: var(--dm-navy-deep);
             --sidebar-text: var(--magkom-gray-light);
             --sidebar-active-bg: var(--magkom-primary-blue);
             --sidebar-active-border: transparent;
@@ -196,15 +213,41 @@
         }
 
         [data-theme="dark"] body {
-            background-color: var(--neutral-150);
-            color: var(--neutral-700);
+            background-color: var(--dm-canvas);
+            color: var(--dm-text-main);
+        }
+
+        /* Canvas Background Application (All Roles) */
+        [data-theme="dark"] body.role-admin,
+        [data-theme="dark"] body.role-admin .main_container,
+        [data-theme="dark"] body.role-admin .dashboard-content-area,
+        [data-theme="dark"] body.role-admin .right_col,
+        [data-theme="dark"] body.role-pembimbing,
+        [data-theme="dark"] body.role-pembimbing .main_container,
+        [data-theme="dark"] body.role-pembimbing .dashboard-content-area,
+        [data-theme="dark"] body.role-pembimbing .right_col,
+        [data-theme="dark"] body.role-superadmin,
+        [data-theme="dark"] body.role-superadmin .main_container,
+        [data-theme="dark"] body.role-superadmin .dashboard-content-area,
+        [data-theme="dark"] body.role-superadmin .right_col,
+        [data-theme="dark"] body.role-peserta,
+        [data-theme="dark"] body.role-peserta .main_container,
+        [data-theme="dark"] body.role-peserta .dashboard-content-area,
+        [data-theme="dark"] body.role-peserta .right_col,
+        [data-theme="dark"] .bento-dashboard-wrapper,
+        [data-theme="dark"] .peserta-container,
+        [data-theme="dark"] .peserta-main-content,
+        [data-theme="dark"] .main-wrapper,
+        [data-theme="dark"] .content-area,
+        [data-theme="dark"] .right_col {
+            background-color: var(--dm-canvas) !important;
         }
 
         /* Topbar & Breadcrumb Mode Gelap */
         [data-theme="dark"] .top_nav,
         [data-theme="dark"] .dashboard-topbar-wrapper {
-            background: linear-gradient(135deg, #02275D 0%, #003566 100%) !important;
-            border-bottom: 1px solid rgba(63, 81, 181, 0.35) !important;
+            background: var(--dm-hero-gradient) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
             box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6) !important;
         }
 
@@ -214,26 +257,26 @@
         }
 
         [data-theme="dark"] .user-name-text {
-            color: #FFFFFF !important;
+            color: var(--dm-text-title) !important;
         }
 
         [data-theme="dark"] .user-dropdown-menu {
-            background-color: var(--neutral-0);
-            border-color: var(--neutral-200);
-            box-shadow: var(--shadow-raised);
+            background-color: var(--dm-surface);
+            border-color: var(--dm-border);
+            box-shadow: var(--dm-shadow);
         }
 
         [data-theme="dark"] .dropdown-header {
             background-color: rgba(255, 255, 255, 0.04);
-            border-bottom-color: var(--neutral-200);
+            border-bottom-color: var(--dm-border);
         }
 
         [data-theme="dark"] .dropdown-header-name {
-            color: #FFFFFF;
+            color: var(--dm-text-title);
         }
 
         [data-theme="dark"] .dropdown-header-email {
-            color: var(--neutral-600);
+            color: var(--dm-text-muted);
         }
 
         [data-theme="dark"] .dropdown-header-role {
@@ -241,40 +284,40 @@
         }
 
         [data-theme="dark"] .dropdown-item-link {
-            color: var(--neutral-700);
+            color: var(--dm-text-main);
         }
 
         [data-theme="dark"] .dropdown-item-link:hover {
-            background-color: var(--neutral-100);
+            background-color: rgba(255, 255, 255, 0.06);
             color: #FFFFFF;
         }
 
         [data-theme="dark"] .dropdown-divider {
-            border-top-color: var(--neutral-200);
+            border-top-color: var(--dm-border);
         }
 
         [data-theme="dark"] .breadcrumb-trail a {
-            color: rgba(255, 255, 255, 0.8) !important;
+            color: var(--dm-text-muted) !important;
         }
 
         [data-theme="dark"] .breadcrumb-trail a:hover {
-            color: #FFCB05 !important;
+            color: var(--dm-warning) !important;
             text-decoration: underline;
         }
 
         [data-theme="dark"] .breadcrumb-separator {
-            color: rgba(255, 255, 255, 0.4) !important;
+            color: var(--dm-text-subtle) !important;
         }
 
         [data-theme="dark"] .breadcrumb-current {
-            color: #FFFFFF !important;
+            color: var(--dm-text-title) !important;
         }
 
         /* Sidebar Navigasi Mode Gelap */
         [data-theme="dark"] .dashboard-sidebar,
         [data-theme="dark"] .left_col {
-            background-color: #011C44 !important;
-            border-right-color: rgba(63, 81, 181, 0.2) !important;
+            background-color: var(--dm-navy-deep) !important;
+            border-right-color: var(--dm-border) !important;
         }
 
         [data-theme="dark"] .sidebar-header {
@@ -1960,6 +2003,14 @@
             display: flex;
             align-items: flex-start;
             gap: 0.875rem;
+        }
+
+        .grace-banner-icon {
+            color: var(--blue-700);
+        }
+
+        [data-theme="dark"] .grace-banner-icon {
+            color: var(--dm-warning);
         }
 
         .grace-banner-title {
