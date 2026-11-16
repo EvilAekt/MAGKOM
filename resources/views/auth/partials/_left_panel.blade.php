@@ -113,12 +113,12 @@
     </g>
 
     <g>
-      <text class="lbl" x="408" y="374">Tugas</text>
-      <text class="lbl" x="343" y="487">Logbook</text>
-      <text class="lbl" x="217" y="487" text-anchor="end">Kuota</text>
-      <text class="lbl" x="152" y="374" text-anchor="end">Peserta</text>
-      <text class="lbl" x="217" y="262" text-anchor="end">Pembimbing</text>
-      <text class="lbl" x="343" y="262">Admin</text>
+      <text class="lbl" x="408" y="374">{{ __('Tugas') }}</text>
+      <text class="lbl" x="343" y="487">{{ __('Logbook') }}</text>
+      <text class="lbl" x="217" y="487" text-anchor="end">{{ __('Kuota') }}</text>
+      <text class="lbl" x="152" y="374" text-anchor="end">{{ __('Peserta') }}</text>
+      <text class="lbl" x="217" y="262" text-anchor="end">{{ __('Pembimbing') }}</text>
+      <text class="lbl" x="343" y="262">{{ __('Admin') }}</text>
     </g>
 
     <g>

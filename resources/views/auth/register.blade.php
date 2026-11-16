@@ -1,6 +1,6 @@
 @extends('layouts.auth-depth', ['variant' => 'register'])
 
-@section('title', 'MagKom - Register')
+@section('title', __('MagKom - Register'))
 
 @section('auth-form')
 @php
@@ -50,8 +50,8 @@
   <div style="display: flex; flex-direction: column; width: 100%; max-width: 460px; margin: 0 auto; box-sizing: border-box">
     
     <div style="margin-bottom: 24px">
-      <h1 style="margin: 0 0 8px; font-size: 34px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; color: #003566">Register Akun</h1>
-      <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5F6B76">Daftarkan akun Anda untuk memulai proses seleksi magang di Dinas Kominfo.</p>
+      <h1 style="margin: 0 0 8px; font-size: 34px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; color: #003566">{{ __('Register Akun') }}</h1>
+      <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5F6B76">{{ __('Daftarkan akun Anda untuk memulai proses seleksi magang di Dinas Kominfo.') }}</p>
     </div>
 
     @if($isKuotaTerpilih)
@@ -65,7 +65,7 @@
                 <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
               </svg>
             </span>
-            <span style="font-size: 14.5px; font-weight: 700; color: #003566; letter-spacing: -0.01em">Pilihan Magang dari Landing Page</span>
+            <span style="font-size: 14.5px; font-weight: 700; color: #003566; letter-spacing: -0.01em">{{ __('Pilihan Magang dari Landing Page') }}</span>
           </div>
           <span style="display: inline-flex; align-items: center; padding: 3px 12px; border-radius: 999px; background: #EEF3FB; border: 1px solid #D5DEEE; color: #003566; font-size: 12px; font-weight: 600">
             {{ $initialTipe === 'kelompok' ? 'Kelompok (' . $initialJumlah . ' Orang)' : 'Individu (1 Orang)' }}
@@ -89,7 +89,7 @@
         {{-- Baris Periode Mulai & Status Kursi --}}
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap">
           <div style="font-size: 13px; color: #475569">
-            Mulai Periode: <strong style="color: #003566; font-weight: 700">{{ $selectedBulan ? \Carbon\CarbonImmutable::parse($selectedBulan->bulan_mulai)->translatedFormat('F Y') : (request('bulan') ? 'Bulan ' . request('bulan') : 'Sesuai Pilihan') }}</strong>
+            {{ __('Mulai Periode:') }} <strong style="color: #003566; font-weight: 700">{{ $selectedBulan ? \Carbon\CarbonImmutable::parse($selectedBulan->bulan_mulai)->translatedFormat('F Y') : (request('bulan') ? 'Bulan ' . request('bulan') : 'Sesuai Pilihan') }}</strong>
           </div>
           @php
             $sisaKursi = $selectedBulan ? (int) ($selectedBulan->kuota_tersedia ?? 4) : 4;
@@ -141,7 +141,7 @@
       <input type="hidden" name="redirect_jumlah" value="{{ request('jumlah', $initialJumlah) }}">
 
       <div style="display: flex; flex-direction: column; gap: 8px">
-        <span style="font-size: 14px; font-weight: 700; color: #003566">Tipe Pendaftaran Magang</span>
+        <span style="font-size: 14px; font-weight: 700; color: #003566">{{ __('Tipe Pendaftaran Magang') }}</span>
         <div style="display: flex; gap: 4px; padding: 4px; border: 1px solid #D5DEEE; border-radius: 12px; background: #EEF3FB">
           <button type="button" data-reg-type="ind" aria-pressed="{{ $initialTipe === 'kelompok' ? 'false' : 'true' }}" style="flex: 1; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid {{ $initialTipe === 'kelompok' ? 'transparent' : '#003566' }}; border-radius: 9px; background: {{ $initialTipe === 'kelompok' ? 'transparent' : '#FFFFFF' }}; color: {{ $initialTipe === 'kelompok' ? '#4A5560' : '#003566' }}; font-family: inherit; font-size: 14px; font-weight: {{ $initialTipe === 'kelompok' ? '600' : '700' }}; cursor: pointer">
             <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ $initialTipe === 'kelompok' ? '#4A5560' : '#003566' }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"></path></svg>
@@ -197,7 +197,7 @@
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 12px">
-        <span style="font-size: 14px; font-weight: 700; color: #003566">Identitas Akun Calon Peserta</span>
+        <span style="font-size: 14px; font-weight: 700; color: #003566">{{ __('Identitas Akun Calon Peserta') }}</span>
 
         <div style="position: relative">
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"></path></svg>
@@ -235,15 +235,15 @@
 
       <div style="display: flex; flex-direction: column; gap: 12px">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
-          <span style="font-size: 14px; font-weight: 700; color: #003566">Informasi Pendidikan &amp; Pilihan Jurusan</span>
-          <a href="#kuota" style="font-size: 13px; font-weight: 700; color: #003566; text-decoration: none; white-space: nowrap">Cek Kuota Terbuka →</a>
+          <span style="font-size: 14px; font-weight: 700; color: #003566">{{ __('Informasi Pendidikan & Pilihan Jurusan') }}</span>
+          <a href="#kuota" style="font-size: 13px; font-weight: 700; color: #003566; text-decoration: none; white-space: nowrap">{{ __('Cek Kuota Terbuka →') }}</a>
         </div>
 
         <div>
           <div style="position: relative">
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px; pointer-events: none"><path d="M12 6.5C10.5 5 8 4.5 3 4.5v13c5 0 7.5.5 9 2 1.5-1.5 4-2 9-2v-13c-5 0-7.5.5-9 2zM12 6.5v13"></path></svg>
             <select id="jenjang" name="jenjang" class="fld" aria-label="Jenjang pendidikan" aria-describedby="hint-jenjang" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 44px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF; appearance: none; -webkit-appearance: none; cursor: pointer">
-              <option value="">-- Pilih Jenjang Pendidikan --</option>
+              <option value="">{{ __('-- Pilih Jenjang Pendidikan --') }}</option>
               <option value="smk" {{ $initialJenjang === 'smk' ? 'selected' : '' }}>SMK</option>
               <option value="mahasiswa" {{ in_array($initialJenjang, ['mahasiswa', 's1', 'd3'], true) ? 'selected' : '' }}>Mahasiswa (D3 / D4 / S1)</option>
             </select>
@@ -259,7 +259,7 @@
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             </svg>
             <select id="bidang" name="bidang_id" class="fld" aria-label="Bidang penempatan atau peminatan" aria-describedby="hint-bidang" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 44px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF; appearance: none; -webkit-appearance: none; cursor: pointer">
-              <option value="">-- Pilih Bidang Peminatan / Penempatan --</option>
+              <option value="">{{ __('-- Pilih Bidang Peminatan / Penempatan --') }}</option>
               @if(isset($bidangList) && count($bidangList) > 0)
                 @foreach($bidangList as $b)
                   <option value="{{ $b->id }}" {{ (string)$b->id === (string)$initialBidangId ? 'selected' : '' }}>{{ $b->nama_bidang }}</option>
@@ -275,14 +275,14 @@
               <path d="M6 9l6 6 6-6"></path>
             </svg>
           </div>
-          <p id="hint-bidang" style="margin: 6px 0 0; font-size: 12.5px; line-height: 1.4; color: #5F6B76">Pilih bidang penempatan di Dinas Kominfo yang sesuai dengan peminatan magang Anda.</p>
+          <p id="hint-bidang" style="margin: 6px 0 0; font-size: 12.5px; line-height: 1.4; color: #5F6B76">{{ __('Pilih bidang penempatan di Dinas Kominfo yang sesuai dengan peminatan magang Anda.') }}</p>
         </div>
 
         <div>
           <div style="position: relative">
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F6B76" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 16px; top: 16px; pointer-events: none"><path d="M2 9l10-5 10 5-10 5z"></path><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"></path></svg>
             <select id="jurusan" name="jurusan_id" data-initial-jurusan="{{ $initialJurusanId }}" class="fld" aria-label="Jurusan atau program studi" aria-describedby="hint-jurusan" style="width: 100%; box-sizing: border-box; height: 50px; padding: 0 44px 0 46px; border: 1px solid #AAAAAA; border-radius: 10px; font-family: inherit; font-size: 15px; color: #212529; background: #FFFFFF; appearance: none; -webkit-appearance: none; cursor: pointer">
-              <option value="">-- Pilih Jurusan / Program Studi --</option>
+              <option value="">{{ __('-- Pilih Jurusan / Program Studi --') }}</option>
               @foreach($jurusanMasterData as $j)
                 <option value="{{ $j['id'] }}" {{ (string)$j['id'] === (string)$initialJurusanId ? 'selected' : '' }}>{{ $j['nama'] }}</option>
               @endforeach
@@ -334,7 +334,7 @@
       <button type="submit" class="btn-main" style="width: 100%; height: 52px; border: none; border-bottom: 3px solid #FFC300; border-radius: 10px; background: #003566; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Register</button>
     </form>
 
-    <p style="margin: 22px 0 0; text-align: center; font-size: 15px; color: #5F6B76">Sudah punya akun? <a href="{{ route('login', request()->query()) }}" style="font-weight: 700; color: #003566; text-decoration: none">Login</a></p>
+    <p style="margin: 22px 0 0; text-align: center; font-size: 15px; color: #5F6B76">{{ __('Sudah punya akun?') }} <a href="{{ route('login', request()->query()) }}" style="font-weight: 700; color: #003566; text-decoration: none">Login</a></p>
     <p style="margin: 10px 0 0; text-align: center; font-size: 12.5px; color: #5F6B76">Magang Kominfo • Dinas Kominfo Sleman • v1.0</p>
   </div>
 </section>

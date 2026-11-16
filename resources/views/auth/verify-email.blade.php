@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Verifikasi Alamat Email - Magang Kominfo Sleman')
+@section('title', __('Verifikasi Alamat Email - Magang Kominfo Sleman'))
 @section('meta_description', 'Verifikasi alamat email Anda untuk mengaktifkan akses ke Portal MagKom Dinas Komunikasi dan Informatika Kabupaten Sleman.')
 
 @section('content')
@@ -12,11 +12,11 @@
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
             <polyline points="22,6 12,13 2,6"></polyline>
         </svg>
-        <span>Aktivasi Akun</span>
+        <span>{{ __('Aktivasi Akun') }}</span>
     </div>
-    <h1 class="auth-title">Verifikasi Alamat Email</h1>
+    <h1 class="auth-title">{{ __('Verifikasi Alamat Email') }}</h1>
     <p class="auth-subtitle">
-        Terima kasih telah mendaftar di Portal MagKom. Kami telah mengirimkan tautan aktivasi akun ke alamat email Anda. Silakan klik tautan tersebut untuk memverifikasi dan mengaktifkan akun Anda.
+        {{ __('Terima kasih telah mendaftar di Portal MagKom. Kami telah mengirimkan tautan aktivasi akun ke alamat email Anda. Silakan klik tautan tersebut untuk memverifikasi dan mengaktifkan akun Anda.') }}
     </p>
 
     <!-- Kotak Saran & Bantuan -->
@@ -28,7 +28,7 @@
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
             </svg>
             <div>
-                Belum menerima email? Pastikan untuk memeriksa tab <strong>Spam</strong> atau <strong>Promosi</strong> di akun email Anda, atau klik tombol di bawah untuk meminta tautan baru.
+                {!! __('Belum menerima email? Pastikan untuk memeriksa tab Spam atau Promosi di akun email Anda, atau klik tombol di bawah untuk meminta tautan baru.') !!}
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
     <form action="{{ route('verification.send') }}" method="POST">
         @csrf
         <button type="submit" class="btn-primary" style="margin-bottom: 1rem;">
-            Kirim Ulang Email Verifikasi
+            {{ __('Kirim Ulang Email Verifikasi') }}
         </button>
     </form>
 
@@ -45,7 +45,7 @@
     <form action="{{ route('logout') }}" method="POST" style="text-align: center;">
         @csrf
         <button type="submit" style="background: none; border: none; color: var(--neutral-500); font-size: 0.875rem; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0.5rem 1rem; transition: color 0.15s ease;">
-            Keluar dari Akun
+            {{ __('Keluar dari Akun') }}
         </button>
     </form>
 @endsection
