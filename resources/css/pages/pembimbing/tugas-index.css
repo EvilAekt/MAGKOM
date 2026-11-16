@@ -273,7 +273,7 @@
     background: #ffffff;
     border-radius: 12px;
     border: 1px solid #CBD5E1;
-    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+    border-top: 3.5px solid var(--magkom-primary-blue) !important;
     padding: 1.15rem 1.35rem;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
     margin-bottom: 24px;
@@ -1064,12 +1064,12 @@
 }
 
 [data-theme="dark"] .tugas-filter-form .btn-filter-apply {
-    background: var(--magkom-primary-blue, #01347C) !important;
+    background: var(--magkom-primary-blue) !important;
     color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .tugas-filter-form .btn-filter-apply:hover {
-    background: var(--navy-700, #0B3180) !important;
+    background: var(--navy-700) !important;
 }
 
 [data-theme="dark"] .assignment-card,
@@ -1147,8 +1147,8 @@
 }
 
 [data-theme="dark"] .tab-pill.active {
-    background: var(--magkom-primary-blue, #01347C) !important;
-    border-color: var(--magkom-primary-blue, #01347C) !important;
+    background: var(--magkom-primary-blue) !important;
+    border-color: var(--magkom-primary-blue) !important;
     color: var(--dm-text-title) !important;
 }
 
@@ -1869,12 +1869,12 @@
 
 [data-theme="dark"] .mentee-count-chip.selesai {
     background: rgba(16, 185, 129, 0.15) !important;
-    color: var(--green-600, #16A34A) !important;
+    color: var(--green-600) !important;
 }
 
 [data-theme="dark"] .mentee-count-chip.review {
     background: rgba(251, 191, 36, 0.15) !important;
-    color: var(--dm-warning, #FFC300) !important;
+    color: var(--dm-warning) !important;
 }
 
 [data-theme="dark"] .classroom-task-row {
@@ -1907,7 +1907,7 @@
 }
 
 [data-theme="dark"] .task-row-due.overdue {
-    color: var(--dm-danger, #d64545) !important;
+    color: var(--dm-danger) !important;
 }
 
 [data-theme="dark"] .classroom-tabs {

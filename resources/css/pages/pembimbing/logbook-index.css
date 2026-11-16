@@ -131,7 +131,7 @@
     background: #ffffff;
     border-radius: 12px;
     border: 1px solid #CBD5E1;
-    border-top: 3.5px solid var(--magkom-primary-blue, #01347C) !important;
+    border-top: 3.5px solid var(--magkom-primary-blue) !important;
     padding: 1.15rem 1.35rem;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
     margin-bottom: 24px;
@@ -292,12 +292,12 @@
 }
 
 [data-theme="dark"] .btn-filter-apply {
-    background: var(--magkom-primary-blue, #01347C) !important;
+    background: var(--magkom-primary-blue) !important;
     color: var(--dm-text-title) !important;
 }
 
 [data-theme="dark"] .btn-filter-apply:hover {
-    background: var(--navy-700, #0B3180) !important;
+    background: var(--navy-700) !important;
 }
 
 [data-theme="dark"] .btn-filter-reset {
@@ -520,11 +520,11 @@
 }
 
 [data-theme="dark"] .logbook-attachment-link.pdf {
-    color: var(--green-600, #16A34A) !important;
+    color: var(--green-600) !important;
 }
 
 [data-theme="dark"] .logbook-attachment-link.web {
-    color: var(--periwinkle-400, #6F86D8) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .logbook-kegiatan-text {
@@ -1108,12 +1108,12 @@
 
 [data-theme="dark"] .mentee-count-chip.selesai {
     background: rgba(16, 185, 129, 0.15) !important;
-    color: var(--green-600, #16A34A) !important;
+    color: var(--green-600) !important;
 }
 
 [data-theme="dark"] .mentee-count-chip.review {
     background: rgba(251, 191, 36, 0.15) !important;
-    color: var(--dm-warning, #FFC300) !important;
+    color: var(--dm-warning) !important;
 }
 
 [data-theme="dark"] .classroom-task-row {
@@ -1578,7 +1578,7 @@
 }
 
 [data-theme="dark"] .logbook-note-field-filled::after {
-    background: var(--active-blue, #1E4FBF) !important;
+    background: var(--active-blue) !important;
 }
 
 [data-theme="dark"] .logbook-note-floating-label {
@@ -1587,7 +1587,7 @@
 
 [data-theme="dark"] .logbook-note-field-filled:focus-within .logbook-note-floating-label,
 [data-theme="dark"] .logbook-note-field-filled.is-focused .logbook-note-floating-label {
-    color: var(--periwinkle-400, #6F86D8) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 [data-theme="dark"] .logbook-note-clean-textarea {
@@ -1596,12 +1596,12 @@
 
 [data-theme="dark"] .supervisor-notes-box {
     background: var(--dm-navy-deep) !important;
-    border-left-color: var(--active-blue, #1E4FBF) !important;
+    border-left-color: var(--active-blue) !important;
     color: var(--dm-text-main) !important;
 }
 
 [data-theme="dark"] .supervisor-notes-box .notes-label {
-    color: var(--periwinkle-400, #6F86D8) !important;
+    color: var(--periwinkle-400) !important;
 }
 
 
