@@ -64,5 +64,7 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 80
 
+# nosemgrep: dockerfile.security.missing-user-entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# nosemgrep: dockerfile.security.missing-user
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

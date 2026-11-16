@@ -60,9 +60,7 @@ class AuthController extends Controller
 
         $request->merge($merges);
 
-        $turnstileEnabled = (bool) config('services.turnstile.enabled', false)
-            && ! empty(config('services.turnstile.site_key'))
-            && ! empty(config('services.turnstile.secret_key'));
+        $turnstileEnabled = (bool) config('services.turnstile.enabled', false);
         $captchaEnabled = (bool) config('captcha.enabled', true);
 
         // 2. Validasi ketat format email RFC
@@ -340,9 +338,7 @@ class AuthController extends Controller
 
         $request->merge($merges);
 
-        $turnstileEnabled = (bool) config('services.turnstile.enabled', false)
-            && ! empty(config('services.turnstile.site_key'))
-            && ! empty(config('services.turnstile.secret_key'));
+        $turnstileEnabled = (bool) config('services.turnstile.enabled', false);
         $captchaEnabled = (bool) config('captcha.enabled', true);
 
         if ($request->has('username') && ! $request->has('nama')) {
