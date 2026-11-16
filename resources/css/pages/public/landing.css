@@ -1268,7 +1268,7 @@ body.landing-drawer-open {
     width: 100%;
     max-width: 100%;
     margin-top: 1.75rem;
-    overflow-x: clip;
+    overflow: visible;
 }
 
 /* Floating Side Navigation Buttons */
@@ -1276,32 +1276,38 @@ body.landing-drawer-open {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 10;
+    z-index: 15;
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 9999px;
     border: 1px solid var(--border);
-    background-color: var(--background);
+    background-color: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(6px);
     color: var(--foreground);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-    transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+    transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 
 .kuota-side-arrow-btn.prev {
-    left: -1.25rem;
+    left: 0.25rem;
 }
 
 .kuota-side-arrow-btn.next {
-    right: -1.25rem;
+    right: 0.25rem;
 }
 
 .kuota-side-arrow-btn:hover:not(:disabled) {
     background-color: var(--secondary);
     border-color: var(--muted-text);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.kuota-side-arrow-btn:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.96);
 }
 
 .kuota-side-arrow-btn:disabled {
@@ -1321,8 +1327,6 @@ body.landing-drawer-open {
     .kuota-side-arrow-btn {
         width: 2.35rem;
         height: 2.35rem;
-        background-color: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(4px);
     }
 }
 
@@ -1523,8 +1527,8 @@ body.landing-drawer-open {
     appearance: none;
     background-color: rgba(1, 52, 124, 0.05);
     border: 1px solid rgba(1, 52, 124, 0.16);
-    padding: 0.25rem 0.6rem;
-    border-radius: 9999px;
+    padding: 0.32rem 0.65rem;
+    border-radius: 6px;
     font-size: 0.775rem;
     font-weight: 600;
     color: var(--navy);

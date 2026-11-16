@@ -383,9 +383,12 @@ export function initAuthInteractions() {
   const tabKel = document.querySelector('[data-reg-type="kel"]');
   const hiddenTipe = document.getElementById('tipe_pendaftaran');
   const kelompokSection = document.getElementById('section-kelompok-wrapper');
+  const regTypeContainer = tabInd ? tabInd.closest('.reg-type-container') : null;
+  const isTypeLocked = regTypeContainer?.getAttribute('data-locked') === 'true' || tabInd?.hasAttribute('disabled') || tabKel?.hasAttribute('disabled');
 
   if (tabInd && tabKel) {
     const activateInd = () => {
+      if (isTypeLocked && tabInd.getAttribute('aria-pressed') !== 'true') return;
       tabInd.setAttribute('aria-pressed', 'true');
       tabKel.setAttribute('aria-pressed', 'false');
       if (hiddenTipe) hiddenTipe.value = 'mandiri';
@@ -407,6 +410,7 @@ export function initAuthInteractions() {
     };
 
     const activateKel = () => {
+      if (isTypeLocked && tabKel.getAttribute('aria-pressed') !== 'true') return;
       tabInd.setAttribute('aria-pressed', 'false');
       tabKel.setAttribute('aria-pressed', 'true');
       if (hiddenTipe) hiddenTipe.value = 'kelompok';
@@ -427,8 +431,10 @@ export function initAuthInteractions() {
       if (indSvg) indSvg.setAttribute('stroke', '#4A5560');
     };
 
-    tabInd.addEventListener('click', activateInd);
-    tabKel.addEventListener('click', activateKel);
+    if (!isTypeLocked) {
+      tabInd.addEventListener('click', activateInd);
+      tabKel.addEventListener('click', activateKel);
+    }
 
     // Initial state based on hidden input
     if (hiddenTipe && hiddenTipe.value === 'kelompok') {
@@ -440,56 +446,159 @@ export function initAuthInteractions() {
 }
 
 /**
- * Cascading Dropdowns: Jenjang -> Bidang -> Jurusan
+ * Cascading Dropdowns: Periode Bulan -> Jenjang -> Penempatan (Bidang) -> Jurusan
  */
 export function initCascadingEducationFields() {
+  const bulanSelect = document.getElementById('bulan_magang');
   const jenjangSelect = document.getElementById('jenjang');
   const bidangSelect = document.getElementById('bidang');
   const jurusanSelect = document.getElementById('jurusan');
-  const dataScript = document.getElementById('register-jurusan-data');
+  const matrixScript = document.getElementById('register-penempatan-matrix');
+  const legacyScript = document.getElementById('register-jurusan-data');
+  const hintBidang = document.getElementById('hint-bidang');
   const hintJurusan = document.getElementById('hint-jurusan');
+  const liveQuotaCard = document.getElementById('live-quota-status-card');
+  const lqcTitle = document.getElementById('lqc-title');
+  const lqcDesc = document.getElementById('lqc-desc');
+  const lqcIcon = document.getElementById('lqc-icon');
 
-  if (!jenjangSelect || !jurusanSelect || !dataScript) return;
+  if (!jenjangSelect || !jurusanSelect) return;
 
-  let masterJurusan = [];
-  try {
-    masterJurusan = JSON.parse(dataScript.textContent || '[]');
-  } catch (e) {
+  // Jika field pendidikan berstatus locked/disabled dari kuota landing page, pertahankan
+  if (jurusanSelect.getAttribute('data-locked') === 'true' || jurusanSelect.disabled) {
     return;
   }
 
+  let matrixPenempatan = {};
+  if (matrixScript) {
+    try {
+      matrixPenempatan = JSON.parse(matrixScript.textContent || '{}');
+    } catch (e) {
+      matrixPenempatan = {};
+    }
+  }
+
+  let masterJurusan = [];
+  if (legacyScript) {
+    try {
+      masterJurusan = JSON.parse(legacyScript.textContent || '[]');
+    } catch (e) {
+      masterJurusan = [];
+    }
+  }
+
+  const initialBidangId = bidangSelect ? (bidangSelect.getAttribute('data-initial-bidang') || bidangSelect.value) : '';
   const initialJurusanId = jurusanSelect.getAttribute('data-initial-jurusan') || jurusanSelect.value;
 
-  const updateJurusan = (preferredVal) => {
-    const selectedJenjang = (jenjangSelect.value || '').toLowerCase().trim();
-    const selectedBidang = bidangSelect ? (bidangSelect.value || '').toString().trim() : '';
+  const getActiveMonthId = () => {
+    if (bulanSelect && bulanSelect.value && bulanSelect.value !== '') {
+      return String(bulanSelect.value);
+    }
+    const monthKeys = Object.keys(matrixPenempatan).filter(k => k !== 'default');
+    return monthKeys.length > 0 ? monthKeys[0] : 'default';
+  };
 
-    // Filter berdasarkan jenjang
-    let filtered = masterJurusan;
-    if (selectedJenjang) {
-      filtered = filtered.filter(j => (j.kategori || '').toLowerCase() === selectedJenjang);
+  const updateLiveQuotaCard = () => {
+    if (!liveQuotaCard) return;
+
+    const selectedBidangId = bidangSelect ? String(bidangSelect.value || '').trim() : '';
+    const selectedJurusanId = String(jurusanSelect.value || '').trim();
+
+    if (!selectedBidangId || !selectedJurusanId) {
+      liveQuotaCard.style.display = 'none';
+      return;
     }
 
-    // Filter berdasarkan bidang jika bidang dipilih
-    if (selectedBidang && filtered.length > 0) {
-      const specificBidang = filtered.filter(j => Array.isArray(j.bidang_ids) && j.bidang_ids.includes(selectedBidang));
-      if (specificBidang.length > 0) {
-        filtered = specificBidang;
+    const monthId = getActiveMonthId();
+    const jenjang = (jenjangSelect.value || '').toLowerCase().trim();
+    const bidangList = matrixPenempatan[monthId]?.[jenjang] || matrixPenempatan['default']?.[jenjang] || [];
+    const currentBidang = bidangList.find(b => String(b.id) === selectedBidangId);
+
+    const hiddenJumlah = document.querySelector('input[name="redirect_jumlah"], input[name="jumlah_kelompok"]');
+    const tipeHidden = document.getElementById('tipe_pendaftaran');
+    const isKelompok = tipeHidden && tipeHidden.value === 'kelompok';
+    const memberCount = isKelompok ? Math.max(2, parseInt(hiddenJumlah?.value || '2', 10)) : 1;
+
+    let sisa = currentBidang ? (parseInt(currentBidang.sisa, 10) || 0) : 0;
+    if (currentBidang && Array.isArray(currentBidang.jurusan)) {
+      const matchJ = currentBidang.jurusan.find(j => String(j.id) === selectedJurusanId);
+      if (matchJ && matchJ.sisa !== undefined) {
+        sisa = parseInt(matchJ.sisa, 10) || 0;
       }
     }
 
-    const currentSelectedVal = preferredVal !== undefined ? preferredVal : jurusanSelect.value;
+    const namaBulan = (bulanSelect && bulanSelect.options[bulanSelect.selectedIndex])
+      ? bulanSelect.options[bulanSelect.selectedIndex].text.replace(/\s*\(.*?\)/g, '').trim()
+      : 'Periode Magang';
+
+    if (sisa >= memberCount && sisa > 0) {
+      liveQuotaCard.className = 'auth-live-quota-card is-tersedia';
+      if (lqcIcon) {
+        lqcIcon.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>';
+      }
+      if (lqcTitle) {
+        lqcTitle.textContent = `Kuota Tersedia (${sisa} Kursi Tersisa)`;
+      }
+    } else {
+      liveQuotaCard.className = 'auth-live-quota-card is-penuh';
+      if (lqcIcon) {
+        lqcIcon.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+      }
+      if (lqcTitle) {
+        if (sisa > 0 && sisa < memberCount) {
+          lqcTitle.textContent = `Sisa ${sisa} Kursi — Kelompok Masuk Waiting List`;
+        } else {
+          lqcTitle.textContent = 'Kuota Penuh (Otomatis Masuk Waiting List)';
+        }
+      }
+    }
+
+    liveQuotaCard.style.display = 'flex';
+  };
+
+  const updateJurusan = (preferredJurusanVal) => {
+    const monthId = getActiveMonthId();
+    const selectedJenjang = (jenjangSelect.value || '').toLowerCase().trim();
+    const selectedBidangId = bidangSelect ? String(bidangSelect.value || '').trim() : '';
 
     jurusanSelect.innerHTML = '';
     const defaultOpt = document.createElement('option');
     defaultOpt.value = '';
+
+    if (!selectedBidangId) {
+      defaultOpt.textContent = '-- Pilih Bidang Peminatan / Penempatan Terlebih Dahulu --';
+      jurusanSelect.appendChild(defaultOpt);
+      if (hintJurusan) {
+        hintJurusan.textContent = 'Pilih bidang penempatan terlebih dahulu.';
+      }
+      updateLiveQuotaCard();
+      return;
+    }
+
     defaultOpt.textContent = '-- Pilih Jurusan / Program Studi --';
     jurusanSelect.appendChild(defaultOpt);
 
+    const bidangList = matrixPenempatan[monthId]?.[selectedJenjang] || matrixPenempatan['default']?.[selectedJenjang] || [];
+    const currentBidang = bidangList.find(b => String(b.id) === selectedBidangId);
+
+    let listJurusan = [];
+    if (currentBidang && Array.isArray(currentBidang.jurusan) && currentBidang.jurusan.length > 0) {
+      listJurusan = currentBidang.jurusan;
+    } else {
+      listJurusan = masterJurusan.filter(j => {
+        const jenjangMatch = !selectedJenjang || (j.kategori || '').toLowerCase() === selectedJenjang;
+        const bidangMatch = !selectedBidangId || (Array.isArray(j.bidang_ids) && j.bidang_ids.includes(selectedBidangId));
+        return jenjangMatch && bidangMatch;
+      });
+    }
+
+    const currentSelectedVal = preferredJurusanVal !== undefined ? preferredJurusanVal : jurusanSelect.value;
     let matchFound = false;
-    filtered.forEach(j => {
+
+    listJurusan.forEach(j => {
       const opt = document.createElement('option');
       opt.value = j.id;
+      // Aturan Khusus: Jurusan HANYA menampilkan nama jurusannya saja tanpa sisa kursi
       opt.textContent = j.nama;
       if (currentSelectedVal && String(j.id) === String(currentSelectedVal)) {
         opt.selected = true;
@@ -503,24 +612,110 @@ export function initCascadingEducationFields() {
     }
 
     if (hintJurusan) {
-      if (selectedJenjang && selectedBidang) {
-        hintJurusan.textContent = `Menampilkan ${filtered.length} jurusan relevan untuk bidang dan jenjang pilihan Anda.`;
-      } else if (selectedJenjang) {
-        hintJurusan.textContent = `Pilih bidang penempatan di atas untuk menyaring jurusan secara spesifik (${filtered.length} jurusan tersedia).`;
-      } else {
-        hintJurusan.textContent = `Jurusan akan disaring sesuai jenjang dan bidang yang dipilih di atas.`;
-      }
+      hintJurusan.textContent = 'Pilihan jurusan menyesuaikan bidang penempatan di atas.';
     }
+
+    updateLiveQuotaCard();
   };
 
-  jenjangSelect.addEventListener('change', () => updateJurusan());
-  if (bidangSelect) {
-    bidangSelect.addEventListener('change', () => updateJurusan());
+  const updateBidang = (preferredBidangVal) => {
+    if (!bidangSelect) return;
+
+    const monthId = getActiveMonthId();
+    const selectedJenjang = (jenjangSelect.value || '').toLowerCase().trim();
+
+    bidangSelect.innerHTML = '';
+    const defaultOpt = document.createElement('option');
+    defaultOpt.value = '';
+
+    if (!selectedJenjang) {
+      defaultOpt.textContent = '-- Pilih Jenjang Pendidikan Terlebih Dahulu --';
+      bidangSelect.appendChild(defaultOpt);
+      if (hintBidang) {
+        hintBidang.textContent = 'Pilih jenjang pendidikan formal Anda terlebih dahulu.';
+      }
+      updateJurusan();
+      return;
+    }
+
+    defaultOpt.textContent = '-- Pilih Bidang Peminatan / Penempatan --';
+    bidangSelect.appendChild(defaultOpt);
+
+    const bidangList = matrixPenempatan[monthId]?.[selectedJenjang] || matrixPenempatan['default']?.[selectedJenjang] || [];
+
+    const currentSelectedVal = preferredBidangVal !== undefined ? preferredBidangVal : bidangSelect.value;
+    let matchFound = false;
+
+    if (bidangList.length > 0) {
+      bidangList.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        // Penempatan menampilkan kuota yang tersedia
+        const sisaKursi = parseInt(b.sisa, 10) || 0;
+        opt.textContent = sisaKursi > 0
+          ? `${b.nama} (Tersedia ${sisaKursi} Kursi)`
+          : `${b.nama} (Kuota Penuh)`;
+
+        if (currentSelectedVal && String(b.id) === String(currentSelectedVal)) {
+          opt.selected = true;
+          matchFound = true;
+        }
+        bidangSelect.appendChild(opt);
+      });
+    }
+
+    if (!matchFound && currentSelectedVal) {
+      bidangSelect.value = '';
+    }
+
+    if (hintBidang) {
+      hintBidang.textContent = 'Pilih bidang penempatan yang tersedia kuotanya.';
+    }
+
+    // Lanjutkan cascading ke Jurusan
+    const targetJurusanId = jurusanSelect.value || initialJurusanId;
+    updateJurusan(targetJurusanId);
+  };
+
+  if (bulanSelect) {
+    bulanSelect.addEventListener('change', () => {
+      updateBidang(bidangSelect ? bidangSelect.value : '');
+    });
   }
 
-  // Jika ada nilai awal saat halaman dimuat
-  if (jenjangSelect.value || (bidangSelect && bidangSelect.value) || initialJurusanId) {
-    updateJurusan(initialJurusanId);
+  jenjangSelect.addEventListener('change', () => {
+    updateBidang();
+  });
+
+  if (bidangSelect) {
+    bidangSelect.addEventListener('change', () => {
+      updateJurusan();
+    });
+  }
+
+  jurusanSelect.addEventListener('change', () => {
+    updateLiveQuotaCard();
+  });
+
+  // Listener untuk perubahan tipe pendaftaran (Individu vs Kelompok) agar kartu live menyesuaikan
+  const typeContainer = document.querySelector('.reg-type-container');
+  if (typeContainer) {
+    typeContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-reg-type]');
+      if (btn) {
+        setTimeout(() => updateLiveQuotaCard(), 50);
+      }
+    });
+  }
+
+  // Inisialisasi awal saat halaman dimuat
+  if (jenjangSelect.value) {
+    updateBidang(initialBidangId);
+    if (initialJurusanId) {
+      updateJurusan(initialJurusanId);
+    }
+  } else if (initialBidangId) {
+    updateBidang(initialBidangId);
   }
 }
 

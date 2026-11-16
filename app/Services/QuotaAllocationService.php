@@ -20,10 +20,15 @@ class QuotaAllocationService
      * Wajib dijalankan di dalam blok DB::transaction().
      *
      * @throws KuotaPenuhException
+     * @throws \InvalidArgumentException
      */
     public function ambilKuotaUmum(int $kuotaId, int $jumlah = 1): Kuota
     {
         assert(DB::transactionLevel() > 0, 'Metode ambilKuotaUmum harus dipanggil dalam transaksi database.');
+
+        if ($jumlah <= 0) {
+            throw new \InvalidArgumentException('Jumlah alokasi kuota harus lebih besar dari 0.');
+        }
 
         $kuota = Kuota::whereKey($kuotaId)->lockForUpdate()->firstOrFail();
 
