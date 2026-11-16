@@ -122,8 +122,8 @@
         }
 
         [data-theme="dark"] .adm-table-container {
-            border-color: #26354D;
-            background: #0F172A;
+            border-color: var(--dm-border);
+            background: var(--dm-surface);
         }
 
         .adm-table-meta-bar {
@@ -138,8 +138,8 @@
         }
 
         [data-theme="dark"] .adm-table-meta-bar {
-            background: #0F172A;
-            border-bottom-color: #26354D;
+            background: var(--dm-surface);
+            border-bottom-color: var(--dm-border);
         }
 
         /* Footer Paginasi Kartu Tabel Terpadu */
@@ -150,8 +150,8 @@
         }
 
         [data-theme="dark"] .adm-table-footer {
-            background: #0E1726;
-            border-top-color: #26354D;
+            background: var(--dm-surface);
+            border-top-color: var(--dm-border);
         }
 
         .adm-table-footer .kuota-pagination-wrapper {
@@ -270,19 +270,19 @@
         }
 
         [data-theme="dark"] .adm-table th {
-            background: #0E1726 !important;
-            color: #94A3B8 !important;
-            border-bottom-color: #26354D !important;
+            background: #081C38 !important;
+            color: var(--dm-text-muted) !important;
+            border-bottom-color: var(--dm-border) !important;
         }
 
         [data-theme="dark"] .adm-table td {
-            background: #0F172A !important;
-            border-bottom-color: #26354D !important;
-            color: #CBD5E1 !important;
+            background: var(--dm-surface) !important;
+            border-bottom-color: var(--dm-border) !important;
+            color: var(--dm-text-main) !important;
         }
 
         [data-theme="dark"] .adm-table tbody tr:hover td {
-            background: #162238 !important;
+            background: rgba(255, 255, 255, 0.05) !important;
         }
 
         .adm-user-cell {
@@ -311,11 +311,11 @@
         }
 
         [data-theme="dark"] .adm-cell-title {
-            color: #F8FAFC !important;
+            color: var(--dm-text-title) !important;
         }
 
         [data-theme="dark"] .adm-cell-sub {
-            color: #94A3B8 !important;
+            color: var(--dm-text-muted) !important;
         }
 
         .adm-user-name {
@@ -332,11 +332,11 @@
         }
 
         [data-theme="dark"] .adm-user-name {
-            color: #F8FAFC !important;
+            color: var(--dm-text-title) !important;
         }
 
         [data-theme="dark"] .adm-user-meta {
-            color: #94A3B8 !important;
+            color: var(--dm-text-muted) !important;
         }
 
         .adm-reg-pill {
@@ -364,7 +364,7 @@
         }
 
         [data-theme="dark"] .adm-table-empty {
-            color: #94A3B8 !important;
+            color: var(--dm-text-muted) !important;
         }
 
         .sa-link,
@@ -806,17 +806,17 @@
         }
 
         [data-theme="dark"] .table-bidang thead th {
-            background-color: #141E30 !important;
-            border-bottom-color: #26354D !important;
-            color: #94A3B8 !important;
+            background-color: #081C38 !important;
+            border-bottom-color: var(--dm-border) !important;
+            color: var(--dm-text-muted) !important;
         }
 
         [data-theme="dark"] .table-bidang tbody tr {
-            border-bottom-color: #26354D !important;
+            border-bottom-color: var(--dm-border) !important;
         }
 
         [data-theme="dark"] .table-bidang tbody tr:hover {
-            background-color: #162238 !important;
+            background-color: rgba(255, 255, 255, 0.05) !important;
         }
 
         /* =====================================================================

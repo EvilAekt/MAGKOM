@@ -598,51 +598,51 @@
    4. DARK MODE HARMONIZATION ([data-theme="dark"])
    ========================================================================= */
 [data-theme="dark"] .settings-white-card {
-    background: #182234;
-    border-color: #26354D;
-    box-shadow: none;
+    background: var(--dm-surface);
+    border-color: var(--dm-border);
+    box-shadow: var(--dm-shadow);
 }
 
 [data-theme="dark"] .card-heading-title {
-    color: #F8FAFC;
+    color: var(--dm-text-title);
 }
 
 [data-theme="dark"] .card-heading-subtitle {
-    color: #94A3B8;
+    color: var(--dm-text-muted);
 }
 
 [data-theme="dark"] .profile-identity-box {
-    border-bottom-color: #26354D;
+    border-bottom-color: var(--dm-border);
 }
 
 [data-theme="dark"] .avatar-circle {
-    background: #1E293B;
-    border-color: #334155;
+    background: var(--dm-canvas);
+    border-color: var(--dm-border);
     color: #60A5FA;
 }
 
 [data-theme="dark"] .identity-name {
-    color: #F8FAFC;
+    color: var(--dm-text-title);
 }
 
 [data-theme="dark"] .role-chip-pill {
-    background: #1E293B;
-    border-color: #334155;
-    color: #94A3B8;
+    background: var(--dm-canvas);
+    border-color: var(--dm-border);
+    color: var(--dm-text-muted);
 }
 
 [data-theme="dark"] .credential-label {
-    color: #94A3B8;
+    color: var(--dm-text-muted);
 }
 
 [data-theme="dark"] .credential-value {
-    color: #F8FAFC;
+    color: var(--dm-text-title);
 }
 
 [data-theme="dark"] .alert-info-box {
-    background: #0F172A;
-    border-color: #26354D;
-    color: #94A3B8;
+    background: var(--dm-canvas);
+    border-color: var(--dm-border);
+    color: var(--dm-text-muted);
 }
 
 [data-theme="dark"] .alert-info-box svg {
@@ -655,51 +655,51 @@
 
 [data-theme="dark"] .form-label-password,
 [data-theme="dark"] .pref-label-title {
-    color: #F8FAFC;
+    color: var(--dm-text-main);
 }
 
 [data-theme="dark"] .input-password-field,
 [data-theme="dark"] .pref-select-field {
-    background: #0F172A;
-    border-color: #334155;
-    color: #F8FAFC;
+    background: var(--dm-canvas);
+    border-color: var(--dm-border);
+    color: var(--dm-text-main);
 }
 
 [data-theme="dark"] .input-password-field:focus,
 [data-theme="dark"] .pref-select-field:focus {
     border-color: #3B82F6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
 }
 
 [data-theme="dark"] .toggle-eye-btn {
-    color: #94A3B8;
+    color: var(--dm-text-muted);
 }
 
 [data-theme="dark"] .toggle-eye-btn:hover {
-    color: #F8FAFC;
-    background-color: #1E293B;
+    color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.08);
 }
 
 [data-theme="dark"] .password-hint-text,
 [data-theme="dark"] .pref-helper-caption {
-    color: #94A3B8;
+    color: var(--dm-text-subtle);
 }
 
 [data-theme="dark"] .btn-action-outline {
-    background: #1E293B;
-    color: #CBD5E1;
-    border-color: #334155;
+    background: var(--dm-surface);
+    color: var(--dm-text-main);
+    border-color: var(--dm-border);
 }
 
 [data-theme="dark"] .btn-action-outline:hover {
-    background: #26354D;
-    color: #F8FAFC;
-    border-color: #475569;
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
 [data-theme="dark"] .theme-preview-card {
-    background: #0F172A;
-    border-color: #26354D;
+    background: var(--dm-canvas);
+    border-color: var(--dm-border);
 }
 
 [data-theme="dark"] .theme-preview-card:hover {
@@ -713,10 +713,10 @@
 }
 
 [data-theme="dark"] .theme-card-title {
-    color: #F8FAFC;
+    color: var(--dm-text-title);
 }
 
 [data-theme="dark"] .theme-card-desc {
-    color: #94A3B8;
+    color: var(--dm-text-muted);
 }
 

@@ -211,19 +211,19 @@
         /* Dark Theme Support for Alerts */
         [data-theme="dark"] .app-alert,
         [data-theme="dark"] .app-toast {
-            background: #182234 !important;
-            border-color: #26354D !important;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+            background: var(--dm-surface) !important;
+            border-color: var(--dm-border) !important;
+            box-shadow: var(--dm-shadow) !important;
         }
 
         [data-theme="dark"] .alert-title,
         [data-theme="dark"] .toast-title {
-            color: #F8FAFC !important;
+            color: var(--dm-text-title) !important;
         }
 
         [data-theme="dark"] .alert-desc,
         [data-theme="dark"] .toast-desc {
-            color: #94A3B8 !important;
+            color: var(--dm-text-muted) !important;
         }
 
         [data-theme="dark"] .alert-icon-badge.success,
@@ -252,13 +252,13 @@
 
         [data-theme="dark"] .alert-close-btn,
         [data-theme="dark"] .toast-close-btn {
-            color: #64748B !important;
+            color: var(--dm-text-muted) !important;
         }
 
         [data-theme="dark"] .alert-close-btn:hover,
         [data-theme="dark"] .toast-close-btn:hover {
-            color: #CBD5E1 !important;
-            background: #1E293B !important;
+            color: #FFFFFF !important;
+            background: rgba(255, 255, 255, 0.08) !important;
         }
 
         /* Banner Masa Tenggang Peserta (PRD AC-12-2) */
