@@ -1940,67 +1940,163 @@ body.role-superadmin .sa-content-canvas {
     color: var(--dm-text-muted) !important;
 }
 
-/* 7. Right-Side Cards (Kalender & Attention) */
-[data-theme="dark"] .sa-calendar-card {
-    background: var(--dm-surface) !important;
-    border: 1px solid var(--dm-border) !important;
+/* 7. Right-Side Cards (Kalender Presisi 1:1 Pembimbing & Attention) */
+[data-theme="dark"] .sa-calendar-card,
+[data-theme="dark"] .bento-calendar-card {
+    background: linear-gradient(180deg, #12305A 0%, #0D2549 100%) !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 4px 18px rgba(0, 53, 102, 0.25) !important;
 }
 
-[data-theme="dark"] .sa-cal-nav-btn {
-    background: rgba(255, 255, 255, 0.08) !important;
-    color: var(--dm-text-title) !important;
+[data-theme="dark"] .sa-cal-nav-btn,
+[data-theme="dark"] .cal-nav-btn {
+    background: none !important;
+    border: none !important;
+    color: var(--dm-text-muted, #9FB0CC) !important;
+}
+
+[data-theme="dark"] .sa-cal-nav-btn:hover,
+[data-theme="dark"] .cal-nav-btn:hover {
+    background: rgba(100, 116, 139, 0.16) !important;
+    color: var(--dm-text-title, #EAF0FA) !important;
 }
 
 [data-theme="dark"] .cal-month-trigger-btn,
-[data-theme="dark"] .cal-year-trigger-btn {
+[data-theme="dark"] .cal-year-trigger-btn,
+[data-theme="dark"] .sa-cal-month-trigger-btn,
+[data-theme="dark"] .sa-cal-year-trigger-btn {
+    color: #EAF0FA !important;
     background: rgba(255, 255, 255, 0.08) !important;
-    color: var(--dm-text-title) !important;
-    border: 1px solid var(--dm-border) !important;
+    border: 1px solid #2F5190 !important;
+}
+
+[data-theme="dark"] .cal-month-trigger-btn:hover,
+[data-theme="dark"] .cal-year-trigger-btn:hover,
+[data-theme="dark"] .sa-cal-month-trigger-btn:hover,
+[data-theme="dark"] .sa-cal-year-trigger-btn:hover {
+    background: #4C84E8 !important;
+    color: #ffffff !important;
+    border-color: #4C84E8 !important;
 }
 
 [data-theme="dark"] .cal-month-popover,
-[data-theme="dark"] .cal-year-popover {
-    background: var(--dm-surface) !important;
-    border: 1px solid var(--dm-border) !important;
-    box-shadow: var(--dm-shadow) !important;
+[data-theme="dark"] .cal-year-popover,
+[data-theme="dark"] .sa-cal-month-popover,
+[data-theme="dark"] .sa-cal-year-popover {
+    background: #0E2548 !important;
+    border: 1px solid #2F5190 !important;
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5) !important;
 }
 
-[data-theme="dark"] .cal-month-popover-title,
-[data-theme="dark"] .cal-year-popover-title {
-    color: var(--dm-text-title) !important;
+[data-theme="dark"] .cal-month-popover-header,
+[data-theme="dark"] .cal-year-popover-header,
+[data-theme="dark"] .sa-cal-month-popover-header,
+[data-theme="dark"] .sa-cal-year-popover-header {
+    color: #9FB0CC !important;
 }
 
+[data-theme="dark"] .cal-year-jump-btn,
+[data-theme="dark"] .sa-cal-year-jump-btn {
+    color: #4C84E8 !important;
+}
+
+[data-theme="dark"] .cal-year-jump-btn:hover,
+[data-theme="dark"] .sa-cal-year-jump-btn:hover {
+    background: #16335F !important;
+}
+
+[data-theme="dark"] .cal-month-option-btn,
+[data-theme="dark"] .cal-year-option-btn,
 [data-theme="dark"] .cal-month-item,
 [data-theme="dark"] .cal-year-item {
-    color: var(--dm-text-main) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #EAF0FA !important;
+    border: 1px solid transparent !important;
 }
 
+[data-theme="dark"] .cal-month-option-btn:hover,
+[data-theme="dark"] .cal-year-option-btn:hover,
 [data-theme="dark"] .cal-month-item:hover,
 [data-theme="dark"] .cal-year-item:hover {
-    background: rgba(255, 255, 255, 0.08) !important;
+    background: #16335F !important;
+    border-color: #4C84E8 !important;
+    color: #4C84E8 !important;
+}
+
+[data-theme="dark"] .cal-month-option-btn.active,
+[data-theme="dark"] .cal-year-option-btn.active {
+    background: #4C84E8 !important;
     color: #FFFFFF !important;
 }
 
-[data-theme="dark"] .sa-cal-days-header {
-    color: var(--dm-text-muted) !important;
+[data-theme="dark"] .sa-cal-days-header,
+[data-theme="dark"] .bento-calendar-days-row {
+    color: #9FB0CC !important;
 }
 
-[data-theme="dark"] .cal-date {
-    color: var(--dm-text-main) !important;
+[data-theme="dark"] .cal-day-weekend {
+    color: #8FA2FF !important;
 }
 
-[data-theme="dark"] .cal-date.date-muted {
-    color: var(--dm-text-subtle) !important;
-    opacity: 0.45;
+/* Sel Tanggal Berbentuk Semi-Oval Kapsul Vertikal (Presisi 1:1 Pembimbing) */
+[data-theme="dark"] .cal-date,
+[data-theme="dark"] .sa-cal-tile {
+    background: #16335F !important;
+    border: 1px solid #2F5190 !important;
+    color: #EAF0FA !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 }
 
-[data-theme="dark"] .cal-date.date-weekend {
-    color: #F87171 !important;
+/* Akhir pekan di kalender (Kolom Sabtu & Minggu) */
+[data-theme="dark"] .cal-date:nth-child(7n+6),
+[data-theme="dark"] .cal-date:nth-child(7n),
+[data-theme="dark"] .cal-date.date-weekend,
+[data-theme="dark"] .sa-cal-tile--weekend {
+    color: #8FA2FF !important;
 }
 
-[data-theme="dark"] .cal-date.date-today {
-    background: #2563EB !important;
+[data-theme="dark"] .cal-date:hover:not(.date-muted):not(.date-selected):not(.date-today) {
+    background: #1E447E !important;
+    border-color: #4C84E8 !important;
     color: #FFFFFF !important;
+    transform: translateY(-1px);
+}
+
+[data-theme="dark"] .cal-date.date-muted,
+[data-theme="dark"] .sa-cal-tile--out {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    color: #5E7194 !important;
+    opacity: 0.45 !important;
+}
+
+/* Hari Ini (Today): Full Color Solid Navy / Sleman Electric Blue */
+[data-theme="dark"] .cal-date.date-today,
+[data-theme="dark"] .sa-cal-tile--today {
+    background: #4C84E8 !important;
+    border-color: #4C84E8 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    border-radius: 11px !important;
+    box-shadow: 0 3px 8px rgba(76, 132, 232, 0.35) !important;
+}
+
+/* Tanggal Terpilih yang Diklik (Selected): Ring Outline Tebal */
+[data-theme="dark"] .cal-date.date-selected:not(.date-today) {
+    background: rgba(76, 132, 232, 0.2) !important;
+    border: 2px solid #4C84E8 !important;
+    color: #4C84E8 !important;
+    font-weight: 800 !important;
+    border-radius: 11px !important;
+    box-shadow: 0 0 0 2px rgba(76, 132, 232, 0.25) !important;
+}
+
+/* Hari Ini yang Sedang Dipilih: Full Color Solid + Gold Ring Border */
+[data-theme="dark"] .cal-date.date-today.date-selected {
+    background: #4C84E8 !important;
+    border: 2px solid #FFC300 !important;
+    color: #ffffff !important;
 }
 
 [data-theme="dark"] .sa-card--action {
