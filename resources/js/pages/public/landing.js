@@ -598,16 +598,26 @@
             if (rafId) cancelAnimationFrame(rafId);
             rafId = requestAnimationFrame(function () {
                 const rect = wrap.getBoundingClientRect();
-                const header = document.querySelector('.landing-header');
-                const headerH = header ? header.offsetHeight : 68;
-                const startOffset = headerH + 20;
+                const isMobile = window.innerWidth < 1024;
+                let prog = 0;
 
-                // Hitung progres scroll sejak bagian atas seksi tiba di posisi baca
-                // Saat user tiba di seksi (rect.top >= startOffset), prog = 0 (mobil tepat di titik START)
-                const scrolled = startOffset - rect.top;
-                const travelRange = Math.max(400, rect.height - 240);
+                if (isMobile) {
+                    // Pada mobile, seksi tersusun vertikal biasa (bukan sticky)
+                    // Trigger point berada di area baca tengah layar (55% dari tinggi viewport)
+                    const triggerPoint = window.innerHeight * 0.55;
+                    const travelRange = Math.max(300, rect.height - 160);
+                    const scrolled = triggerPoint - rect.top;
+                    prog = scrolled / travelRange;
+                } else {
+                    // Hitung progres scroll sejak bagian atas seksi tiba di posisi baca desktop
+                    const header = document.querySelector('.landing-header');
+                    const headerH = header ? header.offsetHeight : 68;
+                    const startOffset = headerH + 20;
+                    const travelRange = Math.max(400, rect.height - 240);
+                    const scrolled = startOffset - rect.top;
+                    prog = scrolled / travelRange;
+                }
 
-                let prog = scrolled / travelRange;
                 prog = Math.max(0, Math.min(1, prog));
 
                 const currentLen = prog * totalLength;
@@ -662,12 +672,21 @@
             const targetLength = cpLengths[index] || 0;
             const progressTarget = targetLength / totalLength;
             const currentScrollY = window.scrollY || window.pageYOffset;
-            const header = document.querySelector('.landing-header');
-            const headerH = header ? header.offsetHeight : 68;
-            const startOffset = headerH + 20;
-            const travelRange = Math.max(400, rect.height - 240);
+            const isMobile = window.innerWidth < 1024;
 
-            const destinationY = currentScrollY + rect.top - startOffset + (progressTarget * travelRange);
+            let destinationY;
+            if (isMobile) {
+                const triggerPoint = window.innerHeight * 0.55;
+                const travelRange = Math.max(300, rect.height - 160);
+                destinationY = currentScrollY + rect.top - triggerPoint + (progressTarget * travelRange);
+            } else {
+                const header = document.querySelector('.landing-header');
+                const headerH = header ? header.offsetHeight : 68;
+                const startOffset = headerH + 20;
+                const travelRange = Math.max(400, rect.height - 240);
+                destinationY = currentScrollY + rect.top - startOffset + (progressTarget * travelRange);
+            }
+
             window.scrollTo({ top: Math.max(0, destinationY), behavior: 'smooth' });
         }
 
@@ -678,10 +697,19 @@
             startNode.addEventListener('click', function () {
                 const rect = wrap.getBoundingClientRect();
                 const currentScrollY = window.scrollY || window.pageYOffset;
-                const header = document.querySelector('.landing-header');
-                const headerH = header ? header.offsetHeight : 68;
-                const startOffset = headerH + 20;
-                const destinationY = currentScrollY + rect.top - startOffset;
+                const isMobile = window.innerWidth < 1024;
+
+                let destinationY;
+                if (isMobile) {
+                    const triggerPoint = window.innerHeight * 0.55;
+                    destinationY = currentScrollY + rect.top - triggerPoint;
+                } else {
+                    const header = document.querySelector('.landing-header');
+                    const headerH = header ? header.offsetHeight : 68;
+                    const startOffset = headerH + 20;
+                    destinationY = currentScrollY + rect.top - startOffset;
+                }
+
                 window.scrollTo({ top: Math.max(0, destinationY), behavior: 'smooth' });
             });
         }

@@ -392,7 +392,16 @@ export function initAuthInteractions() {
       tabInd.setAttribute('aria-pressed', 'true');
       tabKel.setAttribute('aria-pressed', 'false');
       if (hiddenTipe) hiddenTipe.value = 'mandiri';
-      if (kelompokSection) kelompokSection.style.display = 'none';
+      const redirectTipe = document.querySelector('input[name="redirect_tipe"]');
+      if (redirectTipe) redirectTipe.value = 'mandiri';
+      const redirectJumlah = document.querySelector('input[name="redirect_jumlah"]');
+      if (redirectJumlah) redirectJumlah.value = '1';
+      if (kelompokSection) {
+        kelompokSection.style.display = 'none';
+        kelompokSection.querySelectorAll('input').forEach(inp => {
+          inp.disabled = true;
+        });
+      }
 
       tabInd.style.border = '1px solid #003566';
       tabInd.style.background = '#FFFFFF';
@@ -414,7 +423,27 @@ export function initAuthInteractions() {
       tabInd.setAttribute('aria-pressed', 'false');
       tabKel.setAttribute('aria-pressed', 'true');
       if (hiddenTipe) hiddenTipe.value = 'kelompok';
-      if (kelompokSection) kelompokSection.style.display = 'flex';
+      const redirectTipe = document.querySelector('input[name="redirect_tipe"]');
+      if (redirectTipe) redirectTipe.value = 'kelompok';
+      const redirectJumlah = document.querySelector('input[name="redirect_jumlah"]');
+      if (redirectJumlah && parseInt(redirectJumlah.value, 10) < 2) {
+        redirectJumlah.value = '2';
+      }
+      if (kelompokSection) {
+        kelompokSection.style.display = 'flex';
+        const namaKel = kelompokSection.querySelector('#nama_kelompok');
+        if (namaKel) namaKel.disabled = false;
+        const roster = kelompokSection.querySelector('#roster-anggota-container');
+        const targetCount = parseInt(roster?.getAttribute('data-target-anggota') || '1', 10);
+        const cards = kelompokSection.querySelectorAll('.card-anggota-item');
+        cards.forEach((card, idx) => {
+          const isVis = idx < targetCount;
+          card.style.display = isVis ? 'flex' : 'none';
+          card.querySelectorAll('input').forEach(inp => {
+            inp.disabled = !isVis;
+          });
+        });
+      }
 
       tabKel.style.border = '1px solid #003566';
       tabKel.style.background = '#FFFFFF';

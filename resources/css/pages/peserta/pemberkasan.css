@@ -366,6 +366,7 @@
 .pemberkasan-main-card {
     background: #ffffff;
     border: 1px solid #E2E8F0;
+    border-top: 3.5px solid var(--magkom-primary-blue, #01347C);
     border-radius: 16px;
     padding: 22px 26px;
     box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
@@ -415,7 +416,7 @@
     width: 4px;
     height: 18px;
     border-radius: 2px;
-    background: #FFC300;
+    background: #01347C;
     flex-shrink: 0;
 }
 
@@ -1168,12 +1169,7 @@
     transition: all 0.2s ease;
 }
 
-.pemberkasan-submit-card.pending {
-    background: linear-gradient(135deg, #FFCB05 0%, #FFC300 100%);
-    border: 1.5px solid #E6B800;
-    box-shadow: 0 4px 18px -2px rgba(255, 203, 5, 0.4);
-}
-
+.pemberkasan-submit-card.pending,
 .pemberkasan-submit-card.ready {
     background: linear-gradient(135deg, #02275D 0%, #01347C 100%);
     border: 1.5px solid #003566;
@@ -1196,13 +1192,7 @@
     flex-shrink: 0;
 }
 
-.submit-icon-circle.pending {
-    background: #02275D;
-    border: 1.5px solid #02275D;
-    color: #FFCB05;
-    box-shadow: 0 2px 8px rgba(2, 39, 93, 0.25);
-}
-
+.submit-icon-circle.pending,
 .submit-icon-circle.ready {
     background: #FFCB05;
     border: 1px solid #FFC300;
@@ -1211,55 +1201,39 @@
 }
 
 .submit-title-text {
-    font-size: 0.925rem;
+    font-size: 0.95rem;
     font-weight: 800;
-}
-
-.submit-title-text.pending {
-    color: #02275D;
     letter-spacing: -0.01em;
 }
 
+.submit-title-text.pending,
 .submit-title-text.ready {
     color: #FFFFFF;
-    font-size: 0.95rem;
-    letter-spacing: -0.01em;
 }
 
 .btn-submit-final {
     height: 42px;
     padding: 0 24px;
     border-radius: 8px;
-    background: #02275D;
-    color: #FFFFFF;
+    background: #FFCB05;
+    color: #02275D;
     font-size: 0.875rem;
     font-weight: 700;
-    border: 1px solid #02275D;
+    border: 1px solid #FFC300;
     cursor: pointer;
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(2, 39, 93, 0.25);
-}
-
-.btn-submit-final svg {
-    color: #FFCB05;
-}
-
-.pemberkasan-submit-card.ready .btn-submit-final {
-    background: #FFCB05;
-    border: 1px solid #FFC300;
-    color: #02275D;
     box-shadow: 0 3px 12px rgba(255, 203, 5, 0.45);
 }
 
-.pemberkasan-submit-card.ready .btn-submit-final svg {
+.btn-submit-final svg {
     color: #02275D;
 }
 
-.pemberkasan-submit-card.ready .btn-submit-final:hover:not(:disabled) {
+.btn-submit-final:hover:not(:disabled) {
     background: #FFC300;
     border-color: #FFC300;
     color: #02275D;
@@ -1267,25 +1241,18 @@
     transform: translateY(-1px);
 }
 
-.btn-submit-final:hover:not(:disabled) {
-    background: #01347C;
-    border-color: #01347C;
-    box-shadow: 0 4px 14px rgba(2, 39, 93, 0.35);
-    transform: translateY(-1px);
-}
-
 .btn-submit-final:disabled {
-    background: #02275D;
-    border-color: #02275D;
-    color: #FFFFFF;
-    opacity: 0.55;
+    background: #FFCB05;
+    border-color: #FFC300;
+    color: #02275D;
+    opacity: 0.45;
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
 }
 
 .btn-submit-final:disabled svg {
-    color: rgba(255, 203, 5, 0.6);
+    color: #02275D;
 }
 
 /* 12. Dark Mode Support */
@@ -1295,6 +1262,14 @@
 [data-theme="dark"] .doc-card-premium {
     background: #1e293b !important;
     border-color: #334155 !important;
+}
+
+[data-theme="dark"] .pemberkasan-main-card {
+    border-top: 3.5px solid var(--blue-600, #3B82F6) !important;
+}
+
+[data-theme="dark"] .pemberkasan-accent-line {
+    background: #3B82F6 !important;
 }
 
 [data-theme="dark"] .doc-title-text,
@@ -1475,6 +1450,15 @@
 }
 
 @media (max-width: 640px) {
+    .pemberkasan-hero-card {
+        padding: 16px 14px;
+        border-radius: 12px;
+    }
+
+    .hero-title-main {
+        font-size: 1.25rem;
+    }
+
     .pemberkasan-stepper-card {
         padding: 16px 12px;
     }
@@ -1508,6 +1492,116 @@
     .btn-approved-download {
         flex: 1;
         text-align: center;
+    }
+
+    /* Mobile Ergonomics for Document Cards (LENTERA Sleman Style) */
+    .doc-card-premium {
+        padding: 14px 14px;
+    }
+
+    .doc-row-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .doc-left-area {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .doc-right-action {
+        width: 100%;
+        justify-content: flex-start;
+        border-top: 1px dashed #E2E8F0;
+        padding-top: 10px;
+    }
+
+    .btn-upload-trigger {
+        width: 100%;
+        min-height: 44px;
+        justify-content: center;
+    }
+
+    .selected-file-confirm-bar,
+    .replace-inline-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .selected-file-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .btn-confirm-upload {
+        min-height: 38px;
+        width: 100%;
+    }
+
+    /* Mobile Ergonomics for Submission Bar */
+    .pemberkasan-submit-card {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 16px 14px !important;
+        gap: 14px !important;
+    }
+
+    .pemberkasan-submit-card.ready {
+        position: sticky;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        z-index: 50;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .submit-card-left {
+        width: 100% !important;
+    }
+
+    #formAjukanPendaftaran {
+        width: 100% !important;
+    }
+
+    .btn-submit-final {
+        width: 100% !important;
+        min-height: 48px !important;
+        justify-content: center !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .pemberkasan-main-card {
+        padding: 16px 12px !important;
+        border-radius: 12px !important;
+    }
+
+    .stepper-timeline-modern {
+        gap: 4px;
+    }
+
+    .stepper-step-modern {
+        width: 75px;
+    }
+
+    .stepper-icon-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+
+    .stepper-label-text {
+        font-size: 0.68rem;
+    }
+
+    .doc-uploaded-filename {
+        max-width: 190px;
+    }
+
+    /* Modal Responsive Width on Small Phones */
+    .modal-dialog {
+        margin: 8px auto !important;
+        max-width: 96vw !important;
     }
 }
 

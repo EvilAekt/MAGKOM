@@ -855,36 +855,123 @@ html, body {
 }
 
 @media (max-width: 600px) {
+    /* 1. TOPBAR IMMERSIVE 1 BARIS (NON-WRAPPING COMPACT) */
     .peta-alur-topbar {
-        padding: 0.5rem 0.75rem;
+        height: 52px !important;
+        min-height: 52px !important;
+        padding: 0 0.65rem !important;
+        flex-wrap: nowrap !important;
+        row-gap: 0 !important;
+        gap: 0.45rem !important;
+    }
+    .topbar-left {
+        gap: 0.45rem;
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+    .btn-nav-back {
+        padding: 0.38rem 0.5rem !important;
+        font-size: 0.75rem !important;
+        flex-shrink: 0;
+        gap: 0.3rem;
+    }
+    .btn-nav-back span {
+        display: none !important; /* Tampilkan ikon panah saja di mobile */
+    }
+    .topbar-branding {
+        min-width: 0;
+        flex: 1 1 auto;
+        gap: 0.35rem;
     }
     .topbar-branding .topbar-badge {
         display: none !important;
     }
     .topbar-title {
-        font-size: 0.875rem;
+        font-size: 0.82rem !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 140px;
     }
-    .btn-nav-back {
-        padding: 0.35rem 0.65rem;
-        font-size: 0.75rem;
-    }
-    .btn-topbar-register {
-        padding: 0.35rem 0.65rem;
-        font-size: 0.75rem;
+    .topbar-right {
+        gap: 0.35rem !important;
+        flex-shrink: 0;
     }
     .btn-audio-toggle {
-        padding: 0.35rem 0.65rem;
-        font-size: 0.75rem;
+        padding: 0.38rem 0.55rem !important;
+        font-size: 0.75rem !important;
+        border-radius: 9999px;
     }
+    .btn-audio-toggle #audioToggleLabel {
+        display: none !important; /* Hanya tampilkan ikon speaker di mobile */
+    }
+    .btn-topbar-register {
+        padding: 0.38rem 0.65rem !important;
+        font-size: 0.74rem !important;
+        white-space: nowrap !important;
+        gap: 0.3rem;
+    }
+
+    /* 2. MAIN WORKSPACE & KANVAS MAXIMUM HEIGHT */
+    .peta-alur-main-workspace {
+        height: calc(100vh - 80px) !important;
+        flex: 1;
+    }
+
+    /* 3. VIRTUAL ANALOG JOYSTICK HUD COMPACT */
     .virtual-analog-container {
-        bottom: 0.75rem;
-        left: 0.5rem;
-        transform: scale(0.82);
-        transform-origin: bottom left;
+        bottom: 0.35rem !important;
+        left: 50% !important;
+        transform: translateX(-50%) scale(0.8) !important;
+        transform-origin: bottom center !important;
+        gap: 0.25rem !important;
     }
+    .analog-kbd-hint {
+        display: none !important; /* Petunjuk keyboard tidak relevan di layar sentuh */
+    }
+    .analog-hint-text {
+        font-size: 0.62rem !important;
+        padding: 0.1rem 0.45rem !important;
+    }
+    .analog-horn-btn {
+        padding: 0.22rem 0.75rem !important;
+        font-size: 0.65rem !important;
+    }
+    .analog-base {
+        width: 124px !important;
+        height: 56px !important;
+    }
+    .analog-thumb {
+        width: 44px !important;
+        height: 44px !important;
+        left: calc(50% - 22px) !important;
+        top: calc(50% - 22px) !important;
+    }
+
+    /* 4. BALON KOMIK / WEBTOON SPEECH BUBBLE PADA LAYAR POTRET */
+    .webtoon-speech-bubble.is-active {
+        transform: translate(12px, -46px) scale(0.86) !important;
+    }
+    #webtoonBubble4.is-active {
+        transform: translate(-30px, -46px) scale(0.86) !important;
+    }
+
+    /* 5. MINI FOOTER COMPACT */
+    .peta-alur-mini-footer {
+        height: 28px !important;
+        padding: 0 0.75rem !important;
+    }
+    .peta-footer-copy {
+        font-size: 0.65rem !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 95vw;
+    }
+
     .in-scene-stage-hud,
     #missionHudOverlay {
-        bottom: 5.2rem;
+        bottom: 4.6rem;
         left: 0.5rem;
         right: 0.5rem;
         max-height: 44%;
@@ -894,20 +981,29 @@ html, body {
 
 @media (max-width: 360px) {
     .peta-alur-topbar {
-        padding: 0.35rem 0.5rem;
+        padding: 0 0.4rem !important;
+        gap: 0.3rem !important;
     }
     .topbar-title {
-        font-size: 0.75rem;
-        max-width: 140px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        font-size: 0.75rem !important;
+        max-width: 105px !important;
+    }
+    .btn-topbar-register span {
+        display: none !important;
+    }
+    .btn-topbar-register::after {
+        content: 'Daftar';
     }
     .virtual-analog-container {
-        bottom: 0.5rem;
-        left: 0.25rem;
-        transform: scale(0.72);
-        transform-origin: bottom left;
+        bottom: 0.25rem !important;
+        transform: translateX(-50%) scale(0.72) !important;
+        transform-origin: bottom center !important;
+    }
+    .webtoon-speech-bubble.is-active {
+        transform: translate(10px, -42px) scale(0.8) !important;
+    }
+    #webtoonBubble4.is-active {
+        transform: translate(-25px, -42px) scale(0.8) !important;
     }
 }
 

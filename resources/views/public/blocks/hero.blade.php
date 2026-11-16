@@ -78,7 +78,7 @@
                                     {{ $cmsPeriod }}
                                 </p>
                             @endif
-                            <a href="{{ $cmsCtaUrl }}" class="btn-hero-cta">
+                            <a href="{{ $cmsCtaUrl }}" class="btn-hero-cta btn-hero-cta-desktop">
                                 {{ $cmsCta }}
                             </a>
                         </div>
@@ -112,6 +112,13 @@
                                 @endforeach
                             </ul>
                         </div>
+
+                        <!-- Mobile-Only Action Button (Posisikan di Akhir Syarat & Dokumen) -->
+                        <div class="hero-mobile-cta-wrap">
+                            <a href="{{ $cmsCtaUrl }}" class="btn-hero-cta btn-hero-cta-mobile">
+                                {{ $cmsCta }}
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -123,6 +130,14 @@
                              class="hero-full-img" 
                              id="heroFullImg"
                              loading="lazy">
+                        <div class="hero-slide-caption-mobile">
+                            <span class="hero-badge-doc">DOKUMENTASI RESMI</span>
+                            <h2 class="hero-doc-title">Magang Diskominfo Sleman</h2>
+                            <p class="hero-doc-desc">Pengembangan ekosistem digital SPBE, infrastruktur jaringan, dan talenta muda bersama Pemerintah Kabupaten Sleman.</p>
+                            <a href="{{ $cmsCtaUrl }}" class="btn-hero-cta btn-hero-doc-cta">
+                                {{ $cmsCta }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

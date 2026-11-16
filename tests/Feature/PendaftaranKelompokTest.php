@@ -215,6 +215,54 @@ class PendaftaranKelompokTest extends TestCase
         $this->assertDatabaseHas('kelompok_magang', ['nama_kelompok' => 'Tim Kuota Tiga Sukses']);
     }
 
+    public function test_registrasi_kelompok_membersihkan_kartu_anggota_kosong_dan_lolos_validasi(): void
+    {
+        // Rombongan 2 orang (1 ketua + 1 anggota), browser mengirimkan kartu kedua dan ketiga dengan string kosong
+        $payload = [
+            'username' => 'Ketua Tim Dua Orang',
+            'email' => 'timdua@magkom.test',
+            'no_telp' => '081234567890',
+            'password' => 'Password123!',
+            'setuju_privasi' => '1',
+            'tipe_pendaftaran' => 'kelompok',
+            'redirect_tipe' => 'kelompok',
+            'redirect_jumlah' => '2',
+            'nama_kelompok' => 'Tim Duo Solid',
+            'anggota' => [
+                ['nama' => 'Rekan Satu', 'nim_nisn' => '12345', 'no_hp' => '081234567891', 'email' => 'rekan1@magkom.test'],
+                ['nama' => '', 'nim_nisn' => '', 'no_hp' => '', 'email' => ''],
+                ['nama' => '', 'nim_nisn' => '', 'no_hp' => '', 'email' => ''],
+            ],
+        ];
+
+        $response = $this->post('/register', $payload);
+        $response->assertSessionDoesntHaveErrors();
+        $response->assertRedirect(route('peserta.dashboard'));
+
+        $this->assertDatabaseHas('kelompok_magang', ['nama_kelompok' => 'Tim Duo Solid']);
+        $kelompok = KelompokMagang::where('nama_kelompok', 'Tim Duo Solid')->first();
+        $this->assertCount(1, $kelompok->anggota);
+    }
+
+    public function test_registrasi_mandiri_mengabaikan_redirect_tipe_kelompok_jika_memilih_mandiri(): void
+    {
+        $payload = [
+            'username' => 'Budi Mandiri Saja',
+            'email' => 'budimandiri@magkom.test',
+            'no_telp' => '081234567890',
+            'password' => 'Password123!',
+            'setuju_privasi' => '1',
+            'tipe_pendaftaran' => 'mandiri',
+            'redirect_tipe' => 'kelompok', // bekas URL landing page kelompok
+            'redirect_jumlah' => '2',
+        ];
+
+        $response = $this->post('/register', $payload);
+        $response->assertSessionDoesntHaveErrors();
+        $response->assertRedirect(route('peserta.dashboard'));
+        $this->assertDatabaseHas('users', ['email' => 'budimandiri@magkom.test']);
+    }
+
     public function test_seeder_accepted_peserta_membuat_akun_pov_mandiri_dan_kelompok_diterima(): void
     {
         $this->seed(AcceptedPesertaSeeder::class);
