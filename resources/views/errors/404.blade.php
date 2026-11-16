@@ -1,6 +1,6 @@
 @extends('errors.layout')
 
-@section('title', '404 - Halaman Tidak Ditemukan')
+@section('title', __('404 - Halaman Tidak Ditemukan'))
 @section('code', '404')
 @section('code_color', '#0641CC')
 @section('icon_bg', '#E6EEFF')
@@ -14,7 +14,7 @@
 </svg>
 @endsection
 
-@section('headline', 'Halaman Tidak Ditemukan')
-@section('message', 'Tautan yang Anda tuju mungkin salah ketik, telah dipindahkan, atau periode magang terkait sudah tidak tersedia.')
+@section('headline', __('Halaman Tidak Ditemukan'))
+@section('message', __('Tautan yang Anda tuju mungkin salah ketik, telah dipindahkan, atau periode magang terkait sudah tidak tersedia.'))
 @section('button_url', url('/'))
-@section('button_text', 'Kembali ke Beranda')
+@section('button_text', __('Kembali ke Beranda'))
